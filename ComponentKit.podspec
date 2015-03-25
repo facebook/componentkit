@@ -3,6 +3,7 @@ Pod::Spec.new do |s|
   s.version = "0.9"
   s.summary = "A React-inspired view framework for iOS"
   s.homepage = "https://componentkit.com"
+  s.authors = 'adamjernst@fb.com'
   s.license = 'BSD'
   s.source = {
     :git => "https://github.com/facebook/ComponentKit.git",

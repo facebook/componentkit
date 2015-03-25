@@ -1,4 +1,4 @@
-[![Build Status](https://magnum.travis-ci.com/facebook/componentkit.svg?token=r9Ldy7hzyPvrxsyXQmN6&branch=master)](https://magnum.travis-ci.com/facebook/componentkit)
+[![Build Status](https://travis-ci.org/facebook/componentkit.svg)](https://travis-ci.org/facebook/componentkit)
 
 ComponentKit is a view framework for iOS that is heavily inspired by React. It takes a functional, declarative approach to building UI. It was built to power Facebook's News Feed and is now used throughout the Facebook iOS app.
 
