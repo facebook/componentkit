@@ -10,6 +10,12 @@ ComponentKit is available on [CocoaPods](http://cocoapods.org).  Add the followi
 pod 'ComponentKit', '~> 0.9'
 ```
 
+To quickly try WildeGuess, the ComponentKit demo project:
+
+```ruby
+pod try ComponentKit
+```
+
 ### Learn more
 
 * Read the [Getting Started guide](http://www.componentkit.org/docs/getting-started.html)
