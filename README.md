@@ -19,7 +19,7 @@ pod 'ComponentKit', '~> 0.9'
 
 ## Contributing
 
-See the CONTRIBUTING file for how to help out.
+See the [CONTRIBUTING](https://github.com/facebook/componentkit/blob/master/CONTRIBUTING.md) file for how to help out.
 
 ## License
 
