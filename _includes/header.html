@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+<head>
+    <meta charset='utf-8'>
+    <title>ComponentKit | {{ page.title }}</title>
+    <link rel='stylesheet' href='/static/componentkit.css' type='text/css'/>
+    <link rel="stylesheet" href='/static/pygments.css' type='text/css'/>
+    <link rel='shortcut icon' href='/static/favicon.png'>
+    <meta name='viewport' content='width=480'>
+    <meta property="og:title" content="{{ page.title }}" />
+    <meta property="og:site_name" content="ComponentKit">
+    <meta property='og:description' content='ComponentKit: A Library for Functional UI on iOS.'>
+    <meta property='og:image' content='http://componentkit.org/static/componentkit-og-image.png'>
+    <meta property='og:url' content="http://componentkit.org{{ page.url }}">
+    <meta property='og:type' content='website'>
+    <script type="text/javascript" src="//use.typekit.net/vqa1hcx.js"></script>
+    <script type="text/javascript">{'try{Typekit.load();}catch(e){}'}</script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-49208336-4', 'auto');
+      ga('send', 'pageview');
+    </script>
+</head>
+<body>
+
+<header class='topbar'><nav class='width'>
+<a href='/'>
+  <img src="/static/componentkit-logo.png" class="logo">
+</a>
+    <ul>
+      <li><a href="/docs/getting-started.html" {% if (page.layout == 'docs') %} class="active" {% endif %}>
+          Docs
+      </a></li>
+      <li><a href="/support.html" {% if (page.id == 'support') %} class="active" {% endif %}>
+          Support
+      </a></li>
+      <li><a href="http://github.com/facebook/componentkit">GitHub</a>
+    </ul>
+</nav></header>
