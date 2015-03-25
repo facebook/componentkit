@@ -9,7 +9,7 @@ Let's get a sample app powered by ComponentKit up and running, then make some tw
 Clone the Github repo and run `pod install` to set up the example app, then open the workspace:
 
 ```sh
-$ git clone git@github.com:facebook/componentkit.git
+$ git clone https://github.com/facebook/componentkit
 $ cd componentkit/Examples/WildeGuess/
 $ pod install
 $ open WildeGuess.xcworkspace
