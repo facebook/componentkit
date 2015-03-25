@@ -1,0 +1,25 @@
+PODS:
+  - ComponentKit (0.9)
+  - ComponentKitTestLib (0.1.0):
+    - FBSnapshotTestCase
+  - FBSnapshotTestCase (1.6)
+  - OCMock (2.2.4)
+
+DEPENDENCIES:
+  - ComponentKit (from `.`)
+  - ComponentKitTestLib (from `./ComponentKitTestLib`)
+  - OCMock (~> 2.2)
+
+EXTERNAL SOURCES:
+  ComponentKit:
+    :path: .
+  ComponentKitTestLib:
+    :path: ./ComponentKitTestLib
+
+SPEC CHECKSUMS:
+  ComponentKit: 875163132732486bdc9906277e9ada43983ab7d4
+  ComponentKitTestLib: 2a3d2e482e316301a0a6c9c298d29fb820f66390
+  FBSnapshotTestCase: 9d5fe43b29ae3a0ed8fc829477971b281038f748
+  OCMock: 6db79185520e24f9f299548f2b8b07e41d881bd5
+
+COCOAPODS: 0.36.0
