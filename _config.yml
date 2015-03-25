@@ -1,0 +1,24 @@
+---
+url: http://componentkit.org
+name: ComponentKit
+relative_permalinks: false
+markdown: redcarpet
+description: A React-inspired view framework for iOS 
+timezone: America/Los_Angeles
+
+safe: true
+lsi: false
+highlighter: pygments
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: post
+      is_post: true
+
+collections:
+  docs:
+    output: true

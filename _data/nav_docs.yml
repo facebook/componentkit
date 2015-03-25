@@ -1,0 +1,51 @@
+- title: Quick Start
+  items:
+  - getting-started
+  - philosophy
+  - uses
+- title: Reference
+  items:
+  - component-api
+  - composite-components
+  - views
+  - layout
+  - responder-chain
+  - component-actions
+  - state
+  - scopes
+  - component-controllers
+  - lifecycle-methods
+  - animation
+  - debugging
+- title: Collection Views
+  items:
+  - datasource-overview
+  - datasource-basics
+  - datasource-changeset-api
+  - datasource-gotchas
+  - datasource-dive-deeper
+- title: Best Practices
+  items:
+  - never-subclass-components
+  - avoid-overrides
+  - indentation
+  - avoid-local-variables
+  - avoid-single-use-constants
+  - no-underscores
+  - pass-in-component-actions
+  - no-side-effects
+  - pass-in-immutable-objects
+  - components-cant-be-delegates
+  - avoid-excessive-branching
+  - check-for-nil
+  - avoid-push-back
+  - under-300-lines
+  - avoid-width-100-percent
+- title: Infrastructure
+  items:
+  - lifecycle-manager
+  - component-hosting-view
+- title: Appendix
+  items:
+  - why-cpp
+  - advanced-views
