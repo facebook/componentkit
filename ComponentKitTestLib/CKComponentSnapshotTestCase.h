@@ -15,12 +15,26 @@
 
 #define CK_AT_LEAST_IOS7_1 (kCFCoreFoundationVersionNumber >= 847.24)
 #define CK_AT_LEAST_IOS8 (kCFCoreFoundationVersionNumber > 847.27)
+#define CK_AT_LEAST_IOS8_2 (kCFCoreFoundationVersionNumber >= 1142.16)
 
 #if __LP64__
 #define CK_64 1
 #else
 #define CK_64 0
 #endif
+
+/**
+ Maps platform to reference image directory suffix
+ */
+#define CKSnapshotReferenceDirectorySuffix() \
+({ \
+NSString *suffix = \
+CK_AT_LEAST_IOS8_2 ? @"_IOS8.2" : \
+CK_AT_LEAST_IOS8 ? @"_IOS8" : \
+CK_AT_LEAST_IOS7_1 ? @"_IOS7.1" : \
+@""; \
+CK_64 ? [suffix stringByAppendingString:@"_64"] : suffix; \
+})
 
 @class CKComponent;
 
@@ -33,14 +47,7 @@
 #define CKSnapshotVerifyComponent(component__, sizeRange__, identifier__) \
 { \
 NSError *error__ = nil; \
-NSString *referenceImagesDirectorySuffix__ = @""; \
-if (CK_AT_LEAST_IOS8) { \
-referenceImagesDirectorySuffix__ = @"_IOS8"; \
-} else if (CK_AT_LEAST_IOS7_1) { \
-referenceImagesDirectorySuffix__ = @"_IOS7.1"; \
-} \
-if (CK_64) referenceImagesDirectorySuffix__ = [referenceImagesDirectorySuffix__ stringByAppendingString:@"_64"]; \
-NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%s%@", FB_REFERENCE_IMAGE_DIR, referenceImagesDirectorySuffix__]; \
+NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%s%@", FB_REFERENCE_IMAGE_DIR, CKSnapshotReferenceDirectorySuffix()]; \
 BOOL comparisonSuccess__ = [self compareSnapshotOfComponent:(component__) sizeRange:(sizeRange__) referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) error:&error__]; \
 XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); \
 }
@@ -70,14 +77,7 @@ CKSnapshotVerifyComponent([CKInsetComponent newWithInsets:insets__ component:com
 #define CKSnapshotVerifyComponentBlockWithState(componentBlock__, updateStateBlock__, sizeRange__, identifier__) \
 { \
 NSError *error__ = nil; \
-NSString *referenceImagesDirectorySuffix__ = @""; \
-if (CK_AT_LEAST_IOS8) { \
-referenceImagesDirectorySuffix__ = @"_IOS8"; \
-} else if (CK_AT_LEAST_IOS7_1) { \
-referenceImagesDirectorySuffix__ = @"_IOS7.1"; \
-} \
-if (CK_64) referenceImagesDirectorySuffix__ = [referenceImagesDirectorySuffix__ stringByAppendingString:@"_64"]; \
-NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%s%@", FB_REFERENCE_IMAGE_DIR, referenceImagesDirectorySuffix__]; \
+NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%s%@", FB_REFERENCE_IMAGE_DIR, CKSnapshotReferenceDirectorySuffix()]; \
 BOOL comparisonSuccess__ = [self compareSnapshotOfComponentBlock:(componentBlock__) updateStateBlock:(updateStateBlock__) sizeRange:(sizeRange__) referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) error:&error__]; \
 XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); \
 }
