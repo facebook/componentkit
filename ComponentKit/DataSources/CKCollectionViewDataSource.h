@@ -56,7 +56,7 @@ typedef void(*CKCellConfigurationFunction)(UICollectionViewCell *cell, NSIndexPa
  CKArrayControllerInputItems items;
  sections.insert(1); // Insert section at index 1
  items.insert({1,0}, modelX); // Insert a row at index 0 in section 1 containing the UI corresponding to modelX
- item.udpate({0,0}, modelY); // Update row at index 0 in section 0 using modelY
+ item.update({0,0}, modelY); // Update row at index 0 in section 0 using modelY
  [_dataSource enqueueChangeset:{sections, items} constrainedSize:{{0,0},{50,50}}];
  
  @warning In a batch update:

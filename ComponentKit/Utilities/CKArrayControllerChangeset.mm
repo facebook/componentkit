@@ -465,7 +465,7 @@ NS_INLINE NSString *changeTypeDescriptionString(CKArrayControllerChangeType type
   case CKArrayControllerChangeTypeInsert:
     return @"insert";
   case CKArrayControllerChangeTypeUpdate:
-    return @"udpate";
+    return @"update";
   case CKArrayControllerChangeTypeMove:
     return @"move";
   case CKArrayControllerChangeTypeUnknown:
