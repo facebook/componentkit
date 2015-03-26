@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>CKNetworkImageDownloading Protocol Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">ComponentKit </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Facebook</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/cancelImageDownload:">- cancelImageDownload:</option>
+		
+		<option value="//api/name/downloadImageWithURL:scenePath:caller:callbackQueue:downloadProgressBlock:completion:">- downloadImageWithURL:scenePath:caller:callbackQueue:downloadProgressBlock:completion:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">CKNetworkImageDownloading Protocol Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Conforms to</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>CKNetworkImageDownloading.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>Downloads images for a network image component.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/downloadImageWithURL:scenePath:caller:callbackQueue:downloadProgressBlock:completion:" title="downloadImageWithURL:scenePath:caller:callbackQueue:downloadProgressBlock:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/downloadImageWithURL:scenePath:caller:callbackQueue:downloadProgressBlock:completion:">&ndash;&nbsp;downloadImageWithURL:scenePath:caller:callbackQueue:downloadProgressBlock:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Downloads an image with the given URL.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (id)downloadImageWithURL:(NSURL *)<em>URL</em> scenePath:(id)<em>scenePath</em> caller:(id)<em>caller</em> callbackQueue:(dispatch_queue_t)<em>callbackQueue</em> downloadProgressBlock:(void ( ^ ) ( CGFloat progress ))<em>downloadProgressBlock</em> completion:(void ( ^ ) ( CGImageRef image , NSError *error ))<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>URL</code></th>
+						<td><p>The URL of the image to download.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>scenePath</code></th>
+						<td><p>Opaque context for where this is from.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>caller</code></th>
+						<td><p>The object that initiated the request.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>callbackQueue</code></th>
+						<td><p>The queue to call <code>downloadProgressBlock</code> and <code>completion</code> on. If this value is nil, both blocks will be invoked on the main-queue.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>downloadProgressBlock</code></th>
+						<td><p>The block to be invoked when the download of <code>URL</code> progresses.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>The block to be invoked when the download has completed, or has failed.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>An error describing why the download of <code>URL</code> failed, if the download failed; nil otherwise.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>image</code></th>
+						<td><p>The image that was downloaded, if the image could be successfully downloaded; nil otherwise.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>progress</code></th>
+						<td><p>The progress of the download, in the range of (0.0, 1.0), inclusive.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An opaque identifier to be used in canceling the download, via <code>cancelImageDownload:</code>. You must retain the identifier if you wish to use it later.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>If <code>URL</code> is nil, <code>completion</code> will be invoked immediately with a nil image and an error describing why the download failed.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKNetworkImageDownloading.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/cancelImageDownload:" title="cancelImageDownload:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/cancelImageDownload:">&ndash;&nbsp;cancelImageDownload:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Cancels an image download.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)cancelImageDownload:(id)<em>download</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>download</code></th>
+						<td><p>The opaque download identifier object returned from <code>downloadImageWithURL:scenePath:caller:callbackQueue:downloadProgressBlock:completion:</code>.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>This method has no effect if <code>download</code> is nil.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKNetworkImageDownloading.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-03-26</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
