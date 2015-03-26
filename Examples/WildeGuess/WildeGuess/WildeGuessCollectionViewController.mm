@@ -64,7 +64,8 @@
 
   QuoteContext *context = [[QuoteContext alloc] initWithImageNames:imageNames];
   _dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
-                                               supplementaryViewDataSource:nil                                                         componentProvider:[self class]
+                                               supplementaryViewDataSource:nil                                                         
+                                                         componentProvider:[self class]
                                                                    context:context
                                                  cellConfigurationFunction:nil];
   // Insert the initial section
