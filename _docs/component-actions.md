@@ -10,7 +10,7 @@ Often child components must communicate back to their parents. For example, a bu
 
 `CKComponentAction` is just an alias for `SEL` — basically, a method name.
 
-The `CKComponentActionSend` function takes an action, a sender, and an optional opaque context object. It follows the [component responder chain](controls-and-the-responder-chain.html) until it finds a component (or component controller) that responds to the given selector, then sends a message with the sender and context as parameters.
+The `CKComponentActionSend` function takes an action, a sender, and an optional opaque context object. It follows the [component responder chain](responder-chain.html) until it finds a component (or component controller) that responds to the given selector, then sends a message with the sender and context as parameters.
 
 (The only reason for the alias is to document that you expect the `SEL` to be called via `CKComponentActionSend`.)
 
