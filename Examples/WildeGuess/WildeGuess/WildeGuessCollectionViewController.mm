@@ -64,14 +64,15 @@
 
   QuoteContext *context = [[QuoteContext alloc] initWithImageNames:imageNames];
   _dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
-                                               supplementaryViewDataSource:nil                                                         componentProvider:[self class]
+                                               supplementaryViewDataSource:nil                                                         
+                                                         componentProvider:[self class]
                                                                    context:context
                                                  cellConfigurationFunction:nil];
   // Insert the initial section
   CKArrayControllerSections sections;
   sections.insert(0);
   [_dataSource enqueueChangeset:{sections, {}} constrainedSize:{}];
-  [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:6]];
+  [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:4]];
 }
 
 - (void)_enqueuePage:(QuotesPage *)quotesPage
@@ -111,7 +112,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
   if (scrolledToBottomWithBuffer(scrollView.contentOffset, scrollView.contentSize, scrollView.contentInset, scrollView.bounds)) {
-    [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:5]];
+    [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:8]];
   }
 }
 
