@@ -66,7 +66,7 @@ namespace CK {
         CKTextKitAttributes attributes;
         CGSize constrainedSize;
 
-        const Key(CKTextKitAttributes a, CGSize cs);
+        Key(CKTextKitAttributes a, CGSize cs);
 
         size_t hash;
 
