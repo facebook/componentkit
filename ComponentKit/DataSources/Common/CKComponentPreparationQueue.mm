@@ -164,6 +164,11 @@
   return self;
 }
 
+- (instancetype)init 
+{
+  CK_NOT_DESIGNATED_INITIALIZER();
+}
+
 #pragma mark - Public
 
 - (void)enqueueBatch:(const CKComponentPreparationInputBatch &)batch
