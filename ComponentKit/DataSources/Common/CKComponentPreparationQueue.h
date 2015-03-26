@@ -92,6 +92,9 @@ typedef void (^CKComponentPreparationQueueCallback)(const CKArrayControllerSecti
  @param queueWidth Must be greater than 0, this is the maximum number of items computed concurrently in a batch
  */
 - (instancetype)initWithQueueWidth:(NSInteger)queueWidth;
+
+- (instancetype)init CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
+
 /**
  @param batch The batch of input items to process.
  @param block Called with the output items. The block is invoked on the main queue and the order of items in the output array is undefined.

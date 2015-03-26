@@ -164,6 +164,11 @@
   return self;
 }
 
+- (instancetype)init 
+{
+  CK_NOT_DESIGNATED_INITIALIZER();
+}
+
 #pragma mark - Public
 
 - (void)enqueueBatch:(const CKComponentPreparationInputBatch &)batch
@@ -214,7 +219,9 @@
             didFinishPreparingBatchOfSize:job->_batch.items.size()
                                   batchID:(NSUInteger)job->_batch.ID];
     NSArray *outputBatchCopy = [outputBatch copy];
-    job->_block(job->_batch.sections, job->_batch.ID, outputBatchCopy, job->_batch.isContiguousTailInsertion);
+    if (job->_block) {
+      job->_block(job->_batch.sections, job->_batch.ID, outputBatchCopy, job->_batch.isContiguousTailInsertion);
+    }
   });
 }
 
