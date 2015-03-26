@@ -27,7 +27,7 @@
 #import "CKComponentPreparationQueueListener.h"
 
 static const NSInteger kPreparationQueueDefaultWidth = 10;
-typedef CKComponentLifecycleManager *(^CKComponentLifecycleManagerFactory)(void);
+typedef CKComponentLifecycleManager *(^CKComponentLifecycleManagerFactory)(id aContext);
 
 @interface CKComponentDataSource () <
 CKComponentLifecycleManagerDelegate,
@@ -38,6 +38,7 @@ CKComponentLifecycleManagerAsynchronousUpdateHandler
 @implementation CKComponentDataSource
 {
   id<CKComponentDeciding> _decider;
+  id _context;
 
   /*
    Please see the discussion on why we need two arrays
@@ -63,6 +64,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
 
 - (instancetype)initWithLifecycleManagerFactory:(CKComponentLifecycleManagerFactory)lifecycleManagerFactory
                                         decider:(id<CKComponentDeciding>)decider
+                                        context:(id)context
                            inputArrayController:(CKSectionedArrayController *)inputArrayController
                           outputArrayController:(CKSectionedArrayController *)outputArrayController
                                preparationQueue:(CKComponentPreparationQueue *)preparationQueue
@@ -71,6 +73,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
     // Injected dependencies.
     _lifecycleManagerFactory = lifecycleManagerFactory;
     _decider = decider;
+    _context = context;
 
     // Internal dependencies.
     _inputArrayController = inputArrayController;
@@ -95,11 +98,12 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
                                   decider:(id<CKComponentDeciding>)decider
                     preparationQueueWidth:(NSInteger)preparationQueueWidth
 {
-  CKComponentLifecycleManagerFactory lifecycleManagerFactory = ^{
-    return [[CKComponentLifecycleManager alloc] initWithComponentProvider:componentProvider context:context];
+  CKComponentLifecycleManagerFactory lifecycleManagerFactory = ^(id aContext){
+    return [[CKComponentLifecycleManager alloc] initWithComponentProvider:componentProvider context:aContext];
   };
   return [self initWithLifecycleManagerFactory:lifecycleManagerFactory
                                        decider:decider
+                                       context:context
                           inputArrayController:[[CKSectionedArrayController alloc] init]
                          outputArrayController:[[CKSectionedArrayController alloc] init]
                               preparationQueue:[[CKComponentPreparationQueue alloc] initWithQueueWidth:preparationQueueWidth]];
@@ -178,6 +182,14 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
   [self _enqueueChangeset:changeset];
 }
 
+- (void)updateContextAndEnqeueReload:(id)newContext
+{
+  if (_context != newContext) {
+    _context = newContext;
+    [self enqueueReload];
+  }
+}
+
 /**
  External client is either CKComponentTableViewDataSource or the owner of the table view data source.
  They can't insert an CKComponentDataSourceInput b/c they don't have access to existing lifecycle managers that are in
@@ -192,7 +204,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
     CKComponentLifecycleManager *lifecycleManager = nil;
     NSString *UUID = nil;
     if (type == CKArrayControllerChangeTypeInsert) {
-      lifecycleManager = _lifecycleManagerFactory();
+      lifecycleManager = _lifecycleManagerFactory(_context);
       lifecycleManager.asynchronousUpdateHandler = self;
       lifecycleManager.delegate = self;
       UUID = [[NSUUID UUID] UUIDString];
@@ -200,6 +212,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
     if (type == CKArrayControllerChangeTypeUpdate) {
       CKComponentDataSourceInputItem *oldInput = [_inputArrayController objectAtIndexPath:indexPath.toNSIndexPath()];
       lifecycleManager = [oldInput lifecycleManager];
+      [lifecycleManager updateContext:_context];
       UUID = [oldInput UUID];
     }
     return [[CKComponentDataSourceInputItem alloc] initWithLifecycleManager:lifecycleManager

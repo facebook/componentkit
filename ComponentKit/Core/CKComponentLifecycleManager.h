@@ -60,6 +60,13 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
 - (void)updateWithState:(const CKComponentLifecycleManagerState &)state;
 
 /**
+ Updates the context to the new one. 
+ 
+ Component provider will receive new context value next time the component tree will be built.
+ */
+- (void)updateContext:(id)newContext;
+
+/**
  Attaches the manager to the given view. This will display the component in the view and update the view whenever the
  component is updated due to a model or state change.
 

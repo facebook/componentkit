@@ -71,6 +71,11 @@ typedef void(*CKCellConfigurationFunction)(UICollectionViewCell *cell, NSIndexPa
          constrainedSize:(const CKSizeRange &)constrainedSize;
 
 /**
+ Updates context to the new value and enqueues update changeset in order to rebuild component tree.
+ */
+- (void)updateContextAndEnqeueReload:(id)newContext;
+
+/**
  @return The model associated with a certain index path in the collectionView.
  
  As stated above components are generated asynchronously and on a backgorund thread. This means that a changeset is enqueued

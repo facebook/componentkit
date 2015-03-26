@@ -128,6 +128,11 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   _state = state;
 }
 
+- (void)updateContext:(id)newContext
+{
+  _context = newContext;
+}
+
 #pragma mark - Mount/Unmount
 
 - (void)_mountLayout
