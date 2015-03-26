@@ -1,5 +1,5 @@
 ---
-title: Never Subclass Components
+title: Never Subclass Other Components
 layout: docs
 permalink: /docs/never-subclass-components.html
 ---
