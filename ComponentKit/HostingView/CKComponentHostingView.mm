@@ -18,13 +18,14 @@
 #import "CKComponentHostingViewDelegate.h"
 #import "CKComponentLifecycleManager.h"
 #import "CKComponentLifecycleManager_Private.h"
+#import "CKComponentRootView.h"
 #import "CKComponentSizeRangeProviding.h"
 
 @interface CKComponentHostingView () <CKComponentLifecycleManagerDelegate>
 {
   CKComponentLifecycleManager *_lifecycleManager;
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
-  UIView *_containerView;
+  CKComponentRootView *_containerView;
   BOOL _isUpdating;
 }
 @end
@@ -49,7 +50,7 @@
     _lifecycleManager = manager;
     _lifecycleManager.delegate = self;
 
-    _containerView = [[UIView alloc] initWithFrame:CGRectZero];
+    _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
   }
   return self;

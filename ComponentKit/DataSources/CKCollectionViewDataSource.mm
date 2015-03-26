@@ -17,11 +17,13 @@
 #import <ComponentKit/CKMacros.h>
 
 #import "CKComponent.h"
+#import "CKComponentBoundsAnimation+UICollectionView.h"
 #import "CKComponentConstantDecider.h"
 #import "CKComponentDataSource.h"
 #import "CKComponentDataSourceOutputItem.h"
+#import "CKCollectionViewDataSourceCell.h"
 #import "CKComponentLifecycleManager.h"
-#import "CKComponentBoundsAnimation+UICollectionView.h"
+#import "CKComponentRootView.h"
 
 using namespace CK::ArrayController;
 
@@ -78,7 +80,7 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
     _componentDataSource.delegate = self;
     _collectionView = collectionView;
     _collectionView.dataSource = self;
-    [_collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:kReuseIdentifier];
+    [_collectionView registerClass:[CKCollectionViewDataSourceCell class] forCellWithReuseIdentifier:kReuseIdentifier];
     _changesetRegulator = [[CKCollectionViewDataSourceChangesetRegulator alloc] initWithCollectionView:collectionView];
   }
   return self;
@@ -113,12 +115,12 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
   CKComponentDataSourceOutputItem *outputItem = [_componentDataSource objectAtIndexPath:indexPath];
-  UICollectionViewCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:kReuseIdentifier forIndexPath:indexPath];
+  CKCollectionViewDataSourceCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:kReuseIdentifier forIndexPath:indexPath];
   if (_cellConfigurationFunction) {
     _cellConfigurationFunction(cell, indexPath, [outputItem model]);
   }
   CKComponentLifecycleManager *lifecycleManager = [outputItem lifecycleManager];
-  [lifecycleManager attachToView:[cell contentView]];
+  [lifecycleManager attachToView:[cell rootView]];
   return cell;
 }
 
