@@ -235,7 +235,7 @@
     if (changeType == CKArrayControllerChangeTypeInsert ||
         changeType == CKArrayControllerChangeTypeUpdate) {
       
-      // Grab the lifecyle manager and use it to generate an layout the component tree
+      // Grab the lifecycle manager and use it to generate an layout the component tree
       CKComponentLifecycleManager *lifecycleManager = [inputItem lifecycleManager];
       CKComponentLifecycleManagerState state = [lifecycleManager prepareForUpdateWithModel:[inputItem replacementModel]
                                                                            constrainedSize:[inputItem constrainedSize]];

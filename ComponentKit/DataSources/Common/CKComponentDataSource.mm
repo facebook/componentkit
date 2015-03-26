@@ -411,7 +411,7 @@ CKArrayControllerInputItems::Enumerator itemEnumerator =
   std::pair<id<NSObject>, NSIndexPath *> itemToUpdate = [_inputArrayController firstObjectPassingTest:^BOOL(CKComponentDataSourceInputItem *object, NSIndexPath *indexPath, BOOL *stop) {
     return object.lifecycleManager == manager;
   }];
-  // There is a possibility that when we enqueue the udpate, a deletion has already
+  // There is a possibility that when we enqueue the update, a deletion has already
   // been enqueued for the same item, in this case we won't find a corresponding
   // item in the input array.
   if (itemToUpdate.first && itemToUpdate.second ) {
