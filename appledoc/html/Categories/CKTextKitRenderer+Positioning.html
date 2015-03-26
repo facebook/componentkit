@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>CKTextKitRenderer(Positioning) Category Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">ComponentKit </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Facebook</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/enumerateTextIndexesAtPosition:usingBlock:">- enumerateTextIndexesAtPosition:usingBlock:</option>
+		
+		<option value="//api/name/frameForTextRange:">- frameForTextRange:</option>
+		
+		<option value="//api/name/nearestTextIndexAtPosition:">- nearestTextIndexAtPosition:</option>
+		
+		<option value="//api/name/rectsForTextRange:measureOption:">- rectsForTextRange:measureOption:</option>
+		
+		<option value="//api/name/trailingRect">- trailingRect</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">CKTextKitRenderer(Positioning) Category Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Declared in</th>
+	<td>CKTextKitRenderer+Positioning.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/frameForTextRange:" title="frameForTextRange:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/frameForTextRange:">&ndash;&nbsp;frameForTextRange:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the bounding rect for the given character range.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (CGRect)frameForTextRange:(NSRange)<em>textRange</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>textRange</code></th>
+						<td><p>The character range for which the bounding rect will be computed.  Should be within the range of the
+attributedString of this renderer.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>In the external, shadowed coordinate space.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKTextKitRenderer+Positioning.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/rectsForTextRange:measureOption:" title="rectsForTextRange:measureOption:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/rectsForTextRange:measureOption:">&ndash;&nbsp;rectsForTextRange:measureOption:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns an array of rects representing the lines in the given character range</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSArray *)rectsForTextRange:(NSRange)<em>textRange</em> measureOption:(CKTextKitRendererMeasureOption)<em>measureOption</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>textRange</code></th>
+						<td><p>The character range for which the rects will be computed. Should be within the range of the
+attributedString of this renderer.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>measureOption</code></th>
+						<td><p>The measure option to use for construction of the rects. See CKTextKitRendererMeasureOption
+docs for usage.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>This method is useful for providing highlighting text.  Returned rects are in the coordinate space of the
+renderer.</p>
+
+<p>Triggers initialization of textkit components, truncation, and sizing.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKTextKitRenderer+Positioning.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/enumerateTextIndexesAtPosition:usingBlock:" title="enumerateTextIndexesAtPosition:usingBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/enumerateTextIndexesAtPosition:usingBlock:">&ndash;&nbsp;enumerateTextIndexesAtPosition:usingBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Enumerate the text character indexes at a position within the coordinate space of the renderer.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)enumerateTextIndexesAtPosition:(CGPoint)<em>position</em> usingBlock:(ck_text_component_index_block_t)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>position</code></th>
+						<td><p>The point in the shadowed coordinate space at which text indexes will be enumerated.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>The block that will be executed for each index identified that may correspond to the given position.  The
+block is given the character index that corresponds to the glyph at each index in question, as well as the bounding
+rect for that glyph.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Glyph location based on a touch point is not an exact science because user touches are not well-represented
+by a simple point, especially in the context of link-heavy text.  So we have this method to make it a bit easier.  This
+method checks a grid of candidate positions around the touch point you give it, and computes the bounding rect of the
+glyph corresponding to the character index given.</p>
+
+<p>The bounding rect of the glyph can be used to identify the best glyph index that corresponds to your touch.  For
+instance, comparing centroidal distance from the glyph bounding rect to the touch center is useful for identifying
+which link a user actually intended to select.</p>
+
+<p>Triggers initialization of textkit components, truncation, and sizing.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKTextKitRenderer+Positioning.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/nearestTextIndexAtPosition:" title="nearestTextIndexAtPosition:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/nearestTextIndexAtPosition:">&ndash;&nbsp;nearestTextIndexAtPosition:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the single text index whose glyph&rsquo;s centroid is closest to the given position.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSUInteger)nearestTextIndexAtPosition:(CGPoint)<em>position</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>position</code></th>
+						<td><p>The point in the shadowed coordinate space that should be checked.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>This will use the grid enumeration function above, <code>enumerateTextIndexesAtPosition...</code>, in order to find
+the closest glyph, so it is possible that a glyph could be missed, but ultimately unlikely.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKTextKitRenderer+Positioning.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/trailingRect" title="trailingRect"></a>
+	<h3 class="method-title"><code><a href="#//api/name/trailingRect">&ndash;&nbsp;trailingRect</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the trailing rect unused by the renderer in the last rendered line.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (CGRect)trailingRect</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>In the external shadowed coordinate space.</p>
+
+<p>Triggers initialization of textkit components, truncation, and sizing.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKTextKitRenderer+Positioning.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-03-26</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
