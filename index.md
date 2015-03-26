@@ -15,4 +15,4 @@ The framework was built to power Facebook's News Feed and is now used throughout
 
 Sounds good? [Get started](/docs/getting-started.html) or read more about the [philosophy of ComponentKit](/docs/philosophy.html).
 
-(Don't confuse ComponentKit with [React Native](https://code.facebook.com/videos/786462671439502/react-js-conf-2015-keynote-introducing-react-native-/), a framework for building apps in Javascript.)
+(Don't confuse ComponentKit with [React Native](https://code.facebook.com/videos/786462671439502/react-js-conf-2015-keynote-introducing-react-native-/), a framework for building apps in JavaScript.)
