@@ -3,4 +3,4 @@ language: objective-c
 before_install:
   - gem install cocoapods
 
-script: ./build.sh
+script: ./build.sh ci
