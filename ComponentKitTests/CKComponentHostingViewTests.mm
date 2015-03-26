@@ -80,8 +80,9 @@
 - (CKComponentHostingView *)newHostingViewWithLifecycleManager:(CKComponentLifecycleManager *)manager
 {
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
-  CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithLifecycleManager:manager sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight] model:model];
+  CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithLifecycleManager:manager sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
   view.bounds = CGRectMake(0, 0, 100, 100);
+  view.model = model;
   [view layoutIfNeeded];
   return view;
 }
@@ -148,7 +149,8 @@
 {
   CKComponentLifecycleManager *manager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
-  CKComponentHostingView *hostingView = [[CKComponentHostingView alloc] initWithLifecycleManager:manager sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight] model:model];
+  CKComponentHostingView *hostingView = [[CKComponentHostingView alloc] initWithLifecycleManager:manager sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
+  hostingView.model = model;
   [hostingView layoutIfNeeded];
 
   XCTAssertFalse([manager isAttachedToView], @"Expect lifecycle manager to not be attached to the view when the bounds rect is empty.");
