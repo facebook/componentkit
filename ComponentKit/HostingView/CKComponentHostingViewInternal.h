@@ -20,12 +20,6 @@
 @property (nonatomic, readonly) CKComponentLifecycleManager *lifecycleManager;
 
 - (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)manager
-                       sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                                   model:(id<NSObject>)model
-                           containerView:(UIView *)containerView;
-
-- (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)manager
-                       sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                                   model:(id<NSObject>)model;
+                       sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
 
 @end

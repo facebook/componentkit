@@ -40,32 +40,19 @@
 
 - (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)manager
                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                                   model:(id<NSObject>)model
-                           containerView:(UIView *)containerView
 {
   if (self = [super initWithFrame:CGRectZero]) {
     // Injected dependencies
     _sizeRangeProvider = sizeRangeProvider;
-    _model = model;
 
     // Internal dependencies
     _lifecycleManager = manager;
     _lifecycleManager.delegate = self;
 
-    _containerView = containerView;
+    _containerView = [[UIView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
   }
   return self;
-}
-
-- (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)manager
-                       sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                                   model:(id<NSObject>)model
-{
-  return [self initWithLifecycleManager:manager
-                      sizeRangeProvider:sizeRangeProvider
-                                  model:model
-                          containerView:[[UIView alloc] initWithFrame:CGRectZero]];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -73,7 +60,7 @@
                                   context:(id<NSObject>)context
 {
   CKComponentLifecycleManager *manager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:componentProvider context:context sizeRangeProvider:sizeRangeProvider];
-  return [self initWithLifecycleManager:manager sizeRangeProvider:sizeRangeProvider model:nil];
+  return [self initWithLifecycleManager:manager sizeRangeProvider:sizeRangeProvider];
 }
 
 - (void)dealloc
