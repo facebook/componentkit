@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>CKAsyncTransaction Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">ComponentKit </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Facebook</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/callbackQueue">callbackQueue</option>
+		
+		<option value="//api/name/completionBlock">completionBlock</option>
+		
+		<option value="//api/name/state">state</option>
+		
+	</optgroup>
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/addAsyncOperationWithBlock:queue:completion:">- addAsyncOperationWithBlock:queue:completion:</option>
+		
+		<option value="//api/name/addCompletionBlock:">- addCompletionBlock:</option>
+		
+		<option value="//api/name/addOperationWithBlock:queue:completion:">- addOperationWithBlock:queue:completion:</option>
+		
+		<option value="//api/name/cancel">- cancel</option>
+		
+		<option value="//api/name/commit">- commit</option>
+		
+		<option value="//api/name/initWithCallbackQueue:completionBlock:">- initWithCallbackQueue:completionBlock:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">CKAsyncTransaction Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>CKAsyncTransaction.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>@summary CKAsyncTransaction provides lightweight transaction semantics for asynchronous operations.</p>
+
+<p>@desc CKAsyncTransaction provides the following properties:</p>
+
+<ul>
+<li>Transactions group an arbitrary number of operations, each consisting of an execution block and a completion block.</li>
+<li>The execution block returns a single object that will be passed to the completion block.</li>
+<li>Execution blocks added to a transaction will run in parallel on the global background dispatch queues;
+ the completion blocks are dispatched to the callback queue.</li>
+<li>Every operation completion block is guaranteed to execute, regardless of cancelation.
+ However, execution blocks may be skipped if the transaction is canceled.</li>
+<li>Operation completion blocks are always executed in the order they were added to the transaction, assuming the
+ callback queue is serial of course.</li>
+</ul>
+
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/initWithCallbackQueue:completionBlock:" title="initWithCallbackQueue:completionBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithCallbackQueue:completionBlock:">&ndash;&nbsp;initWithCallbackQueue:completionBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>@summary Initialize a transaction that can start collecting async operations.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (id)initWithCallbackQueue:(dispatch_queue_t)<em>callbackQueue</em> completionBlock:(ck_async_transaction_completion_block_t)<em>completionBlock</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>callbackQueue</code></th>
+						<td><p>The dispatch queue that the completion blocks will be called on.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completionBlock</code></th>
+						<td><p>A block that is called when the transaction is completed. May be NULL.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAsyncTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/callbackQueue" title="callbackQueue"></a>
+	<h3 class="method-title"><code><a href="#//api/name/callbackQueue">&nbsp;&nbsp;callbackQueue</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The dispatch queue that the completion blocks will be called on.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, retain, readonly) dispatch_queue_t callbackQueue</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAsyncTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/completionBlock" title="completionBlock"></a>
+	<h3 class="method-title"><code><a href="#//api/name/completionBlock">&nbsp;&nbsp;completionBlock</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>A block that is called when the transaction is completed.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, copy, readonly) ck_async_transaction_completion_block_t completionBlock</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAsyncTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/state" title="state"></a>
+	<h3 class="method-title"><code><a href="#//api/name/state">&nbsp;&nbsp;state</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The state of the transaction.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) CKAsyncTransactionState state</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection see-also-section">
+				<h4 class="method-subtitle">See Also</h4>
+				<ul>
+					
+					<li><code><p><a href="../Constants/CKAsyncTransactionState.html">CKAsyncTransactionState</a></p></code></li>
+					
+				</ul>
+			</div>
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAsyncTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addOperationWithBlock:queue:completion:" title="addOperationWithBlock:queue:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addOperationWithBlock:queue:completion:">&ndash;&nbsp;addOperationWithBlock:queue:completion:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>@summary Adds a synchronous operation to the transaction.  The execution block will be executed immediately.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addOperationWithBlock:(ck_async_transaction_operation_block_t)<em>block</em> queue:(dispatch_queue_t)<em>queue</em> completion:(ck_async_transaction_operation_completion_block_t)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>The execution block that will be executed on a background queue.  This is where the expensive work goes.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>queue</code></th>
+						<td><p>The dispatch queue on which to execute the block.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>The completion block that will be executed with the output of the execution block when all of the
+operations in the transaction are completed. Executed and released on callbackQueue.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>@desc The block will be executed on the specified queue and is expected to complete synchronously.  The async
+transaction will wait for all operations to execute on their appropriate queues, so the blocks may still be executing
+async if they are running on a concurrent queue, even though the work for this block is synchronous.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAsyncTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addAsyncOperationWithBlock:queue:completion:" title="addAsyncOperationWithBlock:queue:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addAsyncOperationWithBlock:queue:completion:">&ndash;&nbsp;addAsyncOperationWithBlock:queue:completion:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>@summary Adds an async operation to the transaction.  The execution block will be executed immediately.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addAsyncOperationWithBlock:(ck_async_transaction_async_operation_block_t)<em>block</em> queue:(dispatch_queue_t)<em>queue</em> completion:(ck_async_transaction_operation_completion_block_t)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>The execution block that will be executed on a background queue.  This is where the expensive work goes.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>queue</code></th>
+						<td><p>The dispatch queue on which to execute the block.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>The completion block that will be executed with the output of the execution block when all of the
+operations in the transaction are completed. Executed and released on callbackQueue.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>@desc The block will be executed on the specified queue and is expected to complete asynchronously.  The block will be
+supplied with a completion block that can be executed once its async operation is completed.  This is useful for
+network downloads and other operations that have an async API.</p>
+
+<p>WARNING: Consumers MUST call the completeOperationBlock passed into the work block, or objects will be leaked!</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAsyncTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addCompletionBlock:" title="addCompletionBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addCompletionBlock:">&ndash;&nbsp;addCompletionBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>@summary Adds a block to run on the completion of the async transaction.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addCompletionBlock:(ck_async_transaction_completion_block_t)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>queue</code></th>
+						<td><p>The dispatch queue on which to execute the block.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>The completion block that will be executed with the output of the execution block when all of the
+operations in the transaction are completed. Executed and released on callbackQueue.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAsyncTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/cancel" title="cancel"></a>
+	<h3 class="method-title"><code><a href="#//api/name/cancel">&ndash;&nbsp;cancel</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>@summary Cancels all operations in the transaction.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)cancel</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>@desc You can only cancel a commmitted transaction.</p>
+
+<p>All completion blocks are always called, regardless of cancelation. Execution blocks may be skipped if canceled.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAsyncTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/commit" title="commit"></a>
+	<h3 class="method-title"><code><a href="#//api/name/commit">&ndash;&nbsp;commit</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>@summary Marks the end of adding operations to the transaction.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)commit</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>@desc You MUST commit every transaction you create. It is an error to create a transaction that is never committed.</p>
+
+<p>When all of the operations that have been added have completed the transaction will execute their completion
+blocks.</p>
+
+<p>If no operations were added to this transaction, invoking commit will execute the transaction&rsquo;s completion block synchronously.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAsyncTransaction.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-03-26</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

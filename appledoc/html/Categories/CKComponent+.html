@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>CKComponent() Category Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">ComponentKit </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Facebook</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/rootComponentMountedView">rootComponentMountedView</option>
+		
+		<option value="//api/name/scopeFrameToken">scopeFrameToken</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Class Methods">
+		
+		<option value="//api/name/initialState">+ initialState</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/animationsFromPreviousComponent:">- animationsFromPreviousComponent:</option>
+		
+		<option value="//api/name/boundsAnimationFromPreviousComponent:">- boundsAnimationFromPreviousComponent:</option>
+		
+		<option value="//api/name/childrenDidMount">- childrenDidMount</option>
+		
+		<option value="//api/name/computeLayoutThatFits:">- computeLayoutThatFits:</option>
+		
+		<option value="//api/name/computeLayoutThatFits:restrictedToSize:relativeToParentSize:">- computeLayoutThatFits:restrictedToSize:relativeToParentSize:</option>
+		
+		<option value="//api/name/controller">- controller</option>
+		
+		<option value="//api/name/layoutThatFits:parentSize:">- layoutThatFits:parentSize:</option>
+		
+		<option value="//api/name/mountInContext:size:children:supercomponent:">- mountInContext:size:children:supercomponent:</option>
+		
+		<option value="//api/name/targetForAction:withSender:">- targetForAction:withSender:</option>
+		
+		<option value="//api/name/unmount">- unmount</option>
+		
+		<option value="//api/name/updateState:">- updateState:</option>
+		
+		<option value="//api/name/updateStateWithExpensiveReflow:">- updateStateWithExpensiveReflow:</option>
+		
+		<option value="//api/name/viewForAnimation">- viewForAnimation</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">CKComponent() Category Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Declared in</th>
+	<td>CKComponentInternal.h<br />CKComponentSubclass.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>A constant that indicates that the parent&rsquo;s size is not yet determined in either dimension.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						<h2 class="task-title">Other Methods</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/mountInContext:size:children:supercomponent:" title="mountInContext:size:children:supercomponent:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/mountInContext:size:children:supercomponent:">&ndash;&nbsp;mountInContext:size:children:supercomponent:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Mounts the component in the given context:
+- Stores references to the supercomponent and superview for -nextResponder and -viewConfiguration.
+- Creates or updates a controller for this component, if one should exist.
+- If this component has a view, creates or recycles a view by fetching one from the given MountContext, and:
+   - Unmounts the view&rsquo;s previous component (if any).
+   - Applies attributes to the view.
+   - Stores a reference to the view in _mountedView (for -viewContext, transient view state, and -unmount).
+   - Stores a reference back to this component in view.ck_component. (This sets up a retain cycle which must be torn
+     down in -unmount.)</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (CK : : Component : : MountResult)mountInContext:(const CK : : Component : : MountContext &amp;)<em>context</em> size:(const CGSize)<em>size</em> children:(std : : shared_ptr&lt;conststd::vector&lt;CKComponentLayoutChild&gt; &gt;)<em>children</em> supercomponent:(CKComponent *)<em>supercomponent</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>context</code></th>
+						<td><p>The component&rsquo;s content should be positioned within the given view at the given position.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>size</code></th>
+						<td><p>The size for this component</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>children</code></th>
+						<td><p>The positioned children for this component. Normally this parameter is ignored.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>supercomponent</code></th>
+						<td><p>This component&rsquo;s parent component</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An updated mount context. In most cases, this is just be the passed-in context. If a view was created, this is
+used to specify that subcomponents should be mounted inside the view.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Override this if your component wants to perform a custom mounting action, but this should be very rare!</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/unmount" title="unmount"></a>
+	<h3 class="method-title"><code><a href="#//api/name/unmount">&ndash;&nbsp;unmount</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Unmounts the component:
+- Clears the references to supercomponent and superview.
+- If the component has a <em>mountedView:
+   - Calls the unapplicator for any attributes that have one.
+   - Clears the view&rsquo;s reference back to this component in ck_component.
+   - Clears </em>mountedView.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)unmount</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/childrenDidMount" title="childrenDidMount"></a>
+	<h3 class="method-title"><code><a href="#//api/name/childrenDidMount">&ndash;&nbsp;childrenDidMount</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called by the CKComponentLifecycleManager when the component and all its children have been mounted.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)childrenDidMount</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/viewForAnimation" title="viewForAnimation"></a>
+	<h3 class="method-title"><code><a href="#//api/name/viewForAnimation">&ndash;&nbsp;viewForAnimation</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called by the animation machinery. Do not access this externally.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (UIView *)viewForAnimation</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/updateStateWithExpensiveReflow:" title="updateStateWithExpensiveReflow:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/updateStateWithExpensiveReflow:">&ndash;&nbsp;updateStateWithExpensiveReflow:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called in specific cases for expensive state updates. Do not access this externally.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)updateStateWithExpensiveReflow:(id ( ^ ) ( id ))<em>updateBlock</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/rootComponentMountedView" title="rootComponentMountedView"></a>
+	<h3 class="method-title"><code><a href="#//api/name/rootComponentMountedView">&nbsp;&nbsp;rootComponentMountedView</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Used by CKComponentLifecycleManager to get the root component in the responder chain; don&rsquo;t touch this.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, weak) UIView *rootComponentMountedView</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/scopeFrameToken" title="scopeFrameToken"></a>
+	<h3 class="method-title"><code><a href="#//api/name/scopeFrameToken">&nbsp;&nbsp;scopeFrameToken</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>For internal use only; don&rsquo;t touch this.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) id scopeFrameToken</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						
+						<h2 class="task-title">Other Methods</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/initialState" title="initialState"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initialState">+&nbsp;initialState</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called to get the component&rsquo;s initial state; the default implementation returns nil.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (id)initialState</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/layoutThatFits:parentSize:" title="layoutThatFits:parentSize:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/layoutThatFits:parentSize:">&ndash;&nbsp;layoutThatFits:parentSize:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Call this on children components to compute their layouts within your implementation of -computeLayoutThatFits:.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (CKComponentLayout)layoutThatFits:(CKSizeRange)<em>constrainedSize</em> parentSize:(CGSize)<em>parentSize</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>constrainedSize</code></th>
+						<td><p>Specifies a minimum and maximum size. The receiver must choose a size that is in this range.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>parentSize</code></th>
+						<td><p>The parent component&rsquo;s size. If the parent component does not have a final size in a given dimension,
+                   then it should be passed as kCKComponentParentDimensionUndefined (for example, if the parent&rsquo;s width
+                   depends on the child&rsquo;s size).</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>A struct defining the layout of the receiver and its children.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<div class="warning"><p><strong>Warning:</strong> You may not override this method. Override -computeLayoutThatFits: instead.</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/computeLayoutThatFits:" title="computeLayoutThatFits:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/computeLayoutThatFits:">&ndash;&nbsp;computeLayoutThatFits:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Override this method to compute your component&rsquo;s layout.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)<em>constrainedSize</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>constrainedSize</code></th>
+						<td><p>A min and max size. This is computed as described in the description. The CKComponentLayout you
+                        return MUST have a size between these two sizes. This is enforced by assertion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Why do you need to override -computeLayoutThatFits: instead of -layoutThatFits:parentSize:?
+The base implementation of -layoutThatFits:parentSize: does the following for you:
+1. First, it uses the parentSize parameter to resolve the component&rsquo;s size (the one passed into -initWithView:size:).
+2. Then, it intersects the resolved size with the constrainedSize parameter. If the two don&rsquo;t intersect,
+    constrainedSize wins. This allows a component to always override its childrens' sizes when computing its layout.
+    (The analogy for UIView: you might return a certain size from -sizeThatFits:, but a parent view can always override
+    that size and set your frame to any size.)</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/computeLayoutThatFits:restrictedToSize:relativeToParentSize:" title="computeLayoutThatFits:restrictedToSize:relativeToParentSize:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/computeLayoutThatFits:restrictedToSize:relativeToParentSize:">&ndash;&nbsp;computeLayoutThatFits:restrictedToSize:relativeToParentSize:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>CKComponent&rsquo;s implementation of -layoutThatFits:parentSize: calls this method to resolve the component&rsquo;s size
+against parentSize, intersect it with constrainedSize, and call -computeLayoutThatFits: with the result.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)<em>constrainedSize</em> restrictedToSize:(const CKComponentSize &amp;)<em>size</em> relativeToParentSize:(CGSize)<em>parentSize</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>In certain advanced cases, you may want to customize this logic. Overriding this method allows you to receive all
+three parameters and do the computation yourself.</p><div class="warning"><p><strong>Warning:</strong> Overriding this method should be done VERY rarely.</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/updateState:" title="updateState:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/updateState:">&ndash;&nbsp;updateState:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Call this to enqueue a change to the state.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)updateState:(id ( ^ ) ( id ))<em>updateBlock</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>The block takes the current state as a parameter and returns an instance of the new state.
+The state <em>must</em> be immutable since components themselves are. A possible use might be:</p>
+
+<p>[self updateState:^MyState <em>(MyState </em>currentState) {
+   MyMutableState *nextState = [currentState mutableCopy];
+   [nextState setFoo:[nextState bar] * 2];
+   return [nextState copy]; // immutable! :D
+}];</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/targetForAction:withSender:" title="targetForAction:withSender:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/targetForAction:withSender:">&ndash;&nbsp;targetForAction:withSender:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Allows an action to be forwarded to another target. By default, returns the receiver if it implements action,
+and proceeds up the responder chain otherwise.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (id)targetForAction:(SEL)<em>action</em> withSender:(id)<em>sender</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/animationsFromPreviousComponent:" title="animationsFromPreviousComponent:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/animationsFromPreviousComponent:">&ndash;&nbsp;animationsFromPreviousComponent:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Override to return a list of animations from the previous version of the same component.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (std : : vector&lt;CKComponentAnimation&gt;)animationsFromPreviousComponent:(CKComponent *)<em>previousComponent</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<div class="warning"><p><strong>Warning:</strong> If you override this method, your component MUST declare a scope (see CKComponentScope). This is used to
+identify equivalent components between trees.</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/boundsAnimationFromPreviousComponent:" title="boundsAnimationFromPreviousComponent:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/boundsAnimationFromPreviousComponent:">&ndash;&nbsp;boundsAnimationFromPreviousComponent:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Override to return how the change to the bounds of the root component should be animated when updating the hierarchy.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (CKComponentBoundsAnimation)boundsAnimationFromPreviousComponent:(CKComponent *)<em>previousComponent</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<div class="warning"><p><strong>Warning:</strong> If you override this method, your component MUST declare a scope (see CKComponentScope). This is used to
+identify equivalent components between trees.</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/controller" title="controller"></a>
+	<h3 class="method-title"><code><a href="#//api/name/controller">&ndash;&nbsp;controller</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the component&rsquo;s controller, if any.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (CKComponentController *)controller</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-03-26</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

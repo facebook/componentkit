@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>CKTextKitContext Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">ComponentKit </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Facebook</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/initWithAttributedString:lineBreakMode:maximumNumberOfLines:constrainedSize:">- initWithAttributedString:lineBreakMode:maximumNumberOfLines:constrainedSize:</option>
+		
+		<option value="//api/name/performBlockWithLockedTextKitComponents:">- performBlockWithLockedTextKitComponents:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">CKTextKitContext Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>CKTextKitContext.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>A threadsafe container for the TextKit components that CKTextKit uses to lay out and truncate its text.</p>
+
+<p>This container is the sole owner and manager of the TextKit classes.  This is an important model because of major
+thread safety issues inside vanilla TextKit.  It provides a central locking location for accessing TextKit methods.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/initWithAttributedString:lineBreakMode:maximumNumberOfLines:constrainedSize:" title="initWithAttributedString:lineBreakMode:maximumNumberOfLines:constrainedSize:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithAttributedString:lineBreakMode:maximumNumberOfLines:constrainedSize:">&ndash;&nbsp;initWithAttributedString:lineBreakMode:maximumNumberOfLines:constrainedSize:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Initializes a context and its associated TextKit components.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithAttributedString:(NSAttributedString *)<em>attributedString</em> lineBreakMode:(NSLineBreakMode)<em>lineBreakMode</em> maximumNumberOfLines:(NSUInteger)<em>maximumNumberOfLines</em> constrainedSize:(CGSize)<em>constrainedSize</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Initialization of TextKit components is a globally locking operation so be careful of bottlenecks with this class.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKTextKitContext.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/performBlockWithLockedTextKitComponents:" title="performBlockWithLockedTextKitComponents:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/performBlockWithLockedTextKitComponents:">&ndash;&nbsp;performBlockWithLockedTextKitComponents:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>All operations on TextKit values MUST occur within this locked context.  Simultaneous access (even non-mutative) to
+TextKit components may cause crashes.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)performBlockWithLockedTextKitComponents:(void ( ^ ) ( NSLayoutManager *layoutManager , NSTextStorage *textStorage , NSTextContainer *textContainer ))<em>block</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>The block provided MUST not call out to client code from within its scope or it is possible for this to cause deadlocks
+in your application.  Use with EXTREME care.</p>
+
+<p>Callers MUST NOT keep a ref to these internal objects and use them later.  This WILL cause crashes in your application.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKTextKitContext.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-03-26</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

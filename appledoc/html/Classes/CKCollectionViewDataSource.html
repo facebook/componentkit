@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>CKCollectionViewDataSource Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">ComponentKit </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Facebook</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/supplementaryViewDataSource">supplementaryViewDataSource</option>
+		
+	</optgroup>
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/enqueueChangeset:constrainedSize:">- enqueueChangeset:constrainedSize:</option>
+		
+		<option value="//api/name/initWithCollectionView:supplementaryViewDataSource:componentProvider:context:cellConfigurationFunction:">- initWithCollectionView:supplementaryViewDataSource:componentProvider:context:cellConfigurationFunction:</option>
+		
+		<option value="//api/name/modelForItemAtIndexPath:">- modelForItemAtIndexPath:</option>
+		
+		<option value="//api/name/sizeForItemAtIndexPath:">- sizeForItemAtIndexPath:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">CKCollectionViewDataSource Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>CKCollectionViewDataSource.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>This class is an implementation of a <code>UICollectionViewDataSource</code> that can be used along with components. For each set of changes (i.e insertion/deletion/update
+of items and/or insertion/deletion of sections) the datasource will compute asynchronously on a background thread the corresponding component trees and then
+apply the corresponding UI changes to the collection view leveraging automatically view reuse.</p>
+
+<p>Doing so this reverses the traditional approach for a <code>UICollectionViewDataSource</code>. Usually the controller layer will <em>tell</em> the <code>UICollectionView</code> to update and
+then the <code>UICollectionView</code> <em>ask</em> the datasource for the data. Here the model is  more Reactive, from an external prospective, the datasource is <em>told</em> what
+changes to apply and then <em>tell</em> the collection view to apply the corresponding changes.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/initWithCollectionView:supplementaryViewDataSource:componentProvider:context:cellConfigurationFunction:" title="initWithCollectionView:supplementaryViewDataSource:componentProvider:context:cellConfigurationFunction:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithCollectionView:supplementaryViewDataSource:componentProvider:context:cellConfigurationFunction:">&ndash;&nbsp;initWithCollectionView:supplementaryViewDataSource:componentProvider:context:cellConfigurationFunction:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Designated initializer</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithCollectionView:(UICollectionView *)<em>collectionView</em> supplementaryViewDataSource:(id&lt;CKSupplementaryViewDataSource&gt;)<em>supplementaryViewDataSource</em> componentProvider:(Class&lt;CKComponentProvider&gt;)<em>componentProvider</em> context:(id)<em>context</em> cellConfigurationFunction:(CKCellConfigurationFunction)<em>cellConfigurationFunction</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>supplementaryViewDataSource</code></th>
+						<td><p>@see the <code>supplementaryViewDataSource</code> property. Will be held weakly, pass nil if you don&rsquo;t need supplementary views.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>componentProvider</code></th>
+						<td><p>Class implementing the pure function turning a model into components.@see CKComponentProvider.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>context</code></th>
+						<td><p>Will be passed to your componentProvider. @see CKComponentProvider.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>cellConfigurationFunction</code></th>
+						<td><p>Pointer to a function applying custom configuration to the UICollectionViewCell where the component
+tree is mounted. We use a function pointer and not a block to enforce the purity of said function.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<div class="warning"><p><strong>Warning:</strong> Reuse won&rsquo;t be handled for you when modifying view parameters through this function, reserve it for small configurations.</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKCollectionViewDataSource.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/enqueueChangeset:constrainedSize:" title="enqueueChangeset:constrainedSize:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/enqueueChangeset:constrainedSize:">&ndash;&nbsp;enqueueChangeset:constrainedSize:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Method to enqueue commands in the datasource.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)enqueueChangeset:(const CKArrayControllerInputChangeset &amp;)<em>changeset</em> constrainedSize:(const CKSizeRange &amp;)<em>constrainedSize</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>changeset</code></th>
+						<td><p>The set of commands to apply to the collection view, e.g :
+`
+CKArrayControllerSections sections;
+CKArrayControllerInputItems items;
+sections.insert(1); // Insert section at index 1
+items.insert({1,0}, modelX); // Insert a row at index 0 in section 1 containing the UI corresponding to modelX
+item.udpate({0,0}, modelY); // Update row at index 0 in section 0 using modelY
+[_dataSource enqueueChangeset:{sections, items} constrainedSize:{{0,0},{50,50}}];</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>constrainedSize</code></th>
+						<td><p>The constrained size {{minWidth, minHeight},{maxWidth, maxHeight}} that will be used to compute
+your component tree.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<div class="warning"><p><strong>Warning:</strong> In a batch update:
+- deletes are applied first relatively to the index space before the batch update
+- inserts are then applied relatively to the &ldquo;post deletion&rdquo; index space:
+https://developer.apple.com/library/ios/documentation/UIKit/Reference/UICollectionView_class/#//apple_ref/occ/instm/UICollectionView/performBatchUpdates:completion:
+`</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKCollectionViewDataSource.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/modelForItemAtIndexPath:" title="modelForItemAtIndexPath:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/modelForItemAtIndexPath:">&ndash;&nbsp;modelForItemAtIndexPath:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The model associated with a certain index path in the collectionView.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (id&lt;NSObject&gt;)modelForItemAtIndexPath:(NSIndexPath *)<em>indexPath</em></code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>The model associated with a certain index path in the collectionView.</p>
+
+<p>As stated above components are generated asynchronously and on a backgorund thread. This means that a changeset is enqueued
+and applied asynchronously when the corresponding component tree is generated. For this reason always use this method when you
+want to retrieve the model associated to a certain index path in the table view (e.g in didSelectRowAtIndexPath: )</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKCollectionViewDataSource.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sizeForItemAtIndexPath:" title="sizeForItemAtIndexPath:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sizeForItemAtIndexPath:">&ndash;&nbsp;sizeForItemAtIndexPath:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The layout size of the component tree at a certain indexPath. Use this to access the component sizes for instance in a
+<code>UICollectionViewLayout(s)</code> or in a <code>UICollectionViewDelegateFlowLayout</code>.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)<em>indexPath</em></code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>The layout size of the component tree at a certain indexPath. Use this to access the component sizes for instance in a
+<code>UICollectionViewLayout(s)</code> or in a <code>UICollectionViewDelegateFlowLayout</code>.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKCollectionViewDataSource.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/supplementaryViewDataSource" title="supplementaryViewDataSource"></a>
+	<h3 class="method-title"><code><a href="#//api/name/supplementaryViewDataSource">&nbsp;&nbsp;supplementaryViewDataSource</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Supplementary views are not handled with components; the datasource will forward any call to
+<code>collectionView:viewForSupplementaryElementOfKind:atIndexPath</code> to this object.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (readonly, nonatomic, weak) id&lt;CKSupplementaryViewDataSource&gt; supplementaryViewDataSource</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKCollectionViewDataSource.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-03-26</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
