@@ -1,5 +1,13 @@
 #!/bin/sh
 
+if [ -z $1 ]; then
+  echo "usage: build.sh <subcommand>"
+  echo "available subcommands:"
+  echo "  ci"
+  echo "  docs"
+  exit
+fi
+
 set -eu
 
 MODE=$1
