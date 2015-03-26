@@ -22,7 +22,7 @@ struct CKComponentViewContext {
   CGRect frame;
 };
 
-/** A component is an immutable object that specifies how to configure a view, loosely inspired by the React. */
+/** A component is an immutable object that specifies how to configure a view, loosely inspired by React. */
 @interface CKComponent : NSObject
 
 /**
