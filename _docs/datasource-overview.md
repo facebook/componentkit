@@ -41,7 +41,7 @@ It can be used to easily bootstrap a `UICollectionView` using components. See ho
 
 The UIKit way to add content to a collection view is:
 
-1. Tell the `UICollectionView` to add/insert/udpate rows or sections.
+1. Tell the `UICollectionView` to add/insert/update rows or sections.
 2. Synchronously, the `UICollectionView` asks its datasource for number of rows, sections and layout info.
 3. Depending on whether or not the updated index paths are visible the `UICollectionView` will synchronously call `cellForItemAtIndexPath:`.
 3. Finally, the datasource returns a configured cell for this index path.
