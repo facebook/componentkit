@@ -82,6 +82,7 @@ This method takes in a view from where to begin its search and the search can be
 To make this easier, we have a LLDB command in Chisel called `pcomponents`, which is a convenient way to print the component hierachy. Utilizing LLDB's prefix matching, you can even shorten that to `pco`.
 
 Optionally, it can take a view and also search upwards using the `-u` flag.
+
 ```
 (lldb) pco -u <view>
 ```
@@ -103,10 +104,13 @@ To unset, just `setDebugMode:NO` instead.
 Again, we simplify the debug view helper using a LLDB command in Chisel - `dcomponents`.
 
 To enable debug view mode:
+
 ```
 (lldb) dc -s
 ```
+
 and to disable:
+
 ```
 (lldb) dc -u
 ```
