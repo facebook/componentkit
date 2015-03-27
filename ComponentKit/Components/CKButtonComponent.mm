@@ -230,11 +230,16 @@ static CGSize intrinsicSize(NSString *title, UIFont *titleFont, UIImage *image,
                             UIImage *backgroundImage, UIEdgeInsets contentEdgeInsets)
 {
   // This computation is based on observing [UIButton -sizeThatFits:].
-  CGSize titleSize = [title sizeWithFont:titleFont ?: [UIFont systemFontOfSize:[UIFont buttonFontSize]]];
+  static NSMutableDictionary *attributes;
+  if (!attributes) {
+      attributes = [NSMutableDictionary dictionaryWithCapacity:1];
+  }
+  attributes[NSFontAttributeName] = titleFont ?: [UIFont systemFontOfSize:[UIFont buttonFontSize]];
+  CGSize titleSize = [title sizeWithAttributes:attributes];
   CGSize imageSize = image.size;
   CGSize contentSize = {
-    titleSize.width + imageSize.width + contentEdgeInsets.left + contentEdgeInsets.right,
-    MAX(titleSize.height, imageSize.height) + contentEdgeInsets.top + contentEdgeInsets.bottom
+    (CGFloat)ceil(titleSize.width) + imageSize.width + contentEdgeInsets.left + contentEdgeInsets.right,
+    MAX((CGFloat)ceil(titleSize.height), imageSize.height) + contentEdgeInsets.top + contentEdgeInsets.bottom
   };
   CGSize backgroundImageSize = backgroundImage.size;
   return {
