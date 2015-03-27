@@ -4,3 +4,8 @@ before_install:
   - gem install cocoapods
 
 script: ./build.sh ci
+
+# Whitelist for branches
+branches:
+  only:
+    - master
