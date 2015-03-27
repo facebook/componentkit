@@ -26,7 +26,7 @@ When working with ComponentKit, you would generally uses generic views such as `
 |    | <UIImageView: 0x7b466e30; frame = (314.5 413.5; 2.5 47); alpha = 0; opaque = NO; autoresize = LM; userInteractionEnabled = NO; layer = <CALayer: 0x7b466eb0>>
 ```
 
-ComponentKit includes a set of debugging tools that help you debug component hierarchies.
+ComponentKit includes a set of debugging tools that help you debug component hierarchies and has strong integration with  [Chisel](http://www.github.com/facebook/chisel). Clone the [github repo](http://www.github.com/facebook/chisel) of Chisel and install it to enable the latest commands.
 
 <div class="note-important">
   <p>
@@ -77,6 +77,15 @@ This method takes in a view from where to begin its search and the search can be
   </p>
 </div>
 
+### `pcomponents`
+
+To make this easier, we have a LLDB command in Chisel called `pcomponents`, which is a convenient way to print the component hierachy. Utilizing LLDB's prefix matching, you can even shorten that to `pco`.
+
+Optionally, it can take a view and also search upwards using the `-u` flag.
+```
+(lldb) pco -u <view>
+```
+
 ## Visually Debug Components
 
 ComponentKit has helpers to set up debug views, which are phantom views for components which usually wouldn't create any view. To enable debug mode:
@@ -89,6 +98,20 @@ Looking through the view hierarchy gives a visual manifestation to layout and ca
 
 To unset, just `setDebugMode:NO` instead.
 
+### `dcomponents`
+
+Again, we simplify the debug view helper using a LLDB command in Chisel - `dcomponents`.
+
+To enable debug view mode:
+```
+(lldb) dc -s
+```
+and to disable:
+```
+(lldb) dc -u
+```
+
+### Xcode Debug View Hierachy / Reveal Integration
 This helper really shines when you can actually see the view hierarchy, be it in Xcode or [Reveal](http://revealapp.com/) 
 
 If you use the the Xcode's default *Debug View Hierarchy* tool to see the individual views:
@@ -98,7 +121,3 @@ If you use the the Xcode's default *Debug View Hierarchy* tool to see the indivi
 Or you can use [Reveal](http://revealapp.com/):
 
 ![Debug Components with Reveal](/static/images/reveal-debug.png)
-
-## Chisel Integration
-
-We're in the process of adding new commands to [Chisel](http://www.github.com/facebook/chisel) for both of these functionalities, named as `pcomponents` and `dcomponents`. Coming soon.
