@@ -229,8 +229,12 @@ static T valueForState(const std::unordered_map<UIControlState, T> &m, UIControl
 static CGSize intrinsicSize(NSString *title, UIFont *titleFont, UIImage *image,
                             UIImage *backgroundImage, UIEdgeInsets contentEdgeInsets)
 {
-  // This computation is based on observing [UIButton -sizeThatFits:].
+  // This computation is based on observing [UIButton -sizeThatFits:], which uses the deprecated method
+  // sizeWithFont in iOS 7 and iOS 8
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
   CGSize titleSize = [title sizeWithFont:titleFont ?: [UIFont systemFontOfSize:[UIFont buttonFontSize]]];
+#pragma clang diagnostic pop
   CGSize imageSize = image.size;
   CGSize contentSize = {
     titleSize.width + imageSize.width + contentEdgeInsets.left + contentEdgeInsets.right,
