@@ -14,9 +14,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B3EECEC11AC2366600BFC5DA"
-               BuildableName = "ComponentKit.app"
+               BlueprintIdentifier = "7AE5602C1AC854890033344F"
+               BuildableName = "libComponentKit.a"
                BlueprintName = "ComponentKit"
+               ReferencedContainer = "container:ComponentKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B3EECEC11AC2366600BFC5DA"
+               BuildableName = "ComponentKitTestHostApp.app"
+               BlueprintName = "ComponentKitTestHostApp"
                ReferencedContainer = "container:ComponentKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -105,8 +119,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B3EECEC11AC2366600BFC5DA"
-            BuildableName = "ComponentKit.app"
-            BlueprintName = "ComponentKit"
+            BuildableName = "ComponentKitTestHostApp.app"
+            BlueprintName = "ComponentKitTestHostApp"
             ReferencedContainer = "container:ComponentKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -120,12 +134,13 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B3EECEC11AC2366600BFC5DA"
-            BuildableName = "ComponentKit.app"
-            BlueprintName = "ComponentKit"
+            BuildableName = "ComponentKitTestHostApp.app"
+            BlueprintName = "ComponentKitTestHostApp"
             ReferencedContainer = "container:ComponentKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -138,12 +153,13 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B3EECEC11AC2366600BFC5DA"
-            BuildableName = "ComponentKit.app"
-            BlueprintName = "ComponentKit"
+            BuildableName = "ComponentKitTestHostApp.app"
+            BlueprintName = "ComponentKitTestHostApp"
             ReferencedContainer = "container:ComponentKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
