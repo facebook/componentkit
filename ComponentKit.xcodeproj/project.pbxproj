@@ -352,9 +352,9 @@
 			productReference = B342DCAA1AC23F2A00ACAC53 /* ComponentTextKitApplicationTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B3EECEC11AC2366600BFC5DA /* ComponentKit */ = {
+		B3EECEC11AC2366600BFC5DA /* ComponentKitTestHostApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B3EECEE51AC2366600BFC5DA /* Build configuration list for PBXNativeTarget "ComponentKit" */;
+			buildConfigurationList = B3EECEE51AC2366600BFC5DA /* Build configuration list for PBXNativeTarget "ComponentKitTestHostApp" */;
 			buildPhases = (
 				B3EECEBE1AC2366600BFC5DA /* Sources */,
 				B3EECEBF1AC2366600BFC5DA /* Frameworks */,
@@ -364,7 +364,7 @@
 			);
 			dependencies = (
 			);
-			name = ComponentKit;
+			name = ComponentKitTestHostApp;
 			productName = ComponentKit;
 			productReference = B3EECEC21AC2366600BFC5DA /* ComponentKit.app */;
 			productType = "com.apple.product-type.application";
@@ -406,7 +406,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B3EECEC11AC2366600BFC5DA /* ComponentKit */,
+				B3EECEC11AC2366600BFC5DA /* ComponentKitTestHostApp */,
 				B342DC3F1AC23E8200ACAC53 /* ComponentKitTests */,
 				B342DC8A1AC23EC300ACAC53 /* ComponentKitApplicationTests */,
 				B342DCA91AC23F2A00ACAC53 /* ComponentTextKitApplicationTests */,
@@ -613,12 +613,12 @@
 /* Begin PBXTargetDependency section */
 		B342DC951AC23ECB00ACAC53 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B3EECEC11AC2366600BFC5DA /* ComponentKit */;
+			target = B3EECEC11AC2366600BFC5DA /* ComponentKitTestHostApp */;
 			targetProxy = B342DC941AC23ECB00ACAC53 /* PBXContainerItemProxy */;
 		};
 		B342DCB41AC23F2E00ACAC53 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B3EECEC11AC2366600BFC5DA /* ComponentKit */;
+			target = B3EECEC11AC2366600BFC5DA /* ComponentKitTestHostApp */;
 			targetProxy = B342DCB31AC23F2E00ACAC53 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -861,7 +861,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B3EECEE51AC2366600BFC5DA /* Build configuration list for PBXNativeTarget "ComponentKit" */ = {
+		B3EECEE51AC2366600BFC5DA /* Build configuration list for PBXNativeTarget "ComponentKitTestHostApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B3EECEE61AC2366600BFC5DA /* Debug */,
