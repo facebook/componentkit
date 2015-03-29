@@ -172,6 +172,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		7AE560281AC854470033344F /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				B342DCBF1AC2443F00ACAC53 /* ComponentKitApplicationsTestsHost */,
+				B342DC411AC23E8200ACAC53 /* ComponentKitTests */,
+				B342DC8C1AC23EC300ACAC53 /* ComponentKitApplicationTests */,
+				B342DCAB1AC23F2A00ACAC53 /* ComponentTextKitApplicationTests */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
 		9EC07CBC8F809ACF3EC95132 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -269,10 +280,7 @@
 		B3EECEB91AC2366500BFC5DA = {
 			isa = PBXGroup;
 			children = (
-				B342DCBF1AC2443F00ACAC53 /* ComponentKitApplicationsTestsHost */,
-				B342DC411AC23E8200ACAC53 /* ComponentKitTests */,
-				B342DC8C1AC23EC300ACAC53 /* ComponentKitApplicationTests */,
-				B342DCAB1AC23F2A00ACAC53 /* ComponentTextKitApplicationTests */,
+				7AE560281AC854470033344F /* Tests */,
 				B3EECEC31AC2366600BFC5DA /* Products */,
 				9EC07CBC8F809ACF3EC95132 /* Pods */,
 				7683E4B5CB30052819FB3185 /* Frameworks */,
