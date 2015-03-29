@@ -14,6 +14,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7AE5602C1AC854890033344F"
+               BuildableName = "libComponentKit.a"
+               BlueprintName = "ComponentKit"
+               ReferencedContainer = "container:ComponentKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "B3EECEC11AC2366600BFC5DA"
                BuildableName = "ComponentKitTestHostApp.app"
                BlueprintName = "ComponentKitTestHostApp"
