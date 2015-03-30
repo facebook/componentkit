@@ -21,6 +21,7 @@
 
 struct CKComponentLifecycleManagerState {
   id model;
+  id context;
   CKSizeRange constrainedSize;
   CKComponentLayout layout;
   CKComponentScopeFrame *scopeFrame;
@@ -34,15 +35,14 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
 /**
  Designated initializer
  */
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id)context;
+- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider;
 
 /** See @protocol CKComponentLifecycleManagerAsynchronousUpdateHandler */
 @property (nonatomic, weak) id<CKComponentLifecycleManagerAsynchronousUpdateHandler> asynchronousUpdateHandler;
 
 @property (nonatomic, weak) id<CKComponentLifecycleManagerDelegate> delegate;
 
-- (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize;
+- (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id)context;
 
 /**
  Updates the state to the new one without mounting the view.
@@ -58,13 +58,6 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
  If we have a view mounted, we remount the view to pick up the new state.
  */
 - (void)updateWithState:(const CKComponentLifecycleManagerState &)state;
-
-/**
- Updates the context to the new one. 
- 
- Component provider will receive new context value next time the component tree will be built.
- */
-- (void)updateContext:(id)newContext;
 
 /**
  Attaches the manager to the given view. This will display the component in the view and update the view whenever the

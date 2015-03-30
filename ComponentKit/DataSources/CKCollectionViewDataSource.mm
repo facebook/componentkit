@@ -100,6 +100,7 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
 
 - (void)updateContextAndEnqeueReload:(id)newContext
 {
+  CKAssertMainThread();
   [_componentDataSource updateContextAndEnqeueReload:newContext];
 }
 

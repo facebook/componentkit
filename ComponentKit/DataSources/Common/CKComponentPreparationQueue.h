@@ -36,6 +36,8 @@
 
 @property (readonly, nonatomic, assign, getter = isPassthrough) BOOL passthrough;
 
+@property (readonly, nonatomic, strong) id context;
+
 @end
 
 @interface CKComponentPreparationInputItem : NSObject <
@@ -49,7 +51,8 @@ CKComponentPreparationItem
                                     UUID:(NSString *)UUID
                                indexPath:(NSIndexPath *)indexPath
                               changeType:(CKArrayControllerChangeType)changeType
-                             passthrough:(BOOL)passthrough;
+                             passthrough:(BOOL)passthrough
+                                 context:(id)context;
 
 - (CKSizeRange)constrainedSize;
 
@@ -66,7 +69,8 @@ CKComponentPreparationItem
                                     UUID:(NSString *)UUID
                                indexPath:(NSIndexPath *)indexPath
                               changeType:(CKArrayControllerChangeType)changeType
-                             passthrough:(BOOL)passthrough;
+                             passthrough:(BOOL)passthrough
+                                 context:(id)context;
 
 - (CKComponentLifecycleManagerState)lifecycleManagerState;
 

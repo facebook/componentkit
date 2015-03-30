@@ -27,7 +27,7 @@
 #import "CKComponentPreparationQueueListener.h"
 
 static const NSInteger kPreparationQueueDefaultWidth = 10;
-typedef CKComponentLifecycleManager *(^CKComponentLifecycleManagerFactory)(id aContext);
+typedef CKComponentLifecycleManager *(^CKComponentLifecycleManagerFactory)(void);
 
 @interface CKComponentDataSource () <
 CKComponentLifecycleManagerDelegate,
@@ -98,8 +98,8 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
                                   decider:(id<CKComponentDeciding>)decider
                     preparationQueueWidth:(NSInteger)preparationQueueWidth
 {
-  CKComponentLifecycleManagerFactory lifecycleManagerFactory = ^(id aContext){
-    return [[CKComponentLifecycleManager alloc] initWithComponentProvider:componentProvider context:aContext];
+  CKComponentLifecycleManagerFactory lifecycleManagerFactory = ^{
+    return [[CKComponentLifecycleManager alloc] initWithComponentProvider:componentProvider];
   };
   return [self initWithLifecycleManagerFactory:lifecycleManagerFactory
                                        decider:decider
@@ -184,6 +184,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
 
 - (void)updateContextAndEnqeueReload:(id)newContext
 {
+  CKAssertMainThread();
   if (_context != newContext) {
     _context = newContext;
     [self enqueueReload];
@@ -204,7 +205,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
     CKComponentLifecycleManager *lifecycleManager = nil;
     NSString *UUID = nil;
     if (type == CKArrayControllerChangeTypeInsert) {
-      lifecycleManager = _lifecycleManagerFactory(_context);
+      lifecycleManager = _lifecycleManagerFactory();
       lifecycleManager.asynchronousUpdateHandler = self;
       lifecycleManager.delegate = self;
       UUID = [[NSUUID UUID] UUIDString];
@@ -212,13 +213,13 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
     if (type == CKArrayControllerChangeTypeUpdate) {
       CKComponentDataSourceInputItem *oldInput = [_inputArrayController objectAtIndexPath:indexPath.toNSIndexPath()];
       lifecycleManager = [oldInput lifecycleManager];
-      [lifecycleManager updateContext:_context];
       UUID = [oldInput UUID];
     }
     return [[CKComponentDataSourceInputItem alloc] initWithLifecycleManager:lifecycleManager
                                                                       model:object
+                                                                    context:_context
                                                             constrainedSize:constrainedSize
-                                                                       UUID:UUID];
+                                                                       UUID:UUID ];
   };
   return [self _enqueueChangeset:changeset.map(mapper)];
 }
@@ -271,7 +272,8 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
                                                                  UUID:[after UUID]
                                                             indexPath:change.indexPath.toNSIndexPath()
                                                            changeType:type
-                                                          passthrough:(componentCompliantModel == nil)];
+                                                          passthrough:(componentCompliantModel == nil)
+                                                              context:[after context]];
     preparationQueueBatch.items.push_back(queueItem);
   };
 
