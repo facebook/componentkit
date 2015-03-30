@@ -13,12 +13,12 @@ We will use a simple setup with a `UIViewController` using a `UICollectionView` 
 #### Component Provider
 The `CKCollectionViewDataSource` is responsible for transforming each model into a component.
 
-This transformation will be defined as a method on a class conforming to `CKComponentProviding`. This class will then be passed to the `CKCollectionViewDataSource` as the component provider and the datasource will call the provider every time it needs to generate a component for a model.
+This transformation will be defined as a method on a class conforming to `CKComponentProvider`. This class will then be passed to the `CKCollectionViewDataSource` as the component provider and the datasource will call the provider every time it needs to generate a component for a model.
 
 Let's make our UIViewController be the component provider here.
 
 ```objc++
-	@interface MyController <CKComponentProviding>
+	@interface MyController <CKComponentProvider>
 	...
 	@end
 
