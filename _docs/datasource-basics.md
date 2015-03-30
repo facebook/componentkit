@@ -49,7 +49,7 @@ Don't access global state inside a Component. Use the context to pass this infor
 
 #### Create a `CKCollectionViewDataSource`
 
-Ok, so now we have our view controller as the component provider, let's create our `CKComponentCollectionViewDataSource` and attach the collection view to it.
+Ok, so now we have our view controller as the component provider, let's create our `CKCollectionViewDataSource` and attach the collection view to it.
 
 ```objc++
 	- (void)viewDidLoad {
@@ -129,7 +129,7 @@ Pretty simple right ? And this logic can apply to any `UICollectionViewLayout` :
 Time to interact with those items now; nothing special here the regular selection APIs can be used. Let's say the models have a url that should be opened when the user tap on an item.
 
 ```objc++
-	- (void)dataSource:(CKComponentCollectionViewDataSource *)dataSource didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+	- (void)dataSource:(CKCollectionViewDataSource *)dataSource didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 	{
  		MyModel *model = (MyModel *)[self.dataSource modelForItemAtIndexPath:indexPath];
  		NSURL *navURL = model.url;
