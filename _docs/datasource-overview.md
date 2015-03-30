@@ -29,7 +29,7 @@ ComponentKit includes a standard datasource stack dedicated to render components
 1. Take as input changesets containing commands and models.
 *e.g: "Insert at index 0 in section 1 the item representing ModelA".
 2. **Generate and layout in the background** the components associated to those changes.
-3. Output a changeset along with handles to the generated components so that it can used with a `UITableView` or a `UICollectionView`
+3. Output a changeset along with handles to the generated components so that it can be used with a `UITableView` or a `UICollectionView`
 
 ### CKComponentCollectionViewDataSource
 
