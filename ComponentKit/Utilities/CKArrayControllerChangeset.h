@@ -170,6 +170,7 @@ namespace CK {
       
       class Changeset final {
       public:
+        Changeset() : items({}), sections({}) {}
         Changeset(const CKArrayControllerSections &s) : items({}), sections(s) {}
         Changeset(const CKArrayControllerInputItems &i) : items(i), sections({}) {}
         Changeset(const CKArrayControllerSections &s, const CKArrayControllerInputItems &i) : sections(s), items(i) {}
