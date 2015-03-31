@@ -10,7 +10,9 @@
 
 #import <UIKit/UIKit.h>
 
-typedef UIView *(^CKComponentRootViewHitTestHook)(CKComponentRootView *rootView, CGPoint point, UIEvent *event);
+#import <ComponentKit/CKComponentRootView.h>
+
+typedef UIView *(^CKComponentRootViewHitTestHook)(UIView *rootView, CGPoint point, UIEvent *event);
 
 @interface CKComponentRootView ()
 
