@@ -75,7 +75,7 @@ Let's add a section at index 0 with two items at indexes 0 and 1.
 {% raw  %}
 	- (void)viewDidAppear {
 		...
-		CKComponentDataSourceChangeset changeset;
+		CKArrayControllerInputChangeset changeset;
 		// Don't forget the insertion of section 0
 		changeset.sections.insert(0);
 		changeset.items.insert({0,0}, firstModel);
@@ -92,7 +92,7 @@ Later on (for instance when updated data is received from the server), we can up
 ```objc++
 {% raw  %}
 	...
-	CKComponentDataSourceChangeset changeset;
+	CKArrayControllerInputChangeset changeset;
 	changeset.items.update({0,0}, udpatedFirstModel);
 	[self.dataSource enqueueChangeset:changeset constrainedSize:{{50,0}, {50, INF}}];
 	...
