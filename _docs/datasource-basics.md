@@ -75,14 +75,15 @@ Let's add a section at index 0 with two items at indexes 0 and 1.
 {% raw  %}
 	- (void)viewDidAppear {
 		...
-		CKArrayControllerInputChangeset changeset;
+		CKArrayControllerSections sections;
+		CKArrayControllerInputItems items;
 		// Don't forget the insertion of section 0
-		changeset.sections.insert(0);
-		changeset.items.insert({0,0}, firstModel);
+		sections.insert(0);
+		items.insert({0,0}, firstModel);
 		// You can also use NSIndexPath
 		NSIndexPath indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
-		changeset.items.insert(indexPath, secondModel);
-		[self.dataSource enqueueChangeset:changeset constrainedSize:{{0,0}, {50, 50}}];
+		items.insert(indexPath, secondModel);
+		[self.dataSource enqueueChangeset:{sections, items} constrainedSize:{{0,0}, {50, 50}}];
 	}
 {% endraw %}
 ```
@@ -92,9 +93,11 @@ Later on (for instance when updated data is received from the server), we can up
 ```objc++
 {% raw  %}
 	...
-	CKArrayControllerInputChangeset changeset;
-	changeset.items.update({0,0}, udpatedFirstModel);
-	[self.dataSource enqueueChangeset:changeset constrainedSize:{{50,0}, {50, INF}}];
+	CKArrayControllerInputItems items;
+	items.update({0,0}, udpatedFirstModel);
+	[self.dataSource enqueueChangeset:{items} constrainedSize:{{50,0}, {50, INF}}];
+	//This works as well thanks to C++ implicit conversion
+	//[self.dataSource enqueueChangeset:items constrainedSize:{{50,0}, {50, INF}}];
 	...
 {% endraw %}
 ```
