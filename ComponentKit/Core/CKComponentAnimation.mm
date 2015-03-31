@@ -20,6 +20,9 @@
 
 static CKComponentAnimationHooks hooksForCAAnimation(CKComponent *component, CAAnimation *originalAnimation)
 {
+  CKCAssertNotNil(component, @"Component being animated must be non-nil");
+  CKCAssertNotNil(originalAnimation, @"Animation being added must be non-nil");
+
   // Don't mutate the animation the component returned, in case it is a static or otherwise reused. (Also copy
   // immediately to protect against the *caller* mutating the animation after this point but before it's used.)
   CAAnimation *copiedAnimation = [originalAnimation copy];
