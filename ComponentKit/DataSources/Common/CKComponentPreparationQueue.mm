@@ -81,7 +81,7 @@
                                indexPath:(NSIndexPath *)indexPath
                               changeType:(CKArrayControllerChangeType)changeType
                              passthrough:(BOOL)passthrough
-                                 context:(id)context
+                                 context:(id<NSObject>)context
 {
   if (self = [super init]) {
     _replacementModel = replacementModel;

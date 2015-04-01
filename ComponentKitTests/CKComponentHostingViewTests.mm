@@ -33,7 +33,7 @@
   BOOL _isAttached;
 }
 
-- (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id)context
+- (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context
 {
   return CKComponentLifecycleManagerStateEmpty;
 }
