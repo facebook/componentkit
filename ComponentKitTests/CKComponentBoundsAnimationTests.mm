@@ -44,10 +44,10 @@
 - (void)testComputingUpdateForComponentLifecycleManagerReturnsBoundsAnimation
 {
   static const CKSizeRange size = {{100, 0}, {100, INFINITY}};
-  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
+  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
 
-  CKComponentLifecycleManagerState stateA = [lifeManager prepareForUpdateWithModel:@100 constrainedSize:size];
-  CKComponentLifecycleManagerState stateB = [lifeManager prepareForUpdateWithModel:@200 constrainedSize:size];
+  CKComponentLifecycleManagerState stateA = [lifeManager prepareForUpdateWithModel:@100 constrainedSize:size context:nil];
+  CKComponentLifecycleManagerState stateB = [lifeManager prepareForUpdateWithModel:@200 constrainedSize:size context:nil];
   XCTAssertEqual(stateB.boundsAnimation.duration, (NSTimeInterval)5.0);
   XCTAssertEqual(stateB.boundsAnimation.delay, (NSTimeInterval)2.0);
 }

@@ -66,9 +66,9 @@ struct CKLifecycleMethodCounts {
 
 - (void)testThatMountingComponentCallsWillAndDidMount
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
 
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}}];
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
   [clm updateWithState:state];
 
   UIView *view = [[UIView alloc] init];
@@ -81,9 +81,9 @@ struct CKLifecycleMethodCounts {
 
 - (void)testThatUnmountingComponentCallsWillAndDidUnmount
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
 
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}}];
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
   [clm updateWithState:state];
 
   UIView *view = [[UIView alloc] init];
@@ -98,9 +98,9 @@ struct CKLifecycleMethodCounts {
 
 - (void)testThatUpdatingComponentWhileMountedCallsWillAndDidRemount
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
 
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}}];
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
   [clm updateWithState:state];
 
   UIView *view = [[UIView alloc] init];
@@ -116,9 +116,9 @@ struct CKLifecycleMethodCounts {
 
 - (void)testThatUpdatingComponentWhileNotMountedCallsNothing
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
 
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}}];
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
   [clm updateWithState:state];
 
   UIView *view = [[UIView alloc] init];

@@ -19,4 +19,8 @@
 @property (nonatomic, readonly) CKSizeRange constrainedSize;
 @property (nonatomic, readonly) CKComponentLifecycleManager *lifecycleManager;
 
+- (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)manager
+                       sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                                 context:(id<NSObject>)context;
+
 @end

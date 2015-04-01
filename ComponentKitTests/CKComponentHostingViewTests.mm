@@ -33,7 +33,7 @@
   BOOL _isAttached;
 }
 
-- (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize
+- (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id)context
 {
   return CKComponentLifecycleManagerStateEmpty;
 }
@@ -73,14 +73,16 @@
 
 - (CKComponentHostingView *)newHostingView
 {
-  CKComponentLifecycleManager *manager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
+  CKComponentLifecycleManager *manager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
   return [self newHostingViewWithLifecycleManager:manager];
 }
 
 - (CKComponentHostingView *)newHostingViewWithLifecycleManager:(CKComponentLifecycleManager *)manager
 {
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
-  CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithLifecycleManager:manager sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
+  CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithLifecycleManager:manager
+                                                                        sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
+                                                                                  context:nil];
   view.bounds = CGRectMake(0, 0, 100, 100);
   view.model = model;
   [view layoutIfNeeded];
@@ -147,9 +149,11 @@
 
 - (void)testUpdateWithEmptyBoundsDoesntAttachLifecycleManager
 {
-  CKComponentLifecycleManager *manager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
+  CKComponentLifecycleManager *manager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
-  CKComponentHostingView *hostingView = [[CKComponentHostingView alloc] initWithLifecycleManager:manager sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
+  CKComponentHostingView *hostingView = [[CKComponentHostingView alloc] initWithLifecycleManager:manager
+                                                                               sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
+                                                                                         context:nil];
   hostingView.model = model;
   [hostingView layoutIfNeeded];
 

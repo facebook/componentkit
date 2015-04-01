@@ -42,7 +42,7 @@
 
 - (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)manager
                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                                 context:(id)context
+                                 context:(id<NSObject>)context
 {
   if (self = [super initWithFrame:CGRectZero]) {
     // Injected dependencies

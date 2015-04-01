@@ -78,12 +78,12 @@ static const CKSizeRange size = {{40, 40}, {40, 40}};
 - (void)testRepeatedPrepareForUpdateWithoutMountingConstructsNewComponents
 {
   NSObject *model = [UIColor clearColor];
-  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
+  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
 
-  CKComponentLifecycleManagerState stateA = [lifeManager prepareForUpdateWithModel:model constrainedSize:size];
+  CKComponentLifecycleManagerState stateA = [lifeManager prepareForUpdateWithModel:model constrainedSize:size context:nil];
   CKCoolComponent *componentA = (CKCoolComponent *)stateA.layout.component;
 
-  CKComponentLifecycleManagerState stateB = [lifeManager prepareForUpdateWithModel:model constrainedSize:size];
+  CKComponentLifecycleManagerState stateB = [lifeManager prepareForUpdateWithModel:model constrainedSize:size context:nil];
   CKCoolComponent *componentB = (CKCoolComponent *)stateB.layout.component;
 
   XCTAssertTrue(componentA != componentB);
@@ -92,13 +92,13 @@ static const CKSizeRange size = {{40, 40}, {40, 40}};
 - (void)testRepeatedPrepareForUpdateWithoutMountingUsesPreviouslyComputedState
 {
   NSObject *model = [UIColor clearColor];
-  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
+  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
 
-  CKComponentLifecycleManagerState stateA = [lifeManager prepareForUpdateWithModel:model constrainedSize:size];
+  CKComponentLifecycleManagerState stateA = [lifeManager prepareForUpdateWithModel:model constrainedSize:size context:nil];
   CKCoolComponent *componentA = (CKCoolComponent *)stateA.layout.component;
   CKComponentController *controllerA = componentA.controller;
 
-  CKComponentLifecycleManagerState stateB = [lifeManager prepareForUpdateWithModel:model constrainedSize:size];
+  CKComponentLifecycleManagerState stateB = [lifeManager prepareForUpdateWithModel:model constrainedSize:size context:nil];
   CKCoolComponent *componentB = (CKCoolComponent *)stateB.layout.component;
   CKComponentController *controllerB = componentB.controller;
 
@@ -108,8 +108,8 @@ static const CKSizeRange size = {{40, 40}, {40, 40}};
 - (void)testAttachingManagerInsertsComponentViewInHierarchy
 {
   NSObject *model = [UIColor clearColor];
-  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:model constrainedSize:size]];
+  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:model constrainedSize:size context:nil]];
 
   UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 40.0, 40.0)];
 
@@ -121,8 +121,8 @@ static const CKSizeRange size = {{40, 40}, {40, 40}};
 - (void)testIsAttachedToView
 {
   NSObject *model = [UIColor clearColor];
-  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:model constrainedSize:size]];
+  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:model constrainedSize:size context:nil]];
 
   UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 40.0, 40.0)];
   XCTAssertFalse([lifeManager isAttachedToView], @"Expect -isAttachedToView to be false before mounting.");
@@ -132,12 +132,10 @@ static const CKSizeRange size = {{40, 40}, {40, 40}};
 
 - (void)testAttachingManagerToViewAlreadyAttachedToAnotherManagerChangesViewManagerToNewManager
 {
-  CKComponentLifecycleManager *firstLifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  [firstLifeManager updateWithState:[firstLifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size]
-                         ];
-  CKComponentLifecycleManager *secondLifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  [secondLifeManager updateWithState:[secondLifeManager prepareForUpdateWithModel:[UIColor blueColor] constrainedSize:size]
-                          ];
+  CKComponentLifecycleManager *firstLifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  [firstLifeManager updateWithState:[firstLifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size context:nil]];
+  CKComponentLifecycleManager *secondLifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  [secondLifeManager updateWithState:[secondLifeManager prepareForUpdateWithModel:[UIColor blueColor] constrainedSize:size context:nil]];
 
   UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 40.0, 40.0)];
   [firstLifeManager attachToView:view];
@@ -149,12 +147,10 @@ static const CKSizeRange size = {{40, 40}, {40, 40}};
 {
   NSObject *firstModel = [UIColor redColor];
   NSObject *secondModel = [UIColor blueColor];
-  CKComponentLifecycleManager *firstLifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  [firstLifeManager updateWithState:[firstLifeManager prepareForUpdateWithModel:firstModel constrainedSize:size]
-                         ];
-  CKComponentLifecycleManager *secondLifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  [secondLifeManager updateWithState:[secondLifeManager prepareForUpdateWithModel:secondModel constrainedSize:size]
-                          ];
+  CKComponentLifecycleManager *firstLifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  [firstLifeManager updateWithState:[firstLifeManager prepareForUpdateWithModel:firstModel constrainedSize:size context:nil]];
+  CKComponentLifecycleManager *secondLifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  [secondLifeManager updateWithState:[secondLifeManager prepareForUpdateWithModel:secondModel constrainedSize:size context:nil]];
 
   UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 40.0, 40.0)];
 
@@ -165,35 +161,30 @@ static const CKSizeRange size = {{40, 40}, {40, 40}};
 
 - (void)testUpdatingAManagerDetachedByNewManagerDoesNotUpdateViewAttachedToNewManager
 {
-  CKComponentLifecycleManager *firstLifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  [firstLifeManager updateWithState:[firstLifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size]
-                         ];
-  CKComponentLifecycleManager *secondLifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  [secondLifeManager updateWithState:[secondLifeManager prepareForUpdateWithModel:[UIColor blueColor] constrainedSize:size]
-                          ];
+  CKComponentLifecycleManager *firstLifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  [firstLifeManager updateWithState:[firstLifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size context:nil]];
+  CKComponentLifecycleManager *secondLifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  [secondLifeManager updateWithState:[secondLifeManager prepareForUpdateWithModel:[UIColor blueColor] constrainedSize:size context:nil]];
 
   UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 40.0, 40.0)];
   [firstLifeManager attachToView:view];
   [secondLifeManager attachToView:view];
 
-  [firstLifeManager updateWithState:[firstLifeManager prepareForUpdateWithModel:[UIColor greenColor] constrainedSize:size]
-                         ];
+  [firstLifeManager updateWithState:[firstLifeManager prepareForUpdateWithModel:[UIColor greenColor] constrainedSize:size context:nil]];
   XCTAssertEqualObjects([[view.subviews firstObject] backgroundColor], [UIColor blueColor],
                         @"Expect the last manager attached to the view to be controlling color, not the first manager");
 }
 
 - (void)testUpdatingAManagerAfterDetachDoesNotUpdateView
 {
-  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size]
-                    ];
+  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size context:nil]];
 
   UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 40.0, 40.0)];
   [lifeManager attachToView:view];
   [lifeManager detachFromView];
 
-  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:[UIColor greenColor] constrainedSize:size]
-                    ];
+  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:[UIColor greenColor] constrainedSize:size context:nil]];
   XCTAssertEqualObjects([[view.subviews firstObject] backgroundColor], [UIColor redColor],
                         @"Expect the manager to leave view untouched after detach");
 }
@@ -201,27 +192,25 @@ static const CKSizeRange size = {{40, 40}, {40, 40}};
 - (void)testNotifyingControllerThroughLifecycleManager
 {
   notified = NO;
-  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size]
-                    ];
+  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size context:nil]];
   [lifeManager componentTreeWillAppear];
   XCTAssertTrue(notified, @"Expect the controller to be notified of the event");
 }
 
 - (void)testCallingUpdateWithStateTriggersSizeDidChangeCallback
 {
-  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
+  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
   [lifeManager setDelegate:self];
-  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size]
-                    ];
+  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size context:nil]];
   XCTAssertTrue(_calledLifecycleManagerSizeDidChange, @"Expect the manager to be notified when the size changes as a result of a call to -updateWithState:");
 }
 
 - (void)testCallingUpdateWithStateWithoutMountingDoesNotTriggerSizeDidChangeCallback
 {
-  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
+  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
   [lifeManager setDelegate:self];
-  [lifeManager updateWithStateWithoutMounting:[lifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size]];
+  [lifeManager updateWithStateWithoutMounting:[lifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size context:nil]];
 
   // It is important that that -componentLifecycleManager:sizeDidChangeWithAnimation: is not called when calling
   // -updateWithStateWithoutMounting:, because this would result in nested -beginUpdates/-endUpdates
