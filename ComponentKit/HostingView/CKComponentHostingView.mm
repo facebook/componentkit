@@ -72,11 +72,6 @@
   [_lifecycleManager detachFromView];
 }
 
-- (void)dealloc
-{
-  [_lifecycleManager detachFromView];
-}
-
 #pragma mark - Layout
 
 - (void)layoutSubviews
