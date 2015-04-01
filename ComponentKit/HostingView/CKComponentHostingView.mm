@@ -27,7 +27,7 @@
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
   CKComponentRootView *_containerView;
   BOOL _isUpdating;
-  id _context;
+  id<NSObject> _context;
 }
 @end
 
@@ -112,7 +112,7 @@
   }
 }
 
-- (void)setContext:(id)context
+- (void)setContext:(id<NSObject>)context
 {
   if (_context != context) {
     _context = context;

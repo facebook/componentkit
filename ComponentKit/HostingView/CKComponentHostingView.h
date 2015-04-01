@@ -45,7 +45,7 @@
  Setting a new context will synchronously construct and mount a new component tree and the
  delegate will be notified if there is a change in size.
  */
-@property (nonatomic, strong) id context;
+@property (nonatomic, strong) id<NSObject> context;
 
 - (instancetype)init CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 - (instancetype)initWithFrame:(CGRect)frame CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
