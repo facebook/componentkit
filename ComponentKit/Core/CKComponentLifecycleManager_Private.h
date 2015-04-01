@@ -22,7 +22,6 @@
  resulting in fixed state size.
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id)context
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
 
 @end

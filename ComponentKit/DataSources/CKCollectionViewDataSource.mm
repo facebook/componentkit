@@ -98,6 +98,12 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
   [_componentDataSource enqueueChangeset:changeset constrainedSize:constrainedSize];
 }
 
+- (void)updateContextAndEnqeueReload:(id)newContext
+{
+  CKAssertMainThread();
+  [_componentDataSource updateContextAndEnqeueReload:newContext];
+}
+
 - (id<NSObject>)modelForItemAtIndexPath:(NSIndexPath *)indexPath
 {
   return [[_componentDataSource objectAtIndexPath:indexPath] model];

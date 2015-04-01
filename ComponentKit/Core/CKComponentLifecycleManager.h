@@ -21,6 +21,7 @@
 
 struct CKComponentLifecycleManagerState {
   id model;
+  id<NSObject> context;
   CKSizeRange constrainedSize;
   CKComponentLayout layout;
   CKComponentScopeFrame *scopeFrame;
@@ -34,15 +35,14 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
 /**
  Designated initializer
  */
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id)context;
+- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider;
 
 /** See @protocol CKComponentLifecycleManagerAsynchronousUpdateHandler */
 @property (nonatomic, weak) id<CKComponentLifecycleManagerAsynchronousUpdateHandler> asynchronousUpdateHandler;
 
 @property (nonatomic, weak) id<CKComponentLifecycleManagerDelegate> delegate;
 
-- (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize;
+- (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context;
 
 /**
  Updates the state to the new one without mounting the view.

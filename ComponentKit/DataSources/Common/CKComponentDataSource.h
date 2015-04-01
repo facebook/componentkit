@@ -72,6 +72,11 @@ class CKComponentBoundsAnimation;
  */
 - (void)enqueueReload;
 
+/**
+ Updates underlying context to the new value and enqueues reload so the component tree will respect the new context value.
+ */
+- (void)updateContextAndEnqeueReload:(id)newContext;
+
 typedef void(^CKComponentDataSourceEnumerator)(CKComponentDataSourceOutputItem *, NSIndexPath *, BOOL *);
 
 - (void)enumerateObjectsUsingBlock:(CKComponentDataSourceEnumerator)block;

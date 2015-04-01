@@ -160,7 +160,8 @@ static void CKRecursiveComponentReflow(UIView *view)
     CKComponentLifecycleManagerState oldState = [lifecycleManager state];
     CKComponentLifecycleManagerState state =
     [lifecycleManager prepareForUpdateWithModel:oldState.model
-                                constrainedSize:oldState.constrainedSize];
+                                constrainedSize:oldState.constrainedSize
+                                        context:oldState.context];
     [lifecycleManager updateWithState:state];
   } else {
     for (UIView *subview in view.subviews) {

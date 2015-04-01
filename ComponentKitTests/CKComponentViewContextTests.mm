@@ -37,9 +37,8 @@ static const CKSizeRange size = {{100, 100}, {100, 100}};
 - (void)testMountingComponentWithViewExposesViewContextWithTheCreatedView
 {
   CKComponentLifecycleManager *clm =
-  [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKSingleViewComponentProvider class]
-                                                         context:nil];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:size];
+  [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKSingleViewComponentProvider class]];
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:size context:nil];
   [clm updateWithState:state];
   CKComponent *component = state.layout.component;
 
@@ -57,9 +56,8 @@ static const CKSizeRange size = {{100, 100}, {100, 100}};
 - (void)testMountingComponentWithViewAndNestedComponentWithoutViewExposesViewContextWithSubcomponentFrameInOuterView
 {
   CKComponentLifecycleManager *clm =
-  [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKNestedComponentProvider class]
-                                                         context:nil];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:size];
+  [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKNestedComponentProvider class]];
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:size context:nil];
   [clm updateWithState:state];
   CKNestedComponent *component = (CKNestedComponent *)state.layout.component;
 

@@ -73,8 +73,7 @@ static CKComponent *(^_componentBlock)(void);
   [CKCPQTestComponentProvider setComponentBlock:^CKComponent *{
     return (id)component;
   }];
-  id lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKCPQTestComponentProvider class]
-                                                                               context:nil];
+  id lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKCPQTestComponentProvider class]];
 
   id model = [[CKCPQTestModel alloc] init];
   NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:1];
@@ -87,7 +86,8 @@ static CKComponent *(^_componentBlock)(void);
                                                                                                         UUID:@"foo"
                                                                                                    indexPath:indexPath
                                                                                                   changeType:changeType
-                                                                                                 passthrough:NO];
+                                                                                                 passthrough:NO
+                                                                                                     context:nil];
 
   CKComponentPreparationOutputItem *output = [CKComponentPreparationQueue prepare:input];
 
@@ -111,8 +111,7 @@ static CKComponent *(^_componentBlock)(void);
   [CKCPQTestComponentProvider setComponentBlock:^CKComponent *{
     return (id)component;
   }];
-  id lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKCPQTestComponentProvider class]
-                                                                               context:nil];
+  id lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKCPQTestComponentProvider class]];
 
   id newModel = [[CKCPQTestModel alloc] init];
   NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:1];
@@ -125,7 +124,8 @@ static CKComponent *(^_componentBlock)(void);
                                                                                                         UUID:@"foo"
                                                                                                    indexPath:indexPath
                                                                                                   changeType:changeType
-                                                                                                 passthrough:NO];
+                                                                                                 passthrough:NO
+                                                                                                     context:nil];
 
   CKComponentPreparationOutputItem *output = [CKComponentPreparationQueue prepare:input];
 
@@ -149,8 +149,7 @@ static CKComponent *(^_componentBlock)(void);
   [CKCPQTestComponentProvider setComponentBlock:^CKComponent *{
     return (id)component;
   }];
-  id lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKCPQTestComponentProvider class]
-                                                                               context:nil];
+  id lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKCPQTestComponentProvider class]];
 
   NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:1];
   CKArrayControllerChangeType changeType = CKArrayControllerChangeTypeDelete;
@@ -162,7 +161,8 @@ static CKComponent *(^_componentBlock)(void);
                                                                                                         UUID:@"foo"
                                                                                                    indexPath:indexPath
                                                                                                   changeType:changeType
-                                                                                                 passthrough:NO];
+                                                                                                 passthrough:NO
+                                                                                                     context:nil];
 
   CKComponentPreparationOutputItem *output = [CKComponentPreparationQueue prepare:input];
 
@@ -188,8 +188,7 @@ static CKComponent *(^_componentBlock)(void);
     XCTFail(@"Should not be called");
     return nil;
   }];
-  id lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKCPQTestComponentProvider class]
-                                                                               context:nil];
+  id lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKCPQTestComponentProvider class]];
 
   id model = [[CKCPQTestModel alloc] init];
   NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:1];
@@ -202,7 +201,8 @@ static CKComponent *(^_componentBlock)(void);
                                                                                                         UUID:@"foo"
                                                                                                    indexPath:indexPath
                                                                                                   changeType:changeType
-                                                                                                 passthrough:YES];
+                                                                                                 passthrough:YES
+                                                                                                     context:nil];
 
   CKComponentPreparationOutputItem *output = [CKComponentPreparationQueue prepare:input];
 

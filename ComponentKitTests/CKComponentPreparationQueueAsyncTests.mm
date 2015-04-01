@@ -29,7 +29,8 @@ static CKComponentPreparationInputItem *fbcpq_passthroughInputItem(NSString *UUI
                                                                       UUID:UUID
                                                                  indexPath:nil
                                                                 changeType:CKArrayControllerChangeTypeUnknown
-                                                               passthrough:YES];
+                                                               passthrough:YES
+                                                                   context:nil];
 }
 
 // Returns the number of output items in an array with a UUID matching the one given.

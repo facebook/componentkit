@@ -51,8 +51,8 @@
 
 - (void)testThatAttachingManagerInstantiatesComponentController
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}}];
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
   [clm updateWithState:state];
 
   UIView *view = [[UIView alloc] init];
@@ -64,8 +64,8 @@
 
 - (void)testThatRemountingUnchangedComponentDoesNotCallDidUpdateComponent
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}}];
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
   [clm updateWithState:state];
 
   UIView *view = [[UIView alloc] init];
@@ -82,15 +82,15 @@
 
 - (void)testThatUpdatingManagerUpdatesComponentController
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
   UIView *view = [[UIView alloc] init];
 
-  CKComponentLifecycleManagerState state1 = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}}];
+  CKComponentLifecycleManagerState state1 = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
   [clm updateWithState:state1];
   [clm attachToView:view];
   CKFooComponent *fooComponent1 = (CKFooComponent *)state1.layout.component;
 
-  CKComponentLifecycleManagerState state2 = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}}];
+  CKComponentLifecycleManagerState state2 = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
   [clm updateWithState:state2];
   CKFooComponent *fooComponent2 = (CKFooComponent *)state1.layout.component;
 
@@ -101,8 +101,8 @@
 
 - (void)testThatAttachingManagerCallsDidAcquireView
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}}];
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
   [clm updateWithState:state];
 
   UIView *view = [[UIView alloc] init];
@@ -115,8 +115,8 @@
 
 - (void)testThatDetachingManagerCallsDidRelinquishView
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}}];
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
   [clm updateWithState:state];
 
   UIView *view = [[UIView alloc] init];
@@ -132,8 +132,8 @@
 
 - (void)testThatUpdatingStateWhileAttachedRelinquishesOldViewAndAcquiresNewOne
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}}];
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
   [clm updateWithState:state];
 
   UIView *view = [[UIView alloc] init];
@@ -154,9 +154,8 @@
 
 - (void)testThatResponderChainIsInOrderComponentThenControllerThenRootView
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]
-                                                                                            context:nil];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}}];
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
   [clm updateWithState:state];
 
   UIView *view = [[UIView alloc] init];

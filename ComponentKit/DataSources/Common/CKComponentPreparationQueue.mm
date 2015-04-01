@@ -31,6 +31,7 @@
                                indexPath:(NSIndexPath *)indexPath
                               changeType:(CKArrayControllerChangeType)changeType
                              passthrough:(BOOL)passthrough
+                                 context:(id<NSObject>)context
 {
   if (self = [super init]) {
     _replacementModel = replacementModel;
@@ -41,6 +42,7 @@
     _changeType = changeType;
     _passthrough = passthrough;
     _oldSize = oldSize;
+    _context = context;
   }
   return self;
 }
@@ -57,6 +59,7 @@
 @synthesize changeType = _changeType;
 @synthesize passthrough = _passthrough;
 @synthesize oldSize = _oldSize;
+@synthesize context = _context;
 
 - (CKSizeRange)constrainedSize
 {
@@ -78,6 +81,7 @@
                                indexPath:(NSIndexPath *)indexPath
                               changeType:(CKArrayControllerChangeType)changeType
                              passthrough:(BOOL)passthrough
+                                 context:(id)context
 {
   if (self = [super init]) {
     _replacementModel = replacementModel;
@@ -88,6 +92,7 @@
     _changeType = changeType;
     _passthrough = passthrough;
     _oldSize = oldSize;
+    _context = context;
   }
   return self;
 }
@@ -104,6 +109,7 @@
 @synthesize changeType = _changeType;
 @synthesize passthrough = _passthrough;
 @synthesize oldSize = _oldSize;
+@synthesize context = _context;
 
 - (CKComponentLifecycleManagerState)lifecycleManagerState
 {
@@ -238,7 +244,8 @@
       // Grab the lifecycle manager and use it to generate an layout the component tree
       CKComponentLifecycleManager *lifecycleManager = [inputItem lifecycleManager];
       CKComponentLifecycleManagerState state = [lifecycleManager prepareForUpdateWithModel:[inputItem replacementModel]
-                                                                           constrainedSize:[inputItem constrainedSize]];
+                                                                           constrainedSize:[inputItem constrainedSize]
+                                                                                   context:[inputItem context]];
 
       outputItem = [[CKComponentPreparationOutputItem alloc] initWithReplacementModel:[inputItem replacementModel]
                                                                      lifecycleManager:lifecycleManager
@@ -247,7 +254,8 @@
                                                                                  UUID:[inputItem UUID]
                                                                             indexPath:[inputItem indexPath]
                                                                            changeType:[inputItem changeType]
-                                                                          passthrough:[inputItem isPassthrough]];
+                                                                          passthrough:[inputItem isPassthrough]
+                                                                              context:[inputItem context]];
     } else if (changeType == CKArrayControllerChangeTypeDelete) {
       outputItem = [[CKComponentPreparationOutputItem alloc] initWithReplacementModel:[inputItem replacementModel]
                                                                      lifecycleManager:nil
@@ -256,7 +264,8 @@
                                                                                  UUID:[inputItem UUID]
                                                                             indexPath:[inputItem indexPath]
                                                                            changeType:[inputItem changeType]
-                                                                          passthrough:[inputItem isPassthrough]];
+                                                                          passthrough:[inputItem isPassthrough]
+                                                                              context:[inputItem context]];
     } else {
       CKFailAssert(@"Unimplemented %d", changeType);
     }
@@ -268,7 +277,8 @@
                                                                                UUID:[inputItem UUID]
                                                                           indexPath:[inputItem indexPath]
                                                                          changeType:[inputItem changeType]
-                                                                        passthrough:[inputItem isPassthrough]];
+                                                                        passthrough:[inputItem isPassthrough]
+                                                                            context:[inputItem context]];
   }
   return outputItem;
 }

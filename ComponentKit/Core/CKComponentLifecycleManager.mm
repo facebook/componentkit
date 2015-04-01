@@ -42,7 +42,6 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   NSSet *_mountedComponents;
 
   Class<CKComponentProvider> _componentProvider;
-  id _context;
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
 
   CK::Mutex _previousScopeFrameMutex;
@@ -51,18 +50,15 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id)context
 {
-  return [self initWithComponentProvider:componentProvider context:context sizeRangeProvider:nil];
+  return [self initWithComponentProvider:componentProvider sizeRangeProvider:nil];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id)context
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
 {
   if (self = [super init]) {
     _componentProvider = componentProvider;
-    _context = context;
     _sizeRangeProvider = sizeRangeProvider;
   }
   return self;
@@ -88,12 +84,12 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
 #pragma mark - Updates
 
-- (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize
+- (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context
 {
   CK::MutexLocker locker(_previousScopeFrameMutex);
 
   CKBuildComponentResult result = CKBuildComponent(self, _previouslyCalculatedScopeFrame, ^{
-    return [_componentProvider componentForModel:model context:_context];
+    return [_componentProvider componentForModel:model context:context];
   });
 
   const CKComponentLayout layout = [result.component layoutThatFits:constrainedSize parentSize:constrainedSize.max];
@@ -101,6 +97,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   _previouslyCalculatedScopeFrame = result.scopeFrame;
   return {
     .model = model,
+    .context = context,
     .constrainedSize = constrainedSize,
     .layout = layout,
     .scopeFrame = result.scopeFrame,
@@ -210,7 +207,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
     [_asynchronousUpdateHandler handleAsynchronousUpdateForComponentLifecycleManager:self];
   } else {
     const CKSizeRange constrainedSize = _sizeRangeProvider ? [_sizeRangeProvider sizeRangeForBoundingSize:_state.constrainedSize.max] : _state.constrainedSize;
-    [self updateWithState:[self prepareForUpdateWithModel:_state.model constrainedSize:constrainedSize]];
+    [self updateWithState:[self prepareForUpdateWithModel:_state.model constrainedSize:constrainedSize context:_state.context]];
   }
 }
 

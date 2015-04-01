@@ -18,12 +18,14 @@
 
 - (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)lifecycleManager
                                    model:(id<NSObject>)model
+                                 context:(id)context
                          constrainedSize:(CKSizeRange)constrainedSize
                                     UUID:(NSString *)UUID;
 
 @property (readonly, nonatomic, strong) CKComponentLifecycleManager *lifecycleManager;
 
 @property (readonly, nonatomic, strong) id<NSObject> model;
+@property (readonly, nonatomic, strong) id<NSObject> context;
 
 - (CKSizeRange)constrainedSize;
 

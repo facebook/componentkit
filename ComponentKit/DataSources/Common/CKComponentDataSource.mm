@@ -38,6 +38,7 @@ CKComponentLifecycleManagerAsynchronousUpdateHandler
 @implementation CKComponentDataSource
 {
   id<CKComponentDeciding> _decider;
+  id<NSObject> _context;
 
   /*
    Please see the discussion on why we need two arrays
@@ -63,6 +64,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
 
 - (instancetype)initWithLifecycleManagerFactory:(CKComponentLifecycleManagerFactory)lifecycleManagerFactory
                                         decider:(id<CKComponentDeciding>)decider
+                                        context:(id<NSObject>)context
                            inputArrayController:(CKSectionedArrayController *)inputArrayController
                           outputArrayController:(CKSectionedArrayController *)outputArrayController
                                preparationQueue:(CKComponentPreparationQueue *)preparationQueue
@@ -71,6 +73,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
     // Injected dependencies.
     _lifecycleManagerFactory = lifecycleManagerFactory;
     _decider = decider;
+    _context = context;
 
     // Internal dependencies.
     _inputArrayController = inputArrayController;
@@ -96,10 +99,11 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
                     preparationQueueWidth:(NSInteger)preparationQueueWidth
 {
   CKComponentLifecycleManagerFactory lifecycleManagerFactory = ^{
-    return [[CKComponentLifecycleManager alloc] initWithComponentProvider:componentProvider context:context];
+    return [[CKComponentLifecycleManager alloc] initWithComponentProvider:componentProvider];
   };
   return [self initWithLifecycleManagerFactory:lifecycleManagerFactory
                                        decider:decider
+                                       context:context
                           inputArrayController:[[CKSectionedArrayController alloc] init]
                          outputArrayController:[[CKSectionedArrayController alloc] init]
                               preparationQueue:[[CKComponentPreparationQueue alloc] initWithQueueWidth:preparationQueueWidth]];
@@ -178,6 +182,15 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
   [self _enqueueChangeset:changeset];
 }
 
+- (void)updateContextAndEnqeueReload:(id)newContext
+{
+  CKAssertMainThread();
+  if (_context != newContext) {
+    _context = newContext;
+    [self enqueueReload];
+  }
+}
+
 /**
  External client is either CKComponentTableViewDataSource or the owner of the table view data source.
  They can't insert an CKComponentDataSourceInput b/c they don't have access to existing lifecycle managers that are in
@@ -204,8 +217,9 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
     }
     return [[CKComponentDataSourceInputItem alloc] initWithLifecycleManager:lifecycleManager
                                                                       model:object
+                                                                    context:_context
                                                             constrainedSize:constrainedSize
-                                                                       UUID:UUID];
+                                                                       UUID:UUID ];
   };
   return [self _enqueueChangeset:changeset.map(mapper)];
 }
@@ -258,7 +272,8 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
                                                                  UUID:[after UUID]
                                                             indexPath:change.indexPath.toNSIndexPath()
                                                            changeType:type
-                                                          passthrough:(componentCompliantModel == nil)];
+                                                          passthrough:(componentCompliantModel == nil)
+                                                              context:[after context]];
     preparationQueueBatch.items.push_back(queueItem);
   };
 

@@ -248,8 +248,8 @@ using namespace CK::Component;
 {
   UIView *rootView = [[UIView alloc] init];
 
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class] context:nil];
-  [clm updateWithState:[clm prepareForUpdateWithModel:@NO constrainedSize:{{0,0}, {100, 100}}]];
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  [clm updateWithState:[clm prepareForUpdateWithModel:@NO constrainedSize:{{0,0}, {100, 100}} context:nil]];
   [clm attachToView:rootView];
 
   // Find the reuse aware view
@@ -257,7 +257,7 @@ using namespace CK::Component;
   XCTAssertFalse(reuseAwareView.inReusePool, @"Shouldn't be in reuse pool now, it's just been mounted");
 
   // Update to a totally different component so that the reuse aware view's parent should be hidden
-  [clm updateWithState:[clm prepareForUpdateWithModel:@YES constrainedSize:{{0,0}, {100, 100}}]];
+  [clm updateWithState:[clm prepareForUpdateWithModel:@YES constrainedSize:{{0,0}, {100, 100}} context:nil]];
   XCTAssertTrue(reuseAwareView.inReusePool, @"Should be in reuse pool as its parent is hidden by components");
 }
 

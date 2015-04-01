@@ -27,6 +27,7 @@
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
   CKComponentRootView *_containerView;
   BOOL _isUpdating;
+  id<NSObject> _context;
 }
 @end
 
@@ -41,15 +42,17 @@
 
 - (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)manager
                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                                 context:(id<NSObject>)context
 {
   if (self = [super initWithFrame:CGRectZero]) {
     // Injected dependencies
     _sizeRangeProvider = sizeRangeProvider;
-
+    _context = context;
+    
     // Internal dependencies
     _lifecycleManager = manager;
     _lifecycleManager.delegate = self;
-
+    
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
   }
@@ -60,8 +63,8 @@
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
                                   context:(id<NSObject>)context
 {
-  CKComponentLifecycleManager *manager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:componentProvider context:context sizeRangeProvider:sizeRangeProvider];
-  return [self initWithLifecycleManager:manager sizeRangeProvider:sizeRangeProvider];
+  CKComponentLifecycleManager *manager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:componentProvider sizeRangeProvider:sizeRangeProvider];
+  return [self initWithLifecycleManager:manager sizeRangeProvider:sizeRangeProvider context:context];
 }
 
 - (void)dealloc
@@ -88,7 +91,7 @@
 - (CGSize)sizeThatFits:(CGSize)size
 {
   CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-  CKComponentLifecycleManagerState state = [_lifecycleManager prepareForUpdateWithModel:_model constrainedSize:constrainedSize];
+  CKComponentLifecycleManagerState state = [_lifecycleManager prepareForUpdateWithModel:_model constrainedSize:constrainedSize context:_context];
   return state.layout.size;
 }
 
@@ -100,6 +103,14 @@
     _model = model;
     CKAssertNotNil(_model, @"Model can not be nil.");
 
+    [self setNeedsLayout];
+  }
+}
+
+- (void)setContext:(id<NSObject>)context
+{
+  if (_context != context) {
+    _context = context;
     [self setNeedsLayout];
   }
 }
@@ -129,7 +140,7 @@
   }
 
   const CGRect bounds = self.bounds;
-  CKComponentLifecycleManagerState state = [_lifecycleManager prepareForUpdateWithModel:_model constrainedSize:CKSizeRange(bounds.size, bounds.size)];
+  CKComponentLifecycleManagerState state = [_lifecycleManager prepareForUpdateWithModel:_model constrainedSize:CKSizeRange(bounds.size, bounds.size) context:_context];
   [_lifecycleManager updateWithState:state];
 
   _isUpdating = NO;
