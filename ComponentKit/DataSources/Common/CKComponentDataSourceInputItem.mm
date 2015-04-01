@@ -23,7 +23,7 @@
 
 - (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)lifecycleManager
                                    model:(id<NSObject>)model
-                                 context:(id)context
+                                 context:(id<NSObject>)context
                          constrainedSize:(CKSizeRange)constrainedSize
                                     UUID:(NSString *)UUID
 {
@@ -37,7 +37,7 @@
     NSUInteger subhashes[] = {
       [_lifecycleManager hash],
       [_model hash],
-      (NSUInteger)_context,
+      [_context hash],
       _constrainedSize.hash(),
       [_UUID hash],
     };

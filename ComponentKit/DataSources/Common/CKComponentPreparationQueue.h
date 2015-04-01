@@ -22,7 +22,7 @@
 
 @protocol CKComponentPreparationItem <NSObject>
 
-@property (readonly, nonatomic, strong) id replacementModel;
+@property (readonly, nonatomic, strong) id<NSObject> replacementModel;
 
 @property (readonly, nonatomic, strong) CKComponentLifecycleManager *lifecycleManager;
 
@@ -36,7 +36,7 @@
 
 @property (readonly, nonatomic, assign, getter = isPassthrough) BOOL passthrough;
 
-@property (readonly, nonatomic, strong) id context;
+@property (readonly, nonatomic, strong) id<NSObject> context;
 
 @end
 
@@ -52,7 +52,7 @@ CKComponentPreparationItem
                                indexPath:(NSIndexPath *)indexPath
                               changeType:(CKArrayControllerChangeType)changeType
                              passthrough:(BOOL)passthrough
-                                 context:(id)context;
+                                 context:(id<NSObject>)context;
 
 - (CKSizeRange)constrainedSize;
 
@@ -70,7 +70,7 @@ CKComponentPreparationItem
                                indexPath:(NSIndexPath *)indexPath
                               changeType:(CKArrayControllerChangeType)changeType
                              passthrough:(BOOL)passthrough
-                                 context:(id)context;
+                                 context:(id<NSObject>)context;
 
 - (CKComponentLifecycleManagerState)lifecycleManagerState;
 

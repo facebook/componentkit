@@ -38,7 +38,7 @@ CKComponentLifecycleManagerAsynchronousUpdateHandler
 @implementation CKComponentDataSource
 {
   id<CKComponentDeciding> _decider;
-  id _context;
+  id<NSObject> _context;
 
   /*
    Please see the discussion on why we need two arrays
@@ -64,7 +64,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
 
 - (instancetype)initWithLifecycleManagerFactory:(CKComponentLifecycleManagerFactory)lifecycleManagerFactory
                                         decider:(id<CKComponentDeciding>)decider
-                                        context:(id)context
+                                        context:(id<NSObject>)context
                            inputArrayController:(CKSectionedArrayController *)inputArrayController
                           outputArrayController:(CKSectionedArrayController *)outputArrayController
                                preparationQueue:(CKComponentPreparationQueue *)preparationQueue

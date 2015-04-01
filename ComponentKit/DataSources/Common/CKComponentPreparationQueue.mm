@@ -21,7 +21,6 @@
 @implementation CKComponentPreparationInputItem
 {
   CKSizeRange _constrainedSize;
-  id _context;
 }
 
 - (instancetype)initWithReplacementModel:(id<NSObject>)replacementModel
@@ -32,7 +31,7 @@
                                indexPath:(NSIndexPath *)indexPath
                               changeType:(CKArrayControllerChangeType)changeType
                              passthrough:(BOOL)passthrough
-                                 context:(id)context
+                                 context:(id<NSObject>)context
 {
   if (self = [super init]) {
     _replacementModel = replacementModel;
@@ -72,7 +71,6 @@
 @implementation CKComponentPreparationOutputItem
 {
   CKComponentLifecycleManagerState _lifecycleManagerState;
-  id _context;
 }
 
 - (instancetype)initWithReplacementModel:(id<NSObject>)replacementModel
