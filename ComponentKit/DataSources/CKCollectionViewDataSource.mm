@@ -67,7 +67,7 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView
            supplementaryViewDataSource:(id<CKSupplementaryViewDataSource>)supplementaryViewDataSource
                      componentProvider:(Class<CKComponentProvider>)componentProvider
-                               context:(id)context
+                               context:(id<NSObject>)context
              cellConfigurationFunction:(CKCellConfigurationFunction)cellConfigurationFunction
 {
   self = [super init];
