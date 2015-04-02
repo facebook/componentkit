@@ -1,6 +1,6 @@
 ---
 layout: default
-title: ComponentKit | A React-inspired view framework for iOS 
+title: A React-inspired view framework for iOS 
 id: home
 hero: true
 ---
