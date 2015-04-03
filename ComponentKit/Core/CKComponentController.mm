@@ -34,6 +34,22 @@ typedef NS_ENUM(NSUInteger, CKComponentControllerState) {
   CKComponentControllerStateUnmounting,
 };
 
+static NSString *componentStateName(CKComponentControllerState state)
+{
+  switch (state) {
+    case CKComponentControllerStateUnmounted:
+      return @"unmounted";
+    case CKComponentControllerStateMounting:
+      return @"mounting";
+    case CKComponentControllerStateMounted:
+      return @"mounted";
+    case CKComponentControllerStateRemounting:
+      return @"remounting";
+    case CKComponentControllerStateUnmounting:
+      return @"unmounting";
+  };
+}
+
 @implementation CKComponentController
 {
   CKComponentControllerState _state;
@@ -82,7 +98,7 @@ typedef NS_ENUM(NSUInteger, CKComponentControllerState) {
       }
       break;
     default:
-      CKFailAssert(@"Unexpected state %d in %@ (%@)", _state, [self class], _component);
+      CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
   }
 }
 
@@ -103,7 +119,7 @@ typedef NS_ENUM(NSUInteger, CKComponentControllerState) {
       _pendingAnimations.clear();
       break;
     default:
-      CKFailAssert(@"Unexpected state %d in %@ (%@)", _state, [self class], _component);
+      CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
   }
 
   if (_updatingComponent) {
@@ -128,7 +144,7 @@ typedef NS_ENUM(NSUInteger, CKComponentControllerState) {
       CKAssert(component != _component, @"Didn't expect the new component to be unmounting during remount");
       break;
     default:
-      CKFailAssert(@"Unexpected state %d in %@ (%@)", _state, [self class], _component);
+      CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
   }
 }
 
@@ -147,7 +163,7 @@ typedef NS_ENUM(NSUInteger, CKComponentControllerState) {
       CKAssert(component != _component, @"Didn't expect the new component to be unmounted while mounted");
       break;
     default:
-      CKFailAssert(@"Unexpected state %d in %@ (%@)", _state, [self class], _component);
+      CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
   }
 }
 
