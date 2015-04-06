@@ -67,7 +67,7 @@ void CKComponentBoundsAnimationApplyAfterCollectionViewBatchUpdates(id context, 
 
 static NSArray *visibleAndJustOffscreenIndexPaths(UICollectionView *cv)
 {
-  NSMutableArray *sortedIndexPaths = [[[cv indexPathsForVisibleItems] sortedArrayUsingSelector:@selector(compare:)] mutableCopy];
+  NSArray *sortedIndexPaths = [[cv indexPathsForVisibleItems] sortedArrayUsingSelector:@selector(compare:)];
   if ([sortedIndexPaths count] == 0) {
     return sortedIndexPaths;
   }
@@ -76,21 +76,26 @@ static NSArray *visibleAndJustOffscreenIndexPaths(UICollectionView *cv)
   // visible as a result of an item becoming smaller? We grab the layout attributes of a few more items that are
   // offscreen so that we can animate them too. (Only some, though; we don't attempt to get *all* layout attributes.)
 
-  NSIndexPath *afterIndexPath = [sortedIndexPaths lastObject];
+  NSIndexPath *previousIndexPath = [sortedIndexPaths lastObject];
   static const NSUInteger kOffscreenIndexPathCount = 10;
-  for (NSUInteger i = 0; i < kOffscreenIndexPathCount; i++) {
-    if ([afterIndexPath item] == [cv numberOfItemsInSection:[afterIndexPath section]] - 1) {
-      if ([afterIndexPath section] == [cv numberOfSections] - 1) {
+  NSMutableArray *offscreenIndexPaths = [NSMutableArray array];
+  while ([offscreenIndexPaths count] < kOffscreenIndexPathCount) {
+    if ([previousIndexPath item] == [cv numberOfItemsInSection:[previousIndexPath section]] - 1) {
+      NSUInteger nextSection = [previousIndexPath section] + 1;
+      while (nextSection < [cv numberOfSections] && [cv numberOfItemsInSection:nextSection] == 0) {
+        nextSection++;
+      }
+      if (nextSection == [cv numberOfSections]) {
         break; // No more rows to animate.
       }
-      afterIndexPath = [NSIndexPath indexPathForItem:0 inSection:[afterIndexPath section] + 1];
+      previousIndexPath = [NSIndexPath indexPathForItem:0 inSection:nextSection];
     } else {
-      afterIndexPath = [NSIndexPath indexPathForItem:[afterIndexPath item] + 1 inSection:[afterIndexPath section]];
+      previousIndexPath = [NSIndexPath indexPathForItem:[previousIndexPath item] + 1 inSection:[previousIndexPath section]];
     }
-    [sortedIndexPaths addObject:afterIndexPath];
+    [offscreenIndexPaths addObject:previousIndexPath];
   }
 
-  return sortedIndexPaths;
+  return [sortedIndexPaths arrayByAddingObjectsFromArray:offscreenIndexPaths];
 }
 
 - (void)applyBoundsAnimationToCollectionView:(const CKComponentBoundsAnimation &)animation
