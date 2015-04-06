@@ -24,7 +24,7 @@
 #import <ComponentKit/CKArrayControllerChangeset.h>
 #import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
 
-@interface WildeGuessCollectionViewController () <CKComponentProvider, UIScrollViewDelegate>
+@interface WildeGuessCollectionViewController () <CKComponentProvider, UICollectionViewDelegateFlowLayout>
 @end
 
 @implementation WildeGuessCollectionViewController
@@ -89,7 +89,7 @@
                 constrainedSize:[_sizeRangeProvider sizeRangeForBoundingSize:self.collectionView.bounds.size]];
 }
 
-#pragma mark - UICollectionViewFlowLayoutDelegate
+#pragma mark - UICollectionViewDelegateFlowLayout
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
