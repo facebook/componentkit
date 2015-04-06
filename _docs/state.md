@@ -35,7 +35,7 @@ Let's make a simple example of using state for the "Continue Reading…" link.
   NSNumber *state = scope.state();
   return [super newWithComponent:
           [CKTextComponent
-           newWithAttributes:{
+           newWithTextAttributes:{
              .attributedString = message,
              .maximumNumberOfLines = [state boolValue] ? 0 : 5,
            }
