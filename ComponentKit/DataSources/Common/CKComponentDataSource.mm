@@ -10,7 +10,7 @@
 
 #import "CKComponentDataSource.h"
 
-#include <queue>
+#import <libkern/OSAtomic.h>
 
 #import <ComponentKit/CKSectionedArrayController.h>
 
@@ -54,7 +54,7 @@ CKComponentLifecycleManagerAsynchronousUpdateHandler
   CKSectionedArrayController *_outputArrayController;
   CKSectionedArrayController *_inputArrayController;
   CKComponentPreparationQueue *_componentPreparationQueue;
-  std::queue<PreparationBatchID> _operationsInPreparationQueueTracker;
+  volatile int32_t _activeOperationCount;
   CKComponentLifecycleManagerFactory _lifecycleManagerFactory;
 }
 
@@ -280,12 +280,11 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
   output.enumerate(sectionsEnumerator, itemsEnumerator);
 
   preparationQueueBatch.ID = batchID();
-  _operationsInPreparationQueueTracker.push(preparationQueueBatch.ID);
+  OSAtomicIncrement32(&_activeOperationCount);
   [_componentPreparationQueue enqueueBatch:preparationQueueBatch
                                      block:^(const CKArrayControllerSections &sections, PreparationBatchID ID, NSArray *outputBatch, BOOL isContiguousTailInsertion) {
-                                       CKInternalConsistencyCheckIf(_operationsInPreparationQueueTracker.size() > 0, @"We dequeued more batches than what we enqueued something went really wrong.");
-                                       CKInternalConsistencyCheckIf(_operationsInPreparationQueueTracker.front() == ID, @"Batches were executed out of order some were dropped on the floor.");
-                                       _operationsInPreparationQueueTracker.pop();
+                                       int32_t oldCount = OSAtomicDecrement32(&_activeOperationCount);
+                                       CKInternalConsistencyCheckIf(oldCount > 0, @"We dequeued more batches than what we enqueued something went really wrong.");
                                        [self _componentPreparationQueueDidPrepareBatch:outputBatch
                                                                               sections:sections];
                                      }];
@@ -296,7 +295,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
 
 - (BOOL)isComputingChanges
 {
-  return !_operationsInPreparationQueueTracker.empty();
+  return _activeOperationCount > 0;
 }
 
 #pragma mark - Listeners to CKComponentPreparationQueue
