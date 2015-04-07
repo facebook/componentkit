@@ -104,6 +104,16 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
   [_componentDataSource updateContextAndEnqeueReload:newContext];
 }
 
+- (NSInteger)numberOfSections
+{
+  return [_componentDataSource numberOfSections];
+}
+
+- (NSInteger)numberOfObjectsInSection:(NSInteger)section
+{
+  return [_componentDataSource numberOfObjectsInSection:section];
+}
+
 - (id<NSObject>)modelForItemAtIndexPath:(NSIndexPath *)indexPath
 {
   return [[_componentDataSource objectAtIndexPath:indexPath] model];
