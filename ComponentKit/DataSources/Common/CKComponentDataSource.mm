@@ -283,8 +283,8 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
   OSAtomicIncrement32(&_activeOperationCount);
   [_componentPreparationQueue enqueueBatch:preparationQueueBatch
                                      block:^(const CKArrayControllerSections &sections, PreparationBatchID ID, NSArray *outputBatch, BOOL isContiguousTailInsertion) {
-                                       int32_t oldCount = OSAtomicDecrement32(&_activeOperationCount);
-                                       CKInternalConsistencyCheckIf(oldCount > 0, @"We dequeued more batches than what we enqueued something went really wrong.");
+                                       int32_t newCount = OSAtomicDecrement32(&_activeOperationCount);
+                                       CKInternalConsistencyCheckIf(oldCount >= 0, @"We dequeued more batches than what we enqueued something went really wrong.");
                                        [self _componentPreparationQueueDidPrepareBatch:outputBatch
                                                                               sections:sections];
                                      }];
