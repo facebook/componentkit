@@ -75,6 +75,10 @@ typedef void(*CKCellConfigurationFunction)(UICollectionViewCell *cell, NSIndexPa
  */
 - (void)updateContextAndEnqeueReload:(id)newContext;
 
+- (NSInteger)numberOfSections;
+
+- (NSInteger)numberOfObjectsInSection:(NSInteger)section;
+
 /**
  @return The model associated with a certain index path in the collectionView.
  
