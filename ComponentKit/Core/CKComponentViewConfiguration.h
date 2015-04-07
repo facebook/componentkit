@@ -73,6 +73,9 @@ struct CKComponentViewClass {
   bool operator!=(const CKComponentViewClass &other) const { return other.identifier != identifier; }
 
   const std::string &getIdentifier() const { return identifier; }
+
+  /** FB specific internal extension for supporting deprecated API. */
+  friend class CKComponentViewClassFBInternal;
 private:
   std::string identifier;
   UIView *(^factory)(void);
