@@ -393,4 +393,20 @@ static const CKSizeRange kUnrestrictedSize = {};
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
+- (void)testRightAlignedSingleLineTruncation
+{
+  CKLabelComponent *labelComponent =
+  [CKLabelComponent
+   newWithLabelAttributes:{
+     .string = @"90's cray photo booth tote bag bespoke Carles. Plaid wayfarers Odd Future master cleanse tattooed four dollar toast small batch kale chips leggings meh photo booth occupy irony. 90's cray photo booth tote bag bespoke Carles. Plaid wayfarers Odd Future master cleanse tattooed four dollar toast small batch kale chips leggings meh photo booth occupy irony. 90's cray photo booth tote bag bespoke Carles. Plaid wayfarers Odd Future master cleanse tattooed four dollar toast small batch kale chips leggings meh photo booth occupy irony.",
+     .truncationString = @"... more",
+     .maximumNumberOfLines = 1,
+     .alignment = NSTextAlignmentRight
+   }
+   viewAttributes:{
+     {@selector(setBackgroundColor:),[UIColor clearColor]}
+   }];
+  CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
+}
+
 @end
