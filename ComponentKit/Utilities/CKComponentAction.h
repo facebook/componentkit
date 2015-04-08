@@ -45,8 +45,8 @@ void CKComponentActionSend(CKComponentAction action, CKComponent *sender, id con
  Returns a view attribute that configures a component that creates a UIControl to send the given CKComponentAction.
  You can use this with e.g. CKButtonComponent.
 
- @param action Sent up the responder chain when an event occurs. Sender is the component that created the UIControl.
-        The context parameter is always nil.
+ @param action Sent up the responder chain when an event occurs. Sender is the component that created the UIControl;
+        context is the UIEvent that triggered the action.
  @param controlEvents The events that should result in the action being sent. Default is touch up inside.
  */
 CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction action,

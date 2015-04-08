@@ -44,7 +44,7 @@ void CKComponentActionSend(CKComponentAction action, CKComponent *sender, id con
 
 @interface CKComponentActionControlForwarder : NSObject
 - (instancetype)initWithAction:(CKComponentAction)action;
-- (void)handleControlEventFromSender:(UIControl *)sender;
+- (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event;
 @end
 
 typedef std::unordered_map<CKComponentAction, CKComponentActionControlForwarder *> ForwarderMap;
@@ -86,12 +86,12 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction actio
       identifier,
       ^(UIControl *control, id value){
         [control addTarget:forwarder
-                    action:@selector(handleControlEventFromSender:)
+                    action:@selector(handleControlEventFromSender:withEvent:)
           forControlEvents:controlEvents];
       },
       ^(UIControl *control, id value){
         [control removeTarget:forwarder
-                       action:@selector(handleControlEventFromSender:)
+                       action:@selector(handleControlEventFromSender:withEvent:)
              forControlEvents:controlEvents];
       }
     },
@@ -113,10 +113,10 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction actio
   return self;
 }
 
-- (void)handleControlEventFromSender:(UIControl *)sender
+- (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event
 {
   // If the action can be handled by the sender itself, send it there instead of looking up the chain.
-  CKComponentActionSend(_action, sender.ck_component, nil, CKComponentActionSendBehaviorStartAtSender);
+  CKComponentActionSend(_action, sender.ck_component, event, CKComponentActionSendBehaviorStartAtSender);
 }
 
 @end
