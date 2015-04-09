@@ -91,8 +91,8 @@
 - (CGSize)sizeThatFits:(CGSize)size
 {
   CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-  CKComponentLifecycleManagerState state = [_lifecycleManager prepareForUpdateWithModel:_model constrainedSize:constrainedSize context:_context];
-  return state.layout.size;
+  CKComponentLayout layout = [_lifecycleManager layoutForModel:_model constrainedSize:constrainedSize context:_context];
+  return layout.size;
 }
 
 #pragma mark - Accessors

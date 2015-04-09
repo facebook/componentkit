@@ -105,6 +105,15 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   };
 }
 
+- (CKComponentLayout)layoutForModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context
+{
+  CKBuildComponentResult result = CKBuildComponent(self, _state.scopeFrame, ^{
+    return [_componentProvider componentForModel:model context:context];
+  });
+
+  return [result.component layoutThatFits:constrainedSize parentSize:constrainedSize.max];
+}
+
 - (void)updateWithState:(const CKComponentLifecycleManagerState &)state
 {
   BOOL sizeChanged = !CGSizeEqualToSize(_state.layout.size, state.layout.size);
