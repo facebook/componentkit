@@ -17,7 +17,7 @@ EXTERNAL SOURCES:
     :path: ./ComponentKitTestLib
 
 SPEC CHECKSUMS:
-  ComponentKit: 9dbaf4759c1125cf618c848ded3a37f4472fd0da
+  ComponentKit: 78d73c354af113de9cdd4605b825c9ca315da773
   ComponentKitTestLib: 2a3d2e482e316301a0a6c9c298d29fb820f66390
   FBSnapshotTestCase: 9d5fe43b29ae3a0ed8fc829477971b281038f748
   OCMock: a6a7dc0e3997fb9f35d99f72528698ebf60d64f2
