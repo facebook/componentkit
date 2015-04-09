@@ -1,5 +1,5 @@
 PODS:
-  - ComponentKit (0.9)
+  - ComponentKit (0.10)
 
 DEPENDENCIES:
   - ComponentKit (from `../..`)
@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../..
 
 SPEC CHECKSUMS:
-  ComponentKit: 78d73c354af113de9cdd4605b825c9ca315da773
+  ComponentKit: b4af3b571640eee92d42c8f78bea6d3b9fae7f77
 
 COCOAPODS: 0.36.0
