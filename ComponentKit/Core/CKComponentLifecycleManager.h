@@ -44,6 +44,8 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
 
 - (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context;
 
+- (CKComponentLayout)layoutForModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context;
+
 /**
  Updates the state to the new one without mounting the view.
 
