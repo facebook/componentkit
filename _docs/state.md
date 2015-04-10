@@ -22,6 +22,7 @@ Just like React, `CKComponent` has state.
 Let's make a simple example of using state for the "Continue Reading…" link.
 
 ```objc++
+#import "CKComponentSubclass.h" // import to expose updateState:
 @implementation MessageComponent
 
 + (id)initialState
