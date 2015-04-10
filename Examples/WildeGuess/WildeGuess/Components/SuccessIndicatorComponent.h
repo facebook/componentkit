@@ -9,7 +9,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/ComponentKit.h>
 
 /** A component indicating whether a quote belongs to Oscar Wilde. */
 @interface SuccessIndicatorComponent : CKCompositeComponent

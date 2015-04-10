@@ -11,18 +11,13 @@
 
 #import "WildeGuessCollectionViewController.h"
 
-#import <ComponentKit/CKComponentProvider.h>
-
-#import <ComponentKit/CKCollectionViewDataSource.h>
+#import <ComponentKit/ComponentKit.h>
 
 #import "InteractiveQuoteComponent.h"
 #import "QuoteModelController.h"
 #import "Quote.h"
 #import "QuoteContext.h"
 #import "QuotesPage.h"
-
-#import <ComponentKit/CKArrayControllerChangeset.h>
-#import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
 
 @interface WildeGuessCollectionViewController () <CKComponentProvider, UICollectionViewDelegateFlowLayout>
 @end

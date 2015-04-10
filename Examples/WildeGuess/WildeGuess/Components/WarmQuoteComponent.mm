@@ -11,13 +11,6 @@
 
 #import "WarmQuoteComponent.h"
 
-#import <ComponentKit/CKImageComponent.h>
-#import <ComponentKit/CKInsetComponent.h>
-#import <ComponentKit/CKRatioLayoutComponent.h>
-#import <ComponentKit/CKStackLayoutComponent.h>
-
-#import <ComponentKit/CKLabelComponent.h>
-
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"
 

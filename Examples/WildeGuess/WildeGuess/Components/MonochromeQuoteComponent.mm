@@ -11,13 +11,6 @@
 
 #import "MonochromeQuoteComponent.h"
 
-#import <ComponentKit/CKBackgroundLayoutComponent.h>
-#import <ComponentKit/CKInsetComponent.h>
-#import <ComponentKit/CKOverlayLayoutComponent.h>
-#import <ComponentKit/CKStackLayoutComponent.h>
-
-#import <ComponentKit/CKLabelComponent.h>
-
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"
 
