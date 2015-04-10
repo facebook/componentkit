@@ -91,7 +91,7 @@ static void stretchChildrenAlongCrossDimension(std::vector<CKStackUnpositionedIt
     // restretch all stretchable children along the cross axis using the new min. set their max size to childCrossMax,
     // not crossMax, so that if any of them would choose a larger size just because the min size increased (weird!)
     // they are forced to choose the same width as all the other components.
-    if (alignItems == CKStackLayoutAlignItemsStretch && fabsf(cross - childCrossMax) > 0.01) {
+    if (alignItems == CKStackLayoutAlignItemsStretch && fabs(cross - childCrossMax) > 0.01) {
       l.layout = crossChildLayout(l.child, style, stack, stack, childCrossMax, childCrossMax, size);
     }
   }
@@ -185,7 +185,7 @@ static const CGFloat kViolationEpsilon = 0.01;
  */
 static std::function<BOOL(const CKStackUnpositionedItem &)> isFlexibleInViolationDirection(const CGFloat violation)
 {
-  if (fabsf(violation) < kViolationEpsilon) {
+  if (fabs(violation) < kViolationEpsilon) {
     return [](const CKStackUnpositionedItem &l) { return NO; };
   } else if (violation > 0) {
     return [](const CKStackUnpositionedItem &l) { return l.child.flexGrow; };
