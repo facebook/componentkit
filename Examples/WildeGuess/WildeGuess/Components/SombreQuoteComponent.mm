@@ -11,10 +11,7 @@
 
 #import "SombreQuoteComponent.h"
 
-#import <ComponentKit/CKInsetComponent.h>
-#import <ComponentKit/CKStackLayoutComponent.h>
-
-#import <ComponentKit/CKLabelComponent.h>
+#import <ComponentKit/ComponentKit.h>
 
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"

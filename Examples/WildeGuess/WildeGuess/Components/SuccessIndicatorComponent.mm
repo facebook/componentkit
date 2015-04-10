@@ -11,12 +11,7 @@
 
 #import "SuccessIndicatorComponent.h"
 
-#import <ComponentKit/CKBackgroundLayoutComponent.h>
-#import <ComponentKit/CKCenterLayoutComponent.h>
-#import <ComponentKit/CKInsetComponent.h>
-#import <ComponentKit/CKStackLayoutComponent.h>
-
-#import <ComponentKit/CKLabelComponent.h>
+#import <ComponentKit/ComponentKit.h>
 
 @implementation SuccessIndicatorComponent
 

@@ -9,7 +9,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import "CKCompositeComponent.h"
+#import <ComponentKit/CKCompositeComponent.h>
 
 @class Quote;
 @class QuoteContext;
