@@ -11,8 +11,6 @@
 
 #import "MonochromeQuoteComponent.h"
 
-#import <ComponentKit/ComponentKit.h>
-
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"
 

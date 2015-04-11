@@ -11,8 +11,6 @@
 
 #import "WarmQuoteComponent.h"
 
-#import <ComponentKit/ComponentKit.h>
-
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"
 

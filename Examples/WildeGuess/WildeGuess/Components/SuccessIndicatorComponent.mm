@@ -11,8 +11,6 @@
 
 #import "SuccessIndicatorComponent.h"
 
-#import <ComponentKit/ComponentKit.h>
-
 @implementation SuccessIndicatorComponent
 
 + (instancetype)newWithIndicatesSuccess:(BOOL)indicatesSuccess

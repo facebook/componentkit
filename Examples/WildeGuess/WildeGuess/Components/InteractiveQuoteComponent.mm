@@ -11,7 +11,6 @@
 
 #import "InteractiveQuoteComponent.h"
 
-#import <ComponentKit/ComponentKit.h>
 #import <ComponentKit/CKComponentSubclass.h>
 
 #import "Quote.h"
