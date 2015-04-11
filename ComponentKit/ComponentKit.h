@@ -39,9 +39,6 @@
 #import <ComponentKit/CKComponentPreparationQueueListener.h>
 #import <ComponentKit/CKComponentPreparationQueueTypes.h>
 #import <ComponentKit/CKComponentProvider.h>
-//Debug
-#import <ComponentKit/CKComponentDebugController.h>
-#import <ComponentKit/CKComponentHierarchyDebugHelper.h>
 //HostingView
 #import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
 #import <ComponentKit/CKComponentHostingView.h>
