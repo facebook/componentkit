@@ -34,6 +34,6 @@ struct CKComponentAnimation {
   id didRemount(id context) const;
   void cleanup(id context) const;
 
-private:
+protected:
   CKComponentAnimationHooks hooks;
 };
