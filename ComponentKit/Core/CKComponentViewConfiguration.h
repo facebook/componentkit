@@ -53,16 +53,6 @@ struct CKComponentViewClass {
                        CKComponentViewReuseBlock didEnterReusePool = nil,
                        CKComponentViewReuseBlock willLeaveReusePool = nil);
 
-  /**
-   Soon to be deprecated and removed constructor using a string indentifier and block-based view factory.
-   Preferred constructor (located right above this comment) uses pure C function,
-   since that makes accidental object capture and incorrect view reuse much harder.
-   */
-  CKComponentViewClass(const std::string &ident,
-                       UIView *(^factory)(void),
-                       CKComponentViewReuseBlock didEnterReusePool = nil,
-                       CKComponentViewReuseBlock willLeaveReusePool = nil);
-
   /** Invoked by the infrastructure to create a new instance of the view. You should not call this directly. */
   UIView *createView() const;
 
@@ -77,6 +67,10 @@ struct CKComponentViewClass {
   /** FB specific internal extension for supporting deprecated API. */
   friend class CKComponentViewClassFBInternal;
 private:
+  CKComponentViewClass(const std::string &ident,
+                       UIView *(^factory)(void),
+                       CKComponentViewReuseBlock didEnterReusePool = nil,
+                       CKComponentViewReuseBlock willLeaveReusePool = nil);
   std::string identifier;
   UIView *(^factory)(void);
   CKComponentViewReuseBlock didEnterReusePool;
