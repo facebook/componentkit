@@ -113,6 +113,9 @@
 
 static BOOL scrolledToBottomWithBuffer(CGPoint contentOffset, CGSize contentSize, UIEdgeInsets contentInset, CGRect bounds)
 {
+  if( contentSize.height == 0 ) {
+    return NO;
+  }
   CGFloat buffer = CGRectGetHeight(bounds) - contentInset.top - contentInset.bottom;
   const CGFloat maxVisibleY = (contentOffset.y + bounds.size.height);
   const CGFloat actualMaxY = (contentSize.height + contentInset.bottom);
