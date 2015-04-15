@@ -80,10 +80,10 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
 
 #pragma mark - Tests
 
-@interface CKNetworkImageComponentTests : CKComponentSnapshotTestCase
+@interface CKAsyncImageComponentTests : CKComponentSnapshotTestCase
 @end
 
-@implementation CKNetworkImageComponentTests
+@implementation CKAsyncImageComponentTests
 
 - (void)setUp
 {
