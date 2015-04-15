@@ -28,8 +28,4 @@
   return _enabled ? model : nil;
 }
 
-- (NSString *)componentComplianceReason:(id)model
-{
-  return _enabled ? nil : @"Decider disabled by default";
-}
 @end
