@@ -8,35 +8,35 @@
  *
  */
 
-#import "CKNetworkImageComponent.h"
+#import "CKAsyncImageComponent.h"
 
-@interface CKNetworkImageSpecifier : NSObject
-- (instancetype)initWithURL:(NSURL *)url
-               defaultImage:(UIImage *)defaultImage
-            imageDownloader:(id<CKNetworkImageDownloading>)imageDownloader
-                  scenePath:(id)scenePath
-                   cropRect:(CGRect)cropRect;
-@property (nonatomic, copy, readonly) NSURL *url;
+@interface CKAsyncImageSpecifier : NSObject
+- (instancetype)initWithIdentifier:(id)identifier
+                      defaultImage:(UIImage *)defaultImage
+                   imageDownloader:(id<CKAsyncImageRetrieval>)imageDownloader
+                         scenePath:(id)scenePath
+                          cropRect:(CGRect)cropRect;
+@property (nonatomic, readonly) id identifier;
 @property (nonatomic, strong, readonly) UIImage *defaultImage;
-@property (nonatomic, strong, readonly) id<CKNetworkImageDownloading> imageDownloader;
+@property (nonatomic, strong, readonly) id<CKAsyncImageRetrieval> imageDownloader;
 @property (nonatomic, strong, readonly) id scenePath;
 @property (nonatomic, assign, readonly) CGRect cropRect;
 @end
 
-@interface CKNetworkImageComponentView : UIImageView
-@property (nonatomic, strong) CKNetworkImageSpecifier *specifier;
+@interface CKAsyncImageComponentView : UIImageView
+@property (nonatomic, strong) CKAsyncImageSpecifier *specifier;
 - (void)didEnterReusePool;
 - (void)willLeaveReusePool;
 @end
 
-@implementation CKNetworkImageComponent
+@implementation CKAsyncImageComponent
 
-+ (instancetype)newWithURL:(NSURL *)url
-           imageDownloader:(id<CKNetworkImageDownloading>)imageDownloader
-                 scenePath:(id)scenePath
-                      size:(const CKComponentSize &)size
-                   options:(const CKNetworkImageComponentOptions &)options
-                attributes:(const CKViewComponentAttributeValueMap &)passedAttributes
++ (instancetype)newWithIdentifier:(id)identifier
+                  imageDownloader:(id<CKAsyncImageRetrieval>)imageDownloader
+                        scenePath:(id)scenePath
+                             size:(const CKComponentSize &)size
+                          options:(const CKAsyncImageComponentOptions &)options
+                       attributes:(const CKViewComponentAttributeValueMap &)passedAttributes
 {
   CGRect cropRect = options.cropRect;
   if (CGRectIsEmpty(cropRect)) {
@@ -44,31 +44,36 @@
   }
   CKViewComponentAttributeValueMap attributes(passedAttributes);
   attributes.insert({
-    {@selector(setSpecifier:), [[CKNetworkImageSpecifier alloc] initWithURL:url
-                                                               defaultImage:options.defaultImage
-                                                            imageDownloader:imageDownloader
-                                                                  scenePath:scenePath
-                                                                   cropRect:cropRect]},
+    {@selector(setSpecifier:), [[CKAsyncImageSpecifier alloc] initWithIdentifier:identifier
+                                                                    defaultImage:options.defaultImage
+                                                                 imageDownloader:imageDownloader
+                                                                       scenePath:scenePath
+                                                                        cropRect:cropRect]},
 
   });
   return [super newWithView:{
-    {[CKNetworkImageComponentView class], @selector(didEnterReusePool), @selector(willLeaveReusePool)},
+    {[CKAsyncImageComponentView class], @selector(didEnterReusePool), @selector(willLeaveReusePool)},
     std::move(attributes)
   } size:size];
 }
 
 @end
 
-@implementation CKNetworkImageSpecifier
+@implementation CKAsyncImageSpecifier
 
-- (instancetype)initWithURL:(NSURL *)url
-               defaultImage:(UIImage *)defaultImage
-            imageDownloader:(id<CKNetworkImageDownloading>)imageDownloader
-                  scenePath:(id)scenePath
-                   cropRect:(CGRect)cropRect
+- (instancetype)initWithIdentifier:(id)identifier
+                      defaultImage:(UIImage *)defaultImage
+                   imageDownloader:(id<CKAsyncImageRetrieval>)imageDownloader
+                         scenePath:(id)scenePath
+                          cropRect:(CGRect)cropRect
 {
   if (self = [super init]) {
-    _url = [url copy];
+    if ([identifier respondsToSelector:@selector(copyWithZone:)]) {
+      _identifier = [identifier copy];
+    }
+    else {
+      _identifier = identifier;
+    }
     _defaultImage = defaultImage;
     _imageDownloader = imageDownloader;
     _scenePath = scenePath;
@@ -79,7 +84,7 @@
 
 - (NSUInteger)hash
 {
-  return [_url hash];
+  return [_identifier hash];
 }
 
 - (BOOL)isEqual:(id)object
@@ -87,8 +92,8 @@
   if (self == object) {
     return YES;
   } else if ([object isKindOfClass:[self class]]) {
-    CKNetworkImageSpecifier *other = object;
-    return CKObjectIsEqual(_url, other->_url)
+    CKAsyncImageSpecifier *other = object;
+    return CKObjectIsEqual(_identifier, other->_identifier)
            && CKObjectIsEqual(_defaultImage, other->_defaultImage)
            && CKObjectIsEqual(_imageDownloader, other->_imageDownloader)
            && CKObjectIsEqual(_scenePath, other->_scenePath);
@@ -98,7 +103,7 @@
 
 @end
 
-@implementation CKNetworkImageComponentView
+@implementation CKAsyncImageComponentView
 {
   BOOL _inReusePool;
   id _download;
@@ -120,7 +125,7 @@
   _download = nil;
 }
 
-- (void)setSpecifier:(CKNetworkImageSpecifier *)specifier
+- (void)setSpecifier:(CKAsyncImageSpecifier *)specifier
 {
   if (CKObjectIsEqual(specifier, _specifier)) {
     return;
@@ -160,17 +165,17 @@
     return;
   }
 
-  if (_specifier.url == nil) {
+  if (_specifier.identifier == nil) {
     return;
   }
 
-  __weak CKNetworkImageComponentView *weakSelf = self;
-  _download = [_specifier.imageDownloader downloadImageWithURL:_specifier.url
-                                                     scenePath:_specifier.scenePath
-                                                        caller:self
-                                                 callbackQueue:dispatch_get_main_queue()
-                                         downloadProgressBlock:nil
-                                                    completion:^(CGImageRef image, NSError *error)
+  __weak CKAsyncImageComponentView *weakSelf = self;
+  _download = [_specifier.imageDownloader downloadImageWithIdentifier:_specifier.identifier
+                                                            scenePath:_specifier.scenePath
+                                                               caller:self
+                                                        callbackQueue:dispatch_get_main_queue()
+                                                downloadProgressBlock:nil
+                                                           completion:^(CGImageRef image, NSError *error)
                {
                  [weakSelf didDownloadImage:image error:error];
                }];
