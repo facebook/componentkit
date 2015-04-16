@@ -17,6 +17,11 @@
 @class CKComponentController;
 @protocol CKComponentStateListener;
 
+typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
+  CKComponentAnnouncedEventTreeWillAppear,
+  CKComponentAnnouncedEventTreeDidDisappear,
+};
+
 @interface CKComponentScopeFrame : NSObject
 
 /**
@@ -59,12 +64,7 @@
 
 - (void)updateState:(id (^)(id))updateFunction tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate;
 
-/**
- For internal use only; forwards a selector to all component controllers that override it.
- - Only works with a whitelisted set of selectors;
- - Only invokes the selector on a controller if it is *overridden* from the base CKComponentController implementation,
-   for efficiency.
- */
-- (void)announceEventToControllers:(SEL)selector;
+/** For internal use only; sends the given event to all component controllers that implement it. */
+- (void)announceEventToControllers:(CKComponentAnnouncedEvent)event;
 
 @end

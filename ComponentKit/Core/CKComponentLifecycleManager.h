@@ -98,14 +98,6 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
  */
 - (id)model;
 
-/**
- Events forwarded to children: note that ALL controllers implementing this selector will be notified
- */
-// This events will be called when the component appears on screen, corresponds to willDisplayCell
-- (void)componentTreeWillAppear;
-// This events will be called when the component disappears, corresponds to willEndDisplayingCell
-- (void)componentTreeDidDisappear;
-
 @end
 
 

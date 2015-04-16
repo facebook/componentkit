@@ -11,7 +11,6 @@
 #import "CKComponentScopeFrame.h"
 
 #import <unordered_map>
-#import <vector>
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
@@ -44,9 +43,9 @@ namespace std {
   };
 }
 
-static const std::vector<SEL> announceableEvents = {
-  @selector(componentTreeWillAppear),
-  @selector(componentTreeDidDisappear),
+static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInteger>, std::equal_to<NSUInteger>> announceableEvents = {
+  {CKComponentAnnouncedEventTreeWillAppear, @selector(componentTreeWillAppear)},
+  {CKComponentAnnouncedEventTreeDidDisappear, @selector(componentTreeDidDisappear)},
 };
 
 @interface CKComponentScopeFrame ()
@@ -56,7 +55,7 @@ static const std::vector<SEL> announceableEvents = {
 @implementation CKComponentScopeFrame {
   id _modifiedState;
   std::unordered_map<_CKStateScopeKey, CKComponentScopeFrame *> _children;
-  std::unordered_multimap<SEL, CKComponentController *> _eventRegistration;
+  std::unordered_multimap<CKComponentAnnouncedEvent, CKComponentController *, std::hash<NSUInteger>, std::equal_to<NSUInteger>> _eventRegistration;
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -74,9 +73,9 @@ static const std::vector<SEL> announceableEvents = {
     _controller = controller;
     _root = rootFrame ? rootFrame : self;
 
-    for (const auto announceableEvent : announceableEvents) {
-      if (CKSubclassOverridesSelector([CKComponentController class], [controller class], announceableEvent)) {
-        [_root registerController:controller forSelector:announceableEvent];
+    for (const auto &announceableEvent : announceableEvents) {
+      if (CKSubclassOverridesSelector([CKComponentController class], [controller class], announceableEvent.second)) {
+        [_root registerController:controller forEvent:(CKComponentAnnouncedEvent)announceableEvent.first];
       }
     }
   }
@@ -173,20 +172,19 @@ static const std::vector<SEL> announceableEvents = {
   _owningComponent = component;
 }
 
-- (void)registerController:(CKComponentController *)controller forSelector:(SEL)selector
+- (void)registerController:(CKComponentController *)controller forEvent:(CKComponentAnnouncedEvent)event
 {
-  _eventRegistration.insert({{selector, controller}});
+  _eventRegistration.insert({{event, controller}});
 }
 
-- (void)announceEventToControllers:(SEL)selector
+- (void)announceEventToControllers:(CKComponentAnnouncedEvent)announcedEvent
 {
-  CKAssert(std::find(announceableEvents.begin(), announceableEvents.end(), selector) != announceableEvents.end(),
-           @"Can only announce a whitelisted events, and %@ is not on the list.", NSStringFromSelector(selector));
-  auto range = _eventRegistration.equal_range(selector);
+  const auto range = _eventRegistration.equal_range(announcedEvent);
+  const SEL sel = announceableEvents.at(announcedEvent);
   for (auto it = range.first; it != range.second; ++it) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [it->second performSelector:selector];
+    [it->second performSelector:sel];
 #pragma clang diagnostic pop
   }
 }
