@@ -189,15 +189,6 @@ static const CKSizeRange size = {{40, 40}, {40, 40}};
                         @"Expect the manager to leave view untouched after detach");
 }
 
-- (void)testNotifyingControllerThroughLifecycleManager
-{
-  notified = NO;
-  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size context:nil]];
-  [lifeManager componentTreeWillAppear];
-  XCTAssertTrue(notified, @"Expect the controller to be notified of the event");
-}
-
 - (void)testCallingUpdateWithStateTriggersSizeDidChangeCallback
 {
   CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];

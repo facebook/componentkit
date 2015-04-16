@@ -198,16 +198,6 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   return _state.model;
 }
 
-- (void)componentTreeWillAppear
-{
-  [_state.scopeFrame announceEventToControllers:@selector(componentTreeWillAppear)];
-}
-
-- (void)componentTreeDidDisappear
-{
-  [_state.scopeFrame announceEventToControllers:@selector(componentTreeDidDisappear)];
-}
-
 #pragma mark - CKComponentStateListener
 
 - (void)componentStateDidEnqueueStateModificationWithTryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
