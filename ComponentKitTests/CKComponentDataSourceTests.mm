@@ -1059,35 +1059,6 @@ static const CKSizeRange constrainedSize = {{320, 0}, {320, INFINITY}};
   [_delegate reset];
 }
 
-- (void)testObjectForUUIDWithNilUUIDReturnsNil
-{
-  [self configureWithMultipleSectionsAndItems];
-
-  auto pair = [_dataSource objectForUUID:nil];
-  XCTAssertNil(pair.first);
-  XCTAssertNil(pair.second);
-}
-
-- (void)testObjectForUUIDWithNotFoundUUIDReturnsNil
-{
-  [self configureWithMultipleSectionsAndItems];
-
-  auto pair = [_dataSource objectForUUID:@"123456789"];
-  XCTAssertNil(pair.first);
-  XCTAssertNil(pair.second);
-}
-
-- (void)testObjectForUUIDReturnsObjectWhenFound
-{
-  [self configureWithMultipleSectionsAndItems];
-
-  CKComponentDataSourceOutputItem *item = [_dataSource objectAtIndexPath:IndexPath(1, 0).toNSIndexPath()];
-  auto pair = [_dataSource objectForUUID:[item UUID]];
-
-  XCTAssertEqualObjects([pair.first model], @"Batman");
-  XCTAssertEqualObjects(pair.second, IndexPath(1, 0).toNSIndexPath());
-}
-
 - (void)testIsComputingChanges
 {
   [self configureWithMultipleSectionsAndItems];
