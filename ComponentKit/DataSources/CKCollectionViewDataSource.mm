@@ -24,12 +24,12 @@
 #import "CKCollectionViewDataSourceCell.h"
 #import "CKComponentLifecycleManager.h"
 #import "CKComponentRootView.h"
+#import "CKComponentScopeFrame.h"
 
 using namespace CK::ArrayController;
 
 @interface CKCollectionViewDataSource () <
 UICollectionViewDataSource,
-UICollectionViewDelegate,
 CKComponentDataSourceDelegate
 >
 @end
@@ -112,6 +112,16 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
   return [[[_componentDataSource objectAtIndexPath:indexPath] lifecycleManager] size];
+}
+
+- (void)announceWillAppearForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  [[[_componentDataSource objectAtIndexPath:indexPath] lifecycleManagerState].scopeFrame announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+}
+
+- (void)announceDidDisappearForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  [[[_componentDataSource objectAtIndexPath:indexPath] lifecycleManagerState].scopeFrame announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
 }
 
 #pragma mark - UICollectionViewDataSource
