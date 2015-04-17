@@ -93,11 +93,6 @@ typedef BOOL(^CKComponentDataSourcePredicate)(CKComponentDataSourceOutputItem *,
 - (std::pair<CKComponentDataSourceOutputItem *, NSIndexPath *>)firstObjectPassingTest:(CKComponentDataSourcePredicate)predicate;
 
 /**
- This is O(N).
- */
-- (std::pair<CKComponentDataSourceOutputItem *, NSIndexPath *>)objectForUUID:(NSString *)UUID;
-
-/**
  @return YES if the datasource has changesets currently enqueued.
  */
 - (BOOL)isComputingChanges;

@@ -161,14 +161,6 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
   return [_outputArrayController firstObjectPassingTest:predicate];
 }
 
-- (std::pair<CKComponentDataSourceOutputItem *, NSIndexPath *>)objectForUUID:(NSString *)UUID
-{
-  return [self firstObjectPassingTest:
-          ^BOOL(CKComponentDataSourceOutputItem *object, NSIndexPath *indexPath, BOOL *stop) {
-            return [[object UUID] isEqual:UUID];
-          }];
-}
-
 - (void)enqueueReload
 {
   __block CKArrayControllerInputItems items;
