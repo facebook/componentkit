@@ -198,6 +198,11 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   return _state.model;
 }
 
+- (CKComponentScopeFrame *)scopeFrame
+{
+  return _state.scopeFrame;
+}
+
 #pragma mark - CKComponentStateListener
 
 - (void)componentStateDidEnqueueStateModificationWithTryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate

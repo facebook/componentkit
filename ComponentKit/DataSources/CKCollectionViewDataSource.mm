@@ -116,12 +116,12 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
 
 - (void)announceWillAppearForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  [[[_componentDataSource objectAtIndexPath:indexPath] lifecycleManagerState].scopeFrame announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  [[[_componentDataSource objectAtIndexPath:indexPath] lifecycleManager].scopeFrame announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
 }
 
 - (void)announceDidDisappearForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  [[[_componentDataSource objectAtIndexPath:indexPath] lifecycleManagerState].scopeFrame announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+  [[[_componentDataSource objectAtIndexPath:indexPath] lifecycleManager].scopeFrame announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
 }
 
 #pragma mark - UICollectionViewDataSource
