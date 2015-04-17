@@ -32,9 +32,7 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
 
 @interface CKComponentLifecycleManager : NSObject
 
-/**
- Designated initializer
- */
+/** Designated initializer */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider;
 
 /** See @protocol CKComponentLifecycleManagerAsynchronousUpdateHandler */
@@ -83,20 +81,17 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
  */
 - (void)detachFromView;
 
-/**
- Returns whether the lifecycle manager is attached to a view.
- */
+/** Returns whether the lifecycle manager is attached to a view. */
 - (BOOL)isAttachedToView;
 
-/**
- Returns the current top-level layout size for the component.
- */
+/** The current top-level layout size for the component */
 - (CGSize)size;
 
-/**
- Returns the last model associated with this lifecycle manager
- */
+/** The last model associated with this lifecycle manager */
 - (id)model;
+
+/** The current scope frame associated with this lifecycle manager */
+- (CKComponentScopeFrame *)scopeFrame;
 
 @end
 
