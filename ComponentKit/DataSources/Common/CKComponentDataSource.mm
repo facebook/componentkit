@@ -41,9 +41,6 @@ CKComponentLifecycleManagerAsynchronousUpdateHandler
   id<NSObject> _context;
 
   /*
-   Please see the discussion on why we need two arrays
-   https://www.facebook.com/groups/574870245894928/permalink/645686615479957/
-
    The basic flow is
 
    Changes -> _inputArrayController -(async)-> Queue -(async)-> _outputArrayController -> delegate

@@ -508,10 +508,6 @@ static Output::Changeset exampleOutputChangeset(void)
                         @[@(CommandTypeItem), @(CKArrayControllerChangeTypeInsert)],
                         ];
 
-  /**
-   I think I passed.
-   https://our.intern.facebook.com/intern/wiki/index.php/Engineering/Interviewing/iOS_Interview/Ninja/Remove_String_Duplicates
-   */
   NSOrderedSet *commands = [[NSOrderedSet alloc] initWithArray:allCommands];
 
   XCTAssertEqualObjects([commands array], expected, @"Commands received in incorrect order");
