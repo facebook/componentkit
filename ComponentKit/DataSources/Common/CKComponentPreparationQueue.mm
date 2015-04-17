@@ -157,8 +157,8 @@
 {
   if (self = [super init]) {
     _announcer = [[CKComponentPreparationQueueListenerAnnouncer alloc] init];
-    _concurrentQueue = dispatch_queue_create("com.facebook.component-preparation-queue.concurrent", DISPATCH_QUEUE_CONCURRENT);
-    _inputQueue = dispatch_queue_create("com.facebook.component-preparation-queue.serial", DISPATCH_QUEUE_SERIAL);
+    _concurrentQueue = dispatch_queue_create("org.componentkit.component-preparation-queue.concurrent", DISPATCH_QUEUE_CONCURRENT);
+    _inputQueue = dispatch_queue_create("org.componentkit.component-preparation-queue.serial", DISPATCH_QUEUE_SERIAL);
     if (queueWidth > 0) {
       _queueWidth = queueWidth;
     } else {

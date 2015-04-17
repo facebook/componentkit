@@ -212,7 +212,7 @@ void AttributeApplicator::apply(UIView *view, const CKComponentViewConfiguration
   // Reset optimistic mutations so that applicators see they see the state they expect.
   CKResetOptimisticMutationsForView(view);
 
-  // Why a pointer? https://our.intern.facebook.com/intern/dex/qa/657083164365634/
+  // Avoid the static destructor fiasco, use a pointer:
   static const auto *empty = new CKViewComponentAttributeValueMap();
 
   CKComponentAttributeSetWrapper *wrapper = objc_getAssociatedObject(view, &kPersistentAttributesViewKey);
