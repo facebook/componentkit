@@ -156,11 +156,6 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
   }
 }
 
-- (std::pair<CKComponentDataSourceOutputItem *, NSIndexPath *>)firstObjectPassingTest:(CKComponentDataSourcePredicate)predicate
-{
-  return [_outputArrayController firstObjectPassingTest:predicate];
-}
-
 - (void)enqueueReload
 {
   __block CKArrayControllerInputItems items;
