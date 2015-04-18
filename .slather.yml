@@ -1,0 +1,5 @@
+service: travis_ci
+coverage_service: coveralls
+xcodeproj: ComponentKit.xcodeproj
+source_directory: ComponentKit
+
