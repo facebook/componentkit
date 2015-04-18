@@ -172,18 +172,17 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
   if (_context != newContext) {
     _context = newContext;
 		
-		__block CKArrayControllerInputItems items;
-		[_inputArrayController enumerateObjectsUsingBlock:^(CKComponentDataSourceInputItem *object, NSIndexPath *indexPath, BOOL *stop) {
-			CKComponentDataSourceInputItem *newItem =
-			[[CKComponentDataSourceInputItem alloc] initWithLifecycleManager:object.lifecycleManager
-																																 model:object.model
-																															 context:_context
-																											 constrainedSize:object.constrainedSize
-																																	UUID:object.UUID];
-			items.update(indexPath,newItem);
-		}];
-		CKArrayControllerInputChangeset changeset(items);
-		[self _enqueueChangeset:changeset];
+    __block CKArrayControllerInputItems items;
+    [_inputArrayController enumerateObjectsUsingBlock:^(CKComponentDataSourceInputItem *object, NSIndexPath *indexPath, BOOL *stop) {
+      CKComponentDataSourceInputItem *newItem =
+      [[CKComponentDataSourceInputItem alloc] initWithLifecycleManager:object.lifecycleManager																																 model:object.model
+							       context:_context
+						       constrainedSize:object.constrainedSize
+								  UUID:object.UUID];
+      items.update(indexPath,newItem);
+    }];
+    CKArrayControllerInputChangeset changeset(items);
+    [self _enqueueChangeset:changeset];
   }
 }
 
