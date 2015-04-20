@@ -1,6 +1,6 @@
 PODS:
   - ComponentKit (0.10)
-  - ComponentKitTestLib (0.1.0):
+  - ComponentKitTestLib (0.10):
     - FBSnapshotTestCase
   - FBSnapshotTestCase (1.6)
   - OCMock (2.2.4)
@@ -12,13 +12,13 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   ComponentKit:
-    :path: .
+    :path: "."
   ComponentKitTestLib:
-    :path: ./ComponentKitTestLib
+    :path: "./ComponentKitTestLib"
 
 SPEC CHECKSUMS:
   ComponentKit: b4af3b571640eee92d42c8f78bea6d3b9fae7f77
-  ComponentKitTestLib: 2a3d2e482e316301a0a6c9c298d29fb820f66390
+  ComponentKitTestLib: 95d8aee7b372fed23e34f30d4624bfee1b2ea4a6
   FBSnapshotTestCase: 9d5fe43b29ae3a0ed8fc829477971b281038f748
   OCMock: a6a7dc0e3997fb9f35d99f72528698ebf60d64f2
 
