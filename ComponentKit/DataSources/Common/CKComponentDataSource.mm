@@ -10,6 +10,7 @@
 
 #import "CKComponentDataSource.h"
 
+#include <libkern/OSAtomic.h>
 #include <queue>
 
 #import <ComponentKit/CKSectionedArrayController.h>
@@ -39,6 +40,9 @@ CKComponentLifecycleManagerAsynchronousUpdateHandler
 {
   id<CKComponentDeciding> _decider;
   id<NSObject> _context;
+
+  // Tracks whether a changeset is actively being enqueued so that concurrent use can be asserted on.
+  volatile uint32_t _changesetBeingEnqueued;
 
   /*
    The basic flow is
@@ -158,6 +162,9 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
 
 - (void)enqueueReload
 {
+  const BOOL isConcurrentEnqueue = OSAtomicOr32Orig(YES, &_changesetBeingEnqueued);
+  CKAssert(!isConcurrentEnqueue, @"%s cannot be called concurrently while enqueueing another changeset from another thread.", sel_getName(_cmd));
+
   __block CKArrayControllerInputItems items;
   [_inputArrayController enumerateObjectsUsingBlock:^(id<NSObject> object, NSIndexPath *indexPath, BOOL *stop) {
     items.update(indexPath, object);
@@ -184,6 +191,9 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
  */
 - (PreparationBatchID)enqueueChangeset:(const CKArrayControllerInputChangeset &)changeset constrainedSize:(const CKSizeRange &)constrainedSize
 {
+  const BOOL isConcurrentEnqueue = OSAtomicOr32Orig(YES, &_changesetBeingEnqueued);
+  CKAssert(!isConcurrentEnqueue, @"%s cannot be called concurrently while enqueueing another changeset from another thread.", sel_getName(_cmd));
+
   CKArrayControllerInputChangeset::Mapper mapper =
   ^id<NSObject>(const CKArrayControllerIndexPath &indexPath, id<NSObject> object, CKArrayControllerChangeType type, BOOL *stop) {
     CKComponentLifecycleManager *lifecycleManager = nil;
@@ -273,6 +283,9 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
                                        [self _componentPreparationQueueDidPrepareBatch:outputBatch
                                                                               sections:sections];
                                      }];
+
+  OSAtomicAnd32(NO, &_changesetBeingEnqueued);
+
   return preparationQueueBatch.ID;
 }
 
@@ -407,6 +420,9 @@ CKArrayControllerInputItems::Enumerator itemEnumerator =
 
 - (void)handleAsynchronousUpdateForComponentLifecycleManager:(CKComponentLifecycleManager *)manager
 {
+  const BOOL isConcurrentEnqueue = OSAtomicOr32Orig(YES, &_changesetBeingEnqueued);
+  CKAssert(!isConcurrentEnqueue, @"%s cannot be called concurrently while enqueueing another changeset from another thread.", sel_getName(_cmd));
+
   std::pair<id<NSObject>, NSIndexPath *> itemToUpdate = [_inputArrayController firstObjectPassingTest:^BOOL(CKComponentDataSourceInputItem *object, NSIndexPath *indexPath, BOOL *stop) {
     return object.lifecycleManager == manager;
   }];

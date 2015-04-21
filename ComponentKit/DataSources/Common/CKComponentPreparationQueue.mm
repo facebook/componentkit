@@ -180,7 +180,6 @@
 - (void)enqueueBatch:(const CKComponentPreparationInputBatch &)batch
                block:(CKComponentPreparationQueueCallback)block
 {
-  CKAssertMainThread();
   CKComponentPreparationQueueJob *job = [[CKComponentPreparationQueueJob alloc] initWithBatch:batch block:block];
   // We dispatch every batch processing operation to a serial queue as
   // each batch needs to be processed in order.
