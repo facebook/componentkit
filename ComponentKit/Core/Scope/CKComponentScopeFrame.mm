@@ -193,4 +193,30 @@ static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInt
   return _boundsAnimationComponents;
 }
 
+- (CKComponentBoundsAnimation)boundsAnimationFromPreviousRootScopeFrame:(CKComponentScopeFrame *)previousRoot
+{
+  NSMapTable *scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
+  for (CKComponent *oldComponent in [previousRoot boundsAnimationComponents]) {
+    id scopeFrameToken = [oldComponent scopeFrameToken];
+    if (scopeFrameToken) {
+      [scopeFrameTokenToOldComponent setObject:oldComponent forKey:scopeFrameToken];
+    }
+  }
+
+  for (CKComponent *newComponent in [self boundsAnimationComponents]) {
+    id scopeFrameToken = [newComponent scopeFrameToken];
+    if (scopeFrameToken) {
+      CKComponent *oldComponent = [scopeFrameTokenToOldComponent objectForKey:scopeFrameToken];
+      if (oldComponent) {
+        const CKComponentBoundsAnimation ba = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
+        if (ba.duration != 0) {
+          return ba;
+        }
+      }
+    }
+  }
+
+  return {};
+}
+
 @end
