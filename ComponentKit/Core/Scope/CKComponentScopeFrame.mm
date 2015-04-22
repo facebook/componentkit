@@ -57,6 +57,7 @@ static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInt
   id _modifiedState;
   std::unordered_map<_CKStateScopeKey, CKComponentScopeFrame *> _children;
   std::unordered_multimap<CKComponentAnnouncedEvent, CKComponentController *, std::hash<NSUInteger>, std::equal_to<NSUInteger>> _eventRegistration;
+  NSHashTable *_boundsAnimationComponents; // weakly held
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -76,6 +77,7 @@ static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInt
     _globalIdentifier = globalIdentifier;
     _root = rootFrame ? rootFrame : self;
 
+    _boundsAnimationComponents = [NSHashTable weakObjectsHashTable];
     for (const auto &announceableEvent : announceableEvents) {
       if (CKSubclassOverridesSelector([CKComponentController class], [controller class], announceableEvent.second)) {
         [_root registerController:controller forEvent:(CKComponentAnnouncedEvent)announceableEvent.first];
@@ -133,36 +135,6 @@ static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInt
   return (it == _children.end()) ? nil : it->second;
 }
 
-- (CKComponentBoundsAnimation)boundsAnimationFromPreviousFrame:(CKComponentScopeFrame *)previousFrame
-{
-  if (previousFrame == nil) {
-    return {};
-  }
-
-  // _owningComponent is __weak, so we must store into strong locals to prevent racing with it becoming nil.
-  CKComponent *newComponent = _owningComponent;
-  CKComponent *oldComponent = previousFrame->_owningComponent;
-  if (newComponent && oldComponent) {
-    const CKComponentBoundsAnimation anim = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
-    if (anim.duration != 0) {
-      return anim;
-    }
-  }
-
-  const auto &oldChildren = previousFrame->_children;
-  for (const auto &newIt : _children) {
-    const auto oldIt = oldChildren.find(newIt.first);
-    if (oldIt != oldChildren.end()) {
-      const CKComponentBoundsAnimation anim = [newIt.second boundsAnimationFromPreviousFrame:oldIt->second];
-      if (anim.duration != 0) {
-        return anim;
-      }
-    }
-  }
-
-  return {};
-}
-
 #pragma mark - State
 
 - (id)updatedState
@@ -188,6 +160,10 @@ static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInt
   /* We keep a separate boolean since _owningComponent is __weak and we want this to be write-once. */
   _acquired = YES;
   _owningComponent = component;
+
+  if (component && CKSubclassOverridesSelector([CKComponent class], [component class], @selector(boundsAnimationFromPreviousComponent:))) {
+    [_root registerBoundsAnimationComponent:component];
+  }
 }
 
 - (void)registerController:(CKComponentController *)controller forEvent:(CKComponentAnnouncedEvent)event
@@ -205,6 +181,16 @@ static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInt
     [it->second performSelector:sel];
 #pragma clang diagnostic pop
   }
+}
+
+- (void)registerBoundsAnimationComponent:(CKComponent *)component
+{
+  [_boundsAnimationComponents addObject:component];
+}
+
+- (NSHashTable *)boundsAnimationComponents
+{
+  return _boundsAnimationComponents;
 }
 
 @end

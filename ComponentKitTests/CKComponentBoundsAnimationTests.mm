@@ -3,53 +3,45 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
 
 #import <XCTest/XCTest.h>
 
-#import "CKComponentLifecycleManager.h"
-#import "CKComponentProvider.h"
-#import "CKComponentScope.h"
-#import "CKCompositeComponent.h"
+#import <ComponentKit/CKComponentScopeInternal.h>
+#import <ComponentKit/CKComponentSubclass.h>
 
-@interface CKBoundsAnimatingComponent : CKCompositeComponent
-+ (instancetype)newWithHeight:(CGFloat)height;
+@interface CKComponentBoundsAnimationTests : XCTestCase
 @end
 
-@implementation CKBoundsAnimatingComponent
-+ (instancetype)newWithHeight:(CGFloat)height
+@interface CKBoundsAnimationComponent : CKComponent
+@end
+
+@implementation CKBoundsAnimationComponent
++ (instancetype)new
 {
   CKComponentScope scope(self);
-  return [super newWithComponent:[CKComponent newWithView:{} size:{.height = height}]];
+  return [super newWithView:{} size:{}];
 }
-- (CKComponentBoundsAnimation)boundsAnimationFromPreviousComponent:(CKBoundsAnimatingComponent *)previous
-{
-  return {.duration = 5.0, .delay = 2.0};
-}
-@end
 
-@interface CKComponentBoundsAnimationTests : XCTestCase <CKComponentProvider>
+- (CKComponentBoundsAnimation)boundsAnimationFromPreviousComponent:(CKComponent *)previousComponent
+{
+  return {.duration = 0.5};
+}
 @end
 
 @implementation CKComponentBoundsAnimationTests
 
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+- (void)testStateScopeFrameIsNotFoundWhenAnotherComponentInTheSameScopeAcquiresItFirst
 {
-  return [CKBoundsAnimatingComponent newWithHeight:(CGFloat)[(NSNumber *)model doubleValue]];
-}
-
-- (void)testComputingUpdateForComponentLifecycleManagerReturnsBoundsAnimation
-{
-  static const CKSizeRange size = {{100, 0}, {100, INFINITY}};
-  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-
-  CKComponentLifecycleManagerState stateA = [lifeManager prepareForUpdateWithModel:@100 constrainedSize:size context:nil];
-  CKComponentLifecycleManagerState stateB = [lifeManager prepareForUpdateWithModel:@200 constrainedSize:size context:nil];
-  XCTAssertEqual(stateB.boundsAnimation.duration, (NSTimeInterval)5.0);
-  XCTAssertEqual(stateB.boundsAnimation.delay, (NSTimeInterval)2.0);
+  CKComponent *(^block)(void) = ^{
+    return [CKBoundsAnimationComponent new];
+  };
+  const CKBuildComponentResult firstResult = CKBuildComponent(nil, nil, block);
+  const CKBuildComponentResult secondResult = CKBuildComponent(nil, firstResult.scopeFrame, block);
+  XCTAssertEqual(secondResult.boundsAnimation.duration, 0.5);
 }
 
 @end

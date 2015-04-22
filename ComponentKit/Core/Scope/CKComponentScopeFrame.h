@@ -63,13 +63,17 @@ typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
 @property (nonatomic, readonly) BOOL acquired;
 @property (nonatomic, readonly, weak) CKComponent *owningComponent;
 
-- (CKComponentBoundsAnimation)boundsAnimationFromPreviousFrame:(CKComponentScopeFrame *)previousFrame;
-
 - (CKComponentScopeFrame *)existingChildFrameWithClass:(Class __unsafe_unretained)aClass identifier:(id)identifier;
 
 - (void)updateState:(id (^)(id))updateFunction tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate;
 
 /** For internal use only; sends the given event to all component controllers that implement it. */
 - (void)announceEventToControllers:(CKComponentAnnouncedEvent)event;
+
+/**
+ For internal use only; when called on the root frame, returns all contained components that override
+ -boundsAnimationFromPreviousComponent:.
+ */
+- (NSHashTable *)boundsAnimationComponents;
 
 @end
