@@ -11,6 +11,7 @@
 #import "CKComponentScopeFrame.h"
 
 #import <unordered_map>
+#import <libkern/OSAtomic.h>
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
@@ -63,6 +64,7 @@ static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInt
                       identifier:(id)identifier
                            state:(id)state
                       controller:(CKComponentController *)controller
+                globalIdentifier:(int32_t)globalIdentifier
                             root:(CKComponentScopeFrame *)rootFrame
 {
   if (self = [super init]) {
@@ -71,6 +73,7 @@ static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInt
     _identifier = identifier;
     _state = state;
     _controller = controller;
+    _globalIdentifier = globalIdentifier;
     _root = rootFrame ? rootFrame : self;
 
     for (const auto &announceableEvent : announceableEvents) {
@@ -87,21 +90,36 @@ static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInt
   CK_NOT_DESIGNATED_INITIALIZER();
 }
 
-+ (instancetype)rootFrameWithListener:(id<CKComponentStateListener>)listener
++ (int32_t)nextGlobalIdentifier
 {
-  return [[self alloc] initWithListener:listener class:Nil identifier:nil state:nil controller:nil root:nil];
+  static int32_t nextGlobalIdentifier = 0;
+  return OSAtomicIncrement32(&nextGlobalIdentifier);
+}
+
++ (instancetype)rootFrameWithListener:(id<CKComponentStateListener>)listener
+                     globalIdentifier:(int32_t)globalIdentifier
+{
+  return [[self alloc] initWithListener:listener
+                                  class:Nil
+                             identifier:nil
+                                  state:nil
+                             controller:nil
+                       globalIdentifier:globalIdentifier
+                                   root:nil];
 }
 
 - (instancetype)childFrameWithComponentClass:(Class __unsafe_unretained)aClass
                                   identifier:(id)identifier
                                        state:(id)state
                                   controller:(CKComponentController *)controller
+                            globalIdentifier:(int32_t)globalIdentifier
 {
   CKComponentScopeFrame *child = [[[self class] alloc] initWithListener:_listener
                                                                   class:aClass
                                                              identifier:identifier
                                                                   state:state
                                                              controller:controller
+                                                       globalIdentifier:globalIdentifier
                                                                    root:_root];
   const auto result = _children.insert({{child.componentClass, child.identifier}, child});
   CKCAssert(result.second, @"Scope collision! Attempting to create scope %@::%@ when it already exists.",

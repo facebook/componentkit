@@ -73,7 +73,7 @@
 
 - (void)testThreadLocalStateIsSet
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
 
   CKComponent *(^block)(void) = ^CKComponent *{
     XCTAssertEqualObjects(CKThreadLocalComponentScope::cursor()->equivalentPreviousFrame(), frame);

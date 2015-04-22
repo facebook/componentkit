@@ -96,12 +96,14 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
 
   id state = equivalentPreviousFrame ? equivalentPreviousFrame.updatedState : (initialStateCreator ? initialStateCreator() : [componentClass initialState]);
   CKComponentController *controller = equivalentPreviousFrame ? equivalentPreviousFrame.controller : _newController(componentClass);
+  int32_t globalIdentifier = equivalentPreviousFrame ? equivalentPreviousFrame.globalIdentifier : [CKComponentScopeFrame nextGlobalIdentifier];
 
   // Create the new scope.
   CKComponentScopeFrame *scopeFrame = [currentFrame childFrameWithComponentClass:componentClass
                                                                       identifier:identifier
                                                                            state:state
-                                                                      controller:controller];
+                                                                      controller:controller
+                                                                globalIdentifier:globalIdentifier];
 
   // Set the new scope to be the "current", top-level scope.
   CKThreadLocalComponentScope::cursor()->pushFrameAndEquivalentPreviousFrame(scopeFrame, equivalentPreviousFrame);
