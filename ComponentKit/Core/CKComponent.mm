@@ -288,7 +288,7 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 - (id)scopeFrameToken
 {
-  return _scopeFrame;
+  return _scopeFrame ? @(_scopeFrame.globalIdentifier) : nil;
 }
 
 @end
