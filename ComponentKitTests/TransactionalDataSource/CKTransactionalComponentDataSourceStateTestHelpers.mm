@@ -47,3 +47,14 @@ CKTransactionalComponentDataSourceState *CKTransactionalComponentDataSourceTestS
 
   return [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:configuration sections:sections];
 }
+
+NSSet *CKTestIndexPaths(NSUInteger numberOfSections, NSUInteger numberOfItemsPerSection)
+{
+  NSMutableSet *ips = [NSMutableSet set];
+  for (NSUInteger i = 0; i < numberOfSections; i++) {
+    for (NSUInteger j = 0; j < numberOfItemsPerSection; j++) {
+      [ips addObject:[NSIndexPath indexPathForItem:j inSection:i]];
+    }
+  }
+  return ips;
+}

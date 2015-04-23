@@ -59,15 +59,8 @@ static u_int32_t globalState = 0;
 
   CKTransactionalComponentDataSourceChange *change = [reloadModification changeFromState:originalState];
 
-  NSMutableSet *expectedUpdatedIndexPaths = [NSMutableSet set];
-  for (NSUInteger i = 0; i < 5; i++) {
-    for (NSUInteger j = 0; j < 5; j++) {
-      [expectedUpdatedIndexPaths addObject:[NSIndexPath indexPathForItem:j inSection:i]];
-    }
-  }
-
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChanges =
-  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:expectedUpdatedIndexPaths
+  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:CKTestIndexPaths(5, 5)
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil
@@ -103,6 +96,5 @@ static u_int32_t globalState = 0;
 
   XCTAssertEqual(component.globalStateAtTimeOfCreation, newGlobalState);
 }
-
 
 @end

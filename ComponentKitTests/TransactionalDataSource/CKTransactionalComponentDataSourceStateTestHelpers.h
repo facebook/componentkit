@@ -16,3 +16,5 @@
 CKTransactionalComponentDataSourceState *CKTransactionalComponentDataSourceTestState(Class<CKComponentProvider> provider,
                                                                                      NSUInteger numberOfSections,
                                                                                      NSUInteger numberOfItemsPerSection);
+
+NSSet *CKTestIndexPaths(NSUInteger numberOfSections, NSUInteger numberOfItemsPerSection);
