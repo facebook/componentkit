@@ -76,4 +76,6 @@ typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
  */
 - (NSHashTable *)boundsAnimationComponents;
 
+- (CKComponentBoundsAnimation)boundsAnimationFromPreviousRootScopeFrame:(CKComponentScopeFrame *)previousRoot;
+
 @end
