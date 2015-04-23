@@ -68,7 +68,8 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(id<CKComponentStateList
                                                          CKComponentScopeFrame *previousRootFrame)
 {
   CKCAssert(cursor()->empty(), @"CKThreadLocalStateScope already exists. You cannot create two at the same time.");
-  cursor()->pushFrameAndEquivalentPreviousFrame([CKComponentScopeFrame rootFrameWithListener:listener], previousRootFrame);
+  int32_t globalIdentifier = previousRootFrame ? previousRootFrame.globalIdentifier : [CKComponentScopeFrame nextGlobalIdentifier];
+  cursor()->pushFrameAndEquivalentPreviousFrame([CKComponentScopeFrame rootFrameWithListener:listener globalIdentifier:globalIdentifier], previousRootFrame);
 }
 
 CKThreadLocalComponentScope::~CKThreadLocalComponentScope() throw(...)

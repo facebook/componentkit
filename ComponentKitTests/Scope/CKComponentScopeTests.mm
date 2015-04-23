@@ -28,21 +28,21 @@
 
 - (void)testThreadLocalStateIsNotNullAfterCreatingThreadStateScope
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKThreadLocalComponentScope threadScope(nil,frame);
   XCTAssertTrue(CKThreadLocalComponentScope::cursor() != nullptr);
 }
 
 - (void)testThreadLocalStateStoresPassedInFrameAsEquivalentPreviousFrame
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKThreadLocalComponentScope threadScope(nil, frame);
   XCTAssertEqualObjects(CKThreadLocalComponentScope::cursor()->equivalentPreviousFrame(), frame);
 }
 
 - (void)testThreadLocalStateBeginsWithRootCurrentFrame
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKThreadLocalComponentScope threadScope(nil, frame);
 
   CKComponentScopeFrame *currentFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
@@ -51,7 +51,7 @@
 
 - (void)testThreadLocalStatePushesChildScope
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKThreadLocalComponentScope threadScope(nil, frame);
 
   CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
@@ -64,7 +64,7 @@
 
 - (void)testCreatingThreadLocalStateScopeThrowsIfScopeAlreadyExists
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
 
   CKThreadLocalComponentScope threadScope(nil, frame);
   XCTAssertThrows(CKThreadLocalComponentScope(nil, frame));
@@ -74,11 +74,12 @@
 
 - (void)testHasChildScopeIsCreatedWithCorrectKeys
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKComponentScopeFrame *childFrame = [frame childFrameWithComponentClass:[CKCompositeComponent class]
                                                                identifier:@"moose"
                                                                     state:@123
-                                                               controller:nil];
+                                                               controller:nil
+                                                         globalIdentifier:1];
 
   XCTAssertEqual(childFrame.componentClass, [CKCompositeComponent class]);
   XCTAssertEqualObjects(childFrame.identifier, @"moose");
@@ -87,11 +88,12 @@
 
 - (void)testHasChildScopeReturnsTrueWhenTheScopeMatches
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKComponentScopeFrame __unused *childFrame = [frame childFrameWithComponentClass:[CKCompositeComponent class]
                                                                         identifier:@"moose"
                                                                              state:@123
-                                                                        controller:nil];
+                                                                        controller:nil
+                                                                  globalIdentifier:1];
 
   XCTAssertNotNil([frame existingChildFrameWithClass:[CKCompositeComponent class] identifier:@"moose"]);
   XCTAssertNil([frame existingChildFrameWithClass:[CKCompositeComponent class] identifier:@"meese"]);
@@ -103,7 +105,7 @@
 
 - (void)testFrameIsPoppedWhenScopeCloses
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKThreadLocalComponentScope threadScope(nil, frame);
 
   CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
@@ -116,7 +118,7 @@
 
 - (void)testHasChildScopeIsTrueEvenAfterScopeClosesAndPopsAFrame
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKThreadLocalComponentScope threadScope(nil, frame);
 
   CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
@@ -128,7 +130,7 @@
 
 - (void)testThreadStateScopeAcquiringPreviousScopeStateOneLevelDown
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKComponentScopeFrame *createdFrame = NULL;
   {
     CKThreadLocalComponentScope threadScope(nil, frame);
@@ -159,9 +161,32 @@
   }
 }
 
+- (void)testThreadStateScopeAcquiringPreviousScopeGlobalIdentifierOneLevelDown
+{
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
+  CKComponentScopeFrame *createdFrame;
+  int32_t childGlobalIdentifier;
+  {
+    CKThreadLocalComponentScope threadScope(nil, frame);
+    {
+      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      childGlobalIdentifier = CKThreadLocalComponentScope::cursor()->currentFrame().globalIdentifier;
+    }
+    createdFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
+  }
+
+  {
+    CKThreadLocalComponentScope threadScope(nil, createdFrame);
+    {
+      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      XCTAssertEqual(childGlobalIdentifier, CKThreadLocalComponentScope::cursor()->currentFrame().globalIdentifier);
+    }
+  }
+}
+
 - (void)testThreadStateScopeAcquiringPreviousScopeStateOneLevelDownWithSibling
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKComponentScopeFrame *createdFrame = NULL;
   {
     CKThreadLocalComponentScope threadScope(nil, frame);
@@ -199,7 +224,7 @@
 
 - (void)testThreadStateScopeAcquiringPreviousScopeStateOneLevelDownWithSiblingThatDoesNotAcquire
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKComponentScopeFrame *createdFrame = NULL;
   {
     CKThreadLocalComponentScope threadScope(nil, frame);
@@ -236,7 +261,7 @@
 
 - (void)testCreatingSiblingScopeWithSameClassNameThrows
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKThreadLocalComponentScope threadScope(nil, frame);
   {
     CKComponentScope scope([CKCompositeComponent class]);
@@ -248,7 +273,7 @@
 
 - (void)testCreatingSiblingScopeWithSameClassNameAndSameIdentifierThrows
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKThreadLocalComponentScope threadScope(nil, frame);
   {
     CKComponentScope scope([CKCompositeComponent class], @"lasagna");
@@ -260,7 +285,7 @@
 
 - (void)testCreatingSiblingScopeWithSameClassButDifferentIdenfitiferDoesNotThrow
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
   CKThreadLocalComponentScope threadScope(nil, frame);
   {
     CKComponentScope scope([CKCompositeComponent class], @"linguine");
@@ -272,13 +297,13 @@
 
 - (void)testTeardownThrowsIfStateScopeHasNotBeenPoppedBackToTheRoot
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
 
   BOOL exceptionThrown = NO;
   @try {
     CKThreadLocalComponentScope threadScope(nil, frame);
 
-    CKComponentScopeFrame *frame2 = [CKComponentScopeFrame rootFrameWithListener:nil];
+    CKComponentScopeFrame *frame2 = [CKComponentScopeFrame rootFrameWithListener:nil globalIdentifier:0];
     CKThreadLocalComponentScope::cursor()->pushFrameAndEquivalentPreviousFrame(frame2, nil);
   } @catch(...) {
     exceptionThrown = YES;

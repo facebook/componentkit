@@ -4,4 +4,4 @@ Example/WildeGuess/Pod
 *.xcworkspace
 appledoc
 *.gcov
-
+.DS_Store

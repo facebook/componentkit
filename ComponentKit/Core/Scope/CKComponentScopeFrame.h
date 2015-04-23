@@ -24,12 +24,15 @@ typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
 
 @interface CKComponentScopeFrame : NSObject
 
++ (int32_t)nextGlobalIdentifier;
+
 /**
  Construct a state-scope frame with a given listener.
  This is the only way to create a root-frame since the other constructor
  derives a name frame within the scope of the given parent.
  */
-+ (instancetype)rootFrameWithListener:(id<CKComponentStateListener>)listener;
++ (instancetype)rootFrameWithListener:(id<CKComponentStateListener>)listener
+                     globalIdentifier:(int32_t)globalIdentifier;
 
 /**
  Create a new child state-scope frame resident within the scope of parent. This
@@ -38,13 +41,15 @@ typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
 - (instancetype)childFrameWithComponentClass:(Class __unsafe_unretained)aClass
                                   identifier:(id)identifier
                                        state:(id)state
-                                  controller:(CKComponentController *)controller;
+                                  controller:(CKComponentController *)controller
+                            globalIdentifier:(int32_t)globalIdentifier;
 
 @property (nonatomic, readonly, weak) id<CKComponentStateListener> listener;
 @property (nonatomic, readonly, strong) Class componentClass;
 @property (nonatomic, readonly, strong) id identifier;
 @property (nonatomic, readonly, strong) id state;
 @property (nonatomic, readonly, strong) CKComponentController *controller;
+@property (nonatomic, readonly, assign) int32_t globalIdentifier;
 
 @property (nonatomic, readonly, strong) id updatedState;
 
@@ -58,13 +63,17 @@ typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
 @property (nonatomic, readonly) BOOL acquired;
 @property (nonatomic, readonly, weak) CKComponent *owningComponent;
 
-- (CKComponentBoundsAnimation)boundsAnimationFromPreviousFrame:(CKComponentScopeFrame *)previousFrame;
-
 - (CKComponentScopeFrame *)existingChildFrameWithClass:(Class __unsafe_unretained)aClass identifier:(id)identifier;
 
 - (void)updateState:(id (^)(id))updateFunction tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate;
 
 /** For internal use only; sends the given event to all component controllers that implement it. */
 - (void)announceEventToControllers:(CKComponentAnnouncedEvent)event;
+
+/**
+ For internal use only; when called on the root frame, returns all contained components that override
+ -boundsAnimationFromPreviousComponent:.
+ */
+- (NSHashTable *)boundsAnimationComponents;
 
 @end

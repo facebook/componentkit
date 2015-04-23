@@ -25,6 +25,32 @@
 
 #pragma mark - State Scope
 
+static CKComponentBoundsAnimation boundsAnimation(CKComponentScopeFrame *newRoot, CKComponentScopeFrame *oldRoot)
+{
+  NSMapTable *scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
+  for (CKComponent *oldComponent in [oldRoot boundsAnimationComponents]) {
+    id scopeFrameToken = [oldComponent scopeFrameToken];
+    if (scopeFrameToken) {
+      [scopeFrameTokenToOldComponent setObject:oldComponent forKey:scopeFrameToken];
+    }
+  }
+
+  for (CKComponent *newComponent in [newRoot boundsAnimationComponents]) {
+    id scopeFrameToken = [newComponent scopeFrameToken];
+    if (scopeFrameToken) {
+      CKComponent *oldComponent = [scopeFrameTokenToOldComponent objectForKey:scopeFrameToken];
+      if (oldComponent) {
+        const CKComponentBoundsAnimation ba = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
+        if (ba.duration != 0) {
+          return ba;
+        }
+      }
+    }
+  }
+
+  return {};
+}
+
 CKBuildComponentResult CKBuildComponent(id<CKComponentStateListener> listener,
                                         CKComponentScopeFrame *previousRootFrame,
                                         CKComponent *(^function)(void))
@@ -36,7 +62,7 @@ CKBuildComponentResult CKBuildComponent(id<CKComponentStateListener> listener,
   return {
     .component = component,
     .scopeFrame = newRootFrame,
-    .boundsAnimation = [newRootFrame boundsAnimationFromPreviousFrame:previousRootFrame],
+    .boundsAnimation = boundsAnimation(newRootFrame, previousRootFrame),
   };
 }
 
@@ -96,12 +122,14 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
 
   id state = equivalentPreviousFrame ? equivalentPreviousFrame.updatedState : (initialStateCreator ? initialStateCreator() : [componentClass initialState]);
   CKComponentController *controller = equivalentPreviousFrame ? equivalentPreviousFrame.controller : _newController(componentClass);
+  int32_t globalIdentifier = equivalentPreviousFrame ? equivalentPreviousFrame.globalIdentifier : [CKComponentScopeFrame nextGlobalIdentifier];
 
   // Create the new scope.
   CKComponentScopeFrame *scopeFrame = [currentFrame childFrameWithComponentClass:componentClass
                                                                       identifier:identifier
                                                                            state:state
-                                                                      controller:controller];
+                                                                      controller:controller
+                                                                globalIdentifier:globalIdentifier];
 
   // Set the new scope to be the "current", top-level scope.
   CKThreadLocalComponentScope::cursor()->pushFrameAndEquivalentPreviousFrame(scopeFrame, equivalentPreviousFrame);
