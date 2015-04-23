@@ -29,9 +29,7 @@ struct CKBuildComponentResult {
   CKComponentBoundsAnimation boundsAnimation;
 };
 
-CKBuildComponentResult CKBuildComponent(id<CKComponentStateListener> listener,
-                                        CKComponentScopeFrame *previousRootFrame,
-                                        CKComponent *(^function)(void));
+CKBuildComponentResult CKBuildComponent(CKComponentScopeFrame *previousRootFrame, CKComponent *(^function)(void));
 
 /**
  This is only meant to be called when constructing a component and as part of the implementation

@@ -88,7 +88,10 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 {
   CK::MutexLocker locker(_previousScopeFrameMutex);
 
-  CKBuildComponentResult result = CKBuildComponent(self, _previouslyCalculatedScopeFrame, ^{
+  CKComponentScopeFrame *previousRoot = _previouslyCalculatedScopeFrame
+  ?: [CKComponentScopeFrame rootFrameWithListener:self globalIdentifier:[CKComponentScopeFrame nextGlobalIdentifier]];
+
+  CKBuildComponentResult result = CKBuildComponent(previousRoot, ^{
     return [_componentProvider componentForModel:model context:context];
   });
 
@@ -107,7 +110,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
 - (CKComponentLayout)layoutForModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context
 {
-  CKBuildComponentResult result = CKBuildComponent(self, _state.scopeFrame, ^{
+  CKBuildComponentResult result = CKBuildComponent(_state.scopeFrame, ^{
     return [_componentProvider componentForModel:model context:context];
   });
 

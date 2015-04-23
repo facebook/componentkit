@@ -21,7 +21,7 @@
  */
 class CKComponentTestRootScope {
 public:
-  CKComponentTestRootScope() : _threadScope(nil, nullptr) {};
+  CKComponentTestRootScope() : _threadScope(nullptr) {};
 private:
   CKThreadLocalComponentScope _threadScope;
 };

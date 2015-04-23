@@ -39,8 +39,8 @@
   CKComponent *(^block)(void) = ^{
     return [CKBoundsAnimationComponent new];
   };
-  const CKBuildComponentResult firstResult = CKBuildComponent(nil, nil, block);
-  const CKBuildComponentResult secondResult = CKBuildComponent(nil, firstResult.scopeFrame, block);
+  const CKBuildComponentResult firstResult = CKBuildComponent(nil, block);
+  const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeFrame, block);
   XCTAssertEqual(secondResult.boundsAnimation.duration, 0.5);
 }
 

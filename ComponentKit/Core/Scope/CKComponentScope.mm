@@ -25,11 +25,9 @@
 
 #pragma mark - State Scope
 
-CKBuildComponentResult CKBuildComponent(id<CKComponentStateListener> listener,
-                                        CKComponentScopeFrame *previousRootFrame,
-                                        CKComponent *(^function)(void))
+CKBuildComponentResult CKBuildComponent(CKComponentScopeFrame *previousRootFrame, CKComponent *(^function)(void))
 {
-  CKThreadLocalComponentScope threadScope(listener, previousRootFrame);
+  CKThreadLocalComponentScope threadScope(previousRootFrame);
   // Order of operations matters, so first store into locals and then return a struct.
   CKComponent *component = function();
   CKComponentScopeFrame *newRootFrame = CKThreadLocalComponentScope::cursor()->currentFrame();

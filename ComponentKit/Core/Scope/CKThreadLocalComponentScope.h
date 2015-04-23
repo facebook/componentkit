@@ -39,7 +39,7 @@ class CKComponentScopeCursor {
 
 class CKThreadLocalComponentScope {
 public:
-  CKThreadLocalComponentScope(id<CKComponentStateListener> listener, CKComponentScopeFrame *previousRootFrame);
+  CKThreadLocalComponentScope(CKComponentScopeFrame *previousRootFrame);
   ~CKThreadLocalComponentScope() throw(...);
 
   static CKComponentScopeCursor *cursor();

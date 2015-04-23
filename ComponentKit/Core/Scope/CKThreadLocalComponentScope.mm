@@ -64,12 +64,12 @@ CKComponentScopeCursor *CKThreadLocalComponentScope::cursor()
   return cursor;
 }
 
-CKThreadLocalComponentScope::CKThreadLocalComponentScope(id<CKComponentStateListener> listener,
-                                                         CKComponentScopeFrame *previousRootFrame)
+CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeFrame *previousRootFrame)
 {
   CKCAssert(cursor()->empty(), @"CKThreadLocalStateScope already exists. You cannot create two at the same time.");
-  int32_t globalIdentifier = previousRootFrame ? previousRootFrame.globalIdentifier : [CKComponentScopeFrame nextGlobalIdentifier];
-  cursor()->pushFrameAndEquivalentPreviousFrame([CKComponentScopeFrame rootFrameWithListener:listener globalIdentifier:globalIdentifier], previousRootFrame);
+  CKComponentScopeFrame *newRoot = [CKComponentScopeFrame rootFrameWithListener:previousRootFrame.listener
+                                                               globalIdentifier:previousRootFrame.globalIdentifier];
+  cursor()->pushFrameAndEquivalentPreviousFrame(newRoot, previousRootFrame);
 }
 
 CKThreadLocalComponentScope::~CKThreadLocalComponentScope() throw(...)

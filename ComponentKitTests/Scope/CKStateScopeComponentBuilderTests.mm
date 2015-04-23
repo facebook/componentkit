@@ -80,7 +80,7 @@
     return [CKComponent new];
   };
 
-  (void)CKBuildComponent(nil, frame, block);
+  (void)CKBuildComponent(frame, block);
 }
 
 - (void)testThreadLocalStateIsUnset
@@ -91,7 +91,7 @@
     return [CKComponent new];
   };
 
-  (void)CKBuildComponent(nil, frame, block);
+  (void)CKBuildComponent(frame, block);
 
   XCTAssertTrue(CKThreadLocalComponentScope::cursor()->empty());
 }
@@ -106,7 +106,7 @@
     return c;
   };
 
-  const CKBuildComponentResult result = CKBuildComponent(nil, frame, block);
+  const CKBuildComponentResult result = CKBuildComponent(frame, block);
   XCTAssertEqualObjects(result.component, c);
 }
 
@@ -122,7 +122,7 @@
     return [CKComponent new];
   };
 
-  const CKBuildComponentResult result = CKBuildComponent(nil, frame, block);
+  const CKBuildComponentResult result = CKBuildComponent(frame, block);
   XCTAssertEqualObjects([result.scopeFrame existingChildFrameWithClass:[CKComponent class] identifier:nil].state, state);
 }
 
@@ -138,7 +138,7 @@
     return [CKComponent new];
   };
 
-  const CKBuildComponentResult firstBuildResult = CKBuildComponent(nil, frame, block);
+  const CKBuildComponentResult firstBuildResult = CKBuildComponent(frame, block);
 
   id __block nextState = nil;
   CKComponent *(^block2)(void) = ^CKComponent *{
@@ -147,7 +147,7 @@
     return [CKComponent new];
   };
 
-  (void)CKBuildComponent(nil, firstBuildResult.scopeFrame, block2);
+  (void)CKBuildComponent(firstBuildResult.scopeFrame, block2);
 
   XCTAssertEqualObjects(state, nextState);
 }
@@ -162,7 +162,7 @@
     return [CKStateExposingComponent new];
   };
 
-  CKStateExposingComponent *component = (CKStateExposingComponent *)CKBuildComponent(nil, frame, block).component;
+  CKStateExposingComponent *component = (CKStateExposingComponent *)CKBuildComponent(frame, block).component;
   XCTAssertEqualObjects(component.state, [CKStateExposingComponent initialState]);
 }
 
@@ -179,7 +179,7 @@
     return c;
   };
 
-  CKComponent *component = CKBuildComponent(nil, frame, block).component;
+  CKComponent *component = CKBuildComponent(frame, block).component;
   XCTAssertNil(component.scopeFrameToken);
 }
 
@@ -200,7 +200,7 @@
     return [CKComponent new];
   };
 
-  CKComponent *outerComponent = CKBuildComponent(nil, frame, block).component;
+  CKComponent *outerComponent = CKBuildComponent(frame, block).component;
   XCTAssertNotNil(innerComponent.scopeFrameToken);
   XCTAssertNil(outerComponent.scopeFrameToken);
 }
@@ -214,7 +214,7 @@
   };
 
   CKComponentScopeFrame *frame = nil;
-  XCTAssertThrows((void)CKBuildComponent(nil, frame, block));
+  XCTAssertThrows((void)CKBuildComponent(frame, block));
 }
 
 - (void)testComponentWithControllerDoesNotThrowIfScopeExistsForTheComponent
@@ -225,7 +225,7 @@
   };
 
   CKComponentScopeFrame *frame = nil;
-  XCTAssertNoThrow((void)CKBuildComponent(nil, frame, block));
+  XCTAssertNoThrow((void)CKBuildComponent(frame, block));
 }
 
 - (void)testComponentWithControllerThatHasAnimationsThrowsIfNoScopeExistsForTheComponent
@@ -235,7 +235,7 @@
   };
 
   CKComponentScopeFrame *frame = nil;
-  XCTAssertThrows((void)CKBuildComponent(nil, frame, block));
+  XCTAssertThrows((void)CKBuildComponent(frame, block));
 }
 
 - (void)testComponentWithControllerThatHasAnimationsDoesNotThrowIfScopeExistsForTheComponent
@@ -246,7 +246,7 @@
   };
 
   CKComponentScopeFrame *frame = nil;
-  XCTAssertNoThrow((void)CKBuildComponent(nil, frame, block));
+  XCTAssertNoThrow((void)CKBuildComponent(frame, block));
 }
 
 @end
