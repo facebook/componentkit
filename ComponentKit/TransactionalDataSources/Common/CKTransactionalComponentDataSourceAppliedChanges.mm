@@ -11,6 +11,10 @@
 #import "CKTransactionalComponentDataSourceAppliedChanges.h"
 #import "CKTransactionalComponentDataSourceAppliedChangesInternal.h"
 
+#import "ComponentUtilities.h"
+#import "CKInternalHelpers.h"
+#import "CKMacros.h"
+
 @implementation CKTransactionalComponentDataSourceAppliedChanges
 
 - (instancetype)initWithUpdatedIndexPaths:(NSSet *)updatedIndexPaths
@@ -31,6 +35,33 @@
     _userInfos = [userInfos copy] ?: @[];
   }
   return self;
+}
+
+- (BOOL)isEqual:(id)object
+{
+  return CKCompareObjectEquality(self, object, ^BOOL(CKTransactionalComponentDataSourceAppliedChanges *a, CKTransactionalComponentDataSourceAppliedChanges *b) {
+    return CKObjectIsEqual(a.updatedIndexPaths, b.updatedIndexPaths)
+    && CKObjectIsEqual(a.removedIndexPaths, b.removedIndexPaths)
+    && CKObjectIsEqual(a.removedSections, b.removedSections)
+    && CKObjectIsEqual(a.movedIndexPaths, b.movedIndexPaths)
+    && CKObjectIsEqual(a.insertedSections, b.insertedSections)
+    && CKObjectIsEqual(a.insertedIndexPaths, b.insertedIndexPaths)
+    && CKObjectIsEqual(a.userInfos, b.userInfos);
+  });
+}
+
+- (NSUInteger)hash
+{
+  NSUInteger subhashes[] = {
+    [_updatedIndexPaths hash],
+    [_removedIndexPaths hash],
+    [_removedSections hash],
+    [_movedIndexPaths hash],
+    [_insertedSections hash],
+    [_insertedIndexPaths hash],
+    [_userInfos hash],
+  };
+  return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
 }
 
 @end
