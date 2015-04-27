@@ -25,32 +25,6 @@
 
 #pragma mark - State Scope
 
-static CKComponentBoundsAnimation boundsAnimation(CKComponentScopeFrame *newRoot, CKComponentScopeFrame *oldRoot)
-{
-  NSMapTable *scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
-  for (CKComponent *oldComponent in [oldRoot boundsAnimationComponents]) {
-    id scopeFrameToken = [oldComponent scopeFrameToken];
-    if (scopeFrameToken) {
-      [scopeFrameTokenToOldComponent setObject:oldComponent forKey:scopeFrameToken];
-    }
-  }
-
-  for (CKComponent *newComponent in [newRoot boundsAnimationComponents]) {
-    id scopeFrameToken = [newComponent scopeFrameToken];
-    if (scopeFrameToken) {
-      CKComponent *oldComponent = [scopeFrameTokenToOldComponent objectForKey:scopeFrameToken];
-      if (oldComponent) {
-        const CKComponentBoundsAnimation ba = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
-        if (ba.duration != 0) {
-          return ba;
-        }
-      }
-    }
-  }
-
-  return {};
-}
-
 CKBuildComponentResult CKBuildComponent(id<CKComponentStateListener> listener,
                                         CKComponentScopeFrame *previousRootFrame,
                                         CKComponent *(^function)(void))
@@ -62,7 +36,7 @@ CKBuildComponentResult CKBuildComponent(id<CKComponentStateListener> listener,
   return {
     .component = component,
     .scopeFrame = newRootFrame,
-    .boundsAnimation = boundsAnimation(newRootFrame, previousRootFrame),
+    .boundsAnimation = [newRootFrame boundsAnimationFromPreviousRootScopeFrame:previousRootFrame],
   };
 }
 
