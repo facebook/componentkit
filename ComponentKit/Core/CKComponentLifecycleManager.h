@@ -13,7 +13,7 @@
 #import <ComponentKit/CKDimension.h>
 
 @class CKComponent;
-@class CKComponentScopeFrame;
+@class CKComponentScopeRoot;
 
 @protocol CKComponentProvider;
 @protocol CKComponentLifecycleManagerDelegate;
@@ -24,7 +24,7 @@ struct CKComponentLifecycleManagerState {
   id<NSObject> context;
   CKSizeRange constrainedSize;
   CKComponentLayout layout;
-  CKComponentScopeFrame *scopeFrame;
+  CKComponentScopeRoot *root;
   CKComponentBoundsAnimation boundsAnimation;
 };
 
@@ -91,7 +91,7 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
 - (id)model;
 
 /** The current scope frame associated with this lifecycle manager */
-- (CKComponentScopeFrame *)scopeFrame;
+- (CKComponentScopeRoot *)scopeRoot;
 
 @end
 

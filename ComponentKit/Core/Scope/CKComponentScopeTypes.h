@@ -8,14 +8,11 @@
  *
  */
 
-#import <ComponentKit/CKComponentLifecycleManager.h>
-#import <ComponentKit/CKComponentScopeRoot.h>
+#import <Foundation/Foundation.h>
 
-/**
- Debug Purposes Only.
- */
-@interface CKComponentLifecycleManager () <CKComponentStateListener>
+#import <unordered_map>
 
-- (CKComponentLifecycleManagerState)state;
+typedef int32_t CKComponentScopeHandleIdentifier;
+typedef int32_t CKComponentScopeRootIdentifier;
 
-@end
+typedef std::unordered_multimap<CKComponentScopeHandleIdentifier, id (^)(id)> CKComponentStateUpdateMap;

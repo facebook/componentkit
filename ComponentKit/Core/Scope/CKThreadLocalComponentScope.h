@@ -13,34 +13,18 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKAssert.h>
-
-@class CKComponentScopeFrame;
-@protocol CKComponentStateListener;
-
-class CKComponentScopeCursor {
-  struct CKComponentScopeCursorFrame {
-    CKComponentScopeFrame *frame;
-    CKComponentScopeFrame *equivalentPreviousFrame;
-  };
-
-  std::stack<CKComponentScopeCursorFrame> _frames;
- public:
-  /** Push a new frame onto both state-trees. */
-  void pushFrameAndEquivalentPreviousFrame(CKComponentScopeFrame *frame, CKComponentScopeFrame *equivalentPreviousFrame);
-
-  /** Pop off one frame on both state trees.  */
-  void popFrame();
-
-  CKComponentScopeFrame *currentFrame() const;
-  CKComponentScopeFrame *equivalentPreviousFrame() const;
-
-  bool empty() const { return _frames.empty(); }
-};
+#import <ComponentKit/CKComponentScopeFrame.h>
 
 class CKThreadLocalComponentScope {
 public:
-  CKThreadLocalComponentScope(CKComponentScopeFrame *previousRootFrame);
-  ~CKThreadLocalComponentScope() throw(...);
+  CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
+                              const CKComponentStateUpdateMap &updates);
+  ~CKThreadLocalComponentScope();
 
-  static CKComponentScopeCursor *cursor();
+  /** Returns nullptr if there isn't a current scope */
+  static CKThreadLocalComponentScope *currentScope();
+
+  CKComponentScopeRoot *const newScopeRoot;
+  const CKComponentStateUpdateMap stateUpdates;
+  std::stack<CKComponentScopeFramePair> stack;
 };

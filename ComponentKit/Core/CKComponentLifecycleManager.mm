@@ -20,7 +20,7 @@
 #import "CKComponentLifecycleManagerAsynchronousUpdateHandler.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScope.h"
-#import "CKComponentScopeInternal.h"
+#import "CKComponentScopeFrame.h"
 #import "CKComponentSizeRangeProviding.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentViewInterface.h"
@@ -33,7 +33,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   .model = nil,
   .constrainedSize = {},
   .layout = {},
-  .scopeFrame = nil,
+  .root = nil,
 };
 
 @implementation CKComponentLifecycleManager
@@ -44,8 +44,9 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   Class<CKComponentProvider> _componentProvider;
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
 
-  CK::Mutex _previousScopeFrameMutex;
-  CKComponentScopeFrame *_previouslyCalculatedScopeFrame;
+  CK::Mutex _mutex; // protects _previousRoot and _pendingStateUpdates
+  CKComponentScopeRoot *_previousRoot;
+  CKComponentStateUpdateMap _pendingStateUpdates;
   CKComponentLifecycleManagerState _state;
 }
 
@@ -86,31 +87,32 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
 - (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context
 {
-  CK::MutexLocker locker(_previousScopeFrameMutex);
+  CK::MutexLocker locker(_mutex);
 
-  CKComponentScopeFrame *previousRoot = _previouslyCalculatedScopeFrame
-  ?: [CKComponentScopeFrame rootFrameWithListener:self globalIdentifier:[CKComponentScopeFrame nextGlobalIdentifier]];
+  CKComponentScopeRoot *previousRoot = _previousRoot ?: [CKComponentScopeRoot rootWithListener:self];
 
-  CKBuildComponentResult result = CKBuildComponent(previousRoot, ^{
+  CKBuildComponentResult result = CKBuildComponent(previousRoot, _pendingStateUpdates, ^{
     return [_componentProvider componentForModel:model context:context];
   });
 
   const CKComponentLayout layout = [result.component layoutThatFits:constrainedSize parentSize:constrainedSize.max];
 
-  _previouslyCalculatedScopeFrame = result.scopeFrame;
+  _previousRoot = result.scopeRoot;
+  _pendingStateUpdates.clear();
+
   return {
     .model = model,
     .context = context,
     .constrainedSize = constrainedSize,
     .layout = layout,
-    .scopeFrame = result.scopeFrame,
+    .root = result.scopeRoot,
     .boundsAnimation = result.boundsAnimation,
   };
 }
 
 - (CKComponentLayout)layoutForModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context
 {
-  CKBuildComponentResult result = CKBuildComponent(_state.scopeFrame, ^{
+  CKBuildComponentResult result = CKBuildComponent(_state.root, {}, ^{
     return [_componentProvider componentForModel:model context:context];
   });
 
@@ -201,15 +203,23 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   return _state.model;
 }
 
-- (CKComponentScopeFrame *)scopeFrame
+- (CKComponentScopeRoot *)scopeRoot
 {
-  return _state.scopeFrame;
+  return _state.root;
 }
 
 #pragma mark - CKComponentStateListener
 
-- (void)componentStateDidEnqueueStateModificationWithTryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
+- (void)componentScopeHandleWithIdentifier:(int32_t)globalIdentifier
+                            rootIdentifier:(int32_t)rootIdentifier
+                     didReceiveStateUpdate:(id (^)(id))stateUpdate
+                     tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
 {
+  {
+    CK::MutexLocker l(_mutex);
+    _pendingStateUpdates.insert({globalIdentifier, stateUpdate});
+  }
+
   if (tryAsynchronousUpdate && _asynchronousUpdateHandler) {
     [_asynchronousUpdateHandler handleAsynchronousUpdateForComponentLifecycleManager:self];
   } else {
