@@ -97,14 +97,14 @@
        willDisplayCell:(UICollectionViewCell *)cell
     forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  [_dataSource announceWillAppearForItemAtIndexPath:indexPath];
+  [_dataSource announceWillAppearForItemInCell:cell];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
   didEndDisplayingCell:(UICollectionViewCell *)cell
     forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  [_dataSource announceDidDisappearForItemAtIndexPath:indexPath];
+  [_dataSource announceDidDisappearForItemInCell:cell];
 }
 
 #pragma mark - CKComponentProvider

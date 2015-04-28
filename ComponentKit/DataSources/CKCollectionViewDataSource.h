@@ -91,16 +91,16 @@ typedef void(*CKCellConfigurationFunction)(UICollectionViewCell *cell, NSIndexPa
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
 
 /**
- Sends -componentTreeWillAppear to all CKComponentControllers for the given indexPath.
- Call this from -collectionView:willDisplayCell:forItemAtIndexPath:
+ Sends -componentTreeWillAppear to all CKComponentControllers for the given cell.
+ If needed, call this from -collectionView:willDisplayCell:forItemAtIndexPath:
  */
-- (void)announceWillAppearForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (void)announceWillAppearForItemInCell:(UICollectionViewCell *)cell;
 
 /**
- Sends -componentTreeDidDisappear to all CKComponentControllers for the given indexPath.
- Call this from -collectionView:didEndDisplayingCell:forItemAtIndexPath:
+ Sends -componentTreeDidDisappear to all CKComponentControllers for the given cell.
+ If needed, call this from -collectionView:didEndDisplayingCell:forItemAtIndexPath:
  */
-- (void)announceDidDisappearForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (void)announceDidDisappearForItemInCell:(UICollectionViewCell *)cell;
 
 @property (readonly, nonatomic, strong) UICollectionView *collectionView;
 /**
