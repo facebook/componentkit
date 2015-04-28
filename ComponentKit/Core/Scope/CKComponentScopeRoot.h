@@ -23,6 +23,7 @@ typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
 };
 
 @protocol CKComponentStateListener <NSObject>
+/** Always sent on the main thread. */
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                             rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate

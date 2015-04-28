@@ -96,6 +96,12 @@
 - (void)updateState:(id (^)(id))updateFunction tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
 {
   CKAssertNotNil(updateFunction, @"The block for updating state cannot be nil");
+  if (![NSThread isMainThread]) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self updateState:updateFunction tryAsynchronousUpdate:tryAsynchronousUpdate];
+    });
+    return;
+  }
   [_listener componentScopeHandleWithIdentifier:_globalIdentifier
                                  rootIdentifier:_rootIdentifier
                           didReceiveStateUpdate:updateFunction
