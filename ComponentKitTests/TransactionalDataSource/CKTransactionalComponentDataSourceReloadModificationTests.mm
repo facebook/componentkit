@@ -52,7 +52,7 @@ static u_int32_t globalState = 0;
 
 - (void)testAppliedChangesIncludesUpdatedIndexPathsForEveryItem
 {
-  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], 5, 5);
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 5, 5);
 
   CKTransactionalComponentDataSourceReloadModification *reloadModification =
   [[CKTransactionalComponentDataSourceReloadModification alloc] initWithUserInfo:nil];
@@ -73,7 +73,7 @@ static u_int32_t globalState = 0;
 
 - (void)testAppliedChangesIncludesUserInfo
 {
-  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], 1, 1);
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 1);
   NSDictionary *userInfo = @{@"foo": @"bar"};
   CKTransactionalComponentDataSourceReloadModification *reloadModification =
   [[CKTransactionalComponentDataSourceReloadModification alloc] initWithUserInfo:userInfo];
@@ -83,7 +83,7 @@ static u_int32_t globalState = 0;
 
 - (void)testActuallyRegeneratesComponents
 {
-  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], 1, 1);
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 1);
   CKTransactionalComponentDataSourceReloadModification *reloadModification =
   [[CKTransactionalComponentDataSourceReloadModification alloc] initWithUserInfo:nil];
 

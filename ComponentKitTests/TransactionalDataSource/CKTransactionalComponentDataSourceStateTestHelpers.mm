@@ -18,9 +18,9 @@
 #import "CKTransactionalComponentDataSourceItemInternal.h"
 #import "CKTransactionalComponentDataSourceStateInternal.h"
 
-static CKTransactionalComponentDataSourceItem *item(CKTransactionalComponentDataSourceConfiguration *configuration, id model)
+static CKTransactionalComponentDataSourceItem *item(CKTransactionalComponentDataSourceConfiguration *configuration, id<CKComponentStateListener> listener, id model)
 {
-  const CKBuildComponentResult result = CKBuildComponent(nil, {}, ^CKComponent *{
+  const CKBuildComponentResult result = CKBuildComponent([CKComponentScopeRoot rootWithListener:listener], {}, ^CKComponent *{
     return [configuration.componentProvider componentForModel:model context:configuration.context];
   });
   const CKComponentLayout layout = [result.component layoutThatFits:configuration.sizeRange parentSize:configuration.sizeRange.max];
@@ -28,6 +28,7 @@ static CKTransactionalComponentDataSourceItem *item(CKTransactionalComponentData
 }
 
 CKTransactionalComponentDataSourceState *CKTransactionalComponentDataSourceTestState(Class<CKComponentProvider> provider,
+                                                                                     id<CKComponentStateListener> listener,
                                                                                      NSUInteger numberOfSections,
                                                                                      NSUInteger numberOfItemsPerSection)
 {
@@ -40,7 +41,7 @@ CKTransactionalComponentDataSourceState *CKTransactionalComponentDataSourceTestS
   for (NSUInteger sectionIndex = 0; sectionIndex < numberOfSections; sectionIndex++) {
     NSMutableArray *items = [NSMutableArray array];
     for (NSUInteger itemIndex = 0; itemIndex < numberOfItemsPerSection; itemIndex++) {
-      [items addObject:item(configuration, @(sectionIndex * numberOfItemsPerSection + itemIndex))];
+      [items addObject:item(configuration, listener, @(sectionIndex * numberOfItemsPerSection + itemIndex))];
     }
     [sections addObject:items];
   }

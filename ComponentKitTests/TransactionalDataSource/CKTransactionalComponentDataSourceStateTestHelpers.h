@@ -12,8 +12,10 @@
 
 @class CKTransactionalComponentDataSourceState;
 @protocol CKComponentProvider;
+@protocol CKComponentStateListener;
 
 CKTransactionalComponentDataSourceState *CKTransactionalComponentDataSourceTestState(Class<CKComponentProvider> provider,
+                                                                                     id<CKComponentStateListener> listener,
                                                                                      NSUInteger numberOfSections,
                                                                                      NSUInteger numberOfItemsPerSection);
 

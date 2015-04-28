@@ -65,7 +65,7 @@
 
 - (void)testAppliedChangesExposesNewConfiguration
 {
-  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], 5, 5);
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 5, 5);
 
   CKTransactionalComponentDataSourceConfiguration *newConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[self class]
@@ -82,7 +82,7 @@
 
 - (void)testAppliedChangesIncludesUpdatedIndexPathsForEveryItem
 {
-  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], 5, 5);
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 5, 5);
 
   CKTransactionalComponentDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKTransactionalComponentDataSourceUpdateConfigurationModification alloc] initWithConfiguration:[originalState configuration] userInfo:nil];
@@ -103,7 +103,7 @@
 
 - (void)testAppliedChangesIncludesUserInfo
 {
-  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], 1, 1);
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 1);
   NSDictionary *userInfo = @{@"foo": @"bar"};
   CKTransactionalComponentDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKTransactionalComponentDataSourceUpdateConfigurationModification alloc] initWithConfiguration:[originalState configuration] userInfo:userInfo];
@@ -113,7 +113,7 @@
 
 - (void)testReturnsComponentsWithUpdatedComponentProvider
 {
-  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], 1, 1);
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 1);
   CKTransactionalComponentDataSourceConfiguration *oldConfiguration = [originalState configuration];
   CKTransactionalComponentDataSourceConfiguration *newConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKAlternateComponentProvider class]
@@ -128,7 +128,7 @@
 
 - (void)testReturnsComponentsWithUpdatedContext
 {
-  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], 1, 1);
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 1);
   CKTransactionalComponentDataSourceConfiguration *oldConfiguration = [originalState configuration];
   CKTransactionalComponentDataSourceConfiguration *newConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[oldConfiguration componentProvider]
@@ -144,7 +144,7 @@
 
 - (void)testReturnsComponentsWithUpdatedSizeRange
 {
-  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], 1, 1);
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 1);
   CKTransactionalComponentDataSourceConfiguration *oldConfiguration = [originalState configuration];
   CKTransactionalComponentDataSourceConfiguration *newConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[oldConfiguration componentProvider]
