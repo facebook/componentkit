@@ -58,6 +58,7 @@ CKComponentDataSourceDelegate
   CKComponentDataSource *_componentDataSource;
   CKCellConfigurationFunction _cellConfigurationFunction;
   CKCollectionViewDataSourceChangesetRegulator *_changesetRegulator;
+  NSMapTable *_cellToItemMap;
 }
 
 CK_FINAL_CLASS([CKCollectionViewDataSource class]);
@@ -82,6 +83,7 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
     _collectionView.dataSource = self;
     [_collectionView registerClass:[CKCollectionViewDataSourceCell class] forCellWithReuseIdentifier:kReuseIdentifier];
     _changesetRegulator = [[CKCollectionViewDataSourceChangesetRegulator alloc] initWithCollectionView:collectionView];
+    _cellToItemMap = [NSMapTable weakToStrongObjectsMapTable];
   }
   return self;
 }
@@ -114,14 +116,23 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
   return [[[_componentDataSource objectAtIndexPath:indexPath] lifecycleManager] size];
 }
 
-- (void)announceWillAppearForItemAtIndexPath:(NSIndexPath *)indexPath
+#pragma mark - Appearance announcement
+
+- (void)announceWillAppearForItemInCell:(UICollectionViewCell *)cell
 {
-  [[[_componentDataSource objectAtIndexPath:indexPath] lifecycleManager].scopeFrame announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  _sendAppearanceEventForCell(cell, CKComponentAnnouncedEventTreeWillAppear, _cellToItemMap);
 }
 
-- (void)announceDidDisappearForItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)announceDidDisappearForItemInCell:(UICollectionViewCell *)cell
 {
-  [[[_componentDataSource objectAtIndexPath:indexPath] lifecycleManager].scopeFrame announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+  // We cannot use the indexPath directly, on deletion the indexPath of the deleted cell cannot be used to
+  // get an item from the datasource.
+  _sendAppearanceEventForCell(cell, CKComponentAnnouncedEventTreeDidDisappear, _cellToItemMap);
+}
+
+NS_INLINE void _sendAppearanceEventForCell(UICollectionViewCell *cell, CKComponentAnnouncedEvent event, NSMapTable *cellToItemMap)
+{
+  [[[[cellToItemMap objectForKey:cell] lifecycleManager] scopeFrame] announceEventToControllers:event];
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -137,6 +148,8 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
   }
   CKComponentLifecycleManager *lifecycleManager = [outputItem lifecycleManager];
   [lifecycleManager attachToView:[cell rootView]];
+  // We maintain this map to be able to announce appearance events.
+  [_cellToItemMap setObject:outputItem forKey:cell];
   return cell;
 }
 
