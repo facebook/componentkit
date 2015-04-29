@@ -119,18 +119,18 @@ typedef NS_ENUM(NSUInteger, CommandType) {
   }
 }
 
-- (void)testThrowsOnUpdateAndInsertWithSameIndexPath
+- (void)testDoesNotThrowOnUpdateAndInsertWithSameIndexPath
 {
   {
     Input::Items items;
     items.update({0, 0}, @1);
-    XCTAssertThrowsSpecificNamed(items.insert({0, 0}, @0), NSException, NSInternalInconsistencyException, @"");
+    XCTAssertNoThrow(items.insert({0, 0}, @0),  @"Insertions can share the same indexes with removals or updates.");
   }
 
   {
     Input::Items items;
     items.insert({0, 0}, @0);
-    XCTAssertThrowsSpecificNamed(items.update({0, 0}, @1), NSException, NSInternalInconsistencyException, @"");
+    XCTAssertNoThrow(items.update({0, 0}, @1), @"Insertions can share the same indexes with removals or updates.");
   }
 }
 
