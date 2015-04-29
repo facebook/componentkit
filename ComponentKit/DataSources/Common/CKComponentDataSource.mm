@@ -177,9 +177,9 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
       CKComponentDataSourceInputItem *newItem =
       [[CKComponentDataSourceInputItem alloc] initWithLifecycleManager:object.lifecycleManager																																 
                                                                  model:object.model
-							                                                 context:_context
-						                                           constrainedSize:object.constrainedSize
-								                                                  UUID:object.UUID];
+							       context:_context
+						       constrainedSize:object.constrainedSize
+								  UUID:object.UUID];
       items.update(indexPath, newItem);
     }];
     CKArrayControllerInputChangeset changeset(items);
