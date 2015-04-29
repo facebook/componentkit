@@ -288,7 +288,7 @@ static void applyChangesetToCollectionView(const Output::Changeset &changeset, U
   };
   
   changeset.enumerate(sectionsEnumerator, itemEnumerator);
-  if (itemUpdateIndexPaths.count > 30){
+  if (itemUpdateIndexPaths.count > 30) {
     [collectionView reloadData];
   } else {
     [collectionView performBatchUpdates:^{
