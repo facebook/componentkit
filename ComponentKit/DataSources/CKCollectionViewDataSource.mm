@@ -236,14 +236,12 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
   if (!_processingChangeset && [_changesetQueue count]) {
     ck_changeset_applicator_t headChangeset = _changesetQueue[0];
     [_changesetQueue removeObjectAtIndex:0];
-    [_collectionView performBatchUpdates:^{
-      _processingChangeset = YES;
-      const auto &changeset = headChangeset();
-      applyChangesetToCollectionView(changeset, _collectionView);
-    } completion:^(BOOL){
-      _processingChangeset = NO;
-      [self applyNextChangeset];
-    }];
+    
+    _processingChangeset = YES;
+    const auto &changeset = headChangeset();
+    applyChangesetToCollectionView(changeset, _collectionView);
+    _processingChangeset = NO;
+    [self applyNextChangeset];
   }
 }
 
@@ -290,14 +288,20 @@ static void applyChangesetToCollectionView(const Output::Changeset &changeset, U
   };
   
   changeset.enumerate(sectionsEnumerator, itemEnumerator);
-  if (itemRemovalIndexPaths.count > 0) {
-    [collectionView deleteItemsAtIndexPaths:itemRemovalIndexPaths];
-  }
-  if (itemUpdateIndexPaths.count > 0) {
-    [collectionView reloadItemsAtIndexPaths:itemUpdateIndexPaths];
-  }
-  if (itemInsertionIndexPaths.count > 0) {
-    [collectionView insertItemsAtIndexPaths:itemInsertionIndexPaths];
+  if (itemUpdateIndexPaths.count > 30) {
+    [collectionView reloadData];
+  }else{
+    [collectionView performBatchUpdates:^{
+      if (itemRemovalIndexPaths.count > 0) {
+        [collectionView deleteItemsAtIndexPaths:itemRemovalIndexPaths];
+      }
+      if (itemUpdateIndexPaths.count > 0) {
+        [collectionView reloadItemsAtIndexPaths:itemUpdateIndexPaths];
+      }
+      if (itemInsertionIndexPaths.count > 0) {
+        [collectionView insertItemsAtIndexPaths:itemInsertionIndexPaths];
+      }
+    } completion:nil];
   }
 }
 
