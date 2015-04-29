@@ -11,6 +11,7 @@
 		31EBF255C3C6127E5A3619D8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD8D95429A0D918C06B66E5F /* libPods.a */; };
 		83EBF589FB5C5611BC1A2D13 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD8D95429A0D918C06B66E5F /* libPods.a */; };
 		A2100E0D1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2100E0C1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm */; };
+		A25C02D11AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A25C02D01AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm */; };
 		A27436F71AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27436F61AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm */; };
 		A27436FA1AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27436F91AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm */; };
 		A27C72751AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27C72741AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm */; };
@@ -77,6 +78,7 @@
 /* Begin PBXFileReference section */
 		71F5A01FFD736AB56CFCFD58 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		A2100E0C1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm; sourceTree = "<group>"; };
+		A25C02D01AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceChangesetModificationTests.mm; sourceTree = "<group>"; };
 		A27436F61AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceReloadModificationTests.mm; sourceTree = "<group>"; };
 		A27436F81AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTransactionalComponentDataSourceStateTestHelpers.h; sourceTree = "<group>"; };
 		A27436F91AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceStateTestHelpers.mm; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 		A27436F51AE94FCA00832359 /* TransactionalDataSource */ = {
 			isa = PBXGroup;
 			children = (
+				A25C02D01AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm */,
 				A27436F61AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm */,
 				A2100E0C1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm */,
 				A27C72741AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm */,
@@ -577,6 +580,7 @@
 				B342DC751AC23EA900ACAC53 /* CKComponentHostingViewTests.mm in Sources */,
 				B342DC7A1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm in Sources */,
 				B342DC7E1AC23EA900ACAC53 /* CKComponentViewManagerTests.mm in Sources */,
+				A25C02D11AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm in Sources */,
 				A27436FA1AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm in Sources */,
 				B342DC741AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm in Sources */,
 				B342DC761AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm in Sources */,

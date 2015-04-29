@@ -21,12 +21,12 @@
                        insertedItems:(NSDictionary *)insertedItems
 {
   if (self = [super init]) {
-    _updatedItems = [updatedItems copy];
-    _removedItems = [removedItems copy];
-    _removedSections = [removedSections copy];
-    _movedItems = [movedItems copy];
-    _insertedSections = [insertedSections copy];
-    _insertedItems = [insertedItems copy];
+    _updatedItems = [updatedItems copy] ?: @{};
+    _removedItems = [removedItems copy] ?: [NSSet set];
+    _removedSections = [removedSections copy] ?: [NSIndexSet indexSet];
+    _movedItems = [movedItems copy] ?: @{};
+    _insertedSections = [insertedSections copy] ?: [NSIndexSet indexSet];
+    _insertedItems = [insertedItems copy] ?: @{};
   }
   return self;
 }
