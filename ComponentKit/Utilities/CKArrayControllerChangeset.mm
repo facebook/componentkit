@@ -129,7 +129,7 @@ void Input::Items::bucketizeObjectBySection(ItemsBucketizedBySection &sectionMap
 
 void Input::Items::update(const IndexPath &indexPath, id<NSObject> object)
 {
-  CKInternalConsistencyCheckIf(!commandExistsForIndexPath(indexPath, {_updates, _removals, _insertions}),
+  CKInternalConsistencyCheckIf(!commandExistsForIndexPath(indexPath, {_updates, _removals}),
                                ([NSString stringWithFormat:@"{item:%zd, section:%zd} already exists in commands",
                                 indexPath.item, indexPath.section]));
 
@@ -148,7 +148,7 @@ void Input::Items::remove(const IndexPath &indexPath)
 
 void Input::Items::insert(const IndexPath &indexPath, id<NSObject> object)
 {
-  CKInternalConsistencyCheckIf(!commandExistsForIndexPath(indexPath, {_insertions, _updates}),
+  CKInternalConsistencyCheckIf(!commandExistsForIndexPath(indexPath, {_insertions}),
                                ([NSString stringWithFormat:@"{item:%zd, section:%zd} already exists in commands",
                                 indexPath.item, indexPath.section]));
 
