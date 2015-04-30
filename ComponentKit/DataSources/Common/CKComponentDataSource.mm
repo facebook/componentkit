@@ -229,6 +229,8 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
       batchContainsSectionInserts = YES;
     }
   };
+  
+  id currentContext = _context;
 
   NSMutableSet *insertedIndexPaths = [[NSMutableSet alloc] init];
   CKArrayControllerOutputItems::Enumerator itemsEnumerator =
@@ -257,7 +259,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
                                                             indexPath:change.indexPath.toNSIndexPath()
                                                            changeType:type
                                                           passthrough:(componentCompliantModel == nil)
-                                                              context:[after context]];
+                                                              context:currentContext];
     preparationQueueBatch.items.push_back(queueItem);
   };
 
