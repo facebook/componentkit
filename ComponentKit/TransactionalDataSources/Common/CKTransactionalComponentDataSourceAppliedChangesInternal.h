@@ -20,6 +20,6 @@
                           movedIndexPaths:(NSDictionary *)movedIndexPaths
                          insertedSections:(NSIndexSet *)insertedSections
                        insertedIndexPaths:(NSSet *)insertedIndexPaths
-                                userInfos:(NSArray *)userInfos;
+                                 userInfo:(NSDictionary *)userInfo;
 
 @end

@@ -23,7 +23,7 @@
                           movedIndexPaths:(NSDictionary *)movedIndexPaths
                          insertedSections:(NSIndexSet *)insertedSections
                        insertedIndexPaths:(NSSet *)insertedIndexPaths
-                                userInfos:(NSArray *)userInfos
+                                 userInfo:(NSDictionary *)userInfo
 {
   if (self = [super init]) {
     _updatedIndexPaths = [updatedIndexPaths copy] ?: [NSSet set];
@@ -32,7 +32,7 @@
     _movedIndexPaths = [movedIndexPaths copy] ?: @{};
     _insertedSections = [insertedSections copy] ?: [NSIndexSet indexSet];
     _insertedIndexPaths = [insertedIndexPaths copy] ?: [NSSet set];
-    _userInfos = [userInfos copy] ?: @[];
+    _userInfo = [userInfo copy];
   }
   return self;
 }
@@ -46,7 +46,7 @@
     && CKObjectIsEqual(a.movedIndexPaths, b.movedIndexPaths)
     && CKObjectIsEqual(a.insertedSections, b.insertedSections)
     && CKObjectIsEqual(a.insertedIndexPaths, b.insertedIndexPaths)
-    && CKObjectIsEqual(a.userInfos, b.userInfos);
+    && CKObjectIsEqual(a.userInfo, b.userInfo);
   });
 }
 
@@ -59,7 +59,7 @@
     [_movedIndexPaths hash],
     [_insertedSections hash],
     [_insertedIndexPaths hash],
-    [_userInfos hash],
+    [_userInfo hash],
   };
   return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
 }

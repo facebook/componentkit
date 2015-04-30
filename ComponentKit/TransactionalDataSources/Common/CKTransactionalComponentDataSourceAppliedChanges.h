@@ -19,10 +19,7 @@
 @property (nonatomic, copy, readonly) NSIndexSet *insertedSections;
 @property (nonatomic, copy, readonly) NSSet *insertedIndexPaths;
 
-/**
- Array of NSDictionary containing all non-nil userInfo objects from the CKTransactionalComponentDataSourceChangeset
- objects that caused this change. (Multiple changesets may result in only a single AppliedChanges.)
- */
-@property (nonatomic, copy, readonly) NSArray *userInfos;
+/** userInfo from the CKTransactionalComponentDataSourceChangeset object that caused this change. */
+@property (nonatomic, copy, readonly) NSDictionary *userInfo;
 
 @end

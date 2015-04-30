@@ -86,7 +86,7 @@
                                                                       movedIndexPaths:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
-                                                                            userInfos:nil];
+                                                                             userInfo:nil];
 
   XCTAssertEqualObjects([change appliedChanges], expectedAppliedChanges);
 }

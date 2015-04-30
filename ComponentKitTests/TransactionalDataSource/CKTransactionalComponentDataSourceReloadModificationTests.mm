@@ -66,7 +66,7 @@ static u_int32_t globalState = 0;
                                                                       movedIndexPaths:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
-                                                                            userInfos:nil];
+                                                                             userInfo:nil];
 
   XCTAssertEqualObjects([change appliedChanges], expectedAppliedChanges);
 }
@@ -78,7 +78,7 @@ static u_int32_t globalState = 0;
   CKTransactionalComponentDataSourceReloadModification *reloadModification =
   [[CKTransactionalComponentDataSourceReloadModification alloc] initWithUserInfo:userInfo];
   CKTransactionalComponentDataSourceChange *change = [reloadModification changeFromState:originalState];
-  XCTAssertEqualObjects([[change appliedChanges] userInfos], @[userInfo]);
+  XCTAssertEqualObjects([[change appliedChanges] userInfo], userInfo);
 }
 
 - (void)testActuallyRegeneratesComponents

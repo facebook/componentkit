@@ -136,7 +136,7 @@
                                                                       movedIndexPaths:[_changeset movedItems]
                                                                      insertedSections:[_changeset insertedSections]
                                                                    insertedIndexPaths:[NSSet setWithArray:[[_changeset insertedItems] allKeys]]
-                                                                            userInfos:_userInfo ? @[_userInfo] : nil];
+                                                                             userInfo:_userInfo];
 
   return [[CKTransactionalComponentDataSourceChange alloc] initWithState:newState
                                                           appliedChanges:appliedChanges];

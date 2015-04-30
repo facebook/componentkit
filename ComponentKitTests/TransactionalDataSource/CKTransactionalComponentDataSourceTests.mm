@@ -77,7 +77,7 @@ struct CKDataSourceAnnouncedUpdate {
                                                                       movedIndexPaths:nil
                                                                      insertedSections:[NSIndexSet indexSetWithIndex:0]
                                                                    insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                            userInfos:nil];
+                                                                             userInfo:nil];
 
   XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
 }
@@ -105,7 +105,7 @@ struct CKDataSourceAnnouncedUpdate {
                                                                       movedIndexPaths:nil
                                                                      insertedSections:[NSIndexSet indexSetWithIndex:0]
                                                                    insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                            userInfos:nil];
+                                                                             userInfo:nil];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
     return _announcedChanges.size() == 1 && [_announcedChanges[0].appliedChanges isEqual:expectedAppliedChanges];

@@ -69,7 +69,7 @@
                                                                       movedIndexPaths:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
-                                                                            userInfos:_userInfo ? @[_userInfo] : nil];
+                                                                             userInfo:_userInfo];
 
   return [[CKTransactionalComponentDataSourceChange alloc] initWithState:newState
                                                           appliedChanges:appliedChanges];

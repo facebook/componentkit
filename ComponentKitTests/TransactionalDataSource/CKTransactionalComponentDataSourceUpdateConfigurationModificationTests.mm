@@ -96,7 +96,7 @@
                                                                       movedIndexPaths:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
-                                                                            userInfos:nil];
+                                                                             userInfo:nil];
 
   XCTAssertEqualObjects([change appliedChanges], expectedAppliedChanges);
 }
@@ -108,7 +108,7 @@
   CKTransactionalComponentDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKTransactionalComponentDataSourceUpdateConfigurationModification alloc] initWithConfiguration:[originalState configuration] userInfo:userInfo];
   CKTransactionalComponentDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];
-  XCTAssertEqualObjects([[change appliedChanges] userInfos], @[userInfo]);
+  XCTAssertEqualObjects([[change appliedChanges] userInfo], userInfo);
 }
 
 - (void)testReturnsComponentsWithUpdatedComponentProvider

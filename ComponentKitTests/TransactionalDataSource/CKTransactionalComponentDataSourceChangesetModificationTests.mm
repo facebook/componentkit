@@ -60,7 +60,7 @@
                                                                        stateListener:nil
                                                                             userInfo:userInfo];
   CKTransactionalComponentDataSourceChange *change = [changesetModification changeFromState:originalState];
-  XCTAssertEqualObjects([[change appliedChanges] userInfos], @[userInfo]);
+  XCTAssertEqualObjects([[change appliedChanges] userInfo], userInfo);
 }
 
 - (void)testInsertingSectionAndItemsInEmptyStateExposesNewItems
