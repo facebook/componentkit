@@ -15,6 +15,9 @@
 #import "CKComponentLayout.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"
+#import "CKTransactionalComponentDataSource.h"
+#import "CKTransactionalComponentDataSourceChangeset.h"
+#import "CKTransactionalComponentDataSourceConfiguration.h"
 #import "CKTransactionalComponentDataSourceItemInternal.h"
 #import "CKTransactionalComponentDataSourceStateInternal.h"
 
@@ -47,6 +50,23 @@ CKTransactionalComponentDataSourceState *CKTransactionalComponentDataSourceTestS
   }
 
   return [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:configuration sections:sections];
+}
+
+CKTransactionalComponentDataSource *CKTransactionalComponentTestDataSource(Class<CKComponentProvider> provider)
+{
+  CKTransactionalComponentDataSource *ds =
+  [[CKTransactionalComponentDataSource alloc] initWithConfiguration:
+   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:provider
+                                                                              context:nil
+                                                                            sizeRange:{}]];
+
+  CKTransactionalComponentDataSourceChangeset *insertion =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+    withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
+   build];
+  [ds applyChangeset:insertion mode:CKTransactionalComponentDataSourceModeSynchronous userInfo:nil];
+  return ds;
 }
 
 NSSet *CKTestIndexPaths(NSUInteger numberOfSections, NSUInteger numberOfItemsPerSection)

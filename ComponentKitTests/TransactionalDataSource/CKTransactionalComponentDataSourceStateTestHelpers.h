@@ -10,6 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class CKTransactionalComponentDataSource;
 @class CKTransactionalComponentDataSourceState;
 @protocol CKComponentProvider;
 @protocol CKComponentStateListener;
@@ -18,5 +19,8 @@ CKTransactionalComponentDataSourceState *CKTransactionalComponentDataSourceTestS
                                                                                      id<CKComponentStateListener> listener,
                                                                                      NSUInteger numberOfSections,
                                                                                      NSUInteger numberOfItemsPerSection);
+
+/** Returns a data source with one item and one section. */
+CKTransactionalComponentDataSource *CKTransactionalComponentTestDataSource(Class<CKComponentProvider> provider);
 
 NSSet *CKTestIndexPaths(NSUInteger numberOfSections, NSUInteger numberOfItemsPerSection);

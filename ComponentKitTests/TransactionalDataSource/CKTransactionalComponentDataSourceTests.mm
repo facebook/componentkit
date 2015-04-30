@@ -19,6 +19,7 @@
 #import "CKTransactionalComponentDataSourceConfiguration.h"
 #import "CKTransactionalComponentDataSourceListener.h"
 #import "CKTransactionalComponentDataSourceState.h"
+#import "CKTransactionalComponentDataSourceStateTestHelpers.h"
 
 @interface CKTransactionalComponentDataSourceTests : XCTestCase <CKComponentProvider, CKTransactionalComponentDataSourceListener>
 @end
@@ -109,6 +110,84 @@ struct CKDataSourceAnnouncedUpdate {
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
     return _announcedChanges.size() == 1 && [_announcedChanges[0].appliedChanges isEqual:expectedAppliedChanges];
+  }));
+}
+
+- (void)testUpdatingConfigurationAnnouncesUpdate
+{
+  CKTransactionalComponentDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
+  [ds addListener:self];
+
+  CKTransactionalComponentDataSourceConfiguration *config =
+  [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[self class]
+                                                                             context:@"new context"
+                                                                           sizeRange:{}];
+  [ds updateConfiguration:config
+                     mode:CKTransactionalComponentDataSourceModeSynchronous
+                 userInfo:nil];
+
+  CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChanges =
+  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+                                                                    removedIndexPaths:nil
+                                                                      removedSections:nil
+                                                                      movedIndexPaths:nil
+                                                                     insertedSections:nil
+                                                                   insertedIndexPaths:nil
+                                                                             userInfo:nil];
+
+  XCTAssertEqual([[ds state] configuration], config);
+  XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
+}
+
+- (void)testReloadingAnnouncesUpdate
+{
+  CKTransactionalComponentDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
+  [ds addListener:self];
+  [ds reloadWithMode:CKTransactionalComponentDataSourceModeSynchronous userInfo:nil];
+
+  CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChanges =
+  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+                                                                    removedIndexPaths:nil
+                                                                      removedSections:nil
+                                                                      movedIndexPaths:nil
+                                                                     insertedSections:nil
+                                                                   insertedIndexPaths:nil
+                                                                             userInfo:nil];
+  XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
+}
+
+- (void)testSynchronousReloadCancelsPreviousAsynchronousReload
+{
+  CKTransactionalComponentDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
+  [ds addListener:self];
+
+  // The initial asynchronous reload should be canceled by the immediately subsequent synchronous reload.
+  // We then request *another* async reload so that we can wait for it to complete and assert that the initial
+  // async reload doesn't actually take effect after the synchronous reload.
+  [ds reloadWithMode:CKTransactionalComponentDataSourceModeAsynchronous userInfo:@{@"id": @1}];
+  [ds reloadWithMode:CKTransactionalComponentDataSourceModeSynchronous userInfo:@{@"id": @2}];
+  [ds reloadWithMode:CKTransactionalComponentDataSourceModeAsynchronous userInfo:@{@"id": @3}];
+
+  CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChangesForSyncReload =
+  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+                                                                    removedIndexPaths:nil
+                                                                      removedSections:nil
+                                                                      movedIndexPaths:nil
+                                                                     insertedSections:nil
+                                                                   insertedIndexPaths:nil
+                                                                             userInfo:@{@"id": @2}];
+  CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChangesForSecondAsyncReload =
+  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+                                                                    removedIndexPaths:nil
+                                                                      removedSections:nil
+                                                                      movedIndexPaths:nil
+                                                                     insertedSections:nil
+                                                                   insertedIndexPaths:nil
+                                                                             userInfo:@{@"id": @3}];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.size() == 2
+    && [_announcedChanges[0].appliedChanges isEqual:expectedAppliedChangesForSyncReload]
+    && [_announcedChanges[1].appliedChanges isEqual:expectedAppliedChangesForSecondAsyncReload];
   }));
 }
 

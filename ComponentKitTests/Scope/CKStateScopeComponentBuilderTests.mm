@@ -21,6 +21,7 @@
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeRoot.h"
 #import "CKThreadLocalComponentScope.h"
+#import "CKStateExposingComponent.h"
 
 #pragma mark - Test Components and Controllers
 
@@ -41,26 +42,6 @@
 
 @implementation CKMonkeyComponentWithAnimations
 - (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(CKComponent *)previousComponent { return {}; }
-@end
-
-@interface CKStateExposingComponent : CKComponent
-@property (nonatomic, strong, readonly) id state;
-@end
-
-@implementation CKStateExposingComponent
-+ (id)initialState
-{
-  return @12345;
-}
-+ (instancetype)new
-{
-  CKComponentScope scope(self);
-  CKStateExposingComponent *c = [super newWithView:{} size:{}];
-  if (c) {
-    c->_state = scope.state();
-  }
-  return c;
-}
 @end
 
 #pragma mark - Tests
