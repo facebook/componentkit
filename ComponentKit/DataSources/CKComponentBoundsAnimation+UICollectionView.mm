@@ -156,21 +156,7 @@ static NSArray *visibleAndJustOffscreenIndexPaths(UICollectionView *cv)
       [v removeFromSuperview];
     }
   };
-  if (animation.mode == CKComponentBoundsAnimationModeSpring) {
-    [UIView animateWithDuration:animation.duration
-                          delay:animation.delay
-         usingSpringWithDamping:animation.springDampingRatio
-          initialSpringVelocity:animation.springInitialVelocity
-                        options:0
-                     animations:restore
-                     completion:completion];
-  } else {
-    [UIView animateWithDuration:animation.duration
-                          delay:animation.delay
-                        options:0
-                     animations:restore
-                     completion:completion];
-  }
+  CKComponentBoundsAnimationApply(animation, restore, completion);
 
   _collectionView = nil;
   _indexPathsToSnapshotViews = nil;
