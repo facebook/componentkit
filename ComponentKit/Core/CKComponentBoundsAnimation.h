@@ -45,3 +45,13 @@ struct CKComponentBoundsAnimation {
   /** Ignored unless mode is Spring, in which case it specifies the initial velocity passed to UIKit. */
   CGFloat springInitialVelocity;
 };
+
+/**
+ Wraps the given block in the correct UIView animation block for a given bounds animation.
+ If duration is zero, wraps [UIView +performWithoutAnimation:].
+ If mode is Default, wraps [UIView +animateWithDuration:...].
+ If mode is Spring, wraps [UIView +animateWithDuration:delay:usingSpringWithDamping:...]
+ */
+void CKComponentBoundsAnimationApply(const CKComponentBoundsAnimation &animation,
+                                     void (^animations)(void),
+                                     void (^completion)(BOOL finished));

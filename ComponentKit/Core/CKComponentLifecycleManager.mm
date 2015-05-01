@@ -121,7 +121,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
   // Since the state has been updated, re-mount the view if it exists.
   if (_mountedView != nil) {
-    [self _mountLayout];
+    CKComponentBoundsAnimationApply(state.boundsAnimation, ^{ [self _mountLayout]; }, nil);
   }
 
   if (sizeChanged) {
