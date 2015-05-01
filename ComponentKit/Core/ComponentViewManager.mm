@@ -53,6 +53,13 @@ namespace CK {
         return identifiers == k.identifiers;
       }
     };
+
+    struct ActionDisabler {
+      ActionDisabler() : _originalValue([CATransaction disableActions]) { [CATransaction setDisableActions:YES]; }
+      ~ActionDisabler() { [CATransaction setDisableActions:_originalValue]; }
+    private:
+      BOOL _originalValue;
+    };
   }
 }
 
@@ -209,6 +216,8 @@ static char kPersistentAttributesViewKey = ' ';
 
 void AttributeApplicator::apply(UIView *view, const CKComponentViewConfiguration &config)
 {
+  CK::Component::ActionDisabler actionDisabler; // We never want implicit animations when applying attributes
+
   // Reset optimistic mutations so that applicators see they see the state they expect.
   CKResetOptimisticMutationsForView(view);
 
