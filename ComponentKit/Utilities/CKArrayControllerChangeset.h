@@ -75,8 +75,8 @@ namespace CK {
       void insert(NSInteger index);
       void remove(NSInteger index);
 
-      const std::set<NSInteger> &insertions(void) const;
-      const std::set<NSInteger> &removals(void) const;
+      NSIndexSet *insertions() const;
+      NSIndexSet *removals() const;
 
       bool operator==(const Sections &other) const;
 
@@ -121,11 +121,15 @@ namespace CK {
         void update(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
         void remove(const CKArrayControllerIndexPath &indexPath);
         void insert(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
+        
+        NSDictionary *updates() const;
+        NSSet *removals() const;
+        NSDictionary *insertions() const;
 
         size_t size() const noexcept;
 
         bool operator==(const Items &other) const;
-
+        
         /**
          Called by Changeset::enumerate(). Note that by passing an NSIndexSet the **order** that clients have called
          Items::insert() is irrelevant. See CKArrayControllerInputChangesetTests for an example. The indexes and objects
@@ -140,14 +144,16 @@ namespace CK {
                                   NSArray *objects,
                                   CKArrayControllerChangeType type,
                                   BOOL *stop);
-
+      
       private:
         friend class Changeset;
 
         typedef std::map<NSInteger, id<NSObject>> ItemIndexToObjectMap;
         typedef std::map<NSInteger, ItemIndexToObjectMap> ItemsBucketizedBySection;
+        typedef void(^ItemsBucketizedBySectionEnumerator)(NSIndexPath *indexPath, id<NSObject> object);
 
         void bucketizeObjectBySection(ItemsBucketizedBySection &m, const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
+        void enumerateItemsBucketizedBySection(const ItemsBucketizedBySection &m, ItemsBucketizedBySectionEnumerator enumerator) const;
         bool commandExistsForIndexPath(const CKArrayControllerIndexPath &indexPath,
                                        const std::vector<ItemsBucketizedBySection> &bucketsToCheck) const;
 

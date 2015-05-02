@@ -36,14 +36,23 @@ void Sections::remove(NSInteger index)
   _removals.insert(index);
 }
 
-const std::set<NSInteger> &Sections::insertions() const
+NS_INLINE NSIndexSet *setOfIndicesToNSIndexSet(std::set<NSInteger> setOfIndices)
 {
-  return _insertions;
+  NSMutableIndexSet *output = [NSMutableIndexSet indexSet];
+  for (auto index : setOfIndices) {
+    [output addIndex:index];
+  }
+  return output;
 }
 
-const std::set<NSInteger> &Sections::removals() const
+NSIndexSet *Sections::insertions() const
 {
-  return _removals;
+  return setOfIndicesToNSIndexSet(_insertions);
+}
+
+NSIndexSet *Sections::removals() const
+{
+  return setOfIndicesToNSIndexSet(_removals);
 }
 
 bool Sections::operator==(const Sections &other) const
@@ -127,6 +136,19 @@ void Input::Items::bucketizeObjectBySection(ItemsBucketizedBySection &sectionMap
   }
 }
 
+void Input::Items::enumerateItemsBucketizedBySection(const ItemsBucketizedBySection &bucketizedItems, ItemsBucketizedBySectionEnumerator enumerator) const
+{
+  if (!enumerator) {
+    return;
+  }
+  
+  for (auto sectionToBucket : bucketizedItems) {
+    for (auto itemObjectPair : sectionToBucket.second) {
+      enumerator([NSIndexPath indexPathForItem:itemObjectPair.first inSection:sectionToBucket.first], itemObjectPair.second);
+    }
+  }
+}
+
 void Input::Items::update(const IndexPath &indexPath, id<NSObject> object)
 {
   CKInternalConsistencyCheckIf(!commandExistsForIndexPath(indexPath, {_updates, _removals}),
@@ -134,6 +156,15 @@ void Input::Items::update(const IndexPath &indexPath, id<NSObject> object)
                                 indexPath.item, indexPath.section]));
 
   bucketizeObjectBySection(_updates, indexPath, object);
+}
+
+NSDictionary *Input::Items::updates() const
+{
+  NSMutableDictionary *updates = [NSMutableDictionary dictionary];
+  enumerateItemsBucketizedBySection(_updates, ^(NSIndexPath *indexPath, id<NSObject> object) {
+    updates[indexPath] = object ?: [NSNull null];
+  });
+  return updates;
 }
 
 void Input::Items::remove(const IndexPath &indexPath)
@@ -146,6 +177,15 @@ void Input::Items::remove(const IndexPath &indexPath)
   bucketizeObjectBySection(_removals, indexPath, nil);
 }
 
+NSSet *Input::Items::removals() const
+{
+  NSMutableSet *removals = [NSMutableSet set];
+  enumerateItemsBucketizedBySection(_removals, ^(NSIndexPath *indexPath, id<NSObject> object) {
+    [removals addObject:indexPath];
+  });
+  return removals;
+}
+
 void Input::Items::insert(const IndexPath &indexPath, id<NSObject> object)
 {
   CKInternalConsistencyCheckIf(!commandExistsForIndexPath(indexPath, {_insertions}),
@@ -153,6 +193,15 @@ void Input::Items::insert(const IndexPath &indexPath, id<NSObject> object)
                                 indexPath.item, indexPath.section]));
 
   bucketizeObjectBySection(_insertions, indexPath, object);
+}
+
+NSDictionary *Input::Items::insertions() const
+{
+  NSMutableDictionary *insertions = [NSMutableDictionary dictionary];
+  enumerateItemsBucketizedBySection(_insertions, ^(NSIndexPath *indexPath, id<NSObject> object) {
+    insertions[indexPath] = object ?: [NSNull null];
+  });
+  return insertions;
 }
 
 size_t Input::Items::size() const noexcept
@@ -179,15 +228,11 @@ void Input::Changeset::enumerate(Sections::Enumerator sectionEnumerator,
 {
   __block BOOL stop = NO;
 
-  void (^emitSectionChanges)(const std::set<NSInteger>&, CKArrayControllerChangeType) =
-  (!sectionEnumerator) ? (void(^)(const std::set<NSInteger>&, CKArrayControllerChangeType))nil :
-  ^(const std::set<NSInteger> &s, CKArrayControllerChangeType t) {
-    if (!s.empty()) {
-      NSMutableIndexSet *indexes = [[NSMutableIndexSet alloc] init];
-      for (auto section : s) {
-        [indexes addIndex:section];
-      }
-      sectionEnumerator(indexes, t, &stop);
+  void (^emitSectionChanges)(NSIndexSet *, CKArrayControllerChangeType) =
+  (!sectionEnumerator) ? (void(^)(NSIndexSet *, CKArrayControllerChangeType))nil :
+  ^(NSIndexSet *s, CKArrayControllerChangeType t) {
+    if (s.count > 0) {
+      sectionEnumerator(s, t, &stop);
     }
   };
 
@@ -329,15 +374,11 @@ void Output::Changeset::enumerate(Sections::Enumerator sectionEnumerator,
 {
   __block BOOL stop = NO;
 
-  void (^emitSectionChanges)(const std::set<NSInteger>&, CKArrayControllerChangeType) =
-  (!sectionEnumerator) ? (void(^)(const std::set<NSInteger>&, CKArrayControllerChangeType))nil :
-  ^(const std::set<NSInteger> &s, CKArrayControllerChangeType t){
-    if (!s.empty()) {
-      NSMutableIndexSet *indexes = [[NSMutableIndexSet alloc] init];
-      for (auto section : s) {
-        [indexes addIndex:section];
-      }
-      sectionEnumerator(indexes, t, &stop);
+  void (^emitSectionChanges)(NSIndexSet *, CKArrayControllerChangeType) =
+  (!sectionEnumerator) ? (void(^)(NSIndexSet *, CKArrayControllerChangeType))nil :
+  ^(NSIndexSet *s, CKArrayControllerChangeType t) {
+    if (s.count > 0) {
+      sectionEnumerator(s, t, &stop);
     }
   };
 
