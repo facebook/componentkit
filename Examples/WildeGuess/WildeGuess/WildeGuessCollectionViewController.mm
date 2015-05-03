@@ -93,6 +93,20 @@
   return [_dataSource sizeForItemAtIndexPath:indexPath];
 }
 
+- (void)collectionView:(UICollectionView *)collectionView
+       willDisplayCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  [_dataSource announceWillAppearForItemInCell:cell];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView
+  didEndDisplayingCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  [_dataSource announceDidDisappearForItemInCell:cell];
+}
+
 #pragma mark - CKComponentProvider
 
 + (CKComponent *)componentForModel:(Quote *)quote context:(QuoteContext *)context
@@ -106,6 +120,10 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+  if( scrollView.contentSize.height == 0 ) {
+    return ;
+  }
+  
   if (scrolledToBottomWithBuffer(scrollView.contentOffset, scrollView.contentSize, scrollView.contentInset, scrollView.bounds)) {
     [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:8]];
   }
@@ -113,9 +131,6 @@
 
 static BOOL scrolledToBottomWithBuffer(CGPoint contentOffset, CGSize contentSize, UIEdgeInsets contentInset, CGRect bounds)
 {
-  if( contentSize.height == 0 ) {
-    return NO;
-  }
   CGFloat buffer = CGRectGetHeight(bounds) - contentInset.top - contentInset.bottom;
   const CGFloat maxVisibleY = (contentOffset.y + bounds.size.height);
   const CGFloat actualMaxY = (contentSize.height + contentInset.bottom);

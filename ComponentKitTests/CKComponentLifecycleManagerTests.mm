@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -187,15 +187,6 @@ static const CKSizeRange size = {{40, 40}, {40, 40}};
   [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:[UIColor greenColor] constrainedSize:size context:nil]];
   XCTAssertEqualObjects([[view.subviews firstObject] backgroundColor], [UIColor redColor],
                         @"Expect the manager to leave view untouched after detach");
-}
-
-- (void)testNotifyingControllerThroughLifecycleManager
-{
-  notified = NO;
-  CKComponentLifecycleManager *lifeManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  [lifeManager updateWithState:[lifeManager prepareForUpdateWithModel:[UIColor redColor] constrainedSize:size context:nil]];
-  [lifeManager componentTreeWillAppear];
-  XCTAssertTrue(notified, @"Expect the controller to be notified of the event");
 }
 
 - (void)testCallingUpdateWithStateTriggersSizeDidChangeCallback

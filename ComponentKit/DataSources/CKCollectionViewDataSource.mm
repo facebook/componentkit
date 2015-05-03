@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -24,40 +24,21 @@
 #import "CKCollectionViewDataSourceCell.h"
 #import "CKComponentLifecycleManager.h"
 #import "CKComponentRootView.h"
+#import "CKComponentScopeFrame.h"
 
 using namespace CK::ArrayController;
 
 @interface CKCollectionViewDataSource () <
 UICollectionViewDataSource,
-UICollectionViewDelegate,
 CKComponentDataSourceDelegate
 >
-@end
-
-/** 
- This helper object is used to regulate the application of changesets to the collection view
- In rare cases, if a performBatchUpdates that mutates the structure of the collection view is executed while the previous one is not done, it will mess up 
- the internal state of the collection view and cause items not to be updated properly. 
- For this reason instead of applying directly changes to the collection view as soon as the componentDataSource is done computing them, we enqueue the 
- changesets in this "regulator" that will apply them serially.
- */
-@interface CKCollectionViewDataSourceChangesetRegulator: NSObject
-
-- (instancetype)initWithCollectionView:(UICollectionView *)collectionView;
-/** 
- Enqueue a changeset in the regulator, the changeset is either :
- - Applied immediately if nothing is enqueued in front of it
- - Defered until all of the changesets in front in the queue are performed
- */
-- (void)enqueueChangesetApplicator:(ck_changeset_applicator_t)changesetApplicator;
-
 @end
 
 @implementation CKCollectionViewDataSource
 {
   CKComponentDataSource *_componentDataSource;
   CKCellConfigurationFunction _cellConfigurationFunction;
-  CKCollectionViewDataSourceChangesetRegulator *_changesetRegulator;
+  NSMapTable *_cellToItemMap;
 }
 
 CK_FINAL_CLASS([CKCollectionViewDataSource class]);
@@ -81,7 +62,7 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
     _collectionView = collectionView;
     _collectionView.dataSource = self;
     [_collectionView registerClass:[CKCollectionViewDataSourceCell class] forCellWithReuseIdentifier:kReuseIdentifier];
-    _changesetRegulator = [[CKCollectionViewDataSourceChangesetRegulator alloc] initWithCollectionView:collectionView];
+    _cellToItemMap = [NSMapTable weakToStrongObjectsMapTable];
   }
   return self;
 }
@@ -114,6 +95,25 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
   return [[[_componentDataSource objectAtIndexPath:indexPath] lifecycleManager] size];
 }
 
+#pragma mark - Appearance announcement
+
+- (void)announceWillAppearForItemInCell:(UICollectionViewCell *)cell
+{
+  _sendAppearanceEventForCell(cell, CKComponentAnnouncedEventTreeWillAppear, _cellToItemMap);
+}
+
+- (void)announceDidDisappearForItemInCell:(UICollectionViewCell *)cell
+{
+  // We cannot use the indexPath directly, on deletion the indexPath of the deleted cell cannot be used to
+  // get an item from the datasource.
+  _sendAppearanceEventForCell(cell, CKComponentAnnouncedEventTreeDidDisappear, _cellToItemMap);
+}
+
+NS_INLINE void _sendAppearanceEventForCell(UICollectionViewCell *cell, CKComponentAnnouncedEvent event, NSMapTable *cellToItemMap)
+{
+  [[[[cellToItemMap objectForKey:cell] lifecycleManager] scopeFrame] announceEventToControllers:event];
+}
+
 #pragma mark - UICollectionViewDataSource
 
 static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_data_source.cell";
@@ -127,6 +127,8 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
   }
   CKComponentLifecycleManager *lifecycleManager = [outputItem lifecycleManager];
   [lifecycleManager attachToView:[cell rootView]];
+  // We maintain this map to be able to announce appearance events.
+  [_cellToItemMap setObject:outputItem forKey:cell];
   return cell;
 }
 
@@ -168,7 +170,10 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
           hasChangesOfTypes:(CKComponentDataSourceChangeType)changeTypes
         changesetApplicator:(ck_changeset_applicator_t)changesetApplicator
 {
-  [_changesetRegulator enqueueChangesetApplicator:changesetApplicator];
+  [_collectionView performBatchUpdates:^{
+    const auto &changeset = changesetApplicator();
+    applyChangesetToCollectionView(changeset, _collectionView);
+  } completion:nil];
 }
 
 - (void)componentDataSource:(CKComponentDataSource *)componentDataSource
@@ -182,45 +187,6 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
     CKComponentBoundsAnimationApplyAfterCollectionViewBatchUpdates(boundsAnimationContext, animation);
   } else {
     [[_collectionView collectionViewLayout] invalidateLayout];
-  }
-}
-
-@end
-
-@implementation CKCollectionViewDataSourceChangesetRegulator {
-  UICollectionView *_collectionView;
-  // Internal queue for the changeset applicators
-  NSMutableArray *_changesetQueue;
-  BOOL _processingChangeset;
-}
-
-- (instancetype)initWithCollectionView:(UICollectionView *)collectionView
-{
-  if (self = [super init]) {
-    _collectionView = collectionView;
-    _changesetQueue = [NSMutableArray array];
-  }
-  return self;
-}
-
-- (void)enqueueChangesetApplicator:(ck_changeset_applicator_t)changesetApplicator
-{
-  [_changesetQueue addObject:changesetApplicator];
-  [self applyNextChangeset];
-}
-
-- (void)applyNextChangeset {
-  if (!_processingChangeset && [_changesetQueue count]) {
-    ck_changeset_applicator_t headChangeset = _changesetQueue[0];
-    [_changesetQueue removeObjectAtIndex:0];
-    [_collectionView performBatchUpdates:^{
-      _processingChangeset = YES;
-      const auto &changeset = headChangeset();
-      applyChangesetToCollectionView(changeset, _collectionView);
-    } completion:^(BOOL){
-      _processingChangeset = NO;
-      [self applyNextChangeset];
-    }];
   }
 }
 

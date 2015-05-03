@@ -1,8 +1,8 @@
 Pod::Spec.new do |s|
   s.name             = "ComponentKitTestLib"
-  s.version          = "0.1.0"
+  s.version          = "0.11"
   s.summary          = "A React-inspired view framework for iOS"
-  s.homepage         = "https://componentkit.com"
+  s.homepage         = "https://componentkit.org"
   s.license          = 'BSD'
   s.source           = { :git => "https://github.com/facebook/ComponentKit.git", :tag => s.version.to_s }
   s.platform     = :ios, '7.0'

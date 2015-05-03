@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -82,20 +82,6 @@ typedef void(^CKComponentDataSourceEnumerator)(CKComponentDataSourceOutputItem *
 - (void)enumerateObjectsUsingBlock:(CKComponentDataSourceEnumerator)block;
 
 - (void)enumerateObjectsInSectionAtIndex:(NSInteger)section usingBlock:(CKComponentDataSourceEnumerator)block;
-
-typedef BOOL(^CKComponentDataSourcePredicate)(CKComponentDataSourceOutputItem *, NSIndexPath *, BOOL *);
-
-/**
- @predicate Returning YES from the predicate will halt searching. Passing a nil predicate will return a {nil, nil} pair.
- @returns The object passing `predicate` and its corresponding index path. Nil in both fields indicates nothing passed.
- This will always return both fields as nil or non-nil.
- */
-- (std::pair<CKComponentDataSourceOutputItem *, NSIndexPath *>)firstObjectPassingTest:(CKComponentDataSourcePredicate)predicate;
-
-/**
- This is O(N).
- */
-- (std::pair<CKComponentDataSourceOutputItem *, NSIndexPath *>)objectForUUID:(NSString *)UUID;
 
 /**
  @return YES if the datasource has changesets currently enqueued.

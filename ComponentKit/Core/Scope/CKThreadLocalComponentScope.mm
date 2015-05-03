@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -68,7 +68,8 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(id<CKComponentStateList
                                                          CKComponentScopeFrame *previousRootFrame)
 {
   CKCAssert(cursor()->empty(), @"CKThreadLocalStateScope already exists. You cannot create two at the same time.");
-  cursor()->pushFrameAndEquivalentPreviousFrame([CKComponentScopeFrame rootFrameWithListener:listener], previousRootFrame);
+  int32_t globalIdentifier = previousRootFrame ? previousRootFrame.globalIdentifier : [CKComponentScopeFrame nextGlobalIdentifier];
+  cursor()->pushFrameAndEquivalentPreviousFrame([CKComponentScopeFrame rootFrameWithListener:listener globalIdentifier:globalIdentifier], previousRootFrame);
 }
 
 CKThreadLocalComponentScope::~CKThreadLocalComponentScope() throw(...)

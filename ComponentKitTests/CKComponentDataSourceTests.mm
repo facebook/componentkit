@@ -3,13 +3,14 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentConstantDecider.h>
 #import <ComponentKit/CKComponentDataSource.h>
 #import <ComponentKit/CKComponentDataSourceOutputItem.h>
@@ -1059,35 +1060,6 @@ static const CKSizeRange constrainedSize = {{320, 0}, {320, INFINITY}};
   [_delegate reset];
 }
 
-- (void)testObjectForUUIDWithNilUUIDReturnsNil
-{
-  [self configureWithMultipleSectionsAndItems];
-
-  auto pair = [_dataSource objectForUUID:nil];
-  XCTAssertNil(pair.first);
-  XCTAssertNil(pair.second);
-}
-
-- (void)testObjectForUUIDWithNotFoundUUIDReturnsNil
-{
-  [self configureWithMultipleSectionsAndItems];
-
-  auto pair = [_dataSource objectForUUID:@"123456789"];
-  XCTAssertNil(pair.first);
-  XCTAssertNil(pair.second);
-}
-
-- (void)testObjectForUUIDReturnsObjectWhenFound
-{
-  [self configureWithMultipleSectionsAndItems];
-
-  CKComponentDataSourceOutputItem *item = [_dataSource objectAtIndexPath:IndexPath(1, 0).toNSIndexPath()];
-  auto pair = [_dataSource objectForUUID:[item UUID]];
-
-  XCTAssertEqualObjects([pair.first model], @"Batman");
-  XCTAssertEqualObjects(pair.second, IndexPath(1, 0).toNSIndexPath());
-}
-
 - (void)testIsComputingChanges
 {
   [self configureWithMultipleSectionsAndItems];
@@ -1108,6 +1080,102 @@ static const CKSizeRange constrainedSize = {{320, 0}, {320, INFINITY}};
   XCTAssertTrue([_dataSource isComputingChanges]);
   [self waitUntilChangeCountIs:2];
   XCTAssertFalse([_dataSource isComputingChanges]);
+}
+
+@end
+
+@interface CKComponentDataSourceReloadTest : XCTestCase <CKComponentProvider>
+@end
+
+@implementation CKComponentDataSourceReloadTest
+{
+  CKComponentDataSource *_dataSource;
+  CKComponentDataSourceTestDelegate *_delegate;
+}
+
+- (void)setUp
+{
+  [super setUp];
+  
+  CKComponentDataSourceTestDelegate *delegate = [[CKComponentDataSourceTestDelegate alloc] init];
+  
+  CKComponentConstantDecider *decider = [[CKComponentConstantDecider alloc] initWithEnabled:YES];
+  CKComponentDataSource *dataSource = [[CKComponentDataSource alloc] initWithComponentProvider:[self class]
+                                                                                       context:@"context"
+                                                                                       decider:decider];
+  
+  dataSource.delegate = delegate;
+  
+  _dataSource = dataSource;
+  _delegate = delegate;
+}
+
+- (void)waitUntilChangeCountIs:(NSUInteger)changeCount
+{
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
+    if (_delegate.changeCount > changeCount) {
+      XCTFail(@"%lu", (unsigned long)_delegate.changeCount);
+    }
+    return (_delegate.changeCount == changeCount);
+  }), @"timeout");
+}
+
+- (void)testReloadCorrectlyEnqueuesUpdatesForTheContainedItems
+{
+  Sections sections;
+  sections.insert(0);
+  sections.insert(1);
+  
+  Input::Items items;
+  items.insert({0, 0}, @"Hello");
+  items.insert({0, 1}, @"World");
+  items.insert({1, 0}, @"Batman");
+  items.insert({1, 1}, @"Robin");
+  
+  [_dataSource enqueueChangeset:{sections, items} constrainedSize:{}];
+  [self waitUntilChangeCountIs:1];
+  [_delegate reset];
+  
+  NSMutableDictionary *capturedState = [NSMutableDictionary dictionary];
+  [_dataSource enumerateObjectsUsingBlock:^(CKComponentDataSourceOutputItem *o, NSIndexPath *ip, BOOL *stop) {
+    capturedState[ip] = o;
+  }];
+  [_dataSource enqueueReload];
+  [self waitUntilChangeCountIs:1];
+  
+  for (CKComponentDataSourceTestDelegateChange *change in [_delegate changes]) {
+    XCTAssertEqual(change.changeType, CKArrayControllerChangeTypeUpdate);
+    XCTAssertEqualObjects(change.afterIndexPath, change.beforeIndexPath);
+    XCTAssertEqualObjects(change.dataSourcePair, capturedState[change.afterIndexPath]);
+  }
+  XCTAssertEqual([[_delegate changes] count], [capturedState count]);
+}
+
+- (void)testUpdateContextAndReloadUpdateTheContextForAllTheContainedItems
+{
+  Sections sections;
+  sections.insert(0);
+  
+  Input::Items items;
+  items.insert({0, 0}, @"Hello");
+  items.insert({0, 1}, @"World");
+  
+  [_dataSource enqueueChangeset:{sections, items} constrainedSize:{}];
+  [self waitUntilChangeCountIs:1];
+  [_delegate reset];
+  
+  NSString *newContext = @"newContext";
+  [_dataSource updateContextAndEnqeueReload:newContext];
+  [self waitUntilChangeCountIs:1];
+  
+  for (CKComponentDataSourceTestDelegateChange *change in [_delegate changes]) {
+    XCTAssertEqualObjects(change.dataSourcePair.lifecycleManagerState.context, newContext);
+  }
+}
+
++ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+{
+  return [CKComponent newWithView:{[UIView class]} size:{}];
 }
 
 @end

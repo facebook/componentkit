@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -41,9 +41,6 @@ CKComponentLifecycleManagerAsynchronousUpdateHandler
   id<NSObject> _context;
 
   /*
-   Please see the discussion on why we need two arrays
-   https://www.facebook.com/groups/574870245894928/permalink/645686615479957/
-
    The basic flow is
 
    Changes -> _inputArrayController -(async)-> Queue -(async)-> _outputArrayController -> delegate
@@ -159,19 +156,6 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
   }
 }
 
-- (std::pair<CKComponentDataSourceOutputItem *, NSIndexPath *>)firstObjectPassingTest:(CKComponentDataSourcePredicate)predicate
-{
-  return [_outputArrayController firstObjectPassingTest:predicate];
-}
-
-- (std::pair<CKComponentDataSourceOutputItem *, NSIndexPath *>)objectForUUID:(NSString *)UUID
-{
-  return [self firstObjectPassingTest:
-          ^BOOL(CKComponentDataSourceOutputItem *object, NSIndexPath *indexPath, BOOL *stop) {
-            return [[object UUID] isEqual:UUID];
-          }];
-}
-
 - (void)enqueueReload
 {
   __block CKArrayControllerInputItems items;
@@ -217,7 +201,6 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
     }
     return [[CKComponentDataSourceInputItem alloc] initWithLifecycleManager:lifecycleManager
                                                                       model:object
-                                                                    context:_context
                                                             constrainedSize:constrainedSize
                                                                        UUID:UUID ];
   };
@@ -273,7 +256,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
                                                             indexPath:change.indexPath.toNSIndexPath()
                                                            changeType:type
                                                           passthrough:(componentCompliantModel == nil)
-                                                              context:[after context]];
+                                                              context:_context];
     preparationQueueBatch.items.push_back(queueItem);
   };
 

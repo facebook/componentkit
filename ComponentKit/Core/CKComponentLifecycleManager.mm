@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -121,7 +121,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
   // Since the state has been updated, re-mount the view if it exists.
   if (_mountedView != nil) {
-    [self _mountLayout];
+    CKComponentBoundsAnimationApply(state.boundsAnimation, ^{ [self _mountLayout]; }, nil);
   }
 
   if (sizeChanged) {
@@ -198,14 +198,9 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   return _state.model;
 }
 
-- (void)componentTreeWillAppear
+- (CKComponentScopeFrame *)scopeFrame
 {
-  [_state.scopeFrame announceEventToControllers:@selector(componentTreeWillAppear)];
-}
-
-- (void)componentTreeDidDisappear
-{
-  [_state.scopeFrame announceEventToControllers:@selector(componentTreeDidDisappear)];
+  return _state.scopeFrame;
 }
 
 #pragma mark - CKComponentStateListener

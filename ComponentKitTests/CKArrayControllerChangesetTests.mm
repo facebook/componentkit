@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -119,18 +119,18 @@ typedef NS_ENUM(NSUInteger, CommandType) {
   }
 }
 
-- (void)testThrowsOnUpdateAndInsertWithSameIndexPath
+- (void)testDoesNotThrowOnUpdateAndInsertWithSameIndexPath
 {
   {
     Input::Items items;
     items.update({0, 0}, @1);
-    XCTAssertThrowsSpecificNamed(items.insert({0, 0}, @0), NSException, NSInternalInconsistencyException, @"");
+    XCTAssertNoThrow(items.insert({0, 0}, @0),  @"Insertions can share the same indexes with removals or updates.");
   }
 
   {
     Input::Items items;
     items.insert({0, 0}, @0);
-    XCTAssertThrowsSpecificNamed(items.update({0, 0}, @1), NSException, NSInternalInconsistencyException, @"");
+    XCTAssertNoThrow(items.update({0, 0}, @1), @"Insertions can share the same indexes with removals or updates.");
   }
 }
 
@@ -148,6 +148,54 @@ typedef NS_ENUM(NSUInteger, CommandType) {
     XCTAssertThrowsSpecificNamed(items.update({0, 0}, @1), NSException, NSInternalInconsistencyException, @"");
   }
 }
+
+- (void)testInsertions
+{
+  Input::Items items;
+  items.insert({0, 0}, @1);
+  items.insert({1, 1}, @2);
+  
+  NSDictionary *expectedInsertions = @{[NSIndexPath indexPathForItem:0 inSection:0]: @1,
+                                       [NSIndexPath indexPathForItem:1 inSection:1]: @2};
+  NSDictionary *expectedUpdates = @{};
+  NSSet *expectedRemovals = [NSSet set];
+  
+  XCTAssertEqualObjects(expectedInsertions, items.insertions());
+  XCTAssertEqualObjects(expectedRemovals, items.removals());
+  XCTAssertEqualObjects(expectedUpdates, items.updates());
+}
+
+- (void)testUpdates
+{
+  Input::Items items;
+  items.update({0, 0}, @1);
+  items.update({1, 1}, @2);
+  
+  NSDictionary *expectedInsertions = @{};
+  NSDictionary *expectedUpdates = @{[NSIndexPath indexPathForItem:0 inSection:0]: @1,
+                                    [NSIndexPath indexPathForItem:1 inSection:1]: @2};;
+  NSSet *expectedRemovals = [NSSet set];
+  
+  XCTAssertEqualObjects(expectedInsertions, items.insertions());
+  XCTAssertEqualObjects(expectedRemovals, items.removals());
+  XCTAssertEqualObjects(expectedUpdates, items.updates());
+}
+
+- (void)testRemovals
+{
+  Input::Items items;
+  items.remove({0, 0});
+  items.remove({1, 1});
+  
+  NSDictionary *expectedInsertions = @{};
+  NSDictionary *expectedUpdates = @{};
+  NSSet *expectedRemovals = [NSSet setWithArray:@[[NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:1 inSection:1]]];
+  
+  XCTAssertEqualObjects(expectedInsertions, items.insertions());
+  XCTAssertEqualObjects(expectedRemovals, items.removals());
+  XCTAssertEqualObjects(expectedUpdates, items.updates());
+}
+
 
 @end
 
@@ -186,6 +234,26 @@ typedef NS_ENUM(NSUInteger, CommandType) {
     sections.remove(0);
     XCTAssertNoThrow(sections.insert(0), @"Removals and insertions can share the same indexes.");
   }
+}
+
+- (void)testInsertion
+{
+  Sections sections;
+  sections.insert(0);
+  sections.insert(1);
+  
+  XCTAssertEqualObjects([NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)], sections.insertions());
+  XCTAssertEqualObjects([NSIndexSet indexSet], sections.removals());
+}
+
+- (void)testRemoval
+{
+  Sections sections;
+  sections.remove(0);
+  sections.remove(1);
+  
+  XCTAssertEqualObjects([NSIndexSet indexSet], sections.insertions());
+  XCTAssertEqualObjects([NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)], sections.removals());
 }
 
 @end
@@ -508,10 +576,6 @@ static Output::Changeset exampleOutputChangeset(void)
                         @[@(CommandTypeItem), @(CKArrayControllerChangeTypeInsert)],
                         ];
 
-  /**
-   I think I passed.
-   https://our.intern.facebook.com/intern/wiki/index.php/Engineering/Interviewing/iOS_Interview/Ninja/Remove_String_Duplicates
-   */
   NSOrderedSet *commands = [[NSOrderedSet alloc] initWithArray:allCommands];
 
   XCTAssertEqualObjects([commands array], expected, @"Commands received in incorrect order");

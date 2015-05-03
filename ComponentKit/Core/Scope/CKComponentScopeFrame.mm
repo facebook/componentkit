@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -11,7 +11,7 @@
 #import "CKComponentScopeFrame.h"
 
 #import <unordered_map>
-#import <vector>
+#import <libkern/OSAtomic.h>
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
@@ -44,9 +44,9 @@ namespace std {
   };
 }
 
-static const std::vector<SEL> announceableEvents = {
-  @selector(componentTreeWillAppear),
-  @selector(componentTreeDidDisappear),
+static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInteger>, std::equal_to<NSUInteger>> announceableEvents = {
+  {CKComponentAnnouncedEventTreeWillAppear, @selector(componentTreeWillAppear)},
+  {CKComponentAnnouncedEventTreeDidDisappear, @selector(componentTreeDidDisappear)},
 };
 
 @interface CKComponentScopeFrame ()
@@ -56,7 +56,8 @@ static const std::vector<SEL> announceableEvents = {
 @implementation CKComponentScopeFrame {
   id _modifiedState;
   std::unordered_map<_CKStateScopeKey, CKComponentScopeFrame *> _children;
-  std::unordered_multimap<SEL, CKComponentController *> _eventRegistration;
+  std::unordered_multimap<CKComponentAnnouncedEvent, CKComponentController *, std::hash<NSUInteger>, std::equal_to<NSUInteger>> _eventRegistration;
+  NSHashTable *_boundsAnimationComponents; // weakly held
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -64,6 +65,7 @@ static const std::vector<SEL> announceableEvents = {
                       identifier:(id)identifier
                            state:(id)state
                       controller:(CKComponentController *)controller
+                globalIdentifier:(int32_t)globalIdentifier
                             root:(CKComponentScopeFrame *)rootFrame
 {
   if (self = [super init]) {
@@ -72,11 +74,13 @@ static const std::vector<SEL> announceableEvents = {
     _identifier = identifier;
     _state = state;
     _controller = controller;
+    _globalIdentifier = globalIdentifier;
     _root = rootFrame ? rootFrame : self;
 
-    for (const auto announceableEvent : announceableEvents) {
-      if (CKSubclassOverridesSelector([CKComponentController class], [controller class], announceableEvent)) {
-        [_root registerController:controller forSelector:announceableEvent];
+    _boundsAnimationComponents = [NSHashTable weakObjectsHashTable];
+    for (const auto &announceableEvent : announceableEvents) {
+      if (CKSubclassOverridesSelector([CKComponentController class], [controller class], announceableEvent.second)) {
+        [_root registerController:controller forEvent:(CKComponentAnnouncedEvent)announceableEvent.first];
       }
     }
   }
@@ -88,21 +92,36 @@ static const std::vector<SEL> announceableEvents = {
   CK_NOT_DESIGNATED_INITIALIZER();
 }
 
-+ (instancetype)rootFrameWithListener:(id<CKComponentStateListener>)listener
++ (int32_t)nextGlobalIdentifier
 {
-  return [[self alloc] initWithListener:listener class:Nil identifier:nil state:nil controller:nil root:nil];
+  static int32_t nextGlobalIdentifier = 0;
+  return OSAtomicIncrement32(&nextGlobalIdentifier);
+}
+
++ (instancetype)rootFrameWithListener:(id<CKComponentStateListener>)listener
+                     globalIdentifier:(int32_t)globalIdentifier
+{
+  return [[self alloc] initWithListener:listener
+                                  class:Nil
+                             identifier:nil
+                                  state:nil
+                             controller:nil
+                       globalIdentifier:globalIdentifier
+                                   root:nil];
 }
 
 - (instancetype)childFrameWithComponentClass:(Class __unsafe_unretained)aClass
                                   identifier:(id)identifier
                                        state:(id)state
                                   controller:(CKComponentController *)controller
+                            globalIdentifier:(int32_t)globalIdentifier
 {
   CKComponentScopeFrame *child = [[[self class] alloc] initWithListener:_listener
                                                                   class:aClass
                                                              identifier:identifier
                                                                   state:state
                                                              controller:controller
+                                                       globalIdentifier:globalIdentifier
                                                                    root:_root];
   const auto result = _children.insert({{child.componentClass, child.identifier}, child});
   CKCAssert(result.second, @"Scope collision! Attempting to create scope %@::%@ when it already exists.",
@@ -114,36 +133,6 @@ static const std::vector<SEL> announceableEvents = {
 {
   const auto it = _children.find({aClass, identifier});
   return (it == _children.end()) ? nil : it->second;
-}
-
-- (CKComponentBoundsAnimation)boundsAnimationFromPreviousFrame:(CKComponentScopeFrame *)previousFrame
-{
-  if (previousFrame == nil) {
-    return {};
-  }
-
-  // _owningComponent is __weak, so we must store into strong locals to prevent racing with it becoming nil.
-  CKComponent *newComponent = _owningComponent;
-  CKComponent *oldComponent = previousFrame->_owningComponent;
-  if (newComponent && oldComponent) {
-    const CKComponentBoundsAnimation anim = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
-    if (anim.duration != 0) {
-      return anim;
-    }
-  }
-
-  const auto &oldChildren = previousFrame->_children;
-  for (const auto &newIt : _children) {
-    const auto oldIt = oldChildren.find(newIt.first);
-    if (oldIt != oldChildren.end()) {
-      const CKComponentBoundsAnimation anim = [newIt.second boundsAnimationFromPreviousFrame:oldIt->second];
-      if (anim.duration != 0) {
-        return anim;
-      }
-    }
-  }
-
-  return {};
 }
 
 #pragma mark - State
@@ -171,24 +160,37 @@ static const std::vector<SEL> announceableEvents = {
   /* We keep a separate boolean since _owningComponent is __weak and we want this to be write-once. */
   _acquired = YES;
   _owningComponent = component;
+
+  if (component && CKSubclassOverridesSelector([CKComponent class], [component class], @selector(boundsAnimationFromPreviousComponent:))) {
+    [_root registerBoundsAnimationComponent:component];
+  }
 }
 
-- (void)registerController:(CKComponentController *)controller forSelector:(SEL)selector
+- (void)registerController:(CKComponentController *)controller forEvent:(CKComponentAnnouncedEvent)event
 {
-  _eventRegistration.insert({{selector, controller}});
+  _eventRegistration.insert({{event, controller}});
 }
 
-- (void)announceEventToControllers:(SEL)selector
+- (void)announceEventToControllers:(CKComponentAnnouncedEvent)announcedEvent
 {
-  CKAssert(std::find(announceableEvents.begin(), announceableEvents.end(), selector) != announceableEvents.end(),
-           @"Can only announce a whitelisted events, and %@ is not on the list.", NSStringFromSelector(selector));
-  auto range = _eventRegistration.equal_range(selector);
+  const auto range = _eventRegistration.equal_range(announcedEvent);
+  const SEL sel = announceableEvents.at(announcedEvent);
   for (auto it = range.first; it != range.second; ++it) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [it->second performSelector:selector];
+    [it->second performSelector:sel];
 #pragma clang diagnostic pop
   }
+}
+
+- (void)registerBoundsAnimationComponent:(CKComponent *)component
+{
+  [_boundsAnimationComponents addObject:component];
+}
+
+- (NSHashTable *)boundsAnimationComponents
+{
+  return _boundsAnimationComponents;
 }
 
 @end

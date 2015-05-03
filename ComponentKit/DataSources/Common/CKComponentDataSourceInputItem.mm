@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -23,21 +23,18 @@
 
 - (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)lifecycleManager
                                    model:(id<NSObject>)model
-                                 context:(id<NSObject>)context
                          constrainedSize:(CKSizeRange)constrainedSize
                                     UUID:(NSString *)UUID
 {
   if (self = [super init]) {
     _lifecycleManager = lifecycleManager;
     _model = model;
-    _context = context;
     _constrainedSize = constrainedSize;
     _UUID = [UUID copy];
 
     NSUInteger subhashes[] = {
       [_lifecycleManager hash],
       [_model hash],
-      [_context hash],
       _constrainedSize.hash(),
       [_UUID hash],
     };
@@ -62,7 +59,6 @@
   CKComponentDataSourceInputItem *other = (CKComponentDataSourceInputItem *)object;
   return (CKObjectIsEqual(_lifecycleManager, other->_lifecycleManager) &&
           CKObjectIsEqual(_model, other->_model) &&
-          CKObjectIsEqual(_context, other->_context) &&
           _constrainedSize == other->_constrainedSize &&
           CKObjectIsEqual(_UUID, other->_UUID));
 }
