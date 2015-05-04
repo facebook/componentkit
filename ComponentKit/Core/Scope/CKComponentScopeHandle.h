@@ -36,7 +36,7 @@
 /** Creates a new version of an existing scope handle that incorporates the given state updates */
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
-@property (nonatomic, weak, readonly) CKComponentController *controller;
+@property (nonatomic, strong, readonly) CKComponentController *controller;
 @property (nonatomic, strong, readonly) id state;
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
 
