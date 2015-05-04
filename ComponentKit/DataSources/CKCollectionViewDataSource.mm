@@ -24,7 +24,7 @@
 #import "CKCollectionViewDataSourceCell.h"
 #import "CKComponentLifecycleManager.h"
 #import "CKComponentRootView.h"
-#import "CKComponentScopeFrame.h"
+#import "CKComponentScopeRoot.h"
 
 using namespace CK::ArrayController;
 
@@ -111,7 +111,7 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
 
 NS_INLINE void _sendAppearanceEventForCell(UICollectionViewCell *cell, CKComponentAnnouncedEvent event, NSMapTable *cellToItemMap)
 {
-  [[[[cellToItemMap objectForKey:cell] lifecycleManager] scopeFrame] announceEventToControllers:event];
+  [[[[cellToItemMap objectForKey:cell] lifecycleManager] scopeRoot] announceEventToControllers:event];
 }
 
 #pragma mark - UICollectionViewDataSource

@@ -8,14 +8,8 @@
  *
  */
 
-#import <ComponentKit/CKComponentLifecycleManager.h>
-#import <ComponentKit/CKComponentScopeRoot.h>
+#import "CKComponent.h"
 
-/**
- Debug Purposes Only.
- */
-@interface CKComponentLifecycleManager () <CKComponentStateListener>
-
-- (CKComponentLifecycleManagerState)state;
-
+@interface CKStateExposingComponent : CKComponent
+@property (nonatomic, strong, readonly) id state;
 @end

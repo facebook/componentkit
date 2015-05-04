@@ -10,8 +10,10 @@
 
 #import <XCTest/XCTest.h>
 
-#import <ComponentKit/CKComponentScopeInternal.h>
-#import <ComponentKit/CKComponentSubclass.h>
+#import "CKComponentScope.h"
+#import "CKComponentScopeFrame.h"
+#import "CKComponentScopeRoot.h"
+#import "CKComponentSubclass.h"
 
 @interface CKComponentBoundsAnimationTests : XCTestCase
 @end
@@ -39,8 +41,8 @@
   CKComponent *(^block)(void) = ^{
     return [CKBoundsAnimationComponent new];
   };
-  const CKBuildComponentResult firstResult = CKBuildComponent(nil, nil, block);
-  const CKBuildComponentResult secondResult = CKBuildComponent(nil, firstResult.scopeFrame, block);
+  const CKBuildComponentResult firstResult = CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, block);
+  const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, block);
   XCTAssertEqual(secondResult.boundsAnimation.duration, 0.5);
 }
 

@@ -8,14 +8,10 @@
  *
  */
 
-#import <ComponentKit/CKComponentLifecycleManager.h>
-#import <ComponentKit/CKComponentScopeRoot.h>
+#import <Foundation/Foundation.h>
 
-/**
- Debug Purposes Only.
- */
-@interface CKComponentLifecycleManager () <CKComponentStateListener>
+#import <ComponentKit/CKTransactionalComponentDataSourceStateModifying.h>
 
-- (CKComponentLifecycleManagerState)state;
-
+@interface CKTransactionalComponentDataSourceReloadModification : NSObject <CKTransactionalComponentDataSourceStateModifying>
+- (instancetype)initWithUserInfo:(NSDictionary *)userInfo;
 @end

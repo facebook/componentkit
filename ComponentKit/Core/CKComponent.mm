@@ -11,7 +11,6 @@
 #import "CKComponent.h"
 #import "CKComponentControllerInternal.h"
 #import "CKComponentInternal.h"
-#import "CKComponentScopeInternal.h"
 #import "CKComponentSubclass.h"
 
 #import <ComponentKit/CKArgumentPrecondition.h>
@@ -26,7 +25,7 @@
 #import "CKComponentController.h"
 #import "CKComponentDebugController.h"
 #import "CKComponentLayout.h"
-#import "CKComponentScopeFrame.h"
+#import "CKComponentScopeHandle.h"
 #import "CKComponentViewConfiguration.h"
 #import "CKComponentViewInterface.h"
 #import "CKAssert.h"
@@ -42,7 +41,7 @@ struct CKComponentMountInfo {
 
 @implementation CKComponent
 {
-  CKComponentScopeFrame *_scopeFrame;
+  CKComponentScopeHandle *_scopeHandle;
   CKComponentViewConfiguration _viewConfiguration;
   CKComponentSize _size;
 
@@ -80,7 +79,7 @@ struct CKComponentMountInfo {
                         size:(const CKComponentSize &)size
 {
   if (self = [super init]) {
-    _scopeFrame = CKComponentScopeFrameForComponent(self);
+    _scopeHandle = [CKComponentScopeHandle handleForComponent:self];
     _viewConfiguration = view;
     _size = size;
   }
@@ -118,7 +117,7 @@ struct CKComponentMountInfo {
   }
   _mountInfo->supercomponent = supercomponent;
 
-  CKComponentController *controller = _scopeFrame.controller;
+  CKComponentController *controller = _scopeHandle.controller;
   [controller componentWillMount:self];
 
   const CK::Component::MountContext &effectiveContext = [CKComponentDebugController debugMode]
@@ -153,10 +152,10 @@ struct CKComponentMountInfo {
 - (void)unmount
 {
   if (_mountInfo != nullptr) {
-    [_scopeFrame.controller componentWillUnmount:self];
+    [_scopeHandle.controller componentWillUnmount:self];
     [self _relinquishMountedView];
     _mountInfo.reset();
-    [_scopeFrame.controller componentDidUnmount:self];
+    [_scopeHandle.controller componentDidUnmount:self];
   }
 }
 
@@ -165,7 +164,7 @@ struct CKComponentMountInfo {
   UIView *view = _mountInfo->view;
   if (view) {
     CKAssert(view.ck_component == self, @"");
-    [_scopeFrame.controller component:self willRelinquishView:view];
+    [_scopeHandle.controller component:self willRelinquishView:view];
     view.ck_component = nil;
     _mountInfo->view = nil;
   }
@@ -173,7 +172,7 @@ struct CKComponentMountInfo {
 
 - (void)childrenDidMount
 {
-  [_scopeFrame.controller componentDidMount:self];
+  [_scopeHandle.controller componentDidMount:self];
 }
 
 #pragma mark - Animation
@@ -229,7 +228,7 @@ struct CKComponentMountInfo {
 
 - (id)nextResponder
 {
-  return _scopeFrame.controller ?: [self nextResponderAfterController];
+  return _scopeHandle.controller ?: [self nextResponderAfterController];
 }
 
 - (id)nextResponderAfterController
@@ -276,19 +275,19 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 - (void)_updateState:(id (^)(id))updateBlock tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
 {
-  CKAssert(_scopeFrame != nullptr, @"A component without state cannot update its state.");
-  CKAssert(updateBlock != nil, @"Cannot enqueue component state modification with a nil block.");
-  [_scopeFrame updateState:updateBlock tryAsynchronousUpdate:tryAsynchronousUpdate];
+  CKAssertNotNil(_scopeHandle, @"A component without state cannot update its state.");
+  CKAssertNotNil(updateBlock, @"Cannot enqueue component state modification with a nil block.");
+  [_scopeHandle updateState:updateBlock tryAsynchronousUpdate:tryAsynchronousUpdate];
 }
 
 - (CKComponentController *)controller
 {
-  return _scopeFrame.controller;
+  return _scopeHandle.controller;
 }
 
 - (id)scopeFrameToken
 {
-  return _scopeFrame ? @(_scopeFrame.globalIdentifier) : nil;
+  return _scopeHandle ? @(_scopeHandle.globalIdentifier) : nil;
 }
 
 @end

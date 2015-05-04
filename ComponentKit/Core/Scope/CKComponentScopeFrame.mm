@@ -13,17 +13,15 @@
 #import <unordered_map>
 #import <libkern/OSAtomic.h>
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKMacros.h>
-#import <ComponentKit/CKComponentSubclass.h>
-
-#import "CKInternalHelpers.h"
+#import "CKAssert.h"
 #import "CKComponentController.h"
 #import "CKComponentInternal.h"
-#import "CKComponentScopeInternal.h"
-#import "CKCompositeComponent.h"
-
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+#import "CKComponentScopeHandle.h"
+#import "CKComponentScopeRootInternal.h"
+#import "CKComponentSubclass.h"
+#import "CKInternalHelpers.h"
+#import "CKMacros.h"
+#import "CKThreadLocalComponentScope.h"
 
 typedef struct _CKStateScopeKey {
   Class __unsafe_unretained componentClass;
@@ -44,153 +42,50 @@ namespace std {
   };
 }
 
-static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInteger>, std::equal_to<NSUInteger>> announceableEvents = {
-  {CKComponentAnnouncedEventTreeWillAppear, @selector(componentTreeWillAppear)},
-  {CKComponentAnnouncedEventTreeDidDisappear, @selector(componentTreeDidDisappear)},
-};
-
-@interface CKComponentScopeFrame ()
-@property (nonatomic, weak, readwrite) CKComponentScopeFrame *root;
-@end
-
-@implementation CKComponentScopeFrame {
-  id _modifiedState;
+@implementation CKComponentScopeFrame
+{
   std::unordered_map<_CKStateScopeKey, CKComponentScopeFrame *> _children;
-  std::unordered_multimap<CKComponentAnnouncedEvent, CKComponentController *, std::hash<NSUInteger>, std::equal_to<NSUInteger>> _eventRegistration;
-  NSHashTable *_boundsAnimationComponents; // weakly held
 }
 
-- (instancetype)initWithListener:(id<CKComponentStateListener>)listener
-                           class:(Class __unsafe_unretained)aClass
-                      identifier:(id)identifier
-                           state:(id)state
-                      controller:(CKComponentController *)controller
-                globalIdentifier:(int32_t)globalIdentifier
-                            root:(CKComponentScopeFrame *)rootFrame
++ (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
+                                      newRoot:(CKComponentScopeRoot *)newRoot
+                               componentClass:(Class)componentClass
+                                   identifier:(id)identifier
+                          initialStateCreator:(id (^)())initialStateCreator
+                                 stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+{
+  CKCAssert([componentClass isSubclassOfClass:[CKComponent class]], @"%@ is not a component", NSStringFromClass(componentClass));
+  CKAssertNotNil(pair.frame, @"Must have frame");
+
+  // Find the existing child, if any, in the old frame
+  CKComponentScopeFrame *existingChild;
+  if (pair.equivalentPreviousFrame) {
+    const auto &equivalentPreviousFrameChildren = pair.equivalentPreviousFrame->_children;
+    const auto it = equivalentPreviousFrameChildren.find({componentClass, identifier});
+    existingChild = (it == equivalentPreviousFrameChildren.end()) ? nil : it->second;
+  }
+
+  CKComponentScopeHandle *newHandle =
+  existingChild ? [existingChild.handle newHandleWithStateUpdates:stateUpdates] :
+  [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
+                                    rootIdentifier:newRoot.globalIdentifier
+                                    componentClass:componentClass
+                               initialStateCreator:initialStateCreator];
+
+  [newRoot registerAnnounceableEventsForController:newHandle.controller];
+
+  CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
+  const auto result = pair.frame->_children.insert({{componentClass, identifier}, newChild});
+  CKAssert(result.second, @"Scope collision: attempting to create duplicate scope %@:%@", componentClass, identifier);
+  return {.frame = newChild, .equivalentPreviousFrame = existingChild};
+}
+
+- (instancetype)initWithHandle:(CKComponentScopeHandle *)handle
 {
   if (self = [super init]) {
-    _listener = listener;
-    _componentClass = aClass;
-    _identifier = identifier;
-    _state = state;
-    _controller = controller;
-    _globalIdentifier = globalIdentifier;
-    _root = rootFrame ? rootFrame : self;
-
-    _boundsAnimationComponents = [NSHashTable weakObjectsHashTable];
-    for (const auto &announceableEvent : announceableEvents) {
-      if (CKSubclassOverridesSelector([CKComponentController class], [controller class], announceableEvent.second)) {
-        [_root registerController:controller forEvent:(CKComponentAnnouncedEvent)announceableEvent.first];
-      }
-    }
+    _handle = handle;
   }
   return self;
-}
-
-- (instancetype)init
-{
-  CK_NOT_DESIGNATED_INITIALIZER();
-}
-
-+ (int32_t)nextGlobalIdentifier
-{
-  static int32_t nextGlobalIdentifier = 0;
-  return OSAtomicIncrement32(&nextGlobalIdentifier);
-}
-
-+ (instancetype)rootFrameWithListener:(id<CKComponentStateListener>)listener
-                     globalIdentifier:(int32_t)globalIdentifier
-{
-  return [[self alloc] initWithListener:listener
-                                  class:Nil
-                             identifier:nil
-                                  state:nil
-                             controller:nil
-                       globalIdentifier:globalIdentifier
-                                   root:nil];
-}
-
-- (instancetype)childFrameWithComponentClass:(Class __unsafe_unretained)aClass
-                                  identifier:(id)identifier
-                                       state:(id)state
-                                  controller:(CKComponentController *)controller
-                            globalIdentifier:(int32_t)globalIdentifier
-{
-  CKComponentScopeFrame *child = [[[self class] alloc] initWithListener:_listener
-                                                                  class:aClass
-                                                             identifier:identifier
-                                                                  state:state
-                                                             controller:controller
-                                                       globalIdentifier:globalIdentifier
-                                                                   root:_root];
-  const auto result = _children.insert({{child.componentClass, child.identifier}, child});
-  CKCAssert(result.second, @"Scope collision! Attempting to create scope %@::%@ when it already exists.",
-            aClass, identifier);
-  return child;
-}
-
-- (CKComponentScopeFrame *)existingChildFrameWithClass:(__unsafe_unretained Class)aClass identifier:(id)identifier
-{
-  const auto it = _children.find({aClass, identifier});
-  return (it == _children.end()) ? nil : it->second;
-}
-
-#pragma mark - State
-
-- (id)updatedState
-{
-  return _modifiedState ?: _state;
-}
-
-- (void)updateState:(id (^)(id))updateFunction tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
-{
-  CKAssertNotNil(updateFunction, @"The block for updating state cannot be nil. What would that even mean?");
-
-  _modifiedState = updateFunction(_state);
-  [_listener componentStateDidEnqueueStateModificationWithTryAsynchronousUpdate:tryAsynchronousUpdate];
-}
-
-#pragma mark - Component State Acquisition
-
-- (void)markAcquiredByComponent:(CKComponent *)component
-{
-  CKAssert(_acquired == NO, @"To acquire state for this component you must declare a scope in the -init method with "
-           "CKComponentScope([%@ class], identifier).", NSStringFromClass([component class]));
-
-  /* We keep a separate boolean since _owningComponent is __weak and we want this to be write-once. */
-  _acquired = YES;
-  _owningComponent = component;
-
-  if (component && CKSubclassOverridesSelector([CKComponent class], [component class], @selector(boundsAnimationFromPreviousComponent:))) {
-    [_root registerBoundsAnimationComponent:component];
-  }
-}
-
-- (void)registerController:(CKComponentController *)controller forEvent:(CKComponentAnnouncedEvent)event
-{
-  _eventRegistration.insert({{event, controller}});
-}
-
-- (void)announceEventToControllers:(CKComponentAnnouncedEvent)announcedEvent
-{
-  const auto range = _eventRegistration.equal_range(announcedEvent);
-  const SEL sel = announceableEvents.at(announcedEvent);
-  for (auto it = range.first; it != range.second; ++it) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [it->second performSelector:sel];
-#pragma clang diagnostic pop
-  }
-}
-
-- (void)registerBoundsAnimationComponent:(CKComponent *)component
-{
-  [_boundsAnimationComponents addObject:component];
-}
-
-- (NSHashTable *)boundsAnimationComponents
-{
-  return _boundsAnimationComponents;
 }
 
 @end

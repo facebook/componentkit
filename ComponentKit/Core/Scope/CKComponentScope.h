@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class CKComponentScopeFrame;
+class CKThreadLocalComponentScope;
 
 /**
  Components have local "state" that is independent of the values passed into its +new method. Components can update
@@ -54,5 +54,6 @@ public:
 private:
   CKComponentScope(const CKComponentScope&) = delete;
   CKComponentScope &operator=(const CKComponentScope&) = delete;
-  CKComponentScopeFrame *_scopeFrame;
+  CKThreadLocalComponentScope *_threadLocalScope;
+  id _state;
 };
