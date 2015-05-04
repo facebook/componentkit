@@ -39,6 +39,7 @@
 
 - (instancetype)initWithConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
 {
+  CKAssertNotNil(configuration, @"Configuration is required");
   if (self = [super init]) {
     _state = [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
     _announcer = [[CKTransactionalComponentDataSourceListenerAnnouncer alloc] init];
@@ -150,6 +151,7 @@
 
 - (void)_enqueueModification:(id<CKTransactionalComponentDataSourceStateModifying>)modification
 {
+  CKAssertMainThread();
   [_pendingAsynchronousModifications addObject:modification];
   if ([_pendingAsynchronousModifications count] == 1) {
     [self _startFirstAsynchronousModification];
@@ -158,6 +160,7 @@
 
 - (void)_startFirstAsynchronousModification
 {
+  CKAssertMainThread();
   id<CKTransactionalComponentDataSourceStateModifying> modification = _pendingAsynchronousModifications[0];
   CKTransactionalComponentDataSourceState *baseState = _state;
   dispatch_async(_workQueue, ^{
@@ -179,6 +182,7 @@
 /** Returns the canceled matching modifications, in the order they would have been applied. */
 - (NSArray *)_cancelEnqueuedModificationsOfType:(Class)modificationType
 {
+  CKAssertMainThread();
   NSIndexSet *indexes = [_pendingAsynchronousModifications indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
     return [obj isKindOfClass:modificationType];
   }];
@@ -189,6 +193,7 @@
 
 - (void)_synchronouslyApplyChange:(CKTransactionalComponentDataSourceChange *)change
 {
+  CKAssertMainThread();
   CKTransactionalComponentDataSourceState *previousState = _state;
   _state = [change state];
   [_announcer transactionalComponentDataSource:self
