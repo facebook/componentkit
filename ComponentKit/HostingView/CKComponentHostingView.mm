@@ -140,7 +140,8 @@
   }
 
   const CGRect bounds = self.bounds;
-  CKComponentLifecycleManagerState state = [_lifecycleManager prepareForUpdateWithModel:_model constrainedSize:CKSizeRange(bounds.size, bounds.size) context:_context];
+  CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:bounds.size];
+  CKComponentLifecycleManagerState state = [_lifecycleManager prepareForUpdateWithModel:_model constrainedSize:constrainedSize context:_context];
   [_lifecycleManager updateWithState:state];
 
   _isUpdating = NO;
