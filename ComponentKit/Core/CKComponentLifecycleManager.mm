@@ -112,7 +112,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
 - (CKComponentLayout)layoutForModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context
 {
-  CKBuildComponentResult result = CKBuildComponent(_state.root, {}, ^{
+  CKBuildComponentResult result = CKBuildComponent(_state.root ?: [CKComponentScopeRoot rootWithListener:nil], {}, ^{
     return [_componentProvider componentForModel:model context:context];
   });
 
