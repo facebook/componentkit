@@ -46,7 +46,8 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
 {
-  return [[CKComponentScopeRoot alloc] initWithListener:listener globalIdentifier:nextGlobalIdentifier()];
+  static int32_t nextGlobalIdentifier = 0;
+  return [[CKComponentScopeRoot alloc] initWithListener:listener globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)];
 }
 
 - (instancetype)newRoot
@@ -121,12 +122,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   }
 
   return {};
-}
-
-static CKComponentScopeRootIdentifier nextGlobalIdentifier()
-{
-  static int32_t nextGlobalIdentifier = 0;
-  return OSAtomicIncrement32(&nextGlobalIdentifier);
 }
 
 @end
