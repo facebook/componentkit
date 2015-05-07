@@ -21,7 +21,7 @@
 {
   id<CKComponentStateListener> __weak _listener;
   Class _componentClass;
-  int32_t _rootIdentifier;
+  CKComponentScopeRootIdentifier _rootIdentifier;
   BOOL _acquired;
 }
 
@@ -46,12 +46,13 @@
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
-                  rootIdentifier:(int32_t)rootIdentifier
+                  rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class)componentClass
              initialStateCreator:(id (^)(void))initialStateCreator
 {
+  static int32_t nextGlobalIdentifier = 0;
   return [self initWithListener:listener
-               globalIdentifier:nextGlobalIdentifier()
+               globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)
                  rootIdentifier:rootIdentifier
                  componentClass:componentClass
                           state:initialStateCreator ? initialStateCreator() : [componentClass initialState]
@@ -60,7 +61,7 @@
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                 globalIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
-                  rootIdentifier:(int32_t)rootIdentifier
+                  rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class)componentClass
                            state:(id)state
                       controller:(CKComponentController *)controller
@@ -156,12 +157,6 @@ static CKComponentController *newController(Class componentClass)
     return [[controllerClass alloc] init];
   }
   return nil;
-}
-
-static CKComponentScopeHandleIdentifier nextGlobalIdentifier()
-{
-  static int32_t nextGlobalIdentifier = 0;
-  return OSAtomicIncrement32(&nextGlobalIdentifier);
 }
 
 @end
