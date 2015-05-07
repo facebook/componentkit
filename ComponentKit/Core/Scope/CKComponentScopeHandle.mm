@@ -19,7 +19,7 @@
 
 @implementation CKComponentScopeHandle
 {
-  id<CKComponentStateListener> _listener;
+  id<CKComponentStateListener> __weak _listener;
   Class _componentClass;
   int32_t _rootIdentifier;
   BOOL _acquired;
