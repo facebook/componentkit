@@ -102,6 +102,17 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
                                                           CKComponentGestureRecognizerSetupFunction setupFunction,
                                                           CKComponentAction action)
 {
+  if (action == NULL) {
+    return {
+      {
+        std::string(class_getName(gestureRecognizerClass)) + "-"
+        + CKStringFromPointer((const void *)setupFunction) + "-no-op",
+        ^(UIView *view, id value) {}, ^(UIView *view, id value) {}
+      },
+      @YES  // Bogus value, we don't use it.
+    };
+  }
+
   static auto *reusePoolMap = new std::unordered_map<CKGestureRecognizerReusePoolMapKey, CKGestureRecognizerReusePool *>();
   static CK::StaticMutex reusePoolMapMutex = CK_MUTEX_INITIALIZER;
   CK::StaticMutexLocker l(reusePoolMapMutex);

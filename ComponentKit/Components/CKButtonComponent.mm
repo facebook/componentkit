@@ -147,10 +147,8 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     {@selector(setSelected:), @(selected)},
     {@selector(setEnabled:), @(enabled)},
     {@selector(setAccessibilityIdentifier:), accessibilityConfiguration.accessibilityIdentifier},
+    CKComponentActionAttribute(action, UIControlEventTouchUpInside),
   });
-  if (action) {
-    attributes.insert(CKComponentActionAttribute(action, UIControlEventTouchUpInside));
-  }
 
   UIEdgeInsets contentEdgeInsets = UIEdgeInsetsZero;
   auto it = passedAttributes.find(@selector(setContentEdgeInsets:));

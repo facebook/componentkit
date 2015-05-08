@@ -18,7 +18,7 @@ typedef void (*CKComponentGestureRecognizerSetupFunction)(UIGestureRecognizer *)
  Returns a view attribute that creates and configures a tap gesture recognizer to send the given CKComponentAction.
 
  @param action Sent up the responder chain when a tap occurs. Sender is the component that created the view.
-        Context is the gesture recognizer.
+        Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
 CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKComponentAction action);
 
@@ -26,7 +26,7 @@ CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKComponentAction a
  Returns a view attribute that creates and configures a pan gesture recognizer to send the given CKComponentAction.
 
  @param action Sent up the responder chain when a pan occurs. Sender is the component that created the view.
-        Context is the gesture recognizer.
+        Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
 CKComponentViewAttributeValue CKComponentPanGestureAttribute(CKComponentAction action);
 
@@ -34,7 +34,7 @@ CKComponentViewAttributeValue CKComponentPanGestureAttribute(CKComponentAction a
  Returns a view attribute that creates and configures a long press gesture recognizer to send the given CKComponentAction.
 
  @param action Sent up the responder chain when a long press occurs. Sender is the component that created the view.
-        Context is the gesture recognizer.
+        Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
 CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(CKComponentAction action);
 
@@ -45,7 +45,7 @@ CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(CKComponentAc
  @param setupFunction Optional; pass nullptr if not needed. Called once for each new gesture recognizer; you may use
         this function to configure the new gesture recognizer.
  @param action Sent up the responder chain when the gesture recognizer recognizes a gesture. Sender is the component
-        that created the view. Context is the gesture recognizer.
+        that created the view. Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
 CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognizerClass,
                                                           CKComponentGestureRecognizerSetupFunction setupFunction,
