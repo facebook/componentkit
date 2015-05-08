@@ -16,6 +16,10 @@
 		A241C6A51AFCFFDB00D4F661 /* CKComponentActionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A241C6A41AFCFFDB00D4F661 /* CKComponentActionTests.mm */; };
 		A241C6A71AFD0A6800D4F661 /* CKComponentActionAttributeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A241C6A61AFD0A6800D4F661 /* CKComponentActionAttributeTests.mm */; };
 		A25C02D11AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A25C02D01AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm */; };
+		A273801F1AFD144100E6F222 /* CKTestActionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = A273801E1AFD144100E6F222 /* CKTestActionComponent.mm */; };
+		A27380311AFD160200E6F222 /* libComponentKitTestHelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */; };
+		A27380321AFD160600E6F222 /* libComponentKitTestHelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */; };
+		A27380341AFD172500E6F222 /* CKTestActionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = A273801C1AFD144100E6F222 /* CKTestActionComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A27436F71AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27436F61AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm */; };
 		A27436FA1AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27436F91AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm */; };
 		A279EA9E1AF087A70046B5AA /* CKTransactionalComponentDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A279EA9D1AF087A70046B5AA /* CKTransactionalComponentDataSourceTests.mm */; };
@@ -90,6 +94,9 @@
 		A241C6A41AFCFFDB00D4F661 /* CKComponentActionTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentActionTests.mm; sourceTree = "<group>"; };
 		A241C6A61AFD0A6800D4F661 /* CKComponentActionAttributeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentActionAttributeTests.mm; sourceTree = "<group>"; };
 		A25C02D01AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceChangesetModificationTests.mm; sourceTree = "<group>"; };
+		A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComponentKitTestHelpers.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A273801C1AFD144100E6F222 /* CKTestActionComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKTestActionComponent.h; sourceTree = "<group>"; };
+		A273801E1AFD144100E6F222 /* CKTestActionComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTestActionComponent.mm; sourceTree = "<group>"; };
 		A27436F61AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceReloadModificationTests.mm; sourceTree = "<group>"; };
 		A27436F81AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTransactionalComponentDataSourceStateTestHelpers.h; sourceTree = "<group>"; };
 		A27436F91AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceStateTestHelpers.mm; sourceTree = "<group>"; };
@@ -154,10 +161,18 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		A27380171AFD144100E6F222 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B342DC3D1AC23E8200ACAC53 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A27380321AFD160600E6F222 /* libComponentKitTestHelpers.a in Frameworks */,
 				83EBF589FB5C5611BC1A2D13 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -166,6 +181,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A27380311AFD160200E6F222 /* libComponentKitTestHelpers.a in Frameworks */,
 				0C293C2FE4684CADAB27CA9D /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -203,6 +219,15 @@
 				A6F27DD3FB8E2237F9C39DCE /* Pods.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		A273801B1AFD144100E6F222 /* ComponentKitTestHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				A273801C1AFD144100E6F222 /* CKTestActionComponent.h */,
+				A273801E1AFD144100E6F222 /* CKTestActionComponent.mm */,
+			);
+			path = ComponentKitTestHelpers;
 			sourceTree = "<group>";
 		};
 		A27436F51AE94FCA00832359 /* TransactionalDataSource */ = {
@@ -318,6 +343,7 @@
 				B342DC411AC23E8200ACAC53 /* ComponentKitTests */,
 				B342DC8C1AC23EC300ACAC53 /* ComponentKitApplicationTests */,
 				B342DCAB1AC23F2A00ACAC53 /* ComponentTextKitApplicationTests */,
+				A273801B1AFD144100E6F222 /* ComponentKitTestHelpers */,
 				B3EECEC31AC2366600BFC5DA /* Products */,
 				9EC07CBC8F809ACF3EC95132 /* Pods */,
 				7683E4B5CB30052819FB3185 /* Frameworks */,
@@ -331,13 +357,42 @@
 				B342DC401AC23E8200ACAC53 /* ComponentKitTests.xctest */,
 				B342DC8B1AC23EC300ACAC53 /* ComponentKitApplicationTests.xctest */,
 				B342DCAA1AC23F2A00ACAC53 /* ComponentTextKitApplicationTests.xctest */,
+				A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		A27380331AFD171C00E6F222 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A27380341AFD172500E6F222 /* CKTestActionComponent.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		A27380191AFD144100E6F222 /* ComponentKitTestHelpers */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A273802F1AFD144200E6F222 /* Build configuration list for PBXNativeTarget "ComponentKitTestHelpers" */;
+			buildPhases = (
+				A27380161AFD144100E6F222 /* Sources */,
+				A27380171AFD144100E6F222 /* Frameworks */,
+				A27380331AFD171C00E6F222 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ComponentKitTestHelpers;
+			productName = ComponentKitTestHelpers;
+			productReference = A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		B342DC3F1AC23E8200ACAC53 /* ComponentKitTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B342DC461AC23E8200ACAC53 /* Build configuration list for PBXNativeTarget "ComponentKitTests" */;
@@ -422,6 +477,9 @@
 			attributes = {
 				LastUpgradeCheck = 0610;
 				TargetAttributes = {
+					A27380191AFD144100E6F222 = {
+						CreatedOnToolsVersion = 6.3.1;
+					};
 					B342DC3F1AC23E8200ACAC53 = {
 						CreatedOnToolsVersion = 6.1;
 					};
@@ -455,6 +513,7 @@
 				B342DC3F1AC23E8200ACAC53 /* ComponentKitTests */,
 				B342DC8A1AC23EC300ACAC53 /* ComponentKitApplicationTests */,
 				B342DCA91AC23F2A00ACAC53 /* ComponentTextKitApplicationTests */,
+				A27380191AFD144100E6F222 /* ComponentKitTestHelpers */,
 			);
 		};
 /* End PBXProject section */
@@ -584,6 +643,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A27380161AFD144100E6F222 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A273801F1AFD144100E6F222 /* CKTestActionComponent.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B342DC3C1AC23E8200ACAC53 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -680,6 +747,37 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		A273802B1AFD144200E6F222 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 71F5A01FFD736AB56CFCFD58 /* Pods.debug.xcconfig */;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		A273802C1AFD144200E6F222 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A6F27DD3FB8E2237F9C39DCE /* Pods.release.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		B342DC471AC23E8200ACAC53 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 71F5A01FFD736AB56CFCFD58 /* Pods.debug.xcconfig */;
@@ -885,6 +983,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A273802F1AFD144200E6F222 /* Build configuration list for PBXNativeTarget "ComponentKitTestHelpers" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A273802B1AFD144200E6F222 /* Debug */,
+				A273802C1AFD144200E6F222 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B342DC461AC23E8200ACAC53 /* Build configuration list for PBXNativeTarget "ComponentKitTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

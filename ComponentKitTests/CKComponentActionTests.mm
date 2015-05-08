@@ -11,18 +11,13 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
+#import <ComponentKitTestHelpers/CKTestActionComponent.h>
+
 #import "CKComponentAction.h"
 #import "CKCompositeComponent.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentInternal.h"
 #import "CKComponentLayout.h"
-
-@interface CKTestActionComponent : CKCompositeComponent
-/** @param block Executed when "testAction" is invoked on the component */
-+ (instancetype)newWithBlock:(void (^)(CKComponent *sender, id context))block
-                   component:(CKComponent *)component;
-- (void)testAction:(CKComponent *)sender context:(id)context;
-@end
 
 @interface CKComponentActionTests : XCTestCase
 @end
@@ -125,27 +120,6 @@
   XCTAssertTrue(innerReceivedTestAction, @"Inner component should have received action");
 
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
-}
-
-@end
-
-@implementation CKTestActionComponent
-{
-  void (^_block)(CKComponent *, id);
-}
-
-+ (instancetype)newWithBlock:(void (^)(CKComponent *sender, id context))block component:(CKComponent *)component
-{
-  CKTestActionComponent *c = [super newWithComponent:component];
-  if (c) {
-    c->_block = block;
-  }
-  return c;
-}
-
-- (void)testAction:(CKComponent *)sender context:(id)context
-{
-  _block(sender, context);
 }
 
 @end
