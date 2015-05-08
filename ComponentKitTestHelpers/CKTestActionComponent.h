@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKCompositeComponent.h"
+#import <ComponentKit/CKCompositeComponent.h>
 
 @interface CKTestActionComponent : CKCompositeComponent
 /** @param block Executed when "testAction:context:" is invoked on the component */
