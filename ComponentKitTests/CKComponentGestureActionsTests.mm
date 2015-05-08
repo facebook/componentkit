@@ -70,6 +70,16 @@
   XCTAssertTrue([fakeParentComponent receivedTest], @"Expected handler to be called");
 }
 
+- (void)testThatApplyingATapRecognizerAttributeWithNoActionDoesNotAddRecognizerToView
+{
+  CKComponentViewAttributeValue attr = CKComponentTapGestureAttribute(NULL);
+  UIView *view = [[UIView alloc] init];
+
+  attr.first.applicator(view, attr.second);
+  XCTAssertEqual([view.gestureRecognizers count], 0u, @"Expected no gesture recognizer");
+  attr.first.unapplicator(view, attr.second);
+}
+
 @end
 
 @implementation CKFakeActionComponent
