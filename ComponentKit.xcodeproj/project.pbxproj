@@ -13,6 +13,8 @@
 		A2100E0D1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2100E0C1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm */; };
 		A22FE3031AF2CEB000EC30B8 /* CKTransactionalComponentDataSourceStateUpdateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A22FE3021AF2CEB000EC30B8 /* CKTransactionalComponentDataSourceStateUpdateTests.mm */; };
 		A22FE3061AF2CF0C00EC30B8 /* CKStateExposingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = A22FE3051AF2CF0C00EC30B8 /* CKStateExposingComponent.mm */; };
+		A241C6A51AFCFFDB00D4F661 /* CKComponentActionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A241C6A41AFCFFDB00D4F661 /* CKComponentActionTests.mm */; };
+		A241C6A71AFD0A6800D4F661 /* CKComponentActionAttributeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A241C6A61AFD0A6800D4F661 /* CKComponentActionAttributeTests.mm */; };
 		A25C02D11AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A25C02D01AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm */; };
 		A27436F71AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27436F61AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm */; };
 		A27436FA1AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27436F91AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm */; };
@@ -85,6 +87,8 @@
 		A22FE3021AF2CEB000EC30B8 /* CKTransactionalComponentDataSourceStateUpdateTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceStateUpdateTests.mm; sourceTree = "<group>"; };
 		A22FE3041AF2CF0C00EC30B8 /* CKStateExposingComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStateExposingComponent.h; sourceTree = "<group>"; };
 		A22FE3051AF2CF0C00EC30B8 /* CKStateExposingComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStateExposingComponent.mm; sourceTree = "<group>"; };
+		A241C6A41AFCFFDB00D4F661 /* CKComponentActionTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentActionTests.mm; sourceTree = "<group>"; };
+		A241C6A61AFD0A6800D4F661 /* CKComponentActionAttributeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentActionAttributeTests.mm; sourceTree = "<group>"; };
 		A25C02D01AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceChangesetModificationTests.mm; sourceTree = "<group>"; };
 		A27436F61AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceReloadModificationTests.mm; sourceTree = "<group>"; };
 		A27436F81AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTransactionalComponentDataSourceStateTestHelpers.h; sourceTree = "<group>"; };
@@ -222,6 +226,7 @@
 			children = (
 				B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */,
 				B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */,
+				A241C6A41AFCFFDB00D4F661 /* CKComponentActionTests.mm */,
 				B342DC4B1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm */,
 				B342DC4C1AC23EA900ACAC53 /* CKComponentContextTests.mm */,
 				B342DC4D1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm */,
@@ -272,6 +277,7 @@
 			children = (
 				B342DC961AC23EE800ACAC53 /* CKButtonComponentTests.mm */,
 				B342DC971AC23EE800ACAC53 /* CKCenterLayoutComponentsTests.mm */,
+				A241C6A61AFD0A6800D4F661 /* CKComponentActionAttributeTests.mm */,
 				B342DC981AC23EE800ACAC53 /* CKInsetComponentTests.mm */,
 				B342DC991AC23EE800ACAC53 /* CKNetworkImageComponentTests.mm */,
 				B342DC9A1AC23EE800ACAC53 /* CKOverlayLayoutComponentTests.mm */,
@@ -585,6 +591,7 @@
 				B342DC771AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm in Sources */,
 				B342DC6C1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm in Sources */,
 				B342DC811AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm in Sources */,
+				A241C6A51AFCFFDB00D4F661 /* CKComponentActionTests.mm in Sources */,
 				B342DC6B1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm in Sources */,
 				B342DC6A1AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm in Sources */,
 				B342DC6F1AC23EA900ACAC53 /* CKComponentControllerTests.mm in Sources */,
@@ -632,6 +639,7 @@
 				B342DC9F1AC23EE800ACAC53 /* CKCenterLayoutComponentsTests.mm in Sources */,
 				B342DCA41AC23EE800ACAC53 /* CKStackLayoutComponentTests.mm in Sources */,
 				B342DC9E1AC23EE800ACAC53 /* CKButtonComponentTests.mm in Sources */,
+				A241C6A71AFD0A6800D4F661 /* CKComponentActionAttributeTests.mm in Sources */,
 				B342DCA01AC23EE800ACAC53 /* CKInsetComponentTests.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
