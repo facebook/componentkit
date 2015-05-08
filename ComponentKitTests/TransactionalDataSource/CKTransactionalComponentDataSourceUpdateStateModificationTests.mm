@@ -64,6 +64,7 @@
 - (void)tearDown
 {
   _pendingStateUpdates.clear();
+  [super tearDown];
 }
 
 - (void)testAppliedChangesIncludesUpdatedIndexPathForAffectedComponent
