@@ -10,6 +10,7 @@
 
 #import <unordered_map>
 
+#import <ComponentKit/CKPlatform.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAction.h>
 

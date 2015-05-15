@@ -13,7 +13,7 @@
 #import <vector>
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 #import <ComponentKit/CKArrayControllerChangeType.h>
 #import <ComponentKit/CKMacros.h>

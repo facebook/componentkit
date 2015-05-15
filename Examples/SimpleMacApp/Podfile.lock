@@ -1,0 +1,14 @@
+PODS:
+  - ComponentKit (0.1)
+
+DEPENDENCIES:
+  - ComponentKit (from `../..`)
+
+EXTERNAL SOURCES:
+  ComponentKit:
+    :path: ../..
+
+SPEC CHECKSUMS:
+  ComponentKit: 16a6ec00cf2ba69e68c95a7939e5ebaffdc1c7c1
+
+COCOAPODS: 0.37.1

@@ -10,11 +10,17 @@
 
 //Accessibility
 #import <ComponentKit/CKComponentAccessibility.h>
+
 //Components
+#if TARGET_OS_IPHONE
 #import <ComponentKit/CKButtonComponent.h>
 #import <ComponentKit/CKImageComponent.h>
 #import <ComponentKit/CKNetworkImageComponent.h>
 #import <ComponentKit/CKNetworkImageDownloading.h>
+#else
+
+#endif
+
 //Core
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAnimation.h>
@@ -31,7 +37,9 @@
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKComponentScope.h>
 //Datasources
+#if TARGET_OS_IPHONE
 #import <ComponentKit/CKCollectionViewDataSource.h>
+#endif
 #import <ComponentKit/CKComponentConstantDecider.h>
 #import <ComponentKit/CKComponentDataSource.h>
 #import <ComponentKit/CKComponentDataSourceOutputItem.h>
@@ -62,6 +70,11 @@
 #import <ComponentKit/CKOptimisticViewMutations.h>
 #import <ComponentKit/CKSectionedArrayController.h>
 //Text
+#if TARGET_OS_IPHONE
 #import <ComponentKit/CKLabelComponent.h>
 #import <ComponentKit/CKTextComponent.h>
 #import <ComponentKit/CKTextKitAttributes.h>
+#else
+#import <ComponentKit/CKMTextLabelComponent.h>
+#import <ComponentKit/CKMButtonComponent.h>
+#endif

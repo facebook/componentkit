@@ -10,7 +10,7 @@
 
 #import "CKComponentHierarchyDebugHelper.h"
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 #import "CKComponent.h"
 #import "CKComponentInternal.h"
@@ -22,8 +22,13 @@
 
 + (NSString *)componentHierarchyDescription
 {
+#if TARGET_OS_IPHONE
   UIWindow *window = [[UIApplication sharedApplication] keyWindow];
   return [[self class] componentHierarchyDescriptionForView:window searchUpwards:NO];
+#else
+  NSView *v = [[NSApp mainWindow] contentView];
+  return [[self class] componentHierarchyDescriptionForView:v searchUpwards:NO];
+#endif
 }
 
 + (NSString *)componentHierarchyDescriptionForView:(UIView *)view searchUpwards:(BOOL)upwards

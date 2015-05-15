@@ -8,7 +8,7 @@
  *
  */
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
 

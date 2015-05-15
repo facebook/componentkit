@@ -11,7 +11,7 @@
 #import <string>
 #import <unordered_map>
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 /**
  View attributes usually correspond to properties (like background color or alpha) but can represent arbitrarily complex

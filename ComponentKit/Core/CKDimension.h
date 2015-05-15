@@ -10,7 +10,7 @@
 
 #import <string>
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 /**
  A dimension relative to constraints to be provided in the future.

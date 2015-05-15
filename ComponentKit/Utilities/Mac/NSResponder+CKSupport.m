@@ -8,10 +8,13 @@
  *
  */
 
-#import <UIKit/UIKit.h>
+#import "NSResponder+CKSupport.h"
 
-@class CKComponentRootView;
+@implementation NSResponder (CKSupport)
 
-@interface CKCollectionViewDataSourceCell : UICollectionViewCell
-@property (nonatomic, strong, readonly) CKComponentRootView *rootView;
+- (id)targetForAction:(SEL)action withSender:(id)sender
+{
+  return [self respondsToSelector:action] ? self : [[self nextResponder] targetForAction:action withSender:sender];
+}
+
 @end

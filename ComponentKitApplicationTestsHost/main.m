@@ -8,6 +8,7 @@
  *
  */
 
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 
 #import "ComponentKitApplicationTestsHostAppDelegate.h"
@@ -18,3 +19,15 @@ int main(int argc, char *argv[])
       return UIApplicationMain(argc, argv, nil, NSStringFromClass([ComponentKitTestHostAppDelegate class]));
   }
 }
+
+
+#else
+
+#import <Cocoa/Cocoa.h>
+
+int main(int argc, const char * argv[])
+{
+  return NSApplicationMain(argc, argv);
+}
+
+#endif

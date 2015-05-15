@@ -10,7 +10,7 @@
 
 #import <ComponentKit/CKSectionedArrayController.h>
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 #import <ComponentKit/CKArgumentPrecondition.h>
 

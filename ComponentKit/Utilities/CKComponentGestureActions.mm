@@ -63,6 +63,7 @@ private:
   std::vector<UIGestureRecognizer *> _reusePool;
 };
 
+#if TARGET_OS_IPHONE
 CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKComponentAction action)
 {
   return CKComponentGestureAttribute([UITapGestureRecognizer class], nullptr, action);
@@ -77,6 +78,27 @@ CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(CKComponentAc
 {
   return CKComponentGestureAttribute([UILongPressGestureRecognizer class], nullptr, action);
 }
+
+#else
+
+CKComponentViewAttributeValue CKComponentClickGestureAttribute(CKComponentAction action)
+{
+  return CKComponentGestureAttribute([NSClickGestureRecognizer class], nullptr, action);
+}
+
+CKComponentViewAttributeValue CKComponentPanGestureAttribute(CKComponentAction action)
+{
+  return CKComponentGestureAttribute([NSPanGestureRecognizer class], nullptr, action);
+}
+
+CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(CKComponentAction action)
+{
+  return CKComponentGestureAttribute([NSPressGestureRecognizer class], nullptr, action);
+}
+
+#endif
+
+
 
 struct CKGestureRecognizerReusePoolMapKey {
   __unsafe_unretained Class gestureRecognizerClass;

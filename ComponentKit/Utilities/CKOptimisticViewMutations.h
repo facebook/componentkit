@@ -8,7 +8,7 @@
  *
  */
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 /**
  Use this function to optimistically mutate the view owned by a CKComponent. When the view is recycled, the mutation

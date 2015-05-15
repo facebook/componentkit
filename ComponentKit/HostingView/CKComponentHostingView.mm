@@ -45,6 +45,11 @@
                                  context:(id<NSObject>)context
 {
   if (self = [super initWithFrame:CGRectZero]) {
+
+#if !TARGET_OS_IPHONE
+    self.wantsLayer = YES;
+#endif
+
     // Injected dependencies
     _sizeRangeProvider = sizeRangeProvider;
     _context = context;
@@ -74,9 +79,8 @@
 
 #pragma mark - Layout
 
-- (void)layoutSubviews
+- (void)_layoutSubviews
 {
-  [super layoutSubviews];
   _containerView.frame = self.bounds;
 
   if (_model && !CGRectIsEmpty(self.bounds)) {
@@ -87,6 +91,20 @@
     }
   }
 }
+
+#if TARGET_OS_IPHONE
+- (void)layoutSubviews
+{
+  [super layoutSubviews];
+  [self _layoutSubviews];
+}
+#else
+- (void)layout
+{
+  [super layout];
+  [self _layoutSubviews];
+}
+#endif
 
 - (CGSize)sizeThatFits:(CGSize)size
 {

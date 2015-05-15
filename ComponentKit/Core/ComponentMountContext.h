@@ -10,7 +10,7 @@
 
 #import <memory>
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 #import <ComponentKit/ComponentUtilities.h>
 #import <ComponentKit/ComponentViewManager.h>

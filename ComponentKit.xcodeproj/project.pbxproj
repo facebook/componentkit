@@ -10,6 +10,8 @@
 		0C293C2FE4684CADAB27CA9D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD8D95429A0D918C06B66E5F /* libPods.a */; };
 		31EBF255C3C6127E5A3619D8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD8D95429A0D918C06B66E5F /* libPods.a */; };
 		83EBF589FB5C5611BC1A2D13 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD8D95429A0D918C06B66E5F /* libPods.a */; };
+		99419F031B068D270063B1AB /* CKTestActionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = A273801E1AFD144100E6F222 /* CKTestActionComponent.mm */; };
+		99419F061B068D270063B1AB /* CKTestActionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = A273801C1AFD144100E6F222 /* CKTestActionComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2100E0D1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2100E0C1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm */; };
 		A22FE3031AF2CEB000EC30B8 /* CKTransactionalComponentDataSourceStateUpdateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A22FE3021AF2CEB000EC30B8 /* CKTransactionalComponentDataSourceStateUpdateTests.mm */; };
 		A22FE3061AF2CF0C00EC30B8 /* CKStateExposingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = A22FE3051AF2CF0C00EC30B8 /* CKStateExposingComponent.mm */; };
@@ -87,6 +89,7 @@
 
 /* Begin PBXFileReference section */
 		71F5A01FFD736AB56CFCFD58 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		99419F0A1B068D270063B1AB /* libComponentKitTestHelpers copy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libComponentKitTestHelpers copy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2100E0C1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm; sourceTree = "<group>"; };
 		A22FE3021AF2CEB000EC30B8 /* CKTransactionalComponentDataSourceStateUpdateTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceStateUpdateTests.mm; sourceTree = "<group>"; };
 		A22FE3041AF2CF0C00EC30B8 /* CKStateExposingComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStateExposingComponent.h; sourceTree = "<group>"; };
@@ -161,6 +164,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		99419F041B068D270063B1AB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A27380171AFD144100E6F222 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -358,6 +368,7 @@
 				B342DC8B1AC23EC300ACAC53 /* ComponentKitApplicationTests.xctest */,
 				B342DCAA1AC23F2A00ACAC53 /* ComponentTextKitApplicationTests.xctest */,
 				A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */,
+				99419F0A1B068D270063B1AB /* libComponentKitTestHelpers copy.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -365,6 +376,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		99419F051B068D270063B1AB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				99419F061B068D270063B1AB /* CKTestActionComponent.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A27380331AFD171C00E6F222 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -376,6 +395,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		99419F011B068D270063B1AB /* ComponentKitTestHelpers-Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 99419F071B068D270063B1AB /* Build configuration list for PBXNativeTarget "ComponentKitTestHelpers-Mac" */;
+			buildPhases = (
+				99419F021B068D270063B1AB /* Sources */,
+				99419F041B068D270063B1AB /* Frameworks */,
+				99419F051B068D270063B1AB /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ComponentKitTestHelpers-Mac";
+			productName = ComponentKitTestHelpers;
+			productReference = 99419F0A1B068D270063B1AB /* libComponentKitTestHelpers copy.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		A27380191AFD144100E6F222 /* ComponentKitTestHelpers */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A273802F1AFD144200E6F222 /* Build configuration list for PBXNativeTarget "ComponentKitTestHelpers" */;
@@ -514,6 +550,7 @@
 				B342DC8A1AC23EC300ACAC53 /* ComponentKitApplicationTests */,
 				B342DCA91AC23F2A00ACAC53 /* ComponentTextKitApplicationTests */,
 				A27380191AFD144100E6F222 /* ComponentKitTestHelpers */,
+				99419F011B068D270063B1AB /* ComponentKitTestHelpers-Mac */,
 			);
 		};
 /* End PBXProject section */
@@ -643,6 +680,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		99419F021B068D270063B1AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				99419F031B068D270063B1AB /* CKTestActionComponent.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A27380161AFD144100E6F222 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -747,6 +792,37 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		99419F081B068D270063B1AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 71F5A01FFD736AB56CFCFD58 /* Pods.debug.xcconfig */;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "ComponentKitTestHelpers copy";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		99419F091B068D270063B1AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A6F27DD3FB8E2237F9C39DCE /* Pods.release.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "ComponentKitTestHelpers copy";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		A273802B1AFD144200E6F222 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 71F5A01FFD736AB56CFCFD58 /* Pods.debug.xcconfig */;
@@ -919,7 +995,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -955,7 +1031,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos;
+				SDKROOT = macosx;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -983,6 +1059,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		99419F071B068D270063B1AB /* Build configuration list for PBXNativeTarget "ComponentKitTestHelpers-Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				99419F081B068D270063B1AB /* Debug */,
+				99419F091B068D270063B1AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A273802F1AFD144200E6F222 /* Build configuration list for PBXNativeTarget "ComponentKitTestHelpers" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

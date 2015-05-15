@@ -10,6 +10,8 @@
 
 #import "CKComponentBoundsAnimation.h"
 
+#if TARGET_OS_IPHONE
+
 void CKComponentBoundsAnimationApply(const CKComponentBoundsAnimation &animation,
                                      void (^animations)(void),
                                      void (^completion)(BOOL finished))
@@ -35,3 +37,22 @@ void CKComponentBoundsAnimationApply(const CKComponentBoundsAnimation &animation
                      completion:completion];
   }
 }
+
+
+#else
+
+void CKComponentBoundsAnimationApply(const CKComponentBoundsAnimation &animation,
+                                     void (^animations)(void),
+                                     void (^completion)(BOOL finished))
+{
+  //NSCAssert(0, @"Needs implement an AppKit");
+  if (animations) {
+    animations();
+  }
+  if (completion) {
+    completion(true);
+  }
+}
+
+
+#endif

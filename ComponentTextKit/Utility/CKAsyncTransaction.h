@@ -9,7 +9,8 @@
  */
 
 #import <Foundation/Foundation.h>
-
+#import <dispatch/dispatch.h>
+ 
 @class CKAsyncTransaction;
 
 typedef void(^ck_async_transaction_completion_block_t)(CKAsyncTransaction *completedTransaction, BOOL canceled);

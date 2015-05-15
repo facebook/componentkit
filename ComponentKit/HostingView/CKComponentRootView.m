@@ -17,6 +17,24 @@
 
 static NSMutableArray *hitTestHooks;
 
+#if !TARGET_OS_IPHONE
+- (instancetype)initWithFrame:(CGRect)frameRect
+{
+  self = [super initWithFrame:frameRect];
+  if (!self) return nil;
+
+  self.wantsLayer = YES;
+
+  return self;
+}
+
+- (BOOL)isFlipped
+{
+  return YES;
+}
+#endif
+
+
 + (void)addHitTestHook:(CKComponentRootViewHitTestHook)hook
 {
   CKAssertMainThread();
@@ -32,6 +50,9 @@ static NSMutableArray *hitTestHooks;
   return [NSArray arrayWithArray:hitTestHooks];
 }
 
+
+#if TARGET_OS_IPHONE
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
   for (CKComponentRootViewHitTestHook hook in hitTestHooks) {
@@ -42,5 +63,21 @@ static NSMutableArray *hitTestHooks;
   }
   return [super hitTest:point withEvent:event];
 }
+
+#else
+
+- (NSView *)hitTest:(NSPoint)point
+{
+  NSEvent *event = [NSApp currentEvent];
+  for (CKComponentRootViewHitTestHook hook in hitTestHooks) {
+    UIView *hitView = hook(self, point, event);
+    if (hitView) {
+      return hitView;
+    }
+  }
+  return [super hitTest:point];
+}
+
+#endif
 
 @end

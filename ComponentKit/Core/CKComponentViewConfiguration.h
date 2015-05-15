@@ -11,7 +11,7 @@
 #import <string>
 #import <unordered_map>
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 #import <ComponentKit/ComponentMountContext.h>
 #import <ComponentKit/ComponentViewManager.h>

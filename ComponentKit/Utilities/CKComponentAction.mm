@@ -49,6 +49,8 @@ void CKComponentActionSend(CKComponentAction action, CKComponent *sender, id con
 
 typedef std::unordered_map<CKComponentAction, CKComponentActionControlForwarder *> ForwarderMap;
 
+#if TARGET_OS_IPHONE
+
 CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction action,
                                                          UIControlEvents controlEvents)
 {
@@ -105,6 +107,60 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction actio
     @YES
   };
 }
+
+#else
+
+
+/*
+ * SEE ABOVE: This is just based on the iOS Code
+ */
+
+CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction action)
+{
+  static ForwarderMap *map = new ForwarderMap(); // never destructed to avoid static destruction fiasco
+  static CK::StaticMutex lock = CK_MUTEX_INITIALIZER;   // protects map
+
+  if (action == NULL) {
+    return {
+      {"CKComponentActionAttribute-no-op", ^(UIControl *control, id value) {}, ^(UIControl *control, id value) {}},
+      // Use a bogus value for the attribute's "value". All the information is encoded in the attribute itself.
+      @YES
+    };
+  }
+
+  CKComponentActionControlForwarder *forwarder;
+  {
+    CK::StaticMutexLocker l(lock);
+    auto it = map->find(action);
+    if (it == map->end()) {
+      forwarder = [[CKComponentActionControlForwarder alloc] initWithAction:action];
+      map->insert({action, forwarder});
+    } else {
+      forwarder = it->second;
+    }
+  }
+
+  std::string identifier = std::string("CKComponentActionAttribute-")
+                         + std::string(sel_getName(action));
+  return {
+    {
+      identifier,
+      ^(UIControl *control, id value){
+        control.target = forwarder;
+        control.action = @selector(handleControlEventFromSender:withEvent:);
+      },
+      ^(UIControl *control, id value){
+        control.target = nil;
+        control.action = NULL;
+      }
+    },
+    // Use a bogus value for the attribute's "value". All the information is encoded in the attribute itself.
+    @YES
+  };
+}
+
+
+#endif
 
 @implementation CKComponentActionControlForwarder
 {

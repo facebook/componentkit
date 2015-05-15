@@ -13,7 +13,7 @@
 #import <stack>
 
 #import <CoreGraphics/CoreGraphics.h>
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 #import "ComponentUtilities.h"
 #import "CKComponentInternal.h"

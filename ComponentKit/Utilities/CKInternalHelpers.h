@@ -10,7 +10,7 @@
 
 #import <string>
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 BOOL CKSubclassOverridesSelector(Class superclass, Class subclass, SEL selector);
 

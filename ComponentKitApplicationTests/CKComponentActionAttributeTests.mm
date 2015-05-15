@@ -8,7 +8,7 @@
  *
  */
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKDefines.h>
 #import <XCTest/XCTest.h>
 
 #import <ComponentKitTestHelpers/CKTestActionComponent.h>

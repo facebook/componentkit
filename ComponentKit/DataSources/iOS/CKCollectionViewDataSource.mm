@@ -181,6 +181,7 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
                 atIndexPath:(NSIndexPath *)indexPath
                   animation:(const CKComponentBoundsAnimation &)animation
 {
+#if TARGET_OS_IOS
   if (animation.duration != 0 && [[_collectionView indexPathsForVisibleItems] containsObject:indexPath]) {
     id boundsAnimationContext = CKComponentBoundsAnimationPrepareForCollectionViewBatchUpdates(_collectionView);
     [UIView performWithoutAnimation:^{ [_collectionView performBatchUpdates:^{} completion:^(BOOL finished) {}]; }];
@@ -188,6 +189,9 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
   } else {
     [[_collectionView collectionViewLayout] invalidateLayout];
   }
+#else
+  [[_collectionView collectionViewLayout] invalidateLayout];
+#endif
 }
 
 #pragma mark - Private
