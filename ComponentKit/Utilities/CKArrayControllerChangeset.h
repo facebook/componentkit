@@ -121,6 +121,12 @@ namespace CK {
         void update(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
         void remove(const CKArrayControllerIndexPath &indexPath);
         void insert(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
+        typedef std::map<NSInteger, id<NSObject>> ItemIndexToObjectMap;
+        typedef std::map<NSInteger, ItemIndexToObjectMap> ItemsBucketizedBySection;
+
+        const ItemsBucketizedBySection &updates() const;
+        const ItemsBucketizedBySection &removals() const;
+        const ItemsBucketizedBySection &insertions() const;
 
         size_t size() const noexcept;
 
@@ -143,9 +149,6 @@ namespace CK {
 
       private:
         friend class Changeset;
-
-        typedef std::map<NSInteger, id<NSObject>> ItemIndexToObjectMap;
-        typedef std::map<NSInteger, ItemIndexToObjectMap> ItemsBucketizedBySection;
 
         void bucketizeObjectBySection(ItemsBucketizedBySection &m, const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
         bool commandExistsForIndexPath(const CKArrayControllerIndexPath &indexPath,
