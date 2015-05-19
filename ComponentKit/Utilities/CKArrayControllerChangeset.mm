@@ -127,6 +127,11 @@ void Input::Items::bucketizeObjectBySection(ItemsBucketizedBySection &sectionMap
   }
 }
 
+const CK::ArrayController::Input::Items::ItemsBucketizedBySection &Input::Items::updates() const
+{
+  return _updates;
+}
+
 void Input::Items::update(const IndexPath &indexPath, id<NSObject> object)
 {
   CKInternalConsistencyCheckIf(!commandExistsForIndexPath(indexPath, {_updates, _removals}),
@@ -134,6 +139,11 @@ void Input::Items::update(const IndexPath &indexPath, id<NSObject> object)
                                 indexPath.item, indexPath.section]));
 
   bucketizeObjectBySection(_updates, indexPath, object);
+}
+
+const CK::ArrayController::Input::Items::ItemsBucketizedBySection &Input::Items::removals() const
+{
+  return _removals;
 }
 
 void Input::Items::remove(const IndexPath &indexPath)
@@ -144,6 +154,11 @@ void Input::Items::remove(const IndexPath &indexPath)
 
   // We can insert nil in a std::map.
   bucketizeObjectBySection(_removals, indexPath, nil);
+}
+
+const CK::ArrayController::Input::Items::ItemsBucketizedBySection &Input::Items::insertions() const
+{
+  return _insertions;
 }
 
 void Input::Items::insert(const IndexPath &indexPath, id<NSObject> object)
