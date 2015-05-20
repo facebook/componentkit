@@ -14,6 +14,7 @@
 #import <stack>
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKComponent.h>
 
 using namespace CK::Component;
 
