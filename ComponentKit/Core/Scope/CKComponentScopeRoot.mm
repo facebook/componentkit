@@ -19,10 +19,17 @@
 #import "CKInternalHelpers.h"
 #import "CKThreadLocalComponentScope.h"
 
-static const std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInteger>, std::equal_to<NSUInteger>> announceableEvents = {
-  {CKComponentAnnouncedEventTreeWillAppear, @selector(componentTreeWillAppear)},
-  {CKComponentAnnouncedEventTreeDidDisappear, @selector(componentTreeDidDisappear)},
-};
+typedef std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInteger>, std::equal_to<NSUInteger>> CKAnounceableEventMap;
+
+static const CKAnounceableEventMap &announceableEvents()
+{
+  // Avoid the static destructor fiasco, use a pointer:
+  static const CKAnounceableEventMap *announceableEvents = new CKAnounceableEventMap({
+    {CKComponentAnnouncedEventTreeWillAppear, @selector(componentTreeWillAppear)},
+    {CKComponentAnnouncedEventTreeDidDisappear, @selector(componentTreeDidDisappear)},
+  });
+  return *announceableEvents;
+}
 
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
@@ -69,7 +76,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 
 - (void)registerAnnounceableEventsForController:(CKComponentController *)controller
 {
-  for (const auto &announceableEvent : announceableEvents) {
+  for (const auto &announceableEvent : announceableEvents()) {
     if (CKSubclassOverridesSelector([CKComponentController class], [controller class], announceableEvent.second)) {
       _eventRegistration.insert({{announceableEvent.first, controller}});
     }
@@ -79,7 +86,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 - (void)announceEventToControllers:(CKComponentAnnouncedEvent)announcedEvent
 {
   const auto range = _eventRegistration.equal_range(announcedEvent);
-  const SEL sel = announceableEvents.at(announcedEvent);
+  const SEL sel = announceableEvents().at(announcedEvent);
   for (auto it = range.first; it != range.second; ++it) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
