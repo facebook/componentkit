@@ -124,9 +124,10 @@ namespace CK {
         typedef std::map<NSInteger, id<NSObject>> ItemIndexToObjectMap;
         typedef std::map<NSInteger, ItemIndexToObjectMap> ItemsBucketizedBySection;
 
-        const ItemsBucketizedBySection &updates() const;
-        const ItemsBucketizedBySection &removals() const;
-        const ItemsBucketizedBySection &insertions() const;
+        typedef void (^UpdatesEnumerator)(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop);
+        typedef void (^RemovalsEnumerator)(NSInteger section, NSInteger index, BOOL *stop);
+        typedef void (^InsertionsEnumerator)(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop);
+        void enumerateItems(UpdatesEnumerator updatesBlock, RemovalsEnumerator removalsBlock, InsertionsEnumerator insertionsBlock) const;
 
         size_t size() const noexcept;
 

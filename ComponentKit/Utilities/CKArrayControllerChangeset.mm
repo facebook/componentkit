@@ -127,11 +127,6 @@ void Input::Items::bucketizeObjectBySection(ItemsBucketizedBySection &sectionMap
   }
 }
 
-const CK::ArrayController::Input::Items::ItemsBucketizedBySection &Input::Items::updates() const
-{
-  return _updates;
-}
-
 void Input::Items::update(const IndexPath &indexPath, id<NSObject> object)
 {
   CKInternalConsistencyCheckIf(!commandExistsForIndexPath(indexPath, {_updates, _removals}),
@@ -139,11 +134,6 @@ void Input::Items::update(const IndexPath &indexPath, id<NSObject> object)
                                 indexPath.item, indexPath.section]));
 
   bucketizeObjectBySection(_updates, indexPath, object);
-}
-
-const CK::ArrayController::Input::Items::ItemsBucketizedBySection &Input::Items::removals() const
-{
-  return _removals;
 }
 
 void Input::Items::remove(const IndexPath &indexPath)
@@ -156,11 +146,6 @@ void Input::Items::remove(const IndexPath &indexPath)
   bucketizeObjectBySection(_removals, indexPath, nil);
 }
 
-const CK::ArrayController::Input::Items::ItemsBucketizedBySection &Input::Items::insertions() const
-{
-  return _insertions;
-}
-
 void Input::Items::insert(const IndexPath &indexPath, id<NSObject> object)
 {
   CKInternalConsistencyCheckIf(!commandExistsForIndexPath(indexPath, {_insertions}),
@@ -169,6 +154,44 @@ void Input::Items::insert(const IndexPath &indexPath, id<NSObject> object)
 
   bucketizeObjectBySection(_insertions, indexPath, object);
 }
+
+
+typedef void (^EnumerationAdapter)(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop);
+static void _iterate(CK::ArrayController::Input::Items::ItemsBucketizedBySection items, EnumerationAdapter ea)
+{
+  BOOL stop = NO;
+  for (const auto &itemsInSection : items) {
+    for (const auto &item : itemsInSection.second) {
+      ea(itemsInSection.first, item.first, item.second, &stop);
+      if (stop) {
+        break;
+      }
+    }
+    if (stop) {
+      break;
+    }
+  }
+}
+
+void Input::Items::enumerateItems(UpdatesEnumerator updatesEnumerator, RemovalsEnumerator removalsEnumerator, InsertionsEnumerator insertionsEnumerator) const
+{
+  if (updatesEnumerator) {
+    _iterate(_updates, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop){
+      updatesEnumerator(section, index, object, stop);
+    });
+  }
+  if (removalsEnumerator) {
+    _iterate(_removals, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop){
+      removalsEnumerator(section, index, stop);
+    });
+  }
+  if (insertionsEnumerator) {
+    _iterate(_insertions, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop){
+      insertionsEnumerator(section, index, object, stop);
+    });
+  }
+}
+
 
 size_t Input::Items::size() const noexcept
 {

@@ -131,38 +131,36 @@ NS_INLINE NSArray *_createEmptySections(NSUInteger count)
 - (CKArrayControllerOutputChangeset)applyChangeset:(CKArrayControllerInputChangeset)changeset
 {
   Sections outputSections;
-  Output::Items outputItems;
+  __block Output::Items outputItems;
 
   // we have to process changes in this specific order (which is how TV/CV will execute them)
 
   { // 1. item updates
-    const CK::ArrayController::Input::Items::ItemsBucketizedBySection &updates = changeset.items.updates();
-
-    for (const auto &updatesInSection : updates) {
-      for (const auto &update : updatesInSection.second) {
-        outputItems.update({
-          {updatesInSection.first, update.first},
-          _sections[updatesInSection.first][update.first],
-          update.second
-        });
-        [_sections[updatesInSection.first] replaceObjectAtIndex:update.first withObject:update.second];
-      }
-    }
+    changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
+      outputItems.update({
+        {section, index},
+        _sections[section][index],
+        object
+      });
+      [_sections[section] replaceObjectAtIndex:index withObject:object];
+    }, nil, nil);
   }
 
   { // 2. item removals
-    const CK::ArrayController::Input::Items::ItemsBucketizedBySection &removals = changeset.items.removals();
-
-    for (const auto &removalsInSection : removals) {
-      NSMutableIndexSet *removedItemIndexesInSection = [NSMutableIndexSet indexSet];
-      for (const auto &removal : removalsInSection.second) {
-        outputItems.remove({
-          {removalsInSection.first, removal.first},
-          _sections[removalsInSection.first][removal.first]
-        });
-        [removedItemIndexesInSection addIndex:removal.first];
+    __block std::map<NSInteger, NSMutableIndexSet *> removedItemIndexesBucketizedBySection;
+    changeset.items.enumerateItems(nil, ^(NSInteger section, NSInteger index, BOOL *stop) {
+      outputItems.remove({
+        {section, index},
+        _sections[section][index]
+      });
+      if (!removedItemIndexesBucketizedBySection.count(section)) {
+        removedItemIndexesBucketizedBySection[section] = [NSMutableIndexSet indexSet];
       }
-      [_sections[removalsInSection.first] removeObjectsAtIndexes:removedItemIndexesInSection];
+      [removedItemIndexesBucketizedBySection[section] addIndex:index];
+    }, nil);
+
+    for (const auto &removalsInSection : removedItemIndexesBucketizedBySection) {
+      [_sections[removalsInSection.first] removeObjectsAtIndexes:removalsInSection.second];
     }
   }
 
@@ -188,20 +186,21 @@ NS_INLINE NSArray *_createEmptySections(NSUInteger count)
   }
 
   { // 5. item insertions
-    const CK::ArrayController::Input::Items::ItemsBucketizedBySection &insertions = changeset.items.insertions();
-
-    for (const auto &insertionsInSection : insertions) {
-      NSMutableIndexSet *insertedItemIndexesInSection = [NSMutableIndexSet indexSet];
-      NSMutableArray *insertedItemsInSection = [NSMutableArray array];
-      for (const auto &insert : insertionsInSection.second) {
-        outputItems.insert({
-          {insertionsInSection.first, insert.first},
-          insert.second
-        });
-        [insertedItemIndexesInSection addIndex:insert.first];
-        [insertedItemsInSection addObject:insert.second];
+    __block std::map<NSInteger, std::pair<NSMutableIndexSet *, NSMutableArray *>> insertedObjectBucketizedBySection;
+    changeset.items.enumerateItems(nil, nil, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
+      outputItems.insert({
+        {section, index},
+        object
+      });
+      if (!insertedObjectBucketizedBySection.count(section)) {
+        insertedObjectBucketizedBySection[section] = std::make_pair([NSMutableIndexSet indexSet], [NSMutableArray array]);
       }
-      [_sections[insertionsInSection.first] insertObjects:insertedItemsInSection atIndexes:insertedItemIndexesInSection];
+      [insertedObjectBucketizedBySection[section].first addIndex:index];
+      [insertedObjectBucketizedBySection[section].second addObject:object];
+    });
+
+    for (const auto &insertionsInSection : insertedObjectBucketizedBySection) {
+      [_sections[insertionsInSection.first] insertObjects:insertionsInSection.second.second atIndexes:insertionsInSection.second.first];
     }
   }
 
