@@ -8,8 +8,11 @@
  *
  */
 
-#import <ComponentKit/CKComponent.h>
-#import <ComponentKit/CKDimension.h>
+#import <ComponentKit/CKSizeRange.h>
+
+#import <vector>
+
+@class CKComponent;
 
 namespace CK {
   namespace Component {
