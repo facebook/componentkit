@@ -341,38 +341,25 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
                                                                         UUID:[item UUID]];
   };
   auto mappedChangeset = changeset.map(mapper);
-  
+
   __block CKComponentDataSourceChangeType changeTypes = 0;
 
-  CKArrayControllerSections::Enumerator sectionEnumerator = ^(NSIndexSet *indexSet, CKArrayControllerChangeType changeType, BOOL *stop){
-    switch (changeType) {
-      case CKArrayControllerChangeTypeInsert: changeTypes |= CKComponentDataSourceChangeTypeInsertSections; break;
-      case CKArrayControllerChangeTypeDelete: changeTypes |= CKComponentDataSourceChangeTypeDeleteSections; break;
-      case CKArrayControllerChangeTypeMove: changeTypes |= CKComponentDataSourceChangeTypeMoveSections; break;
-      default: CKFailAssert(@"Unexpected change type %lu", (unsigned long)changeType); break;
+  changeTypes |= mappedChangeset.sections.insertions().empty() ? 0 : CKComponentDataSourceChangeTypeInsertSections;
+  changeTypes |= mappedChangeset.sections.removals().empty() ? 0 : CKComponentDataSourceChangeTypeDeleteSections;
+
+  mappedChangeset.items.enumerateItems(^(NSInteger, NSInteger, CKComponentDataSourceOutputItem* outputItem, BOOL *stop) {
+    if (!CGSizeEqualToSize([outputItem oldSize], [outputItem lifecycleManagerState].layout.size)) {
+      changeTypes |= CKComponentDataSourceChangeTypeUpdateSize;
+      *stop = YES;
     }
-  };
-  
-CKArrayControllerInputItems::Enumerator itemEnumerator =
-  ^(NSInteger section, NSIndexSet *indexes, NSArray *objects, CKArrayControllerChangeType type, BOOL *stop) {
-    switch (type) {
-      case CKArrayControllerChangeTypeInsert: changeTypes |= CKComponentDataSourceChangeTypeInsertRows; break;
-      case CKArrayControllerChangeTypeDelete: changeTypes |= CKComponentDataSourceChangeTypeDeleteRows; break;
-      case CKArrayControllerChangeTypeMove: changeTypes |= CKComponentDataSourceChangeTypeMoveRows; break;
-      case CKArrayControllerChangeTypeUpdate: {
-        [objects enumerateObjectsUsingBlock:^(CKComponentDataSourceOutputItem *obj, NSUInteger idx, BOOL *innerStop) {
-          if (!CGSizeEqualToSize([obj oldSize], [obj lifecycleManagerState].layout.size)) {
-            changeTypes |= CKComponentDataSourceChangeTypeUpdateSize;
-            *innerStop = YES;
-          }
-        }];
-        break;
-      }
-      default: CKFailAssert(@"Unexpected change type %lu", (unsigned long)type); break;
-    }
-  };
-  mappedChangeset.enumerate(sectionEnumerator, itemEnumerator);
-  
+  }, ^(NSInteger, NSInteger, BOOL *stop) {
+    changeTypes |= CKComponentDataSourceChangeTypeDeleteRows;
+    *stop = YES;
+  }, ^(NSInteger, NSInteger, id<NSObject>, BOOL *stop) {
+    changeTypes |= CKComponentDataSourceChangeTypeInsertRows;
+    *stop = YES;
+  });
+
   [_delegate componentDataSource:self
                hasChangesOfTypes:changeTypes
              changesetApplicator:^{
