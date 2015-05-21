@@ -35,7 +35,7 @@ NSUInteger CKIntegerArrayHash(const NSUInteger *subhashes, NSUInteger count)
 {
   NSUInteger result = subhashes[0];
   for (int ii = 1; ii < count; ++ii) {
-    result = std::hash<unsigned long long>()((((unsigned long long)result) << 32 | subhashes[ii]));
+    result = std::hash<unsigned long long>()((((unsigned long long)result) << sizeof(NSUInteger) | subhashes[ii]));
   }
   return result;
 }

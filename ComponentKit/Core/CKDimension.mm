@@ -131,12 +131,11 @@ NSString *CKSizeRange::description() const
 }
 size_t CKSizeRange::hash() const
 {
-  std::hash<CGFloat> hasher;
   NSUInteger subhashes[] = {
-    hasher(min.width),
-    hasher(min.height),
-    hasher(max.width),
-    hasher(max.height)
+      NSUInteger(min.width),
+      NSUInteger(min.height),
+      NSUInteger(max.width),
+      NSUInteger(max.height)
   };
   return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
 }
