@@ -4,7 +4,7 @@ layout: docs
 permalink: /docs/never-subclass-components.html
 ---
 
-You should never subclass any other component classes besides `CKCompositeComponent` when creating a component. (If you need to perform advanced layout by overriding computeLayoutThatFits:, you may subclass CKComponent directly, but this is rare.)
+Only subclass `CKCompositeComponent`. (If you need to perform advanced layout by overriding `computeLayoutThatFits:` you may subclass `CKComponent` directly, but this should be rare.)
 
 - **Subclassing is difficult to reason about.** There is no `final` keyword in Objective-C, so *any* method can be overridden in a subclass. It's impossible to read a superclass and know what is and isn't overridden somewhere.
 - **Subclassing makes refactoring the superclass difficult.** If the superclass is refactored to rename or remove a method, every subclass must be inspected to see if they were overriding the method. This is often skipped or forgotten, leading to silent bugs.
