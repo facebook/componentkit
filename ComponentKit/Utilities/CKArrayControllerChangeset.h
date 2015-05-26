@@ -133,21 +133,6 @@ namespace CK {
 
         bool operator==(const Items &other) const;
 
-        /**
-         Called by Changeset::enumerate(). Note that by passing an NSIndexSet the **order** that clients have called
-         Items::insert() is irrelevant. See CKArrayControllerInputChangesetTests for an example. The indexes and objects
-         parameters will always have the same number of elements, unless for CKArrayControllerChangeTypeDelete where
-         only indexes are passed.
-
-         In doing so we can, for example, simply call -[NSArray insertObjects:atIndexes:] and let NSArray do the
-         hard work of index-munging.
-         */
-        typedef void(^Enumerator)(NSInteger section,
-                                  NSIndexSet *indexes,
-                                  NSArray *objects,
-                                  CKArrayControllerChangeType type,
-                                  BOOL *stop);
-
       private:
         friend class Changeset;
 
@@ -181,24 +166,6 @@ namespace CK {
         
         const CKArrayControllerSections sections;
         const CKArrayControllerInputItems items;
-        
-        /**
-         Called by CKSectionedArrayController. Enumeration vends "commands" that the array controller applies to its
-         internal array-of-arrays.
-         
-         The order of block invocation allows us to apply these commands directly to the arrays without having to deal
-         with adjusting/offsetting indexes or index paths.
-         
-         1) item updates
-         2) item removals
-         3) section removals
-         4) section insertions
-         5) item insertions
-         
-         Note that Items::Enumerate is invoked once for each section in which we need to insert/update/remove objects.
-         If there are insertions into N sections it is invoked N times.
-         */
-        void enumerate(CKArrayControllerSections::Enumerator sectionEnumerator, CKArrayControllerInputItems::Enumerator itemEnumerator) const;
         
         typedef id<NSObject> (^Mapper)(const IndexPath &indexPath, id<NSObject> object, CKArrayControllerChangeType type, BOOL *stop);
         
