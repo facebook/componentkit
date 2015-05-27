@@ -205,68 +205,6 @@ bool Input::Items::operator==(const Items &other) const
 
 typedef std::pair<IndexPath, id<NSObject>> IndexPathObjectPair;
 
-/**
- 1) item updates
- 2) item removals
- 3) section removals
- 4) section insertions
- 5) item insertions
- */
-void Input::Changeset::enumerate(Sections::Enumerator sectionEnumerator,
-                                 Items::Enumerator itemEnumerator) const
-{
-  __block BOOL stop = NO;
-
-  void (^emitSectionChanges)(const std::set<NSInteger>&, CKArrayControllerChangeType) =
-  (!sectionEnumerator) ? (void(^)(const std::set<NSInteger>&, CKArrayControllerChangeType))nil :
-  ^(const std::set<NSInteger> &s, CKArrayControllerChangeType t) {
-    if (!s.empty()) {
-      NSMutableIndexSet *indexes = [[NSMutableIndexSet alloc] init];
-      for (auto section : s) {
-        [indexes addIndex:section];
-      }
-      sectionEnumerator(indexes, t, &stop);
-    }
-  };
-
-  void (^emitItemChanges)(const Items::ItemsBucketizedBySection&, CKArrayControllerChangeType) =
-  (!itemEnumerator) ? (void(^)(const Items::ItemsBucketizedBySection&, CKArrayControllerChangeType))nil :
-  ^(const Items::ItemsBucketizedBySection &m, CKArrayControllerChangeType t) {
-    for (auto sectionToBucket : m) {
-      NSMutableIndexSet *indexes = [[NSMutableIndexSet alloc] init];
-      NSMutableArray *objects = (t == CKArrayControllerChangeTypeDelete) ? nil : [[NSMutableArray alloc] init];
-      for (auto itemObjectPair : sectionToBucket.second) {
-        [indexes addIndex:itemObjectPair.first];
-        [objects addObject:itemObjectPair.second];
-      }
-      itemEnumerator(sectionToBucket.first, indexes, objects, t, &stop);
-      if (stop) {
-        break;
-      }
-    }
-  };
-
-  if (emitItemChanges) {
-    emitItemChanges(items._updates, CKArrayControllerChangeTypeUpdate);
-  }
-
-  if (!stop && emitItemChanges) {
-    emitItemChanges(items._removals, CKArrayControllerChangeTypeDelete);
-  }
-
-  if (!stop && emitSectionChanges) {
-    emitSectionChanges(sections.removals(), CKArrayControllerChangeTypeDelete);
-  }
-
-  if (!stop && emitSectionChanges) {
-    emitSectionChanges(sections.insertions(), CKArrayControllerChangeTypeInsert);
-  }
-
-  if (!stop && emitItemChanges) {
-    emitItemChanges(items._insertions, CKArrayControllerChangeTypeInsert);
-  }
-}
-
 Input::Changeset Input::Changeset::_map(Mapper objectMapper, Sections::Mapper sectionIndexMapper, ItemIndexPathMapper indexPathMapper) const
 {
   if (!objectMapper && !sectionIndexMapper && !indexPathMapper) {
