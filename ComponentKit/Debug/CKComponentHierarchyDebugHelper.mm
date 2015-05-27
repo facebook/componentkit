@@ -72,12 +72,14 @@ static void CKBuildComponentHierarchyDescription(NSMutableArray *result, const C
                      NSStringFromCGPoint(position),
                      NSStringFromCGSize(layout.size)]];
 
-  for (const auto &child : *layout.children) {
-    CKBuildComponentHierarchyDescription(result,
-                                         child.layout,
-                                         child.position,
-                                         [NSString stringWithFormat:@"| %@", prefix]);
-  }
+  if (layout.children) {
+    for (const auto &child : *layout.children) {
+      CKBuildComponentHierarchyDescription(result,
+                                           child.layout,
+                                           child.position,
+                                           [NSString stringWithFormat:@"| %@", prefix]);
+    }
+  } 
 }
 
 @end
