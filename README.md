@@ -10,7 +10,7 @@ ComponentKit is a view framework for iOS that is heavily inspired by React. It t
 ComponentKit is available on [CocoaPods](http://cocoapods.org).  Add the following to your Podfile:
 
 ```ruby
-pod 'ComponentKit', '~> 0.11'
+pod 'ComponentKit', '~> 0.12'
 ```
 
 To quickly try WildeGuess, the ComponentKit demo project:
