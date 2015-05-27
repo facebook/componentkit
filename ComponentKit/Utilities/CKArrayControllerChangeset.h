@@ -127,6 +127,17 @@ namespace CK {
         typedef void (^UpdatesEnumerator)(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop);
         typedef void (^RemovalsEnumerator)(NSInteger section, NSInteger index, BOOL *stop);
         typedef void (^InsertionsEnumerator)(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop);
+        /**
+         Each set of items is guaranteed to be enumerated in ascending order based on index path.
+         For example, following code
+
+         Items items;
+         items.remove({2,4});
+         items.remove({2,3});
+         items.remove({1,18});
+
+         would result in removalsBlock being called with index paths in this order during enumeration: {1,18}, {2,3}, {2,4}.
+         */
         void enumerateItems(UpdatesEnumerator updatesBlock, RemovalsEnumerator removalsBlock, InsertionsEnumerator insertionsBlock) const;
 
         size_t size() const noexcept;

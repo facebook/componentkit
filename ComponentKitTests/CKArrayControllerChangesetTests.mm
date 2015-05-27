@@ -253,6 +253,25 @@ static Input::Changeset exampleInputChangeset(void)
   });
 }
 
+- (void)testEnumerationOrdersItemsCommandsAscendingBasedOnIndexPath
+{
+  Input::Changeset changeset = exampleInputChangeset();
+
+  __block std::vector<std::pair<NSInteger, NSInteger>> removals, updates, insertions;
+
+  changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject>, BOOL *) {
+    updates.push_back({section, index});
+  }, ^(NSInteger section, NSInteger index, BOOL *) {
+    removals.push_back({section, index});
+  }, ^(NSInteger section, NSInteger index, id<NSObject>, BOOL *) {
+    insertions.push_back({section, index});
+  });
+
+  XCTAssertEqual(removals, (std::vector<std::pair<NSInteger, NSInteger>>{{15, 8}, {15, 9}}), @"Removals received in incorrect order.");
+  XCTAssertEqual(updates, (std::vector<std::pair<NSInteger, NSInteger>>{{6, 5}, {6, 6}}), @"Updates received in incorrect order.");
+  XCTAssertEqual(insertions, (std::vector<std::pair<NSInteger, NSInteger>>{{1, 5}, {1, 15}, {2, 0}, {2, 1}}), @"Insertions received in incorrect order.");
+}
+
 - (void)testMapNULLBlock
 {
   Input::Changeset input = exampleInputChangeset();
