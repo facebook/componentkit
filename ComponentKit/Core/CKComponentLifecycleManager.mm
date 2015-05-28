@@ -144,7 +144,6 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 - (void)_mountLayout
 {
   NSSet *newMountedComponents = CKMountComponentLayout(_state.layout, _mountedView);
-  _state.layout.component.rootComponentMountedView = _mountedView;
 
   // Unmount any components that were in _mountedComponents but are no longer in newMountedComponents.
   NSMutableSet *componentsToUnmount = [_mountedComponents mutableCopy];
