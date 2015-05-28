@@ -149,10 +149,10 @@ NS_INLINE NSArray *_createEmptySections(NSUInteger count)
   { // 2. item removals
     __block std::map<NSInteger, NSMutableIndexSet *> removedItemIndexesBucketizedBySection;
     changeset.items.enumerateItems(nil, ^(NSInteger section, NSInteger index, BOOL *stop) {
-      outputItems.remove({
+      outputItems.remove(
         {section, index},
         _sections[section][index]
-      });
+      );
       if (!removedItemIndexesBucketizedBySection.count(section)) {
         removedItemIndexesBucketizedBySection[section] = [NSMutableIndexSet indexSet];
       }
@@ -188,10 +188,10 @@ NS_INLINE NSArray *_createEmptySections(NSUInteger count)
   { // 5. item insertions
     __block std::map<NSInteger, std::pair<NSMutableIndexSet *, NSMutableArray *>> insertedObjectBucketizedBySection;
     changeset.items.enumerateItems(nil, nil, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
-      outputItems.insert({
+      outputItems.insert(
         {section, index},
         object
-      });
+      );
       if (!insertedObjectBucketizedBySection.count(section)) {
         insertedObjectBucketizedBySection[section] = std::make_pair([NSMutableIndexSet indexSet], [NSMutableArray array]);
       }
