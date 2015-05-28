@@ -31,7 +31,7 @@
 
 /** 
  Applies a changeset either synchronously or asynchronously to the collection view.
- If a synchronous changeset is applied while asynchronous changesets are still pending or being applied, then all the pending changesets are (re)applied synchronously 
+ If a synchronous changeset is applied while asynchronous changesets are still pending, then the pending changesets will be applied synchronously
  before the new changeset is applied.
  */
 - (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset

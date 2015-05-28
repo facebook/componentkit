@@ -10,7 +10,6 @@
 
 #import "CKCollectionViewTransactionalDataSource.h"
 
-#import "CKComponentInternal.h"
 #import "CKCollectionViewDataSourceCell.h"
 #import "CKTransactionalComponentDataSourceConfiguration.h"
 #import "CKTransactionalComponentDataSourceListener.h"
@@ -19,6 +18,7 @@
 #import "CKTransactionalComponentDataSourceAppliedChanges.h"
 #import "CKComponentRootView.h"
 #import "CKComponentLayout.h"
+#import "CKComponentDataSourceAttachController.h"
 
 @interface CKCollectionViewTransactionalDataSource () <
 UICollectionViewDataSource,
@@ -27,6 +27,7 @@ CKTransactionalComponentDataSourceListener
 {
   CKTransactionalComponentDataSource *_componentDataSource;
   CKTransactionalComponentDataSourceState *_currentState;
+  CKComponentDataSourceAttachController *_attachController;
 }
 @end
 
@@ -43,6 +44,8 @@ CKTransactionalComponentDataSourceListener
     _collectionView = collectionView;
     _collectionView.dataSource = self;
     [_collectionView registerClass:[CKCollectionViewDataSourceCell class] forCellWithReuseIdentifier:kReuseIdentifier];
+    
+    _attachController = [[CKComponentDataSourceAttachController alloc] init];
   }
   return self;
 }
@@ -54,7 +57,7 @@ CKTransactionalComponentDataSourceListener
               userInfo:(NSDictionary *)userInfo
 {
   [_componentDataSource applyChangeset:changeset
-                                  mode:CKTransactionalComponentDataSourceModeSynchronous
+                                  mode:mode
                               userInfo:userInfo];
 }
 
@@ -79,8 +82,21 @@ static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppli
 {
   [_collectionView performBatchUpdates:^{
     applyChangesToCollectionView(changes, _collectionView);
+    // Detach all the component layouts for items being deleted
+    [self _detachComponentLayoutForRemovedItemsAtIndexPaths:[changes removedIndexPaths]
+                                                    inState:previousState];
+    // Update current state
     _currentState = [_componentDataSource state];
   } completion:NULL];
+}
+
+- (void)_detachComponentLayoutForRemovedItemsAtIndexPaths:(NSSet *)removedIndexPaths
+                                                  inState:(CKTransactionalComponentDataSourceState *)state
+{
+  for (NSIndexPath *indexPath in removedIndexPaths) {
+    CKComponentScopeRootIdentifier identifier = [[[state objectAtIndexPath:indexPath] scopeRoot] globalIdentifier];
+    [_attachController detachComponentLayoutWithScopeIdentifier:identifier];
+  }
 }
 
 #pragma mark - State
@@ -96,9 +112,9 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  CKTransactionalComponentDataSourceItem *item = [_currentState objectAtIndexPath:indexPath];
   CKCollectionViewDataSourceCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:kReuseIdentifier forIndexPath:indexPath];
-  CKMountComponentLayout(item.layout, cell.rootView);
+  CKTransactionalComponentDataSourceItem *item = [_currentState objectAtIndexPath:indexPath];
+  [_attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier toView:cell.rootView];
   return cell;
 }
 
