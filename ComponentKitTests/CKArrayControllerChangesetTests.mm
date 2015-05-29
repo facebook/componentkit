@@ -402,10 +402,10 @@ static Output::Changeset exampleOutputChangeset(void)
   items.remove({15, 9}, @5);
   items.remove({16, 4}, @6);
   items.remove({16, 5}, @7);
-  items.update({{7, 6}, @8, @9});
-  items.update({{7, 5}, @8, @9});
-  items.update({{6, 3}, @8, @9});
-  items.update({{6, 4}, @8, @9});
+  items.update({7, 6}, @8, @9);
+  items.update({7, 5}, @8, @9);
+  items.update({6, 3}, @8, @9);
+  items.update({6, 4}, @8, @9);
 
   return {sections, items};
 }
@@ -661,10 +661,10 @@ static Output::Changeset exampleOutputChangeset(void)
   expectedItems.remove({15, 9}, @6);
   expectedItems.remove({16, 4}, @7);
   expectedItems.remove({16, 5}, @8);
-  expectedItems.update({{7, 6}, @9, @10});
-  expectedItems.update({{7, 5}, @9, @10});
-  expectedItems.update({{6, 3}, @9, @10});
-  expectedItems.update({{6, 4}, @9, @10});
+  expectedItems.update({7, 6}, @9, @10);
+  expectedItems.update({7, 5}, @9, @10);
+  expectedItems.update({6, 3}, @9, @10);
+  expectedItems.update({6, 4}, @9, @10);
 
   Output::Changeset expected = {expectedSections, expectedItems};
 

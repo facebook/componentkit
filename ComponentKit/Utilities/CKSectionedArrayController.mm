@@ -137,11 +137,11 @@ NS_INLINE NSArray *_createEmptySections(NSUInteger count)
 
   { // 1. item updates
     changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
-      outputItems.update({
+      outputItems.update(
         {section, index},
         _sections[section][index],
         object
-      });
+      );
       [_sections[section] replaceObjectAtIndex:index withObject:object];
     }, nil, nil);
   }

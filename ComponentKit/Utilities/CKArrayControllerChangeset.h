@@ -239,7 +239,7 @@ namespace CK {
 
       class Items final {
       public:
-        void update(const CKArrayControllerOutputChange &update);
+        void update(const CKArrayControllerIndexPath &indexPath, id<NSObject> oldObject, id<NSObject> newObject);
         /**
          Note that we pass the removed object here, too. In doing so we can inform clients of what was removed as a
          result of an Input::Changeset

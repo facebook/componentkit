@@ -290,9 +290,9 @@ void Output::Items::remove(const CKArrayControllerIndexPath &indexPath, id<NSObj
   _removals.push_back({indexPath, object, nil});
 }
 
-void Output::Items::update(const Change &update)
+void Output::Items::update(const CKArrayControllerIndexPath &indexPath, id<NSObject> oldObject, id<NSObject> newObject)
 {
-  _updates.push_back(update);
+  _updates.push_back({indexPath, oldObject, newObject});
 }
 
 bool Output::Items::operator==(const Items &other) const
@@ -382,7 +382,7 @@ Output::Changeset Output::Changeset::map(Mapper mapper) const
       _validateBeforeAfterPair(mappedPair, change.indexPath, t);
 
       if (t == CKArrayControllerChangeTypeUpdate) {
-        mappedItems.update({change.indexPath, mappedPair.first, mappedPair.second});
+        mappedItems.update(change.indexPath, mappedPair.first, mappedPair.second);
       }
       if (t == CKArrayControllerChangeTypeDelete) {
         mappedItems.remove(change.indexPath, mappedPair.first);
