@@ -497,24 +497,24 @@ static Output::Changeset exampleOutputChangeset(void)
   changeset.enumerate(sectionsEnumerator, itemsEnumerator);
 
   std::set<Output::Change> expectedInsertions = {
-    {{0, 0}, nil, @1},
-    {{0, 1}, nil, @0},
-    {{2, 0}, nil, @2},
-    {{2, 1}, nil, @3}
+    {{}, {0, 0}, nil, @1},
+    {{}, {0, 1}, nil, @0},
+    {{}, {2, 0}, nil, @2},
+    {{}, {2, 1}, nil, @3}
   };
 
   std::set<Output::Change> expectedRemovals = {
-    {{15, 9}, @5, nil},
-    {{15, 10}, @4, nil},
-    {{16, 4}, @6, nil},
-    {{16, 5}, @7, nil}
+    {{15, 9}, {}, @5, nil},
+    {{15, 10}, {}, @4, nil},
+    {{16, 4}, {}, @6, nil},
+    {{16, 5}, {}, @7, nil}
   };
 
   std::set<Output::Change> expectedUpdates = {
-    {{7, 5}, @8, @9},
-    {{7, 6}, @8, @9},
-    {{6, 3}, @8, @9},
-    {{6, 4}, @8, @9}
+    {{7, 5}, {}, @8, @9},
+    {{7, 6}, {}, @8, @9},
+    {{6, 3}, {}, @8, @9},
+    {{6, 4}, {}, @8, @9}
   };
 
   XCTAssertTrue(insertions == expectedInsertions, @"");

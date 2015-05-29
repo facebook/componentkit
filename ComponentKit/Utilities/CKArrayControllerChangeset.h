@@ -207,23 +207,36 @@ namespace CK {
     namespace Output {
 
       struct Change {
+        /** soon to be removed, use sourceIndexPath/destinationIndexPath instead */
         CKArrayControllerIndexPath indexPath;
+        
+        /** Valid for updates and removals. */
+        CKArrayControllerIndexPath sourceIndexPath;
+        /** Valid for insertions. */
+        CKArrayControllerIndexPath destinationIndexPath;
+
         id<NSObject> before;
         id<NSObject> after;
 
-        Change(const CKArrayControllerIndexPath &iP, id<NSObject> b, id<NSObject> a) : indexPath(iP), before(b), after(a) {};
+        Change(const CKArrayControllerIndexPath &sIP, const CKArrayControllerIndexPath &dIP, id<NSObject> b, id<NSObject> a) : indexPath((sIP.section != NSNotFound)?sIP:dIP), sourceIndexPath(sIP), destinationIndexPath(dIP), before(b), after(a) {};
 
         bool operator==(const Change &other) const {
-          return indexPath == other.indexPath && CKObjectIsEqual(before, other.before) && CKObjectIsEqual(after, other.after);
+          return sourceIndexPath == other.sourceIndexPath && destinationIndexPath == other.destinationIndexPath && CKObjectIsEqual(before, other.before) && CKObjectIsEqual(after, other.after);
         }
 
         bool operator<(const Change &other) const {
-          return indexPath < other.indexPath;
+          if (sourceIndexPath.section != NSNotFound) {
+            return sourceIndexPath < other.sourceIndexPath;
+          } else {
+            return destinationIndexPath < other.destinationIndexPath;
+          }
         }
 
         NSString *description() const {
-          return [NSString stringWithFormat:@"indexPath: <%zd,%zd>, before: <%@>, after: <%@>", indexPath.section, indexPath.item, before, after];
+          return [NSString stringWithFormat:@"sourceIndexPath: <%zd,%zd>, destinationIndexPath: <%zd,%zd>, before: <%@>, after: <%@>",
+                  sourceIndexPath.section, sourceIndexPath.item, destinationIndexPath.section, destinationIndexPath.item, before, after];
         }
+
       };
     }
   }
