@@ -76,7 +76,7 @@ static UIScrollView *findScrollView(UIView *v)
   CKComponentLayout layout = [hierarchy layoutThatFits:{} parentSize:{NAN, NAN}];
 
   UIView *container = [UIView new];
-  NSSet *mounted = CKMountComponentLayout(layout, container);
+  NSSet *mounted = CKMountComponentLayout(layout, container, nil, nil);
 
   XCTAssertFalse(hierarchy.receivedScroll, @"Should not have triggered yet");
 
@@ -99,7 +99,7 @@ static UIScrollView *findScrollView(UIView *v)
 
   layout = [noScrollHierarchy layoutThatFits:{} parentSize:{NAN, NAN}];
 
-  CKMountComponentLayout(layout, container);
+  CKMountComponentLayout(layout, container, nil, nil);
 
   XCTAssertFalse(noScrollHierarchy.receivedScroll, @"Should not have triggered yet");
   hierarchy.receivedScroll = NO;
@@ -108,7 +108,6 @@ static UIScrollView *findScrollView(UIView *v)
 
   XCTAssertFalse(noScrollHierarchy.receivedScroll, @"Should not have triggered because we don't want scroll events.");
   XCTAssertFalse(hierarchy.receivedScroll, @"Should not have triggered on old hierarchy either.");
-
 }
 
 @end
