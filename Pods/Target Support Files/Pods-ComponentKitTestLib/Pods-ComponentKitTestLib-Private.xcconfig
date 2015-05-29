@@ -1,0 +1,7 @@
+#include "Pods-ComponentKitTestLib.xcconfig"
+FRAMEWORK_SEARCH_PATHS = ${PODS_COMPONENTKITTESTLIB_FRAMEWORK_SEARCH_PATHS}
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Private" "${PODS_ROOT}/Headers/Private/ComponentKitTestLib" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/ComponentKit" "${PODS_ROOT}/Headers/Public/ComponentKitTestLib" "${PODS_ROOT}/Headers/Public/FBSnapshotTestCase" "${PODS_ROOT}/Headers/Public/OCMock"
+OTHER_LDFLAGS = ${PODS_COMPONENTKITTESTLIB_OTHER_LDFLAGS} -ObjC
+PODS_ROOT = ${SRCROOT}
+SKIP_INSTALL = YES

@@ -13,12 +13,11 @@ set -eu
 MODE=$1
 
 function ci() {
-  pod install
   xctool \
       -workspace $1.xcworkspace \
       -scheme $1 \
-      -sdk iphonesimulator8.1 \
-      -destination "platform=iOS Simulator,OS=8.1,name=iPhone 5" \
+      -sdk iphonesimulator \
+      -destination "platform=iOS Simulator,name=iPhone 5" \
       $2
 }
 
@@ -26,6 +25,7 @@ if [ "$MODE" = "ci" ]; then
   ci ComponentKit test
 
   pushd Examples/WildeGuess
+  pod install
   ci WildeGuess build
   popd
 fi

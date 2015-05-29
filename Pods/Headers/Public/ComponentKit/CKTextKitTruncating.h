@@ -1,0 +1,1 @@
+../../../../ComponentTextKit/TextKit/CKTextKitTruncating.h
