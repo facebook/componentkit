@@ -206,17 +206,6 @@ namespace CK {
      */
     namespace Output {
 
-      struct Pair {
-        CKArrayControllerIndexPath indexPath;
-        id<NSObject> object;
-
-        Pair(const CKArrayControllerIndexPath &iP, id<NSObject> o) : indexPath(iP), object(o) {};
-
-        bool operator==(const Pair &other) const {
-          return indexPath == other.indexPath && CKObjectIsEqual(object, other.object);
-        }
-      };
-
       struct Change {
         CKArrayControllerIndexPath indexPath;
         id<NSObject> before;
@@ -240,7 +229,6 @@ namespace CK {
   }
 }
 
-typedef CK::ArrayController::Output::Pair CKArrayControllerOutputPair;
 typedef CK::ArrayController::Output::Change CKArrayControllerOutputChange;
 
 namespace CK {
@@ -256,8 +244,8 @@ namespace CK {
          Note that we pass the removed object here, too. In doing so we can inform clients of what was removed as a
          result of an Input::Changeset
          */
-        void remove(const CKArrayControllerOutputPair &removal);
-        void insert(const CKArrayControllerOutputPair &insertion);
+        void remove(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
+        void insert(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
 
         typedef void(^Enumerator)(const CKArrayControllerOutputChange &change,
                                   CKArrayControllerChangeType type,

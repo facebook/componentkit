@@ -394,14 +394,14 @@ static Output::Changeset exampleOutputChangeset(void)
   sections.remove(7);
 
   Output::Items items;
-  items.insert({{0, 1}, @0});
-  items.insert({{0, 0}, @1});
-  items.insert({{2, 0}, @2});
-  items.insert({{2, 1}, @3});
-  items.remove({{15, 10}, @4});
-  items.remove({{15, 9}, @5});
-  items.remove({{16, 4}, @6});
-  items.remove({{16, 5}, @7});
+  items.insert({0, 1}, @0);
+  items.insert({0, 0}, @1);
+  items.insert({2, 0}, @2);
+  items.insert({2, 1}, @3);
+  items.remove({15, 10}, @4);
+  items.remove({15, 9}, @5);
+  items.remove({16, 4}, @6);
+  items.remove({16, 5}, @7);
   items.update({{7, 6}, @8, @9});
   items.update({{7, 5}, @8, @9});
   items.update({{6, 3}, @8, @9});
@@ -653,14 +653,14 @@ static Output::Changeset exampleOutputChangeset(void)
   expectedSections.remove(7);
 
   Output::Items expectedItems;
-  expectedItems.insert({{0, 1}, @1});
-  expectedItems.insert({{0, 0}, @2});
-  expectedItems.insert({{2, 0}, @3});
-  expectedItems.insert({{2, 1}, @4});
-  expectedItems.remove({{15, 10}, @5});
-  expectedItems.remove({{15, 9}, @6});
-  expectedItems.remove({{16, 4}, @7});
-  expectedItems.remove({{16, 5}, @8});
+  expectedItems.insert({0, 1}, @1);
+  expectedItems.insert({0, 0}, @2);
+  expectedItems.insert({2, 0}, @3);
+  expectedItems.insert({2, 1}, @4);
+  expectedItems.remove({15, 10}, @5);
+  expectedItems.remove({15, 9}, @6);
+  expectedItems.remove({16, 4}, @7);
+  expectedItems.remove({16, 5}, @8);
   expectedItems.update({{7, 6}, @9, @10});
   expectedItems.update({{7, 5}, @9, @10});
   expectedItems.update({{6, 3}, @9, @10});

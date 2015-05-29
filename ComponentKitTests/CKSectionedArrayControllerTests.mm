@@ -176,7 +176,7 @@ using namespace CK::ArrayController;
   Sections expectedSections;
   expectedSections.insert(0);
   Output::Items expectedItems;
-  expectedItems.insert({{0, 0}, @0});
+  expectedItems.insert({0, 0}, @0);
   Output::Changeset expected = {expectedSections, expectedItems};
 
   XCTAssertTrue(output == expected, @"");
@@ -227,10 +227,10 @@ using namespace CK::ArrayController;
   expectedSections.insert(1);
   expectedSections.insert(2);
   Output::Items expectedItems;
-  expectedItems.insert({{1, 0}, @0});
-  expectedItems.insert({{1, 1}, @1});
-  expectedItems.insert({{2, 0}, @2});
-  expectedItems.insert({{2, 1}, @3});
+  expectedItems.insert({1, 0}, @0);
+  expectedItems.insert({1, 1}, @1);
+  expectedItems.insert({2, 0}, @2);
+  expectedItems.insert({2, 1}, @3);
   Output::Changeset expected = {expectedSections, expectedItems};
 
   XCTAssertTrue(output == expected, @"");
@@ -293,7 +293,7 @@ using namespace CK::ArrayController;
   XCTAssertEqual([_controller numberOfObjectsInSection:0], 0, @"");
 
   Output::Items expectedItems;
-  expectedItems.remove({{0, 0}, @0});
+  expectedItems.remove({0, 0}, @0);
   Output::Changeset expected = {{}, expectedItems};
 
   XCTAssertTrue(output == expected, @"");
@@ -360,11 +360,11 @@ using namespace CK::ArrayController;
   XCTAssertEqual([_controller numberOfObjectsInSection:2], 0, @"");
 
   Output::Items expectedItems;
-  expectedItems.remove({{1, 1}, @1});
-  expectedItems.remove({{1, 2}, @2});
-  expectedItems.remove({{2, 0}, @3});
-  expectedItems.remove({{2, 1}, @4});
-  expectedItems.remove({{2, 2}, @5});
+  expectedItems.remove({1, 1}, @1);
+  expectedItems.remove({1, 2}, @2);
+  expectedItems.remove({2, 0}, @3);
+  expectedItems.remove({2, 1}, @4);
+  expectedItems.remove({2, 2}, @5);
   Output::Changeset expected = {{}, expectedItems};
 
   XCTAssertTrue(output == expected, @"");

@@ -280,14 +280,14 @@ bool Input::Changeset::operator==(const Changeset &other) const
   return sections == other.sections && items == other.items;
 }
 
-void Output::Items::insert(const Pair &insertion)
+void Output::Items::insert(const CKArrayControllerIndexPath &indexPath, id<NSObject> object)
 {
-  _insertions.push_back({insertion.indexPath, nil, insertion.object});
+  _insertions.push_back({indexPath, nil, object});
 }
 
-void Output::Items::remove(const Pair &removal)
+void Output::Items::remove(const CKArrayControllerIndexPath &indexPath, id<NSObject> object)
 {
-  _removals.push_back({removal.indexPath, removal.object, nil});
+  _removals.push_back({indexPath, object, nil});
 }
 
 void Output::Items::update(const Change &update)
@@ -385,10 +385,10 @@ Output::Changeset Output::Changeset::map(Mapper mapper) const
         mappedItems.update({change.indexPath, mappedPair.first, mappedPair.second});
       }
       if (t == CKArrayControllerChangeTypeDelete) {
-        mappedItems.remove({change.indexPath, mappedPair.first});
+        mappedItems.remove(change.indexPath, mappedPair.first);
       }
       if (t == CKArrayControllerChangeTypeInsert) {
-        mappedItems.insert({change.indexPath, mappedPair.second});
+        mappedItems.insert(change.indexPath, mappedPair.second);
       }
       if (stop) {
         break;
