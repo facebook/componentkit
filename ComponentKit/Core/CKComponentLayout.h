@@ -46,3 +46,6 @@ struct CKComponentLayoutChild {
 
 /** Recursively mounts the layout in the view, returning a set of the mounted components. */
 NSSet *CKMountComponentLayout(const CKComponentLayout &layout, UIView *view, CKComponent *supercomponent = nil);
+
+/** Take a previous return value from CKMountComponentLayout and the new return value, unmounting any old components. */
+void CKUnmountComponents(NSSet *oldComponents, NSSet *newComponents = nil);

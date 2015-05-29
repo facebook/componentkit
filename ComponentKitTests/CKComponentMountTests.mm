@@ -58,6 +58,54 @@
   XCTAssertEqualObjects([c nextResponderAfterController], container, @"Did not setup responder correctly!");
 }
 
+- (void)testUnmounting
+{
+  CKComponent *a = [CKComponent newWithView:{[UIView class]} size:{}];
+  CKComponent *b = [CKComponent newWithView:{[UIView class]} size:{}];
+  CKComponent *c = [CKComponent newWithView:{[UIView class]} size:{}];
+
+  CKComponentLayout layoutAll = {a, CGSizeZero,
+    {
+      {CGPointZero, {b, {}, {}}},
+      {CGPointZero, {c, {}, {}}},
+    }
+  };
+
+  CKComponentLayout layoutSome = {a, CGSizeZero,
+    {
+      {CGPointZero, {c, {}, {}}},
+    }
+  };
+  
+  
+  UIView *container = [UIView new];
+  NSSet *allMounted = CKMountComponentLayout(layoutAll, container);
+
+  XCTAssertNotNil(a.viewContext.view, @"Didn't create view");
+  XCTAssertNotNil(b.viewContext.view, @"Didn't create view");
+  XCTAssertNotNil(c.viewContext.view, @"Didn't create view");
+
+  NSSet *someMounted = CKMountComponentLayout(layoutSome, container);
+
+  XCTAssertNotNil(a.viewContext.view, @"Should still be mounted");
+  XCTAssertNotNil(b.viewContext.view, @"Should still be mounted");
+  XCTAssertNotNil(c.viewContext.view, @"Should still be mounted");
+
+  CKUnmountComponents(someMounted, allMounted);
+
+  XCTAssertNotNil(a.viewContext.view, @"Should still be mounted");
+  XCTAssertNil(b.viewContext.view, @"Should not be mounted");
+  XCTAssertNotNil(c.viewContext.view, @"Should still be mounted");
+
+  CKUnmountComponents(someMounted);
+
+  XCTAssertNil(a.viewContext.view, @"Should not be mounted");
+  XCTAssertNil(b.viewContext.view, @"Should not be mounted");
+  XCTAssertNil(c.viewContext.view, @"Should not be mounted");
+
+
+}
+
 @end
 
 @implementation CKDontMountChildrenComponent
