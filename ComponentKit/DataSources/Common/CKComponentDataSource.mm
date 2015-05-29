@@ -254,7 +254,8 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
                                                       constrainedSize:constrainedSize
                                                               oldSize:[before lifecycleManager].size
                                                                  UUID:[after UUID]
-                                                            indexPath:change.indexPath.toNSIndexPath()
+                                                      sourceIndexPath:change.sourceIndexPath.toNSIndexPath()
+                                                 destinationIndexPath:change.destinationIndexPath.toNSIndexPath()
                                                            changeType:type
                                                           passthrough:(componentCompliantModel == nil)
                                                               context:_context];
@@ -307,15 +308,15 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
     CKArrayControllerChangeType type = [outputItem changeType];
     switch (type) {
       case CKArrayControllerChangeTypeUpdate: {
-        items.update([outputItem indexPath], outputItem);
+        items.update([outputItem sourceIndexPath], outputItem);
       }
         break;
       case CKArrayControllerChangeTypeInsert: {
-        items.insert([outputItem indexPath], outputItem);
+        items.insert([outputItem destinationIndexPath], outputItem);
       }
         break;
       case CKArrayControllerChangeTypeDelete: {
-        items.remove([outputItem indexPath]);
+        items.remove([outputItem sourceIndexPath]);
       }
         break;
       default:

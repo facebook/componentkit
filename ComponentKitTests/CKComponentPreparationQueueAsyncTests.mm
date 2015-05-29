@@ -27,7 +27,8 @@ static CKComponentPreparationInputItem *fbcpq_passthroughInputItem(NSString *UUI
                                                            constrainedSize:CKSizeRange()
                                                                    oldSize:{0, 0}
                                                                       UUID:UUID
-                                                                 indexPath:nil
+                                                           sourceIndexPath:nil
+                                                      destinationIndexPath:nil
                                                                 changeType:CKArrayControllerChangeTypeUnknown
                                                                passthrough:YES
                                                                    context:nil];
