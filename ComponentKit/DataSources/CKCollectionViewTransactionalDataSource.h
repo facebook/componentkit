@@ -44,6 +44,10 @@
  */
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
 
+/** @see `CKTransactionalComponentDataSource` */
+- (void)reloadWithMode:(CKTransactionalComponentDataSourceMode)mode
+              userInfo:(NSDictionary *)userInfo;
+
 @property (readonly, nonatomic, strong) UICollectionView *collectionView;
 
 @end

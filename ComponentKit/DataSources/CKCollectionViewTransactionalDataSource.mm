@@ -106,6 +106,14 @@ static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppli
   return [_currentState objectAtIndexPath:indexPath].layout.size;
 }
 
+#pragma mark - Reload
+
+- (void)reloadWithMode:(CKTransactionalComponentDataSourceMode)mode
+              userInfo:(NSDictionary *)userInfo
+{
+  [_componentDataSource reloadWithMode:mode userInfo:userInfo];
+}
+
 #pragma mark - UICollectionViewDataSource
 
 static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_data_source.cell";
