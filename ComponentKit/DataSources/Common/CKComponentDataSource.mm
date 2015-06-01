@@ -24,6 +24,7 @@
 #import "CKComponentLifecycleManager.h"
 #import "CKComponentLifecycleManagerAsynchronousUpdateHandler.h"
 #import "CKComponentPreparationQueue.h"
+#import "CKComponentPreparationQueueInternal.h"
 #import "CKComponentPreparationQueueListener.h"
 
 static const NSInteger kPreparationQueueDefaultWidth = 10;
@@ -407,6 +408,11 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
 }
 
 #pragma mark - Utilities
+
+- (dispatch_queue_t)concurrentQueue
+{
+  return [_componentPreparationQueue concurrentQueue];
+}
 
 /** @return the UUID for a changeset sent to the preparationQueue */
 static PreparationBatchID batchID()
