@@ -114,6 +114,13 @@ static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppli
   [_componentDataSource reloadWithMode:mode userInfo:userInfo];
 }
 
+- (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
+                       mode:(CKTransactionalComponentDataSourceMode)mode
+                   userInfo:(NSDictionary *)userInfo
+{
+  [_componentDataSource updateConfiguration:configuration mode:mode userInfo:userInfo];
+}
+
 #pragma mark - UICollectionViewDataSource
 
 static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_data_source.cell";

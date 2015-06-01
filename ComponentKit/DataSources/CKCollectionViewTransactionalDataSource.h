@@ -48,6 +48,11 @@
 - (void)reloadWithMode:(CKTransactionalComponentDataSourceMode)mode
               userInfo:(NSDictionary *)userInfo;
 
+/** @see `CKTransactionalComponentDataSource` */
+- (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
+                       mode:(CKTransactionalComponentDataSourceMode)mode
+                   userInfo:(NSDictionary *)userInfo;
+
 @property (readonly, nonatomic, strong) UICollectionView *collectionView;
 
 @end
