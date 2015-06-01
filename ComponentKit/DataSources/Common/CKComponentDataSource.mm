@@ -166,7 +166,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
   [self _enqueueChangeset:changeset];
 }
 
-- (void)updateContextAndEnqeueReload:(id)newContext
+- (void)updateContextAndEnqueueReload:(id)newContext
 {
   CKAssertMainThread();
   if (_context != newContext) {
