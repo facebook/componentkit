@@ -73,7 +73,7 @@ typedef void(*CKCellConfigurationFunction)(UICollectionViewCell *cell, NSIndexPa
 /**
  Updates context to the new value and enqueues update changeset in order to rebuild component tree.
  */
-- (void)updateContextAndEnqeueReload:(id)newContext;
+- (void)updateContextAndEnqueueReload:(id)newContext;
 
 /**
  @return The model associated with a certain index path in the collectionView.
