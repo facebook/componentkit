@@ -207,9 +207,6 @@ namespace CK {
     namespace Output {
 
       struct Change {
-        /** soon to be removed, use sourceIndexPath/destinationIndexPath instead */
-        CKArrayControllerIndexPath indexPath;
-        
         /** Valid for updates and removals. */
         CKArrayControllerIndexPath sourceIndexPath;
         /** Valid for insertions. */
@@ -218,7 +215,7 @@ namespace CK {
         id<NSObject> before;
         id<NSObject> after;
 
-        Change(const CKArrayControllerIndexPath &sIP, const CKArrayControllerIndexPath &dIP, id<NSObject> b, id<NSObject> a) : indexPath((sIP.section != NSNotFound)?sIP:dIP), sourceIndexPath(sIP), destinationIndexPath(dIP), before(b), after(a) {};
+        Change(const CKArrayControllerIndexPath &sIP, const CKArrayControllerIndexPath &dIP, id<NSObject> b, id<NSObject> a) : sourceIndexPath(sIP), destinationIndexPath(dIP), before(b), after(a) {};
 
         bool operator==(const Change &other) const {
           return sourceIndexPath == other.sourceIndexPath && destinationIndexPath == other.destinationIndexPath && CKObjectIsEqual(before, other.before) && CKObjectIsEqual(after, other.after);

@@ -29,7 +29,7 @@
 @property (nonatomic, strong) CKComponentDataSourceOutputItem *dataSourcePair;
 @property (nonatomic, strong) CKComponentDataSourceOutputItem *oldDataSourcePair;
 @property (nonatomic, assign) CKArrayControllerChangeType changeType;
-@property (nonatomic, strong) NSIndexPath *beforeIndexPath;
-@property (nonatomic, strong) NSIndexPath *afterIndexPath;
+@property (nonatomic, strong) NSIndexPath *sourceIndexPath;
+@property (nonatomic, strong) NSIndexPath *destinationIndexPath;
 
 @end

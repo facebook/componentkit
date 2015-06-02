@@ -25,8 +25,8 @@ using namespace CK::ArrayController;
             CKObjectIsEqual(change.dataSourcePair, changeToCompare.dataSourcePair) &&
             CKObjectIsEqual(change.oldDataSourcePair, changeToCompare.oldDataSourcePair) &&
             change.changeType == changeToCompare.changeType &&
-            CKObjectIsEqual(change.beforeIndexPath, changeToCompare.beforeIndexPath) &&
-            CKObjectIsEqual(change.afterIndexPath, changeToCompare.afterIndexPath)
+            CKObjectIsEqual(change.sourceIndexPath, changeToCompare.sourceIndexPath) &&
+            CKObjectIsEqual(change.destinationIndexPath, changeToCompare.destinationIndexPath)
     );
   });
 }
@@ -72,8 +72,8 @@ using namespace CK::ArrayController;
     CKComponentDataSourceTestDelegateChange *delegateChange = [[CKComponentDataSourceTestDelegateChange alloc] init];
     delegateChange.dataSourcePair = change.after;
     delegateChange.oldDataSourcePair = change.before;
-    delegateChange.beforeIndexPath = (type == CKArrayControllerChangeTypeInsert) ? nil : change.indexPath.toNSIndexPath();
-    delegateChange.afterIndexPath = (type == CKArrayControllerChangeTypeDelete) ? nil : change.indexPath.toNSIndexPath();
+    delegateChange.sourceIndexPath = change.sourceIndexPath.toNSIndexPath();
+    delegateChange.destinationIndexPath = change.destinationIndexPath.toNSIndexPath();
     delegateChange.changeType = type;
     [_changes addObject:delegateChange];
 

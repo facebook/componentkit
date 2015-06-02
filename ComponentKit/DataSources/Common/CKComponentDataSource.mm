@@ -240,7 +240,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
       batchContainsUpdates = YES;
     }
     if (type == CKArrayControllerChangeTypeInsert) {
-      [insertedIndexPaths addObject:change.indexPath.toNSIndexPath()];
+      [insertedIndexPaths addObject:change.destinationIndexPath.toNSIndexPath()];
     }
 
     CKComponentDataSourceInputItem *before = change.before;
