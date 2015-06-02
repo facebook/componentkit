@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <ComponentKit/CKPlatform.h>
 
 /**
  * @abstract an immutable class for calculating shadow padding drawing a shadowed background for text

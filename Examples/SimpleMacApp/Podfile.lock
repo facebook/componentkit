@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../..
 
 SPEC CHECKSUMS:
-  ComponentKit: 118f67e66ddc87cd8082a98dfc71516c47deee9c
+  ComponentKit: 8e2d31f73c4a51bbb764809d7c9318d4661f7640
 
 COCOAPODS: 0.37.1

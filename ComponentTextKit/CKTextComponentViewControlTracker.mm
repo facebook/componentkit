@@ -22,6 +22,8 @@
   NSTextCheckingResult *_trackingTextCheckingResult;
 }
 
+#if TARGET_OS_IPHONE
+
 /**
  sendActionsForControlEvents: calls sendAction:to:forEvent: with a nil event, so provide this alternate method to supply
  the event to the targets
@@ -89,5 +91,7 @@
     view.textLayer.highlighter.highlightedRange = CKTextComponentLayerInvalidHighlightRange;
   }
 }
+
+#endif
 
 @end

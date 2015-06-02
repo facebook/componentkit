@@ -9,7 +9,7 @@
  */
 
 #import <QuartzCore/QuartzCore.h>
-#import <ComponentKit/CKDefines.h>
+#import <ComponentKit/CKPlatform.h>
 
 @class CKAsyncTransaction;
 

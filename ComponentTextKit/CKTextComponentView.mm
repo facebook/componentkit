@@ -36,12 +36,15 @@
 {
   if (self = [super initWithFrame:frame]) {
     // Set some sensible defaults for a text view
+#if TARGET_OS_IPHONE
     self.contentScaleFactor = CKScreenScale();
+#endif
     self.backgroundColor = [UIColor whiteColor];
   }
   return self;
 }
 
+#if TARGET_OS_IPHONE
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
   if (![self.backgroundColor isEqual:backgroundColor]) {
@@ -63,6 +66,7 @@
     }
   }
 }
+#endif
 
 - (CKTextComponentLayer *)textLayer
 {
@@ -89,6 +93,8 @@
   }
   return _controlTracker;
 }
+
+#if TARGET_OS_IPHONE
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
 {
@@ -118,7 +124,11 @@
   [super endTrackingWithTouch:touch withEvent:event];
 }
 
+#endif
+
 #pragma mark - Touch Interaction
+
+#if TARGET_OS_IPHONE
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)recognizer
 {
@@ -133,5 +143,7 @@
   }
   return [super gestureRecognizerShouldBegin:recognizer];
 }
+
+#endif
 
 @end

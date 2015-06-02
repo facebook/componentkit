@@ -15,6 +15,8 @@
  */
 @interface CKTextComponentViewControlTracker : NSObject
 
+#if TARGET_OS_IPHONE
+
 - (BOOL)beginTrackingForTextComponentView:(CKTextComponentView *)view
                                 withTouch:(UITouch *)touch
                                 withEvent:(UIEvent *)event;
@@ -29,5 +31,7 @@
 
 - (void)cancelTrackingForTextComponentView:(CKTextComponentView *)view
                                  withEvent:(UIEvent *)event;
+
+#endif
 
 @end

@@ -4,6 +4,8 @@
 
 #import <ComponentKit/CKComponentSubclass.h>
 
+#import "NSString+CKMTextCache.h"
+
 @implementation CKMButtonComponent {
   NSString *_title;
 }
@@ -39,14 +41,22 @@
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
+  const CGSize constraint = {
+    isinf(constrainedSize.max.width) ? CGFLOAT_MAX : constrainedSize.max.width,
+    CGFLOAT_MAX
+  };
+
   NSDictionary *attributes = @{
                                NSFontAttributeName: [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]
                                };
-  CGSize size = [_title sizeWithAttributes:attributes];
-  size.height = 24.0;
-  size.width += 14.0 * 2;  // for padding around button's title
-  size.width = ceil(size.width);
-  return {self, constrainedSize.clamp(size)};
+  CGRect rect = [_title ckm_boundingRectWithSize:constraint
+                                         options:NSStringDrawingUsesLineFragmentOrigin
+                                      attributes:attributes];
+
+  rect.size.height = 24.0;
+  rect.size.width += 14.0 * 2;  // for padding around button's title
+  rect.size.width = ceil(rect.size.width);
+  return {self, constrainedSize.clamp(rect.size)};
 }
 
 @end

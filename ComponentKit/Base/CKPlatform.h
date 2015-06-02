@@ -22,7 +22,9 @@
 #import <ComponentKit/NSView+CKSupport.h>
 #import <ComponentKit/NSIndexPath+CKSupport.h>
 #import <ComponentKit/NSResponder+CKSupport.h>
-
+#import <ComponentKit/NSLayoutManager+CKPlatform.h>
+#import <ComponentKit/NSTextContainer+CKSupport.h>
+#import <ComponentKit/NSValue+CKSupport.h>
 /*
  * These are defined here as the UIKit equivalents instead of using something like CKViewClass / CKControlClass etc so that it will be easier to merge with upstream ComponentKit.
  */
@@ -30,6 +32,7 @@
 #define UIView NSView
 #define UIControl NSControl
 #define UIColor NSColor
+#define UIFont NSFont
 #define UIEdgeInsets NSEdgeInsets
 #define UIEdgeInsetsZero ((NSEdgeInsets){})
 #define UIEvent NSEvent
@@ -43,6 +46,8 @@ static inline CGRect UIEdgeInsetsInsetRect(CGRect r, UIEdgeInsets insets) {
   return r;
 };
 
+#define UIEdgeInsetsMake NSEdgeInsetsMake
+
 #define NSStringFromCGSize NSStringFromSize
 #define NSStringFromCGPoint NSStringFromPoint
 
@@ -50,7 +55,6 @@ static inline bool UIAccessibilityIsVoiceOverRunning() {
   // via http://stackoverflow.com/a/485314/113455
   return CFPreferencesCopyAppValue(CFSTR("voiceOverOnOffKey"), CFSTR("com.apple.universalaccess")) == kCFBooleanTrue;
 }
-
 
 #endif //TARGET_OS_IPHONE
 

@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <ComponentKit/CKPlatform.h>
 
 /**
  A threadsafe container for the TextKit components that CKTextKit uses to lay out and truncate its text.
