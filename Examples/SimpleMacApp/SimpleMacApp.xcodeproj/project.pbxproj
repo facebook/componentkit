@@ -16,6 +16,8 @@
 		99419F641B06960D0063B1AB /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99419F5C1B06960D0063B1AB /* Info.plist */; };
 		99419F651B06960D0063B1AB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 99419F5D1B06960D0063B1AB /* main.m */; };
 		99419F661B06960D0063B1AB /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 99419F5E1B06960D0063B1AB /* MainMenu.xib */; };
+		9950FF921B163F79007ED1F4 /* CKMTableCellComponentProvider.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9950FF911B163F79007ED1F4 /* CKMTableCellComponentProvider.mm */; };
+		9950FF951B165A9A007ED1F4 /* CKMSampleTableComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9950FF941B165A9A007ED1F4 /* CKMSampleTableComponent.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +48,10 @@
 		99419F5C1B06960D0063B1AB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		99419F5D1B06960D0063B1AB /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		99419F5E1B06960D0063B1AB /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
+		9950FF901B163F79007ED1F4 /* CKMTableCellComponentProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMTableCellComponentProvider.h; sourceTree = "<group>"; };
+		9950FF911B163F79007ED1F4 /* CKMTableCellComponentProvider.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKMTableCellComponentProvider.mm; sourceTree = "<group>"; };
+		9950FF931B165A9A007ED1F4 /* CKMSampleTableComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMSampleTableComponent.h; sourceTree = "<group>"; };
+		9950FF941B165A9A007ED1F4 /* CKMSampleTableComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKMSampleTableComponent.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,8 +134,12 @@
 				99419F541B06960D0063B1AB /* CKMAppDelegate.m */,
 				99419F551B06960D0063B1AB /* CKMRootViewController.h */,
 				99419F561B06960D0063B1AB /* CKMRootViewController.mm */,
+				9950FF931B165A9A007ED1F4 /* CKMSampleTableComponent.h */,
+				9950FF941B165A9A007ED1F4 /* CKMSampleTableComponent.mm */,
 				99419F571B06960D0063B1AB /* CKMSampleComponentProvider.h */,
 				99419F581B06960D0063B1AB /* CKMSampleComponentProvider.mm */,
+				9950FF901B163F79007ED1F4 /* CKMTableCellComponentProvider.h */,
+				9950FF911B163F79007ED1F4 /* CKMTableCellComponentProvider.mm */,
 				99419F5B1B06960D0063B1AB /* Images.xcassets */,
 				99419F5C1B06960D0063B1AB /* Info.plist */,
 				99419F5D1B06960D0063B1AB /* main.m */,
@@ -275,6 +285,8 @@
 			files = (
 				99419F651B06960D0063B1AB /* main.m in Sources */,
 				99419F611B06960D0063B1AB /* CKMSampleComponentProvider.mm in Sources */,
+				9950FF951B165A9A007ED1F4 /* CKMSampleTableComponent.mm in Sources */,
+				9950FF921B163F79007ED1F4 /* CKMTableCellComponentProvider.mm in Sources */,
 				99419F601B06960D0063B1AB /* CKMRootViewController.mm in Sources */,
 				99419F5F1B06960D0063B1AB /* CKMAppDelegate.m in Sources */,
 			);

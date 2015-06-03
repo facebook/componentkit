@@ -78,7 +78,7 @@ typedef void(*CKCellConfigurationFunction)(UICollectionViewCell *cell, NSIndexPa
 /**
  @return The model associated with a certain index path in the collectionView.
  
- As stated above components are generated asynchronously and on a backgorund thread. This means that a changeset is enqueued
+ As stated above components are generated asynchronously and on a background thread. This means that a changeset is enqueued
  and applied asynchronously when the corresponding component tree is generated. For this reason always use this method when you
  want to retrieve the model associated to a certain index path in the table view (e.g in didSelectRowAtIndexPath: )
  */

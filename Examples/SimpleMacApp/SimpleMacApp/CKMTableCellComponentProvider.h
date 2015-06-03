@@ -8,8 +8,10 @@
  *
  */
 
-#import <Cocoa/Cocoa.h>
+#import "CKComponent.h"
 
-@interface CKMAppDelegate : NSObject <NSApplicationDelegate>
+#import <ComponentKit/ComponentKit.h>
+
+@interface CKMTableCellComponentProvider : CKComponent
 
 @end

@@ -45,6 +45,7 @@
   CGSize size = [_title sizeWithAttributes:attributes];
   size.height = 24.0;
   size.width += 14.0 * 2;  // for padding around button's title
+  size.width = ceil(size.width);
   return {self, constrainedSize.clamp(size)};
 }
 

@@ -15,7 +15,7 @@
 
 + (NSIndexPath *)indexPathForItem:(NSInteger)item inSection:(NSInteger)section
 {
-  return [NSIndexPath indexPathWithIndexes:(const NSUInteger []){item, section} length:2];
+  return [NSIndexPath indexPathWithIndexes:(const NSUInteger []){section, item} length:2];
 }
 
 - (NSInteger)section
