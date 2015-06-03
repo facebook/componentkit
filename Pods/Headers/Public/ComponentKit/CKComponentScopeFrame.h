@@ -1,0 +1,1 @@
+../../../../ComponentKit/Core/Scope/CKComponentScopeFrame.h

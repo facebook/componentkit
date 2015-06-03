@@ -1,0 +1,2 @@
+PODS_COMPONENTKITTESTLIB_FRAMEWORK_SEARCH_PATHS = $(inherited) "$(SDKROOT)/Developer/Library/Frameworks" "$(PLATFORM_DIR)/Developer/Library/Frameworks"
+PODS_COMPONENTKITTESTLIB_OTHER_LDFLAGS = -framework "UIKit" -framework "XCTest"

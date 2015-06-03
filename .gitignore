@@ -1,7 +1,6 @@
-Pods
-Example/WildeGuess/Pod
+Examples/WildeGuess/Pods
+Examples/WildeGuess/WildeGuess.xcworkspace
 *xcuserdata
-*.xcworkspace
 appledoc
 *.gcov
 .DS_Store
