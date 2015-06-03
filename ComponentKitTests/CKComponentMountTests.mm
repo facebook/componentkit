@@ -45,6 +45,19 @@
   }
 }
 
+- (void)testMountingComponentAffectsResponderChain
+{
+  CKComponent *c = [CKComponent newWithView:{[UIView class]} size:{}];
+  CKComponentLayout layout = [c layoutThatFits:{} parentSize:{NAN, NAN}];
+
+  UIView *container = [UIView new];
+  NSSet *mountedComponents = CKMountComponentLayout(layout, container);
+  XCTAssertEqualObjects(mountedComponents, [NSSet setWithObject:c], @"Didn't mount as expected");
+
+  XCTAssertEqualObjects([c nextResponder], container, @"Did not setup responder correctly!");
+  XCTAssertEqualObjects([c nextResponderAfterController], container, @"Did not setup responder correctly!");
+}
+
 @end
 
 @implementation CKDontMountChildrenComponent
