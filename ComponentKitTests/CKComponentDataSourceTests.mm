@@ -1165,7 +1165,7 @@ static const CKSizeRange constrainedSize = {{320, 0}, {320, INFINITY}};
   [_delegate reset];
   
   NSString *newContext = @"newContext";
-  [_dataSource updateContextAndEnqeueReload:newContext];
+  [_dataSource updateContextAndEnqueueReload:newContext];
   [self waitUntilChangeCountIs:1];
   
   for (CKComponentDataSourceTestDelegateChange *change in [_delegate changes]) {

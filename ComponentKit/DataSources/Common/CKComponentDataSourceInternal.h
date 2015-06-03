@@ -8,16 +8,9 @@
  *
  */
 
-#import <Foundation/Foundation.h>
+#import <ComponentKit/CKComponentDataSource.h>
 
-#import <ComponentKit/CKComponentPreparationQueue.h>
-
-@interface CKComponentPreparationQueue ()
-
-/**
- This is exposed here for unit tests that verify the conversion separately from the queueing/batching.
- */
-+ (CKComponentPreparationOutputItem *)prepare:(CKComponentPreparationInputItem *)item;
+@interface CKComponentDataSource ()
 
 /**
  The concurrent queue that the preparation queue uses for its asynchronous operations.
@@ -25,7 +18,6 @@
  You may dispatch_suspend this queue (but be sure to resume it later).
  Exposed here to allow for CPU Reprioritization.
  */
-
 @property (nonatomic, strong, readonly) dispatch_queue_t concurrentQueue;
 
 @end

@@ -127,11 +127,6 @@ void Input::Items::bucketizeObjectBySection(ItemsBucketizedBySection &sectionMap
   }
 }
 
-const CK::ArrayController::Input::Items::ItemsBucketizedBySection &Input::Items::updates() const
-{
-  return _updates;
-}
-
 void Input::Items::update(const IndexPath &indexPath, id<NSObject> object)
 {
   CKInternalConsistencyCheckIf(!commandExistsForIndexPath(indexPath, {_updates, _removals}),
@@ -139,11 +134,6 @@ void Input::Items::update(const IndexPath &indexPath, id<NSObject> object)
                                 indexPath.item, indexPath.section]));
 
   bucketizeObjectBySection(_updates, indexPath, object);
-}
-
-const CK::ArrayController::Input::Items::ItemsBucketizedBySection &Input::Items::removals() const
-{
-  return _removals;
 }
 
 void Input::Items::remove(const IndexPath &indexPath)
@@ -156,11 +146,6 @@ void Input::Items::remove(const IndexPath &indexPath)
   bucketizeObjectBySection(_removals, indexPath, nil);
 }
 
-const CK::ArrayController::Input::Items::ItemsBucketizedBySection &Input::Items::insertions() const
-{
-  return _insertions;
-}
-
 void Input::Items::insert(const IndexPath &indexPath, id<NSObject> object)
 {
   CKInternalConsistencyCheckIf(!commandExistsForIndexPath(indexPath, {_insertions}),
@@ -169,6 +154,44 @@ void Input::Items::insert(const IndexPath &indexPath, id<NSObject> object)
 
   bucketizeObjectBySection(_insertions, indexPath, object);
 }
+
+
+typedef void (^EnumerationAdapter)(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop);
+static void _iterate(CK::ArrayController::Input::Items::ItemsBucketizedBySection items, EnumerationAdapter ea)
+{
+  BOOL stop = NO;
+  for (const auto &itemsInSection : items) {
+    for (const auto &item : itemsInSection.second) {
+      ea(itemsInSection.first, item.first, item.second, &stop);
+      if (stop) {
+        break;
+      }
+    }
+    if (stop) {
+      break;
+    }
+  }
+}
+
+void Input::Items::enumerateItems(UpdatesEnumerator updatesEnumerator, RemovalsEnumerator removalsEnumerator, InsertionsEnumerator insertionsEnumerator) const
+{
+  if (updatesEnumerator) {
+    _iterate(_updates, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop){
+      updatesEnumerator(section, index, object, stop);
+    });
+  }
+  if (removalsEnumerator) {
+    _iterate(_removals, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop){
+      removalsEnumerator(section, index, stop);
+    });
+  }
+  if (insertionsEnumerator) {
+    _iterate(_insertions, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop){
+      insertionsEnumerator(section, index, object, stop);
+    });
+  }
+}
+
 
 size_t Input::Items::size() const noexcept
 {
@@ -181,68 +204,6 @@ bool Input::Items::operator==(const Items &other) const
 }
 
 typedef std::pair<IndexPath, id<NSObject>> IndexPathObjectPair;
-
-/**
- 1) item updates
- 2) item removals
- 3) section removals
- 4) section insertions
- 5) item insertions
- */
-void Input::Changeset::enumerate(Sections::Enumerator sectionEnumerator,
-                                 Items::Enumerator itemEnumerator) const
-{
-  __block BOOL stop = NO;
-
-  void (^emitSectionChanges)(const std::set<NSInteger>&, CKArrayControllerChangeType) =
-  (!sectionEnumerator) ? (void(^)(const std::set<NSInteger>&, CKArrayControllerChangeType))nil :
-  ^(const std::set<NSInteger> &s, CKArrayControllerChangeType t) {
-    if (!s.empty()) {
-      NSMutableIndexSet *indexes = [[NSMutableIndexSet alloc] init];
-      for (auto section : s) {
-        [indexes addIndex:section];
-      }
-      sectionEnumerator(indexes, t, &stop);
-    }
-  };
-
-  void (^emitItemChanges)(const Items::ItemsBucketizedBySection&, CKArrayControllerChangeType) =
-  (!itemEnumerator) ? (void(^)(const Items::ItemsBucketizedBySection&, CKArrayControllerChangeType))nil :
-  ^(const Items::ItemsBucketizedBySection &m, CKArrayControllerChangeType t) {
-    for (auto sectionToBucket : m) {
-      NSMutableIndexSet *indexes = [[NSMutableIndexSet alloc] init];
-      NSMutableArray *objects = (t == CKArrayControllerChangeTypeDelete) ? nil : [[NSMutableArray alloc] init];
-      for (auto itemObjectPair : sectionToBucket.second) {
-        [indexes addIndex:itemObjectPair.first];
-        [objects addObject:itemObjectPair.second];
-      }
-      itemEnumerator(sectionToBucket.first, indexes, objects, t, &stop);
-      if (stop) {
-        break;
-      }
-    }
-  };
-
-  if (emitItemChanges) {
-    emitItemChanges(items._updates, CKArrayControllerChangeTypeUpdate);
-  }
-
-  if (!stop && emitItemChanges) {
-    emitItemChanges(items._removals, CKArrayControllerChangeTypeDelete);
-  }
-
-  if (!stop && emitSectionChanges) {
-    emitSectionChanges(sections.removals(), CKArrayControllerChangeTypeDelete);
-  }
-
-  if (!stop && emitSectionChanges) {
-    emitSectionChanges(sections.insertions(), CKArrayControllerChangeTypeInsert);
-  }
-
-  if (!stop && emitItemChanges) {
-    emitItemChanges(items._insertions, CKArrayControllerChangeTypeInsert);
-  }
-}
 
 Input::Changeset Input::Changeset::_map(Mapper objectMapper, Sections::Mapper sectionIndexMapper, ItemIndexPathMapper indexPathMapper) const
 {
@@ -319,14 +280,14 @@ bool Input::Changeset::operator==(const Changeset &other) const
   return sections == other.sections && items == other.items;
 }
 
-void Output::Items::insert(const Pair &insertion)
+void Output::Items::insert(const CKArrayControllerIndexPath &indexPath, id<NSObject> object)
 {
-  _insertions.push_back({insertion.indexPath, nil, insertion.object});
+  _insertions.push_back({indexPath, nil, object});
 }
 
-void Output::Items::remove(const Pair &removal)
+void Output::Items::remove(const CKArrayControllerIndexPath &indexPath, id<NSObject> object)
 {
-  _removals.push_back({removal.indexPath, removal.object, nil});
+  _removals.push_back({indexPath, object, nil});
 }
 
 void Output::Items::update(const Change &update)
@@ -424,10 +385,10 @@ Output::Changeset Output::Changeset::map(Mapper mapper) const
         mappedItems.update({change.indexPath, mappedPair.first, mappedPair.second});
       }
       if (t == CKArrayControllerChangeTypeDelete) {
-        mappedItems.remove({change.indexPath, mappedPair.first});
+        mappedItems.remove(change.indexPath, mappedPair.first);
       }
       if (t == CKArrayControllerChangeTypeInsert) {
-        mappedItems.insert({change.indexPath, mappedPair.second});
+        mappedItems.insert(change.indexPath, mappedPair.second);
       }
       if (stop) {
         break;
