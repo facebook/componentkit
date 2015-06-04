@@ -79,10 +79,12 @@ static void _transactionGroupRunLoopObserverCallback(CFRunLoopObserverRef observ
 
 + (void)layoutAndDisplayAllWindowsIfNeeded
 {
+#if TARGET_OS_IPHONE
   for (UIWindow *window in [[UIApplication sharedApplication] windows]) {
     CALayer *windowLayer = window.layer;
     [self layoutAndDisplaySublayersOfLayerIfNeeded:windowLayer];
   }
+#endif
 }
 
 - (id)init

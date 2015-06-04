@@ -12,6 +12,42 @@
 
 #import <ComponentKit/CKTextKitContext.h>
 
+#if !TARGET_OS_IPHONE
+
+@interface _CKTextContainer : NSTextContainer
+{
+  NSLineBreakMode _lineBreakMode;
+  NSUInteger _maximumNumberOfLines;
+}
+
+- (instancetype)initWithSize:(CGSize)size;
+@end
+
+@implementation _CKTextContainer
+
+- (instancetype)initWithSize:(CGSize)size
+{
+  return [super initWithContainerSize:size];
+}
+
+- (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode
+{
+  _lineBreakMode = lineBreakMode;
+}
+
+- (void)setMaximumNumberOfLines:(NSUInteger)maximumNumberOfLines
+{
+  _maximumNumberOfLines = maximumNumberOfLines;
+}
+
+@end
+
+#else
+
+@compatibility_alias _CKTextContainer NSTextContainer
+
+#endif
+
 @implementation CKTextKitContext
 {
   // All TextKit operations (even non-mutative ones) must be executed serially.
@@ -19,7 +55,7 @@
 
   NSLayoutManager *_layoutManager;
   NSTextStorage *_textStorage;
-  NSTextContainer *_textContainer;
+  _CKTextContainer *_textContainer;
 }
 
 - (instancetype)initWithAttributedString:(NSAttributedString *)attributedString
@@ -36,7 +72,7 @@
     _layoutManager = [[NSLayoutManager alloc] init];
     _layoutManager.usesFontLeading = NO;
     [_textStorage addLayoutManager:_layoutManager];
-    _textContainer = [[NSTextContainer alloc] initWithSize:constrainedSize];
+    _textContainer = [[_CKTextContainer alloc] initWithSize:constrainedSize];
     // We want the text laid out up to the very edges of the container.
     _textContainer.lineFragmentPadding = 0;
     _textContainer.lineBreakMode = lineBreakMode;

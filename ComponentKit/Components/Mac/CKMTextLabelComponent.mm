@@ -2,6 +2,8 @@
 
 #import "CKMTextLabelComponent.h"
 
+#import "NSString+CKMTextCache.h"
+
 #import <ComponentKit/CKComponentSubclass.h>
 
 @implementation CKMTextLabelComponent {
@@ -54,9 +56,9 @@
   
   NSDictionary *attributes = @{ NSFontAttributeName: font };
 
-  CGRect rect = [_attrs.text boundingRectWithSize:constraint
-                                          options:NSStringDrawingUsesLineFragmentOrigin
-                                       attributes:attributes];
+  CGRect rect = [_attrs.text ckm_boundingRectWithSize:constraint
+                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                           attributes:attributes];
 
   rect = UIEdgeInsetsInsetRect(rect, {.left = -3, .right = -3});
 

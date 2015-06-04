@@ -10,7 +10,7 @@
 
 #import <vector>
 
-#import <ComponentKit/CKDefines.h>
+#import <ComponentKit/CKPlatform.h>
 
 #import <ComponentKit/CKTextKitRenderer.h>
 

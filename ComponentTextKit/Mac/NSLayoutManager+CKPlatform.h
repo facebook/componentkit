@@ -8,10 +8,10 @@
  *
  */
 
-#import <ComponentKit/CKPlatform.h>
+#import <Cocoa/Cocoa.h>
 
-#import <ComponentKit/CKTextKitTruncating.h>
+@interface NSLayoutManager (CKPlatform)
 
-@interface CKTextKitTailTruncater : NSObject <CKTextKitTruncating>
+- (void)enumerateLineFragmentsForGlyphRange:(NSRange)glyphRange usingBlock:(void (^)(CGRect rect, CGRect usedRect, NSTextContainer *textContainer, NSRange glyphRange, BOOL *stop))block;
 
 @end

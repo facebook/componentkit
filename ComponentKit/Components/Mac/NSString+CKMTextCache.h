@@ -8,10 +8,10 @@
  *
  */
 
-#import <ComponentKit/CKPlatform.h>
+#import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKTextKitTruncating.h>
+@interface NSString (CKMTextCache)
 
-@interface CKTextKitTailTruncater : NSObject <CKTextKitTruncating>
+- (CGRect)ckm_boundingRectWithSize:(NSSize)size options:(NSStringDrawingOptions)options attributes:(NSDictionary *)attributes;
 
 @end

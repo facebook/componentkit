@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.ios.source_files = 'ComponentKit/**/*', 'ComponentTextKit/**/*'
   #TODO: include the textkit bits as well
-  s.osx.source_files = 'ComponentKit/**/*'
+  s.osx.source_files = 'ComponentKit/**/*', 'ComponentTextKit/**/*'
   s.osx.exclude_files = "ComponentKit/**/iOS/**/*"
   s.ios.exclude_files = "ComponentKit/**/OSX/**/*"
 

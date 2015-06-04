@@ -29,6 +29,7 @@ namespace CK {
       std::function<void (void)>onEnterBackground;
       ApplicationObserver(std::function<void (void)> lowMem, std::function<void (void)>bg) :
       onLowMemory(lowMem), onEnterBackground(bg) {
+#if TARGET_OS_IPHONE
         // We use CFNotificationCenter here so that we can avoid creating an NSObject and registering it *just* to
         // receive low memory and backgrounding notifications.
         CFNotificationCenterAddObserver(CFNotificationCenterGetLocalCenter(),
@@ -43,8 +44,10 @@ namespace CK {
                                         (__bridge CFStringRef)UIApplicationDidEnterBackgroundNotification,
                                         NULL,
                                         CFNotificationSuspensionBehaviorDeliverImmediately);
+#endif
       };
       ApplicationObserver() {
+#if TARGET_OS_IPHONE
         CFNotificationCenterRemoveObserver(CFNotificationCenterGetLocalCenter(),
                                            this,
                                            (__bridge CFStringRef)UIApplicationDidReceiveMemoryWarningNotification,
@@ -53,6 +56,7 @@ namespace CK {
                                            this,
                                            (__bridge CFStringRef)UIApplicationDidEnterBackgroundNotification,
                                            NULL);
+#endif
       };
     };
 

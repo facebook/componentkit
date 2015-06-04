@@ -106,7 +106,12 @@ static NSCharacterSet *_defaultAvoidTruncationCharacterSet()
 
   CGContextSaveGState(context);
   [_shadower setShadowInContext:context];
+#if TARGET_OS_IPHONE
   UIGraphicsPushContext(context);
+#else
+  NSGraphicsContext *oldContext = [NSGraphicsContext currentContext];
+  [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:YES]];
+#endif
 
   [_context performBlockWithLockedTextKitComponents:^(NSLayoutManager *layoutManager, NSTextStorage *textStorage, NSTextContainer *textContainer) {
     NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
@@ -114,7 +119,11 @@ static NSCharacterSet *_defaultAvoidTruncationCharacterSet()
     [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:shadowInsetBounds.origin];
   }];
 
+#if TARGET_OS_IPHONE
   UIGraphicsPopContext();
+#else
+  [NSGraphicsContext setCurrentContext:oldContext];
+#endif
   CGContextRestoreGState(context);
 }
 
