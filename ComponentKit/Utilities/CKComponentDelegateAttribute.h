@@ -13,9 +13,7 @@
 #import <ComponentKit/CKComponentAction.h>
 #import <vector>
 
-/** It's necessary to specify a list of selectors your delegate will implement, because we have to answer the question "respondsToSelector:" without access to the responder chain, since it's is frequently cached as an optimization in objects with delegates. */
-
-using CKComponentDelegateAttributeDefinition = std::vector<SEL>;
+#import <ComponentKit/CKComponentDelegateForwarder.h>
 
 /**
  Returns a view attribute that proxies the delegate onto the component responder chain.
@@ -36,5 +34,5 @@ using CKComponentDelegateAttributeDefinition = std::vector<SEL>;
  Then you can implement -scrollViewDidScroll: in your composite component, that potentially has a number of intervening components before the scroll component.
 
  */
-CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
-                                                           CKComponentDelegateAttributeDefinition definition);
+CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL delegatePropertySelector,
+                                                           CKComponentForwardedSelectors selectors);
