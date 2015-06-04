@@ -105,7 +105,7 @@ CK_FINAL_CLASS([CKNSTableViewDataSource class]);
   // Dequeue a reusable cell for this identifer
   NSView *v = [tableView makeViewWithIdentifier:reuseIdentifier owner:nil];
   if (!v) {
-    v = [[NSView alloc] initWithFrame:CGRect{0,0, 100, 100}];
+    v = [[NSView alloc] initWithFrame:CGRect{{0,0}, {100, 100}}];
     v.identifier = reuseIdentifier;
   }
 
