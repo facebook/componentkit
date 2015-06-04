@@ -221,14 +221,6 @@ namespace CK {
           return sourceIndexPath == other.sourceIndexPath && destinationIndexPath == other.destinationIndexPath && CKObjectIsEqual(before, other.before) && CKObjectIsEqual(after, other.after);
         }
 
-        bool operator<(const Change &other) const {
-          if (sourceIndexPath.section != NSNotFound) {
-            return sourceIndexPath < other.sourceIndexPath;
-          } else {
-            return destinationIndexPath < other.destinationIndexPath;
-          }
-        }
-
         NSString *description() const {
           return [NSString stringWithFormat:@"sourceIndexPath: <%zd,%zd>, destinationIndexPath: <%zd,%zd>, before: <%@>, after: <%@>",
                   sourceIndexPath.section, sourceIndexPath.item, destinationIndexPath.section, destinationIndexPath.item, before, after];
