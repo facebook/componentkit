@@ -25,6 +25,7 @@
 
 @interface CKNetworkImageComponentView : UIImageView
 @property (nonatomic, strong) CKNetworkImageSpecifier *specifier;
+@property (nonatomic, strong) CATransition *imageChangeTransition;
 - (void)didEnterReusePool;
 - (void)willLeaveReusePool;
 @end
@@ -37,6 +38,7 @@
                       size:(const CKComponentSize &)size
                    options:(const CKNetworkImageComponentOptions &)options
                 attributes:(const CKViewComponentAttributeValueMap &)passedAttributes
+            fadeTransition:(const CKComponentFadeTransition)fadeTransition
 {
   CGRect cropRect = options.cropRect;
   if (CGRectIsEmpty(cropRect)) {
@@ -44,6 +46,7 @@
   }
   CKViewComponentAttributeValueMap attributes(passedAttributes);
   attributes.insert({
+    {@selector(setImageChangeTransition:), CKComponentGenerateTransition(fadeTransition)},
     {@selector(setSpecifier:), [[CKNetworkImageSpecifier alloc] initWithURL:url
                                                                defaultImage:options.defaultImage
                                                             imageDownloader:imageDownloader
@@ -115,6 +118,9 @@
 {
   if (image) {
     self.image = [UIImage imageWithCGImage:image];
+    if (self.imageChangeTransition.duration > 0) {
+      [self.layer addAnimation:self.imageChangeTransition forKey:NSStringFromSelector(@selector(imageChangeTransition))];
+    }
     [self updateContentsRect];
   }
   _download = nil;
