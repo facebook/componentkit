@@ -100,7 +100,8 @@ namespace std {
 
 CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognizerClass,
                                                           CKComponentGestureRecognizerSetupFunction setupFunction,
-                                                          CKComponentAction action)
+                                                          CKComponentAction action,
+                                                          CKComponentForwardedSelectors delegateSelectors)
 {
   if (action == NULL) {
     return {
@@ -124,12 +125,23 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
     {
       std::string(class_getName(gestureRecognizerClass))
       + "-" + CKStringFromPointer((const void *)setupFunction)
-      + "-" + std::string(sel_getName(action)),
+      + "-" + std::string(sel_getName(action))
+      + CKIdentifierFromDelegateForwarderSelectors(delegateSelectors),
       ^(UIView *view, id value){
         CKCAssertNil(recognizerForAction(view, action),
                      @"Registered two gesture recognizers with the same action %@", NSStringFromSelector(action));
         UIGestureRecognizer *gestureRecognizer = reusePool->get();
         [gestureRecognizer ck_setComponentAction:action];
+
+        // Setup delegate proxying if applicable
+        if (delegateSelectors.size() > 0) {
+          CKCAssertNil(gestureRecognizer.delegate, @"Doesn't make sense to set the gesture delegate and provide selectors to proxy");
+          CKComponentDelegateForwarder *proxy = [CKComponentDelegateForwarder newWithSelectors:delegateSelectors];
+          proxy.view = view;
+          gestureRecognizer.delegate = (id<UIGestureRecognizerDelegate>)proxy;
+          // This will retain it
+          gestureRecognizer.ck_delegateProxy = proxy;
+        }
         [view addGestureRecognizer:gestureRecognizer];
       },
       ^(UIView *view, id value){
@@ -137,6 +149,14 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
         CKCAssertNotNil(recognizer, @"Expected to find recognizer for %@ on teardown", NSStringFromSelector(action));
         [view removeGestureRecognizer:recognizer];
         [recognizer ck_setComponentAction:NULL];
+
+        // Tear down delegate proxying if applicable
+        if (delegateSelectors.size() > 0) {
+          CKComponentDelegateForwarder *proxy = recognizer.ck_delegateProxy;
+          proxy.view = nil;
+          recognizer.delegate = nil;
+          recognizer.ck_delegateProxy = nil;
+        }
         reusePool->recycle(recognizer);
       }
     },

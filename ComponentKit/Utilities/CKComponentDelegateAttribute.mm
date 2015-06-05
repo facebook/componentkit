@@ -17,24 +17,6 @@
 #import "CKComponentViewInterface.h"
 #import "CKComponentSubclass.h"
 
-std::string identifierFromDefinition(const CKComponentDelegateAttributeDefinition& first)
-{
-  std::string so = "Delegate";
-  for (auto& s : first) {
-    so = so + "-" + sel_getName(s);
-  }
-  return so;
-}
-
-@interface CKComponentDelegateForwarder : NSObject {
-  @package
-  // Weak ref to our view, to grab the component.
-  __weak UIView *_view;
-  CKComponentDelegateAttributeDefinition _defn;
-}
-
-@end
-
 @interface UIView (CKDelegateProxy)
 
 @property (nonatomic, strong, setter=ck_setDelegateProxy:) CKComponentDelegateForwarder *ck_delegateProxy;
@@ -42,7 +24,7 @@ std::string identifierFromDefinition(const CKComponentDelegateAttributeDefinitio
 @end
 
 CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
-                                                           CKComponentDelegateAttributeDefinition definition)
+                                                           CKComponentForwardedSelectors selectors)
 {
   if (selector == NULL) {
     return {
@@ -56,7 +38,7 @@ CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
 
   return {
     {
-      std::string(sel_getName(selector)) + identifierFromDefinition(definition),
+      std::string(sel_getName(selector)) + CKIdentifierFromDelegateForwarderSelectors(selectors),
       ^(UIView *view, id value){
 
         // Create a proxy for this set of selectors
@@ -64,9 +46,8 @@ CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
         CKCAssertNil(view.ck_delegateProxy,
                      @"Unsupported: registered two delegate proxies for the same view: %@ %@", view, view.ck_delegateProxy);
 
-        CKComponentDelegateForwarder *proxy = [[CKComponentDelegateForwarder alloc] init];
-        proxy->_view = view;
-        proxy->_defn = definition;
+        CKComponentDelegateForwarder *proxy = [CKComponentDelegateForwarder newWithSelectors:selectors];
+        proxy.view = view;
         view.ck_delegateProxy = proxy;
 
 #pragma clang diagnostic push
@@ -79,7 +60,7 @@ CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
 
         // When unapplied, remove association with the view
         CKComponentDelegateForwarder *proxy = view.ck_delegateProxy;
-        proxy->_view = nil;
+        proxy.view = nil;
         view.ck_delegateProxy = nil;
 
 #pragma clang diagnostic push
@@ -92,39 +73,3 @@ CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
     @YES // Bogus value, we don't use it.
   };
 }
-
-@implementation CKComponentDelegateForwarder : NSObject
-
-- (BOOL)respondsToSelector:(SEL)aSelector
-{
-  if ([super respondsToSelector:aSelector]) {
-    return YES;
-  } else {
-    return std::find(_defn.begin(), _defn.end(), aSelector) != std::end(_defn);
-  }
-}
-
-- (id)forwardingTargetForSelector:(SEL)aSelector
-{
-  CKComponent *responder = _view.ck_component;
-  return [responder targetForAction:aSelector withSender:responder];
-}
-
-@end
-
-
-@implementation UIView (CKDelegateProxy)
-
-static const char kCKComponentDelegateProxyKey = ' ';
-
-- (CKComponentDelegateForwarder *)ck_delegateProxy
-{
-  return objc_getAssociatedObject(self, &kCKComponentDelegateProxyKey);
-}
-
-- (void)ck_setDelegateProxy:(CKComponentDelegateForwarder *)delegateProxy
-{
-  objc_setAssociatedObject(self, &kCKComponentDelegateProxyKey, delegateProxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
