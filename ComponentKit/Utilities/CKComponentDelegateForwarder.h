@@ -22,16 +22,19 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
 
 
 /**
- This is intended for ComponentKit internal use only. This will make an object that forwards
+ This class is intended for ComponentKit internal use only.
  */
 @interface CKComponentDelegateForwarder : NSObject
 
+/**
+ This initializer will make an object that forwards calls to the given selectors on to the component, and its nextResponder, etc.
+ */
 + (instancetype)newWithSelectors:(CKComponentForwardedSelectors)selectors;
 
 /**
  The view is used to find out where to start looking in the component responder chain.
 
- The forwarder will call [view.ck_component targetForAction: withSender:] to proxy to the responder chain, so this needs to be accurate.
+ The forwarder will call [view.ck_component targetForAction: withSender:] to proxy to the responder chain, so this needs to be accurate when you mount/unmount.
  */
 @property (nonatomic, weak) UIView *view;
 

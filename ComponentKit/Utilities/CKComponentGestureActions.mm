@@ -125,7 +125,8 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
     {
       std::string(class_getName(gestureRecognizerClass))
       + "-" + CKStringFromPointer((const void *)setupFunction)
-      + "-" + std::string(sel_getName(action)),
+      + "-" + std::string(sel_getName(action))
+      + CKIdentifierFromDelegateForwarderSelectors(delegateSelectors),
       ^(UIView *view, id value){
         CKCAssertNil(recognizerForAction(view, action),
                      @"Registered two gesture recognizers with the same action %@", NSStringFromSelector(action));

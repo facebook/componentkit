@@ -19,6 +19,9 @@
 
 std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwardedSelectors& first)
 {
+  if (first.size() == 0) {
+    return "";
+  }
   std::string so = "Delegate";
   for (auto& s : first) {
     so = so + "-" + sel_getName(s);
