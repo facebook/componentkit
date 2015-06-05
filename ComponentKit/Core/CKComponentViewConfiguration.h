@@ -37,7 +37,8 @@ struct CKComponentViewClass {
   CKComponentViewClass(Class viewClass);
 
   /**
-   A variant that allows you to specify two selectors that are sent as a view is reused.
+   A variant that allows you to specify two selectors that are sent as a view is hidden/unhidden for future reuse.
+   Note that a view can be reused but not hidden so never enters the pool (in which case these selectors won't be sent).
    @param didEnterReusePoolMessage Sent to the view just after it has been hidden for future reuse.
    @param willLeaveReusePool Sent to the view just before it is revealed after being reused.
    */
@@ -45,6 +46,8 @@ struct CKComponentViewClass {
 
   /**
    Specifies a view class that cannot be instantiated with -initWithFrame:.
+   Allows you to specify two blocks that are invoked as a view is hidden/unhidden for future reuse.
+   Note that a view can be reused but not hidden so never enters the pool (in which case these blocks won't be invoked).
    @param factory A pointer to a function that returns a new instance of a view.
    @param didEnterReusePool Executed after a view has been hidden for future reuse.
    @param willLeaveReusePool Executed just before a view is revealed after being reused.
