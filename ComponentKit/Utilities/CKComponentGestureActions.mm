@@ -185,6 +185,11 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
 
 @end
 
+CKComponentAction CKComponentGestureGetAction(UIGestureRecognizer *gesture)
+{
+  return [gesture ck_componentAction];
+};
+
 @implementation UIGestureRecognizer (CKComponent)
 
 static const char kCKComponentActionGestureRecognizerKey = ' ';
