@@ -37,6 +37,7 @@
 #define UIEdgeInsetsZero ((NSEdgeInsets){})
 #define UIEvent NSEvent
 #define UIGestureRecognizer NSGestureRecognizer
+#define UIGestureRecognizerDelegate NSGestureRecognizerDelegate
 
 static inline CGRect UIEdgeInsetsInsetRect(CGRect r, UIEdgeInsets insets) {
   r.origin.x    += insets.left;

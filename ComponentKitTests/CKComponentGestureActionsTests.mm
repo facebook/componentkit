@@ -18,9 +18,12 @@
 #import "CKComponentGestureActionsInternal.h"
 #import "CKComponentViewInterface.h"
 
-@interface CKFakeActionComponent : CKComponent
+@interface CKFakeActionComponent : CKComponent <UIGestureRecognizerDelegate>
 - (void)test:(CKComponent *)sender;
 @property (nonatomic, assign) BOOL receivedTest;
+
+@property (nonatomic, assign) BOOL receivedGestureShouldBegin;
+
 @end
 
 @interface CKComponentGestureActionsTests : XCTestCase
@@ -80,11 +83,58 @@
   attr.first.unapplicator(view, attr.second);
 }
 
+- (void)testThatWhenDelegateActionsAreSetTheyProxyToComponent
+{
+
+  UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+  id mockComponent = [OCMockObject mockForClass:[CKComponent class]];
+  CKFakeActionComponent *fakeParentComponent = [CKFakeActionComponent new];
+  [[[mockComponent stub] andReturn:fakeParentComponent] nextResponder];
+  [[[mockComponent stub] andReturn:fakeParentComponent] targetForAction:[OCMArg anySelector] withSender:[OCMArg any]];
+  view.ck_component = mockComponent;
+
+  CKComponentViewAttributeValue attr = CKComponentGestureAttribute([UIPanGestureRecognizer class], nullptr, @selector(test:), {@selector(gestureRecognizerShouldBegin:)});
+  attr.first.applicator(view, attr.second);
+
+  UIPanGestureRecognizer *gesture = view.gestureRecognizers.firstObject;
+  XCTAssert(gesture.delegate, @"Gesture delegate not set");
+  BOOL retVal = [gesture.delegate gestureRecognizerShouldBegin:gesture];
+
+  XCTAssert(fakeParentComponent.receivedGestureShouldBegin, @"Didn't get proxied :(");
+  XCTAssert(retVal, @"Should have returned YES");
+}
+
+- (void)testThatWithNoDelegateActionsNoDelegateIsSet
+{
+  UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+  id mockComponent = [OCMockObject mockForClass:[CKComponent class]];
+  CKFakeActionComponent *fakeParentComponent = [CKFakeActionComponent new];
+  [[[mockComponent stub] andReturn:fakeParentComponent] nextResponder];
+  [[[mockComponent stub] andReturn:fakeParentComponent] targetForAction:[OCMArg anySelector] withSender:[OCMArg any]];
+  view.ck_component = mockComponent;
+
+  CKComponentViewAttributeValue attr = CKComponentGestureAttribute([UIPanGestureRecognizer class], nullptr, @selector(test:));
+  attr.first.applicator(view, attr.second);
+
+  UIPanGestureRecognizer *gesture = view.gestureRecognizers.firstObject;
+  XCTAssertNil(gesture.delegate, @"Gesture delegate should not be set");
+}
+
+
+
 @end
 
 @implementation CKFakeActionComponent
+
 - (void)test:(CKComponent *)sender
 {
   _receivedTest = YES;
 }
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+  _receivedGestureShouldBegin = YES;
+  return YES;
+}
+
 @end

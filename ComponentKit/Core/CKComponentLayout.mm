@@ -46,6 +46,8 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout, UIView *view, CKC
   stack.push({layout, MountContext::RootContext(view), supercomponent, NO});
   NSMutableSet *mountedComponents = [NSMutableSet set];
 
+  layout.component.rootComponentMountedView = view;
+
   while (!stack.empty()) {
     MountItem &item = stack.top();
     if (item.visited) {
