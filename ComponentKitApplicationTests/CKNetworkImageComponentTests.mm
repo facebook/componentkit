@@ -102,7 +102,8 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
    options:{}
    attributes:{
      {{@selector(setBackgroundColor:), [UIColor redColor]}},
-   }];
+   }
+   fadeTransition:{}];
 
   static CKSizeRange kSize = {{50, 50}, {50, 50}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -121,7 +122,8 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
    }
    attributes:{
      {{@selector(setBackgroundColor:), [UIColor redColor]}},
-   }];
+   }
+   fadeTransition:{}];
 
   static CKSizeRange kSize = {{50, 50}, {50, 50}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -152,7 +154,8 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
    attributes:{
      // Snapshot will show a red image, not the purple image provided by the image downloader.
      {{@selector(setBackgroundColor:), [UIColor redColor]}},
-   }];
+   }
+   fadeTransition:{}];
 
   static CKSizeRange kSize = {{50, 50}, {50, 50}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -186,7 +189,8 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
    }
    attributes:{
      {{@selector(setBackgroundColor:), [UIColor redColor]}},
-   }];
+   }
+   fadeTransition:{}];
 
   static CKSizeRange kSize = {{50, 50}, {50, 50}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -206,7 +210,8 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
    }
    attributes:{
      {{@selector(setBackgroundColor:), [UIColor redColor]}},
-   }];
+   }
+   fadeTransition:{}];
 
   static CKSizeRange kSize = {{50, 50}, {50, 50}};
   CKSnapshotVerifyComponent(c, kSize, nil);

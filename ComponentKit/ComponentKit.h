@@ -20,6 +20,7 @@
 #import <ComponentKit/CKComponentAnimation.h>
 #import <ComponentKit/CKComponentAnimationHooks.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
+#import <ComponentKit/CKComponentFadeTransition.h>
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentLifecycleManager.h>

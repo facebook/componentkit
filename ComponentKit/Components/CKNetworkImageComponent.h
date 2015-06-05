@@ -10,6 +10,7 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKNetworkImageDownloading.h>
+#import <ComponentKit/CKComponentFadeTransition.h>
 
 struct CKNetworkImageComponentOptions {
   /** Optional imade displayed while the image is loading, or when url is nil. */
@@ -30,6 +31,7 @@ struct CKNetworkImageComponentOptions {
                  scenePath:(id)scenePath
                       size:(const CKComponentSize &)size
                    options:(const CKNetworkImageComponentOptions &)options
-                attributes:(const CKViewComponentAttributeValueMap &)attributes;
+                attributes:(const CKViewComponentAttributeValueMap &)attributes
+            fadeTransition:(const CKComponentFadeTransition)fadeTransition;
 
 @end
