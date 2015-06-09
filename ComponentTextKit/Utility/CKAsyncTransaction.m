@@ -33,7 +33,7 @@
   CKAssertNil(_operationCompletionBlock, @"Should have been called and released before -dealloc");
 }
 
-- (void)callAndReleaseCompletionBlock:(BOOL)canceled;
+- (void)callAndReleaseCompletionBlock:(BOOL)canceled
 {
   if (_operationCompletionBlock) {
     _operationCompletionBlock(self.value, canceled);
