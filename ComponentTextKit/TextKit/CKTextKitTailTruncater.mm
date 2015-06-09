@@ -95,10 +95,12 @@
   NSUInteger firstClippedGlyphIndex = [layoutManager glyphIndexForPoint:beginningOfTruncationMessage
                                                         inTextContainer:textContainer
                                          fractionOfDistanceThroughGlyph:NULL];
+  // If it didn't intersect with any text then it should just return the last visible character index, since the
+  // truncation rect can fully fit on the line without clipping any other text.
+  if (firstClippedGlyphIndex == NSNotFound) {
+    return [layoutManager characterIndexForGlyphAtIndex:lastVisibleGlyphIndex];
+  }
   NSUInteger firstCharacterIndexToReplace = [layoutManager characterIndexForGlyphAtIndex:firstClippedGlyphIndex];
-  CKAssert(firstCharacterIndexToReplace != NSNotFound,
-           @"The beginning of the truncation message exclusion rect (%@) didn't intersect any glyphs",
-           NSStringFromCGPoint(beginningOfTruncationMessage));
 
   // Break on word boundaries
   return [self _findTruncationInsertionPointAtOrBeforeCharacterIndex:firstCharacterIndexToReplace

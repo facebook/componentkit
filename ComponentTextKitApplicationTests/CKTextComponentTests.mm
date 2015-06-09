@@ -384,4 +384,27 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
   CKSnapshotVerifyComponent(c, kUnrestrictedSize, @"");
 }
 
+- (void)testTruncationStringLargerThanLastLine
+{
+  CKTextComponent *c =
+  [CKTextComponent
+   newWithTextAttributes:{
+     .attributedString =
+     [[NSAttributedString
+       alloc]
+      initWithString:@"asdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf"
+      attributes:@{NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue" size:12.5]}],
+     .maximumNumberOfLines = 3,
+     .truncationAttributedString = [[NSAttributedString
+                                     alloc]
+                                    initWithString:@"... Read More"
+                                    attributes:@{NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue" size:12.5]}],
+   }
+   viewAttributes:{
+     {{@selector(setBackgroundColor:), [UIColor clearColor]}}
+   }
+   accessibilityContext:{ }];
+  CKSnapshotVerifyComponent(c, kUnrestrictedSize, @"");
+}
+
 @end
