@@ -207,23 +207,25 @@ namespace CK {
     namespace Output {
 
       struct Change {
-        CKArrayControllerIndexPath indexPath;
+        /** Valid for updates and removals. */
+        CKArrayControllerIndexPath sourceIndexPath;
+        /** Valid for insertions. */
+        CKArrayControllerIndexPath destinationIndexPath;
+
         id<NSObject> before;
         id<NSObject> after;
 
-        Change(const CKArrayControllerIndexPath &iP, id<NSObject> b, id<NSObject> a) : indexPath(iP), before(b), after(a) {};
+        Change(const CKArrayControllerIndexPath &sIP, const CKArrayControllerIndexPath &dIP, id<NSObject> b, id<NSObject> a) : sourceIndexPath(sIP), destinationIndexPath(dIP), before(b), after(a) {};
 
         bool operator==(const Change &other) const {
-          return indexPath == other.indexPath && CKObjectIsEqual(before, other.before) && CKObjectIsEqual(after, other.after);
-        }
-
-        bool operator<(const Change &other) const {
-          return indexPath < other.indexPath;
+          return sourceIndexPath == other.sourceIndexPath && destinationIndexPath == other.destinationIndexPath && CKObjectIsEqual(before, other.before) && CKObjectIsEqual(after, other.after);
         }
 
         NSString *description() const {
-          return [NSString stringWithFormat:@"indexPath: <%zd,%zd>, before: <%@>, after: <%@>", indexPath.section, indexPath.item, before, after];
+          return [NSString stringWithFormat:@"sourceIndexPath: <%zd,%zd>, destinationIndexPath: <%zd,%zd>, before: <%@>, after: <%@>",
+                  sourceIndexPath.section, sourceIndexPath.item, destinationIndexPath.section, destinationIndexPath.item, before, after];
         }
+
       };
     }
   }
@@ -239,7 +241,7 @@ namespace CK {
 
       class Items final {
       public:
-        void update(const CKArrayControllerOutputChange &update);
+        void update(const CKArrayControllerIndexPath &indexPath, id<NSObject> oldObject, id<NSObject> newObject);
         /**
          Note that we pass the removed object here, too. In doing so we can inform clients of what was removed as a
          result of an Input::Changeset

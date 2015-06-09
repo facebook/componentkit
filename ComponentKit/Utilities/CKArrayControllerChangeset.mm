@@ -282,17 +282,17 @@ bool Input::Changeset::operator==(const Changeset &other) const
 
 void Output::Items::insert(const CKArrayControllerIndexPath &indexPath, id<NSObject> object)
 {
-  _insertions.push_back({indexPath, nil, object});
+  _insertions.push_back({{}, indexPath, nil, object});
 }
 
 void Output::Items::remove(const CKArrayControllerIndexPath &indexPath, id<NSObject> object)
 {
-  _removals.push_back({indexPath, object, nil});
+  _removals.push_back({indexPath, {}, object, nil});
 }
 
-void Output::Items::update(const Change &update)
+void Output::Items::update(const CKArrayControllerIndexPath &indexPath, id<NSObject> oldObject, id<NSObject> newObject)
 {
-  _updates.push_back(update);
+  _updates.push_back({indexPath, {}, oldObject, newObject});
 }
 
 bool Output::Items::operator==(const Items &other) const
@@ -348,20 +348,26 @@ void Output::Changeset::enumerate(Sections::Enumerator sectionEnumerator,
 }
 
 /**
- Clients of Output::Changeset::map() may reuturn invalid pairs. For example {nil, <object>} for a deletion, instead of
+ Clients of Output::Changeset::map() may return invalid pairs. For example {nil, <object>} for a deletion, instead of
  {<object>, nil}.
  */
-NS_INLINE void _validateBeforeAfterPair(Output::Changeset::BeforeAfterPair pair, IndexPath indexPath, CKArrayControllerChangeType changeType)
+NS_INLINE void _validateBeforeAfterPair(Output::Changeset::BeforeAfterPair pair, IndexPath sourceIndexPath, IndexPath destinationIndexPath, CKArrayControllerChangeType changeType)
 {
   if (changeType == CKArrayControllerChangeTypeUpdate) {
-    CKInternalConsistencyCheckIf(pair.first != nil, ([NSString stringWithFormat:@"update {%zd, %zd}: before MUST NOT be nil.", indexPath.item, indexPath.section]));
-    CKInternalConsistencyCheckIf(pair.second != nil, ([NSString stringWithFormat:@"update {%zd, %zd}: after MUST NOT be nil.", indexPath.item, indexPath.section]));
+    CKInternalConsistencyCheckIf(pair.first != nil, ([NSString stringWithFormat:@"update {%zd, %zd}: before MUST NOT be nil.", sourceIndexPath.item, sourceIndexPath.section]));
+    CKInternalConsistencyCheckIf(pair.second != nil, ([NSString stringWithFormat:@"update {%zd, %zd}: after MUST NOT be nil.", sourceIndexPath.item, sourceIndexPath.section]));
+    CKInternalConsistencyCheckIf(!(sourceIndexPath == IndexPath(NSNotFound, NSNotFound)), ([NSString stringWithFormat:@"update MUST have sourceIndexPath"]));
+    CKInternalConsistencyCheckIf((destinationIndexPath == IndexPath(NSNotFound, NSNotFound)), ([NSString stringWithFormat:@"update MUST NOT have destinationIndexPath"]));
   } else if (changeType == CKArrayControllerChangeTypeDelete) {
-    CKInternalConsistencyCheckIf(pair.first != nil, ([NSString stringWithFormat:@"remove {%zd, %zd}: before MUST NOT be nil.", indexPath.item, indexPath.section]));
-    CKInternalConsistencyCheckIf(pair.second == nil, ([NSString stringWithFormat:@"remove {%zd, %zd}: after MUST be nil.", indexPath.item, indexPath.section]));
+    CKInternalConsistencyCheckIf(pair.first != nil, ([NSString stringWithFormat:@"remove {%zd, %zd}: before MUST NOT be nil.", sourceIndexPath.item, sourceIndexPath.section]));
+    CKInternalConsistencyCheckIf(pair.second == nil, ([NSString stringWithFormat:@"remove {%zd, %zd}: after MUST be nil.", sourceIndexPath.item, sourceIndexPath.section]));
+    CKInternalConsistencyCheckIf(!(sourceIndexPath == IndexPath(NSNotFound, NSNotFound)), ([NSString stringWithFormat:@"remove MUST have sourceIndexPath"]));
+    CKInternalConsistencyCheckIf((destinationIndexPath == IndexPath(NSNotFound, NSNotFound)), ([NSString stringWithFormat:@"remove MUST NOT have destinationIndexPath"]));
   } else if (changeType == CKArrayControllerChangeTypeInsert) {
-    CKInternalConsistencyCheckIf(pair.first == nil, ([NSString stringWithFormat:@"insert {%zd, %zd}: before MUST be nil.", indexPath.item, indexPath.section]));
-    CKInternalConsistencyCheckIf(pair.second != nil, ([NSString stringWithFormat:@"insert {%zd, %zd}: after MUST NOT be nil.", indexPath.item, indexPath.section]));
+    CKInternalConsistencyCheckIf(pair.first == nil, ([NSString stringWithFormat:@"insert {%zd, %zd}: before MUST be nil.", destinationIndexPath.item, destinationIndexPath.section]));
+    CKInternalConsistencyCheckIf(pair.second != nil, ([NSString stringWithFormat:@"insert {%zd, %zd}: after MUST NOT be nil.", destinationIndexPath.item, destinationIndexPath.section]));
+    CKInternalConsistencyCheckIf((sourceIndexPath == IndexPath(NSNotFound, NSNotFound)), ([NSString stringWithFormat:@"insert MUST NOT have sourceIndexPath"]));
+    CKInternalConsistencyCheckIf(!(destinationIndexPath == IndexPath(NSNotFound, NSNotFound)), ([NSString stringWithFormat:@"insert MUST have destinationIndexPath"]));
   }
 }
 
@@ -379,16 +385,16 @@ Output::Changeset Output::Changeset::map(Mapper mapper) const
     for (const auto &change : changes) {
       auto mappedPair = mapper(change, t, &stop);
 
-      _validateBeforeAfterPair(mappedPair, change.indexPath, t);
+      _validateBeforeAfterPair(mappedPair, change.sourceIndexPath, change.destinationIndexPath, t);
 
       if (t == CKArrayControllerChangeTypeUpdate) {
-        mappedItems.update({change.indexPath, mappedPair.first, mappedPair.second});
+        mappedItems.update(change.sourceIndexPath, mappedPair.first, mappedPair.second);
       }
       if (t == CKArrayControllerChangeTypeDelete) {
-        mappedItems.remove(change.indexPath, mappedPair.first);
+        mappedItems.remove(change.sourceIndexPath, mappedPair.first);
       }
       if (t == CKArrayControllerChangeTypeInsert) {
-        mappedItems.insert(change.indexPath, mappedPair.second);
+        mappedItems.insert(change.destinationIndexPath, mappedPair.second);
       }
       if (stop) {
         break;

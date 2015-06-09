@@ -7,6 +7,7 @@
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
+#include <unordered_set>
 
 #import <XCTest/XCTest.h>
 
@@ -402,10 +403,10 @@ static Output::Changeset exampleOutputChangeset(void)
   items.remove({15, 9}, @5);
   items.remove({16, 4}, @6);
   items.remove({16, 5}, @7);
-  items.update({{7, 6}, @8, @9});
-  items.update({{7, 5}, @8, @9});
-  items.update({{6, 3}, @8, @9});
-  items.update({{6, 4}, @8, @9});
+  items.update({7, 6}, @8, @9);
+  items.update({7, 5}, @8, @9);
+  items.update({6, 3}, @8, @9);
+  items.update({6, 4}, @8, @9);
 
   return {sections, items};
 }
@@ -470,16 +471,28 @@ static Output::Changeset exampleOutputChangeset(void)
   XCTAssertEqualObjects(removals, expectedRemovals, @"");
 }
 
-- (void)testItemCommandsAreEnumeratedInOrder
+// Adding very bad hashing for Output::Change just to make it possible to put them in a set for the next test.
+namespace std {
+  template <>
+  struct hash<Output::Change>
+  {
+    size_t operator()(const Output::Change &) const
+    {
+      return 0;
+    }
+  };
+}
+
+- (void)testAllItemCommandsAreEnumerated
 {
   Output::Changeset changeset = exampleOutputChangeset();
 
   Sections::Enumerator sectionsEnumerator =
   ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {};
 
-  __block std::set<Output::Change> insertions;
-  __block std::set<Output::Change> removals;
-  __block std::set<Output::Change> updates;
+  __block std::unordered_set<Output::Change> insertions;
+  __block std::unordered_set<Output::Change> removals;
+  __block std::unordered_set<Output::Change> updates;
 
   Output::Items::Enumerator itemsEnumerator =
   ^(const Output::Change &change, CKArrayControllerChangeType type, BOOL *stop) {
@@ -496,25 +509,25 @@ static Output::Changeset exampleOutputChangeset(void)
 
   changeset.enumerate(sectionsEnumerator, itemsEnumerator);
 
-  std::set<Output::Change> expectedInsertions = {
-    {{0, 0}, nil, @1},
-    {{0, 1}, nil, @0},
-    {{2, 0}, nil, @2},
-    {{2, 1}, nil, @3}
+  std::unordered_set<Output::Change> expectedInsertions = {
+    {{}, {0, 0}, nil, @1},
+    {{}, {0, 1}, nil, @0},
+    {{}, {2, 0}, nil, @2},
+    {{}, {2, 1}, nil, @3}
   };
 
-  std::set<Output::Change> expectedRemovals = {
-    {{15, 9}, @5, nil},
-    {{15, 10}, @4, nil},
-    {{16, 4}, @6, nil},
-    {{16, 5}, @7, nil}
+  std::unordered_set<Output::Change> expectedRemovals = {
+    {{15, 9}, {}, @5, nil},
+    {{15, 10}, {}, @4, nil},
+    {{16, 4}, {}, @6, nil},
+    {{16, 5}, {}, @7, nil}
   };
 
-  std::set<Output::Change> expectedUpdates = {
-    {{7, 5}, @8, @9},
-    {{7, 6}, @8, @9},
-    {{6, 3}, @8, @9},
-    {{6, 4}, @8, @9}
+  std::unordered_set<Output::Change> expectedUpdates = {
+    {{7, 5}, {}, @8, @9},
+    {{7, 6}, {}, @8, @9},
+    {{6, 3}, {}, @8, @9},
+    {{6, 4}, {}, @8, @9}
   };
 
   XCTAssertTrue(insertions == expectedInsertions, @"");
@@ -661,10 +674,10 @@ static Output::Changeset exampleOutputChangeset(void)
   expectedItems.remove({15, 9}, @6);
   expectedItems.remove({16, 4}, @7);
   expectedItems.remove({16, 5}, @8);
-  expectedItems.update({{7, 6}, @9, @10});
-  expectedItems.update({{7, 5}, @9, @10});
-  expectedItems.update({{6, 3}, @9, @10});
-  expectedItems.update({{6, 4}, @9, @10});
+  expectedItems.update({7, 6}, @9, @10);
+  expectedItems.update({7, 5}, @9, @10);
+  expectedItems.update({6, 3}, @9, @10);
+  expectedItems.update({6, 4}, @9, @10);
 
   Output::Changeset expected = {expectedSections, expectedItems};
 

@@ -84,7 +84,8 @@ static CKComponent *(^_componentBlock)(void);
                                                                                              constrainedSize:{{0,0}, {10, 20}}
                                                                                                      oldSize:{320, 100}
                                                                                                         UUID:@"foo"
-                                                                                                   indexPath:indexPath
+                                                                                             sourceIndexPath:nil
+                                                                                        destinationIndexPath:indexPath
                                                                                                   changeType:changeType
                                                                                                  passthrough:NO
                                                                                                      context:nil];
@@ -93,7 +94,8 @@ static CKComponent *(^_componentBlock)(void);
 
   XCTAssertNotNil(output);
   XCTAssertEqual([output changeType], changeType);
-  XCTAssertEqualObjects([output indexPath], indexPath);
+  XCTAssertEqualObjects([output sourceIndexPath], nil);
+  XCTAssertEqualObjects([output destinationIndexPath], indexPath);
   XCTAssertEqualObjects([output UUID], [input UUID]);
   XCTAssertTrue(CGSizeEqualToSize([input oldSize], [output oldSize]));
 
@@ -122,7 +124,8 @@ static CKComponent *(^_componentBlock)(void);
                                                                                              constrainedSize:{{0,0}, {10, 20}}
                                                                                                      oldSize:{320, 100}
                                                                                                         UUID:@"foo"
-                                                                                                   indexPath:indexPath
+                                                                                             sourceIndexPath:indexPath
+                                                                                        destinationIndexPath:nil
                                                                                                   changeType:changeType
                                                                                                  passthrough:NO
                                                                                                      context:nil];
@@ -131,7 +134,8 @@ static CKComponent *(^_componentBlock)(void);
 
   XCTAssertNotNil(output);
   XCTAssertEqual([output changeType], changeType);
-  XCTAssertEqualObjects([output indexPath], indexPath);
+  XCTAssertEqualObjects([output sourceIndexPath], indexPath);
+  XCTAssertEqualObjects([output destinationIndexPath], nil);
   XCTAssertEqualObjects([output UUID], [input UUID]);
   XCTAssertTrue(CGSizeEqualToSize([input oldSize], [output oldSize]));
 
@@ -159,7 +163,8 @@ static CKComponent *(^_componentBlock)(void);
                                                                                              constrainedSize:{{0,0}, {10, 20}}
                                                                                                      oldSize:{320, 100}
                                                                                                         UUID:@"foo"
-                                                                                                   indexPath:indexPath
+                                                                                             sourceIndexPath:indexPath
+                                                                                        destinationIndexPath:nil
                                                                                                   changeType:changeType
                                                                                                  passthrough:NO
                                                                                                      context:nil];
@@ -169,7 +174,8 @@ static CKComponent *(^_componentBlock)(void);
   XCTAssertNotNil(output);
   XCTAssertNil([output lifecycleManager]);
   XCTAssertEqual([output changeType], changeType);
-  XCTAssertEqualObjects([output indexPath], indexPath);
+  XCTAssertEqualObjects([output sourceIndexPath], indexPath);
+  XCTAssertEqualObjects([output destinationIndexPath], nil);
   XCTAssertEqualObjects([output UUID], [input UUID]);
   XCTAssertTrue(CGSizeEqualToSize([input oldSize], [output oldSize]));
 
@@ -199,7 +205,8 @@ static CKComponent *(^_componentBlock)(void);
                                                                                              constrainedSize:{{0,0}, {10, 20}}
                                                                                                      oldSize:{320, 100}
                                                                                                         UUID:@"foo"
-                                                                                                   indexPath:indexPath
+                                                                                             sourceIndexPath:nil
+                                                                                        destinationIndexPath:indexPath
                                                                                                   changeType:changeType
                                                                                                  passthrough:YES
                                                                                                      context:nil];
@@ -208,7 +215,8 @@ static CKComponent *(^_componentBlock)(void);
 
   XCTAssertNotNil(output);
   XCTAssertEqual([output changeType], changeType);
-  XCTAssertEqualObjects([output indexPath], indexPath);
+  XCTAssertEqualObjects([output sourceIndexPath], nil);
+  XCTAssertEqualObjects([output destinationIndexPath], indexPath);
   XCTAssertEqualObjects(output.replacementModel, input.replacementModel);
   XCTAssertEqualObjects([output UUID], [input UUID]);
   XCTAssertTrue(CGSizeEqualToSize([input oldSize], [output oldSize]));
