@@ -10,6 +10,8 @@
 
 #import "CKTransactionalComponentDataSourceListenerAnnouncer.h"
 
+#import <ComponentKit/CKComponentAnnouncerHelper.h>
+
 @implementation CKTransactionalComponentDataSourceListenerAnnouncer
 
 - (void)addListener:(id<CKTransactionalComponentDataSourceListener>)listener
