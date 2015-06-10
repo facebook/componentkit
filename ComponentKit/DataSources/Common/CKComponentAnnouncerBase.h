@@ -10,5 +10,12 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ This is a base class every announcer extends.
+
+ Since we want to keep announcers Obj-C friendly
+ we hide the Obj-C++ part in CKComponentAnnouncerBaseInternal.h.
+ Otherwise it would leak out through declaration of an announcer class.
+ */
 @interface CKComponentAnnouncerBase : NSObject
 @end
