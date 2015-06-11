@@ -52,3 +52,9 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
                                                           CKComponentGestureRecognizerSetupFunction setupFunction,
                                                           CKComponentAction action,
                                                           CKComponentForwardedSelectors delegateSelectors = {});
+
+/**
+ Allows mapping a UIGestureRecognizer back to the original CKComponentAction selector,
+ since ComponentKit internally changes the selector to be able send to the component responder chain.
+ */
+CKComponentAction CKComponentGestureGetAction(UIGestureRecognizer *gesture);
