@@ -20,6 +20,7 @@
 #import "CKComponentBoundsAnimation+UICollectionView.h"
 #import "CKComponentConstantDecider.h"
 #import "CKComponentDataSource.h"
+#import "CKComponentDataSourceDelegate.h"
 #import "CKComponentDataSourceOutputItem.h"
 #import "CKCollectionViewDataSourceCell.h"
 #import "CKComponentLifecycleManager.h"
