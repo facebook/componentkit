@@ -11,6 +11,7 @@
 #import "CKComponentDataSourceTestDelegate.h"
 
 #import <ComponentKit/CKComponentDataSource.h>
+#import <ComponentKit/CKComponentDataSourceDelegate.h>
 #import <ComponentKit/CKComponentDataSourceOutputItem.h>
 #import <ComponentKit/ComponentUtilities.h>
 

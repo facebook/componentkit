@@ -18,6 +18,7 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
 
+#import "CKComponentDataSourceDelegate.h"
 #import "CKComponentDataSourceInputItem.h"
 #import "CKComponentDataSourceOutputItem.h"
 #import "CKComponentDeciding.h"
