@@ -28,7 +28,7 @@
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
-                      style:(CKStackLayoutComponentStyle)style
+                      style:(const CKStackLayoutComponentStyle &)style
                    children:(const std::vector<CKStackLayoutComponentChild> &)children
 {
   CKStackLayoutComponent *c = [super newWithView:view size:size];

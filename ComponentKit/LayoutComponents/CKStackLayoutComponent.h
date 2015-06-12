@@ -117,7 +117,7 @@ struct CKStackLayoutComponentChild {
  */
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
-                      style:(CKStackLayoutComponentStyle)style
+                      style:(const CKStackLayoutComponentStyle &)style
                    children:(const std::vector<CKStackLayoutComponentChild> &)children;
 
 @end
