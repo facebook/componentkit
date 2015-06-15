@@ -177,18 +177,9 @@ namespace CK {
         
         const CKArrayControllerSections sections;
         const CKArrayControllerInputItems items;
-        
-        typedef id<NSObject> (^Mapper)(const IndexPath &indexPath, id<NSObject> object, CKArrayControllerChangeType type, BOOL *stop);
-        
-        Changeset map(Mapper mapper) const;
-        
-        typedef IndexPath (^ItemIndexPathMapper)(const IndexPath &indexPath, CKArrayControllerChangeType type);
-        
-        Changeset mapIndex(Sections::Mapper sectionIndexMapper, ItemIndexPathMapper mapper) const;
+
 
         bool operator==(const Changeset &other) const;
-      private:
-        Changeset _map(Mapper objectMapper, Sections::Mapper sectionIndexMapper, ItemIndexPathMapper indexPathMapper) const;
       };
     }
   }
