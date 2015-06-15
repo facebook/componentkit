@@ -182,31 +182,32 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
  They can't insert an CKComponentDataSourceInput b/c they don't have access to existing lifecycle managers that are in
  the _writeArrayController.
 
- Therefore we map() the input to wrap each item given to us.
+ Therefore we wrap each item given to us.
  */
 - (PreparationBatchID)enqueueChangeset:(const CKArrayControllerInputChangeset &)changeset constrainedSize:(const CKSizeRange &)constrainedSize
 {
-  CKArrayControllerInputChangeset::Mapper mapper =
-  ^id<NSObject>(const CKArrayControllerIndexPath &indexPath, id<NSObject> object, CKArrayControllerChangeType type, BOOL *stop) {
-    CKComponentLifecycleManager *lifecycleManager = nil;
-    NSString *UUID = nil;
-    if (type == CKArrayControllerChangeTypeInsert) {
-      lifecycleManager = _lifecycleManagerFactory();
-      lifecycleManager.asynchronousUpdateHandler = self;
-      lifecycleManager.delegate = self;
-      UUID = [[NSUUID UUID] UUIDString];
-    }
-    if (type == CKArrayControllerChangeTypeUpdate) {
-      CKComponentDataSourceInputItem *oldInput = [_inputArrayController objectAtIndexPath:indexPath.toNSIndexPath()];
-      lifecycleManager = [oldInput lifecycleManager];
-      UUID = [oldInput UUID];
-    }
-    return [[CKComponentDataSourceInputItem alloc] initWithLifecycleManager:lifecycleManager
-                                                                      model:object
-                                                            constrainedSize:constrainedSize
-                                                                       UUID:UUID ];
-  };
-  return [self _enqueueChangeset:changeset.map(mapper)];
+  __block CKArrayControllerInputItems newItems;
+  changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
+    CKComponentDataSourceInputItem *oldInput = [_inputArrayController objectAtIndexPath:[NSIndexPath indexPathForItem:index inSection:section]];
+    id<NSObject> mappedObject = [[CKComponentDataSourceInputItem alloc] initWithLifecycleManager:[oldInput lifecycleManager]
+                                                                                           model:object
+                                                                                 constrainedSize:constrainedSize
+                                                                                            UUID:[oldInput UUID]];
+    newItems.update({section, index}, mappedObject);
+  },^(NSInteger section, NSInteger index, BOOL *stop) {
+    newItems.remove({section, index});
+  },^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
+    CKComponentLifecycleManager *lifecycleManager = _lifecycleManagerFactory();
+    lifecycleManager.asynchronousUpdateHandler = self;
+    lifecycleManager.delegate = self;
+    id<NSObject> mappedObject = [[CKComponentDataSourceInputItem alloc] initWithLifecycleManager:lifecycleManager
+                                                                                           model:object
+                                                                                 constrainedSize:constrainedSize
+                                                                                            UUID:[[NSUUID UUID] UUIDString]];
+    newItems.insert({section, index}, mappedObject);
+  });
+
+  return [self _enqueueChangeset:{changeset.sections, newItems}];
 }
 
 - (PreparationBatchID)_enqueueChangeset:(const CKArrayControllerInputChangeset &)changeset
@@ -327,46 +328,47 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
   [self _processChangeset:{sections, items}];
 }
 
+
+static CKComponentDataSourceOutputItem *_outputItemFromPreparationOutputItem(CKComponentPreparationOutputItem *item)
+{
+  CKComponentLifecycleManager *lifecycleManager = [item lifecycleManager];
+  CKComponentLifecycleManagerState lifecycleManagerState = [item lifecycleManagerState];
+  if (![item isPassthrough]) {
+    [lifecycleManager updateWithStateWithoutMounting:lifecycleManagerState];
+  }
+  return [[CKComponentDataSourceOutputItem alloc] initWithLifecycleManager:lifecycleManager
+                                                     lifecycleManagerState:lifecycleManagerState
+                                                                   oldSize:[item oldSize]
+                                                                     model:[item replacementModel]
+                                                                      UUID:[item UUID]];
+}
+
 - (void)_processChangeset:(const CKArrayControllerInputChangeset &)changeset
 {
-  CKArrayControllerInputChangeset::Mapper mapper =
-  ^id<NSObject>(const CKArrayControllerIndexPath &indexPath, id<NSObject> object, CKArrayControllerChangeType type, BOOL *stop) {
-    CKComponentPreparationOutputItem *item = (CKComponentPreparationOutputItem *)object;
-    CKComponentLifecycleManager *lifecycleManager = [item lifecycleManager];
-    CKComponentLifecycleManagerState lifecycleManagerState = [item lifecycleManagerState];
-    if (![item isPassthrough]) {
-      [lifecycleManager updateWithStateWithoutMounting:lifecycleManagerState];
-    }
-    return [[CKComponentDataSourceOutputItem alloc] initWithLifecycleManager:lifecycleManager
-                                                       lifecycleManagerState:lifecycleManagerState
-                                                                     oldSize:[item oldSize]
-                                                                       model:[item replacementModel]
-                                                                        UUID:[item UUID]];
-  };
-  auto mappedChangeset = changeset.map(mapper);
-
+  __block CKArrayControllerInputItems newItems;
   __block CKComponentDataSourceChangeType changeTypes = 0;
 
-  changeTypes |= mappedChangeset.sections.insertions().empty() ? 0 : CKComponentDataSourceChangeTypeInsertSections;
-  changeTypes |= mappedChangeset.sections.removals().empty() ? 0 : CKComponentDataSourceChangeTypeDeleteSections;
+  changeTypes |= changeset.sections.insertions().empty() ? 0 : CKComponentDataSourceChangeTypeInsertSections;
+  changeTypes |= changeset.sections.removals().empty() ? 0 : CKComponentDataSourceChangeTypeDeleteSections;
 
-  mappedChangeset.items.enumerateItems(^(NSInteger, NSInteger, CKComponentDataSourceOutputItem* outputItem, BOOL *stop) {
-    if (!CGSizeEqualToSize([outputItem oldSize], [outputItem lifecycleManagerState].layout.size)) {
+  changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
+    CKComponentDataSourceOutputItem *newItem = _outputItemFromPreparationOutputItem((CKComponentPreparationOutputItem *)object);
+    newItems.update({section, index}, newItem);
+    if (!(changeTypes & CKComponentDataSourceChangeTypeUpdateSize) && !CGSizeEqualToSize([newItem oldSize], [newItem lifecycleManagerState].layout.size)) {
       changeTypes |= CKComponentDataSourceChangeTypeUpdateSize;
-      *stop = YES;
     }
-  }, ^(NSInteger, NSInteger, BOOL *stop) {
+  }, ^(NSInteger section, NSInteger index, BOOL *stop) {
+    newItems.remove({section, index});
     changeTypes |= CKComponentDataSourceChangeTypeDeleteRows;
-    *stop = YES;
-  }, ^(NSInteger, NSInteger, id<NSObject>, BOOL *stop) {
+  }, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
+    newItems.insert({section, index}, _outputItemFromPreparationOutputItem((CKComponentPreparationOutputItem *)object));
     changeTypes |= CKComponentDataSourceChangeTypeInsertRows;
-    *stop = YES;
   });
 
   [_delegate componentDataSource:self
                hasChangesOfTypes:changeTypes
              changesetApplicator:^{
-               return [_outputArrayController applyChangeset:mappedChangeset];
+               return [_outputArrayController applyChangeset:{changeset.sections, newItems}];
              }];
 }
 
