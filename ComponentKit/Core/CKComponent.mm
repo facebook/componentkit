@@ -17,9 +17,7 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
 
-#import "CKInternalHelpers.h"
-#import "CKWeakObjectContainer.h"
-#import "ComponentLayoutContext.h"
+#import "CKAssert.h"
 #import "CKComponentAccessibility.h"
 #import "CKComponentAnimation.h"
 #import "CKComponentController.h"
@@ -28,7 +26,10 @@
 #import "CKComponentScopeHandle.h"
 #import "CKComponentViewConfiguration.h"
 #import "CKComponentViewInterface.h"
-#import "CKAssert.h"
+#import "CKInternalHelpers.h"
+#import "CKMountAnimationGuard.h"
+#import "CKWeakObjectContainer.h"
+#import "ComponentLayoutContext.h"
 
 CGFloat const kCKComponentParentDimensionUndefined = NAN;
 CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndefined, kCKComponentParentDimensionUndefined};
@@ -125,6 +126,7 @@ struct CKComponentMountInfo {
 
   UIView *v = effectiveContext.viewManager->viewForConfiguration([self class], viewConfiguration);
   if (v) {
+    CKMountAnimationGuard g(v.ck_component, self);
     if (_mountInfo->view != v) {
       [self _relinquishMountedView]; // First release our old view
       [v.ck_component unmount];      // Then unmount old component (if any) from the new view
