@@ -13,35 +13,43 @@
 /** Used by CKComponent internally to block animations when configuring a new or recycled view */
 class CKMountAnimationGuard {
 public:
-  CKMountAnimationGuard(CKComponent *oldComponent, CKComponent *newComponent)
-  : _blockedAnimations(blockAnimationsIfNeeded(oldComponent, newComponent)) {}
+  CKMountAnimationGuard(CKComponent *oldComponent, CKComponent *newComponent, const CK::Component::MountContext &ctx)
+  : didBlockAnimations(blockAnimationsIfNeeded(oldComponent, newComponent, ctx)) {}
 
   ~CKMountAnimationGuard()
   {
-    if (_blockedAnimations) {
+    if (didBlockAnimations) {
       [CATransaction setDisableActions:NO];
     }
   }
 
+  const BOOL didBlockAnimations;
+
 private:
   CKMountAnimationGuard(const CKMountAnimationGuard&) = delete;
   CKMountAnimationGuard &operator=(const CKMountAnimationGuard&) = delete;
-  BOOL _blockedAnimations;
 
-  static BOOL blockAnimationsIfNeeded(CKComponent *oldComponent, CKComponent *newComponent)
+  static BOOL blockAnimationsIfNeeded(CKComponent *oldComponent, CKComponent *newComponent,
+                                      const CK::Component::MountContext &ctx)
   {
     if ([CATransaction disableActions]) {
       return NO; // Already blocked
     }
-    if (shouldBlockAnimations(oldComponent, newComponent)) {
+    if (shouldBlockAnimations(oldComponent, newComponent, ctx)) {
       [CATransaction setDisableActions:YES];
       return YES;
     }
     return NO;
   }
 
-  static BOOL shouldBlockAnimations(CKComponent *oldComponent, CKComponent *newComponent)
+  static BOOL shouldBlockAnimations(CKComponent *oldComponent, CKComponent *newComponent,
+                                    const CK::Component::MountContext &ctx)
   {
+    // If the context explicitly tells us to block animations, do it.
+    if (ctx.shouldBlockAnimations) {
+      return YES;
+    }
+
     // If we're configuring an entirely new view, or one where the old component has already unmounted,
     // block animation to prevent animating from an undefined previous state.
     if (oldComponent == nil) {

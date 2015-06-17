@@ -125,7 +125,7 @@ CK::Component::MountContext CKDebugMountContext(Class componentClass,
 
   UIView *debugView = context.viewManager->viewForConfiguration(componentClass, debugViewConfigurations->at(componentClass));
   debugView.frame = {context.position, size};
-  return context.childContextForSubview(debugView);
+  return context.childContextForSubview(debugView, NO);
 }
 
 #pragma mark - Synchronous Reflow

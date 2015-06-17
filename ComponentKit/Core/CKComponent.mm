@@ -126,7 +126,7 @@ struct CKComponentMountInfo {
 
   UIView *v = effectiveContext.viewManager->viewForConfiguration([self class], viewConfiguration);
   if (v) {
-    CKMountAnimationGuard g(v.ck_component, self);
+    CKMountAnimationGuard g(v.ck_component, self, context);
     if (_mountInfo->view != v) {
       [self _relinquishMountedView]; // First release our old view
       [v.ck_component unmount];      // Then unmount old component (if any) from the new view
@@ -143,7 +143,7 @@ struct CKComponentMountInfo {
     [v setBounds:{v.bounds.origin, size}];
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
-    return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v)};
+    return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
   } else {
     CKAssertNil(_mountInfo->view, @"Didn't expect to sometimes have a view and sometimes not have a view");
     _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, size}};

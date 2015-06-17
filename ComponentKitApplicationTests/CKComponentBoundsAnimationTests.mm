@@ -142,4 +142,48 @@
   [secondMountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
 
+- (void)testBoundsAnimationIsNotAppliedToChildrenWhenViewRecycledForComponentWithDistinctScopeFrameToken
+{
+  UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+
+  const CKBuildComponentResult firstResult = CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, ^{
+    CKComponentScope scope([CKStackLayoutComponent class], @"foo");
+    return [CKStackLayoutComponent
+            newWithView:{[CKBoundsAnimationRecordingView class]}
+            size:{}
+            style:{.alignItems = CKStackLayoutAlignItemsStretch}
+            children:{
+              {[CKComponent newWithView:{[CKBoundsAnimationRecordingView class]} size:{}], .flexGrow = YES},
+            }];
+  });
+  const CKComponentLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
+  NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container);
+
+  const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, ^{
+    // Change the scope identifier for the new version of the stack. This means that the outer view's bounds change
+    // shouldn't be animated; crucially, the *inner* view's bounds change should *also* not be animated, even though
+    // it is recycling the same view.
+
+    // NB: We use a plain CKComponent, not a CKBoundsAnimationComponent; otherwise the scope tokens of the child will
+    // be different, and we will avoid animating the child view for that reason instead of the changing parent scope.
+    CKComponentScope scope([CKStackLayoutComponent class], @"bar");
+    return [CKStackLayoutComponent
+            newWithView:{[CKBoundsAnimationRecordingView class]}
+            size:{}
+            style:{.alignItems = CKStackLayoutAlignItemsStretch}
+            children:{
+              {[CKComponent newWithView:{[CKBoundsAnimationRecordingView class]} size:{}], .flexGrow = YES},
+            }];
+  });
+  const CKComponentLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
+  NSSet *secondMountedComponents = CKMountComponentLayout(secondLayout, container);
+
+  CKBoundsAnimationRecordingView *v = (CKBoundsAnimationRecordingView *)secondResult.component.viewContext.view;
+  CKBoundsAnimationRecordingView *subview = [[v subviews] firstObject];
+  CKAssertTrue(subview != nil && subview.animatedLastBoundsChange == NO);
+
+  [firstMountedComponents makeObjectsPerformSelector:@selector(unmount)];
+  [secondMountedComponents makeObjectsPerformSelector:@selector(unmount)];
+}
+
 @end
