@@ -40,7 +40,7 @@
   return [[_sections objectAtIndex:[indexPath section]] objectAtIndex:[indexPath item]];
 }
 
-- (void)enumerateObjectsUsingBlock:(CKComponentDataSourceEnumerator)block
+- (void)enumerateObjectsUsingBlock:(CKTransactionalComponentDataSourceEnumerator)block
 {
   if (block) {
     [_sections enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
@@ -52,7 +52,7 @@
   }
 }
 
-- (void)enumerateObjectsInSectionAtIndex:(NSInteger)section usingBlock:(CKComponentDataSourceEnumerator)block
+- (void)enumerateObjectsInSectionAtIndex:(NSInteger)section usingBlock:(CKTransactionalComponentDataSourceEnumerator)block
 {
   if (block) {
     [[_sections objectAtIndex:section] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
