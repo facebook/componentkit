@@ -247,7 +247,8 @@ static void applyChangesetToCollectionView(const Output::Changeset &changeset, U
                                                         NSUInteger idx,
                                                         BOOL *stop)
     {
-      if (CKCollectionViewDataSourceCell *cell = [collectionView cellForItemAtIndexPath:indexPath]) {
+      if (CKCollectionViewDataSourceCell *cell = (CKCollectionViewDataSourceCell*) [collectionView cellForItemAtIndexPath:indexPath])
+      {
         attachToCell(cell, indexPath, cellConfigurationFunction, [_componentDataSource objectAtIndexPath:indexPath]);
         [itemUpdateIndexPaths removeObject:indexPath];
       }
