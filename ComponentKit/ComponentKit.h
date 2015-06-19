@@ -61,6 +61,7 @@
 #import <ComponentKit/CKComponentGestureActions.h>
 #import <ComponentKit/CKOptimisticViewMutations.h>
 #import <ComponentKit/CKSectionedArrayController.h>
+#import <ComponentKit/CKComponentDelegateAttribute.h>
 //Text
 #import <ComponentKit/CKLabelComponent.h>
 #import <ComponentKit/CKTextComponent.h>
