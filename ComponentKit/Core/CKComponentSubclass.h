@@ -106,6 +106,14 @@ extern CGSize const kCKComponentParentSizeUndefined;
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
 
 /**
+ Override to return a list of animations that will be applied to the component when it is first mounted.
+
+ @warning If you override this method, your component MUST declare a scope (see CKComponentScope). This is used to
+ identify equivalent components between trees.
+ */
+- (std::vector<CKComponentAnimation>)animationsOnInitialMount;
+
+/**
  Override to return a list of animations from the previous version of the same component.
 
  @warning If you override this method, your component MUST declare a scope (see CKComponentScope). This is used to
