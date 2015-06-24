@@ -56,6 +56,10 @@ id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void));
    _memoizerState = memoizer.nextMemoizerState();
 
  }
+ 
+ How to use component layout memoization, override -shouldMemoizeLayout in your component subclass.
+ See CKComponentSubclass.h for more info.
+
  */
 
 struct CKComponentMemoizer {
@@ -125,4 +129,5 @@ CKMemoizationKey CKMakeTupleMemoizationKey(Types... args) {
 
   return CKMemoizationKey{};
 };
+
 
