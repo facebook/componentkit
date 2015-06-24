@@ -71,10 +71,11 @@
 - (id)nextResponder;
 
 /**
- When an event occurs, if a controller implements the canPerformAction method it will be called in the normal responder
- chain. If the method returns YES, the traversal will end and the action will be called on this controller. If the
- method returns NO, the controller will be skipped and the event will continue to traverse the responder chain to the
- next responder.
+ When an action is triggered, a component controller may use this method to either capture or ignore the given action.
+ The default implementation simply uses respondsToSelector: to determine if the controller can perform the given action.
+
+ In practice, this is useful only for integrations with UIMenuController whose API walks the UIResponder chain to
+ determine which menu items to display. You should not override this method for standard component actions.
  */
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
 
