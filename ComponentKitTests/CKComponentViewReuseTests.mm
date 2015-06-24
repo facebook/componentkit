@@ -14,9 +14,11 @@
 #import "ComponentViewReuseUtilities.h"
 #import "CKComponent.h"
 #import "CKComponentInternal.h"
+#import "CKStackLayoutComponent.h"
 #import "CKComponentLifecycleManager.h"
 #import "CKComponentProvider.h"
 #import "CKCompositeComponent.h"
+#import "CKComponentViewInterface.h"
 
 @interface CKComponentViewReuseTests : XCTestCase <CKComponentProvider>
 @end
@@ -28,6 +30,11 @@
 /** Doesn't actually do anything, just provides a BOOL for storage. */
 @interface CKReuseAwareView : UIView
 @property (nonatomic, assign, getter=isInReusePool) BOOL inReusePool;
+@end
+
+
+@interface CKTestIdentifierComponentProvider : NSObject <CKComponentProvider>
+
 @end
 
 using namespace CK::Component;
@@ -261,6 +268,39 @@ static UIView *viewFactory()
   XCTAssertTrue(reuseAwareView.inReusePool, @"Should be in reuse pool as its parent is hidden by components");
 }
 
+- (void)testComponentWithIdentifierReusedAsSameView
+{
+  UIView *rootView = [[UIView alloc] init];
+
+  // Make some otherwise-indistinguishable views with one that is special
+
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[CKTestIdentifierComponentProvider class]];
+  [clm updateWithState:[clm prepareForUpdateWithModel:@[@"", @"", @"", @"", @"A", @""] constrainedSize:{{0,0}, {100, 100}} context:nil]];
+  [clm attachToView:rootView];
+
+  auto findA = [](UIView *where) {
+    UIView *aView;
+    for (UIView *v in where.subviews) {
+      if (v.ck_component && v.ck_component.viewConfiguration.viewClass().getIdentifier() == "UIView/id/A") {
+        aView = v;
+      }
+    }
+    return aView;
+  };
+
+  // Find view "A"
+  UIView *aView = findA(rootView);
+  XCTAssertNotNil(aView, @"Can't actually find A.");
+
+  // Update to a component with the views switched around
+  [clm updateWithState:[clm prepareForUpdateWithModel:@[@"", @"A", @"",] constrainedSize:{{0,0}, {100, 100}} context:nil]];
+
+  UIView *nextAView = findA(rootView);
+
+  // Make sure the same view represents "A"
+  XCTAssertEqual(aView, nextAView, @"Same view no longer represents A.");
+}
+
 static UIView *reuseAwareViewFactory()
 {
   return [[CKReuseAwareView alloc] init];
@@ -327,6 +367,35 @@ supercomponent:(CKComponent *)supercomponent
     .contextForChildren = result.contextForChildren.childContextForSubview(injectingView.injectedView, NO),
   };
 }
+
+@end
+
+@implementation CKTestIdentifierComponentProvider
+
++ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+{
+  return
+  [CKStackLayoutComponent
+   newWithView:{}
+   size:{}
+   style:{}
+   children:CK::map((NSArray *)model, [](NSString *ident) -> CKStackLayoutComponentChild {
+    if (ident.length > 0) {
+      return {[CKComponent
+               newWithView:{
+                 {[UIView class], ident.UTF8String},
+               }
+               size:{}]};
+    } else {
+      return {[CKComponent
+               newWithView:{
+                 {[UIView class]},
+               }
+               size:{}]};
+    }
+  })];
+}
+
 
 @end
 
