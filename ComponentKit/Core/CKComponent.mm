@@ -11,6 +11,7 @@
 #import "CKComponent.h"
 #import "CKComponentControllerInternal.h"
 #import "CKComponentInternal.h"
+#import "CKComponentMemoizer.h"
 #import "CKComponentSubclass.h"
 
 #import <ComponentKit/CKArgumentPrecondition.h>
@@ -232,6 +233,13 @@ struct CKComponentMountInfo {
 {
   return {self, constrainedSize.min};
 }
+
+- (BOOL)shouldMemoizeLayout
+{
+  return NO;
+}
+
+#pragma mark - Responder
 
 - (id)nextResponder
 {

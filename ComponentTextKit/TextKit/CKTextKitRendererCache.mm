@@ -10,7 +10,7 @@
 
 #import <ComponentKit/CKTextKitRendererCache.h>
 
-#import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKEqualityHashHelpers.h>
 
 namespace CK {
   namespace TextKit {

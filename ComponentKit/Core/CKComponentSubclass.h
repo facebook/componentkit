@@ -77,6 +77,11 @@ extern CGSize const kCKComponentParentSizeUndefined;
                       relativeToParentSize:(CGSize)parentSize;
 
 /**
+ TODO: document
+ */
+- (BOOL)shouldMemoizeLayout;
+
+/**
  Call this to enqueue a change to the state.
 
  The block takes the current state as a parameter and returns an instance of the new state.
@@ -89,6 +94,7 @@ extern CGSize const kCKComponentParentSizeUndefined;
  }];
  */
 - (void)updateState:(id (^)(id))updateBlock;
+
 
 /**
  Allows an action to be forwarded to another target. By default, returns the receiver if it implements action,

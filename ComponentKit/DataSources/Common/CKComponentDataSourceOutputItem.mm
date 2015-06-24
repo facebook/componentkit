@@ -10,7 +10,7 @@
 
 #import "CKComponentDataSourceOutputItem.h"
 
-#import "CKInternalHelpers.h"
+#import "CKEqualityHashHelpers.h"
 #import "ComponentUtilities.h"
 #import "CKComponentLifecycleManager.h"
 #import "CKMacros.h"

@@ -12,7 +12,7 @@
 #import "CKTransactionalComponentDataSourceAppliedChangesInternal.h"
 
 #import "ComponentUtilities.h"
-#import "CKInternalHelpers.h"
+#import "CKEqualityHashHelpers.h"
 #import "CKMacros.h"
 
 @implementation CKTransactionalComponentDataSourceAppliedChanges

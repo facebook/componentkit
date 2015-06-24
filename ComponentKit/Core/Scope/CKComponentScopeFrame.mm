@@ -19,7 +19,7 @@
 #import "CKComponentScopeHandle.h"
 #import "CKComponentScopeRootInternal.h"
 #import "CKComponentSubclass.h"
-#import "CKInternalHelpers.h"
+#import "CKEqualityHashHelpers.h"
 #import "CKMacros.h"
 #import "CKThreadLocalComponentScope.h"
 
