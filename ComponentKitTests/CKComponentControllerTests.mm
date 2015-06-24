@@ -168,7 +168,7 @@
                        @"Root component's controller's nextResponder should be root view");
 }
 
-- (void)testThatResponderChainWorksTargetsCorrectResponder
+- (void)testThatResponderChainTargetsCorrectResponder
 {
   CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
   CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
