@@ -70,4 +70,12 @@
  */
 - (id)nextResponder;
 
+/**
+ When an event occurs, if a controller implements the canPerformAction method it will be called in the normal responder
+ chain. If the method returns YES, the traversal will end and the action will be called on this controller. If the
+ method returns NO, the controller will be skipped and the event will continue to traverse the responder chain to the
+ next responder.
+ */
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
+
 @end

@@ -54,4 +54,12 @@ struct CKComponentViewContext {
  */
 - (id)nextResponder;
 
+/**
+ When an event occurs, if a component implements the canPerformAction method it will be called in the normal responder
+ chain. If the method returns YES, the traversal will end and the action will be called on this component. If the
+ method returns NO, the component will be skipped and the event will continue to traverse the responder chain to the
+ component's next responder.
+ */
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
+
 @end
