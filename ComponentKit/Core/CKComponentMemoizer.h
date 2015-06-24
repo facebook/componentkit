@@ -88,6 +88,9 @@ struct CKComponentMemoizer {
    */
   id nextMemoizerState();
 
+  // Copies the layout into the layout cache
+  static void rememberLayout(CKComponentLayout l);
+
 private:
   id previousMemoizer_;
 };
@@ -135,4 +138,9 @@ CKMemoizationKey CKMakeTupleMemoizationKey(Types... args) {
 
   return CKMemoizationKey{};
 };
+
+
+// Internal, for CKComponent
+CKComponentLayout CKMemoizeOrComputeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize);
+
 
