@@ -11,6 +11,7 @@
 #import <ComponentKit/CKArrayControllerChangeType.h>
 
 #import <ComponentKit/CKComponentDataSource.h>
+#import <ComponentKit/CKComponentDataSourceDelegate.h>
 #import <ComponentKit/CKComponentDataSourceOutputItem.h>
 
 @interface CKComponentDataSourceTestDelegate : NSObject <CKComponentDataSourceDelegate>
