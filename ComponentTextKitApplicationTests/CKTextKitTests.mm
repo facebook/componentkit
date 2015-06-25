@@ -88,6 +88,34 @@ static BOOL checkAttributes(const CKTextKitAttributes &attributes, const CGSize 
   XCTAssert(checkAttributes(attributes, { 100, 100 }));
 }
 
+- (void)testChangingAPropertyChangesHash
+{
+  NSAttributedString *as = [[NSAttributedString alloc] initWithString:@"hello" attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12]}];
+
+  CKTextKitAttributes attrib1 {
+    .attributedString = as,
+    .lineBreakMode =  NSLineBreakByClipping,
+  };
+  CKTextKitAttributes attrib2 {
+    .attributedString = as,
+  };
+
+  XCTAssertNotEqual(attrib1.hash(), attrib2.hash(), @"Hashes should differ when NSLineBreakByClipping changes.");
+}
+
+- (void)testSameStringHashesSame
+{
+  CKTextKitAttributes attrib1 {
+    .attributedString = [[NSAttributedString alloc] initWithString:@"hello" attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12]}],
+  };
+  CKTextKitAttributes attrib2 {
+    .attributedString = [[NSAttributedString alloc] initWithString:@"hello" attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12]}],
+  };
+
+  XCTAssertEqual(attrib1.hash(), attrib2.hash(), @"Hashes should be the same!");
+}
+
+
 - (void)testStringsWithVariableAttributes
 {
   NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@"hello" attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12]}];
