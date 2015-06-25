@@ -75,3 +75,15 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout, UIView *view, CKC
   }
   return mountedComponents;
 }
+
+void CKUnmountComponents(NSSet *oldComponents, NSSet *newComponents)
+{
+  // Unmount any components that were in _mountedComponents but are no longer in newMountedComponents.
+  NSMutableSet *componentsToUnmount = [oldComponents mutableCopy];
+  if (newComponents) {
+    [componentsToUnmount minusSet:newComponents];
+  }
+  for (CKComponent *component in componentsToUnmount) {
+    [component unmount];
+  }
+}
