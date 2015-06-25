@@ -211,7 +211,12 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 - (id)targetForAction:(SEL)action withSender:(id)sender
 {
-  return [self respondsToSelector:action] ? self : [[self nextResponder] targetForAction:action withSender:sender];
+  return [self canPerformAction:action withSender:sender] ? self : [[self nextResponder] targetForAction:action withSender:sender];
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+  return [self respondsToSelector:action];
 }
 
 @end
