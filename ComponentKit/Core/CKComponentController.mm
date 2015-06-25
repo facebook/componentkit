@@ -54,7 +54,10 @@ static NSString *componentStateName(CKComponentControllerState state)
 {
   CKComponentControllerState _state;
   BOOL _updatingComponent;
+  BOOL _performedInitialMount;
   CKComponent *_previousComponent;
+  std::vector<CKPendingComponentAnimation> _pendingAnimationsOnInitialMount;
+  std::vector<CKAppliedComponentAnimation> _appliedAnimationsOnInitialMount;
   std::vector<CKPendingComponentAnimation> _pendingAnimations;
   std::vector<CKAppliedComponentAnimation> _appliedAnimations;
 }
@@ -87,6 +90,12 @@ static NSString *componentStateName(CKComponentControllerState state)
     case CKComponentControllerStateUnmounted:
       _state = CKComponentControllerStateMounting;
       [self willMount];
+      if (!_performedInitialMount) {
+        _performedInitialMount = YES;
+        for (const auto &animation : [component animationsOnInitialMount]) {
+          _pendingAnimationsOnInitialMount.push_back({animation, animation.willRemount()});
+        }
+      }
       break;
     case CKComponentControllerStateMounted:
       _state = CKComponentControllerStateRemounting;
@@ -108,6 +117,11 @@ static NSString *componentStateName(CKComponentControllerState state)
     case CKComponentControllerStateMounting:
       _state = CKComponentControllerStateMounted;
       [self didMount];
+      for (const auto &pendingAnimation : _pendingAnimationsOnInitialMount) {
+        const CKComponentAnimation &anim = pendingAnimation.animation;
+        _appliedAnimationsOnInitialMount.push_back({anim, anim.didRemount(pendingAnimation.context)});
+      }
+      _pendingAnimationsOnInitialMount.clear();
       break;
     case CKComponentControllerStateRemounting:
       _state = CKComponentControllerStateMounted;
@@ -176,6 +190,10 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 - (void)_cleanupAppliedAnimations
 {
+  for (const auto &appliedAnimation : _appliedAnimationsOnInitialMount) {
+    appliedAnimation.animation.cleanup(appliedAnimation.context);
+  }
+  _appliedAnimationsOnInitialMount.clear();
   for (const auto &appliedAnimation : _appliedAnimations) {
     appliedAnimation.animation.cleanup(appliedAnimation.context);
   }

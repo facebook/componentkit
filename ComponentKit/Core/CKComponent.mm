@@ -179,6 +179,11 @@ struct CKComponentMountInfo {
 
 #pragma mark - Animation
 
+- (std::vector<CKComponentAnimation>)animationsOnInitialMount
+{
+  return {};
+}
+
 - (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(CKComponent *)previousComponent
 {
   return {};

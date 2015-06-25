@@ -42,6 +42,7 @@
 
 @implementation CKMonkeyComponentWithAnimations
 - (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(CKComponent *)previousComponent { return {}; }
+- (std::vector<CKComponentAnimation>)animationsOnInitialMount { return {}; }
 @end
 
 #pragma mark - Tests
