@@ -67,7 +67,8 @@
   CKTextKitContext *truncationContext = [[CKTextKitContext alloc] initWithAttributedString:_truncationAttributedString
                                                                              lineBreakMode:NSLineBreakByWordWrapping
                                                                       maximumNumberOfLines:1
-                                                                           constrainedSize:constrainedRect.size];
+                                                                           constrainedSize:constrainedRect.size
+                                                                      layoutManagerFactory:nil];
 
   __block CGRect truncationUsedRect;
 
