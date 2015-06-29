@@ -31,7 +31,10 @@ void CKOffMainThreadDeleter::operator()(std::vector<CKComponentLayoutChild> *tar
   }
 }
 
-NSSet *CKMountComponentLayout(const CKComponentLayout &layout, UIView *view, CKComponent *supercomponent)
+NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
+                              UIView *view,
+                              NSSet *previouslyMountedComponents,
+                              CKComponent *supercomponent)
 {
   struct MountItem {
     const CKComponentLayout &layout;
@@ -73,5 +76,20 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout, UIView *view, CKC
       }
     }
   }
+
+  if (previouslyMountedComponents) {
+    // Unmount any components that were in previouslyMountedComponents but are no longer in mountedComponents.
+    NSMutableSet *componentsToUnmount = [previouslyMountedComponents mutableCopy];
+    [componentsToUnmount minusSet:mountedComponents];
+    CKUnmountComponents(componentsToUnmount);
+  }
+
   return mountedComponents;
+}
+
+void CKUnmountComponents(NSSet *componentsToUnmount)
+{
+  for (CKComponent *component in componentsToUnmount) {
+    [component unmount];
+  }
 }

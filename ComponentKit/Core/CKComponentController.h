@@ -70,4 +70,13 @@
  */
 - (id)nextResponder;
 
+/**
+ When an action is triggered, a component controller may use this method to either capture or ignore the given action.
+ The default implementation simply uses respondsToSelector: to determine if the controller can perform the given action.
+
+ In practice, this is useful only for integrations with UIMenuController whose API walks the UIResponder chain to
+ determine which menu items to display. You should not override this method for standard component actions.
+ */
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
+
 @end

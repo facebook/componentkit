@@ -10,5 +10,6 @@ link_with 'ComponentKitTests',
           'ComponentTextKitApplicationTests'
 pod 'ComponentKit', :path => '.'
 pod 'ComponentKitTestLib', :path => './ComponentKitTestLib'
+pod 'ComponentSnapshotTestCase', :path => './ComponentSnapshotTestCase'
 pod 'OCMock', '~> 2.2'
 

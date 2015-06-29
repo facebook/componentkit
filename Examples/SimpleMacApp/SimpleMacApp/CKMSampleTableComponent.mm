@@ -144,7 +144,7 @@ supercomponent:(CKComponent *)supercomponent
 
   auto &tableLayout = (*children)[0].layout;
 
-  CKMountComponentLayout(tableLayout, scroll.contentView);
+  CKMountComponentLayout(tableLayout, scroll.contentView, nil, nil);
 
   // Now we're in the content view
   NSTableView *tableView = (NSTableView *)_table.viewContext.view;

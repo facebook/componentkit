@@ -137,8 +137,10 @@ static Class controllerClassForComponentClass(Class componentClass)
   if (it == cache->end()) {
     Class c = NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"]);
 
-    // If you override animationsFromPreviousComponent: then we need a controller.
-    if (c == nil && CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:))) {
+    // If you override animationsFromPreviousComponent: or animationsOnInitialMount then we need a controller.
+    if (c == nil &&
+        (CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
+         CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnInitialMount)))) {
       c = [CKComponentController class];
     }
 

@@ -36,7 +36,7 @@
 
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView);
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
   CKComponentActionSend(@selector(testAction:context:), innerComponent);
 
@@ -57,7 +57,7 @@
 
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView);
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
   id context = @"context";
 
@@ -85,7 +85,7 @@
 
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView);
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
   CKComponentActionSend(@selector(testAction:context:), innerComponent);
 
@@ -112,7 +112,7 @@
 
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView);
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
   CKComponentActionSend(@selector(testAction:context:), innerComponent, nil, CKComponentActionSendBehaviorStartAtSender);
 

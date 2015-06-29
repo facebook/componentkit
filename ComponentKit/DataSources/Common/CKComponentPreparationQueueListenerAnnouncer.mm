@@ -14,6 +14,8 @@
 
 #import "CKComponentPreparationQueueListenerAnnouncer.h"
 
+#import <ComponentKit/CKComponentAnnouncerHelper.h>
+
 @implementation CKComponentPreparationQueueListenerAnnouncer
 
 - (void)addListener:(id<CKComponentPreparationQueueListener>)listener

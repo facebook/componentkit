@@ -112,7 +112,7 @@ CK_FINAL_CLASS([CKNSTableViewDataSource class]);
   CKTransactionalComponentDataSourceItem *item = [[_componentDataSource state] objectAtIndexPath:[NSIndexPath indexPathForItem:row inSection:0]];
   const CKComponentLayout &layout = item.layout;
 
-  CKMountComponentLayout(layout, v);
+  CKMountComponentLayout(layout, v, nil, nil);
 
   return v;
 }

@@ -69,6 +69,7 @@
 #import <ComponentKit/CKComponentGestureActions.h>
 #import <ComponentKit/CKOptimisticViewMutations.h>
 #import <ComponentKit/CKSectionedArrayController.h>
+#import <ComponentKit/CKComponentDelegateAttribute.h>
 //Text
 #if TARGET_OS_IPHONE
 #import <ComponentKit/CKLabelComponent.h>

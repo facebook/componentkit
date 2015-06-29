@@ -10,7 +10,7 @@
 
 #import <ComponentKit/CKDefines.h>
 
-#import <ComponentKitTestLib/CKComponentSnapshotTestCase.h>
+#import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
 #import "CKBackgroundLayoutComponent.h"
 #import "CKCenterLayoutComponent.h"

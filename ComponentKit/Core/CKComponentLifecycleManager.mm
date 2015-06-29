@@ -69,12 +69,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 {
   if (_mountedComponents) {
     NSSet *componentsToUnmount = _mountedComponents;
-    dispatch_block_t unmountBlock = ^{
-      for (CKComponent *c in componentsToUnmount) {
-        [c unmount];
-      }
-    };
-
+    dispatch_block_t unmountBlock = ^{ CKUnmountComponents(componentsToUnmount); };
     if ([NSThread isMainThread]) {
       unmountBlock();
     } else {
@@ -143,15 +138,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
 - (void)_mountLayout
 {
-  NSSet *newMountedComponents = CKMountComponentLayout(_state.layout, _mountedView);
-
-  // Unmount any components that were in _mountedComponents but are no longer in newMountedComponents.
-  NSMutableSet *componentsToUnmount = [_mountedComponents mutableCopy];
-  [componentsToUnmount minusSet:newMountedComponents];
-  for (CKComponent *component in componentsToUnmount) {
-    [component unmount];
-  }
-  _mountedComponents = [newMountedComponents copy];
+  _mountedComponents = [CKMountComponentLayout(_state.layout, _mountedView, _mountedComponents, nil) copy];
 }
 
 - (void)attachToView:(UIView *)view
@@ -176,9 +163,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 {
   if (_mountedView) {
     CKAssert(_mountedView.ck_componentLifecycleManager == self, @"");
-    for (CKComponent *component in _mountedComponents) {
-      [component unmount];
-    }
+    CKUnmountComponents(_mountedComponents);
     _mountedComponents = nil;
     _mountedView.ck_componentLifecycleManager = nil;
     _mountedView = nil;

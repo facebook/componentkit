@@ -324,7 +324,7 @@ supercomponent:(CKComponent *)supercomponent
   CKInjectingView *injectingView = (CKInjectingView *)result.contextForChildren.viewManager->view;
   return {
     .mountChildren = YES,
-    .contextForChildren = result.contextForChildren.childContextForSubview(injectingView.injectedView),
+    .contextForChildren = result.contextForChildren.childContextForSubview(injectingView.injectedView, NO),
   };
 }
 

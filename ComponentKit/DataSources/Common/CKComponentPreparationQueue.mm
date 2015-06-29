@@ -28,7 +28,8 @@
                          constrainedSize:(CKSizeRange)constrainedSize
                                  oldSize:(CGSize)oldSize
                                     UUID:(NSString *)UUID
-                               indexPath:(NSIndexPath *)indexPath
+                         sourceIndexPath:(NSIndexPath *)sourceIndexPath
+                    destinationIndexPath:(NSIndexPath *)destinationIndexPath
                               changeType:(CKArrayControllerChangeType)changeType
                              passthrough:(BOOL)passthrough
                                  context:(id<NSObject>)context
@@ -38,7 +39,8 @@
     _lifecycleManager = lifecycleManager;
     _constrainedSize = constrainedSize;
     _UUID = [UUID copy];
-    _indexPath = [indexPath copy];
+    _sourceIndexPath = [sourceIndexPath copy];
+    _destinationIndexPath = [destinationIndexPath copy];
     _changeType = changeType;
     _passthrough = passthrough;
     _oldSize = oldSize;
@@ -55,7 +57,8 @@
 @synthesize replacementModel = _replacementModel;
 @synthesize lifecycleManager = _lifecycleManager;
 @synthesize UUID = _UUID;
-@synthesize indexPath = _indexPath;
+@synthesize sourceIndexPath = _sourceIndexPath;
+@synthesize destinationIndexPath = _destinationIndexPath;
 @synthesize changeType = _changeType;
 @synthesize passthrough = _passthrough;
 @synthesize oldSize = _oldSize;
@@ -78,7 +81,8 @@
                    lifecycleManagerState:(CKComponentLifecycleManagerState)lifecycleManagerState
                                  oldSize:(CGSize)oldSize
                                     UUID:(NSString *)UUID
-                               indexPath:(NSIndexPath *)indexPath
+                         sourceIndexPath:(NSIndexPath *)sourceIndexPath
+                    destinationIndexPath:(NSIndexPath *)destinationIndexPath
                               changeType:(CKArrayControllerChangeType)changeType
                              passthrough:(BOOL)passthrough
                                  context:(id<NSObject>)context
@@ -88,7 +92,8 @@
     _lifecycleManager = lifecycleManager;
     _lifecycleManagerState = lifecycleManagerState;
     _UUID = [UUID copy];
-    _indexPath = [indexPath copy];
+    _sourceIndexPath = [sourceIndexPath copy];
+    _destinationIndexPath = [destinationIndexPath copy];
     _changeType = changeType;
     _passthrough = passthrough;
     _oldSize = oldSize;
@@ -105,7 +110,8 @@
 @synthesize replacementModel = _replacementModel;
 @synthesize lifecycleManager = _lifecycleManager;
 @synthesize UUID = _UUID;
-@synthesize indexPath = _indexPath;
+@synthesize sourceIndexPath = _sourceIndexPath;
+@synthesize destinationIndexPath = _destinationIndexPath;
 @synthesize changeType = _changeType;
 @synthesize passthrough = _passthrough;
 @synthesize oldSize = _oldSize;
@@ -252,7 +258,8 @@
                                                                 lifecycleManagerState:state
                                                                               oldSize:[inputItem oldSize]
                                                                                  UUID:[inputItem UUID]
-                                                                            indexPath:[inputItem indexPath]
+                                                                      sourceIndexPath:[inputItem sourceIndexPath]
+                                                                 destinationIndexPath:[inputItem destinationIndexPath]
                                                                            changeType:[inputItem changeType]
                                                                           passthrough:[inputItem isPassthrough]
                                                                               context:[inputItem context]];
@@ -262,7 +269,8 @@
                                                                 lifecycleManagerState:CKComponentLifecycleManagerStateEmpty
                                                                               oldSize:[inputItem oldSize]
                                                                                  UUID:[inputItem UUID]
-                                                                            indexPath:[inputItem indexPath]
+                                                                      sourceIndexPath:[inputItem sourceIndexPath]
+                                                                 destinationIndexPath:[inputItem destinationIndexPath]
                                                                            changeType:[inputItem changeType]
                                                                           passthrough:[inputItem isPassthrough]
                                                                               context:[inputItem context]];
@@ -275,7 +283,8 @@
                                                               lifecycleManagerState:CKComponentLifecycleManagerStateEmpty
                                                                             oldSize:[inputItem oldSize]
                                                                                UUID:[inputItem UUID]
-                                                                          indexPath:[inputItem indexPath]
+                                                                    sourceIndexPath:[inputItem sourceIndexPath]
+                                                               destinationIndexPath:[inputItem destinationIndexPath]
                                                                          changeType:[inputItem changeType]
                                                                         passthrough:[inputItem isPassthrough]
                                                                             context:[inputItem context]];

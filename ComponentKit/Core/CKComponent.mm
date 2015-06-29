@@ -17,9 +17,7 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
 
-#import "CKInternalHelpers.h"
-#import "CKWeakObjectContainer.h"
-#import "ComponentLayoutContext.h"
+#import "CKAssert.h"
 #import "CKComponentAccessibility.h"
 #import "CKComponentAnimation.h"
 #import "CKComponentController.h"
@@ -28,7 +26,10 @@
 #import "CKComponentScopeHandle.h"
 #import "CKComponentViewConfiguration.h"
 #import "CKComponentViewInterface.h"
-#import "CKAssert.h"
+#import "CKInternalHelpers.h"
+#import "CKMountAnimationGuard.h"
+#import "CKWeakObjectContainer.h"
+#import "ComponentLayoutContext.h"
 
 CGFloat const kCKComponentParentDimensionUndefined = NAN;
 CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndefined, kCKComponentParentDimensionUndefined};
@@ -125,6 +126,7 @@ struct CKComponentMountInfo {
 
   UIView *v = effectiveContext.viewManager->viewForConfiguration([self class], viewConfiguration);
   if (v) {
+    CKMountAnimationGuard g(v.ck_component, self, context);
     if (_mountInfo->view != v) {
       [self _relinquishMountedView]; // First release our old view
       [v.ck_component unmount];      // Then unmount old component (if any) from the new view
@@ -149,7 +151,7 @@ struct CKComponentMountInfo {
 #endif
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
-    return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v)};
+    return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
   } else {
     CKAssertNil(_mountInfo->view, @"Didn't expect to sometimes have a view and sometimes not have a view");
     _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, size}};
@@ -184,6 +186,11 @@ struct CKComponentMountInfo {
 }
 
 #pragma mark - Animation
+
+- (std::vector<CKComponentAnimation>)animationsOnInitialMount
+{
+  return {};
+}
 
 - (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(CKComponent *)previousComponent
 {
@@ -246,7 +253,12 @@ struct CKComponentMountInfo {
 
 - (id)targetForAction:(SEL)action withSender:(id)sender
 {
-  return [self respondsToSelector:action] ? self : [[self nextResponder] targetForAction:action withSender:sender];
+  return [self canPerformAction:action withSender:sender] ? self : [[self nextResponder] targetForAction:action withSender:sender];
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+  return [self respondsToSelector:action];
 }
 
 // Because only the root component in each mounted tree will have a non-nil rootComponentMountedView, we use Obj-C

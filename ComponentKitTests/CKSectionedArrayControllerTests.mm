@@ -412,7 +412,7 @@ using namespace CK::ArrayController;
   XCTAssertEqual([_controller numberOfObjectsInSection:0], 1, @"");
 
   Output::Items expectedItems;
-  expectedItems.update({{0, 0}, @0, @1});
+  expectedItems.update({0, 0}, @0, @1);
   Output::Changeset expected = {{}, expectedItems};
 
   XCTAssertTrue(output == expected, @"");

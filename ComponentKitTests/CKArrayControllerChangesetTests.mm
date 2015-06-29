@@ -7,6 +7,7 @@
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
+#include <unordered_set>
 
 #import <XCTest/XCTest.h>
 
@@ -253,115 +254,6 @@ static Input::Changeset exampleInputChangeset(void)
   });
 }
 
-- (void)testEnumerationOrdersItemsCommandsAscendingBasedOnIndexPath
-{
-  Input::Changeset changeset = exampleInputChangeset();
-
-  __block std::vector<std::pair<NSInteger, NSInteger>> removals, updates, insertions;
-
-  changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject>, BOOL *) {
-    updates.push_back({section, index});
-  }, ^(NSInteger section, NSInteger index, BOOL *) {
-    removals.push_back({section, index});
-  }, ^(NSInteger section, NSInteger index, id<NSObject>, BOOL *) {
-    insertions.push_back({section, index});
-  });
-
-  XCTAssertEqual(removals, (std::vector<std::pair<NSInteger, NSInteger>>{{15, 8}, {15, 9}}), @"Removals received in incorrect order.");
-  XCTAssertEqual(updates, (std::vector<std::pair<NSInteger, NSInteger>>{{6, 5}, {6, 6}}), @"Updates received in incorrect order.");
-  XCTAssertEqual(insertions, (std::vector<std::pair<NSInteger, NSInteger>>{{1, 5}, {1, 15}, {2, 0}, {2, 1}}), @"Insertions received in incorrect order.");
-}
-
-- (void)testMapNULLBlock
-{
-  Input::Changeset input = exampleInputChangeset();
-  Input::Changeset mapped = input.map(NULL);
-  XCTAssertTrue(input == mapped, @"");
-}
-
-- (void)testMapThrowsOnNilReturnValueFromBlock
-{
-  Input::Changeset input = exampleInputChangeset();
-  Input::Changeset::Mapper mapper = ^id<NSObject>(const IndexPath &indexPath, id<NSObject> object, CKArrayControllerChangeType type, BOOL *stop) {
-    return nil;
-  };
-  XCTAssertThrowsSpecificNamed(input.map(mapper), NSException, NSInternalInconsistencyException, @"");
-}
-
-- (void)testMapIdentity
-{
-  Input::Changeset input = exampleInputChangeset();
-  Input::Changeset::Mapper mapper = ^id<NSObject>(const IndexPath &indexPath, id<NSObject> object, CKArrayControllerChangeType type, BOOL *stop) {
-    return object;
-  };
-  Input::Changeset mapped = input.map(mapper);
-  XCTAssertTrue(mapped == input, @"");
-}
-
-- (void)testMap
-{
-  Input::Changeset input = exampleInputChangeset();
-  Input::Changeset::Mapper mapper = ^id<NSObject>(const IndexPath &indexPath, id<NSObject> object, CKArrayControllerChangeType type, BOOL *stop) {
-    return @([(NSNumber *)object intValue] + 1);
-  };
-
-  Input::Changeset mapped = input.map(mapper);
-
-  Sections expectedSections;
-  expectedSections.insert(2);
-  expectedSections.insert(0);
-  expectedSections.remove(15);
-  expectedSections.remove(5);
-
-  Input::Items expectedItems;
-  expectedItems.insert({2, 1}, @2);
-  expectedItems.insert({2, 0}, @3);
-  expectedItems.insert({1, 15}, @4);
-  expectedItems.insert({1, 5}, @5);
-  expectedItems.update({6, 6}, @6);
-  expectedItems.update({6, 5}, @6);
-  expectedItems.remove({15, 9});
-  expectedItems.remove({15, 8});
-
-  Input::Changeset expected = {expectedSections, expectedItems};
-
-  XCTAssertTrue(mapped == expected, @"");
-}
-
-- (void)testMapIndex
-{
-  Input::Changeset input = exampleInputChangeset();
-  
-  const NSInteger sectionOffset = 5;
-  const NSInteger itemOffset = 2;
-  Input::Changeset mapped = input.mapIndex(
-                                           ^(const NSInteger sectionIndex, CKArrayControllerChangeType type) {
-                                             return sectionIndex + sectionOffset;
-                                           },
-                                           ^(const IndexPath &indexPath, CKArrayControllerChangeType type) {
-                                             return IndexPath(indexPath.section + sectionOffset, indexPath.item + itemOffset);
-                                           });
-  Sections expectedSections;
-  expectedSections.insert(2+sectionOffset);
-  expectedSections.insert(0+sectionOffset);
-  expectedSections.remove(15+sectionOffset);
-  expectedSections.remove(5+sectionOffset);
-  
-  Input::Items expectedItems;
-  expectedItems.insert({2+sectionOffset, 1+itemOffset}, @1);
-  expectedItems.insert({2+sectionOffset, 0+itemOffset}, @2);
-  expectedItems.insert({1+sectionOffset, 15+itemOffset}, @3);
-  expectedItems.insert({1+sectionOffset, 5+itemOffset}, @4);
-  expectedItems.update({6+sectionOffset, 6+itemOffset}, @5);
-  expectedItems.update({6+sectionOffset, 5+itemOffset}, @5);
-  expectedItems.remove({15+sectionOffset, 9+itemOffset});
-  expectedItems.remove({15+sectionOffset, 8+itemOffset});
-  
-  Input::Changeset expected = {expectedSections, expectedItems};
-  
-  XCTAssertTrue(mapped == expected, @"");
-}
-
 @end
 
 @interface CKArrayControllerOutputChangesetTests : XCTestCase
@@ -402,10 +294,10 @@ static Output::Changeset exampleOutputChangeset(void)
   items.remove({15, 9}, @5);
   items.remove({16, 4}, @6);
   items.remove({16, 5}, @7);
-  items.update({{7, 6}, @8, @9});
-  items.update({{7, 5}, @8, @9});
-  items.update({{6, 3}, @8, @9});
-  items.update({{6, 4}, @8, @9});
+  items.update({7, 6}, @8, @9);
+  items.update({7, 5}, @8, @9);
+  items.update({6, 3}, @8, @9);
+  items.update({6, 4}, @8, @9);
 
   return {sections, items};
 }
@@ -470,16 +362,28 @@ static Output::Changeset exampleOutputChangeset(void)
   XCTAssertEqualObjects(removals, expectedRemovals, @"");
 }
 
-- (void)testItemCommandsAreEnumeratedInOrder
+// Adding very bad hashing for Output::Change just to make it possible to put them in a set for the next test.
+namespace std {
+  template <>
+  struct hash<Output::Change>
+  {
+    size_t operator()(const Output::Change &) const
+    {
+      return 0;
+    }
+  };
+}
+
+- (void)testAllItemCommandsAreEnumerated
 {
   Output::Changeset changeset = exampleOutputChangeset();
 
   Sections::Enumerator sectionsEnumerator =
   ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {};
 
-  __block std::set<Output::Change> insertions;
-  __block std::set<Output::Change> removals;
-  __block std::set<Output::Change> updates;
+  __block std::unordered_set<Output::Change> insertions;
+  __block std::unordered_set<Output::Change> removals;
+  __block std::unordered_set<Output::Change> updates;
 
   Output::Items::Enumerator itemsEnumerator =
   ^(const Output::Change &change, CKArrayControllerChangeType type, BOOL *stop) {
@@ -496,25 +400,25 @@ static Output::Changeset exampleOutputChangeset(void)
 
   changeset.enumerate(sectionsEnumerator, itemsEnumerator);
 
-  std::set<Output::Change> expectedInsertions = {
-    {{0, 0}, nil, @1},
-    {{0, 1}, nil, @0},
-    {{2, 0}, nil, @2},
-    {{2, 1}, nil, @3}
+  std::unordered_set<Output::Change> expectedInsertions = {
+    {{}, {0, 0}, nil, @1},
+    {{}, {0, 1}, nil, @0},
+    {{}, {2, 0}, nil, @2},
+    {{}, {2, 1}, nil, @3}
   };
 
-  std::set<Output::Change> expectedRemovals = {
-    {{15, 9}, @5, nil},
-    {{15, 10}, @4, nil},
-    {{16, 4}, @6, nil},
-    {{16, 5}, @7, nil}
+  std::unordered_set<Output::Change> expectedRemovals = {
+    {{15, 9}, {}, @5, nil},
+    {{15, 10}, {}, @4, nil},
+    {{16, 4}, {}, @6, nil},
+    {{16, 5}, {}, @7, nil}
   };
 
-  std::set<Output::Change> expectedUpdates = {
-    {{7, 5}, @8, @9},
-    {{7, 6}, @8, @9},
-    {{6, 3}, @8, @9},
-    {{6, 4}, @8, @9}
+  std::unordered_set<Output::Change> expectedUpdates = {
+    {{7, 5}, {}, @8, @9},
+    {{7, 6}, {}, @8, @9},
+    {{6, 3}, {}, @8, @9},
+    {{6, 4}, {}, @8, @9}
   };
 
   XCTAssertTrue(insertions == expectedInsertions, @"");
@@ -661,10 +565,10 @@ static Output::Changeset exampleOutputChangeset(void)
   expectedItems.remove({15, 9}, @6);
   expectedItems.remove({16, 4}, @7);
   expectedItems.remove({16, 5}, @8);
-  expectedItems.update({{7, 6}, @9, @10});
-  expectedItems.update({{7, 5}, @9, @10});
-  expectedItems.update({{6, 3}, @9, @10});
-  expectedItems.update({{6, 4}, @9, @10});
+  expectedItems.update({7, 6}, @9, @10);
+  expectedItems.update({7, 5}, @9, @10);
+  expectedItems.update({6, 3}, @9, @10);
+  expectedItems.update({6, 4}, @9, @10);
 
   Output::Changeset expected = {expectedSections, expectedItems};
 

@@ -16,7 +16,7 @@ BOOL CKSubclassOverridesSelector(Class superclass, Class subclass, SEL selector)
 
 std::string CKStringFromPointer(const void *ptr);
 
-extern NSUInteger CKIntegerArrayHash(const NSUInteger *subhashes, NSUInteger count);
+NSUInteger CKIntegerArrayHash(const NSUInteger *subhashes, NSUInteger count);
 
 CGFloat CKScreenScale();
 

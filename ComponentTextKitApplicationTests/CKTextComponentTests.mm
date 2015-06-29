@@ -10,7 +10,7 @@
 
 #import <ComponentKit/CKDefines.h>
 
-#import <ComponentKitTestLib/CKComponentSnapshotTestCase.h>
+#import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
 #import <ComponentKit/CKTextComponent.h>
 
@@ -376,6 +376,29 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
       initWithString:@"Zapfino is the best"
       attributes:@{NSFontAttributeName : [UIFont fontWithName:@"Zapfino" size:28],
                    NSLigatureAttributeName : @2}]
+   }
+   viewAttributes:{
+     {{@selector(setBackgroundColor:), [UIColor clearColor]}}
+   }
+   accessibilityContext:{ }];
+  CKSnapshotVerifyComponent(c, kUnrestrictedSize, @"");
+}
+
+- (void)testTruncationStringLargerThanLastLine
+{
+  CKTextComponent *c =
+  [CKTextComponent
+   newWithTextAttributes:{
+     .attributedString =
+     [[NSAttributedString
+       alloc]
+      initWithString:@"asdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf"
+      attributes:@{NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue" size:12.5]}],
+     .maximumNumberOfLines = 3,
+     .truncationAttributedString = [[NSAttributedString
+                                     alloc]
+                                    initWithString:@"... Read More"
+                                    attributes:@{NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue" size:12.5]}],
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}

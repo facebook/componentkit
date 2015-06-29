@@ -1145,8 +1145,7 @@ static const CKSizeRange constrainedSize = {{320, 0}, {320, INFINITY}};
   
   for (CKComponentDataSourceTestDelegateChange *change in [_delegate changes]) {
     XCTAssertEqual(change.changeType, CKArrayControllerChangeTypeUpdate);
-    XCTAssertEqualObjects(change.afterIndexPath, change.beforeIndexPath);
-    XCTAssertEqualObjects(change.dataSourcePair, capturedState[change.afterIndexPath]);
+    XCTAssertEqualObjects(change.dataSourcePair, capturedState[change.sourceIndexPath]);
   }
   XCTAssertEqual([[_delegate changes] count], [capturedState count]);
 }

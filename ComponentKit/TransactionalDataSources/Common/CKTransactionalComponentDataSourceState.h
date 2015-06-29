@@ -22,11 +22,11 @@
 
 - (CKTransactionalComponentDataSourceItem *)objectAtIndexPath:(NSIndexPath *)indexPath;
 
-typedef void(^CKComponentDataSourceEnumerator)(CKTransactionalComponentDataSourceItem *, NSIndexPath *, BOOL *stop);
+typedef void(^CKTransactionalComponentDataSourceEnumerator)(CKTransactionalComponentDataSourceItem *, NSIndexPath *, BOOL *stop);
 
-- (void)enumerateObjectsUsingBlock:(CKComponentDataSourceEnumerator)block;
+- (void)enumerateObjectsUsingBlock:(CKTransactionalComponentDataSourceEnumerator)block;
 
-- (void)enumerateObjectsInSectionAtIndex:(NSInteger)section usingBlock:(CKComponentDataSourceEnumerator)block;
+- (void)enumerateObjectsInSectionAtIndex:(NSInteger)section usingBlock:(CKTransactionalComponentDataSourceEnumerator)block;
 
 /** The configuration used to generate this state object. */
 @property (nonatomic, strong, readonly) CKTransactionalComponentDataSourceConfiguration *configuration;
