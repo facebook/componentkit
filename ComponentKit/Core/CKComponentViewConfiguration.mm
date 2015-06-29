@@ -142,3 +142,12 @@ BOOL CKComponentViewClass::hasView() const
 {
   return factory != nil;
 }
+
+size_t std::hash<CKComponentViewConfiguration>::operator()(const CKComponentViewConfiguration &cl) const
+{
+  NSUInteger subhashes[] = {
+    std::hash<CKComponentViewClass>()(cl.viewClass()),
+    std::hash<CKViewComponentAttributeValueMap>()(*cl.attributes()),
+  };
+  return CKIntegerArrayHash(subhashes, std::end(subhashes) - std::begin(subhashes));
+};

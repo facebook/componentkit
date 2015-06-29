@@ -12,6 +12,7 @@
 #import <unordered_map>
 
 #import <UIKit/UIKit.h>
+#import <ComponentKit/CKEqualityHashHelpers.h>
 
 /**
  View attributes usually correspond to properties (like background color or alpha) but can represent arbitrarily complex
@@ -80,7 +81,11 @@ struct CKComponentViewAttribute {
   bool operator==(const CKComponentViewAttribute &attr) const { return identifier == attr.identifier; };
 };
 
+
+typedef std::unordered_map<CKComponentViewAttribute, id> CKViewComponentAttributeValueMap;
+
 namespace std {
+
   template<> struct hash<CKComponentViewAttribute>
   {
     size_t operator()(const CKComponentViewAttribute &attr) const
@@ -89,9 +94,6 @@ namespace std {
     }
   };
 }
-
-typedef std::unordered_map<CKComponentViewAttribute, id> CKViewComponentAttributeValueMap;
-
 /**
  This typedef is provided for convenience for helper functions that return both an attribute and a value, ready-made
  for dropping into the initialization list for attributes.
@@ -100,3 +102,20 @@ typedef std::unordered_map<CKComponentViewAttribute, id> CKViewComponentAttribut
  constructor takes a list of std::pair<CKComponentViewAttribute, id>.
  */
 typedef CKViewComponentAttributeValueMap::value_type CKComponentViewAttributeValue;
+
+namespace std {
+
+  template<> struct hash<CKViewComponentAttributeValueMap>
+  {
+    size_t operator()(const CKViewComponentAttributeValueMap &attr) const
+    {
+      uint64_t hash = 0;
+      for (const auto& it: attr) {
+        hash = CKHashCombine(hash, std::hash<CKComponentViewAttribute>()(it.first));
+        hash = CKHashCombine(hash, CK::hash<id>()(it.second));
+      }
+      return CKHash64ToNative(hash);
+    }
+  };
+  
+}
