@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentMemoizer.h>
 #import <ComponentKit/CKNSTableViewDataSource.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
 
@@ -111,17 +112,20 @@ static CKTransactionalComponentDataSourceChangeset *insertItems(NSArray *models,
 {
   CKComponentScope s(self);
 
-  CKMSampleTableComponent *c =
-  [self newWithView:scrollView
-               size:size];
+  return CKMemoize(CKMakeTupleMemoizationKey(scrollView, tableView, modelObjects, componentProvider, size), ^id{
+    CKMSampleTableComponent *c =
+    [self newWithView:scrollView
+                 size:size];
 
-  if (!c) return nil;
+    if (!c) return nil;
 
-  c->_table = [CKComponent newWithView:tableView size:size];
-  c->_cellProviderClass = componentProvider;
-  c->_models = [modelObjects copy];
+    c->_table = [CKComponent newWithView:tableView size:size];
+    c->_cellProviderClass = componentProvider;
+    c->_models = [modelObjects copy];
 
-  return c;
+    return c;
+    
+  });
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
