@@ -44,12 +44,12 @@
 
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView);
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
   [(UIControl *)[controlComponent viewContext].view sendActionsForControlEvents:UIControlEventTouchUpInside];
   XCTAssert(actionSender == controlComponent, @"Sender should be the component that created the control");
 
-  [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
+  CKUnmountComponents(mountedComponents);
 }
 
 - (void)testControlActionAttributeWithControlEventSpecified
@@ -71,12 +71,12 @@
 
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView);
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
   [(UIControl *)[controlComponent viewContext].view sendActionsForControlEvents:UIControlEventValueChanged];
   XCTAssertTrue(receivedAction, @"Should have received action");
 
-  [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
+  CKUnmountComponents(mountedComponents);
 }
 
 - (void)testControlActionIsNotSentForControlEventsThatDoNotMatch
@@ -98,12 +98,12 @@
 
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView);
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
   [(UIControl *)[controlComponent viewContext].view sendActionsForControlEvents:UIControlEventTouchDragEnter];
   XCTAssertFalse(receivedAction, @"Should not have received callback for UIControlEventTouchDragEnter");
 
-  [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
+  CKUnmountComponents(mountedComponents);
 }
 
 - (void)testControlActionIsNotSentForNullAction
@@ -125,12 +125,12 @@
 
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView);
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
   [(UIControl *)[controlComponent viewContext].view sendActionsForControlEvents:UIControlEventTouchUpInside];
   XCTAssertFalse(receivedAction, @"Should not have received callback if no action specified");
 
-  [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
+  CKUnmountComponents(mountedComponents);
 }
 
 @end

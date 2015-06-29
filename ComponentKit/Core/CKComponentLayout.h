@@ -44,5 +44,19 @@ struct CKComponentLayoutChild {
   CKComponentLayout layout;
 };
 
-/** Recursively mounts the layout in the view, returning a set of the mounted components. */
-NSSet *CKMountComponentLayout(const CKComponentLayout &layout, UIView *view, CKComponent *supercomponent = nil);
+/**
+ Recursively mounts the layout in the view, returning a set of the mounted components.
+ @param layout The layout to mount, usually returned from a call to -layoutThatFits:parentSize:
+ @param view The view in which to mount the layout.
+ @param previouslyMountedComponents If a previous layout was mounted, pass the return value of the previous call to
+        CKMountComponentLayout; any components that are not present in the new layout will be unmounted.
+ @param supercomponent Usually pass nil; if you are mounting a subtree of a layout, pass the parent component so the
+        component responder chain can be connected correctly.
+ */
+NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
+                              UIView *view,
+                              NSSet *previouslyMountedComponents,
+                              CKComponent *supercomponent);
+
+/** Unmounts all components returned by a previous call to CKMountComponentLayout. */
+void CKUnmountComponents(NSSet *componentsToUnmount);
