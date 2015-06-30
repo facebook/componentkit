@@ -22,6 +22,10 @@ CKComponentViewClass::CKComponentViewClass(Class viewClass) :
 identifier(class_getName(viewClass)),
 factory(^{return [[viewClass alloc] init];}) {}
 
+CKComponentViewClass::CKComponentViewClass(Class viewClass, std::string reuseName) :
+identifier(std::string(class_getName(viewClass)) + "/id/" + reuseName),
+factory(^{return [[viewClass alloc] init];}) {}
+
 static CKComponentViewReuseBlock blockFromSEL(SEL sel)
 {
   if (sel) {

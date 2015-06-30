@@ -37,6 +37,15 @@ struct CKComponentViewClass {
   CKComponentViewClass(Class viewClass);
 
   /**
+   Specifies that the component should have a view of the given class. The class will be instantiated with UIView's
+   designated initializer -initWithFrame:.
+   
+   This variant introduces a reuseName that additionally constrains reuse. So, if a component is being animated to another
+   component, you can be sure that the corresponding pieces animate to eachother instead of to a random view.
+   */
+  CKComponentViewClass(Class viewClass, std::string reuseName);
+
+  /**
    A variant that allows you to specify two selectors that are sent as a view is hidden/unhidden for future reuse.
    Note that a view can be reused but not hidden so never enters the pool (in which case these selectors won't be sent).
    @param didEnterReusePoolMessage Sent to the view just after it has been hidden for future reuse.
