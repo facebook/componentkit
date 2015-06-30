@@ -17,7 +17,6 @@
 @interface CKComponentHostingView ()
 
 @property (nonatomic, strong, readonly) UIView *containerView;
-@property (nonatomic, readonly) CKSizeRange constrainedSize;
 
 /** Returns the layout that's currently mounted. Main thread only. */
 - (const CKComponentLayout &)mountedLayout;
