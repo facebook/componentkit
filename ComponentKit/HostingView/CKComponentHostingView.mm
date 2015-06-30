@@ -21,12 +21,6 @@
 #import "CKComponentSizeRangeProviding.h"
 #import "CKComponentSubclass.h"
 
-typedef NS_ENUM(NSUInteger, CKComponentHostingViewUpdateType) {
-  CKComponentHostingViewUpdateTypeNone = 0,
-  CKComponentHostingViewUpdateTypeAsynchronous = 1,
-  CKComponentHostingViewUpdateTypeSynchronous = 2,
-};
-
 @interface CKComponentHostingView () <CKComponentStateListener>
 {
   Class<CKComponentProvider> _componentProvider;
@@ -35,10 +29,14 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewUpdateType) {
   CKComponentScopeRoot *_scopeRoot;
   CKComponentStateUpdateMap _pendingStateUpdates;
 
-  CKComponent *_component;
-  CKComponentHostingViewUpdateType _componentNeedsUpdateType;
-  CKComponentLayout _layout;
+  id<NSObject> _currentModel;
+  id<NSObject> _currentContext;
 
+  CKComponent *_component;
+  BOOL _componentNeedsUpdate;
+  CKComponentHostingViewMode _requestedUpdateMode;
+
+  CKComponentLayout _mountedLayout;
   NSSet *_mountedComponents;
 
   BOOL _scheduledAsynchronousComponentUpdate;
@@ -66,7 +64,8 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewUpdateType) {
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
 
-    _componentNeedsUpdateType = CKComponentHostingViewUpdateTypeSynchronous;
+    _componentNeedsUpdate = YES;
+    _requestedUpdateMode = CKComponentHostingViewModeSynchronous;
   }
   return self;
 }
@@ -88,10 +87,10 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewUpdateType) {
   if (!CGRectIsEmpty(self.bounds)) {
     [self _synchronouslyUpdateComponentIfNeeded];
     const CGSize size = self.bounds.size;
-    if (_layout.component != _component || !CGSizeEqualToSize(_layout.size, size)) {
-      _layout = [_component layoutThatFits:{size, size} parentSize:size];
+    if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
+      _mountedLayout = [_component layoutThatFits:{size, size} parentSize:size];
     }
-    _mountedComponents = [CKMountComponentLayout(_layout, _containerView, _mountedComponents, nil) copy];
+    _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil) copy];
   }
 }
 
@@ -105,27 +104,23 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewUpdateType) {
 
 #pragma mark - Accessors
 
-- (void)setModel:(id)model
+- (void)updateModel:(id<NSObject>)model mode:(CKComponentHostingViewMode)mode
 {
   CKAssertMainThread();
-  if (_model != model) {
-    _model = model;
-    [self _setNeedsUpdate:CKComponentHostingViewUpdateTypeSynchronous];
-  }
+  _currentModel = model;
+  [self _setNeedsUpdateWithMode:mode];
 }
 
-- (void)setContext:(id<NSObject>)context
+- (void)updateContext:(id<NSObject>)context mode:(CKComponentHostingViewMode)mode
 {
   CKAssertMainThread();
-  if (_context != context) {
-    _context = context;
-    [self _setNeedsUpdate:CKComponentHostingViewUpdateTypeSynchronous];
-  }
+  _currentContext = context;
+  [self _setNeedsUpdateWithMode:mode];
 }
 
 - (const CKComponentLayout &)mountedLayout
 {
-  return _layout;
+  return _mountedLayout;
 }
 
 #pragma mark - CKComponentStateListener
@@ -137,28 +132,27 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewUpdateType) {
 {
   CKAssertMainThread();
   _pendingStateUpdates.insert({globalIdentifier, stateUpdate});
-  [self _setNeedsUpdate:tryAsynchronousUpdate ? CKComponentHostingViewUpdateTypeAsynchronous : CKComponentHostingViewUpdateTypeSynchronous];
+  [self _setNeedsUpdateWithMode:tryAsynchronousUpdate ? CKComponentHostingViewModeAsynchronous : CKComponentHostingViewModeSynchronous];
 }
 
 #pragma mark - Private
 
-- (void)_setNeedsUpdate:(CKComponentHostingViewUpdateType)updateType
+- (void)_setNeedsUpdateWithMode:(CKComponentHostingViewMode)mode
 {
-  if (updateType <= _componentNeedsUpdateType) {
-    return; // Never go backwards, e.g. from Sync to Async or Async to None.
+  if (_componentNeedsUpdate && _requestedUpdateMode == CKComponentHostingViewModeSynchronous) {
+    return; // Already scheduled a synchronous update; nothing more to do.
   }
 
-  _componentNeedsUpdateType = updateType;
+  _componentNeedsUpdate = YES;
+  _requestedUpdateMode = mode;
 
-  switch (updateType) {
-    case CKComponentHostingViewUpdateTypeAsynchronous:
+  switch (mode) {
+    case CKComponentHostingViewModeAsynchronous:
       [self _asynchronouslyUpdateComponentIfNeeded];
       break;
-    case CKComponentHostingViewUpdateTypeSynchronous:
+    case CKComponentHostingViewModeSynchronous:
       [self setNeedsLayout];
       [_delegate componentHostingViewDidInvalidateSize:self];
-      break;
-    case CKComponentHostingViewUpdateTypeNone:
       break;
   }
 }
@@ -178,14 +172,14 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewUpdateType) {
 
 - (void)_scheduleAsynchronousUpdate
 {
-  if (_componentNeedsUpdateType != CKComponentHostingViewUpdateTypeAsynchronous) {
+  if (_requestedUpdateMode != CKComponentHostingViewModeAsynchronous) {
     // A synchronous update was either scheduled or completed, so we can skip the async update.
     _scheduledAsynchronousComponentUpdate = NO;
     return;
   }
 
-  id<NSObject> modelCopy = _model;
-  id<NSObject> contextCopy = _context;
+  id<NSObject> modelCopy = _currentModel;
+  id<NSObject> contextCopy = _currentContext;
   CKComponentScopeRoot *scopeRootCopy = _scopeRoot;
   auto stateUpdatesToApply = std::make_shared<const CKComponentStateUpdateMap>(_pendingStateUpdates);
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -193,19 +187,21 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewUpdateType) {
       return [_componentProvider componentForModel:modelCopy context:contextCopy];
     });
     dispatch_async(dispatch_get_main_queue(), ^{
-      if (_componentNeedsUpdateType == CKComponentHostingViewUpdateTypeNone) {
+      if (!_componentNeedsUpdate) {
         // A synchronous update snuck in and took care of it for us.
         return;
       }
 
-      if (_model == modelCopy
-          && _context == contextCopy
+      if (_currentModel == modelCopy
+          && _currentContext == contextCopy
           && _scopeRoot == scopeRootCopy
           && _pendingStateUpdates.size() == stateUpdatesToApply->size()) {
         _pendingStateUpdates.clear();
         _component = result.component;
         _scopeRoot = result.scopeRoot;
-        _componentNeedsUpdateType = CKComponentHostingViewUpdateTypeNone;
+        _currentModel = modelCopy;
+        _currentContext = contextCopy;
+        _componentNeedsUpdate = NO;
         _scheduledAsynchronousComponentUpdate = NO;
         [self setNeedsLayout];
         [_delegate componentHostingViewDidInvalidateSize:self];
@@ -218,7 +214,7 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewUpdateType) {
 
 - (void)_synchronouslyUpdateComponentIfNeeded
 {
-  if (_componentNeedsUpdateType != CKComponentHostingViewUpdateTypeSynchronous) {
+  if (_componentNeedsUpdate == NO || _requestedUpdateMode == CKComponentHostingViewModeAsynchronous) {
     return;
   }
 
@@ -233,11 +229,11 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewUpdateType) {
   CKComponentStateUpdateMap stateUpdatesToApply = _pendingStateUpdates;
   _pendingStateUpdates.clear();
   const CKBuildComponentResult result = CKBuildComponent(_scopeRoot, stateUpdatesToApply, ^CKComponent *{
-    return [_componentProvider componentForModel:_model context:_context];
+    return [_componentProvider componentForModel:_currentModel context:_currentContext];
   });
   _component = result.component;
   _scopeRoot = result.scopeRoot;
-  _componentNeedsUpdateType = CKComponentHostingViewUpdateTypeNone;
+  _componentNeedsUpdate = NO;
 
   _isSynchronouslyUpdatingComponent = NO;
 }

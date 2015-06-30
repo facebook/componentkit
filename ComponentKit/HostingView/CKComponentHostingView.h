@@ -16,6 +16,11 @@
 @protocol CKComponentHostingViewDelegate;
 @protocol CKComponentSizeRangeProviding;
 
+typedef NS_ENUM(NSUInteger, CKComponentHostingViewMode) {
+  CKComponentHostingViewModeAsynchronous,
+  CKComponentHostingViewModeSynchronous,
+};
+
 /** A view that renders a single component. */
 @interface CKComponentHostingView : UIView
 
@@ -26,19 +31,11 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
 
-/**
- The model object used to generate the view's component.
+/** Updates the model used to render the component. */
+- (void)updateModel:(id<NSObject>)model mode:(CKComponentHostingViewMode)mode;
 
- Setting a new model will synchronously construct and mount a new component tree and the
- delegate will be notified if there is a change in size.
- */
-@property (nonatomic, strong) id<NSObject> model;
-
-/**
- Setting a new context will synchronously construct and mount a new component tree and the
- delegate will be notified if there is a change in size.
- */
-@property (nonatomic, strong) id<NSObject> context;
+/** Updates the context used to render the component. */
+- (void)updateContext:(id<NSObject>)context mode:(CKComponentHostingViewMode)mode;
 
 - (instancetype)init CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 - (instancetype)initWithFrame:(CGRect)frame CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
