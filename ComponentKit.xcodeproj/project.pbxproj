@@ -30,6 +30,7 @@
 		A279EA9E1AF087A70046B5AA /* CKTransactionalComponentDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A279EA9D1AF087A70046B5AA /* CKTransactionalComponentDataSourceTests.mm */; };
 		A27C72751AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27C72741AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm */; };
 		A2CD66321AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2CD66311AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm */; };
+		A2D20CF41B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2D20CF31B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm */; };
 		B342DC6A1AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */; };
 		B342DC6B1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */; };
 		B342DC6C1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4B1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm */; };
@@ -114,6 +115,7 @@
 		A279EA9D1AF087A70046B5AA /* CKTransactionalComponentDataSourceTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceTests.mm; sourceTree = "<group>"; };
 		A27C72741AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceUpdateStateModificationTests.mm; sourceTree = "<group>"; };
 		A2CD66311AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceStateTests.mm; sourceTree = "<group>"; };
+		A2D20CF31B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentHostingViewAsyncStateUpdateTests.mm; sourceTree = "<group>"; };
 		A6F27DD3FB8E2237F9C39DCE /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		B342DC401AC23E8200ACAC53 /* ComponentKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComponentKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKArrayControllerChangesetTests.mm; sourceTree = "<group>"; };
@@ -285,6 +287,7 @@
 				B342DC541AC23EA900ACAC53 /* CKComponentHostingViewTestModel.h */,
 				B342DC551AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm */,
 				B342DC561AC23EA900ACAC53 /* CKComponentHostingViewTests.mm */,
+				A2D20CF31B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm */,
 				B342DC571AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm */,
 				B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */,
 				B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */,
@@ -680,6 +683,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2D20CF41B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm in Sources */,
 				B342DC771AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm in Sources */,
 				994EF6FB1B1FD77700E2236F /* CKComponentDelegateAttributeTests.mm in Sources */,
 				B342DC6C1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm in Sources */,

@@ -21,6 +21,12 @@
 #import "CKComponentSizeRangeProviding.h"
 #import "CKComponentSubclass.h"
 
+typedef NS_ENUM(NSUInteger, CKComponentHostingViewUpdateType) {
+  CKComponentHostingViewUpdateTypeNone = 0,
+  CKComponentHostingViewUpdateTypeAsynchronous = 1,
+  CKComponentHostingViewUpdateTypeSynchronous = 2,
+};
+
 @interface CKComponentHostingView () <CKComponentStateListener>
 {
   Class<CKComponentProvider> _componentProvider;
@@ -30,12 +36,13 @@
   CKComponentStateUpdateMap _pendingStateUpdates;
 
   CKComponent *_component;
-  BOOL _componentNeedsUpdate;
+  CKComponentHostingViewUpdateType _componentNeedsUpdateType;
   CKComponentLayout _layout;
 
   NSSet *_mountedComponents;
 
-  BOOL _isUpdating;
+  BOOL _scheduledAsynchronousComponentUpdate;
+  BOOL _isSynchronouslyUpdatingComponent;
 }
 @end
 
@@ -59,7 +66,7 @@
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
 
-    _componentNeedsUpdate = YES;
+    _componentNeedsUpdateType = CKComponentHostingViewUpdateTypeSynchronous;
   }
   return self;
 }
@@ -79,7 +86,7 @@
   _containerView.frame = self.bounds;
 
   if (!CGRectIsEmpty(self.bounds)) {
-    [self _updateComponentIfNeeded];
+    [self _synchronouslyUpdateComponentIfNeeded];
     const CGSize size = self.bounds.size;
     if (_layout.component != _component || !CGSizeEqualToSize(_layout.size, size)) {
       _layout = [_component layoutThatFits:{size, size} parentSize:size];
@@ -91,7 +98,7 @@
 - (CGSize)sizeThatFits:(CGSize)size
 {
   CKAssertMainThread();
-  [self _updateComponentIfNeeded];
+  [self _synchronouslyUpdateComponentIfNeeded];
   const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
   return [_component layoutThatFits:constrainedSize parentSize:constrainedSize.max].size;
 }
@@ -103,7 +110,7 @@
   CKAssertMainThread();
   if (_model != model) {
     _model = model;
-    [self _setComponentNeedsUpdate];
+    [self _setNeedsUpdate:CKComponentHostingViewUpdateTypeSynchronous];
   }
 }
 
@@ -112,7 +119,7 @@
   CKAssertMainThread();
   if (_context != context) {
     _context = context;
-    [self _setComponentNeedsUpdate];
+    [self _setNeedsUpdate:CKComponentHostingViewUpdateTypeSynchronous];
   }
 }
 
@@ -130,33 +137,97 @@
 {
   CKAssertMainThread();
   _pendingStateUpdates.insert({globalIdentifier, stateUpdate});
-  [self _setComponentNeedsUpdate];
+  [self _setNeedsUpdate:tryAsynchronousUpdate ? CKComponentHostingViewUpdateTypeAsynchronous : CKComponentHostingViewUpdateTypeSynchronous];
 }
 
 #pragma mark - Private
 
-- (void)_setComponentNeedsUpdate
+- (void)_setNeedsUpdate:(CKComponentHostingViewUpdateType)updateType
 {
-  if (!_componentNeedsUpdate) { // Avoid thrashing delegate
-    _componentNeedsUpdate = YES;
-    [self setNeedsLayout];
-    [_delegate componentHostingViewDidInvalidateSize:self];
+  if (updateType <= _componentNeedsUpdateType) {
+    return; // Never go backwards, e.g. from Sync to Async or Async to None.
+  }
+
+  _componentNeedsUpdateType = updateType;
+
+  switch (updateType) {
+    case CKComponentHostingViewUpdateTypeAsynchronous:
+      [self _asynchronouslyUpdateComponentIfNeeded];
+      break;
+    case CKComponentHostingViewUpdateTypeSynchronous:
+      [self setNeedsLayout];
+      [_delegate componentHostingViewDidInvalidateSize:self];
+      break;
+    case CKComponentHostingViewUpdateTypeNone:
+      break;
   }
 }
 
-- (void)_updateComponentIfNeeded
+- (void)_asynchronouslyUpdateComponentIfNeeded
 {
-  if (!_componentNeedsUpdate) {
+  if (_scheduledAsynchronousComponentUpdate) {
+    return;
+  }
+  _scheduledAsynchronousComponentUpdate = YES;
+
+  // Wait until the end of the run loop so that if multiple async updates are triggered we don't thrash.
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self _scheduleAsynchronousUpdate];
+  });
+}
+
+- (void)_scheduleAsynchronousUpdate
+{
+  if (_componentNeedsUpdateType != CKComponentHostingViewUpdateTypeAsynchronous) {
+    // A synchronous update was either scheduled or completed, so we can skip the async update.
+    _scheduledAsynchronousComponentUpdate = NO;
     return;
   }
 
-  if (_isUpdating) {
-    CKFailAssert(@"CKComponentHostingView -_update is not re-entrant. This is called by -layoutSubviews, so ensure "
-                 "that there is nothing that is triggering a nested call to -layoutSubviews. "
-                 "This call will be a no-op in production.");
+  id<NSObject> modelCopy = _model;
+  id<NSObject> contextCopy = _context;
+  CKComponentScopeRoot *scopeRootCopy = _scopeRoot;
+  auto stateUpdatesToApply = std::make_shared<const CKComponentStateUpdateMap>(_pendingStateUpdates);
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    const CKBuildComponentResult result = CKBuildComponent(scopeRootCopy, *stateUpdatesToApply, ^CKComponent *{
+      return [_componentProvider componentForModel:modelCopy context:contextCopy];
+    });
+    dispatch_async(dispatch_get_main_queue(), ^{
+      if (_componentNeedsUpdateType == CKComponentHostingViewUpdateTypeNone) {
+        // A synchronous update snuck in and took care of it for us.
+        return;
+      }
+
+      if (_model == modelCopy
+          && _context == contextCopy
+          && _scopeRoot == scopeRootCopy
+          && _pendingStateUpdates.size() == stateUpdatesToApply->size()) {
+        _pendingStateUpdates.clear();
+        _component = result.component;
+        _scopeRoot = result.scopeRoot;
+        _componentNeedsUpdateType = CKComponentHostingViewUpdateTypeNone;
+        _scheduledAsynchronousComponentUpdate = NO;
+        [self setNeedsLayout];
+        [_delegate componentHostingViewDidInvalidateSize:self];
+      } else {
+        [self _scheduleAsynchronousUpdate];
+      }
+    });
+  });
+}
+
+- (void)_synchronouslyUpdateComponentIfNeeded
+{
+  if (_componentNeedsUpdateType != CKComponentHostingViewUpdateTypeSynchronous) {
+    return;
+  }
+
+  if (_isSynchronouslyUpdatingComponent) {
+    CKFailAssert(@"CKComponentHostingView is not re-entrant. This is called by -layoutSubviews, so ensure "
+                 "that there is nothing that is triggering a nested call to -layoutSubviews.");
     return;
   } else {
-    _isUpdating = YES;
+    _isSynchronouslyUpdatingComponent = YES;
   }
 
   CKComponentStateUpdateMap stateUpdatesToApply = _pendingStateUpdates;
@@ -166,9 +237,9 @@
   });
   _component = result.component;
   _scopeRoot = result.scopeRoot;
-  _componentNeedsUpdate = NO;
+  _componentNeedsUpdateType = CKComponentHostingViewUpdateTypeNone;
 
-  _isUpdating = NO;
+  _isSynchronouslyUpdatingComponent = NO;
 }
 
 @end

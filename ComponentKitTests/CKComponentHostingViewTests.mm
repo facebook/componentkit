@@ -10,8 +10,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import <OCMock/OCMock.h>
-
 #import "CKComponentHostingViewTestModel.h"
 
 #import "CKComponent.h"
@@ -37,7 +35,6 @@ static CKComponentHostingView *hostingView()
 
 @implementation CKComponentHostingViewTests {
   BOOL _calledSizeDidInvalidate;
-  CKComponentHostingView *_hostingView;
 }
 
 + (CKComponent *)componentForModel:(CKComponentHostingViewTestModel *)model context:(id<NSObject>)context
