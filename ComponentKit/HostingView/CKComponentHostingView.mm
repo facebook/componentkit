@@ -50,12 +50,10 @@
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                                  context:(id<NSObject>)context
 {
   if (self = [super initWithFrame:CGRectZero]) {
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
-    _context = context;
     _scopeRoot = [CKComponentScopeRoot rootWithListener:self];
 
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
