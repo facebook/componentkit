@@ -16,18 +16,26 @@
 
 #import "CKComponentAnimation.h"
 #import "CKComponentHostingViewDelegate.h"
-#import "CKComponentLifecycleManager.h"
-#import "CKComponentLifecycleManager_Private.h"
 #import "CKComponentRootView.h"
+#import "CKComponentScopeRoot.h"
 #import "CKComponentSizeRangeProviding.h"
+#import "CKComponentSubclass.h"
 
-@interface CKComponentHostingView () <CKComponentLifecycleManagerDelegate>
+@interface CKComponentHostingView () <CKComponentStateListener>
 {
-  CKComponentLifecycleManager *_lifecycleManager;
+  Class<CKComponentProvider> _componentProvider;
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
-  CKComponentRootView *_containerView;
+
+  CKComponentScopeRoot *_scopeRoot;
+  CKComponentStateUpdateMap _pendingStateUpdates;
+
+  CKComponent *_component;
+  BOOL _componentNeedsUpdate;
+  CKComponentLayout _layout;
+
+  NSSet *_mountedComponents;
+
   BOOL _isUpdating;
-  id<NSObject> _context;
 }
 @end
 
@@ -40,108 +48,127 @@
   CK_NOT_DESIGNATED_INITIALIZER();
 }
 
-- (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)manager
-                       sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                                 context:(id<NSObject>)context
-{
-  if (self = [super initWithFrame:CGRectZero]) {
-    // Injected dependencies
-    _sizeRangeProvider = sizeRangeProvider;
-    _context = context;
-    
-    // Internal dependencies
-    _lifecycleManager = manager;
-    _lifecycleManager.delegate = self;
-    
-    _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
-    [self addSubview:_containerView];
-  }
-  return self;
-}
-
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
                                   context:(id<NSObject>)context
 {
-  CKComponentLifecycleManager *manager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:componentProvider sizeRangeProvider:sizeRangeProvider];
-  return [self initWithLifecycleManager:manager sizeRangeProvider:sizeRangeProvider context:context];
+  if (self = [super initWithFrame:CGRectZero]) {
+    _componentProvider = componentProvider;
+    _sizeRangeProvider = sizeRangeProvider;
+    _context = context;
+    _scopeRoot = [CKComponentScopeRoot rootWithListener:self];
+
+    _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
+    [self addSubview:_containerView];
+
+    _componentNeedsUpdate = YES;
+  }
+  return self;
 }
 
 - (void)dealloc
 {
-  [_lifecycleManager detachFromView];
+  CKAssertMainThread(); // UIKit should guarantee this
+  CKUnmountComponents(_mountedComponents);
 }
 
 #pragma mark - Layout
 
 - (void)layoutSubviews
 {
+  CKAssertMainThread();
   [super layoutSubviews];
   _containerView.frame = self.bounds;
 
-  if (_model && !CGRectIsEmpty(self.bounds)) {
-    [self _update];
-
-    if (![_lifecycleManager isAttachedToView]) {
-      [_lifecycleManager attachToView:_containerView];
+  if (!CGRectIsEmpty(self.bounds)) {
+    [self _updateComponentIfNeeded];
+    const CGSize size = self.bounds.size;
+    if (_layout.component != _component || !CGSizeEqualToSize(_layout.size, size)) {
+      _layout = [_component layoutThatFits:{size, size} parentSize:size];
     }
+    _mountedComponents = [CKMountComponentLayout(_layout, _containerView, _mountedComponents, nil) copy];
   }
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
-  CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-  CKComponentLayout layout = [_lifecycleManager layoutForModel:_model constrainedSize:constrainedSize context:_context];
-  return layout.size;
+  CKAssertMainThread();
+  [self _updateComponentIfNeeded];
+  const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
+  return [_component layoutThatFits:constrainedSize parentSize:constrainedSize.max].size;
 }
 
 #pragma mark - Accessors
 
 - (void)setModel:(id)model
 {
+  CKAssertMainThread();
   if (_model != model) {
     _model = model;
-    CKAssertNotNil(_model, @"Model can not be nil.");
-
-    [self setNeedsLayout];
+    [self _setComponentNeedsUpdate];
   }
 }
 
 - (void)setContext:(id<NSObject>)context
 {
+  CKAssertMainThread();
   if (_context != context) {
     _context = context;
-    [self setNeedsLayout];
+    [self _setComponentNeedsUpdate];
   }
 }
 
-- (UIView *)containerView
+- (const CKComponentLayout &)mountedLayout
 {
-  return _containerView;
+  return _layout;
 }
 
-#pragma mark - CKComponentLifecycleManagerDelegate
+#pragma mark - CKComponentStateListener
 
-- (void)componentLifecycleManager:(CKComponentLifecycleManager *)manager
-       sizeDidChangeWithAnimation:(const CKComponentBoundsAnimation &)animation
+- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
+                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+                     didReceiveStateUpdate:(id (^)(id))stateUpdate
+                     tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
 {
-  [_delegate componentHostingViewDidInvalidateSize:self];
+  CKAssertMainThread();
+  _pendingStateUpdates.insert({globalIdentifier, stateUpdate});
+  [self _setComponentNeedsUpdate];
 }
 
 #pragma mark - Private
 
-- (void)_update
+- (void)_setComponentNeedsUpdate
 {
+  if (!_componentNeedsUpdate) { // Avoid thrashing delegate
+    _componentNeedsUpdate = YES;
+    [self setNeedsLayout];
+    [_delegate componentHostingViewDidInvalidateSize:self];
+  }
+}
+
+- (void)_updateComponentIfNeeded
+{
+  if (!_componentNeedsUpdate) {
+    return;
+  }
+
   if (_isUpdating) {
-    CKFailAssert(@"CKComponentHostingView -_update is not re-entrant. This is called by -layoutSubviews, so ensure that there is nothing that is triggering a nested call to -layoutSubviews. This call will be a no-op in production.");
+    CKFailAssert(@"CKComponentHostingView -_update is not re-entrant. This is called by -layoutSubviews, so ensure "
+                 "that there is nothing that is triggering a nested call to -layoutSubviews. "
+                 "This call will be a no-op in production.");
     return;
   } else {
     _isUpdating = YES;
   }
 
-  const CGRect bounds = self.bounds;
-  CKComponentLifecycleManagerState state = [_lifecycleManager prepareForUpdateWithModel:_model constrainedSize:CKSizeRange(bounds.size, bounds.size) context:_context];
-  [_lifecycleManager updateWithState:state];
+  CKComponentStateUpdateMap stateUpdatesToApply = _pendingStateUpdates;
+  _pendingStateUpdates.clear();
+  const CKBuildComponentResult result = CKBuildComponent(_scopeRoot, stateUpdatesToApply, ^CKComponent *{
+    return [_componentProvider componentForModel:_model context:_context];
+  });
+  _component = result.component;
+  _scopeRoot = result.scopeRoot;
+  _componentNeedsUpdate = NO;
 
   _isUpdating = NO;
 }

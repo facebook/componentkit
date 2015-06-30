@@ -10,6 +10,7 @@
 
 #import <ComponentKit/CKComponentHostingView.h>
 #import <ComponentKit/CKDimension.h>
+#import <ComponentKit/CKComponentLayout.h>
 
 @class CKComponentLifecycleManager;
 
@@ -17,10 +18,8 @@
 
 @property (nonatomic, strong, readonly) UIView *containerView;
 @property (nonatomic, readonly) CKSizeRange constrainedSize;
-@property (nonatomic, readonly) CKComponentLifecycleManager *lifecycleManager;
 
-- (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)manager
-                       sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                                 context:(id<NSObject>)context;
+/** Returns the layout that's currently mounted. Main thread only. */
+- (const CKComponentLayout &)mountedLayout;
 
 @end
