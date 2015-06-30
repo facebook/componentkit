@@ -42,7 +42,8 @@
   CKTextKitContext *context = [[CKTextKitContext alloc] initWithAttributedString:attributedString
                                                                    lineBreakMode:NSLineBreakByWordWrapping
                                                             maximumNumberOfLines:0
-                                                                 constrainedSize:constrainedSize];
+                                                                 constrainedSize:constrainedSize
+                                                            layoutManagerFactory:nil];
   __block NSRange textKitVisibleRange;
   [context performBlockWithLockedTextKitComponents:^(NSLayoutManager *layoutManager, NSTextStorage *textStorage, NSTextContainer *textContainer) {
     textKitVisibleRange = [layoutManager characterRangeForGlyphRange:[layoutManager glyphRangeForTextContainer:textContainer]
@@ -62,7 +63,8 @@
   CKTextKitContext *context = [[CKTextKitContext alloc] initWithAttributedString:attributedString
                                                                    lineBreakMode:NSLineBreakByWordWrapping
                                                             maximumNumberOfLines:0
-                                                                 constrainedSize:constrainedSize];
+                                                                 constrainedSize:constrainedSize
+                                                            layoutManagerFactory:nil];
   CKTextKitTailTruncater *tailTruncater = [[CKTextKitTailTruncater alloc] initWithContext:context
                                                                truncationAttributedString:[self _simpleTruncationAttributedString]
                                                                    avoidTailTruncationSet:[NSCharacterSet characterSetWithCharactersInString:@""]
@@ -83,7 +85,8 @@
   CKTextKitContext *context = [[CKTextKitContext alloc] initWithAttributedString:attributedString
                                                                    lineBreakMode:NSLineBreakByWordWrapping
                                                             maximumNumberOfLines:0
-                                                                 constrainedSize:constrainedSize];
+                                                                 constrainedSize:constrainedSize
+                                                            layoutManagerFactory:nil];
   CKTextKitTailTruncater *tailTruncater = [[CKTextKitTailTruncater alloc] initWithContext:context
                                                                truncationAttributedString:[self _simpleTruncationAttributedString]
                                                                    avoidTailTruncationSet:[NSCharacterSet characterSetWithCharactersInString:@"."]
@@ -105,7 +108,8 @@
   CKTextKitContext *context = [[CKTextKitContext alloc] initWithAttributedString:attributedString
                                                                    lineBreakMode:NSLineBreakByCharWrapping
                                                             maximumNumberOfLines:0
-                                                                 constrainedSize:constrainedSize];
+                                                                 constrainedSize:constrainedSize
+                                                            layoutManagerFactory:nil];
   CKTextKitTailTruncater *tailTruncater = [[CKTextKitTailTruncater alloc] initWithContext:context
                                                                truncationAttributedString:[self _simpleTruncationAttributedString]
                                                                    avoidTailTruncationSet:[NSCharacterSet characterSetWithCharactersInString:@"."]
