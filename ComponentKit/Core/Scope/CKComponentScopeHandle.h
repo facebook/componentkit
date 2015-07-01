@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
+#import <ComponentKit/CKUpdateMode.h>
 
 @class CKComponent;
 @class CKComponentController;
@@ -40,6 +41,6 @@
 @property (nonatomic, strong, readonly) id state;
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
 
-- (void)updateState:(id (^)(id))updateFunction tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate;
+- (void)updateState:(id (^)(id))updateFunction mode:(CKUpdateMode)mode;
 
 @end

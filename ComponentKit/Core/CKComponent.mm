@@ -275,21 +275,11 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return nil;
 }
 
-- (void)updateState:(id (^)(id))updateBlock
-{
-  [self _updateState:updateBlock tryAsynchronousUpdate:NO];
-}
-
-- (void)updateStateWithExpensiveReflow:(id (^)(id))updateBlock
-{
-  [self _updateState:updateBlock tryAsynchronousUpdate:YES];
-}
-
-- (void)_updateState:(id (^)(id))updateBlock tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
+- (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode
 {
   CKAssertNotNil(_scopeHandle, @"A component without state cannot update its state.");
   CKAssertNotNil(updateBlock, @"Cannot enqueue component state modification with a nil block.");
-  [_scopeHandle updateState:updateBlock tryAsynchronousUpdate:tryAsynchronousUpdate];
+  [_scopeHandle updateState:updateBlock mode:mode];
 }
 
 - (CKComponentController *)controller

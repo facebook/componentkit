@@ -128,11 +128,11 @@
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                             rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
-                     tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
+                                      mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
   _pendingStateUpdates.insert({globalIdentifier, stateUpdate});
-  [self _setNeedsUpdateWithMode:tryAsynchronousUpdate ? CKUpdateModeAsynchronous : CKUpdateModeSynchronous];
+  [self _setNeedsUpdateWithMode:mode];
 }
 
 #pragma mark - Private

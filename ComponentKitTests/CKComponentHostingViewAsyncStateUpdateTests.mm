@@ -47,7 +47,7 @@
   XCTAssertEqualObjects(componentView.backgroundColor, [UIColor blackColor], @"Expected bg color to initially be black");
 
   const CKComponentLayout &layout = [hostingView mountedLayout];
-  [layout.component updateStateWithExpensiveReflow:^(id oldState){ return [UIColor redColor]; }];
+  [layout.component updateState:^(id oldState){ return [UIColor redColor]; } mode:CKUpdateModeAsynchronous];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^{
     [hostingView layoutIfNeeded];
@@ -66,8 +66,8 @@
   XCTAssertEqualObjects(componentView.backgroundColor, [UIColor blackColor], @"Expected bg color to initially be black");
 
   const CKComponentLayout &layout = [hostingView mountedLayout];
-  [layout.component updateStateWithExpensiveReflow:^(id oldState){ return [UIColor redColor]; }];
-  [layout.component updateState:^(id oldState){ return oldState; }];
+  [layout.component updateState:^(id oldState){ return [UIColor redColor]; } mode:CKUpdateModeAsynchronous];
+  [layout.component updateState:^(id oldState){ return oldState; } mode:CKUpdateModeSynchronous];
 
   [hostingView layoutIfNeeded];
   XCTAssertEqualObjects(componentView.backgroundColor, [UIColor redColor],

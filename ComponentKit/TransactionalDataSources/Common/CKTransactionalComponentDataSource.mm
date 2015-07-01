@@ -131,7 +131,7 @@
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                             rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
-                     tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
+                                      mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
   if (_pendingAsynchronousStateUpdates.empty() && _pendingSynchronousStateUpdates.empty()) {
@@ -140,7 +140,7 @@
     });
   }
 
-  if (tryAsynchronousUpdate) {
+  if (mode == CKUpdateModeAsynchronous) {
     _pendingAsynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});
   } else {
     _pendingSynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});

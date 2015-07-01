@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
+#import <ComponentKit/CKUpdateMode.h>
 
 @class CKComponent;
 @class CKComponentScopeFrame;
@@ -27,7 +28,7 @@ typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                             rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
-                     tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate;
+                                      mode:(CKUpdateMode)mode;
 @end
 
 struct CKBuildComponentResult {
