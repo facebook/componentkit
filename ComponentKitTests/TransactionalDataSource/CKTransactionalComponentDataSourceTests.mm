@@ -69,7 +69,7 @@ struct CKDataSourceAnnouncedUpdate {
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];
-  [ds applyChangeset:insertion mode:CKTransactionalComponentDataSourceModeSynchronous userInfo:nil];
+  [ds applyChangeset:insertion mode:CKUpdateModeSynchronous userInfo:nil];
 
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChanges =
   [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:nil
@@ -97,7 +97,7 @@ struct CKDataSourceAnnouncedUpdate {
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];
-  [ds applyChangeset:insertion mode:CKTransactionalComponentDataSourceModeAsynchronous userInfo:nil];
+  [ds applyChangeset:insertion mode:CKUpdateModeAsynchronous userInfo:nil];
 
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChanges =
   [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:nil
@@ -123,7 +123,7 @@ struct CKDataSourceAnnouncedUpdate {
                                                                              context:@"new context"
                                                                            sizeRange:{}];
   [ds updateConfiguration:config
-                     mode:CKTransactionalComponentDataSourceModeSynchronous
+                     mode:CKUpdateModeSynchronous
                  userInfo:nil];
 
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChanges =
@@ -143,7 +143,7 @@ struct CKDataSourceAnnouncedUpdate {
 {
   CKTransactionalComponentDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
   [ds addListener:self];
-  [ds reloadWithMode:CKTransactionalComponentDataSourceModeSynchronous userInfo:nil];
+  [ds reloadWithMode:CKUpdateModeSynchronous userInfo:nil];
 
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChanges =
   [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
@@ -164,9 +164,9 @@ struct CKDataSourceAnnouncedUpdate {
   // The initial asynchronous reload should be canceled by the immediately subsequent synchronous reload.
   // We then request *another* async reload so that we can wait for it to complete and assert that the initial
   // async reload doesn't actually take effect after the synchronous reload.
-  [ds reloadWithMode:CKTransactionalComponentDataSourceModeAsynchronous userInfo:@{@"id": @1}];
-  [ds reloadWithMode:CKTransactionalComponentDataSourceModeSynchronous userInfo:@{@"id": @2}];
-  [ds reloadWithMode:CKTransactionalComponentDataSourceModeAsynchronous userInfo:@{@"id": @3}];
+  [ds reloadWithMode:CKUpdateModeAsynchronous userInfo:@{@"id": @1}];
+  [ds reloadWithMode:CKUpdateModeSynchronous userInfo:@{@"id": @2}];
+  [ds reloadWithMode:CKUpdateModeAsynchronous userInfo:@{@"id": @3}];
 
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChangesForSyncReload =
   [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]

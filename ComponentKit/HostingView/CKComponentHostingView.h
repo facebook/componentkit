@@ -12,14 +12,10 @@
 
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKUpdateMode.h>
 
 @protocol CKComponentHostingViewDelegate;
 @protocol CKComponentSizeRangeProviding;
-
-typedef NS_ENUM(NSUInteger, CKComponentHostingViewMode) {
-  CKComponentHostingViewModeAsynchronous,
-  CKComponentHostingViewModeSynchronous,
-};
 
 /** A view that renders a single component. */
 @interface CKComponentHostingView : UIView
@@ -32,10 +28,10 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewMode) {
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
 
 /** Updates the model used to render the component. */
-- (void)updateModel:(id<NSObject>)model mode:(CKComponentHostingViewMode)mode;
+- (void)updateModel:(id<NSObject>)model mode:(CKUpdateMode)mode;
 
 /** Updates the context used to render the component. */
-- (void)updateContext:(id<NSObject>)context mode:(CKComponentHostingViewMode)mode;
+- (void)updateContext:(id<NSObject>)context mode:(CKUpdateMode)mode;
 
 - (instancetype)init CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 - (instancetype)initWithFrame:(CGRect)frame CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;

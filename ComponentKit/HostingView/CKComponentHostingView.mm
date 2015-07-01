@@ -34,7 +34,7 @@
 
   CKComponent *_component;
   BOOL _componentNeedsUpdate;
-  CKComponentHostingViewMode _requestedUpdateMode;
+  CKUpdateMode _requestedUpdateMode;
 
   CKComponentLayout _mountedLayout;
   NSSet *_mountedComponents;
@@ -65,7 +65,7 @@
     [self addSubview:_containerView];
 
     _componentNeedsUpdate = YES;
-    _requestedUpdateMode = CKComponentHostingViewModeSynchronous;
+    _requestedUpdateMode = CKUpdateModeSynchronous;
   }
   return self;
 }
@@ -104,14 +104,14 @@
 
 #pragma mark - Accessors
 
-- (void)updateModel:(id<NSObject>)model mode:(CKComponentHostingViewMode)mode
+- (void)updateModel:(id<NSObject>)model mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
   _currentModel = model;
   [self _setNeedsUpdateWithMode:mode];
 }
 
-- (void)updateContext:(id<NSObject>)context mode:(CKComponentHostingViewMode)mode
+- (void)updateContext:(id<NSObject>)context mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
   _currentContext = context;
@@ -132,14 +132,14 @@
 {
   CKAssertMainThread();
   _pendingStateUpdates.insert({globalIdentifier, stateUpdate});
-  [self _setNeedsUpdateWithMode:tryAsynchronousUpdate ? CKComponentHostingViewModeAsynchronous : CKComponentHostingViewModeSynchronous];
+  [self _setNeedsUpdateWithMode:tryAsynchronousUpdate ? CKUpdateModeAsynchronous : CKUpdateModeSynchronous];
 }
 
 #pragma mark - Private
 
-- (void)_setNeedsUpdateWithMode:(CKComponentHostingViewMode)mode
+- (void)_setNeedsUpdateWithMode:(CKUpdateMode)mode
 {
-  if (_componentNeedsUpdate && _requestedUpdateMode == CKComponentHostingViewModeSynchronous) {
+  if (_componentNeedsUpdate && _requestedUpdateMode == CKUpdateModeSynchronous) {
     return; // Already scheduled a synchronous update; nothing more to do.
   }
 
@@ -147,10 +147,10 @@
   _requestedUpdateMode = mode;
 
   switch (mode) {
-    case CKComponentHostingViewModeAsynchronous:
+    case CKUpdateModeAsynchronous:
       [self _asynchronouslyUpdateComponentIfNeeded];
       break;
-    case CKComponentHostingViewModeSynchronous:
+    case CKUpdateModeSynchronous:
       [self setNeedsLayout];
       [_delegate componentHostingViewDidInvalidateSize:self];
       break;
@@ -172,7 +172,7 @@
 
 - (void)_scheduleAsynchronousUpdate
 {
-  if (_requestedUpdateMode != CKComponentHostingViewModeAsynchronous) {
+  if (_requestedUpdateMode != CKUpdateModeAsynchronous) {
     // A synchronous update was either scheduled or completed, so we can skip the async update.
     _scheduledAsynchronousComponentUpdate = NO;
     return;
@@ -214,7 +214,7 @@
 
 - (void)_synchronouslyUpdateComponentIfNeeded
 {
-  if (_componentNeedsUpdate == NO || _requestedUpdateMode == CKComponentHostingViewModeAsynchronous) {
+  if (_componentNeedsUpdate == NO || _requestedUpdateMode == CKUpdateModeAsynchronous) {
     return;
   }
 

@@ -29,7 +29,7 @@ static CKComponentHostingView *hostingView()
   CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
                                                                          sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
   view.bounds = CGRectMake(0, 0, 100, 100);
-  [view updateModel:model mode:CKComponentHostingViewModeSynchronous];
+  [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
   return view;
 }
@@ -76,7 +76,7 @@ static CKComponentHostingView *hostingView()
 {
   CKComponentHostingView *view = hostingView();
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
-               mode:CKComponentHostingViewModeSynchronous];
+               mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
 
   UIView *componentView = [view.containerView.subviews firstObject];
@@ -87,7 +87,7 @@ static CKComponentHostingView *hostingView()
 {
   CKComponentHostingView *view = hostingView();
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
-               mode:CKComponentHostingViewModeAsynchronous];
+               mode:CKUpdateModeAsynchronous];
   [view layoutIfNeeded];
 
   UIView *componentView = [view.containerView.subviews firstObject];
@@ -102,7 +102,7 @@ static CKComponentHostingView *hostingView()
   CKComponentHostingView *view = hostingView();
   view.delegate = self;
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(75, 75))]
-               mode:CKComponentHostingViewModeSynchronous];
+               mode:CKUpdateModeSynchronous];
   XCTAssertTrue(_calledSizeDidInvalidate);
 }
 
@@ -110,7 +110,7 @@ static CKComponentHostingView *hostingView()
 {
   CKComponentHostingView *view = hostingView();
   view.delegate = self;
-  [view updateContext:@"foo" mode:CKComponentHostingViewModeSynchronous];
+  [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
   XCTAssertTrue(_calledSizeDidInvalidate);
 }
 
@@ -119,7 +119,7 @@ static CKComponentHostingView *hostingView()
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
   CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[self class]
                                                                          sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
-  [view updateModel:model mode:CKComponentHostingViewModeSynchronous];
+  [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
 
   XCTAssertEqual([view.containerView.subviews count], 0u, @"Expect the component is not mounted with empty bounds");
