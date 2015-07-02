@@ -15,8 +15,8 @@
 #import <ComponentKit/CKAssert.h>
 
 #import "ComponentLayoutContext.h"
+#import "CKEqualityHashHelpers.h"
 #import "CKMacros.h"
-#import "CKInternalHelpers.h"
 
 bool CKRelativeDimension::operator==(const CKRelativeDimension &other) const
 {

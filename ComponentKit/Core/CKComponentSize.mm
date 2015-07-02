@@ -9,7 +9,7 @@
  */
 
 #import "CKComponentSize.h"
-#import "CKInternalHelpers.h"
+#import "CKEqualityHashHelpers.h"
 
 #import <ComponentKit/CKAssert.h>
 

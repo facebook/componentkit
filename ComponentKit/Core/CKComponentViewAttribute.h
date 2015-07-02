@@ -12,7 +12,7 @@
 #import <unordered_map>
 
 #import <ComponentKit/CKPlatform.h>
-#import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKEqualityHashHelpers.h>
 
 /**
  View attributes usually correspond to properties (like background color or alpha) but can represent arbitrarily complex
@@ -112,7 +112,7 @@ namespace std {
       size_t hash = 0;
       for (const auto& it: attr) {
         hash = CKHashCombine(hash, std::hash<CKComponentViewAttribute>()(it.first));
-        hash = CKHashCombine(hash, CKUtils::hash<id>()(it.second));
+        hash = CKHashCombine(hash, CK::hash<id>()(it.second));
       }
       return hash;
     }
