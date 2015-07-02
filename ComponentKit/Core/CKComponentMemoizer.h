@@ -115,7 +115,7 @@ template <typename ...Types, typename Pred = CKTupleOperations::equal_to<std::tu
 CKMemoizationKey CKMakeTupleMemoizationKey(Types... args) {
   using Tuple = std::tuple<Types...>;
 
-  Tuple *tuple = new Tuple(std::forward(args...));
+  Tuple *tuple = new Tuple(std::forward_as_tuple(args...));
   size_t hash = CKTupleOperations::hash<Tuple>()(*tuple);
 
   return {
