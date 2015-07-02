@@ -15,7 +15,7 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKEqualityHashHelpers.h>
 #import <ComponentKit/CKMacros.h>
 
 /**

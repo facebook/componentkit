@@ -26,7 +26,8 @@
 - (instancetype)initWithAttributedString:(NSAttributedString *)attributedString
                            lineBreakMode:(NSLineBreakMode)lineBreakMode
                     maximumNumberOfLines:(NSUInteger)maximumNumberOfLines
-                         constrainedSize:(CGSize)constrainedSize;
+                         constrainedSize:(CGSize)constrainedSize
+                    layoutManagerFactory:(NSLayoutManager*(*)(void))layoutManagerFactory;
 
 /**
  All operations on TextKit values MUST occur within this locked context.  Simultaneous access (even non-mutative) to

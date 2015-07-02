@@ -77,6 +77,10 @@ struct CKTextKitAttributes {
    The radius that should be applied to the shadow blur.  Larger values mean a larger, more blurred shadow.
    */
   CGFloat shadowRadius;
+  /**
+   A pointer to a function that that returns a custom layout manager subclass. If nil, defaults to NSLayoutManager.
+   */
+  NSLayoutManager *(*layoutManagerFactory)(void);
 
   /**
    We provide an explicit copy function so we can use aggregate initializer syntax while providing copy semantics for
@@ -93,7 +97,8 @@ struct CKTextKitAttributes {
       shadowOffset,
       [shadowColor copy],
       shadowOpacity,
-      shadowRadius
+      shadowRadius,
+      layoutManagerFactory
     };
   };
 
@@ -104,6 +109,7 @@ struct CKTextKitAttributes {
     && maximumNumberOfLines == other.maximumNumberOfLines
     && shadowOpacity == other.shadowOpacity
     && shadowRadius == other.shadowRadius
+    && layoutManagerFactory == other.layoutManagerFactory
     && CGSizeEqualToSize(shadowOffset, other.shadowOffset)
     && _objectsEqual(avoidTailTruncationSet, other.avoidTailTruncationSet)
     && _objectsEqual(shadowColor, other.shadowColor)
