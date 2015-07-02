@@ -10,7 +10,7 @@
 
 #import <ComponentKit/CKCacheImpl.h>
 
-#import "CKInternalHelpers.h"
+#import "CKEqualityHashHelpers.h"
 
 #import "NSString+CKMTextCache.h"
 

@@ -30,8 +30,7 @@
   self.view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 480, 200)];
 
   self.hostingView = [[CKComponentHostingView alloc] initWithComponentProvider:[CKMSampleComponentProvider class]
-                                                             sizeRangeProvider:nil
-                                                                       context:self];
+                                                             sizeRangeProvider:nil];
 
   // Build up a nice changeset with our rows
   NSMutableArray *data = [NSMutableArray array];
