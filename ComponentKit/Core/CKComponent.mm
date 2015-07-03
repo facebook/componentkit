@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -11,25 +11,25 @@
 #import "CKComponent.h"
 #import "CKComponentControllerInternal.h"
 #import "CKComponentInternal.h"
-#import "CKComponentScopeInternal.h"
 #import "CKComponentSubclass.h"
 
 #import <ComponentKit/CKArgumentPrecondition.h>
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
 
-#import "CKInternalHelpers.h"
-#import "CKWeakObjectContainer.h"
-#import "ComponentLayoutContext.h"
+#import "CKAssert.h"
 #import "CKComponentAccessibility.h"
 #import "CKComponentAnimation.h"
 #import "CKComponentController.h"
 #import "CKComponentDebugController.h"
 #import "CKComponentLayout.h"
-#import "CKComponentScopeFrame.h"
+#import "CKComponentScopeHandle.h"
 #import "CKComponentViewConfiguration.h"
 #import "CKComponentViewInterface.h"
-#import "CKAssert.h"
+#import "CKInternalHelpers.h"
+#import "CKMountAnimationGuard.h"
+#import "CKWeakObjectContainer.h"
+#import "ComponentLayoutContext.h"
 
 CGFloat const kCKComponentParentDimensionUndefined = NAN;
 CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndefined, kCKComponentParentDimensionUndefined};
@@ -42,7 +42,7 @@ struct CKComponentMountInfo {
 
 @implementation CKComponent
 {
-  CKComponentScopeFrame *_scopeFrame;
+  CKComponentScopeHandle *_scopeHandle;
   CKComponentViewConfiguration _viewConfiguration;
   CKComponentSize _size;
 
@@ -80,7 +80,7 @@ struct CKComponentMountInfo {
                         size:(const CKComponentSize &)size
 {
   if (self = [super init]) {
-    _scopeFrame = CKComponentScopeFrameForComponent(self);
+    _scopeHandle = [CKComponentScopeHandle handleForComponent:self];
     _viewConfiguration = view;
     _size = size;
   }
@@ -118,7 +118,7 @@ struct CKComponentMountInfo {
   }
   _mountInfo->supercomponent = supercomponent;
 
-  CKComponentController *controller = _scopeFrame.controller;
+  CKComponentController *controller = _scopeHandle.controller;
   [controller componentWillMount:self];
 
   const CK::Component::MountContext &effectiveContext = [CKComponentDebugController debugMode]
@@ -126,6 +126,7 @@ struct CKComponentMountInfo {
 
   UIView *v = effectiveContext.viewManager->viewForConfiguration([self class], viewConfiguration);
   if (v) {
+    CKMountAnimationGuard g(v.ck_component, self, context);
     if (_mountInfo->view != v) {
       [self _relinquishMountedView]; // First release our old view
       [v.ck_component unmount];      // Then unmount old component (if any) from the new view
@@ -142,7 +143,7 @@ struct CKComponentMountInfo {
     [v setBounds:{v.bounds.origin, size}];
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
-    return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v)};
+    return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
   } else {
     CKAssertNil(_mountInfo->view, @"Didn't expect to sometimes have a view and sometimes not have a view");
     _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, size}};
@@ -153,10 +154,10 @@ struct CKComponentMountInfo {
 - (void)unmount
 {
   if (_mountInfo != nullptr) {
-    [_scopeFrame.controller componentWillUnmount:self];
+    [_scopeHandle.controller componentWillUnmount:self];
     [self _relinquishMountedView];
     _mountInfo.reset();
-    [_scopeFrame.controller componentDidUnmount:self];
+    [_scopeHandle.controller componentDidUnmount:self];
   }
 }
 
@@ -165,7 +166,7 @@ struct CKComponentMountInfo {
   UIView *view = _mountInfo->view;
   if (view) {
     CKAssert(view.ck_component == self, @"");
-    [_scopeFrame.controller component:self willRelinquishView:view];
+    [_scopeHandle.controller component:self willRelinquishView:view];
     view.ck_component = nil;
     _mountInfo->view = nil;
   }
@@ -173,10 +174,15 @@ struct CKComponentMountInfo {
 
 - (void)childrenDidMount
 {
-  [_scopeFrame.controller componentDidMount:self];
+  [_scopeHandle.controller componentDidMount:self];
 }
 
 #pragma mark - Animation
+
+- (std::vector<CKComponentAnimation>)animationsOnInitialMount
+{
+  return {};
+}
 
 - (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(CKComponent *)previousComponent
 {
@@ -229,7 +235,7 @@ struct CKComponentMountInfo {
 
 - (id)nextResponder
 {
-  return _scopeFrame.controller ?: [self nextResponderAfterController];
+  return _scopeHandle.controller ?: [self nextResponderAfterController];
 }
 
 - (id)nextResponderAfterController
@@ -239,7 +245,12 @@ struct CKComponentMountInfo {
 
 - (id)targetForAction:(SEL)action withSender:(id)sender
 {
-  return [self respondsToSelector:action] ? self : [[self nextResponder] targetForAction:action withSender:sender];
+  return [self canPerformAction:action withSender:sender] ? self : [[self nextResponder] targetForAction:action withSender:sender];
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+  return [self respondsToSelector:action];
 }
 
 // Because only the root component in each mounted tree will have a non-nil rootComponentMountedView, we use Obj-C
@@ -276,19 +287,19 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 - (void)_updateState:(id (^)(id))updateBlock tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
 {
-  CKAssert(_scopeFrame != nullptr, @"A component without state cannot update its state.");
-  CKAssert(updateBlock != nil, @"Cannot enqueue component state modification with a nil block.");
-  [_scopeFrame updateState:updateBlock tryAsynchronousUpdate:tryAsynchronousUpdate];
+  CKAssertNotNil(_scopeHandle, @"A component without state cannot update its state.");
+  CKAssertNotNil(updateBlock, @"Cannot enqueue component state modification with a nil block.");
+  [_scopeHandle updateState:updateBlock tryAsynchronousUpdate:tryAsynchronousUpdate];
 }
 
 - (CKComponentController *)controller
 {
-  return _scopeFrame.controller;
+  return _scopeHandle.controller;
 }
 
 - (id)scopeFrameToken
 {
-  return _scopeFrame;
+  return _scopeHandle ? @(_scopeHandle.globalIdentifier) : nil;
 }
 
 @end

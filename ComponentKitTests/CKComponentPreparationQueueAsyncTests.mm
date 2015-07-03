@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -27,7 +27,8 @@ static CKComponentPreparationInputItem *fbcpq_passthroughInputItem(NSString *UUI
                                                            constrainedSize:CKSizeRange()
                                                                    oldSize:{0, 0}
                                                                       UUID:UUID
-                                                                 indexPath:nil
+                                                           sourceIndexPath:nil
+                                                      destinationIndexPath:nil
                                                                 changeType:CKArrayControllerChangeTypeUnknown
                                                                passthrough:YES
                                                                    context:nil];

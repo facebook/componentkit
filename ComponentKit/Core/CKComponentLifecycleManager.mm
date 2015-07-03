@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -20,7 +20,7 @@
 #import "CKComponentLifecycleManagerAsynchronousUpdateHandler.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScope.h"
-#import "CKComponentScopeInternal.h"
+#import "CKComponentScopeFrame.h"
 #import "CKComponentSizeRangeProviding.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentViewInterface.h"
@@ -33,7 +33,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   .model = nil,
   .constrainedSize = {},
   .layout = {},
-  .scopeFrame = nil,
+  .root = nil,
 };
 
 @implementation CKComponentLifecycleManager
@@ -44,8 +44,9 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   Class<CKComponentProvider> _componentProvider;
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
 
-  CK::Mutex _previousScopeFrameMutex;
-  CKComponentScopeFrame *_previouslyCalculatedScopeFrame;
+  CK::Mutex _mutex; // protects _previousRoot and _pendingStateUpdates
+  CKComponentScopeRoot *_previousRoot;
+  CKComponentStateUpdateMap _pendingStateUpdates;
   CKComponentLifecycleManagerState _state;
 }
 
@@ -68,12 +69,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 {
   if (_mountedComponents) {
     NSSet *componentsToUnmount = _mountedComponents;
-    dispatch_block_t unmountBlock = ^{
-      for (CKComponent *c in componentsToUnmount) {
-        [c unmount];
-      }
-    };
-
+    dispatch_block_t unmountBlock = ^{ CKUnmountComponents(componentsToUnmount); };
     if ([NSThread isMainThread]) {
       unmountBlock();
     } else {
@@ -86,32 +82,27 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
 - (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context
 {
-  CK::MutexLocker locker(_previousScopeFrameMutex);
+  CK::MutexLocker locker(_mutex);
 
-  CKBuildComponentResult result = CKBuildComponent(self, _previouslyCalculatedScopeFrame, ^{
+  CKComponentScopeRoot *previousRoot = _previousRoot ?: [CKComponentScopeRoot rootWithListener:self];
+
+  CKBuildComponentResult result = CKBuildComponent(previousRoot, _pendingStateUpdates, ^{
     return [_componentProvider componentForModel:model context:context];
   });
 
   const CKComponentLayout layout = [result.component layoutThatFits:constrainedSize parentSize:constrainedSize.max];
 
-  _previouslyCalculatedScopeFrame = result.scopeFrame;
+  _previousRoot = result.scopeRoot;
+  _pendingStateUpdates.clear();
+
   return {
     .model = model,
     .context = context,
     .constrainedSize = constrainedSize,
     .layout = layout,
-    .scopeFrame = result.scopeFrame,
+    .root = result.scopeRoot,
     .boundsAnimation = result.boundsAnimation,
   };
-}
-
-- (CKComponentLayout)layoutForModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context
-{
-  CKBuildComponentResult result = CKBuildComponent(self, _state.scopeFrame, ^{
-    return [_componentProvider componentForModel:model context:context];
-  });
-
-  return [result.component layoutThatFits:constrainedSize parentSize:constrainedSize.max];
 }
 
 - (void)updateWithState:(const CKComponentLifecycleManagerState &)state
@@ -121,7 +112,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
   // Since the state has been updated, re-mount the view if it exists.
   if (_mountedView != nil) {
-    [self _mountLayout];
+    CKComponentBoundsAnimationApply(state.boundsAnimation, ^{ [self _mountLayout]; }, nil);
   }
 
   if (sizeChanged) {
@@ -138,16 +129,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
 - (void)_mountLayout
 {
-  NSSet *newMountedComponents = CKMountComponentLayout(_state.layout, _mountedView);
-  _state.layout.component.rootComponentMountedView = _mountedView;
-
-  // Unmount any components that were in _mountedComponents but are no longer in newMountedComponents.
-  NSMutableSet *componentsToUnmount = [_mountedComponents mutableCopy];
-  [componentsToUnmount minusSet:newMountedComponents];
-  for (CKComponent *component in componentsToUnmount) {
-    [component unmount];
-  }
-  _mountedComponents = [newMountedComponents copy];
+  _mountedComponents = [CKMountComponentLayout(_state.layout, _mountedView, _mountedComponents, nil) copy];
 }
 
 - (void)attachToView:(UIView *)view
@@ -172,9 +154,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 {
   if (_mountedView) {
     CKAssert(_mountedView.ck_componentLifecycleManager == self, @"");
-    for (CKComponent *component in _mountedComponents) {
-      [component unmount];
-    }
+    CKUnmountComponents(_mountedComponents);
     _mountedComponents = nil;
     _mountedView.ck_componentLifecycleManager = nil;
     _mountedView = nil;
@@ -198,20 +178,23 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   return _state.model;
 }
 
-- (void)componentTreeWillAppear
+- (CKComponentScopeRoot *)scopeRoot
 {
-  [_state.scopeFrame announceEventToControllers:@selector(componentTreeWillAppear)];
-}
-
-- (void)componentTreeDidDisappear
-{
-  [_state.scopeFrame announceEventToControllers:@selector(componentTreeDidDisappear)];
+  return _state.root;
 }
 
 #pragma mark - CKComponentStateListener
 
-- (void)componentStateDidEnqueueStateModificationWithTryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
+- (void)componentScopeHandleWithIdentifier:(int32_t)globalIdentifier
+                            rootIdentifier:(int32_t)rootIdentifier
+                     didReceiveStateUpdate:(id (^)(id))stateUpdate
+                     tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
 {
+  {
+    CK::MutexLocker l(_mutex);
+    _pendingStateUpdates.insert({globalIdentifier, stateUpdate});
+  }
+
   if (tryAsynchronousUpdate && _asynchronousUpdateHandler) {
     [_asynchronousUpdateHandler handleAsynchronousUpdateForComponentLifecycleManager:self];
   } else {

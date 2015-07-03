@@ -93,6 +93,20 @@
   return [_dataSource sizeForItemAtIndexPath:indexPath];
 }
 
+- (void)collectionView:(UICollectionView *)collectionView
+       willDisplayCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  [_dataSource announceWillAppearForItemInCell:cell];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView
+  didEndDisplayingCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  [_dataSource announceDidDisappearForItemInCell:cell];
+}
+
 #pragma mark - CKComponentProvider
 
 + (CKComponent *)componentForModel:(Quote *)quote context:(QuoteContext *)context

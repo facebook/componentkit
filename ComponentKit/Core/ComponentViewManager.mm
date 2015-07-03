@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -52,6 +52,13 @@ namespace CK {
       {
         return identifiers == k.identifiers;
       }
+    };
+
+    struct ActionDisabler {
+      ActionDisabler() : _originalValue([CATransaction disableActions]) { [CATransaction setDisableActions:YES]; }
+      ~ActionDisabler() { [CATransaction setDisableActions:_originalValue]; }
+    private:
+      BOOL _originalValue;
     };
   }
 }
@@ -209,10 +216,12 @@ static char kPersistentAttributesViewKey = ' ';
 
 void AttributeApplicator::apply(UIView *view, const CKComponentViewConfiguration &config)
 {
+  CK::Component::ActionDisabler actionDisabler; // We never want implicit animations when applying attributes
+
   // Reset optimistic mutations so that applicators see they see the state they expect.
   CKResetOptimisticMutationsForView(view);
 
-  // Why a pointer? https://our.intern.facebook.com/intern/dex/qa/657083164365634/
+  // Avoid the static destructor fiasco, use a pointer:
   static const auto *empty = new CKViewComponentAttributeValueMap();
 
   CKComponentAttributeSetWrapper *wrapper = objc_getAssociatedObject(view, &kPersistentAttributesViewKey);

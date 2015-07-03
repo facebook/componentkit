@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -52,10 +52,16 @@ typedef std::unordered_map<CKComponentAction, CKComponentActionControlForwarder 
 CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction action,
                                                          UIControlEvents controlEvents)
 {
-  CKCAssertNotNil(action, @"Can't pass a NULL action to CKComponentActionAttribute");
-
   static ForwarderMap *map = new ForwarderMap(); // never destructed to avoid static destruction fiasco
   static CK::StaticMutex lock = CK_MUTEX_INITIALIZER;   // protects map
+
+  if (action == NULL) {
+    return {
+      {"CKComponentActionAttribute-no-op", ^(UIControl *control, id value) {}, ^(UIControl *control, id value) {}},
+      // Use a bogus value for the attribute's "value". All the information is encoded in the attribute itself.
+      @YES
+    };
+  }
 
   // We need a target for the control event. (We can't use the responder chain because we need to jump in and change the
   // sender from the UIControl to the CKComponent.)

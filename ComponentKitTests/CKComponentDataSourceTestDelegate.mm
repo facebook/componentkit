@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -11,6 +11,7 @@
 #import "CKComponentDataSourceTestDelegate.h"
 
 #import <ComponentKit/CKComponentDataSource.h>
+#import <ComponentKit/CKComponentDataSourceDelegate.h>
 #import <ComponentKit/CKComponentDataSourceOutputItem.h>
 #import <ComponentKit/ComponentUtilities.h>
 
@@ -25,8 +26,8 @@ using namespace CK::ArrayController;
             CKObjectIsEqual(change.dataSourcePair, changeToCompare.dataSourcePair) &&
             CKObjectIsEqual(change.oldDataSourcePair, changeToCompare.oldDataSourcePair) &&
             change.changeType == changeToCompare.changeType &&
-            CKObjectIsEqual(change.beforeIndexPath, changeToCompare.beforeIndexPath) &&
-            CKObjectIsEqual(change.afterIndexPath, changeToCompare.afterIndexPath)
+            CKObjectIsEqual(change.sourceIndexPath, changeToCompare.sourceIndexPath) &&
+            CKObjectIsEqual(change.destinationIndexPath, changeToCompare.destinationIndexPath)
     );
   });
 }
@@ -72,8 +73,8 @@ using namespace CK::ArrayController;
     CKComponentDataSourceTestDelegateChange *delegateChange = [[CKComponentDataSourceTestDelegateChange alloc] init];
     delegateChange.dataSourcePair = change.after;
     delegateChange.oldDataSourcePair = change.before;
-    delegateChange.beforeIndexPath = (type == CKArrayControllerChangeTypeInsert) ? nil : change.indexPath.toNSIndexPath();
-    delegateChange.afterIndexPath = (type == CKArrayControllerChangeTypeDelete) ? nil : change.indexPath.toNSIndexPath();
+    delegateChange.sourceIndexPath = change.sourceIndexPath.toNSIndexPath();
+    delegateChange.destinationIndexPath = change.destinationIndexPath.toNSIndexPath();
     delegateChange.changeType = type;
     [_changes addObject:delegateChange];
 

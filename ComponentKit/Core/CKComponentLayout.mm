@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -31,7 +31,10 @@ void CKOffMainThreadDeleter::operator()(std::vector<CKComponentLayoutChild> *tar
   }
 }
 
-NSSet *CKMountComponentLayout(const CKComponentLayout &layout, UIView *view, CKComponent *supercomponent)
+NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
+                              UIView *view,
+                              NSSet *previouslyMountedComponents,
+                              CKComponent *supercomponent)
 {
   struct MountItem {
     const CKComponentLayout &layout;
@@ -45,6 +48,8 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout, UIView *view, CKC
   std::stack<MountItem> stack;
   stack.push({layout, MountContext::RootContext(view), supercomponent, NO});
   NSMutableSet *mountedComponents = [NSMutableSet set];
+
+  layout.component.rootComponentMountedView = view;
 
   while (!stack.empty()) {
     MountItem &item = stack.top();
@@ -71,5 +76,20 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout, UIView *view, CKC
       }
     }
   }
+
+  if (previouslyMountedComponents) {
+    // Unmount any components that were in previouslyMountedComponents but are no longer in mountedComponents.
+    NSMutableSet *componentsToUnmount = [previouslyMountedComponents mutableCopy];
+    [componentsToUnmount minusSet:mountedComponents];
+    CKUnmountComponents(componentsToUnmount);
+  }
+
   return mountedComponents;
+}
+
+void CKUnmountComponents(NSSet *componentsToUnmount)
+{
+  for (CKComponent *component in componentsToUnmount) {
+    [component unmount];
+  }
 }

@@ -109,6 +109,8 @@ static CKTextKitRenderer *rendererForAttributes(CKTextKitAttributes &attributes,
   CKTextComponentView *view = (CKTextComponentView *)result.contextForChildren.viewManager->view;
   CKTextKitRenderer *renderer = rendererForAttributes(_attributes, size);
   view.renderer = renderer;
+  view.isAccessibilityElement = _accessibilityContext.isAccessibilityElement.boolValue;
+  view.accessibilityLabel = _accessibilityContext.accessibilityLabel.hasText() ? _accessibilityContext.accessibilityLabel.value() : _attributes.attributedString.string;
   return result;
 }
 

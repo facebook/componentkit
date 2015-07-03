@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -73,7 +73,7 @@ typedef void(*CKCellConfigurationFunction)(UICollectionViewCell *cell, NSIndexPa
 /**
  Updates context to the new value and enqueues update changeset in order to rebuild component tree.
  */
-- (void)updateContextAndEnqeueReload:(id)newContext;
+- (void)updateContextAndEnqueueReload:(id)newContext;
 
 /**
  @return The model associated with a certain index path in the collectionView.
@@ -89,6 +89,18 @@ typedef void(*CKCellConfigurationFunction)(UICollectionViewCell *cell, NSIndexPa
  `UICollectionViewLayout(s)` or in a `UICollectionViewDelegateFlowLayout`.
  */
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+
+/**
+ Sends -componentTreeWillAppear to all CKComponentControllers for the given cell.
+ If needed, call this from -collectionView:willDisplayCell:forItemAtIndexPath:
+ */
+- (void)announceWillAppearForItemInCell:(UICollectionViewCell *)cell;
+
+/**
+ Sends -componentTreeDidDisappear to all CKComponentControllers for the given cell.
+ If needed, call this from -collectionView:didEndDisplayingCell:forItemAtIndexPath:
+ */
+- (void)announceDidDisappearForItemInCell:(UICollectionViewCell *)cell;
 
 @property (readonly, nonatomic, strong) UICollectionView *collectionView;
 /**

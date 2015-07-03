@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -69,5 +69,14 @@
  - The view the controller's component is mounted within, if it is the root component.
  */
 - (id)nextResponder;
+
+/**
+ When an action is triggered, a component controller may use this method to either capture or ignore the given action.
+ The default implementation simply uses respondsToSelector: to determine if the controller can perform the given action.
+
+ In practice, this is useful only for integrations with UIMenuController whose API walks the UIResponder chain to
+ determine which menu items to display. You should not override this method for standard component actions.
+ */
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
 
 @end

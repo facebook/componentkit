@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -46,7 +46,7 @@ void CKComponentActionSend(CKComponentAction action, CKComponent *sender, id con
  You can use this with e.g. CKButtonComponent.
 
  @param action Sent up the responder chain when an event occurs. Sender is the component that created the UIControl;
-        context is the UIEvent that triggered the action.
+        context is the UIEvent that triggered the action. May be NULL, in which case no action will be sent.
  @param controlEvents The events that should result in the action being sent. Default is touch up inside.
  */
 CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction action,

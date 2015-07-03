@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -100,8 +100,20 @@ namespace std {
 
 CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognizerClass,
                                                           CKComponentGestureRecognizerSetupFunction setupFunction,
-                                                          CKComponentAction action)
+                                                          CKComponentAction action,
+                                                          CKComponentForwardedSelectors delegateSelectors)
 {
+  if (action == NULL) {
+    return {
+      {
+        std::string(class_getName(gestureRecognizerClass)) + "-"
+        + CKStringFromPointer((const void *)setupFunction) + "-no-op",
+        ^(UIView *view, id value) {}, ^(UIView *view, id value) {}
+      },
+      @YES  // Bogus value, we don't use it.
+    };
+  }
+
   static auto *reusePoolMap = new std::unordered_map<CKGestureRecognizerReusePoolMapKey, CKGestureRecognizerReusePool *>();
   static CK::StaticMutex reusePoolMapMutex = CK_MUTEX_INITIALIZER;
   CK::StaticMutexLocker l(reusePoolMapMutex);
@@ -113,12 +125,23 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
     {
       std::string(class_getName(gestureRecognizerClass))
       + "-" + CKStringFromPointer((const void *)setupFunction)
-      + "-" + std::string(sel_getName(action)),
+      + "-" + std::string(sel_getName(action))
+      + CKIdentifierFromDelegateForwarderSelectors(delegateSelectors),
       ^(UIView *view, id value){
         CKCAssertNil(recognizerForAction(view, action),
                      @"Registered two gesture recognizers with the same action %@", NSStringFromSelector(action));
         UIGestureRecognizer *gestureRecognizer = reusePool->get();
         [gestureRecognizer ck_setComponentAction:action];
+
+        // Setup delegate proxying if applicable
+        if (delegateSelectors.size() > 0) {
+          CKCAssertNil(gestureRecognizer.delegate, @"Doesn't make sense to set the gesture delegate and provide selectors to proxy");
+          CKComponentDelegateForwarder *proxy = [CKComponentDelegateForwarder newWithSelectors:delegateSelectors];
+          proxy.view = view;
+          gestureRecognizer.delegate = (id<UIGestureRecognizerDelegate>)proxy;
+          // This will retain it
+          gestureRecognizer.ck_delegateProxy = proxy;
+        }
         [view addGestureRecognizer:gestureRecognizer];
       },
       ^(UIView *view, id value){
@@ -126,6 +149,14 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
         CKCAssertNotNil(recognizer, @"Expected to find recognizer for %@ on teardown", NSStringFromSelector(action));
         [view removeGestureRecognizer:recognizer];
         [recognizer ck_setComponentAction:NULL];
+
+        // Tear down delegate proxying if applicable
+        if (delegateSelectors.size() > 0) {
+          CKComponentDelegateForwarder *proxy = recognizer.ck_delegateProxy;
+          proxy.view = nil;
+          recognizer.delegate = nil;
+          recognizer.ck_delegateProxy = nil;
+        }
         reusePool->recycle(recognizer);
       }
     },
@@ -153,6 +184,11 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
 }
 
 @end
+
+CKComponentAction CKComponentGestureGetAction(UIGestureRecognizer *gesture)
+{
+  return [gesture ck_componentAction];
+};
 
 @implementation UIGestureRecognizer (CKComponent)
 

@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -30,7 +30,9 @@
 
 @property (readonly, nonatomic, copy) NSString *UUID;
 
-@property (readonly, nonatomic, copy) NSIndexPath *indexPath;
+@property (readonly, nonatomic, copy) NSIndexPath *sourceIndexPath;
+
+@property (readonly, nonatomic, copy) NSIndexPath *destinationIndexPath;
 
 @property (readonly, nonatomic, assign) CKArrayControllerChangeType changeType;
 
@@ -49,7 +51,8 @@ CKComponentPreparationItem
                          constrainedSize:(CKSizeRange)constrainedSize
                                  oldSize:(CGSize)oldSize
                                     UUID:(NSString *)UUID
-                               indexPath:(NSIndexPath *)indexPath
+                         sourceIndexPath:(NSIndexPath *)sourceIndexPath
+                    destinationIndexPath:(NSIndexPath *)destinationIndexPath
                               changeType:(CKArrayControllerChangeType)changeType
                              passthrough:(BOOL)passthrough
                                  context:(id<NSObject>)context;
@@ -67,7 +70,8 @@ CKComponentPreparationItem
                    lifecycleManagerState:(CKComponentLifecycleManagerState)lifecycleManagerState
                                  oldSize:(CGSize)oldSize
                                     UUID:(NSString *)UUID
-                               indexPath:(NSIndexPath *)indexPath
+                         sourceIndexPath:(NSIndexPath *)sourceIndexPath
+                    destinationIndexPath:(NSIndexPath *)destinationIndexPath
                               changeType:(CKArrayControllerChangeType)changeType
                              passthrough:(BOOL)passthrough
                                  context:(id<NSObject>)context;

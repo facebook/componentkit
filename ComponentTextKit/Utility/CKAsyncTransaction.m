@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -33,7 +33,7 @@
   CKAssertNil(_operationCompletionBlock, @"Should have been called and released before -dealloc");
 }
 
-- (void)callAndReleaseCompletionBlock:(BOOL)canceled;
+- (void)callAndReleaseCompletionBlock:(BOOL)canceled
 {
   if (_operationCompletionBlock) {
     _operationCompletionBlock(self.value, canceled);

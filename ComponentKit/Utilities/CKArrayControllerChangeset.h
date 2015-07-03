@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -121,31 +121,31 @@ namespace CK {
         void update(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
         void remove(const CKArrayControllerIndexPath &indexPath);
         void insert(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
+        typedef std::map<NSInteger, id<NSObject>> ItemIndexToObjectMap;
+        typedef std::map<NSInteger, ItemIndexToObjectMap> ItemsBucketizedBySection;
+
+        typedef void (^UpdatesEnumerator)(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop);
+        typedef void (^RemovalsEnumerator)(NSInteger section, NSInteger index, BOOL *stop);
+        typedef void (^InsertionsEnumerator)(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop);
+        /**
+         Each set of items is guaranteed to be enumerated in ascending order based on index path.
+         For example, following code
+
+         Items items;
+         items.remove({2,4});
+         items.remove({2,3});
+         items.remove({1,18});
+
+         would result in removalsBlock being called with index paths in this order during enumeration: {1,18}, {2,3}, {2,4}.
+         */
+        void enumerateItems(UpdatesEnumerator updatesBlock, RemovalsEnumerator removalsBlock, InsertionsEnumerator insertionsBlock) const;
 
         size_t size() const noexcept;
 
         bool operator==(const Items &other) const;
 
-        /**
-         Called by Changeset::enumerate(). Note that by passing an NSIndexSet the **order** that clients have called
-         Items::insert() is irrelevant. See CKArrayControllerInputChangesetTests for an example. The indexes and objects
-         parameters will always have the same number of elements, unless for CKArrayControllerChangeTypeDelete where
-         only indexes are passed.
-
-         In doing so we can, for example, simply call -[NSArray insertObjects:atIndexes:] and let NSArray do the
-         hard work of index-munging.
-         */
-        typedef void(^Enumerator)(NSInteger section,
-                                  NSIndexSet *indexes,
-                                  NSArray *objects,
-                                  CKArrayControllerChangeType type,
-                                  BOOL *stop);
-
       private:
         friend class Changeset;
-
-        typedef std::map<NSInteger, id<NSObject>> ItemIndexToObjectMap;
-        typedef std::map<NSInteger, ItemIndexToObjectMap> ItemsBucketizedBySection;
 
         void bucketizeObjectBySection(ItemsBucketizedBySection &m, const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
         bool commandExistsForIndexPath(const CKArrayControllerIndexPath &indexPath,
@@ -177,36 +177,9 @@ namespace CK {
         
         const CKArrayControllerSections sections;
         const CKArrayControllerInputItems items;
-        
-        /**
-         Called by CKSectionedArrayController. Enumeration vends "commands" that the array controller applies to its
-         internal array-of-arrays.
-         
-         The order of block invocation allows us to apply these commands directly to the arrays without having to deal
-         with adjusting/offsetting indexes or index paths.
-         
-         1) item updates
-         2) item removals
-         3) section removals
-         4) section insertions
-         5) item insertions
-         
-         Note that Items::Enumerate is invoked once for each section in which we need to insert/update/remove objects.
-         If there are insertions into N sections it is invoked N times.
-         */
-        void enumerate(CKArrayControllerSections::Enumerator sectionEnumerator, CKArrayControllerInputItems::Enumerator itemEnumerator) const;
-        
-        typedef id<NSObject> (^Mapper)(const IndexPath &indexPath, id<NSObject> object, CKArrayControllerChangeType type, BOOL *stop);
-        
-        Changeset map(Mapper mapper) const;
-        
-        typedef IndexPath (^ItemIndexPathMapper)(const IndexPath &indexPath, CKArrayControllerChangeType type);
-        
-        Changeset mapIndex(Sections::Mapper sectionIndexMapper, ItemIndexPathMapper mapper) const;
+
 
         bool operator==(const Changeset &other) const;
-      private:
-        Changeset _map(Mapper objectMapper, Sections::Mapper sectionIndexMapper, ItemIndexPathMapper indexPathMapper) const;
       };
     }
   }
@@ -224,41 +197,31 @@ namespace CK {
      */
     namespace Output {
 
-      struct Pair {
-        CKArrayControllerIndexPath indexPath;
-        id<NSObject> object;
-
-        Pair(const CKArrayControllerIndexPath &iP, id<NSObject> o) : indexPath(iP), object(o) {};
-
-        bool operator==(const Pair &other) const {
-          return indexPath == other.indexPath && CKObjectIsEqual(object, other.object);
-        }
-      };
-
       struct Change {
-        CKArrayControllerIndexPath indexPath;
+        /** Valid for updates and removals. */
+        CKArrayControllerIndexPath sourceIndexPath;
+        /** Valid for insertions. */
+        CKArrayControllerIndexPath destinationIndexPath;
+
         id<NSObject> before;
         id<NSObject> after;
 
-        Change(const CKArrayControllerIndexPath &iP, id<NSObject> b, id<NSObject> a) : indexPath(iP), before(b), after(a) {};
+        Change(const CKArrayControllerIndexPath &sIP, const CKArrayControllerIndexPath &dIP, id<NSObject> b, id<NSObject> a) : sourceIndexPath(sIP), destinationIndexPath(dIP), before(b), after(a) {};
 
         bool operator==(const Change &other) const {
-          return indexPath == other.indexPath && CKObjectIsEqual(before, other.before) && CKObjectIsEqual(after, other.after);
-        }
-
-        bool operator<(const Change &other) const {
-          return indexPath < other.indexPath;
+          return sourceIndexPath == other.sourceIndexPath && destinationIndexPath == other.destinationIndexPath && CKObjectIsEqual(before, other.before) && CKObjectIsEqual(after, other.after);
         }
 
         NSString *description() const {
-          return [NSString stringWithFormat:@"indexPath: <%zd,%zd>, before: <%@>, after: <%@>", indexPath.section, indexPath.item, before, after];
+          return [NSString stringWithFormat:@"sourceIndexPath: <%zd,%zd>, destinationIndexPath: <%zd,%zd>, before: <%@>, after: <%@>",
+                  sourceIndexPath.section, sourceIndexPath.item, destinationIndexPath.section, destinationIndexPath.item, before, after];
         }
+
       };
     }
   }
 }
 
-typedef CK::ArrayController::Output::Pair CKArrayControllerOutputPair;
 typedef CK::ArrayController::Output::Change CKArrayControllerOutputChange;
 
 namespace CK {
@@ -269,13 +232,13 @@ namespace CK {
 
       class Items final {
       public:
-        void update(const CKArrayControllerOutputChange &update);
+        void update(const CKArrayControllerIndexPath &indexPath, id<NSObject> oldObject, id<NSObject> newObject);
         /**
          Note that we pass the removed object here, too. In doing so we can inform clients of what was removed as a
          result of an Input::Changeset
          */
-        void remove(const CKArrayControllerOutputPair &removal);
-        void insert(const CKArrayControllerOutputPair &insertion);
+        void remove(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
+        void insert(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
 
         typedef void(^Enumerator)(const CKArrayControllerOutputChange &change,
                                   CKArrayControllerChangeType type,

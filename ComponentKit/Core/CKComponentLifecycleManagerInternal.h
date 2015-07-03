@@ -3,13 +3,13 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
 
 #import <ComponentKit/CKComponentLifecycleManager.h>
-#import <ComponentKit/CKComponentScopeInternal.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
 
 /**
  Debug Purposes Only.

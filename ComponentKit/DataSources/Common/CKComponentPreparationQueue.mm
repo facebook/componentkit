@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -28,7 +28,8 @@
                          constrainedSize:(CKSizeRange)constrainedSize
                                  oldSize:(CGSize)oldSize
                                     UUID:(NSString *)UUID
-                               indexPath:(NSIndexPath *)indexPath
+                         sourceIndexPath:(NSIndexPath *)sourceIndexPath
+                    destinationIndexPath:(NSIndexPath *)destinationIndexPath
                               changeType:(CKArrayControllerChangeType)changeType
                              passthrough:(BOOL)passthrough
                                  context:(id<NSObject>)context
@@ -38,7 +39,8 @@
     _lifecycleManager = lifecycleManager;
     _constrainedSize = constrainedSize;
     _UUID = [UUID copy];
-    _indexPath = [indexPath copy];
+    _sourceIndexPath = [sourceIndexPath copy];
+    _destinationIndexPath = [destinationIndexPath copy];
     _changeType = changeType;
     _passthrough = passthrough;
     _oldSize = oldSize;
@@ -55,7 +57,8 @@
 @synthesize replacementModel = _replacementModel;
 @synthesize lifecycleManager = _lifecycleManager;
 @synthesize UUID = _UUID;
-@synthesize indexPath = _indexPath;
+@synthesize sourceIndexPath = _sourceIndexPath;
+@synthesize destinationIndexPath = _destinationIndexPath;
 @synthesize changeType = _changeType;
 @synthesize passthrough = _passthrough;
 @synthesize oldSize = _oldSize;
@@ -78,7 +81,8 @@
                    lifecycleManagerState:(CKComponentLifecycleManagerState)lifecycleManagerState
                                  oldSize:(CGSize)oldSize
                                     UUID:(NSString *)UUID
-                               indexPath:(NSIndexPath *)indexPath
+                         sourceIndexPath:(NSIndexPath *)sourceIndexPath
+                    destinationIndexPath:(NSIndexPath *)destinationIndexPath
                               changeType:(CKArrayControllerChangeType)changeType
                              passthrough:(BOOL)passthrough
                                  context:(id<NSObject>)context
@@ -88,7 +92,8 @@
     _lifecycleManager = lifecycleManager;
     _lifecycleManagerState = lifecycleManagerState;
     _UUID = [UUID copy];
-    _indexPath = [indexPath copy];
+    _sourceIndexPath = [sourceIndexPath copy];
+    _destinationIndexPath = [destinationIndexPath copy];
     _changeType = changeType;
     _passthrough = passthrough;
     _oldSize = oldSize;
@@ -105,7 +110,8 @@
 @synthesize replacementModel = _replacementModel;
 @synthesize lifecycleManager = _lifecycleManager;
 @synthesize UUID = _UUID;
-@synthesize indexPath = _indexPath;
+@synthesize sourceIndexPath = _sourceIndexPath;
+@synthesize destinationIndexPath = _destinationIndexPath;
 @synthesize changeType = _changeType;
 @synthesize passthrough = _passthrough;
 @synthesize oldSize = _oldSize;
@@ -157,8 +163,8 @@
 {
   if (self = [super init]) {
     _announcer = [[CKComponentPreparationQueueListenerAnnouncer alloc] init];
-    _concurrentQueue = dispatch_queue_create("com.facebook.component-preparation-queue.concurrent", DISPATCH_QUEUE_CONCURRENT);
-    _inputQueue = dispatch_queue_create("com.facebook.component-preparation-queue.serial", DISPATCH_QUEUE_SERIAL);
+    _concurrentQueue = dispatch_queue_create("org.componentkit.component-preparation-queue.concurrent", DISPATCH_QUEUE_CONCURRENT);
+    _inputQueue = dispatch_queue_create("org.componentkit.component-preparation-queue.serial", DISPATCH_QUEUE_SERIAL);
     if (queueWidth > 0) {
       _queueWidth = queueWidth;
     } else {
@@ -252,7 +258,8 @@
                                                                 lifecycleManagerState:state
                                                                               oldSize:[inputItem oldSize]
                                                                                  UUID:[inputItem UUID]
-                                                                            indexPath:[inputItem indexPath]
+                                                                      sourceIndexPath:[inputItem sourceIndexPath]
+                                                                 destinationIndexPath:[inputItem destinationIndexPath]
                                                                            changeType:[inputItem changeType]
                                                                           passthrough:[inputItem isPassthrough]
                                                                               context:[inputItem context]];
@@ -262,7 +269,8 @@
                                                                 lifecycleManagerState:CKComponentLifecycleManagerStateEmpty
                                                                               oldSize:[inputItem oldSize]
                                                                                  UUID:[inputItem UUID]
-                                                                            indexPath:[inputItem indexPath]
+                                                                      sourceIndexPath:[inputItem sourceIndexPath]
+                                                                 destinationIndexPath:[inputItem destinationIndexPath]
                                                                            changeType:[inputItem changeType]
                                                                           passthrough:[inputItem isPassthrough]
                                                                               context:[inputItem context]];
@@ -275,7 +283,8 @@
                                                               lifecycleManagerState:CKComponentLifecycleManagerStateEmpty
                                                                             oldSize:[inputItem oldSize]
                                                                                UUID:[inputItem UUID]
-                                                                          indexPath:[inputItem indexPath]
+                                                                    sourceIndexPath:[inputItem sourceIndexPath]
+                                                               destinationIndexPath:[inputItem destinationIndexPath]
                                                                          changeType:[inputItem changeType]
                                                                         passthrough:[inputItem isPassthrough]
                                                                             context:[inputItem context]];

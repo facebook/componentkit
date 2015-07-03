@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -16,25 +16,18 @@
 @protocol CKComponentHostingViewDelegate;
 @protocol CKComponentSizeRangeProviding;
 
-/**
- A view the can host a component tree and automatically update it when the model or internal state changes.
- */
+/** A view that renders a single component. */
 @interface CKComponentHostingView : UIView
 
-/**
- The delegate of the view.
- */
+/** Notified when the view's ideal size (measured by -sizeThatFits:) may have changed. */
 @property (nonatomic, weak) id<CKComponentHostingViewDelegate> delegate;
 
-/**
- Designated initializer.
- */
+/** Designated initializer. */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                                  context:(id<NSObject>)context;
+                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
 
 /**
- The model object used to generate the component-tree hosted by the view.
+ The model object used to generate the view's component.
 
  Setting a new model will synchronously construct and mount a new component tree and the
  delegate will be notified if there is a change in size.

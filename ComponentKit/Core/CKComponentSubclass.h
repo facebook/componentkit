@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -95,6 +95,23 @@ extern CGSize const kCKComponentParentSizeUndefined;
  and proceeds up the responder chain otherwise.
  */
 - (id)targetForAction:(SEL)action withSender:(id)sender;
+
+/**
+ When an action is triggered, a component may use this method to either capture or ignore the given action. The default
+ implementation simply uses respondsToSelector: to determine if the component can perform the given action.
+
+ In practice, this is useful only for integrations with UIMenuController whose API walks the UIResponder chain to
+ determine which menu items to display. You should not override this method for standard component actions.
+ */
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
+
+/**
+ Override to return a list of animations that will be applied to the component when it is first mounted.
+
+ @warning If you override this method, your component MUST declare a scope (see CKComponentScope). This is used to
+ identify equivalent components between trees.
+ */
+- (std::vector<CKComponentAnimation>)animationsOnInitialMount;
 
 /**
  Override to return a list of animations from the previous version of the same component.
