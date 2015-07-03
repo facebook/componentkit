@@ -102,7 +102,7 @@ Later on (for instance when updated data is received from the server), we can up
 {% endraw %}
 ```
 
-It is also possible to remove items and sections through this [changeset API](changeset-api.html).
+It is also possible to remove items and sections through this [changeset API](datasource-changeset-api.html).
 
 #### Layout
 

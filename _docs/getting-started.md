@@ -6,7 +6,7 @@ permalink: /docs/getting-started.html
 
 Let's get a sample app powered by ComponentKit up and running, then make some tweaks to experiment with how components work.
 
-Clone the Github repo and run `pod install` to set up the example app, then open the workspace:
+Clone the Github repo and run `pod install` to set up the example app, then open the workspace. If you don't have `pod` installed, see [CocoaPods](https://cocoapods.org/).
 
 ```sh
 $ git clone https://github.com/facebook/componentkit
@@ -67,5 +67,5 @@ Run the app once more. Now it looks a lot better:
 Congratulations! You've done your first development with ComponentKit. Keep poking around the sample app to learn more, or start using it in your own apps. Just add the following to your Podfile:
 
 ```
-pod 'ComponentKit', '~> 0.9'
+pod 'ComponentKit', '~> 0.12'
 ```
