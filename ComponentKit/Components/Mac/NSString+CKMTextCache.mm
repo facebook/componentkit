@@ -8,6 +8,8 @@
  *
  */
 
+#import <AppKit/AppKit.h>
+
 #import <ComponentKit/CKCacheImpl.h>
 
 #import "CKEqualityHashHelpers.h"
@@ -26,7 +28,7 @@ struct NSStringDrawingKey
   NSStringDrawingOptions options;
   NSDictionary *attributes;
 
-  NSStringDrawingKey(NSString *string, CGSize constrainedSize, NSStringDrawingOptions options, NSDictionary *attributes) : string(string), constrainedSize(constrainedSize), options(options), attributes(attributes) {
+  NSStringDrawingKey(NSString *string_, CGSize constrainedSize_, NSStringDrawingOptions options_, NSDictionary *attributes_) : string(string_), constrainedSize(constrainedSize_), options(options_), attributes(attributes_) {
     hash = _hash();
   };
 
@@ -35,6 +37,7 @@ struct NSStringDrawingKey
   bool operator == (const NSStringDrawingKey &other) const {
     // These comparisons are in a specific order to reduce the overall cost of this function.
     return hash == other.hash
+    && _objectsEqual(string, other.string)
     && CGSizeEqualToSize(constrainedSize, other.constrainedSize)
     && _objectsEqual(attributes, other.attributes);
   }
@@ -46,9 +49,12 @@ struct NSStringDrawingKey
       std::hash<CGFloat>()(constrainedSize.width),
       std::hash<CGFloat>()(constrainedSize.height),
       std::hash<NSStringDrawingOptions>()(options),
-      [attributes hash],
+      [attributes[NSFontAttributeName] hash],
+      [attributes hash], // just returns # of attributes in dict
     };
-    return CKIntegerArrayHash(subhashes, sizeof(subhashes) / sizeof(subhashes[0]));
+    NSUInteger combined = CKIntegerArrayHash(subhashes, sizeof(subhashes) / sizeof(subhashes[0]));
+    //NSLog(@"%@ %@ hash: %llu %llu %llu", string, attributes[NSFontAttributeName], (unsigned long long)string.hash, (unsigned long long)[attributes[NSFontAttributeName] hash], (unsigned long long)combined);
+    return combined;
   }
 
 
