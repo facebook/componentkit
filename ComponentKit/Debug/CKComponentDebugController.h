@@ -10,7 +10,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>
 
 @class CKComponent;
