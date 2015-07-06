@@ -8,6 +8,8 @@
  *
  */
 
+#import <Foundation/Foundation.h>
+
 #import "CKEqualityHashHelpers.h"
 
 #import <functional>
