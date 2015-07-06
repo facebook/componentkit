@@ -42,7 +42,7 @@ CGFloat CKScreenScale()
   return _scale;
 #else
   // FIXME: this really can't be determined statically!
-  return 2.0;
+  return 1.0;
 #endif
 }
 
