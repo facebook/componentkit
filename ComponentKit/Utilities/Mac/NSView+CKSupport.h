@@ -14,6 +14,8 @@
 
 @property (nonatomic, strong) NSColor *backgroundColor;
 
+@property (nonatomic, assign) BOOL clipsToBounds;
+
 - (void)setNeedsLayout;
 
 // No-op

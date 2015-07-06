@@ -12,6 +12,7 @@
 
 @implementation NSView (CKSupport)
 
+@dynamic clipsToBounds;
 @dynamic backgroundColor;
 
 - (void)layoutSubviews
