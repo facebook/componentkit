@@ -25,6 +25,7 @@ struct CKComponentLifecycleManagerState {
   CKSizeRange constrainedSize;
   CKComponentLayout layout;
   CKComponentScopeRoot *root;
+  id memoizerState;
   CKComponentBoundsAnimation boundsAnimation;
 };
 

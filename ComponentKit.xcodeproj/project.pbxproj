@@ -13,6 +13,7 @@
 		18644AE71B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE41B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm */; };
 		31EBF255C3C6127E5A3619D8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD8D95429A0D918C06B66E5F /* libPods.a */; };
 		83EBF589FB5C5611BC1A2D13 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD8D95429A0D918C06B66E5F /* libPods.a */; };
+		991DE3411B3B308900AA05B2 /* CKComponentMemoizerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 991DE3401B3B308900AA05B2 /* CKComponentMemoizerTests.mm */; };
 		994EF6FB1B1FD77700E2236F /* CKComponentDelegateAttributeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 994EF6FA1B1FD77700E2236F /* CKComponentDelegateAttributeTests.mm */; };
 		A2100E0D1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2100E0C1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm */; };
 		A22FE3031AF2CEB000EC30B8 /* CKTransactionalComponentDataSourceStateUpdateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A22FE3021AF2CEB000EC30B8 /* CKTransactionalComponentDataSourceStateUpdateTests.mm */; };
@@ -95,6 +96,7 @@
 		18644AE31B3CB8E60028AF87 /* CKTestStatefulViewComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTestStatefulViewComponent.h; sourceTree = "<group>"; };
 		18644AE41B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTestStatefulViewComponent.mm; sourceTree = "<group>"; };
 		71F5A01FFD736AB56CFCFD58 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		991DE3401B3B308900AA05B2 /* CKComponentMemoizerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentMemoizerTests.mm; sourceTree = "<group>"; };
 		994EF6FA1B1FD77700E2236F /* CKComponentDelegateAttributeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDelegateAttributeTests.mm; sourceTree = "<group>"; };
 		A2100E0C1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm; sourceTree = "<group>"; };
 		A22FE3021AF2CEB000EC30B8 /* CKTransactionalComponentDataSourceStateUpdateTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceStateUpdateTests.mm; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 				B342DC5F1AC23EA900ACAC53 /* CKComponentViewManagerTests.mm */,
 				B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */,
 				994EF6FA1B1FD77700E2236F /* CKComponentDelegateAttributeTests.mm */,
+				991DE3401B3B308900AA05B2 /* CKComponentMemoizerTests.mm */,
 				B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */,
 				B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */,
 				B342DC631AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm */,
@@ -719,6 +722,7 @@
 				18644AE61B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm in Sources */,
 				B342DC821AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm in Sources */,
 				A27C72751AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm in Sources */,
+				991DE3411B3B308900AA05B2 /* CKComponentMemoizerTests.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

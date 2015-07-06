@@ -13,7 +13,7 @@
 #import <functional>
 
 #import <ComponentKit/CKDimension.h>
-#import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKEqualityHashHelpers.h>
 #import <ComponentKit/CKMacros.h>
 
 CKSizeRange::CKSizeRange(const CGSize &_min, const CGSize &_max) : min(_min), max(_max)
