@@ -35,6 +35,8 @@ CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKComponentAction a
  */
 CKComponentViewAttributeValue CKComponentClickGestureAttribute(CKComponentAction action);
 
+CKComponentViewAttributeValue CKComponentDoubleClickGestureAttribute(CKComponentAction action);
+
 #endif
 
 /**

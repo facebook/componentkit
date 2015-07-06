@@ -86,6 +86,13 @@ CKComponentViewAttributeValue CKComponentClickGestureAttribute(CKComponentAction
   return CKComponentGestureAttribute([NSClickGestureRecognizer class], nullptr, action);
 }
 
+CKComponentViewAttributeValue CKComponentDoubleClickGestureAttribute(CKComponentAction action)
+{
+  return CKComponentGestureAttribute([NSClickGestureRecognizer class],
+                                     [](NSGestureRecognizer *r){ ((NSClickGestureRecognizer *)r).numberOfClicksRequired = 2; },
+                                     action);
+}
+
 CKComponentViewAttributeValue CKComponentPanGestureAttribute(CKComponentAction action)
 {
   return CKComponentGestureAttribute([NSPanGestureRecognizer class], nullptr, action);
