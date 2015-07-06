@@ -14,12 +14,12 @@
 //Components
 #if TARGET_OS_IPHONE
 #import <ComponentKit/CKButtonComponent.h>
-#import <ComponentKit/CKImageComponent.h>
 #import <ComponentKit/CKNetworkImageComponent.h>
 #import <ComponentKit/CKNetworkImageDownloading.h>
 #else
 
 #endif
+#import <ComponentKit/CKImageComponent.h>
 
 //Core
 #import <ComponentKit/CKComponent.h>
