@@ -16,7 +16,7 @@ struct CKMTextLabelComponentAttrs {
 @interface CKMTextLabelComponent : CKComponent
 
 + (instancetype)newWithTextAttributes:(CKMTextLabelComponentAttrs)attrs
-                       viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
+                       viewAttributes:(CKViewComponentAttributeValueMap)viewAttributes
                                  size:(CKComponentSize)size;
 
 @end

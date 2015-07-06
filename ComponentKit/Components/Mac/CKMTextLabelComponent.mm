@@ -11,21 +11,27 @@
 }
 
 + (instancetype)newWithTextAttributes:(CKMTextLabelComponentAttrs)attrs
-                       viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
+                       viewAttributes:(CKViewComponentAttributeValueMap)viewAttributes
                                  size:(CKComponentSize)size
 {
+  CKViewComponentAttributeValueMap addl = {
+    {@selector(setEditable:), @NO},
+    {@selector(setSelectable:), @NO},
+    {@selector(setStringValue:), attrs.text ?: @""},
+    {@selector(setBackgroundColor:), attrs.backgroundColor},
+    {@selector(setTextColor:), attrs.color},
+    {@selector(setBezeled:), @NO},
+    {@selector(setAlignment:), @(attrs.alignment)},
+    {@selector(setFont:), attrs.font},
+  };
+  viewAttributes.insert(addl.begin(), addl.end());
+
   CKMTextLabelComponent *c =
   [super
    newWithView:{
      {[NSTextField class]},
      {
-       {@selector(setEditable:), @NO},
-       {@selector(setSelectable:), @NO},
-       {@selector(setStringValue:), attrs.text ?: @""},
-       {@selector(setBackgroundColor:), attrs.backgroundColor},
-       {@selector(setBezeled:), @NO},
-       {@selector(setAlignment:), @(attrs.alignment)},
-       {@selector(setFont:), attrs.font},
+       std::move(viewAttributes),
      },
    }
    size:size];
@@ -49,7 +55,7 @@
 {
   const CGSize constraint = {
     isinf(constrainedSize.max.width) ? CGFLOAT_MAX : constrainedSize.max.width,
-    CGFLOAT_MAX
+    isinf(constrainedSize.max.height) ? 0.0 : CGFLOAT_MAX,
   };
 
   NSFont *font = _attrs.font ?: [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]];
@@ -60,7 +66,7 @@
                                               options:NSStringDrawingUsesLineFragmentOrigin
                                            attributes:attributes];
 
-  rect = UIEdgeInsetsInsetRect(rect, {.left = -3, .right = -3});
+  rect = UIEdgeInsetsInsetRect(rect, {.left = -5, .right = -5});
 
   return {self, constrainedSize.clamp(rect.size)};
 }
