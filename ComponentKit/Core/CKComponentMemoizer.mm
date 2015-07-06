@@ -121,6 +121,7 @@ struct CKLayoutMemoizationKey {
   CKLayoutMemoizationKey key{.component = component, .thatFits = constrainedSize, .parentSize = parentSize};
   auto it = layoutCache_.find(key);
   if (it != layoutCache_.end()) {
+    self.next->layoutCache_.insert({key, it->second});
     return it->second;
   } else {
     CKComponentLayout layout = [component computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
@@ -167,6 +168,8 @@ id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void))
   CKComponent *component = [impl dequeueComponentForKey:memoizationKey];
   if (!component && block) {
     component = block();
+  }
+  if (component) {
     [impl enqueueComponent:component forKey:memoizationKey];
   }
   return component;
