@@ -69,6 +69,13 @@
   return self;
 }
 
+#if !TARGET_OS_IPHONE
+- (BOOL)isFlipped
+{
+  return YES;
+}
+#endif
+
 - (void)dealloc
 {
   CKAssertMainThread(); // UIKit should guarantee this
