@@ -10,9 +10,8 @@
 
 #import <XCTest/XCTest.h>
 
-#import <OCMock/OCMock.h>
-
 #import "CKComponentHostingViewTestModel.h"
+#import "CKTestRunLoopRunning.h"
 
 #import "CKComponent.h"
 #import "CKComponentFlexibleSizeRangeProvider.h"
@@ -30,14 +29,13 @@ static CKComponentHostingView *hostingView()
   CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
                                                                          sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
   view.bounds = CGRectMake(0, 0, 100, 100);
-  view.model = model;
+  [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
   return view;
 }
 
 @implementation CKComponentHostingViewTests {
   BOOL _calledSizeDidInvalidate;
-  CKComponentHostingView *_hostingView;
 }
 
 + (CKComponent *)componentForModel:(CKComponentHostingViewTestModel *)model context:(id<NSObject>)context
@@ -74,21 +72,37 @@ static CKComponentHostingView *hostingView()
   XCTAssertTrue(CGRectEqualToRect(componentView.bounds, CGRectMake(0, 0, 200, 200)));
 }
 
-- (void)testUpdatesOnModelChange
+- (void)testImmediatelyUpdatesViewOnSynchronousModelChange
 {
   CKComponentHostingView *view = hostingView();
-  view.model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
+  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
+               mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
 
   UIView *componentView = [view.containerView.subviews firstObject];
   XCTAssertEqualObjects(componentView.backgroundColor, [UIColor redColor], @"Expected component view to become red");
 }
 
+- (void)testEventuallyUpdatesViewOnAsynchronousModelChange
+{
+  CKComponentHostingView *view = hostingView();
+  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
+               mode:CKUpdateModeAsynchronous];
+  [view layoutIfNeeded];
+
+  UIView *componentView = [view.containerView.subviews firstObject];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^{
+    [view layoutIfNeeded];
+    return [componentView.backgroundColor isEqual:[UIColor redColor]];
+  }));
+}
+
 - (void)testInformsDelegateSizeIsInvalidatedOnModelChange
 {
   CKComponentHostingView *view = hostingView();
   view.delegate = self;
-  view.model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(75, 75))];
+  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(75, 75))]
+               mode:CKUpdateModeSynchronous];
   XCTAssertTrue(_calledSizeDidInvalidate);
 }
 
@@ -96,7 +110,7 @@ static CKComponentHostingView *hostingView()
 {
   CKComponentHostingView *view = hostingView();
   view.delegate = self;
-  view.context = @"foo";
+  [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
   XCTAssertTrue(_calledSizeDidInvalidate);
 }
 
@@ -105,7 +119,7 @@ static CKComponentHostingView *hostingView()
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
   CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[self class]
                                                                          sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
-  view.model = model;
+  [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
 
   XCTAssertEqual([view.containerView.subviews count], 0u, @"Expect the component is not mounted with empty bounds");

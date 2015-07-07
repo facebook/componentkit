@@ -193,14 +193,14 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 - (void)componentScopeHandleWithIdentifier:(int32_t)globalIdentifier
                             rootIdentifier:(int32_t)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
-                     tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
+                                      mode:(CKUpdateMode)mode
 {
   {
     CK::MutexLocker l(_mutex);
     _pendingStateUpdates.insert({globalIdentifier, stateUpdate});
   }
 
-  if (tryAsynchronousUpdate && _asynchronousUpdateHandler) {
+  if (mode == CKUpdateModeAsynchronous && _asynchronousUpdateHandler) {
     [_asynchronousUpdateHandler handleAsynchronousUpdateForComponentLifecycleManager:self];
   } else {
     const CKSizeRange constrainedSize = _sizeRangeProvider ? [_sizeRangeProvider sizeRangeForBoundingSize:_state.constrainedSize.max] : _state.constrainedSize;

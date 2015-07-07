@@ -172,7 +172,7 @@ struct CKLifecycleMethodCounts {
 {
   [self updateState:^(id oldState){
     return @YES;
-  }];
+  } mode:CKUpdateModeSynchronous];
 }
 @end
 

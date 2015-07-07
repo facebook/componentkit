@@ -61,9 +61,6 @@
 /** Called by the animation machinery. Do not access this externally. */
 - (UIView *)viewForAnimation;
 
-/** Called in specific cases for expensive state updates. Do not access this externally. */
-- (void)updateStateWithExpensiveReflow:(id (^)(id))updateBlock;
-
 /** Used by CKComponentLifecycleManager to get the root component in the responder chain; don't touch this. */
 @property (nonatomic, weak) UIView *rootComponentMountedView;
 

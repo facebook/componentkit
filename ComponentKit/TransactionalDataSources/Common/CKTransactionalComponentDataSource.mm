@@ -56,17 +56,17 @@
 }
 
 - (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
-                  mode:(CKTransactionalComponentDataSourceMode)mode
+                  mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo
 {
   CKAssertMainThread();
   id<CKTransactionalComponentDataSourceStateModifying> modification =
   [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset stateListener:self userInfo:userInfo];
   switch (mode) {
-    case CKTransactionalComponentDataSourceModeAsynchronous:
+    case CKUpdateModeAsynchronous:
       [self _enqueueModification:modification];
       break;
-    case CKTransactionalComponentDataSourceModeSynchronous:
+    case CKUpdateModeSynchronous:
       // We need to keep FIFO ordering of changesets, so cancel & synchronously apply any queued async modifications.
       NSArray *enqueuedChangesets = [self _cancelEnqueuedModificationsOfType:[modification class]];
       for (id<CKTransactionalComponentDataSourceStateModifying> pendingChangesetModification in enqueuedChangesets) {
@@ -78,17 +78,17 @@
 }
 
 - (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
-                       mode:(CKTransactionalComponentDataSourceMode)mode
+                       mode:(CKUpdateMode)mode
                    userInfo:(NSDictionary *)userInfo
 {
   CKAssertMainThread();
   id<CKTransactionalComponentDataSourceStateModifying> modification =
   [[CKTransactionalComponentDataSourceUpdateConfigurationModification alloc] initWithConfiguration:configuration userInfo:userInfo];
   switch (mode) {
-    case CKTransactionalComponentDataSourceModeAsynchronous:
+    case CKUpdateModeAsynchronous:
       [self _enqueueModification:modification];
       break;
-    case CKTransactionalComponentDataSourceModeSynchronous:
+    case CKUpdateModeSynchronous:
       // Cancel all enqueued asynchronous configuration updates or they'll complete later and overwrite this one.
       [self _cancelEnqueuedModificationsOfType:[modification class]];
       [self _synchronouslyApplyChange:[modification changeFromState:_state]];
@@ -96,17 +96,17 @@
   }
 }
 
-- (void)reloadWithMode:(CKTransactionalComponentDataSourceMode)mode
+- (void)reloadWithMode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo
 {
   CKAssertMainThread();
   id<CKTransactionalComponentDataSourceStateModifying> modification =
   [[CKTransactionalComponentDataSourceReloadModification alloc] initWithUserInfo:userInfo];
   switch (mode) {
-    case CKTransactionalComponentDataSourceModeAsynchronous:
+    case CKUpdateModeAsynchronous:
       [self _enqueueModification:modification];
       break;
-    case CKTransactionalComponentDataSourceModeSynchronous:
+    case CKUpdateModeSynchronous:
       // Cancel previously enqueued reloads; we're reloading right now, so no need to subsequently reload again.
       [self _cancelEnqueuedModificationsOfType:[modification class]];
       [self _synchronouslyApplyChange:[modification changeFromState:_state]];
@@ -131,7 +131,7 @@
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                             rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
-                     tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
+                                      mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
   if (_pendingAsynchronousStateUpdates.empty() && _pendingSynchronousStateUpdates.empty()) {
@@ -140,7 +140,7 @@
     });
   }
 
-  if (tryAsynchronousUpdate) {
+  if (mode == CKUpdateModeAsynchronous) {
     _pendingAsynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});
   } else {
     _pendingSynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});

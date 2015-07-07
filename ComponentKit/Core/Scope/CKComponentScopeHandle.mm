@@ -94,19 +94,19 @@
 
 #pragma mark - State
 
-- (void)updateState:(id (^)(id))updateFunction tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
+- (void)updateState:(id (^)(id))updateFunction mode:(CKUpdateMode)mode
 {
   CKAssertNotNil(updateFunction, @"The block for updating state cannot be nil");
   if (![NSThread isMainThread]) {
     dispatch_async(dispatch_get_main_queue(), ^{
-      [self updateState:updateFunction tryAsynchronousUpdate:tryAsynchronousUpdate];
+      [self updateState:updateFunction mode:mode];
     });
     return;
   }
   [_listener componentScopeHandleWithIdentifier:_globalIdentifier
                                  rootIdentifier:_rootIdentifier
                           didReceiveStateUpdate:updateFunction
-                          tryAsynchronousUpdate:tryAsynchronousUpdate];
+                                           mode:mode];
 }
 
 #pragma mark - Component Scope Handle Acquisition

@@ -10,17 +10,14 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKUpdateMode.h>
+
 @protocol CKComponentProvider;
 @protocol CKTransactionalComponentDataSourceListener;
 
 @class CKTransactionalComponentDataSourceChangeset;
 @class CKTransactionalComponentDataSourceConfiguration;
 @class CKTransactionalComponentDataSourceState;
-
-typedef NS_ENUM(NSUInteger, CKTransactionalComponentDataSourceMode) {
-  CKTransactionalComponentDataSourceModeAsynchronous,
-  CKTransactionalComponentDataSourceModeSynchronous,
-};
 
 /** Transforms an input of model objects into CKComponentLayouts. All methods and callbacks are main thread only. */
 @interface CKTransactionalComponentDataSource : NSObject
@@ -36,19 +33,19 @@ typedef NS_ENUM(NSUInteger, CKTransactionalComponentDataSourceMode) {
  changesets are still pending, they will all be applied synchronously before applying the new changeset.
  */
 - (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
-                  mode:(CKTransactionalComponentDataSourceMode)mode
+                  mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo;
 
 /** Updates the configuration object, updating all existing components. */
 - (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
-                       mode:(CKTransactionalComponentDataSourceMode)mode
+                       mode:(CKUpdateMode)mode
                    userInfo:(NSDictionary *)userInfo;
 
 /**
  Regenerate all components in the data source. This can be useful when responding to changes to global singleton state
  that break the "components as a pure function of input" rule (for example, changes to UIAccessibility).
  */
-- (void)reloadWithMode:(CKTransactionalComponentDataSourceMode)mode
+- (void)reloadWithMode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo;
 
 - (void)addListener:(id<CKTransactionalComponentDataSourceListener>)listener;

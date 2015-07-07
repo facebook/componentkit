@@ -81,7 +81,7 @@ static CKComponent *hairlineComponent()
 {
   [self updateState:^(NSNumber *oldState){
     return [oldState boolValue] ? @NO : @YES;
-  }];
+  } mode:CKUpdateModeSynchronous];
 }
 
 - (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(InteractiveQuoteComponent *)previousComponent
