@@ -21,16 +21,23 @@
 #import "CKComponentSizeRangeProviding.h"
 #import "CKComponentSubclass.h"
 
+struct CKComponentHostingViewInputs {
+  CKComponentScopeRoot *scopeRoot;
+  id<NSObject> model;
+  id<NSObject> context;
+  CKComponentStateUpdateMap stateUpdates;
+
+  bool operator==(const CKComponentHostingViewInputs &i) const {
+    return scopeRoot == i.scopeRoot && model == i.model && context == i.context && stateUpdates == i.stateUpdates;
+  };
+};
+
 @interface CKComponentHostingView () <CKComponentStateListener>
 {
   Class<CKComponentProvider> _componentProvider;
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
 
-  CKComponentScopeRoot *_scopeRoot;
-  CKComponentStateUpdateMap _pendingStateUpdates;
-
-  id<NSObject> _currentModel;
-  id<NSObject> _currentContext;
+  CKComponentHostingViewInputs _pendingInputs;
 
   CKComponent *_component;
   BOOL _componentNeedsUpdate;
@@ -59,7 +66,7 @@
   if (self = [super initWithFrame:CGRectZero]) {
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
-    _scopeRoot = [CKComponentScopeRoot rootWithListener:self];
+    _pendingInputs = {.scopeRoot = [CKComponentScopeRoot rootWithListener:self]};
 
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
@@ -107,14 +114,14 @@
 - (void)updateModel:(id<NSObject>)model mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
-  _currentModel = model;
+  _pendingInputs.model = model;
   [self _setNeedsUpdateWithMode:mode];
 }
 
 - (void)updateContext:(id<NSObject>)context mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
-  _currentContext = context;
+  _pendingInputs.context = context;
   [self _setNeedsUpdateWithMode:mode];
 }
 
@@ -131,7 +138,7 @@
                                       mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
-  _pendingStateUpdates.insert({globalIdentifier, stateUpdate});
+  _pendingInputs.stateUpdates.insert({globalIdentifier, stateUpdate});
   [self _setNeedsUpdateWithMode:mode];
 }
 
@@ -178,31 +185,23 @@
     return;
   }
 
-  id<NSObject> modelCopy = _currentModel;
-  id<NSObject> contextCopy = _currentContext;
-  CKComponentScopeRoot *scopeRootCopy = _scopeRoot;
-  auto stateUpdatesToApply = std::make_shared<const CKComponentStateUpdateMap>(_pendingStateUpdates);
+  const auto inputs = std::make_shared<const CKComponentHostingViewInputs>(_pendingInputs);
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    const CKBuildComponentResult result = CKBuildComponent(scopeRootCopy, *stateUpdatesToApply, ^CKComponent *{
-      return [_componentProvider componentForModel:modelCopy context:contextCopy];
-    });
+    const auto result = std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
+      inputs->scopeRoot,
+      inputs->stateUpdates,
+      ^{ return [_componentProvider componentForModel:inputs->model context:inputs->context]; }
+    ));
     dispatch_async(dispatch_get_main_queue(), ^{
       if (!_componentNeedsUpdate) {
         // A synchronous update snuck in and took care of it for us.
         return;
       }
 
-      if (_currentModel == modelCopy
-          && _currentContext == contextCopy
-          && _scopeRoot == scopeRootCopy
-          && _pendingStateUpdates.size() == stateUpdatesToApply->size()) {
-        _pendingStateUpdates.clear();
-        _component = result.component;
-        _scopeRoot = result.scopeRoot;
-        _currentModel = modelCopy;
-        _currentContext = contextCopy;
-        _componentNeedsUpdate = NO;
+      // If the inputs haven't changed, apply the result; otherwise, retry.
+      if (_pendingInputs == *inputs) {
         _scheduledAsynchronousComponentUpdate = NO;
+        [self _applyResult:*result];
         [self setNeedsLayout];
         [_delegate componentHostingViewDidInvalidateSize:self];
       } else {
@@ -210,6 +209,14 @@
       }
     });
   });
+}
+
+- (void)_applyResult:(const CKBuildComponentResult &)result
+{
+  _pendingInputs.scopeRoot = result.scopeRoot;
+  _pendingInputs.stateUpdates = {};
+  _component = result.component;
+  _componentNeedsUpdate = NO;
 }
 
 - (void)_synchronouslyUpdateComponentIfNeeded
@@ -222,19 +229,12 @@
     CKFailAssert(@"CKComponentHostingView is not re-entrant. This is called by -layoutSubviews, so ensure "
                  "that there is nothing that is triggering a nested call to -layoutSubviews.");
     return;
-  } else {
-    _isSynchronouslyUpdatingComponent = YES;
   }
 
-  CKComponentStateUpdateMap stateUpdatesToApply = _pendingStateUpdates;
-  _pendingStateUpdates.clear();
-  const CKBuildComponentResult result = CKBuildComponent(_scopeRoot, stateUpdatesToApply, ^CKComponent *{
-    return [_componentProvider componentForModel:_currentModel context:_currentContext];
-  });
-  _component = result.component;
-  _scopeRoot = result.scopeRoot;
-  _componentNeedsUpdate = NO;
-
+  _isSynchronouslyUpdatingComponent = YES;
+  [self _applyResult:CKBuildComponent(_pendingInputs.scopeRoot, _pendingInputs.stateUpdates, ^CKComponent *{
+    return [_componentProvider componentForModel:_pendingInputs.model context:_pendingInputs.context];
+  })];
   _isSynchronouslyUpdatingComponent = NO;
 }
 
