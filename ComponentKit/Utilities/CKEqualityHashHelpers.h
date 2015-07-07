@@ -41,14 +41,14 @@ namespace CK {
 
   // For non-objc types, defer to std::hash
   template <typename T> struct hash<T, typename std::enable_if<!is_objc_class<T>::value>::type> {
-    bool operator ()(const T& a) {
+    size_t operator ()(const T& a) {
       return std::hash<T>()(a);
     }
   };
 
   // For objc types, call [o hash]
   template <typename T> struct hash<T, typename std::enable_if<is_objc_class<T>::value>::type> {
-    bool operator ()(id o) {
+    size_t operator ()(id o) {
       return [o hash];
     }
   };
