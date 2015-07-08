@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>CKNetworkImageComponent Class Reference</title>
+	<title>CKComponentDelegateForwarder Class Reference</title>
 
 	<link rel="stylesheet" href="../css/style.css">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
@@ -54,11 +54,17 @@
 
 	
 	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/view">view</option>
+		
+	</optgroup>
+	
 
 	
 	<optgroup label="Class Methods">
 		
-		<option value="//api/name/newWithURL:imageDownloader:scenePath:size:options:attributes:">+ newWithURL:imageDownloader:scenePath:size:options:attributes:</option>
+		<option value="//api/name/newWithSelectors:">+ newWithSelectors:</option>
 		
 	</optgroup>
 	
@@ -77,16 +83,16 @@
 		<div id="overview_contents" class="container">
 			<div id="content">
 				<main role="main">
-					<h1 class="title">CKNetworkImageComponent Class Reference</h1>
+					<h1 class="title">CKComponentDelegateForwarder Class Reference</h1>
 
 					
 					<div class="section section-specification"><table cellspacing="0"><tbody>
 						<tr>
 	<th>Inherits from</th>
-	<td><a href="../Classes/CKComponent.html">CKComponent</a> : NSObject</td>
+	<td>NSObject</td>
 </tr><tr>
 	<th>Declared in</th>
-	<td>CKNetworkImageComponent.h</td>
+	<td>CKComponentDelegateForwarder.h</td>
 </tr>
 						</tbody></table></div>
 					
@@ -96,7 +102,7 @@
 					<div class="section section-overview">
 						<a title="Overview" name="overview"></a>
 						<h2 class="subtitle subtitle-overview">Overview</h2>
-						<p>Renders an image from a URL.</p>
+						<p>This class is intended for ComponentKit internal use only.</p>
 					</div>
 					
 					
@@ -112,8 +118,8 @@
 
 						<div class="task-list">
 							<div class="section-method">
-	<a name="//api/name/newWithURL:imageDownloader:scenePath:size:options:attributes:" title="newWithURL:imageDownloader:scenePath:size:options:attributes:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/newWithURL:imageDownloader:scenePath:size:options:attributes:">+&nbsp;newWithURL:imageDownloader:scenePath:size:options:attributes:</a></code>
+	<a name="//api/name/newWithSelectors:" title="newWithSelectors:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/newWithSelectors:">+&nbsp;newWithSelectors:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -123,31 +129,14 @@
 			
 			
 			<div class="method-subsection brief-description">
-				<p>See CKNetworkImageComponentOptions</p>
+				<p>This initializer will make an object that forwards calls to the given selectors on to the component, and its nextResponder, etc.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>+ (instancetype)newWithURL:(NSURL *)<em>url</em> imageDownloader:(id&lt;CKNetworkImageDownloading&gt;)<em>imageDownloader</em> scenePath:(id)<em>scenePath</em> size:(const CKComponentSize &amp;)<em>size</em> options:(const CKNetworkImageComponentOptions &amp;)<em>options</em> attributes:(const CKViewComponentAttributeValueMap &amp;)<em>attributes</em></code></div>
+			<div class="method-subsection method-declaration"><code>+ (instancetype)newWithSelectors:(CKComponentForwardedSelectors)<em>selectors</em></code></div>
 
 		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>options</code></th>
-						<td><p>See CKNetworkImageComponentOptions</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>attributes</code></th>
-						<td><p>Applied to the underlying UIImageView.</p></td>
-					</tr>
-				
-				</table>
-			</div>
 			
 
 			
@@ -163,7 +152,53 @@
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKNetworkImageComponent.h</code></p>
+				<p><code class="declared-in-ref">CKComponentDelegateForwarder.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/view" title="view"></a>
+	<h3 class="method-title"><code><a href="#//api/name/view">&nbsp;&nbsp;view</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The view is used to find out where to start looking in the component responder chain.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, weak) UIView *view</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>The forwarder will call [view.ck_component targetForAction: withSender:] to proxy to the responder chain, so this needs to be accurate when you mount/unmount.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentDelegateForwarder.h</code></p>
 			</div>
 			
 			

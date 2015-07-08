@@ -66,6 +66,10 @@
 	
 	<optgroup label="Instance Methods">
 		
+		<option value="//api/name/announceDidDisappearForItemInCell:">- announceDidDisappearForItemInCell:</option>
+		
+		<option value="//api/name/announceWillAppearForItemInCell:">- announceWillAppearForItemInCell:</option>
+		
 		<option value="//api/name/enqueueChangeset:constrainedSize:">- enqueueChangeset:constrainedSize:</option>
 		
 		<option value="//api/name/initWithCollectionView:supplementaryViewDataSource:componentProvider:context:cellConfigurationFunction:">- initWithCollectionView:supplementaryViewDataSource:componentProvider:context:cellConfigurationFunction:</option>
@@ -73,6 +77,8 @@
 		<option value="//api/name/modelForItemAtIndexPath:">- modelForItemAtIndexPath:</option>
 		
 		<option value="//api/name/sizeForItemAtIndexPath:">- sizeForItemAtIndexPath:</option>
+		
+		<option value="//api/name/updateContextAndEnqueueReload:">- updateContextAndEnqueueReload:</option>
 		
 	</optgroup>
 	
@@ -146,7 +152,7 @@ changes to apply and then <em>tell</em> the collection view to apply the corresp
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithCollectionView:(UICollectionView *)<em>collectionView</em> supplementaryViewDataSource:(id&lt;CKSupplementaryViewDataSource&gt;)<em>supplementaryViewDataSource</em> componentProvider:(Class&lt;CKComponentProvider&gt;)<em>componentProvider</em> context:(id)<em>context</em> cellConfigurationFunction:(CKCellConfigurationFunction)<em>cellConfigurationFunction</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithCollectionView:(UICollectionView *)<em>collectionView</em> supplementaryViewDataSource:(id&lt;CKSupplementaryViewDataSource&gt;)<em>supplementaryViewDataSource</em> componentProvider:(Class&lt;CKComponentProvider&gt;)<em>componentProvider</em> context:(id&lt;NSObject&gt;)<em>context</em> cellConfigurationFunction:(CKCellConfigurationFunction)<em>cellConfigurationFunction</em></code></div>
 
 		    
 			
@@ -236,7 +242,7 @@ CKArrayControllerSections sections;
 CKArrayControllerInputItems items;
 sections.insert(1); // Insert section at index 1
 items.insert({1,0}, modelX); // Insert a row at index 0 in section 1 containing the UI corresponding to modelX
-item.udpate({0,0}, modelY); // Update row at index 0 in section 0 using modelY
+item.update({0,0}, modelY); // Update row at index 0 in section 0 using modelY
 [_dataSource enqueueChangeset:{sections, items} constrainedSize:{{0,0},{50,50}}];</p></td>
 					</tr>
 				
@@ -263,6 +269,47 @@ your component tree.</p></td>
 https://developer.apple.com/library/ios/documentation/UIKit/Reference/UICollectionView_class/#//apple_ref/occ/instm/UICollectionView/performBatchUpdates:completion:
 `</p></div>
 			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKCollectionViewDataSource.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/updateContextAndEnqueueReload:" title="updateContextAndEnqueueReload:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/updateContextAndEnqueueReload:">&ndash;&nbsp;updateContextAndEnqueueReload:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Updates context to the new value and enqueues update changeset in order to rebuild component tree.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)updateContextAndEnqueueReload:(id)<em>newContext</em></code></div>
+
+		    
+			
+
+			
+
+			
+
 			
 
 			
@@ -377,6 +424,90 @@ want to retrieve the model associated to a certain index path in the table view 
 		</div>
 	</div>
 </div><div class="section-method">
+	<a name="//api/name/announceWillAppearForItemInCell:" title="announceWillAppearForItemInCell:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/announceWillAppearForItemInCell:">&ndash;&nbsp;announceWillAppearForItemInCell:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Sends -componentTreeWillAppear to all CKComponentControllers for the given cell.
+If needed, call this from -collectionView:willDisplayCell:forItemAtIndexPath:</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)announceWillAppearForItemInCell:(UICollectionViewCell *)<em>cell</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKCollectionViewDataSource.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/announceDidDisappearForItemInCell:" title="announceDidDisappearForItemInCell:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/announceDidDisappearForItemInCell:">&ndash;&nbsp;announceDidDisappearForItemInCell:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Sends -componentTreeDidDisappear to all CKComponentControllers for the given cell.
+If needed, call this from -collectionView:didEndDisplayingCell:forItemAtIndexPath:</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)announceDidDisappearForItemInCell:(UICollectionViewCell *)<em>cell</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKCollectionViewDataSource.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/supplementaryViewDataSource" title="supplementaryViewDataSource"></a>
 	<h3 class="method-title"><code><a href="#//api/name/supplementaryViewDataSource">&nbsp;&nbsp;supplementaryViewDataSource</a></code>
 </h3>
@@ -426,12 +557,14 @@ want to retrieve the model associated to a certain index path in the table view 
 					
 
                     
+                    
+          
 				</main>
 
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-03-26</p>
+						<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-07-08</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>

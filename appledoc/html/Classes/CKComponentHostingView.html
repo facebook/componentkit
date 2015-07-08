@@ -58,8 +58,6 @@
 		
 		<option value="//api/name/delegate">delegate</option>
 		
-		<option value="//api/name/model">model</option>
-		
 	</optgroup>
 	
 
@@ -68,7 +66,11 @@
 	
 	<optgroup label="Instance Methods">
 		
-		<option value="//api/name/initWithComponentProvider:sizeRangeProvider:context:">- initWithComponentProvider:sizeRangeProvider:context:</option>
+		<option value="//api/name/initWithComponentProvider:sizeRangeProvider:">- initWithComponentProvider:sizeRangeProvider:</option>
+		
+		<option value="//api/name/updateContext:mode:">- updateContext:mode:</option>
+		
+		<option value="//api/name/updateModel:mode:">- updateModel:mode:</option>
 		
 	</optgroup>
 	
@@ -104,7 +106,7 @@
 					<div class="section section-overview">
 						<a title="Overview" name="overview"></a>
 						<h2 class="subtitle subtitle-overview">Overview</h2>
-						<p>A view the can host a component tree and automatically update it when the model or internal state changes.</p>
+						<p>A view that renders a single component.</p>
 					</div>
 					
 					
@@ -131,7 +133,7 @@
 			
 			
 			<div class="method-subsection brief-description">
-				<p>The delegate of the view.</p>
+				<p>Notified when the view&rsquo;s ideal size (measured by -sizeThatFits:) may have changed.</p>
 			</div>
 			
 		    
@@ -161,8 +163,8 @@
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/initWithComponentProvider:sizeRangeProvider:context:" title="initWithComponentProvider:sizeRangeProvider:context:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/initWithComponentProvider:sizeRangeProvider:context:">&ndash;&nbsp;initWithComponentProvider:sizeRangeProvider:context:</a></code>
+	<a name="//api/name/initWithComponentProvider:sizeRangeProvider:" title="initWithComponentProvider:sizeRangeProvider:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithComponentProvider:sizeRangeProvider:">&ndash;&nbsp;initWithComponentProvider:sizeRangeProvider:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -177,7 +179,7 @@
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithComponentProvider:(Class&lt;CKComponentProvider&gt;)<em>componentProvider</em> sizeRangeProvider:(id&lt;CKComponentSizeRangeProviding&gt;)<em>sizeRangeProvider</em> context:(id&lt;NSObject&gt;)<em>context</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithComponentProvider:(Class&lt;CKComponentProvider&gt;)<em>componentProvider</em> sizeRangeProvider:(id&lt;CKComponentSizeRangeProviding&gt;)<em>sizeRangeProvider</em></code></div>
 
 		    
 			
@@ -202,8 +204,8 @@
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/model" title="model"></a>
-	<h3 class="method-title"><code><a href="#//api/name/model">&nbsp;&nbsp;model</a></code>
+	<a name="//api/name/updateModel:mode:" title="updateModel:mode:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/updateModel:mode:">&ndash;&nbsp;updateModel:mode:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -213,12 +215,12 @@
 			
 			
 			<div class="method-subsection brief-description">
-				<p>The model object used to generate the component-tree hosted by the view.</p>
+				<p>Updates the model used to render the component.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong) id&lt;NSObject&gt; model</code></div>
+			<div class="method-subsection method-declaration"><code>- (void)updateModel:(id&lt;NSObject&gt;)<em>model</em> mode:(CKUpdateMode)<em>mode</em></code></div>
 
 		    
 			
@@ -228,11 +230,46 @@
 			
 
 			
-			<div class="method-subsection discussion-section">
-				<h4 class="method-subtitle">Discussion</h4>
-				<p>Setting a new model will synchronously construct and mount a new component tree and the
-delegate will be notified if there is a change in size.</p>
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentHostingView.h</code></p>
 			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/updateContext:mode:" title="updateContext:mode:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/updateContext:mode:">&ndash;&nbsp;updateContext:mode:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Updates the context used to render the component.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)updateContext:(id&lt;NSObject&gt;)<em>context</em> mode:(CKUpdateMode)<em>mode</em></code></div>
+
+		    
+			
+
+			
+
+			
+
 			
 
 			
@@ -256,12 +293,14 @@ delegate will be notified if there is a change in size.</p>
 					
 
                     
+                    
+          
 				</main>
 
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-03-26</p>
+						<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-07-08</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
