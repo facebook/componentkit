@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>CKStatefulViewComponentController Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">ComponentKit </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Facebook</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+	<optgroup label="Class Methods">
+		
+		<option value="//api/name/configureStatefulView:forComponent:">+ configureStatefulView:forComponent:</option>
+		
+		<option value="//api/name/contextForNewStatefulView:">+ contextForNewStatefulView:</option>
+		
+		<option value="//api/name/newStatefulView:">+ newStatefulView:</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/canRelinquishStatefulView">- canRelinquishStatefulView</option>
+		
+		<option value="//api/name/canRelinquishStatefulViewDidChange">- canRelinquishStatefulViewDidChange</option>
+		
+		<option value="//api/name/didAcquireStatefulView:">- didAcquireStatefulView:</option>
+		
+		<option value="//api/name/statefulView">- statefulView</option>
+		
+		<option value="//api/name/willRelinquishStatefulView:">- willRelinquishStatefulView:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">CKStatefulViewComponentController Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td><a href="../Classes/CKComponentController.html">CKComponentController</a> : NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>CKStatefulViewComponentController.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>CKStatefulViewComponentController acts as an escape hatch for views that don&rsquo;t play nicely with the assumptions made
+by the Components infrastructure.</p>
+
+<p>Stateful views have two distinguishing characteristics from regular component views:
+- The stateful view will move between superviews if the root mounted view changes.
+   (Normally, an entirely new view in the new root view would be used.)
+- The controller can delay the relinquishing of a stateful view, preventing it from returning to the reuse pool.
+   (Normally, Components expects to be in control of view lifecycles and may return a view to the pool at any time.)</p>
+
+<p>Examples of where stateful views may be useful:
+- Photos, when tapped, may wish to animate the photo to fullscreen. When the photo is dismissed, it should return to
+   the place from which it came, even if table view cell recycling has resulted in an entirely new cell being used for
+   the photo&rsquo;s story.
+- Swapping from one video view to another (because the underlying table view cell was recycled) will result in a
+   noticeable pause in video playback. By using stateful views, the video view will simply be moved to the new cell
+   instead.
+- Text fields have lots of state that cannot be accessed externally (autocomplete status; precise scroll position).
+   By making the text field a stateful view, it will be moved between cells and maintain this state.</p>
+
+<p>This controller&rsquo;s corresponding component must subclass CKStatefulViewComponent.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/newStatefulView:" title="newStatefulView:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/newStatefulView:">+&nbsp;newStatefulView:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Return a new instance of the stateful view type used by this controller. Views are automatically recycled.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (UIView *)newStatefulView:(id)<em>context</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKStatefulViewComponentController.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/contextForNewStatefulView:" title="contextForNewStatefulView:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/contextForNewStatefulView:">+&nbsp;contextForNewStatefulView:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Optionally override this to return a context that should be passed to +newStatefulView.
+Views will be recycled based on the context returned here. The default is nil.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (id)contextForNewStatefulView:(CKComponent *)<em>component</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKStatefulViewComponentController.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/configureStatefulView:forComponent:" title="configureStatefulView:forComponent:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/configureStatefulView:forComponent:">+&nbsp;configureStatefulView:forComponent:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Configure a given instance of a stateful view with the state from a given CKComponent instance. This has two purposes:
+- Configuring a view for the first time, before it appears in the view hierarchy;
+- Reconfiguring the current view when the CKComponent instance is updated and remounted.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)configureStatefulView:(UIView *)<em>statefulView</em> forComponent:(CKComponent *)<em>component</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKStatefulViewComponentController.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/statefulView" title="statefulView"></a>
+	<h3 class="method-title"><code><a href="#//api/name/statefulView">&ndash;&nbsp;statefulView</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The current stateful view owned by this controller, if any.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (UIView *)statefulView</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<ul>
+<li>Do not override this method. (Override +newStatefulView instead.)</li>
+<li>Do not remove this view from its superview. (Its children can be removed from the stateful view itself, of course.)</li>
+<li>Do not change this view&rsquo;s size. (Trigger a component reflow to change the value passed to +newWithSize: for the
+ corresponding component instead.)</li>
+</ul>
+
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKStatefulViewComponentController.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/didAcquireStatefulView:" title="didAcquireStatefulView:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/didAcquireStatefulView:">&ndash;&nbsp;didAcquireStatefulView:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called when a stateful view has been acquired (either created or recycled) and configured.
+You could use this method to e.g. set the component controller as the view&rsquo;s delegate.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)didAcquireStatefulView:(UIView *)<em>statefulView</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKStatefulViewComponentController.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/willRelinquishStatefulView:" title="willRelinquishStatefulView:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/willRelinquishStatefulView:">&ndash;&nbsp;willRelinquishStatefulView:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called when the controller is about to relinquish the given stateful view, returning it to the reuse pool.
+This will be called when the component controller is not mounted and -canRelinquishStatefulView returns YES.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)willRelinquishStatefulView:(UIView *)<em>statefulView</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Relinquishing the view happens asynchronously after the component is unmounted. When this method is called
+the view might already have been removed from its superview so consider carefully where you need to cleanup
+your view&rsquo;s state.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKStatefulViewComponentController.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/canRelinquishStatefulView" title="canRelinquishStatefulView"></a>
+	<h3 class="method-title"><code><a href="#//api/name/canRelinquishStatefulView">&ndash;&nbsp;canRelinquishStatefulView</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Override this method to delay relinquishing a stateful view when the controller&rsquo;s component is unmounted.
+The default implementation returns YES. See -canRelinquishStatefulViewDidChange for an example of how this may be used.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)canRelinquishStatefulView</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKStatefulViewComponentController.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/canRelinquishStatefulViewDidChange" title="canRelinquishStatefulViewDidChange"></a>
+	<h3 class="method-title"><code><a href="#//api/name/canRelinquishStatefulViewDidChange">&ndash;&nbsp;canRelinquishStatefulViewDidChange</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Call this method when the value returned by -canRelinquishStatefulView has changed. This may trigger the controller
+to relinquish the stateful view.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)canRelinquishStatefulViewDidChange</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>For example, a video component controller may return NO from -canRelinquishStatefulView while the video view is
+fullscreen. After the video exits fullscreen, call this method to signal that -canRelinquishStatefulView will now
+return YES.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKStatefulViewComponentController.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-07-08</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
