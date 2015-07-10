@@ -35,7 +35,7 @@
  before the new changeset is applied.
  */
 - (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
-                  mode:(CKTransactionalComponentDataSourceMode)mode
+                  mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo;
 
 /**
@@ -45,12 +45,12 @@
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
 
 /** @see `CKTransactionalComponentDataSource` */
-- (void)reloadWithMode:(CKTransactionalComponentDataSourceMode)mode
+- (void)reloadWithMode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo;
 
 /** @see `CKTransactionalComponentDataSource` */
 - (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
-                       mode:(CKTransactionalComponentDataSourceMode)mode
+                       mode:(CKUpdateMode)mode
                    userInfo:(NSDictionary *)userInfo;
 
 @property (readonly, nonatomic, strong) UICollectionView *collectionView;

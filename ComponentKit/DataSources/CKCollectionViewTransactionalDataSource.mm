@@ -53,7 +53,7 @@ CKTransactionalComponentDataSourceListener
 #pragma mark - Changeset application
 
 - (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
-                  mode:(CKTransactionalComponentDataSourceMode)mode
+                  mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo
 {
   [_componentDataSource applyChangeset:changeset
@@ -108,14 +108,14 @@ static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppli
 
 #pragma mark - Reload
 
-- (void)reloadWithMode:(CKTransactionalComponentDataSourceMode)mode
+- (void)reloadWithMode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo
 {
   [_componentDataSource reloadWithMode:mode userInfo:userInfo];
 }
 
 - (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
-                       mode:(CKTransactionalComponentDataSourceMode)mode
+                       mode:(CKUpdateMode)mode
                    userInfo:(NSDictionary *)userInfo
 {
   [_componentDataSource updateConfiguration:configuration mode:mode userInfo:userInfo];
