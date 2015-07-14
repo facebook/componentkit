@@ -73,7 +73,7 @@ CK_FINAL_CLASS([CKNSTableViewDataSource class]);
 #pragma mark - Changesets
 
 - (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
-                  mode:(CKTransactionalComponentDataSourceMode)mode
+                  mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo
 {
   [_componentDataSource applyChangeset:changeset mode:mode userInfo:userInfo];

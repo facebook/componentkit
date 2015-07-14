@@ -80,12 +80,12 @@ static CKTransactionalComponentDataSourceChangeset *insertItems(NSArray *models,
                                                            insertedSections:[NSIndexSet indexSetWithIndex:0]
                                                               insertedItems:nil];
 
-  [_dataSource applyChangeset:base mode:CKTransactionalComponentDataSourceModeSynchronous userInfo:nil];
+  [_dataSource applyChangeset:base mode:CKUpdateModeSynchronous userInfo:nil];
 
 
   // This only works the first time. To get it working more generally, you would need to compute the changeset from the old to new states.
   [_dataSource applyChangeset:insertItems(self.tableComponent.models, 0)
-                         mode:CKTransactionalComponentDataSourceModeAsynchronous
+                         mode:CKUpdateModeAsynchronous
                      userInfo:nil];
 
 }

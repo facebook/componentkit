@@ -25,6 +25,7 @@
 
 
 @implementation CKMRootViewController
+
 - (void)loadView
 {
   self.view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 480, 200)];
@@ -45,9 +46,7 @@
     [data addObject:[ms copy]];
   }
 
-
-
-  self.hostingView.model = data;
+  [self.hostingView updateModel:data mode:CKUpdateModeSynchronous];
 
   self.hostingView.frame = self.view.bounds;
   self.hostingView.autoresizingMask = (NSViewWidthSizable | NSViewHeightSizable);

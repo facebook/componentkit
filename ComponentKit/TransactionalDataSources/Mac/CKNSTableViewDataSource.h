@@ -49,7 +49,7 @@
  * In the future, we could add multi-section emulation and add floating separators a la UITableView.
  */
 - (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
-                  mode:(CKTransactionalComponentDataSourceMode)mode
+                  mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo;
 
 /**
