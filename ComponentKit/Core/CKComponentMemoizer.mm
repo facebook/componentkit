@@ -37,13 +37,10 @@ struct CKLayoutMemoizationKey {
   struct Hash {
     size_t operator ()(CKLayoutMemoizationKey a) const {
       NSUInteger subhashes[] = {
-        a.component.hash,
-        std::hash<CGFloat>()(a.thatFits.min.width),
-        std::hash<CGFloat>()(a.thatFits.min.height),
-        std::hash<CGFloat>()(a.thatFits.max.width),
-        std::hash<CGFloat>()(a.thatFits.max.height),
-        std::hash<CGFloat>()(a.parentSize.width),
-        std::hash<CGFloat>()(a.parentSize.height),
+        CK::hash<id>()(a.component),
+        CK::hash<CKSizeRange>()(a.thatFits),
+        CK::hash<CGFloat>()(a.parentSize.width),
+        CK::hash<CGFloat>()(a.parentSize.height),
       };
       return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
     };
@@ -53,8 +50,7 @@ struct CKLayoutMemoizationKey {
     bool operator ()(CKLayoutMemoizationKey a, CKLayoutMemoizationKey b) const {
       return a.component == b.component
       && a.thatFits == b.thatFits
-      && a.parentSize.width == b.parentSize.width
-      && a.parentSize.height == b.parentSize.height;
+      && CGSizeEqualToSize(a.parentSize, b.parentSize);
     }
   };
 };
@@ -77,19 +73,6 @@ struct CKLayoutMemoizationKey {
 
 
 @implementation _CKComponentMemoizerImpl
-
-- (instancetype)init
-{
-  self = [super init];
-  if (!self) return nil;
-
-  return self;
-}
-
-- (void)dealloc
-{
-  
-}
 
 - (CKComponent *)dequeueComponentForKey:(CKMemoizationKey)key
 {

@@ -15,6 +15,7 @@
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKDimension.h>
+#import <ComponentKit/CKUpdateMode.h>
 
 /** A constant that indicates that the parent's size is not yet determined in a given dimension. */
 extern CGFloat const kCKComponentParentDimensionUndefined;
@@ -77,24 +78,29 @@ extern CGSize const kCKComponentParentSizeUndefined;
                       relativeToParentSize:(CGSize)parentSize;
 
 /**
- TODO: document
+ Override this in a subclass to opt-in to layout memoization.
+
+ Calls to -layoutThatFits:constrainedSize: will then be transparently memoized across re-layouts
+ for a given component instance, constrained size, and parent size, as long as there is a CKComponentMemoizer
+ active in the given scope (see CKComponentMemoizer.h for details).
  */
 - (BOOL)shouldMemoizeLayout;
 
 /**
- Call this to enqueue a change to the state.
+ Enqueue a change to the state.
 
- The block takes the current state as a parameter and returns an instance of the new state.
+ @param updateBlock A block that takes the current state as a parameter and returns an instance of the new state.
  The state *must* be immutable since components themselves are. A possible use might be:
 
- [self updateState:^MyState *(MyState *currentState) {
-   MyMutableState *nextState = [currentState mutableCopy];
-   [nextState setFoo:[nextState bar] * 2];
-   return [nextState copy]; // immutable! :D
- }];
- */
-- (void)updateState:(id (^)(id))updateBlock;
+   [self updateState:^MyState *(MyState *currentState) {
+     MyMutableState *nextState = [currentState mutableCopy];
+     [nextState setFoo:[nextState bar] * 2];
+     return [nextState copy]; // immutable! :D
+   }];
 
+ @param mode @see CKUpdateMode
+ */
+- (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode;
 
 /**
  Allows an action to be forwarded to another target. By default, returns the receiver if it implements action,

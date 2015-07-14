@@ -15,8 +15,9 @@
 #import <ComponentKit/CKAssert.h>
 
 #import "ComponentLayoutContext.h"
-#import "CKEqualityHashHelpers.h"
 #import "CKMacros.h"
+#import "CKInternalHelpers.h"
+#import "CKEqualityHashHelpers.h"
 
 bool CKRelativeDimension::operator==(const CKRelativeDimension &other) const
 {
@@ -58,7 +59,7 @@ CGFloat CKRelativeDimension::resolve(CGFloat autoSize, CGFloat parent) const
 }
 
 size_t std::hash<CKRelativeDimension>::operator ()(const CKRelativeDimension &size) {
-  size_t subhashes[] = {
+  NSUInteger subhashes[] = {
     (size_t)(size._type),
     std::hash<CGFloat>()(size._value),
   };

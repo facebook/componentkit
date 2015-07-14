@@ -57,23 +57,17 @@ id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void));
 
  }
  
- How to use component layout memoization:
- 
- - (BOOL)shouldMemoizeLayout
- {
-   return YES;
- }
- 
- Calls to -layoutThatFits:constrainedSize: will then be transparently memoized across re-layouts
- for a given component instance, constrained size, and parent size.
+ How to use component layout memoization, override -shouldMemoizeLayout in your component subclass.
+ See CKComponentSubclass.h for more info.
 
  */
+
 struct CKComponentMemoizer {
 
   /**
-   Create a memoizer with the provided layout. Will make memoized components available to CKMemoize().
-   
-   This object must remain in scope for objects to be vended, however.
+   Create a memoizer. If you pass in a memoizer state, components will be vended from reuse from there.
+   Creating a CKComponentMemoizer in a scope will make memoized components available to CKMemoize().
+   This object must remain in scope for objects to be vended.
    */
   CKComponentMemoizer(id previousMemoizerState);
 
@@ -84,12 +78,9 @@ struct CKComponentMemoizer {
 
   /**
    Store this state across rebuilding components.
-   Do not use this object from multiple threads simultaneously!!
+   Do not use this object from multiple threads simultaneously
    */
   id nextMemoizerState();
-
-  // Copies the layout into the layout cache
-  static void rememberLayout(CKComponentLayout l);
 
 private:
   id previousMemoizer_;
@@ -138,9 +129,5 @@ CKMemoizationKey CKMakeTupleMemoizationKey(Types... args) {
 
   return CKMemoizationKey{};
 };
-
-
-// Internal, for CKComponent
-CKComponentLayout CKMemoizeOrComputeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize);
 
 

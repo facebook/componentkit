@@ -35,7 +35,7 @@
 {
   CKTransactionalComponentDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
   CKTransactionalComponentDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  [[item layout].component updateState:^(id oldState){return @"new state";}];
+  [[item layout].component updateState:^(id oldState){return @"new state";} mode:CKUpdateModeSynchronous];
 
   // Even for synchronous updates, the update is deferred to the end of the run loop, so we must spin the runloop.
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
@@ -49,9 +49,9 @@
   CKTransactionalComponentDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
   CKTransactionalComponentDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
   NSNumber *originalState = ((CKStateExposingComponent *)[item layout].component).state;
-  [[item layout].component updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);}];
-  [[item layout].component updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);}];
-  [[item layout].component updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);}];
+  [[item layout].component updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
+  [[item layout].component updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
+  [[item layout].component updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     CKTransactionalComponentDataSourceItem *updatedItem = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
@@ -63,7 +63,7 @@
 {
   CKTransactionalComponentDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
   CKTransactionalComponentDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  [[item layout].component updateStateWithExpensiveReflow:^(id oldState){return @"new state";}];
+  [[item layout].component updateState:^(id oldState){return @"new state";} mode:CKUpdateModeAsynchronous];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     CKTransactionalComponentDataSourceItem *updatedItem = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];

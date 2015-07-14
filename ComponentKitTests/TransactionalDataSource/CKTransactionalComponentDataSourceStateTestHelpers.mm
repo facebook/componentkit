@@ -65,7 +65,7 @@ CKTransactionalComponentDataSource *CKTransactionalComponentTestDataSource(Class
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];
-  [ds applyChangeset:insertion mode:CKTransactionalComponentDataSourceModeSynchronous userInfo:nil];
+  [ds applyChangeset:insertion mode:CKUpdateModeSynchronous userInfo:nil];
   return ds;
 }
 

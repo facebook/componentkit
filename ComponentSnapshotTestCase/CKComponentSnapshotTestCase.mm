@@ -59,7 +59,7 @@ static CKComponent *_leakyComponent;
 
   CKComponentLifecycleManager *lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
   [lifecycleManager updateWithState:[lifecycleManager prepareForUpdateWithModel:nil constrainedSize:sizeRange context:nil]];
-  [_leakyComponent updateState:updateStackBlock];
+  [_leakyComponent updateState:updateStackBlock mode:CKUpdateModeSynchronous];
 
   return [self compareSnapshotOfComponent:[lifecycleManager state].layout.component
                                 sizeRange:sizeRange

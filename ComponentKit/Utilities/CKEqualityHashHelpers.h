@@ -27,6 +27,24 @@ inline uint64_t CKHashCombine(const uint64_t upper, const uint64_t lower) {
   return b;
 }
 
+#if __LP64__
+inline size_t CKHash64ToNative(uint64_t key) {
+  return key;
+}
+#else
+
+// Thomas Wang downscaling hash function
+inline size_t CKHash64ToNative(uint64_t key) {
+  key = (~key) + (key << 18);
+  key = key ^ (key >> 31);
+  key = key * 21;
+  key = key ^ (key >> 11);
+  key = key + (key << 6);
+  key = key ^ (key >> 22);
+  return (uint32_t) key;
+}
+#endif
+
 NSUInteger CKIntegerArrayHash(const NSUInteger *subhashes, NSUInteger count);
 
 namespace CK {

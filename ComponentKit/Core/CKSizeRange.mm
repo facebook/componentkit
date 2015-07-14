@@ -72,10 +72,12 @@ bool CKSizeRange::operator==(const CKSizeRange &other) const
 {
   return CGSizeEqualToSize(min, other.min) && CGSizeEqualToSize(max, other.max);
 }
+
 NSString *CKSizeRange::description() const
 {
   return [NSString stringWithFormat:@"<CKSizeRange: min=%@, max=%@>", NSStringFromCGSize(min), NSStringFromCGSize(max)];
 }
+
 size_t CKSizeRange::hash() const
 {
   std::hash<CGFloat> hasher;
@@ -88,3 +90,7 @@ size_t CKSizeRange::hash() const
   return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
 }
 
+size_t std::hash<CKSizeRange>::operator()(const CKSizeRange &s)
+{
+  return s.hash();
+};

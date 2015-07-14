@@ -79,7 +79,7 @@ NSString *CKComponentSize::description() const
 }
 
 size_t std::hash<CKComponentSize>::operator ()(const CKComponentSize &size) {
-  size_t subhashes[] = {
+  NSUInteger subhashes[] = {
     std::hash<CKRelativeDimension>()(size.width),
     std::hash<CKRelativeDimension>()(size.height),
     std::hash<CKRelativeDimension>()(size.minWidth),

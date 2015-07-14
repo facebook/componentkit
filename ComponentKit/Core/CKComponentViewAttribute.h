@@ -109,12 +109,12 @@ namespace std {
   {
     size_t operator()(const CKViewComponentAttributeValueMap &attr) const
     {
-      size_t hash = 0;
+      uint64_t hash = 0;
       for (const auto& it: attr) {
         hash = CKHashCombine(hash, std::hash<CKComponentViewAttribute>()(it.first));
         hash = CKHashCombine(hash, CK::hash<id>()(it.second));
       }
-      return hash;
+      return CKHash64ToNative(hash);
     }
   };
   

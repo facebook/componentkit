@@ -56,7 +56,7 @@
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                             rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
-                     tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
+                                      mode:(CKUpdateMode)mode
 {
   _pendingStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});
 }
@@ -73,7 +73,7 @@
 
   NSIndexPath *ip = [NSIndexPath indexPathForItem:2 inSection:0];
   CKTransactionalComponentDataSourceItem *item = [originalState objectAtIndexPath:ip];
-  [[item layout].component updateState:^(id state){return @"hello";}];
+  [[item layout].component updateState:^(id state){return @"hello";} mode:CKUpdateModeSynchronous];
 
   CKTransactionalComponentDataSourceUpdateStateModification *updateStateModification =
   [[CKTransactionalComponentDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingStateUpdates];
@@ -98,7 +98,7 @@
 
   NSIndexPath *ip = [NSIndexPath indexPathForItem:0 inSection:0];
   CKTransactionalComponentDataSourceItem *item = [originalState objectAtIndexPath:ip];
-  [[item layout].component updateState:^(id state){return @"hello";}];
+  [[item layout].component updateState:^(id state){return @"hello";} mode:CKUpdateModeSynchronous];
 
   CKTransactionalComponentDataSourceUpdateStateModification *updateStateModification =
   [[CKTransactionalComponentDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingStateUpdates];
@@ -117,8 +117,8 @@
 
   NSIndexPath *ip = [NSIndexPath indexPathForItem:0 inSection:0];
   CKTransactionalComponentDataSourceItem *item = [originalState objectAtIndexPath:ip];
-  [[item layout].component updateState:^(NSString *state){return @"hello";}];
-  [[item layout].component updateState:^(NSString *state){return [state stringByAppendingString:@" world"];}];
+  [[item layout].component updateState:^(NSString *state){return @"hello";} mode:CKUpdateModeSynchronous];
+  [[item layout].component updateState:^(NSString *state){return [state stringByAppendingString:@" world"];} mode:CKUpdateModeSynchronous];
 
   CKTransactionalComponentDataSourceUpdateStateModification *updateStateModification =
   [[CKTransactionalComponentDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingStateUpdates];

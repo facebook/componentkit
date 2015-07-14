@@ -145,7 +145,7 @@ BOOL CKComponentViewClass::hasView() const
 
 size_t std::hash<CKComponentViewConfiguration>::operator()(const CKComponentViewConfiguration &cl) const
 {
-  size_t subhashes[] = {
+  NSUInteger subhashes[] = {
     std::hash<CKComponentViewClass>()(cl.viewClass()),
     std::hash<CKViewComponentAttributeValueMap>()(*cl.attributes()),
   };

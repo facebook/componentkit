@@ -37,10 +37,5 @@ NSUInteger CKIntegerArrayHash(const NSUInteger *subhashes, NSUInteger count)
   for (int ii = 1; ii < count; ++ii) {
     result = CKHashCombine(result, subhashes[ii]);
   }
-#if __LP64__
-  return result;
-#else
-  return twang_32from64(result);
-#endif
+  return CKHash64ToNative(result);
 }
-

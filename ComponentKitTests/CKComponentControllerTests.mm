@@ -206,14 +206,12 @@
 {
   [self updateState:^(id oldState){
     return @YES;
-  }];
+  } mode:CKUpdateModeSynchronous];
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
-  if (sender == self)
-    return YES;
-  return NO;
+  return (sender == self);
 }
 
 @end
