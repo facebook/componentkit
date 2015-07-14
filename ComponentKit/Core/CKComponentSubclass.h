@@ -78,6 +78,15 @@ extern CGSize const kCKComponentParentSizeUndefined;
                       relativeToParentSize:(CGSize)parentSize;
 
 /**
+ Override this in a subclass to opt-in to layout memoization.
+
+ Calls to -layoutThatFits:constrainedSize: will then be transparently memoized across re-layouts
+ for a given component instance, constrained size, and parent size, as long as there is a CKComponentMemoizer
+ active in the given scope (see CKComponentMemoizer.h for details).
+ */
+- (BOOL)shouldMemoizeLayout;
+
+/**
  Enqueue a change to the state.
 
  @param updateBlock A block that takes the current state as a parameter and returns an instance of the new state.

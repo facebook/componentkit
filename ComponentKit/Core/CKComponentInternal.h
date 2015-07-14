@@ -68,3 +68,6 @@
 @property (nonatomic, strong, readonly) id scopeFrameToken;
 
 @end
+
+// Internal, for CKComponent
+CKComponentLayout CKMemoizeOrComputeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize);

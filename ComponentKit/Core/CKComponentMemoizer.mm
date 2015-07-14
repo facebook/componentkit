@@ -29,6 +29,34 @@ namespace std {
   };
 }
 
+struct CKLayoutMemoizationKey {
+  CKComponent *component;
+  CKSizeRange thatFits;
+  CGSize parentSize;
+
+  struct Hash {
+    size_t operator ()(CKLayoutMemoizationKey a) const {
+      NSUInteger subhashes[] = {
+        CK::hash<id>()(a.component),
+        CK::hash<CKSizeRange>()(a.thatFits),
+        CK::hash<CGFloat>()(a.parentSize.width),
+        CK::hash<CGFloat>()(a.parentSize.height),
+      };
+      return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
+    };
+  };
+
+  struct Equals {
+    bool operator ()(CKLayoutMemoizationKey a, CKLayoutMemoizationKey b) const {
+      return a.component == b.component
+      && a.thatFits == b.thatFits
+      && CGSizeEqualToSize(a.parentSize, b.parentSize);
+    }
+  };
+};
+
+
+
 @interface _CKComponentMemoizerImpl : NSObject {
   @package
 
@@ -37,6 +65,8 @@ namespace std {
 
   // maps CKMemoizationKey -> any number of CKComponent *
   std::unordered_multimap<CKMemoizationKey, CKComponent *> componentCache_;
+
+  std::unordered_map<CKLayoutMemoizationKey, CKComponentLayout, CKLayoutMemoizationKey::Hash, CKLayoutMemoizationKey::Equals> layoutCache_;
 }
 
 @end
@@ -67,6 +97,19 @@ namespace std {
 - (void)enqueueComponent:(CKComponent *)component forKey:(CKMemoizationKey)key
 {
   self.next->componentCache_.insert({key, component});
+}
+
+- (CKComponentLayout)cachedLayout:(CKComponent *)component thatFits:(CKSizeRange)constrainedSize restrictedToSize:(CKComponentSize)size parentSize:(CGSize)parentSize
+{
+  CKLayoutMemoizationKey key{.component = component, .thatFits = constrainedSize, .parentSize = parentSize};
+  auto it = layoutCache_.find(key);
+  if (it != layoutCache_.end()) {
+    return it->second;
+  } else {
+    CKComponentLayout layout = [component computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
+    self.next->layoutCache_.insert({key, layout});
+    return layout;
+  }
 }
 
 + (_CKComponentMemoizerImpl *)currentMemoizer
@@ -119,3 +162,13 @@ id CKComponentMemoizer::nextMemoizerState()
   _CKComponentMemoizerImpl *impl = [_CKComponentMemoizerImpl currentMemoizer];
   return impl ? impl->_next : nil;
 }
+
+CKComponentLayout CKMemoizeOrComputeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize)
+{
+  if (component && [component shouldMemoizeLayout]) {
+    return [[_CKComponentMemoizerImpl currentMemoizer] cachedLayout:component thatFits:constrainedSize restrictedToSize:size parentSize:parentSize];
+  } else {
+    return [component computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
+  }
+}
+
