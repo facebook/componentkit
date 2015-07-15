@@ -53,6 +53,7 @@ Ok, so now we have our view controller as the component provider, let's create o
 
 ```objc++
 	- (void)viewDidLoad {
+	[super viewDidLoad];
 	...
 	self.dataSource = _dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
                                                                   supplementaryViewDataSource:nil
@@ -73,7 +74,8 @@ Let's add a section at index 0 with two items at indexes 0 and 1.
 
 ```objc++
 {% raw  %}
-	- (void)viewDidAppear {
+	- (void)viewDidAppear:(BOOL)animated {
+		[super viewDidAppear:animated];
 		...
 		CKArrayControllerSections sections;
 		CKArrayControllerInputItems items;
@@ -81,7 +83,7 @@ Let's add a section at index 0 with two items at indexes 0 and 1.
 		sections.insert(0);
 		items.insert({0,0}, firstModel);
 		// You can also use NSIndexPath
-		NSIndexPath indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
+		NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
 		items.insert(indexPath, secondModel);
 		[self.dataSource enqueueChangeset:{sections, items} constrainedSize:{{0,0}, {50, 50}}];
 	}
