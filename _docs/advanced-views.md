@@ -16,7 +16,7 @@ CKComponentViewClass(UIView *(*factory)(void));
 This allows you to use almost any view with ComponentKit. Here's one example:
 
 ```objc++
-static UIView *authorViewForOscarWilde(void) {
+static AuthorView *authorViewForOscarWilde(void) {
   return [[AuthorView alloc] initWithName:@"Oscar Fingal O'Flahertie Wills Wilde"];
 }
 // ...
