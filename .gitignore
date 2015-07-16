@@ -3,5 +3,4 @@ Example/WildeGuess/Pod
 *xcuserdata
 *.xcworkspace
 appledoc
-*.gcov
-.DS_Store
+

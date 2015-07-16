@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -11,15 +11,6 @@
 #import <string>
 
 #import <UIKit/UIKit.h>
-
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKSizeRange.h>
-#import <ComponentKit/ComponentLayoutContext.h>  // Used by CKCAssertPositiveReal.
-
-#define CKCAssertPositiveReal(description, num) \
-  CKCAssert(num >= 0 && num < CGFLOAT_MAX, @"%@ must be a real positive integer.\n%@", description, CK::Component::LayoutContext::currentStackDescription())
-#define CKCAssertInfOrPositiveReal(description, num) \
-  CKCAssert(isinf(num) || (num >= 0 && num < CGFLOAT_MAX), @"%@ must be infinite or a real positive integer.\n%@", description, CK::Component::LayoutContext::currentStackDescription())
 
 /**
  A dimension relative to constraints to be provided in the future.
@@ -62,16 +53,33 @@ private:
     POINTS,
     PERCENT,
   };
-  CKRelativeDimension(Type type, CGFloat value)
-    : _type(type), _value(value)
-  {
-    if (type == Type::POINTS) {
-      CKCAssertPositiveReal(@"Points", value);
-    }
-  }
-
+  CKRelativeDimension(Type type, CGFloat value);
   Type _type;
   CGFloat _value;
+};
+
+/** Expresses an inclusive range of sizes. Used to provide a simple constraint to component layout. */
+struct CKSizeRange {
+  CGSize min;
+  CGSize max;
+
+  /** The default constructor creates an unconstrained range. */
+  CKSizeRange() : CKSizeRange({0,0}, {INFINITY, INFINITY}) {}
+
+  CKSizeRange(const CGSize &min, const CGSize &max);
+
+  /** Clamps the provided CGSize between the [min, max] bounds of this SizeRange. */
+  CGSize clamp(const CGSize &size) const;
+
+  /**
+   Intersects another size range. If the other size range does not overlap in either dimension, this size range
+   "wins" by returning a single point within its own range that is closest to the non-overlapping range.
+   */
+  CKSizeRange intersect(const CKSizeRange &other) const;
+
+  bool operator==(const CKSizeRange &other) const;
+  NSString *description() const;
+  size_t hash() const;
 };
 
 /** Expresses a size with relative dimensions. */

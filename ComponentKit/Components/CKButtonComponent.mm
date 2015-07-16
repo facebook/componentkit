@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -147,8 +147,10 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     {@selector(setSelected:), @(selected)},
     {@selector(setEnabled:), @(enabled)},
     {@selector(setAccessibilityIdentifier:), accessibilityConfiguration.accessibilityIdentifier},
-    CKComponentActionAttribute(action, UIControlEventTouchUpInside),
   });
+  if (action) {
+    attributes.insert(CKComponentActionAttribute(action, UIControlEventTouchUpInside));
+  }
 
   UIEdgeInsets contentEdgeInsets = UIEdgeInsetsZero;
   auto it = passedAttributes.find(@selector(setContentEdgeInsets:));

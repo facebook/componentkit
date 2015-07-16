@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -176,7 +176,7 @@ using namespace CK::ArrayController;
   Sections expectedSections;
   expectedSections.insert(0);
   Output::Items expectedItems;
-  expectedItems.insert({0, 0}, @0);
+  expectedItems.insert({{0, 0}, @0});
   Output::Changeset expected = {expectedSections, expectedItems};
 
   XCTAssertTrue(output == expected, @"");
@@ -227,10 +227,10 @@ using namespace CK::ArrayController;
   expectedSections.insert(1);
   expectedSections.insert(2);
   Output::Items expectedItems;
-  expectedItems.insert({1, 0}, @0);
-  expectedItems.insert({1, 1}, @1);
-  expectedItems.insert({2, 0}, @2);
-  expectedItems.insert({2, 1}, @3);
+  expectedItems.insert({{1, 0}, @0});
+  expectedItems.insert({{1, 1}, @1});
+  expectedItems.insert({{2, 0}, @2});
+  expectedItems.insert({{2, 1}, @3});
   Output::Changeset expected = {expectedSections, expectedItems};
 
   XCTAssertTrue(output == expected, @"");
@@ -293,7 +293,7 @@ using namespace CK::ArrayController;
   XCTAssertEqual([_controller numberOfObjectsInSection:0], 0, @"");
 
   Output::Items expectedItems;
-  expectedItems.remove({0, 0}, @0);
+  expectedItems.remove({{0, 0}, @0});
   Output::Changeset expected = {{}, expectedItems};
 
   XCTAssertTrue(output == expected, @"");
@@ -360,11 +360,11 @@ using namespace CK::ArrayController;
   XCTAssertEqual([_controller numberOfObjectsInSection:2], 0, @"");
 
   Output::Items expectedItems;
-  expectedItems.remove({1, 1}, @1);
-  expectedItems.remove({1, 2}, @2);
-  expectedItems.remove({2, 0}, @3);
-  expectedItems.remove({2, 1}, @4);
-  expectedItems.remove({2, 2}, @5);
+  expectedItems.remove({{1, 1}, @1});
+  expectedItems.remove({{1, 2}, @2});
+  expectedItems.remove({{2, 0}, @3});
+  expectedItems.remove({{2, 1}, @4});
+  expectedItems.remove({{2, 2}, @5});
   Output::Changeset expected = {{}, expectedItems};
 
   XCTAssertTrue(output == expected, @"");
@@ -412,7 +412,7 @@ using namespace CK::ArrayController;
   XCTAssertEqual([_controller numberOfObjectsInSection:0], 1, @"");
 
   Output::Items expectedItems;
-  expectedItems.update({0, 0}, @0, @1);
+  expectedItems.update({{0, 0}, @0, @1});
   Output::Changeset expected = {{}, expectedItems};
 
   XCTAssertTrue(output == expected, @"");
@@ -564,6 +564,59 @@ NS_INLINE Input::Changeset _multipleSectionInput(void)
   expected.push_back({{1, 0}, @2});
 
   XCTAssertTrue(enumerated == expected, @"");
+}
+
+- (void)testFirstObjectPassingTestWithNilPredicate
+{
+  [_controller applyChangeset:_multipleSectionInput()];
+  auto pair = [_controller firstObjectPassingTest:nil];
+  XCTAssertNil(pair.first, @"");
+  XCTAssertNil(pair.second, @"");
+}
+
+- (void)testFirstObjectPassingTestWithNonNilPredicate
+{
+  [_controller applyChangeset:_multipleSectionInput()];
+  auto pair = [_controller firstObjectPassingTest:^BOOL(id<NSObject> object, NSIndexPath *indexPath, BOOL *stop) {
+    return [object isEqual:@1];
+  }];
+  XCTAssertEqualObjects(pair.first, @1, @"");
+  XCTAssertEqualObjects(pair.second, [NSIndexPath indexPathForItem:1 inSection:0], @"");
+}
+
+- (void)testFirstObjectPassingTestStop
+{
+  [_controller applyChangeset:_multipleSectionInput()];
+
+  NSMutableArray *enumerated = [[NSMutableArray alloc] init];
+  auto pair = [_controller firstObjectPassingTest:^BOOL(id<NSObject> object, NSIndexPath *indexPath, BOOL *stop) {
+    *stop = [indexPath isEqual:[NSIndexPath indexPathForItem:0 inSection:1]];
+    [enumerated addObject:object];
+    return NO;
+  }];
+
+  NSArray *expected = @[@0, @1, @2];
+  XCTAssertEqualObjects(enumerated, expected, @"");
+}
+
+- (void)testFirstObjectPassingTestWithMultipleMatchesReturnsFirst
+{
+  [_controller applyChangeset:_multipleSectionInput()];
+  auto pair = [_controller firstObjectPassingTest:^BOOL(id<NSObject> object, NSIndexPath *indexPath, BOOL *stop) {
+    return YES;
+  }];
+  XCTAssertEqualObjects(pair.first, @0, @"");
+  XCTAssertEqualObjects(pair.second, [NSIndexPath indexPathForItem:0 inSection:0], @"");
+}
+
+- (void)testFirstObjectPassingTestWithNoMatchesReturnsNil
+{
+  [_controller applyChangeset:_multipleSectionInput()];
+  auto pair = [_controller firstObjectPassingTest:^BOOL(id<NSObject> object, NSIndexPath *indexPath, BOOL *stop) {
+    return NO;
+  }];
+  XCTAssertNil(pair.first, @"");
+  XCTAssertNil(pair.second, @"");
 }
 
 @end

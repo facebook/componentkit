@@ -3,11 +3,10 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
-#include <unordered_set>
 
 #import <XCTest/XCTest.h>
 
@@ -120,18 +119,18 @@ typedef NS_ENUM(NSUInteger, CommandType) {
   }
 }
 
-- (void)testDoesNotThrowOnUpdateAndInsertWithSameIndexPath
+- (void)testThrowsOnUpdateAndInsertWithSameIndexPath
 {
   {
     Input::Items items;
     items.update({0, 0}, @1);
-    XCTAssertNoThrow(items.insert({0, 0}, @0),  @"Insertions can share the same indexes with removals or updates.");
+    XCTAssertThrowsSpecificNamed(items.insert({0, 0}, @0), NSException, NSInternalInconsistencyException, @"");
   }
 
   {
     Input::Items items;
     items.insert({0, 0}, @0);
-    XCTAssertNoThrow(items.update({0, 0}, @1), @"Insertions can share the same indexes with removals or updates.");
+    XCTAssertThrowsSpecificNamed(items.update({0, 0}, @1), NSException, NSInternalInconsistencyException, @"");
   }
 }
 
@@ -200,16 +199,14 @@ typedef NS_ENUM(NSUInteger, CommandType) {
 {
   Input::Changeset changeset = {{}, {}};
 
-  XCTAssertNoThrow(changeset.items.enumerateItems(nil,
-                                                  ^(NSInteger section, NSInteger index, BOOL *stop) {},
-                                                  ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {}));
-  XCTAssertNoThrow(changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {},
-                                                  nil,
-                                                  ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {}));
-  XCTAssertNoThrow(changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {},
-                                                  ^(NSInteger section, NSInteger index, BOOL *stop) {},
-                                                  nil));
+  Sections::Enumerator sectionsEnumerator =
+  ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {};
 
+  Input::Items::Enumerator itemsEnumerator =
+  ^(NSInteger section, NSIndexSet *indexes, NSArray *objects, CKArrayControllerChangeType type, BOOL *stop) {};
+
+  XCTAssertNoThrow(changeset.enumerate(nil, itemsEnumerator), @"");
+  XCTAssertNoThrow(changeset.enumerate(sectionsEnumerator, nil), @"");
 }
 
 static Input::Changeset exampleInputChangeset(void)
@@ -233,25 +230,208 @@ static Input::Changeset exampleInputChangeset(void)
   return {sections, items};
 }
 
+/**
+ Enumerating input should order commands (see header) such that we can apply the changes to the internal arrays of
+ CKSectionedArrayController **without** having to change any of the index paths in the input commands.
+ */
+- (void)testEnumerationOrdersSectionAndItemsCommandsCorrectly
+{
+  __block std::vector<std::pair<CommandType, CKArrayControllerChangeType>> commands;
+
+  Sections::Enumerator sectionsEnumerator =
+  ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {
+    commands.push_back({CommandTypeSection, type});
+  };
+
+  Input::Items::Enumerator itemsEnumerator =
+  ^(NSInteger section, NSIndexSet *indexes, NSArray *objects, CKArrayControllerChangeType type, BOOL *stop) {
+    commands.push_back({CommandTypeItem, type});
+  };
+
+  Input::Changeset changeset = exampleInputChangeset();
+  changeset.enumerate(sectionsEnumerator, itemsEnumerator);
+
+  std::vector<std::pair<CommandType, CKArrayControllerChangeType>> expected = {
+    {CommandTypeItem, CKArrayControllerChangeTypeUpdate},
+    {CommandTypeItem, CKArrayControllerChangeTypeDelete},
+    {CommandTypeSection, CKArrayControllerChangeTypeDelete},
+    {CommandTypeSection, CKArrayControllerChangeTypeInsert},
+    {CommandTypeItem, CKArrayControllerChangeTypeInsert},
+    {CommandTypeItem, CKArrayControllerChangeTypeInsert}, // We insert items in 2 sections, so we expect 2 callbacks.
+  };
+
+  XCTAssertTrue(commands == expected, @"Commands received in incorrect order");
+}
+
+
+- (void)testSectionCommandsAreEnumeratedOnlyIfNecessary
+{
+  Sections sections;
+  Input::Items items;
+
+  Input::Changeset changeset = {sections, items};
+
+  __block BOOL insertions = NO;
+  __block BOOL removals = NO;
+
+  Sections::Enumerator sectionsEnumerator =
+  ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {
+    if (type == CKArrayControllerChangeTypeInsert) {
+      insertions = YES;
+    }
+    if (type == CKArrayControllerChangeTypeDelete) {
+      removals = YES;
+    }
+  };
+
+  Input::Items::Enumerator itemsEnumerator =
+    ^(NSInteger section, NSIndexSet *indexes, NSArray *objects, CKArrayControllerChangeType type, BOOL *stop) {};
+
+  changeset.enumerate(sectionsEnumerator, itemsEnumerator);
+
+  XCTAssertFalse(insertions, @"If there are no insertions, the insertions block should not be called");
+  XCTAssertFalse(removals, @"If there are no removals, the removal block should not be called");
+}
+
 - (void)testEachCommandOfTheSameTypeIsPassedToEnumerationBlocks
 {
-  Input::Changeset changeset = exampleInputChangeset();
-
-  changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
-    XCTAssertEqual(section, 6, @"Removal in an unexpected section.");
-    XCTAssert(index == 5 || index == 6, @"Removal at unexpected index path.");
-  }, ^(NSInteger section, NSInteger index, BOOL *stop) {
-    XCTAssertEqual(section, 15, @"Update in an unexpected section.");
-    XCTAssert(index == 8 || index == 9, @"Update at unexpected index path.");
-  }, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
-    if (section == 1) {
-      XCTAssert(index == 5 || index == 15, @"Insertion at unexpected index path.");
-    } else if (section == 2) {
-      XCTAssert(index == 0 || index == 1, @"Insertion at unexpected index path.");
-    } else {
-      XCTFail(@"Insertion in an unexpected section.");
+  Sections::Enumerator sectionsEnumerator =
+  ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {
+    if (type == CKArrayControllerChangeTypeInsert) {
+      NSMutableIndexSet *expected = [[NSMutableIndexSet alloc] init];
+      [expected addIndex:0];
+      [expected addIndex:2];
+      XCTAssertEqualObjects(sectionIndexes, expected, @"");
     }
-  });
+    if (type == CKArrayControllerChangeTypeDelete) {
+      NSMutableIndexSet *expected = [[NSMutableIndexSet alloc] init];
+      [expected addIndex:15];
+      [expected addIndex:5];
+      XCTAssertEqualObjects(sectionIndexes, expected, @"");
+    }
+  };
+
+  Input::Items::Enumerator itemsEnumerator =
+  ^(NSInteger section, NSIndexSet *indexes, NSArray *objects, CKArrayControllerChangeType type, BOOL *stop) {
+
+    NSMutableIndexSet *expected = [[NSMutableIndexSet alloc] init];
+
+    if (type == CKArrayControllerChangeTypeInsert) {
+      if (section == 1) {
+        [expected addIndex:5];
+        [expected addIndex:15];
+        XCTAssertEqualObjects(indexes, expected, @"");
+      }
+      if (section == 2) {
+        [expected addIndex:0];
+        [expected addIndex:1];
+        XCTAssertEqualObjects(indexes, expected, @"");
+      }
+    }
+    if (type == CKArrayControllerChangeTypeDelete) {
+      [expected addIndex:8];
+      [expected addIndex:9];
+      XCTAssertEqualObjects(indexes, expected, @"");
+    }
+    if (type == CKArrayControllerChangeTypeUpdate) {
+      [expected addIndex:5];
+      [expected addIndex:6];
+      XCTAssertEqualObjects(indexes, expected, @"");
+    }
+  };
+
+  Input::Changeset changeset = exampleInputChangeset();
+  changeset.enumerate(sectionsEnumerator, itemsEnumerator);
+}
+
+- (void)testMapNULLBlock
+{
+  Input::Changeset input = exampleInputChangeset();
+  Input::Changeset mapped = input.map(NULL);
+  XCTAssertTrue(input == mapped, @"");
+}
+
+- (void)testMapThrowsOnNilReturnValueFromBlock
+{
+  Input::Changeset input = exampleInputChangeset();
+  Input::Changeset::Mapper mapper = ^id<NSObject>(const IndexPath &indexPath, id<NSObject> object, CKArrayControllerChangeType type, BOOL *stop) {
+    return nil;
+  };
+  XCTAssertThrowsSpecificNamed(input.map(mapper), NSException, NSInternalInconsistencyException, @"");
+}
+
+- (void)testMapIdentity
+{
+  Input::Changeset input = exampleInputChangeset();
+  Input::Changeset::Mapper mapper = ^id<NSObject>(const IndexPath &indexPath, id<NSObject> object, CKArrayControllerChangeType type, BOOL *stop) {
+    return object;
+  };
+  Input::Changeset mapped = input.map(mapper);
+  XCTAssertTrue(mapped == input, @"");
+}
+
+- (void)testMap
+{
+  Input::Changeset input = exampleInputChangeset();
+  Input::Changeset::Mapper mapper = ^id<NSObject>(const IndexPath &indexPath, id<NSObject> object, CKArrayControllerChangeType type, BOOL *stop) {
+    return @([(NSNumber *)object intValue] + 1);
+  };
+
+  Input::Changeset mapped = input.map(mapper);
+
+  Sections expectedSections;
+  expectedSections.insert(2);
+  expectedSections.insert(0);
+  expectedSections.remove(15);
+  expectedSections.remove(5);
+
+  Input::Items expectedItems;
+  expectedItems.insert({2, 1}, @2);
+  expectedItems.insert({2, 0}, @3);
+  expectedItems.insert({1, 15}, @4);
+  expectedItems.insert({1, 5}, @5);
+  expectedItems.update({6, 6}, @6);
+  expectedItems.update({6, 5}, @6);
+  expectedItems.remove({15, 9});
+  expectedItems.remove({15, 8});
+
+  Input::Changeset expected = {expectedSections, expectedItems};
+
+  XCTAssertTrue(mapped == expected, @"");
+}
+
+- (void)testMapIndex
+{
+  Input::Changeset input = exampleInputChangeset();
+  
+  const NSInteger sectionOffset = 5;
+  const NSInteger itemOffset = 2;
+  Input::Changeset mapped = input.mapIndex(
+                                           ^(const NSInteger sectionIndex, CKArrayControllerChangeType type) {
+                                             return sectionIndex + sectionOffset;
+                                           },
+                                           ^(const IndexPath &indexPath, CKArrayControllerChangeType type) {
+                                             return IndexPath(indexPath.section + sectionOffset, indexPath.item + itemOffset);
+                                           });
+  Sections expectedSections;
+  expectedSections.insert(2+sectionOffset);
+  expectedSections.insert(0+sectionOffset);
+  expectedSections.remove(15+sectionOffset);
+  expectedSections.remove(5+sectionOffset);
+  
+  Input::Items expectedItems;
+  expectedItems.insert({2+sectionOffset, 1+itemOffset}, @1);
+  expectedItems.insert({2+sectionOffset, 0+itemOffset}, @2);
+  expectedItems.insert({1+sectionOffset, 15+itemOffset}, @3);
+  expectedItems.insert({1+sectionOffset, 5+itemOffset}, @4);
+  expectedItems.update({6+sectionOffset, 6+itemOffset}, @5);
+  expectedItems.update({6+sectionOffset, 5+itemOffset}, @5);
+  expectedItems.remove({15+sectionOffset, 9+itemOffset});
+  expectedItems.remove({15+sectionOffset, 8+itemOffset});
+  
+  Input::Changeset expected = {expectedSections, expectedItems};
+  
+  XCTAssertTrue(mapped == expected, @"");
 }
 
 @end
@@ -286,18 +466,18 @@ static Output::Changeset exampleOutputChangeset(void)
   sections.remove(7);
 
   Output::Items items;
-  items.insert({0, 1}, @0);
-  items.insert({0, 0}, @1);
-  items.insert({2, 0}, @2);
-  items.insert({2, 1}, @3);
-  items.remove({15, 10}, @4);
-  items.remove({15, 9}, @5);
-  items.remove({16, 4}, @6);
-  items.remove({16, 5}, @7);
-  items.update({7, 6}, @8, @9);
-  items.update({7, 5}, @8, @9);
-  items.update({6, 3}, @8, @9);
-  items.update({6, 4}, @8, @9);
+  items.insert({{0, 1}, @0});
+  items.insert({{0, 0}, @1});
+  items.insert({{2, 0}, @2});
+  items.insert({{2, 1}, @3});
+  items.remove({{15, 10}, @4});
+  items.remove({{15, 9}, @5});
+  items.remove({{16, 4}, @6});
+  items.remove({{16, 5}, @7});
+  items.update({{7, 6}, @8, @9});
+  items.update({{7, 5}, @8, @9});
+  items.update({{6, 3}, @8, @9});
+  items.update({{6, 4}, @8, @9});
 
   return {sections, items};
 }
@@ -328,6 +508,10 @@ static Output::Changeset exampleOutputChangeset(void)
                         @[@(CommandTypeItem), @(CKArrayControllerChangeTypeInsert)],
                         ];
 
+  /**
+   I think I passed.
+   https://our.intern.facebook.com/intern/wiki/index.php/Engineering/Interviewing/iOS_Interview/Ninja/Remove_String_Duplicates
+   */
   NSOrderedSet *commands = [[NSOrderedSet alloc] initWithArray:allCommands];
 
   XCTAssertEqualObjects([commands array], expected, @"Commands received in incorrect order");
@@ -362,28 +546,16 @@ static Output::Changeset exampleOutputChangeset(void)
   XCTAssertEqualObjects(removals, expectedRemovals, @"");
 }
 
-// Adding very bad hashing for Output::Change just to make it possible to put them in a set for the next test.
-namespace std {
-  template <>
-  struct hash<Output::Change>
-  {
-    size_t operator()(const Output::Change &) const
-    {
-      return 0;
-    }
-  };
-}
-
-- (void)testAllItemCommandsAreEnumerated
+- (void)testItemCommandsAreEnumeratedInOrder
 {
   Output::Changeset changeset = exampleOutputChangeset();
 
   Sections::Enumerator sectionsEnumerator =
   ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {};
 
-  __block std::unordered_set<Output::Change> insertions;
-  __block std::unordered_set<Output::Change> removals;
-  __block std::unordered_set<Output::Change> updates;
+  __block std::set<Output::Change> insertions;
+  __block std::set<Output::Change> removals;
+  __block std::set<Output::Change> updates;
 
   Output::Items::Enumerator itemsEnumerator =
   ^(const Output::Change &change, CKArrayControllerChangeType type, BOOL *stop) {
@@ -400,25 +572,25 @@ namespace std {
 
   changeset.enumerate(sectionsEnumerator, itemsEnumerator);
 
-  std::unordered_set<Output::Change> expectedInsertions = {
-    {{}, {0, 0}, nil, @1},
-    {{}, {0, 1}, nil, @0},
-    {{}, {2, 0}, nil, @2},
-    {{}, {2, 1}, nil, @3}
+  std::set<Output::Change> expectedInsertions = {
+    {{0, 0}, nil, @1},
+    {{0, 1}, nil, @0},
+    {{2, 0}, nil, @2},
+    {{2, 1}, nil, @3}
   };
 
-  std::unordered_set<Output::Change> expectedRemovals = {
-    {{15, 9}, {}, @5, nil},
-    {{15, 10}, {}, @4, nil},
-    {{16, 4}, {}, @6, nil},
-    {{16, 5}, {}, @7, nil}
+  std::set<Output::Change> expectedRemovals = {
+    {{15, 9}, @5, nil},
+    {{15, 10}, @4, nil},
+    {{16, 4}, @6, nil},
+    {{16, 5}, @7, nil}
   };
 
-  std::unordered_set<Output::Change> expectedUpdates = {
-    {{7, 5}, {}, @8, @9},
-    {{7, 6}, {}, @8, @9},
-    {{6, 3}, {}, @8, @9},
-    {{6, 4}, {}, @8, @9}
+  std::set<Output::Change> expectedUpdates = {
+    {{7, 5}, @8, @9},
+    {{7, 6}, @8, @9},
+    {{6, 3}, @8, @9},
+    {{6, 4}, @8, @9}
   };
 
   XCTAssertTrue(insertions == expectedInsertions, @"");
@@ -557,18 +729,18 @@ namespace std {
   expectedSections.remove(7);
 
   Output::Items expectedItems;
-  expectedItems.insert({0, 1}, @1);
-  expectedItems.insert({0, 0}, @2);
-  expectedItems.insert({2, 0}, @3);
-  expectedItems.insert({2, 1}, @4);
-  expectedItems.remove({15, 10}, @5);
-  expectedItems.remove({15, 9}, @6);
-  expectedItems.remove({16, 4}, @7);
-  expectedItems.remove({16, 5}, @8);
-  expectedItems.update({7, 6}, @9, @10);
-  expectedItems.update({7, 5}, @9, @10);
-  expectedItems.update({6, 3}, @9, @10);
-  expectedItems.update({6, 4}, @9, @10);
+  expectedItems.insert({{0, 1}, @1});
+  expectedItems.insert({{0, 0}, @2});
+  expectedItems.insert({{2, 0}, @3});
+  expectedItems.insert({{2, 1}, @4});
+  expectedItems.remove({{15, 10}, @5});
+  expectedItems.remove({{15, 9}, @6});
+  expectedItems.remove({{16, 4}, @7});
+  expectedItems.remove({{16, 5}, @8});
+  expectedItems.update({{7, 6}, @9, @10});
+  expectedItems.update({{7, 5}, @9, @10});
+  expectedItems.update({{6, 3}, @9, @10});
+  expectedItems.update({{6, 4}, @9, @10});
 
   Output::Changeset expected = {expectedSections, expectedItems};
 

@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -11,7 +11,6 @@
 #import <ComponentKit/CKArrayControllerChangeType.h>
 
 #import <ComponentKit/CKComponentDataSource.h>
-#import <ComponentKit/CKComponentDataSourceDelegate.h>
 #import <ComponentKit/CKComponentDataSourceOutputItem.h>
 
 @interface CKComponentDataSourceTestDelegate : NSObject <CKComponentDataSourceDelegate>
@@ -30,7 +29,7 @@
 @property (nonatomic, strong) CKComponentDataSourceOutputItem *dataSourcePair;
 @property (nonatomic, strong) CKComponentDataSourceOutputItem *oldDataSourcePair;
 @property (nonatomic, assign) CKArrayControllerChangeType changeType;
-@property (nonatomic, strong) NSIndexPath *sourceIndexPath;
-@property (nonatomic, strong) NSIndexPath *destinationIndexPath;
+@property (nonatomic, strong) NSIndexPath *beforeIndexPath;
+@property (nonatomic, strong) NSIndexPath *afterIndexPath;
 
 @end

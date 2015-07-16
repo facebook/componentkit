@@ -1,7 +1,6 @@
 # [![ComponentKit](http://componentkit.org/static/componentkit-hero-logo.png)](http://componentkit.org/)
 
 [![Build Status](https://travis-ci.org/facebook/componentkit.svg)](https://travis-ci.org/facebook/componentkit)
-[![Coverage Status](https://coveralls.io/repos/facebook/componentkit/badge.svg)](https://coveralls.io/r/facebook/componentkit)
 
 ComponentKit is a view framework for iOS that is heavily inspired by React. It takes a functional, declarative approach to building UI. It was built to power Facebook's News Feed and is now used throughout the Facebook iOS app.
 
@@ -10,7 +9,7 @@ ComponentKit is a view framework for iOS that is heavily inspired by React. It t
 ComponentKit is available on [CocoaPods](http://cocoapods.org).  Add the following to your Podfile:
 
 ```ruby
-pod 'ComponentKit', '~> 0.12'
+pod 'ComponentKit', '~> 0.10'
 ```
 
 To quickly try WildeGuess, the ComponentKit demo project:
