@@ -167,9 +167,11 @@ id CKComponentMemoizer::nextMemoizerState()
 CKComponentLayout CKMemoizeOrComputeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize)
 {
   if (component && [component shouldMemoizeLayout]) {
-    return [[_CKComponentMemoizerImpl currentMemoizer] cachedLayout:component thatFits:constrainedSize restrictedToSize:size parentSize:parentSize];
-  } else {
-    return [component computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
+    _CKComponentMemoizerImpl *impl = [_CKComponentMemoizerImpl currentMemoizer];
+    if (impl) { // If component wants layout memoization but there isn't a current memoizer, fall down to compute case
+      return [impl cachedLayout:component thatFits:constrainedSize restrictedToSize:size parentSize:parentSize];
+    }
   }
+  return [component computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
 }
 
