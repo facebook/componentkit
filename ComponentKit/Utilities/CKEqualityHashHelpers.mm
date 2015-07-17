@@ -15,6 +15,19 @@
 #import <stdio.h>
 #import <string>
 
+/*
+ * Thomas Wang downscaling hash function
+ */
+
+inline uint32_t twang_32from64(uint64_t key) {
+  key = (~key) + (key << 18);
+  key = key ^ (key >> 31);
+  key = key * 21;
+  key = key ^ (key >> 11);
+  key = key + (key << 6);
+  key = key ^ (key >> 22);
+  return (uint32_t) key;
+}
 
 NSUInteger CKIntegerArrayHash(const NSUInteger *subhashes, NSUInteger count)
 {
@@ -22,6 +35,10 @@ NSUInteger CKIntegerArrayHash(const NSUInteger *subhashes, NSUInteger count)
   for (int ii = 1; ii < count; ++ii) {
     result = CKHashCombine(result, subhashes[ii]);
   }
-  return CKHash64ToNative(result);
+#if __LP64__
+  return result;
+#else
+  return twang_32from64(result);
+#endif
 }
 

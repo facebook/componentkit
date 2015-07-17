@@ -9,7 +9,6 @@
  */
 
 #import "CKComponentSize.h"
-#import "CKEqualityHashHelpers.h"
 
 #import <ComponentKit/CKAssert.h>
 
@@ -77,16 +76,3 @@ NSString *CKComponentSize::description() const
           CKRelativeSize(minWidth, minHeight).description(),
           CKRelativeSize(maxWidth, maxHeight).description()];
 }
-
-size_t std::hash<CKComponentSize>::operator ()(const CKComponentSize &size) {
-  NSUInteger subhashes[] = {
-    std::hash<CKRelativeDimension>()(size.width),
-    std::hash<CKRelativeDimension>()(size.height),
-    std::hash<CKRelativeDimension>()(size.minWidth),
-    std::hash<CKRelativeDimension>()(size.minHeight),
-    std::hash<CKRelativeDimension>()(size.maxWidth),
-    std::hash<CKRelativeDimension>()(size.maxHeight),
-  };
-
-  return CKIntegerArrayHash(subhashes, std::end(subhashes) - std::begin(subhashes));
-};

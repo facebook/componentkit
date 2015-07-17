@@ -40,9 +40,3 @@ struct CKComponentSize {
   bool operator==(const CKComponentSize &other) const;
   NSString *description() const;
 };
-
-namespace std {
-  template <> struct hash<CKComponentSize> {
-    size_t operator ()(const CKComponentSize &);
-  };
-}

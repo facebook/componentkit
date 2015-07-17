@@ -40,14 +40,6 @@
  CKRelativeDimension u = CKRelativeDimension::Percent(0.5); // 50%
 
  */
-class CKRelativeDimension;
-
-namespace std {
-  template <> struct hash<CKRelativeDimension> {
-    size_t operator ()(const CKRelativeDimension &);
-  };
-}
-
 class CKRelativeDimension {
 public:
   CKRelativeDimension() : CKRelativeDimension(Type::AUTO, 0) {}
@@ -80,10 +72,7 @@ private:
 
   Type _type;
   CGFloat _value;
-
-  friend std::hash<CKRelativeDimension>;
 };
-
 
 /** Expresses a size with relative dimensions. */
 struct CKRelativeSize {
