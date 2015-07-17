@@ -26,4 +26,12 @@
  */
 + (NSString *)componentHierarchyDescription;
 
+/**
+ @param view the view to begin the recursive search
+ @param upwards a boolean which if true, returns the ancestors of view, and if false returns the downward hierarchy
+
+ @return A string with a description of the hierarchy starting or ending at view, depending on upwards
+ */
++ (NSString *)componentHierarchyDescriptionForView:(UIView *)view searchUpwards:(BOOL)upwards;
+
 @end
