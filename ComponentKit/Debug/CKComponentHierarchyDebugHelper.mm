@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -72,14 +72,12 @@ static void CKBuildComponentHierarchyDescription(NSMutableArray *result, const C
                      NSStringFromCGPoint(position),
                      NSStringFromCGSize(layout.size)]];
 
-  if (layout.children) {
-    for (const auto &child : *layout.children) {
-      CKBuildComponentHierarchyDescription(result,
-                                           child.layout,
-                                           child.position,
-                                           [NSString stringWithFormat:@"| %@", prefix]);
-    }
-  } 
+  for (const auto &child : *layout.children) {
+    CKBuildComponentHierarchyDescription(result,
+                                         child.layout,
+                                         child.position,
+                                         [NSString stringWithFormat:@"| %@", prefix]);
+  }
 }
 
 @end

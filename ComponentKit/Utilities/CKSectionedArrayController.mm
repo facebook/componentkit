@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -128,81 +128,116 @@ NS_INLINE NSArray *_createEmptySections(NSUInteger count)
   return emptySections;
 }
 
+/**
+ Returns a block that inserts/removes sections.
+
+ @param sections Same pointer as our _sections ivar.
+ @param outputChangeset On return contains all the commands for the outuput changeset.
+ @returns A block that mutates the passed in array and builds the outputChangeset.
+ */
+NS_INLINE Sections::Enumerator sectionEnumerator(NSMutableArray *sections, Sections &outputSections)
+{
+  return ^(NSIndexSet *indexes, CKArrayControllerChangeType type, BOOL *stop) {
+    if (type == CKArrayControllerChangeTypeDelete) {
+
+      [indexes enumerateIndexesUsingBlock:^(NSUInteger itemIndex, BOOL *s) {
+        outputSections.remove((NSInteger)itemIndex);
+      }];
+
+      [sections removeObjectsAtIndexes:indexes];
+
+    } else if (type == CKArrayControllerChangeTypeInsert) {
+
+      [indexes enumerateIndexesUsingBlock:^(NSUInteger sectionIndex, BOOL *s) {
+        outputSections.insert((NSInteger)sectionIndex);
+      }];
+
+      NSArray *emptySections = _createEmptySections([indexes count]);
+      [sections insertObjects:emptySections atIndexes:indexes];
+
+    }
+  };
+}
+
+/**
+ Returns a block that inserts/removes/updates items within a section.
+
+ @param sections Same pointer as our _sections ivar.
+ @param outputChangeset On return contains all the commands for the outuput changeset.
+ @returns A block that mutates the passed in array and builds the outputChangeset.
+ */
+NS_INLINE Input::Items::Enumerator itemEnumerator(NSMutableArray *sections, Output::Items &outputItems)
+{
+  return ^(NSInteger sectionIndex, NSIndexSet *itemIndexes, NSArray *objects, CKArrayControllerChangeType type, BOOL *stop) {
+
+    NSMutableArray *section = sections[(NSUInteger)sectionIndex];
+
+    if (type == CKArrayControllerChangeTypeUpdate) {
+
+      // We need the current state of the section.
+      NSArray *originals = [section objectsAtIndexes:itemIndexes];
+
+      // Build up the output commands using the current state of the section and the replacement objects.
+      __block NSUInteger i = 0;
+      [itemIndexes enumerateIndexesUsingBlock:^(NSUInteger itemIndex, BOOL *s) {
+        outputItems.update({
+          {sectionIndex, (NSInteger)itemIndex},
+          originals[i],
+          objects[i]
+        });
+        i++;
+      }];
+
+      // Then update the section.
+      [section replaceObjectsAtIndexes:itemIndexes withObjects:objects];
+
+    } else if (type == CKArrayControllerChangeTypeInsert) {
+
+      // Build up the output commands.
+      __block NSUInteger i = 0;
+      [itemIndexes enumerateIndexesUsingBlock:^(NSUInteger itemIndex, BOOL *s) {
+        outputItems.insert({
+          {sectionIndex, (NSInteger)itemIndex},
+          objects[i++],
+        });
+      }];
+
+      // Then update the section.
+      [section insertObjects:objects atIndexes:itemIndexes];
+
+    } else if (type == CKArrayControllerChangeTypeDelete) {
+
+      // We need the current state of the section.
+      NSArray *removed = [section objectsAtIndexes:itemIndexes];
+
+      // Build up the output commands.
+      __block NSUInteger i = 0;
+      [itemIndexes enumerateIndexesUsingBlock:^(NSUInteger itemIndex, BOOL *s) {
+        outputItems.remove({
+          {sectionIndex, (NSInteger)itemIndex},
+          removed[i++],
+        });
+      }];
+
+      // Then update the section.
+      [section removeObjectsAtIndexes:itemIndexes];
+
+    }
+  };
+}
+
 - (CKArrayControllerOutputChangeset)applyChangeset:(CKArrayControllerInputChangeset)changeset
 {
   Sections outputSections;
-  __block Output::Items outputItems;
+  Sections::Enumerator sectionsBlock = sectionEnumerator(_sections, outputSections);
 
-  // we have to process changes in this specific order (which is how TV/CV will execute them)
+  Output::Items outputItems;
+  Input::Items::Enumerator itemsBlock = itemEnumerator(_sections, outputItems);
 
-  { // 1. item updates
-    changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
-      outputItems.update(
-        {section, index},
-        _sections[section][index],
-        object
-      );
-      [_sections[section] replaceObjectAtIndex:index withObject:object];
-    }, nil, nil);
-  }
-
-  { // 2. item removals
-    __block std::map<NSInteger, NSMutableIndexSet *> removedItemIndexesBucketizedBySection;
-    changeset.items.enumerateItems(nil, ^(NSInteger section, NSInteger index, BOOL *stop) {
-      outputItems.remove(
-        {section, index},
-        _sections[section][index]
-      );
-      if (!removedItemIndexesBucketizedBySection.count(section)) {
-        removedItemIndexesBucketizedBySection[section] = [NSMutableIndexSet indexSet];
-      }
-      [removedItemIndexesBucketizedBySection[section] addIndex:index];
-    }, nil);
-
-    for (const auto &removalsInSection : removedItemIndexesBucketizedBySection) {
-      [_sections[removalsInSection.first] removeObjectsAtIndexes:removalsInSection.second];
-    }
-  }
-
-  { // 3. section removals
-    NSMutableIndexSet *sectionRemovalIndexes = [NSMutableIndexSet indexSet];
-    for (NSInteger removal : changeset.sections.removals()) {
-      outputSections.remove(removal);
-      [sectionRemovalIndexes addIndex:removal];
-    }
-    [_sections removeObjectsAtIndexes:sectionRemovalIndexes];
-  }
-
-  { // 4. section insertions
-    const std::set<NSInteger> &insertions = changeset.sections.insertions();
-    NSMutableIndexSet *sectionInsertionIndexes = [NSMutableIndexSet indexSet];
-    for (NSInteger insertion : insertions) {
-      outputSections.insert(insertion);
-      [sectionInsertionIndexes addIndex:insertion];
-    }
-
-    NSArray *emptySections = _createEmptySections(insertions.size());
-    [_sections insertObjects:emptySections atIndexes:sectionInsertionIndexes];
-  }
-
-  { // 5. item insertions
-    __block std::map<NSInteger, std::pair<NSMutableIndexSet *, NSMutableArray *>> insertedObjectBucketizedBySection;
-    changeset.items.enumerateItems(nil, nil, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
-      outputItems.insert(
-        {section, index},
-        object
-      );
-      if (!insertedObjectBucketizedBySection.count(section)) {
-        insertedObjectBucketizedBySection[section] = std::make_pair([NSMutableIndexSet indexSet], [NSMutableArray array]);
-      }
-      [insertedObjectBucketizedBySection[section].first addIndex:index];
-      [insertedObjectBucketizedBySection[section].second addObject:object];
-    });
-
-    for (const auto &insertionsInSection : insertedObjectBucketizedBySection) {
-      [_sections[insertionsInSection.first] insertObjects:insertionsInSection.second.second atIndexes:insertionsInSection.second.first];
-    }
-  }
+  /**
+   See the header docs for enumerate(). There we detail the order of block invocation.
+   */
+  changeset.enumerate(sectionsBlock, itemsBlock);
 
   return {outputSections, outputItems};
 }

@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -13,7 +13,7 @@
 #import <ComponentKit/CKDimension.h>
 
 @class CKComponent;
-@class CKComponentScopeRoot;
+@class CKComponentScopeFrame;
 
 @protocol CKComponentProvider;
 @protocol CKComponentLifecycleManagerDelegate;
@@ -24,7 +24,7 @@ struct CKComponentLifecycleManagerState {
   id<NSObject> context;
   CKSizeRange constrainedSize;
   CKComponentLayout layout;
-  CKComponentScopeRoot *root;
+  CKComponentScopeFrame *scopeFrame;
   CKComponentBoundsAnimation boundsAnimation;
 };
 
@@ -32,7 +32,9 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
 
 @interface CKComponentLifecycleManager : NSObject
 
-/** Designated initializer */
+/**
+ Designated initializer
+ */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider;
 
 /** See @protocol CKComponentLifecycleManagerAsynchronousUpdateHandler */
@@ -41,6 +43,8 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
 @property (nonatomic, weak) id<CKComponentLifecycleManagerDelegate> delegate;
 
 - (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context;
+
+- (CKComponentLayout)layoutForModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context;
 
 /**
  Updates the state to the new one without mounting the view.
@@ -79,17 +83,28 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
  */
 - (void)detachFromView;
 
-/** Returns whether the lifecycle manager is attached to a view. */
+/**
+ Returns whether the lifecycle manager is attached to a view.
+ */
 - (BOOL)isAttachedToView;
 
-/** The current top-level layout size for the component */
+/**
+ Returns the current top-level layout size for the component.
+ */
 - (CGSize)size;
 
-/** The last model associated with this lifecycle manager */
+/**
+ Returns the last model associated with this lifecycle manager
+ */
 - (id)model;
 
-/** The current scope frame associated with this lifecycle manager */
-- (CKComponentScopeRoot *)scopeRoot;
+/**
+ Events forwarded to children: note that ALL controllers implementing this selector will be notified
+ */
+// This events will be called when the component appears on screen, corresponds to willDisplayCell
+- (void)componentTreeWillAppear;
+// This events will be called when the component disappears, corresponds to willEndDisplayingCell
+- (void)componentTreeDidDisappear;
 
 @end
 

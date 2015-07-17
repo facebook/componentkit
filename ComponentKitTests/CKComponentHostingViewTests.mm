@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -19,25 +19,51 @@
 #import "CKComponentHostingView.h"
 #import "CKComponentHostingViewDelegate.h"
 #import "CKComponentHostingViewInternal.h"
+#import "CKComponentLifecycleManager.h"
 #import "CKComponentViewInterface.h"
 
 @interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate>
 @end
 
-static CKComponentHostingView *hostingView()
-{
-  CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
-  CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
-                                                                         sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
-  view.bounds = CGRectMake(0, 0, 100, 100);
-  view.model = model;
-  [view layoutIfNeeded];
-  return view;
+@interface CKFakeComponentLifecycleManager : NSObject
+@property (nonatomic, assign) BOOL updateWithStateWasCalled;
+@end
+
+@implementation CKFakeComponentLifecycleManager {
+  BOOL _isAttached;
 }
+
+- (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize context:(id<NSObject>)context
+{
+  return CKComponentLifecycleManagerStateEmpty;
+}
+
+- (void)updateWithState:(const CKComponentLifecycleManagerState &)state
+{
+  self.updateWithStateWasCalled = YES;
+}
+
+- (void)attachToView:(UIView *)view
+{
+  _isAttached = YES;
+}
+
+- (void)detachFromView
+{
+  _isAttached = NO;
+}
+
+- (BOOL)isAttachedToView
+{
+  return _isAttached;
+}
+
+- (void)setDelegate:(id<CKComponentLifecycleManagerDelegate>)delegate {}
+
+@end
 
 @implementation CKComponentHostingViewTests {
   BOOL _calledSizeDidInvalidate;
-  CKComponentHostingView *_hostingView;
 }
 
 + (CKComponent *)componentForModel:(CKComponentHostingViewTestModel *)model context:(id<NSObject>)context
@@ -45,70 +71,93 @@ static CKComponentHostingView *hostingView()
   return CKComponentWithHostingViewTestModel(model);
 }
 
-- (void)setUp
+- (CKComponentHostingView *)newHostingView
 {
-  [super setUp];
+  CKComponentLifecycleManager *manager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  return [self newHostingViewWithLifecycleManager:manager];
+}
+
+- (CKComponentHostingView *)newHostingViewWithLifecycleManager:(CKComponentLifecycleManager *)manager
+{
+  CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
+  CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithLifecycleManager:manager
+                                                                        sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
+                                                                                  context:nil];
+  view.bounds = CGRectMake(0, 0, 100, 100);
+  view.model = model;
+  [view layoutIfNeeded];
+  return view;
+}
+
+- (void)tearDown
+{
   _calledSizeDidInvalidate = NO;
+  [super tearDown];
 }
 
 - (void)testInitializationInsertsContainerViewInHierarchy
 {
-  CKComponentHostingView *view = hostingView();
-  XCTAssertTrue(view.subviews.count == 1, @"Expect hosting view to have a single subview.");
+  CKComponentHostingView *hostingView = [self newHostingView];
+  XCTAssertTrue(hostingView.subviews.count == 1, @"Expect hosting view to have a single subview.");
 }
 
-- (void)testInitializationInsertsComponentViewInHierarchy
+- (void)testInitializationInsertsComponentViewInHierarcy
 {
-  CKComponentHostingView *view = hostingView();
-  XCTAssertTrue([view.containerView.subviews count] > 0, @"Expect that initialization should insert component view as subview of container view.");
+  CKComponentHostingView *hostingView = [self newHostingView];
+
+  XCTAssertTrue([hostingView.containerView.subviews count] > 0, @"Expect that initialization should insert component view as subview of container view.");
 }
 
-- (void)testUpdatingHostingViewBoundsResizesComponentView
+- (void)testLifecycleManagerAttachedToContainerAndNotRoot
 {
-  CKComponentHostingView *view = hostingView();
-  view.bounds = CGRectMake(0, 0, 200, 200);
-  [view layoutIfNeeded];
+  CKComponentHostingView *hostingView = [self newHostingView];
+  XCTAssertNil(hostingView.ck_componentLifecycleManager, @"Expect hosting view to have no lifecycle manager.");
+  XCTAssertNotNil(hostingView.containerView.ck_componentLifecycleManager, @"Expect container view to have a lifecycle manager.");
+}
 
-  UIView *componentView = [view.containerView.subviews firstObject];
-  XCTAssertEqualObjects(componentView.backgroundColor, [UIColor orangeColor], @"Expected to find orange component view");
-  XCTAssertTrue(CGRectEqualToRect(componentView.bounds, CGRectMake(0, 0, 200, 200)));
+- (void)testUpdatesOnBoundsChange
+{
+  id fakeManager = [[CKFakeComponentLifecycleManager alloc] init];
+  CKComponentHostingView *hostingView = [self newHostingViewWithLifecycleManager:fakeManager];
+
+  hostingView.bounds = CGRectMake(0, 0, 100, 100);
+
+  XCTAssertTrue([fakeManager updateWithStateWasCalled], @"Expect update to be triggered on bounds change.");
 }
 
 - (void)testUpdatesOnModelChange
 {
-  CKComponentHostingView *view = hostingView();
-  view.model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
-  [view layoutIfNeeded];
+  id fakeManager = [[CKFakeComponentLifecycleManager alloc] init];
+  CKComponentHostingView *hostingView = [self newHostingViewWithLifecycleManager:fakeManager];
+  CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
 
-  UIView *componentView = [view.containerView.subviews firstObject];
-  XCTAssertEqualObjects(componentView.backgroundColor, [UIColor redColor], @"Expected component view to become red");
+  hostingView.model = model;
+
+  XCTAssertTrue([fakeManager updateWithStateWasCalled], @"Expect update to be triggered on bounds change.");
 }
 
-- (void)testInformsDelegateSizeIsInvalidatedOnModelChange
+- (void)testCallsDelegateOnSizeChange
 {
-  CKComponentHostingView *view = hostingView();
-  view.delegate = self;
-  view.model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(75, 75))];
-  XCTAssertTrue(_calledSizeDidInvalidate);
+  CKComponentHostingView *hostingView = [self newHostingView];
+  hostingView.delegate = self;
+  hostingView.model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(75, 75))];
+  hostingView.bounds = (CGRect){ .size = [hostingView sizeThatFits:CGSizeMake(75, CGFLOAT_MAX)] };
+  [hostingView layoutIfNeeded];
+
+  XCTAssertTrue(_calledSizeDidInvalidate, @"Expect -componentHostingViewSizeDidInvalidate: to be called when component size changes.");
 }
 
-- (void)testInformsDelegateSizeIsInvalidatedOnContextChange
+- (void)testUpdateWithEmptyBoundsDoesntAttachLifecycleManager
 {
-  CKComponentHostingView *view = hostingView();
-  view.delegate = self;
-  view.context = @"foo";
-  XCTAssertTrue(_calledSizeDidInvalidate);
-}
-
-- (void)testUpdateWithEmptyBoundsDoesntMountLayout
-{
+  CKComponentLifecycleManager *manager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
-  CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[self class]
-                                                                         sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
-  view.model = model;
-  [view layoutIfNeeded];
+  CKComponentHostingView *hostingView = [[CKComponentHostingView alloc] initWithLifecycleManager:manager
+                                                                               sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
+                                                                                         context:nil];
+  hostingView.model = model;
+  [hostingView layoutIfNeeded];
 
-  XCTAssertEqual([view.containerView.subviews count], 0u, @"Expect the component is not mounted with empty bounds");
+  XCTAssertFalse([manager isAttachedToView], @"Expect lifecycle manager to not be attached to the view when the bounds rect is empty.");
 }
 
 #pragma mark - CKComponentHostingViewDelegate

@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -168,20 +168,6 @@
                        @"Root component's controller's nextResponder should be root view");
 }
 
-- (void)testThatResponderChainTargetsCorrectResponder
-{
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state];
-  
-  UIView *view = [[UIView alloc] init];
-  [clm attachToView:view];
-  
-  CKFooComponent *fooComponent = (CKFooComponent *)state.layout.component;
-  XCTAssertEqualObjects([fooComponent targetForAction:nil withSender:fooComponent], fooComponent, @"Component should respond to this action");
-  XCTAssertEqualObjects([fooComponent targetForAction:nil withSender:nil], fooComponent.controller, @"Component's controller should respond to this action");
-}
-
 @end
 
 
@@ -208,14 +194,6 @@
     return @YES;
   }];
 }
-
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
-{
-  if (sender == self)
-    return YES;
-  return NO;
-}
-
 @end
 
 @implementation CKFooComponentController
@@ -237,11 +215,6 @@
 {
   [super componentDidAcquireView];
   _calledDidAcquireView = YES;
-}
-
--(BOOL)canPerformAction:(SEL)action withSender:(id)sender
-{
-  return YES;
 }
 
 @end

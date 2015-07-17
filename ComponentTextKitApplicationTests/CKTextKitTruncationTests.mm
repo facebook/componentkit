@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -42,8 +42,7 @@
   CKTextKitContext *context = [[CKTextKitContext alloc] initWithAttributedString:attributedString
                                                                    lineBreakMode:NSLineBreakByWordWrapping
                                                             maximumNumberOfLines:0
-                                                                 constrainedSize:constrainedSize
-                                                            layoutManagerFactory:nil];
+                                                                 constrainedSize:constrainedSize];
   __block NSRange textKitVisibleRange;
   [context performBlockWithLockedTextKitComponents:^(NSLayoutManager *layoutManager, NSTextStorage *textStorage, NSTextContainer *textContainer) {
     textKitVisibleRange = [layoutManager characterRangeForGlyphRange:[layoutManager glyphRangeForTextContainer:textContainer]
@@ -63,8 +62,7 @@
   CKTextKitContext *context = [[CKTextKitContext alloc] initWithAttributedString:attributedString
                                                                    lineBreakMode:NSLineBreakByWordWrapping
                                                             maximumNumberOfLines:0
-                                                                 constrainedSize:constrainedSize
-                                                            layoutManagerFactory:nil];
+                                                                 constrainedSize:constrainedSize];
   CKTextKitTailTruncater *tailTruncater = [[CKTextKitTailTruncater alloc] initWithContext:context
                                                                truncationAttributedString:[self _simpleTruncationAttributedString]
                                                                    avoidTailTruncationSet:[NSCharacterSet characterSetWithCharactersInString:@""]
@@ -85,8 +83,7 @@
   CKTextKitContext *context = [[CKTextKitContext alloc] initWithAttributedString:attributedString
                                                                    lineBreakMode:NSLineBreakByWordWrapping
                                                             maximumNumberOfLines:0
-                                                                 constrainedSize:constrainedSize
-                                                            layoutManagerFactory:nil];
+                                                                 constrainedSize:constrainedSize];
   CKTextKitTailTruncater *tailTruncater = [[CKTextKitTailTruncater alloc] initWithContext:context
                                                                truncationAttributedString:[self _simpleTruncationAttributedString]
                                                                    avoidTailTruncationSet:[NSCharacterSet characterSetWithCharactersInString:@"."]
@@ -108,8 +105,7 @@
   CKTextKitContext *context = [[CKTextKitContext alloc] initWithAttributedString:attributedString
                                                                    lineBreakMode:NSLineBreakByCharWrapping
                                                             maximumNumberOfLines:0
-                                                                 constrainedSize:constrainedSize
-                                                            layoutManagerFactory:nil];
+                                                                 constrainedSize:constrainedSize];
   CKTextKitTailTruncater *tailTruncater = [[CKTextKitTailTruncater alloc] initWithContext:context
                                                                truncationAttributedString:[self _simpleTruncationAttributedString]
                                                                    avoidTailTruncationSet:[NSCharacterSet characterSetWithCharactersInString:@"."]

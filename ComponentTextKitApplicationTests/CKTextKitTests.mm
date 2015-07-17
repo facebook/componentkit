@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -87,34 +87,6 @@ static BOOL checkAttributes(const CKTextKitAttributes &attributes, const CGSize 
   };
   XCTAssert(checkAttributes(attributes, { 100, 100 }));
 }
-
-- (void)testChangingAPropertyChangesHash
-{
-  NSAttributedString *as = [[NSAttributedString alloc] initWithString:@"hello" attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12]}];
-
-  CKTextKitAttributes attrib1 {
-    .attributedString = as,
-    .lineBreakMode =  NSLineBreakByClipping,
-  };
-  CKTextKitAttributes attrib2 {
-    .attributedString = as,
-  };
-
-  XCTAssertNotEqual(attrib1.hash(), attrib2.hash(), @"Hashes should differ when NSLineBreakByClipping changes.");
-}
-
-- (void)testSameStringHashesSame
-{
-  CKTextKitAttributes attrib1 {
-    .attributedString = [[NSAttributedString alloc] initWithString:@"hello" attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12]}],
-  };
-  CKTextKitAttributes attrib2 {
-    .attributedString = [[NSAttributedString alloc] initWithString:@"hello" attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12]}],
-  };
-
-  XCTAssertEqual(attrib1.hash(), attrib2.hash(), @"Hashes should be the same!");
-}
-
 
 - (void)testStringsWithVariableAttributes
 {

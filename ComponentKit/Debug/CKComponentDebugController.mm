@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
+ *  LICENSE file in the root directory of this source tree. An additional grant 
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -109,7 +109,7 @@ CK::Component::MountContext CKDebugMountContext(Class componentClass,
   static CK::StaticMutex l = CK_MUTEX_INITIALIZER;
   CK::StaticMutexLocker lock(l);
 
-  // Avoid the static destructor fiasco, use a pointer:
+  // This is a pointer because of https://our.intern.facebook.com/intern/dex/qa/657083164365634/
   static std::unordered_map<Class, CKComponentViewConfiguration> *debugViewConfigurations =
   new std::unordered_map<Class, CKComponentViewConfiguration>();
 
@@ -125,7 +125,7 @@ CK::Component::MountContext CKDebugMountContext(Class componentClass,
 
   UIView *debugView = context.viewManager->viewForConfiguration(componentClass, debugViewConfigurations->at(componentClass));
   debugView.frame = {context.position, size};
-  return context.childContextForSubview(debugView, NO);
+  return context.childContextForSubview(debugView);
 }
 
 #pragma mark - Synchronous Reflow
