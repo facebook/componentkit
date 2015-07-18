@@ -47,7 +47,7 @@ static NSString *const indentString = @"| ";
   }
 }
 
-NSString *ancestorComponentHierarchyDescriptionForView(UIView *view)
+static NSString *ancestorComponentHierarchyDescriptionForView(UIView *view)
 {
   NSString *ancestors;
   if (view.ck_component) {
@@ -64,7 +64,7 @@ NSString *ancestorComponentHierarchyDescriptionForView(UIView *view)
   return ancestors;
 }
 
-NSUInteger depthOfViewInViewHierarchy(UIView *view)
+static NSUInteger depthOfViewInViewHierarchy(UIView *view)
 {
   NSUInteger depth = 0;
   while (view) {
@@ -74,7 +74,7 @@ NSUInteger depthOfViewInViewHierarchy(UIView *view)
   return depth;
 }
 
-NSString *ancestorDescriptionForView(UIView *view)
+static NSString *ancestorDescriptionForView(UIView *view)
 {
   NSMutableArray *ancestors = [NSMutableArray array];
   while (view) {
@@ -94,7 +94,7 @@ NSString *ancestorDescriptionForView(UIView *view)
   return description;
 }
 
-NSString *componentAncestorDescriptionForView(UIView *view, CKComponentRootView *rootView, NSString *prefix)
+static NSString *componentAncestorDescriptionForView(UIView *view, CKComponentRootView *rootView, NSString *prefix)
 {
   const CKComponentLayout &rootLayout = layoutForRootView(rootView);
   CKComponent *component = view.ck_component;
@@ -109,7 +109,7 @@ NSString *componentAncestorDescriptionForView(UIView *view, CKComponentRootView 
   return description;
 }
 
-BOOL buildComponentAncestors(const CKComponentLayout &layout, CKComponent *component, CGPoint position, std::deque<CKComponentDescriptionInformation> &ancestors)
+static BOOL buildComponentAncestors(const CKComponentLayout &layout, CKComponent *component, CGPoint position, std::deque<CKComponentDescriptionInformation> &ancestors)
 {
   CKComponent *layoutComponent = layout.component;
   UIView *view = layoutComponent.viewContext.view;
@@ -132,7 +132,7 @@ BOOL buildComponentAncestors(const CKComponentLayout &layout, CKComponent *compo
   return YES;
 }
 
-NSString *componentHierarchyDescriptionForView(UIView *view)
+static NSString *componentHierarchyDescriptionForView(UIView *view)
 {
   NSString *description;
   if (view.ck_component) {
@@ -147,25 +147,25 @@ NSString *componentHierarchyDescriptionForView(UIView *view)
   return description;
 }
 
-NSMutableString *computeDescription(CKComponent *component, UIView *view, CGSize size, CGPoint position, NSString *prefix)
+static NSMutableString *computeDescription(CKComponent *component, UIView *view, CGSize size, CGPoint position, NSString *prefix)
 {
   NSMutableString *nodeDescription = [NSMutableString string];
   if (component) {
     NSString *componentDescription = [NSString stringWithFormat:@"%@%@, Position: %@, Size: %@\n", prefix, component, NSStringFromCGPoint(position), NSStringFromCGSize(size)];
     [nodeDescription appendString:componentDescription];
-    // we do not add a viewDescription for the component if this condition is not satisfied
+    // We do not add a viewDescription for the component if this condition is not satisfied
     if (component == view.ck_component) { // @"^-> " is used for component's associated view
       NSString *viewDescription = [NSString stringWithFormat:@"%@^-> %@\n", prefix, view];
       [nodeDescription appendString:viewDescription];
     }
-  } else { // isolated view
+  } else { // Isolated view
     NSString *viewDescription = [NSString stringWithFormat:@"%@%@\n", prefix, view];
     [nodeDescription appendString:viewDescription];
   }
   return nodeDescription;
 }
 
-NSMutableString *recursiveDescriptionForView(UIView *view, NSString *prefix)
+static NSMutableString *recursiveDescriptionForView(UIView *view, NSString *prefix)
 {
   NSMutableString *description = [NSMutableString string];
   if ([view isKindOfClass:[CKComponentRootView class]]) {
@@ -184,7 +184,7 @@ NSMutableString *recursiveDescriptionForView(UIView *view, NSString *prefix)
   return description;
 }
 
-CKComponentRootView *rootViewForView(UIView *view)
+static CKComponentRootView *rootViewForView(UIView *view)
 {
   while (view && ![view isKindOfClass:[CKComponentRootView class]]) {
     view = view.superview;
@@ -192,12 +192,12 @@ CKComponentRootView *rootViewForView(UIView *view)
   return (CKComponentRootView *)view;
 }
 
-const CKComponentLayout &layoutForRootView(CKComponentRootView *rootView)
+static const CKComponentLayout &layoutForRootView(CKComponentRootView *rootView)
 {
   return rootView.ck_componentLifecycleManager.state.layout;
 }
 
-const CKComponentLayout *findLayoutForComponent(CKComponent *component, const CKComponentLayout &layout)
+static const CKComponentLayout *findLayoutForComponent(CKComponent *component, const CKComponentLayout &layout)
 {
   const CKComponentLayout *componentLayout = nil;
   if (layout.component == component) {
@@ -215,7 +215,7 @@ const CKComponentLayout *findLayoutForComponent(CKComponent *component, const CK
   return componentLayout;
 }
 
-NSMutableString *recursiveDescriptionForLayout(const CKComponentLayout &layout, CGPoint position, NSString *prefix)
+static NSMutableString *recursiveDescriptionForLayout(const CKComponentLayout &layout, CGPoint position, NSString *prefix)
 {
   CKComponent *component = layout.component;
   UIView *view = component.viewContext.view;
