@@ -49,19 +49,19 @@ static NSString *const indentString = @"| ";
 
 static NSString *ancestorComponentHierarchyDescriptionForView(UIView *view)
 {
-  NSString *ancestors;
+  NSString *ancestorDescription;
   if (view.ck_component) {
-    // Views including and above root view are isolated
     CKComponentRootView *rootView = rootViewForView(view);
-    NSString *viewAncestors = ancestorDescriptionForView(rootView);
-    NSString *componentAncestors = componentAncestorDescriptionForView(view, rootView, [@"" stringByPaddingToLength:depthOfViewInViewHierarchy(rootView) * indentString.length
+    NSString *viewAncestorDescription = ancestorDescriptionForView(rootView);
+    NSString *componentAncestorDescription = componentAncestorDescriptionForView(view, rootView, [@"" stringByPaddingToLength:depthOfViewInViewHierarchy(rootView) * indentString.length
                                                                                                          withString:indentString
                                                                                                     startingAtIndex:0]);
-    ancestors = [viewAncestors stringByAppendingString:componentAncestors];
+    ancestorDescription = [viewAncestorDescription stringByAppendingString:componentAncestorDescription];
   } else {
-    ancestors = ancestorDescriptionForView(view);
+    // Views including and above root view do not have an associated component
+    ancestorDescription = ancestorDescriptionForView(view);
   }
-  return ancestors;
+  return ancestorDescription;
 }
 
 static NSUInteger depthOfViewInViewHierarchy(UIView *view)
