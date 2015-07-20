@@ -19,6 +19,8 @@
 #import "CKComponentViewInterface.h"
 #import "CKComponentLayout.h"
 #import "CKComponentRootView.h"
+#import "CKComponentHostingView.h"
+#import "CKComponentHostingViewInternal.h"
 
 #include <deque>
 
@@ -52,8 +54,9 @@ static NSString *ancestorComponentHierarchyDescriptionForView(UIView *view)
   NSString *ancestorDescription;
   if (view.ck_component) {
     CKComponentRootView *rootView = rootViewForView(view);
+    const CKComponentLayout &rootLayout = rootLayoutFromRootView(rootView);
     NSString *viewAncestorDescription = ancestorDescriptionForView(rootView);
-    NSString *componentAncestorDescription = componentAncestorDescriptionForView(view, rootView, [@"" stringByPaddingToLength:depthOfViewInViewHierarchy(rootView) * indentString.length
+    NSString *componentAncestorDescription = componentAncestorDescriptionForView(view, rootLayout, [@"" stringByPaddingToLength:depthOfViewInViewHierarchy(rootView) * indentString.length
                                                                                                          withString:indentString
                                                                                                     startingAtIndex:0]);
     ancestorDescription = [viewAncestorDescription stringByAppendingString:componentAncestorDescription];
@@ -94,9 +97,8 @@ static NSString *ancestorDescriptionForView(UIView *view)
   return description;
 }
 
-static NSString *componentAncestorDescriptionForView(UIView *view, CKComponentRootView *rootView, NSString *prefix)
+static NSString *componentAncestorDescriptionForView(UIView *view, const CKComponentLayout &rootLayout, NSString *prefix)
 {
-  const CKComponentLayout &rootLayout = layoutForRootView(rootView);
   CKComponent *component = view.ck_component;
   std::deque<CKComponentDescriptionInformation> ancestors;
   buildComponentAncestors(rootLayout, component, {0, 0}, ancestors);
@@ -138,7 +140,7 @@ static NSString *componentHierarchyDescriptionForView(UIView *view)
   if (view.ck_component) {
     CKComponentRootView *rootView = rootViewForView(view);
     CKComponent *component = view.ck_component;
-    const CKComponentLayout &rootLayout = layoutForRootView(rootView);
+    const CKComponentLayout &rootLayout = rootLayoutFromRootView(rootView);
     const CKComponentLayout &layout = *findLayoutForComponent(component, rootLayout);
     description = recursiveDescriptionForLayout(layout, {0, 0}, @"");
   } else {
@@ -170,7 +172,7 @@ static NSMutableString *recursiveDescriptionForView(UIView *view, NSString *pref
   NSMutableString *description = [NSMutableString string];
   if ([view isKindOfClass:[CKComponentRootView class]]) {
     CKComponentRootView *rootView = (CKComponentRootView *)view;
-    const CKComponentLayout &rootLayout = layoutForRootView(rootView);
+    const CKComponentLayout &rootLayout = rootLayoutFromRootView(rootView);
     [description appendString:computeDescription(nil, rootView, {0, 0}, {0, 0}, prefix)];
     [description appendString:recursiveDescriptionForLayout(rootLayout, {0, 0}, [prefix stringByAppendingString:indentString])];
   } else {
@@ -192,9 +194,20 @@ static CKComponentRootView *rootViewForView(UIView *view)
   return (CKComponentRootView *)view;
 }
 
-static const CKComponentLayout &layoutForRootView(CKComponentRootView *rootView)
+/* Note: This is fragile code that is being used because ComponentKit is
+ * currently in the process of transitioning away holding the root layout in
+ * CKComponentRootView
+ */
+static const CKComponentLayout &rootLayoutFromRootView(CKComponentRootView *rootView)
 {
-  return rootView.ck_componentLifecycleManager.state.layout;
+  const CKComponentLayout *rootLayout;
+  if ([rootView.superview isKindOfClass:[CKComponentHostingView class]]) {
+    CKComponentHostingView *hostingView = (CKComponentHostingView *)rootView.superview;
+    rootLayout = &hostingView.mountedLayout;
+  } else {
+    rootLayout = &rootView.ck_componentLifecycleManager.state.layout;
+  }
+  return *rootLayout;
 }
 
 static const CKComponentLayout *findLayoutForComponent(CKComponent *component, const CKComponentLayout &layout)
