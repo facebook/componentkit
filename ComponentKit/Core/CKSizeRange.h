@@ -10,8 +10,6 @@
 
 #import <UIKit/UIKit.h>
 
-#include <functional>
-
 /** Expresses an inclusive range of sizes. Used to provide a simple constraint to component layout. */
 struct CKSizeRange {
   CGSize min;
@@ -35,9 +33,3 @@ struct CKSizeRange {
   NSString *description() const;
   size_t hash() const;
 };
-
-namespace std {
-  template <> struct hash<CKSizeRange> {
-    size_t operator ()(const CKSizeRange &);
-  };
-}

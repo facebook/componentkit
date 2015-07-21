@@ -129,11 +129,3 @@ private:
 
   friend class CK::Component::ViewReusePoolMap;    // uses attributeShape
 };
-
-namespace std {
-  template<> struct hash<CKComponentViewConfiguration>
-  {
-    size_t operator()(const CKComponentViewConfiguration &cl) const;
-  };
-}
-
