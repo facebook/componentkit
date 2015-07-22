@@ -16,6 +16,6 @@
  */
 @interface CKComponentLifecycleManager () <CKComponentStateListener>
 
-- (CKComponentLifecycleManagerState)state;
+- (const CKComponentLifecycleManagerState &)state;
 
 @end
