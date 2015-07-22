@@ -54,7 +54,7 @@ static NSString *ancestorComponentHierarchyDescriptionForView(UIView *view)
   NSString *ancestorDescription;
   if (view.ck_component) {
     CKComponentRootView *rootView = rootViewForView(view);
-    const CKComponentLayout &rootLayout = rootLayoutFromRootView(rootView);
+    const CKComponentLayout &rootLayout = *rootLayoutFromRootView(rootView);
     NSString *viewAncestorDescription = ancestorDescriptionForView(rootView);
     NSString *componentAncestorDescription = componentAncestorDescriptionForView(view, rootLayout, [@"" stringByPaddingToLength:depthOfViewInViewHierarchy(rootView) * indentString.length
                                                                                                          withString:indentString
@@ -84,12 +84,12 @@ static NSString *ancestorDescriptionForView(UIView *view)
     [ancestors addObject:view];
     view = view.superview;
   }
-  
+
   NSMutableString *prefix = [NSMutableString string];
   NSMutableString *description = [NSMutableString string];
   // reverse
   NSArray *orderedAncestors = [[ancestors reverseObjectEnumerator] allObjects];
-  
+
   for (UIView *ancestor in orderedAncestors) {
     [description appendString:computeDescription(nil, ancestor, {0, 0}, {0, 0}, prefix)];
     [prefix appendString:indentString];
@@ -117,12 +117,12 @@ static BOOL buildComponentAncestors(const CKComponentLayout &layout, CKComponent
   UIView *view = layoutComponent.viewContext.view;
   CKComponentDescriptionInformation descriptionInformation = {layout, view, position};
   ancestors.push_back(descriptionInformation);
-  
+
   if (component != layoutComponent) {
     if (layout.children) {
       for (const auto &child : *layout.children) {
         BOOL childResult = buildComponentAncestors(child.layout, component, child.position, ancestors);
-        
+
         if (childResult) {
           return YES;
         }
@@ -140,7 +140,7 @@ static NSString *componentHierarchyDescriptionForView(UIView *view)
   if (view.ck_component) {
     CKComponentRootView *rootView = rootViewForView(view);
     CKComponent *component = view.ck_component;
-    const CKComponentLayout &rootLayout = rootLayoutFromRootView(rootView);
+    const CKComponentLayout &rootLayout = *rootLayoutFromRootView(rootView);
     const CKComponentLayout &layout = *findLayoutForComponent(component, rootLayout);
     description = recursiveDescriptionForLayout(layout, {0, 0}, @"");
   } else {
@@ -172,15 +172,20 @@ static NSMutableString *recursiveDescriptionForView(UIView *view, NSString *pref
   NSMutableString *description = [NSMutableString string];
   if ([view isKindOfClass:[CKComponentRootView class]]) {
     CKComponentRootView *rootView = (CKComponentRootView *)view;
-    const CKComponentLayout &rootLayout = rootLayoutFromRootView(rootView);
-    [description appendString:computeDescription(nil, rootView, {0, 0}, {0, 0}, prefix)];
-    [description appendString:recursiveDescriptionForLayout(rootLayout, {0, 0}, [prefix stringByAppendingString:indentString])];
-  } else {
-    description = computeDescription(nil, view, {0, 0}, {0, 0}, prefix);
-    if (view.subviews) {
-      for (UIView *subview in view.subviews) {
-        [description appendString:recursiveDescriptionForView(subview, [prefix stringByAppendingString:indentString])];
-      }
+    const CKComponentLayout *rootLayout = rootLayoutFromRootView(rootView);
+
+    if (rootLayout) {
+      [description appendString:computeDescription(nil, rootView, {0, 0}, {0, 0}, prefix)];
+      [description appendString:recursiveDescriptionForLayout(*rootLayout, {0, 0}, [prefix stringByAppendingString:indentString])];
+      return description;
+    }
+  }
+
+  description = computeDescription(nil, view, {0, 0}, {0, 0}, prefix);
+
+  if (view.subviews) {
+    for (UIView *subview in view.subviews) {
+      [description appendString:recursiveDescriptionForView(subview, [prefix stringByAppendingString:indentString])];
     }
   }
   return description;
@@ -198,16 +203,18 @@ static CKComponentRootView *rootViewForView(UIView *view)
  * currently in the process of transitioning away holding the root layout in
  * CKComponentRootView
  */
-static const CKComponentLayout &rootLayoutFromRootView(CKComponentRootView *rootView)
+static const CKComponentLayout *rootLayoutFromRootView(CKComponentRootView *rootView)
 {
   const CKComponentLayout *rootLayout;
-  if ([rootView.superview isKindOfClass:[CKComponentHostingView class]]) {
+  if (rootView.ck_componentLifecycleManager) {
+    rootLayout = &rootView.ck_componentLifecycleManager.state.layout;
+  } else if ([rootView.superview isKindOfClass:[CKComponentHostingView class]]) {
     CKComponentHostingView *hostingView = (CKComponentHostingView *)rootView.superview;
     rootLayout = &hostingView.mountedLayout;
   } else {
-    rootLayout = &rootView.ck_componentLifecycleManager.state.layout;
+    rootLayout = nil;
   }
-  return *rootLayout;
+  return rootLayout;
 }
 
 static const CKComponentLayout *findLayoutForComponent(CKComponent *component, const CKComponentLayout &layout)
@@ -218,7 +225,7 @@ static const CKComponentLayout *findLayoutForComponent(CKComponent *component, c
   } else {
     for (const auto &child : *(layout.children)) {
       const CKComponentLayout *childLayout = findLayoutForComponent(component, child.layout);
-      
+
       if (childLayout) {
         componentLayout = childLayout;
         break;
@@ -233,7 +240,7 @@ static NSMutableString *recursiveDescriptionForLayout(const CKComponentLayout &l
   CKComponent *component = layout.component;
   UIView *view = component.viewContext.view;
   NSMutableString *description = computeDescription(component, view, layout.size, position, prefix);
-  
+
   if (layout.children) {
     for (const auto &child : *layout.children) {
       [description appendString:recursiveDescriptionForLayout(child.layout, child.position, [prefix stringByAppendingString:indentString])];
