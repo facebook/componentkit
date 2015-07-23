@@ -210,7 +210,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
 #pragma mark - Debug
 
-- (CKComponentLifecycleManagerState)state
+- (const CKComponentLifecycleManagerState &)state
 {
   return _state;
 }
