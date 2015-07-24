@@ -92,6 +92,9 @@ extern const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEm
 /** The current scope frame associated with this lifecycle manager */
 - (CKComponentScopeRoot *)scopeRoot;
 
+/** The current component layout associated with this lifecycle manager */
+- (const CKComponentLayout &)componentLayout;
+
 @end
 
 
