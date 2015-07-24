@@ -188,6 +188,11 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   return _state.root;
 }
 
+- (const CKComponentLayout &)componentLayout
+{
+  return _state.layout;
+}
+
 #pragma mark - CKComponentStateListener
 
 - (void)componentScopeHandleWithIdentifier:(int32_t)globalIdentifier
