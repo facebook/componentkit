@@ -134,7 +134,7 @@ Pretty simple right ? And this logic can apply to any `UICollectionViewLayout` :
 Time to interact with those items now; nothing special here the regular selection APIs can be used. Let's say the models have a url that should be opened when the user tap on an item.
 
 ```objc++
-	- (void)dataSource:(CKCollectionViewDataSource *)dataSource didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+	- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 	{
  		MyModel *model = (MyModel *)[self.dataSource modelForItemAtIndexPath:indexPath];
  		NSURL *navURL = model.url;
