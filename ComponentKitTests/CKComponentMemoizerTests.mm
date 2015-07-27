@@ -71,7 +71,6 @@
 
   id memoizerState;
   CKBuildComponentResult result;
-  CKComponentLayout layout;
   {
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer memoizer(nil);
@@ -105,13 +104,13 @@
             }];
   };
 
-  
+
   CKBuildComponentResult result1;
   CKComponentLayout layout1;
   id memoizerState;
   {
     CKComponentMemoizer memoizer(nil);
-    
+
     result1 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
     layout1 = [result1.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
     memoizerState = memoizer.nextMemoizerState();
@@ -161,7 +160,6 @@
 
   id memoizerState;
   CKBuildComponentResult result1;
-  CKComponentLayout layout;
   {
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer memoizer(nil);
