@@ -139,9 +139,17 @@ struct CKComponentMountInfo {
       CKAssert(v.ck_component == self, @"");
     }
 
+#if TARGET_OS_IPHONE
     const CGPoint anchorPoint = v.layer.anchorPoint;
     [v setCenter:effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
     [v setBounds:{v.bounds.origin, size}];
+#else
+    const CGPoint anchorPoint = v.layer.anchorPoint;
+    v.frame = CGRect{
+      .origin = effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y}),
+      .size = size,
+    };
+#endif
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
     return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};

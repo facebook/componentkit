@@ -33,12 +33,17 @@ std::string CKStringFromPointer(const void *ptr)
 
 CGFloat CKScreenScale()
 {
+#if TARGET_OS_IPHONE
   static CGFloat _scale;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     _scale = [UIScreen mainScreen].scale;
   });
   return _scale;
+#else
+  // FIXME: this really can't be determined statically!
+  return 1.0;
+#endif
 }
 
 CGFloat CKFloorPixelValue(CGFloat f)

@@ -8,7 +8,7 @@
  *
  */
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 #ifndef ComponentKit_CKTextKitAttributes_h
 #define ComponentKit_CKTextKitAttributes_h

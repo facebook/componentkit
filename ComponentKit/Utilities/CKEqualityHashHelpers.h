@@ -56,7 +56,7 @@ namespace CK {
   template<typename T>
   struct is_objc_class<T, typename std::enable_if<std::is_convertible<T, id>::value, bool>::type> : std::true_type { };
 
-  // CKUtils::hash<T>()(value) -> either std::hash<T> if c++ or [o hash] if ObjC object.
+  // CK::hash<T>()(value) -> either std::hash<T> if c++ or [o hash] if ObjC object.
   template <typename T, typename Enable = void> struct hash;
 
   // For non-objc types, defer to std::hash

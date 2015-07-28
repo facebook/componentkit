@@ -8,10 +8,10 @@
  *
  */
 
-#import <UIKit/UIKit.h>
+#import <Cocoa/Cocoa.h>
 
-@class CKComponentRootView;
+@interface NSLayoutManager (CKPlatform)
 
-@interface CKCollectionViewDataSourceCell : UICollectionViewCell
-@property (nonatomic, strong, readonly) CKComponentRootView *rootView;
+- (void)enumerateLineFragmentsForGlyphRange:(NSRange)glyphRange usingBlock:(void (^)(CGRect rect, CGRect usedRect, NSTextContainer *textContainer, NSRange glyphRange, BOOL *stop))block;
+
 @end

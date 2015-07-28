@@ -3,7 +3,6 @@ PODS:
   - ComponentKitTestLib (0.12)
   - ComponentSnapshotTestCase (0.12):
     - FBSnapshotTestCase
-  - FBSnapshotTestCase (1.8.1)
   - OCMock (2.2.4)
 
 DEPENDENCIES:

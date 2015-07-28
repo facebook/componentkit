@@ -111,8 +111,24 @@
       return nil;
     }
 
+#if TARGET_OS_IPHONE
     UIGraphicsBeginImageContextWithOptions(bounds.size, opaque, contentsScale);
     CGContextRef bitmapContext = UIGraphicsGetCurrentContext();
+#else
+    CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault | (opaque ? kCGImageAlphaNoneSkipLast : kCGImageAlphaPremultipliedLast);
+    size_t bitsPerComponent = 8;
+    NSInteger width = ceil(bounds.size.width * contentsScale);
+    NSInteger height = ceil(bounds.size.height * contentsScale);
+    size_t bytesPerRow = 4 * width;
+    CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
+    CGContextRef bitmapContext = CGBitmapContextCreate(NULL,
+                                                       width,
+                                                       height,
+                                                       bitsPerComponent,
+                                                       bytesPerRow,
+                                                       space,
+                                                       bitmapInfo);
+#endif
 
     if (backgroundColorObject != NULL) {
       CGContextSetFillColorWithColor(bitmapContext, (CGColorRef)backgroundColorObject);
@@ -122,7 +138,11 @@
     [drawingDelegate drawAsyncLayerInContext:bitmapContext parameters:drawParameters];
 
     CGImageRef image = CGBitmapContextCreateImage(bitmapContext);
+#if TARGET_OS_IPHONE
     UIGraphicsEndImageContext();
+#else
+    CGContextRelease(bitmapContext);
+#endif
 
     return CFBridgingRelease(image);
   } copy];

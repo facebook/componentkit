@@ -24,7 +24,11 @@ static CKViewComponentAttributeValueMap ViewAttributesFromAccessibilityContext(c
     accessibilityAttributes[@selector(setAccessibilityIdentifier:)] = accessibilityContext.accessibilityIdentifier;
   }
   if (accessibilityContext.isAccessibilityElement) {
+#if TARGET_OS_IPHONE
     accessibilityAttributes[@selector(setIsAccessibilityElement:)] = accessibilityContext.isAccessibilityElement;
+#else
+    accessibilityAttributes[@selector(setAccessibilityElement:)] = accessibilityContext.isAccessibilityElement;
+#endif
   }
   if (accessibilityContext.accessibilityLabel.hasText()) {
     accessibilityAttributes[@selector(setAccessibilityLabel:)] = accessibilityContext.accessibilityLabel.value();

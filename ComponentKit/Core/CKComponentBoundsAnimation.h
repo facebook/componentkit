@@ -8,7 +8,7 @@
  *
  */
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 typedef NS_ENUM(NSUInteger, CKComponentBoundsAnimationMode) {
   /** Wraps changes in a UIView animation block */

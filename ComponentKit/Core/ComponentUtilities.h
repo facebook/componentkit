@@ -13,7 +13,7 @@
 #import <type_traits>
 #import <vector>
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 namespace CK {
   // adopted from http://stackoverflow.com/questions/14945223/map-function-with-c11-constructs

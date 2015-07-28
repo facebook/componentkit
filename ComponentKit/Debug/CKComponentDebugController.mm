@@ -10,7 +10,7 @@
 
 #import "CKComponentDebugController.h"
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 #import "CKComponent.h"
 #import "CKComponentAnimation.h"
@@ -36,6 +36,7 @@ static NSString *const CKComponentDebugModeDidChangeNotification = @"CKComponent
 - (instancetype)initWithFrame:(CGRect)frame
 {
   if (self = [super initWithFrame:frame]) {
+#if TARGET_OS_IPHONE
     self.backgroundColor = [UIColor colorWithRed:0.2 green:0.5 blue:0.9 alpha:0.1];
     self.layer.borderColor = [UIColor colorWithRed:0.2 green:0.7 blue: 0.6 alpha: 0.5].CGColor;
     if ([UIScreen mainScreen].scale > 1) {
@@ -43,6 +44,12 @@ static NSString *const CKComponentDebugModeDidChangeNotification = @"CKComponent
     } else {
       self.layer.borderWidth = 1.0f;
     }
+#else
+    self.wantsLayer = YES;
+    self.layer.backgroundColor = [UIColor colorWithRed:0.2 green:0.5 blue:0.9 alpha:0.1].CGColor;
+    self.layer.borderColor = [UIColor colorWithRed:0.2 green:0.7 blue: 0.6 alpha: 0.5].CGColor;
+    self.layer.borderWidth = 1.0f;
+#endif
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(debugModeDidChange) name:CKComponentDebugModeDidChangeNotification object:nil];
   }
@@ -135,10 +142,16 @@ CK::Component::MountContext CKDebugMountContext(Class componentClass,
   if (![NSThread isMainThread]) {
     dispatch_async(dispatch_get_main_queue(), ^{ [self reflowComponents]; });
   } else {
+#if TARGET_OS_IPHONE
     UIWindow *window = [[UIApplication sharedApplication] keyWindow];
     CKRecursiveComponentReflow(window);
+#else
+    NSWindow *window = [NSApp keyWindow];
+    CKRecursiveComponentReflow(window.contentView);
+#endif
   }
 }
+
 
 + (void)reflowComponentsForView:(UIView *)view searchUpwards:(BOOL)upwards
 {

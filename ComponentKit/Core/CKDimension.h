@@ -10,7 +10,7 @@
 
 #import <string>
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKSizeRange.h>

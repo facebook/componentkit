@@ -15,6 +15,8 @@
 
 typedef void (*CKComponentGestureRecognizerSetupFunction)(UIGestureRecognizer *);
 
+#if TARGET_OS_IPHONE
+
 /**
  Returns a view attribute that creates and configures a tap gesture recognizer to send the given CKComponentAction.
 
@@ -22,6 +24,20 @@ typedef void (*CKComponentGestureRecognizerSetupFunction)(UIGestureRecognizer *)
         Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
 CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKComponentAction action);
+
+#else 
+
+/**
+ Returns a view attribute that creates and configures a click gesture recognizer to send the given CKComponentAction.
+
+ @param action Sent up the responder chain when a click occurs. Sender is the component that created the view.
+ Context is the gesture recognizer. May be NULL, in which case no action will be sent.
+ */
+CKComponentViewAttributeValue CKComponentClickGestureAttribute(CKComponentAction action);
+
+CKComponentViewAttributeValue CKComponentDoubleClickGestureAttribute(CKComponentAction action);
+
+#endif
 
 /**
  Returns a view attribute that creates and configures a pan gesture recognizer to send the given CKComponentAction.
@@ -31,6 +47,7 @@ CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKComponentAction a
  */
 CKComponentViewAttributeValue CKComponentPanGestureAttribute(CKComponentAction action);
 
+
 /**
  Returns a view attribute that creates and configures a long press gesture recognizer to send the given CKComponentAction.
 
@@ -38,6 +55,7 @@ CKComponentViewAttributeValue CKComponentPanGestureAttribute(CKComponentAction a
         Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
 CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(CKComponentAction action);
+
 
 /**
  Returns a view attribute that creates and configures a gesture recognizer.

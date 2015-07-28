@@ -15,7 +15,6 @@
 #import <ComponentKit/CKComponentLayout.h>
 
 @interface CKComponent ()
-
 /**
  Mounts the component in the given context:
  - Stores references to the supercomponent and superview for -nextResponder and -viewConfiguration.

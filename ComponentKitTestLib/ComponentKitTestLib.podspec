@@ -5,7 +5,10 @@ Pod::Spec.new do |s|
   s.homepage         = "https://componentkit.org"
   s.license          = 'BSD'
   s.source           = { :git => "https://github.com/facebook/ComponentKit.git", :tag => s.version.to_s }
-  s.platform     = :ios, '7.0'
+  s.ios.platform     = :ios, '7.0'
+  s.osx.platform     = :osx, '10.10'
   s.requires_arc = true
   s.source_files = '**/*.h', '**/*.m', '**/*.mm'
+  s.ios.dependency 'FBSnapshotTestCase'
+  s.frameworks = 'UIKit', 'XCTest'
 end

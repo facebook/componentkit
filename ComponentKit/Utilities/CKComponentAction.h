@@ -8,7 +8,7 @@
  *
  */
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 #import <ComponentKit/CKComponentViewAttribute.h>
 
@@ -41,6 +41,8 @@ typedef NS_ENUM(NSUInteger, CKComponentActionSendBehavior) {
 void CKComponentActionSend(CKComponentAction action, CKComponent *sender, id context = nil,
                            CKComponentActionSendBehavior behavior = CKComponentActionSendBehaviorStartAtSenderNextResponder);
 
+
+#if TARGET_OS_IPHONE
 /**
  Returns a view attribute that configures a component that creates a UIControl to send the given CKComponentAction.
  You can use this with e.g. CKButtonComponent.
@@ -51,4 +53,8 @@ void CKComponentActionSend(CKComponentAction action, CKComponent *sender, id con
  */
 CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction action,
                                                          UIControlEvents controlEvents = UIControlEventTouchUpInside);
+#else
 
+CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction action);
+
+#endif

@@ -64,6 +64,11 @@ struct CKComponentHostingViewInputs {
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
 {
   if (self = [super initWithFrame:CGRectZero]) {
+
+#if !TARGET_OS_IPHONE
+    self.wantsLayer = YES;
+#endif
+
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
     _pendingInputs = {.scopeRoot = [CKComponentScopeRoot rootWithListener:self]};
@@ -77,6 +82,13 @@ struct CKComponentHostingViewInputs {
   return self;
 }
 
+#if !TARGET_OS_IPHONE
+- (BOOL)isFlipped
+{
+  return YES;
+}
+#endif
+
 - (void)dealloc
 {
   CKAssertMainThread(); // UIKit should guarantee this
@@ -85,10 +97,8 @@ struct CKComponentHostingViewInputs {
 
 #pragma mark - Layout
 
-- (void)layoutSubviews
+- (void)_layoutSubviews
 {
-  CKAssertMainThread();
-  [super layoutSubviews];
   _containerView.frame = self.bounds;
 
   if (!CGRectIsEmpty(self.bounds)) {
@@ -100,6 +110,22 @@ struct CKComponentHostingViewInputs {
     _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil) copy];
   }
 }
+
+#if TARGET_OS_IPHONE
+- (void)layoutSubviews
+{
+  CKAssertMainThread();
+  [super layoutSubviews];
+  [self _layoutSubviews];
+}
+#else
+- (void)layout
+{
+  CKAssertMainThread();
+  [super layout];
+  [self _layoutSubviews];
+}
+#endif
 
 - (CGSize)sizeThatFits:(CGSize)size
 {

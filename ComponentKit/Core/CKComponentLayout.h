@@ -11,7 +11,7 @@
 #import <utility>
 #import <vector>
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 #import <ComponentKit/CKAssert.h>
 

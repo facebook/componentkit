@@ -8,7 +8,7 @@
  *
  */
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 /**
  A common root view used by CKComponentHostingView and CKCollectionViewDataSource.

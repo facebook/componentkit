@@ -11,7 +11,7 @@
 #import "CKTransactionalComponentDataSourceState.h"
 #import "CKTransactionalComponentDataSourceStateInternal.h"
 
-#import <UIKit/UIKit.h>
+#import <ComponentKit/CKPlatform.h>
 
 @implementation CKTransactionalComponentDataSourceState
 
