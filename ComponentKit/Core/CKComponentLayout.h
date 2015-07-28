@@ -29,14 +29,15 @@ struct CKComponentLayout {
   CKComponent *component;
   CGSize size;
   std::shared_ptr<const std::vector<CKComponentLayoutChild>> children;
+  NSDictionary *extra;
 
-  CKComponentLayout(CKComponent *c, CGSize s, std::vector<CKComponentLayoutChild> ch = {})
-  : component(c), size(s), children(new std::vector<CKComponentLayoutChild>(std::move(ch)), CKOffMainThreadDeleter()) {
+  CKComponentLayout(CKComponent *c, CGSize s, std::vector<CKComponentLayoutChild> ch = {}, NSDictionary *e = nil)
+  : component(c), size(s), children(new std::vector<CKComponentLayoutChild>(std::move(ch)), CKOffMainThreadDeleter()), extra(e) {
     CKCAssertNotNil(c, @"Nil components are not allowed");
   };
 
   CKComponentLayout()
-  : component(nil), size({0, 0}), children(new std::vector<CKComponentLayoutChild>(), CKOffMainThreadDeleter()) {};
+  : component(nil), size({0, 0}), children(new std::vector<CKComponentLayoutChild>(), CKOffMainThreadDeleter()), extra(nil) {};
 };
 
 struct CKComponentLayoutChild {
