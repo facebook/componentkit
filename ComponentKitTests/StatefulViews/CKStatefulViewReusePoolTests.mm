@@ -21,6 +21,17 @@
 @interface CKOtherStatefulViewComponentController : CKStatefulViewComponentController
 @end
 
+@interface CKStatefulViewComponentWithMaximumController : CKStatefulViewComponentController
+@end
+@implementation CKStatefulViewComponentWithMaximumController
+
++ (NSInteger)maximumPoolSize
+{
+  return 1;
+}
+
+@end
+
 @implementation CKStatefulViewReusePoolTests
 
 - (void)testDequeueingFromEmptyPoolReturnsNil
@@ -118,6 +129,35 @@
                                                      preferredSuperview:containerView
                                                                 context:@"context2"];
   XCTAssertTrue(firstView != dequeuedView, @"Expected different view to be vended.");
+}
+
+- (void)testMaximumPoolSizeOfOneByEnqueueingTwoViewsThenDequeueingTwoViewsReturnsNewViwe
+{
+  CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
+  
+  UIView *container1 = [[UIView alloc] init];
+  CKTestStatefulView *view1 = [[CKTestStatefulView alloc] init];
+  [container1 addSubview:view1];
+  [pool enqueueStatefulView:view1
+         forControllerClass:[CKStatefulViewComponentWithMaximumController class]
+                    context:nil];
+  
+  UIView *container2 = [[UIView alloc] init];
+  CKTestStatefulView *view2 = [[CKTestStatefulView alloc] init];
+  [container2 addSubview:view2];
+  [pool enqueueStatefulView:view2
+         forControllerClass:[CKStatefulViewComponentWithMaximumController class]
+                    context:nil];
+  
+  UIView *dequeuedView1 = [pool dequeueStatefulViewForControllerClass:[CKStatefulViewComponentWithMaximumController class]
+                                                  preferredSuperview:container1
+                                                             context:nil];
+  XCTAssertTrue(dequeuedView1 == view1, @"Expected view in container1 to be returned");
+  
+  UIView *dequeuedView2 = [pool dequeueStatefulViewForControllerClass:[CKStatefulViewComponentWithMaximumController class]
+                                                   preferredSuperview:container2
+                                                              context:nil];
+  XCTAssertTrue(dequeuedView2 != view2, @"Expected view in container2 not to be returned");
 }
 
 @end
