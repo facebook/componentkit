@@ -104,20 +104,10 @@ struct PoolKeyHasher {
   // maximumPoolSize will be -1 by default
   NSInteger maximumPoolSize = [controllerClass maximumPoolSize];
   
-  if (maximumPoolSize < 0 || [self _sizeForControllerClass:controllerClass context:context] < maximumPoolSize) {
-    // only add the stateful view to the pool if a maximum limit has not been set
-    return _pool[std::make_pair(controllerClass, context)].addView(view);
+  FBStatefulReusePoolItem poolItem = _pool[std::make_pair(controllerClass, context)];
+  if (maximumPoolSize < 0 || poolItem.viewCount() < maximumPoolSize) {
+    poolItem.addView(view);
   }
-}
-
-- (NSInteger)_sizeForControllerClass:(Class)controllerClass
-                             context:(id)context
-{
-  const auto it = _pool.find(std::make_pair(controllerClass, context));
-  if (it == _pool.end()) {
-    return 0;
-  }
-  return it->second.viewCount();
 }
 
 @end
