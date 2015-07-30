@@ -53,7 +53,7 @@ The datasource maintains an internal data structure which is the only source of 
 For instance to access the model associated to a certain index path using a `CKCollectionViewDataSource` you can use:
 
 ```objc++
-[datasource objectAtindexPath:indexPath];
+[datasource modelForItemAtIndexPath:indexPath];
 ```
 
 Now let's look at what could go wrong if we query another source of data.
