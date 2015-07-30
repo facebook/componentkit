@@ -7,6 +7,7 @@
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
+#import "CKStatefulViewComponentController.h"
 
 #import "CKStatefulViewReusePool.h"
 
@@ -30,6 +31,11 @@ public:
       [allViews removeObject:view];
     }
     return view;
+  };
+  
+  NSUInteger viewCount()
+  {
+    return [allViews count];
   };
 
   void addView(UIView *view)
@@ -94,8 +100,24 @@ struct PoolKeyHasher {
   NSAssert([NSThread isMainThread], nil);
   NSParameterAssert(view != nil);
   NSParameterAssert(controllerClass != nil);
+  
+  // maximumPoolSize will be -1 by default
+  NSInteger maximumPoolSize = [controllerClass maximumPoolSize];
+  
+  if (maximumPoolSize < 0 || [self _sizeForControllerClass:controllerClass context:context] < maximumPoolSize) {
+    // only add the stateful view to the pool if a maximum limit has not been set
+    return _pool[std::make_pair(controllerClass, context)].addView(view);
+  }
+}
 
-  return _pool[std::make_pair(controllerClass, context)].addView(view);
+- (NSInteger)_sizeForControllerClass:(Class)controllerClass
+                             context:(id)context
+{
+  const auto it = _pool.find(std::make_pair(controllerClass, context));
+  if (it == _pool.end()) {
+    return 0;
+  }
+  return it->second.viewCount();
 }
 
 @end
