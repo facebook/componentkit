@@ -25,7 +25,7 @@
 @end
 @implementation CKStatefulViewComponentWithMaximumController
 
-+ (NSInteger)maximumPoolSize
++ (NSInteger)maximumPoolSize:(id)context
 {
   return 1;
 }
