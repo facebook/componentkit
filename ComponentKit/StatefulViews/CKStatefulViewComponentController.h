@@ -55,7 +55,7 @@
  Optionally override this to return the maximum number of stateful components that should be enqueued into the
  reuse pool. After this limit is reached, relinquished components will no longer be retained.
  */
-+ (NSInteger)maximumPoolSize;
++ (NSInteger)maximumPoolSize:(id)context;
 
 /**
  The current stateful view owned by this controller, if any.

@@ -102,7 +102,7 @@ struct PoolKeyHasher {
   NSParameterAssert(controllerClass != nil);
   
   // maximumPoolSize will be -1 by default
-  NSInteger maximumPoolSize = [controllerClass maximumPoolSize];
+  NSInteger maximumPoolSize = [controllerClass maximumPoolSize:context];
   
   FBStatefulReusePoolItem poolItem = _pool[std::make_pair(controllerClass, context)];
   if (maximumPoolSize < 0 || poolItem.viewCount() < maximumPoolSize) {
