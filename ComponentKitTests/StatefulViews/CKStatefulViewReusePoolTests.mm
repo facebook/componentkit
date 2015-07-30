@@ -131,7 +131,7 @@
   XCTAssertTrue(firstView != dequeuedView, @"Expected different view to be vended.");
 }
 
-- (void)testMaximumPoolSizeOfOneByEnqueueingTwoViewsThenDequeueingTwoViewsReturnsNewViwe
+- (void)testMaximumPoolSizeOfOneByEnqueueingTwoViewsThenDequeueingTwoViewsReturnsNewView
 {
   CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
   
@@ -157,7 +157,7 @@
   UIView *dequeuedView2 = [pool dequeueStatefulViewForControllerClass:[CKStatefulViewComponentWithMaximumController class]
                                                    preferredSuperview:container2
                                                               context:nil];
-  XCTAssertTrue(dequeuedView2 != view2, @"Expected view in container2 not to be returned");
+  XCTAssertTrue(dequeuedView2 != view2, @"Didn't expect view in container2 to be returned");
 }
 
 @end
