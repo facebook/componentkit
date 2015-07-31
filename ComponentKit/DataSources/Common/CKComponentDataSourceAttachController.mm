@@ -106,9 +106,9 @@
   }
 }
 
-CKComponentDataSourceAttachState *_mountComponentLayoutInView(CKComponentLayout layout,
-                                                              UIView *view,
-                                                              CKComponentScopeRootIdentifier scopeIdentifier)
+static CKComponentDataSourceAttachState *_mountComponentLayoutInView(CKComponentLayout layout,
+                                                                     UIView *view,
+                                                                     CKComponentScopeRootIdentifier scopeIdentifier)
 {
   CKCAssertNotNil(view, @"Impossible to mount a component layout on a nil view");
   NSSet *currentlyMountedComponents = view.ck_attachState.mountedComponents;
