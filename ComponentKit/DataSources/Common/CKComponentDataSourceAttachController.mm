@@ -75,7 +75,7 @@
   // Mount the component tree on the view
   CKComponentDataSourceAttachState *attachState = _mountComponentLayoutInView(layout, view, scopeIdentifier);
   // Mark the view as attached and associates it to the right attach state
-  _scopeIdentifierToAttachedViewMap[@(scopeIdentifier)] = attachState;
+  _scopeIdentifierToAttachedViewMap[@(scopeIdentifier)] = view;
   view.ck_attachState = attachState;
 }
 
