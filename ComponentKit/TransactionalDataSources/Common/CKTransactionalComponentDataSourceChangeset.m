@@ -35,21 +35,75 @@
 
 @implementation CKTransactionalComponentDataSourceChangesetBuilder
 {
-  NSDictionary *_updatedItems;
-  NSSet *_removedItems;
-  NSIndexSet *_removedSections;
-  NSDictionary *_movedItems;
-  NSIndexSet *_insertedSections;
-  NSDictionary *_insertedItems;
+  id _updatedItems;
+  id _removedItems;
+  id _removedSections;
+  id _movedItems;
+  id _insertedSections;
+  id _insertedItems;
 }
 
 + (instancetype)transactionalComponentDataSourceChangeset { return [[self alloc] init]; }
-- (instancetype)withUpdatedItems:(NSDictionary *)updatedItems { _updatedItems = updatedItems; return self;}
-- (instancetype)withRemovedItems:(NSSet *)removedItems { _removedItems = removedItems; return self; }
-- (instancetype)withRemovedSections:(NSIndexSet *)removedSections { _removedSections = removedSections; return self; }
-- (instancetype)withMovedItems:(NSDictionary *)movedItems { _movedItems = movedItems; return self; }
-- (instancetype)withInsertedSections:(NSIndexSet *)insertedSections { _insertedSections = insertedSections; return self; }
-- (instancetype)withInsertedItems:(NSDictionary *)insertedItems { _insertedItems = insertedItems; return self; }
+
+- (instancetype)withUpdatedItems:(NSDictionary *)updatedItems {
+  if (_updatedItems) {
+    _updatedItems = [_updatedItems mutableCopy];
+    [_updatedItems addEntriesFromDictionary:updatedItems];
+  } else {
+    _updatedItems = updatedItems;
+  }
+	return self;
+}
+
+- (instancetype)withRemovedItems:(NSSet *)removedItems {
+  if (_removedItems) {
+    _removedItems = [_removedItems mutableCopy];
+    [_removedItems addObjectsFromArray:removedItems.allObjects];
+  } else {
+    _removedItems = removedItems;
+  }
+  return self;
+}
+
+- (instancetype)withRemovedSections:(NSIndexSet *)removedSections {
+  if (_removedSections) {
+    _removedSections = [_removedSections mutableCopy];
+    [_removedSections addIndexes:removedSections];
+  } else {
+    _removedSections = removedSections;
+  }
+  return self;
+}
+
+- (instancetype)withMovedItems:(NSDictionary *)movedItems {
+  if (_movedItems) {
+    _movedItems = [_movedItems mutableCopy];
+    [_movedItems addEntriesFromDictionary:movedItems];
+  } else {
+    _movedItems = movedItems;
+  }
+  return self;
+}
+
+- (instancetype)withInsertedSections:(NSIndexSet *)insertedSections {
+  if (_insertedSections) {
+    _insertedSections = [_insertedSections mutableCopy];
+    [_insertedSections addIndexes:insertedSections];
+  } else {
+    _insertedSections = insertedSections;
+  }
+  return self;
+}
+
+- (instancetype)withInsertedItems:(NSDictionary *)insertedItems {
+  if (_insertedItems) {
+    _insertedItems = [_insertedItems mutableCopy];
+    [_insertedItems addEntriesFromDictionary:insertedItems];
+  } else {
+    _insertedItems = insertedItems;
+  }
+  return self;
+}
 
 - (CKTransactionalComponentDataSourceChangeset *)build
 {
