@@ -39,6 +39,7 @@ static CKComponent *_leakyComponent;
   return [self compareSnapshotOfView:v
             referenceImagesDirectory:referenceImagesDirectory
                           identifier:identifier
+                           tolerance:0
                                error:errorPtr];
 }
 
