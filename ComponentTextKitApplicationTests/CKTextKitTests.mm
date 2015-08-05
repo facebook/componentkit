@@ -75,7 +75,7 @@ static BOOL checkAttributes(const CKTextKitAttributes &attributes, const CGSize 
   FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] init];
   UIImage *labelImage = UITextViewImageWithAttributes(attributes, constrainedSize);
   UIImage *textKitImage = CKTextKitImageWithAttributes(attributes, constrainedSize);
-  return [controller compareReferenceImage:labelImage toImage:textKitImage error:nil];
+  return [controller compareReferenceImage:labelImage toImage:textKitImage tolerance:0 error:nil];
 }
 
 @implementation CKTextKitTests
