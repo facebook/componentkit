@@ -12,15 +12,7 @@
 #import "CKComponentInternal.h"
 
 #import "CKComponentDataSourceAttachController.h"
-
-@interface CKComponentDataSourceAttachState : NSObject
-
-@property (nonatomic, strong, readonly) NSSet *mountedComponents;
-@property (nonatomic, readonly) CKComponentScopeRootIdentifier scopeIdentifier;
-
-- (instancetype)initWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
-                      mountedComponents:(NSSet *)mountedComponents;
-@end
+#import "CKComponentDataSourceAttachControllerInternal.h"
 
 @interface UIView(CKComponentDataSourceAttachController)
 
@@ -83,6 +75,13 @@
 {
   CKAssertMainThread();
   [self _detachComponentLayoutFromView:[_scopeIdentifierToAttachedViewMap objectForKey:@(scopeIdentifier)]];
+}
+
+#pragma mark - Internal API
+
+- (CKComponentDataSourceAttachState *)attachStateForScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
+{
+  return ((UIView *)_scopeIdentifierToAttachedViewMap[@(scopeIdentifier)]).ck_attachState;
 }
 
 #pragma mark - Attach helpers
