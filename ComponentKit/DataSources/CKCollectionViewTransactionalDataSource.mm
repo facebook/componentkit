@@ -101,6 +101,11 @@ static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppli
 
 #pragma mark - State
 
+- (id<NSObject>)modelForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  return [_currentState objectAtIndexPath:indexPath].model;
+}
+
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
   return [_currentState objectAtIndexPath:indexPath].layout.size;
