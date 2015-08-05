@@ -215,7 +215,7 @@ static NSMutableString *recursiveDescriptionForView(UIView *view, NSString *pref
       return description;
     }
   }
-  // if (![view isKindOfClass:[CKComponentRootView class]] || !rootLayoutFromRootView(view))
+  // Either the view is not a CKComponentRootView or the view does not have a rootLayout
   NSMutableString *description = [NSMutableString string];
   description = computeDescription(nil, view, {0, 0}, {0, 0}, prefix, YES);
   if (view.subviews) {
