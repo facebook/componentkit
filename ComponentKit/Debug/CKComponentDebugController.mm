@@ -14,9 +14,12 @@
 
 #import "CKComponent.h"
 #import "CKComponentAnimation.h"
+#import "CKComponentHostingView.h"
+#import "CKComponentHostingViewInternal.h"
 #import "CKComponentInternal.h"
 #import "CKComponentLifecycleManager.h"
 #import "CKComponentLifecycleManagerInternal.h"
+#import "CKComponentRootView.h"
 #import "CKComponentViewInterface.h"
 #import "CKMutex.h"
 
@@ -143,14 +146,13 @@ CK::Component::MountContext CKDebugMountContext(Class componentClass,
 + (void)reflowComponentsForView:(UIView *)view searchUpwards:(BOOL)upwards
 {
   if (upwards) {
-    while (view && !view.ck_componentLifecycleManager) {
+    while (view && ![view isKindOfClass:[CKComponentRootView class]]) {
       view = view.superview;
     }
-    if (!view) {
-      return;
-    }
   }
-  CKRecursiveComponentReflow(view);
+  if (view) {
+    CKRecursiveComponentReflow(view);
+  }
 }
 
 static void CKRecursiveComponentReflow(UIView *view)
@@ -163,6 +165,9 @@ static void CKRecursiveComponentReflow(UIView *view)
                                 constrainedSize:oldState.constrainedSize
                                         context:oldState.context];
     [lifecycleManager updateWithState:state];
+  } else if ([view.superview isKindOfClass:[CKComponentHostingView class]]) {
+    CKComponentHostingView *hostingView = (CKComponentHostingView *)view.superview;
+    [hostingView setNeedsLayout];
   } else {
     for (UIView *subview in view.subviews) {
       CKRecursiveComponentReflow(subview);
