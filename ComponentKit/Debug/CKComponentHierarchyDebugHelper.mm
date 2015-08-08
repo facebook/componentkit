@@ -73,7 +73,7 @@ static NSString *ancestorComponentHierarchyDescriptionForView(UIView *view, BOOL
                                  withString:indentString
                             startingAtIndex:0];
     } else {
-      NSString *rootViewDescription = computeDescription(nil, rootView, {0, 0}, {0, 0}, @"", YES);
+      NSString *rootViewDescription = computeDescription(nil, rootView, CGSizeZero, CGPointZero, @"", YES);
       viewAncestorDescription = [NSString stringWithFormat:@"For View: %@", rootViewDescription];
       prefix = indentString;
     }
@@ -112,17 +112,20 @@ static NSString *ancestorDescriptionForView(UIView *view)
   NSArray *orderedAncestors = [[ancestors reverseObjectEnumerator] allObjects];
 
   for (UIView *ancestor in orderedAncestors) {
-    [description appendString:computeDescription(nil, ancestor, {0, 0}, {0, 0}, prefix, YES)];
+    [description appendString:computeDescription(nil, ancestor, CGSizeZero, CGPointZero, prefix, YES)];
     [prefix appendString:indentString];
   }
   return description;
 }
 
-static NSString *componentAncestorDescriptionForView(UIView *view, const CKComponentLayout &rootLayout, NSString *prefix, BOOL showViews)
+static NSString *componentAncestorDescriptionForView(UIView *view,
+                                                     const CKComponentLayout &rootLayout,
+                                                     NSString *prefix,
+                                                     BOOL showViews)
 {
   CKComponent *component = view.ck_component;
   std::deque<CKComponentDescriptionInformation> ancestors;
-  buildComponentAncestors(rootLayout, component, {0, 0}, ancestors);
+  buildComponentAncestors(rootLayout, component, CGPointZero, ancestors);
   NSMutableString *description = [NSMutableString string];
   NSMutableString *currentPrefix = [prefix mutableCopy];
   for (auto &descriptionInformation : ancestors) {
@@ -137,7 +140,10 @@ static NSString *componentAncestorDescriptionForView(UIView *view, const CKCompo
   return description;
 }
 
-static BOOL buildComponentAncestors(const CKComponentLayout &layout, CKComponent *component, CGPoint position, std::deque<CKComponentDescriptionInformation> &ancestors)
+static BOOL buildComponentAncestors(const CKComponentLayout &layout,
+                                    CKComponent *component,
+                                    CGPoint position,
+                                    std::deque<CKComponentDescriptionInformation> &ancestors)
 {
   CKComponent *layoutComponent = layout.component;
   UIView *view = layoutComponent.viewContext.view;
@@ -169,27 +175,20 @@ static NSString *componentHierarchyDescriptionForView(UIView *view, BOOL showVie
     const CKComponentLayout &rootLayout = *rootLayoutFromRootView(rootView);
     const CKComponentLayout &layout = *findLayoutForComponent(component, rootLayout);
     if (showViews) {
-      description = recursiveDescriptionForLayout(layout, {0, 0}, @"", showViews);
+      description = recursiveDescriptionForLayout(layout, CGPointZero, @"", showViews);
     } else {
-      NSString *rootViewDescription = computeDescription(nil, rootView, {0, 0}, {0, 0}, @"", YES);
+      NSString *rootViewDescription = computeDescription(nil, rootView, CGSizeZero, CGPointZero, @"", YES);
       NSString *viewAncestorDescription = [NSString stringWithFormat:@"For View: %@", rootViewDescription];
-      description = recursiveDescriptionForLayout(layout, {0, 0}, indentString, showViews);
+      description = recursiveDescriptionForLayout(layout, CGPointZero, indentString, showViews);
       description = [viewAncestorDescription stringByAppendingString:description];
     }
-  } else if (showViews) {
-    description = recursiveDescriptionForView(view, @"");
   } else {
-    description = @"No component found for given view";
+    description = recursiveDescriptionForView(view, @"", showViews);
   }
   return description;
 }
 
-static NSMutableString *computeDescription(CKComponent *component,
-                                           UIView *view,
-                                           CGSize size,
-                                           CGPoint position,
-                                           NSString *prefix,
-                                           BOOL showView)
+static NSMutableString *computeDescription(CKComponent *component, UIView *view, CGSize size, CGPoint position, NSString *prefix, BOOL showView)
 {
   NSMutableString *nodeDescription = [NSMutableString string];
   if (component) {
@@ -203,24 +202,35 @@ static NSMutableString *computeDescription(CKComponent *component,
   return nodeDescription;
 }
 
-static NSMutableString *recursiveDescriptionForView(UIView *view, NSString *prefix)
+static NSMutableString *recursiveDescriptionForView(UIView *view, NSString *prefix, BOOL showViews)
 {
   if ([view isKindOfClass:[CKComponentRootView class]]) {
     CKComponentRootView *rootView = (CKComponentRootView *)view;
     const CKComponentLayout *rootLayout = rootLayoutFromRootView(rootView);
     if (rootLayout) {
       NSMutableString *description = [NSMutableString string];
-      [description appendString:computeDescription(nil, rootView, {0, 0}, {0, 0}, prefix, YES)];
-      [description appendString:recursiveDescriptionForLayout(*rootLayout, {0, 0}, [prefix stringByAppendingString:indentString], YES)];
+      if (!showViews) {
+        [description appendString:@"For View: "];
+      }
+      // We always get the description of the CKComponentRootView (even if showViews is NO).
+      [description appendString:computeDescription(nil, rootView, CGSizeZero, CGPointZero, prefix, YES)];
+      [description appendString:recursiveDescriptionForLayout(*rootLayout,
+                                                              CGPointZero,
+                                                              [prefix stringByAppendingString:indentString],
+                                                              showViews)];
       return description;
     }
   }
-  // Either the view is not a CKComponentRootView or the view does not have a rootLayout
+  // Either the view is not a RootView or it does not have a RootLayout.
   NSMutableString *description = [NSMutableString string];
-  description = computeDescription(nil, view, {0, 0}, {0, 0}, prefix, YES);
+  if (showViews) {
+    [description appendString:computeDescription(nil, view, CGSizeZero, CGPointZero, prefix, YES)];
+  }
   if (view.subviews) {
+    // If we are not showing views then we shouldn't increase the prefix.
+    NSString *newPrefix = showViews ? [prefix stringByAppendingString:indentString] : prefix;
     for (UIView *subview in view.subviews) {
-      [description appendString:recursiveDescriptionForView(subview, [prefix stringByAppendingString:indentString])];
+      [description appendString:recursiveDescriptionForView(subview, newPrefix, showViews)];
     }
   }
   return description;
@@ -234,9 +244,10 @@ static CKComponentRootView *rootViewForView(UIView *view)
   return (CKComponentRootView *)view;
 }
 
-/* Note: This is fragile code that is being used because ComponentKit is
- * currently in the process of transitioning away holding the root layout in
- * CKComponentRootView
+/**
+ Note: This is fragile code that is being used because ComponentKit is currently in the process of
+ transitioning away from holding the root layout in CKComponentRootView. This code should be updated
+ once the move away from a ck_componentLifecycleManager is done.
  */
 static const CKComponentLayout *rootLayoutFromRootView(CKComponentRootView *rootView)
 {
@@ -270,7 +281,10 @@ static const CKComponentLayout *findLayoutForComponent(CKComponent *component, c
   return componentLayout;
 }
 
-static NSMutableString *recursiveDescriptionForLayout(const CKComponentLayout &layout, CGPoint position, NSString *prefix, BOOL showViews)
+static NSMutableString *recursiveDescriptionForLayout(const CKComponentLayout &layout,
+                                                      CGPoint position,
+                                                      NSString *prefix,
+                                                      BOOL showViews)
 {
   CKComponent *component = layout.component;
   NSMutableString *description = computeDescription(component, component.viewContext.view, layout.size, position, prefix, showViews);
