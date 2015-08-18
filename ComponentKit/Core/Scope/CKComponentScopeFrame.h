@@ -25,7 +25,7 @@ struct CKComponentScopeFramePair {
 
 + (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
                                       newRoot:(CKComponentScopeRoot *)newRoot
-                               componentClass:(Class)aClass
+                               componentClass:(Class)componentClass
                                    identifier:(id)identifier
                           initialStateCreator:(id (^)(void))initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
@@ -33,5 +33,17 @@ struct CKComponentScopeFramePair {
 - (instancetype)initWithHandle:(CKComponentScopeHandle *)handle;
 
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
+
+struct _CKChildScopeFrameRet {
+  Class cls;
+  id identifier;
+  CKComponentScopeFrame *frame;
+};
+
+- (_CKChildScopeFrameRet)childScopeFrameForOldIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier;
+
+- (void)injectScopeHierarchy:(_CKChildScopeFrameRet)oldFrame;
+
+- (BOOL)anyDescendentHasPendingUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
 @end

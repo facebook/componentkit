@@ -13,6 +13,7 @@
 #import <ComponentKit/ComponentMountContext.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentScopeTypes.h>
 
 @interface CKComponent ()
 
@@ -66,6 +67,9 @@
 
 /** For internal use only; don't touch this. */
 @property (nonatomic, strong, readonly) id scopeFrameToken;
+
+/** For internal use only; don't touch this. */
+@property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
 
 @end
 
