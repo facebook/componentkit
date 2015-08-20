@@ -51,6 +51,11 @@
   NSRange visibleGlyphRange = [layoutManager glyphRangeForBoundingRect:constrainedRect
                                                        inTextContainer:textContainer];
   NSInteger lastVisibleGlyphIndex = (NSMaxRange(visibleGlyphRange) - 1);
+
+  if (lastVisibleGlyphIndex < 0) {
+    return NSNotFound;
+  }
+
   CGRect lastLineRect = [layoutManager lineFragmentRectForGlyphAtIndex:lastVisibleGlyphIndex
                                                         effectiveRange:NULL];
   CGRect lastLineUsedRect = [layoutManager lineFragmentUsedRectForGlyphAtIndex:lastVisibleGlyphIndex
