@@ -449,7 +449,6 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
    accessibilityContext:{ }];
-  self.recordMode = YES;
   CKSnapshotVerifyComponent(c, kUnrestrictedSize, @"");
 }
 
