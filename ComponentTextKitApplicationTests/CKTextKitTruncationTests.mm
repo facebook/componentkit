@@ -125,4 +125,19 @@
   XCTAssertEqualObjects(expectedString, drawnString);
 }
 
+- (void)testHandleZeroHeightConstrainedSize
+{
+  CGSize constrainedSize = CGSizeMake(50, 0);
+  NSAttributedString *attributedString = [self _sentenceAttributedString];
+  CKTextKitContext *context = [[CKTextKitContext alloc] initWithAttributedString:attributedString
+                                                                   lineBreakMode:NSLineBreakByCharWrapping
+                                                            maximumNumberOfLines:0
+                                                                 constrainedSize:constrainedSize
+                                                            layoutManagerFactory:nil];
+  XCTAssertNoThrow([[CKTextKitTailTruncater alloc] initWithContext:context
+                                        truncationAttributedString:[self _simpleTruncationAttributedString]
+                                            avoidTailTruncationSet:[NSCharacterSet characterSetWithCharactersInString:@"."]
+                                                   constrainedSize:constrainedSize]);
+}
+
 @end
