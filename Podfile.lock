@@ -1,7 +1,7 @@
 PODS:
-  - ComponentKit (0.12)
-  - ComponentKitTestLib (0.12)
-  - ComponentSnapshotTestCase (0.12):
+  - ComponentKit (0.13)
+  - ComponentKitTestLib (0.13)
+  - ComponentSnapshotTestCase (0.13):
     - FBSnapshotTestCase/Core
   - FBSnapshotTestCase/Core (2.0.3)
   - OCMock (2.2.4)
@@ -14,17 +14,17 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   ComponentKit:
-    :path: "."
+    :path: .
   ComponentKitTestLib:
-    :path: "./ComponentKitTestLib"
+    :path: ./ComponentKitTestLib
   ComponentSnapshotTestCase:
-    :path: "./ComponentSnapshotTestCase"
+    :path: ./ComponentSnapshotTestCase
 
 SPEC CHECKSUMS:
-  ComponentKit: 4bf3ce82a9e28f2ec26ba112102a2120ef312aa6
-  ComponentKitTestLib: 4c28d18b6f2f0f25fec043bb17113781f019c095
-  ComponentSnapshotTestCase: eb054752d912bd14666c6db6614c1a55e59a3164
+  ComponentKit: b79a11f258ef71c44e3be976e4929c6eb4144c58
+  ComponentKitTestLib: df0db542b6605ba88e18cba63dd59d9ccc5966fd
+  ComponentSnapshotTestCase: cc50eb3c5418e77387dba6202a7e58760468d785
   FBSnapshotTestCase: d0eeca6bf87958e088b254396ae66873f971cfb1
   OCMock: a6a7dc0e3997fb9f35d99f72528698ebf60d64f2
 
-COCOAPODS: 0.37.2
+COCOAPODS: 0.38.2
