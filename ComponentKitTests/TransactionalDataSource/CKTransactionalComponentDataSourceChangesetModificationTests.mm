@@ -16,6 +16,7 @@
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"
 #import "CKTransactionalComponentDataSourceAppliedChangesInternal.h"
+#import "CKTransactionalComponentDataSourceChangesetInternal.h"
 #import "CKTransactionalComponentDataSourceChange.h"
 #import "CKTransactionalComponentDataSourceChangeset.h"
 #import "CKTransactionalComponentDataSourceItem.h"
@@ -170,6 +171,74 @@
 
   c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:1]] layout].component;
   XCTAssertEqualObjects(c.model, @0);
+}
+
+- (void)testAppendsUpdatedItems
+{
+  CKTransactionalComponentDataSourceChangeset *changeSet =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @"updated0"}]
+   withUpdatedItems:@{[NSIndexPath indexPathForItem:1 inSection:0]: @"updated1"}]
+  build];
+  XCTAssertEqualObjects(changeSet.updatedItems,
+                        (@{[NSIndexPath indexPathForItem:0 inSection:0]: @"updated0",
+                           [NSIndexPath indexPathForItem:1 inSection:0]: @"updated1"}));
+}
+
+- (void)testAppendsRemovedItems
+{
+  CKTransactionalComponentDataSourceChangeset *changeSet =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]]
+    withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]]
+   build];
+  XCTAssertEqualObjects(changeSet.removedItems,
+                        ([NSSet setWithObjects:
+                          [NSIndexPath indexPathForItem:0 inSection:0],
+                          [NSIndexPath indexPathForItem:1 inSection:0],
+                          nil]));
+}
+
+- (void)testAppendsRemovedSections
+{
+  CKTransactionalComponentDataSourceChangeset *changeSet =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withRemovedSections:[NSIndexSet indexSetWithIndex:0]]
+    withRemovedSections:[NSIndexSet indexSetWithIndex:1]] build];
+  XCTAssertEqualObjects(changeSet.removedSections, [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]);
+}
+
+- (void)testAppendsMovedItems
+{
+  CKTransactionalComponentDataSourceChangeset *changeSet =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withMovedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @"updated0"}]
+    withMovedItems:@{[NSIndexPath indexPathForItem:1 inSection:0]: @"updated1"}]
+   build];
+  XCTAssertEqualObjects(changeSet.movedItems,
+                        (@{[NSIndexPath indexPathForItem:0 inSection:0]: @"updated0",
+                           [NSIndexPath indexPathForItem:1 inSection:0]: @"updated1"}));
+}
+
+- (void)testAppendsInsertedSections
+{
+  CKTransactionalComponentDataSourceChangeset *changeSet =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+    withInsertedSections:[NSIndexSet indexSetWithIndex:1]] build];
+  XCTAssertEqualObjects(changeSet.insertedSections, [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]);
+}
+
+- (void)testAppendsInsertedItems
+{
+  CKTransactionalComponentDataSourceChangeset *changeSet =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @"updated0"}]
+    withInsertedItems:@{[NSIndexPath indexPathForItem:1 inSection:0]: @"updated1"}]
+   build];
+  XCTAssertEqualObjects(changeSet.insertedItems,
+                        (@{[NSIndexPath indexPathForItem:0 inSection:0]: @"updated0",
+                           [NSIndexPath indexPathForItem:1 inSection:0]: @"updated1"}));
 }
 
 
