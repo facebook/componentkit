@@ -62,9 +62,7 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
         continue; // Nil components in a layout struct are invalid, but handle them gracefully
       }
       const MountResult mountResult = [item.layout.component mountInContext:item.mountContext
-                                                                       size:item.layout.size
-                                                        alignmentRectInsets:item.layout.alignmentRectInsets
-                                                                   children:item.layout.children
+                                                                     layout:item.layout
                                                              supercomponent:item.supercomponent];
       [mountedComponents addObject:item.layout.component];
 
