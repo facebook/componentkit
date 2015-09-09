@@ -38,6 +38,7 @@
  */
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
                                         size:(const CGSize)size
+                         alignmentRectInsets:(UIEdgeInsets)alignmentRectInsets
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent NS_REQUIRES_SUPER;
 

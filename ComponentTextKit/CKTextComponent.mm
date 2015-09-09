@@ -99,11 +99,13 @@ static CKTextKitRenderer *rendererForAttributes(CKTextKitAttributes &attributes,
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
                                         size:(const CGSize)size
+                         alignmentRectInsets:(UIEdgeInsets)alignmentRectInsets
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
 {
   CK::Component::MountResult result = [super mountInContext:context
                                                        size:size
+                                        alignmentRectInsets:alignmentRectInsets
                                                    children:children
                                              supercomponent:supercomponent];
   CKTextComponentView *view = (CKTextComponentView *)result.contextForChildren.viewManager->view;

@@ -30,9 +30,10 @@ struct CKComponentLayout {
   CGSize size;
   std::shared_ptr<const std::vector<CKComponentLayoutChild>> children;
   NSDictionary *extra;
+  UIEdgeInsets alignmentRectInsets;
 
-  CKComponentLayout(CKComponent *c, CGSize s, std::vector<CKComponentLayoutChild> ch = {}, NSDictionary *e = nil)
-  : component(c), size(s), children(new std::vector<CKComponentLayoutChild>(std::move(ch)), CKOffMainThreadDeleter()), extra(e) {
+  CKComponentLayout(CKComponent *c, CGSize s, std::vector<CKComponentLayoutChild> ch = {}, NSDictionary *e = nil, UIEdgeInsets insets = {})
+  : component(c), size(s), children(new std::vector<CKComponentLayoutChild>(std::move(ch)), CKOffMainThreadDeleter()), extra(e), alignmentRectInsets(insets) {
     CKCAssertNotNil(c, @"Nil components are not allowed");
   };
 

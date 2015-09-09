@@ -108,6 +108,7 @@ struct CKComponentMountInfo {
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
                                         size:(const CGSize)size
+                         alignmentRectInsets:(UIEdgeInsets)alignmentRectInsets
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
 {
@@ -140,8 +141,10 @@ struct CKComponentMountInfo {
     }
 
     const CGPoint anchorPoint = v.layer.anchorPoint;
-    [v setCenter:effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
-    [v setBounds:{v.bounds.origin, size}];
+    CGRect frame = {effectiveContext.position, size};
+    frame = UIEdgeInsetsInsetRect(frame, alignmentRectInsets);
+    [v setCenter:frame.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
+    [v setBounds:{v.bounds.origin, frame.size}];
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
     return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};

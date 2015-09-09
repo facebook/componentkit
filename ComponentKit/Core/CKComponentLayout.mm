@@ -63,6 +63,7 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
       }
       const MountResult mountResult = [item.layout.component mountInContext:item.mountContext
                                                                        size:item.layout.size
+                                                        alignmentRectInsets:item.layout.alignmentRectInsets
                                                                    children:item.layout.children
                                                              supercomponent:item.supercomponent];
       [mountedComponents addObject:item.layout.component];
