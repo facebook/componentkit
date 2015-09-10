@@ -39,6 +39,7 @@ struct CKComponentBoundsAnimation {
   NSTimeInterval duration;
   NSTimeInterval delay;
   CKComponentBoundsAnimationMode mode;
+  UIViewAnimationOptions options;
 
   /** Ignored unless mode is Spring, in which case it specifies the damping ratio passed to UIKit. */
   CGFloat springDampingRatio;

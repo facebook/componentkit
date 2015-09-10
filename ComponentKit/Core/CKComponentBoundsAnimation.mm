@@ -24,13 +24,13 @@ void CKComponentBoundsAnimationApply(const CKComponentBoundsAnimation &animation
                           delay:animation.delay
          usingSpringWithDamping:animation.springDampingRatio
           initialSpringVelocity:animation.springInitialVelocity
-                        options:0
+                        options:animation.options
                      animations:animations
                      completion:completion];
   } else {
     [UIView animateWithDuration:animation.duration
                           delay:animation.delay
-                        options:0
+                        options:animation.options
                      animations:animations
                      completion:completion];
   }
