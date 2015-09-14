@@ -47,7 +47,7 @@ CK_64 ? [suffix stringByAppendingString:@"_64"] : suffix; \
 #define CKSnapshotVerifyComponent(component__, sizeRange__, identifier__) \
 { \
 NSError *error__ = nil; \
-NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%s%@", FB_REFERENCE_IMAGE_DIR, CKSnapshotReferenceDirectorySuffix()]; \
+NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%@%@", [self getReferenceImageDirectoryWithDefault:(@ FB_REFERENCE_IMAGE_DIR)], CKSnapshotReferenceDirectorySuffix()]; \
 BOOL comparisonSuccess__ = [self compareSnapshotOfComponent:(component__) sizeRange:(sizeRange__) referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) error:&error__]; \
 XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); \
 }
@@ -77,7 +77,7 @@ CKSnapshotVerifyComponent([CKInsetComponent newWithInsets:insets__ component:com
 #define CKSnapshotVerifyComponentBlockWithState(componentBlock__, updateStateBlock__, sizeRange__, identifier__) \
 { \
 NSError *error__ = nil; \
-NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%s%@", FB_REFERENCE_IMAGE_DIR, CKSnapshotReferenceDirectorySuffix()]; \
+NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%@%@", [self getReferenceImageDirectoryWithDefault:(@ FB_REFERENCE_IMAGE_DIR)], CKSnapshotReferenceDirectorySuffix()]; \
 BOOL comparisonSuccess__ = [self compareSnapshotOfComponentBlock:(componentBlock__) updateStateBlock:(updateStateBlock__) sizeRange:(sizeRange__) referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) error:&error__]; \
 XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); \
 }
