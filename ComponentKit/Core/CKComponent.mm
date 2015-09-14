@@ -107,8 +107,7 @@ struct CKComponentMountInfo {
 #pragma mark - Mounting and Unmounting
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-                                        size:(const CGSize)size
-                                    children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
+                                      layout:(const CKComponentLayout &)layout
                               supercomponent:(CKComponent *)supercomponent
 {
   // Taking a const ref to a temporary extends the lifetime of the temporary to the lifetime of the const ref
@@ -123,7 +122,7 @@ struct CKComponentMountInfo {
   [controller componentWillMount:self];
 
   const CK::Component::MountContext &effectiveContext = [CKComponentDebugController debugMode]
-  ? CKDebugMountContext([self class], context, _viewConfiguration, size) : context;
+  ? CKDebugMountContext([self class], context, _viewConfiguration, layout.size) : context;
 
   UIView *v = effectiveContext.viewManager->viewForConfiguration([self class], viewConfiguration);
   if (v) {
@@ -140,14 +139,15 @@ struct CKComponentMountInfo {
     }
 
     const CGPoint anchorPoint = v.layer.anchorPoint;
-    [v setCenter:effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
-    [v setBounds:{v.bounds.origin, size}];
+    CGRect frame = UIEdgeInsetsInsetRect({effectiveContext.position, layout.size}, layout.alignmentRectInsets);
+    [v setCenter:frame.origin + CGPoint({layout.size.width * anchorPoint.x, layout.size.height * anchorPoint.y})];
+    [v setBounds:{v.bounds.origin, frame.size}];
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
     return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
   } else {
     CKAssertNil(_mountInfo->view, @"Didn't expect to sometimes have a view and sometimes not have a view");
-    _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, size}};
+    _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, layout.size}};
     return {.mountChildren = YES, .contextForChildren = effectiveContext};
   }
 }
