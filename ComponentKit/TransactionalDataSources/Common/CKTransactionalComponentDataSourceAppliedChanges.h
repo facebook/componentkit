@@ -12,7 +12,7 @@
 
 @interface CKTransactionalComponentDataSourceAppliedChanges : NSObject
 
-@property (nonatomic, copy, readonly) NSSet *updatedIndexPaths;
+@property (nonatomic, copy, readonly) NSDictionary *updatedIndexPaths;
 @property (nonatomic, copy, readonly) NSSet *removedIndexPaths;
 @property (nonatomic, copy, readonly) NSIndexSet *removedSections;
 @property (nonatomic, copy, readonly) NSDictionary *movedIndexPaths;

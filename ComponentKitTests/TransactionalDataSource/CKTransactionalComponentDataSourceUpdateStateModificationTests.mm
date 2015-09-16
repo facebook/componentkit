@@ -81,7 +81,7 @@
   CKTransactionalComponentDataSourceChange *change = [updateStateModification changeFromState:originalState];
 
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChanges =
-  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:ip]
+  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:@{ip: ip}
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil

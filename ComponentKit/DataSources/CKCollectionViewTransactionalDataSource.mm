@@ -63,7 +63,7 @@ CKTransactionalComponentDataSourceListener
 
 static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppliedChanges *changes, UICollectionView *collectionView)
 {
-  [collectionView reloadItemsAtIndexPaths:[changes.updatedIndexPaths allObjects]];
+  [collectionView reloadItemsAtIndexPaths:[changes.updatedIndexPaths allKeys]];
   [collectionView deleteItemsAtIndexPaths:[changes.removedIndexPaths allObjects]];
   [collectionView deleteSections:changes.removedSections];
   for (NSIndexPath *from in changes.movedIndexPaths) {

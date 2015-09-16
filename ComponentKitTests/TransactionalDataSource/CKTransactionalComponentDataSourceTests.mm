@@ -127,7 +127,7 @@ struct CKDataSourceAnnouncedUpdate {
                  userInfo:nil];
 
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChanges =
-  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:@{[NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:0]}
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil
@@ -146,7 +146,7 @@ struct CKDataSourceAnnouncedUpdate {
   [ds reloadWithMode:CKUpdateModeSynchronous userInfo:nil];
 
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChanges =
-  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:@{[NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:0]}
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil
@@ -169,7 +169,7 @@ struct CKDataSourceAnnouncedUpdate {
   [ds reloadWithMode:CKUpdateModeAsynchronous userInfo:@{@"id": @3}];
 
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChangesForSyncReload =
-  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:@{[NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:0]}
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil
@@ -177,7 +177,7 @@ struct CKDataSourceAnnouncedUpdate {
                                                                    insertedIndexPaths:nil
                                                                              userInfo:@{@"id": @2}];
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChangesForSecondAsyncReload =
-  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:@{[NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:0]}
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil

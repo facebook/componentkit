@@ -12,6 +12,8 @@
 
 #import <map>
 
+#import "CKArgumentPrecondition.h"
+#import "CKFunctor.h"
 #import "CKTransactionalComponentDataSourceConfiguration.h"
 #import "CKTransactionalComponentDataSourceStateInternal.h"
 #import "CKTransactionalComponentDataSourceChange.h"
@@ -56,6 +58,8 @@
   }];
 
   // Update items
+  // This structure is used for computing post-changeset-application index paths for updated items.
+  __block std::unordered_map<CKTransactionalComponentDataSourceItem *, NSIndexPath *, CK::HashFunctor<NSObject *>> itemToInitialIndexPathMap;
   [[_changeset updatedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
     NSMutableArray *section = newSections[indexPath.section];
     CKTransactionalComponentDataSourceItem *oldItem = section[indexPath.item];
@@ -65,8 +69,9 @@
     });
     const CKComponentLayout layout = [result.component layoutThatFits:sizeRange parentSize:sizeRange.max];
 
-    [section replaceObjectAtIndex:indexPath.item withObject:
-     [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot]];
+    CKTransactionalComponentDataSourceItem *newItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot];
+    [section replaceObjectAtIndex:indexPath.item withObject:newItem];
+    itemToInitialIndexPathMap[newItem] = indexPath;
   }];
 
   __block std::unordered_map<NSUInteger, std::map<NSUInteger, CKTransactionalComponentDataSourceItem *>> insertedItemsBySection;
@@ -125,12 +130,12 @@
     [[newSections objectAtIndex:sectionIt.first] insertObjects:items atIndexes:indexes];
   }
 
+  NSDictionary *updatedIndexPaths = computeUpdateIndexPaths(newSections, itemToInitialIndexPathMap);
   CKTransactionalComponentDataSourceState *newState =
   [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:configuration
                                                                 sections:newSections];
-
   CKTransactionalComponentDataSourceAppliedChanges *appliedChanges =
-  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithArray:[[_changeset updatedItems] allKeys]]
+  [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:updatedIndexPaths
                                                                     removedIndexPaths:[_changeset removedItems]
                                                                       removedSections:[_changeset removedSections]
                                                                       movedIndexPaths:[_changeset movedItems]
@@ -140,6 +145,26 @@
 
   return [[CKTransactionalComponentDataSourceChange alloc] initWithState:newState
                                                           appliedChanges:appliedChanges];
+}
+
+/**
+ This function computes a pre-changeset-application -> post-changeset-application index path map for updated items.
+ It does a linear pass over all items (in `newState`), and each item is looked up in a previously constructed map (`itemToInitialIndexPathMap`) of item -> pre-changeset-application index path.
+ If it exists we know it was updated and can easily create the mapping (since `newState` is post-changeset-application).
+ */
+static NSDictionary *computeUpdateIndexPaths(NSArray *newState, const std::unordered_map<CKTransactionalComponentDataSourceItem *, NSIndexPath *, CK::HashFunctor<NSObject *>> &itemToInitialIndexPathMap)
+{
+  __block NSMutableDictionary *updatedItemIndexPaths = [NSMutableDictionary dictionary];
+  [newState enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
+    [items enumerateObjectsUsingBlock:^(CKTransactionalComponentDataSourceItem *item, NSUInteger index, BOOL *stop) {
+      const auto &itemIndexPathPair = itemToInitialIndexPathMap.find(item);
+      if (itemIndexPathPair != itemToInitialIndexPathMap.end()) {
+        updatedItemIndexPaths[itemIndexPathPair->second] = [NSIndexPath indexPathForItem:index inSection:sectionIdx];
+      }
+    }];
+  }];
+  CKInternalConsistencyCheckIf([updatedItemIndexPaths count] == itemToInitialIndexPathMap.size(), @"There are not enough (or too much) updates in the state after applying the changeset. It probably means your changeset is invalid.");
+  return updatedItemIndexPaths;
 }
 
 static NSArray *emptyMutableArrays(NSUInteger count)

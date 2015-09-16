@@ -48,11 +48,12 @@
   && [_configuration componentProvider] == [[oldState configuration] componentProvider];
 
   NSMutableArray *newSections = [NSMutableArray array];
-  NSMutableSet *updatedIndexPaths = [NSMutableSet set];
+  NSMutableDictionary *updatedIndexPaths = [NSMutableDictionary dictionary];
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     NSMutableArray *newItems = [NSMutableArray array];
     [items enumerateObjectsUsingBlock:^(CKTransactionalComponentDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
-      [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
+      NSIndexPath *updateIndexPath = [NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx];
+      updatedIndexPaths[updateIndexPath] = updateIndexPath;
 
       CKTransactionalComponentDataSourceItem *newItem;
       if (onlySizeRangeChanged) {
