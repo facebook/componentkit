@@ -87,7 +87,7 @@
 
   // Moves: then record as removals
   [[_changeset movedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *from, NSIndexPath *to, BOOL *stop) {
-    addRemovedIndexPath(to);
+    addRemovedIndexPath(from);
   }];
 
   // Remove items
