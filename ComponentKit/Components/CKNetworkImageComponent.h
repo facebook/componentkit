@@ -12,7 +12,7 @@
 #import <ComponentKit/CKNetworkImageDownloading.h>
 
 struct CKNetworkImageComponentOptions {
-  /** Optional imade displayed while the image is loading, or when url is nil. */
+  /** Optional image displayed while the image is loading, or when url is nil. */
   UIImage *defaultImage;
   /** Optional rectangle (in the unit coordinate space) that specifies the portion of contents that the receiver should draw. */
   CGRect cropRect;
