@@ -145,7 +145,34 @@
   XCTAssertEqualObjects(c.model, @2);
 }
 
-- (void)testMoveItems
+- (void)testMoveItem
+{
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 3);
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withMovedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:2 inSection:0]}]
+   build];
+  CKTransactionalComponentDataSourceChangesetModification *changesetModification =
+  [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset
+                                                                       stateListener:nil
+                                                                            userInfo:nil];
+  CKTransactionalComponentDataSourceChange *change = [changesetModification changeFromState:originalState];
+
+  // Initial state: [0, 1, 2]
+  // We move the first element to the last position
+  // Result should be [1, 2, 0]
+
+  auto c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] layout].component;
+  XCTAssertEqualObjects(c.model, @1);
+
+  c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] layout].component;
+  XCTAssertEqualObjects(c.model, @2);
+
+  c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:2 inSection:0]] layout].component;
+  XCTAssertEqualObjects(c.model, @0);
+}
+
+- (void)testSwapItemsWithMoves
 {
   CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 2, 2);
   CKTransactionalComponentDataSourceChangeset *changeset =
