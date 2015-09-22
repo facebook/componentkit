@@ -116,13 +116,15 @@ static NSArray *visibleAndJustOffscreenIndexPaths(UICollectionView *cv)
   // First, move the cells to their old positions without animation:
   NSMutableDictionary *indexPathsToAnimatingViews = [NSMutableDictionary dictionary];
   NSMutableArray *snapshotViewsToRemoveAfterAnimation = [NSMutableArray array];
+  const CGRect visibleRect = {.origin = [_collectionView contentOffset], .size = [_collectionView bounds].size};
+  NSIndexPath *largestAnimatingVisibleElement = largestAnimatingVisibleElementForOriginalLayout(_indexPathsToOriginalLayoutAttributes, visibleRect);
   [UIView performWithoutAnimation:^{
-    const CGRect visibleRect = {.origin = [_collectionView contentOffset], .size = [_collectionView bounds].size};
     [_indexPathsToOriginalLayoutAttributes enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *ip, UICollectionViewLayoutAttributes *attrs, BOOL *stop) {
       // If we're animating an item *out* of the collection view's visible bounds, we can't rely on animating a
       // UICollectionViewCell. Confusingly enough there will be a cell at the exact moment this function is called,
       // but the UICollectionView will reclaim and hide it at the end of the run loop turn. Use a snapshot view instead.
-      if (CGRectIntersectsRect(visibleRect, [[_collectionView layoutAttributesForItemAtIndexPath:ip] frame])) {
+      // Also, the largest animating visible element will be retained inside the visible bounds so don't use a snapshot view.
+      if (CGRectIntersectsRect(visibleRect, [[_collectionView layoutAttributesForItemAtIndexPath:ip] frame]) || [ip isEqual:largestAnimatingVisibleElement]) {
         UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:ip];
         if (cell) {
           // Surprisingly -applyLayoutAttributes: does not apply bounds or center; that's deeper magic.
@@ -143,6 +145,10 @@ static NSArray *visibleAndJustOffscreenIndexPaths(UICollectionView *cv)
     }];
   }];
 
+  // The smallest adjustment we have to make the content-offset to keep the largest visible element from being animated off-screen. When the largest element suddenly disappears the user
+  // loses context and the result is jarring.
+  CGPoint contentOffsetAdjustment = contentOffsetAdjustmentToKeepElementInVisibleBounds(largestAnimatingVisibleElement, indexPathsToAnimatingViews, _collectionView, visibleRect);
+
   // Then move them back to their current positions with animation:
   void (^restore)(void) = ^{
     [indexPathsToAnimatingViews enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *ip, UIView *view, BOOL *stop) {
@@ -150,6 +156,7 @@ static NSArray *visibleAndJustOffscreenIndexPaths(UICollectionView *cv)
       [view setBounds:attrs.bounds];
       [view setCenter:attrs.center];
     }];
+    [_collectionView setContentOffset:CGPointMake(_collectionView.contentOffset.x + contentOffsetAdjustment.x, _collectionView.contentOffset.y + contentOffsetAdjustment.y)];
   };
   void (^completion)(BOOL) = ^(BOOL finished){
     for (UIView *v in snapshotViewsToRemoveAfterAnimation) {
@@ -161,6 +168,67 @@ static NSArray *visibleAndJustOffscreenIndexPaths(UICollectionView *cv)
   _collectionView = nil;
   _indexPathsToSnapshotViews = nil;
   _indexPathsToOriginalLayoutAttributes = nil;
+}
+
+#pragma mark - Maintain context during bounds animation
+
+// @abstract Returns the minimum content offset adjustment that would keep the largest visible element in the collection view in the viewport post-animation.
+// @param largestVisibleAnimatingElementIndexPath The index path of the largest visible element that will be animated for the bounds animation.
+// @param indexPathsToAnimationViews A dictionary that maps index paths of the animating elements of the collection view, to their view.
+// @param collectionView The collection view the bounds change animation is being applied to.
+// @param visibleRect The visible portion of the collection-view's contents.
+// @return The minimum content offset to set on the collection-view that will keep the largest visible element still visible.
+static CGPoint contentOffsetAdjustmentToKeepElementInVisibleBounds(NSIndexPath *largestVisibleAnimatingElementIndexPath, NSDictionary *indexPathsToAnimatingViews, UICollectionView *collectionView, CGRect visibleRect)
+{
+  CGPoint contentOffsetAdjustment = CGPointZero;
+  BOOL largestVisibleElementWillExitVisibleRect = elementWillExitVisibleRect(largestVisibleAnimatingElementIndexPath, indexPathsToAnimatingViews, collectionView, visibleRect);
+
+  if (largestVisibleElementWillExitVisibleRect) {
+    CGRect currentBounds = ((UIView *)indexPathsToAnimatingViews[largestVisibleAnimatingElementIndexPath]).bounds;
+    CGRect destinationBounds = ((UICollectionViewLayoutAttributes *) [collectionView layoutAttributesForItemAtIndexPath:largestVisibleAnimatingElementIndexPath]).bounds;
+
+    CGFloat deltaX = CGRectGetMaxX(destinationBounds) - CGRectGetMaxX(currentBounds);
+    CGFloat deltaY = CGRectGetMaxY(destinationBounds) - CGRectGetMaxY(currentBounds);
+
+    contentOffsetAdjustment = CGPointMake(deltaX, deltaY);
+  }
+  return contentOffsetAdjustment;
+}
+
+// @abstract Returns the index-path of largest element in the collection, inside the collection views visible bounds, as returned by the collection view's layout attributes.
+// @param indexPathToOriginalLayoutAttributes A dictionary mapping the indexpath of elements to their collection view layout attributes.
+// @param visibleRect  The visible portion of the collection-view's contents.
+static NSIndexPath* largestAnimatingVisibleElementForOriginalLayout(NSDictionary *indexPathToOriginalLayoutAttributes, CGRect visibleRect) {
+  __block CGRect largestSoFar = CGRectZero;
+  __block NSIndexPath *prominentElementIndexPath = nil;
+  [indexPathToOriginalLayoutAttributes enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *ip, UICollectionViewLayoutAttributes *attrs, BOOL *stop) {
+    CGRect intersection = CGRectIntersection(visibleRect, attrs.frame);
+    if (_CGRectArea(intersection) > _CGRectArea(largestSoFar)) {
+      largestSoFar = intersection;
+      prominentElementIndexPath = ip;
+    }
+  }];
+  return prominentElementIndexPath;
+}
+
+// Returns YES if the element is current visible, but will not be visible (will be animated off-screen) post animation.
+static BOOL elementWillExitVisibleRect(NSIndexPath *indexPath, NSDictionary *indexPathsToAnimatingViews, UICollectionView *collectionView, CGRect visibleRect)
+{
+  UIView *animatingView = indexPathsToAnimatingViews[indexPath];
+  UICollectionViewLayoutAttributes *attrs = [collectionView layoutAttributesForItemAtIndexPath:indexPath];
+
+  BOOL isItemCurrentlyInVisibleRect = (CGRectIntersectsRect(visibleRect,animatingView.frame));
+  BOOL willItemAnimateOffVisibleRect = !CGRectIntersectsRect(visibleRect, attrs.frame);
+
+  if (isItemCurrentlyInVisibleRect && willItemAnimateOffVisibleRect) {
+    return YES;
+  }
+  return NO;
+}
+
+static CGFloat _CGRectArea(CGRect rect)
+{
+  return CGRectGetWidth(rect) * CGRectGetHeight(rect);
 }
 
 @end
