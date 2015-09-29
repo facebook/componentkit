@@ -87,6 +87,11 @@ XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); 
 @interface CKComponentSnapshotTestCase : FBSnapshotTestCase
 
 /**
+ The percentage difference to still count as identical - 0 mean pixel perfect, 1 means I don't care
+ */
+@property (readwrite, nonatomic, assign) CGFloat tolerance;
+
+/**
  Performs the comparison or records a snapshot of the view if recordMode is YES.
  @param component The component to snapshot
  @param referenceImagesDirectory The directory in which reference images are stored.
