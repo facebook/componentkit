@@ -70,6 +70,10 @@ static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppli
     NSIndexPath *to = changes.movedIndexPaths[from];
     [collectionView moveItemAtIndexPath:from toIndexPath:to];
   }
+  for (NSNumber *from in changes.movedSections) {
+    NSNumber *to = changes.movedSections[from];
+    [collectionView moveSection:from.unsignedIntegerValue toSection:to.unsignedIntegerValue];
+  }
   [collectionView insertSections:changes.insertedSections];
   [collectionView insertItemsAtIndexPaths:[changes.insertedIndexPaths allObjects]];
 }

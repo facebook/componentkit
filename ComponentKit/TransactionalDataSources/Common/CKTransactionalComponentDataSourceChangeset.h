@@ -25,6 +25,7 @@
                         removedItems:(NSSet *)removedItems
                      removedSections:(NSIndexSet *)removedSections
                           movedItems:(NSDictionary *)movedItems
+                       movedSections:(NSDictionary *)movedSections
                     insertedSections:(NSIndexSet *)insertedSections
                        insertedItems:(NSDictionary *)insertedItems;
 
@@ -38,6 +39,7 @@
 - (instancetype)withRemovedItems:(NSSet *)removedItems;
 - (instancetype)withRemovedSections:(NSIndexSet *)removedSections;
 - (instancetype)withMovedItems:(NSDictionary *)movedItems;
+- (instancetype)withMovedSections:(NSDictionary *)movedSections;
 - (instancetype)withInsertedSections:(NSIndexSet *)insertedSections;
 - (instancetype)withInsertedItems:(NSDictionary *)insertedItems;
 - (CKTransactionalComponentDataSourceChangeset *)build;

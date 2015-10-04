@@ -94,6 +94,7 @@
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil
+                                                                        movedSections:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
                                                                              userInfo:nil];
