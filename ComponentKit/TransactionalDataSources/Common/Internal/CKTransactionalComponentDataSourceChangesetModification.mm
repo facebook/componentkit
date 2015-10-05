@@ -134,6 +134,7 @@
                                                                     removedIndexPaths:[_changeset removedItems]
                                                                       removedSections:[_changeset removedSections]
                                                                       movedIndexPaths:[_changeset movedItems]
+                                                                        movedSections:[_changeset movedSections]
                                                                      insertedSections:[_changeset insertedSections]
                                                                    insertedIndexPaths:[NSSet setWithArray:[[_changeset insertedItems] allKeys]]
                                                                              userInfo:_userInfo];

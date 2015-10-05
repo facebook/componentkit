@@ -64,6 +64,7 @@ static u_int32_t globalState = 0;
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil
+                                                                        movedSections:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
                                                                              userInfo:nil];

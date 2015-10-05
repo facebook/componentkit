@@ -21,6 +21,7 @@
                         removedIndexPaths:(NSSet *)removedIndexPaths
                           removedSections:(NSIndexSet *)removedSections
                           movedIndexPaths:(NSDictionary *)movedIndexPaths
+                            movedSections:(NSDictionary *)movedSections
                          insertedSections:(NSIndexSet *)insertedSections
                        insertedIndexPaths:(NSSet *)insertedIndexPaths
                                  userInfo:(NSDictionary *)userInfo
@@ -30,6 +31,7 @@
     _removedIndexPaths = [removedIndexPaths copy] ?: [NSSet set];
     _removedSections = [removedSections copy] ?: [NSIndexSet indexSet];
     _movedIndexPaths = [movedIndexPaths copy] ?: @{};
+    _movedSections = [movedSections copy] ?: @{};
     _insertedSections = [insertedSections copy] ?: [NSIndexSet indexSet];
     _insertedIndexPaths = [insertedIndexPaths copy] ?: [NSSet set];
     _userInfo = [userInfo copy];
@@ -44,6 +46,7 @@
     && CKObjectIsEqual(a.removedIndexPaths, b.removedIndexPaths)
     && CKObjectIsEqual(a.removedSections, b.removedSections)
     && CKObjectIsEqual(a.movedIndexPaths, b.movedIndexPaths)
+    && CKObjectIsEqual(a.movedSections, b.movedSections)
     && CKObjectIsEqual(a.insertedSections, b.insertedSections)
     && CKObjectIsEqual(a.insertedIndexPaths, b.insertedIndexPaths)
     && CKObjectIsEqual(a.userInfo, b.userInfo);
@@ -57,6 +60,7 @@
     [_removedIndexPaths hash],
     [_removedSections hash],
     [_movedIndexPaths hash],
+    [_movedSections hash],
     [_insertedSections hash],
     [_insertedIndexPaths hash],
     [_userInfo hash],

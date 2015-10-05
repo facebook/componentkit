@@ -16,6 +16,7 @@
 @property (nonatomic, copy, readonly) NSSet *removedIndexPaths;
 @property (nonatomic, copy, readonly) NSIndexSet *removedSections;
 @property (nonatomic, copy, readonly) NSDictionary *movedIndexPaths;
+@property (nonatomic, copy, readonly) NSDictionary *movedSections;
 @property (nonatomic, copy, readonly) NSIndexSet *insertedSections;
 @property (nonatomic, copy, readonly) NSSet *insertedIndexPaths;
 
