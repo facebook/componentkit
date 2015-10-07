@@ -31,6 +31,8 @@
            supplementaryViewDataSource:(id<CKSupplementaryViewDataSource>)supplementaryViewDataSource
                          configuration:(CKTransactionalComponentDataSourceConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
 
+- (instancetype)init NS_UNAVAILABLE;
+
 /** 
  Applies a changeset either synchronously or asynchronously to the collection view.
  If a synchronous changeset is applied while asynchronous changesets are still pending, then the pending changesets will be applied synchronously
