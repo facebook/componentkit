@@ -15,6 +15,8 @@
 #import "CKAsyncTransaction.h"
 #import "CKAsyncTransactionGroup.h"
 
+#import <objc/runtime.h>
+
 @implementation CALayer (CKAsyncTransactionContainerTransactions)
 @dynamic ck_asyncLayerTransactions;
 @dynamic ck_currentAsyncLayerTransaction;
@@ -119,6 +121,22 @@
 - (void)ck_asyncTransactionContainerStateDidChange
 {
   // No-op in the base class.
+}
+
+@end
+
+static void *ck_asyncTransactionContainerKey = &ck_asyncTransactionContainerKey;
+
+@implementation CALayer (CKAsyncTransactionContainerStorage)
+
+- (BOOL)ck_isAsyncTransactionContainer
+{
+  return [objc_getAssociatedObject(self, ck_asyncTransactionContainerKey) boolValue];
+}
+
+- (void)ck_setAsyncTransactionContainer:(BOOL)asyncTransactionContainer
+{
+  objc_setAssociatedObject(self, ck_asyncTransactionContainerKey, @(asyncTransactionContainer), OBJC_ASSOCIATION_RETAIN);
 }
 
 @end
