@@ -31,13 +31,14 @@
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKComponentScope.h>
 //Datasources
-#import <ComponentKit/CKCollectionViewDataSource.h>
-#import <ComponentKit/CKComponentConstantDecider.h>
-#import <ComponentKit/CKComponentDataSource.h>
-#import <ComponentKit/CKComponentDataSourceOutputItem.h>
-#import <ComponentKit/CKComponentDeciding.h>
-#import <ComponentKit/CKComponentPreparationQueueListener.h>
-#import <ComponentKit/CKComponentPreparationQueueTypes.h>
+#import <ComponentKit/CKCollectionViewTransactionalDataSource.h>
+#import <ComponentKit/CKTransactionalComponentDataSource.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceAppliedChanges.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceItem.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceListener.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceState.h>
 #import <ComponentKit/CKComponentProvider.h>
 //HostingView
 #import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
@@ -54,13 +55,10 @@
 #import <ComponentKit/CKStackLayoutComponent.h>
 #import <ComponentKit/CKStaticLayoutComponent.h>
 //Utilities
-#import <ComponentKit/CKArrayControllerChangeset.h>
-#import <ComponentKit/CKArrayControllerChangeType.h>
 #import <ComponentKit/CKComponentAction.h>
 #import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKComponentGestureActions.h>
 #import <ComponentKit/CKOptimisticViewMutations.h>
-#import <ComponentKit/CKSectionedArrayController.h>
 #import <ComponentKit/CKComponentDelegateAttribute.h>
 //Text
 #import <ComponentKit/CKLabelComponent.h>

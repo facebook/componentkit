@@ -111,6 +111,12 @@ static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppli
   return [_currentState objectAtIndexPath:indexPath].layout.size;
 }
 
+- (void)announceEvent:(CKComponentAnnouncedEvent)event
+   forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  [[_currentState objectAtIndexPath:indexPath].scopeRoot announceEventToControllers:event];
+}
+
 #pragma mark - Reload
 
 - (void)reloadWithMode:(CKUpdateMode)mode

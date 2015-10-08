@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 
 #import "CKTransactionalComponentDataSource.h"
+#import "CKComponentScopeRoot.h"
 
 /**
  This class is an implementation of a `UICollectionViewDataSource` that can be used along with components. For each set of changes (i.e insertion/deletion/update
@@ -52,6 +53,11 @@
  `UICollectionViewLayout(s)` or in a `UICollectionViewDelegateFlowLayout`.
  */
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+
+/** */
+- (void)announceEvent:(CKComponentAnnouncedEvent)event
+   forItemAtIndexPath:(NSIndexPath *)indexPath;
+
 
 /** @see `CKTransactionalComponentDataSource` */
 - (void)reloadWithMode:(CKUpdateMode)mode

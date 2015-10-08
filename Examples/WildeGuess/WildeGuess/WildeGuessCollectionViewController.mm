@@ -24,16 +24,31 @@
 
 @implementation WildeGuessCollectionViewController
 {
-  CKCollectionViewDataSource *_dataSource;
+  QuoteContext *_context;
+  CKCollectionViewTransactionalDataSource *_dataSource;
   QuoteModelController *_quoteModelController;
-  CKComponentFlexibleSizeRangeProvider *_sizeRangeProvider;
+  CGFloat _layoutWidth;
 }
 
 - (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout *)layout
 {
   if (self = [super initWithCollectionViewLayout:layout]) {
-    _sizeRangeProvider = [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleHeight];
     _quoteModelController = [[QuoteModelController alloc] init];
+
+    // Preload images for the component context that need to be used in component preparation. Components preparation
+    // happens on background threads but +[UIImage imageNamed:] is not thread safe and needs to be called on the main
+    // thread. The preloaded images are then cached on the component context for use inside components.
+    NSSet *imageNames = [NSSet setWithObjects:
+                         @"LosAngeles",
+                         @"MarketStreet",
+                         @"Drops",
+                         @"Powell",
+                         nil];
+    _context = [[QuoteContext alloc] initWithImageNames:imageNames];
+
+    // Choose an arbitrary width to start at since we won't know for sure until viewWillLayoutSubviews
+    _layoutWidth = [[UIScreen mainScreen] bounds].size.width;
+
     self.title = @"Wilde Guess";
     self.navigationItem.prompt = @"Tap to reveal which quotes are from Oscar Wilde";
   }
@@ -44,44 +59,57 @@
 {
   [super viewDidLoad];
 
-  // Preload images for the component context that need to be used in component preparation. Components preparation
-  // happens on background threads but +[UIImage imageNamed:] is not thread safe and needs to be called on the main
-  // thread. The preloaded images are then cached on the component context for use inside components.
-  NSSet *imageNames = [NSSet setWithObjects:
-                       @"LosAngeles",
-                       @"MarketStreet",
-                       @"Drops",
-                       @"Powell",
-                       nil];
-
   self.collectionView.backgroundColor = [UIColor whiteColor];
   self.collectionView.delegate = self;
 
-  QuoteContext *context = [[QuoteContext alloc] initWithImageNames:imageNames];
-  _dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
-                                               supplementaryViewDataSource:nil                                                         
-                                                         componentProvider:[self class]
-                                                                   context:context
-                                                 cellConfigurationFunction:nil];
+  _dataSource = [[CKCollectionViewTransactionalDataSource alloc] initWithCollectionView:self.collectionView
+                                                                          configuration:[self _configurationForLayoutWidth]];
   // Insert the initial section
-  CKArrayControllerSections sections;
-  sections.insert(0);
-  [_dataSource enqueueChangeset:{sections, {}} constrainedSize:{}];
+  [_dataSource applyChangeset:[[[CKTransactionalComponentDataSourceChangesetBuilder
+                                 transactionalComponentDataSourceChangeset]
+                                withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+                               build]
+                         mode:CKUpdateModeAsynchronous
+                     userInfo:nil];
   [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:4]];
+}
+
+- (CKTransactionalComponentDataSourceConfiguration *)_configurationForLayoutWidth
+{
+  return [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[self class]
+                                                                                    context:_context
+                                                                                  sizeRange:{{_layoutWidth, 0}, {_layoutWidth, INFINITY}}];
+}
+
+- (void)viewWillLayoutSubviews
+{
+  [super viewWillLayoutSubviews];
+
+  const CGFloat viewWidth = [[self view] bounds].size.width;
+  if (viewWidth != _layoutWidth) {
+    _layoutWidth = viewWidth;
+    [_dataSource updateConfiguration:[self _configurationForLayoutWidth]
+                                mode:CKUpdateModeSynchronous
+                            userInfo:nil];
+  }
 }
 
 - (void)_enqueuePage:(QuotesPage *)quotesPage
 {
   NSArray *quotes = quotesPage.quotes;
   NSInteger position = quotesPage.position;
+  NSMutableDictionary *items = [NSMutableDictionary dictionary];
 
   // Convert the array of quotes to a valid changeset
-  CKArrayControllerInputItems items;
   for (NSInteger i = 0; i < [quotes count]; i++) {
-    items.insert([NSIndexPath indexPathForRow:position + i inSection:0], quotes[i]);
+    items[[NSIndexPath indexPathForRow:position + i inSection:0]] = quotes[i];
   }
-  [_dataSource enqueueChangeset:{{}, items}
-                constrainedSize:[_sizeRangeProvider sizeRangeForBoundingSize:self.collectionView.bounds.size]];
+  [_dataSource applyChangeset:[[[CKTransactionalComponentDataSourceChangesetBuilder
+                                 transactionalComponentDataSourceChangeset]
+                                withInsertedItems:items]
+                               build]
+                         mode:CKUpdateModeAsynchronous
+                     userInfo:nil];
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout
@@ -97,14 +125,14 @@
        willDisplayCell:(UICollectionViewCell *)cell
     forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  [_dataSource announceWillAppearForItemInCell:cell];
+  [_dataSource announceEvent:CKComponentAnnouncedEventTreeWillAppear forItemAtIndexPath:indexPath];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
   didEndDisplayingCell:(UICollectionViewCell *)cell
     forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  [_dataSource announceDidDisappearForItemInCell:cell];
+  [_dataSource announceEvent:CKComponentAnnouncedEventTreeDidDisappear forItemAtIndexPath:indexPath];
 }
 
 #pragma mark - CKComponentProvider

@@ -32,14 +32,11 @@
 		A27C72751AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27C72741AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm */; };
 		A2CD66321AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2CD66311AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm */; };
 		A2D20CF41B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2D20CF31B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm */; };
-		B342DC6A1AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */; };
 		B342DC6B1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */; };
 		B342DC6C1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4B1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm */; };
 		B342DC6D1AC23EA900ACAC53 /* CKComponentContextTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4C1AC23EA900ACAC53 /* CKComponentContextTests.mm */; };
 		B342DC6E1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4D1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm */; };
 		B342DC6F1AC23EA900ACAC53 /* CKComponentControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4E1AC23EA900ACAC53 /* CKComponentControllerTests.mm */; };
-		B342DC701AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC501AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm */; };
-		B342DC711AC23EA900ACAC53 /* CKComponentDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC511AC23EA900ACAC53 /* CKComponentDataSourceTests.mm */; };
 		B342DC721AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC521AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm */; };
 		B342DC731AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC531AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm */; };
 		B342DC741AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC551AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm */; };
@@ -47,8 +44,6 @@
 		B342DC761AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC571AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm */; };
 		B342DC771AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */; };
 		B342DC781AC23EA900ACAC53 /* CKComponentMountTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */; };
-		B342DC791AC23EA900ACAC53 /* CKComponentPreparationQueueAsyncTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5A1AC23EA900ACAC53 /* CKComponentPreparationQueueAsyncTests.mm */; };
-		B342DC7A1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5B1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm */; };
 		B342DC7B1AC23EA900ACAC53 /* CKComponentSizeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5C1AC23EA900ACAC53 /* CKComponentSizeTests.mm */; };
 		B342DC7C1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */; };
 		B342DC7D1AC23EA900ACAC53 /* CKComponentViewContextTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */; };
@@ -56,7 +51,6 @@
 		B342DC7F1AC23EA900ACAC53 /* CKComponentViewReuseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */; };
 		B342DC801AC23EA900ACAC53 /* CKDimensionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */; };
 		B342DC811AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */; };
-		B342DC821AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC631AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm */; };
 		B342DC831AC23EA900ACAC53 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC651AC23EA900ACAC53 /* CKTestRunLoopRunning.mm */; };
 		B342DC851AC23EA900ACAC53 /* CKComponentScopeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC681AC23EA900ACAC53 /* CKComponentScopeTests.mm */; };
 		B342DC861AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC691AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm */; };
@@ -120,15 +114,11 @@
 		A2D20CF31B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentHostingViewAsyncStateUpdateTests.mm; sourceTree = "<group>"; };
 		A6F27DD3FB8E2237F9C39DCE /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		B342DC401AC23E8200ACAC53 /* ComponentKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComponentKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKArrayControllerChangesetTests.mm; sourceTree = "<group>"; };
 		B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAccessibilityTests.mm; sourceTree = "<group>"; };
 		B342DC4B1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentBoundsAnimationTests.mm; sourceTree = "<group>"; };
 		B342DC4C1AC23EA900ACAC53 /* CKComponentContextTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentContextTests.mm; sourceTree = "<group>"; };
 		B342DC4D1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentControllerLifecycleMethodTests.mm; sourceTree = "<group>"; };
 		B342DC4E1AC23EA900ACAC53 /* CKComponentControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentControllerTests.mm; sourceTree = "<group>"; };
-		B342DC4F1AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentDataSourceTestDelegate.h; sourceTree = "<group>"; };
-		B342DC501AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDataSourceTestDelegate.mm; sourceTree = "<group>"; };
-		B342DC511AC23EA900ACAC53 /* CKComponentDataSourceTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDataSourceTests.mm; sourceTree = "<group>"; };
 		B342DC521AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentFlexibleSizeRangeProviderTests.mm; sourceTree = "<group>"; };
 		B342DC531AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentGestureActionsTests.mm; sourceTree = "<group>"; };
 		B342DC541AC23EA900ACAC53 /* CKComponentHostingViewTestModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentHostingViewTestModel.h; sourceTree = "<group>"; };
@@ -137,8 +127,6 @@
 		B342DC571AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentLifecycleManagerTests.mm; sourceTree = "<group>"; };
 		B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentMountContextLayoutGuideTests.mm; sourceTree = "<group>"; };
 		B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentMountTests.mm; sourceTree = "<group>"; };
-		B342DC5A1AC23EA900ACAC53 /* CKComponentPreparationQueueAsyncTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentPreparationQueueAsyncTests.mm; sourceTree = "<group>"; };
-		B342DC5B1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentPreparationQueueTests.mm; sourceTree = "<group>"; };
 		B342DC5C1AC23EA900ACAC53 /* CKComponentSizeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentSizeTests.mm; sourceTree = "<group>"; };
 		B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewAttributeTests.mm; sourceTree = "<group>"; };
 		B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewContextTests.mm; sourceTree = "<group>"; };
@@ -146,7 +134,6 @@
 		B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewReuseTests.mm; sourceTree = "<group>"; };
 		B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDimensionTests.mm; sourceTree = "<group>"; };
 		B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKOptimisticViewMutationsTests.mm; sourceTree = "<group>"; };
-		B342DC631AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSectionedArrayControllerTests.mm; sourceTree = "<group>"; };
 		B342DC641AC23EA900ACAC53 /* CKTestRunLoopRunning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTestRunLoopRunning.h; sourceTree = "<group>"; };
 		B342DC651AC23EA900ACAC53 /* CKTestRunLoopRunning.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTestRunLoopRunning.mm; sourceTree = "<group>"; };
 		B342DC661AC23EA900ACAC53 /* ComponentKitTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ComponentKitTests-Info.plist"; sourceTree = "<group>"; };
@@ -275,16 +262,12 @@
 		B342DC411AC23E8200ACAC53 /* ComponentKitTests */ = {
 			isa = PBXGroup;
 			children = (
-				B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */,
 				B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */,
 				A241C6A41AFCFFDB00D4F661 /* CKComponentActionTests.mm */,
 				B342DC4C1AC23EA900ACAC53 /* CKComponentContextTests.mm */,
 				B342DC4D1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm */,
 				B342DC4E1AC23EA900ACAC53 /* CKComponentControllerTests.mm */,
 				39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */,
-				B342DC4F1AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.h */,
-				B342DC501AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm */,
-				B342DC511AC23EA900ACAC53 /* CKComponentDataSourceTests.mm */,
 				B342DC521AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm */,
 				B342DC531AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm */,
 				B342DC541AC23EA900ACAC53 /* CKComponentHostingViewTestModel.h */,
@@ -294,8 +277,6 @@
 				B342DC571AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm */,
 				B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */,
 				B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */,
-				B342DC5A1AC23EA900ACAC53 /* CKComponentPreparationQueueAsyncTests.mm */,
-				B342DC5B1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm */,
 				B342DC5C1AC23EA900ACAC53 /* CKComponentSizeTests.mm */,
 				B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */,
 				B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */,
@@ -305,7 +286,6 @@
 				991DE3401B3B308900AA05B2 /* CKComponentMemoizerTests.mm */,
 				B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */,
 				B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */,
-				B342DC631AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm */,
 				A22FE3041AF2CF0C00EC30B8 /* CKStateExposingComponent.h */,
 				A22FE3051AF2CF0C00EC30B8 /* CKStateExposingComponent.mm */,
 				B342DC641AC23EA900ACAC53 /* CKTestRunLoopRunning.h */,
@@ -693,14 +673,11 @@
 				B342DC811AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm in Sources */,
 				A241C6A51AFCFFDB00D4F661 /* CKComponentActionTests.mm in Sources */,
 				B342DC6B1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm in Sources */,
-				B342DC6A1AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm in Sources */,
 				B342DC6F1AC23EA900ACAC53 /* CKComponentControllerTests.mm in Sources */,
 				B342DC851AC23EA900ACAC53 /* CKComponentScopeTests.mm in Sources */,
 				A2CD66321AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm in Sources */,
-				B342DC711AC23EA900ACAC53 /* CKComponentDataSourceTests.mm in Sources */,
 				B342DC781AC23EA900ACAC53 /* CKComponentMountTests.mm in Sources */,
 				B342DC751AC23EA900ACAC53 /* CKComponentHostingViewTests.mm in Sources */,
-				B342DC7A1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm in Sources */,
 				B342DC7E1AC23EA900ACAC53 /* CKComponentViewManagerTests.mm in Sources */,
 				A25C02D11AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm in Sources */,
 				A27436FA1AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm in Sources */,
@@ -715,7 +692,6 @@
 				A279EA9E1AF087A70046B5AA /* CKTransactionalComponentDataSourceTests.mm in Sources */,
 				B342DC801AC23EA900ACAC53 /* CKDimensionTests.mm in Sources */,
 				18644AE71B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm in Sources */,
-				B342DC791AC23EA900ACAC53 /* CKComponentPreparationQueueAsyncTests.mm in Sources */,
 				B342DC6E1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm in Sources */,
 				A2100E0D1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm in Sources */,
 				B342DC7C1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm in Sources */,
@@ -724,11 +700,9 @@
 				B342DC861AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm in Sources */,
 				B342DC7F1AC23EA900ACAC53 /* CKComponentViewReuseTests.mm in Sources */,
 				A27436F71AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm in Sources */,
-				B342DC701AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm in Sources */,
 				B342DC831AC23EA900ACAC53 /* CKTestRunLoopRunning.mm in Sources */,
 				B342DC731AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm in Sources */,
 				18644AE61B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm in Sources */,
-				B342DC821AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm in Sources */,
 				A27C72751AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm in Sources */,
 				991DE3411B3B308900AA05B2 /* CKComponentMemoizerTests.mm in Sources */,
 			);
