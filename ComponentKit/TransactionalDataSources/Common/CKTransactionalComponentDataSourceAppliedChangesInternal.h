@@ -18,6 +18,7 @@
                         removedIndexPaths:(NSSet *)removedIndexPaths
                           removedSections:(NSIndexSet *)removedSections
                           movedIndexPaths:(NSDictionary *)movedIndexPaths
+                            movedSections:(NSDictionary *)movedSections
                          insertedSections:(NSIndexSet *)insertedSections
                        insertedIndexPaths:(NSSet *)insertedIndexPaths
                                  userInfo:(NSDictionary *)userInfo;

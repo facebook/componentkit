@@ -76,6 +76,7 @@ struct CKDataSourceAnnouncedUpdate {
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil
+                                                                        movedSections:nil
                                                                      insertedSections:[NSIndexSet indexSetWithIndex:0]
                                                                    insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
                                                                              userInfo:nil];
@@ -104,6 +105,7 @@ struct CKDataSourceAnnouncedUpdate {
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil
+                                                                        movedSections:nil
                                                                      insertedSections:[NSIndexSet indexSetWithIndex:0]
                                                                    insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
                                                                              userInfo:nil];
@@ -131,6 +133,7 @@ struct CKDataSourceAnnouncedUpdate {
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil
+                                                                        movedSections:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
                                                                              userInfo:nil];
@@ -150,6 +153,7 @@ struct CKDataSourceAnnouncedUpdate {
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil
+                                                                        movedSections:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
                                                                              userInfo:nil];
@@ -173,6 +177,7 @@ struct CKDataSourceAnnouncedUpdate {
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil
+                                                                        movedSections:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
                                                                              userInfo:@{@"id": @2}];
@@ -181,6 +186,7 @@ struct CKDataSourceAnnouncedUpdate {
                                                                     removedIndexPaths:nil
                                                                       removedSections:nil
                                                                       movedIndexPaths:nil
+                                                                        movedSections:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
                                                                              userInfo:@{@"id": @3}];

@@ -17,6 +17,7 @@
                         removedItems:(NSSet *)removedItems
                      removedSections:(NSIndexSet *)removedSections
                           movedItems:(NSDictionary *)movedItems
+                       movedSections:(NSDictionary *)movedSections
                     insertedSections:(NSIndexSet *)insertedSections
                        insertedItems:(NSDictionary *)insertedItems
 {
@@ -25,6 +26,7 @@
     _removedItems = [removedItems copy] ?: [NSSet set];
     _removedSections = [removedSections copy] ?: [NSIndexSet indexSet];
     _movedItems = [movedItems copy] ?: @{};
+    _movedSections = [movedSections copy] ?: @{};
     _insertedSections = [insertedSections copy] ?: [NSIndexSet indexSet];
     _insertedItems = [insertedItems copy] ?: @{};
   }
@@ -39,6 +41,7 @@
   NSSet *_removedItems;
   NSIndexSet *_removedSections;
   NSDictionary *_movedItems;
+  NSDictionary *_movedSections;
   NSIndexSet *_insertedSections;
   NSDictionary *_insertedItems;
 }
@@ -48,6 +51,7 @@
 - (instancetype)withRemovedItems:(NSSet *)removedItems { _removedItems = removedItems; return self; }
 - (instancetype)withRemovedSections:(NSIndexSet *)removedSections { _removedSections = removedSections; return self; }
 - (instancetype)withMovedItems:(NSDictionary *)movedItems { _movedItems = movedItems; return self; }
+- (instancetype)withMovedSections:(NSDictionary *)movedSections { _movedSections = movedSections; return self; }
 - (instancetype)withInsertedSections:(NSIndexSet *)insertedSections { _insertedSections = insertedSections; return self; }
 - (instancetype)withInsertedItems:(NSDictionary *)insertedItems { _insertedItems = insertedItems; return self; }
 
@@ -57,6 +61,7 @@
                                                                       removedItems:_removedItems
                                                                    removedSections:_removedSections
                                                                         movedItems:_movedItems
+                                                                     movedSections:_movedSections
                                                                   insertedSections:_insertedSections
                                                                      insertedItems:_insertedItems];
 }
