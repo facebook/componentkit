@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 
 #import "CKTransactionalComponentDataSource.h"
+#import "CKSupplementaryViewDataSource.h"
 
 /**
  This class is an implementation of a `UICollectionViewDataSource` that can be used along with components. For each set of changes (i.e insertion/deletion/update
@@ -27,7 +28,10 @@
  @param collectionView The collectionView is held strongly and its datasource property will be set to the receiver.
  */
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView
+           supplementaryViewDataSource:(id<CKSupplementaryViewDataSource>)supplementaryViewDataSource
                          configuration:(CKTransactionalComponentDataSourceConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
+
+- (instancetype)init NS_UNAVAILABLE;
 
 /** 
  Applies a changeset either synchronously or asynchronously to the collection view.
