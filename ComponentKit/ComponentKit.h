@@ -39,6 +39,9 @@
 #import <ComponentKit/CKComponentPreparationQueueListener.h>
 #import <ComponentKit/CKComponentPreparationQueueTypes.h>
 #import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKCollectionViewTransactionalDataSource.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
 //HostingView
 #import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
 #import <ComponentKit/CKComponentHostingView.h>
