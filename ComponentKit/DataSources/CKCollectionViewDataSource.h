@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKArrayControllerChangeset.h>
+#import <ComponentKit/CKSupplementaryViewDataSource.h>
 
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKDimension.h>
@@ -113,15 +114,3 @@ typedef void(*CKCellConfigurationFunction)(UICollectionViewCell *cell, NSIndexPa
 
 @end
 
-/**
- The supplementaryViewDataSource can't just conform to @see UICollectionViewDataSource as this protocol includes required
- methods that are already implemented by this class. Hence we duplicate the part of the protocol related to supplementary views
- and wrap it in our internal one.
- */
-@protocol CKSupplementaryViewDataSource<NSObject>
-
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
-           viewForSupplementaryElementOfKind:(NSString *)kind
-                                 atIndexPath:(NSIndexPath *)indexPath;
-
-@end
