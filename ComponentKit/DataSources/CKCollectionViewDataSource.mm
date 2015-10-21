@@ -215,20 +215,26 @@ static void applyChangesetToCollectionView(const Output::Changeset &changeset, U
       case CKArrayControllerChangeTypeUpdate:
         [itemUpdateIndexPaths addObject:change.sourceIndexPath.toNSIndexPath()];
         break;
+      case CKArrayControllerChangeTypeMove:
+        [collectionView moveItemAtIndexPath:change.sourceIndexPath.toNSIndexPath() toIndexPath:change.destinationIndexPath.toNSIndexPath()];
+        break;
       default:
         CKCFailAssert(@"Unsupported change type for items: %d", type);
         break;
     }
   };
   
-  Sections::Enumerator sectionsEnumerator = ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {
-    if (sectionIndexes.count > 0) {
+  Sections::Enumerator sectionsEnumerator = ^(NSIndexSet *sourceIndexes, NSIndexSet *destinationIndexes, CKArrayControllerChangeType type, BOOL *stop) {
+    if (sourceIndexes.count > 0 || destinationIndexes.count > 0) {
       switch (type) {
         case CKArrayControllerChangeTypeDelete:
-          [collectionView deleteSections:sectionIndexes];
+          [collectionView deleteSections:sourceIndexes];
           break;
         case CKArrayControllerChangeTypeInsert:
-          [collectionView insertSections:sectionIndexes];
+          [collectionView insertSections:destinationIndexes];
+          break;
+        case CKArrayControllerChangeTypeMove:
+          [collectionView moveSection:sourceIndexes.firstIndex toSection:destinationIndexes.firstIndex];
           break;
         default:
           CKCFailAssert(@"Unsuported change type for sections %d", type);
