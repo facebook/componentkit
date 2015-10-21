@@ -65,7 +65,7 @@ using namespace CK::ArrayController;
   const auto &changeset = changesetApplicator();
 
   Sections::Enumerator sectionsEnumerator =
-  ^(NSIndexSet *indexes, CKArrayControllerChangeType type, BOOL *stop) {};
+  ^(NSIndexSet *sourceIndexes, NSIndexSet *destinationIndexes, CKArrayControllerChangeType type, BOOL *stop) {};
 
   Output::Items::Enumerator itemsEnumerator =
   ^(const Output::Change &change, CKArrayControllerChangeType type, BOOL *stop) {

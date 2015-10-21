@@ -205,6 +205,8 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
                                                                                  constrainedSize:constrainedSize
                                                                                             UUID:[[NSUUID UUID] UUIDString]];
     newItems.insert({section, index}, mappedObject);
+  },^(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath, BOOL *stop) {
+    newItems.move(fromIndexPath, toIndexPath);
   });
 
   return [self _enqueueChangeset:{changeset.sections, newItems}];
@@ -217,34 +219,8 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
   __block CKComponentPreparationInputBatch preparationQueueBatch;
   preparationQueueBatch.sections = output.getSections();
 
-  __block BOOL batchContainsSectionInserts = NO;
-  __block BOOL batchContainsUpdates = NO;
-  __block BOOL batchContainsDeletions = NO;
-
-  CKArrayControllerSections::Enumerator sectionsEnumerator =
-  ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {
-    if (type == CKArrayControllerChangeTypeDelete) {
-      batchContainsDeletions = YES;
-    }
-
-    if (type == CKArrayControllerChangeTypeInsert) {
-      batchContainsSectionInserts = YES;
-    }
-  };
-
-  NSMutableSet *insertedIndexPaths = [[NSMutableSet alloc] init];
   CKArrayControllerOutputItems::Enumerator itemsEnumerator =
   ^(const CKArrayControllerOutputChange &change, CKArrayControllerChangeType type, BOOL *stop) {
-    if (type == CKArrayControllerChangeTypeDelete) {
-      batchContainsDeletions = YES;
-    }
-    if (type == CKArrayControllerChangeTypeUpdate) {
-      batchContainsUpdates = YES;
-    }
-    if (type == CKArrayControllerChangeTypeInsert) {
-      [insertedIndexPaths addObject:change.destinationIndexPath.toNSIndexPath()];
-    }
-
     CKComponentDataSourceInputItem *before = change.before;
     CKComponentDataSourceInputItem *after = change.after;
     id componentCompliantModel = [_decider componentCompliantModel:[after model]];
@@ -264,7 +240,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
     preparationQueueBatch.items.push_back(queueItem);
   };
 
-  output.enumerate(sectionsEnumerator, itemsEnumerator);
+  output.enumerate(nil, itemsEnumerator);
 
   preparationQueueBatch.ID = batchID();
   _operationsInPreparationQueueTracker.push(preparationQueueBatch.ID);
@@ -321,6 +297,10 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
         items.remove([outputItem sourceIndexPath]);
       }
         break;
+      case CKArrayControllerChangeTypeMove: {
+        items.move([outputItem sourceIndexPath], [outputItem destinationIndexPath]);
+      }
+        break;
       default:
         break;
     }
@@ -363,6 +343,9 @@ static CKComponentDataSourceOutputItem *_outputItemFromPreparationOutputItem(CKC
   }, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
     newItems.insert({section, index}, _outputItemFromPreparationOutputItem((CKComponentPreparationOutputItem *)object));
     changeTypes |= CKComponentDataSourceChangeTypeInsertRows;
+  }, ^(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath, BOOL *stop) {
+    changeTypes |= CKComponentDataSourceChangeTypeMoveRows;
+    newItems.move(fromIndexPath, toIndexPath);
   });
 
   [_delegate componentDataSource:self
