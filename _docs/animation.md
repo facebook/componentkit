@@ -4,7 +4,27 @@ layout: docs
 permalink: /docs/animation.html
 ---
 
-ComponentKit exposes two ways to perform animations.
+ComponentKit exposes three ways to perform animations on a component.
+
+## animationsOnInitialMount
+
+Override this method to specify how to animate the initial appearance of a component. For example, if you were implementing a component that indicates network reachability issues, you could fade in the component:
+
+```objc++
+- (std::vector<CKComponentAnimation>)animationsOnInitialMount
+{
+    return { {self, fadeToAppear()} };
+}
+
+static CAAnimation *fadeToAppear()
+{
+  CABasicAnimation *fade = [CABasicAnimation animationWithKeyPath:@"opacity"];
+  fade.fromValue = @(0);
+  fade.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+  fade.duration = 0.5;
+  return fade;
+}
+```objc++
 
 ## animationsFromPreviousComponent:
 
@@ -53,3 +73,5 @@ Override this method to specify how the top-level bounds of a component should a
 ## Notes
 
 If you implement either method, your component must have a [scope](scopes.html).
+
+If updating your component's [state](state.html) changes it's bounds, both `boundsAnimationFromPreviousComponent` and `animationsFromPreviousComponent` will be called. 
