@@ -24,7 +24,7 @@ static CAAnimation *fadeToAppear()
   fade.duration = 0.5;
   return fade;
 }
-```objc++
+```
 
 ## animationsFromPreviousComponent:
 
