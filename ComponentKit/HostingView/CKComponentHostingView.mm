@@ -71,7 +71,7 @@ struct CKComponentHostingViewInputs {
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
 
-    _componentNeedsUpdate = YES;
+    _componentNeedsUpdate = NO;
     _requestedUpdateMode = CKUpdateModeSynchronous;
   }
   return self;
