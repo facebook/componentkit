@@ -17,7 +17,7 @@ public:
   ~CKWatchdogTimer();
 
   /** Configures the duration to wait and the action to take upon firing. Default is to do nothing. */
-  static void configure(const int64_t timeoutNanoseconds, void (*handler)(void));
+  static void configure(const int64_t timeoutNanoseconds, void (*handler)(NSString *queueLabel));
 private:
   CKWatchdogTimer(const CKWatchdogTimer&) = delete;
   CKWatchdogTimer &operator=(const CKWatchdogTimer&) = delete;

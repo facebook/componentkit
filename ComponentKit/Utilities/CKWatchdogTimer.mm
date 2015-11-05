@@ -18,9 +18,15 @@
 /** Protects timeoutNanoseconds and handler */
 static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER;
 static uint64_t timeoutNanoseconds = 0;
-static void (*handler)(void) = nullptr;
+static void (*handler)(NSString *) = nullptr;
 
-static dispatch_source_t newTimer()
+static NSString *currentQueueLabel(void)
+{
+  const char *label = dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL);
+  return label ? [NSString stringWithCString:label encoding:NSUTF8StringEncoding] : nil;
+}
+
+static dispatch_source_t newTimer(void)
 {
   uint64_t localTimeoutNanoseconds;
   {
@@ -46,19 +52,20 @@ static dispatch_source_t newTimer()
                                                   }];
   });
 
+  NSString *queueLabel = currentQueueLabel();
   const uint64_t timerCreationTimestamp = mach_absolute_time();
   dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
   dispatch_source_set_event_handler(timer, ^{
     CKCAssertMainThread();
     // Don't fire the handler if the app backgrounded after scheduling the timer since that suspends app's CPU
     if (lastBackgroundingTimestamp < timerCreationTimestamp) {
-      void (*localHandler)(void);
+      void (*localHandler)(NSString *);
       {
         CK::StaticMutexLocker l(mutex);
         localHandler = handler;
       }
       if (localHandler) {
-        localHandler();
+        localHandler(queueLabel);
       }
     }
     // Prevent further invocations of the timer.
@@ -85,7 +92,7 @@ CKWatchdogTimer::~CKWatchdogTimer()
   }
 }
 
-void CKWatchdogTimer::configure(const int64_t newTimeoutNanoseconds, void (*newHandler)(void))
+void CKWatchdogTimer::configure(const int64_t newTimeoutNanoseconds, void (*newHandler)(NSString *))
 {
   CK::StaticMutexLocker l(mutex);
   timeoutNanoseconds = newTimeoutNanoseconds;
