@@ -125,6 +125,12 @@
   if (CKObjectIsEqual(specifier, _specifier)) {
     return;
   }
+  
+  BOOL isShowingCurrentImageURL = self.image != _specifier.defaultImage && self.image != nil;
+  if (isShowingCurrentImageURL && CKObjectIsEqual(_specifier.url, specifier.url)) {
+    _specifier = specifier;
+    return;
+  }
 
   if (_download) {
     [_specifier.imageDownloader cancelImageDownload:_download];
