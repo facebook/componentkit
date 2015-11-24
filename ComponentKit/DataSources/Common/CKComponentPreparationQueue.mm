@@ -17,6 +17,7 @@
 #import "CKMutex.h"
 #import "CKComponentLifecycleManager.h"
 #import "CKComponentPreparationQueueListenerAnnouncer.h"
+#import "CKWatchdogTimer.h"
 
 @implementation CKComponentPreparationInputItem
 {
@@ -199,6 +200,8 @@
 
 - (void)_processJob:(CKComponentPreparationQueueJob *)job
 {
+  CKWatchdogTimer watchdog;
+
   // All announcments are scheduled on the main thread
   dispatch_async(dispatch_get_main_queue(), ^{
     [_announcer componentPreparationQueue:self
