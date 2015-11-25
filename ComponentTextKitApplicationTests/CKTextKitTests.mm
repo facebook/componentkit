@@ -13,8 +13,10 @@
 
 #import <FBSnapshotTestCase/FBSnapshotTestController.h>
 
+#import "CKTextKitEntityAttribute.h"
 #import "CKTextKitAttributes.h"
 #import "CKTextKitRenderer.h"
+#import "CKTextKitRenderer+Positioning.h"
 
 @interface CKTextKitTests : XCTestCase
 
@@ -133,6 +135,24 @@ static BOOL checkAttributes(const CKTextKitAttributes &attributes, const CGSize 
     .attributedString = attrStr
   };
   XCTAssert(checkAttributes(attributes, { 100, 100 }));
+}
+
+- (void)testRectsForRangeBeyondTruncationSizeReturnsNonZeroNumberOfRects
+{
+  NSAttributedString *attributedString =
+  [[NSAttributedString alloc]
+   initWithString:@"90's cray photo booth tote bag bespoke Carles. Plaid wayfarers Odd Future master cleanse tattooed four dollar toast small batch kale chips leggings meh photo booth occupy irony.  " attributes:@{CKTextKitEntityAttributeName : [[CKTextKitEntityAttribute alloc] initWithEntity:@"entity"]}];
+
+  CKTextKitRenderer *renderer =
+  [[CKTextKitRenderer alloc]
+   initWithTextKitAttributes:{
+     .attributedString = attributedString,
+     .maximumNumberOfLines = 1,
+     .truncationAttributedString = [[NSAttributedString alloc] initWithString:@"... Continue Reading"]
+   }
+   constrainedSize:{ 100, 100 }];
+
+  XCTAssert([renderer rectsForTextRange:NSMakeRange(0, attributedString.length) measureOption:CKTextKitRendererMeasureOptionBlock].count > 0);
 }
 
 @end
