@@ -16,8 +16,14 @@
 
 @interface CKComponentController : NSObject
 
+/** The controller's component is not mounted, but is about to be for the first time. */
+- (void)willMountInitially NS_REQUIRES_SUPER;
+
 /** The controller's component is not mounted, but is about to be. */
 - (void)willMount NS_REQUIRES_SUPER;
+
+/** The controller's component was not previously mounted, but now it is for the first time (including all of its children). */
+- (void)didMountInitially NS_REQUIRES_SUPER;
 
 /** The controller's component was not previously mounted, but now it is (including all of its children). */
 - (void)didMount NS_REQUIRES_SUPER;

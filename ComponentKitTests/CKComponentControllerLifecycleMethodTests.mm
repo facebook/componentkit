@@ -23,7 +23,9 @@
 @end
 
 struct CKLifecycleMethodCounts {
+  NSUInteger willMountInitially;
   NSUInteger willMount;
+  NSUInteger didMountInitially;
   NSUInteger didMount;
   NSUInteger willRemount;
   NSUInteger didRemount;
@@ -32,14 +34,15 @@ struct CKLifecycleMethodCounts {
 
   NSString *description() const
   {
-    return [NSString stringWithFormat:@"willMount:%lu didMount:%lu willRemount:%lu didRemount:%lu willUnmount:%lu didUnmount:%lu",
-            (unsigned long)willMount, (unsigned long)didMount, (unsigned long)willRemount,
+    return [NSString stringWithFormat:@"willMountInitially:%lu willMount:%lu didMountInitially:%lu didMount:%lu willRemount:%lu didRemount:%lu willUnmount:%lu didUnmount:%lu",
+            (unsigned long)willMountInitially, (unsigned long)willMount, (unsigned long)didMountInitially, (unsigned long)didMount, (unsigned long)willRemount,
             (unsigned long)didRemount, (unsigned long)willUnmount, (unsigned long)didUnmount];
   }
 
   bool operator==(const CKLifecycleMethodCounts &other) const
   {
-    return willMount == other.willMount && didMount == other.didMount
+    return willMountInitially == other.willMountInitially && willMount == other.willMount
+    && didMountInitially == other.didMountInitially && didMount == other.didMount
     && willRemount == other.willRemount && didRemount == other.didRemount
     && willUnmount == other.willUnmount && didUnmount == other.didUnmount;
   }
@@ -64,6 +67,27 @@ struct CKLifecycleMethodCounts {
   return [CKLifecycleComponent new];
 }
 
+- (void)testThatMountingComponentCallsWillAndDidMountInitially
+{
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+	
+  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
+  [clm updateWithState:state];
+	
+  UIView *view = [[UIView alloc] init];
+  [clm attachToView:view];
+  CKLifecycleComponentController *controller = ((CKLifecycleComponent *)state.layout.component).controller;
+  const CKLifecycleMethodCounts actual1 = controller->_counts;
+  const CKLifecycleMethodCounts expected1 = {.willMountInitially = 1, .willMount = 1, .didMountInitially = 1, .didMount = 1};
+  XCTAssertTrue(actual1 == expected1, @"Expected %@ but got %@", expected1.description(), actual1.description());
+	
+  [clm detachFromView];
+  [clm attachToView:view];
+  const CKLifecycleMethodCounts actual2 = controller->_counts;
+  const CKLifecycleMethodCounts expected2 = {.willMountInitially = 1, .willMount = 2, .didMountInitially = 1, .didMount = 2, .willUnmount = 1, .didUnmount = 1};
+  XCTAssertTrue(actual2 == expected2, @"Expected %@ but got %@", expected2.description(), actual2.description());
+}
+
 - (void)testThatMountingComponentCallsWillAndDidMount
 {
   CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
@@ -75,7 +99,7 @@ struct CKLifecycleMethodCounts {
   [clm attachToView:view];
   CKLifecycleComponentController *controller = ((CKLifecycleComponent *)state.layout.component).controller;
   const CKLifecycleMethodCounts actual = controller->_counts;
-  const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1};
+  const CKLifecycleMethodCounts expected = {.willMountInitially = 1, .willMount = 1, .didMountInitially = 1, .didMount = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
 }
 
@@ -92,7 +116,7 @@ struct CKLifecycleMethodCounts {
 
   CKLifecycleComponentController *controller = ((CKLifecycleComponent *)state.layout.component).controller;
   const CKLifecycleMethodCounts actual = controller->_counts;
-  const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1};
+  const CKLifecycleMethodCounts expected = {.willMountInitially = 1, .willMount = 1, .didMountInitially = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
 }
 
@@ -110,7 +134,7 @@ struct CKLifecycleMethodCounts {
 
   CKLifecycleComponentController *controller = component.controller;
   const CKLifecycleMethodCounts actual = controller->_counts;
-  const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willRemount = 1, .didRemount = 1};
+  const CKLifecycleMethodCounts expected = {.willMountInitially = 1, .willMount = 1, .didMountInitially = 1, .didMount = 1, .willRemount = 1, .didRemount = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
 }
 
@@ -129,7 +153,7 @@ struct CKLifecycleMethodCounts {
   CKLifecycleComponentController *controller = component.controller;
   {
     const CKLifecycleMethodCounts actual = controller->_counts;
-    const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1};
+    const CKLifecycleMethodCounts expected = {.willMountInitially = 1, .willMount = 1, .didMountInitially = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1};
     XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
   }
 
@@ -184,7 +208,9 @@ struct CKLifecycleMethodCounts {
   [(CKLifecycleComponent *)[self component] setController:self];
 }
 
+- (void)willMountInitially { [super willMountInitially]; _counts.willMountInitially++; }
 - (void)willMount { [super willMount]; _counts.willMount++; }
+- (void)didMountInitially { [super didMountInitially]; _counts.didMountInitially++; }
 - (void)didMount { [super didMount]; _counts.didMount++; }
 - (void)willRemount { [super willRemount]; _counts.willRemount++; }
 - (void)didRemount { [super didRemount]; _counts.didRemount++; }

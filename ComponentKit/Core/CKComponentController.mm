@@ -55,6 +55,7 @@ static NSString *componentStateName(CKComponentControllerState state)
   CKComponentControllerState _state;
   BOOL _updatingComponent;
   BOOL _performedInitialMount;
+  BOOL _performDidMountInitially;
   CKComponent *_previousComponent;
   std::vector<CKPendingComponentAnimation> _pendingAnimationsOnInitialMount;
   std::vector<CKAppliedComponentAnimation> _appliedAnimationsOnInitialMount;
@@ -62,7 +63,9 @@ static NSString *componentStateName(CKComponentControllerState state)
   std::vector<CKAppliedComponentAnimation> _appliedAnimations;
 }
 
+- (void)willMountInitially {}
 - (void)willMount {}
+- (void)didMountInitially {}
 - (void)didMount {}
 - (void)willRemount {}
 - (void)didRemount {}
@@ -89,6 +92,10 @@ static NSString *componentStateName(CKComponentControllerState state)
   switch (_state) {
     case CKComponentControllerStateUnmounted:
       _state = CKComponentControllerStateMounting;
+	  if (!_performedInitialMount) {
+        _performDidMountInitially = YES;
+        [self willMountInitially];
+      }
       [self willMount];
       if (!_performedInitialMount) {
         _performedInitialMount = YES;
@@ -116,6 +123,10 @@ static NSString *componentStateName(CKComponentControllerState state)
   switch (_state) {
     case CKComponentControllerStateMounting:
       _state = CKComponentControllerStateMounted;
+      if (_performDidMountInitially) {
+        _performDidMountInitially = NO;
+        [self didMountInitially];
+	  }
       [self didMount];
       for (const auto &pendingAnimation : _pendingAnimationsOnInitialMount) {
         const CKComponentAnimation &anim = pendingAnimation.animation;
