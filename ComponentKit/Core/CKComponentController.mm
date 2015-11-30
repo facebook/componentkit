@@ -92,7 +92,7 @@ static NSString *componentStateName(CKComponentControllerState state)
   switch (_state) {
     case CKComponentControllerStateUnmounted:
       _state = CKComponentControllerStateMounting;
-	  if (!_performedInitialMount) {
+      if (!_performedInitialMount) {
         _performDidMountInitially = YES;
         [self willMountInitially];
       }
@@ -126,7 +126,7 @@ static NSString *componentStateName(CKComponentControllerState state)
       if (_performDidMountInitially) {
         _performDidMountInitially = NO;
         [self didMountInitially];
-	  }
+      }
       [self didMount];
       for (const auto &pendingAnimation : _pendingAnimationsOnInitialMount) {
         const CKComponentAnimation &anim = pendingAnimation.animation;
