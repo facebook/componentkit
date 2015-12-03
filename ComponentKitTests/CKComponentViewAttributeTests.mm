@@ -74,6 +74,37 @@
   XCTAssertTrue(c.layer.opacity == 0.5, @"Expected opacity to be applied to view's layer");
 }
 
+- (void)testThatMountingViewWithPrimitiveAttributeActuallyAppliesAttributeToView
+{
+  CKComponent *testComponent = [CKComponent newWithView:{[CKNSNumberView class], {
+    {@selector(setSelected:), YES},
+    {CKComponentViewAttribute::LayerAttribute(@selector(setOpacity:)), @0.5},
+    {@selector(setTag:), 2},
+    {@selector(setPrimitiveChar:), 'D'},
+    {@selector(setPrimitiveShort:), short(1)},
+    {@selector(setPrimitiveInt:), 14},
+    {@selector(setPrimitiveInt32:), 9L},
+    {@selector(setPrimitiveInt64:), 5LL},
+    {@selector(setPrimitiveUChar:), (unsigned char)('L')},
+    {@selector(setPrimitiveUShort:), (ushort)(23)},
+    {@selector(setPrimitiveUInt32:), 15UL},
+    {@selector(setPrimitiveUInt64:), 18ULL},
+    {@selector(setPrimitiveDouble:), 11.3},
+    {@selector(setPrimitiveFloat:), 21.1F},
+  }} size:{}];
+  CKComponentLifecycleManager *m = [[CKComponentLifecycleManager alloc] init];
+  [m updateWithState:{
+    .layout = [testComponent layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
+  }];
+  
+  UIView *container = [[UIView alloc] init];
+  [m attachToView:container];
+  CKNSNumberView *c = [[container subviews] firstObject];
+  XCTAssertTrue([c isSelected], @"Expected selected to be applied to view");
+  XCTAssertTrue(c.layer.opacity == 0.5, @"Expected opacity to be applied to view's layer");
+}
+
+
 - (void)testThatRecyclingViewWithSameAttributeValueDoesNotReApplyAttributeToView
 {
   CKComponent *testComponent1 = [CKComponent newWithView:{[CKSetterCounterView class], {
