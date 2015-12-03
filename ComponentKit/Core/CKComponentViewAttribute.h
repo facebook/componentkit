@@ -81,8 +81,44 @@ struct CKComponentViewAttribute {
   bool operator==(const CKComponentViewAttribute &attr) const { return identifier == attr.identifier; };
 };
 
+struct CKBoxedValue {
+  CKBoxedValue() : __actual(nil) {};
 
-typedef std::unordered_map<CKComponentViewAttribute, id> CKViewComponentAttributeValueMap;
+  // Could replace this with !CK::is_objc_class<T>
+  CKBoxedValue(bool v) : __actual(@(v)) {};
+  CKBoxedValue(int8_t v) : __actual(@(v)) {};
+  CKBoxedValue(uint8_t v) : __actual(@(v)) {};
+  CKBoxedValue(int16_t v) : __actual(@(v)) {};
+  CKBoxedValue(uint16_t v) : __actual(@(v)) {};
+  CKBoxedValue(int32_t v) : __actual(@(v)) {};
+  CKBoxedValue(uint32_t v) : __actual(@(v)) {};
+  CKBoxedValue(int64_t v) : __actual(@(v)) {};
+  CKBoxedValue(uint64_t v) : __actual(@(v)) {};
+  CKBoxedValue(long v) : __actual(@(v)) {};
+  CKBoxedValue(unsigned long v) : __actual(@(v)) {};
+  CKBoxedValue(float v) : __actual(@(v)) {};
+  CKBoxedValue(double v) : __actual(@(v)) {};
+  CKBoxedValue(SEL v) : __actual([NSValue valueWithPointer:v]) {};
+  CKBoxedValue(std::nullptr_t v) : __actual(nil) {};
+  
+  // Any objects go here
+  CKBoxedValue(id obj) : __actual(obj) {};
+
+  // Define conversions for common Apple types
+  CKBoxedValue(CGRect v) : __actual([NSValue valueWithCGRect:v]) {};
+  CKBoxedValue(CGPoint v) : __actual([NSValue valueWithCGPoint:v]) {};
+  CKBoxedValue(UIEdgeInsets v) : __actual([NSValue valueWithBytes:&v objCType:@encode(decltype(v))]) {};
+  
+  operator id () const {
+    return __actual;
+  };
+
+private:
+  id __actual;
+
+};
+
+typedef std::unordered_map<CKComponentViewAttribute, CKBoxedValue> CKViewComponentAttributeValueMap;
 
 namespace std {
 
