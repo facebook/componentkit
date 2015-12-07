@@ -36,6 +36,14 @@ void Sections::remove(NSInteger index)
   _removals.insert(index);
 }
 
+void Sections::move(NSInteger fromIndex, NSInteger toIndex)
+{
+  auto move = std::make_pair(fromIndex, toIndex);
+  CKInternalConsistencyCheckIf(_moves.find(move) == _moves.end(),
+                               ([NSString stringWithFormat:@"%zd already exists in move commands", index]));
+  _moves.insert(move);
+}
+
 const std::set<NSInteger> &Sections::insertions() const
 {
   return _insertions;
@@ -46,33 +54,19 @@ const std::set<NSInteger> &Sections::removals() const
   return _removals;
 }
 
+const std::set<std::pair<NSInteger, NSInteger>> &Sections::moves() const
+{
+  return _moves;
+}
+
 bool Sections::operator==(const Sections &other) const
 {
-  return _insertions == other._insertions && _removals == other._removals;
+  return _insertions == other._insertions && _removals == other._removals && _moves == other._moves;
 }
 
 size_t Sections::size() const noexcept
 {
-  return _insertions.size() + _removals.size();
-}
-
-Sections Sections::mapIndex(Sections::Mapper mapper) const
-{
-  __block Sections mappedSections = {};
-  void (^map)(std::set<NSInteger>, CKArrayControllerChangeType) = ^(std::set<NSInteger> indexes, CKArrayControllerChangeType type) {
-    for (auto index : indexes) {
-      NSInteger newIndex = mapper(index, type);
-      if (type == CKArrayControllerChangeTypeInsert) {
-        mappedSections.insert(newIndex);
-      } else if (type == CKArrayControllerChangeTypeDelete) {
-        mappedSections.remove(newIndex);
-      }
-    }
-  };
-  map(_insertions, CKArrayControllerChangeTypeInsert);
-  map(_removals, CKArrayControllerChangeTypeDelete);
-  
-  return mappedSections;
+  return _insertions.size() + _removals.size() + _moves.size();
 }
 
 /**
@@ -155,6 +149,13 @@ void Input::Items::insert(const IndexPath &indexPath, id<NSObject> object)
   bucketizeObjectBySection(_insertions, indexPath, object);
 }
 
+void Input::Items::move(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath)
+{
+  CKInternalConsistencyCheckIf(!commandExistsForIndexPath(fromIndexPath, {_moves}),
+                               ([NSString stringWithFormat:@"{item:%zd, section:%zd} already exists in commands",
+                                fromIndexPath.item, fromIndexPath.section]));
+  bucketizeObjectBySection(_moves, fromIndexPath, toIndexPath.toNSIndexPath());
+}
 
 typedef void (^EnumerationAdapter)(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop);
 static void _iterate(CK::ArrayController::Input::Items::ItemsBucketizedBySection items, EnumerationAdapter ea)
@@ -173,7 +174,7 @@ static void _iterate(CK::ArrayController::Input::Items::ItemsBucketizedBySection
   }
 }
 
-void Input::Items::enumerateItems(UpdatesEnumerator updatesEnumerator, RemovalsEnumerator removalsEnumerator, InsertionsEnumerator insertionsEnumerator) const
+void Input::Items::enumerateItems(UpdatesEnumerator updatesEnumerator, RemovalsEnumerator removalsEnumerator, InsertionsEnumerator insertionsEnumerator, MovesEnumerator movesEnumerator) const
 {
   if (updatesEnumerator) {
     _iterate(_updates, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop){
@@ -190,17 +191,22 @@ void Input::Items::enumerateItems(UpdatesEnumerator updatesEnumerator, RemovalsE
       insertionsEnumerator(section, index, object, stop);
     });
   }
+  if (movesEnumerator) {
+    _iterate(_moves, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop){
+      movesEnumerator({section, index}, (NSIndexPath *)object, stop);
+    });
+  }
 }
 
 
 size_t Input::Items::size() const noexcept
 {
-  return _updates.size() + _removals.size() + _insertions.size();
+  return _updates.size() + _removals.size() + _insertions.size() + _moves.size();
 }
 
 bool Input::Items::operator==(const Items &other) const
 {
-  return _updates == other._updates && _removals == other._removals && _insertions == other._insertions;
+  return _updates == other._updates && _removals == other._removals && _insertions == other._insertions && _moves == other._moves;
 }
 
 bool Input::Changeset::operator==(const Changeset &other) const
@@ -223,9 +229,13 @@ void Output::Items::update(const CKArrayControllerIndexPath &indexPath, id<NSObj
   _updates.push_back({indexPath, {}, oldObject, newObject});
 }
 
+void Output::Items::move(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath, id<NSObject> object) {
+  _moves.push_back({fromIndexPath, toIndexPath, object, object});
+}
+
 bool Output::Items::operator==(const Items &other) const
 {
-  return _updates == other._updates && _removals == other._removals && _insertions == other._insertions;
+  return _updates == other._updates && _removals == other._removals && _insertions == other._insertions && _moves == other._moves;
 }
 
 void Output::Changeset::enumerate(Sections::Enumerator sectionEnumerator,
@@ -241,7 +251,17 @@ void Output::Changeset::enumerate(Sections::Enumerator sectionEnumerator,
       for (auto section : s) {
         [indexes addIndex:section];
       }
-      sectionEnumerator(indexes, t, &stop);
+      sectionEnumerator((t == CKArrayControllerChangeTypeDelete ? indexes : nil), (t == CKArrayControllerChangeTypeInsert ? indexes : nil), t, &stop);
+    }
+  };
+
+  void (^emitSectionMoves)(const std::set<std::pair<NSInteger, NSInteger>>&) =
+  (!sectionEnumerator) ? (void(^)(const std::set<std::pair<NSInteger, NSInteger>>&))nil :
+  ^(const std::set<std::pair<NSInteger, NSInteger>> &s){
+    if (!s.empty()) {
+      for (auto move : s) {
+        sectionEnumerator([NSIndexSet indexSetWithIndex:move.first], [NSIndexSet indexSetWithIndex:move.second], CKArrayControllerChangeTypeMove, &stop);
+      }
     }
   };
 
@@ -270,8 +290,16 @@ void Output::Changeset::enumerate(Sections::Enumerator sectionEnumerator,
     emitSectionChanges(_sections.insertions(), CKArrayControllerChangeTypeInsert);
   }
 
+  if (!stop && emitSectionMoves) {
+    emitSectionMoves(_sections.moves());
+  }
+
   if (!stop && emitItemChanges) {
     emitItemChanges(_items._insertions, CKArrayControllerChangeTypeInsert);
+  }
+
+  if (!stop && emitItemChanges) {
+    emitItemChanges(_items._moves, CKArrayControllerChangeTypeMove);
   }
 }
 
@@ -324,6 +352,9 @@ Output::Changeset Output::Changeset::map(Mapper mapper) const
       if (t == CKArrayControllerChangeTypeInsert) {
         mappedItems.insert(change.destinationIndexPath, mappedPair.second);
       }
+      if (t == CKArrayControllerChangeTypeMove) {
+        mappedItems.move(change.sourceIndexPath, change.destinationIndexPath, mappedPair.second);
+      }
       if (stop) {
         break;
       }
@@ -336,6 +367,9 @@ Output::Changeset Output::Changeset::map(Mapper mapper) const
   }
   if (!stop) {
     map(_items._insertions, CKArrayControllerChangeTypeInsert);
+  }
+  if (!stop) {
+    map(_items._moves, CKArrayControllerChangeTypeMove);
   }
 
   return {_sections, mappedItems};
@@ -387,8 +421,8 @@ NSString *Output::Changeset::description() const
 {
   NSMutableString *debugString = [NSMutableString string];
 
-  Sections::Enumerator sectionsEnumerator = ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {
-    [debugString appendFormat:@"%@_sections => %@\n", changeTypeDescriptionString(type), indexSetDebugString(sectionIndexes)];
+  Sections::Enumerator sectionsEnumerator = ^(NSIndexSet *sourceIndexes, NSIndexSet *destinationIndexes, CKArrayControllerChangeType type, BOOL *stop) {
+    [debugString appendFormat:@"%@_sections => %@%@\n", changeTypeDescriptionString(type), indexSetDebugString(sourceIndexes), indexSetDebugString(destinationIndexes)];
   };
 
   Output::Items::Enumerator itemsEnumerator =

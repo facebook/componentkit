@@ -248,7 +248,8 @@
   if (![inputItem isPassthrough]) {
     CKArrayControllerChangeType changeType = [inputItem changeType];
     if (changeType == CKArrayControllerChangeTypeInsert ||
-        changeType == CKArrayControllerChangeTypeUpdate) {
+        changeType == CKArrayControllerChangeTypeUpdate ||
+        changeType == CKArrayControllerChangeTypeMove) {
       
       // Grab the lifecycle manager and use it to generate an layout the component tree
       CKComponentLifecycleManager *lifecycleManager = [inputItem lifecycleManager];
