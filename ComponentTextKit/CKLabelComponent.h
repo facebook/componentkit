@@ -69,4 +69,8 @@ struct CKLabelAttributes
 + (instancetype)newWithLabelAttributes:(const CKLabelAttributes &)attributes
                         viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes;
 
++ (instancetype)newWithLabelAttributes:(const CKLabelAttributes &)attributes
+                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
+                                  size:(const CKComponentSize &)size;
+
 @end
