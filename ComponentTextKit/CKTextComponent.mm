@@ -64,16 +64,6 @@ static CKTextKitRenderer *rendererForAttributes(CKTextKitAttributes &attributes,
 + (instancetype)newWithTextAttributes:(const CKTextKitAttributes &)attributes
                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
                  accessibilityContext:(const CKTextComponentAccessibilityContext &)accessibilityContext
-{
-  return [self newWithTextAttributes:attributes
-                      viewAttributes:viewAttributes
-                accessibilityContext:accessibilityContext
-                                size:{}];
-}
-
-+ (instancetype)newWithTextAttributes:(const CKTextKitAttributes &)attributes
-                       viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
-                 accessibilityContext:(const CKTextComponentAccessibilityContext &)accessibilityContext
                                  size:(const CKComponentSize &)size
 {
   CKTextKitAttributes copyAttributes = attributes.copy();

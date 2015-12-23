@@ -67,9 +67,6 @@ struct CKLabelAttributes
 @interface CKLabelComponent : CKCompositeComponent
 
 + (instancetype)newWithLabelAttributes:(const CKLabelAttributes &)attributes
-                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes;
-
-+ (instancetype)newWithLabelAttributes:(const CKLabelAttributes &)attributes
                         viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
                                   size:(const CKComponentSize &)size;
 

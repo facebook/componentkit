@@ -41,7 +41,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -54,7 +55,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kUnrestrictedSize, @"");
 }
 
@@ -68,7 +70,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kStrictSize, @"");
 }
 
@@ -82,7 +85,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kStrictSize, @"");
 }
 
@@ -96,7 +100,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -110,7 +115,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -124,7 +130,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -138,7 +145,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -155,7 +163,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -172,7 +181,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -189,7 +199,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -203,7 +214,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -219,7 +231,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -233,7 +246,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -248,7 +262,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -262,7 +277,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -276,7 +292,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -290,7 +307,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -304,7 +322,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -318,7 +337,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -333,7 +353,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -347,7 +368,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -361,7 +383,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -375,7 +398,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -389,7 +413,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 
@@ -405,7 +430,8 @@ static const CKSizeRange kUnrestrictedSize = {};
    }
    viewAttributes:{
      {@selector(setBackgroundColor:),[UIColor clearColor]}
-   }];
+   }
+   size:{ }];
   CKSnapshotVerifyComponent(labelComponent, kFlexibleSize, @"");
 }
 

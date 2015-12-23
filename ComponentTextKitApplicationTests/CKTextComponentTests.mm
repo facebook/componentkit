@@ -72,7 +72,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -89,7 +90,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -110,7 +112,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -126,7 +129,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -143,7 +147,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -161,7 +166,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -183,7 +189,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -206,7 +213,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -229,7 +237,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -257,7 +266,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -277,7 +287,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -295,7 +306,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -315,7 +327,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -335,7 +348,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kStrictSize, @"");
 }
 
@@ -354,7 +368,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -379,7 +394,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -399,7 +415,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kUnrestrictedSize, @"");
 }
 
@@ -422,7 +439,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kUnrestrictedSize, @"");
 }
 
@@ -448,7 +466,8 @@ static NSLayoutManager *testLayoutManagerFactory(void) {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   accessibilityContext:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kUnrestrictedSize, @"");
 }
 

@@ -16,14 +16,6 @@
 
 + (instancetype)newWithLabelAttributes:(const CKLabelAttributes &)attributes
                         viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
-{
-  return [self newWithLabelAttributes:attributes
-                       viewAttributes:viewAttributes
-                                 size:{}];
-}
-
-+ (instancetype)newWithLabelAttributes:(const CKLabelAttributes &)attributes
-                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
                                   size:(const CKComponentSize &)size
 {
   CKViewComponentAttributeValueMap copiedMap = viewAttributes;
