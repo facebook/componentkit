@@ -54,7 +54,8 @@
                     viewAttributes:{
                       {@selector(setBackgroundColor:), [UIColor clearColor]},
                       {@selector(setUserInteractionEnabled:), @NO},
-                    }]
+                    }
+                    size:{ }]
                  },
                  {[CKLabelComponent
                    newWithLabelAttributes:{
@@ -66,7 +67,8 @@
                    viewAttributes:{
                      {@selector(setBackgroundColor:), [UIColor clearColor]},
                      {@selector(setUserInteractionEnabled:), @NO},
-                   }],
+                   }
+                   size:{ }],
                    .spacingBefore = 20
                  }
                }]]

@@ -31,7 +31,8 @@
     viewAttributes:{
       {@selector(setBackgroundColor:), [UIColor clearColor]},
       {@selector(setUserInteractionEnabled:), @NO},
-    }]];
+    }
+    size:{ }]];
 
   CKComponent *quoteTextWithBookmarkComponent =
   [CKStackLayoutComponent
