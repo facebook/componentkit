@@ -34,6 +34,9 @@ typedef NS_ENUM(NSUInteger, CKComponentControllerState) {
   CKComponentControllerStateUnmounting,
 };
 
+typedef size_t CKComponentAnimationID;
+typedef std::unordered_map<CKComponentAnimationID, CKAppliedComponentAnimation> CKAppliedComponentAnimationMap;
+
 static NSString *componentStateName(CKComponentControllerState state)
 {
   switch (state) {
@@ -50,16 +53,27 @@ static NSString *componentStateName(CKComponentControllerState state)
   };
 }
 
+static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnimationID animationID)
+{
+  auto it = map.find(animationID);
+  if (it != map.end()) {
+    const CKAppliedComponentAnimation &appliedAnim = it->second;
+    appliedAnim.animation.cleanup(appliedAnim.context);
+    map.erase(animationID);
+  }
+}
+
 @implementation CKComponentController
 {
   CKComponentControllerState _state;
   BOOL _updatingComponent;
   BOOL _performedInitialMount;
   CKComponent *_previousComponent;
+  CKComponentAnimationID _nextAnimationID;
   std::vector<CKPendingComponentAnimation> _pendingAnimationsOnInitialMount;
-  std::vector<CKAppliedComponentAnimation> _appliedAnimationsOnInitialMount;
+  CKAppliedComponentAnimationMap _appliedAnimationsOnInitialMount;
   std::vector<CKPendingComponentAnimation> _pendingAnimations;
-  std::vector<CKAppliedComponentAnimation> _appliedAnimations;
+  CKAppliedComponentAnimationMap _appliedAnimations;
 }
 
 - (void)willMount {}
@@ -119,7 +133,13 @@ static NSString *componentStateName(CKComponentControllerState state)
       [self didMount];
       for (const auto &pendingAnimation : _pendingAnimationsOnInitialMount) {
         const CKComponentAnimation &anim = pendingAnimation.animation;
-        _appliedAnimationsOnInitialMount.push_back({anim, anim.didRemount(pendingAnimation.context)});
+        [CATransaction begin];
+        CKComponentAnimationID animationID = _nextAnimationID++;
+        [CATransaction setCompletionBlock:^() {
+          eraseAnimation(_appliedAnimationsOnInitialMount, animationID);
+        }];
+        _appliedAnimationsOnInitialMount.insert({animationID, {anim, anim.didRemount(pendingAnimation.context)}});
+        [CATransaction commit];
       }
       _pendingAnimationsOnInitialMount.clear();
       break;
@@ -128,7 +148,13 @@ static NSString *componentStateName(CKComponentControllerState state)
       [self didRemount];
       for (const auto &pendingAnimation : _pendingAnimations) {
         const CKComponentAnimation &anim = pendingAnimation.animation;
-        _appliedAnimations.push_back({anim, anim.didRemount(pendingAnimation.context)});
+        [CATransaction begin];
+        CKComponentAnimationID animationID = _nextAnimationID++;
+        [CATransaction setCompletionBlock:^() {
+          eraseAnimation(_appliedAnimations, animationID);
+        }];
+        _appliedAnimations.insert({animationID, {anim, anim.didRemount(pendingAnimation.context)}});
+        [CATransaction commit];
       }
       _pendingAnimations.clear();
       break;
@@ -191,11 +217,11 @@ static NSString *componentStateName(CKComponentControllerState state)
 - (void)_cleanupAppliedAnimations
 {
   for (const auto &appliedAnimation : _appliedAnimationsOnInitialMount) {
-    appliedAnimation.animation.cleanup(appliedAnimation.context);
+    appliedAnimation.second.animation.cleanup(appliedAnimation.second.context);
   }
   _appliedAnimationsOnInitialMount.clear();
   for (const auto &appliedAnimation : _appliedAnimations) {
-    appliedAnimation.animation.cleanup(appliedAnimation.context);
+    appliedAnimation.second.animation.cleanup(appliedAnimation.second.context);
   }
   _appliedAnimations.clear();
 }
