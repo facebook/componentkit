@@ -199,5 +199,146 @@
   XCTAssertEqualObjects(c.model, @0);
 }
 
+- (void)testChangesetWithInsertWillCorrectlyComputeIndexPathsForUpdates
+{
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 3, 3);
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1, [NSIndexPath indexPathForItem:1 inSection:0]: @2}]
+    withInsertedItems:@{[NSIndexPath indexPathForItem:1 inSection:0]: @2}]
+   build];
+  CKTransactionalComponentDataSourceChangesetModification *changesetModification =
+  [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset
+                                                                       stateListener:nil
+                                                                            userInfo:nil];
+  CKTransactionalComponentDataSourceChange *change = [changesetModification changeFromState:originalState];
+  NSDictionary *expectedUpdatedIndexPaths = @{
+                                              [NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:0],
+                                              [NSIndexPath indexPathForItem:1 inSection:0]: [NSIndexPath indexPathForItem:2 inSection:0],
+                                              };
+  XCTAssertEqualObjects([[change appliedChanges] updatedIndexPaths], expectedUpdatedIndexPaths);
+}
+
+- (void)testChangesetWithRemovalWillCorrectlyComputeIndexPathsForUpdates
+{
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 3, 3);
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1, [NSIndexPath indexPathForItem:2 inSection:0]: @2}]
+    withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]]
+   build];
+  CKTransactionalComponentDataSourceChangesetModification *changesetModification =
+  [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset
+                                                                       stateListener:nil
+                                                                            userInfo:nil];
+  CKTransactionalComponentDataSourceChange *change = [changesetModification changeFromState:originalState];
+  NSDictionary *expectedUpdatedIndexPaths = @{
+                                              [NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:0],
+                                              [NSIndexPath indexPathForItem:2 inSection:0]: [NSIndexPath indexPathForItem:1 inSection:0],
+                                              };
+  XCTAssertEqualObjects([[change appliedChanges] updatedIndexPaths], expectedUpdatedIndexPaths);
+}
+
+- (void)testChangesetWithInsertionAndRemovalWillCorrectlyComputeIndexPathsForUpdates
+{
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 3, 3);
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1, [NSIndexPath indexPathForItem:2 inSection:0]: @2}]
+    withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]]
+   withInsertedItems:@{[NSIndexPath indexPathForItem:1 inSection:0]: @7}]
+   build];
+  CKTransactionalComponentDataSourceChangesetModification *changesetModification =
+  [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset
+                                                                       stateListener:nil
+                                                                            userInfo:nil];
+  CKTransactionalComponentDataSourceChange *change = [changesetModification changeFromState:originalState];
+  NSDictionary *expectedUpdatedIndexPaths = @{
+                                              [NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:0],
+                                              [NSIndexPath indexPathForItem:2 inSection:0]: [NSIndexPath indexPathForItem:2 inSection:0],
+                                              };
+  XCTAssertEqualObjects([[change appliedChanges] updatedIndexPaths], expectedUpdatedIndexPaths);
+}
+
+- (void)testChangesetWithMoveWillCorrectlyComputeIndexPathsForUpdates
+{
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 4);
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withUpdatedItems:@{[NSIndexPath indexPathForItem:1 inSection:0]: @1, [NSIndexPath indexPathForItem:2 inSection:0]: @2}]
+    withMovedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:1 inSection:0]}]
+   build];
+  CKTransactionalComponentDataSourceChangesetModification *changesetModification =
+  [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset
+                                                                       stateListener:nil
+                                                                            userInfo:nil];
+  CKTransactionalComponentDataSourceChange *change = [changesetModification changeFromState:originalState];
+  NSDictionary *expectedUpdatedIndexPaths = @{
+                                              [NSIndexPath indexPathForItem:1 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:0],
+                                              [NSIndexPath indexPathForItem:2 inSection:0]: [NSIndexPath indexPathForItem:2 inSection:0],
+                                              };
+  XCTAssertEqualObjects([[change appliedChanges] updatedIndexPaths], expectedUpdatedIndexPaths);
+}
+
+- (void)testChangesetWithSectionInsertWillCorrectlyComputeIndexPathsForUpdates
+{
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 3, 3);
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1, [NSIndexPath indexPathForItem:1 inSection:0]: @2}]
+    withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+   build];
+  CKTransactionalComponentDataSourceChangesetModification *changesetModification =
+  [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset
+                                                                       stateListener:nil
+                                                                            userInfo:nil];
+  CKTransactionalComponentDataSourceChange *change = [changesetModification changeFromState:originalState];
+  NSDictionary *expectedUpdatedIndexPaths = @{
+                                              [NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:1],
+                                              [NSIndexPath indexPathForItem:1 inSection:0]: [NSIndexPath indexPathForItem:1 inSection:1],
+                                              };
+  XCTAssertEqualObjects([[change appliedChanges] updatedIndexPaths], expectedUpdatedIndexPaths);
+}
+
+- (void)testChangesetWithSectionRemovalWillCorrectlyComputeIndexPathsForUpdates
+{
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 3, 3);
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:1]: @1, [NSIndexPath indexPathForItem:1 inSection:1]: @2}]
+    withRemovedSections:[NSIndexSet indexSetWithIndex:0]]
+   build];
+  CKTransactionalComponentDataSourceChangesetModification *changesetModification =
+  [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset
+                                                                       stateListener:nil
+                                                                            userInfo:nil];
+  CKTransactionalComponentDataSourceChange *change = [changesetModification changeFromState:originalState];
+  NSDictionary *expectedUpdatedIndexPaths = @{
+                                              [NSIndexPath indexPathForItem:0 inSection:1]: [NSIndexPath indexPathForItem:0 inSection:0],
+                                              [NSIndexPath indexPathForItem:1 inSection:1]: [NSIndexPath indexPathForItem:1 inSection:0],
+                                              };
+  XCTAssertEqualObjects([[change appliedChanges] updatedIndexPaths], expectedUpdatedIndexPaths);
+}
+
+- (void)testChangesetWithSectionInsertionAndSectionRemovalWillCorrectlyComputeIndexPathsForUpdates
+{
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 3, 3);
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+      withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:1]: @1, [NSIndexPath indexPathForItem:2 inSection:1]: @2}]
+     withRemovedSections:[NSIndexSet indexSetWithIndex:0]]
+    withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+   build];
+  CKTransactionalComponentDataSourceChangesetModification *changesetModification =
+  [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset
+                                                                       stateListener:nil
+                                                                            userInfo:nil];
+  CKTransactionalComponentDataSourceChange *change = [changesetModification changeFromState:originalState];
+  NSDictionary *expectedUpdatedIndexPaths = @{
+                                              [NSIndexPath indexPathForItem:0 inSection:1]: [NSIndexPath indexPathForItem:0 inSection:1],
+                                              [NSIndexPath indexPathForItem:2 inSection:1]: [NSIndexPath indexPathForItem:2 inSection:1],
+                                              };
+  XCTAssertEqualObjects([[change appliedChanges] updatedIndexPaths], expectedUpdatedIndexPaths);
+}
 
 @end

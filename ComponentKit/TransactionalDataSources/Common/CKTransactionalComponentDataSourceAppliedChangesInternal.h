@@ -14,7 +14,7 @@
 @interface CKTransactionalComponentDataSourceAppliedChanges ()
 
 /** Any of the parameters may be nil, in which case a default value will be substituted instead. */
-- (instancetype)initWithUpdatedIndexPaths:(NSSet *)updatedIndexPaths
+- (instancetype)initWithUpdatedIndexPaths:(NSDictionary *)updatedIndexPaths
                         removedIndexPaths:(NSSet *)removedIndexPaths
                           removedSections:(NSIndexSet *)removedSections
                           movedIndexPaths:(NSDictionary *)movedIndexPaths

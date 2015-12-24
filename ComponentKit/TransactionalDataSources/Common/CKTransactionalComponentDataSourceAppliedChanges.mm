@@ -17,7 +17,7 @@
 
 @implementation CKTransactionalComponentDataSourceAppliedChanges
 
-- (instancetype)initWithUpdatedIndexPaths:(NSSet *)updatedIndexPaths
+- (instancetype)initWithUpdatedIndexPaths:(NSDictionary *)updatedIndexPaths
                         removedIndexPaths:(NSSet *)removedIndexPaths
                           removedSections:(NSIndexSet *)removedSections
                           movedIndexPaths:(NSDictionary *)movedIndexPaths
@@ -26,7 +26,7 @@
                                  userInfo:(NSDictionary *)userInfo
 {
   if (self = [super init]) {
-    _updatedIndexPaths = [updatedIndexPaths copy] ?: [NSSet set];
+    _updatedIndexPaths = [updatedIndexPaths copy] ?: @{};
     _removedIndexPaths = [removedIndexPaths copy] ?: [NSSet set];
     _removedSections = [removedSections copy] ?: [NSIndexSet indexSet];
     _movedIndexPaths = [movedIndexPaths copy] ?: @{};

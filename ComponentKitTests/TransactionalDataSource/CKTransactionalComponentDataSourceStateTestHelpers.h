@@ -23,4 +23,4 @@ CKTransactionalComponentDataSourceState *CKTransactionalComponentDataSourceTestS
 /** Returns a data source with one item and one section. */
 CKTransactionalComponentDataSource *CKTransactionalComponentTestDataSource(Class<CKComponentProvider> provider);
 
-NSSet *CKTestIndexPaths(NSUInteger numberOfSections, NSUInteger numberOfItemsPerSection);
+NSDictionary *CKTestIndexPaths(NSUInteger numberOfSections, NSUInteger numberOfItemsPerSection);

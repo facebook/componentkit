@@ -69,12 +69,12 @@ CKTransactionalComponentDataSource *CKTransactionalComponentTestDataSource(Class
   return ds;
 }
 
-NSSet *CKTestIndexPaths(NSUInteger numberOfSections, NSUInteger numberOfItemsPerSection)
+NSDictionary *CKTestIndexPaths(NSUInteger numberOfSections, NSUInteger numberOfItemsPerSection)
 {
-  NSMutableSet *ips = [NSMutableSet set];
+  NSMutableDictionary *ips = [NSMutableDictionary dictionary];
   for (NSUInteger i = 0; i < numberOfSections; i++) {
     for (NSUInteger j = 0; j < numberOfItemsPerSection; j++) {
-      [ips addObject:[NSIndexPath indexPathForItem:j inSection:i]];
+      ips[[NSIndexPath indexPathForItem:j inSection:i]] = [NSIndexPath indexPathForItem:j inSection:i];
     }
   }
   return ips;
