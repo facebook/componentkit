@@ -127,24 +127,24 @@
     return;
   }
 
-  BOOL urlIsDifferent = !CKObjectIsEqual(_specifier.url, specifier.url);
-  BOOL cropRectIsDifferent = !CGRectEqualToRect(_specifier.cropRect, specifier.cropRect);
-
-  _specifier = specifier;
-
-  if (cropRectIsDifferent) {
+  if (!CGRectEqualToRect(_specifier.cropRect, specifier.cropRect)) {
     [self setNeedsLayout];
   }
 
-  if (urlIsDifferent || CKObjectIsEqual(self.image, _specifier.defaultImage)) {
-    self.image = _specifier.defaultImage;
+  BOOL urlIsDifferent = !CKObjectIsEqual(_specifier.url, specifier.url);
+  BOOL isShowingCurrentDefaultImage = CKObjectIsEqual(self.image, _specifier.defaultImage);
+  if (urlIsDifferent || isShowingCurrentDefaultImage) {
+    self.image = specifier.defaultImage;
   }
 
+  if (urlIsDifferent && _download != nil) {
+    [specifier.imageDownloader cancelImageDownload:_download];
+    _download = nil;
+  }
+
+  _specifier = specifier;
+
   if (urlIsDifferent) {
-    if (_download != nil) {
-      [_specifier.imageDownloader cancelImageDownload:_download];
-      _download = nil;
-    }
     [self _startDownloadIfNotInReusePool];
   }
 }
