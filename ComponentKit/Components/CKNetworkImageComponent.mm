@@ -89,9 +89,10 @@
   } else if ([object isKindOfClass:[self class]]) {
     CKNetworkImageSpecifier *other = object;
     return CKObjectIsEqual(_url, other->_url)
-           && CKObjectIsEqual(_defaultImage, other->_defaultImage)
-           && CKObjectIsEqual(_imageDownloader, other->_imageDownloader)
-           && CKObjectIsEqual(_scenePath, other->_scenePath);
+    && CKObjectIsEqual(_defaultImage, other->_defaultImage)
+    && CKObjectIsEqual(_imageDownloader, other->_imageDownloader)
+    && CKObjectIsEqual(_scenePath, other->_scenePath)
+    && CGRectEqualToRect(_cropRect, other->_cropRect);
   }
   return NO;
 }
@@ -125,22 +126,27 @@
   if (CKObjectIsEqual(specifier, _specifier)) {
     return;
   }
-  
-  BOOL isShowingCurrentImageURL = self.image != _specifier.defaultImage && self.image != nil;
-  if (isShowingCurrentImageURL && CKObjectIsEqual(_specifier.url, specifier.url)) {
-    _specifier = specifier;
-    return;
-  }
 
-  if (_download) {
-    [_specifier.imageDownloader cancelImageDownload:_download];
-    _download = nil;
-  }
+  BOOL urlIsDifferent = !CKObjectIsEqual(_specifier.url, specifier.url);
+  BOOL cropRectIsDifferent = !CGRectEqualToRect(_specifier.cropRect, specifier.cropRect);
 
   _specifier = specifier;
-  self.image = specifier.defaultImage;
 
-  [self _startDownloadIfNotInReusePool];
+  if (cropRectIsDifferent) {
+    [self setNeedsLayout];
+  }
+
+  if (urlIsDifferent || CKObjectIsEqual(self.image, _specifier.defaultImage)) {
+    self.image = _specifier.defaultImage;
+  }
+
+  if (urlIsDifferent) {
+    if (_download != nil) {
+      [_specifier.imageDownloader cancelImageDownload:_download];
+      _download = nil;
+    }
+    [self _startDownloadIfNotInReusePool];
+  }
 }
 
 - (void)didEnterReusePool
