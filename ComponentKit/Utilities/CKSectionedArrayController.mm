@@ -143,7 +143,7 @@ NS_INLINE NSArray *_createEmptySections(NSUInteger count)
         object
       );
       [_sections[section] replaceObjectAtIndex:index withObject:object];
-    }, nil, nil);
+    }, nil, nil, nil);
   }
 
   { // 2. item removals
@@ -157,7 +157,7 @@ NS_INLINE NSArray *_createEmptySections(NSUInteger count)
         removedItemIndexesBucketizedBySection[section] = [NSMutableIndexSet indexSet];
       }
       [removedItemIndexesBucketizedBySection[section] addIndex:index];
-    }, nil);
+    }, nil, nil);
 
     for (const auto &removalsInSection : removedItemIndexesBucketizedBySection) {
       [_sections[removalsInSection.first] removeObjectsAtIndexes:removalsInSection.second];
@@ -185,7 +185,18 @@ NS_INLINE NSArray *_createEmptySections(NSUInteger count)
     [_sections insertObjects:emptySections atIndexes:sectionInsertionIndexes];
   }
 
-  { // 5. item insertions
+  { // 5. section moves
+    const std::set<std::pair<NSInteger, NSInteger>> &moves = changeset.sections.moves();
+    for (auto move : moves) {
+      outputSections.move(move.first, move.second);
+
+      NSMutableArray *section = [_sections objectAtIndex:move.first];
+      [_sections removeObjectAtIndex:move.first];
+      [_sections insertObject:section atIndex:move.second];
+    }
+  }
+
+  { // 6. item insertions
     __block std::map<NSInteger, std::pair<NSMutableIndexSet *, NSMutableArray *>> insertedObjectBucketizedBySection;
     changeset.items.enumerateItems(nil, nil, ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
       outputItems.insert(
@@ -197,11 +208,21 @@ NS_INLINE NSArray *_createEmptySections(NSUInteger count)
       }
       [insertedObjectBucketizedBySection[section].first addIndex:index];
       [insertedObjectBucketizedBySection[section].second addObject:object];
-    });
+    }, nil);
 
     for (const auto &insertionsInSection : insertedObjectBucketizedBySection) {
       [_sections[insertionsInSection.first] insertObjects:insertionsInSection.second.second atIndexes:insertionsInSection.second.first];
     }
+  }
+
+  { // 7. item moves
+    __block std::set<std::tuple<const CKArrayControllerIndexPath &, const CKArrayControllerIndexPath &, id<NSObject>>> moves;
+    changeset.items.enumerateItems(nil, nil, nil, ^(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath, BOOL *stop) {
+      id <NSObject> object = _sections[fromIndexPath.section][fromIndexPath.item];
+      outputItems.move(fromIndexPath, toIndexPath, object);
+      [_sections[fromIndexPath.section] removeObjectAtIndex:fromIndexPath.item];
+      [_sections[toIndexPath.section] insertObject:object atIndex:toIndexPath.item];
+    });
   }
 
   return {outputSections, outputItems};

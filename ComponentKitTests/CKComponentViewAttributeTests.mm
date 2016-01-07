@@ -27,11 +27,41 @@
 @property (nonatomic, readonly) NSUInteger numberOfTimesViewWasHidden;
 @end
 
+@interface CKNSNumberView : UIControl
+@property (nonatomic) char primitiveChar;
+@property (nonatomic) int primitiveInt;
+@property (nonatomic) short primitiveShort;
+@property (nonatomic) int32_t primitiveInt32;
+@property (nonatomic) long long primitiveInt64;
+@property (nonatomic) unsigned char primitiveUChar;
+@property (nonatomic) unsigned int primitiveUInt;
+@property (nonatomic) unsigned short primitiveUShort;
+@property (nonatomic) uint32_t primitiveUInt32;
+@property (nonatomic) unsigned long long primitiveUInt64;
+@property (nonatomic) double primitiveDouble;
+@property (nonatomic) float primitiveFloat;
+@end
+
 @implementation CKComponentViewAttributeTests
 
 - (void)testThatMountingViewWithNSValueAttributeActuallyAppliesAttributeToView
 {
-  CKComponent *testComponent = [CKComponent newWithView:{[UIControl class], {{@selector(setSelected:), @YES}}} size:{}];
+  CKComponent *testComponent = [CKComponent newWithView:{[CKNSNumberView class], {
+      {@selector(setSelected:), @YES},
+      {CKComponentViewAttribute::LayerAttribute(@selector(setOpacity:)), @(0.5) },
+      {@selector(setTag:), @2},
+      {@selector(setPrimitiveChar:), @'D'},
+      {@selector(setPrimitiveShort:), @(short(1))},
+      {@selector(setPrimitiveInt:), @14},
+      {@selector(setPrimitiveInt32:), @9L},
+      {@selector(setPrimitiveInt64:), @5LL},
+      {@selector(setPrimitiveUChar:), [NSNumber numberWithUnsignedChar:'L']},
+      {@selector(setPrimitiveUShort:), [NSNumber numberWithUnsignedShort:23]},
+      {@selector(setPrimitiveUInt32:), @15UL},
+      {@selector(setPrimitiveUInt64:), @18ULL},
+      {@selector(setPrimitiveDouble:), @11.3},
+      {@selector(setPrimitiveFloat:), @21.1F},
+  }} size:{}];
   CKComponentLifecycleManager *m = [[CKComponentLifecycleManager alloc] init];
   [m updateWithState:{
     .layout = [testComponent layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
@@ -39,9 +69,41 @@
 
   UIView *container = [[UIView alloc] init];
   [m attachToView:container];
-  UIControl *c = [[container subviews] firstObject];
+  CKNSNumberView *c = [[container subviews] firstObject];
   XCTAssertTrue([c isSelected], @"Expected selected to be applied to view");
+  XCTAssertTrue(c.layer.opacity == 0.5, @"Expected opacity to be applied to view's layer");
 }
+
+- (void)testThatMountingViewWithPrimitiveAttributeActuallyAppliesAttributeToView
+{
+  CKComponent *testComponent = [CKComponent newWithView:{[CKNSNumberView class], {
+    {@selector(setSelected:), YES},
+    {CKComponentViewAttribute::LayerAttribute(@selector(setOpacity:)), @0.5},
+    {@selector(setTag:), 2},
+    {@selector(setPrimitiveChar:), 'D'},
+    {@selector(setPrimitiveShort:), short(1)},
+    {@selector(setPrimitiveInt:), 14},
+    {@selector(setPrimitiveInt32:), 9L},
+    {@selector(setPrimitiveInt64:), 5LL},
+    {@selector(setPrimitiveUChar:), (unsigned char)('L')},
+    {@selector(setPrimitiveUShort:), (ushort)(23)},
+    {@selector(setPrimitiveUInt32:), 15UL},
+    {@selector(setPrimitiveUInt64:), 18ULL},
+    {@selector(setPrimitiveDouble:), 11.3},
+    {@selector(setPrimitiveFloat:), 21.1F},
+  }} size:{}];
+  CKComponentLifecycleManager *m = [[CKComponentLifecycleManager alloc] init];
+  [m updateWithState:{
+    .layout = [testComponent layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
+  }];
+  
+  UIView *container = [[UIView alloc] init];
+  [m attachToView:container];
+  CKNSNumberView *c = [[container subviews] firstObject];
+  XCTAssertTrue([c isSelected], @"Expected selected to be applied to view");
+  XCTAssertTrue(c.layer.opacity == 0.5, @"Expected opacity to be applied to view's layer");
+}
+
 
 - (void)testThatRecyclingViewWithSameAttributeValueDoesNotReApplyAttributeToView
 {
@@ -246,5 +308,11 @@
   }
   [super setHidden:hidden];
 }
+
+@end
+
+@implementation CKNSNumberView
+
+// Unused beyonf verifying that numbers are set correctly
 
 @end

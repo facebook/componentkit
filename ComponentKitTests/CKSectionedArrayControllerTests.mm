@@ -420,6 +420,72 @@ using namespace CK::ArrayController;
 
 @end
 
+@interface CKSectionedArrayControllerMoveTests : XCTestCase
+@end
+
+@implementation CKSectionedArrayControllerMoveTests
+{
+  CKSectionedArrayController *_controller;
+}
+
+- (void)setUp
+{
+  [super setUp];
+  _controller = [[CKSectionedArrayController alloc] init];
+
+  Sections sections;
+  sections.insert(0);
+  sections.insert(1);
+
+  Input::Items items;
+  items.insert({0, 0}, @0);
+  items.insert({0, 1}, @1);
+
+  (void)[_controller applyChangeset:{sections, items}];
+}
+
+- (void)tearDown
+{
+  _controller = nil;
+  [super tearDown];
+}
+
+- (void)testMoveOfSection
+{
+  Sections sections;
+  sections.move(0, 1);
+
+  auto output = [_controller applyChangeset:{sections, {}}];
+
+  XCTAssertEqual([_controller numberOfObjectsInSection:0], 0, @"");
+  XCTAssertEqual([_controller numberOfObjectsInSection:1], 2, @"");
+
+  Sections expectedSections;
+  expectedSections.move(0, 1);
+  Output::Changeset expected = {expectedSections, {}};
+
+  XCTAssertTrue(output == expected, @"");
+}
+
+- (void)testMoveOfItem
+{
+  Input::Items items;
+  items.move({0, 0}, {0, 1});
+
+  auto output = [_controller applyChangeset:{{}, items}];
+
+  XCTAssertEqual([_controller numberOfObjectsInSection:0], 2, @"");
+  XCTAssertEqual([_controller objectAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]], @0, @"");
+
+  Output::Items expectedItems;
+  expectedItems.move({0, 0}, {0, 1}, @0);
+  Output::Changeset expected = {{}, expectedItems};
+
+  XCTAssertTrue(output == expected, @"");
+}
+
+@end
+
 @interface CKSectionedArrayControllerEnumerationTest : XCTestCase
 @end
 

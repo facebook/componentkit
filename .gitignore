@@ -5,3 +5,4 @@ Example/WildeGuess/Pod
 appledoc
 *.gcov
 .DS_Store
+ObjectiveC.gc*

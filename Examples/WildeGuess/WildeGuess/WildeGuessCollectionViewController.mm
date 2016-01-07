@@ -120,6 +120,10 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+  if( scrollView.contentSize.height == 0 ) {
+    return ;
+  }
+  
   if (scrolledToBottomWithBuffer(scrollView.contentOffset, scrollView.contentSize, scrollView.contentInset, scrollView.bounds)) {
     [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:8]];
   }

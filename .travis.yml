@@ -1,9 +1,7 @@
 language: objective-c
 
 before_install:
-  - gem install activesupport
   - gem install cocoapods -v 0.37.2
-  - gem install slather -v 1.8
 
 script: ./build.sh ci
 
@@ -11,6 +9,3 @@ script: ./build.sh ci
 branches:
   only:
     - master
-
-after_success:
-  - slather

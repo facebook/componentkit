@@ -74,9 +74,11 @@ namespace CK {
       ~Sections();
       void insert(NSInteger index);
       void remove(NSInteger index);
+      void move(NSInteger fromIndex, NSInteger toIndex);
 
       const std::set<NSInteger> &insertions(void) const;
       const std::set<NSInteger> &removals(void) const;
+      const std::set<std::pair<NSInteger, NSInteger>> &moves() const;
 
       bool operator==(const Sections &other) const;
 
@@ -86,17 +88,15 @@ namespace CK {
        Called by Changeset::enumerate(). Note that by passing an NSIndexSet the **order** that clients have called
        Sections::insert() is irrelevant. See CKArrayControllerInputChangesetTests for an example.
        */
-      typedef void(^Enumerator)(NSIndexSet *sectionIndexes,
+      typedef void(^Enumerator)(NSIndexSet *sourceIndexes,
+                                NSIndexSet *destinationIndexes,
                                 CKArrayControllerChangeType type,
                                 BOOL *stop);
-      
-      typedef NSInteger (^Mapper)(const NSInteger sectionIndex, CKArrayControllerChangeType type);
-      
-      Sections mapIndex(Mapper mapper) const;
 
     private:
       std::set<NSInteger> _insertions;
       std::set<NSInteger> _removals;
+      std::set<std::pair<NSInteger, NSInteger>> _moves;
     };
 
   }
@@ -121,12 +121,14 @@ namespace CK {
         void update(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
         void remove(const CKArrayControllerIndexPath &indexPath);
         void insert(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
+        void move(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath);
         typedef std::map<NSInteger, id<NSObject>> ItemIndexToObjectMap;
         typedef std::map<NSInteger, ItemIndexToObjectMap> ItemsBucketizedBySection;
 
         typedef void (^UpdatesEnumerator)(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop);
         typedef void (^RemovalsEnumerator)(NSInteger section, NSInteger index, BOOL *stop);
         typedef void (^InsertionsEnumerator)(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop);
+        typedef void (^MovesEnumerator)(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath, BOOL *stop);
         /**
          Each set of items is guaranteed to be enumerated in ascending order based on index path.
          For example, following code
@@ -138,7 +140,7 @@ namespace CK {
 
          would result in removalsBlock being called with index paths in this order during enumeration: {1,18}, {2,3}, {2,4}.
          */
-        void enumerateItems(UpdatesEnumerator updatesBlock, RemovalsEnumerator removalsBlock, InsertionsEnumerator insertionsBlock) const;
+        void enumerateItems(UpdatesEnumerator updatesBlock, RemovalsEnumerator removalsBlock, InsertionsEnumerator insertionsBlock, MovesEnumerator movesBlock) const;
 
         size_t size() const noexcept;
 
@@ -154,6 +156,7 @@ namespace CK {
         ItemsBucketizedBySection _updates;
         ItemsBucketizedBySection _removals;
         ItemsBucketizedBySection _insertions;
+        ItemsBucketizedBySection _moves;
       };
 
     }
@@ -239,6 +242,7 @@ namespace CK {
          */
         void remove(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
         void insert(const CKArrayControllerIndexPath &indexPath, id<NSObject> object);
+        void move(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath, id<NSObject> object);
 
         typedef void(^Enumerator)(const CKArrayControllerOutputChange &change,
                                   CKArrayControllerChangeType type,
@@ -252,6 +256,7 @@ namespace CK {
         std::vector<Change> _updates;
         std::vector<Change> _removals;
         std::vector<Change> _insertions;
+        std::vector<Change> _moves;
       };
 
     }

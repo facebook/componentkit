@@ -202,14 +202,20 @@ typedef NS_ENUM(NSUInteger, CommandType) {
 
   XCTAssertNoThrow(changeset.items.enumerateItems(nil,
                                                   ^(NSInteger section, NSInteger index, BOOL *stop) {},
-                                                  ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {}));
+                                                  ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {},
+                                                  ^(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath, BOOL *stop) {}));
   XCTAssertNoThrow(changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {},
                                                   nil,
-                                                  ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {}));
+                                                  ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {},
+                                                  ^(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath, BOOL *stop) {}));
   XCTAssertNoThrow(changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {},
                                                   ^(NSInteger section, NSInteger index, BOOL *stop) {},
+                                                  nil,
+                                                  ^(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath, BOOL *stop){}));
+  XCTAssertNoThrow(changeset.items.enumerateItems(^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {},
+                                                  ^(NSInteger section, NSInteger index, BOOL *stop) {},
+                                                  ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {},
                                                   nil));
-
 }
 
 static Input::Changeset exampleInputChangeset(void)
@@ -229,7 +235,9 @@ static Input::Changeset exampleInputChangeset(void)
   items.update({6, 5}, @5);
   items.remove({15, 9});
   items.remove({15, 8});
-
+  items.move({9, 3}, {9, 2});
+  items.move({9, 5}, {9, 4});
+  items.move({10, 5}, {10, 2});
   return {sections, items};
 }
 
@@ -251,6 +259,18 @@ static Input::Changeset exampleInputChangeset(void)
     } else {
       XCTFail(@"Insertion in an unexpected section.");
     }
+  }, ^(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath, BOOL *stop) {
+    if (fromIndexPath.section == 9) {
+      XCTAssert(fromIndexPath.section == 9, @"Move to unexpected section.");
+      XCTAssert(fromIndexPath.item == 3 || fromIndexPath.item == 5, @"Move from unexpected index path.");
+      XCTAssert(toIndexPath.item == 2 || toIndexPath.item == 4, @"Move to unexpected index path.");
+    } else if (fromIndexPath.section == 10) {
+      XCTAssert(fromIndexPath.section == 10, @"Move to unexpected section.");
+      XCTAssert(fromIndexPath.item == 5, @"Move from unexpected index path.");
+      XCTAssert(toIndexPath.item == 2, @"Move to unexpected index path.");
+    } else {
+      XCTFail(@"Move from an unexpected section.");
+    }
   });
 }
 
@@ -266,7 +286,7 @@ static Input::Changeset exampleInputChangeset(void)
   Output::Changeset changeset = {{}, {}};
 
   Sections::Enumerator sectionsEnumerator =
-  ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {};
+  ^(NSIndexSet *sourceIndexes, NSIndexSet *destinationIndexes, CKArrayControllerChangeType type, BOOL *stop) {};
 
   Output::Items::Enumerator itemsEnumerator =
   ^(const Output::Change &change, CKArrayControllerChangeType type, BOOL *stop) {};
@@ -309,7 +329,7 @@ static Output::Changeset exampleOutputChangeset(void)
   NSMutableArray *allCommands = [[NSMutableArray alloc] init];
 
   Sections::Enumerator sectionsEnumerator =
-  ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {
+  ^(NSIndexSet *sourceIndexes, NSIndexSet *destinationIndexes, CKArrayControllerChangeType type, BOOL *stop) {
     [allCommands addObject:@[@(CommandTypeSection), @(type)]];
   };
 
@@ -341,12 +361,12 @@ static Output::Changeset exampleOutputChangeset(void)
   __block NSIndexSet *removals;
 
   Sections::Enumerator sectionsEnumerator =
-  ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {
+  ^(NSIndexSet *sourceIndexes, NSIndexSet *destinationIndexes, CKArrayControllerChangeType type, BOOL *stop) {
     if (type == CKArrayControllerChangeTypeInsert) {
-      insertions = sectionIndexes;
+      insertions = destinationIndexes;
     }
     if (type == CKArrayControllerChangeTypeDelete) {
-      removals = sectionIndexes;
+      removals = sourceIndexes;
     }
   };
 
@@ -379,7 +399,7 @@ namespace std {
   Output::Changeset changeset = exampleOutputChangeset();
 
   Sections::Enumerator sectionsEnumerator =
-  ^(NSIndexSet *sectionIndexes, CKArrayControllerChangeType type, BOOL *stop) {};
+  ^(NSIndexSet *sourceIndexes, NSIndexSet *destinationIndexes, CKArrayControllerChangeType type, BOOL *stop) {};
 
   __block std::unordered_set<Output::Change> insertions;
   __block std::unordered_set<Output::Change> removals;

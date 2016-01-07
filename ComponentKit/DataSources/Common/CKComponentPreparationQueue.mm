@@ -17,6 +17,7 @@
 #import "CKMutex.h"
 #import "CKComponentLifecycleManager.h"
 #import "CKComponentPreparationQueueListenerAnnouncer.h"
+#import "CKWatchdogTimer.h"
 
 @implementation CKComponentPreparationInputItem
 {
@@ -199,6 +200,8 @@
 
 - (void)_processJob:(CKComponentPreparationQueueJob *)job
 {
+  CKWatchdogTimer watchdog;
+
   // All announcments are scheduled on the main thread
   dispatch_async(dispatch_get_main_queue(), ^{
     [_announcer componentPreparationQueue:self
@@ -245,7 +248,8 @@
   if (![inputItem isPassthrough]) {
     CKArrayControllerChangeType changeType = [inputItem changeType];
     if (changeType == CKArrayControllerChangeTypeInsert ||
-        changeType == CKArrayControllerChangeTypeUpdate) {
+        changeType == CKArrayControllerChangeTypeUpdate ||
+        changeType == CKArrayControllerChangeTypeMove) {
       
       // Grab the lifecycle manager and use it to generate an layout the component tree
       CKComponentLifecycleManager *lifecycleManager = [inputItem lifecycleManager];
