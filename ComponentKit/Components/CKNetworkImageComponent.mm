@@ -89,9 +89,10 @@
   } else if ([object isKindOfClass:[self class]]) {
     CKNetworkImageSpecifier *other = object;
     return CKObjectIsEqual(_url, other->_url)
-           && CKObjectIsEqual(_defaultImage, other->_defaultImage)
-           && CKObjectIsEqual(_imageDownloader, other->_imageDownloader)
-           && CKObjectIsEqual(_scenePath, other->_scenePath);
+    && CKObjectIsEqual(_defaultImage, other->_defaultImage)
+    && CKObjectIsEqual(_imageDownloader, other->_imageDownloader)
+    && CKObjectIsEqual(_scenePath, other->_scenePath)
+    && CGRectEqualToRect(_cropRect, other->_cropRect);
   }
   return NO;
 }
@@ -126,15 +127,26 @@
     return;
   }
 
-  if (_download) {
-    [_specifier.imageDownloader cancelImageDownload:_download];
+  if (!CGRectEqualToRect(_specifier.cropRect, specifier.cropRect)) {
+    [self setNeedsLayout];
+  }
+
+  BOOL urlIsDifferent = !CKObjectIsEqual(_specifier.url, specifier.url);
+  BOOL isShowingCurrentDefaultImage = CKObjectIsEqual(self.image, _specifier.defaultImage);
+  if (urlIsDifferent || isShowingCurrentDefaultImage) {
+    self.image = specifier.defaultImage;
+  }
+
+  if (urlIsDifferent && _download != nil) {
+    [specifier.imageDownloader cancelImageDownload:_download];
     _download = nil;
   }
 
   _specifier = specifier;
-  self.image = specifier.defaultImage;
 
-  [self _startDownloadIfNotInReusePool];
+  if (urlIsDifferent) {
+    [self _startDownloadIfNotInReusePool];
+  }
 }
 
 - (void)didEnterReusePool
