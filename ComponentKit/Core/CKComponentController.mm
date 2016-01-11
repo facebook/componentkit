@@ -68,6 +68,7 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
   CKComponentControllerState _state;
   BOOL _updatingComponent;
   BOOL _performedInitialMount;
+  BOOL _performDidMountInitially;
   CKComponent *_previousComponent;
   CKComponentAnimationID _nextAnimationID;
   std::vector<CKPendingComponentAnimation> _pendingAnimationsOnInitialMount;
@@ -76,7 +77,9 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
   CKAppliedComponentAnimationMap _appliedAnimations;
 }
 
+- (void)willMountInitially {}
 - (void)willMount {}
+- (void)didMountInitially {}
 - (void)didMount {}
 - (void)willRemount {}
 - (void)didRemount {}
@@ -103,6 +106,10 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
   switch (_state) {
     case CKComponentControllerStateUnmounted:
       _state = CKComponentControllerStateMounting;
+      if (!_performedInitialMount) {
+        _performDidMountInitially = YES;
+        [self willMountInitially];
+      }
       [self willMount];
       if (!_performedInitialMount) {
         _performedInitialMount = YES;
@@ -130,6 +137,10 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
   switch (_state) {
     case CKComponentControllerStateMounting:
       _state = CKComponentControllerStateMounted;
+      if (_performDidMountInitially) {
+        _performDidMountInitially = NO;
+        [self didMountInitially];
+      }
       [self didMount];
       for (const auto &pendingAnimation : _pendingAnimationsOnInitialMount) {
         const CKComponentAnimation &anim = pendingAnimation.animation;
