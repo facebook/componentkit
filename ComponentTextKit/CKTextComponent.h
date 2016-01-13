@@ -27,6 +27,7 @@ struct CKTextComponentAccessibilityContext
 
 + (instancetype)newWithTextAttributes:(const CKTextKitAttributes &)attributes
                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
-                 accessibilityContext:(const CKTextComponentAccessibilityContext &)accessibilityContext;
+                 accessibilityContext:(const CKTextComponentAccessibilityContext &)accessibilityContext
+                                 size:(const CKComponentSize &)size;
 
 @end

@@ -64,6 +64,7 @@ static CKTextKitRenderer *rendererForAttributes(CKTextKitAttributes &attributes,
 + (instancetype)newWithTextAttributes:(const CKTextKitAttributes &)attributes
                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
                  accessibilityContext:(const CKTextComponentAccessibilityContext &)accessibilityContext
+                                 size:(const CKComponentSize &)size
 {
   CKTextKitAttributes copyAttributes = attributes.copy();
   CKViewComponentAttributeValueMap copiedMap = viewAttributes;
@@ -76,7 +77,7 @@ static CKTextKitRenderer *rendererForAttributes(CKTextKitAttributes &attributes,
       .accessibilityLabel = accessibilityContext.accessibilityLabel.hasText()
       ? accessibilityContext.accessibilityLabel : ^{ return copyAttributes.attributedString.string; }
     }
-  } size:{}];
+  } size:size];
   if (c) {
     c->_attributes = copyAttributes;
     c->_accessibilityContext = accessibilityContext;

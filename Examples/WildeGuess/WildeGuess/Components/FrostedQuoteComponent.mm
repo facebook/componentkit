@@ -40,7 +40,8 @@
                   viewAttributes:{
                     {@selector(setBackgroundColor:), [UIColor clearColor]},
                     {@selector(setUserInteractionEnabled:), @NO},
-                  }],
+                  }
+                  size:{ }],
                  .alignSelf = CKStackLayoutAlignSelfCenter
                },
                {
@@ -57,7 +58,8 @@
                    viewAttributes:{
                      {@selector(setBackgroundColor:), [UIColor clearColor]},
                      {@selector(setUserInteractionEnabled:), @NO},
-                   }]],
+                   }
+                   size:{ }]],
                  .alignSelf = CKStackLayoutAlignSelfEnd, // Right aligned
                }
              }]]]];
