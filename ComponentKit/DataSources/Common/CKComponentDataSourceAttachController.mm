@@ -42,8 +42,16 @@
 
 - (void)dealloc
 {
-  CKAssert([[NSThread currentThread] isMainThread], @"This object is affined to the main thread and should be deallocated from the main thread.");
-  [self _detachAllViews];
+  NSDictionary *scopeIdentifierToAttachedViewMap = _scopeIdentifierToAttachedViewMap;
+  dispatch_block_t viewTearDownBlock = ^{
+    NSArray *views = [scopeIdentifierToAttachedViewMap allValues];
+    _tearDownAttachStateFromViews(views);
+  };
+  if ([[NSThread currentThread] isMainThread]) {
+    viewTearDownBlock();
+  } else {
+    dispatch_async(dispatch_get_main_queue(), viewTearDownBlock);
+  }
 }
 
 #pragma mark - Public API
@@ -113,6 +121,17 @@ static CKComponentDataSourceAttachState *_mountComponentLayoutInView(CKComponent
   NSSet *currentlyMountedComponents = view.ck_attachState.mountedComponents;
   NSSet *newMountedComponents = CKMountComponentLayout(layout, view, currentlyMountedComponents, nil);
   return [[CKComponentDataSourceAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents];
+}
+
+static void _tearDownAttachStateFromViews(NSArray *views)
+{
+  for (UIView *view in views) {
+    CKComponentDataSourceAttachState *attachState = view.ck_attachState;
+    if (attachState) {
+      CKUnmountComponents(attachState.mountedComponents);
+      view.ck_attachState = nil;
+    }
+  }
 }
 
 @end
