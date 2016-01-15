@@ -149,44 +149,4 @@
   XCTAssertNil(outerComponent.scopeFrameToken);
 }
 
-#pragma mark - Controller Construction
-
-- (void)testComponentWithControllerThrowsIfNoScopeExistsForTheComponent
-{
-  CKComponent *(^block)(void) = ^CKComponent *{
-    return [CKMonkeyComponent new];
-  };
-
-  XCTAssertThrows((void)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, block));
-}
-
-- (void)testComponentWithControllerDoesNotThrowIfScopeExistsForTheComponent
-{
-  CKComponent *(^block)(void) = ^CKComponent *{
-    CKComponentScope scope([CKMonkeyComponent class]);
-    return [CKMonkeyComponent new];
-  };
-
-  XCTAssertNoThrow((void)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, block));
-}
-
-- (void)testComponentWithControllerThatHasAnimationsThrowsIfNoScopeExistsForTheComponent
-{
-  CKComponent *(^block)(void) = ^CKComponent *{
-    return [CKMonkeyComponentWithAnimations new];
-  };
-
-  XCTAssertThrows((void)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, block));
-}
-
-- (void)testComponentWithControllerThatHasAnimationsDoesNotThrowIfScopeExistsForTheComponent
-{
-  CKComponent *(^block)(void) = ^CKComponent *{
-    CKComponentScope scope([CKMonkeyComponentWithAnimations class]);
-    return [CKMonkeyComponentWithAnimations new];
-  };
-
-  XCTAssertNoThrow((void)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, block));
-}
-
 @end

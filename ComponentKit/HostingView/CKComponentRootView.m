@@ -34,13 +34,14 @@ static NSMutableArray *hitTestHooks;
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
+  UIView *superHitView = [super hitTest:point withEvent:event];
   for (CKComponentRootViewHitTestHook hook in hitTestHooks) {
-    UIView *hitView = hook(self, point, event);
+    UIView *hitView = hook(self, point, event, superHitView);
     if (hitView) {
       return hitView;
     }
   }
-  return [super hitTest:point withEvent:event];
+  return superHitView;
 }
 
 @end

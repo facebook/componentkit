@@ -37,14 +37,6 @@ static void openContextWithNSObject()
   CKComponentContext<NSObject> context(o);
 }
 
-- (void)testAttemptingToEstablishComponentContextWithDuplicateClassThrows
-{
-  NSObject *o = [[NSObject alloc] init];
-  CKComponentContext<NSObject> context(o);
-
-  XCTAssertThrows(openContextWithNSObject(), @"Expected opening another context with NSObject to throw");
-}
-
 - (void)testComponentContextCleansUpWhenItGoesOutOfScope
 {
   {
