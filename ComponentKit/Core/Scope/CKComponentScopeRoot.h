@@ -21,6 +21,7 @@
 typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
   CKComponentAnnouncedEventTreeWillAppear,
   CKComponentAnnouncedEventTreeDidDisappear,
+  CKComponentAnnouncedEventControllerWillDealloc
 };
 
 @protocol CKComponentStateListener <NSObject>

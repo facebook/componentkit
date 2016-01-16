@@ -27,6 +27,7 @@ static const CKAnounceableEventMap &announceableEvents()
   static const CKAnounceableEventMap *announceableEvents = new CKAnounceableEventMap({
     {CKComponentAnnouncedEventTreeWillAppear, @selector(componentTreeWillAppear)},
     {CKComponentAnnouncedEventTreeDidDisappear, @selector(componentTreeDidDisappear)},
+    {CKComponentAnnouncedEventControllerWillDealloc, @selector(willDealloc)},
   });
   return *announceableEvents;
 }

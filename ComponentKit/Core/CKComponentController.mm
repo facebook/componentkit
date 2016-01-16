@@ -82,6 +82,7 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
 - (void)didRemount {}
 - (void)willUnmount {}
 - (void)didUnmount {}
+- (void)willDealloc {}
 - (void)willUpdateComponent {}
 - (void)didUpdateComponent {}
 - (void)componentWillRelinquishView {}

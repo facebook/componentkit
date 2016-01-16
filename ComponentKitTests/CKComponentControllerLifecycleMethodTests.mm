@@ -29,6 +29,7 @@ struct CKLifecycleMethodCounts {
   NSUInteger didRemount;
   NSUInteger willUnmount;
   NSUInteger didUnmount;
+  NSUInteger willDealloc;
 
   NSString *description() const
   {
@@ -149,6 +150,47 @@ struct CKLifecycleMethodCounts {
   }
 }
 
+- (void)testThatComponentControllerCallsWillDealloc
+{
+  // Retain the component's controller beyond the natural lifecycle so that we can observe _counts after the lifecycle manager is released
+  CKLifecycleComponentController *controller;
+  CKLifecycleMethodCounts actual;
+  const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1, .willDealloc = 1};
+
+  // Unmounted
+  @autoreleasepool {
+    CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+    CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
+    [clm updateWithState:state];
+    
+    UIView *view = [[UIView alloc] init];
+    [clm attachToView:view];
+    [clm detachFromView];
+    
+    controller = ((CKLifecycleComponent *)state.layout.component).controller;
+  }
+  actual  = controller->_counts;
+  XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
+
+  controller->_counts = {}; // Reset all to zero
+  // Mounted
+  @autoreleasepool {
+    CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+    CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
+    [clm updateWithState:state];
+    
+    UIView *view = [[UIView alloc] init];
+    [clm attachToView:view];
+    
+    controller = ((CKLifecycleComponent *)state.layout.component).controller;
+  }
+  actual  = controller->_counts;
+
+  // Expect that calls to willUnmount and didUnmount are made before deallocation
+  XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
+
+}
+
 @end
 
 @implementation CKLifecycleComponent
@@ -190,5 +232,6 @@ struct CKLifecycleMethodCounts {
 - (void)didRemount { [super didRemount]; _counts.didRemount++; }
 - (void)willUnmount { [super willUnmount]; _counts.willUnmount++; }
 - (void)didUnmount { [super didUnmount]; _counts.didUnmount++; }
+- (void)willDealloc { [super willDealloc]; _counts.willDealloc++; }
 
 @end
