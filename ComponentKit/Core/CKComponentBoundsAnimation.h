@@ -32,8 +32,6 @@ typedef NS_ENUM(NSUInteger, CKComponentBoundsAnimationMode) {
 
  @warning UITableView does not support customizing its animation in any way. CKComponentTableViewDataSource animates
  the change using UITableView's defaults if duration is non-zero, ignoring all other parameters.
-
- @warning CKComponentHostingView does not yet support CKComponentBoundsAnimation.
  */
 struct CKComponentBoundsAnimation {
   NSTimeInterval duration;
