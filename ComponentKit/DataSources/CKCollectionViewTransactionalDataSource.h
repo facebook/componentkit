@@ -66,6 +66,14 @@
                        mode:(CKUpdateMode)mode
                    userInfo:(NSDictionary *)userInfo;
 
+/**
+ Enqueues a change set with the specified mode and userInfo that will remove all items
+ and sections, according to the current state of the component date source. This returns
+ the collection view to an "empty" state.
+ */
+- (void)removeAllWithMode:(CKUpdateMode)mode
+                 userInfo:(NSDictionary *)userInfo;
+
 @property (readonly, nonatomic, strong) UICollectionView *collectionView;
 
 @end

@@ -16,6 +16,7 @@
 #import "CKTransactionalComponentDataSourceItem.h"
 #import "CKTransactionalComponentDataSourceState.h"
 #import "CKTransactionalComponentDataSourceAppliedChanges.h"
+#import "CKTransactionalComponentDataSourceChangeset.h"
 #import "CKComponentRootView.h"
 #import "CKComponentLayout.h"
 #import "CKComponentDataSourceAttachController.h"
@@ -127,6 +128,28 @@ static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppli
                    userInfo:(NSDictionary *)userInfo
 {
   [_componentDataSource updateConfiguration:configuration mode:mode userInfo:userInfo];
+}
+
+#pragma mark - Remove All
+
+- (void)removeAllWithMode:(CKUpdateMode)mode
+                 userInfo:(NSDictionary *)userInfo
+{
+  NSMutableSet *indexPaths = [NSMutableSet set];
+  NSMutableIndexSet *sections = [NSMutableIndexSet indexSet];
+	[_currentState enumerateObjectsUsingBlock:^(CKTransactionalComponentDataSourceItem *_, NSIndexPath *indexPath, BOOL *stop) {
+    [indexPaths addObject:indexPath];
+    [sections addIndex:indexPath.section];
+  }];
+  CKTransactionalComponentDataSourceChangeset *changeSet =
+  [[CKTransactionalComponentDataSourceChangeset alloc]
+   initWithUpdatedItems:nil
+   removedItems:indexPaths
+   removedSections:sections
+   movedItems:nil
+   insertedSections:nil
+   insertedItems:nil];
+  [self applyChangeset:changeSet mode:mode userInfo:userInfo];
 }
 
 #pragma mark - UICollectionViewDataSource
