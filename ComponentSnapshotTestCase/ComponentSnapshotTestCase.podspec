@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "ComponentSnapshotTestCase"
-  s.version          = "0.13"
+  s.version          = "0.14"
   s.summary          = "Support for Components with FBSnapshotTestCase"
   s.homepage         = "https://componentkit.org"
   s.license          = 'BSD'
