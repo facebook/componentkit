@@ -14,7 +14,7 @@
 
 #import "CKCollectionViewTransactionalDataSource.h"
 #import "CKTransactionalComponentDataSourceConfiguration.h"
-#import "CKSupplementaryViewDataSource.h"
+#import "CKTransactionalComponentDataSourceChangeset.h"
 #import "CKSizeRange.h"
 
 @interface CKCollectionViewTransactionalDataSource () <UICollectionViewDataSource>
@@ -23,7 +23,6 @@
 @interface CKCollectionViewTransactionalDataSourceTests : XCTestCase
 @property (strong) CKCollectionViewTransactionalDataSource *dataSource;
 @property (strong) id mockCollectionView;
-@property (strong) id mockSupplementaryViewDataSource;
 @end
 
 @implementation CKCollectionViewTransactionalDataSourceTests
@@ -31,7 +30,6 @@
 - (void)setUp {
   [super setUp];
 
-  self.mockSupplementaryViewDataSource = [OCMockObject mockForProtocol:@protocol(CKSupplementaryViewDataSource)];
   self.mockCollectionView = [OCMockObject niceMockForClass:[UICollectionView class]];
 
   CKTransactionalComponentDataSourceConfiguration *config = [[CKTransactionalComponentDataSourceConfiguration alloc]
@@ -41,17 +39,52 @@
 
   self.dataSource = [[CKCollectionViewTransactionalDataSource alloc]
                      initWithCollectionView:self.mockCollectionView
-                     supplementaryViewDataSource:self.mockSupplementaryViewDataSource
+                     supplementaryViewDataSource:nil
                      configuration:config];
 }
 
-- (void)testSupplementaryViewDataSource
+- (void)testRemoveAllItems
 {
-  NSIndexPath *indexPath = [NSIndexPath indexPathForItem:3 inSection:4];
-  NSString *viewKind = @"foo";
-  
-  [[self.mockSupplementaryViewDataSource expect] collectionView:self.mockCollectionView viewForSupplementaryElementOfKind:viewKind atIndexPath:indexPath];
-  [self.dataSource collectionView:self.mockCollectionView viewForSupplementaryElementOfKind:viewKind atIndexPath:indexPath];
+  NSIndexSet *sections = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)];
+  NSDictionary *items = @{
+                          [NSIndexPath indexPathForItem:0 inSection:0] : @"0-0",
+                          [NSIndexPath indexPathForItem:0 inSection:1] : @"0-1",
+                          [NSIndexPath indexPathForItem:1 inSection:1] : @"1-1",
+                          [NSIndexPath indexPathForItem:0 inSection:2] : @"0-2",
+                          [NSIndexPath indexPathForItem:1 inSection:2] : @"1-2",
+                          [NSIndexPath indexPathForItem:2 inSection:2] : @"2-2"
+                          };
+
+  [[[self.mockCollectionView stub] andDo:^(NSInvocation *invocation) {
+    dispatch_block_t block;
+    [invocation getArgument:&block atIndex:2];
+    block();
+  }] performBatchUpdates:[OCMArg any] completion:[OCMArg any]];
+
+  CKTransactionalComponentDataSourceChangeset *changeSet = [[CKTransactionalComponentDataSourceChangeset alloc]
+                                                            initWithUpdatedItems:nil
+                                                            removedItems:nil
+                                                            removedSections:nil
+                                                            movedItems:nil 
+                                                            insertedSections:sections
+                                                            insertedItems:items];
+  [self.dataSource applyChangeset:changeSet mode:CKUpdateModeSynchronous userInfo:nil];
+
+  id expectEmptyArray = [OCMArg checkWithBlock:^BOOL(NSArray *array) {
+    return array.count == 0;
+  }];
+
+  [[self.mockCollectionView expect] deleteSections:sections];
+  [[self.mockCollectionView expect] deleteItemsAtIndexPaths:items.allKeys];
+
+  [[self.mockCollectionView expect] reloadItemsAtIndexPaths:expectEmptyArray];
+  [[self.mockCollectionView expect] insertItemsAtIndexPaths:expectEmptyArray];
+  [[self.mockCollectionView expect] moveItemAtIndexPath:[OCMArg any] toIndexPath:[OCMArg any]];
+  [[self.mockCollectionView expect] insertSections:[OCMArg checkWithBlock:^BOOL(NSIndexSet *sections) {
+    return sections.count == 0;
+  }]];
+
+  [self.dataSource removeAllWithMode:CKUpdateModeSynchronous userInfo:nil];
 }
 
 @end
