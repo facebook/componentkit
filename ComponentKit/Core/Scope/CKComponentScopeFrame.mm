@@ -23,14 +23,14 @@
 #import "CKMacros.h"
 #import "CKThreadLocalComponentScope.h"
 
-typedef struct _CKStateScopeKey {
+struct _CKStateScopeKey {
   Class __unsafe_unretained componentClass;
   id identifier;
 
   bool operator==(const _CKStateScopeKey &v) const {
     return (CKObjectIsEqual(this->componentClass, v.componentClass) && CKObjectIsEqual(this->identifier, v.identifier));
   }
-} _CKStateScopeKey;
+};
 
 namespace std {
   template <>
@@ -86,6 +86,42 @@ namespace std {
     _handle = handle;
   }
   return self;
+}
+
+- (void)injectScopeHierarchy:(_CKChildScopeFrameRet)oldFrame
+{
+  Class componentClass = oldFrame.cls;
+  id identifier = oldFrame.identifier;
+  CKAssert([oldFrame.frame isKindOfClass:[CKComponentScopeFrame class]], @"Can't inject with incorrect frame class.");
+
+  auto result = _children.insert({{componentClass, identifier}, oldFrame.frame});
+
+  CKAssert(result.second, @"Scope collision: attempting to create duplicate scope %@:%@", componentClass, identifier);
+}
+
+- (_CKChildScopeFrameRet)childScopeFrameForOldIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
+{
+  for (auto &pr : _children) {
+    if (pr.second->_handle.globalIdentifier == globalIdentifier) {
+      return _CKChildScopeFrameRet{pr.first.componentClass, pr.first.identifier, pr.second};
+    }
+  }
+  return {nil, nil, 0};
+}
+
+- (BOOL)anyDescendentHasPendingUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+{
+  auto it = stateUpdates.find(_handle.globalIdentifier);
+  if (it != stateUpdates.end()) {
+    return YES;
+  }
+  // Look in children
+  for (auto &pr : _children) {
+    if ([pr.second anyDescendentHasPendingUpdates:stateUpdates]) {
+      return YES;
+    }
+  }
+  return NO;
 }
 
 @end

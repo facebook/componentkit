@@ -14,10 +14,46 @@
 #import "CKComponentSubclass.h"
 #import "CKMacros.h"
 #import "CKInternalHelpers.h"
+#import "CKThreadLocalComponentScope.h"
+#import "CKComponentScopeHandle.h"
 
 #include <map>
 
+
 static NSString *CKComponentMemoizerThreadKey = @"CKComponentMemoizer";
+
+static bool CKCanUseMemoizedComponent(CKComponent *c) {
+  CKThreadLocalComponentScope *s = CKThreadLocalComponentScope::currentScope();
+
+  NSCAssert(s != nullptr, @"No thread local scope!");
+  if (!s) {
+    return false;
+  }
+
+  auto stackTop = s->stack.top();
+  CKComponentScopeHandleIdentifier oldIdent = c.globalIdentifier;
+
+  // Look for the equivalent child frame
+  auto oldFrameRet = [stackTop.equivalentPreviousFrame childScopeFrameForOldIdentifier:oldIdent];
+  CKComponentScopeFrame *oldScopeFrame = oldFrameRet.frame;
+
+  // Make sure none of the descendents of the oldScopeFrame have pending state updates
+  if (oldScopeFrame && s->stateUpdates.size() > 0) {
+    if ([oldScopeFrame anyDescendentHasPendingUpdates:s->stateUpdates]) {
+      //NSLog(@"Cannot reuse component %@ because state has been updated.", c);
+      return false;
+    }
+  }
+
+  // Copy oldScopeFrame into new scope frame
+  if (oldScopeFrame) {
+    [stackTop.frame injectScopeHierarchy:oldFrameRet];
+  }
+
+  //NSLog(@"Ok to reuse component %@.", c);
+
+  return true;
+}
 
 // Define hash as just pulling out the precomputed hash field
 namespace std {
@@ -149,6 +185,11 @@ id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void))
 {
   _CKComponentMemoizerImpl *impl = [_CKComponentMemoizerImpl currentMemoizer];
   CKComponent *component = [impl dequeueComponentForKey:memoizationKey];
+  if (component) {
+    if (!CKCanUseMemoizedComponent(component)) {
+      component = nil;
+    }
+  }
   if (!component && block) {
     component = block();
   }
