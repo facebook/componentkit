@@ -93,6 +93,10 @@ namespace CK {
                                 CKArrayControllerChangeType type,
                                 BOOL *stop);
 
+      typedef NSInteger (^Mapper)(const NSInteger sectionIndex, CKArrayControllerChangeType type);
+
+      Sections mapIndex(Mapper mapper) const;
+
     private:
       std::set<NSInteger> _insertions;
       std::set<NSInteger> _removals;
