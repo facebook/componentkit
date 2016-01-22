@@ -69,6 +69,24 @@ size_t Sections::size() const noexcept
   return _insertions.size() + _removals.size() + _moves.size();
 }
 
+Sections Sections::mapIndex(Sections::Mapper mapper) const
+{
+  __block Sections mappedSections = {};
+  void (^map)(std::set<NSInteger>, CKArrayControllerChangeType) = ^(std::set<NSInteger> indexes, CKArrayControllerChangeType type) {
+    for (auto index : indexes) {
+      NSInteger newIndex = mapper(index, type);
+      if (type == CKArrayControllerChangeTypeInsert) {
+        mappedSections.insert(newIndex);
+      } else if (type == CKArrayControllerChangeTypeDelete) {
+        mappedSections.remove(newIndex);
+      }
+    }
+  };
+  map(_insertions, CKArrayControllerChangeTypeInsert);
+  map(_removals, CKArrayControllerChangeTypeDelete);
+  return mappedSections;
+}
+
 /**
  Updates and removals operate in the same index path space, but insertions operate post-application of updates and
  removals. Therefore insertions index paths can alse appear in the commands for removals and updates and vice versa,
