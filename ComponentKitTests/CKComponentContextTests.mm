@@ -31,12 +31,6 @@
   XCTAssertNil(CKComponentContext<NSObject>::get(), @"Expected to return nil without throwing");
 }
 
-static void openContextWithNSObject()
-{
-  NSObject *o = [[NSObject alloc] init];
-  CKComponentContext<NSObject> context(o);
-}
-
 - (void)testComponentContextCleansUpWhenItGoesOutOfScope
 {
   {
