@@ -94,14 +94,6 @@
 
 #pragma mark - Attach helpers
 
-- (void)_detachAllViews
-{
-  NSArray *views = [_scopeIdentifierToAttachedViewMap allValues];
-  for (UIView *view in views) {
-    [self _detachComponentLayoutFromView:view];
-  }
-}
-
 - (void)_detachComponentLayoutFromView:(UIView *)view
 {
   CKComponentDataSourceAttachState *attachState = view.ck_attachState;
