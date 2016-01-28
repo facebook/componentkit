@@ -19,6 +19,7 @@
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeRoot.h"
+#import "CKComponentMemoizer.h"
 
 @implementation CKTransactionalComponentDataSourceUpdateConfigurationModification
 {
@@ -58,15 +59,18 @@
         const CKComponentLayout layout = CKComponentComputeLayout(item.layout.component, sizeRange, sizeRange.max);
         newItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout
                                                                            model:[item model]
-                                                                       scopeRoot:[item scopeRoot]];
+                                                                       scopeRoot:[item scopeRoot]
+                                                                   memoizerState:[item memoizerState]];
       } else {
+        CKComponentMemoizer memoizer(item.memoizerState);
         const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
           return [componentProvider componentForModel:[item model] context:context];
         });
         const CKComponentLayout layout = CKComponentComputeLayout(result.component, sizeRange, sizeRange.max);
         newItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout
                                                                            model:[item model]
-                                                                       scopeRoot:result.scopeRoot];
+                                                                       scopeRoot:result.scopeRoot
+                                                                   memoizerState:memoizer.nextMemoizerState()];
       }
 
       [newItems addObject:newItem];
