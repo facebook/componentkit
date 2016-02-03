@@ -16,8 +16,8 @@
 /**
  This class is an implementation of a `UICollectionViewDataSource` that can be used along with components. For each set of changes (i.e insertion/deletion/update
  of items and/or insertion/deletion of sections) the datasource will compute asynchronously on a background thread the corresponding component trees and then
- apply the corresponding UI changes to the collection view leveraging automatically view reuse.
- 
+ apply the corresponding UI changes to the collection view leveraging automatic view reuse.
+
  Doing so this reverses the traditional approach for a `UICollectionViewDataSource`. Usually the controller layer will *tell* the `UICollectionView` to update and
  then the `UICollectionView` *ask* the datasource for the data. Here the model is  more Reactive, from an external prospective, the datasource is *told* what
  changes to apply and then *tell* the collection view to apply the corresponding changes.
@@ -33,7 +33,7 @@
 
 - (instancetype)init NS_UNAVAILABLE;
 
-/** 
+/**
  Applies a changeset either synchronously or asynchronously to the collection view.
  If a synchronous changeset is applied while asynchronous changesets are still pending, then the pending changesets will be applied synchronously
  before the new changeset is applied.
