@@ -43,11 +43,23 @@ static CKStackPositionedLayout stackedLayout(const CKStackLayoutComponentStyle &
   const auto largestChildCrossSize = it == unpositionedLayout.items.end() ? 0 : crossDimension(style.direction, it->layout.size);
   const auto minCrossSize = crossDimension(style.direction, constrainedSize.min);
   const auto maxCrossSize = crossDimension(style.direction, constrainedSize.max);
+  const auto maxStackSize = stackDimension(style.direction, constrainedSize.max);
+
   const CGFloat crossSize = MIN(MAX(minCrossSize, largestChildCrossSize), maxCrossSize);
 
+  CGFloat maxLineHieght = 0;
+  CGFloat crossPosition = 0;
   CGPoint p = directionPoint(style.direction, offset, 0);
   BOOL first = YES;
   auto stackedChildren = CK::map(unpositionedLayout.items, [&](const CKStackUnpositionedItem &l) -> CKComponentLayoutChild {
+    if(!first && style.flexWrap == CKStackLayoutWrapFlexWrap) {
+      CGFloat stackSize = (style.direction == CKStackLayoutDirectionVertical) ? p.y : p.x;
+      if (stackSize + l.child.spacingBefore + style.spacing + stackDimension(style.direction, l.layout.size) + l.child.spacingAfter > maxStackSize) {
+        crossPosition = crossPosition + maxLineHieght;
+        maxLineHieght = 0;
+        p = directionPoint(style.direction, offset, crossPosition);
+      }
+    }
     p = p + directionPoint(style.direction, l.child.spacingBefore, 0);
     if (!first) {
       p = p + directionPoint(style.direction, style.spacing, 0);
@@ -59,9 +71,12 @@ static CKStackPositionedLayout stackedLayout(const CKStackLayoutComponentStyle &
       l.layout,
     };
     p = p + directionPoint(style.direction, stackDimension(style.direction, l.layout.size) + l.child.spacingAfter, 0);
+    if(crossDimension(style.direction, l.layout.size) > maxLineHieght) {
+        maxLineHieght = crossDimension(style.direction, l.layout.size);
+    }
     return c;
   });
-  return {stackedChildren, crossSize};
+  return {stackedChildren, style.flexWrap == CKStackLayoutWrapFlexWrap ? (maxLineHieght + crossPosition) : crossSize};
 }
 
 CKStackPositionedLayout CKStackPositionedLayout::compute(const CKStackUnpositionedLayout &unpositionedLayout,

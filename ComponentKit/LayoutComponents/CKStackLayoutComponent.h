@@ -17,6 +17,11 @@ typedef NS_ENUM(NSUInteger, CKStackLayoutDirection) {
   CKStackLayoutDirectionHorizontal,
 };
 
+typedef NS_ENUM(NSUInteger, CKStackLayoutWrap) {
+  CKStackLayoutWrapFlexNoWrap,
+  CKStackLayoutWrapFlexWrap
+};
+
 /** If no children are flexible, how should this component justify its children in the available space? */
 typedef NS_ENUM(NSUInteger, CKStackLayoutJustifyContent) {
   /**
@@ -69,6 +74,8 @@ struct CKStackLayoutComponentStyle {
   CKStackLayoutJustifyContent justifyContent;
   /** Orientation of children along cross axis */
   CKStackLayoutAlignItems alignItems;
+  /** Property specifies whether flex items are forced into a single line or can be wrapped onto multiple lines */
+  CKStackLayoutWrap flexWrap;
 };
 
 struct CKStackLayoutComponentChild {
