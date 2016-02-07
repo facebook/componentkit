@@ -18,11 +18,11 @@ sectionid: docs
     {{ content }}
 
     <div class="docs-prevnext">
-      {% if page.prev %}
-        <a href="/docs/{{ page.prev }}">&larr; Prev</a>
+      {% if page.previous %}
+        <a href="{{ page.previous.url }}">&larr; Prev</a>
       {% endif %}
       {% if page.next %}
-        <a class="right" href="/docs/{{ page.next }}">Next &rarr;</a>
+        <a class="right" href="{{ page.next.url }}">Next &rarr;</a>
       {% endif %}
     </div>
 

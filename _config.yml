@@ -1,9 +1,8 @@
 ---
 url: http://componentkit.org
 name: ComponentKit
-relative_permalinks: false
 markdown: redcarpet
-description: A React-inspired view framework for iOS 
+description: A React-inspired view framework for iOS
 timezone: America/Los_Angeles
 
 safe: true
