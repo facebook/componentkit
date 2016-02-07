@@ -52,7 +52,7 @@ Delete everything (including the curly braces), so that the `CKStackLayoutCompon
 
 <img src="/static/images/quote-after.png" width="250" height="431" alt="FrostedQuoteComponent screenshot with quote mark removed">
 
-Things look a little imbalanced now, though. There are 70 points of padding on top and only 25 points on bottom. Modify the 
+Things look a little imbalanced now, though. There are 70 points of padding on top and only 25 points on bottom. Modify the
 `CKInsetComponent` to change the bottom padding to be 70 points as well:
 
 ```objc++
