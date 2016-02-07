@@ -1,36 +1,35 @@
-# [![ComponentKit](http://componentkit.org/static/componentkit-hero-logo.png)](http://componentkit.org/)
+# ComponentKit Documentation
 
-[![Build Status](https://travis-ci.org/facebook/componentkit.svg)](https://travis-ci.org/facebook/componentkit)
+We use [Jekyll](http://jekyllrb.com/) to build the site using Markdown and host it on [Github Pages](https://pages.github.com/).
 
-ComponentKit is a view framework for iOS that is heavily inspired by React. It takes a functional, declarative approach to building UI. It was built to power Facebook's News Feed and is now used throughout the Facebook iOS app.
+## Installation
 
-### Quick start
+To contribute to the site or add to the documentation, you will have to set up a local copy of the site on your development machine.
 
-ComponentKit is available on [CocoaPods](http://cocoapods.org).  Add the following to your Podfile:
+### Dependencies
 
-```ruby
-pod 'ComponentKit', '~> 0.14'
+Github Pages uses Jekyll to host a site and Jekyll has the following dependencies.
+
+ - [Ruby](http://www.ruby-lang.org/) (version >= 1.8.7)
+ - [RubyGems](http://rubygems.org/) (version >= 1.3.7)
+ - [Bundler](http://gembundler.com/)
+
+Mac OS X comes pre-installed with Ruby, but you may need to update RubyGems (via `gem update --system`).
+Otherwise, [RVM](https://rvm.io/) and [rbenv](https://github.com/sstephenson/rbenv) are popular ways to install Ruby.
+Once you have RubyGems and installed Bundler (via `gem install bundler`), use it to install the dependencies:
+
+```sh
+$ cd componentkit # Go to folder
+$ bundle install # Might need sudo.
 ```
 
-To quickly try WildeGuess, the ComponentKit demo project:
+### Instructions
 
-```ruby
-pod try ComponentKit
+Use Jekyll to serve the website locally (by default, at `http://localhost:4000`):
+
+```sh
+$ cd componentkit # Go to folder
+$ git checkout docs
+$ bundle exec jekyll serve -w
+$ open http://localhost:4000/
 ```
-
-### Learn more
-
-* Read the [Getting Started guide](http://www.componentkit.org/docs/getting-started.html)
-* Get the [sample projects](https://github.com/facebook/componentkit/tree/master/Examples/WildeGuess)
-* Read the [objc.io article](http://www.objc.io/issue-22/facebook.html) by Adam Ernst
-* Watch the [@Scale talk](https://youtu.be/mLSeEoC6GjU?t=24m18s) by Ari Grant
-
-## Contributing
-
-See the [CONTRIBUTING](CONTRIBUTING.md) file for how to help out.
-
-## License
-
-ComponentKit is BSD-licensed. We also provide an additional patent grant.
-
-The files in the /Examples directory are licensed under a separate license as specified in each file; documentation is licensed CC-BY-4.0.

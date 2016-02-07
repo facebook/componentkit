@@ -1,8 +1,4 @@
-Pods
-Example/WildeGuess/Pod
-*xcuserdata
-*.xcworkspace
-appledoc
-*.gcov
-.DS_Store
-ObjectiveC.gc*
+.DS_STORE
+_site/
+*.swo
+*.swp
