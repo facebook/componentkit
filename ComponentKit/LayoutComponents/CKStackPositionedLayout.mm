@@ -45,9 +45,9 @@ static CKStackPositionedLayout stackedLayout(const CKStackLayoutComponentStyle &
   const auto maxCrossSize = crossDimension(style.direction, constrainedSize.max);
   const auto maxStackSize = stackDimension(style.direction, constrainedSize.max);
 
-  const CGFloat crossSize = MIN(MAX(minCrossSize, largestChildCrossSize), maxCrossSize);
+  CGFloat crossSize = MIN(MAX(minCrossSize, largestChildCrossSize), maxCrossSize);
 
-  CGFloat maxLineHieght = 0;
+  CGFloat maxCrossItemSize = 0;
   CGFloat crossPosition = 0;
   CGPoint p = directionPoint(style.direction, offset, 0);
   BOOL first = YES;
@@ -55,9 +55,18 @@ static CKStackPositionedLayout stackedLayout(const CKStackLayoutComponentStyle &
     if(!first && style.flexWrap == CKStackLayoutWrapFlexWrap) {
       CGFloat stackSize = (style.direction == CKStackLayoutDirectionVertical) ? p.y : p.x;
       if (stackSize + l.child.spacingBefore + style.spacing + stackDimension(style.direction, l.layout.size) + l.child.spacingAfter > maxStackSize) {
-        crossPosition = crossPosition + maxLineHieght;
-        maxLineHieght = 0;
+        // Add maximum item size for new line cross position
+        crossPosition = crossPosition + maxCrossItemSize;
+        // Reset maximum cross size for new line
+        maxCrossItemSize = 0;
+        // Reset point to start of the line
         p = directionPoint(style.direction, offset, crossPosition);
+        // Indicate the first item of line
+        first = YES;
+      }
+      if(crossDimension(style.direction, l.layout.size) > maxCrossItemSize) {
+        // Calculating maximum cross size for current line
+        maxCrossItemSize = crossDimension(style.direction, l.layout.size);
       }
     }
     p = p + directionPoint(style.direction, l.child.spacingBefore, 0);
@@ -71,12 +80,16 @@ static CKStackPositionedLayout stackedLayout(const CKStackLayoutComponentStyle &
       l.layout,
     };
     p = p + directionPoint(style.direction, stackDimension(style.direction, l.layout.size) + l.child.spacingAfter, 0);
-    if(crossDimension(style.direction, l.layout.size) > maxLineHieght) {
-        maxLineHieght = crossDimension(style.direction, l.layout.size);
-    }
+   
     return c;
   });
-  return {stackedChildren, style.flexWrap == CKStackLayoutWrapFlexWrap ? (maxLineHieght + crossPosition) : crossSize};
+    
+  if (style.flexWrap == CKStackLayoutWrapFlexWrap){
+    // Calculating max cross size for all lines. Taking last cross position and adding max cross item size for last line
+    crossSize = (maxCrossItemSize + crossPosition);
+  }
+  
+  return {stackedChildren, crossSize};
 }
 
 CKStackPositionedLayout CKStackPositionedLayout::compute(const CKStackUnpositionedLayout &unpositionedLayout,
