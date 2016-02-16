@@ -11,11 +11,11 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 
-#import "CKComponent.h"
-#import "CKComponentInternal.h"
-#import "CKComponentLayout.h"
-#import "CKComponentDataSourceAttachController.h"
-#import "CKComponentDataSourceAttachControllerInternal.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentDataSourceAttachController.h>
+#import <ComponentKit/CKComponentDataSourceAttachControllerInternal.h>
 
 @interface CKComponentDataSourceAttachControllerTests : XCTestCase
 @end

@@ -10,12 +10,12 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CKComponentInternal.h"
-#import "CKComponentScope.h"
-#import "CKComponentScopeFrame.h"
-#import "CKComponentScopeRoot.h"
-#import "CKComponentSubclass.h"
-#import "CKStackLayoutComponent.h"
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentScope.h>
+#import <ComponentKit/CKComponentScopeFrame.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKStackLayoutComponent.h>
 
 @interface CKComponentBoundsAnimationTests : XCTestCase
 @end

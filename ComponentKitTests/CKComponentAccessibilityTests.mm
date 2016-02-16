@@ -12,8 +12,8 @@
 
 #import <ComponentKit/CKComponent.h>
 
-#import "CKComponentAccessibility.h"
-#import "CKComponentAccessibility_Private.h"
+#import <ComponentKit/CKComponentAccessibility.h>
+#import <ComponentKit/CKComponentAccessibility_Private.h>
 
 using namespace CK::Component::Accessibility;
 

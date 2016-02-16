@@ -10,7 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CKComponentFlexibleSizeRangeProvider.h"
+#import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
 
 @interface CKComponentFlexibleSizeRangeProviderTests : XCTestCase
 

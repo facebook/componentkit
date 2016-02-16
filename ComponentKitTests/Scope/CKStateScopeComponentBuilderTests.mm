@@ -12,15 +12,15 @@
 
 #import <OCMock/OCMock.h>
 
-#import "CKComponentController.h"
-#import "CKComponentSubclass.h"
-#import "CKCompositeComponent.h"
+#import <ComponentKit/CKComponentController.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKComponentScope.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentScopeFrame.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
 
-#import "CKComponentScope.h"
-#import "CKComponentInternal.h"
-#import "CKComponentScopeFrame.h"
-#import "CKComponentScopeRoot.h"
-#import "CKThreadLocalComponentScope.h"
 #import "CKStateExposingComponent.h"
 
 #pragma mark - Test Components and Controllers

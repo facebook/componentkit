@@ -10,7 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CKComponentContext.h"
+#import <ComponentKit/CKComponentContext.h>
 
 @interface CKComponentContextTests : XCTestCase
 @end

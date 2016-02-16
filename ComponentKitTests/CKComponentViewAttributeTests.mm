@@ -11,9 +11,9 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
-#import "CKComponent.h"
-#import "CKComponentLifecycleManager.h"
-#import "CKComponentSubclass.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentLifecycleManager.h>
+#import <ComponentKit/CKComponentSubclass.h>
 
 @interface CKComponentViewAttributeTests : XCTestCase
 @end

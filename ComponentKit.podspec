@@ -30,23 +30,21 @@ Pod::Spec.new do |s|
 
   end
 
-  s.subspec 'ComponentKitTestHelpers' do |sts|
-    sts.source_files = 'ComponentKitTestHelpers/*.{h, m, mm}'
-    sts.dependency 'ComponentKit/Core'
+  s.subspec 'ComponentKitTestHelpers' do |ss|
+    ss.source_files = 'ComponentKitTestHelpers/*.{h, m, mm}'
+    ss.dependency 'ComponentKit/Core'
   end
 
-  s.subspec 'ComponentSnapshotTestCase' do |sts|
-    sts.source_files = 'ComponentSnapshotTestCase/*.{h, m, mm}'
-    sts.public_header_files = 'ComponentSnapshotTestCase/ComponentSnapshotTestCase.h'
-    sts.dependency 'ComponentKit/Core'
-    sts.dependency 'FBSnapshotTestCase/Core', '~> 2.0.4'
-    sts.frameworks = 'XCTest'
+  s.subspec 'ComponentSnapshotTestCase' do |ss|
+    ss.source_files = 'ComponentSnapshotTestCase/*.{h, m, mm}'
+    ss.dependency 'ComponentKit/Core'
+    ss.dependency 'FBSnapshotTestCase/Core', '~> 2.0.4'
+    ss.frameworks = 'XCTest'
   end
 
-  s.subspec 'ComponentKitTestLib' do |tbs|
-    tbs.source_files = 'ComponentKitTestLib/*.{h, m, mm}'  
-    tbs.public_header_files = 'ComponentKitTestLib/CKComponentTestRootScope.h'
-    tbs.dependency 'ComponentKit/Core'
+  s.subspec 'ComponentKitTestLib' do |ss|
+    ss.source_files = 'ComponentKitTestLib/*.{h, m, mm}'  
+    ss.dependency 'ComponentKit/Core'
   end
   
   s.default_subspec = 'Core'

@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKTestActionComponent.h"
+#import <ComponentKit/CKTestActionComponent.h>
 
 @implementation CKTestActionComponent
 {

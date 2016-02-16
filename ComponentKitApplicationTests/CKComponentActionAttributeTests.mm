@@ -11,13 +11,13 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestHelpers/CKTestActionComponent.h>
+#import <ComponentKit/CKTestActionComponent.h>
 
-#import "CKComponentAction.h"
-#import "CKCompositeComponent.h"
-#import "CKComponentSubclass.h"
-#import "CKComponentInternal.h"
-#import "CKComponentLayout.h"
+#import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentLayout.h>
 
 @interface CKComponentActionAttributeTests : XCTestCase
 @end
@@ -36,7 +36,6 @@
      {CKComponentActionAttribute(@selector(testAction:context:))}
    }
    size:{}];
-
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
    newWithBlock:^(CKComponent *sender, id context){ actionSender = sender; }

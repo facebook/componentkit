@@ -10,7 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CKDimension.h"
+#import <ComponentKit/CKDimension.h>
 
 
 @interface CKDimensionTests : XCTestCase

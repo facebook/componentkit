@@ -10,22 +10,22 @@ PODS:
     - FBSnapshotTestCase/Core (~> 2.0.4)
   - ComponentKit/Core (0.13)
   - FBSnapshotTestCase/Core (2.0.7)
-  - OCMock (2.2.4)
+  - OCMock (3.2.2)
 
 DEPENDENCIES:
   - ComponentKit (from `.`)
   - ComponentKit/ComponentKitTestHelpers (from `.`)
   - ComponentKit/ComponentKitTestLib (from `.`)
   - ComponentKit/ComponentSnapshotTestCase (from `.`)
-  - OCMock (~> 2.2)
+  - OCMock (~> 3.2)
 
 EXTERNAL SOURCES:
   ComponentKit:
     :path: "."
 
 SPEC CHECKSUMS:
-  ComponentKit: 037b8240aa5b21f2abcf3369eb33b7613f80fcec
+  ComponentKit: 8bd69454c132dc074651cb63c5ae562cc2408345
   FBSnapshotTestCase: 7e85180d0d141a0cf472352edda7e80d7eaeb547
-  OCMock: a6a7dc0e3997fb9f35d99f72528698ebf60d64f2
+  OCMock: 18c9b7e67d4c2770e95bb77a9cc1ae0c91fe3835
 
-COCOAPODS: 0.39.0
+COCOAPODS: 0.38.2

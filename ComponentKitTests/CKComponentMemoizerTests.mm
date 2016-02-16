@@ -1,15 +1,15 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "CKComponent.h"
-#import "CKComponentMemoizer.h"
-#import "CKComponentScopeRoot.h"
-#import "CKComponentSubclass.h"
-#import "CKComponentInternal.h"
-#import "CKInternalHelpers.h"
-#import "CKMacros.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentMemoizer.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKMacros.h>
 
-#import "CKStackLayoutComponent.h"
+#import <ComponentKit/CKStackLayoutComponent.h>
 
 @interface CKComponentMemoizerTests : XCTestCase
 

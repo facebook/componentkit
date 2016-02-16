@@ -10,11 +10,11 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CKComponent.h"
-#import "CKComponentInternal.h"
-#import "CKComponentLifecycleManager.h"
-#import "CKComponentSubclass.h"
-#import "CKStaticLayoutComponent.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentLifecycleManager.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKStaticLayoutComponent.h>
 
 @interface CKComponentMountContextLayoutGuideTests : XCTestCase
 @end
