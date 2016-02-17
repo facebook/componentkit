@@ -193,7 +193,7 @@ static void applyChangesetToTableView(const CKArrayControllerOutputChangeset &ch
 
   CKArrayControllerOutputItems::Enumerator itemEnumerator =
   ^(const CKArrayControllerOutputChange &change, CKArrayControllerChangeType type, BOOL *stop) {
-    NSIndexPath *indexPath = change.indexPath.toNSIndexPath();
+    NSIndexPath *indexPath = change.destinationIndexPath.toNSIndexPath();
     if (type == CKArrayControllerChangeTypeDelete) {
       [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
