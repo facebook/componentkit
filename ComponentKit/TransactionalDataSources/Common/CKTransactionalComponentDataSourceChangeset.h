@@ -21,12 +21,12 @@
  @param insertedSections NSIndexSet of section indices.
  @param insertedItems Mapping from NSIndexPath to new model.
  */
-- (instancetype)initWithUpdatedItems:(NSDictionary *)updatedItems
-                        removedItems:(NSSet *)removedItems
+- (instancetype)initWithUpdatedItems:(NSDictionary<NSIndexPath *, id<NSObject>> *)updatedItems
+                        removedItems:(NSSet<NSIndexPath *> *)removedItems
                      removedSections:(NSIndexSet *)removedSections
-                          movedItems:(NSDictionary *)movedItems
+                          movedItems:(NSDictionary<NSIndexPath *, NSIndexPath *> *)movedItems
                     insertedSections:(NSIndexSet *)insertedSections
-                       insertedItems:(NSDictionary *)insertedItems;
+                       insertedItems:(NSDictionary<NSIndexPath *, id<NSObject>> *)insertedItems;
 
 @end
 
@@ -34,12 +34,12 @@
 @interface CKTransactionalComponentDataSourceChangesetBuilder : NSObject
 
 + (instancetype)transactionalComponentDataSourceChangeset;
-- (instancetype)withUpdatedItems:(NSDictionary *)updatedItems;
-- (instancetype)withRemovedItems:(NSSet *)removedItems;
+- (instancetype)withUpdatedItems:(NSDictionary<NSIndexPath *, id<NSObject>> *)updatedItems;
+- (instancetype)withRemovedItems:(NSSet<NSIndexPath *> *)removedItems;
 - (instancetype)withRemovedSections:(NSIndexSet *)removedSections;
-- (instancetype)withMovedItems:(NSDictionary *)movedItems;
+- (instancetype)withMovedItems:(NSDictionary<NSIndexPath *, NSIndexPath *> *)movedItems;
 - (instancetype)withInsertedSections:(NSIndexSet *)insertedSections;
-- (instancetype)withInsertedItems:(NSDictionary *)insertedItems;
+- (instancetype)withInsertedItems:(NSDictionary<NSIndexPath *, id<NSObject>> *)insertedItems;
 - (CKTransactionalComponentDataSourceChangeset *)build;
 
 @end

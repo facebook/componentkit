@@ -13,12 +13,12 @@
 
 @implementation CKTransactionalComponentDataSourceChangeset
 
-- (instancetype)initWithUpdatedItems:(NSDictionary *)updatedItems
-                        removedItems:(NSSet *)removedItems
+- (instancetype)initWithUpdatedItems:(NSDictionary<NSIndexPath *, id<NSObject>> *)updatedItems
+                        removedItems:(NSSet<NSIndexPath *> *)removedItems
                      removedSections:(NSIndexSet *)removedSections
-                          movedItems:(NSDictionary *)movedItems
+                          movedItems:(NSDictionary<NSIndexPath *, NSIndexPath *> *)movedItems
                     insertedSections:(NSIndexSet *)insertedSections
-                       insertedItems:(NSDictionary *)insertedItems
+                       insertedItems:(NSDictionary<NSIndexPath *, id<NSObject>> *)insertedItems
 {
   if (self = [super init]) {
     _updatedItems = [updatedItems copy] ?: @{};
@@ -35,21 +35,21 @@
 
 @implementation CKTransactionalComponentDataSourceChangesetBuilder
 {
-  NSDictionary *_updatedItems;
-  NSSet *_removedItems;
+  NSDictionary<NSIndexPath *, id<NSObject>> *_updatedItems;
+  NSSet<NSIndexPath *> *_removedItems;
   NSIndexSet *_removedSections;
-  NSDictionary *_movedItems;
+  NSDictionary<NSIndexPath *, NSIndexPath *> *_movedItems;
   NSIndexSet *_insertedSections;
-  NSDictionary *_insertedItems;
+  NSDictionary<NSIndexPath *, id<NSObject>> *_insertedItems;
 }
 
 + (instancetype)transactionalComponentDataSourceChangeset { return [[self alloc] init]; }
-- (instancetype)withUpdatedItems:(NSDictionary *)updatedItems { _updatedItems = updatedItems; return self;}
-- (instancetype)withRemovedItems:(NSSet *)removedItems { _removedItems = removedItems; return self; }
+- (instancetype)withUpdatedItems:(NSDictionary<NSIndexPath *, id<NSObject>> *)updatedItems { _updatedItems = updatedItems; return self;}
+- (instancetype)withRemovedItems:(NSSet<NSIndexPath *> *)removedItems { _removedItems = removedItems; return self; }
 - (instancetype)withRemovedSections:(NSIndexSet *)removedSections { _removedSections = removedSections; return self; }
-- (instancetype)withMovedItems:(NSDictionary *)movedItems { _movedItems = movedItems; return self; }
+- (instancetype)withMovedItems:(NSDictionary<NSIndexPath *, NSIndexPath *> *)movedItems { _movedItems = movedItems; return self; }
 - (instancetype)withInsertedSections:(NSIndexSet *)insertedSections { _insertedSections = insertedSections; return self; }
-- (instancetype)withInsertedItems:(NSDictionary *)insertedItems { _insertedItems = insertedItems; return self; }
+- (instancetype)withInsertedItems:(NSDictionary<NSIndexPath *, id<NSObject>> *)insertedItems { _insertedItems = insertedItems; return self; }
 
 - (CKTransactionalComponentDataSourceChangeset *)build
 {
