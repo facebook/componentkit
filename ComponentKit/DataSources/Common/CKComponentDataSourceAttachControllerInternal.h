@@ -17,11 +17,21 @@
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier scopeIdentifier;
 
 - (instancetype)initWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
-                      mountedComponents:(NSSet *)mountedComponents;
+                      mountedComponents:(NSSet *)mountedComponents
+                                 layout:(const CKComponentLayout &)layout;
+
+- (const CKComponentLayout &)layout;
+
 @end
 
 @interface CKComponentDataSourceAttachController ()
 
 - (CKComponentDataSourceAttachState *)attachStateForScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier;
+
+@end
+
+@interface UIView(CKComponentDataSourceAttachController)
+
+@property (nonatomic, strong, setter=ck_setAttachState:) CKComponentDataSourceAttachState *ck_attachState;
 
 @end
