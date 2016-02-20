@@ -4,6 +4,7 @@ before_install:
   - gem install cocoapods -v 0.37.2
 
 script: ./build.sh ci
+osx_image: xcode7.3
 
 # Whitelist for branches
 branches:

@@ -17,7 +17,7 @@ function ci() {
   xctool \
       -workspace $1.xcworkspace \
       -scheme $1 \
-      -sdk iphonesimulator8.1 \
+      -sdk iphonesimulator9.3 \
       -destination "platform=iOS Simulator,OS=8.1,name=iPhone 5" \
       $2
 }
