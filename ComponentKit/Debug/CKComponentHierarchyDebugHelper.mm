@@ -14,6 +14,8 @@
 
 #import "CKComponent.h"
 #import "CKComponentInternal.h"
+#import "CKComponentDataSourceAttachController.h"
+#import "CKComponentDataSourceAttachControllerInternal.h"
 #import "CKComponentLifecycleManager.h"
 #import "CKComponentLifecycleManagerInternal.h"
 #import "CKComponentViewInterface.h"
@@ -244,16 +246,13 @@ static CKComponentRootView *rootViewForView(UIView *view)
   return (CKComponentRootView *)view;
 }
 
-/**
- Note: This is fragile code that is being used because ComponentKit is currently in the process of
- transitioning away from holding the root layout in CKComponentRootView. This code should be updated
- once the move away from a ck_componentLifecycleManager is done.
- */
 static const CKComponentLayout *rootLayoutFromRootView(CKComponentRootView *rootView)
 {
   const CKComponentLayout *rootLayout;
   if (rootView.ck_componentLifecycleManager) {
     rootLayout = &rootView.ck_componentLifecycleManager.state.layout;
+  } else if (rootView.ck_attachState) {
+    rootLayout = &[rootView.ck_attachState layout];
   } else if ([rootView.superview isKindOfClass:[CKComponentHostingView class]]) {
     CKComponentHostingView *hostingView = (CKComponentHostingView *)rootView.superview;
     rootLayout = &hostingView.mountedLayout;

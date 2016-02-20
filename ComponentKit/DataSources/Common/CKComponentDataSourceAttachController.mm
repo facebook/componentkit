@@ -14,12 +14,6 @@
 #import "CKComponentDataSourceAttachController.h"
 #import "CKComponentDataSourceAttachControllerInternal.h"
 
-@interface UIView(CKComponentDataSourceAttachController)
-
-@property (nonatomic, strong, setter=ck_setAttachState:) CKComponentDataSourceAttachState *ck_attachState;
-
-@end
-
 @implementation CKComponentDataSourceAttachController
 {
   /**
@@ -112,7 +106,7 @@ static CKComponentDataSourceAttachState *_mountComponentLayoutInView(CKComponent
   CKCAssertNotNil(view, @"Impossible to mount a component layout on a nil view");
   NSSet *currentlyMountedComponents = view.ck_attachState.mountedComponents;
   NSSet *newMountedComponents = CKMountComponentLayout(layout, view, currentlyMountedComponents, nil);
-  return [[CKComponentDataSourceAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents];
+  return [[CKComponentDataSourceAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents layout:layout];
 }
 
 static void _tearDownAttachStateFromViews(NSArray *views)
@@ -129,18 +123,27 @@ static void _tearDownAttachStateFromViews(NSArray *views)
 @end
 
 
-@implementation CKComponentDataSourceAttachState
+@implementation CKComponentDataSourceAttachState {
+  CKComponentLayout _layout;
+}
 
 - (instancetype)initWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
                       mountedComponents:(NSSet *)mountedComponents
+                                 layout:(const CKComponentLayout &)layout
 {
   self = [super init];
   if (self) {
     CKAssertNotNil(mountedComponents, @"");
     _scopeIdentifier = scopeIdentifier;
     _mountedComponents = [mountedComponents copy];
+    _layout = layout;
   }
   return self;
+}
+
+- (const CKComponentLayout &)layout
+{
+  return _layout;
 }
 
 @end
