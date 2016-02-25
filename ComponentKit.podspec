@@ -10,11 +10,11 @@ Pod::Spec.new do |s|
     :tag => s.version.to_s
   }
   s.social_media_url = 'https://twitter.com/componentkit'
-  s.platform = :ios, '7.0'
+  s.ios.deployment_target = '7.0'
   s.requires_arc = true
 
   s.library = 'c++'
-  s.xcconfig = {
+  s.pod_target_xcconfig = { 
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++11',
     'CLANG_CXX_LIBRARY' => 'libc++',
   }
@@ -23,27 +23,26 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |cs|
     cs.source_files = [
-      'ComponentKit/**/*', 
-      'ComponentTextKit/**/*'
+      'ComponentKit/**/*.{h,m,mm}', 
+      'ComponentTextKit/**/*.{h,m,mm}'
     ]
     cs.frameworks = 'UIKit', 'CoreText'
-
   end
 
   s.subspec 'ComponentKitTestHelpers' do |ss|
-    ss.source_files = 'ComponentKitTestHelpers/*.{h, m, mm}'
+    ss.source_files = 'ComponentKitTestHelpers/*'
     ss.dependency 'ComponentKit/Core'
   end
 
   s.subspec 'ComponentSnapshotTestCase' do |ss|
-    ss.source_files = 'ComponentSnapshotTestCase/*.{h, m, mm}'
+    ss.source_files = 'ComponentSnapshotTestCase/*'
     ss.dependency 'ComponentKit/Core'
     ss.dependency 'FBSnapshotTestCase/Core', '~> 2.0.4'
     ss.frameworks = 'XCTest'
   end
 
   s.subspec 'ComponentKitTestLib' do |ss|
-    ss.source_files = 'ComponentKitTestLib/*.{h, m, mm}'  
+    ss.source_files = 'ComponentKitTestLib/*'
     ss.dependency 'ComponentKit/Core'
   end
   
