@@ -10,7 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CKComponent.h"
+#import <ComponentKit/CKComponent.h>
 
 
 @interface CKComponentSizeTests : XCTestCase

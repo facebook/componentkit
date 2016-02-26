@@ -13,10 +13,10 @@
 
 #import <FBSnapshotTestCase/FBSnapshotTestController.h>
 
-#import "CKTextKitEntityAttribute.h"
-#import "CKTextKitAttributes.h"
-#import "CKTextKitRenderer.h"
-#import "CKTextKitRenderer+Positioning.h"
+#import <ComponentKit/CKTextKitEntityAttribute.h>
+#import <ComponentKit/CKTextKitAttributes.h>
+#import <ComponentKit/CKTextKitRenderer.h>
+#import <ComponentKit/CKTextKitRenderer+Positioning.h>
 
 @interface CKTextKitTests : XCTestCase
 

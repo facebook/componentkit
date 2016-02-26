@@ -10,7 +10,7 @@
 
 #import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
-#import "CKNetworkImageComponent.h"
+#import <ComponentKit/CKNetworkImageComponent.h>
 
 #pragma mark - Helpers
 

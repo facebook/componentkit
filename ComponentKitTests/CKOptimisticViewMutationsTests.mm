@@ -10,11 +10,11 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CKComponent.h"
-#import "CKComponentAnimation.h"
-#import "CKComponentLifecycleManager.h"
-#import "CKComponentSubclass.h"
-#import "CKOptimisticViewMutations.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentAnimation.h>
+#import <ComponentKit/CKComponentLifecycleManager.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKOptimisticViewMutations.h>
 
 @interface CKOptimisticViewMutationsTests : XCTestCase
 @end

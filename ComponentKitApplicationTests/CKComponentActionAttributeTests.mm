@@ -13,11 +13,11 @@
 
 #import <ComponentKitTestHelpers/CKTestActionComponent.h>
 
-#import "CKComponentAction.h"
-#import "CKCompositeComponent.h"
-#import "CKComponentSubclass.h"
-#import "CKComponentInternal.h"
-#import "CKComponentLayout.h"
+#import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentLayout.h>
 
 @interface CKComponentActionAttributeTests : XCTestCase
 @end

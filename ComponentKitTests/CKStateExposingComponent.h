@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKComponent.h"
+#import <ComponentKit/CKComponent.h>
 
 @interface CKStateExposingComponent : CKComponent
 @property (nonatomic, strong, readonly) id state;

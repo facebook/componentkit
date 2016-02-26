@@ -12,13 +12,13 @@
 
 #import <ComponentKitTestLib/CKComponentTestRootScope.h>
 
-#import "CKComponent.h"
-#import "CKComponentController.h"
-#import "CKComponentLifecycleManager.h"
-#import "CKComponentProvider.h"
-#import "CKComponentScope.h"
-#import "CKComponentSubclass.h"
-#import "CKComponentViewInterface.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentController.h>
+#import <ComponentKit/CKComponentLifecycleManager.h>
+#import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKComponentScope.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKComponentViewInterface.h>
 
 @interface CKComponentControllerTests : XCTestCase <CKComponentProvider>
 @end

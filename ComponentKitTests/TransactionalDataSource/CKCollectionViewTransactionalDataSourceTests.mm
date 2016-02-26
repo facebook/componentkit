@@ -12,10 +12,10 @@
 #import <OCMock/OCMock.h>
 #import <UIKit/UIKit.h>
 
-#import "CKCollectionViewTransactionalDataSource.h"
-#import "CKTransactionalComponentDataSourceConfiguration.h"
-#import "CKSupplementaryViewDataSource.h"
-#import "CKSizeRange.h"
+#import <ComponentKit/CKCollectionViewTransactionalDataSource.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
+#import <ComponentKit/CKSupplementaryViewDataSource.h>
+#import <ComponentKit/CKSizeRange.h>
 
 @interface CKCollectionViewTransactionalDataSource () <UICollectionViewDataSource>
 @end

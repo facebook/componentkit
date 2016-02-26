@@ -10,16 +10,16 @@
 
 #import "CKTransactionalComponentDataSourceStateTestHelpers.h"
 
-#import "CKTransactionalComponentDataSourceConfiguration.h"
-#import "CKComponentProvider.h"
-#import "CKComponentLayout.h"
-#import "CKComponentScopeRoot.h"
-#import "CKComponentSubclass.h"
-#import "CKTransactionalComponentDataSource.h"
-#import "CKTransactionalComponentDataSourceChangeset.h"
-#import "CKTransactionalComponentDataSourceConfiguration.h"
-#import "CKTransactionalComponentDataSourceItemInternal.h"
-#import "CKTransactionalComponentDataSourceStateInternal.h"
+#import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
+#import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKTransactionalComponentDataSource.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceItemInternal.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceStateInternal.h>
 
 static CKTransactionalComponentDataSourceItem *item(CKTransactionalComponentDataSourceConfiguration *configuration, id<CKComponentStateListener> listener, id model)
 {

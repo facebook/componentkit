@@ -12,11 +12,12 @@
 
 #import "ComponentViewManager.h"
 #import "ComponentViewReuseUtilities.h"
-#import "CKComponent.h"
-#import "CKComponentInternal.h"
-#import "CKComponentLifecycleManager.h"
-#import "CKComponentProvider.h"
-#import "CKCompositeComponent.h"
+
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentLifecycleManager.h>
+#import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKCompositeComponent.h>
 
 @interface CKComponentViewReuseTests : XCTestCase <CKComponentProvider>
 @end

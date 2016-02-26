@@ -8,10 +8,10 @@
  *
  */
 
-#import "CKTestStatefulViewComponent.h"
-
 #import <ComponentKit/CKComponentScope.h>
-#import <ComponentKit/CKStatefulViewComponentController.h>
+
+#import "CKTestStatefulViewComponent.h"
+#import "CKStatefulViewComponentController.h"
 
 @interface CKTestStatefulViewComponent ()
 @property (nonatomic, strong) UIColor *color;

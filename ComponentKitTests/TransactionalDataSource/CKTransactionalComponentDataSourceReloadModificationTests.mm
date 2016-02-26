@@ -12,14 +12,15 @@
 
 #include <stdlib.h>
 
-#import "CKComponent.h"
-#import "CKComponentLayout.h"
-#import "CKComponentProvider.h"
-#import "CKTransactionalComponentDataSourceAppliedChangesInternal.h"
-#import "CKTransactionalComponentDataSourceChange.h"
-#import "CKTransactionalComponentDataSourceItem.h"
-#import "CKTransactionalComponentDataSourceReloadModification.h"
-#import "CKTransactionalComponentDataSourceState.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceAppliedChangesInternal.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceChange.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceItem.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceReloadModification.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceState.h>
+
 #import "CKTransactionalComponentDataSourceStateTestHelpers.h"
 
 // Some tests manipulate this to simulate global singleton state changing.

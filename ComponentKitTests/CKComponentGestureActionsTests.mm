@@ -13,10 +13,10 @@
 
 #import <OCMock/OCMock.h>
 
-#import "CKComponent.h"
-#import "CKComponentGestureActions.h"
-#import "CKComponentGestureActionsInternal.h"
-#import "CKComponentViewInterface.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentGestureActions.h>
+#import <ComponentKit/CKComponentGestureActionsInternal.h>
+#import <ComponentKit/CKComponentViewInterface.h>
 
 @interface CKFakeActionComponent : CKComponent <UIGestureRecognizerDelegate>
 - (void)test:(CKComponent *)sender;

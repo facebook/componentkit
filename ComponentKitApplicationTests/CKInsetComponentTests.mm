@@ -10,10 +10,10 @@
 
 #import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
-#import "CKBackgroundLayoutComponent.h"
-#import "CKCompositeComponent.h"
-#import "CKInsetComponent.h"
-#import "CKStaticLayoutComponent.h"
+#import <ComponentKit/CKBackgroundLayoutComponent.h>
+#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKInsetComponent.h>
+#import <ComponentKit/CKStaticLayoutComponent.h>
 
 
 typedef NS_OPTIONS(NSUInteger, CKInsetComponentTestEdge) {
