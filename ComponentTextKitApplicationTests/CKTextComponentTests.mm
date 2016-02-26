@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
+#import <ComponentKit/CKComponentSnapshotTestCase.h>
 
 #import <ComponentKit/CKTextComponent.h>
 

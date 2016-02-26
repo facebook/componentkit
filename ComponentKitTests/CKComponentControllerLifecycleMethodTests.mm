@@ -10,7 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestLib/CKComponentTestRootScope.h>
+#import <ComponentKit/CKComponentTestRootScope.h>
 
 #import "CKComponent.h"
 #import "CKComponentController.h"

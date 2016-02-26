@@ -11,7 +11,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestHelpers/CKTestActionComponent.h>
+#import <ComponentKit/CKTestActionComponent.h>
 
 #import "CKComponentAction.h"
 #import "CKCompositeComponent.h"
