@@ -67,8 +67,6 @@ struct CKComponentViewClass {
 
   const std::string &getIdentifier() const { return identifier; }
 
-  /** FB specific internal extension for supporting deprecated API. */
-  friend class CKComponentViewClassFBInternal;
 private:
   CKComponentViewClass(const std::string &ident,
                        UIView *(^factory)(void),
