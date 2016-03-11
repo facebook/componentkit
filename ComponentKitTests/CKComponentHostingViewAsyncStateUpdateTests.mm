@@ -12,13 +12,13 @@
 
 #import "CKTestRunLoopRunning.h"
 
-#import "CKComponent.h"
-#import "CKComponentFlexibleSizeRangeProvider.h"
-#import "CKComponentHostingView.h"
-#import "CKComponentHostingViewInternal.h"
-#import "CKComponentInternal.h"
-#import "CKComponentScope.h"
-#import "CKComponentSubclass.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
+#import <ComponentKit/CKComponentHostingView.h>
+#import <ComponentKit/CKComponentHostingViewInternal.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentScope.h>
+#import <ComponentKit/CKComponentSubclass.h>
 
 @interface CKComponentHostingViewAsyncStateUpdateTests : XCTestCase <CKComponentProvider>
 @end

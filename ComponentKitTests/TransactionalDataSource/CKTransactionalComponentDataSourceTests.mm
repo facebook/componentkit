@@ -10,15 +10,16 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CKComponent.h"
-#import "CKComponentProvider.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKTransactionalComponentDataSource.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceAppliedChangesInternal.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceListener.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceState.h>
+
 #import "CKTestRunLoopRunning.h"
-#import "CKTransactionalComponentDataSource.h"
-#import "CKTransactionalComponentDataSourceAppliedChangesInternal.h"
-#import "CKTransactionalComponentDataSourceChangeset.h"
-#import "CKTransactionalComponentDataSourceConfiguration.h"
-#import "CKTransactionalComponentDataSourceListener.h"
-#import "CKTransactionalComponentDataSourceState.h"
 #import "CKTransactionalComponentDataSourceStateTestHelpers.h"
 
 @interface CKTransactionalComponentDataSourceTests : XCTestCase <CKComponentProvider, CKTransactionalComponentDataSourceListener>

@@ -12,11 +12,11 @@
 
 #import <ComponentKit/CKCompositeComponent.h>
 
-#import "CKComponentScope.h"
-#import "CKComponentScopeFrame.h"
-#import "CKComponentScopeHandle.h"
-#import "CKComponentScopeRoot.h"
-#import "CKThreadLocalComponentScope.h"
+#import <ComponentKit/CKComponentScope.h>
+#import <ComponentKit/CKComponentScopeFrame.h>
+#import <ComponentKit/CKComponentScopeHandle.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
 
 @interface CKComponentScopeTests : XCTestCase
 @end

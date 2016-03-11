@@ -12,15 +12,16 @@
 
 #include <stdlib.h>
 
-#import "CKComponent.h"
-#import "CKComponentLayout.h"
-#import "CKComponentProvider.h"
-#import "CKCompositeComponent.h"
-#import "CKTransactionalComponentDataSourceAppliedChangesInternal.h"
-#import "CKTransactionalComponentDataSourceChange.h"
-#import "CKTransactionalComponentDataSourceConfiguration.h"
-#import "CKTransactionalComponentDataSourceItem.h"
-#import "CKTransactionalComponentDataSourceState.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceAppliedChangesInternal.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceChange.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceItem.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceState.h>
+
 #import "CKTransactionalComponentDataSourceStateTestHelpers.h"
 #import "CKTransactionalComponentDataSourceUpdateConfigurationModification.h"
 

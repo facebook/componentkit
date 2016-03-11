@@ -10,7 +10,7 @@
 
 #import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
-#import "CKOverlayLayoutComponent.h"
+#import <ComponentKit/CKOverlayLayoutComponent.h>
 
 static const CKSizeRange kSize = {{320, 320}, {320, 320}};
 

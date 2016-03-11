@@ -10,10 +10,11 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CKComponent.h"
-#import "CKComponentProvider.h"
-#import "CKTransactionalComponentDataSourceState.h"
-#import "CKTransactionalComponentDataSourceItem.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceState.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceItem.h>
+
 #import "CKTransactionalComponentDataSourceStateTestHelpers.h"
 
 @interface CKTransactionalComponentDataSourceStateTests : XCTestCase <CKComponentProvider>

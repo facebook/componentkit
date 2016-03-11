@@ -12,8 +12,9 @@
 
 #import "ComponentViewManager.h"
 #import "ComponentViewReuseUtilities.h"
-#import "CKComponent.h"
-#import "CKComponentInternal.h"
+
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentInternal.h>
 
 using CK::Component::ViewManager;
 

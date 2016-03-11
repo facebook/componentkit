@@ -10,7 +10,7 @@
 
 #import "CKStateExposingComponent.h"
 
-#import "CKComponentScope.h"
+#import <ComponentKit/CKComponentScope.h>
 
 @implementation CKStateExposingComponent
 + (id)initialState

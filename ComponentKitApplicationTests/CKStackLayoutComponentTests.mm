@@ -10,10 +10,10 @@
 
 #import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
-#import "CKComponent.h"
-#import "CKComponentSubclass.h"
-#import "CKRatioLayoutComponent.h"
-#import "CKStackLayoutComponent.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKRatioLayoutComponent.h>
+#import <ComponentKit/CKStackLayoutComponent.h>
 
 static CKComponentViewConfiguration whiteBg = {[UIView class], {{@selector(setBackgroundColor:), [UIColor whiteColor]}}};
 

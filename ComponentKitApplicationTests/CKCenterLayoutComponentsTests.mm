@@ -12,9 +12,9 @@
 
 #import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
-#import "CKBackgroundLayoutComponent.h"
-#import "CKCenterLayoutComponent.h"
-#import "CKStackLayoutComponent.h"
+#import <ComponentKit/CKBackgroundLayoutComponent.h>
+#import <ComponentKit/CKCenterLayoutComponent.h>
+#import <ComponentKit/CKStackLayoutComponent.h>
 
 static const CKSizeRange kSize = {{100, 120}, {320, 160}};
 

@@ -10,7 +10,7 @@
 
 #import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
-#import "CKButtonComponent.h"
+#import <ComponentKit/CKButtonComponent.h>
 
 @interface CKButtonComponentTests : CKComponentSnapshotTestCase
 @end

@@ -13,12 +13,12 @@
 #import "CKComponentHostingViewTestModel.h"
 #import "CKTestRunLoopRunning.h"
 
-#import "CKComponent.h"
-#import "CKComponentFlexibleSizeRangeProvider.h"
-#import "CKComponentHostingView.h"
-#import "CKComponentHostingViewDelegate.h"
-#import "CKComponentHostingViewInternal.h"
-#import "CKComponentViewInterface.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
+#import <ComponentKit/CKComponentHostingView.h>
+#import <ComponentKit/CKComponentHostingViewDelegate.h>
+#import <ComponentKit/CKComponentHostingViewInternal.h>
+#import <ComponentKit/CKComponentViewInterface.h>
 
 @interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate>
 @end
