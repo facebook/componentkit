@@ -40,7 +40,7 @@
     return handle;
   }
   CKCAssertNil(controllerClassForComponentClass([component class]), @"%@ has a controller but no scope! "
-               "Use CKComponentScope(self) before constructing the component or CKComponentTestRootScope "
+               "Use CKComponentScope scope(self) before constructing the component or CKComponentTestRootScope "
                "at the start of the test.", [component class]);
   return nil;
 }
