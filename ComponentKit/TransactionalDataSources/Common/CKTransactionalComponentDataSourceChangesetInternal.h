@@ -13,12 +13,12 @@
 /** Internal interface since this class is usually only consumed internally. */
 @interface CKTransactionalComponentDataSourceChangeset ()
 
-@property (nonatomic, copy, readonly) NSDictionary *updatedItems;
-@property (nonatomic, copy, readonly) NSSet *removedItems;
+@property (nonatomic, copy, readonly) NSDictionary<NSIndexPath *, id<NSObject>> *updatedItems;
+@property (nonatomic, copy, readonly) NSSet<NSIndexPath *> *removedItems;
 @property (nonatomic, copy, readonly) NSIndexSet *removedSections;
-@property (nonatomic, copy, readonly) NSDictionary *movedItems;
+@property (nonatomic, copy, readonly) NSDictionary<NSIndexPath *, NSIndexPath *> *movedItems;
 @property (nonatomic, copy, readonly) NSIndexSet *insertedSections;
-@property (nonatomic, copy, readonly) NSDictionary *insertedItems;
+@property (nonatomic, copy, readonly) NSDictionary<NSIndexPath *, id<NSObject>> *insertedItems;
 @property (nonatomic, copy, readonly) NSDictionary *userInfo;
 
 @end
