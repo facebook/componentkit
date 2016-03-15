@@ -14,7 +14,7 @@
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKRatioLayoutComponent.h>
 
-#import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
+#import <ComponentKit/CKComponentSnapshotTestCase.h>
 
 @interface CKRatioLayoutComponentTests : CKComponentSnapshotTestCase
 
