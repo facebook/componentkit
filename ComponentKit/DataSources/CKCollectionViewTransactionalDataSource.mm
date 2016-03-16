@@ -26,13 +26,14 @@ CKTransactionalComponentDataSourceListener
 >
 {
   CKTransactionalComponentDataSource *_componentDataSource;
-  id<CKSupplementaryViewDataSource> _supplementaryViewDataSource;
+  __weak id<CKSupplementaryViewDataSource> _supplementaryViewDataSource;
   CKTransactionalComponentDataSourceState *_currentState;
   CKComponentDataSourceAttachController *_attachController;
 }
 @end
 
 @implementation CKCollectionViewTransactionalDataSource
+@synthesize supplementaryViewDataSource = _supplementaryViewDataSource;
 
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView
            supplementaryViewDataSource:(id<CKSupplementaryViewDataSource>)supplementaryViewDataSource
