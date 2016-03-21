@@ -33,10 +33,4 @@
 /// @param containerLayer A layer for which all transactions have been completed or canceled.
 - (void)removeTransactionContainer:(CALayer *)containerLayer;
 
-/// Force layout and display and signal when all the pending transactions have completed.
-/// When the app is in background mode, UIKit suspends layout and display calls until it takes a screenshot.
-/// Call flushPendingTransactions to force async layers to render and display a consistent UI for the snapshot.
-/// @param completionHandler A block that is called on the main thread after all transactions have completed.
-- (void)flushPendingTransactions:(dispatch_block_t)completionHandler;
-
 @end
