@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
+#import <ComponentKit/CKComponentSnapshotTestCase.h>
 
 #import <ComponentKit/CKBackgroundLayoutComponent.h>
 #import <ComponentKit/CKCompositeComponent.h>

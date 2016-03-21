@@ -14,7 +14,7 @@
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentSubclass.h>
 
-#import <ComponentKitTestLib/CKComponentTestRootScope.h>
+#import <ComponentKit/CKComponentTestRootScope.h>
 
 #import "CKTestRunLoopRunning.h"
 
