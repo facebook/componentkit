@@ -114,7 +114,7 @@ static CKComponentHostingView *hostingView()
   XCTAssertTrue(_calledSizeDidInvalidate);
 }
 
-- (void)testUpdateWithEmptyBoundsDoesntMountLayout
+- (void)testUpdateWithEmptyBoundsMountLayout
 {
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
   CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[self class]
@@ -122,7 +122,7 @@ static CKComponentHostingView *hostingView()
   [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
 
-  XCTAssertEqual([view.containerView.subviews count], 0u, @"Expect the component is not mounted with empty bounds");
+  XCTAssertEqual([view.containerView.subviews count], 1u, @"Expect the component is mounted with empty bounds");
 }
 
 #pragma mark - CKComponentHostingViewDelegate
