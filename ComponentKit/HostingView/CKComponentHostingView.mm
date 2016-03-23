@@ -92,14 +92,12 @@ struct CKComponentHostingViewInputs {
   [super layoutSubviews];
   _containerView.frame = self.bounds;
 
-  if (!CGRectIsEmpty(self.bounds)) {
-    [self _synchronouslyUpdateComponentIfNeeded];
-    const CGSize size = self.bounds.size;
-    if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
-      _mountedLayout = [_component layoutThatFits:{size, size} parentSize:size];
-    }
-    _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil) copy];
+  [self _synchronouslyUpdateComponentIfNeeded];
+  const CGSize size = self.bounds.size;
+  if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
+    _mountedLayout = [_component layoutThatFits:{size, size} parentSize:size];
   }
+  _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil) copy];
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
