@@ -22,4 +22,14 @@
 /** userInfo from the CKTransactionalComponentDataSourceChangeset object that caused this change. */
 @property (nonatomic, copy, readonly) NSDictionary *userInfo;
 
+
+/** Any of the parameters may be nil, in which case a default value will be substituted instead. */
+- (instancetype)initWithUpdatedIndexPaths:(NSSet *)updatedIndexPaths
+                        removedIndexPaths:(NSSet *)removedIndexPaths
+                          removedSections:(NSIndexSet *)removedSections
+                          movedIndexPaths:(NSDictionary *)movedIndexPaths
+                         insertedSections:(NSIndexSet *)insertedSections
+                       insertedIndexPaths:(NSSet *)insertedIndexPaths
+                                 userInfo:(NSDictionary *)userInfo NS_DESIGNATED_INITIALIZER;
+
 @end

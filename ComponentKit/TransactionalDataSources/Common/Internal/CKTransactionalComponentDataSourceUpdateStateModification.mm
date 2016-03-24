@@ -14,7 +14,7 @@
 #import "CKTransactionalComponentDataSourceStateInternal.h"
 #import "CKTransactionalComponentDataSourceChange.h"
 #import "CKTransactionalComponentDataSourceItemInternal.h"
-#import "CKTransactionalComponentDataSourceAppliedChangesInternal.h"
+#import "CKTransactionalComponentDataSourceAppliedChanges.h"
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"

@@ -13,7 +13,7 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKTransactionalComponentDataSource.h>
-#import <ComponentKit/CKTransactionalComponentDataSourceAppliedChangesInternal.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceAppliedChanges.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceListener.h>
