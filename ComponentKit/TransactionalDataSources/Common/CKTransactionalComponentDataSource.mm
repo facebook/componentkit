@@ -22,7 +22,6 @@
 #import "CKTransactionalComponentDataSourceStateModifying.h"
 #import "CKTransactionalComponentDataSourceUpdateConfigurationModification.h"
 #import "CKTransactionalComponentDataSourceUpdateStateModification.h"
-#import "CKWatchdogTimer.h"
 
 @interface CKTransactionalComponentDataSource () <CKComponentStateListener>
 {
@@ -165,7 +164,6 @@
   id<CKTransactionalComponentDataSourceStateModifying> modification = _pendingAsynchronousModifications[0];
   CKTransactionalComponentDataSourceState *baseState = _state;
   dispatch_async(_workQueue, ^{
-    CKWatchdogTimer watchdog;
     CKTransactionalComponentDataSourceChange *change = [modification changeFromState:baseState];
     dispatch_async(dispatch_get_main_queue(), ^{
       // If the first object in _pendingAsynchronousModifications is not still the modification,
