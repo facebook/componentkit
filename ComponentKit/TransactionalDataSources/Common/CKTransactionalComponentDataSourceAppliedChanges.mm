@@ -17,6 +17,17 @@
 
 @implementation CKTransactionalComponentDataSourceAppliedChanges
 
+- (instancetype)init
+{
+  return [self initWithUpdatedIndexPaths:nil
+                       removedIndexPaths:nil
+                         removedSections:nil
+                         movedIndexPaths:nil
+                        insertedSections:nil
+                      insertedIndexPaths:nil
+                                userInfo:nil];
+}
+
 - (instancetype)initWithUpdatedIndexPaths:(NSSet *)updatedIndexPaths
                         removedIndexPaths:(NSSet *)removedIndexPaths
                           removedSections:(NSIndexSet *)removedSections
