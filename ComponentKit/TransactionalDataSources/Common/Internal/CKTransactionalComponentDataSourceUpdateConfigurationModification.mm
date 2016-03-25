@@ -19,7 +19,6 @@
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeRoot.h"
-#import "CKComponentSubclass.h"
 
 @implementation CKTransactionalComponentDataSourceUpdateConfigurationModification
 {
@@ -56,7 +55,7 @@
 
       CKTransactionalComponentDataSourceItem *newItem;
       if (onlySizeRangeChanged) {
-        const CKComponentLayout layout = [[item layout].component layoutThatFits:sizeRange parentSize:sizeRange.max];
+        const CKComponentLayout layout = CKComponentComputeLayout(item.layout.component, sizeRange, sizeRange.max);
         newItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout
                                                                            model:[item model]
                                                                        scopeRoot:[item scopeRoot]];
@@ -64,7 +63,7 @@
         const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
           return [componentProvider componentForModel:[item model] context:context];
         });
-        const CKComponentLayout layout = [result.component layoutThatFits:sizeRange parentSize:sizeRange.max];
+        const CKComponentLayout layout = CKComponentComputeLayout(result.component, sizeRange, sizeRange.max);
         newItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout
                                                                            model:[item model]
                                                                        scopeRoot:result.scopeRoot];

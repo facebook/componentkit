@@ -48,7 +48,7 @@ id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void));
  
    result = CKBuildComponent(...)
  
-   layout = [result.component layoutThatFits:constrainedSize parentSize:constrainedSize.max]
+   layout = CKComponentComputeLayout(result.component, constrainedSize, constrainedSize.max);
  
     ...
    CKMountComponentLayout(layout)

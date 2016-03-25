@@ -35,7 +35,7 @@ static CKComponentLayout crossChildLayout(const CKStackLayoutComponentChild &chi
   // stretched children will have a cross dimension of at least crossMin
   const CGFloat childCrossMin = alignItems == CKStackLayoutAlignItemsStretch ? crossMin : 0;
   const CKSizeRange childSizeRange = directionSizeRange(style.direction, stackMin, stackMax, childCrossMin, crossMax);
-  return [child.component layoutThatFits:childSizeRange parentSize:size];
+  return CKComponentComputeLayout(child.component, childSizeRange, size);
 }
 
 /**

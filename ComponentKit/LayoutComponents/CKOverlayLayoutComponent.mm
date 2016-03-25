@@ -50,12 +50,13 @@
            "(component=%@, overlay=%@)", size.description(), _component, _overlay);
 
   CKComponentLayout contentsLayout = [_component layoutThatFits:constrainedSize parentSize:parentSize];
+  
   return {
     self,
     contentsLayout.size,
     _overlay ? std::vector<CKComponentLayoutChild> {
       {{0,0}, contentsLayout},
-      {{0,0}, [_overlay layoutThatFits:{contentsLayout.size, contentsLayout.size} parentSize:contentsLayout.size]}
+      {{0,0}, CKComponentComputeLayout(_overlay, {contentsLayout.size, contentsLayout.size}, contentsLayout.size)}
     } : std::vector<CKComponentLayoutChild> {
       {{0,0}, contentsLayout},
     }

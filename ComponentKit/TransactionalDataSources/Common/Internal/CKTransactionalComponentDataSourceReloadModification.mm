@@ -19,7 +19,6 @@
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeRoot.h"
-#import "CKComponentSubclass.h"
 
 @implementation CKTransactionalComponentDataSourceReloadModification
 {
@@ -50,7 +49,7 @@
       const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
         return [componentProvider componentForModel:[item model] context:context];
       });
-      const CKComponentLayout layout = [result.component layoutThatFits:sizeRange parentSize:sizeRange.max];
+      const CKComponentLayout layout = CKComponentComputeLayout(result.component, sizeRange, sizeRange.max);
       [newItems addObject:[[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout
                                                                                    model:[item model]
                                                                                scopeRoot:result.scopeRoot]];

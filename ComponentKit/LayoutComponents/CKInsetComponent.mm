@@ -13,9 +13,9 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
 
+#import "CKComponentSubclass.h"
 #import "CKInternalHelpers.h"
 #import "ComponentLayoutContext.h"
-#import "CKComponentSubclass.h"
 
 @interface CKInsetComponent ()
 {

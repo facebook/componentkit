@@ -64,7 +64,7 @@
   // If there is no max size in *either* dimension, we can't apply the ratio, so just pass our size range through.
   const CKSizeRange childRange = (bestSize == sizeOptions.end()) ? constrainedSize : CKSizeRange(*bestSize, *bestSize);
   const CGSize parentSize = (bestSize == sizeOptions.end()) ? kCKComponentParentSizeUndefined : *bestSize;
-  const CKComponentLayout childLayout = [_component layoutThatFits:childRange parentSize:parentSize];
+  const CKComponentLayout childLayout = CKComponentComputeLayout(_component, childRange, parentSize);
   return {self, childLayout.size, {{{0,0}, childLayout}}};
 }
 

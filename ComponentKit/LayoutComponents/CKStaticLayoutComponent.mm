@@ -11,7 +11,6 @@
 #import "CKStaticLayoutComponent.h"
 
 #import "ComponentUtilities.h"
-#import "CKComponentLayout.h"
 #import "CKComponentSubclass.h"
 
 @implementation CKStaticLayoutComponent
@@ -49,8 +48,7 @@
       constrainedSize.max.height - child.position.y
     };
     CKSizeRange childConstraint = child.size.resolveSizeRange(size, {{0,0}, autoMaxSize});
-    return CKComponentLayoutChild({child.position, [child.component layoutThatFits:childConstraint
-                                                                        parentSize:size]});
+    return CKComponentLayoutChild({child.position, CKComponentComputeLayout(child.component, childConstraint, size)});
   });
 
   if (isnan(size.width)) {

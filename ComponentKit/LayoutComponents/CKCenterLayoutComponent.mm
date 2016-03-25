@@ -11,8 +11,8 @@
 #import "CKCenterLayoutComponent.h"
 
 #import "CKInternalHelpers.h"
-#import "ComponentUtilities.h"
 #import "CKComponentSubclass.h"
+#import "ComponentUtilities.h"
 
 @implementation CKCenterLayoutComponent
 {
@@ -50,7 +50,7 @@
     (_centeringOptions & CKCenterLayoutComponentCenteringX) != 0 ? 0 : constrainedSize.min.width,
     (_centeringOptions & CKCenterLayoutComponentCenteringY) != 0 ? 0 : constrainedSize.min.height,
   };
-  const CKComponentLayout childLayout = [_child layoutThatFits:{minChildSize, {constrainedSize.max}} parentSize:size];
+  const CKComponentLayout childLayout = CKComponentComputeLayout(_child, {minChildSize, {constrainedSize.max}}, size);
 
   // If we have an undetermined height or width, use the child size to define the layout
   // size
