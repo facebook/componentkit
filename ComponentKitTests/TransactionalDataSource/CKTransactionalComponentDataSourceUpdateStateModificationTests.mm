@@ -15,7 +15,7 @@
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentSubclass.h>
-#import <ComponentKit/CKTransactionalComponentDataSourceAppliedChangesInternal.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceAppliedChanges.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceChange.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceItem.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceState.h>

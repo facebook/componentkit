@@ -9,7 +9,7 @@
  */
 
 #import "CKTransactionalComponentDataSourceAppliedChanges.h"
-#import "CKTransactionalComponentDataSourceAppliedChangesInternal.h"
+#import "CKTransactionalComponentDataSourceAppliedChanges.h"
 
 #import "ComponentUtilities.h"
 #import "CKEqualityHashHelpers.h"
