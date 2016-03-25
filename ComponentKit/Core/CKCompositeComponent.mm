@@ -15,7 +15,6 @@
 
 #import "CKInternalHelpers.h"
 #import "CKComponentInternal.h"
-#import "CKComponentLayout.h"
 #import "CKComponentSubclass.h"
 
 @interface CKCompositeComponent ()

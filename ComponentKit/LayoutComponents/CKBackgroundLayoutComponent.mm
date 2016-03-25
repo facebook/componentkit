@@ -57,8 +57,7 @@
   std::vector<CKComponentLayoutChild> children;
   if (_background) {
     // Size background to exactly the same size.
-    children.push_back({{0,0}, [_background layoutThatFits:{contentsLayout.size, contentsLayout.size}
-                                                parentSize:contentsLayout.size]});
+    children.push_back({{0,0}, [_background layoutThatFits:{contentsLayout.size, contentsLayout.size} parentSize:contentsLayout.size]});
   }
   children.push_back({{0,0}, contentsLayout});
 

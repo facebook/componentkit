@@ -16,10 +16,10 @@
 
 #import "CKComponentAnimation.h"
 #import "CKComponentHostingViewDelegate.h"
+#import "CKComponentLayout.h"
 #import "CKComponentRootView.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSizeRangeProviding.h"
-#import "CKComponentSubclass.h"
 #import "CKWatchdogTimer.h"
 
 struct CKComponentHostingViewInputs {
@@ -95,7 +95,7 @@ struct CKComponentHostingViewInputs {
   [self _synchronouslyUpdateComponentIfNeeded];
   const CGSize size = self.bounds.size;
   if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
-    _mountedLayout = [_component layoutThatFits:{size, size} parentSize:size];
+    _mountedLayout = CKComponentComputeLayout(_component, {size, size}, size);
   }
   _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil) copy];
 }
@@ -105,7 +105,7 @@ struct CKComponentHostingViewInputs {
   CKAssertMainThread();
   [self _synchronouslyUpdateComponentIfNeeded];
   const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-  return [_component layoutThatFits:constrainedSize parentSize:constrainedSize.max].size;
+  return CKComponentComputeLayout(_component, constrainedSize, constrainedSize.max).size;
 }
 
 #pragma mark - Accessors
