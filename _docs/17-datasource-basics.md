@@ -17,7 +17,7 @@ This transformation will be defined as a method on a class conforming to `CKComp
 
 Let's make our UIViewController be the component provider here.
 
-```objc++
+{% highlight objc %}
 	@interface MyController <CKComponentProvider>
 	...
 	@end
@@ -28,7 +28,7 @@ Let's make our UIViewController be the component provider here.
 		return [MyComponent newWithModel:model context:context];
 	}
 	...
-```
+{% endhighlight %}
 
 <div class="note-important">
  <p>
@@ -51,7 +51,7 @@ Don't access global state inside a Component. Use the context to pass this infor
 
 Ok, so now we have our view controller as the component provider, let's create our `CKCollectionViewDataSource` and attach the collection view to it.
 
-```objc++
+{% highlight objc %}
 	- (void)viewDidLoad {
 	[super viewDidLoad];
 	...
@@ -60,7 +60,7 @@ Ok, so now we have our view controller as the component provider, let's create o
                                                                             componentProvider:[self class]
                                                                                       context:context
                                                                     cellConfigurationFunction:nil];
-```
+{% endhighlight %}
 
 
 Note that we pass the context in the initializer. It is the same context that will get passed into `+ (CKComponent *)componentForModel:context:` every time a component needs to be computed.
@@ -72,7 +72,7 @@ Using `CKCollectionViewDataSource` changes are never applied directly to the col
 
 Let's add a section at index 0 with two items at indexes 0 and 1.
 
-```objc++
+{% highlight objc %}
 {% raw  %}
 	- (void)viewDidAppear:(BOOL)animated {
 		[super viewDidAppear:animated];
@@ -88,11 +88,11 @@ Let's add a section at index 0 with two items at indexes 0 and 1.
 		[self.dataSource enqueueChangeset:{sections, items} constrainedSize:{{0,0}, {50, 50}}];
 	}
 {% endraw %}
-```
+{% endhighlight %}
 
 Later on (for instance when updated data is received from the server), we can update our first item with an updated model.
 
-```objc++
+{% highlight objc %}
 {% raw  %}
 	...
 	CKArrayControllerInputItems items;
@@ -102,7 +102,7 @@ Later on (for instance when updated data is received from the server), we can up
 	//[self.dataSource enqueueChangeset:items constrainedSize:{{50,0}, {50, INF}}];
 	...
 {% endraw %}
-```
+{% endhighlight %}
 
 It is also possible to remove items and sections through this [changeset API](datasource-changeset-api.html).
 
@@ -116,13 +116,13 @@ Let's see how the computed component sizes can be used with the `UICollectionVie
 
 Each item is sized so that it matches the size of its corresponding component.
 
-```objc++
+{% highlight objc %}
 	- (CGSize)collectionView:(UICollectionView *)collectionView
                  layout:(UICollectionViewLayout *)collectionViewLayout
                  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
  		return [self.dataSource sizeForItemAtIndexPath:indexPath];
 	}
-```
+{% endhighlight %}
 
 Pretty simple right ? And this logic can apply to any `UICollectionViewLayout` :
 
@@ -133,7 +133,7 @@ Pretty simple right ? And this logic can apply to any `UICollectionViewLayout` :
 
 Time to interact with those items now; nothing special here the regular selection APIs can be used. Let's say the models have a url that should be opened when the user tap on an item.
 
-```objc++
+{% highlight objc %}
 	- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 	{
  		MyModel *model = (MyModel *)[self.dataSource modelForItemAtIndexPath:indexPath];
@@ -142,7 +142,7 @@ Time to interact with those items now; nothing special here the regular selectio
  			[[UIApplication sharedApplication] openURL:navURL];
  		}
  	}
-```
+{% endhighlight %}
 <div class="note-important">
  <p>
 The datasource is the source of truth for the collection view, if you have to retrieve a model corresponding to an indexPath always use `-modelForItemAtIndexPath`. See this <a href="/docs/datasource-gotchas.html#the-datasource-involves-asynchronous-operations">gotcha</a> for more details.

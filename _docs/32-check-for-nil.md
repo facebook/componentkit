@@ -8,7 +8,8 @@ Remember: **`+new` can always return nil**. ComponentKit adopts the convention t
 
 This is important when you are implementing `+new`; you must check if `[super +new...]` returned nil before assigning to ivars.
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 @implementation MyComponent
 {
   NSString *_name;
@@ -24,7 +25,7 @@ This is important when you are implementing `+new`; you must check if `[super +n
 
 Instead:
 
-```objc++
+{% highlight objc %}
 
 + (instancetype)newWithName:(NSString *)name
 {
@@ -34,6 +35,6 @@ Instead:
   }
   return c;
 }
-```
+{% endhighlight %}
 
 (This is somewhat analogous to the usual pattern for implementing `-init`, where you check if `[super init...]` returns nil.)

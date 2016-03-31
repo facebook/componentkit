@@ -10,7 +10,8 @@ In your `+new` method, avoid creating temporary local variables when possible.
 
 Here is a really tangled-up `+new` method that is hard to read, understand, or modify:
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 + (instancetype)newWithArticle:(ArticleModel *)article options:(ArticleOptions)options
 {
   NSAttributedString *timestamp = [CKDateFormatter stringFromDate:article.creationTime];
@@ -53,7 +54,7 @@ Here is a really tangled-up `+new` method that is hard to read, understand, or m
 
 Instead, split out logic into separate components:
 
-```objc++
+{% highlight objc %}
 + (instancetype)newWithArticle:(ArticleModel *)article options:(ArticleOptions)options
 {
   // Note how there are NO local variables here at all.
@@ -82,4 +83,4 @@ static ArticleHeaderComponentOptions headerOptions(ArticleOptions options)
   }
   return options;
 }
-```
+{% endhighlight %}

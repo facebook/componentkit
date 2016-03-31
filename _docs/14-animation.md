@@ -10,7 +10,7 @@ ComponentKit exposes three ways to perform animations on a component.
 
 Override this method to specify how to animate the initial appearance of a component. For example, if you were implementing a component that indicates network reachability issues, you could fade in the component:
 
-```objc++
+{% highlight objc %}
 - (std::vector<CKComponentAnimation>)animationsOnInitialMount
 {
     return { {self, fadeToAppear()} };
@@ -24,13 +24,13 @@ static CAAnimation *fadeToAppear()
   fade.duration = 0.5;
   return fade;
 }
-```
+{% endhighlight %}
 
 ## animationsFromPreviousComponent:
 
 Override this method to specify how to animate between two versions of a component. Here's an example from the example app:
 
-```objc++
+{% highlight objc %}
 - (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(InteractiveQuoteComponent *)previousComponent
 {
   if (previousComponent->_overlay == nil && _overlay != nil) {
@@ -48,13 +48,13 @@ static CAAnimation *scaleToAppear()
   scale.duration = 0.2;
   return scale;
 }
-```
+{% endhighlight %}
 
 ## boundsAnimationFromPreviousComponent:
 
 Override this method to specify how the top-level bounds of a component should animate inside a `UICollectionView`. For example, if you were implementing an expandable article component that changes its height, you could specify a spring animation for changing the cell bounds:
 
-```objc++
+{% highlight objc %}
 - (CKComponentBoundsAnimation)boundsAnimationFromPreviousComponent:(ArticleComponent *)previousComponent
 {
   if (previousComponent->_state == ArticleComponentStateCollapsed && _state == ArticleComponentStateExpanded) {
@@ -68,7 +68,7 @@ Override this method to specify how the top-level bounds of a component should a
     return {};
   }
 }
-```
+{% endhighlight %}
 
 ## Notes
 

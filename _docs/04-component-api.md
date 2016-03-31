@@ -5,7 +5,7 @@ permalink: /docs/component-api.html
 ---
 The base `CKComponent` class is quite simple. Leaving out a few methods, it looks like this:
 
-```objc++
+{% highlight objc %}
 @interface CKComponent : NSObject
 
 /** Returns a new component. */
@@ -17,7 +17,7 @@ The base `CKComponent` class is quite simple. Leaving out a few methods, it look
                          parentSize:(CGSize)parentSize;
 
 @end
-```
+{% endhighlight %}
 
 We'll get to these two methods in a moment. For now, note:
 

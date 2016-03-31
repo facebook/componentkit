@@ -22,17 +22,17 @@ Scopes give components a persistent, unique identity. They're needed in three ca
 
 Use the `CKComponentScope` type to define a component scope at the top of a component's `+new` method.
 
-```objc++
+{% highlight objc %}
 + (instancetype)newWithModel:(Model *)model
 {
   CKComponentScope scope(self, model.uniqueID);
   ...
   return [super newWithComponent:...];
 }
-```
+{% endhighlight %}
 
 If your component doesn't have a model object with a unique identifier, you can omit that parameter as long as there won't be multiple siblings of the same type.
 
-```objc++
+{% highlight objc %}
 CKComponentScope scope(self);
-```
+{% endhighlight %}

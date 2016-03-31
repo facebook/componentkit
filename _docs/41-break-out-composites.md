@@ -5,7 +5,8 @@ permalink: /docs/break-out-composites.html
 ---
 Avoid creating sub-components in `static` helper functions.
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 + (instancetype)newWithTitle:(NSString *)title
                     subtitle:(NSString *)subtitle
 {
@@ -37,7 +38,7 @@ static CKComponent *textComponent(NSString *text, UIFont *font)
 
 Instead, break out a separate `CKCompositeComponent`. This keeps components readable and allows more use of named parameters.
 
-{% highlight objc++ %}
+{% highlight objc %}
 + (instancetype)newWithTitle:(NSString *)title
                     subtitle:(NSString *)subtitle
 {

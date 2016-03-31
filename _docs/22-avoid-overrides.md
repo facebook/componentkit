@@ -7,7 +7,8 @@ Method overrides make components more difficult to use.
 
 Imagine you're adding an optional text color parameter to a component. You might be tempted to add an override:
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 @interface ArticleTextComponent
 + (instancetype)newWithText:(NSString *)text;
 + (instancetype)newWithText:(NSString *)text textColor:(UIColor *)textColor;
@@ -16,7 +17,8 @@ Imagine you're adding an optional text color parameter to a component. You might
 
 But someone will later add another override:
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 
   @interface ArticleTextComponent
   + (instancetype)newWithText:(NSString *)text;
@@ -32,7 +34,7 @@ The component is splintering. It's not obvious which override to use and we need
 
 Instead, always expose all parameters in a single designated initializer and document which are optional.
 
-  ```objc++
+  {% highlight objc %}
 
 @interface ArticleTextComponent
 /**
@@ -44,11 +46,11 @@ Instead, always expose all parameters in a single designated initializer and doc
                   textColor:(UIColor *)textColor
             backgroundColor:(UIColor *)backgroundColor;
 @end
-```
+{% endhighlight %}
 
 If there are too many parameters, a useful pattern is a "style struct". For example, see `CKTextComponent`:
 
-```objc++
+{% highlight objc %}
 struct CKTextKitAttributes {
   NSAttributedString *attributedString;
   NSAttributedString *truncationAttributedString;
@@ -66,13 +68,13 @@ struct CKTextKitAttributes {
                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
                  accessibilityContext:(const CKTextComponentAccessibilityContext &)accessibilityContext;
 @end
-```
+{% endhighlight %}
 
 Using [aggregate initialization](http://en.cppreference.com/w/cpp/language/aggregate_initialization), it's easy to initialize the style struct with only some parameters:
 
-```objc++
+{% highlight objc %}
 {
   .shadowColor = [UIColor blackColor],
   .maximumNumberOfLines = 1,
 }
-```
+{% endhighlight %}

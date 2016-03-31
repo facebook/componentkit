@@ -18,7 +18,7 @@ The `CKComponentActionSend` function takes an action, a sender, and an optional 
 
 Here's an example of how to handle a component action. (The API for `CKButtonComponent` has been simplified for this example.)
 
-```objc++
+{% highlight objc %}
 @implementation SampleComponent
 + (instancetype)new
 {
@@ -32,7 +32,7 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
   // Do something
 }
 @end
-```
+{% endhighlight %}
 
 ### Why not blocks? 
 

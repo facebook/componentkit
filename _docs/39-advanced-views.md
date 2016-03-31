@@ -9,19 +9,19 @@ Back in [Views](views.html) we glossed over `CKComponentViewClass` and `CKCompon
 
 But of course, not all views can be created with `-initWithFrame:`. For these cases, there's an advanced constructor that takes a function pointer:
 
-```objc++
+{% highlight objc %}
 CKComponentViewClass(UIView *(*factory)(void));
-```
+{% endhighlight %}
 
 This allows you to use almost any view with ComponentKit. Here's one example:
 
-```objc++
+{% highlight objc %}
 static UIView *authorViewForOscarWilde(void) {
   return [[AuthorView alloc] initWithName:@"Oscar Fingal O'Flahertie Wills Wilde"];
 }
 // ...
 [CKComponent newWithView:{&authorViewForOscarWilde} size:{50, 50}]
-```
+{% endhighlight %}
 
 <div class="note-important">
   <p> 
@@ -31,14 +31,14 @@ static UIView *authorViewForOscarWilde(void) {
 
 `CKComponentViewAttribute` has similar underpinnings. Usually you pass a `SEL`, but under the hood they're basically just arbitrary blocks paired with a unique identifier:
 
-```objc++
+{% highlight objc %}
 struct CKComponentViewAttribute {
   std::string identifier;
   void (^applicator)(id view, id value);
   void (^unapplicator)(id view, id value);
   void (^updater)(id view, id oldValue, id newValue);
 };
-```
+{% endhighlight %}
 
 This allows you to express arbitrarily complex operations on the view, like "call this method with these N arguments". The only restriction is that you must box up the inputs to the block in a single `id` so ComponentKit can determine if it has changed across recyclings.
 

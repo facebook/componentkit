@@ -5,19 +5,19 @@ permalink: /docs/views.html
 ---
 Create components using the `newWithView:size:` class method:
 
-```objc++
+{% highlight objc %}
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size;
-```
+{% endhighlight %}
 
 It's important to note that you don't pass a `UIView` directly, but a `CKComponentViewConfiguration`. What's that?
 
-```objc++
+{% highlight objc %}
 struct CKComponentViewConfiguration {
   CKComponentViewClass viewClass;
   std::unordered_map<CKComponentViewAttribute, id> attributes;
 };
-```
+{% endhighlight %}
 
 The first field is a view class. Ignore `CKComponentViewClass` for now — in most cases you just pass a class like `[UIImageView class]` or `[UIButton class]`.
 
@@ -25,7 +25,7 @@ The second field holds a map of attributes to values: font, color, background im
 
 Let's put one together:
 
-```objc++
+{% highlight objc %}
 [CKComponent 
  newWithView:{
    [UIImageView class],
@@ -35,7 +35,7 @@ Let's put one together:
    }
  }
  size:{image.size.width, image.size.height}];
-```
+{% endhighlight %}
 
 That's all there is to it. ComponentKit does this for us:
 
@@ -51,9 +51,9 @@ The values in the map are of type `id`, so if you want to pass in primitive type
 
 Often there exist logical components that don't need a corresponding view in the view hierarchy. For example a `CKStackLayoutComponent` often doesn't need to have a view; it only needs to position various subviews inside a designated area. In such situations, just pass `{}` for the view configuration and no view is created. For example:
 
-```objc++
+{% highlight objc %}
 [CKComponent newWithView:{} size:{}]
-```
+{% endhighlight %}
 
 (You can also just use `+new` directly, which uses this as the default.)
 
