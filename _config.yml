@@ -1,13 +1,11 @@
 ---
 url: http://componentkit.org
 name: ComponentKit
-markdown: redcarpet
 description: A React-inspired view framework for iOS
 timezone: America/Los_Angeles
 
 safe: true
 lsi: false
-highlighter: pygments
 
 defaults:
   -
