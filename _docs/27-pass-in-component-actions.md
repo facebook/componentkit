@@ -7,7 +7,8 @@ Follow this simple rule: `CKComponentAction` selectors should be implemented in 
 
 The following counterexample establishes a hidden coupling between the parent and child component. If another component tries to use `ChildComponent` or if the method is renamed in `ParentComponent`, it will crash at runtime.
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 @implementation ParentComponent
 + (instancetype)new
 {
@@ -32,7 +33,7 @@ The following counterexample establishes a hidden coupling between the parent an
 
 Instead, always pass selectors from parents to children. In the following example, it is explicit that the child component needs a `CKComponentAction` selector. If the parent component renames the `someAction:` method, it's far easier to catch renaming the parameter.
 
-```objc++
+{% highlight objc %}
 
 @implementation ParentComponent
 + (instancetype)new
@@ -56,4 +57,4 @@ Instead, always pass selectors from parents to children. In the following exampl
            newWithAction:action]];
 }
 @end
-```
+{% endhighlight %}

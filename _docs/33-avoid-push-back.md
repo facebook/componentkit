@@ -6,7 +6,8 @@ permalink: /docs/avoid-push-back.html
 
 Avoid doing this:
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 std::vector<CKStackLayoutComponentChild> children;
 if (someSetting) {
   children.push_back({[HeaderComponent newWithModel:model});
@@ -30,7 +31,7 @@ There are a few reasons why:
 
 Instead, do this:
 
-```objc++
+{% highlight objc %}
 return [super newWithComponent:
         [CKStackLayoutComponent
          newWithView:{}
@@ -40,4 +41,4 @@ return [super newWithComponent:
            {someSetting ? [HeaderComponent newWithModel:model] : nil},
            {fooComponent},
          }]];
-```
+{% endhighlight %}

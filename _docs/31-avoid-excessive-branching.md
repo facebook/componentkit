@@ -6,7 +6,8 @@ permalink: /docs/avoid-excessive-branching.html
 
 Avoid excessive branching in component code; it hurts readability.
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 + (instancetype)newWithArticle:(Article *)article
 {
   CKComponent *headerComponent;
@@ -40,7 +41,7 @@ Avoid excessive branching in component code; it hurts readability.
 
 If you find yourself branching too much, consider separating your component into smaller components and composing them.
 
-```objc++
+{% highlight objc %}
 + (instancetype)newWithArticle:(Article *)article
 {
   return [super newWithComponent:
@@ -55,4 +56,4 @@ If you find yourself branching too much, consider separating your component into
              {[ArticleBodyComponent newWithArticle:article]},
            }]]
 }
-```
+{% endhighlight %}

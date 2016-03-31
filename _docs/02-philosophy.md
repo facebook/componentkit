@@ -10,7 +10,7 @@ A simple analogy is to think of a component as a stencil: a fixed description th
 
 Let's see some sample code for rendering an article in a news app:
 
-```objc++
+{% highlight objc %}
 @implementation ArticleComponent
 
 + (instancetype)newWithArticle:(ArticleModel *)article
@@ -30,7 +30,7 @@ Let's see some sample code for rendering an article in a news app:
 }
 
 @end
-```
+{% endhighlight %}
 
 Components have three characteristics:
 

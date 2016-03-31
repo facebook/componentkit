@@ -9,7 +9,8 @@ permalink: /docs/datasource-gotchas.html
 
 A datasource will initially be totally empty (no items and no sections). Inserting items in section 0 before inserting section 0 will cause an exception to be raised.
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 {% raw  %}
 CKComponentCollectionViewDataSource datasource = [[CKComponentCollectionViewDataSource alloc] ...];
 CKArrayControllerInputItems items;
@@ -19,7 +20,7 @@ items.insert({0, 0}, @"Hello");
 {% endraw  %}
 {% endhighlight %}
 
-{% highlight objc++ %}
+{% highlight objc %}
 {% raw  %}
 CKComponentCollectionViewDataSource datasource = [[CKComponentCollectionViewDataSource alloc] ...];
 CKArrayControllerInputItems items;
@@ -52,13 +53,14 @@ The datasource maintains an internal data structure which is the only source of 
 
 For instance to access the model associated to a certain index path using a `CKCollectionViewDataSource` you can use:
 
-```objc++
+{% highlight objc %}
 [datasource modelForItemAtIndexPath:indexPath];
-```
+{% endhighlight %}
 
 Now let's look at what could go wrong if we query another source of data.
 
-{% highlight objc++ cssclass=redhighlight %}  
+{: .redhighlight }
+{% highlight objc %}
 {% raw  %}
 @implementation MyAwesomeController {
     CKComponentCollectionViewDataSource *_datasource;
@@ -91,7 +93,8 @@ The datasource gives you the current state of what is displayed on the screen, b
 
 Let's look at this buggy code that uses the datasource to compute the insertion index.
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 {% raw  %}
 @implementation MyAwesomeController {
     CKComponentCollectionViewDataSource *_datasource;
@@ -115,7 +118,7 @@ Let's look at this buggy code that uses the datasource to compute the insertion 
 
 In `-insertAtTail` we should check `_listOfModels` instead to compute the insertion index.
 
-{% highlight objc++ %}
+{% highlight objc %}
 {% raw  %}
 - (void)insertAtTail:(id)model {
 // We first add the new model (C) at the end of _listOfModels which already contains (A) et (B)

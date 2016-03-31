@@ -8,7 +8,8 @@ Components are **short-lived**, and their lifecycle is not under your control. T
 
 An example: imagine you're showing a `UIAlertView`. You might be tempted to make the component the delegate:
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 @implementation AlertDisplayComponent <UIAlertViewDelegate>
 {
   UIAlertView *_alertView;
@@ -33,7 +34,7 @@ But if the component hierarchy is regenerated for any reason, the original compo
 
 Instead, use `CKComponentController`. Component controllers are long-lived; they persist and keep track of each updated version of your component. You can [learn more about component controllers](component-controllers.html); here's an example of their use:
 
-```objc++
+{% highlight objc %}
 
 @interface AlertDisplayComponentController : CKComponentController <UIAlertViewDelegate>
 @end
@@ -56,5 +57,5 @@ Instead, use `CKComponentController`. Component controllers are long-lived; they
   [self.component updateState:...];
 }
 @end
-```
+{% endhighlight %}
 

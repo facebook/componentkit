@@ -15,7 +15,7 @@ These commands can be seen as a sentence with three parts :
 
 Here is some sample code, showing how to create a changeset - As you can see changesets are a c++ structure.
 
-```objc++
+{% highlight objc %}
 CKArrayControllerInputItems items;
 // Insert an item at index 0 in section 0 and compute the component for the model @"Hello"
 items.insert({0, 0}, @"Hello");
@@ -30,23 +30,23 @@ sections.insert(2);
 sections.insert(3);
 
 [datasource enqueueChangeset:{sections, items}];
-```
+{% endhighlight %}
 
 Changes can also be created from `NSIndexPaths` :
 
-```objc++
+{% highlight objc %}
 CKArrayControllerInputItems items;
 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForItem:0 inSection:0];
 items.insert({insertionIndexPath}, @"Hello");
-```
+{% endhighlight %}
 
 You can even get rid of the brackets around the `NSIndexPath`, thanks to [C++ converting constructors](http://en.cppreference.com/w/cpp/language/converting_constructor) :
 
-```objc++
+{% highlight objc %}
 CKArrayControllerInputItems items;
 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForItem:0 inSection:0];
 items.insert(insertionIndexPath, @"Hello");
-```
+{% endhighlight %}
 
 
 ## Order in which changes are applied.

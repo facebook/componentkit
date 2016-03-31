@@ -10,23 +10,23 @@ This divide is managed by the `CKComponentLifecycleManager`. This class is inter
 
 Create a lifecycle manager using its designated initializer. This takes a "component provider" (basically, a function mapping models into components) and a context object (which may hold common utilities):
 
-```objc++
+{% highlight objc %}
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id)context;
-```
+{% endhighlight %}
 
 The lifecycle manager's job is to hold the state associated with each component. It exposes a method to generate a new state object from a new model, and another method to make the generated state object its current state. (Why separate methods? The separation allows the data source to asynchronously compute new states for multiple lifecycle managers on different threads, then apply all the changes together at a single time.)
 
-```objc++
+{% highlight objc %}
 - (CKComponentLifecycleManagerState)prepareForUpdateWithModel:(id)model constrainedSize:(CKSizeRange)constrainedSize;
 - (void)updateWithState:(const CKComponentLifecycleManagerState &)state;
-```
+{% endhighlight %}
 
 The lifecycle manager exposes methods to attach or detach to views. Attaching performs the actual operations to turn components into views. Only one lifecycle manager can be mounted on any given view.
 
-```objc++
+{% highlight objc %}
 - (void)attachToView:(UIView *)view;
 - (void)detachFromView;
-```
+{% endhighlight %}
 
 Remember that because the lifecycle manager is internal infrastructure, its API is subject to change. Don't use it directly.

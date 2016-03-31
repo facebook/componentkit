@@ -10,7 +10,7 @@ A "composite component" simply wraps another component, hiding its implementatio
 
 For example, imagine you're implementing a button to share an article in a newsreader app. You could implement `ShareButtonComponent` as a composite component that wraps a `CKButtonComponent`:
 
-```objc++
+{% highlight objc %}
 @implementation ShareButtonComponent
 
 + (instancetype)newWithArticle:(ArticleModel *)article
@@ -27,6 +27,6 @@ For example, imagine you're implementing a button to share an article in a newsr
 }
 
 @end
-```
+{% endhighlight %}
 
 [Never Subclass Components](never-subclass-components.html) contains more information about why you should favor subclassing `CKCompositeComponent` whenever posible.

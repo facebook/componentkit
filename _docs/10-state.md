@@ -13,15 +13,15 @@ Figuring out the difference between these two can be tricky at first. [Thinking 
 
 Just like React, `CKComponent` has state.
 
-```objc++
+{% highlight objc %}
 @interface CKComponent
 - (void)updateState:(id (^)(id))updateBlock;
 @end
-```
+{% endhighlight %}
 
 Let's make a simple example of using state for the "Continue Reading…" link.
 
-```objc++
+{% highlight objc %}
 #import "CKComponentSubclass.h" // import to expose updateState:
 @implementation MessageComponent
 
@@ -50,7 +50,7 @@ Let's make a simple example of using state for the "Continue Reading…" link.
 }
 
 @end
-```
+{% endhighlight %}
 That's all there is to it. Some nice attributes:
 
 - Continue Reading state is completely hidden from parent components and controllers. They don't need to know about it or manage it.

@@ -39,7 +39,7 @@ Here is an example of usage of `CKComponentDataSource` directly with a UIViewCon
 
 `ComponentsTableViewController.h`
 
-```objc++
+{% highlight objc %}
 {% raw  %}
 /* This file provided by Facebook is for non-commercial testing and evaluation
  * purposes only.  Facebook reserves all rights not expressly granted.
@@ -58,11 +58,11 @@ Here is an example of usage of `CKComponentDataSource` directly with a UIViewCon
 
 @end
 {% endraw  %}
-```
+{% endhighlight %}
 
 `ComponentTableViewController.mm`
 
-```objc++
+{% highlight objc %}
 {% raw  %}
 /* This file provided by Facebook is for non-commercial testing and evaluation
  * purposes only.  Facebook reserves all rights not expressly granted.
@@ -237,4 +237,4 @@ static void applyChangesetToTableView(const CKArrayControllerOutputChangeset &ch
 
 @end
 {% endraw  %}
-```
+{% endhighlight %}

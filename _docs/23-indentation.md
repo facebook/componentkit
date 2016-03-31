@@ -18,7 +18,8 @@ Because components are often deeply nested structures, it's rarely possible to f
 
 This is hard to read:
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 HeaderComponent *header = [HeaderComponent newWithTitle:@"Hello world"
                                       subtitleComponent:[SubtitleComponent newWithSubtitle:subtitle
                                                                                      image:image]
@@ -27,7 +28,7 @@ HeaderComponent *header = [HeaderComponent newWithTitle:@"Hello world"
 
 <p>Much better:</p>
 
-{% highlight objc++ %}
+{% highlight objc %}
 HeaderComponent *header =
 [HeaderComponent
  newWithTitle:@"Hello world"
@@ -50,7 +51,7 @@ HeaderComponent *header =
 
 As the *only* special case, you should generally write `super newWithComponent:` on a single line. This is merely for convenience as this fits nicely on one line and works well with Xcode's indentation. For example:
 
-```objc++
+{% highlight objc %}
 return [super newWithComponent:
         [HeaderComponent
          newWithTitle:@"Hello world"
@@ -59,15 +60,15 @@ return [super newWithComponent:
           newWithSubtitle:subtitle
           image:image]
          image:image]];
-```
+{% endhighlight %}
 
 If the object is not `super` or the method is not `newWithComponent`, always put the method on a new line. For example, even if you're writing `super newWithView:`, have a new line after `super`:
 
-```objc++
+{% highlight objc %}
 return [super
         newWithView:{
           [UIView class],
           {CKComponentTapGestureAttribute(@selector(didTap:))}
         }
         component:component];
-```
+{% endhighlight %}

@@ -8,7 +8,7 @@ permalink: /docs/layout.html
 
 `CKComponent` instances do not have any size or position information. Instead, ComponentKit calls the `layoutThatFits:` method with a given size constraint and the component must *return* a structure describing both its size, and the position and sizes of its children.
 
-```objc++
+{% highlight objc %}
 struct CKComponentLayout {
   CKComponent *component;
   CGSize size;
@@ -19,7 +19,7 @@ struct CKComponentLayoutChild {
   CGPoint position;
   CKComponentLayout layout;
 };
-```
+{% endhighlight %}
 
 ## Layout Components
 

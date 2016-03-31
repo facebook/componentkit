@@ -6,7 +6,8 @@ permalink: /docs/avoid-width-100-percent.html
 
 Avoid doing this:
 
-{% highlight objc++ cssclass=redhighlight %}
+{: .redhighlight }
+{% highlight objc %}
 @implementation ArtistComponent
 + (instancetype)newWithArtist:(ArtistModel *)artist
 {

@@ -8,12 +8,12 @@ Let's get a sample app powered by ComponentKit up and running, then make some tw
 
 Clone the Github repo and run `pod install` to set up the example app, then open the workspace. If you don't have `pod` installed, see [CocoaPods](https://cocoapods.org/).
 
-```sh
+{% highlight sh %}
 $ git clone https://github.com/facebook/componentkit
 $ cd componentkit/Examples/WildeGuess/
 $ pod install
 $ open WildeGuess.xcworkspace
-```
+{% endhighlight %}
 
 Run the project in the simulator to see a simple app that shows a list of quotes.
 
@@ -23,9 +23,9 @@ Let's imagine we want to remove the white quote mark that's circled in this scre
 
 First we'll need to figure out which component we need to change. Pause the app in the debugger and execute the following command in lldb. This inserts special debug views in the hierarchy, as described in [Debugging](debugging.html).
 
-```
+{% highlight objc %}
 (lldb) e (void)[CKComponentDebugController setDebugMode:YES]
-```
+{% endhighlight %}
 
 Then click the [Debug View Hierarchy](https://developer.apple.com/library/ios/recipes/xcode_help-debugger/using_view_debugger/using_view_debugger.html) button in Xcode and browse through the view hierarchy:
 
@@ -39,14 +39,14 @@ Aha! So we need to modify `FrostedQuoteComponent`. That file should make a few t
 
 The quote mark is created here:
 
-```
+{% highlight objc %}
 {
   // A semi-transparent end quote (") symbol placed below the quote.
   [CKInsetComponent
    ... (omitted) ...],
   .alignSelf = CKStackLayoutAlignSelfEnd, // Right aligned
 }
-```
+{% endhighlight %}
 
 Delete everything (including the curly braces), so that the `CKStackLayoutComponent` only has a single child. Run the app again and the quote mark is gone!
 
@@ -55,10 +55,10 @@ Delete everything (including the curly braces), so that the `CKStackLayoutCompon
 Things look a little imbalanced now, though. There are 70 points of padding on top and only 25 points on bottom. Modify the
 `CKInsetComponent` to change the bottom padding to be 70 points as well:
 
-```objc++
+{% highlight objc %}
 [CKInsetComponent
  newWithInsets:{.top = 70, .bottom = 70, .left = 20, .right = 20}
-```
+{% endhighlight %}
 
 Run the app once more. Now it looks a lot better:
 
@@ -66,6 +66,6 @@ Run the app once more. Now it looks a lot better:
 
 Congratulations! You've done your first development with ComponentKit. Keep poking around the sample app to learn more, or start using it in your own apps. Just add the following to your Podfile:
 
-```
+~~~
 pod 'ComponentKit', '~> 0.14'
-```
+~~~
