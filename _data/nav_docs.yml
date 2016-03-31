@@ -42,6 +42,7 @@
   - under-300-lines
   - avoid-width-100-percent
   - use-designated-initializer-style
+  - break-out-composites
 - title: Infrastructure
   items:
   - lifecycle-manager
