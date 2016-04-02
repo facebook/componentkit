@@ -20,7 +20,7 @@
 #import "CKComponentRootView.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSizeRangeProviding.h"
-#import "CKWatchdogTimer.h"
+#import "CKComponentSubclass.h"
 
 struct CKComponentHostingViewInputs {
   CKComponentScopeRoot *scopeRoot;
@@ -186,7 +186,6 @@ struct CKComponentHostingViewInputs {
 
   const auto inputs = std::make_shared<const CKComponentHostingViewInputs>(_pendingInputs);
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    CKWatchdogTimer watchdog;
     const auto result = std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
       inputs->scopeRoot,
       inputs->stateUpdates,
