@@ -10,6 +10,9 @@
 
 #import "CKTransactionalComponentDataSourceConfiguration.h"
 
+#import "CKEqualityHashHelpers.h"
+#import "CKMacros.h"
+
 @implementation CKTransactionalComponentDataSourceConfiguration
 {
   CKSizeRange _sizeRange;
@@ -30,6 +33,25 @@
 - (const CKSizeRange &)sizeRange
 {
   return _sizeRange;
+}
+
+- (BOOL)isEqual:(id)object
+{
+  if (![object isKindOfClass:[CKTransactionalComponentDataSourceConfiguration class]]) {
+    return NO;
+  } else {
+    CKTransactionalComponentDataSourceConfiguration *obj = (CKTransactionalComponentDataSourceConfiguration *)object;
+    return _componentProvider == obj.componentProvider && [_context isEqual:obj.context] && _sizeRange == obj.sizeRange;
+  }
+}
+
+- (NSUInteger)hash
+{
+  NSUInteger hashes[2] = {
+    [_context hash],
+    _sizeRange.hash()
+  };
+  return CKIntegerArrayHash(hashes, CK_ARRAY_COUNT(hashes));
 }
 
 @end

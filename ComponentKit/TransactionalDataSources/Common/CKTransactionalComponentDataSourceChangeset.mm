@@ -8,8 +8,10 @@
  *
  */
 
-#import "CKTransactionalComponentDataSourceChangeset.h"
 #import "CKTransactionalComponentDataSourceChangesetInternal.h"
+
+#import "CKEqualityHashHelpers.h"
+#import "CKMacros.h"
 
 @implementation CKTransactionalComponentDataSourceChangeset
 
@@ -29,6 +31,41 @@
     _insertedItems = [insertedItems copy] ?: @{};
   }
   return self;
+}
+
+
+- (NSString *)description
+{
+  return [NSString stringWithFormat:@"Updates: %@\nRemoved Items: %@\nRemove Sections: %@\nMoves: %@\nInserted Sections: %@\nInserted Items: %@", _updatedItems, _removedItems, _removedSections, _movedItems, _insertedSections, _insertedItems];
+}
+
+- (BOOL)isEqual:(id)object
+{
+  if (![object isKindOfClass:[CKTransactionalComponentDataSourceChangeset class]]) {
+    return NO;
+  } else {
+    CKTransactionalComponentDataSourceChangeset *obj = (CKTransactionalComponentDataSourceChangeset *)object;
+    return
+    [_updatedItems isEqualToDictionary:obj.updatedItems] &&
+    [_removedItems isEqualToSet:obj.removedItems] &&
+    [_removedSections isEqualToIndexSet:obj.removedSections] &&
+    [_movedItems isEqualToDictionary:obj.movedItems] &&
+    [_insertedSections isEqualToIndexSet:obj.insertedSections] &&
+    [_insertedItems isEqual:obj.insertedItems];
+  }
+}
+
+- (NSUInteger)hash
+{
+  NSUInteger hashes[6] = {
+    [_updatedItems hash],
+    [_removedItems hash],
+    [_removedSections hash],
+    [_movedItems hash],
+    [_insertedSections hash],
+    [_insertedItems hash]
+  };
+  return CKIntegerArrayHash(hashes, CK_ARRAY_COUNT(hashes));
 }
 
 @end
