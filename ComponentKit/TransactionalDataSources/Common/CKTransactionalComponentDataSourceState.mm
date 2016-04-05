@@ -8,10 +8,11 @@
  *
  */
 
-#import "CKTransactionalComponentDataSourceState.h"
 #import "CKTransactionalComponentDataSourceStateInternal.h"
 
-#import <UIKit/UIKit.h>
+#import "CKEqualityHashHelpers.h"
+#import "CKMacros.h"
+#import "CKTransactionalComponentDataSourceConfiguration.h"
 
 @implementation CKTransactionalComponentDataSourceState
 
@@ -59,6 +60,32 @@
       block(obj, [NSIndexPath indexPathForItem:idx inSection:section], stop);
     }];
   }
+}
+
+#pragma mark - NSObject methods
+
+- (NSString *)description
+{
+  return [_sections description];
+}
+
+- (BOOL)isEqual:(id)object
+{
+  if (![object isKindOfClass:[CKTransactionalComponentDataSourceState class]]) {
+    return NO;
+  } else {
+    CKTransactionalComponentDataSourceState *obj = ((CKTransactionalComponentDataSourceState *)object);
+    return [_configuration isEqual:obj.configuration] && [_sections isEqualToArray:obj.sections];
+  }
+}
+
+- (NSUInteger)hash
+{
+  NSUInteger hashes[2] = {
+    [_configuration hash],
+    [_sections hash]
+  };
+  return CKIntegerArrayHash(hashes, CK_ARRAY_COUNT(hashes));
 }
 
 @end
