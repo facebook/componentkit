@@ -13,6 +13,7 @@
 #import "CKEqualityHashHelpers.h"
 #import "CKMacros.h"
 #import "CKTransactionalComponentDataSourceConfiguration.h"
+#import "CKTransactionalComponentDataSourceItem.h"
 
 @implementation CKTransactionalComponentDataSourceState
 
@@ -75,7 +76,7 @@
     return NO;
   } else {
     CKTransactionalComponentDataSourceState *obj = ((CKTransactionalComponentDataSourceState *)object);
-    return [_configuration isEqual:obj.configuration] && [_sections isEqualToArray:obj.sections];
+    return [_configuration isEqual:obj.configuration] && [flattenedModelsFromSections(_sections) isEqualToArray:flattenedModelsFromSections(obj.sections)];
   }
 }
 
@@ -86,6 +87,19 @@
     [_sections hash]
   };
   return CKIntegerArrayHash(hashes, CK_ARRAY_COUNT(hashes));
+}
+
+static NSArray *flattenedModelsFromSections(NSArray *sections)
+{
+  NSMutableArray *modelSections = [NSMutableArray new];
+  for (NSArray *section in sections) {
+    NSMutableArray *modelSection = [NSMutableArray new];
+    for (CKTransactionalComponentDataSourceItem *item in section) {
+      [modelSection addObject:item.model];
+    }
+    [modelSections addObject:modelSection];
+  }
+  return modelSections;
 }
 
 @end
