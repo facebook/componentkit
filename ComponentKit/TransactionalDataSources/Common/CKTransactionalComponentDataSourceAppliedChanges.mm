@@ -48,6 +48,19 @@
   return self;
 }
 
+- (NSString *)description
+{
+  return [NSString stringWithFormat:
+          @"<CKTransactionalComponentDataSourceAppliedChanges: %p>\n \
+          Updated Index Paths: %@\n \
+          Removed Index Paths: %@\n \
+          Remove Sections: %@\n \
+          Moves: %@\n \
+          Inserted Sections: %@\n \
+          Inserted Index Paths: %@",
+          self, _updatedIndexPaths, _removedIndexPaths, _removedSections, _movedIndexPaths, _insertedSections, _insertedIndexPaths];
+}
+
 - (BOOL)isEqual:(id)object
 {
   return CKCompareObjectEquality(self, object, ^BOOL(CKTransactionalComponentDataSourceAppliedChanges *a, CKTransactionalComponentDataSourceAppliedChanges *b) {
