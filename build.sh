@@ -13,11 +13,10 @@ set -eu
 MODE=$1
 
 function ci() {
-  pod install
   xctool \
-      -workspace $1.xcworkspace \
+      -project $1.xcodeproj \
       -scheme $1 \
-      -sdk iphonesimulator8.1 \
+      -sdk iphonesimulator9.3 \
       -destination "platform=iOS Simulator,OS=8.1,name=iPhone 5" \
       $2
 }

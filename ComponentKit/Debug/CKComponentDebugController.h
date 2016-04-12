@@ -27,7 +27,7 @@
 /**
  Setting the debug mode enables the injection of debug configuration into the component.
  */
-+ (void)setDebugMode:(BOOL)debugMode;
++ (void)setDebugMode:(BOOL)debugMode NS_EXTENSION_UNAVAILABLE("Recursively reflows components using -[UIApplication keyWindow]");
 
 /**
  Components are an immutable construct. Whenever we make changes to the parameters on which the components depended,
@@ -36,7 +36,7 @@
 
  This is particularly used in reflowing the component hierarchy when we set the debug mode.
  */
-+ (void)reflowComponents;
++ (void)reflowComponents NS_EXTENSION_UNAVAILABLE("Recursively reflows components using -[UIApplication keyWindow]");
 
 @end
 
