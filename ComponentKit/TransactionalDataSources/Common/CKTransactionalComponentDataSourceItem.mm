@@ -12,6 +12,8 @@
 #import "CKTransactionalComponentDataSourceItemInternal.h"
 
 #import "CKComponentLayout.h"
+#import "CKEqualityHashHelpers.h"
+#import "CKMacros.h"
 
 @implementation CKTransactionalComponentDataSourceItem
 {
@@ -35,6 +37,20 @@
 - (const CKComponentLayout &)layout
 {
   return _layout;
+}
+
+- (BOOL)isEqual:(id)object
+{
+  if (![object isKindOfClass:[CKTransactionalComponentDataSourceItem class]]) {
+    return NO;
+  } else {
+    return [_model isEqual:((CKTransactionalComponentDataSourceItem *)object).model];
+  }
+}
+
+- (NSUInteger)hash
+{
+  return [_model hash];
 }
 
 @end
