@@ -10,7 +10,12 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKUpdateMode.h>
+
 class CKThreadLocalComponentScope;
+@class CKComponentScopeHandle;
+
+typedef void (^CKComponentStateUpdater)(id (^)(id), CKUpdateMode mode);
 
 /**
  Components have local "state" that is independent of the values passed into its +new method. Components can update
@@ -49,11 +54,14 @@ public:
   ~CKComponentScope();
 
   /** @return The current state for the component being built. */
-  id state() const;
+  id state(void) const;
+
+  /** @return A block that schedules a state update. Usually, use [CKComponent -updateState:mode:] instead. */
+  CKComponentStateUpdater stateUpdater(void) const;
 
 private:
   CKComponentScope(const CKComponentScope&) = delete;
   CKComponentScope &operator=(const CKComponentScope&) = delete;
   CKThreadLocalComponentScope *_threadLocalScope;
-  id _state;
+  CKComponentScopeHandle *_scopeHandle;
 };

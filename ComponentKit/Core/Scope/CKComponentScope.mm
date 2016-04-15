@@ -32,11 +32,16 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
                                                initialStateCreator:initialStateCreator
                                                       stateUpdates:_threadLocalScope->stateUpdates];
     _threadLocalScope->stack.push({.frame = childPair.frame, .equivalentPreviousFrame = childPair.equivalentPreviousFrame});
-    _state = childPair.frame.handle.state;
+    _scopeHandle = childPair.frame.handle;
   }
 }
 
-id CKComponentScope::state() const
+id CKComponentScope::state(void) const
 {
-  return _state;
+  return _scopeHandle.state;
+}
+
+CKComponentStateUpdater CKComponentScope::stateUpdater(void) const
+{
+  return ^(id (^update)(id), CKUpdateMode mode){ [_scopeHandle updateState:update mode:mode]; };
 }
