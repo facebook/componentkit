@@ -56,7 +56,13 @@ public:
   /** @return The current state for the component being built. */
   id state(void) const;
 
-  /** @return A block that schedules a state update. Usually, use [CKComponent -updateState:mode:] instead. */
+  /**
+   @return A block that schedules a state update when invoked.
+   @discussion Usually, prefer the more idiomatic [CKComponent -updateState:mode:]. Use this in the rare case where you
+   need to pass a state updater to a child component during +new. (Usually, the child should communicate back via
+   CKComponentAction and the parent should call -updateState:mode: on itself; this hides the implementation details
+   of the parent's state from the child.)
+  */
   CKComponentStateUpdater stateUpdater(void) const;
 
 private:
