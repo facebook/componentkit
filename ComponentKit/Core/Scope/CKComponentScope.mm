@@ -43,5 +43,7 @@ id CKComponentScope::state(void) const
 
 CKComponentStateUpdater CKComponentScope::stateUpdater(void) const
 {
-  return ^(id (^update)(id), CKUpdateMode mode){ [_scopeHandle updateState:update mode:mode]; };
+  // We must capture _scopeHandle in a local, since this may be destroyed by the time the block executes.
+  CKComponentScopeHandle *const scopeHandle = _scopeHandle;
+  return ^(id (^update)(id), CKUpdateMode mode){ [scopeHandle updateState:update mode:mode]; };
 }
