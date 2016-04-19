@@ -77,14 +77,6 @@ static void _transactionGroupRunLoopObserverCallback(CFRunLoopObserverRef observ
   [_containerLayers addObject:containerLayer];
 }
 
-- (void)removeTransactionContainer:(CALayer *)containerLayer
-{
-  CKAssertMainThread();
-  CKAssertNotNil(containerLayer, @"Cannot remove a nil layer from the group");
-
-  [_containerLayers removeObject:containerLayer];
-}
-
 #pragma mark Transactions
 
 - (void)commit
