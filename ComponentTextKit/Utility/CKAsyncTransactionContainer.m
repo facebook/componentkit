@@ -71,7 +71,6 @@
       [self ck_asyncTransactionContainerDidCompleteTransaction:completedTransaction];
       if ([transactions count] == 0) {
         [self ck_asyncTransactionContainerStateDidChange];
-        [[CKAsyncTransactionGroup mainTransactionGroup] removeTransactionContainer:self];
       }
     }];
     [transactions addObject:transaction];

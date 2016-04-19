@@ -25,12 +25,4 @@
 /// @see CKAsyncTransactionContainer
 - (void)addTransactionContainer:(CALayer *)containerLayer;
 
-/// Remove a transaction container that no longer has pending transactions.
-/// All layers added with addTransactionContainer: should be removed with removeTransactionContainer: once all
-/// its transactions have been completed or canceled for flushPendingTransactions: to work correctly.
-/// Only one call to removeTransactionContainer: is needed to remove the layer, even if addTransactionContainer:
-/// has been called multiple times.
-/// @param containerLayer A layer for which all transactions have been completed or canceled.
-- (void)removeTransactionContainer:(CALayer *)containerLayer;
-
 @end
