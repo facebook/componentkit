@@ -34,7 +34,8 @@
 
 - (NSInteger)numberOfObjectsInSection:(NSInteger)section
 {
-  return [[_sections objectAtIndex:section] count];
+  // This is done to mimic UICollectionView behavior, which returns 0 objects even if there are 0 sections
+  return ([self numberOfSections] == 0 ? 0 : [[_sections objectAtIndex:section] count]);
 }
 
 - (CKTransactionalComponentDataSourceItem *)objectAtIndexPath:(NSIndexPath *)indexPath
