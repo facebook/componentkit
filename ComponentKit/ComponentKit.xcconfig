@@ -19,3 +19,4 @@ CLANG_ENABLE_MODULES = YES
 ONLY_ACTIVE_ARCH[config=Debug] = YES
 GCC_OPTIMIZATION_LEVEL[config=Debug] = 0
 COPY_PHASE_STRIP[config=Debug] = NO
+OTHER_CFLAGS[config=Debug] = $(inherited) -Wall -Wextra -Wno-mismatched-tags -Wno-unused-parameter -Wno-sign-compare -Wno-missing-field-initializers

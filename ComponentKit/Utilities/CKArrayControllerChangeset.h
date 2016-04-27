@@ -43,7 +43,7 @@ namespace CK {
       NSInteger section;
       NSInteger item;
 
-      IndexPath(void) : item(NSNotFound), section(NSNotFound) {};
+      IndexPath(void) : section(NSNotFound), item(NSNotFound) {};
 
       IndexPath(NSInteger s, NSInteger i) : section(s), item(i) {};
 
@@ -177,8 +177,8 @@ namespace CK {
       
       class Changeset final {
       public:
-        Changeset(const CKArrayControllerSections &s) : items({}), sections(s) {}
-        Changeset(const CKArrayControllerInputItems &i) : items(i), sections({}) {}
+        Changeset(const CKArrayControllerSections &s) : sections(s), items({}) {}
+        Changeset(const CKArrayControllerInputItems &i) : sections({}), items(i) {}
         Changeset(const CKArrayControllerSections &s, const CKArrayControllerInputItems &i) : sections(s), items(i) {}
         ~Changeset();
         
