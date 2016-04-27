@@ -13,7 +13,7 @@ set -eu
 MODE=$1
 
 function ci() {
-  xctool \
+  xcodebuild \
       -project $1.xcodeproj \
       -scheme $1 \
       -sdk iphonesimulator9.3 \
