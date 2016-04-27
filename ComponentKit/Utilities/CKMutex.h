@@ -13,7 +13,7 @@
 
 #import <libkern/OSAtomic.h>
 
-#import "CKAssert.h"
+#import <ComponentKit/CKAssert.h>
 
 #if defined (__GNUC__)
 # define CK_NOTHROW __attribute__ ((nothrow))

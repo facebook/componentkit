@@ -10,8 +10,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "CKComponentLayout.h"
-#import "CKComponentScopeRoot.h"
+#import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
 
 /**
  @brief This controller can be used to manage attaching and detaching a component trees to a view.
