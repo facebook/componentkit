@@ -133,7 +133,7 @@ namespace CK {
           cache.insert(key, object, cost);
         }
 
-        const id objectForKey(const Key &key) {
+        id objectForKey(const Key &key) {
           return cache.find(key);
         }
 

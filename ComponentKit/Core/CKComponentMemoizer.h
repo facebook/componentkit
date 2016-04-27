@@ -10,7 +10,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKSizeRange.h>
 #import <ComponentKit/CKComponentSize.h>

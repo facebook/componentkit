@@ -12,8 +12,8 @@
 #import <vector>
 
 #import <Foundation/Foundation.h>
-#import "CKComponentAnnouncerBase.h"
-#import "CKComponentAnnouncerBaseInternal.h"
+#import <ComponentKit/CKComponentAnnouncerBase.h>
+#import <ComponentKit/CKComponentAnnouncerBaseInternal.h>
 
 namespace CK {
   namespace Component {
