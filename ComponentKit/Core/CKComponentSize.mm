@@ -20,8 +20,8 @@ CKComponentSize CKComponentSize::fromCGSize(CGSize size)
 
 static inline void CKCSConstrain(CGFloat minVal, CGFloat exactVal, CGFloat maxVal, CGFloat *outMin, CGFloat *outMax)
 {
-    CKCAssert(!isnan(minVal), @"minVal must not be NaN");
-    CKCAssert(!isnan(maxVal), @"maxVal must not be NaN");
+    CKCAssert(!isnan(minVal), @"minVal must not be NaN. Current stack description: %@", CK::Component::LayoutContext::currentStackDescription());
+    CKCAssert(!isnan(maxVal), @"maxVal must not be NaN. Current stack description: %@", CK::Component::LayoutContext::currentStackDescription());
     // Avoid use of min/max primitives since they're harder to reason
     // about in the presence of NaN (in exactVal)
     // Follow CSS: min overrides max overrides exact.
