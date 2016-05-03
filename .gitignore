@@ -3,4 +3,5 @@ appledoc
 *.gcov
 .DS_Store
 Carthage/Build
+*Carthage/Checkouts*
 ObjectiveC.gc*
