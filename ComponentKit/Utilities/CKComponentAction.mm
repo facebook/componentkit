@@ -18,6 +18,8 @@
 #import "CKComponent.h"
 #import "CKComponentViewInterface.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
 // This method returns a friendly-print of a responder chain. Used for debug purposes.
 static NSString *_debugResponderChain(id responder) {
   if (!responder) {
@@ -26,6 +28,7 @@ static NSString *_debugResponderChain(id responder) {
     return [NSString stringWithFormat:@"%@ -> %@", responder, _debugResponderChain([responder nextResponder])];
   }
 }
+#pragma clang diagnostic pop
 
 void CKComponentActionSend(CKComponentAction action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
 {
