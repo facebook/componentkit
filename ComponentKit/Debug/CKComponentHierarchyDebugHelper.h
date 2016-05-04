@@ -24,6 +24,6 @@
  find views which have a lifecycle manager, from which we can get the component layout hierarchies.
  @return A string with a description of the hierarchy.
  */
-+ (NSString *)componentHierarchyDescription;
++ (NSString *)componentHierarchyDescription NS_EXTENSION_UNAVAILABLE("Recursively describes components using -[UIApplication keyWindow]");
 
 @end
