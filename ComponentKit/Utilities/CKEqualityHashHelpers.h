@@ -32,7 +32,6 @@ inline size_t CKHash64ToNative(uint64_t key) {
   return key;
 }
 #else
-
 // Thomas Wang downscaling hash function
 inline size_t CKHash64ToNative(uint64_t key) {
   key = (~key) + (key << 18);
@@ -102,7 +101,7 @@ namespace CKTupleOperations
       size_t prev = _hash_helper<Tuple, Index-1>::hash(tuple);
       using TypeForIndex = typename std::tuple_element<Index,Tuple>::type;
       size_t thisHash = CK::hash<TypeForIndex>()(std::get<Index>(tuple));
-      return CKHashCombine(prev, thisHash);
+      return CKHash64ToNative(CKHashCombine(prev, thisHash));
     }
   };
 
