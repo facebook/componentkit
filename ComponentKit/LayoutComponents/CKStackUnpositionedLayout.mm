@@ -349,5 +349,5 @@ CKStackUnpositionedLayout CKStackUnpositionedLayout::compute(const std::vector<C
   stretchChildrenAlongCrossDimension(items, style, size);
 
   const CGFloat stackDimensionSum = computeStackDimensionSum(items, style);
-  return {items, stackDimensionSum, computeViolation(stackDimensionSum, style, sizeRange)};
+  return {std::move(items), stackDimensionSum, computeViolation(stackDimensionSum, style, sizeRange)};
 }
