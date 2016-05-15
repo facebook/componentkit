@@ -61,7 +61,7 @@ static CKStackPositionedLayout stackedLayout(const CKStackLayoutComponentStyle &
     p = p + directionPoint(style.direction, stackDimension(style.direction, l.layout.size) + l.child.spacingAfter, 0);
     return c;
   });
-  return {stackedChildren, crossSize};
+  return {std::move(stackedChildren), crossSize};
 }
 
 CKStackPositionedLayout CKStackPositionedLayout::compute(const CKStackUnpositionedLayout &unpositionedLayout,
