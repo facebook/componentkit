@@ -48,7 +48,7 @@ class CKComponentBoundsAnimation;
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
-                                  decider:(id<CKComponentDeciding>)decider;
+                                  decider:(Class<CKComponentDeciding>)decider;
 
 /**
  @see `CKComponentDataSourceDelegate`
