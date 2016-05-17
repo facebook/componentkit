@@ -10,22 +10,20 @@
 
 #import "CKComponentConstantDecider.h"
 
-@implementation CKComponentConstantDecider
+@implementation CKComponentConstantApprovingDecider : NSObject
+
++ (BOOL)isModelComponentCompliant:(id)model
 {
-  BOOL _enabled;
+  return YES;
 }
 
-- (instancetype)initWithEnabled:(BOOL)enabled
-{
-  if (self = [super init]) {
-    _enabled = enabled;
-  }
-  return self;
-}
+@end
 
-- (id)componentCompliantModel:(id)model
+@implementation CKComponentConstantDenyingDecider : NSObject
+
++ (BOOL)isModelComponentCompliant:(id)model
 {
-  return _enabled ? model : nil;
+  return NO;
 }
 
 @end

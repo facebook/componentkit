@@ -56,7 +56,7 @@ CK_FINAL_CLASS([CKCollectionViewDataSource class]);
   if (self) {
     _componentDataSource = [[CKComponentDataSource alloc] initWithComponentProvider:componentProvider
                                                                             context:context
-                                                                            decider:[[CKComponentConstantDecider alloc] initWithEnabled:YES]];
+                                                                            decider:[CKComponentConstantApprovingDecider class]];
     _supplementaryViewDataSource = supplementaryViewDataSource;
     _cellConfigurationFunction = cellConfigurationFunction;
     _componentDataSource.delegate = self;

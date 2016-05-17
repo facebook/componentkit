@@ -12,8 +12,8 @@
 
 #import <ComponentKit/CKComponentDeciding.h>
 
-@interface CKComponentConstantDecider : NSObject <CKComponentDeciding>
+@interface CKComponentConstantApprovingDecider : NSObject <CKComponentDeciding>
+@end
 
-- (instancetype)initWithEnabled:(BOOL)enabled;
-
+@interface CKComponentConstantDenyingDecider : NSObject <CKComponentDeciding>
 @end

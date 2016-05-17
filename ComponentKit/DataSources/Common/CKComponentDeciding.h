@@ -13,9 +13,9 @@
 @protocol CKComponentDeciding <NSObject>
 
 /*
- * Returns a component compliant model if possible
- * Nil otherwise
+ * Returns YES if the model is component-eligible
+ * No otherwise
  */
-- (id)componentCompliantModel:(id)model;
++ (BOOL)isModelComponentCompliant:(id)model;
 
 @end

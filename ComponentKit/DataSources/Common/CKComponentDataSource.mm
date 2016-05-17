@@ -39,7 +39,7 @@ CKComponentLifecycleManagerAsynchronousUpdateHandler
 
 @implementation CKComponentDataSource
 {
-  id<CKComponentDeciding> _decider;
+  Class<CKComponentDeciding> _decider;
   id<NSObject> _context;
 
   /*
@@ -62,7 +62,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
 #pragma mark - Lifecycle
 
 - (instancetype)initWithLifecycleManagerFactory:(CKComponentLifecycleManagerFactory)lifecycleManagerFactory
-                                        decider:(id<CKComponentDeciding>)decider
+                                        decider:(Class<CKComponentDeciding>)decider
                                         context:(id<NSObject>)context
                            inputArrayController:(CKSectionedArrayController *)inputArrayController
                           outputArrayController:(CKSectionedArrayController *)outputArrayController
@@ -84,7 +84,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
-                                  decider:(id<CKComponentDeciding>)decider
+                                  decider:(Class<CKComponentDeciding>)decider
 {
   return [self initWithComponentProvider:componentProvider
                                  context:context
@@ -94,7 +94,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
-                                  decider:(id<CKComponentDeciding>)decider
+                                  decider:(Class<CKComponentDeciding>)decider
                     preparationQueueWidth:(NSInteger)preparationQueueWidth
 {
   CKComponentLifecycleManagerFactory lifecycleManagerFactory = ^{
@@ -223,7 +223,6 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
   ^(const CKArrayControllerOutputChange &change, CKArrayControllerChangeType type, BOOL *stop) {
     CKComponentDataSourceInputItem *before = change.before;
     CKComponentDataSourceInputItem *after = change.after;
-    id componentCompliantModel = [_decider componentCompliantModel:[after model]];
 
     CKSizeRange constrainedSize = (type == CKArrayControllerChangeTypeDelete) ? CKSizeRange() : [after constrainedSize];
     CKComponentPreparationInputItem *queueItem =
@@ -235,7 +234,7 @@ CK_FINAL_CLASS([CKComponentDataSource class]);
                                                       sourceIndexPath:change.sourceIndexPath.toNSIndexPath()
                                                  destinationIndexPath:change.destinationIndexPath.toNSIndexPath()
                                                            changeType:type
-                                                          passthrough:(componentCompliantModel == nil)
+                                                          passthrough:![_decider isModelComponentCompliant:[after model]]
                                                               context:_context];
     preparationQueueBatch.items.push_back(queueItem);
   };
