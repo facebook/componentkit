@@ -194,6 +194,7 @@ struct CKComponentHostingViewInputs {
     dispatch_async(dispatch_get_main_queue(), ^{
       if (!_componentNeedsUpdate) {
         // A synchronous update snuck in and took care of it for us.
+        _scheduledAsynchronousComponentUpdate = NO;
         return;
       }
 
