@@ -74,7 +74,7 @@ static CK::TextKit::Renderer::Cache *rasterContentsCache()
       }
     }
     _renderer = renderer;
-    [self setNeedsAsyncDisplay];
+    [self setNeedsDisplay];
   }
 }
 
