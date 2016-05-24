@@ -23,7 +23,7 @@
           [CKTextComponent
            newWithTextAttributes:textKitAttributes(attributes)
            viewAttributes:std::move(copiedMap)
-           accessibilityContext:{.isAccessibilityElement = @(YES)}
+           options:{.accessibilityContext = {.isAccessibilityElement = @(YES)}}
            size:size]];
 }
 
