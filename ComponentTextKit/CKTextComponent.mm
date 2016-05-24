@@ -63,24 +63,25 @@ static CKTextKitRenderer *rendererForAttributes(CKTextKitAttributes &attributes,
 
 + (instancetype)newWithTextAttributes:(const CKTextKitAttributes &)attributes
                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
-                 accessibilityContext:(const CKTextComponentAccessibilityContext &)accessibilityContext
+                              options:(const CKTextComponentOptions &)options
                                  size:(const CKComponentSize &)size
 {
   CKTextKitAttributes copyAttributes = attributes.copy();
   CKViewComponentAttributeValueMap copiedMap = viewAttributes;
+  copiedMap.insert({CKComponentViewAttribute::LayerAttribute(@selector(setDisplayMode:)), @(options.displayMode)});
   CKTextComponent *c = [super newWithView:{
     [CKTextComponentView class],
     std::move(copiedMap),
     {
-      .isAccessibilityElement = accessibilityContext.isAccessibilityElement,
-      .accessibilityIdentifier = accessibilityContext.accessibilityIdentifier,
-      .accessibilityLabel = accessibilityContext.accessibilityLabel.hasText()
-      ? accessibilityContext.accessibilityLabel : ^{ return copyAttributes.attributedString.string; }
+      .isAccessibilityElement = options.accessibilityContext.isAccessibilityElement,
+      .accessibilityIdentifier = options.accessibilityContext.accessibilityIdentifier,
+      .accessibilityLabel = options.accessibilityContext.accessibilityLabel.hasText()
+      ? options.accessibilityContext.accessibilityLabel : ^{ return copyAttributes.attributedString.string; }
     }
   } size:size];
   if (c) {
     c->_attributes = copyAttributes;
-    c->_accessibilityContext = accessibilityContext;
+    c->_accessibilityContext = options.accessibilityContext;
   }
   return c;
 }
