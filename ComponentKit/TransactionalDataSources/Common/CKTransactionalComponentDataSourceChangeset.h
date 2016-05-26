@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CKTransactionalComponentDataSourceChangeset : NSObject
+@interface CKTransactionalComponentDataSourceChangeset<__covariant ModelType> : NSObject
 
 /**
  Designated initializer. Any parameter may be nil.
@@ -21,25 +21,25 @@
  @param insertedSections NSIndexSet of section indices.
  @param insertedItems Mapping from NSIndexPath to new model.
  */
-- (instancetype)initWithUpdatedItems:(NSDictionary *)updatedItems
-                        removedItems:(NSSet *)removedItems
+- (instancetype)initWithUpdatedItems:(NSDictionary<NSIndexPath *, ModelType> *)updatedItems
+                        removedItems:(NSSet<NSIndexPath *> *)removedItems
                      removedSections:(NSIndexSet *)removedSections
-                          movedItems:(NSDictionary *)movedItems
+                          movedItems:(NSDictionary<NSIndexPath *, NSIndexPath *> *)movedItems
                     insertedSections:(NSIndexSet *)insertedSections
-                       insertedItems:(NSDictionary *)insertedItems;
+                       insertedItems:(NSDictionary<NSIndexPath *, ModelType> *)insertedItems;
 
 @end
 
 /** A helper object that allows you to build changesets. */
-@interface CKTransactionalComponentDataSourceChangesetBuilder : NSObject
+@interface CKTransactionalComponentDataSourceChangesetBuilder<__covariant ModelType> : NSObject
 
 + (instancetype)transactionalComponentDataSourceChangeset;
-- (instancetype)withUpdatedItems:(NSDictionary *)updatedItems;
+- (instancetype)withUpdatedItems:(NSDictionary<NSIndexPath *, ModelType> *)updatedItems;
 - (instancetype)withRemovedItems:(NSSet *)removedItems;
 - (instancetype)withRemovedSections:(NSIndexSet *)removedSections;
-- (instancetype)withMovedItems:(NSDictionary *)movedItems;
+- (instancetype)withMovedItems:(NSDictionary<NSIndexPath *, NSIndexPath *> *)movedItems;
 - (instancetype)withInsertedSections:(NSIndexSet *)insertedSections;
-- (instancetype)withInsertedItems:(NSDictionary *)insertedItems;
-- (CKTransactionalComponentDataSourceChangeset *)build;
+- (instancetype)withInsertedItems:(NSDictionary<NSIndexPath *, ModelType> *)insertedItems;
+- (CKTransactionalComponentDataSourceChangeset<ModelType> *)build;
 
 @end
