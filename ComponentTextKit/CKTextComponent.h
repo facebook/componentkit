@@ -26,6 +26,10 @@ struct CKTextComponentAccessibilityContext
 
 struct CKTextComponentOptions
 {
+  /**
+   Controls if rendering should be done synchronously or async
+   See @CKAsyncLayer
+   */
   CKAsyncLayerDisplayMode displayMode;
   CKTextComponentAccessibilityContext accessibilityContext;
 };

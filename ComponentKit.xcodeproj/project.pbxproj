@@ -318,7 +318,7 @@
 		D0B47D6E1CBD948E00BB33CE /* CKTextKitShadower.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C5C1CBD92C200BB33CE /* CKTextKitShadower.h */; };
 		D0B47D6F1CBD948E00BB33CE /* CKTextKitTailTruncater.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C5E1CBD92C200BB33CE /* CKTextKitTailTruncater.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D701CBD948E00BB33CE /* CKTextKitTruncating.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C601CBD92C200BB33CE /* CKTextKitTruncating.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D0B47D711CBD948E00BB33CE /* CKAsyncLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C621CBD92C200BB33CE /* CKAsyncLayer.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D0B47D711CBD948E00BB33CE /* CKAsyncLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C621CBD92C200BB33CE /* CKAsyncLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D721CBD948E00BB33CE /* CKAsyncLayerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C641CBD92C200BB33CE /* CKAsyncLayerInternal.h */; };
 		D0B47D731CBD948E00BB33CE /* CKAsyncLayerSubclass.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C651CBD92C200BB33CE /* CKAsyncLayerSubclass.h */; };
 		D0B47D741CBD948E00BB33CE /* CKAsyncTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C661CBD92C200BB33CE /* CKAsyncTransaction.h */; };
