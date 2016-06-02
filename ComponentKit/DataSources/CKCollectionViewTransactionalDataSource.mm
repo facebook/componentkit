@@ -83,6 +83,7 @@ static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppli
 - (void)transactionalComponentDataSource:(CKTransactionalComponentDataSource *)dataSource
                   didModifyPreviousState:(CKTransactionalComponentDataSourceState *)previousState
                        byApplyingChanges:(CKTransactionalComponentDataSourceAppliedChanges *)changes
+                                userInfo:(NSDictionary *)userInfo
 {
   [_collectionView performBatchUpdates:^{
     applyChangesToCollectionView(changes, _collectionView);

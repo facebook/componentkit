@@ -27,6 +27,7 @@
 - (void)transactionalComponentDataSource:(CKTransactionalComponentDataSource *)dataSource
                   didModifyPreviousState:(CKTransactionalComponentDataSourceState *)previousState
                        byApplyingChanges:(CKTransactionalComponentDataSourceAppliedChanges *)changes
+                                userInfo:(NSDictionary *)userInfo
 {
   CK::Component::AnnouncerHelper::call(self, _cmd, dataSource, previousState, changes);
 }
