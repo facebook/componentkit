@@ -140,4 +140,17 @@
                                                    constrainedSize:constrainedSize]);
 }
 
+- (void)testEnforcementOfMaximumNumberOfLines
+{
+  const NSUInteger maximumNumberOfLines = 1;
+  const CGSize constrainedSize = CGSizeMake(50, INFINITY);
+  CKTextKitRenderer *renderer = [[CKTextKitRenderer alloc]
+                                 initWithTextKitAttributes:{
+                                   .attributedString = [[NSAttributedString alloc] initWithString:@"This is a super long phrase."],
+                                   .maximumNumberOfLines = maximumNumberOfLines,
+                                 }
+                                 constrainedSize:constrainedSize];
+  XCTAssertEqual(renderer.lineCount, maximumNumberOfLines);
+}
+
 @end
