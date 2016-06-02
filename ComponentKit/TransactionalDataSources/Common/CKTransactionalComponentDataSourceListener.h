@@ -22,9 +22,11 @@
  @param previousState The state that the data source was previously exposing.
  @param changes The changes that were applied (which may correspond to multiple 
         CKTransactionalComponentDataSourceChangeset objects).
+ @param userInfo The dictionary of information relevant to the state change
  */
 - (void)transactionalComponentDataSource:(CKTransactionalComponentDataSource *)dataSource
                   didModifyPreviousState:(CKTransactionalComponentDataSourceState *)previousState
-                       byApplyingChanges:(CKTransactionalComponentDataSourceAppliedChanges *)changes;
+                       byApplyingChanges:(CKTransactionalComponentDataSourceAppliedChanges *)changes
+                                userInfo:(NSDictionary *)userInfo;
 
 @end

@@ -64,15 +64,15 @@
   [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset stateListener:self userInfo:userInfo];
   switch (mode) {
     case CKUpdateModeAsynchronous:
-      [self _enqueueModification:modification];
+      [self _enqueueModification:modification userInfo:userInfo];
       break;
     case CKUpdateModeSynchronous:
       // We need to keep FIFO ordering of changesets, so cancel & synchronously apply any queued async modifications.
       NSArray *enqueuedChangesets = [self _cancelEnqueuedModificationsOfType:[modification class]];
       for (id<CKTransactionalComponentDataSourceStateModifying> pendingChangesetModification in enqueuedChangesets) {
-        [self _synchronouslyApplyChange:[pendingChangesetModification changeFromState:_state]];
+        [self _synchronouslyApplyChange:[pendingChangesetModification changeFromState:_state] userInfo:userInfo];
       }
-      [self _synchronouslyApplyChange:[modification changeFromState:_state]];
+      [self _synchronouslyApplyChange:[modification changeFromState:_state] userInfo:userInfo];
       break;
   }
 }
@@ -86,12 +86,12 @@
   [[CKTransactionalComponentDataSourceUpdateConfigurationModification alloc] initWithConfiguration:configuration userInfo:userInfo];
   switch (mode) {
     case CKUpdateModeAsynchronous:
-      [self _enqueueModification:modification];
+      [self _enqueueModification:modification userInfo:userInfo];
       break;
     case CKUpdateModeSynchronous:
       // Cancel all enqueued asynchronous configuration updates or they'll complete later and overwrite this one.
       [self _cancelEnqueuedModificationsOfType:[modification class]];
-      [self _synchronouslyApplyChange:[modification changeFromState:_state]];
+      [self _synchronouslyApplyChange:[modification changeFromState:_state] userInfo:userInfo];
       break;
   }
 }
@@ -104,12 +104,12 @@
   [[CKTransactionalComponentDataSourceReloadModification alloc] initWithUserInfo:userInfo];
   switch (mode) {
     case CKUpdateModeAsynchronous:
-      [self _enqueueModification:modification];
+      [self _enqueueModification:modification userInfo:userInfo];
       break;
     case CKUpdateModeSynchronous:
       // Cancel previously enqueued reloads; we're reloading right now, so no need to subsequently reload again.
       [self _cancelEnqueuedModificationsOfType:[modification class]];
-      [self _synchronouslyApplyChange:[modification changeFromState:_state]];
+      [self _synchronouslyApplyChange:[modification changeFromState:_state] userInfo:userInfo];
       break;
   }
 }
@@ -139,7 +139,7 @@
       [self _processStateUpdates];
     });
   }
-
+  
   if (mode == CKUpdateModeAsynchronous) {
     _pendingAsynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});
   } else {
@@ -149,16 +149,16 @@
 
 #pragma mark - Internal
 
-- (void)_enqueueModification:(id<CKTransactionalComponentDataSourceStateModifying>)modification
+- (void)_enqueueModification:(id<CKTransactionalComponentDataSourceStateModifying>)modification userInfo:(NSDictionary *)userInfo
 {
   CKAssertMainThread();
   [_pendingAsynchronousModifications addObject:modification];
   if ([_pendingAsynchronousModifications count] == 1) {
-    [self _startFirstAsynchronousModification];
+    [self _startFirstAsynchronousModificationWithUserInfo:userInfo];
   }
 }
 
-- (void)_startFirstAsynchronousModification
+- (void)_startFirstAsynchronousModificationWithUserInfo:(NSDictionary *)userInfo
 {
   CKAssertMainThread();
   id<CKTransactionalComponentDataSourceStateModifying> modification = _pendingAsynchronousModifications[0];
@@ -169,11 +169,11 @@
       // If the first object in _pendingAsynchronousModifications is not still the modification,
       // it may have been canceled; don't apply it.
       if ([_pendingAsynchronousModifications firstObject] == modification && _state == baseState) {
-        [self _synchronouslyApplyChange:change];
+        [self _synchronouslyApplyChange:change userInfo:userInfo];
         [_pendingAsynchronousModifications removeObjectAtIndex:0];
       }
       if ([_pendingAsynchronousModifications count] != 0) {
-        [self _startFirstAsynchronousModification];
+        [self _startFirstAsynchronousModificationWithUserInfo:userInfo];
       }
     });
   });
@@ -191,14 +191,15 @@
   return modifications;
 }
 
-- (void)_synchronouslyApplyChange:(CKTransactionalComponentDataSourceChange *)change
+- (void)_synchronouslyApplyChange:(CKTransactionalComponentDataSourceChange *)change userInfo:(NSDictionary *)userInfo
 {
   CKAssertMainThread();
   CKTransactionalComponentDataSourceState *previousState = _state;
   _state = [change state];
   [_announcer transactionalComponentDataSource:self
                         didModifyPreviousState:previousState
-                             byApplyingChanges:[change appliedChanges]];
+                             byApplyingChanges:[change appliedChanges]
+                                      userInfo:userInfo];
 }
 
 - (void)_processStateUpdates
@@ -208,13 +209,13 @@
     CKTransactionalComponentDataSourceUpdateStateModification *sm =
     [[CKTransactionalComponentDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingAsynchronousStateUpdates];
     _pendingAsynchronousStateUpdates.clear();
-    [self _enqueueModification:sm];
+    [self _enqueueModification:sm userInfo:nil];
   }
   if (!_pendingSynchronousStateUpdates.empty()) {
     CKTransactionalComponentDataSourceUpdateStateModification *sm =
     [[CKTransactionalComponentDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingSynchronousStateUpdates];
     _pendingSynchronousStateUpdates.clear();
-    [self _synchronouslyApplyChange:[sm changeFromState:_state]];
+    [self _synchronouslyApplyChange:[sm changeFromState:_state] userInfo:nil];
   }
 }
 
