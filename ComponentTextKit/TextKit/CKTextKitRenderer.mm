@@ -125,10 +125,16 @@ static NSCharacterSet *_defaultAvoidTruncationCharacterSet()
 {
   __block NSUInteger lineCount = 0;
   [_context performBlockWithLockedTextKitComponents:^(NSLayoutManager *layoutManager, NSTextStorage *textStorage, NSTextContainer *textContainer) {
-    for (NSRange lineRange = { 0, 0 }; NSMaxRange(lineRange) < [layoutManager numberOfGlyphs]; lineCount++) {
-      [layoutManager lineFragmentRectForGlyphAtIndex:NSMaxRange(lineRange) effectiveRange:&lineRange];
+    NSUInteger numberOfGlyphs = [layoutManager numberOfGlyphs];
+    for (NSRange lineRange = { 0, 0 }; NSMaxRange(lineRange) < numberOfGlyphs;) {
+      CGRect lineRect = [layoutManager lineFragmentRectForGlyphAtIndex:NSMaxRange(lineRange) effectiveRange:&lineRange];
+      if (CGRectIsEmpty(lineRect)) {
+        break;
+      }
+      lineCount++;
     }
   }];
+
   return lineCount;
 }
 

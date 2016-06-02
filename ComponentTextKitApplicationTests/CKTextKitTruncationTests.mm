@@ -140,4 +140,30 @@
                                                    constrainedSize:constrainedSize]);
 }
 
+- (void)testNoLimitOfMaximumNumberOfLines
+{
+  const NSUInteger maximumNumberOfLines = 0;
+  NSAttributedString *attributedString = [self _sentenceAttributedString];
+  CKTextKitRenderer *renderer = [[CKTextKitRenderer alloc]
+                                 initWithTextKitAttributes:{
+                                   .attributedString = attributedString,
+                                   .maximumNumberOfLines = maximumNumberOfLines,
+                                 }
+                                 constrainedSize:CGSizeMake(50, INFINITY)];
+  XCTAssertTrue(renderer.lineCount > maximumNumberOfLines);
+}
+
+- (void)testEnforcementOfMaximumNumberOfLines
+{
+  const NSUInteger maximumNumberOfLines = 3;
+  NSAttributedString *attributedString = [self _sentenceAttributedString];
+  CKTextKitRenderer *renderer = [[CKTextKitRenderer alloc]
+                                 initWithTextKitAttributes:{
+                                   .attributedString = attributedString,
+                                   .maximumNumberOfLines = maximumNumberOfLines,
+                                 }
+                                 constrainedSize:CGSizeMake(50, INFINITY)];
+  XCTAssertEqual(renderer.lineCount, maximumNumberOfLines);
+}
+
 @end
