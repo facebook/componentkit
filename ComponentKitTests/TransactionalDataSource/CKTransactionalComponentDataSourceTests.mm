@@ -197,6 +197,7 @@ struct CKDataSourceAnnouncedUpdate {
 - (void)transactionalComponentDataSource:(CKTransactionalComponentDataSource *)dataSource
                   didModifyPreviousState:(CKTransactionalComponentDataSourceState *)previousState
                        byApplyingChanges:(CKTransactionalComponentDataSourceAppliedChanges *)changes
+                                userInfo:(NSDictionary *)userInfo
 {
   _announcedChanges.push_back({previousState, changes});
 }
