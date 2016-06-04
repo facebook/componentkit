@@ -131,6 +131,34 @@
   XCTAssertTrue(firstView != dequeuedView, @"Expected different view to be vended.");
 }
 
+- (void)testEnqueueingOneViewThatLostItSuperviewThenDequeueingWithDifferentPreferredSuperviews
+{
+  CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
+
+  UIView *container1 = [[UIView alloc] init];
+  CKTestStatefulView *view = [[CKTestStatefulView alloc] init];
+  [container1 addSubview:view];
+  [pool enqueueStatefulView:view
+         forControllerClass:[CKTestStatefulViewComponentController class]
+                    context:nil];
+
+  // remove the statefull view from the container
+  [view removeFromSuperview];
+
+  UIView *container2 = [[UIView alloc] init];
+  UIView *dequeuedView = [pool dequeueStatefulViewForControllerClass:[CKTestStatefulViewComponentController class]
+                                                  preferredSuperview:container2
+                                                             context:nil];
+  XCTAssertTrue(dequeuedView == view, @"Expected view in container1 to be returned");
+
+  XCTAssertNil([pool dequeueStatefulViewForControllerClass:[CKTestStatefulViewComponentController class]
+                                        preferredSuperview:container1
+                                                   context:nil], @"Didn't expect to vend view from empty pool");
+  XCTAssertNil([pool dequeueStatefulViewForControllerClass:[CKTestStatefulViewComponentController class]
+                                        preferredSuperview:container2
+                                                   context:nil], @"Didn't expect to vend view from empty pool");
+}
+
 - (void)testMaximumPoolSizeOfOneByEnqueueingTwoViewsThenDequeueingTwoViewsReturnsNewView
 {
   CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];

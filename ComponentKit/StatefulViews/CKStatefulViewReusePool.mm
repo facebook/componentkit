@@ -16,46 +16,34 @@
 class FBStatefulReusePoolItem {
 public:
   FBStatefulReusePoolItem()
-  : preferredSuperviewMap([NSMapTable weakToStrongObjectsMapTable]), allViews([NSMutableArray array]) {};
+  : views([NSMutableArray array]) {};
 
   UIView *viewWithPreferredSuperview(UIView *preferredSuperview)
   {
-    NSMutableArray *matchingViews = [preferredSuperviewMap objectForKey:preferredSuperview];
-    UIView *view = [matchingViews lastObject] ?: [allViews lastObject];
-    if (view) {
-      if ([matchingViews count]) {
-        [matchingViews removeObject:view];
-      } else {
-        [[preferredSuperviewMap objectForKey:[view superview]] removeObject:view];
-      }
-      [allViews removeObject:view];
+    if ([views count] == 0) {
+      return nil;
     }
+    const NSUInteger matchingIndex = [views indexOfObjectPassingTest:^BOOL(UIView *view, NSUInteger idx, BOOL *stop) {
+      return [view superview] == preferredSuperview;
+    }];
+    const NSUInteger viewIndex = (matchingIndex == NSNotFound) ? 0 : matchingIndex;
+    UIView *view = views[viewIndex];
+    [views removeObjectAtIndex:viewIndex];
     return view;
   };
   
   NSUInteger viewCount()
   {
-    return [allViews count];
+    return [views count];
   };
 
   void addView(UIView *view)
   {
-    UIView *superview = [view superview];
-    if (superview) {
-      NSMutableArray *matchingViews = [preferredSuperviewMap objectForKey:superview];
-      if (matchingViews == nil) {
-        matchingViews = [[NSMutableArray alloc] init];
-        [preferredSuperviewMap setObject:matchingViews forKey:superview];
-      }
-      [matchingViews addObject:view];
-    }
-    [allViews addObject:view];
+    [views addObject:view];
   };
 
 private:
-  // Maps superviews (weakly held keys) to views available for reuse within them.
-  NSMapTable *preferredSuperviewMap;
-  NSMutableArray *allViews;
+  NSMutableArray<UIView *> *views;
 };
 
 struct PoolKeyHasher {
