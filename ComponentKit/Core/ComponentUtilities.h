@@ -64,20 +64,16 @@ namespace CK {
 
   template <class T> typename
   std::vector<T> chain(std::vector<T> a, std::vector<T> b) {
-    if (a.size() == 0) {
-      return {};
-    } else {
-      std::vector<T> newVector;
+    std::vector<T> newVector;
 
-      for (auto i: a) {
-        newVector.push_back(i);
-      }
-      for (auto i: b) {
-        newVector.push_back(i);
-      }
-
-      return newVector;
+    for (auto i: a) {
+      newVector.push_back(i);
     }
+    for (auto i: b) {
+      newVector.push_back(i);
+    }
+
+    return newVector;
   }
 };
 

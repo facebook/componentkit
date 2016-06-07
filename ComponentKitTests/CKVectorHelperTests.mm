@@ -31,8 +31,7 @@
 {
   std::vector<int> a;
   std::vector<int> b = {1,2,3};
-  std::vector<int> emptyVector;
-  XCTAssertTrue(CK::chain(a,b) == emptyVector);
+  XCTAssertTrue(CK::chain(a,b) == b);
 }
 
 - (void)test_secondVectorEmpty
