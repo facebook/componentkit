@@ -75,6 +75,8 @@
 		B761C8AB1CB36AAE00CDD03F /* CKTransactionalComponentDataSourceConfigurationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B761C8AA1CB36AAE00CDD03F /* CKTransactionalComponentDataSourceConfigurationTests.mm */; };
 		B761C8AE1CB36BF700CDD03F /* CKTransactionalComponentDataSourceChangesetTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B761C8AD1CB36BF700CDD03F /* CKTransactionalComponentDataSourceChangesetTests.mm */; };
 		B761C8B11CB36FA200CDD03F /* CKTransactionalComponentDataSourceAppliedChangesTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B761C8B01CB36FA200CDD03F /* CKTransactionalComponentDataSourceAppliedChangesTests.mm */; };
+		B7E2E59C1D076B42002A4442 /* CKVectorHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = B7E2E59A1D076B42002A4442 /* CKVectorHelpers.h */; };
+		B7E2E59F1D077098002A4442 /* CKVectorHelperTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B7E2E59E1D077098002A4442 /* CKVectorHelperTests.mm */; };
 		D000B81D1CC45427005A27CF /* OCMock.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D04977E31CC4145E0046CBCC /* OCMock.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D000B81E1CC45440005A27CF /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D000B8101CC41535005A27CF /* FBSnapshotTestCase.framework */; };
 		D000B81F1CC45446005A27CF /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D000B8101CC41535005A27CF /* FBSnapshotTestCase.framework */; };
@@ -556,6 +558,8 @@
 		B761C8AA1CB36AAE00CDD03F /* CKTransactionalComponentDataSourceConfigurationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceConfigurationTests.mm; sourceTree = "<group>"; };
 		B761C8AD1CB36BF700CDD03F /* CKTransactionalComponentDataSourceChangesetTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceChangesetTests.mm; sourceTree = "<group>"; };
 		B761C8B01CB36FA200CDD03F /* CKTransactionalComponentDataSourceAppliedChangesTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceAppliedChangesTests.mm; sourceTree = "<group>"; };
+		B7E2E59A1D076B42002A4442 /* CKVectorHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKVectorHelpers.h; sourceTree = "<group>"; };
+		B7E2E59E1D077098002A4442 /* CKVectorHelperTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKVectorHelperTests.mm; sourceTree = "<group>"; };
 		D000B8081CC4152A005A27CF /* FBSnapshotTestCase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSnapshotTestCase.xcodeproj; path = "Carthage/Checkouts/ios-snapshot-test-case/FBSnapshotTestCase.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		D04977D11CC4145E0046CBCC /* OCMock.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock.xcodeproj; path = Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D0B47AB51CBD924100BB33CE /* ComponentKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ComponentKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -971,6 +975,7 @@
 				B342DC671AC23EA900ACAC53 /* Scope */,
 				A27436F51AE94FCA00832359 /* TransactionalDataSource */,
 				18644AE01B3CB8E60028AF87 /* StatefulViews */,
+				B7E2E59E1D077098002A4442 /* CKVectorHelperTests.mm */,
 			);
 			path = ComponentKitTests;
 			sourceTree = "<group>";
@@ -1406,6 +1411,7 @@
 				D0B47B9A1CBD926700BB33CE /* CKSectionedArrayController.mm */,
 				D0B47B9B1CBD926700BB33CE /* CKWeakObjectContainer.h */,
 				D0B47B9C1CBD926700BB33CE /* CKWeakObjectContainer.m */,
+				B7E2E59A1D076B42002A4442 /* CKVectorHelpers.h */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1612,6 +1618,7 @@
 				D0B47CF01CBD948E00BB33CE /* CKComponentAnimation.h in Headers */,
 				D0B47D311CBD948E00BB33CE /* CKBackgroundLayoutComponent.h in Headers */,
 				D0B47D4B1CBD948E00BB33CE /* CKTransactionalComponentDataSourceChangesetModification.h in Headers */,
+				B7E2E59C1D076B42002A4442 /* CKVectorHelpers.h in Headers */,
 				D0B47D021CBD948E00BB33CE /* CKDimension.h in Headers */,
 				D0B47D631CBD948E00BB33CE /* CKTextComponentLayerHighlighter.h in Headers */,
 				D0B47D451CBD948E00BB33CE /* CKTransactionalComponentDataSourceItemInternal.h in Headers */,
@@ -2020,6 +2027,7 @@
 				B342DC781AC23EA900ACAC53 /* CKComponentMountTests.mm in Sources */,
 				B342DC751AC23EA900ACAC53 /* CKComponentHostingViewTests.mm in Sources */,
 				B342DC7A1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm in Sources */,
+				B7E2E59F1D077098002A4442 /* CKVectorHelperTests.mm in Sources */,
 				B342DC7E1AC23EA900ACAC53 /* CKComponentViewManagerTests.mm in Sources */,
 				A25C02D11AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm in Sources */,
 				A27436FA1AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm in Sources */,
