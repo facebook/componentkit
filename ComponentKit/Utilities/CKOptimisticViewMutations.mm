@@ -13,37 +13,63 @@
 #import <objc/runtime.h>
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/ComponentUtilities.h>
 
-const char kOptimisticViewMutationOriginalValuesAssociatedObjectKey = ' ';
+typedef void (^CKOptimisticViewMutationTeardown)(UIView *v);
 
-void CKPerformOptimisticViewMutation(UIView *view, NSString *keyPath, id value)
+const char kOptimisticViewMutationMutationsAssociatedObjectKey = ' ';
+
+void CKPerformOptimisticViewMutation(UIView *view,
+                                     CKOptimisticViewMutationGetter getter,
+                                     CKOptimisticViewMutationSetter setter,
+                                     id value,
+                                     id context)
 {
   CKCAssertMainThread();
   CKCAssertNotNil(view, @"Must have a non-nil view");
+  CKCAssertNotNil(getter, @"Must have a non-nil getter");
+  CKCAssertNotNil(setter, @"Must have a non-nil getter");
+  if (view == nil || getter == nil || setter == nil) {
+    return;
+  }
+
+  NSMutableArray<CKOptimisticViewMutationTeardown> *mutations = objc_getAssociatedObject(view, &kOptimisticViewMutationMutationsAssociatedObjectKey);
+  if (mutations == nil) {
+    mutations = [NSMutableArray array];
+    objc_setAssociatedObject(view, &kOptimisticViewMutationMutationsAssociatedObjectKey, mutations, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  }
+  id oldValue = getter(view, context);
+  [mutations addObject:^(UIView *v) {
+    setter(v, oldValue, context);
+    CKCAssert(CKObjectIsEqual(getter(view, context), oldValue), @"Setter failed to restore old value");
+  }];
+  setter(view, value, context);
+  CKCAssert(CKObjectIsEqual(getter(view, context), value), @"Setter failed to apply new value");
+}
+
+static id keyPathGetter(UIView *view, id keyPath)
+{
+  return [view valueForKeyPath:keyPath];
+}
+
+static void keyPathSetter(UIView *view, id value, id keyPath)
+{
+  [view setValue:value forKey:keyPath];
+}
+
+void CKPerformOptimisticViewMutation(UIView *view, NSString *keyPath, id value)
+{
   CKCAssertNotNil(keyPath, @"Must have a non-nil keyPath");
-
-  NSMutableDictionary *originalValues = objc_getAssociatedObject(view, &kOptimisticViewMutationOriginalValuesAssociatedObjectKey);
-  if (originalValues == nil) {
-    originalValues = [NSMutableDictionary dictionary];
-    objc_setAssociatedObject(view, &kOptimisticViewMutationOriginalValuesAssociatedObjectKey, originalValues, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-  }
-
-  if (originalValues[keyPath] == nil) {
-    // First mutation for this keypath; store the old value.
-    originalValues[keyPath] = [view valueForKeyPath:keyPath] ?: [NSNull null];
-  }
-
-  [view setValue:value forKeyPath:keyPath];
+  CKPerformOptimisticViewMutation(view, &keyPathGetter, &keyPathSetter, value, keyPath);
 }
 
 void CKResetOptimisticMutationsForView(UIView *view)
 {
-  NSDictionary *originalValues = objc_getAssociatedObject(view, &kOptimisticViewMutationOriginalValuesAssociatedObjectKey);
-  if (originalValues) {
-    for (NSString *keyPath in originalValues) {
-      id value = originalValues[keyPath];
-      [view setValue:(value == [NSNull null] ? nil : value) forKeyPath:keyPath];
-    }
-    objc_setAssociatedObject(view, &kOptimisticViewMutationOriginalValuesAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  NSArray *mutations = [objc_getAssociatedObject(view, &kOptimisticViewMutationMutationsAssociatedObjectKey) copy];
+  objc_setAssociatedObject(view, &kOptimisticViewMutationMutationsAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  // We must tear down the mutations in the *reverse* order in which they were applied, or we could end up restoring
+  // the wrong value.
+  for (CKOptimisticViewMutationTeardown teardown in [mutations reverseObjectEnumerator]) {
+    teardown(view);
   }
 }
