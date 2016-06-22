@@ -6,13 +6,12 @@ permalink: /docs/getting-started.html
 
 Let's get a sample app powered by ComponentKit up and running, then make some tweaks to experiment with how components work.
 
-Clone the Github repo and run `pod install` to set up the example app, then open the workspace. If you don't have `pod` installed, see [CocoaPods](https://cocoapods.org/).
+Clone the Github repo, and then open the Xcode project.
 
 {% highlight sh %}
 $ git clone https://github.com/facebook/componentkit
 $ cd componentkit/Examples/WildeGuess/
-$ pod install
-$ open WildeGuess.xcworkspace
+$ open WildeGuess.xcodeproj
 {% endhighlight %}
 
 Run the project in the simulator to see a simple app that shows a list of quotes.
