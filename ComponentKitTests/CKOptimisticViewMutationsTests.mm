@@ -63,7 +63,7 @@
 
   CKPerformOptimisticViewMutation(view, @"backgroundColor", [UIColor redColor]);
   CKPerformOptimisticViewMutation(view, @"backgroundColor", [UIColor yellowColor]);
-  XCTAssertEqualObjects(view.backgroundColor, [UIColor yellowColor], @"Expected optimistic red mutation");
+  XCTAssertEqualObjects(view.backgroundColor, [UIColor yellowColor], @"Expected view to yellow after second optimistic mutation");
 
   // detaching and reattaching to the view should reset it back to blue.
   [clm detachFromView];

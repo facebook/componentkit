@@ -28,6 +28,7 @@ typedef void (*CKOptimisticViewMutationSetter)(UIView *view, id value, id contex
 
  The getter will be invoked to fetch the current value; then the setter will be invoked with the passed value.
  When the view is recycled, the setter will be invoked again with the saved result from the getter block.
+ The getter and setter should be free of any side effects that modify other views, global state, etc.
  */
 void CKPerformOptimisticViewMutation(UIView *view,
                                      CKOptimisticViewMutationGetter getter,

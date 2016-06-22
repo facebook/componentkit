@@ -17,7 +17,7 @@
 
 typedef void (^CKOptimisticViewMutationTeardown)(UIView *v);
 
-const char kOptimisticViewMutationMutationsAssociatedObjectKey = ' ';
+const char kOptimisticViewMutationTeardownsAssociatedObjectKey = ' ';
 
 void CKPerformOptimisticViewMutation(UIView *view,
                                      CKOptimisticViewMutationGetter getter,
@@ -28,18 +28,18 @@ void CKPerformOptimisticViewMutation(UIView *view,
   CKCAssertMainThread();
   CKCAssertNotNil(view, @"Must have a non-nil view");
   CKCAssertNotNil(getter, @"Must have a non-nil getter");
-  CKCAssertNotNil(setter, @"Must have a non-nil getter");
+  CKCAssertNotNil(setter, @"Must have a non-nil setter");
   if (view == nil || getter == nil || setter == nil) {
     return;
   }
 
-  NSMutableArray<CKOptimisticViewMutationTeardown> *mutations = objc_getAssociatedObject(view, &kOptimisticViewMutationMutationsAssociatedObjectKey);
-  if (mutations == nil) {
-    mutations = [NSMutableArray array];
-    objc_setAssociatedObject(view, &kOptimisticViewMutationMutationsAssociatedObjectKey, mutations, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  NSMutableArray<CKOptimisticViewMutationTeardown> *mutationTeardowns = objc_getAssociatedObject(view, &kOptimisticViewMutationTeardownsAssociatedObjectKey);
+  if (mutationTeardowns == nil) {
+    mutationTeardowns = [NSMutableArray array];
+    objc_setAssociatedObject(view, &kOptimisticViewMutationTeardownsAssociatedObjectKey, mutationTeardowns, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
   }
   id oldValue = getter(view, context);
-  [mutations addObject:^(UIView *v) {
+  [mutationTeardowns addObject:^(UIView *v) {
     setter(v, oldValue, context);
     CKCAssert(CKObjectIsEqual(getter(view, context), oldValue), @"Setter failed to restore old value");
   }];
@@ -65,11 +65,11 @@ void CKPerformOptimisticViewMutation(UIView *view, NSString *keyPath, id value)
 
 void CKResetOptimisticMutationsForView(UIView *view)
 {
-  NSArray *mutations = [objc_getAssociatedObject(view, &kOptimisticViewMutationMutationsAssociatedObjectKey) copy];
-  objc_setAssociatedObject(view, &kOptimisticViewMutationMutationsAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  NSArray *mutationTeardowns = [objc_getAssociatedObject(view, &kOptimisticViewMutationTeardownsAssociatedObjectKey) copy];
+  objc_setAssociatedObject(view, &kOptimisticViewMutationTeardownsAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
   // We must tear down the mutations in the *reverse* order in which they were applied, or we could end up restoring
   // the wrong value.
-  for (CKOptimisticViewMutationTeardown teardown in [mutations reverseObjectEnumerator]) {
+  for (CKOptimisticViewMutationTeardown teardown in [mutationTeardowns reverseObjectEnumerator]) {
     teardown(view);
   }
 }
