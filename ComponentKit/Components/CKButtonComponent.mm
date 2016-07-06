@@ -168,10 +168,15 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
                           }
                           size:size];
 
+#if !TARGET_OS_TV
   UIControlState state = (selected ? UIControlStateSelected : UIControlStateNormal)
                        | (enabled ? UIControlStateNormal : UIControlStateDisabled);
   b->_intrinsicSize = intrinsicSize(valueForState(titles, state), titleFont, valueForState(images, state),
                                     valueForState(backgroundImages, state), contentEdgeInsets);
+#else
+  // intrinsicSize not available on tvOS (can't use `sizeWithFont`) so set to infinity
+  b->_intrinsicSize = {INFINITY, INFINITY};
+#endif // !TARGET_OS_TV
   return b;
 }
 
@@ -224,6 +229,7 @@ static T valueForState(const std::unordered_map<UIControlState, T> &m, UIControl
   return nil;
 }
 
+#if !TARGET_OS_TV // sizeWithFont is not available on tvOS
 static CGSize intrinsicSize(NSString *title, UIFont *titleFont, UIImage *image,
                             UIImage *backgroundImage, UIEdgeInsets contentEdgeInsets)
 {
@@ -244,6 +250,7 @@ static CGSize intrinsicSize(NSString *title, UIFont *titleFont, UIImage *image,
     MAX(backgroundImageSize.height, contentSize.height)
   };
 }
+#endif // !TARGET_OS_TV
 
 @end
 
