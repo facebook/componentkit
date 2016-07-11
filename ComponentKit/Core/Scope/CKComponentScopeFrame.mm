@@ -57,27 +57,32 @@ namespace std {
   CKCAssert([componentClass isSubclassOfClass:[CKComponent class]], @"%@ is not a component", NSStringFromClass(componentClass));
   CKAssertNotNil(pair.frame, @"Must have frame");
 
-  // Find the existing child, if any, in the old frame
-  CKComponentScopeFrame *existingChild;
+  CKComponentScopeFrame *existingChildFrameOfEquivalentPreviousFrame;
   if (pair.equivalentPreviousFrame) {
     const auto &equivalentPreviousFrameChildren = pair.equivalentPreviousFrame->_children;
     const auto it = equivalentPreviousFrameChildren.find({componentClass, identifier});
-    existingChild = (it == equivalentPreviousFrameChildren.end()) ? nil : it->second;
+    existingChildFrameOfEquivalentPreviousFrame = (it == equivalentPreviousFrameChildren.end()) ? nil : it->second;
   }
 
+  const auto existingChild = pair.frame->_children.find({componentClass, identifier});
+  CKComponentScopeHandleIdentifier existingGlobalIdentifier =
+  existingChild != pair.frame->_children.end() ? existingChild->second.handle.globalIdentifier : 0;
+
   CKComponentScopeHandle *newHandle =
-  existingChild ? [existingChild.handle newHandleWithStateUpdates:stateUpdates] :
-  [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
-                                    rootIdentifier:newRoot.globalIdentifier
-                                    componentClass:componentClass
-                               initialStateCreator:initialStateCreator];
+  existingChildFrameOfEquivalentPreviousFrame
+  ? [existingChildFrameOfEquivalentPreviousFrame.handle newHandleWithStateUpdates:stateUpdates]
+  : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
+                                    globalIdentifier:existingGlobalIdentifier
+                                      rootIdentifier:newRoot.globalIdentifier
+                                      componentClass:componentClass
+                                 initialStateCreator:initialStateCreator];
 
   [newRoot registerAnnounceableEventsForController:newHandle.controller];
 
   CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
   const auto __attribute__((unused)) result = pair.frame->_children.insert({{componentClass, identifier}, newChild});
   CKAssert(result.second, @"Scope collision: attempting to create duplicate scope %@:%@", componentClass, identifier);
-  return {.frame = newChild, .equivalentPreviousFrame = existingChild};
+  return {.frame = newChild, .equivalentPreviousFrame = existingChildFrameOfEquivalentPreviousFrame};
 }
 
 - (instancetype)initWithHandle:(CKComponentScopeHandle *)handle

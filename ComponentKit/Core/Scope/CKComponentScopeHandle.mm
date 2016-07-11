@@ -46,13 +46,14 @@
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
+                globalIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class)componentClass
              initialStateCreator:(id (^)(void))initialStateCreator
 {
   static int32_t nextGlobalIdentifier = 0;
   return [self initWithListener:listener
-               globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)
+               globalIdentifier:(globalIdentifier > 0) ? globalIdentifier : OSAtomicIncrement32(&nextGlobalIdentifier)
                  rootIdentifier:rootIdentifier
                  componentClass:componentClass
                           state:initialStateCreator ? initialStateCreator() : [componentClass initialState]
