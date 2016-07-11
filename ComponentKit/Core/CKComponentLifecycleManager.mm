@@ -94,7 +94,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
     return [_componentProvider componentForModel:model context:context];
   });
 
-  const CKComponentLayout layout = CKComponentComputeLayout(result.component, constrainedSize, constrainedSize.max);
+  const CKComponentLayout layout = CKComputeComponentLayout(result.component, constrainedSize, constrainedSize.max);
 
   _previousRoot = result.scopeRoot;
   _pendingStateUpdates.clear();

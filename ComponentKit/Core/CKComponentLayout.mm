@@ -93,9 +93,9 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
   return mountedComponents;
 }
 
-CKComponentLayout CKComponentComputeLayout(CKComponent *component,
+CKComponentLayout CKComputeComponentLayout(CKComponent *component,
                                            const CKSizeRange &sizeRange,
-                                           CGSize parentSize)
+                                           const CGSize parentSize)
 {
   return component ? [component layoutThatFits:sizeRange parentSize:parentSize] : (CKComponentLayout){};
 }

@@ -95,7 +95,7 @@ struct CKComponentHostingViewInputs {
   [self _synchronouslyUpdateComponentIfNeeded];
   const CGSize size = self.bounds.size;
   if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
-    _mountedLayout = CKComponentComputeLayout(_component, {size, size}, size);
+    _mountedLayout = CKComputeComponentLayout(_component, {size, size}, size);
   }
   _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil) copy];
 }
@@ -105,7 +105,7 @@ struct CKComponentHostingViewInputs {
   CKAssertMainThread();
   [self _synchronouslyUpdateComponentIfNeeded];
   const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-  return CKComponentComputeLayout(_component, constrainedSize, constrainedSize.max).size;
+  return CKComputeComponentLayout(_component, constrainedSize, constrainedSize.max).size;
 }
 
 #pragma mark - Accessors

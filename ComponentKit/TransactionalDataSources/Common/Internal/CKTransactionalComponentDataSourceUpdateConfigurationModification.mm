@@ -55,7 +55,7 @@
 
       CKTransactionalComponentDataSourceItem *newItem;
       if (onlySizeRangeChanged) {
-        const CKComponentLayout layout = CKComponentComputeLayout(item.layout.component, sizeRange, sizeRange.max);
+        const CKComponentLayout layout = CKComputeComponentLayout(item.layout.component, sizeRange, sizeRange.max);
         newItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout
                                                                            model:[item model]
                                                                        scopeRoot:[item scopeRoot]];
@@ -63,7 +63,7 @@
         const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
           return [componentProvider componentForModel:[item model] context:context];
         });
-        const CKComponentLayout layout = CKComponentComputeLayout(result.component, sizeRange, sizeRange.max);
+        const CKComponentLayout layout = CKComputeComponentLayout(result.component, sizeRange, sizeRange.max);
         newItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout
                                                                            model:[item model]
                                                                        scopeRoot:result.scopeRoot];
