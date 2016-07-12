@@ -93,6 +93,11 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
   return mountedComponents;
 }
 
+CKComponentLayout CKComputeTopLevelComponentLayout(CKComponent *component, const CKSizeRange &sizeRange)
+{
+  return CKComputeComponentLayout(component, sizeRange, sizeRange.max);
+}
+
 CKComponentLayout CKComputeComponentLayout(CKComponent *component,
                                            const CKSizeRange &sizeRange,
                                            const CGSize parentSize)

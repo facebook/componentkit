@@ -62,10 +62,17 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
                               CKComponent *supercomponent);
 
 /**
- This exists as a safe alternative to layoutThatFits:parentSize: by guarding against nil components
- @param component The component being laid out
- @param sizeRange The size range for laying out the component
- @param parentSize The size of the parent of the component being laid out
+ Safely computes the layout of the given top-level component by guarding against nil components.
+ @param component The top-level component to compute the layout for.
+ @param sizeRange The size range to compute the component layout within.
+ */
+CKComponentLayout CKComputeTopLevelComponentLayout(CKComponent *component, const CKSizeRange &sizeRange);
+
+/**
+ Safely computes the layout of the given component by guarding against nil components.
+ @param component The component to compute the layout for.
+ @param sizeRange The size range to compute the component layout within.
+ @param parentSize The parent size of the component to compute the layout for.
  */
 CKComponentLayout CKComputeComponentLayout(CKComponent *component,
                                            const CKSizeRange &sizeRange,
