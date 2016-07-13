@@ -295,7 +295,7 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return _scopeHandle.controller;
 }
 
-- (NSNumber *)scopeFrameToken
+- (id<NSObject>)scopeFrameToken
 {
   return _scopeHandle ? @(_scopeHandle.globalIdentifier) : nil;
 }

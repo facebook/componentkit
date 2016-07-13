@@ -19,12 +19,12 @@ void CKDetectComponentScopeCollisions(const CKComponentLayout &layout)
 {
 #if DEBUG
   std::queue<const CKComponentLayout> queue;
-  NSMutableSet<NSNumber *> *previouslySeenScopeFrameTokens = [NSMutableSet new];
+  NSMutableSet<id<NSObject>> *previouslySeenScopeFrameTokens = [NSMutableSet new];
   queue.push(layout);
   while (!queue.empty()) {
     auto currentLayout = queue.front();
     queue.pop();
-    NSNumber *scopeFrameToken = [currentLayout.component scopeFrameToken];
+    id<NSObject> scopeFrameToken = [currentLayout.component scopeFrameToken];
     if (scopeFrameToken && [previouslySeenScopeFrameTokens containsObject:scopeFrameToken]) {
       CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for component %@", [currentLayout.component class]);
     }
