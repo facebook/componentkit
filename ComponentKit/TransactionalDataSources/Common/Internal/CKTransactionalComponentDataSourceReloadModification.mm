@@ -49,7 +49,7 @@
       const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
         return [componentProvider componentForModel:[item model] context:context];
       });
-      const CKComponentLayout layout = CKComputeTopLevelComponentLayout(result.component, sizeRange);
+      const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange);
       [newItems addObject:[[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout
                                                                                    model:[item model]
                                                                                scopeRoot:result.scopeRoot]];

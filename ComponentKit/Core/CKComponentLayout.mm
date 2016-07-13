@@ -94,9 +94,9 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
   return mountedComponents;
 }
 
-CKComponentLayout CKComputeTopLevelComponentLayout(CKComponent *component, const CKSizeRange &sizeRange)
+CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent, const CKSizeRange &sizeRange)
 {
-  const CKComponentLayout layout = CKComputeComponentLayout(component, sizeRange, sizeRange.max);
+  const CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectComponentScopeCollisions(layout);
   return layout;
 }

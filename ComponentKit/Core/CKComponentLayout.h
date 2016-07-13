@@ -62,11 +62,11 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
                               CKComponent *supercomponent);
 
 /**
- Safely computes the layout of the given top-level component by guarding against nil components.
- @param component The top-level component to compute the layout for.
+ Safely computes the layout of the given root component by guarding against nil components.
+ @param rootComponent The root component to compute the layout for.
  @param sizeRange The size range to compute the component layout within.
  */
-CKComponentLayout CKComputeTopLevelComponentLayout(CKComponent *component, const CKSizeRange &sizeRange);
+CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent, const CKSizeRange &sizeRange);
 
 /**
  Safely computes the layout of the given component by guarding against nil components.
