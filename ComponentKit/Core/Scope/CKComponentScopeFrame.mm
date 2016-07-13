@@ -65,14 +65,30 @@ namespace std {
   }
 
   const auto existingChild = pair.frame->_children.find({componentClass, identifier});
-  CKComponentScopeHandleIdentifier existingGlobalIdentifier =
-  existingChild != pair.frame->_children.end() ? existingChild->second.handle.globalIdentifier : 0;
+  if (existingChild != pair.frame->_children.end()) {
+    /*
+     The component was involved in a scope collision and the scope handle needs to be reacquired.
+     In the event of a component scope collision the component scope frames reuses the existing scope handle; any
+     existing state will be made available to the component that introduced the scope collision. This leads to some
+     interesting side effects:
+
+       1. Any component state associated with the scope handle will be shared between components with colliding scopes
+       2. Any component controller associated with the scope handle will be responsible for each component with
+          colliding scopes; resulting in strange behavior while components are mounted, unmounted, etc.
+
+     Reusing the existing scope handle allows ComponentKit to detect component scope collisions during layout. Moving
+     component scope collision detection to component layout makes it possible to create multiple components that may
+     normally result in a scope collision even if only one component actually makes it to layout.
+    */
+    CKComponentScopeHandle *newHandle = [existingChild->second.handle newHandleWillBeReacquiredDueToScopeCollision];
+    CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
+    return {.frame = newChild, .equivalentPreviousFrame = existingChildFrameOfEquivalentPreviousFrame};
+  }
 
   CKComponentScopeHandle *newHandle =
   existingChildFrameOfEquivalentPreviousFrame
   ? [existingChildFrameOfEquivalentPreviousFrame.handle newHandleWithStateUpdates:stateUpdates]
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
-                                    globalIdentifier:existingGlobalIdentifier
                                       rootIdentifier:newRoot.globalIdentifier
                                       componentClass:componentClass
                                  initialStateCreator:initialStateCreator];
