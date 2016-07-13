@@ -65,7 +65,7 @@ namespace std {
   }
 
   const auto existingChild = pair.frame->_children.find({componentClass, identifier});
-  if (existingChild != pair.frame->_children.end()) {
+  if (!pair.frame->_children.empty() && (existingChild != pair.frame->_children.end())) {
     /*
      The component was involved in a scope collision and the scope handle needs to be reacquired.
      In the event of a component scope collision the component scope frames reuses the existing scope handle; any
