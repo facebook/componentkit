@@ -10,6 +10,8 @@
 		18644AE51B3CB8E60028AF87 /* CKStatefulViewComponentControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE11B3CB8E60028AF87 /* CKStatefulViewComponentControllerTests.mm */; };
 		18644AE61B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE21B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm */; };
 		18644AE71B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE41B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm */; };
+		2DBF1D7A1D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2DBF1D7B1D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm */; };
 		2DF899011CDD4064003C3507 /* ReferenceImages_IOS9 in Resources */ = {isa = PBXBuildFile; fileRef = 2DF899001CDD4064003C3507 /* ReferenceImages_IOS9 */; };
 		39B090BF1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */; };
 		497824751BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 497824741BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm */; };
@@ -479,6 +481,8 @@
 		18644AE21B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatefulViewReusePoolTests.mm; sourceTree = "<group>"; };
 		18644AE31B3CB8E60028AF87 /* CKTestStatefulViewComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTestStatefulViewComponent.h; sourceTree = "<group>"; };
 		18644AE41B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTestStatefulViewComponent.mm; sourceTree = "<group>"; };
+		2DBF1D781D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDetectComponentScopeCollisions.h; sourceTree = "<group>"; };
+		2DBF1D791D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDetectComponentScopeCollisions.mm; sourceTree = "<group>"; };
 		2DF899001CDD4064003C3507 /* ReferenceImages_IOS9 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS9; sourceTree = "<group>"; };
 		39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDataSourceAttachControllerTests.mm; sourceTree = "<group>"; };
 		497824741BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCollectionViewTransactionalDataSourceTests.mm; sourceTree = "<group>"; };
@@ -1202,6 +1206,8 @@
 				D0B47B091CBD926700BB33CE /* CKComponentScopeRoot.mm */,
 				D0B47B0A1CBD926700BB33CE /* CKComponentScopeRootInternal.h */,
 				D0B47B0B1CBD926700BB33CE /* CKComponentScopeTypes.h */,
+				2DBF1D781D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h */,
+				2DBF1D791D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm */,
 				D0B47B0C1CBD926700BB33CE /* CKThreadLocalComponentScope.h */,
 				D0B47B0D1CBD926700BB33CE /* CKThreadLocalComponentScope.mm */,
 			);
@@ -1658,6 +1664,7 @@
 				D0B47D711CBD948E00BB33CE /* CKAsyncLayer.h in Headers */,
 				D0B47D6E1CBD948E00BB33CE /* CKTextKitShadower.h in Headers */,
 				D0B47D0D1CBD948E00BB33CE /* CKComponentScopeRoot.h in Headers */,
+				2DBF1D7A1D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h in Headers */,
 				D0B47CE81CBD948E00BB33CE /* CKAssert.h in Headers */,
 				D0B47D6C1CBD948E00BB33CE /* CKTextKitRenderer.h in Headers */,
 				D0B47D101CBD948E00BB33CE /* CKThreadLocalComponentScope.h in Headers */,
@@ -2154,6 +2161,7 @@
 				D0B47CB71CBD943400BB33CE /* CKStaticLayoutComponent.mm in Sources */,
 				D0B47CB81CBD943400BB33CE /* CKStatefulViewComponent.mm in Sources */,
 				D0B47CB91CBD943400BB33CE /* CKStatefulViewComponentController.mm in Sources */,
+				2DBF1D7B1D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm in Sources */,
 				D0B47CBA1CBD943400BB33CE /* CKStatefulViewReusePool.mm in Sources */,
 				D0B47CBB1CBD943400BB33CE /* CKTransactionalComponentDataSource.mm in Sources */,
 				D0B47CBC1CBD943400BB33CE /* CKTransactionalComponentDataSourceAppliedChanges.mm in Sources */,

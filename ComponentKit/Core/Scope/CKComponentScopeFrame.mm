@@ -80,8 +80,7 @@ namespace std {
   [newRoot registerAnnounceableEventsForController:newHandle.controller];
 
   CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
-  const auto __attribute__((unused)) result = pair.frame->_children.insert({{componentClass, identifier}, newChild});
-  CKAssert(result.second, @"Scope collision: attempting to create duplicate scope %@:%@", componentClass, identifier);
+  pair.frame->_children.insert({{componentClass, identifier}, newChild});
   return {.frame = newChild, .equivalentPreviousFrame = existingChildFrameOfEquivalentPreviousFrame};
 }
 
