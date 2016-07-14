@@ -43,6 +43,7 @@
   - avoid-width-100-percent
   - use-designated-initializer-style
   - break-out-composites
+  - keep-controller-in-component
 - title: Infrastructure
   items:
   - lifecycle-manager
