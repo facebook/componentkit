@@ -68,7 +68,7 @@ namespace std {
   if (!pair.frame->_children.empty() && (existingChild != pair.frame->_children.end())) {
     /*
      The component was involved in a scope collision and the scope handle needs to be reacquired.
-     In the event of a component scope collision the component scope frames reuses the existing scope handle; any
+     In the event of a component scope collision the component scope frame reuses the existing scope handle; any
      existing state will be made available to the component that introduced the scope collision. This leads to some
      interesting side effects:
 
