@@ -146,7 +146,6 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     {titleFontAttribute, titleFont},
     {@selector(setSelected:), @(selected)},
     {@selector(setEnabled:), @(enabled)},
-    {@selector(setAccessibilityIdentifier:), accessibilityConfiguration.accessibilityIdentifier},
     CKComponentActionAttribute(action, UIControlEventTouchUpInside),
   });
 
@@ -161,7 +160,6 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
                             [UIButton class],
                             std::move(attributes),
                             {
-                              .accessibilityIdentifier = accessibilityConfiguration.accessibilityIdentifier,
                               .accessibilityLabel = accessibilityConfiguration.accessibilityLabel,
                               .accessibilityComponentAction = enabled ? action : NULL
                             }

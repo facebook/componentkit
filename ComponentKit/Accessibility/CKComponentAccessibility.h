@@ -43,17 +43,16 @@ private:
 
 /**
  Separate structure to handle accessibility as we want the components infrastructure to decide wether to use it or not depending if accessibility is enabled or not.
+ Not to be confused with accessibilityIdentifier which is used for automation to identify elements on the screen. To set the identifier pass in {@selector(setAccessibilityIdentifier:), @"accessibilityId"} with the viewConfiguration's attributes
  */
 struct CKComponentAccessibilityContext {
   NSNumber *isAccessibilityElement;
-  NSString *accessibilityIdentifier;
   CKComponentAccessibilityTextAttribute accessibilityLabel;
   CKComponentAction accessibilityComponentAction;
 
   bool operator==(const CKComponentAccessibilityContext &other) const
   {
-    return CKObjectIsEqual(other.accessibilityIdentifier, accessibilityIdentifier)
-    && CKObjectIsEqual(other.isAccessibilityElement, isAccessibilityElement)
+    return CKObjectIsEqual(other.isAccessibilityElement, isAccessibilityElement)
     && CKObjectIsEqual(other.accessibilityLabel.value(), accessibilityLabel.value())
     && other.accessibilityComponentAction == accessibilityComponentAction;
   }
@@ -64,8 +63,8 @@ namespace CK {
     namespace Accessibility {
       /**
        @return A modified configuration for which extra view component attributes have been added to handle accessibility.
-       e.g: The following view configuration `{[UIView class], {{@selector(setBlah:), @"Blah"}}, {.accessibilityIdentifier = @"accessibilityId"}}`
-       will become `{[UIView class], {{@selector(setBlah:), @"Blah"}, {@selector(setAccessibilityIdentifier), @"accessibilityId"}}, {.accessibilityIdentifier = @"accessibilityId"}}`
+       e.g: The following view configuration `{[UIView class], {{@selector(setBlah:), @"Blah"}}, {.accessibilityLabel = @"accessibilityLabel"}}`
+       will become `{[UIView class], {{@selector(setBlah:), @"Blah"}, {@selector(setAccessibilityLabel), @"accessibilityLabel"}}, {.accessibilityLabel = @"accessibilityLabel"}}`
        */
       CKComponentViewConfiguration AccessibleViewConfiguration(const CKComponentViewConfiguration &viewConfiguration);
       BOOL IsAccessibilityEnabled();

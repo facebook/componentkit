@@ -14,8 +14,6 @@
 #import <ComponentKit/CKComponentAction.h>
 
 struct CKButtonComponentAccessibilityConfiguration {
-  /** Accessibility identifier */
-  NSString *accessibilityIdentifier;
   /** Accessibility label for the button. If one is not provided, the button title will be used as a label */
   NSString *accessibilityLabel;
 };
