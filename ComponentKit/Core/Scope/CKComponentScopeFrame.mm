@@ -80,7 +80,7 @@ namespace std {
      component scope collision detection to component layout makes it possible to create multiple components that may
      normally result in a scope collision even if only one component actually makes it to layout.
     */
-    CKComponentScopeHandle *newHandle = [existingChild->second.handle newHandleWillBeReacquiredDueToScopeCollision];
+    CKComponentScopeHandle *newHandle = [existingChild->second.handle newHandleToBeReacquiredDueToScopeCollision];
     CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
     return {.frame = newChild, .equivalentPreviousFrame = existingChildFrameOfEquivalentPreviousFrame};
   }

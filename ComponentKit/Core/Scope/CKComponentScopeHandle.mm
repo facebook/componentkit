@@ -92,7 +92,7 @@
                                                controller:_controller];
 }
 
-- (instancetype)newHandleWillBeReacquiredDueToScopeCollision
+- (instancetype)newHandleToBeReacquiredDueToScopeCollision
 {
   return [[CKComponentScopeHandle alloc] initWithListener:_listener
                                          globalIdentifier:_globalIdentifier

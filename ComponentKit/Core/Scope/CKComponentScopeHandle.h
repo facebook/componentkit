@@ -38,7 +38,7 @@
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
 /** Creates a new, but identical, instance of the scope handle that will be reacquired due to a scope collision. */
-- (instancetype)newHandleWillBeReacquiredDueToScopeCollision;
+- (instancetype)newHandleToBeReacquiredDueToScopeCollision;
 
 - (void)updateState:(id (^)(id))updateFunction mode:(CKUpdateMode)mode;
 
