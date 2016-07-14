@@ -65,7 +65,7 @@
 @property (nonatomic, weak) UIView *rootComponentMountedView;
 
 /** For internal use only; don't touch this. */
-@property (nonatomic, strong, readonly) id scopeFrameToken;
+@property (nonatomic, strong, readonly) id<NSObject> scopeFrameToken;
 
 @end
 

@@ -92,6 +92,16 @@
                                                controller:_controller];
 }
 
+- (instancetype)newHandleToBeReacquiredDueToScopeCollision
+{
+  return [[CKComponentScopeHandle alloc] initWithListener:_listener
+                                         globalIdentifier:_globalIdentifier
+                                           rootIdentifier:_rootIdentifier
+                                           componentClass:_componentClass
+                                                    state:_state
+                                               controller:_controller];
+}
+
 #pragma mark - State
 
 - (void)updateState:(id (^)(id))updateFunction mode:(CKUpdateMode)mode

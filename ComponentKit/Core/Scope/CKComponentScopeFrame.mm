@@ -57,27 +57,47 @@ namespace std {
   CKCAssert([componentClass isSubclassOfClass:[CKComponent class]], @"%@ is not a component", NSStringFromClass(componentClass));
   CKAssertNotNil(pair.frame, @"Must have frame");
 
-  // Find the existing child, if any, in the old frame
-  CKComponentScopeFrame *existingChild;
+  CKComponentScopeFrame *existingChildFrameOfEquivalentPreviousFrame;
   if (pair.equivalentPreviousFrame) {
     const auto &equivalentPreviousFrameChildren = pair.equivalentPreviousFrame->_children;
     const auto it = equivalentPreviousFrameChildren.find({componentClass, identifier});
-    existingChild = (it == equivalentPreviousFrameChildren.end()) ? nil : it->second;
+    existingChildFrameOfEquivalentPreviousFrame = (it == equivalentPreviousFrameChildren.end()) ? nil : it->second;
+  }
+
+  const auto existingChild = pair.frame->_children.find({componentClass, identifier});
+  if (!pair.frame->_children.empty() && (existingChild != pair.frame->_children.end())) {
+    /*
+     The component was involved in a scope collision and the scope handle needs to be reacquired.
+     In the event of a component scope collision the component scope frame reuses the existing scope handle; any
+     existing state will be made available to the component that introduced the scope collision. This leads to some
+     interesting side effects:
+
+       1. Any component state associated with the scope handle will be shared between components with colliding scopes
+       2. Any component controller associated with the scope handle will be responsible for each component with
+          colliding scopes; resulting in strange behavior while components are mounted, unmounted, etc.
+
+     Reusing the existing scope handle allows ComponentKit to detect component scope collisions during layout. Moving
+     component scope collision detection to component layout makes it possible to create multiple components that may
+     normally result in a scope collision even if only one component actually makes it to layout.
+    */
+    CKComponentScopeHandle *newHandle = [existingChild->second.handle newHandleToBeReacquiredDueToScopeCollision];
+    CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
+    return {.frame = newChild, .equivalentPreviousFrame = existingChildFrameOfEquivalentPreviousFrame};
   }
 
   CKComponentScopeHandle *newHandle =
-  existingChild ? [existingChild.handle newHandleWithStateUpdates:stateUpdates] :
-  [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
-                                    rootIdentifier:newRoot.globalIdentifier
-                                    componentClass:componentClass
-                               initialStateCreator:initialStateCreator];
+  existingChildFrameOfEquivalentPreviousFrame
+  ? [existingChildFrameOfEquivalentPreviousFrame.handle newHandleWithStateUpdates:stateUpdates]
+  : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
+                                      rootIdentifier:newRoot.globalIdentifier
+                                      componentClass:componentClass
+                                 initialStateCreator:initialStateCreator];
 
   [newRoot registerAnnounceableEventsForController:newHandle.controller];
 
   CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
-  const auto __attribute__((unused)) result = pair.frame->_children.insert({{componentClass, identifier}, newChild});
-  CKAssert(result.second, @"Scope collision: attempting to create duplicate scope %@:%@", componentClass, identifier);
-  return {.frame = newChild, .equivalentPreviousFrame = existingChild};
+  pair.frame->_children.insert({{componentClass, identifier}, newChild});
+  return {.frame = newChild, .equivalentPreviousFrame = existingChildFrameOfEquivalentPreviousFrame};
 }
 
 - (instancetype)initWithHandle:(CKComponentScopeHandle *)handle
