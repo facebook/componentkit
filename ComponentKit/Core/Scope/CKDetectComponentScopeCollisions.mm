@@ -17,7 +17,7 @@
 
 void CKDetectComponentScopeCollisions(const CKComponentLayout &layout)
 {
-#if DEBUG
+#if CK_ASSERTIONS_ENABLED
   std::queue<const CKComponentLayout> queue;
   NSMutableSet<id<NSObject>> *previouslySeenScopeFrameTokens = [NSMutableSet new];
   queue.push(layout);
