@@ -47,6 +47,7 @@ static CKComponent *(^_componentBlock)(void);
 @property (readwrite, nonatomic, copy) CKComponentLayout (^layoutBlock)(CKSizeRange);
 - (CKComponentLayout)layoutThatFits:(CKSizeRange)constrainedSize
                          parentSize:(CGSize)parentSize;
+- (id<NSObject>)scopeFrameToken;
 @end
 
 @implementation CKStubLayoutComponent
@@ -54,6 +55,10 @@ static CKComponent *(^_componentBlock)(void);
                          parentSize:(CGSize)parentSize
 {
   return _layoutBlock(constrainedSize);
+}
+- (id<NSObject>)scopeFrameToken
+{
+  return nil;
 }
 @end
 
