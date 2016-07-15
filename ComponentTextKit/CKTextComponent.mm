@@ -74,7 +74,6 @@ static CKTextKitRenderer *rendererForAttributes(CKTextKitAttributes &attributes,
     std::move(copiedMap),
     {
       .isAccessibilityElement = options.accessibilityContext.isAccessibilityElement,
-      .accessibilityIdentifier = options.accessibilityContext.accessibilityIdentifier,
       .accessibilityLabel = options.accessibilityContext.accessibilityLabel.hasText()
       ? options.accessibilityContext.accessibilityLabel : ^{ return copyAttributes.attributedString.string; }
     }

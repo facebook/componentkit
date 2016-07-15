@@ -16,7 +16,6 @@
 struct CKTextComponentAccessibilityContext
 {
   NSNumber *isAccessibilityElement;
-  NSString *accessibilityIdentifier;
   NSNumber *providesAccessibleElements;
   /**
    Should rarely be used, the component's text will be used by default.
