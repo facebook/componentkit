@@ -19,12 +19,13 @@ MODE=$1
 
 function ci() {
   xcodebuild \
-      -project $1.xcodeproj \
-      -scheme $2 \
-      -sdk $3 \
-      -destination "$4" \
-      $5 \
-      | $BUILDOUTPUTFILTER
+    -project $1.xcodeproj \
+    -scheme $2 \
+    -sdk $3 \
+    -destination "$4" \
+    $5 \
+    | $BUILDOUTPUTFILTER \
+    && exit ${PIPESTATUS[0]}
 }
 
 function ios_ci() {
