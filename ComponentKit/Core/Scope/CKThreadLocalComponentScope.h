@@ -28,3 +28,12 @@ public:
   const CKComponentStateUpdateMap stateUpdates;
   std::stack<CKComponentScopeFramePair> stack;
 };
+
+class CKThreadLocalComponentScopeOverride {
+public:
+  CKThreadLocalComponentScopeOverride(CKThreadLocalComponentScope *scope);
+  ~CKThreadLocalComponentScopeOverride();
+
+private:
+  CKThreadLocalComponentScope *const previousScope;
+};
