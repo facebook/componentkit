@@ -20,13 +20,15 @@ void CKDetectComponentScopeCollisions(const CKComponentLayout &layout)
 #if CK_ASSERTIONS_ENABLED
   std::queue<const CKComponentLayout> queue;
   NSMutableSet<id<NSObject>> *previouslySeenScopeFrameTokens = [NSMutableSet new];
+  NSMutableArray<Class> *componentBacktrace = [NSMutableArray new];
   queue.push(layout);
   while (!queue.empty()) {
     auto currentLayout = queue.front();
     queue.pop();
     id<NSObject> scopeFrameToken = [currentLayout.component scopeFrameToken];
     if (scopeFrameToken && [previouslySeenScopeFrameTokens containsObject:scopeFrameToken]) {
-      CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for component %@", [currentLayout.component class]);
+      CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for component %@ (backtrace: %@)",
+                    [currentLayout.component class], [componentBacktrace componentsJoinedByString:@", "]);
     }
     if (scopeFrameToken) {
       [previouslySeenScopeFrameTokens addObject:scopeFrameToken];
@@ -36,6 +38,7 @@ void CKDetectComponentScopeCollisions(const CKComponentLayout &layout)
         queue.push(child.layout);
       }
     }
+    [componentBacktrace addObject:[currentLayout.component class]];
   }
 #endif
 }
