@@ -219,4 +219,28 @@
   }
 }
 
+#pragma mark - Component scope override
+
+- (void)testComponentScopeCanBeOverridden
+{
+  CKComponentScopeRoot *root = [CKComponentScopeRoot rootWithListener:nil];
+  CKThreadLocalComponentScope threadScope(root, {});
+  CKThreadLocalComponentScope *threadScopePtr = &threadScope;
+
+  dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    XCTAssertTrue(CKThreadLocalComponentScope::currentScope() == nullptr);
+    {
+      CKThreadLocalComponentScopeOverride scopeOverride(threadScopePtr);
+      XCTAssertEqual(CKThreadLocalComponentScope::currentScope(), threadScopePtr);
+    }
+    XCTAssertTrue(CKThreadLocalComponentScope::currentScope() == nullptr);
+    dispatch_semaphore_signal(sema);
+  });
+  dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC));
+  dispatch_semaphore_wait(sema, timeout);
+
+  XCTAssertEqual(CKThreadLocalComponentScope::currentScope(), threadScopePtr);
+}
+
 @end

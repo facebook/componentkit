@@ -28,3 +28,16 @@ public:
   const CKComponentStateUpdateMap stateUpdates;
   std::stack<CKComponentScopeFramePair> stack;
 };
+
+/**
+ Temporarily overrides the current thread's component scope.
+ Use for testing and advanced integration purposes only.
+ */
+class CKThreadLocalComponentScopeOverride {
+public:
+  CKThreadLocalComponentScopeOverride(CKThreadLocalComponentScope *scope);
+  ~CKThreadLocalComponentScopeOverride();
+
+private:
+  CKThreadLocalComponentScope *const previousScope;
+};

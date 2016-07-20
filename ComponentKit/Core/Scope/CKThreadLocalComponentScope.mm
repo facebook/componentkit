@@ -47,3 +47,14 @@ CKThreadLocalComponentScope::~CKThreadLocalComponentScope()
   CKCAssert(stack.empty(), @"Didn't expect stack to contain anything in destructor");
   pthread_setspecific(_threadKey(), nullptr);
 }
+
+CKThreadLocalComponentScopeOverride::CKThreadLocalComponentScopeOverride(CKThreadLocalComponentScope *scope)
+: previousScope(CKThreadLocalComponentScope::currentScope())
+{
+  pthread_setspecific(_threadKey(), scope);
+}
+
+CKThreadLocalComponentScopeOverride::~CKThreadLocalComponentScopeOverride()
+{
+  pthread_setspecific(_threadKey(), previousScope);
+}
