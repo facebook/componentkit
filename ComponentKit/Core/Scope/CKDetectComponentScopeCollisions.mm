@@ -28,6 +28,23 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
   }
   return componentBacktrace;
 }
+
+static NSString *componentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace)
+{
+  NSMutableString *const description = [NSMutableString string];
+  [componentBacktrace enumerateObjectsWithOptions:NSEnumerationReverse
+                                       usingBlock:^(CKComponent * _Nonnull component, NSUInteger index, BOOL * _Nonnull stop) {
+                                         const NSInteger depth = componentBacktrace.count - index - 1;
+                                         if (depth != 0) {
+                                           [description appendString:@"\n"];
+                                         }
+                                         [description appendString:[@"" stringByPaddingToLength:depth withString:@" " startingAtIndex:0]];
+                                         [description appendString:NSStringFromClass([component class])];
+                                         [description appendString:@": "];
+                                         [description appendString:[component description]];
+                                       }];
+  return description;
+}
 #pragma clang diagnostic pop
 
 void CKDetectComponentScopeCollisions(const CKComponentLayout &layout)
@@ -43,9 +60,9 @@ void CKDetectComponentScopeCollisions(const CKComponentLayout &layout)
     CKComponent *const component = componentLayout.component;
     const id<NSObject> scopeFrameToken = [component scopeFrameToken];
     if (scopeFrameToken && [previouslySeenScopeFrameTokens containsObject:scopeFrameToken]) {
-      CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for component %@ (backtrace: %@)",
+      CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for component: %@\n%@",
                     [component class],
-                    [generateComponentBacktrace(component, componentsToParentComponents) componentsJoinedByString:@", "]);
+                    componentBacktraceDescription(generateComponentBacktrace(component, componentsToParentComponents)));
     }
     if (scopeFrameToken) {
       [previouslySeenScopeFrameTokens addObject:scopeFrameToken];
