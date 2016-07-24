@@ -15,30 +15,47 @@
 #import "CKAssert.h"
 #import "CKComponentInternal.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component,
+                                                          NSMapTable<CKComponent *, CKComponent*> *componentsToParentComponents)
+{
+  NSMutableArray<CKComponent *> *componentBacktrace = [NSMutableArray arrayWithObject:component];
+  CKComponent *parentComponent = [componentsToParentComponents objectForKey:component];
+  while (parentComponent) {
+    [componentBacktrace addObject:parentComponent];
+    parentComponent = [componentsToParentComponents objectForKey:parentComponent];
+  }
+  return componentBacktrace;
+}
+#pragma clang diagnostic pop
+
 void CKDetectComponentScopeCollisions(const CKComponentLayout &layout)
 {
 #if CK_ASSERTIONS_ENABLED
   std::queue<const CKComponentLayout> queue;
-  NSMutableSet<id<NSObject>> *previouslySeenScopeFrameTokens = [NSMutableSet new];
-  NSMutableArray<Class> *componentBacktrace = [NSMutableArray new];
+  NSMutableSet<id<NSObject>> *const previouslySeenScopeFrameTokens = [NSMutableSet new];
+  NSMapTable<CKComponent *, CKComponent*> *const componentsToParentComponents = [NSMapTable strongToStrongObjectsMapTable];
   queue.push(layout);
   while (!queue.empty()) {
-    auto currentLayout = queue.front();
+    const auto componentLayout = queue.front();
     queue.pop();
-    id<NSObject> scopeFrameToken = [currentLayout.component scopeFrameToken];
+    CKComponent *const component = componentLayout.component;
+    const id<NSObject> scopeFrameToken = [component scopeFrameToken];
     if (scopeFrameToken && [previouslySeenScopeFrameTokens containsObject:scopeFrameToken]) {
       CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for component %@ (backtrace: %@)",
-                    [currentLayout.component class], [componentBacktrace componentsJoinedByString:@", "]);
+                    [component class],
+                    [generateComponentBacktrace(component, componentsToParentComponents) componentsJoinedByString:@", "]);
     }
     if (scopeFrameToken) {
       [previouslySeenScopeFrameTokens addObject:scopeFrameToken];
     }
-    if (currentLayout.children) {
-      for (auto child : *currentLayout.children) {
-        queue.push(child.layout);
+    if (componentLayout.children) {
+      for (const auto childComponentLayout : *componentLayout.children) {
+        queue.push(childComponentLayout.layout);
+        [componentsToParentComponents setObject:componentLayout.component forKey:childComponentLayout.layout.component];
       }
     }
-    [componentBacktrace addObject:[currentLayout.component class]];
   }
 #endif
 }
