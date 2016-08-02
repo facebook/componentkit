@@ -30,7 +30,7 @@ static void _deleteComponentLayoutChild(void *target)
 
 void CKOffMainThreadDeleter::operator()(std::vector<CKComponentLayoutChild> *target)
 {
-  if ([NSThread isMainThread]) {
+  if ([NSThread isMainThread] && target && !target->empty()) {
     // use dispatch_async_f to avoid block allocations
     dispatch_async_f(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), target, &_deleteComponentLayoutChild);
   } else {
