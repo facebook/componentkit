@@ -62,7 +62,7 @@
     const CKBuildComponentResult result = CKBuildComponent([oldItem scopeRoot], {}, ^{
       return [componentProvider componentForModel:model context:context];
     });
-    const CKComponentLayout layout = CKComponentComputeLayout(result.component, sizeRange, sizeRange.max);
+    const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange);
 
     [section replaceObjectAtIndex:indexPath.item withObject:
      [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot]];
@@ -108,7 +108,7 @@
     const CKBuildComponentResult result = CKBuildComponent([CKComponentScopeRoot rootWithListener:_stateListener], {}, ^{
       return [componentProvider componentForModel:model context:context];
     });
-    const CKComponentLayout layout = CKComponentComputeLayout(result.component, sizeRange, sizeRange.max);
+    const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange);
     insertedItemsBySection[indexPath.section][indexPath.item] =
     [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot];
   }];

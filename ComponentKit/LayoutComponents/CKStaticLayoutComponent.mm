@@ -48,7 +48,7 @@
       constrainedSize.max.height - child.position.y
     };
     CKSizeRange childConstraint = child.size.resolveSizeRange(size, {{0,0}, autoMaxSize});
-    return CKComponentLayoutChild({child.position, CKComponentComputeLayout(child.component, childConstraint, size)});
+    return CKComponentLayoutChild({child.position, CKComputeComponentLayout(child.component, childConstraint, size)});
   });
 
   if (isnan(size.width)) {

@@ -107,6 +107,9 @@
     return [layoutManager characterIndexForGlyphAtIndex:lastVisibleGlyphIndex];
   }
   NSUInteger firstCharacterIndexToReplace = [layoutManager characterIndexForGlyphAtIndex:firstClippedGlyphIndex];
+  if (firstCharacterIndexToReplace == NSNotFound) {
+    return NSNotFound;
+  }
 
   // Break on word boundaries
   return [self _findTruncationInsertionPointAtOrBeforeCharacterIndex:firstCharacterIndexToReplace
@@ -170,7 +173,8 @@
       NSInteger firstCharacterIndexToReplace = [self _calculateCharacterIndexBeforeTruncationMessage:layoutManager
                                                                                          textStorage:textStorage
                                                                                        textContainer:textContainer];
-      if (firstCharacterIndexToReplace == 0 || firstCharacterIndexToReplace == NSNotFound) {
+      if (firstCharacterIndexToReplace == 0 || firstCharacterIndexToReplace >= textStorage.length) {
+        // Either nothing is visible, or everything is; nothing for us to do here
         return;
       }
 

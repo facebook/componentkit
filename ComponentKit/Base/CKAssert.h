@@ -10,6 +10,12 @@
 
 #pragma once
 
+#if !defined(NS_BLOCK_ASSERTIONS)
+#define CK_ASSERTIONS_ENABLED 1
+#else
+#define CK_ASSERTIONS_ENABLED 0
+#endif
+
 #define CKAssert(condition, description, ...) NSAssert(condition, description, ##__VA_ARGS__)
 #define CKCAssert(condition, description, ...) NSCAssert(condition, description, ##__VA_ARGS__)
 

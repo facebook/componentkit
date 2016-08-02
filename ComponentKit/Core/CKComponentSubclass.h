@@ -37,7 +37,7 @@ extern CGSize const kCKComponentParentSizeUndefined;
  Call this on children components to compute their layouts within your implementation of -computeLayoutThatFits:.
 
  @warning You may not override this method. Override -computeLayoutThatFits: instead.
- @warning In almost all cases, prefer the use of CKComponentComputeLayout in CKcomponentLayout
+ @warning In almost all cases, prefer the use of CKComputeComponentLayout in CKComponentLayout
 
  @param constrainedSize Specifies a minimum and maximum size. The receiver must choose a size that is in this range.
  @param parentSize The parent component's size. If the parent component does not have a final size in a given dimension,

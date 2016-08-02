@@ -56,7 +56,7 @@
     contentsLayout.size,
     _overlay ? std::vector<CKComponentLayoutChild> {
       {{0,0}, contentsLayout},
-      {{0,0}, CKComponentComputeLayout(_overlay, {contentsLayout.size, contentsLayout.size}, contentsLayout.size)}
+      {{0,0}, CKComputeComponentLayout(_overlay, {contentsLayout.size, contentsLayout.size}, contentsLayout.size)}
     } : std::vector<CKComponentLayoutChild> {
       {{0,0}, contentsLayout},
     }

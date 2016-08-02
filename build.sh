@@ -8,25 +8,42 @@ if [ -z $1 ]; then
   exit
 fi
 
+BUILDOUTPUTFILTER="tee" # handle xcpretty not being installed, tee will act like a noop
+if type xcpretty > /dev/null 2>&1; then
+  BUILDOUTPUTFILTER="xcpretty"
+fi
+
 set -eu
 
 MODE=$1
 
 function ci() {
   xcodebuild \
-      -project $1.xcodeproj \
-      -scheme $1 \
-      -sdk iphonesimulator9.3 \
-      -destination "platform=iOS Simulator,OS=8.1,name=iPhone 5" \
-      $2
+    -project $1.xcodeproj \
+    -scheme $2 \
+    -sdk $3 \
+    -destination "$4" \
+    $5 \
+    | $BUILDOUTPUTFILTER \
+    && exit ${PIPESTATUS[0]}
+}
+
+function ios_ci() {
+  ci $1 $1 iphonesimulator9.3 "platform=iOS Simulator,OS=9.3,name=iPhone 5" $2
+}
+
+function tvos_ci() {
+  ci $1 $1AppleTV appletvsimulator "platform=tvOS Simulator,OS=9.2,name=Apple TV 1080p" $2
 }
 
 if [ "$MODE" = "ci" ]; then
-  ci ComponentKit test
+  ios_ci ComponentKit test
+  tvos_ci ComponentKit test
 
   pushd Examples/WildeGuess
-  ci WildeGuess build
+  ios_ci WildeGuess build
   popd
+
 fi
 
 if [ "$MODE" = "docs" ]; then

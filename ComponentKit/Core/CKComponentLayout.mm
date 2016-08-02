@@ -18,6 +18,7 @@
 #import "ComponentUtilities.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
+#import "CKDetectComponentScopeCollisions.h"
 #import "CKTransactionalComponentDataSourceItemInternal.h"
 
 using namespace CK::Component;
@@ -93,9 +94,16 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
   return mountedComponents;
 }
 
-CKComponentLayout CKComponentComputeLayout(CKComponent *component,
+CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent, const CKSizeRange &sizeRange)
+{
+  const CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
+  CKDetectComponentScopeCollisions(layout);
+  return layout;
+}
+
+CKComponentLayout CKComputeComponentLayout(CKComponent *component,
                                            const CKSizeRange &sizeRange,
-                                           CGSize parentSize)
+                                           const CGSize parentSize)
 {
   return component ? [component layoutThatFits:sizeRange parentSize:parentSize] : (CKComponentLayout){};
 }

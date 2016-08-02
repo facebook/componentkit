@@ -33,69 +33,72 @@ void CKComponentBoundsAnimationApplyAfterCollectionViewBatchUpdates(id context, 
   NSInteger _numberOfSections;
   std::vector<NSUInteger> _numberOfItemsInSection;
   NSDictionary *_indexPathsToSnapshotViews;
+  NSDictionary *_supplementaryElementIndexPathsToSnapshotViews;
   NSDictionary *_indexPathsToOriginalLayoutAttributes;
+  NSDictionary *_supplementaryElementIndexPathsToOriginalLayoutAttributes;
 }
 
-- (instancetype)initWithCollectionView:(UICollectionView *)cv
+- (instancetype)initWithCollectionView:(UICollectionView *)collectionView
 {
   if (self = [super init]) {
-    _collectionView = cv;
-    _numberOfSections = [cv numberOfSections];
+    _collectionView = collectionView;
+    _numberOfSections = [collectionView numberOfSections];
     for (NSInteger i = 0; i < _numberOfSections; i++) {
-      _numberOfItemsInSection.push_back([cv numberOfItemsInSection:i]);
+      _numberOfItemsInSection.push_back([collectionView numberOfItemsInSection:i]);
     }
 
     // We might need to use a snapshot view to animate cells that are going offscreen, but we don't know which ones yet.
     // Grab a snapshot view for every cell; they'll be used or discarded in -applyBoundsAnimationToCollectionView:.
-    NSMutableDictionary *sv = [NSMutableDictionary dictionary];
-    for (NSIndexPath *ip in [cv indexPathsForVisibleItems]) {
-      UIView *snapshotView = [[cv cellForItemAtIndexPath:ip] snapshotViewAfterScreenUpdates:NO];
-      if (snapshotView) {
-        sv[ip] = snapshotView;
+
+    const CGSize visibleSize = collectionView.bounds.size;
+    const CGRect visibleRect = { collectionView.contentOffset, visibleSize };
+
+    // Obviously we want to animate all visible cells. But what about cells that were not previously visible, but become
+    // visible as a result of an item becoming smaller? We grab the layout attributes of a few more items that are
+    // offscreen so that we can animate them too. (Only some, though; we don't attempt to get *all* layout attributes.)
+
+    const CGFloat offscreenHeight = visibleSize.height / 2;
+    const CGRect extendedRect = { visibleRect.origin, { visibleSize.width, visibleSize.height + offscreenHeight } };
+
+    NSMutableDictionary *indexPathsToSnapshotViews = [NSMutableDictionary dictionary];
+    NSMutableDictionary *indexPathsToOriginalLayoutAttributes = [NSMutableDictionary dictionary];
+    NSMutableDictionary *supplementaryElementIndexPathsToSnapshotViews = [NSMutableDictionary dictionary];
+    NSMutableDictionary *supplementaryElementIndexPathsToOriginalLayoutAttributes = [NSMutableDictionary dictionary];
+    for (UICollectionViewLayoutAttributes  *attributes in [collectionView.collectionViewLayout layoutAttributesForElementsInRect:extendedRect]) {
+      NSIndexPath * const indexPath = attributes.indexPath;
+      switch (attributes.representedElementCategory) {
+        case UICollectionElementCategoryCell: {
+          indexPathsToOriginalLayoutAttributes[indexPath] = attributes;
+          if (CGRectIntersectsRect(attributes.frame, visibleRect)) {
+            UIView *snapshotView = [[collectionView cellForItemAtIndexPath:indexPath] snapshotViewAfterScreenUpdates:NO];
+            if (snapshotView) {
+              indexPathsToSnapshotViews[indexPath] = snapshotView;
+            }
+          }
+          break;
+        }
+        case UICollectionElementCategorySupplementaryView: {
+          supplementaryElementIndexPathsToOriginalLayoutAttributes[indexPath] = attributes;
+          if (CGRectIntersectsRect(attributes.frame, visibleRect)) {
+            UIView *snapshotView =
+            [[collectionView supplementaryViewForElementKind:attributes.representedElementKind atIndexPath:indexPath] snapshotViewAfterScreenUpdates:NO];
+            if (snapshotView) {
+              supplementaryElementIndexPathsToSnapshotViews[indexPath] = snapshotView;
+            }
+          }
+          break;
+        }
+        case UICollectionElementCategoryDecorationView: {
+          break;
+        }
       }
     }
-    _indexPathsToSnapshotViews = sv;
-
-    NSMutableDictionary *la = [NSMutableDictionary dictionary];
-    for (NSIndexPath *ip in visibleAndJustOffscreenIndexPaths(cv)) {
-      la[ip] = [_collectionView layoutAttributesForItemAtIndexPath:ip];
-    }
-    _indexPathsToOriginalLayoutAttributes = la;
+    _indexPathsToSnapshotViews = indexPathsToSnapshotViews;
+    _indexPathsToOriginalLayoutAttributes = indexPathsToOriginalLayoutAttributes;
+    _supplementaryElementIndexPathsToSnapshotViews = supplementaryElementIndexPathsToSnapshotViews;
+    _supplementaryElementIndexPathsToOriginalLayoutAttributes = supplementaryElementIndexPathsToOriginalLayoutAttributes;
   }
   return self;
-}
-
-static NSArray *visibleAndJustOffscreenIndexPaths(UICollectionView *cv)
-{
-  NSArray *sortedIndexPaths = [[cv indexPathsForVisibleItems] sortedArrayUsingSelector:@selector(compare:)];
-  if ([sortedIndexPaths count] == 0) {
-    return sortedIndexPaths;
-  }
-
-  // Obviously we want to animate all visible cells. But what about cells that were not previously visible, but become
-  // visible as a result of an item becoming smaller? We grab the layout attributes of a few more items that are
-  // offscreen so that we can animate them too. (Only some, though; we don't attempt to get *all* layout attributes.)
-
-  NSIndexPath *previousIndexPath = [sortedIndexPaths lastObject];
-  static const NSUInteger kOffscreenIndexPathCount = 10;
-  NSMutableArray *offscreenIndexPaths = [NSMutableArray array];
-  while ([offscreenIndexPaths count] < kOffscreenIndexPathCount) {
-    if ([previousIndexPath item] == [cv numberOfItemsInSection:[previousIndexPath section]] - 1) {
-      NSUInteger nextSection = [previousIndexPath section] + 1;
-      while (nextSection < [cv numberOfSections] && [cv numberOfItemsInSection:nextSection] == 0) {
-        nextSection++;
-      }
-      if (nextSection == [cv numberOfSections]) {
-        break; // No more rows to animate.
-      }
-      previousIndexPath = [NSIndexPath indexPathForItem:0 inSection:nextSection];
-    } else {
-      previousIndexPath = [NSIndexPath indexPathForItem:[previousIndexPath item] + 1 inSection:[previousIndexPath section]];
-    }
-    [offscreenIndexPaths addObject:previousIndexPath];
-  }
-
-  return [sortedIndexPaths arrayByAddingObjectsFromArray:offscreenIndexPaths];
 }
 
 - (void)applyBoundsAnimationToCollectionView:(const CKComponentBoundsAnimation &)animation
@@ -115,30 +118,53 @@ static NSArray *visibleAndJustOffscreenIndexPaths(UICollectionView *cv)
 
   // First, move the cells to their old positions without animation:
   NSMutableDictionary *indexPathsToAnimatingViews = [NSMutableDictionary dictionary];
+  NSMutableDictionary *indexPathsToAnimatingSupplementaryViews = [NSMutableDictionary dictionary];
+  NSMutableDictionary *indexPathsToSupplementaryElementKinds = [NSMutableDictionary dictionary];
   NSMutableArray *snapshotViewsToRemoveAfterAnimation = [NSMutableArray array];
   const CGRect visibleRect = {.origin = [_collectionView contentOffset], .size = [_collectionView bounds].size};
   NSIndexPath *largestAnimatingVisibleElement = largestAnimatingVisibleElementForOriginalLayout(_indexPathsToOriginalLayoutAttributes, visibleRect);
   [UIView performWithoutAnimation:^{
-    [_indexPathsToOriginalLayoutAttributes enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *ip, UICollectionViewLayoutAttributes *attrs, BOOL *stop) {
+    [_indexPathsToOriginalLayoutAttributes enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, UICollectionViewLayoutAttributes *attributes, BOOL *stop) {
       // If we're animating an item *out* of the collection view's visible bounds, we can't rely on animating a
       // UICollectionViewCell. Confusingly enough there will be a cell at the exact moment this function is called,
       // but the UICollectionView will reclaim and hide it at the end of the run loop turn. Use a snapshot view instead.
       // Also, the largest animating visible element will be retained inside the visible bounds so don't use a snapshot view.
-      if (CGRectIntersectsRect(visibleRect, [[_collectionView layoutAttributesForItemAtIndexPath:ip] frame]) || [ip isEqual:largestAnimatingVisibleElement]) {
-        UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:ip];
+      if (CGRectIntersectsRect(visibleRect, [[_collectionView layoutAttributesForItemAtIndexPath:indexPath] frame]) || [indexPath isEqual:largestAnimatingVisibleElement]) {
+        UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:indexPath];
         if (cell) {
           // Surprisingly -applyLayoutAttributes: does not apply bounds or center; that's deeper magic.
-          [cell setBounds:attrs.bounds];
-          [cell setCenter:attrs.center];
-          indexPathsToAnimatingViews[ip] = cell;
+          [cell setBounds:attributes.bounds];
+          [cell setCenter:attributes.center];
+          indexPathsToAnimatingViews[indexPath] = cell;
         }
       } else {
-        UIView *snapshotView = _indexPathsToSnapshotViews[ip];
+        UIView *snapshotView = _indexPathsToSnapshotViews[indexPath];
         if (snapshotView) {
-          [snapshotView setBounds:attrs.bounds];
-          [snapshotView setCenter:attrs.center];
+          [snapshotView setBounds:attributes.bounds];
+          [snapshotView setCenter:attributes.center];
           [_collectionView addSubview:snapshotView];
-          indexPathsToAnimatingViews[ip] = snapshotView;
+          indexPathsToAnimatingViews[indexPath] = snapshotView;
+          [snapshotViewsToRemoveAfterAnimation addObject:snapshotView];
+        }
+      }
+    }];
+    [_supplementaryElementIndexPathsToOriginalLayoutAttributes enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, UICollectionViewLayoutAttributes *attributes, BOOL *stop) {
+      if (CGRectIntersectsRect(visibleRect, [[_collectionView layoutAttributesForSupplementaryElementOfKind:attributes.representedElementKind atIndexPath:indexPath] frame])) {
+        UICollectionReusableView *supplementaryView = [_collectionView supplementaryViewForElementKind:attributes.representedElementKind atIndexPath:indexPath];
+        if (supplementaryView) {
+          [supplementaryView setBounds:attributes.bounds];
+          [supplementaryView setCenter:attributes.center];
+          indexPathsToAnimatingSupplementaryViews[indexPath] = supplementaryView;
+          indexPathsToSupplementaryElementKinds[indexPath] = attributes.representedElementKind;
+        }
+      } else {
+        UIView *snapshotView = _supplementaryElementIndexPathsToSnapshotViews[indexPath];
+        if (snapshotView) {
+          [snapshotView setBounds:attributes.bounds];
+          [snapshotView setCenter:attributes.center];
+          [_collectionView addSubview:snapshotView];
+          indexPathsToAnimatingSupplementaryViews[indexPath] = snapshotView;
+          indexPathsToSupplementaryElementKinds[indexPath] = attributes.representedElementKind;
           [snapshotViewsToRemoveAfterAnimation addObject:snapshotView];
         }
       }
@@ -151,10 +177,16 @@ static NSArray *visibleAndJustOffscreenIndexPaths(UICollectionView *cv)
 
   // Then move them back to their current positions with animation:
   void (^restore)(void) = ^{
-    [indexPathsToAnimatingViews enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *ip, UIView *view, BOOL *stop) {
-      UICollectionViewLayoutAttributes *attrs = [_collectionView layoutAttributesForItemAtIndexPath:ip];
-      [view setBounds:attrs.bounds];
-      [view setCenter:attrs.center];
+    [indexPathsToAnimatingViews enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, UIView *view, BOOL *stop) {
+      UICollectionViewLayoutAttributes *attributes = [_collectionView layoutAttributesForItemAtIndexPath:indexPath];
+      [view setBounds:attributes.bounds];
+      [view setCenter:attributes.center];
+    }];
+    [indexPathsToAnimatingSupplementaryViews enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, UIView *view, BOOL *stop) {
+      UICollectionViewLayoutAttributes *attributes =
+      [_collectionView layoutAttributesForSupplementaryElementOfKind:indexPathsToSupplementaryElementKinds[indexPath] atIndexPath:indexPath];
+      [view setBounds:attributes.bounds];
+      [view setCenter:attributes.center];
     }];
     [_collectionView setContentOffset:CGPointMake(_collectionView.contentOffset.x + contentOffsetAdjustment.x, _collectionView.contentOffset.y + contentOffsetAdjustment.y)];
   };
@@ -167,7 +199,9 @@ static NSArray *visibleAndJustOffscreenIndexPaths(UICollectionView *cv)
 
   _collectionView = nil;
   _indexPathsToSnapshotViews = nil;
+  _supplementaryElementIndexPathsToSnapshotViews = nil;
   _indexPathsToOriginalLayoutAttributes = nil;
+  _supplementaryElementIndexPathsToOriginalLayoutAttributes = nil;
 }
 
 #pragma mark - Maintain context during bounds animation
@@ -201,11 +235,11 @@ static CGPoint contentOffsetAdjustmentToKeepElementInVisibleBounds(NSIndexPath *
 static NSIndexPath* largestAnimatingVisibleElementForOriginalLayout(NSDictionary *indexPathToOriginalLayoutAttributes, CGRect visibleRect) {
   __block CGRect largestSoFar = CGRectZero;
   __block NSIndexPath *prominentElementIndexPath = nil;
-  [indexPathToOriginalLayoutAttributes enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *ip, UICollectionViewLayoutAttributes *attrs, BOOL *stop) {
-    CGRect intersection = CGRectIntersection(visibleRect, attrs.frame);
+  [indexPathToOriginalLayoutAttributes enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, UICollectionViewLayoutAttributes *attributes, BOOL *stop) {
+    CGRect intersection = CGRectIntersection(visibleRect, attributes.frame);
     if (_CGRectArea(intersection) > _CGRectArea(largestSoFar)) {
       largestSoFar = intersection;
-      prominentElementIndexPath = ip;
+      prominentElementIndexPath = indexPath;
     }
   }];
   return prominentElementIndexPath;
@@ -215,10 +249,10 @@ static NSIndexPath* largestAnimatingVisibleElementForOriginalLayout(NSDictionary
 static BOOL elementWillExitVisibleRect(NSIndexPath *indexPath, NSDictionary *indexPathsToAnimatingViews, UICollectionView *collectionView, CGRect visibleRect)
 {
   UIView *animatingView = indexPathsToAnimatingViews[indexPath];
-  UICollectionViewLayoutAttributes *attrs = [collectionView layoutAttributesForItemAtIndexPath:indexPath];
+  UICollectionViewLayoutAttributes *attributes = [collectionView layoutAttributesForItemAtIndexPath:indexPath];
 
   BOOL isItemCurrentlyInVisibleRect = (CGRectIntersectsRect(visibleRect,animatingView.frame));
-  BOOL willItemAnimateOffVisibleRect = !CGRectIntersectsRect(visibleRect, attrs.frame);
+  BOOL willItemAnimateOffVisibleRect = !CGRectIntersectsRect(visibleRect, attributes.frame);
 
   if (isItemCurrentlyInVisibleRect && willItemAnimateOffVisibleRect) {
     return YES;

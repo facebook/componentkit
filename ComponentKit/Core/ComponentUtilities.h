@@ -75,6 +75,37 @@ namespace CK {
 
     return newVector;
   }
+
+  /**
+   This function takes a vector and returns a new vector after adding an additional object between every entry in the vector that passes the predicate
+   Example:
+   inputs: { 1, 2, 3, 4, 5, 6 }, factory ^(int) { return 0; } predicate: ^BOOL(int a) { return a%2 == 0; }
+   output: { 2, 0, 4, 0, 6 }
+   */
+  template <typename T, typename Func, typename Predicate>
+  auto intersperse(std::vector<T> a, Func &&factory, Predicate predicate) -> std::vector<T>
+  {
+    std::vector<T> newVector;
+
+    if (a.size() < 2) {
+      return (a.size() == 1 && predicate(a.at(0))) ? a : newVector;
+    }
+
+    for (int i = 0; i < a.size() - 1; i++) {
+      T currentA = a.at(i);
+      if (predicate(currentA)) {
+        newVector.push_back(currentA);
+        newVector.push_back(factory());
+      }
+    }
+
+    T lastA = a.at(a.size() - 1);
+    if (predicate(lastA)) {
+      newVector.push_back(lastA);
+    }
+
+    return newVector;
+  }
 };
 
 inline CGPoint operator+(const CGPoint &p1, const CGPoint &p2)
