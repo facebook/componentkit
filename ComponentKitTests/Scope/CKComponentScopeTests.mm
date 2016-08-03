@@ -248,16 +248,16 @@
     CKThreadLocalComponentScope threadScope(root, {});
     int32_t globalIdentifier;
     {
-      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      CKComponentScope scope1([CKCompositeComponent class], @"macaque");
       {
-        CKComponentScope scope([CKCompositeComponent class], @"moose");
+        CKComponentScope scope2([CKCompositeComponent class], @"moose");
         globalIdentifier = CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier;
       }
     }
     {
-      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      CKComponentScope scope1([CKCompositeComponent class], @"macaque");
       {
-        CKComponentScope scope([CKCompositeComponent class], @"moose");
+        CKComponentScope scope2([CKCompositeComponent class], @"moose");
         XCTAssertEqual(globalIdentifier, CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier);
       }
     }
@@ -272,15 +272,15 @@
   {
     CKThreadLocalComponentScope threadScope(root1, {});
     {
-      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      CKComponentScope scope1([CKCompositeComponent class], @"macaque");
       {
-        CKComponentScope scope([CKCompositeComponent class], @"moose");
+        CKComponentScope scope2([CKCompositeComponent class], @"moose");
       }
     }
     {
-      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      CKComponentScope scope1([CKCompositeComponent class], @"macaque");
       {
-        CKComponentScope scope([CKCompositeComponent class], @"moose");
+        CKComponentScope scope2([CKCompositeComponent class], @"moose");
         globalIdentifier = CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier;
       }
     }
@@ -289,15 +289,15 @@
   {
     CKThreadLocalComponentScope threadScope(root2, {});
     {
-      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      CKComponentScope scope1([CKCompositeComponent class], @"macaque");
       {
-        CKComponentScope scope([CKCompositeComponent class], @"moose");
+        CKComponentScope scope2([CKCompositeComponent class], @"moose");
       }
     }
     {
-      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      CKComponentScope scope1([CKCompositeComponent class], @"macaque");
       {
-        CKComponentScope scope([CKCompositeComponent class], @"moose");
+        CKComponentScope scope2([CKCompositeComponent class], @"moose");
         XCTAssertEqual(globalIdentifier, CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier);
       }
     }
