@@ -26,6 +26,24 @@ If you have CocoaPods and want to quickly try WildeGuess, the ComponentKit demo 
 pod try ComponentKit
 ```
 
+### Opening the Xcode projects
+
+If you want to try out ComponentKit just clone the GitHub repository and open the Xcode project. To get started with the example app:
+
+```
+open Examples/WildeGuess/WildeGuess.xcodeproj
+```
+
+Build and run the `WildeGuess` target to try it out!
+
+If you're interested in viewing only the ComponentKit source code in Xcode:
+
+```
+open ComponentKit.xcodeproj
+```
+
+There is no need to run any special commands prior to opening either Xcode project.
+
 ### Learn more
 
 * Read the [Getting Started guide](http://www.componentkit.org/docs/getting-started.html)
