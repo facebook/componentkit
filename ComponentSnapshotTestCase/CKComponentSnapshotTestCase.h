@@ -13,10 +13,10 @@
 
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 
-#define CK_AT_LEAST_IOS7_1 (kCFCoreFoundationVersionNumber >= 847.24)
 #define CK_AT_LEAST_IOS8 (kCFCoreFoundationVersionNumber > 847.27)
 #define CK_AT_LEAST_IOS8_2 (kCFCoreFoundationVersionNumber >= 1142.16)
 #define CK_AT_LEAST_IOS9 (kCFCoreFoundationVersionNumber >= 1223.1)
+#define CK_AT_LEAST_IOS10_BETA_4 (kCFCoreFoundationVersionNumber >= 1345.0)
 
 #if __LP64__
 #define CK_64 1
@@ -30,10 +30,10 @@
 #define CKSnapshotReferenceDirectorySuffix() \
 ({ \
 NSString *suffix = \
+CK_AT_LEAST_IOS10_BETA_4 ? @"_IOS10" : \
 CK_AT_LEAST_IOS9 ? @"_IOS9" : \
 CK_AT_LEAST_IOS8_2 ? @"_IOS8.2" : \
 CK_AT_LEAST_IOS8 ? @"_IOS8" : \
-CK_AT_LEAST_IOS7_1 ? @"_IOS7.1" : \
 @""; \
 CK_64 ? [suffix stringByAppendingString:@"_64"] : suffix; \
 })
