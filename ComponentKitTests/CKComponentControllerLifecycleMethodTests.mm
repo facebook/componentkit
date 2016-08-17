@@ -53,7 +53,6 @@ struct CKLifecycleMethodCounts {
 @end
 
 @interface CKLifecycleComponent : CKComponent
-@property (nonatomic, weak) CKLifecycleComponentController *controller;
 - (void)updateStateToIncludeNewAttribute;
 @end
 
@@ -73,7 +72,7 @@ struct CKLifecycleMethodCounts {
 
   UIView *view = [[UIView alloc] init];
   [clm attachToView:view];
-  CKLifecycleComponentController *controller = ((CKLifecycleComponent *)state.layout.component).controller;
+  CKLifecycleComponentController *controller = (CKLifecycleComponentController *)state.layout.component.controller;
   const CKLifecycleMethodCounts actual = controller->_counts;
   const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
@@ -90,7 +89,7 @@ struct CKLifecycleMethodCounts {
   [clm attachToView:view];
   [clm detachFromView];
 
-  CKLifecycleComponentController *controller = ((CKLifecycleComponent *)state.layout.component).controller;
+  CKLifecycleComponentController *controller = (CKLifecycleComponentController *)state.layout.component.controller;
   const CKLifecycleMethodCounts actual = controller->_counts;
   const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
@@ -108,7 +107,7 @@ struct CKLifecycleMethodCounts {
   CKLifecycleComponent *component = (CKLifecycleComponent *)state.layout.component;
   [component updateStateToIncludeNewAttribute];
 
-  CKLifecycleComponentController *controller = component.controller;
+  CKLifecycleComponentController *controller = (CKLifecycleComponentController *)component.controller;
   const CKLifecycleMethodCounts actual = controller->_counts;
   const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willRemount = 1, .didRemount = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
@@ -126,7 +125,7 @@ struct CKLifecycleMethodCounts {
   [clm detachFromView];
 
   CKLifecycleComponent *component = (CKLifecycleComponent *)state.layout.component;
-  CKLifecycleComponentController *controller = component.controller;
+  CKLifecycleComponentController *controller = (CKLifecycleComponentController *)component.controller;
   {
     const CKLifecycleMethodCounts actual = controller->_counts;
     const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1};
@@ -177,12 +176,6 @@ struct CKLifecycleMethodCounts {
 @end
 
 @implementation CKLifecycleComponentController
-
-- (void)didUpdateComponent
-{
-  [super didUpdateComponent];
-  [(CKLifecycleComponent *)[self component] setController:self];
-}
 
 - (void)willMount { [super willMount]; _counts.willMount++; }
 - (void)didMount { [super didMount]; _counts.didMount++; }

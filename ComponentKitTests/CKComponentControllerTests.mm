@@ -30,7 +30,7 @@
 @end
 
 @interface CKFooComponent : CKComponent
-@property (nonatomic, weak) CKFooComponentController *controller;
+- (CKFooComponentController *)controller;
 - (void)updateStateToIncludeNewAttribute;
 @end
 
@@ -41,12 +41,11 @@
   return [CKFooComponent new];
 }
 
-- (void)testThatCreatingComponentDoesNotInstantiateItsController
+- (void)testThatCreatingComponentCreatesAController
 {
   CKComponentTestRootScope scope;
-
   CKFooComponent *fooComponent = [CKFooComponent new];
-  XCTAssertNil(fooComponent.controller, @"Didn't expect creating a component to create a controller");
+  XCTAssertNotNil(fooComponent.controller);
 }
 
 - (void)testThatAttachingManagerInstantiatesComponentController
@@ -202,6 +201,12 @@
   return [super newWithView:{[UIView class], std::move(attrs)} size:{}];
 }
 
+- (CKFooComponentController *)controller
+{
+  // We provide this convenience method here to avoid having all the casts in the tests above.
+  return (CKFooComponentController *)[super controller];
+}
+
 - (void)updateStateToIncludeNewAttribute
 {
   [self updateState:^(id oldState){
@@ -221,7 +226,6 @@
 - (void)didUpdateComponent
 {
   [super didUpdateComponent];
-  ((CKFooComponent *)self.component).controller = self;
   _calledDidUpdateComponent = YES;
 }
 

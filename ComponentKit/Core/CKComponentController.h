@@ -79,4 +79,13 @@
  */
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
 
+/** 
+ Initializes a controller with the first generation of component. You should not directly initialize a controller,
+ they are initialized for you by the infrastructure.
+ */
+- (instancetype)initWithComponent:(CKComponent *)component NS_DESIGNATED_INITIALIZER;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 @end
