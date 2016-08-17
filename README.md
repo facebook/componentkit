@@ -20,12 +20,6 @@ If you are using Carthage, add the following to your [Cartfile](https://github.c
 github "facebook/ComponentKit" ~> 0.14
 ```
 
-If you have CocoaPods and want to quickly try WildeGuess, the ComponentKit demo project, then run the following:
-
-```ruby
-pod try ComponentKit
-```
-
 ### Opening the Xcode projects
 
 If you want to try out ComponentKit just clone the GitHub repository and open the Xcode project. To get started with the example app:
