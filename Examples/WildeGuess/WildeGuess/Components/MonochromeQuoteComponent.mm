@@ -55,7 +55,7 @@
      },
      {
        .component = quoteTextComponent,
-       .flexShrink = YES,
+       .flexShrink = 1,
        .flexBasis = CKRelativeDimension::Percent(1.0)
      }
    }];

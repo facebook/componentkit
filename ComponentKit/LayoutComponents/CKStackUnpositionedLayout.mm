@@ -188,15 +188,15 @@ static std::function<BOOL(const CKStackUnpositionedItem &)> isFlexibleInViolatio
   if (fabs(violation) < kViolationEpsilon) {
     return [](const CKStackUnpositionedItem &l) { return NO; };
   } else if (violation > 0) {
-    return [](const CKStackUnpositionedItem &l) { return l.child.flexGrow; };
+    return [](const CKStackUnpositionedItem &l) { return l.child.flexGrow > 0; };
   } else {
-    return [](const CKStackUnpositionedItem &l) { return l.child.flexShrink; };
+    return [](const CKStackUnpositionedItem &l) { return l.child.flexShrink > 0; };
   }
 }
 
 static inline BOOL isFlexibleInBothDirections(const CKStackLayoutComponentChild &child)
 {
-  return child.flexGrow && child.flexShrink;
+  return child.flexGrow > 0 && child.flexShrink > 0;
 }
 
 /**

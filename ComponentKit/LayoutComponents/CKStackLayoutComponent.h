@@ -78,9 +78,9 @@ struct CKStackLayoutComponentChild {
   /** Additional space to place after the component in the stacking direction. */
   CGFloat spacingAfter;
   /** If the sum of childrens' stack dimensions is less than the minimum size, should this component grow? */
-  BOOL flexGrow;
+  NSInteger flexGrow;
   /** If the sum of childrens' stack dimensions is greater than the maximum size, should this component shrink? */
-  BOOL flexShrink;
+  NSInteger flexShrink;
   /** Specifies the initial size in the stack dimension for the child. */
   CKRelativeDimension flexBasis;
   /** Orientation of the child along cross axis, overriding alignItems */

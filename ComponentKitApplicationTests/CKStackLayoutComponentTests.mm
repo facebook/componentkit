@@ -28,13 +28,13 @@ static CKComponentViewConfiguration whiteBg = {[UIView class], {{@selector(setBa
   self.recordMode = NO;
 }
 
-static CKStackLayoutComponentChild flexChild(CKComponent *c, BOOL flex)
+static CKStackLayoutComponentChild flexChild(CKComponent *c, NSInteger flex)
 {
   return {c, .flexGrow = flex, .flexShrink = flex};
 }
 
 - (CKStackLayoutComponent *)_layoutWithJustify:(CKStackLayoutJustifyContent)justify
-                                          flex:(BOOL)flex
+                                          flex:(NSInteger)flex
 {
   return [CKStackLayoutComponent
           newWithView:whiteBg
@@ -54,20 +54,20 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, BOOL flex)
 {
   // width 300px; height 0-300px
   static CKSizeRange kSize = {{300, 0}, {300, 300}};
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flex:NO], kSize, @"justifyStart");
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentCenter flex:NO], kSize, @"justifyCenter");
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentEnd flex:NO], kSize, @"justifyEnd");
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flex:YES], kSize, @"flex");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flex:0], kSize, @"justifyStart");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentCenter flex:0], kSize, @"justifyCenter");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentEnd flex:0], kSize, @"justifyEnd");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flex:1], kSize, @"flex");
 }
 
 - (void)testOverflowBehaviors
 {
   // width 110px; height 0-300px
   static CKSizeRange kSize = {{110, 0}, {110, 300}};
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flex:NO], kSize, @"justifyStart");
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentCenter flex:NO], kSize, @"justifyCenter");
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentEnd flex:NO], kSize, @"justifyEnd");
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flex:YES], kSize, @"flex");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flex:0], kSize, @"justifyStart");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentCenter flex:0], kSize, @"justifyCenter");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentEnd flex:0], kSize, @"justifyEnd");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flex:1], kSize, @"flex");
 }
 
 - (void)testOverflowBehaviorsWhenAllFlexShrinkComponentsHaveBeenClampedToZeroButViolationStillExists
@@ -81,15 +81,15 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, BOOL flex)
      // After flexShrink-able children are all clamped to zero, the sum of their widths is 100px.
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}],
-       .flexShrink = NO,
+       .flexShrink = 0,
      },
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}],
-       .flexShrink = YES,
+       .flexShrink = 1,
      },
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
-       .flexShrink = NO,
+       .flexShrink = 0,
      },
    }];
 
@@ -309,8 +309,8 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, BOOL flex)
          newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}}
          size:{.height = 150}]],
        .flexBasis = CKRelativeDimension::Percent(1),
-       .flexGrow = YES,
-       .flexShrink = YES
+       .flexGrow = 1,
+       .flexShrink = 1
      },
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]},
    }];
@@ -332,11 +332,11 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, BOOL flex)
    children:{
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{100,100}],
-       .flexShrink = YES,
+       .flexShrink = 1,
      },
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}],
-       .flexShrink = YES,
+       .flexShrink = 1,
      },
    }];
 
@@ -494,17 +494,17 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, BOOL flex)
    children:{
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}],
-       .flexGrow = YES,
+       .flexGrow = 1,
        .flexBasis = 10
      },
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{150,150}],
-       .flexGrow = YES,
+       .flexGrow = 1,
        .flexBasis = 10,
      },
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
-       .flexGrow = YES,
+       .flexGrow = 1,
        .flexBasis = 10,
      },
    }];
@@ -528,18 +528,18 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, BOOL flex)
    children:{
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}],
-       .flexGrow = YES,
+       .flexGrow = 1,
        // This should override the intrinsic size of 50pts and instead compute to 50% = 100pts.
        // The result should be that the red box is twice as wide as the blue and gree boxes after flexing.
        .flexBasis = CKRelativeDimension::Percent(0.5)
      },
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}],
-       .flexGrow = YES,
+       .flexGrow = 1,
      },
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
-       .flexGrow = YES,
+       .flexGrow = 1,
      },
    }];
 
@@ -603,8 +603,8 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, BOOL flex)
          [CKComponent
           newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}}
           size:{3000, 3000}]],
-        .flexGrow = YES,
-        .flexShrink = YES,
+        .flexGrow = 1,
+        .flexShrink = 1,
       },
     }]];
 
@@ -622,15 +622,15 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, BOOL flex)
    children:{
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{300,50}],
-       .flexShrink = YES,
+       .flexShrink = 1,
      },
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,50}],
-       .flexShrink = NO,
+       .flexShrink = 0,
      },
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{200,50}],
-       .flexShrink = YES,
+       .flexShrink = 1,
      },
    }];
 
