@@ -1,8 +1,10 @@
 ---
-title: Components Can't Be Delegates
+title: Components Can't Be Delegates Directly
 layout: docs
 permalink: /docs/components-cant-be-delegates.html
 ---
+
+TL;DR: You can use `CKComponentDelegateAttribute` to configure a delegate for a view to proxy delegate methods back to your component.
 
 Components are **short-lived**, and their lifecycle is not under your control. Thus they should not be delegates or `NSNotification` observers.
 
@@ -59,3 +61,18 @@ Instead, use `CKComponentController`. Component controllers are long-lived; they
 @end
 {% endhighlight %}
 
+Your other option is to use `CKComponentDelegateAttribute`, which will proxy delegate callbacks into the component responder chain.
+
+{% highlight objc %}
+[CKComponent
+ newWithView:{[UIScrollView class], {
+   CKComponentDelegateAttribute(@selector(setDelegate:), {
+   @selector(scrollViewDidScroll:),
+   @selector(scrollViewDidZoom:),
+   })
+ }}
+ size:{}] ...
+ {% endhighlight %}
+ 
+ Then in your component, you can implement the delegate methods `-scrollViewDidScroll:` and `-scrollViewDidZoom:`.
+ 
