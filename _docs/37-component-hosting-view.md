@@ -8,7 +8,7 @@ So you've created a component and now need some way to render it on screen. If y
 
 ## Setting the model 
 
-`CKComponentHostingView` has a readwrite `model` property that can be used to set the model passed to the root component.
+`CKComponentHostingView` provides a `updateModel:mode:` method that you can call to update the model for the hosting view. Similarly a secondary context object is also provided. Updating either model or context will trigger a re-generation of the component in the hosting view.
 
 ## Size Range Provider 
 
