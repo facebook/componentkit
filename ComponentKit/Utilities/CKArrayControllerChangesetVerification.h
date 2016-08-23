@@ -33,4 +33,4 @@ typedef NS_ENUM(NSUInteger, CKBadChangesetOperationType) {
  @param sections the current sections (or state) of the data source
  @return which section is causing an issue, if any. If there's no issue, this function will return CKBadChangesetOperationTypeNone
  */
-extern CKBadChangesetOperationType CKIsValidChangesetForSections(CKArrayControllerInputChangeset changeset, NSArray<NSArray *> *sections);
+CKBadChangesetOperationType CKIsValidChangesetForSections(CKArrayControllerInputChangeset changeset, NSArray<NSArray *> *sections);
