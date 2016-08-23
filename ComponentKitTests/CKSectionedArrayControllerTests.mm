@@ -105,7 +105,7 @@ using namespace CK::ArrayController;
 
   Input::Changeset changeset = {{}, items};
   XCTAssertThrowsSpecificNamed([_controller applyChangeset:changeset],
-                              NSException, NSRangeException, @"");
+                              NSException, NSInternalInconsistencyException);
 }
 
 - (void)testOutOfBoundsInsertionOfObjectsThrowsWhenNotEmpty
@@ -119,7 +119,7 @@ using namespace CK::ArrayController;
 
   Input::Changeset changeset = {{}, items};
   XCTAssertThrowsSpecificNamed([_controller applyChangeset:changeset],
-                              NSException, NSRangeException, @"");
+                              NSException, NSInternalInconsistencyException);
 }
 
 @end

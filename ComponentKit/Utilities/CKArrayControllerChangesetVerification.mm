@@ -150,3 +150,25 @@ CKBadChangesetOperationType CKIsValidChangesetForSections(CKArrayControllerInput
 
   return invalidChangeFound ? CKBadChangesetOperationTypeMoveRow : CKBadChangesetOperationTypeNone;
 }
+
+NSString *CKHumanReadableBadChangesetOperation(CKBadChangesetOperationType type)
+{
+  switch (type) {
+    case CKBadChangesetOperationTypeUpdate:
+      return @"Bad Update";
+    case CKBadChangesetOperationTypeRemoveRow:
+      return @"Bad Row Removal";
+    case CKBadChangesetOperationTypeRemoveSection:
+      return @"Bad Section Removal";
+    case CKBadChangesetOperationTypeInsertSection:
+      return @"Bad Section Insertion";
+    case CKBadChangesetOperationTypeMoveSection:
+      return @"Bad Section Move";
+    case CKBadChangesetOperationTypeInsertRow:
+      return @"Bad Row Insertion";
+    case CKBadChangesetOperationTypeMoveRow:
+      return @"Bad Row Move";
+    case CKBadChangesetOperationTypeNone:
+      return @"No Issue";
+  }
+}
