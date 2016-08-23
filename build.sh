@@ -37,6 +37,9 @@ function tvos_ci() {
 }
 
 if [ "$MODE" = "ci" ]; then
+  brew install carthage
+  carthage update
+
   ios_ci ComponentKit test
   tvos_ci ComponentKit test
 
