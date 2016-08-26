@@ -49,6 +49,7 @@ struct CKComponentHostingViewInputs {
 
   BOOL _scheduledAsynchronousComponentUpdate;
   BOOL _isSynchronouslyUpdatingComponent;
+  BOOL _isMountingComponent;
 }
 @end
 
@@ -90,14 +91,22 @@ struct CKComponentHostingViewInputs {
 {
   CKAssertMainThread();
   [super layoutSubviews];
-  _containerView.frame = self.bounds;
 
-  [self _synchronouslyUpdateComponentIfNeeded];
-  const CGSize size = self.bounds.size;
-  if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
-    _mountedLayout = CKComputeRootComponentLayout(_component, {size, size});
+  // It is possible for a view change due to mounting to trigger a re-layout of the entire screen. This can
+  // synchronously call layoutIfNeeded on this view, which could cause a re-entrant component mount, which we want
+  // to avoid.
+  if (!_isMountingComponent) {
+    _isMountingComponent = YES;
+    _containerView.frame = self.bounds;
+
+    [self _synchronouslyUpdateComponentIfNeeded];
+    const CGSize size = self.bounds.size;
+    if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
+      _mountedLayout = CKComputeRootComponentLayout(_component, {size, size});
+    }
+    _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil) copy];
+    _isMountingComponent = NO;
   }
-  _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil) copy];
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
