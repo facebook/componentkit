@@ -612,7 +612,66 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, NSInteger flex)
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testViolationIsDistributedEquallyAmongFlexibleChildComponents
+- (void)testPositiveViolationIsDistributedEquallyAmongFlexibleChildComponents
+{
+  CKStackLayoutComponent *c =
+  [CKStackLayoutComponent
+   newWithView:whiteBg
+   size:{}
+   style:{
+     .direction = CKStackLayoutDirectionHorizontal
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}],
+       .flexGrow = 1,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}],
+       .flexGrow = 0,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
+       .flexGrow = 1,
+     },
+   }];
+  // In this scenario a width of 350 results in a positive violation of 200.
+  // Due to each flexible child component specifying a flex grow factor of 1 the violation will be distributed evenly.
+  static CKSizeRange kSize = {{350, 0}, {350, 350}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
+- (void)testPositiveViolationIsDistributedProportionallyAmongFlexibleChildComponents
+{
+  CKStackLayoutComponent *c =
+  [CKStackLayoutComponent
+   newWithView:whiteBg
+   size:{}
+   style:{
+     .direction = CKStackLayoutDirectionHorizontal
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}],
+       .flexGrow = 1,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}],
+       .flexGrow = 2,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
+       .flexGrow = 1,
+     },
+   }];
+  // In this scenario a width of 350 results in a positive violation of 200.
+  // The first and third child components specify a flex grow factor of 1 and will flex by 50.
+  // The second child component specify a flex grow factor of 2 and will flex by 100.
+  static CKSizeRange kSize = {{350, 0}, {350, 350}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
+- (void)testNegativeViolationIsDistributedEquallyAmongFlexibleChildComponents
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -633,13 +692,39 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, NSInteger flex)
        .flexShrink = 1,
      },
    }];
+  // In this scenario a width of 400 results in a negative violation of 200.
+  // Due to each flexible child component specifying a flex shrink factor of 1 the violation will be distributed evenly.
+  static CKSizeRange kSize = {{400, 0}, {400, 400}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
 
-  // A width of 400px results in a violation of 200px. This is distributed equally among each flexible component,
-  // causing both of them to be shrunk by 100px, resulting in widths of 300px, 100px, and 50px.
-  // In the W3 flexbox standard, flexible components are shrunk proportionate to their original sizes,
-  // resulting in widths of 180px, 100px, and 120px.
-  // This test verifies the current behavior--the snapshot contains widths 300px, 100px, and 50px.
-  static CKSizeRange kSize = {{400, 0}, {400, 150}};
+- (void)testNegativeViolationIsDistributedProportionallyAmongFlexibleChildComponents
+{
+  CKStackLayoutComponent *c =
+  [CKStackLayoutComponent
+   newWithView:whiteBg
+   size:{}
+   style:{
+     .direction = CKStackLayoutDirectionHorizontal
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{300,50}],
+       .flexShrink = 2,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,50}],
+       .flexShrink = 1,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{200,50}],
+       .flexShrink = 2,
+     },
+   }];
+  // In this scenario a width of 400 results in a negative violation of 200.
+  // The first and third child components specify a flex shrink factor of 2 and will flex by 80.
+  // The second child component specify a flex shrink factor of 1 and will flex by 40.
+  static CKSizeRange kSize = {{400, 0}, {400, 400}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
