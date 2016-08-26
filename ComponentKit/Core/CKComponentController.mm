@@ -79,6 +79,14 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
   CKAppliedComponentAnimationMap _appliedAnimations;
 }
 
+- (instancetype)initWithComponent:(CKComponent *)component
+{
+  if (self = [super init]) {
+    _component = component;
+  }
+  return self;
+}
+
 - (void)willMount {}
 - (void)didMount {}
 - (void)willRemount {}

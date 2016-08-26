@@ -42,6 +42,13 @@
 
 - (void)updateState:(id (^)(id))updateFunction mode:(CKUpdateMode)mode;
 
+/** Informs the scope handle that it should complete its configuration. This will generate the controller */
+- (void)resolve;
+
+/**
+ Should not be called until after handleForComponent:. The controller will assert (if assertions are compiled), and
+ return nil until `resolve` is called.
+ */
 @property (nonatomic, strong, readonly) CKComponentController *controller;
 @property (nonatomic, strong, readonly) id state;
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
