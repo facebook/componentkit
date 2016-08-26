@@ -318,9 +318,7 @@
 		18644AE71B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE41B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm */; };
 		2D03A6601D3869A800E4F890 /* CKDetectComponentScopeCollisions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm */; };
 		2D03A6611D3869C700E4F890 /* CKDetectComponentScopeCollisions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2D8C3D431D64F41E00E6D47A /* ReferenceImages_IOS10 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D411D64F41E00E6D47A /* ReferenceImages_IOS10 */; };
 		2D8C3D441D64F41E00E6D47A /* ReferenceImages_IOS10_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */; };
-		2D8C3D511D64F43E00E6D47A /* ReferenceImages_IOS10 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D4F1D64F43E00E6D47A /* ReferenceImages_IOS10 */; };
 		2D8C3D521D64F43E00E6D47A /* ReferenceImages_IOS10_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */; };
 		2D8C3D541D64F44B00E6D47A /* ReferenceImages_IOS9_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D531D64F44B00E6D47A /* ReferenceImages_IOS9_64 */; };
 		2DBF1D7A1D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -812,9 +810,7 @@
 		18644AE21B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatefulViewReusePoolTests.mm; sourceTree = "<group>"; };
 		18644AE31B3CB8E60028AF87 /* CKTestStatefulViewComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTestStatefulViewComponent.h; sourceTree = "<group>"; };
 		18644AE41B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTestStatefulViewComponent.mm; sourceTree = "<group>"; };
-		2D8C3D411D64F41E00E6D47A /* ReferenceImages_IOS10 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10; sourceTree = "<group>"; };
 		2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10_64; sourceTree = "<group>"; };
-		2D8C3D4F1D64F43E00E6D47A /* ReferenceImages_IOS10 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10; sourceTree = "<group>"; };
 		2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10_64; sourceTree = "<group>"; };
 		2D8C3D531D64F44B00E6D47A /* ReferenceImages_IOS9_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS9_64; sourceTree = "<group>"; };
 		2DBF1D781D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDetectComponentScopeCollisions.h; sourceTree = "<group>"; };
@@ -1893,7 +1889,6 @@
 				D0B47DB11CBDACDE00BB33CE /* ReferenceImages_IOS8.2_64 */,
 				D0B47DB21CBDACDE00BB33CE /* ReferenceImages_IOS9 */,
 				D0B47DB31CBDACDE00BB33CE /* ReferenceImages_IOS9_64 */,
-				2D8C3D411D64F41E00E6D47A /* ReferenceImages_IOS10 */,
 				2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */,
 			);
 			name = ReferenceImages;
@@ -1908,7 +1903,6 @@
 				D0B47DBE1CBDAD1600BB33CE /* ReferenceImages_IOS8.2_64 */,
 				2DF899001CDD4064003C3507 /* ReferenceImages_IOS9 */,
 				2D8C3D531D64F44B00E6D47A /* ReferenceImages_IOS9_64 */,
-				2D8C3D4F1D64F43E00E6D47A /* ReferenceImages_IOS10 */,
 				2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */,
 			);
 			name = ReferenceImages;
@@ -2583,7 +2577,6 @@
 				2D8C3D441D64F41E00E6D47A /* ReferenceImages_IOS10_64 in Resources */,
 				D0B47DB61CBDACDF00BB33CE /* ReferenceImages_IOS8.2 in Resources */,
 				D0B47DB81CBDACDF00BB33CE /* ReferenceImages_IOS9 in Resources */,
-				2D8C3D431D64F41E00E6D47A /* ReferenceImages_IOS10 in Resources */,
 				D0B47DB71CBDACDF00BB33CE /* ReferenceImages_IOS8.2_64 in Resources */,
 				D0B47DB41CBDACDF00BB33CE /* ReferenceImages_IOS8 in Resources */,
 				D0B47DB51CBDACDF00BB33CE /* ReferenceImages_IOS8_64 in Resources */,
@@ -2601,7 +2594,6 @@
 				D0B47DC21CBDAD1600BB33CE /* ReferenceImages_IOS8.2_64 in Resources */,
 				D0B47DBF1CBDAD1600BB33CE /* ReferenceImages_IOS8 in Resources */,
 				D0B47DC01CBDAD1600BB33CE /* ReferenceImages_IOS8_64 in Resources */,
-				2D8C3D511D64F43E00E6D47A /* ReferenceImages_IOS10 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
