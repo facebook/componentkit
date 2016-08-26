@@ -15,8 +15,36 @@
 #import <ComponentKit/CKAssert.h>
 
 #import "ComponentUtilities.h"
+#import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKStackLayoutComponentUtilities.h"
+
+/**
+ 
+ */
+static CGFloat resolveCrossDimensionMaxForStretchChild(const CKStackLayoutComponentStyle &style,
+                                                       const CKStackLayoutComponentChild &child,
+                                                       const CGFloat stackMax,
+                                                       const CGFloat crossMax)
+{
+  // stretched children may have a cross direction max that is smaller than the minimum size constraint of the parent.
+  const CGFloat computedMax = (style.direction == CKStackLayoutDirectionVertical ?
+                               child.component.size.resolve(kCKComponentParentSizeUndefined).max.width :
+                               child.component.size.resolve(kCKComponentParentSizeUndefined).max.height);
+  return computedMax == INFINITY ? crossMax : computedMax;
+}
+
+static CGFloat resolveCrossDimensionMinForStretchChild(const CKStackLayoutComponentStyle &style,
+                                                    const CKStackLayoutComponentChild &child,
+                                                    const CGFloat stackMax,
+                                                    const CGFloat crossMin)
+{
+  // stretched children will have a cross dimension of at least crossMin, unless they explicitly define a child size
+  // that is smaller than the constraint of the parent.
+  return (style.direction == CKStackLayoutDirectionVertical ?
+             child.component.size.resolve(kCKComponentParentSizeUndefined).min.width :
+          child.component.size.resolve(kCKComponentParentSizeUndefined).min.height) ?: crossMin;
+}
 
 /**
  Sizes the child given the parameters specified, and returns the computed layout.
@@ -32,9 +60,13 @@ static CKComponentLayout crossChildLayout(const CKStackLayoutComponentChild &chi
                                           const CGSize size)
 {
   const CKStackLayoutAlignItems alignItems = alignment(child.alignSelf, style.alignItems);
-  // stretched children will have a cross dimension of at least crossMin
-  const CGFloat childCrossMin = alignItems == CKStackLayoutAlignItemsStretch ? crossMin : 0;
-  const CKSizeRange childSizeRange = directionSizeRange(style.direction, stackMin, stackMax, childCrossMin, crossMax);
+  const CGFloat childCrossMin = (alignItems == CKStackLayoutAlignItemsStretch ?
+                                 resolveCrossDimensionMinForStretchChild(style, child, stackMax, crossMin) :
+                                 0);
+  const CGFloat childCrossMax = (alignItems == CKStackLayoutAlignItemsStretch ?
+                                 resolveCrossDimensionMaxForStretchChild(style, child, stackMax, crossMax) :
+                                 crossMax);
+  const CKSizeRange childSizeRange = directionSizeRange(style.direction, stackMin, stackMax, childCrossMin, childCrossMax);
   return CKComputeComponentLayout(child.component, childSizeRange, size);
 }
 

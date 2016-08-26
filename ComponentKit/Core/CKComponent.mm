@@ -45,7 +45,6 @@ struct CKComponentMountInfo {
 {
   CKComponentScopeHandle *_scopeHandle;
   CKComponentViewConfiguration _viewConfiguration;
-  CKComponentSize _size;
 
   /** Only non-null while mounted. */
   std::unique_ptr<CKComponentMountInfo> _mountInfo;
