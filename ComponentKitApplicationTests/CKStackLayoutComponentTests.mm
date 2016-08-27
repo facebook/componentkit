@@ -28,7 +28,7 @@ static CKComponentViewConfiguration whiteBg = {[UIView class], {{@selector(setBa
   self.recordMode = NO;
 }
 
-static CKStackLayoutComponentChild flexChild(CKComponent *c, NSInteger flex)
+static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   return {c, .flexGrow = flex, .flexShrink = flex};
 }

@@ -82,13 +82,13 @@ struct CKStackLayoutComponentChild {
    This value represents the "flex grow factor" and determines how much this component should be grow in relation to any
    other flexible children.
    */
-  NSInteger flexGrow;
+  CGFloat flexGrow;
   /**
    If the sum of childrens' stack dimensions is greater than the maximum size, how much should this component shrink?
    This value represents the "flex shrink factor" and determines how much this component should be shrink in relation to
    any other flexible children.
    */
-  NSInteger flexShrink;
+  CGFloat flexShrink;
   /** Specifies the initial size in the stack dimension for the child. */
   CKRelativeDimension flexBasis;
   /** Orientation of the child along cross axis, overriding alignItems */
