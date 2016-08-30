@@ -97,14 +97,41 @@ namespace CK {
 
       Sections mapIndex(Mapper mapper) const;
 
+      NSString *description() const {
+        return [NSString stringWithFormat:@"Inserted sections: %@\nRemoved sections: %@\nMoved sections: %@", stringFromSet(this->insertions()), stringFromSet(this->removals()), stringFromSet(this->moves())];
+      }
+
     private:
       std::set<NSInteger> _insertions;
       std::set<NSInteger> _removals;
       std::set<std::pair<NSInteger, NSInteger>> _moves;
+
+      NSString *stringFromSet(std::set<NSInteger> set) const {
+        if (set.size() == 0) {
+          return @"";
+        }
+
+        NSMutableString *setString = [NSMutableString new];
+        for (NSInteger entry : set) {
+          [setString appendString:[NSString stringWithFormat:@"%ld, ", (long)entry]];
+        }
+        return [setString length] > 0 ? [setString substringToIndex:([setString length] - 2)] : @"";
+      }
+
+      NSString *stringFromSet(std::set<std::pair<NSInteger, NSInteger>> set) const {
+        if (set.size() == 0) {
+          return @"";
+        }
+
+        NSMutableString *setString = [NSMutableString new];
+        for (std::pair<NSInteger, NSInteger> entry : set) {
+          [setString appendString:[NSString stringWithFormat:@"%ld->%ld, ", (long)(entry.first), (long)(entry.second)]];
+        }
+        return [setString substringToIndex:([setString length] - 2)];
+      }
     };
 
   }
-
 }
 
 typedef CK::ArrayController::IndexPath CKArrayControllerIndexPath;
@@ -150,6 +177,25 @@ namespace CK {
 
         bool operator==(const Items &other) const;
 
+        NSString *description() const {
+          NSMutableString *changesetString = [NSMutableString new];
+
+          this->enumerateItems(
+                               ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
+                                 [changesetString appendString:[NSString stringWithFormat:@"Update: {%ld,%ld} -> %@\n", (long)section, (long)index, object]];
+                               },
+                               ^(NSInteger section, NSInteger index, BOOL *stop) {
+                                 [changesetString appendString:[NSString stringWithFormat:@"Removal: {%ld,%ld}\n", (long)section, (long)index]];
+                               },
+                               ^(NSInteger section, NSInteger index, id<NSObject> object, BOOL *stop) {
+                                 [changesetString appendString:[NSString stringWithFormat:@"Insertion: {%ld,%ld} -> %@\n", (long)section, (long)index, object]];
+                               },
+                               ^(const CKArrayControllerIndexPath &fromIndexPath, const CKArrayControllerIndexPath &toIndexPath, BOOL *stop) {
+                                 [changesetString appendString:[NSString stringWithFormat:@"Move: {%ld,%ld} -> {%ld,%ld}\n", (long)fromIndexPath.section, (long)fromIndexPath.item, (long)toIndexPath.section, (long)toIndexPath.item]];
+                               });
+
+          return changesetString;
+        }
       private:
         friend class Changeset;
 
@@ -187,6 +233,10 @@ namespace CK {
 
 
         bool operator==(const Changeset &other) const;
+
+        NSString *description() const {
+          return [NSString stringWithFormat:@"Sections:\n%@\n\nItems:\n%@\n", sections.description(), items.description()];
+        }
       };
     }
   }
