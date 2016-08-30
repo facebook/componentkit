@@ -11,13 +11,13 @@ ComponentKit is available to install via [CocoaPods](http://cocoapods.org) or [C
 If you are using CocoaPods, add the following to your [Podfile](https://guides.cocoapods.org/using/the-podfile.html):
 
 ```ruby
-pod 'ComponentKit', '~> 0.14'
+pod 'ComponentKit', '~> 0.15'
 ```
 
 If you are using Carthage, add the following to your [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#cartfile):
 
 ```
-github "facebook/ComponentKit" ~> 0.14
+github "facebook/ComponentKit" ~> 0.15
 ```
 
 ### Opening the Xcode projects
