@@ -8,11 +8,6 @@ if [ -z $1 ]; then
   exit
 fi
 
-BUILDOUTPUTFILTER="tee" # handle xcpretty not being installed, tee will act like a noop
-if type xcpretty > /dev/null 2>&1; then
-  BUILDOUTPUTFILTER="xcpretty"
-fi
-
 set -eu
 
 MODE=$1
@@ -23,9 +18,7 @@ function ci() {
     -scheme $2 \
     -sdk $3 \
     -destination "$4" \
-    $5 \
-    | $BUILDOUTPUTFILTER \
-    && exit ${PIPESTATUS[0]}
+    $5
 }
 
 function ios_ci() {
