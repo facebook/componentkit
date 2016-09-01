@@ -1,9 +1,21 @@
-language: objective-c
+os: osx
 osx_image: xcode7.3
+language: objective-c
 
-script: ./build.sh ci
+install:
+  - gem install xcpretty -N --no-ri --no-rdoc
+  - carthage bootstrap
 
-# Whitelist for branches
+script:
+  - set -o pipefail
+  - xcodebuild $XCODEBUILD_CONFIGURATION | xcpretty
+
+env:
+  matrix:
+    - XCODEBUILD_CONFIGURATION="clean test -project ComponentKit.xcodeproj -scheme ComponentKit -sdk iphonesimulator9.3"
+    - XCODEBUILD_CONFIGURATION="clean test -project ComponentKit.xcodeproj -scheme ComponentKitAppleTV -sdk appletvsimulator9.2"
+    - XCODEBUILD_CONFIGURATION="clean build -project Examples/WildeGuess/WildeGuess.xcodeproj -scheme WildeGuess -sdk iphonesimulator9.3"
+
 branches:
   only:
     - master
