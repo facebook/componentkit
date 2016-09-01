@@ -8,6 +8,11 @@ if [ -z $1 ]; then
   exit
 fi
 
+BUILDOUTPUTFILTER="tee"
+if type xcpretty > /dev/null 2>&1; then
+  BUILDOUTPUTFILTER="xcpretty"
+fi
+
 set -eu
 
 MODE=$1
@@ -18,7 +23,9 @@ function ci() {
     -scheme $2 \
     -sdk $3 \
     -destination "$4" \
-    $5
+    $5 \
+    | $BUILDOUTPUTFILTER \
+    && exit ${PIPESTATUS[0]}
 }
 
 function ios_ci() {
