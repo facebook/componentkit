@@ -10,11 +10,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKComponentContextImpl.h>
+#import <ComponentKit/CKComponentContextHelper.h>
 
 /**
  Provides a way to implicitly pass parameters to child components.
-
  @warning Contexts should be used sparingly. Prefer explicitly passing parameters instead.
  */
 template<typename T>
@@ -28,7 +27,7 @@ public:
    */
   CKComponentContext(T *object) : _key([T class])
   {
-    CK::Component::Context::store(_key, object);
+    CKComponentContextHelper::store(_key, object);
   }
 
   /**
@@ -40,16 +39,17 @@ public:
    */
   static T *get()
   {
-    return CK::Component::Context::fetch([T class]);
+    return CKComponentContextHelper::fetch([T class]);
   }
 
-  CKComponentContext(const CKComponentContext&) = delete;
-  CKComponentContext &operator=(const CKComponentContext&) = delete;
   ~CKComponentContext()
   {
-    CK::Component::Context::clear(_key);
+    CKComponentContextHelper::clear(_key);
   }
 
 private:
   const Class _key;
+
+  CKComponentContext(const CKComponentContext&) = delete;
+  CKComponentContext &operator=(const CKComponentContext&) = delete;
 };
