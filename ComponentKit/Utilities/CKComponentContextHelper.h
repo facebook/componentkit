@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-struct CKComponentContextStoreResult {
+struct CKComponentContextPreviousState {
   id key;
   id originalValue;
   id newValue;
@@ -18,8 +18,8 @@ struct CKComponentContextStoreResult {
 
 /** Internal helper class. Do not attempt to use this externally. */
 class CKComponentContextHelper {
-  static CKComponentContextStoreResult store(id key, id object);
-  static void clear(const CKComponentContextStoreResult &storeResult);
+  static CKComponentContextPreviousState store(id key, id object);
+  static void restore(const CKComponentContextPreviousState &storeResult);
   static id fetch(id key);
 
   template<typename T>

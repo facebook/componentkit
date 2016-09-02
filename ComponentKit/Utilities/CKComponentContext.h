@@ -44,11 +44,11 @@ public:
    */
   static T *get() { return CKComponentContextHelper::fetch([T class]); }
 
-  CKComponentContext(T *object) : _storeResult(CKComponentContextHelper::store([T class], object)) {}
-  ~CKComponentContext() { CKComponentContextHelper::clear(_storeResult); }
+  CKComponentContext(T *object) : _previousState(CKComponentContextHelper::store([T class], object)) {}
+  ~CKComponentContext() { CKComponentContextHelper::restore(_previousState); }
 
 private:
-  const CKComponentContextStoreResult _storeResult;
+  const CKComponentContextPreviousState _previousState;
 
   CKComponentContext(const CKComponentContext&) = delete;
   CKComponentContext &operator=(const CKComponentContext&) = delete;

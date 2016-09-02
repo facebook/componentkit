@@ -25,7 +25,7 @@ static NSMutableDictionary *contextDictionary(BOOL create)
   return contextDictionary;
 }
 
-CKComponentContextStoreResult CKComponentContextHelper::store(id key, id object)
+CKComponentContextPreviousState CKComponentContextHelper::store(id key, id object)
 {
   NSMutableDictionary *const c = contextDictionary(YES);
   id originalValue = c[key];
@@ -33,7 +33,7 @@ CKComponentContextStoreResult CKComponentContextHelper::store(id key, id object)
   return {.key = key, .originalValue = originalValue, .newValue = object};
 }
 
-void CKComponentContextHelper::clear(const CKComponentContextStoreResult &storeResult)
+void CKComponentContextHelper::restore(const CKComponentContextPreviousState &storeResult)
 {
   NSMutableDictionary *const c = contextDictionary(YES);
   CKCAssert(c[storeResult.key] == storeResult.newValue, @"Context value for %@ unexpectedly mutated", storeResult.key);
