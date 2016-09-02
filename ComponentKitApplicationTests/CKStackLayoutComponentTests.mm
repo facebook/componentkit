@@ -15,7 +15,9 @@
 #import <ComponentKit/CKRatioLayoutComponent.h>
 #import <ComponentKit/CKStackLayoutComponent.h>
 
-static CKComponentViewConfiguration whiteBg = {[UIView class], {{@selector(setBackgroundColor:), [UIColor whiteColor]}}};
+static CKComponentViewConfiguration kWhiteBackgroundView = {
+  [UIView class], {{@selector(setBackgroundColor:), [UIColor whiteColor]}}
+};
 
 @interface CKStackLayoutComponentTests : CKComponentSnapshotTestCase
 @end
@@ -28,53 +30,31 @@ static CKComponentViewConfiguration whiteBg = {[UIView class], {{@selector(setBa
   self.recordMode = NO;
 }
 
-static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
-{
-  return {c, .flexGrow = flex, .flexShrink = flex};
-}
-
-- (CKStackLayoutComponent *)_layoutWithJustify:(CKStackLayoutJustifyContent)justify
-                                          flex:(NSInteger)flex
-{
-  return [CKStackLayoutComponent
-          newWithView:whiteBg
-          size:{}
-          style:{
-            .direction = CKStackLayoutDirectionHorizontal,
-            .justifyContent = justify,
-          }
-          children:{
-            flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}], flex),
-            flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}], flex),
-            flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}], flex),
-          }];
-}
-
 - (void)testUnderflowBehaviors
 {
   // width 300px; height 0-300px
   static CKSizeRange kSize = {{300, 0}, {300, 300}};
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flex:0], kSize, @"justifyStart");
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentCenter flex:0], kSize, @"justifyCenter");
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentEnd flex:0], kSize, @"justifyEnd");
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flex:1], kSize, @"flex");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flexFactor:0], kSize, @"justifyStart");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentCenter flexFactor:0], kSize, @"justifyCenter");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentEnd flexFactor:0], kSize, @"justifyEnd");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flexFactor:1], kSize, @"flex");
 }
 
 - (void)testOverflowBehaviors
 {
   // width 110px; height 0-300px
   static CKSizeRange kSize = {{110, 0}, {110, 300}};
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flex:0], kSize, @"justifyStart");
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentCenter flex:0], kSize, @"justifyCenter");
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentEnd flex:0], kSize, @"justifyEnd");
-  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flex:1], kSize, @"flex");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flexFactor:0], kSize, @"justifyStart");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentCenter flexFactor:0], kSize, @"justifyCenter");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentEnd flexFactor:0], kSize, @"justifyEnd");
+  CKSnapshotVerifyComponent([self _layoutWithJustify:CKStackLayoutJustifyContentStart flexFactor:1], kSize, @"flex");
 }
 
 - (void)testOverflowBehaviorsWhenAllFlexShrinkComponentsHaveBeenClampedToZeroButViolationStillExists
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{.direction = CKStackLayoutDirectionHorizontal}
    children:{
@@ -102,7 +82,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionHorizontal,
@@ -126,7 +106,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionVertical,
@@ -150,7 +130,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionVertical,
@@ -203,7 +183,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 
   CKStackLayoutComponent *spacingBefore =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionVertical,
@@ -225,7 +205,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 
   CKStackLayoutComponent *spacingAfter =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionVertical,
@@ -247,7 +227,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 
   CKStackLayoutComponent *spacingBalancedOut =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionVertical,
@@ -273,7 +253,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionVertical,
@@ -294,7 +274,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionHorizontal,
@@ -323,7 +303,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionVertical,
@@ -348,7 +328,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionHorizontal,
@@ -371,7 +351,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionVertical,
@@ -391,7 +371,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionVertical,
@@ -411,7 +391,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionVertical,
@@ -431,7 +411,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionVertical,
@@ -453,7 +433,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionVertical,
@@ -475,7 +455,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{}
    children:{}];
@@ -488,7 +468,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{.direction = CKStackLayoutDirectionHorizontal}
    children:{
@@ -522,7 +502,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{.direction = CKStackLayoutDirectionHorizontal}
    children:{
@@ -551,7 +531,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{.direction = CKStackLayoutDirectionHorizontal}
    children:{
@@ -616,7 +596,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionHorizontal
@@ -637,7 +617,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
    }];
   // In this scenario a width of 350 results in a positive violation of 200.
   // Due to each flexible child component specifying a flex grow factor of 1 the violation will be distributed evenly.
-  static CKSizeRange kSize = {{350, 0}, {350, 350}};
+  static CKSizeRange kSize = {{350, 350}, {350, 350}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
@@ -645,10 +625,10 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
-     .direction = CKStackLayoutDirectionHorizontal
+     .direction = CKStackLayoutDirectionVertical
    }
    children:{
      {
@@ -666,8 +646,77 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
    }];
   // In this scenario a width of 350 results in a positive violation of 200.
   // The first and third child components specify a flex grow factor of 1 and will flex by 50.
-  // The second child component specify a flex grow factor of 2 and will flex by 100.
-  static CKSizeRange kSize = {{350, 0}, {350, 350}};
+  // The second child component specifies a flex grow factor of 2 and will flex by 100.
+  static CKSizeRange kSize = {{350, 350}, {350, 350}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
+- (void)testPositiveViolationIsDistributedEquallyAmongGrowingAndShrinkingFlexibleChildComponents
+{
+  CKStackLayoutComponent *c =
+  [CKStackLayoutComponent
+   newWithView:kWhiteBackgroundView
+   size:{}
+   style:{
+     .direction = CKStackLayoutDirectionHorizontal
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}],
+       .flexShrink = 1,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}],
+       .flexGrow = 1,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
+       .flexShrink = 0,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor yellowColor]}}} size:{50,50}],
+       .flexGrow = 1,
+     },
+   }];
+  // In this scenario a width of 400 results in a positive violation of 200.
+  // The first and third child components specify a flex shrink factor of 1 and 0, respectively. They won't flex.
+  // The second and fourth child components specify a flex grow factor of 1 and will flex by 100.
+  static CKSizeRange kSize = {{400, 400}, {400, 400}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
+- (void)testPositiveViolationIsDistributedProportionallyAmongGrowingAndShrinkingFlexibleChildComponents
+{
+  CKStackLayoutComponent *c =
+  [CKStackLayoutComponent
+   newWithView:kWhiteBackgroundView
+   size:{}
+   style:{
+     .direction = CKStackLayoutDirectionVertical
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}],
+       .flexShrink = 1,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}],
+       .flexGrow = 3,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
+       .flexShrink = 0,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor yellowColor]}}} size:{50,50}],
+       .flexGrow = 1,
+     },
+   }];
+  // In this scenario a width of 400 results in a positive violation of 200.
+  // The first and third child components specify a flex shrink factor of 1 and 0, respectively. They won't flex.
+  // The second child component specifies a flex grow factor of 3 and will flex by 150.
+  // The fourth child component specifies a flex grow factor of 1 and will flex by 50.
+  static CKSizeRange kSize = {{400, 400}, {400, 400}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
@@ -675,9 +724,11 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
    size:{}
-   style:{.direction = CKStackLayoutDirectionHorizontal}
+   style:{
+     .direction = CKStackLayoutDirectionHorizontal
+   }
    children:{
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{300,50}],
@@ -694,7 +745,7 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
    }];
   // In this scenario a width of 400 results in a negative violation of 200.
   // Due to each flexible child component specifying a flex shrink factor of 1 the violation will be distributed evenly.
-  static CKSizeRange kSize = {{400, 0}, {400, 400}};
+  static CKSizeRange kSize = {{400, 400}, {400, 400}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
@@ -702,7 +753,106 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
-   newWithView:whiteBg
+   newWithView:kWhiteBackgroundView
+   size:{}
+   style:{
+     .direction = CKStackLayoutDirectionVertical
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,300}],
+       .flexShrink = 2,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,100}],
+       .flexShrink = 1,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,200}],
+       .flexShrink = 2,
+     },
+   }];
+  // In this scenario a width of 400 results in a negative violation of 200.
+  // The first and third child components specify a flex shrink factor of 2 and will flex by 80.
+  // The second child component specifies a flex shrink factor of 1 and will flex by 40.
+  static CKSizeRange kSize = {{400, 400}, {400, 400}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
+- (void)testNegativeViolationIsDistributedEquallyAmongGrowingAndShrinkingFlexibleChildComponents
+{
+  CKStackLayoutComponent *c =
+  [CKStackLayoutComponent
+   newWithView:kWhiteBackgroundView
+   size:{}
+   style:{
+     .direction = CKStackLayoutDirectionHorizontal
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{150,50}],
+       .flexGrow = 1,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{150,50}],
+       .flexShrink = 1,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,50}],
+       .flexGrow = 0,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor yellowColor]}}} size:{150,50}],
+       .flexShrink = 1,
+     },
+   }];
+  // In this scenario a width of 400 results in a negative violation of 200.
+  // The first and third child components specify a flex grow factor of 1 and 0, respectively. They won't flex.
+  // The second and fourth child components specify a flex grow factor of 1 and will flex by 100.
+  static CKSizeRange kSize = {{400, 400}, {400, 400}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
+- (void)testNegativeViolationIsDistributedProportionallyAmongGrowingAndShrinkingFlexibleChildComponents
+{
+  CKStackLayoutComponent *c =
+  [CKStackLayoutComponent
+   newWithView:kWhiteBackgroundView
+   size:{}
+   style:{
+     .direction = CKStackLayoutDirectionVertical
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,150}],
+       .flexGrow = 1,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,100}],
+       .flexShrink = 1,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,150}],
+       .flexGrow = 0,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor yellowColor]}}} size:{50,200}],
+       .flexShrink = 3,
+     },
+   }];
+  // In this scenario a width of 400 results in a negative violation of 200.
+  // The first and third child components specify a flex grow factor of 1 and 0, respectively. They won't flex.
+  // The second child component specifies a flex grow factor of 1 and will flex by 50.
+  // The fourth child component specifies a flex grow factor of 3 and will flex by 150.
+  static CKSizeRange kSize = {{400, 400}, {400, 400}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
+- (void)testNegativeViolationIsDistributedAmongFlexibleChildrenUntilOneShrinksToZeroWidth
+{
+  CKStackLayoutComponent *c =
+  [CKStackLayoutComponent
+   newWithView:kWhiteBackgroundView
    size:{}
    style:{
      .direction = CKStackLayoutDirectionHorizontal
@@ -710,22 +860,44 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flex)
    children:{
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{300,50}],
-       .flexShrink = 2,
-     },
-     {
-       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,50}],
        .flexShrink = 1,
      },
      {
-       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{200,50}],
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,50}],
        .flexShrink = 2,
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{200,50}],
+       .flexShrink = 1,
      },
    }];
   // In this scenario a width of 400 results in a negative violation of 200.
-  // The first and third child components specify a flex shrink factor of 2 and will flex by 80.
-  // The second child component specify a flex shrink factor of 1 and will flex by 40.
-  static CKSizeRange kSize = {{400, 0}, {400, 400}};
+  // The first and third child components specify a flex shrink factor of 1 and will flex by 50.
+  // The second child component specifies a flex shrink factor of 2 and will flex by 100. It will have a width of 0.
+  static CKSizeRange kSize = {{400, 400}, {400, 400}};
   CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
+static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flexFactor)
+{
+  return {c, .flexGrow = flexFactor, .flexShrink = flexFactor};
+}
+
+- (CKStackLayoutComponent *)_layoutWithJustify:(CKStackLayoutJustifyContent)justify flexFactor:(NSInteger)flexFactor
+{
+  return
+  [CKStackLayoutComponent
+   newWithView:kWhiteBackgroundView
+   size:{}
+   style:{
+     .direction = CKStackLayoutDirectionHorizontal,
+     .justifyContent = justify,
+   }
+   children:{
+     flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}], flexFactor),
+     flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}], flexFactor),
+     flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}], flexFactor),
+   }];
 }
 
 @end
