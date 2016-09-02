@@ -35,6 +35,9 @@ CKComponentContextPreviousState CKComponentContextHelper::store(id key, id objec
 
 void CKComponentContextHelper::restore(const CKComponentContextPreviousState &storeResult)
 {
+  // We want to create the context dictionary if it doesn't exist already, because we need to restore the original
+  // value. In practice it should always exist already except for an obscure edge case; see the unit test
+  // testTriplyNestedComponentContextWithNilMiddleValueCorrectlyRestoresOuterValue for an example.
   NSMutableDictionary *const c = contextDictionary(YES);
   CKCAssert(c[storeResult.key] == storeResult.newValue, @"Context value for %@ unexpectedly mutated", storeResult.key);
   c[storeResult.key] = storeResult.originalValue;
