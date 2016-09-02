@@ -16,7 +16,7 @@ static NSString *const kThreadDictionaryKey = @"CKComponentContext";
 
 static NSMutableDictionary *contextDictionary(BOOL create)
 {
-  NSMutableDictionary *threadDictionary = [[NSThread currentThread] threadDictionary];
+  NSMutableDictionary *const threadDictionary = [[NSThread currentThread] threadDictionary];
   NSMutableDictionary *contextDictionary = [threadDictionary objectForKey:kThreadDictionaryKey];
   if (contextDictionary == nil && create) {
     contextDictionary = [NSMutableDictionary dictionary];
@@ -35,7 +35,7 @@ CKComponentContextStoreResult CKComponentContextHelper::store(id key, id object)
 
 void CKComponentContextHelper::clear(const CKComponentContextStoreResult &storeResult)
 {
-  NSMutableDictionary *c = contextDictionary(YES);
+  NSMutableDictionary *const c = contextDictionary(YES);
   CKCAssert(c[storeResult.key] == storeResult.newValue, @"Context value for %@ unexpectedly mutated", storeResult.key);
   c[storeResult.key] = storeResult.originalValue;
   if ([c count] == 0) {
