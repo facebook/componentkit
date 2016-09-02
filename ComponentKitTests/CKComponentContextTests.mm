@@ -40,4 +40,33 @@
   XCTAssertNil(CKComponentContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
 }
 
+- (void)testNestedComponentContextChangesValueAndRestoresItAfterGoingOutOfScope
+{
+  NSObject *outer = [[NSObject alloc] init];
+  CKComponentContext<NSObject> context(outer);
+  {
+    NSObject *inner = [[NSObject alloc] init];
+    CKComponentContext<NSObject> context(inner);
+    XCTAssertTrue(CKComponentContext<NSObject>::get() == inner);
+  }
+  XCTAssertTrue(CKComponentContext<NSObject>::get() == outer);
+}
+
+- (void)testTriplyNestedComponentContextWithNilMiddleValueCorrectlyRestoresOuterValue
+{
+  // This tests an obscure edge case with restoring values for context as we pop scopes.
+  NSObject *outer = [[NSObject alloc] init];
+  CKComponentContext<NSObject> context(outer);
+  {
+    CKComponentContext<NSObject> context(nil);
+    XCTAssertTrue(CKComponentContext<NSObject>::get() == nil);
+    {
+      NSObject *inner = [[NSObject alloc] init];
+      CKComponentContext<NSObject> context(inner);
+      XCTAssertTrue(CKComponentContext<NSObject>::get() == inner);
+    }
+  }
+  XCTAssertTrue(CKComponentContext<NSObject>::get() == outer);
+}
+
 @end

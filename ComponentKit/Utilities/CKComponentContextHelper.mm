@@ -25,19 +25,19 @@ static NSMutableDictionary *contextDictionary(BOOL create)
   return contextDictionary;
 }
 
-void CKComponentContextHelper::store(id key, id object)
+CKComponentContextStoreResult CKComponentContextHelper::store(id key, id object)
 {
-  CKCAssertNotNil(object, @"Cannot store nil objects");
-  NSMutableDictionary *c = contextDictionary(YES);
-  CKCAssertNil(c[key], @"Cannot store %@ = %@ as %@ already exists", key, object, c[key]);
+  NSMutableDictionary *const c = contextDictionary(YES);
+  id originalValue = c[key];
   c[key] = object;
+  return {.key = key, .originalValue = originalValue, .newValue = object};
 }
 
-void CKComponentContextHelper::clear(id key)
+void CKComponentContextHelper::clear(const CKComponentContextStoreResult &storeResult)
 {
-  NSMutableDictionary *c = contextDictionary(NO);
-  CKCAssertNotNil(c[key], @"Who removed %@ behind our back?", key);
-  [c removeObjectForKey:key];
+  NSMutableDictionary *c = contextDictionary(YES);
+  CKCAssert(c[storeResult.key] == storeResult.newValue, @"Context value for %@ unexpectedly mutated", storeResult.key);
+  c[storeResult.key] = storeResult.originalValue;
   if ([c count] == 0) {
     [[[NSThread currentThread] threadDictionary] removeObjectForKey:kThreadDictionaryKey];
   }

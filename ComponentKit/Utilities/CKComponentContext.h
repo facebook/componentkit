@@ -13,42 +13,42 @@
 #import <ComponentKit/CKComponentContextHelper.h>
 
 /**
- Provides a way to implicitly pass parameters to child components.
- @warning Contexts should be used sparingly. Prefer explicitly passing parameters instead.
+ Provides a way to implicitly pass parameters to child components. Items are keyed by class. Example usage:
+
+ {
+   CKComponentContext<CKFoo> c(foo);
+   // Any components created while c is in scope will be able to read its value
+   // by calling CKComponentContext<CKFoo>::get().
+ }
+
+ You may nest contexts with the same class, in which case the innermost context defines the value when fetched:
+
+ {
+   CKComponentContext<CKFoo> c1(foo1);
+   {
+     CKComponentContext<CKFoo> c2(foo2);
+     // CKComponentContext<CKFoo>::get() will return foo2 here
+   }
+   // CKComponentContext<CKFoo>::get() will return foo1 here
+ }
+
+ @warning Context should be used sparingly. Prefer explicitly passing parameters instead.
  */
 template<typename T>
 class CKComponentContext {
 public:
   /**
    Fetches an object from the context dictionary.
-
    You may only call this from inside +new. If you want access to something from context later, store it in an ivar.
-
    @example CKFoo *foo = CKComponentContext<CKFoo>::get();
    */
-  static T *get()
-  {
-    return CKComponentContextHelper::fetch([T class]);
-  }
+  static T *get() { return CKComponentContextHelper::fetch([T class]); }
 
-  /**
-   Puts an object in the context dictionary. Objects are currently keyed by class, meaning you cannot store multiple
-   objects of the same class.
-
-   @example CKComponentContext<CKFoo> fooContext(foo);
-   */
-  CKComponentContext(T *object) : _key([T class])
-  {
-    CKComponentContextHelper::store(_key, object);
-  }
-
-  ~CKComponentContext()
-  {
-    CKComponentContextHelper::clear(_key);
-  }
+  CKComponentContext(T *object) : _storeResult(CKComponentContextHelper::store([T class], object)) {}
+  ~CKComponentContext() { CKComponentContextHelper::clear(_storeResult); }
 
 private:
-  const Class _key;
+  const CKComponentContextStoreResult _storeResult;
 
   CKComponentContext(const CKComponentContext&) = delete;
   CKComponentContext &operator=(const CKComponentContext&) = delete;
