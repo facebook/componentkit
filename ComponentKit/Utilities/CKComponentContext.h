@@ -20,17 +20,6 @@ template<typename T>
 class CKComponentContext {
 public:
   /**
-   Puts an object in the context dictionary. Objects are currently keyed by class, meaning you cannot store multiple
-   objects of the same class.
-
-   @example CKComponentContext<CKFoo> fooContext(foo);
-   */
-  CKComponentContext(T *object) : _key([T class])
-  {
-    CKComponentContextHelper::store(_key, object);
-  }
-
-  /**
    Fetches an object from the context dictionary.
 
    You may only call this from inside +new. If you want access to something from context later, store it in an ivar.
@@ -40,6 +29,17 @@ public:
   static T *get()
   {
     return CKComponentContextHelper::fetch([T class]);
+  }
+
+  /**
+   Puts an object in the context dictionary. Objects are currently keyed by class, meaning you cannot store multiple
+   objects of the same class.
+
+   @example CKComponentContext<CKFoo> fooContext(foo);
+   */
+  CKComponentContext(T *object) : _key([T class])
+  {
+    CKComponentContextHelper::store(_key, object);
   }
 
   ~CKComponentContext()
