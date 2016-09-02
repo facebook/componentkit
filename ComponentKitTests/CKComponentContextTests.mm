@@ -69,4 +69,11 @@
   XCTAssertTrue(CKComponentContext<NSObject>::get() == outer);
 }
 
+- (void)testFetchingAllComponentContextItemsReturnsArray
+{
+  NSObject *o = [[NSObject alloc] init];
+  CKComponentContext<NSObject> context(o);
+  XCTAssertEqualObjects(CKAllComponentContextItems(), @[o]);
+}
+
 @end

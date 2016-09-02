@@ -50,3 +50,8 @@ id CKComponentContextHelper::fetch(id key)
 {
   return contextDictionary(NO)[key];
 }
+
+NSArray *CKAllComponentContextItems()
+{
+  return contextDictionary(NO).allValues;
+}

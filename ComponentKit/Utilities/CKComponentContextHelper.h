@@ -25,3 +25,9 @@ class CKComponentContextHelper {
   template<typename T>
   friend class CKComponentContext;
 };
+
+/**
+ Returns an array with all the items that are currently in CKComponentContext.
+ Avoid using this unless you really know what you're doing.
+ */
+NSArray *CKAllComponentContextItems();
