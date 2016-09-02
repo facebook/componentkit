@@ -43,10 +43,10 @@
 - (void)testNestedComponentContextChangesValueAndRestoresItAfterGoingOutOfScope
 {
   NSObject *outer = [[NSObject alloc] init];
-  CKComponentContext<NSObject> context(outer);
+  CKComponentContext<NSObject> outerContext(outer);
   {
     NSObject *inner = [[NSObject alloc] init];
-    CKComponentContext<NSObject> context(inner);
+    CKComponentContext<NSObject> innerContext(inner);
     XCTAssertTrue(CKComponentContext<NSObject>::get() == inner);
   }
   XCTAssertTrue(CKComponentContext<NSObject>::get() == outer);
@@ -56,13 +56,13 @@
 {
   // This tests an obscure edge case with restoring values for context as we pop scopes.
   NSObject *outer = [[NSObject alloc] init];
-  CKComponentContext<NSObject> context(outer);
+  CKComponentContext<NSObject> outerContext(outer);
   {
-    CKComponentContext<NSObject> context(nil);
+    CKComponentContext<NSObject> middleContext(nil);
     XCTAssertTrue(CKComponentContext<NSObject>::get() == nil);
     {
       NSObject *inner = [[NSObject alloc] init];
-      CKComponentContext<NSObject> context(inner);
+      CKComponentContext<NSObject> innerContext(inner);
       XCTAssertTrue(CKComponentContext<NSObject>::get() == inner);
     }
   }
