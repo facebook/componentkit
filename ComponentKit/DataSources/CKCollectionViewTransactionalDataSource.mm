@@ -65,9 +65,13 @@ CKTransactionalComponentDataSourceListener
                               userInfo:userInfo];
 }
 
-static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppliedChanges *changes, UICollectionView *collectionView)
+static void applyChangesToCollectionView(UICollectionView *collectionView, CKComponentDataSourceAttachController *attachController, CKTransactionalComponentDataSourceState *currentState, CKTransactionalComponentDataSourceAppliedChanges *changes)
 {
-  [collectionView reloadItemsAtIndexPaths:[changes.updatedIndexPaths allObjects]];
+  [changes.updatedIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, BOOL *stop) {
+    if (CKCollectionViewDataSourceCell *cell = (CKCollectionViewDataSourceCell *) [collectionView cellForItemAtIndexPath:indexPath]) {
+      attachToCell(cell, indexPath, currentState, attachController);
+    }
+  }];
   [collectionView deleteItemsAtIndexPaths:[changes.removedIndexPaths allObjects]];
   [collectionView deleteSections:changes.removedSections];
   for (NSIndexPath *from in changes.movedIndexPaths) {
@@ -85,7 +89,7 @@ static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppli
                        byApplyingChanges:(CKTransactionalComponentDataSourceAppliedChanges *)changes
 {
   [_collectionView performBatchUpdates:^{
-    applyChangesToCollectionView(changes, _collectionView);
+    applyChangesToCollectionView(_collectionView, _attachController, [_componentDataSource state], changes);
     // Detach all the component layouts for items being deleted
     [self _detachComponentLayoutForRemovedItemsAtIndexPaths:[changes removedIndexPaths]
                                                     inState:previousState];
@@ -134,11 +138,16 @@ static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppli
 
 static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_data_source.cell";
 
+static void attachToCell(CKCollectionViewDataSourceCell *cell, NSIndexPath *indexPath, CKTransactionalComponentDataSourceState *currentState, CKComponentDataSourceAttachController *attachController)
+{
+  CKTransactionalComponentDataSourceItem *item = [currentState objectAtIndexPath:indexPath];
+  [attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier toView:cell.rootView];
+}
+
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
   CKCollectionViewDataSourceCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:kReuseIdentifier forIndexPath:indexPath];
-  CKTransactionalComponentDataSourceItem *item = [_currentState objectAtIndexPath:indexPath];
-  [_attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier toView:cell.rootView];
+  attachToCell(cell, indexPath, _currentState, _attachController);
   return cell;
 }
 
