@@ -33,4 +33,52 @@ But sometimes, you do need an object with a longer lifecycle. *Component control
 
 There is a only a one-way communication channel between the component and its component controller - you can only pass data off of a component to a component controller. A component has no reference its corresponding component controller. This is by design. 
 
-To pass data from a component to its controller, expose a `@property` on the component in a class extension. The controller can read those properties in `didUpdateComponent`.
+To pass data from a component to its controller, expose a `@property` on the component in a class extension. The controller can initialize itself with the properties in `initWithComponent:`. If these properties will be changing in subsequent state changes (i.e. a new component is being created with different values for these properties), keep them up to date in `didUpdateComponent`.
+
+{% highlight objc %}
+@interface MySongComponent()
+@property (nonatomic, strong, readonly) MySong *song;     // All components for a controller share the same value
+@property (nonatomic, assign, readonly) BOOL isPlaying;   // Different components may have different values (part of component state)
+@end
+@implementation MySongComponent : CKCompositeComponent
++ (instancetype)newWithSong:(MySong *)song
+{
+  CKComponentScope scope(self, song.unique_id);
+  const BOOL isPlaying = [scope.state() boolValue];
+  MySongComponent *const c =
+  [MySongComponent
+   newWithComponent:[SongUIComponent
+                     newWithIsPlaying:isPlaying]];
+  if (c) {
+    c->_song = song;
+    c->_isPlaying = isPlaying;
+  }
+  return c;
+}
+@end
+@interface MySongComponentController : CKComponentController
+@end
+@implementation MySongComponentController
+{
+  MySong *_song;
+}
+- (instancetype)initWithComponent:(MySongComponent *)component
+{
+  if (self = [super initWithComponent:component]) {
+    _song = component.song;
+    [_song.setDelegate:self];
+  }
+  return self;
+}
+- (void)songStateDidChange:(BOOL)isPlaying
+{
+  [self.component updateState:^{
+    return @(isPlaying);
+  } mode:CKUpdateModeAsynchronous];
+}
+- (void)didUpdateComponent:(MySongComponent *)component
+{
+  // This only fires on a state *change* (i.e. not through the initializer path).
+}
+@end
+{% endhighlight %}
