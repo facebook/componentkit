@@ -78,7 +78,7 @@
   NSObject *o = [[NSObject alloc] init];
   CKComponentContext<NSObject> context(o);
   const CKComponentContextContents contents = CKComponentContextHelper::fetchAll();
-  XCTAssertEqualObjects(contents.objects, @[o]);
+  XCTAssertEqualObjects(contents.objects, @{[NSObject class]: o});
 }
 
 - (void)testDynamicLookupIsConsultedOnFetch

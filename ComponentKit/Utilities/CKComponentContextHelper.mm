@@ -75,7 +75,7 @@ CKComponentContextContents CKComponentContextHelper::fetchAll()
     return {};
   }
   return {
-    .objects = v->_dictionary.allValues,
+    .objects = [v->_dictionary copy],
     .dynamicLookup = v->_dynamicLookup,
   };
 }
