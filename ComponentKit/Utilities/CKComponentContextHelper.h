@@ -23,7 +23,7 @@ struct CKComponentContextPreviousState {
 struct CKComponentContextContents {
   /** The items stored in CKComponentContext. */
   NSDictionary<Class, id> *objects;
-  /** The dynamic lookup implementation, if any; used for classes not found in contents. */
+  /** The dynamic lookup implementation, if any; used for classes not found in objects. */
   id<CKComponentContextDynamicLookup> dynamicLookup;
 };
 
