@@ -40,7 +40,7 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
 
 <div class="note-important">
   <p>
-    Component actions will only be sent up the [component responder chain](responder-chain.html) in a mounted component hierarchy. Trying to call <code>CKComponentActionSend</code> from an unmounted component will raise an assertion.
+    Component actions will only be sent up the component responder chain in a mounted component hierarchy. Trying to call <code>CKComponentActionSend</code> from an unmounted component will raise an assertion.
   </p>
 </div>
 
