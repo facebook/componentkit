@@ -100,4 +100,5 @@ void CKComponentContextHelper::restoreDynamicLookup(const CKComponentContextPrev
   CKCAssert(v->_dynamicLookup == setResult.newLookup, @"Lookup unexpectedly mutated");
   v->_dictionary = [NSMutableDictionary dictionaryWithDictionary:setResult.previousContents];
   v->_dynamicLookup = setResult.originalLookup;
+  clearContextValueIfEmpty(v);
 }
