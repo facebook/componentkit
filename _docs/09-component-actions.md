@@ -8,7 +8,7 @@ Often child components must communicate back to their parents. For example, a bu
 
 ### What are Component Actions? 
 
-`CKComponentAction` is just an alias for `SEL` — basically, a method name.
+`CKComponentAction` is just an alias for `SEL` — basically, a method name. This alias is used as a way to document the purpose of the selector, which is to send a component action.
 
 The `CKComponentActionSend` function takes an action, a sender, and an optional opaque context object. It follows the [component responder chain](responder-chain.html) until it finds a component (or component controller) that responds to the given selector, then sends a message with the sender and context as parameters.
 
@@ -17,8 +17,6 @@ The `CKComponentActionSend` function takes an action, a sender, and an optional 
     <code>CKComponentActionSend</code> must be called on the main thread.
   </p>
 </div>
-
-(The only reason for the alias is to document that you expect the `SEL` to be called via `CKComponentActionSend`.)
 
 ### Using Component Actions 
 
@@ -39,6 +37,12 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
 }
 @end
 {% endhighlight %}
+
+<div class="note-important">
+  <p>
+    Component actions will only be sent up the [component responder chain](responder-chain.html) in a mounted component hierarchy. Trying to call <code>CKComponentActionSend</code> from an unmounted component will raise an assertion.
+  </p>
+</div>
 
 ### Why not blocks? 
 
