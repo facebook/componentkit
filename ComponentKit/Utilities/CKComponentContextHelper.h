@@ -39,7 +39,7 @@ struct CKComponentContextHelper {
   static void restore(const CKComponentContextPreviousState &storeResult);
   static id fetch(id key);
   /**
-   Returns an array with all the items that are currently in CKComponentContext.
+   Returns a structure with all the items that are currently in CKComponentContext.
    This could be used to bridge CKComponentContext items to another language or system.
    */
   static CKComponentContextContents fetchAll();
