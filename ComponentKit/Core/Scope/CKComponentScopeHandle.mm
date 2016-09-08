@@ -152,7 +152,10 @@
 
 - (void)resolve
 {
-  if (!_controller) {
+  CKAssertFalse(_resolved);
+  // _acquiredComponent may be nil if a component scope was declared before an early return. In that case, the scope
+  // handle will not be acquired, and we should avoid creating a component controller for the nil component.
+  if (!_controller && _acquiredComponent) {
     CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
     CKAssert(currentScope != nullptr, @"Current scope should never be null here. Thread-local stack is corrupted.");
 

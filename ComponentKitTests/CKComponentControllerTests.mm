@@ -19,6 +19,7 @@
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentViewInterface.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
 
 @interface CKComponentControllerTests : XCTestCase <CKComponentProvider>
 @end
@@ -30,6 +31,7 @@
 @end
 
 @interface CKFooComponent : CKComponent
++ (void)setShouldEarlyReturnNew:(BOOL)shouldEarlyReturnNew;
 - (CKFooComponentController *)controller;
 - (void)updateStateToIncludeNewAttribute;
 @end
@@ -181,10 +183,39 @@
   XCTAssertEqualObjects([fooComponent targetForAction:nil withSender:nil], fooComponent.controller, @"Component's controller should respond to this action");
 }
 
+- (void)testThatEarlyReturnNew_fromFirstComponent_allowsComponentCreation_whenNotEarlyReturning_onStateUpdate
+{
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  UIView *view = [[UIView alloc] init];
+
+  [CKFooComponent setShouldEarlyReturnNew:YES];
+
+  CKComponentLifecycleManagerState state1 = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
+  [clm updateWithState:state1];
+  [clm attachToView:view];
+
+  [CKFooComponent setShouldEarlyReturnNew:NO];
+
+  CKComponentLifecycleManagerState state2 = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
+  [clm updateWithState:state2];
+  CKFooComponent *fooComponent2 = (CKFooComponent *)state2.layout.component;
+
+  XCTAssertTrue([fooComponent2.controller isKindOfClass:[CKFooComponentController class]],
+                @"Expected controller %@ to exist and be of type CKFooComponentController",
+                fooComponent2.controller);
+}
+
 @end
 
 
 @implementation CKFooComponent
+
+static BOOL _shouldEarlyReturnNew = NO;
+
++ (void)setShouldEarlyReturnNew:(BOOL)shouldEarlyReturnNew
+{
+  _shouldEarlyReturnNew = shouldEarlyReturnNew;
+}
 
 + (id)initialState
 {
@@ -194,6 +225,9 @@
 + (instancetype)new
 {
   CKComponentScope scope(self); // components with controllers must have a scope
+  if (_shouldEarlyReturnNew) {
+    return nil;
+  }
   CKViewComponentAttributeValueMap attrs;
   if ([scope.state() boolValue]) {
     attrs.insert({@selector(setBackgroundColor:), [UIColor redColor]});
