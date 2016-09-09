@@ -671,10 +671,11 @@
 		D0B47DC01CBDAD1600BB33CE /* ReferenceImages_IOS8_64 in Resources */ = {isa = PBXBuildFile; fileRef = D0B47DBC1CBDAD1600BB33CE /* ReferenceImages_IOS8_64 */; };
 		D0B47DC11CBDAD1600BB33CE /* ReferenceImages_IOS8.2 in Resources */ = {isa = PBXBuildFile; fileRef = D0B47DBD1CBDAD1600BB33CE /* ReferenceImages_IOS8.2 */; };
 		D0B47DC21CBDAD1600BB33CE /* ReferenceImages_IOS8.2_64 in Resources */ = {isa = PBXBuildFile; fileRef = D0B47DBE1CBDAD1600BB33CE /* ReferenceImages_IOS8.2_64 */; };
-		EB14A3411D8267DF0004BECF /* CKImageComponentAutoSized.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKImageComponentAutoSized.h */; };
-		EB14A3421D8267DF0004BECF /* CKImageComponentAutoSized.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKImageComponentAutoSized.h */; };
+		EB14A3411D8267DF0004BECF /* CKImageComponentAutoSized.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKImageComponentAutoSized.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB14A3421D8267DF0004BECF /* CKImageComponentAutoSized.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKImageComponentAutoSized.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB14A3431D8267DF0004BECF /* CKImageComponentAutoSized.mm in Sources */ = {isa = PBXBuildFile; fileRef = EB14A3401D8267DF0004BECF /* CKImageComponentAutoSized.mm */; };
 		EB14A3441D8267DF0004BECF /* CKImageComponentAutoSized.mm in Sources */ = {isa = PBXBuildFile; fileRef = EB14A3401D8267DF0004BECF /* CKImageComponentAutoSized.mm */; };
+		EB14A3501D8268580004BECF /* CKImageComponentTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = EB14A34F1D8268580004BECF /* CKImageComponentTests.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1175,6 +1176,7 @@
 		D0B47DBE1CBDAD1600BB33CE /* ReferenceImages_IOS8.2_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS8.2_64; sourceTree = "<group>"; };
 		EB14A33F1D8267DF0004BECF /* CKImageComponentAutoSized.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKImageComponentAutoSized.h; sourceTree = "<group>"; };
 		EB14A3401D8267DF0004BECF /* CKImageComponentAutoSized.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKImageComponentAutoSized.mm; sourceTree = "<group>"; };
+		EB14A34F1D8268580004BECF /* CKImageComponentTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKImageComponentTests.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1370,6 +1372,7 @@
 				B342DC971AC23EE800ACAC53 /* CKCenterLayoutComponentsTests.mm */,
 				A241C6A61AFD0A6800D4F661 /* CKComponentActionAttributeTests.mm */,
 				B342DC4B1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm */,
+				EB14A34F1D8268580004BECF /* CKImageComponentTests.mm */,
 				B342DC981AC23EE800ACAC53 /* CKInsetComponentTests.mm */,
 				B342DC991AC23EE800ACAC53 /* CKNetworkImageComponentTests.mm */,
 				B342DC9A1AC23EE800ACAC53 /* CKOverlayLayoutComponentTests.mm */,
@@ -2871,6 +2874,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0B47D9A1CBDA97400BB33CE /* CKComponentSnapshotTestCase.mm in Sources */,
+				EB14A3501D8268580004BECF /* CKImageComponentTests.mm in Sources */,
 				B342DCA21AC23EE800ACAC53 /* CKOverlayLayoutComponentTests.mm in Sources */,
 				B342DCA31AC23EE800ACAC53 /* CKRatioLayoutComponentTests.mm in Sources */,
 				B342DCA11AC23EE800ACAC53 /* CKNetworkImageComponentTests.mm in Sources */,
