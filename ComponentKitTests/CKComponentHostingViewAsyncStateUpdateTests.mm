@@ -10,7 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CKTestRunLoopRunning.h"
+#import <ComponentKitTestLib/CKTestRunLoopRunning.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>

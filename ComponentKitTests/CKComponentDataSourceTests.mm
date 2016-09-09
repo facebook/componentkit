@@ -17,7 +17,7 @@
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/ComponentUtilities.h>
 
-#import "CKTestRunLoopRunning.h"
+#import <ComponentKitTestLib/CKTestRunLoopRunning.h>
 #import "CKComponentDataSourceTestDelegate.h"
 #import "CKComponentLifecycleManagerAsynchronousUpdateHandler.h"
 

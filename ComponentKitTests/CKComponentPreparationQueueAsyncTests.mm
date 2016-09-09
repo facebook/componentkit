@@ -13,7 +13,7 @@
 #import <ComponentKit/CKComponentPreparationQueue.h>
 #import <ComponentKit/CKComponentPreparationQueueInternal.h>
 
-#import "CKTestRunLoopRunning.h"
+#import <ComponentKitTestLib/CKTestRunLoopRunning.h>
 
 using namespace CK::ArrayController;
 
