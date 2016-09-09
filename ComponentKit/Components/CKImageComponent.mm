@@ -10,19 +10,7 @@
 
 #import "CKImageComponent.h"
 
-#import "CKComponentSize.h"
-#import "CKComponentSubclass.h"
-
 @implementation CKImageComponent
-
-+ (instancetype)newWithImage:(UIImage *)image
-                  attributes:(const CKViewComponentAttributeValueMap &)attributes
-{
-  return [self
-          newWithImage:image
-          attributes:attributes
-          size:CKComponentSize::fromCGSize(image.size)];
-}
 
 + (instancetype)newWithImage:(UIImage *)image
                   attributes:(const CKViewComponentAttributeValueMap &)attributes

@@ -8,20 +8,21 @@
  *
  */
 
-#import <ComponentKit/CKComponent.h>
+#import "CKImageComponentAutoSized.h"
 
-struct CKComponentSize;
+#import "CKComponentSize.h"
+#import "CKImageComponent.h"
 
-/**
- A component that displays an image using UIImageView.
- */
-@interface CKImageComponent : CKComponent
+@implementation CKImageComponentAutoSized
 
-/**
- Uses a static layout with the given image size and applies additional attributes.
- */
 + (instancetype)newWithImage:(UIImage *)image
                   attributes:(const CKViewComponentAttributeValueMap &)attributes
-                        size:(const CKComponentSize &)size;
+{
+  return [super newWithComponent:
+          [CKImageComponent
+           newWithImage:image
+           attributes:attributes
+           size:CKComponentSize::fromCGSize(image.size)]];
+}
 
 @end

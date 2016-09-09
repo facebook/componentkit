@@ -671,6 +671,10 @@
 		D0B47DC01CBDAD1600BB33CE /* ReferenceImages_IOS8_64 in Resources */ = {isa = PBXBuildFile; fileRef = D0B47DBC1CBDAD1600BB33CE /* ReferenceImages_IOS8_64 */; };
 		D0B47DC11CBDAD1600BB33CE /* ReferenceImages_IOS8.2 in Resources */ = {isa = PBXBuildFile; fileRef = D0B47DBD1CBDAD1600BB33CE /* ReferenceImages_IOS8.2 */; };
 		D0B47DC21CBDAD1600BB33CE /* ReferenceImages_IOS8.2_64 in Resources */ = {isa = PBXBuildFile; fileRef = D0B47DBE1CBDAD1600BB33CE /* ReferenceImages_IOS8.2_64 */; };
+		EB14A3411D8267DF0004BECF /* CKImageComponentAutoSized.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKImageComponentAutoSized.h */; };
+		EB14A3421D8267DF0004BECF /* CKImageComponentAutoSized.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKImageComponentAutoSized.h */; };
+		EB14A3431D8267DF0004BECF /* CKImageComponentAutoSized.mm in Sources */ = {isa = PBXBuildFile; fileRef = EB14A3401D8267DF0004BECF /* CKImageComponentAutoSized.mm */; };
+		EB14A3441D8267DF0004BECF /* CKImageComponentAutoSized.mm in Sources */ = {isa = PBXBuildFile; fileRef = EB14A3401D8267DF0004BECF /* CKImageComponentAutoSized.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1169,6 +1173,8 @@
 		D0B47DBC1CBDAD1600BB33CE /* ReferenceImages_IOS8_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS8_64; sourceTree = "<group>"; };
 		D0B47DBD1CBDAD1600BB33CE /* ReferenceImages_IOS8.2 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS8.2; sourceTree = "<group>"; };
 		D0B47DBE1CBDAD1600BB33CE /* ReferenceImages_IOS8.2_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS8.2_64; sourceTree = "<group>"; };
+		EB14A33F1D8267DF0004BECF /* CKImageComponentAutoSized.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKImageComponentAutoSized.h; sourceTree = "<group>"; };
+		EB14A3401D8267DF0004BECF /* CKImageComponentAutoSized.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKImageComponentAutoSized.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1503,6 +1509,8 @@
 				D0B47ACE1CBD926700BB33CE /* CKButtonComponent.mm */,
 				D0B47ACF1CBD926700BB33CE /* CKImageComponent.h */,
 				D0B47AD01CBD926700BB33CE /* CKImageComponent.mm */,
+				EB14A33F1D8267DF0004BECF /* CKImageComponentAutoSized.h */,
+				EB14A3401D8267DF0004BECF /* CKImageComponentAutoSized.mm */,
 				D0B47AD11CBD926700BB33CE /* CKNetworkImageComponent.h */,
 				D0B47AD21CBD926700BB33CE /* CKNetworkImageComponent.mm */,
 				D0B47AD31CBD926700BB33CE /* CKNetworkImageDownloading.h */,
@@ -1963,6 +1971,7 @@
 				03B8B4F11D2A346F00EDFF59 /* CKStackLayoutComponent.h in Headers */,
 				03B8B4F21D2A346F00EDFF59 /* CKTransactionalComponentDataSourceConfiguration.h in Headers */,
 				03B8B4F31D2A346F00EDFF59 /* CKComponentHostingViewDelegate.h in Headers */,
+				EB14A3421D8267DF0004BECF /* CKImageComponentAutoSized.h in Headers */,
 				03B8B4F41D2A346F00EDFF59 /* CKTextComponentView.h in Headers */,
 				03B8B4F51D2A346F00EDFF59 /* CKTransactionalComponentDataSourceReloadModification.h in Headers */,
 				03B8B4F61D2A346F00EDFF59 /* CKComponentAnnouncerBaseInternal.h in Headers */,
@@ -2144,6 +2153,7 @@
 				D0B47D491CBD948E00BB33CE /* CKTransactionalComponentDataSourceStateInternal.h in Headers */,
 				D0B47D581CBD948E00BB33CE /* CKComponentGestureActionsInternal.h in Headers */,
 				D0B47D341CBD948E00BB33CE /* CKOverlayLayoutComponent.h in Headers */,
+				EB14A3411D8267DF0004BECF /* CKImageComponentAutoSized.h in Headers */,
 				D0B47D571CBD948E00BB33CE /* CKComponentGestureActions.h in Headers */,
 				D0B47D5D1CBD948E00BB33CE /* CKOptimisticViewMutations.h in Headers */,
 				D0B47D521CBD948E00BB33CE /* CKComponentAction.h in Headers */,
@@ -2679,6 +2689,7 @@
 				03B8B4991D2A346F00EDFF59 /* CKInsetComponent.mm in Sources */,
 				03B8B49A1D2A346F00EDFF59 /* CKOverlayLayoutComponent.mm in Sources */,
 				03B8B49B1D2A346F00EDFF59 /* CKRatioLayoutComponent.mm in Sources */,
+				EB14A3441D8267DF0004BECF /* CKImageComponentAutoSized.mm in Sources */,
 				03B8B49C1D2A346F00EDFF59 /* CKStackLayoutComponent.mm in Sources */,
 				03B8B49D1D2A346F00EDFF59 /* CKStackPositionedLayout.mm in Sources */,
 				03B8B49E1D2A346F00EDFF59 /* CKStackUnpositionedLayout.mm in Sources */,
@@ -2946,6 +2957,7 @@
 				D0B47CB31CBD943400BB33CE /* CKRatioLayoutComponent.mm in Sources */,
 				D0B47CB41CBD943400BB33CE /* CKStackLayoutComponent.mm in Sources */,
 				D0B47CB51CBD943400BB33CE /* CKStackPositionedLayout.mm in Sources */,
+				EB14A3431D8267DF0004BECF /* CKImageComponentAutoSized.mm in Sources */,
 				D0B47CB61CBD943400BB33CE /* CKStackUnpositionedLayout.mm in Sources */,
 				D0B47CB71CBD943400BB33CE /* CKStaticLayoutComponent.mm in Sources */,
 				D0B47CB81CBD943400BB33CE /* CKStatefulViewComponent.mm in Sources */,
