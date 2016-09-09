@@ -16,7 +16,7 @@
 
 #import <ComponentKitTestLib/CKComponentTestRootScope.h>
 
-#import "CKTestRunLoopRunning.h"
+#import <ComponentKitTestLib/CKTestRunLoopRunning.h>
 
 #import "CKTestStatefulViewComponent.h"
 

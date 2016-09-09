@@ -11,7 +11,7 @@
 #import <XCTest/XCTest.h>
 
 #import "CKComponentHostingViewTestModel.h"
-#import "CKTestRunLoopRunning.h"
+#import <ComponentKitTestLib/CKTestRunLoopRunning.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>

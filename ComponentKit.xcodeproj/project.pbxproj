@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		035FD04C1D83218100D28351 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = 035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */; };
+		035FD04E1D83219000D28351 /* CKComponentTestRootScope.h in Headers */ = {isa = PBXBuildFile; fileRef = 035FD0491D83218100D28351 /* CKComponentTestRootScope.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		035FD04F1D83219100D28351 /* CKTestRunLoopRunning.h in Headers */ = {isa = PBXBuildFile; fileRef = 035FD04A1D83218100D28351 /* CKTestRunLoopRunning.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		035FD0501D8321FF00D28351 /* libComponentKitTestLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 035FD0361D83212400D28351 /* libComponentKitTestLib.a */; };
+		035FD05E1D83227500D28351 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = 035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */; };
+		035FD0601D83228200D28351 /* CKComponentTestRootScope.h in Headers */ = {isa = PBXBuildFile; fileRef = 035FD0491D83218100D28351 /* CKComponentTestRootScope.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		035FD0611D83228400D28351 /* CKTestRunLoopRunning.h in Headers */ = {isa = PBXBuildFile; fileRef = 035FD04A1D83218100D28351 /* CKTestRunLoopRunning.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		035FD0621D83229300D28351 /* libComponentKitTestLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 035FD0551D83223600D28351 /* libComponentKitTestLib.a */; };
 		03A98A6B1D2B2BFD00C5BAC2 /* CKTestActionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = A273801E1AFD144100E6F222 /* CKTestActionComponent.mm */; };
 		03A98A6E1D2B2BFD00C5BAC2 /* CKTestActionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = A273801C1AFD144100E6F222 /* CKTestActionComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B46D1D2A346F00EDFF59 /* CKComponentAccessibility.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AC51CBD926700BB33CE /* CKComponentAccessibility.mm */; };
@@ -299,7 +307,6 @@
 		03F1ABF01D2B2A9B00867584 /* CKComponentViewReuseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */; };
 		03F1ABF11D2B2A9B00867584 /* CKTransactionalComponentDataSourceReloadModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27436F61AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm */; };
 		03F1ABF21D2B2A9B00867584 /* CKComponentDataSourceTestDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC501AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm */; };
-		03F1ABF31D2B2A9B00867584 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC651AC23EA900ACAC53 /* CKTestRunLoopRunning.mm */; };
 		03F1ABF41D2B2A9B00867584 /* CKComponentGestureActionsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC531AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm */; };
 		03F1ABF51D2B2A9B00867584 /* CKStatefulViewReusePoolTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE21B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm */; };
 		03F1ABF61D2B2A9B00867584 /* CKSectionedArrayControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC631AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm */; };
@@ -373,7 +380,6 @@
 		B342DC801AC23EA900ACAC53 /* CKDimensionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */; };
 		B342DC811AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */; };
 		B342DC821AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC631AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm */; };
-		B342DC831AC23EA900ACAC53 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC651AC23EA900ACAC53 /* CKTestRunLoopRunning.mm */; };
 		B342DC851AC23EA900ACAC53 /* CKComponentScopeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC681AC23EA900ACAC53 /* CKComponentScopeTests.mm */; };
 		B342DC861AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC691AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm */; };
 		B342DC9E1AC23EE800ACAC53 /* CKButtonComponentTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC961AC23EE800ACAC53 /* CKButtonComponentTests.mm */; };
@@ -674,6 +680,41 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		035FD0631D83235200D28351 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 035FD0541D83223600D28351;
+			remoteInfo = ComponentKitTestLibAppleTV;
+		};
+		035FD0651D83236600D28351 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 03A98A691D2B2BFD00C5BAC2;
+			remoteInfo = ComponentKitTestHelpersAppleTV;
+		};
+		035FD06B1D83238100D28351 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A27380191AFD144100E6F222;
+			remoteInfo = ComponentKitTestHelpers;
+		};
+		035FD06D1D83238100D28351 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 035FD0351D83212400D28351;
+			remoteInfo = ComponentKitTestLib;
+		};
+		035FD06F1D83238A00D28351 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A27380191AFD144100E6F222;
+			remoteInfo = ComponentKitTestHelpers;
+		};
 		B342DC941AC23ECB00ACAC53 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
@@ -768,6 +809,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		035FD0341D83212400D28351 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		035FD0531D83223600D28351 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		03F1AC011D2B2A9B00867584 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -805,6 +864,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		035FD0361D83212400D28351 /* libComponentKitTestLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComponentKitTestLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		035FD0491D83218100D28351 /* CKComponentTestRootScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentTestRootScope.h; sourceTree = "<group>"; };
+		035FD04A1D83218100D28351 /* CKTestRunLoopRunning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTestRunLoopRunning.h; sourceTree = "<group>"; };
+		035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTestRunLoopRunning.mm; sourceTree = "<group>"; };
+		035FD0551D83223600D28351 /* libComponentKitTestLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComponentKitTestLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		03A98A721D2B2BFD00C5BAC2 /* libComponentKitTestHelpers.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComponentKitTestHelpers.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		03B8B56A1D2A346F00EDFF59 /* ComponentKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ComponentKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		03F1AC061D2B2A9B00867584 /* ComponentKitTestsAppleTV.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComponentKitTestsAppleTV.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -869,8 +933,6 @@
 		B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDimensionTests.mm; sourceTree = "<group>"; };
 		B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKOptimisticViewMutationsTests.mm; sourceTree = "<group>"; };
 		B342DC631AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSectionedArrayControllerTests.mm; sourceTree = "<group>"; };
-		B342DC641AC23EA900ACAC53 /* CKTestRunLoopRunning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTestRunLoopRunning.h; sourceTree = "<group>"; };
-		B342DC651AC23EA900ACAC53 /* CKTestRunLoopRunning.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTestRunLoopRunning.mm; sourceTree = "<group>"; };
 		B342DC661AC23EA900ACAC53 /* ComponentKitTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ComponentKitTests-Info.plist"; sourceTree = "<group>"; };
 		B342DC681AC23EA900ACAC53 /* CKComponentScopeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentScopeTests.mm; sourceTree = "<group>"; };
 		B342DC691AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStateScopeComponentBuilderTests.mm; sourceTree = "<group>"; };
@@ -1172,6 +1234,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		035FD0331D83212400D28351 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		035FD0521D83223600D28351 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		03A98A6C1D2B2BFD00C5BAC2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1196,6 +1272,7 @@
 				03F1ABFD1D2B2A9B00867584 /* UIKit.framework in Frameworks */,
 				03F1ABFE1D2B2A9B00867584 /* ComponentKit.framework in Frameworks */,
 				03F1ABFF1D2B2A9B00867584 /* libComponentKitTestHelpers.a in Frameworks */,
+				035FD0621D83229300D28351 /* libComponentKitTestLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1216,6 +1293,7 @@
 				D0B47D881CBDA24900BB33CE /* UIKit.framework in Frameworks */,
 				D0B47D7E1CBD9E1400BB33CE /* ComponentKit.framework in Frameworks */,
 				A27380321AFD160600E6F222 /* libComponentKitTestHelpers.a in Frameworks */,
+				035FD0501D8321FF00D28351 /* libComponentKitTestLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1260,6 +1338,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		035FD0371D83212400D28351 /* ComponentKitTestLib */ = {
+			isa = PBXGroup;
+			children = (
+				035FD0491D83218100D28351 /* CKComponentTestRootScope.h */,
+				035FD04A1D83218100D28351 /* CKTestRunLoopRunning.h */,
+				035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */,
+			);
+			path = ComponentKitTestLib;
+			sourceTree = "<group>";
+		};
 		18644AE01B3CB8E60028AF87 /* StatefulViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -1337,8 +1425,6 @@
 				B342DC631AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm */,
 				A22FE3041AF2CF0C00EC30B8 /* CKStateExposingComponent.h */,
 				A22FE3051AF2CF0C00EC30B8 /* CKStateExposingComponent.mm */,
-				B342DC641AC23EA900ACAC53 /* CKTestRunLoopRunning.h */,
-				B342DC651AC23EA900ACAC53 /* CKTestRunLoopRunning.mm */,
 				B342DC661AC23EA900ACAC53 /* ComponentKitTests-Info.plist */,
 				B342DC671AC23EA900ACAC53 /* Scope */,
 				A27436F51AE94FCA00832359 /* TransactionalDataSource */,
@@ -1410,6 +1496,7 @@
 				B342DCAB1AC23F2A00ACAC53 /* ComponentTextKitApplicationTests */,
 				A273801B1AFD144100E6F222 /* ComponentKitTestHelpers */,
 				D0B47D961CBDA97400BB33CE /* ComponentSnapshotTestCase */,
+				035FD0371D83212400D28351 /* ComponentKitTestLib */,
 				D0B47D811CBD9E7C00BB33CE /* Frameworks */,
 				B3EECEC31AC2366600BFC5DA /* Products */,
 			);
@@ -1427,6 +1514,8 @@
 				03B8B56A1D2A346F00EDFF59 /* ComponentKit.framework */,
 				03F1AC061D2B2A9B00867584 /* ComponentKitTestsAppleTV.xctest */,
 				03A98A721D2B2BFD00C5BAC2 /* libComponentKitTestHelpers.a */,
+				035FD0361D83212400D28351 /* libComponentKitTestLib.a */,
+				035FD0551D83223600D28351 /* libComponentKitTestLib.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1914,6 +2003,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		035FD04D1D83218600D28351 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				035FD04E1D83219000D28351 /* CKComponentTestRootScope.h in Headers */,
+				035FD04F1D83219100D28351 /* CKTestRunLoopRunning.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		035FD05F1D83227D00D28351 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				035FD0601D83228200D28351 /* CKComponentTestRootScope.h in Headers */,
+				035FD0611D83228400D28351 /* CKTestRunLoopRunning.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		03A98A6D1D2B2BFD00C5BAC2 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -2250,6 +2357,42 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		035FD0351D83212400D28351 /* ComponentKitTestLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 035FD0481D83212400D28351 /* Build configuration list for PBXNativeTarget "ComponentKitTestLib" */;
+			buildPhases = (
+				035FD0321D83212400D28351 /* Sources */,
+				035FD0331D83212400D28351 /* Frameworks */,
+				035FD0341D83212400D28351 /* CopyFiles */,
+				035FD04D1D83218600D28351 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ComponentKitTestLib;
+			productName = ComponentKitTestLib;
+			productReference = 035FD0361D83212400D28351 /* libComponentKitTestLib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		035FD0541D83223600D28351 /* ComponentKitTestLibAppleTV */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 035FD05B1D83223700D28351 /* Build configuration list for PBXNativeTarget "ComponentKitTestLibAppleTV" */;
+			buildPhases = (
+				035FD0511D83223600D28351 /* Sources */,
+				035FD0521D83223600D28351 /* Frameworks */,
+				035FD0531D83223600D28351 /* CopyFiles */,
+				035FD05F1D83227D00D28351 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ComponentKitTestLibAppleTV;
+			productName = ComponentKitTestLibAppleTV;
+			productReference = 035FD0551D83223600D28351 /* libComponentKitTestLib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		03A98A691D2B2BFD00C5BAC2 /* ComponentKitTestHelpersAppleTV */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 03A98A6F1D2B2BFD00C5BAC2 /* Build configuration list for PBXNativeTarget "ComponentKitTestHelpersAppleTV" */;
@@ -2297,6 +2440,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				035FD0661D83236600D28351 /* PBXTargetDependency */,
+				035FD0641D83235200D28351 /* PBXTargetDependency */,
 			);
 			name = ComponentKitTestsAppleTV;
 			productName = ComponentKitTests;
@@ -2332,6 +2477,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				035FD06C1D83238100D28351 /* PBXTargetDependency */,
+				035FD06E1D83238100D28351 /* PBXTargetDependency */,
 			);
 			name = ComponentKitTests;
 			productName = ComponentKitTests;
@@ -2349,6 +2496,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				035FD0701D83238A00D28351 /* PBXTargetDependency */,
 				B342DC951AC23ECB00ACAC53 /* PBXTargetDependency */,
 			);
 			name = ComponentKitApplicationTests;
@@ -2419,6 +2567,12 @@
 			attributes = {
 				LastUpgradeCheck = 0700;
 				TargetAttributes = {
+					035FD0351D83212400D28351 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					035FD0541D83223600D28351 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
 					A27380191AFD144100E6F222 = {
 						CreatedOnToolsVersion = 6.3.1;
 					};
@@ -2470,9 +2624,11 @@
 				B342DC8A1AC23EC300ACAC53 /* ComponentKitApplicationTests */,
 				B342DCA91AC23F2A00ACAC53 /* ComponentTextKitApplicationTests */,
 				A27380191AFD144100E6F222 /* ComponentKitTestHelpers */,
+				035FD0351D83212400D28351 /* ComponentKitTestLib */,
 				03B8B46B1D2A346F00EDFF59 /* ComponentKitAppleTV */,
 				03F1ABC51D2B2A9B00867584 /* ComponentKitTestsAppleTV */,
 				03A98A691D2B2BFD00C5BAC2 /* ComponentKitTestHelpersAppleTV */,
+				035FD0541D83223600D28351 /* ComponentKitTestLibAppleTV */,
 			);
 		};
 /* End PBXProject section */
@@ -2617,6 +2773,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		035FD0321D83212400D28351 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				035FD04C1D83218100D28351 /* CKTestRunLoopRunning.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		035FD0511D83223600D28351 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				035FD05E1D83227500D28351 /* CKTestRunLoopRunning.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		03A98A6A1D2B2BFD00C5BAC2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2780,7 +2952,6 @@
 				03F1ABF01D2B2A9B00867584 /* CKComponentViewReuseTests.mm in Sources */,
 				03F1ABF11D2B2A9B00867584 /* CKTransactionalComponentDataSourceReloadModificationTests.mm in Sources */,
 				03F1ABF21D2B2A9B00867584 /* CKComponentDataSourceTestDelegate.mm in Sources */,
-				03F1ABF31D2B2A9B00867584 /* CKTestRunLoopRunning.mm in Sources */,
 				03F1ABF41D2B2A9B00867584 /* CKComponentGestureActionsTests.mm in Sources */,
 				03F1ABF51D2B2A9B00867584 /* CKStatefulViewReusePoolTests.mm in Sources */,
 				03F1ABF61D2B2A9B00867584 /* CKSectionedArrayControllerTests.mm in Sources */,
@@ -2846,7 +3017,6 @@
 				B797C04D1D49F794006461CC /* CKArrayControllerChangesetVerificationTests.mm in Sources */,
 				A27436F71AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm in Sources */,
 				B342DC701AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm in Sources */,
-				B342DC831AC23EA900ACAC53 /* CKTestRunLoopRunning.mm in Sources */,
 				B342DC731AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm in Sources */,
 				18644AE61B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm in Sources */,
 				B342DC821AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm in Sources */,
@@ -3002,6 +3172,31 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		035FD0641D83235200D28351 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 035FD0541D83223600D28351 /* ComponentKitTestLibAppleTV */;
+			targetProxy = 035FD0631D83235200D28351 /* PBXContainerItemProxy */;
+		};
+		035FD0661D83236600D28351 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 03A98A691D2B2BFD00C5BAC2 /* ComponentKitTestHelpersAppleTV */;
+			targetProxy = 035FD0651D83236600D28351 /* PBXContainerItemProxy */;
+		};
+		035FD06C1D83238100D28351 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A27380191AFD144100E6F222 /* ComponentKitTestHelpers */;
+			targetProxy = 035FD06B1D83238100D28351 /* PBXContainerItemProxy */;
+		};
+		035FD06E1D83238100D28351 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 035FD0351D83212400D28351 /* ComponentKitTestLib */;
+			targetProxy = 035FD06D1D83238100D28351 /* PBXContainerItemProxy */;
+		};
+		035FD0701D83238A00D28351 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A27380191AFD144100E6F222 /* ComponentKitTestHelpers */;
+			targetProxy = 035FD06F1D83238A00D28351 /* PBXContainerItemProxy */;
+		};
 		B342DC951AC23ECB00ACAC53 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B3EECEC11AC2366600BFC5DA /* ComponentKitApplicationsTestsHost */;
@@ -3020,6 +3215,62 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		035FD03C1D83212400D28351 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		035FD03D1D83212400D28351 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		035FD05C1D83223700D28351 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_NO_COMMON_BLOCKS = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = ComponentKitTestLib;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TVOS_DEPLOYMENT_TARGET = 9.2;
+			};
+			name = Debug;
+		};
+		035FD05D1D83223700D28351 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = ComponentKitTestLib;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TVOS_DEPLOYMENT_TARGET = 9.2;
+			};
+			name = Release;
+		};
 		03A98A701D2B2BFD00C5BAC2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3404,6 +3655,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		035FD0481D83212400D28351 /* Build configuration list for PBXNativeTarget "ComponentKitTestLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				035FD03C1D83212400D28351 /* Debug */,
+				035FD03D1D83212400D28351 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		035FD05B1D83223700D28351 /* Build configuration list for PBXNativeTarget "ComponentKitTestLibAppleTV" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				035FD05C1D83223700D28351 /* Debug */,
+				035FD05D1D83223700D28351 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		03A98A6F1D2B2BFD00C5BAC2 /* Build configuration list for PBXNativeTarget "ComponentKitTestHelpersAppleTV" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
