@@ -12,7 +12,7 @@
 
 #import <ComponentKit/CKComponentSize.h>
 #import <ComponentKit/CKImageComponent.h>
-#import <ComponentKit/CKImageComponentAutoSized.h>
+#import <ComponentKit/CKAutoSizedImageComponent.h>
 
 #pragma mark - Helpers
 
@@ -47,8 +47,8 @@ static UIImage *TestImageWithColorAndSize(UIColor *color, CGSize size)
 
 - (void)testImageComponentWithImageSize
 {
-  CKImageComponentAutoSized *c =
-  [CKImageComponentAutoSized
+  CKAutoSizedImageComponent *c =
+  [CKAutoSizedImageComponent
    newWithImage:TestImageWithColorAndSize([UIColor redColor], CGSizeMake(200, 200))
    attributes:{}];
 

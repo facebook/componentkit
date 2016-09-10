@@ -15,7 +15,7 @@ struct CKComponentSize;
 /**
  A component that displays an image using UIImageView.
  */
-@interface CKImageComponentAutoSized : CKCompositeComponent
+@interface CKAutoSizedImageComponent : CKCompositeComponent
 
 /**
  Uses a static layout with the image's size and apply additional attributes.

@@ -8,12 +8,12 @@
  *
  */
 
-#import "CKImageComponentAutoSized.h"
+#import "CKAutoSizedImageComponent.h"
 
 #import "CKComponentSize.h"
 #import "CKImageComponent.h"
 
-@implementation CKImageComponentAutoSized
+@implementation CKAutoSizedImageComponent
 
 + (instancetype)newWithImage:(UIImage *)image
                   attributes:(const CKViewComponentAttributeValueMap &)attributes
