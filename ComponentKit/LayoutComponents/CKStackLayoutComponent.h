@@ -79,14 +79,14 @@ struct CKStackLayoutComponentChild {
   CGFloat spacingAfter;
   /**
    If the sum of childrens' stack dimensions is less than the minimum size, how much should this component grow?
-   This value represents the "flex grow factor" and determines how much this component should be grow in relation to any
+   This value represents the "flex grow factor" and determines how much this component should grow in relation to any
    other flexible children.
    */
   CGFloat flexGrow;
   /**
    If the sum of childrens' stack dimensions is greater than the maximum size, how much should this component shrink?
-   This value represents the "flex shrink factor" and determines how much this component should be shrink in relation to
-   any other flexible children.
+   This value represents the "flex shrink factor" and determines how much this component should shink in relation to
+   other flexible children.
    */
   CGFloat flexShrink;
   /** Specifies the initial size in the stack dimension for the child. */
