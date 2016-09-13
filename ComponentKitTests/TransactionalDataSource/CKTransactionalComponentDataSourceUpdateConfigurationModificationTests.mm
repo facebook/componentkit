@@ -71,8 +71,7 @@
   CKTransactionalComponentDataSourceConfiguration *newConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[self class]
                                                                              context:@"some updated context"
-                                                                           sizeRange:{{100, 100}, {100, 100}}
-                                                                          workThread:nil];
+                                                                           sizeRange:{{100, 100}, {100, 100}}];
 
   CKTransactionalComponentDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKTransactionalComponentDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
@@ -120,8 +119,7 @@
   CKTransactionalComponentDataSourceConfiguration *newConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKAlternateComponentProvider class]
                                                                              context:[oldConfiguration context]
-                                                                           sizeRange:[oldConfiguration sizeRange]
-                                                                          workThread:nil];
+                                                                           sizeRange:[oldConfiguration sizeRange]];
   CKTransactionalComponentDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKTransactionalComponentDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
   CKTransactionalComponentDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];
@@ -136,8 +134,7 @@
   CKTransactionalComponentDataSourceConfiguration *newConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[oldConfiguration componentProvider]
                                                                              context:@"some new context"
-                                                                           sizeRange:[oldConfiguration sizeRange]
-                                                                          workThread:nil];
+                                                                           sizeRange:[oldConfiguration sizeRange]];
   CKTransactionalComponentDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKTransactionalComponentDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
   CKTransactionalComponentDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];
@@ -153,8 +150,7 @@
   CKTransactionalComponentDataSourceConfiguration *newConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[oldConfiguration componentProvider]
                                                                              context:[oldConfiguration context]
-                                                                           sizeRange:{{50, 50}, {50, 50}}
-                                                                          workThread:nil];
+                                                                           sizeRange:{{50, 50}, {50, 50}}];
   CKTransactionalComponentDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKTransactionalComponentDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
   CKTransactionalComponentDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];

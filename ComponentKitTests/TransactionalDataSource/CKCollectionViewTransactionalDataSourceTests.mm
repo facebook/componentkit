@@ -37,8 +37,7 @@
   CKTransactionalComponentDataSourceConfiguration *config = [[CKTransactionalComponentDataSourceConfiguration alloc]
                                                              initWithComponentProvider:nil
                                                              context:nil
-                                                             sizeRange:CKSizeRange()
-                                                             workThread:nil];
+                                                             sizeRange:CKSizeRange()];
 
   self.dataSource = [[CKCollectionViewTransactionalDataSource alloc]
                      initWithCollectionView:self.mockCollectionView

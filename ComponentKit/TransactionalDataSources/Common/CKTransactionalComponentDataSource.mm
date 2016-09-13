@@ -16,6 +16,7 @@
 #import "CKTransactionalComponentDataSourceChange.h"
 #import "CKTransactionalComponentDataSourceChangesetModification.h"
 #import "CKTransactionalComponentDataSourceConfiguration.h"
+#import "CKTransactionalComponentDataSourceConfigurationInternal.h"
 #import "CKTransactionalComponentDataSourceListenerAnnouncer.h"
 #import "CKTransactionalComponentDataSourceReloadModification.h"
 #import "CKTransactionalComponentDataSourceStateInternal.h"
@@ -42,6 +43,8 @@
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
 
   NSMutableArray *_pendingAsynchronousModifications;
+
+  NSThread *_workThreadOverride;
 }
 @end
 
@@ -55,6 +58,7 @@
     _announcer = [[CKTransactionalComponentDataSourceListenerAnnouncer alloc] init];
     _workQueue = dispatch_queue_create("org.componentkit.CKTransactionalComponentDataSource", DISPATCH_QUEUE_SERIAL);
     _pendingAsynchronousModifications = [NSMutableArray array];
+    _workThreadOverride = configuration.workThreadOverride;
   }
   return self;
 }
@@ -171,13 +175,12 @@
 - (void)_startFirstAsynchronousModification
 {
   CKAssertMainThread();
-  NSThread *currentWorkThread = _state.configuration.workThread;
   CKTransactionalComponentDataSourceModificationPair *modificationPair =
   [[CKTransactionalComponentDataSourceModificationPair alloc] initWithModification:_pendingAsynchronousModifications[0]
                                                                              state:_state];
-  if (currentWorkThread) {
+  if (_workThreadOverride) {
     [self performSelector:@selector(_applyModificationPair:)
-                 onThread:currentWorkThread
+                 onThread:_workThreadOverride
                withObject:modificationPair
             waitUntilDone:NO];
   } else {

@@ -29,13 +29,11 @@
   CKTransactionalComponentDataSourceConfiguration *firstConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceConfigurationTests class]
                                                                              context:@"context"
-                                                                           sizeRange:CKSizeRange()
-                                                                          workThread:nil];
+                                                                           sizeRange:CKSizeRange()];
   CKTransactionalComponentDataSourceConfiguration *secondConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceConfigurationTests class]
                                                                              context:@"context"
-                                                                           sizeRange:CKSizeRange()
-                                                                          workThread:nil];
+                                                                           sizeRange:CKSizeRange()];
   XCTAssertEqualObjects(firstConfiguration, secondConfiguration);
 }
 
@@ -44,13 +42,11 @@
   CKTransactionalComponentDataSourceConfiguration *firstConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceConfigurationTests class]
                                                                              context:@"context"
-                                                                           sizeRange:CKSizeRange()
-                                                                          workThread:nil];
+                                                                           sizeRange:CKSizeRange()];
   CKTransactionalComponentDataSourceConfiguration *secondConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceConfigurationTests class]
                                                                              context:@"context2"
-                                                                           sizeRange:CKSizeRange()
-                                                                          workThread:nil];
+                                                                           sizeRange:CKSizeRange()];
   XCTAssertNotEqualObjects(firstConfiguration, secondConfiguration);
 }
 

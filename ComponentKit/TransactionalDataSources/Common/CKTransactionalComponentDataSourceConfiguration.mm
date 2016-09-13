@@ -9,6 +9,7 @@
  */
 
 #import "CKTransactionalComponentDataSourceConfiguration.h"
+#import "CKTransactionalComponentDataSourceConfigurationInternal.h"
 
 #import "CKEqualityHashHelpers.h"
 #import "CKMacros.h"
@@ -21,14 +22,24 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-                               workThread:(NSThread *)workThread
+{
+  return [self initWithComponentProvider:componentProvider
+                                 context:context
+                               sizeRange:sizeRange
+                      workThreadOverride:nil];
+}
+
+- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
+                                  context:(id<NSObject>)context
+                                sizeRange:(const CKSizeRange &)sizeRange
+                       workThreadOverride:(NSThread *)workThreadOverride
 {
   if (self = [super init]) {
-    CKAssert(!workThread || workThread.isExecuting, @"The specified work thread must be executing");
+    CKAssert(!workThreadOverride || workThreadOverride.isExecuting, @"The work thread override must be executing");
     _componentProvider = componentProvider;
     _context = context;
     _sizeRange = sizeRange;
-    _workThread = workThread;
+    _workThreadOverride = workThreadOverride;
   }
   return self;
 }
@@ -47,7 +58,7 @@
     return (_componentProvider == obj.componentProvider
             && [_context isEqual:obj.context]
             && _sizeRange == obj.sizeRange
-            && _workThread == obj.workThread);
+            && _workThreadOverride == obj.workThreadOverride);
   }
 }
 
