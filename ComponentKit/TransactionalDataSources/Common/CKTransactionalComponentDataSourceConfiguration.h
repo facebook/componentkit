@@ -22,13 +22,17 @@
  @param componentProvider See @protocol(CKComponentProvider)
  @param context Passed to methods exposed by @protocol(CKComponentProvider).
  @param sizeRange Used for the root layout.
+ @param workThread The optional thread used by the data source to perform its work; this thread must be executing.
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
-                                sizeRange:(const CKSizeRange &)sizeRange;
+                                sizeRange:(const CKSizeRange &)sizeRange
+                               workThread:(NSThread *)workThread;
 
 @property (nonatomic, strong, readonly) Class<CKComponentProvider> componentProvider;
 @property (nonatomic, strong, readonly) id<NSObject> context;
+@property (nonatomic, strong, readonly) NSThread *workThread;
+
 - (const CKSizeRange &)sizeRange;
 
 @end

@@ -38,7 +38,8 @@ CKTransactionalComponentDataSourceState *CKTransactionalComponentDataSourceTestS
   CKTransactionalComponentDataSourceConfiguration *configuration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:provider
                                                                              context:@"context"
-                                                                           sizeRange:{{100, 100}, {100, 100}}];
+                                                                           sizeRange:{{100, 100}, {100, 100}}
+                                                                          workThread:nil];
 
   NSMutableArray *sections = [NSMutableArray array];
   for (NSUInteger sectionIndex = 0; sectionIndex < numberOfSections; sectionIndex++) {
@@ -58,7 +59,8 @@ CKTransactionalComponentDataSource *CKTransactionalComponentTestDataSource(Class
   [[CKTransactionalComponentDataSource alloc] initWithConfiguration:
    [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:provider
                                                                               context:nil
-                                                                            sizeRange:{}]];
+                                                                            sizeRange:{}
+                                                                           workThread:nil]];
 
   CKTransactionalComponentDataSourceChangeset *insertion =
   [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]

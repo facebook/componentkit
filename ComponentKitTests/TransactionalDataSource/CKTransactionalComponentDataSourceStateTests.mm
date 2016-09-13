@@ -91,11 +91,19 @@
 - (void)testStateEquality
 {
   CKTransactionalComponentDataSourceItem *firstItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout() model:@"model" scopeRoot:nil];
-  CKTransactionalComponentDataSourceConfiguration *firstConfiguration = [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceStateTests class] context:@"context" sizeRange:CKSizeRange()];
+  CKTransactionalComponentDataSourceConfiguration *firstConfiguration =
+  [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceStateTests class]
+                                                                             context:@"context"
+                                                                           sizeRange:CKSizeRange()
+                                                                          workThread:nil];
   CKTransactionalComponentDataSourceState *firstState = [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:firstConfiguration sections:@[@[firstItem]]];
 
   CKTransactionalComponentDataSourceItem *secondItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout() model:@"model" scopeRoot:nil];
-  CKTransactionalComponentDataSourceConfiguration *secondConfiguration = [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceStateTests class] context:@"context" sizeRange:CKSizeRange()];
+  CKTransactionalComponentDataSourceConfiguration *secondConfiguration =
+  [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceStateTests class]
+                                                                             context:@"context"
+                                                                           sizeRange:CKSizeRange()
+                                                                          workThread:nil];
   CKTransactionalComponentDataSourceState *secondState = [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:secondConfiguration sections:@[@[secondItem]]];
 
   XCTAssertEqualObjects(firstState, secondState);
@@ -104,11 +112,19 @@
 - (void)testNonEqualStates
 {
   CKTransactionalComponentDataSourceItem *firstItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout() model:@"model" scopeRoot:nil];
-  CKTransactionalComponentDataSourceConfiguration *firstConfiguration = [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceStateTests class] context:@"context" sizeRange:CKSizeRange()];
+  CKTransactionalComponentDataSourceConfiguration *firstConfiguration =
+  [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceStateTests class]
+                                                                             context:@"context"
+                                                                           sizeRange:CKSizeRange()
+                                                                          workThread:nil];
   CKTransactionalComponentDataSourceState *firstState = [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:firstConfiguration sections:@[@[firstItem]]];
 
   CKTransactionalComponentDataSourceItem *secondItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout() model:@"model2" scopeRoot:nil];
-  CKTransactionalComponentDataSourceConfiguration *secondConfiguration = [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceStateTests class] context:@"context" sizeRange:CKSizeRange()];
+  CKTransactionalComponentDataSourceConfiguration *secondConfiguration =
+  [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceStateTests class]
+                                                                             context:@"context"
+                                                                           sizeRange:CKSizeRange()
+                                                                          workThread:nil];
   CKTransactionalComponentDataSourceState *secondState = [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:secondConfiguration sections:@[@[secondItem]]];
 
   XCTAssertNotEqualObjects(firstState, secondState);

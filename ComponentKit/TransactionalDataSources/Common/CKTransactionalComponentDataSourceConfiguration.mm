@@ -21,11 +21,14 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
+                               workThread:(NSThread *)workThread
 {
   if (self = [super init]) {
+    CKAssert(!workThread || workThread.isExecuting, @"The specified work thread must be executing");
     _componentProvider = componentProvider;
     _context = context;
     _sizeRange = sizeRange;
+    _workThread = workThread;
   }
   return self;
 }
@@ -41,7 +44,10 @@
     return NO;
   } else {
     CKTransactionalComponentDataSourceConfiguration *obj = (CKTransactionalComponentDataSourceConfiguration *)object;
-    return _componentProvider == obj.componentProvider && [_context isEqual:obj.context] && _sizeRange == obj.sizeRange;
+    return (_componentProvider == obj.componentProvider
+            && [_context isEqual:obj.context]
+            && _sizeRange == obj.sizeRange
+            && _workThread == obj.workThread);
   }
 }
 

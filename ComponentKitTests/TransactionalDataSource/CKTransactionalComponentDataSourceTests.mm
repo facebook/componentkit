@@ -52,7 +52,8 @@ struct CKDataSourceAnnouncedUpdate {
   [[CKTransactionalComponentDataSource alloc] initWithConfiguration:
    [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[self class]
                                                                               context:nil
-                                                                            sizeRange:{}]];
+                                                                            sizeRange:{}
+                                                                           workThread:nil]];
   XCTAssertEqual([[ds state] numberOfSections], (NSUInteger)0);
 }
 
@@ -62,7 +63,8 @@ struct CKDataSourceAnnouncedUpdate {
   [[CKTransactionalComponentDataSource alloc] initWithConfiguration:
    [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[self class]
                                                                               context:nil
-                                                                            sizeRange:{}]];
+                                                                            sizeRange:{}
+                                                                           workThread:nil]];
   [ds addListener:self];
 
   CKTransactionalComponentDataSourceChangeset *insertion =
@@ -90,7 +92,8 @@ struct CKDataSourceAnnouncedUpdate {
   [[CKTransactionalComponentDataSource alloc] initWithConfiguration:
    [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[self class]
                                                                               context:nil
-                                                                            sizeRange:{}]];
+                                                                            sizeRange:{}
+                                                                           workThread:nil]];
   [ds addListener:self];
 
   CKTransactionalComponentDataSourceChangeset *insertion =
@@ -122,7 +125,8 @@ struct CKDataSourceAnnouncedUpdate {
   CKTransactionalComponentDataSourceConfiguration *config =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[self class]
                                                                              context:@"new context"
-                                                                           sizeRange:{}];
+                                                                           sizeRange:{}
+                                                                          workThread:nil];
   [ds updateConfiguration:config
                      mode:CKUpdateModeSynchronous
                  userInfo:nil];
@@ -192,6 +196,34 @@ struct CKDataSourceAnnouncedUpdate {
   }));
 }
 
+- (void)testAsynchronouslyInsertingItemsAppliesModificationsOnWorkThread
+{
+  NSThread *workThread = [[NSThread alloc] initWithTarget:self
+                                                 selector:@selector(_workThreadMain)
+                                                   object:nil];
+  [workThread start];
+  CKTransactionalComponentDataSource *dataSource =
+  [[CKTransactionalComponentDataSource alloc] initWithConfiguration:
+   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[self class]
+                                                                              context:nil
+                                                                            sizeRange:{}
+                                                                           workThread:workThread]];
+  [dataSource addListener:self];
+
+  CKTransactionalComponentDataSourceChangeset *insertion =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+    withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
+   build];
+  [dataSource applyChangeset:insertion mode:CKUpdateModeAsynchronous userInfo:nil];
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
+    return _announcedChanges.size() == 1;
+  }));
+
+  [workThread cancel];
+}
+
 #pragma mark - Listener
 
 - (void)transactionalComponentDataSource:(CKTransactionalComponentDataSource *)dataSource
@@ -199,6 +231,15 @@ struct CKDataSourceAnnouncedUpdate {
                        byApplyingChanges:(CKTransactionalComponentDataSourceAppliedChanges *)changes
 {
   _announcedChanges.push_back({previousState, changes});
+}
+
+- (void)_workThreadMain
+{
+  @autoreleasepool {
+    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+    [runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
+    [runLoop run];
+  }
 }
 
 @end

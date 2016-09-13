@@ -23,6 +23,16 @@
 #import "CKTransactionalComponentDataSourceUpdateConfigurationModification.h"
 #import "CKTransactionalComponentDataSourceUpdateStateModification.h"
 
+@interface CKTransactionalComponentDataSourceModificationPair : NSObject
+
+@property (nonatomic, strong, readonly) id<CKTransactionalComponentDataSourceStateModifying> modification;
+@property (nonatomic, strong, readonly) CKTransactionalComponentDataSourceState *state;
+
+- (instancetype)initWithModification:(id<CKTransactionalComponentDataSourceStateModifying>)modification
+                               state:(CKTransactionalComponentDataSourceState *)state;
+
+@end
+
 @interface CKTransactionalComponentDataSource () <CKComponentStateListener>
 {
   CKTransactionalComponentDataSourceState *_state;
@@ -161,22 +171,20 @@
 - (void)_startFirstAsynchronousModification
 {
   CKAssertMainThread();
-  id<CKTransactionalComponentDataSourceStateModifying> modification = _pendingAsynchronousModifications[0];
-  CKTransactionalComponentDataSourceState *baseState = _state;
-  dispatch_async(_workQueue, ^{
-    CKTransactionalComponentDataSourceChange *change = [modification changeFromState:baseState];
-    dispatch_async(dispatch_get_main_queue(), ^{
-      // If the first object in _pendingAsynchronousModifications is not still the modification,
-      // it may have been canceled; don't apply it.
-      if ([_pendingAsynchronousModifications firstObject] == modification && _state == baseState) {
-        [self _synchronouslyApplyChange:change];
-        [_pendingAsynchronousModifications removeObjectAtIndex:0];
-      }
-      if ([_pendingAsynchronousModifications count] != 0) {
-        [self _startFirstAsynchronousModification];
-      }
+  NSThread *currentWorkThread = _state.configuration.workThread;
+  CKTransactionalComponentDataSourceModificationPair *modificationPair =
+  [[CKTransactionalComponentDataSourceModificationPair alloc] initWithModification:_pendingAsynchronousModifications[0]
+                                                                             state:_state];
+  if (currentWorkThread) {
+    [self performSelector:@selector(_applyModificationPair:)
+                 onThread:currentWorkThread
+               withObject:modificationPair
+            waitUntilDone:NO];
+  } else {
+    dispatch_async(_workQueue, ^{
+      [self _applyModificationPair:modificationPair];
     });
-  });
+  }
 }
 
 /** Returns the canceled matching modifications, in the order they would have been applied. */
@@ -216,6 +224,36 @@
     _pendingSynchronousStateUpdates.clear();
     [self _synchronouslyApplyChange:[sm changeFromState:_state]];
   }
+}
+
+- (void)_applyModificationPair:(CKTransactionalComponentDataSourceModificationPair *)modificationPair
+{
+  CKTransactionalComponentDataSourceChange *change = [modificationPair.modification changeFromState:modificationPair.state];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    // If the first object in _pendingAsynchronousModifications is not still the modification,
+    // it may have been canceled; don't apply it.
+    if ([_pendingAsynchronousModifications firstObject] == modificationPair.modification && self->_state == modificationPair.state) {
+      [self _synchronouslyApplyChange:change];
+      [_pendingAsynchronousModifications removeObjectAtIndex:0];
+    }
+    if ([_pendingAsynchronousModifications count] != 0) {
+      [self _startFirstAsynchronousModification];
+    }
+  });
+}
+
+@end
+
+@implementation CKTransactionalComponentDataSourceModificationPair
+
+- (instancetype)initWithModification:(id<CKTransactionalComponentDataSourceStateModifying>)modification
+                               state:(CKTransactionalComponentDataSourceState *)state
+{
+  if (self = [super init]) {
+    _modification = modification;
+    _state = state;
+  }
+  return self;
 }
 
 @end
