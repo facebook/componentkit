@@ -8,27 +8,22 @@
  *
  */
 
-#import <Foundation/Foundation.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
 
-#import <ComponentKit/CKDimension.h>
-
-@protocol CKComponentProvider;
-
-/** Immutable value object that configures a data source */
-@interface CKTransactionalComponentDataSourceConfiguration : NSObject
+@interface CKTransactionalComponentDataSourceConfiguration ()
 
 /**
  @param componentProvider See @protocol(CKComponentProvider)
  @param context Passed to methods exposed by @protocol(CKComponentProvider).
  @param sizeRange Used for the root layout.
+ @param workThreadOverride The optional thread used by the data source to perform its work instead of the internal
+                           dispatch queue; if provided this thread must be executing.
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
-                                sizeRange:(const CKSizeRange &)sizeRange;
+                                sizeRange:(const CKSizeRange &)sizeRange
+                       workThreadOverride:(NSThread *)workThreadOverride;
 
-@property (nonatomic, strong, readonly) Class<CKComponentProvider> componentProvider;
-@property (nonatomic, strong, readonly) id<NSObject> context;
-
-- (const CKSizeRange &)sizeRange;
+@property (nonatomic, strong, readonly) NSThread *workThreadOverride;
 
 @end
