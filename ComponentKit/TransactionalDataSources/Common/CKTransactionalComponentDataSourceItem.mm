@@ -23,11 +23,13 @@
 - (instancetype)initWithLayout:(const CKComponentLayout &)layout
                          model:(id)model
                      scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                 memoizerState:(id)memoizerState
 {
   if (self = [super init]) {
     _layout = layout;
     _model = model;
     _scopeRoot = scopeRoot;
+    _memoizerState = memoizerState;
   }
   return self;
 }

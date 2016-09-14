@@ -23,4 +23,7 @@ class CKComponentLayout;
 /** The scope root for this item, which holds references to component controllers and state */
 @property (nonatomic, strong, readonly) CKComponentScopeRoot *scopeRoot;
 
+/** The memoizer state to use when building the component tree */
+@property (nonatomic, strong, readonly) id memoizerState;
+
 @end

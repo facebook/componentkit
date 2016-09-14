@@ -19,6 +19,7 @@
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeRoot.h"
+#import "CKComponentMemoizer.h"
 
 @implementation CKTransactionalComponentDataSourceUpdateStateModification
 {
@@ -50,13 +51,15 @@
         [newItems addObject:item];
       } else {
         [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
+        CKComponentMemoizer memoizer(item.memoizerState);
         const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], stateUpdatesForItem->second, ^{
           return [componentProvider componentForModel:[item model] context:context];
         });
         const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange);
         [newItems addObject:[[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout
                                                                                      model:[item model]
-                                                                                 scopeRoot:result.scopeRoot]];
+                                                                                 scopeRoot:result.scopeRoot
+                                                                             memoizerState:memoizer.nextMemoizerState()]];
       }
     }];
     [newSections addObject:newItems];
