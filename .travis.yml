@@ -13,7 +13,3 @@ env:
     - BUILD_SUBCOMMAND="ci-componentkit-ios"
     - BUILD_SUBCOMMAND="ci-componentkit-tvos"
     - BUILD_SUBCOMMAND="ci-wildeguess-ios"
-
-branches:
-  only:
-    - master
