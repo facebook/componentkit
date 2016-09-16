@@ -720,7 +720,7 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testNegativeViolationIsDistributedEquallyAmongFlexibleChildComponents
+- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAmongFlexibleChildComponents
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -744,12 +744,12 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
      },
    }];
   // In this scenario a width of 400 results in a negative violation of 200.
-  // Due to each flexible child component specifying a flex shrink factor of 1 the violation will be distributed evenly.
+  // The first and third child components specify a flex shrink factor of 1 and will flex by -120 and -80, respectively.
   static CKSizeRange kSize = {{400, 400}, {400, 400}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testNegativeViolationIsDistributedProportionallyAmongFlexibleChildComponents
+- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAndFlexFactorAmongFlexibleChildComponents
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -773,13 +773,13 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
      },
    }];
   // In this scenario a width of 400 results in a negative violation of 200.
-  // The first and third child components specify a flex shrink factor of 2 and will flex by 80.
-  // The second child component specifies a flex shrink factor of 1 and will flex by 40.
+  // The first and third child components specify a flex shrink factor of 2 and will flex by -109 and -72, respectively.
+  // The second child component specifies a flex shrink factor of 1 and will flex by -18.
   static CKSizeRange kSize = {{400, 400}, {400, 400}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testNegativeViolationIsDistributedEquallyAmongGrowingAndShrinkingFlexibleChildComponents
+- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAmongGrowingAndShrinkingFlexibleChildComponents
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -808,12 +808,12 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
    }];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex grow factor of 1 and 0, respectively. They won't flex.
-  // The second and fourth child components specify a flex grow factor of 1 and will flex by 100.
+  // The second and fourth child components specify a flex grow factor of 1 and will flex by -100.
   static CKSizeRange kSize = {{400, 400}, {400, 400}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testNegativeViolationIsDistributedProportionallyAmongGrowingAndShrinkingFlexibleChildComponents
+- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAndFlexFactorAmongGrowingAndShrinkingFlexibleChildComponents
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -842,13 +842,13 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
    }];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex grow factor of 1 and 0, respectively. They won't flex.
-  // The second child component specifies a flex grow factor of 1 and will flex by 50.
-  // The fourth child component specifies a flex grow factor of 3 and will flex by 150.
+  // The second child component specifies a flex grow factor of 1 and will flex by -28.
+  // The fourth child component specifies a flex grow factor of 3 and will flex by -171.
   static CKSizeRange kSize = {{400, 400}, {400, 400}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testNegativeViolationIsDistributedAmongFlexibleChildrenUntilOneShrinksToZeroWidth
+- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAndFlexFactorDoesNotShrinkToZeroWidth
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -873,7 +873,7 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
    }];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex shrink factor of 1 and will flex by 50.
-  // The second child component specifies a flex shrink factor of 2 and will flex by 100. It will have a width of 0.
+  // The second child component specifies a flex shrink factor of 2 and will flex by -57. It will have a width of 43.
   static CKSizeRange kSize = {{400, 400}, {400, 400}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
