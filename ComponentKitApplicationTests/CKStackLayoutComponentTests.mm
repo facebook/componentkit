@@ -573,16 +573,12 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
       {
         [CKComponent
          newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}}
-         size:{.width = 10, .height = 0}],
+         size:{.width = 10}],
       },
       {
-        [CKRatioLayoutComponent
-         newWithRatio:1.0
-         size:{}
-         component:
-         [CKComponent
-          newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}}
-          size:{3000, 3000}]],
+        [CKComponent
+         newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}}
+         size:{500, 500}],
         .flexGrow = 1,
         .flexShrink = 1,
       },
@@ -898,6 +894,42 @@ static CKStackLayoutComponentChild flexChild(CKComponent *c, CGFloat flexFactor)
      flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}], flexFactor),
      flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}], flexFactor),
    }];
+}
+
+- (void)testNestedStackLayoutStretchDoesNotViolateWidth
+{
+  CKStackLayoutComponent *c =
+  [CKStackLayoutComponent
+   newWithView:{
+     [UIView class],
+     {
+       {@selector(setBackgroundColor:), [UIColor blueColor]}
+     }
+   }
+   size:{
+     .width = 100,
+     .height = 100
+   }
+   style:{
+     .direction = CKStackLayoutDirectionVertical,
+     .alignItems = CKStackLayoutAlignItemsStretch
+   }
+   children:{
+     {
+       [CKComponent
+        newWithView:{
+          [UIView class],
+          {
+            {@selector(setBackgroundColor:), [UIColor redColor]}
+          }
+        } size:{
+          .width = 50,
+          .height = 50
+        }]
+     }
+   }];
+  static CKSizeRange kSize = {{0, 0}, {300, INFINITY}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
 @end
