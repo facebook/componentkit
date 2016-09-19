@@ -35,7 +35,6 @@
                        workThreadOverride:(NSThread *)workThreadOverride
 {
   if (self = [super init]) {
-    CKAssert(!workThreadOverride || workThreadOverride.isExecuting, @"The work thread override must be executing");
     _componentProvider = componentProvider;
     _context = context;
     _sizeRange = sizeRange;
