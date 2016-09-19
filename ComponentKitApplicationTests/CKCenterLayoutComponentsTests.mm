@@ -108,7 +108,7 @@ static NSString *suffixForCenteringOptions(CKCenterLayoutComponentCenteringOptio
          [CKComponent
           newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}}
           size:{10,10}],
-         .flexGrow = YES,
+         .flexGrow = 1,
        }
      }]
     background:
