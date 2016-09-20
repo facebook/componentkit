@@ -19,9 +19,6 @@
 #import "CKComponentSubclass.h"
 #import "CKStackLayoutComponentUtilities.h"
 
-/**
- 
- */
 static CGFloat resolveCrossDimensionMaxForStretchChild(const CKStackLayoutComponentStyle &style,
                                                        const CKStackLayoutComponentChild &child,
                                                        const CGFloat stackMax,
