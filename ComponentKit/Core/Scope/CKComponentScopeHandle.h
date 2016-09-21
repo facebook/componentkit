@@ -35,7 +35,8 @@
              initialStateCreator:(id (^)(void))initialStateCreator;
 
 /** Creates a new instance of the scope handle that incorporates the given state updates. */
-- (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
+- (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                       componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot;
 
 /** Creates a new, but identical, instance of the scope handle that will be reacquired due to a scope collision. */
 - (instancetype)newHandleToBeReacquiredDueToScopeCollision;
