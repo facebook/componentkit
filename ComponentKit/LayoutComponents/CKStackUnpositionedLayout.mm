@@ -187,7 +187,8 @@ static std::function<CGFloat(const CKStackUnpositionedItem &, BOOL)> flexGrowAdj
   // To compute the flex grow adjustment distribute the violation proportionally based on each item's flex grow factor.
   // If there happens to be a violation remaining make sure it is allocated to the first flexible child.
   return [violationPerFlexFactor, remainingViolation](const CKStackUnpositionedItem &item, BOOL isFirstFlex) {
-    return violationPerFlexFactor * item.child.flexGrow + (isFirstFlex ? remainingViolation : 0);
+    // Only apply the remaining violation for the first flexible child that has a flex grow factor.
+    return violationPerFlexFactor * item.child.flexGrow + (isFirstFlex && item.child.flexGrow > 0 ? remainingViolation : 0);
   };
 }
 
