@@ -157,7 +157,8 @@ namespace std {
 
   CKComponentScopeHandle *newHandle =
   existingChildFrameOfEquivalentPreviousFrame
-  ? [existingChildFrameOfEquivalentPreviousFrame.handle newHandleWithStateUpdates:stateUpdates]
+  ? [existingChildFrameOfEquivalentPreviousFrame.handle newHandleWithStateUpdates:stateUpdates
+                                                               componentScopeRoot:newRoot]
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                       rootIdentifier:newRoot.globalIdentifier
                                       componentClass:componentClass

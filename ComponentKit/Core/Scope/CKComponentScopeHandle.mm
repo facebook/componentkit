@@ -85,12 +85,14 @@
 }
 
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                       componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot
 {
   id updatedState = _state;
   const auto range = stateUpdates.equal_range(_globalIdentifier);
   for (auto it = range.first; it != range.second; ++it) {
     updatedState = it->second(updatedState);
   }
+  [componentScopeRoot registerAnnounceableEventsForController:_controller];
   return [[CKComponentScopeHandle alloc] initWithListener:_listener
                                          globalIdentifier:_globalIdentifier
                                            rootIdentifier:_rootIdentifier
@@ -205,7 +207,6 @@ static CKComponentController *newController(CKComponent *component, CKComponentS
     CKCAssert([controllerClass isSubclassOfClass:[CKComponentController class]],
               @"%@ must inherit from CKComponentController", controllerClass);
     CKComponentController *controller = [[controllerClass alloc] initWithComponent:component];
-
     [root registerAnnounceableEventsForController:controller];
     return controller;
   }
