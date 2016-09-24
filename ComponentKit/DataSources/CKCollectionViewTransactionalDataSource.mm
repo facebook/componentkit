@@ -29,6 +29,7 @@ CKTransactionalComponentDataSourceListener
   __weak id<CKSupplementaryViewDataSource> _supplementaryViewDataSource;
   CKTransactionalComponentDataSourceState *_currentState;
   CKComponentDataSourceAttachController *_attachController;
+  NSMapTable<UICollectionViewCell *, CKTransactionalComponentDataSourceItem *> *_cellToItemMap;
 }
 @end
 
@@ -50,6 +51,7 @@ CKTransactionalComponentDataSourceListener
     
     _attachController = [[CKComponentDataSourceAttachController alloc] init];
     _supplementaryViewDataSource = supplementaryViewDataSource;
+    _cellToItemMap = [NSMapTable weakToStrongObjectsMapTable];
   }
   return self;
 }
@@ -130,6 +132,18 @@ static void applyChangesToCollectionView(CKTransactionalComponentDataSourceAppli
   [_componentDataSource updateConfiguration:configuration mode:mode userInfo:userInfo];
 }
 
+#pragma mark - Appearance announcements
+
+- (void)announceWillDisplayCell:(UICollectionViewCell *)cell
+{
+  [[_cellToItemMap objectForKey:cell].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+}
+
+- (void)announceDidEndDisplayingCell:(UICollectionViewCell *)cell
+{
+  [[_cellToItemMap objectForKey:cell].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+}
+
 #pragma mark - UICollectionViewDataSource
 
 static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_data_source.cell";
@@ -139,6 +153,7 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
   CKCollectionViewDataSourceCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:kReuseIdentifier forIndexPath:indexPath];
   CKTransactionalComponentDataSourceItem *item = [_currentState objectAtIndexPath:indexPath];
   [_attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier toView:cell.rootView];
+  [_cellToItemMap setObject:item forKey:cell];
   return cell;
 }
 
