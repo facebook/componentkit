@@ -31,11 +31,11 @@ function ci() {
 }
 
 function ios_ci() {
-  ci $1 $2 iphonesimulator9.3 "platform=iOS Simulator,OS=9.3,name=iPhone 5s" $3
+  ci $1 $2 iphonesimulator10.0 "platform=iOS Simulator,OS=10.0,name=iPhone 5s" $3
 }
 
 function tvos_ci() {
-  ci $1 $2 appletvsimulator9.2 "platform=tvOS Simulator,OS=9.2,name=Apple TV 1080p" $3
+  ci $1 $2 appletvsimulator10.0 "platform=tvOS Simulator,OS=10.0,name=Apple TV 1080p" $3
 }
 
 if [ "$MODE" = "ci-componentkit-ios" ]; then
