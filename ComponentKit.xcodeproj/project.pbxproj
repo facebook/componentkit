@@ -3203,7 +3203,6 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_NO_COMMON_BLOCKS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -3217,7 +3216,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -3313,7 +3311,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "ComponentKitTests/ComponentKitTests-Info.plist";
@@ -3329,7 +3326,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "ComponentKitTests/ComponentKitTests-Info.plist";
@@ -3372,7 +3368,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "ComponentKitTests/ComponentKitTests-Info.plist";
@@ -3387,7 +3382,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "ComponentKitTests/ComponentKitTests-Info.plist";
@@ -3402,7 +3396,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "ComponentKitApplicationTests/ComponentKitApplicationTests-Info.plist";
@@ -3418,7 +3411,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "ComponentKitApplicationTests/ComponentKitApplicationTests-Info.plist";
@@ -3434,7 +3426,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "ComponentTextKitApplicationTests/ComponentTextKitApplicationTests-Info.plist";
@@ -3450,7 +3441,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "ComponentTextKitApplicationTests/ComponentTextKitApplicationTests-Info.plist";
