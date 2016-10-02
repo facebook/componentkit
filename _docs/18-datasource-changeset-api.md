@@ -22,7 +22,7 @@ items.insert({0, 0}, @"Hello");
 // Update the item at index 1 in section 0 and update it with the component computed for the model @"World"
 items.update({0, 1}, @"World");
 // Delete the item at index 2 in section 0, no need for a model here :)
-Items.delete({0, 2});
+items.delete({0, 2});
 
 Sections sections;
 sections.insert(0);
