@@ -96,7 +96,7 @@ Later on (for instance when updated data is received from the server), we can up
 {% raw  %}
 	...
 	CKArrayControllerInputItems items;
-	items.update({0,0}, udpatedFirstModel);
+	items.update({0,0}, updatedFirstModel);
 	[self.dataSource enqueueChangeset:{items} constrainedSize:{{50,0}, {50, INF}}];
 	//This works as well thanks to C++ implicit conversion
 	//[self.dataSource enqueueChangeset:items constrainedSize:{{50,0}, {50, INF}}];
