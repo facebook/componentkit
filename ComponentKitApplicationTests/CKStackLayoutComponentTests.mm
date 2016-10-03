@@ -617,7 +617,7 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testPositiveViolationIsDistributedEquallyAmongFlexibleChildComponentsExpressedAsPercentages
+- (void)testPositiveViolationIsDistributedEquallyAmongFlexibleChildComponentsArbitraryFloats
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -676,7 +676,7 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testPositiveViolationIsDistributedProportionallyAmongFlexibleChildComponentsExpressedAsPercentages
+- (void)testPositiveViolationIsDistributedProportionallyAmongFlexibleChildComponentsArbitraryFloats
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -740,7 +740,7 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testPositiveViolationIsDistributedEquallyAmongGrowingAndShrinkingFlexibleChildComponentsExpressedAsPercentages
+- (void)testPositiveViolationIsDistributedEquallyAmongGrowingAndShrinkingFlexibleChildComponentsArbitraryFloats
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -809,7 +809,7 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testPositiveViolationIsDistributedProportionallyAmongGrowingAndShrinkingFlexibleChildComponentsExpressedAsPercentages
+- (void)testPositiveViolationIsDistributedProportionallyAmongGrowingAndShrinkingFlexibleChildComponentsArbitraryFloats
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -873,7 +873,7 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testRemainingViolationIsAppliedProperlyToFirstFlexibleChildComponentExpressedAsPercentages
+- (void)testRemainingViolationIsAppliedProperlyToFirstFlexibleChildComponentArbitraryFloats
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -931,7 +931,7 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAmongFlexibleChildComponentsExpressedAsPercentages
+- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAmongFlexibleChildComponentsArbitraryFloats
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -990,7 +990,7 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAndFlexFactorAmongFlexibleChildComponentsExpressedAsPercentages
+- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAndFlexFactorAmongFlexibleChildComponentsArbitraryFloats
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -1054,7 +1054,7 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAmongGrowingAndShrinkingFlexibleChildComponentsExpressedAsPercentages
+- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAmongGrowingAndShrinkingFlexibleChildComponentsArbitraryFloats
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -1123,7 +1123,7 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAndFlexFactorAmongGrowingAndShrinkingFlexibleChildComponentsExpressedAsPercentages
+- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAndFlexFactorAmongGrowingAndShrinkingFlexibleChildComponentsArbitraryFloats
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
@@ -1188,7 +1188,7 @@ static CKComponentViewConfiguration kWhiteBackgroundView = {
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
-- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAndFlexFactorDoesNotShrinkToZeroWidthExpressedAsPercentages
+- (void)testNegativeViolationIsDistributedProportionallyBasedOnSizeAndFlexFactorDoesNotShrinkToZeroWidthArbitraryFloats
 {
   CKStackLayoutComponent *c =
   [CKStackLayoutComponent
