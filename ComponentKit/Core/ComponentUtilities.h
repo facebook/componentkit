@@ -33,7 +33,7 @@ namespace CK {
     // Let std::transform apply `func` to all elements
     // (use perfect forwarding for the function object)
     std::transform(
-                   begin(iterable), end(iterable), res.begin(),
+                   std::begin(iterable), std::end(iterable), res.begin(),
                    std::forward<Func>(func)
                    );
 
