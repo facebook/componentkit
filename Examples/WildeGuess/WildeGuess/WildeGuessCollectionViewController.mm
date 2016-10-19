@@ -68,7 +68,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
-  [_dataSource applyChangeset:initialChangeset mode:CKUpdateModeAsynchronous userInfo:nil];
+  [_dataSource applyChangeset:initialChangeset mode:CKUpdateModeSynchronous userInfo:nil];
   [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:4]];
 }
 
