@@ -186,9 +186,9 @@
 		B3E848C21ABE848900377D52 /* WildeGuess */ = {
 			isa = PBXGroup;
 			children = (
+				B34FB95C1ABE8BA300D2D896 /* Components */,
 				B34FB95A1ABE8BA300D2D896 /* AppDelegate.h */,
 				B34FB95B1ABE8BA300D2D896 /* AppDelegate.mm */,
-				B34FB95C1ABE8BA300D2D896 /* Components */,
 				B34FB96B1ABE8BA300D2D896 /* Quote.h */,
 				B34FB96C1ABE8BA300D2D896 /* Quote.m */,
 				B34FB96D1ABE8BA300D2D896 /* QuoteContext.h */,
