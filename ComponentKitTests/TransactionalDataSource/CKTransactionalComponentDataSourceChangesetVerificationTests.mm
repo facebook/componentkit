@@ -14,6 +14,7 @@
 
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceChangesetModification.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceItemInternal.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceStateInternal.h>
 
@@ -851,7 +852,7 @@
 
 #pragma mark - More complicated situations
 
-- (void)test_validSampleInitialInsertions
+- (void)test_validInitialSectionInsertionsWithItemInsertions
 {
   CKTransactionalComponentDataSourceState *state =
   [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
@@ -867,6 +868,129 @@
                         }]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
+}
+
+- (void)test_validInitialSectionInsertionsInPendingAsynchronousModificationWithItemInsertions
+{
+  CKTransactionalComponentDataSourceState *state =
+  [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
+                                                                sections:@[]];
+  NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications =
+  @[
+    // Insert section 0 and section 1
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    ];
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withInsertedItems:@{
+                        [NSIndexPath indexPathForItem:0 inSection:0]: @"A1",
+                        [NSIndexPath indexPathForItem:1 inSection:0]: @"B1",
+                        [NSIndexPath indexPathForItem:0 inSection:1]: @"A2",
+                        [NSIndexPath indexPathForItem:1 inSection:1]: @"B2",
+                        }]
+   build];
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, pendingAsynchronousModifications), CKBadChangesetOperationTypeNone);
+}
+
+- (void)test_validChangesetAppliedToValidPendingAsynchronousModifications
+{
+  CKTransactionalComponentDataSourceState *state =
+  [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
+                                                                sections:@[]];
+  NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications =
+  @[
+    // Insert section 0
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    // Insert two items into section 0
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedItems:@{
+                           [NSIndexPath indexPathForItem:0 inSection:0]: @"A1",
+                           [NSIndexPath indexPathForItem:1 inSection:0]: @"B1",
+                           }]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    // Insert section 1
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedSections:[NSIndexSet indexSetWithIndex:1]]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    // Insert two items into section 1
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedItems:@{
+                           [NSIndexPath indexPathForItem:0 inSection:1]: @"A2",
+                           [NSIndexPath indexPathForItem:1 inSection:1]: @"B2",
+                           }]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    ];
+  // Remove first item from each section
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withRemovedItems:[NSSet setWithArray:@[
+                                           [NSIndexPath indexPathForItem:0 inSection:0],
+                                           [NSIndexPath indexPathForItem:0 inSection:1],
+                                           ]]]
+   build];
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, pendingAsynchronousModifications), CKBadChangesetOperationTypeNone);
+}
+
+- (void)test_invalidChangesetAppliedToValidPendingAsynchronousModifications
+{
+  CKTransactionalComponentDataSourceState *state =
+  [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
+                                                                sections:@[]];
+  NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications =
+  @[
+    // Insert section 0
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    // Insert two items into section 0
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedItems:@{
+                           [NSIndexPath indexPathForItem:0 inSection:0]: @"A1",
+                           [NSIndexPath indexPathForItem:1 inSection:0]: @"B1",
+                           }]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    ];
+  // Remove first item from section 1
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withRemovedItems:[NSSet setWithArray:@[
+                                           [NSIndexPath indexPathForItem:0 inSection:0],
+                                           [NSIndexPath indexPathForItem:0 inSection:1],
+                                           ]]]
+   build];
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, pendingAsynchronousModifications), CKBadChangesetOperationTypeRemoveRow);
 }
 
 static CKTransactionalComponentDataSourceItem *itemWithModel(id model)
