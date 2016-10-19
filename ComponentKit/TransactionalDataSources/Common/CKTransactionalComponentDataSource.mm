@@ -15,6 +15,7 @@
 #import "CKComponentScopeRoot.h"
 #import "CKTransactionalComponentDataSourceChange.h"
 #import "CKTransactionalComponentDataSourceChangesetModification.h"
+#import "CKTransactionalComponentDataSourceChangesetVerification.h"
 #import "CKTransactionalComponentDataSourceConfiguration.h"
 #import "CKTransactionalComponentDataSourceConfigurationInternal.h"
 #import "CKTransactionalComponentDataSourceListenerAnnouncer.h"
@@ -74,6 +75,7 @@
               userInfo:(NSDictionary *)userInfo
 {
   CKAssertMainThread();
+  verifyChangeset(changeset, _state);
   id<CKTransactionalComponentDataSourceStateModifying> modification =
   [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset stateListener:self userInfo:userInfo];
   switch (mode) {
@@ -243,6 +245,17 @@
       [self _startFirstAsynchronousModification];
     }
   });
+}
+
+static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changeset,
+                            CKTransactionalComponentDataSourceState *state)
+{
+#if CK_ASSERTIONS_ENABLED
+  const CKBadChangesetOperationType badChangesetOperationType = CKIsValidChangesetForState(changeset, state);
+  CKCAssert(badChangesetOperationType == CKBadChangesetOperationTypeNone,
+            @"Bad operation: %@\nChangeset:\n************\n %@\n************\nCurrent data source state: %@",
+            CKHumanReadableBadChangesetOperationType(badChangesetOperationType), changeset, state);
+#endif
 }
 
 @end
