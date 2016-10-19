@@ -25,7 +25,6 @@
 
 @implementation CKTransactionalComponentDataSourceChangesetModification
 {
-  CKTransactionalComponentDataSourceChangeset *_changeset;
   id<CKComponentStateListener> _stateListener;
   NSDictionary *_userInfo;
 }
