@@ -236,7 +236,7 @@ static void verifyChangeset(CKArrayControllerInputChangeset changeset, NSArray<N
 {
 #if CK_ASSERTIONS_ENABLED
   CKBadChangesetOperationType badChangesetOperationType = CKIsValidChangesetForSections(changeset, sections);
-  CKCAssert(badChangesetOperationType == CKBadChangesetOperationTypeNone, @"Bad operation: %@\nChangeset:\n************\n %@\n************\nCurrent data source state: %@", CKHumanReadableBadChangesetOperation(badChangesetOperationType), changeset.description(), sections);
+  CKCAssert(badChangesetOperationType == CKBadChangesetOperationTypeNone, @"Bad operation: %@\nChangeset:\n************\n %@\n************\nCurrent data source state: %@", CKHumanReadableBadChangesetOperationType(badChangesetOperationType), changeset.description(), sections);
 #endif
 }
 

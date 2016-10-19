@@ -325,6 +325,8 @@
 		2D03A6601D3869A800E4F890 /* CKDetectComponentScopeCollisions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm */; };
 		2D03A6611D3869C700E4F890 /* CKDetectComponentScopeCollisions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2D34A4AA1D777EB80020B11C /* CKArrayControllerChangesetVerification.mm in Sources */ = {isa = PBXBuildFile; fileRef = B797C03F1D49F701006461CC /* CKArrayControllerChangesetVerification.mm */; };
+		2D640D5D1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D640D5C1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm */; };
+		2D640D5E1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D640D5C1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm */; };
 		2D7A98161DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D7A98141DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h */; };
 		2D7A98171DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D7A98141DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h */; };
 		2D7A98181DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D7A98151DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.mm */; };
@@ -881,6 +883,7 @@
 		18644AE21B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatefulViewReusePoolTests.mm; sourceTree = "<group>"; };
 		18644AE31B3CB8E60028AF87 /* CKTestStatefulViewComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTestStatefulViewComponent.h; sourceTree = "<group>"; };
 		18644AE41B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTestStatefulViewComponent.mm; sourceTree = "<group>"; };
+		2D640D5C1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKBadChangesetOperationType.mm; sourceTree = "<group>"; };
 		2D7A98141DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTransactionalComponentDataSourceChangesetVerification.h; sourceTree = "<group>"; };
 		2D7A98151DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceChangesetVerification.mm; sourceTree = "<group>"; };
 		2D7A98241DB56D8D0064FC6D /* CKTransactionalComponentDataSourceChangesetVerificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceChangesetVerificationTests.mm; sourceTree = "<group>"; };
@@ -1861,6 +1864,7 @@
 				D0B47B841CBD926700BB33CE /* CKArrayControllerChangeset.mm */,
 				D0B47B851CBD926700BB33CE /* CKArrayControllerChangeType.h */,
 				2D7A98271DB571700064FC6D /* CKBadChangesetOperationType.h */,
+				2D640D5C1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm */,
 				D0B47B861CBD926700BB33CE /* CKComponentAction.h */,
 				D0B47B871CBD926700BB33CE /* CKComponentAction.mm */,
 				D0B47B881CBD926700BB33CE /* CKComponentContext.h */,
@@ -2867,6 +2871,7 @@
 				03B8B4A91D2A346F00EDFF59 /* CKTransactionalComponentDataSourceState.mm in Sources */,
 				03B8B4AA1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceChange.m in Sources */,
 				03B8B4AB1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceChangesetModification.mm in Sources */,
+				2D640D5E1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm in Sources */,
 				03B8B4AC1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceReloadModification.mm in Sources */,
 				03B8B4AD1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceUpdateConfigurationModification.mm in Sources */,
 				03B8B4AE1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceUpdateStateModification.mm in Sources */,
@@ -3137,6 +3142,7 @@
 				D0B47CC21CBD943400BB33CE /* CKTransactionalComponentDataSourceChange.m in Sources */,
 				D0B47CC31CBD943400BB33CE /* CKTransactionalComponentDataSourceChangesetModification.mm in Sources */,
 				D0B47CC41CBD943400BB33CE /* CKTransactionalComponentDataSourceReloadModification.mm in Sources */,
+				2D640D5D1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm in Sources */,
 				D0B47CC51CBD943400BB33CE /* CKTransactionalComponentDataSourceUpdateConfigurationModification.mm in Sources */,
 				D0B47CC61CBD943400BB33CE /* CKTransactionalComponentDataSourceUpdateStateModification.mm in Sources */,
 				D0B47CC71CBD943400BB33CE /* CKArrayControllerChangeset.mm in Sources */,
