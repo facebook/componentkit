@@ -11,17 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKArrayControllerChangeset.h>
-
-typedef NS_ENUM(NSUInteger, CKBadChangesetOperationType) {
-  CKBadChangesetOperationTypeNone,
-  CKBadChangesetOperationTypeUpdate,
-  CKBadChangesetOperationTypeInsertSection,
-  CKBadChangesetOperationTypeInsertRow,
-  CKBadChangesetOperationTypeRemoveSection,
-  CKBadChangesetOperationTypeRemoveRow,
-  CKBadChangesetOperationTypeMoveSection,
-  CKBadChangesetOperationTypeMoveRow
-};
+#import <ComponentKit/CKBadChangesetOperationType.h>
 
 /**
  This function determines whether a given changeset is valid for a particular data source state.
