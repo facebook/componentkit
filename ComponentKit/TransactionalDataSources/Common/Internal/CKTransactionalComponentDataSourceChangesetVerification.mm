@@ -40,7 +40,7 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
    This process ensures that the modified state represents the actual state the changeset will be applied to.
    */
   CKTransactionalComponentDataSourceState *modifiedState = foldModificationsIntoState(state, pendingAsynchronousModifications);
-  // Compute the initial collection of section used, used to maintain a running tally of how many items are present in each section.
+  // Compute the number of items in each section used to maintain a running tally as changeset modifications are "applied".
   NSMutableArray<NSNumber *> *sectionCounts = sectionCountsForState(modifiedState);
   __block BOOL invalidChangeFound = NO;
   // Updated items
@@ -181,7 +181,7 @@ static CKTransactionalComponentDataSourceState *foldModificationIntoState(CKTran
                                                                           CKTransactionalComponentDataSourceChangesetModification *changesetModification)
 {
   CKTransactionalComponentDataSourceChangeset *changeset = changesetModification.changeset;
-  NSMutableArray *modifiedSections = [NSMutableArray array];
+  NSMutableArray *modifiedSections = [NSMutableArray new];
   [state.sections enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger index, BOOL *sectionStop) {
     [modifiedSections addObject:[items mutableCopy]];
   }];
@@ -237,9 +237,9 @@ static CKTransactionalComponentDataSourceState *foldModificationIntoState(CKTran
 
 static NSArray *emptyMutableArrays(NSUInteger count)
 {
-  NSMutableArray *arrays = [NSMutableArray array];
+  NSMutableArray *arrays = [NSMutableArray new];
   for (NSUInteger i = 0; i < count; i++) {
-    [arrays addObject:[NSMutableArray array]];
+    [arrays addObject:[NSMutableArray new]];
   }
   return arrays;
 }
