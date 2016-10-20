@@ -256,8 +256,11 @@ static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changes
                                                                                            state,
                                                                                            pendingAsynchronousModifications);
   CKCAssert(badChangesetOperationType == CKBadChangesetOperationTypeNone,
-            @"Bad operation: %@\nChangeset:\n************\n %@\n************\nCurrent data source state: %@",
-            CKHumanReadableBadChangesetOperationType(badChangesetOperationType), changeset, state);
+            @"Bad operation: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@",
+            CKHumanReadableBadChangesetOperationType(badChangesetOperationType),
+            changeset,
+            state,
+            pendingAsynchronousModifications);
 #endif
 }
 

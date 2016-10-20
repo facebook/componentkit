@@ -140,6 +140,11 @@
                                                           appliedChanges:appliedChanges];
 }
 
+- (NSString *)description
+{
+  return [_changeset description];
+}
+
 static NSArray *emptyMutableArrays(NSUInteger count)
 {
   NSMutableArray *arrays = [NSMutableArray array];
