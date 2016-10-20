@@ -15,5 +15,8 @@
 @class CKTransactionalComponentDataSourceChangeset;
 @class CKTransactionalComponentDataSourceState;
 
-extern CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentDataSourceChangeset *changeset,
-                                                              CKTransactionalComponentDataSourceState *state);
+@protocol CKTransactionalComponentDataSourceStateModifying;
+
+CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentDataSourceChangeset *changeset,
+                                                       CKTransactionalComponentDataSourceState *state,
+                                                       NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications);

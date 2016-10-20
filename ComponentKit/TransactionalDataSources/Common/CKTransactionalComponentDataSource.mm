@@ -15,6 +15,7 @@
 #import "CKComponentScopeRoot.h"
 #import "CKTransactionalComponentDataSourceChange.h"
 #import "CKTransactionalComponentDataSourceChangesetModification.h"
+#import "CKTransactionalComponentDataSourceChangesetVerification.h"
 #import "CKTransactionalComponentDataSourceConfiguration.h"
 #import "CKTransactionalComponentDataSourceConfigurationInternal.h"
 #import "CKTransactionalComponentDataSourceListenerAnnouncer.h"
@@ -42,7 +43,7 @@
   CKComponentStateUpdatesMap _pendingAsynchronousStateUpdates;
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
 
-  NSMutableArray *_pendingAsynchronousModifications;
+  NSMutableArray<id<CKTransactionalComponentDataSourceStateModifying>> *_pendingAsynchronousModifications;
 
   NSThread *_workThreadOverride;
 }
@@ -74,6 +75,7 @@
               userInfo:(NSDictionary *)userInfo
 {
   CKAssertMainThread();
+  verifyChangeset(changeset, _state, _pendingAsynchronousModifications);
   id<CKTransactionalComponentDataSourceStateModifying> modification =
   [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset stateListener:self userInfo:userInfo];
   switch (mode) {
@@ -243,6 +245,23 @@
       [self _startFirstAsynchronousModification];
     }
   });
+}
+
+static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changeset,
+                            CKTransactionalComponentDataSourceState *state,
+                            NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications)
+{
+#if CK_ASSERTIONS_ENABLED
+  const CKBadChangesetOperationType badChangesetOperationType = CKIsValidChangesetForState(changeset,
+                                                                                           state,
+                                                                                           pendingAsynchronousModifications);
+  CKCAssert(badChangesetOperationType == CKBadChangesetOperationTypeNone,
+            @"Bad operation: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@",
+            CKHumanReadableBadChangesetOperationType(badChangesetOperationType),
+            changeset,
+            state,
+            pendingAsynchronousModifications);
+#endif
 }
 
 @end

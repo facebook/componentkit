@@ -20,3 +20,6 @@ typedef NS_ENUM(NSUInteger, CKBadChangesetOperationType) {
   CKBadChangesetOperationTypeMoveSection,
   CKBadChangesetOperationTypeMoveRow
 };
+
+/** Returns a human readable translation of the given CKBadChangesetOperationType. */
+NSString *CKHumanReadableBadChangesetOperationType(CKBadChangesetOperationType type);

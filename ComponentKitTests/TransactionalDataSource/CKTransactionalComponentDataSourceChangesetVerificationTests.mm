@@ -14,6 +14,7 @@
 
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceChangesetModification.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceItemInternal.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceStateInternal.h>
 
@@ -34,7 +35,7 @@
   CKTransactionalComponentDataSourceChangeset *changeset =
   [[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_emptyChangesetNonEmptySections
@@ -54,7 +55,7 @@
   CKTransactionalComponentDataSourceChangeset *changeset =
   [[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_nonEmptyChangesetEmptySections
@@ -70,7 +71,7 @@
                        [NSIndexPath indexPathForItem:1 inSection:0]: @"B",
                        }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validInsertionIntoEmptySection
@@ -87,7 +88,7 @@
                         [NSIndexPath indexPathForItem:1 inSection:0]: @"B",
                         }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validInsertionIntoBeginningOfNonEmptySection
@@ -107,7 +108,7 @@
                         [NSIndexPath indexPathForItem:1 inSection:0]: @"B",
                         }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validInsertionIntoMiddleOfNonEmptySection
@@ -127,7 +128,7 @@
                         [NSIndexPath indexPathForItem:2 inSection:0]: @"B",
                         }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validInsertionAtEndOfNonEmptySection
@@ -147,7 +148,7 @@
                         [NSIndexPath indexPathForItem:3 inSection:0]: @"B",
                         }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validRemovalAtBeginningOfSection
@@ -167,7 +168,7 @@
                                            [NSIndexPath indexPathForItem:0 inSection:0],
                                            ]]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validRemovalAtMiddleOfSection
@@ -187,7 +188,7 @@
                                            [NSIndexPath indexPathForItem:1 inSection:0],
                                            ]]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validRemovalAtEndOfSection
@@ -207,7 +208,7 @@
                                            [NSIndexPath indexPathForItem:2 inSection:0],
                                            ]]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validRemovalOfAllItems
@@ -229,7 +230,7 @@
                                            [NSIndexPath indexPathForItem:0 inSection:0],
                                            ]]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validInsertionOfSectionInEmptySections
@@ -241,7 +242,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validInsertionOfSectionAtBeginningOfNonEmptySections
@@ -262,7 +263,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validInsertionOfSectionInMiddleOfNonEmptySections
@@ -283,7 +284,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:1]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validInsertionOfSectionAtEndOfNonEmptySections
@@ -304,7 +305,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:2]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validInsertionOfMultipleSections
@@ -325,7 +326,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 2)]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_removalOfSectionAtBeginningOfSections
@@ -350,7 +351,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_removalOfSectionAtMiddleOfSections
@@ -375,7 +376,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedSections:[NSIndexSet indexSetWithIndex:1]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_removalOfSectionAtEndOfSections
@@ -400,7 +401,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedSections:[NSIndexSet indexSetWithIndex:2]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_removeMultipleSectionsAtBeginningOfSections
@@ -425,7 +426,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_removeMultipleSectionsAtEndOfSections
@@ -450,7 +451,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 2)]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validUpdate
@@ -469,7 +470,7 @@
                        [NSIndexPath indexPathForItem:0 inSection:0]: @"A",
                        }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validMoveForwardInsideOneSection
@@ -488,7 +489,7 @@
                      [NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:1 inSection:0],
                      }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validMoveBackwardInsideOneSection
@@ -507,7 +508,7 @@
                      [NSIndexPath indexPathForItem:1 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:0],
                      }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validMoveForwardBetweenSections
@@ -534,7 +535,7 @@
                      [NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:2 inSection:1],
                      }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 - (void)test_validMoveBackwardBetweenSections
@@ -561,7 +562,7 @@
                      [NSIndexPath indexPathForItem:0 inSection:1]: [NSIndexPath indexPathForItem:2 inSection:0],
                      }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
 #pragma mark - Invalid changesets
@@ -582,7 +583,7 @@
                        [NSIndexPath indexPathForItem:1 inSection:-1]: @"A",
                        }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeUpdate);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeUpdate);
 }
 
 - (void)test_invalidUpdateInNegativeItem
@@ -601,7 +602,7 @@
                        [NSIndexPath indexPathForItem:-1 inSection:0]: @"A",
                        }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeUpdate);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeUpdate);
 }
 
 - (void)test_invalidInsertionAtEndOfSection
@@ -620,7 +621,7 @@
                         [NSIndexPath indexPathForItem:3 inSection:0]: @"A",
                         }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeInsertRow);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeInsertRow);
 }
 
 - (void)test_invalidMultipleInsertionAtEndOfSection
@@ -641,7 +642,7 @@
                         [NSIndexPath indexPathForItem:5 inSection:0]: @"E",
                         }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeInsertRow);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeInsertRow);
 }
 
 - (void)test_invalidInsertionInNonExistentSection
@@ -660,7 +661,7 @@
                         [NSIndexPath indexPathForItem:0 inSection:1]: @"A",
                         }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeInsertRow);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeInsertRow);
 }
 
 - (void)test_invalidRemovalInValidSection
@@ -679,7 +680,7 @@
                                            [NSIndexPath indexPathForItem:2 inSection:0],
                                            ]]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeRemoveRow);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeRemoveRow);
 }
 
 - (void)test_invalidRemovalInNonExistentSection
@@ -698,7 +699,7 @@
                                            [NSIndexPath indexPathForItem:0 inSection:1],
                                            ]]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeRemoveRow);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeRemoveRow);
 }
 
 - (void)test_invalidInsertionOfSection
@@ -715,7 +716,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:2]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeInsertSection);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeInsertSection);
 }
 
 - (void)test_invalidRemovalOfSection
@@ -732,7 +733,7 @@
   [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedSections:[NSIndexSet indexSetWithIndex:2]]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeRemoveSection);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeRemoveSection);
 }
 
 - (void)test_invalidUpdateWithinExistingSection
@@ -751,7 +752,7 @@
                        [NSIndexPath indexPathForItem:2 inSection:0]: @"A",
                        }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeUpdate);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeUpdate);
 }
 
 - (void)test_invalidUpdateWithinNonExistentSection
@@ -770,7 +771,7 @@
                        [NSIndexPath indexPathForItem:0 inSection:1]: @"A",
                        }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeUpdate);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeUpdate);
 }
 
 - (void)test_moveWithInvalidOriginIndexPathInExistingSection
@@ -789,7 +790,7 @@
                      [NSIndexPath indexPathForItem:2 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:0],
                      }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeMoveRow);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeMoveRow);
 }
 
 - (void)test_moveWithInvalidDestinationIndexPathInExistingSection
@@ -808,7 +809,7 @@
                      [NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:2 inSection:0],
                      }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeMoveRow);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeMoveRow);
 }
 
 - (void)test_moveWithInvalidOriginSection
@@ -827,7 +828,7 @@
                      [NSIndexPath indexPathForItem:0 inSection:1]: [NSIndexPath indexPathForItem:0 inSection:0],
                      }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeMoveRow);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeMoveRow);
 }
 
 - (void)test_moveWithInvalidDestinationSection
@@ -846,12 +847,12 @@
                      [NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:1],
                      }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeMoveRow);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeMoveRow);
 }
 
 #pragma mark - More complicated situations
 
-- (void)test_validSampleInitialInsertions
+- (void)test_validInitialSectionInsertionsWithItemInsertions
 {
   CKTransactionalComponentDataSourceState *state =
   [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
@@ -866,7 +867,130 @@
                         [NSIndexPath indexPathForItem:1 inSection:1]: @"B2",
                         }]
    build];
-  XCTAssertEqual(CKIsValidChangesetForState(changeset, state), CKBadChangesetOperationTypeNone);
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
+}
+
+- (void)test_validInitialSectionInsertionsInPendingAsynchronousModificationWithItemInsertions
+{
+  CKTransactionalComponentDataSourceState *state =
+  [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
+                                                                sections:@[]];
+  NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications =
+  @[
+    // Insert section 0 and section 1
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    ];
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withInsertedItems:@{
+                        [NSIndexPath indexPathForItem:0 inSection:0]: @"A1",
+                        [NSIndexPath indexPathForItem:1 inSection:0]: @"B1",
+                        [NSIndexPath indexPathForItem:0 inSection:1]: @"A2",
+                        [NSIndexPath indexPathForItem:1 inSection:1]: @"B2",
+                        }]
+   build];
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, pendingAsynchronousModifications), CKBadChangesetOperationTypeNone);
+}
+
+- (void)test_validChangesetAppliedToValidPendingAsynchronousModifications
+{
+  CKTransactionalComponentDataSourceState *state =
+  [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
+                                                                sections:@[]];
+  NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications =
+  @[
+    // Insert section 0
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    // Insert two items into section 0
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedItems:@{
+                           [NSIndexPath indexPathForItem:0 inSection:0]: @"A1",
+                           [NSIndexPath indexPathForItem:1 inSection:0]: @"B1",
+                           }]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    // Insert section 1
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedSections:[NSIndexSet indexSetWithIndex:1]]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    // Insert two items into section 1
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedItems:@{
+                           [NSIndexPath indexPathForItem:0 inSection:1]: @"A2",
+                           [NSIndexPath indexPathForItem:1 inSection:1]: @"B2",
+                           }]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    ];
+  // Remove first item from each section
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withRemovedItems:[NSSet setWithArray:@[
+                                           [NSIndexPath indexPathForItem:0 inSection:0],
+                                           [NSIndexPath indexPathForItem:0 inSection:1],
+                                           ]]]
+   build];
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, pendingAsynchronousModifications), CKBadChangesetOperationTypeNone);
+}
+
+- (void)test_invalidChangesetAppliedToValidPendingAsynchronousModifications
+{
+  CKTransactionalComponentDataSourceState *state =
+  [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
+                                                                sections:@[]];
+  NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications =
+  @[
+    // Insert section 0
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    // Insert two items into section 0
+    [[CKTransactionalComponentDataSourceChangesetModification alloc]
+     initWithChangeset:
+     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+       withInsertedItems:@{
+                           [NSIndexPath indexPathForItem:0 inSection:0]: @"A1",
+                           [NSIndexPath indexPathForItem:1 inSection:0]: @"B1",
+                           }]
+      build]
+     stateListener:nil
+     userInfo:nil],
+    ];
+  // Remove first item from section 1
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withRemovedItems:[NSSet setWithArray:@[
+                                           [NSIndexPath indexPathForItem:0 inSection:0],
+                                           [NSIndexPath indexPathForItem:0 inSection:1],
+                                           ]]]
+   build];
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, pendingAsynchronousModifications), CKBadChangesetOperationTypeRemoveRow);
 }
 
 static CKTransactionalComponentDataSourceItem *itemWithModel(id model)

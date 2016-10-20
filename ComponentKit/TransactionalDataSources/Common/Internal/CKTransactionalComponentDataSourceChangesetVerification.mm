@@ -13,16 +13,28 @@
 #import "CKTransactionalComponentDataSourceChangesetVerification.h"
 
 #import <ComponentKit/CKTransactionalComponentDataSourceChangesetInternal.h>
+#import <ComponentKit/CKTransactionalComponentDataSourceChangesetModification.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceStateInternal.h>
 
-static NSMutableArray<NSNumber *> *sectionCountsForState(CKTransactionalComponentDataSourceState *state);
+static NSArray<NSNumber *> *sectionCountsWithModificationsFoldedIntoState(CKTransactionalComponentDataSourceState *state,
+                                                                          NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *modifications);
+
+static NSArray<NSNumber *> *sectionCountsForState(CKTransactionalComponentDataSourceState *state);
+
+static NSArray<NSNumber *> *updatedSectionCountsWithModification(NSArray<NSNumber *> *sectionCounts,
+                                                                 CKTransactionalComponentDataSourceChangesetModification *changesetModification);
 
 static NSArray<NSIndexPath *> *sortedIndexPaths(NSArray<NSIndexPath *> *indexPaths);
 
 CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentDataSourceChangeset *changeset,
-                                                       CKTransactionalComponentDataSourceState *state)
+                                                       CKTransactionalComponentDataSourceState *state,
+                                                       NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications)
 {
-  NSMutableArray<NSNumber *> *sectionCounts = sectionCountsForState(state);
+  /*
+   "Fold" any pending asynchronous modifications into the supplied state and compute the number of items in each section.
+   This process ensures that the modified state represents the state the changeset will be eventually applied to.
+   */
+  NSMutableArray<NSNumber *> *sectionCounts = [sectionCountsWithModificationsFoldedIntoState(state, pendingAsynchronousModifications) mutableCopy];
   __block BOOL invalidChangeFound = NO;
   // Updated items
   [changeset.updatedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, id _Nonnull model, BOOL * _Nonnull stop) {
@@ -146,13 +158,56 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
   return invalidChangeFound ? CKBadChangesetOperationTypeMoveRow : CKBadChangesetOperationTypeNone;
 }
 
-static NSMutableArray<NSNumber *> *sectionCountsForState(CKTransactionalComponentDataSourceState *state)
+static NSArray<NSNumber *> *sectionCountsWithModificationsFoldedIntoState(CKTransactionalComponentDataSourceState *state,
+                                                                          NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *modifications)
+{
+  NSArray<NSNumber *> *sectionCounts = sectionCountsForState(state);
+  for (id<CKTransactionalComponentDataSourceStateModifying> modification in modifications) {
+    if ([modification isKindOfClass:[CKTransactionalComponentDataSourceChangesetModification class]]) {
+      sectionCounts = updatedSectionCountsWithModification(sectionCounts, modification);
+    }
+  }
+  return sectionCounts;
+}
+
+static NSArray<NSNumber *> *sectionCountsForState(CKTransactionalComponentDataSourceState *state)
 {
   NSMutableArray *sectionCounts = [NSMutableArray new];
   for (NSArray *section in state.sections) {
     [sectionCounts addObject:@(section.count)];
   }
   return sectionCounts;
+}
+
+static NSArray<NSNumber *> *updatedSectionCountsWithModification(NSArray<NSNumber *> *sectionCounts,
+                                                                 CKTransactionalComponentDataSourceChangesetModification *changesetModification)
+{
+  CKTransactionalComponentDataSourceChangeset *changeset = changesetModification.changeset;
+  NSMutableArray *updatedSectionCounts = [sectionCounts mutableCopy];
+  // Move items
+  [changeset.movedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull fromIndexPath, NSIndexPath * _Nonnull toIndexPath, BOOL * _Nonnull stop) {
+    // "Remove" the item
+    updatedSectionCounts[fromIndexPath.section] = @([updatedSectionCounts[fromIndexPath.section] integerValue] - 1);
+    // "Insert" the item
+    updatedSectionCounts[toIndexPath.section] = @([updatedSectionCounts[toIndexPath.section] integerValue] + 1);
+  }];
+  // Remove items
+  [changeset.removedItems enumerateObjectsUsingBlock:^(NSIndexPath *_Nonnull indexPath, BOOL * _Nonnull stop) {
+    updatedSectionCounts[indexPath.section] = @([updatedSectionCounts[indexPath.section] integerValue] - 1);
+  }];
+  // Remove sections
+  [updatedSectionCounts removeObjectsAtIndexes:changeset.removedSections];
+  // Insert sections
+  NSMutableArray *emptySections = [NSMutableArray new];
+  for (NSUInteger i = 0; i < changeset.insertedSections.count; i++) {
+    [emptySections addObject:@0];
+  }
+  [updatedSectionCounts insertObjects:emptySections atIndexes:changeset.insertedSections];
+  // Insert items
+  [changeset.insertedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, id _Nonnull model, BOOL * _Nonnull stop) {
+    updatedSectionCounts[indexPath.section] = @([updatedSectionCounts[indexPath.section] integerValue] + 1);
+  }];
+  return updatedSectionCounts;
 }
 
 static NSArray<NSIndexPath *> *sortedIndexPaths(NSArray<NSIndexPath *> *indexPaths)

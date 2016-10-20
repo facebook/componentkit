@@ -17,7 +17,11 @@
 @protocol CKComponentStateListener;
 
 @interface CKTransactionalComponentDataSourceChangesetModification : NSObject <CKTransactionalComponentDataSourceStateModifying>
+
 - (instancetype)initWithChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo;
+
+@property (nonatomic, readonly, strong) CKTransactionalComponentDataSourceChangeset *changeset;
+
 @end

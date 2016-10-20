@@ -25,7 +25,6 @@
 
 @implementation CKTransactionalComponentDataSourceChangesetModification
 {
-  CKTransactionalComponentDataSourceChangeset *_changeset;
   id<CKComponentStateListener> _stateListener;
   NSDictionary *_userInfo;
 }
@@ -139,6 +138,11 @@
 
   return [[CKTransactionalComponentDataSourceChange alloc] initWithState:newState
                                                           appliedChanges:appliedChanges];
+}
+
+- (NSString *)description
+{
+  return [_changeset description];
 }
 
 static NSArray *emptyMutableArrays(NSUInteger count)

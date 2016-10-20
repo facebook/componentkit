@@ -23,7 +23,5 @@
  @param sections the current sections (or state) of the data source
  @return which section is causing an issue, if any. If there's no issue, this function will return CKBadChangesetOperationTypeNone
  */
-CKBadChangesetOperationType CKIsValidChangesetForSections(CKArrayControllerInputChangeset changeset, NSArray<NSArray *> *sections);
-
-/** This function takes a CKBadChangesetOperationType and returns a human readable string for it */
-NSString *CKHumanReadableBadChangesetOperation(CKBadChangesetOperationType type);
+CKBadChangesetOperationType CKIsValidChangesetForSections(CKArrayControllerInputChangeset changeset,
+                                                          NSArray<NSArray *> *sections);
