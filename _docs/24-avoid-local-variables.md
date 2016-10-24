@@ -1,9 +1,16 @@
 ---
-title: Avoid Local Variables 
+title: Avoid Local Variables; Otherwise, Use Const
 layout: docs
 permalink: /docs/avoid-local-variables.html
 ---
-In your `+new` method, avoid creating temporary local variables when possible.
+In your `+new` method:
+
+- **Prefer inlining** what would otherwise be a single-use temporary local variable.
+- If inlining isn't possible due to necessary references or code duplication concerns, **add `const`** to the
+right place to make sure the temporary local variable isn't assignable by  (E.g. `NSString *const foo`
+instead of `NSString *foo`).
+
+We avoid reassigning variables because:
 
 - **It makes code harder to read and modify** since dependencies between local variables are hard to visualize.
 - **It encourages mutating local variables after assignment** which hides surprising side-effects and changes.
