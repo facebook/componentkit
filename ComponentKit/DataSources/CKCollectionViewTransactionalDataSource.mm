@@ -67,11 +67,14 @@ CKTransactionalComponentDataSourceListener
                               userInfo:userInfo];
 }
 
-static void applyChangesToCollectionView(UICollectionView *collectionView, CKComponentDataSourceAttachController *attachController, CKTransactionalComponentDataSourceState *currentState, CKTransactionalComponentDataSourceAppliedChanges *changes)
+static void applyChangesToCollectionView(UICollectionView *collectionView,
+                                         CKComponentDataSourceAttachController *attachController,
+                                         CKTransactionalComponentDataSourceState *currentState,
+                                         CKTransactionalComponentDataSourceAppliedChanges *changes)
 {
   [changes.updatedIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, BOOL *stop) {
     if (CKCollectionViewDataSourceCell *cell = (CKCollectionViewDataSourceCell *) [collectionView cellForItemAtIndexPath:indexPath]) {
-      attachToCell(cell, indexPath, currentState, attachController);
+      attachToCell(cell, [currentState objectAtIndexPath:indexPath], attachController);
     }
   }];
   [collectionView deleteItemsAtIndexPaths:[changes.removedIndexPaths allObjects]];
@@ -152,16 +155,11 @@ static void applyChangesToCollectionView(UICollectionView *collectionView, CKCom
 
 static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_data_source.cell";
 
-static void attachToCell(CKCollectionViewDataSourceCell *cell, NSIndexPath *indexPath, CKTransactionalComponentDataSourceState *currentState, CKComponentDataSourceAttachController *attachController)
-{
-  CKTransactionalComponentDataSourceItem *item = [currentState objectAtIndexPath:indexPath];
-  [attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier toView:cell.rootView];
-}
-
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
   CKCollectionViewDataSourceCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:kReuseIdentifier forIndexPath:indexPath];
-  attachToCell(cell, indexPath, _currentState, _attachController);
+  CKTransactionalComponentDataSourceItem *item = [_currentState objectAtIndexPath:indexPath];
+  attachToCell(cell, item, _attachController);
   [_cellToItemMap setObject:item forKey:cell];
   return cell;
 }
@@ -179,6 +177,13 @@ static void attachToCell(CKCollectionViewDataSourceCell *cell, NSIndexPath *inde
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
   return _currentState ? [_currentState numberOfObjectsInSection:section] : 0;
+}
+
+static void attachToCell(CKCollectionViewDataSourceCell *cell,
+                         CKTransactionalComponentDataSourceItem *item,
+                         CKComponentDataSourceAttachController *attachController)
+{
+  [attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier toView:cell.rootView];
 }
 
 @end
