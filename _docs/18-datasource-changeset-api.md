@@ -62,4 +62,4 @@ Be wary of this fact while computing a changeset, the conventions defined in Coc
 - **Deletions and Updates are applied first using the current index space.**
 - **Insertions are then applied in the post deletions index space (updates obviously won't modify the index space).**
 
-You can consult the [following section](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/TableView_iPhone/ManageInsertDeleteRow/ManageInsertDeleteRow.html) in the apple documentation to get more information.
+You can consult the [following section](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/TableView_iPhone/ManageInsertDeleteRow/ManageInsertDeleteRow.html) in the Apple documentation to get more information.
