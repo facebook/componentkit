@@ -503,6 +503,7 @@ footer {
 
     section.content nav.toc {
         float: left;
+        width: 240px;
     }
 
 
