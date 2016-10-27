@@ -1,5 +1,5 @@
 ---
-title: Avoid Local Variables; Otherwise, Use Const
+title: Avoid Local Variables, Use Const
 layout: docs
 permalink: /docs/avoid-local-variables.html
 ---
