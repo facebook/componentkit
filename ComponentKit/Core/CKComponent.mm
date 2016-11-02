@@ -140,9 +140,14 @@ struct CKComponentMountInfo {
       CKAssert(v.ck_component == self, @"");
     }
 
-    const CGPoint anchorPoint = v.layer.anchorPoint;
-    [v setCenter:effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
-    [v setBounds:{v.bounds.origin, size}];
+    @try {
+      const CGPoint anchorPoint = v.layer.anchorPoint;
+      [v setCenter:effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
+      [v setBounds:{v.bounds.origin, size}];
+    } @catch (NSException *exception) {
+      [NSException raise:exception.name
+                  format:@"%@ raised %@ during mount: %@", [self class], exception.name, exception.reason];
+    }
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
     return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
