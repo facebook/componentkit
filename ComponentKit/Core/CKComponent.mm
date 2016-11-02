@@ -146,13 +146,8 @@ struct CKComponentMountInfo {
       [v setCenter:effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
       [v setBounds:{v.bounds.origin, size}];
     } @catch (NSException *exception) {
-      NSMutableArray<CKComponent *> *const componentBacktrace = [NSMutableArray arrayWithObject:supercomponent];
-      while ([componentBacktrace lastObject]
-             && [componentBacktrace lastObject]->_mountInfo
-             && [componentBacktrace lastObject]->_mountInfo->supercomponent) {
-        [componentBacktrace addObject:[componentBacktrace lastObject]->_mountInfo->supercomponent];
-      }
-      NSString *const componentBacktraceDescription = CKComponentBacktraceDescription(componentBacktrace);
+      NSString *const componentBacktraceDescription =
+      CKComponentBacktraceDescription(generateComponentBacktrace(supercomponent));
       [NSException raise:exception.name
                   format:@"%@ raised %@ during mount: %@\n%@", [self class], exception.name, exception.reason, componentBacktraceDescription];
     }
@@ -319,6 +314,17 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 - (id<NSObject>)scopeFrameToken
 {
   return _scopeHandle ? @(_scopeHandle.globalIdentifier) : nil;
+}
+
+static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component)
+{
+  NSMutableArray<CKComponent *> *const componentBacktrace = [NSMutableArray arrayWithObject:component];
+  while ([componentBacktrace lastObject]
+         && [componentBacktrace lastObject]->_mountInfo
+         && [componentBacktrace lastObject]->_mountInfo->supercomponent) {
+    [componentBacktrace addObject:[componentBacktrace lastObject]->_mountInfo->supercomponent];
+  }
+  return componentBacktrace;
 }
 
 @end
