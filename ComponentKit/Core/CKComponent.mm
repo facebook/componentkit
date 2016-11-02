@@ -21,6 +21,7 @@
 #import "CKAssert.h"
 #import "CKComponentAccessibility.h"
 #import "CKComponentAnimation.h"
+#import "CKComponentBacktraceDescription.h"
 #import "CKComponentController.h"
 #import "CKComponentDebugController.h"
 #import "CKComponentLayout.h"
@@ -145,8 +146,16 @@ struct CKComponentMountInfo {
       [v setCenter:effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
       [v setBounds:{v.bounds.origin, size}];
     } @catch (NSException *exception) {
+      NSMutableArray<CKComponent *> *const componentBacktrace = [NSMutableArray arrayWithObject:supercomponent];
+      while ([componentBacktrace lastObject]
+             && [componentBacktrace lastObject]->_mountInfo
+             && [componentBacktrace lastObject]->_mountInfo->supercomponent) {
+        [componentBacktrace addObject:[componentBacktrace lastObject]->_mountInfo->supercomponent];
+
+      }
+      NSString *const componentBacktraceDescription = CKComponentBacktraceDescription(componentBacktrace);
       [NSException raise:exception.name
-                  format:@"%@ raised %@ during mount: %@", [self class], exception.name, exception.reason];
+                  format:@"%@ raised %@ during mount: %@\n%@", [self class], exception.name, exception.reason, componentBacktraceDescription];
     }
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
