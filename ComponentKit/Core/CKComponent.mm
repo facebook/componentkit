@@ -151,7 +151,6 @@ struct CKComponentMountInfo {
              && [componentBacktrace lastObject]->_mountInfo
              && [componentBacktrace lastObject]->_mountInfo->supercomponent) {
         [componentBacktrace addObject:[componentBacktrace lastObject]->_mountInfo->supercomponent];
-
       }
       NSString *const componentBacktraceDescription = CKComponentBacktraceDescription(componentBacktrace);
       [NSException raise:exception.name
