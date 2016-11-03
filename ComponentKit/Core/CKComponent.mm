@@ -21,6 +21,7 @@
 #import "CKAssert.h"
 #import "CKComponentAccessibility.h"
 #import "CKComponentAnimation.h"
+#import "CKComponentBacktraceDescription.h"
 #import "CKComponentController.h"
 #import "CKComponentDebugController.h"
 #import "CKComponentLayout.h"
@@ -140,9 +141,16 @@ struct CKComponentMountInfo {
       CKAssert(v.ck_component == self, @"");
     }
 
-    const CGPoint anchorPoint = v.layer.anchorPoint;
-    [v setCenter:effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
-    [v setBounds:{v.bounds.origin, size}];
+    @try {
+      const CGPoint anchorPoint = v.layer.anchorPoint;
+      [v setCenter:effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
+      [v setBounds:{v.bounds.origin, size}];
+    } @catch (NSException *exception) {
+      NSString *const componentBacktraceDescription =
+      CKComponentBacktraceDescription(generateComponentBacktrace(supercomponent));
+      [NSException raise:exception.name
+                  format:@"%@ raised %@ during mount: %@\n%@", [self class], exception.name, exception.reason, componentBacktraceDescription];
+    }
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
     return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
@@ -306,6 +314,17 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 - (id<NSObject>)scopeFrameToken
 {
   return _scopeHandle ? @(_scopeHandle.globalIdentifier) : nil;
+}
+
+static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component)
+{
+  NSMutableArray<CKComponent *> *const componentBacktrace = [NSMutableArray arrayWithObject:component];
+  while ([componentBacktrace lastObject]
+         && [componentBacktrace lastObject]->_mountInfo
+         && [componentBacktrace lastObject]->_mountInfo->supercomponent) {
+    [componentBacktrace addObject:[componentBacktrace lastObject]->_mountInfo->supercomponent];
+  }
+  return componentBacktrace;
 }
 
 @end
