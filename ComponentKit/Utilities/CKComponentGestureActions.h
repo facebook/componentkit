@@ -21,7 +21,7 @@ typedef void (*CKComponentGestureRecognizerSetupFunction)(UIGestureRecognizer *)
  @param action Sent up the responder chain when a tap occurs. Sender is the component that created the view.
  Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
-CKComponentViewAttributeValue CKComponentTapGestureAttribute(const CKComponentAction &action);
+CKComponentViewAttributeValue CKComponentTapGestureAttribute(const CKTypedComponentAction<id> &action);
 
 /**
  Returns a view attribute that creates and configures a pan gesture recognizer to send the given CKComponentAction.
@@ -29,7 +29,7 @@ CKComponentViewAttributeValue CKComponentTapGestureAttribute(const CKComponentAc
  @param action Sent up the responder chain when a pan occurs. Sender is the component that created the view.
  Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
-CKComponentViewAttributeValue CKComponentPanGestureAttribute(const CKComponentAction &action);
+CKComponentViewAttributeValue CKComponentPanGestureAttribute(const CKTypedComponentAction<id> &action);
 
 /**
  Returns a view attribute that creates and configures a long press gesture recognizer to send the given CKComponentAction.
@@ -37,7 +37,7 @@ CKComponentViewAttributeValue CKComponentPanGestureAttribute(const CKComponentAc
  @param action Sent up the responder chain when a long press occurs. Sender is the component that created the view.
  Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
-CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(const CKComponentAction &action);
+CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(const CKTypedComponentAction<id> &action);
 
 /**
  Returns a view attribute that creates and configures a gesture recognizer.
@@ -50,11 +50,11 @@ CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(const CKCompo
  */
 CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognizerClass,
                                                           CKComponentGestureRecognizerSetupFunction setupFunction,
-                                                          const CKComponentAction &action,
+                                                          const CKTypedComponentAction<id> &action,
                                                           CKComponentForwardedSelectors delegateSelectors = {});
 
 /**
  Allows mapping a UIGestureRecognizer back to the original CKComponentAction selector,
  since ComponentKit internally changes the selector to be able send to the component responder chain.
  */
-CKComponentAction CKComponentGestureGetAction(UIGestureRecognizer *gesture);
+CKTypedComponentAction<id> CKComponentGestureGetAction(UIGestureRecognizer *gesture);
