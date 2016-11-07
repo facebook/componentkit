@@ -19,5 +19,5 @@
 /** Exposed only for testing. Do not touch this directly. */
 @interface UIGestureRecognizer (CKComponent)
 - (CKComponentAction)ck_componentAction;
-- (void)ck_setComponentAction:(CKComponentAction)action;
+- (void)ck_setComponentAction:(const CKComponentAction &)action;
 @end

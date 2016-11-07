@@ -18,6 +18,14 @@
 #import "CKComponent.h"
 #import "CKComponentViewInterface.h"
 
+struct CKComponentActionHasher
+{
+  std::size_t operator()(const CKComponentAction& k) const
+  {
+    return std::hash<void *>()(k.selector());
+  }
+};
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 // This method returns a friendly-print of a responder chain. Used for debug purposes.
@@ -30,42 +38,42 @@ static NSString *_debugResponderChain(id responder) {
 }
 #pragma clang diagnostic pop
 
-void CKComponentActionSend(CKComponentAction action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
+void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
 {
   id initialResponder = (behavior == CKComponentActionSendBehaviorStartAtSender) ? sender : [sender nextResponder];
-  id responder = [initialResponder targetForAction:action withSender:sender];
+  id responder = [initialResponder targetForAction:action.selector() withSender:sender];
   CKCAssertNotNil(responder, @"Unhandled component action %@ following responder chain %@",
-                  NSStringFromSelector(action), _debugResponderChain(sender));
-
+                  NSStringFromSelector(action.selector()), _debugResponderChain(sender));
+  
   // ARC is worried that the selector might have a return value it doesn't know about, or be annotated with ns_consumed.
   // Neither is the case for our action handlers, so ignore the warning.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-  [responder performSelector:action withObject:sender withObject:context];
+  [responder performSelector:action.selector() withObject:sender withObject:context];
 #pragma clang diagnostic pop
 }
 
 @interface CKComponentActionControlForwarder : NSObject
-- (instancetype)initWithAction:(CKComponentAction)action;
+- (instancetype)initWithAction:(const CKComponentAction &)action;
 - (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event;
 @end
 
-typedef std::unordered_map<CKComponentAction, CKComponentActionControlForwarder *> ForwarderMap;
+typedef std::unordered_map<CKComponentAction, CKComponentActionControlForwarder *, CKComponentActionHasher> ForwarderMap;
 
-CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction action,
+CKComponentViewAttributeValue CKComponentActionAttribute(const CKComponentAction &action,
                                                          UIControlEvents controlEvents)
 {
   static ForwarderMap *map = new ForwarderMap(); // never destructed to avoid static destruction fiasco
   static CK::StaticMutex lock = CK_MUTEX_INITIALIZER;   // protects map
-
-  if (action == NULL) {
+  
+  if (action.selector() == NULL) {
     return {
       {"CKComponentActionAttribute-no-op", ^(UIControl *control, id value) {}, ^(UIControl *control, id value) {}},
       // Use a bogus value for the attribute's "value". All the information is encoded in the attribute itself.
       @YES
     };
   }
-
+  
   // We need a target for the control event. (We can't use the responder chain because we need to jump in and change the
   // sender from the UIControl to the CKComponent.)
   // Control event targets are __unsafe_unretained. We can't rely on the block to keep the target alive, since the block
@@ -86,10 +94,10 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction actio
       forwarder = it->second;
     }
   }
-
+  
   std::string identifier = std::string("CKComponentActionAttribute-")
-                         + std::string(sel_getName(action))
-                         + "-" + std::to_string(controlEvents);
+  + std::string(sel_getName(action.selector()))
+  + "-" + std::to_string(controlEvents);
   return {
     {
       identifier,
@@ -114,7 +122,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction actio
   CKComponentAction _action;
 }
 
-- (instancetype)initWithAction:(CKComponentAction)action
+- (instancetype)initWithAction:(const CKComponentAction &)action
 {
   if (self = [super init]) {
     _action = action;
