@@ -21,49 +21,73 @@
  We support several different types of action variants. You don't need to use this value anywhere, it's set for you
  by whatever initializer you end up using.
  */
-typedef NS_ENUM(NSUInteger, _CKTypedComponentActionVariant) {
-  _CKTypedComponentActionVariantRawSelector = 0,
-  _CKTypedComponentActionVariantTargetSelector,
-  _CKTypedComponentActionVariantComponentScope
+typedef NS_ENUM(NSUInteger, CKTypedComponentActionVariant) {
+  CKTypedComponentActionVariantRawSelector = 0,
+  CKTypedComponentActionVariantTargetSelector,
+  CKTypedComponentActionVariantComponentScope
+};
+
+typedef NS_ENUM(NSUInteger, CKComponentActionSendBehavior) {
+  /** Starts searching at the sender's next responder. Usually this is what you want to prevent infinite loops. */
+  CKComponentActionSendBehaviorStartAtSenderNextResponder,
+  /** If the sender itself responds to the action, invoke the action on the sender. */
+  CKComponentActionSendBehaviorStartAtSender,
+};
+
+struct CKTypedComponentActionValue {
+  CKTypedComponentActionValue() : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(NULL) {}
+  CKTypedComponentActionValue(const CKTypedComponentActionValue &value) : _variant(value._variant), _target(value._target), _scopeHandle(value._scopeHandle), _selector(value._selector) {};
+  CKTypedComponentActionValue(CKTypedComponentActionVariant variant, __unsafe_unretained id target, __unsafe_unretained CKComponentScopeHandle *scopeHandle, SEL selector) : _variant(variant), _target(target), _scopeHandle(scopeHandle), _selector(selector) {};
+
+  id initialTarget(CKComponent *sender) const;
+  SEL selector() const { return _selector; };
+  CKComponentActionSendBehavior defaultBehavior() const;
+
+  explicit operator bool() const { return _selector != NULL; };
+  bool operator==(const CKTypedComponentActionValue& rhs) const;
+
+private:
+  CKTypedComponentActionVariant _variant;
+  __weak id _target;
+  __weak CKComponentScopeHandle *_scopeHandle;
+  SEL _selector;
 };
 
 #pragma mark - Typed Helpers
 
-template <typename... Ts> struct _CKTypedComponentActionTypelist { };
+template <typename... Ts> struct CKTypedComponentActionTypelist { };
 
 /** Base case, recursion should stop here. */
-void _CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const _CKTypedComponentActionTypelist<> &list);
+void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list);
 
 /** 
  Recursion through variadic argument type unpacking. This allows us to build a vector of encoded const char * before
  any actual arguments have been provided. All of this is done at compile-time.
  */
 template<typename T, typename... Ts>
-void _CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const _CKTypedComponentActionTypelist<T, Ts...> &list)
+void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<T, Ts...> &list)
 {
   typeVector.push_back(@encode(T));
-  _CKTypedComponentActionTypeVectorBuild(typeVector, _CKTypedComponentActionTypelist<Ts...>{});
+  CKTypedComponentActionTypeVectorBuild(typeVector, CKTypedComponentActionTypelist<Ts...>{});
 }
 
 /** Base case, recursion should stop here. */
-void _CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index);
+void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index);
 
 /**
  Recursion here is through normal variadic argument list unpacking. Unlike above, we have the arguments, so we don't
  require the intermediary struct.
  */
 template <typename T, typename... Ts>
-void _CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index, T t, Ts... args)
+void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index, T t, Ts... args)
 {
   // We have to be able to handle methods that take less than the provided number of arguments, since that will cause
   // an exception to be thrown.
   if (index < invocation.methodSignature.numberOfArguments) {
     [invocation setArgument:&t atIndex:index];
-    _CKConfigureInvocationWithArguments(invocation, index + 1, args...);
+    CKConfigureInvocationWithArguments(invocation, index + 1, args...);
   }
 }
-
-id _CKTypedComponentActionTarget(_CKTypedComponentActionVariant variant, CKComponent *sender, id target, CKComponentScopeHandle *scopeHandle);
 
 #pragma mark - Debug Helpers
 
@@ -76,7 +100,7 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder);
 #pragma mark - Sending
 
 template<typename... T>
-static void _CKComponentActionSendResponderChain(SEL selector, id target, CKComponent *sender, T... args) {
+static void CKComponentActionSendResponderChain(SEL selector, id target, CKComponent *sender, T... args) {
   id responder = [target targetForAction:selector withSender:target];
   CKCAssertNotNil(responder, @"Unhandled component action %@ following responder chain %@",
                   NSStringFromSelector(selector), _CKComponentResponderChainDebugResponderChain(target));
@@ -90,6 +114,6 @@ static void _CKComponentActionSendResponderChain(SEL selector, id target, CKComp
   }
   // We use a recursive argument unpack to unwrap the variadic arguments in-order on the invocation in a type-safe
   // manner.
-  _CKConfigureInvocationWithArguments(invocation, 3, args...);
+  CKConfigureInvocationWithArguments(invocation, 3, args...);
   [invocation invoke];
 }

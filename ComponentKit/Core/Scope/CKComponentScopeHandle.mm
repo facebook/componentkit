@@ -25,6 +25,8 @@
   CKComponentController *_controller;
   CKComponentScopeRootIdentifier _rootIdentifier;
   BOOL _acquired;
+  BOOL _resolved;
+  CKComponent *__weak _acquiredComponent;
 }
 
 + (CKComponentScopeHandle *)handleForComponent:(CKComponent *)component
@@ -162,6 +164,12 @@
     _controller = newController(_acquiredComponent, currentScope->newScopeRoot);
   }
   _resolved = YES;
+}
+
+- (id)responder
+{
+  CKAssert(_resolved, @"Asking for responder from scope handle before resolution:%@", NSStringFromClass(_componentClass));
+  return _acquiredComponent;
 }
 
 #pragma mark Controllers

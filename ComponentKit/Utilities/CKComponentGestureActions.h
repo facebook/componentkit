@@ -21,7 +21,7 @@ typedef void (*CKComponentGestureRecognizerSetupFunction)(UIGestureRecognizer *)
  @param action Sent up the responder chain when a tap occurs. Sender is the component that created the view.
  Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
-CKComponentViewAttributeValue CKComponentTapGestureAttribute(const CKTypedComponentAction<UIGestureRecognizer *> &action);
+CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKTypedComponentAction<UIGestureRecognizer *> action);
 
 /**
  Returns a view attribute that creates and configures a pan gesture recognizer to send the given CKComponentAction.
@@ -29,7 +29,7 @@ CKComponentViewAttributeValue CKComponentTapGestureAttribute(const CKTypedCompon
  @param action Sent up the responder chain when a pan occurs. Sender is the component that created the view.
  Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
-CKComponentViewAttributeValue CKComponentPanGestureAttribute(const CKTypedComponentAction<UIGestureRecognizer *> &action);
+CKComponentViewAttributeValue CKComponentPanGestureAttribute(CKTypedComponentAction<UIGestureRecognizer *> action);
 
 /**
  Returns a view attribute that creates and configures a long press gesture recognizer to send the given CKComponentAction.
@@ -37,7 +37,7 @@ CKComponentViewAttributeValue CKComponentPanGestureAttribute(const CKTypedCompon
  @param action Sent up the responder chain when a long press occurs. Sender is the component that created the view.
  Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
-CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(const CKTypedComponentAction<UIGestureRecognizer *> &action);
+CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(CKTypedComponentAction<UIGestureRecognizer *> action);
 
 /**
  Returns a view attribute that creates and configures a gesture recognizer.
@@ -50,7 +50,7 @@ CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(const CKTyped
  */
 CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognizerClass,
                                                           CKComponentGestureRecognizerSetupFunction setupFunction,
-                                                          const CKTypedComponentAction<UIGestureRecognizer *> &action,
+                                                          CKTypedComponentAction<UIGestureRecognizer *> action,
                                                           CKComponentForwardedSelectors delegateSelectors = {});
 
 /**

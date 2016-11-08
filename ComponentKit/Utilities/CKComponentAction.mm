@@ -21,20 +21,34 @@
 #import "CKComponentScopeHandle.h"
 #import "CKComponentViewInterface.h"
 
-void _CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const _CKTypedComponentActionTypelist<> &list) { }
-void _CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) { }
+void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list) { }
+void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) { }
 
-id _CKTypedComponentActionTarget(_CKTypedComponentActionVariant variant, CKComponent *sender, id target, CKComponentScopeHandle *scopeHandle) {
-  switch (variant) {
-    case _CKTypedComponentActionVariantRawSelector:
+id CKTypedComponentActionValue::initialTarget(CKComponent *sender) const {
+  switch (_variant) {
+    case CKTypedComponentActionVariantRawSelector:
       return sender;
-    case _CKTypedComponentActionVariantTargetSelector:
-      return target;
-    case _CKTypedComponentActionVariantComponentScope:
-      CKCAssert(scopeHandle.resolved, @"Sending an action before scope handle is resolved is not supported.");
-      return scopeHandle.acquiredComponent;
+    case CKTypedComponentActionVariantTargetSelector:
+      return _target;
+    case CKTypedComponentActionVariantComponentScope:
+      return _scopeHandle.responder;
   }
 }
+
+bool CKTypedComponentActionValue::operator==(const CKTypedComponentActionValue& rhs) const
+{
+  return (_variant == rhs._variant
+          && CKObjectIsEqual(_target, rhs._target)
+          && CKObjectIsEqual(_scopeHandle, rhs._scopeHandle)
+          && _selector == rhs._selector);
+}
+
+CKComponentActionSendBehavior CKTypedComponentActionValue::defaultBehavior() const
+{
+  return (_variant == CKTypedComponentActionVariantRawSelector
+          ? CKComponentActionSendBehaviorStartAtSenderNextResponder
+          : CKComponentActionSendBehaviorStartAtSender);
+};
 
 void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender)
 {
@@ -46,18 +60,18 @@ void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender,
   action.send(sender, behavior);
 }
 
-void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent *sender, id context)
+void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context)
 {
   action.send(sender, CKComponentActionSendBehaviorStartAtSenderNextResponder, context);
 }
 
-void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
+void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
 {
   action.send(sender, behavior, context);
 }
 
 @interface CKComponentActionControlForwarder : NSObject
-- (instancetype)initWithAction:(const CKTypedComponentAction<UIEvent *> &)action;
+- (instancetype)initWithAction:(CKTypedComponentAction<UIEvent *>)action;
 - (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event;
 @end
 
@@ -71,7 +85,7 @@ struct CKComponentActionHasher
 
 typedef std::unordered_map<CKTypedComponentAction<UIEvent *>, CKComponentActionControlForwarder *, CKComponentActionHasher> ForwarderMap;
 
-CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentAction<UIEvent *> &action,
+CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<UIEvent *> action,
                                                          UIControlEvents controlEvents)
 {
   static ForwarderMap *map = new ForwarderMap(); // never destructed to avoid static destruction fiasco
@@ -133,7 +147,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentA
   CKTypedComponentAction<UIEvent *> _action;
 }
 
-- (instancetype)initWithAction:(const CKTypedComponentAction<UIEvent *> &)action
+- (instancetype)initWithAction:(CKTypedComponentAction<UIEvent *>)action
 {
   if (self = [super init]) {
     _action = action;

@@ -20,7 +20,7 @@
 #import "CKComponentViewInterface.h"
 
 /** Find a UIGestureRecognizer attached to a view that has a given ck_componentAction. */
-static UIGestureRecognizer *recognizerForAction(UIView *view, const CKTypedComponentAction<UIGestureRecognizer *> &action)
+static UIGestureRecognizer *recognizerForAction(UIView *view, CKTypedComponentAction<UIGestureRecognizer *> action)
 {
   for (UIGestureRecognizer *recognizer in view.gestureRecognizers) {
     if (sel_isEqual([recognizer ck_componentAction].selector(), action.selector())) {
@@ -63,17 +63,17 @@ private:
   std::vector<UIGestureRecognizer *> _reusePool;
 };
 
-CKComponentViewAttributeValue CKComponentTapGestureAttribute(const CKTypedComponentAction<UIGestureRecognizer *> &action)
+CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKTypedComponentAction<UIGestureRecognizer *> action)
 {
   return CKComponentGestureAttribute([UITapGestureRecognizer class], nullptr, action);
 }
 
-CKComponentViewAttributeValue CKComponentPanGestureAttribute(const CKTypedComponentAction<UIGestureRecognizer *> &action)
+CKComponentViewAttributeValue CKComponentPanGestureAttribute(CKTypedComponentAction<UIGestureRecognizer *> action)
 {
   return CKComponentGestureAttribute([UIPanGestureRecognizer class], nullptr, action);
 }
 
-CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(const CKTypedComponentAction<UIGestureRecognizer *> &action)
+CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(CKTypedComponentAction<UIGestureRecognizer *> action)
 {
   return CKComponentGestureAttribute([UILongPressGestureRecognizer class], nullptr, action);
 }
@@ -100,7 +100,7 @@ namespace std {
 
 CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognizerClass,
                                                           CKComponentGestureRecognizerSetupFunction setupFunction,
-                                                          const CKTypedComponentAction<UIGestureRecognizer *> &action,
+                                                          CKTypedComponentAction<UIGestureRecognizer *> action,
                                                           CKComponentForwardedSelectors delegateSelectors)
 {
   if (!action) {
@@ -187,7 +187,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
 
 @interface _CKGestureActionWrapper : NSObject <NSCopying>
 
-- (instancetype)initWithGestureAction:(const CKTypedComponentAction<UIGestureRecognizer *> &)action;
+- (instancetype)initWithGestureAction:(CKTypedComponentAction<UIGestureRecognizer *>)action;
 
 - (CKTypedComponentAction<UIGestureRecognizer *>)action;
 
@@ -198,7 +198,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
   CKTypedComponentAction<UIGestureRecognizer *> _action;
 }
 
-- (instancetype)initWithGestureAction:(const CKTypedComponentAction<UIGestureRecognizer *> &)action
+- (instancetype)initWithGestureAction:(CKTypedComponentAction<UIGestureRecognizer *>)action
 {
   if (self = [super init]) {
     _action = action;
@@ -233,7 +233,7 @@ static const char kCKComponentActionGestureRecognizerKey = ' ';
   }
 }
 
-- (void)ck_setComponentAction:(const CKTypedComponentAction<UIGestureRecognizer *> &)action
+- (void)ck_setComponentAction:(CKTypedComponentAction<UIGestureRecognizer *>)action
 {
   _CKGestureActionWrapper *wrapper = [[_CKGestureActionWrapper alloc] initWithGestureAction:action];
   objc_setAssociatedObject(self, &kCKComponentActionGestureRecognizerKey, wrapper, OBJC_ASSOCIATION_COPY_NONATOMIC);
