@@ -90,7 +90,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
                     titleFont:(UIFont *)titleFont
                      selected:(BOOL)selected
                       enabled:(BOOL)enabled
-                       action:(const CKComponentAction &)action
+                       action:(const CKTypedComponentAction<UIEvent *> &)action
                          size:(const CKComponentSize &)size
                    attributes:(const CKViewComponentAttributeValueMap &)passedAttributes
    accessibilityConfiguration:(CKButtonComponentAccessibilityConfiguration)accessibilityConfiguration
@@ -161,7 +161,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
                             std::move(attributes),
                             {
                               .accessibilityLabel = accessibilityConfiguration.accessibilityLabel,
-                              .accessibilityComponentAction = enabled ? action : NULL
+                              .accessibilityComponentAction = enabled ? CKComponentAction(action) : NULL
                             }
                           }
                           size:size];

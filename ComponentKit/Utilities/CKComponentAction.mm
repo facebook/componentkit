@@ -44,21 +44,21 @@ void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent
 }
 
 @interface CKComponentActionControlForwarder : NSObject
-- (instancetype)initWithAction:(const CKTypedComponentAction<id> &)action;
+- (instancetype)initWithAction:(const CKTypedComponentAction<UIEvent *> &)action;
 - (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event;
 @end
 
 struct CKComponentActionHasher
 {
-  std::size_t operator()(const CKTypedComponentAction<id>& k) const
+  std::size_t operator()(const CKTypedComponentAction<UIEvent *>& k) const
   {
     return std::hash<void *>()(k.selector());
   }
 };
 
-typedef std::unordered_map<CKTypedComponentAction<id>, CKComponentActionControlForwarder *, CKComponentActionHasher> ForwarderMap;
+typedef std::unordered_map<CKTypedComponentAction<UIEvent *>, CKComponentActionControlForwarder *, CKComponentActionHasher> ForwarderMap;
 
-CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentAction<id> &action,
+CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentAction<UIEvent *> &action,
                                                          UIControlEvents controlEvents)
 {
   static ForwarderMap *map = new ForwarderMap(); // never destructed to avoid static destruction fiasco
@@ -117,10 +117,10 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentA
 
 @implementation CKComponentActionControlForwarder
 {
-  CKTypedComponentAction<id> _action;
+  CKTypedComponentAction<UIEvent *> _action;
 }
 
-- (instancetype)initWithAction:(const CKTypedComponentAction<id> &)action
+- (instancetype)initWithAction:(const CKTypedComponentAction<UIEvent *> &)action
 {
   if (self = [super init]) {
     _action = action;
@@ -131,7 +131,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentA
 - (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event
 {
   // If the action can be handled by the sender itself, send it there instead of looking up the chain.
-  CKComponentActionSend(_action, sender.ck_component, event, CKComponentActionSendBehaviorStartAtSender);
+  _action.send(sender.ck_component, CKComponentActionSendBehaviorStartAtSender, event);
 }
 
 #pragma mark - Debug Helpers

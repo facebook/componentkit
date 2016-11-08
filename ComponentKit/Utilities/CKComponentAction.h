@@ -61,9 +61,22 @@ struct CKTypedComponentAction {
   typedef void (^CKTypedComponentActionExecutionBlock)(id sender, T... args);
   CKTypedComponentActionExecutionBlock block() const;
   
-  /** We support promotion from actions that take no arguments, but we do not allow demotion. */
-  CKTypedComponentAction(const CKTypedComponentAction<> &action)
-  { _variant = action._variant; _target = action._target; _selector = action._selector; };
+  /** We support promotion from actions that take no arguments. */
+  template <typename T1, typename... Ts>
+  CKTypedComponentAction<T1, Ts...>(const CKTypedComponentAction<> &action)
+  { _variant = action._variant; _target = action._target; _selector = action._selector; }
+
+  /** Const copy constructor to allow for block capture of the struct. */
+  CKTypedComponentAction<T...>(const CKTypedComponentAction<T...> &action)
+  { _variant = action._variant; _target = action._target; _selector = action._selector; }
+
+  /** 
+   We allow demotion from actions with types to untyped actions, but only when explicit. This means arguments to the
+   method specified here will have nil values at runtime. Used for interoperation with older API's.
+   */
+  template<typename... Ts>
+  explicit CKTypedComponentAction<>(const CKTypedComponentAction<Ts...> &action)
+  { _variant = action._variant; _target = action._target; _selector = action._selector; }
   
   /** Allows conversion from NULL actions. */
   CKTypedComponentAction(int s) : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _selector(NULL) {};
@@ -100,5 +113,5 @@ void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent
  context is the UIEvent that triggered the action. May be NULL, in which case no action will be sent.
  @param controlEvents The events that should result in the action being sent. Default is touch up inside.
  */
-CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentAction<id> &action,
+CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentAction<UIEvent *> &action,
                                                          UIControlEvents controlEvents = UIControlEventTouchUpInside);
