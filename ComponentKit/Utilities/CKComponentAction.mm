@@ -185,7 +185,7 @@ static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSigna
     const char *methodEncoding = [signature getArgumentTypeAtIndex:i + 3];
     const char *typeEncoding = typeEncodings[i];
 
-    CKCAssert(strcmp(methodEncoding, typeEncoding) == 0, @"Implementation of %@ does not match expected types.\nExpected type %s, got %s", NSStringFromSelector(selector), typeEncoding, methodEncoding);
+    CKCAssert(methodEncoding == NULL || typeEncoding == NULL || strcmp(methodEncoding, typeEncoding) == 0, @"Implementation of %@ does not match expected types.\nExpected type %s, got %s", NSStringFromSelector(selector), typeEncoding, methodEncoding);
   }
 }
 
