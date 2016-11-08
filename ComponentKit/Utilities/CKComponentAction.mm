@@ -35,6 +35,14 @@ id CKTypedComponentActionValue::initialTarget(CKComponent *sender) const {
   }
 }
 
+#pragma mark - CKTypedComponentActionValue
+
+CKTypedComponentActionValue::CKTypedComponentActionValue() : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(NULL) {}
+
+CKTypedComponentActionValue::CKTypedComponentActionValue(const CKTypedComponentActionValue &value) : _variant(value._variant), _target(value._target), _scopeHandle(value._scopeHandle), _selector(value._selector) {};
+
+CKTypedComponentActionValue::CKTypedComponentActionValue(CKTypedComponentActionVariant variant, __unsafe_unretained id target, __unsafe_unretained CKComponentScopeHandle *scopeHandle, SEL selector) : _variant(variant), _target(target), _scopeHandle(scopeHandle), _selector(selector) {};
+
 bool CKTypedComponentActionValue::operator==(const CKTypedComponentActionValue& rhs) const
 {
   return (_variant == rhs._variant
@@ -49,6 +57,8 @@ CKComponentActionSendBehavior CKTypedComponentActionValue::defaultBehavior() con
           ? CKComponentActionSendBehaviorStartAtSenderNextResponder
           : CKComponentActionSendBehaviorStartAtSender);
 };
+
+#pragma mark - Legacy Send Functions
 
 void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender)
 {
@@ -69,6 +79,8 @@ void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sende
 {
   action.send(sender, behavior, context);
 }
+
+#pragma mark - Control Actions
 
 @interface CKComponentActionControlForwarder : NSObject
 - (instancetype)initWithAction:(CKTypedComponentAction<UIEvent *>)action;

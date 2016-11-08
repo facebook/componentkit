@@ -37,9 +37,9 @@ typedef NS_ENUM(NSUInteger, CKComponentActionSendBehavior) {
 };
 
 struct CKTypedComponentActionValue {
-  CKTypedComponentActionValue() : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(NULL) {}
-  CKTypedComponentActionValue(const CKTypedComponentActionValue &value) : _variant(value._variant), _target(value._target), _scopeHandle(value._scopeHandle), _selector(value._selector) {};
-  CKTypedComponentActionValue(CKTypedComponentActionVariant variant, __unsafe_unretained id target, __unsafe_unretained CKComponentScopeHandle *scopeHandle, SEL selector) : _variant(variant), _target(target), _scopeHandle(scopeHandle), _selector(selector) {};
+  CKTypedComponentActionValue();
+  CKTypedComponentActionValue(const CKTypedComponentActionValue &value);
+  CKTypedComponentActionValue(CKTypedComponentActionVariant variant, __unsafe_unretained id target, __unsafe_unretained CKComponentScopeHandle *scopeHandle, SEL selector);
 
   id initialTarget(CKComponent *sender) const;
   SEL selector() const { return _selector; };
