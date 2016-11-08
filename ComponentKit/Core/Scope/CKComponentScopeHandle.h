@@ -51,6 +51,11 @@
  return nil until `resolve` is called.
  */
 @property (nonatomic, strong, readonly) CKComponentController *controller;
+@property (nonatomic, weak, readonly) CKComponent *acquiredComponent;
+@property (nonatomic, assign, readonly) BOOL resolved;
+
+@property (nonatomic, assign, readonly) Class componentClass;
+
 @property (nonatomic, strong, readonly) id state;
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
 

@@ -14,14 +14,27 @@
 #import <vector>
 #import <array>
 
-#import <ComponentKit/CKAssert.h>
-
+#import "CKAssert.h"
 #import "CKMutex.h"
 #import "CKComponent.h"
+#import "CKInternalHelpers.h"
+#import "CKComponentScopeHandle.h"
 #import "CKComponentViewInterface.h"
 
 void _CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const _CKTypedComponentActionTypelist<> &list) { }
 void _CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) { }
+
+id _CKTypedComponentActionTarget(_CKTypedComponentActionVariant variant, CKComponent *sender, id target, CKComponentScopeHandle *scopeHandle) {
+  switch (variant) {
+    case _CKTypedComponentActionVariantRawSelector:
+      return sender;
+    case _CKTypedComponentActionVariantTargetSelector:
+      return target;
+    case _CKTypedComponentActionVariantComponentScope:
+      CKCAssert(scopeHandle.resolved, @"Sending an action before scope handle is resolved is not supported.");
+      return scopeHandle.acquiredComponent;
+  }
+}
 
 void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender)
 {
@@ -136,15 +149,8 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentA
 
 #pragma mark - Debug Helpers
 
-void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings)
+static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSignature *signature, const std::vector<const char *> &typeEncodings)
 {
-  // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
-  // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
-  // argument indices.
-  CKCAssert([target respondsToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", [target class], NSStringFromSelector(selector));
-
-  NSMethodSignature *signature = [target methodSignatureForSelector:selector];
-
   CKCAssert(typeEncodings.size() + 3 >= signature.numberOfArguments, @"Expected action method %@ to take less than %lu arguments, but it suppoorts %lu", NSStringFromSelector(selector), typeEncodings.size(), (unsigned long)signature.numberOfArguments - 3);
 
   CKCAssert(signature.methodReturnLength == 0, @"Component action methods should not have any return value. Any objects returned from this method will be leaked.");
@@ -155,6 +161,33 @@ void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const st
 
     CKCAssert(strcmp(methodEncoding, typeEncoding) == 0, @"Implementation of %@ does not match expected types.\nExpected type %s, got %s", NSStringFromSelector(selector), typeEncoding, methodEncoding);
   }
+}
+
+void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings)
+{
+  // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
+  // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
+  // argument indices.
+  const Class klass = scope.scopeHandle().componentClass;
+  // We allow component actions to be implemented either in the component, or its controller.
+  const Class controllerKlass = CKComponentControllerClassFromComponentClass(klass);
+  CKCAssert([klass instancesRespondToSelector:selector] || [controllerKlass instancesRespondToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", klass, NSStringFromSelector(selector));
+
+  NSMethodSignature *signature = [klass instanceMethodSignatureForSelector:selector] ?: [controllerKlass instanceMethodSignatureForSelector:selector];
+
+  checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
+}
+
+void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings)
+{
+  // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
+  // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
+  // argument indices.
+  CKCAssert([target respondsToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", [target class], NSStringFromSelector(selector));
+
+  NSMethodSignature *signature = [target methodSignatureForSelector:selector];
+
+  checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
 }
 
 

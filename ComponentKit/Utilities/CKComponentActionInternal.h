@@ -13,6 +13,7 @@
 #import <vector>
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKComponentScope.h>
 
 @class CKComponent;
 
@@ -20,9 +21,10 @@
  We support several different types of action variants. You don't need to use this value anywhere, it's set for you
  by whatever initializer you end up using.
  */
-typedef NS_ENUM(NSUInteger, CKTypedComponentActionVariant) {
-  CKTypedComponentActionVariantRawSelector = 0,
-  CKTypedComponentActionVariantTargetSelector
+typedef NS_ENUM(NSUInteger, _CKTypedComponentActionVariant) {
+  _CKTypedComponentActionVariantRawSelector = 0,
+  _CKTypedComponentActionVariantTargetSelector,
+  _CKTypedComponentActionVariantComponentScope
 };
 
 #pragma mark - Typed Helpers
@@ -61,7 +63,11 @@ void _CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger ind
   }
 }
 
+id _CKTypedComponentActionTarget(_CKTypedComponentActionVariant variant, CKComponent *sender, id target, CKComponentScopeHandle *scopeHandle);
+
 #pragma mark - Debug Helpers
+
+void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings);
 
 void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings);
 

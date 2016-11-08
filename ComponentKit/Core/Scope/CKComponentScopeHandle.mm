@@ -14,6 +14,7 @@
 #import "CKComponentControllerInternal.h"
 #import "CKComponentScopeRootInternal.h"
 #import "CKComponentSubclass.h"
+#import "CKComponentInternal.h"
 #import "CKInternalHelpers.h"
 #import "CKMutex.h"
 #import "CKThreadLocalComponentScope.h"
@@ -21,15 +22,9 @@
 @implementation CKComponentScopeHandle
 {
   id<CKComponentStateListener> __weak _listener;
-  Class _componentClass;
   CKComponentController *_controller;
   CKComponentScopeRootIdentifier _rootIdentifier;
   BOOL _acquired;
-  // Temporarily stored reference to the specific component that acquired this handle. This forms a reference cycle
-  // that is broken in `resolve`. This reference will always be partially initialized, and should not be used outside
-  // the `resolve` call.
-  CKComponent *_acquiredComponent;
-  BOOL _resolved;
 }
 
 + (CKComponentScopeHandle *)handleForComponent:(CKComponent *)component
@@ -46,7 +41,7 @@
     }
     return handle;
   }
-  CKCAssertNil(controllerClassForComponentClass([component class]), @"%@ has a controller but no scope! "
+  CKCAssertNil(CKComponentControllerClassFromComponentClass([component class]), @"%@ has a controller but no scope! "
                "Use CKComponentScope scope(self) before constructing the component or CKComponentTestRootScope "
                "at the start of the test.", [component class]);
   return nil;
@@ -166,43 +161,14 @@
     // in that case, and we should avoid re-generating a new controller in that case.
     _controller = newController(_acquiredComponent, currentScope->newScopeRoot);
   }
-  // We break the retain cycle with the acquired component here.
-  _acquiredComponent = nil;
   _resolved = YES;
 }
 
 #pragma mark Controllers
 
-static Class controllerClassForComponentClass(Class componentClass)
-{
-  if (componentClass == [CKComponent class]) {
-    return Nil; // Don't create root CKComponentControllers as it does nothing interesting.
-  }
-
-  static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER; // protects cache
-  CK::StaticMutexLocker l(mutex);
-
-  static std::unordered_map<Class, Class> *cache = new std::unordered_map<Class, Class>();
-  const auto &it = cache->find(componentClass);
-  if (it == cache->end()) {
-    Class c = NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"]);
-
-    // If you override animationsFromPreviousComponent: or animationsOnInitialMount then we need a controller.
-    if (c == nil &&
-        (CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
-         CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnInitialMount)))) {
-      c = [CKComponentController class];
-    }
-
-    cache->insert({componentClass, c});
-    return c;
-  }
-  return it->second;
-}
-
 static CKComponentController *newController(CKComponent *component, CKComponentScopeRoot *root)
 {
-  Class controllerClass = controllerClassForComponentClass([component class]);
+  Class controllerClass = CKComponentControllerClassFromComponentClass([component class]);
   if (controllerClass) {
     CKCAssert([controllerClass isSubclassOfClass:[CKComponentController class]],
               @"%@ must inherit from CKComponentController", controllerClass);

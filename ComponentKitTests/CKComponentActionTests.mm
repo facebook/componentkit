@@ -18,6 +18,96 @@
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentController.h>
+
+@interface CKTestScopeActionComponent : CKComponent
+
++ (instancetype)newWithBlock:(void(^)(CKComponent *sender, id context))block;
+
+- (void)triggerAction:(id)context;
+
+@end
+
+@implementation CKTestScopeActionComponent
+{
+  CKTypedComponentAction<id> _action;
+  void (^_block)(CKComponent *, id);
+}
+
++ (instancetype)newWithBlock:(void (^)(CKComponent *, id))block
+{
+  CKComponentScope scope(self);
+
+  CKTestScopeActionComponent *c = [super newWithView:{} size:{}];
+  if (c) {
+    c->_action = {scope, @selector(actionMethod:context:)};
+    c->_block = block;
+  }
+  return c;
+}
+
+- (void)actionMethod:(CKComponent *)sender context:(id)context
+{
+  _block(sender, context);
+}
+
+- (void)triggerAction:(id)context
+{
+  _action.send(self, context);
+}
+
+@end
+
+@interface CKTestControllerScopeActionComponent : CKComponent
+
++ (instancetype)newWithBlock:(void(^)(CKComponent *sender, id context))block;
+
+- (void(^)(CKComponent *sender, id context))block;
+
+- (void)triggerAction:(id)context;
+
+@end
+
+@implementation CKTestControllerScopeActionComponent
+{
+  CKTypedComponentAction<id> _action;
+  void (^_block)(CKComponent *, id);
+}
+
++ (instancetype)newWithBlock:(void (^)(CKComponent *, id))block
+{
+  CKComponentScope scope(self);
+
+  CKTestControllerScopeActionComponent *c = [super newWithView:{} size:{}];
+  if (c) {
+    c->_action = {scope, @selector(actionMethod:context:)};
+    c->_block = block;
+  }
+  return c;
+}
+
+- (void (^)(CKComponent *, id))block
+{
+  return _block;
+}
+
+- (void)triggerAction:(id)context
+{
+  _action.send(self, context);
+}
+
+@end
+
+@interface CKTestControllerScopeActionComponentController : CKComponentController
+@end
+
+@implementation CKTestControllerScopeActionComponentController
+- (void)actionMethod:(CKComponent *)sender context:(id)context
+{
+  ((CKTestControllerScopeActionComponent *)self.component).block(sender, context);
+}
+@end
 
 @interface CKComponentActionTests : XCTestCase
 @end
@@ -263,6 +353,116 @@
   action.send(innerComponent, CKComponentActionSendBehaviorStartAtSender, @"hello");
 
   XCTAssertTrue(calledBlock, @"Outer component should have received the action, even though the components are not mounted.");
+}
+
+- (void)testTargetSelectorActionCallsOnTargetWhenExecutionBlockInvoked
+{
+  __block BOOL calledBlock = NO;
+
+  CKComponent *innerComponent = [CKComponent new];
+  CKTestActionComponent *outerComponent =
+  [CKTestActionComponent
+   newWithSingleArgumentBlock:^(CKComponent *sender, id context){ calledBlock = YES; }
+   secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
+   primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
+   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   component:innerComponent];
+
+  CKTypedComponentAction<id> action { outerComponent, @selector(testAction:context:) };
+  action.block()(innerComponent, CKComponentActionSendBehaviorStartAtSender, @"hello");
+
+  XCTAssertTrue(calledBlock, @"Outer component should have received the action, even though the components are not mounted.");
+}
+
+- (void)testTargetSelectorActionCallsOnTargetWhenExecutionBlockInvokedWithCorrectSender
+{
+  __block id actionSender = nil;
+
+  CKComponent *innerComponent = [CKComponent new];
+  CKTestActionComponent *outerComponent =
+  [CKTestActionComponent
+   newWithSingleArgumentBlock:^(CKComponent *sender, id context){ actionSender = sender; }
+   secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
+   primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
+   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   component:innerComponent];
+
+  CKTypedComponentAction<id> action { outerComponent, @selector(testAction:context:) };
+  action.block()(innerComponent, CKComponentActionSendBehaviorStartAtSender, @"hello");
+
+  XCTAssertTrue(actionSender == innerComponent, @"Sender should be the inner component.");
+}
+
+- (void)testTargetSelectorActionCallsOnTargetWhenExecutionBlockInvokedWithCurriedSender
+{
+  __block id actionSender = nil;
+
+  CKComponent *innerComponent = [CKComponent new];
+  CKTestActionComponent *outerComponent =
+  [CKTestActionComponent
+   newWithSingleArgumentBlock:^(CKComponent *sender, id context){ actionSender = sender; }
+   secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
+   primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
+   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   component:innerComponent];
+
+  CKTypedComponentAction<id> action { outerComponent, @selector(testAction:context:) };
+  action.curriedSenderBlock(innerComponent, CKComponentActionSendBehaviorStartAtSender)(@"hello");
+
+  XCTAssertTrue(actionSender == innerComponent, @"Sender should be the inner component.");
+}
+
+- (void)testScopeActionCallsMethodOnScopedComponent
+{
+  __block BOOL calledAction = NO;
+
+  // We have to use build component here to ensure the scopes are properly configured.
+  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, ^{
+    return [CKTestScopeActionComponent
+            newWithBlock:^(CKComponent *sender, id context) {
+              calledAction = YES;
+            }];
+  }).component;
+
+  [component triggerAction:nil];
+
+  XCTAssertTrue(calledAction, @"Should have called the action on the test component");
+}
+
+- (void)testScopeActionCallsMethodOnScopedComponentWithCorrectContext
+{
+  __block id actionContext = nil;
+
+  // We have to use build component here to ensure the scopes are properly configured.
+  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, ^{
+    return [CKTestScopeActionComponent
+            newWithBlock:^(CKComponent *sender, id context) {
+              actionContext = context;
+            }];
+  }).component;
+
+  id context = @"hello";
+
+  [component triggerAction:context];
+
+  XCTAssertTrue(actionContext == context, @"Context should have been passed to scope component action call");
+}
+
+- (void)testScopeActionCallsMethodOnScopedComponentControllerIfNotImplementedOnComponent
+{
+  __block BOOL calledAction = NO;
+
+  // We have to use build component here to ensure the scopes are properly configured.
+  CKTestControllerScopeActionComponent *component = (CKTestControllerScopeActionComponent *)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, ^{
+    return [CKTestControllerScopeActionComponent
+            newWithBlock:^(CKComponent *sender, id context) {
+              calledAction = YES;
+            }];
+  }).component;
+
+  [component triggerAction:nil];
+
+  XCTAssertTrue(calledAction, @"Should have called the action on the test component");
 }
 
 @end
