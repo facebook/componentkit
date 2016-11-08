@@ -21,8 +21,9 @@
  
  We allow a typed specification of the parameters that will be provided as arguments to the component action at runtime
  through the variadic templated arguments. You may specify an arbitrary number of arguments to your component action,
- and you may use either object, or primitive arguments. You should not use C++ references as arguments because the block
- API will likely result in corrupted memory access. Pass C++ structs by value as arguments to action sending.
+ and you may use either object, or primitive arguments. Only trivially-constructible arguments or pointers can be used
+ as types for component actions, so primitive types like int, CGRect, and NSObject * are fine. This is enforced via a
+ compile time check.
 
  Methods will always be provided the sender as the first argument.
  
@@ -86,6 +87,11 @@
  */
 template<typename... T>
 struct CKTypedComponentAction {
+  static_assert(std::is_same<
+                CKTypedComponentActionBoolPack<(std::is_trivially_constructible<T>::value || std::is_pointer<T>::value)...>,
+                CKTypedComponentActionBoolPack<(CKTypedComponentActionDenyType<T>::value)...>
+                >::value, "You must either use a pointer (like an NSObject) or a trivially constructible type. Complex types are not allowed as arguments of component actions.");
+
   CKTypedComponentAction<T...>() : _internal({}) {};
   CKTypedComponentAction<T...>(id target, SEL selector) : _internal({CKTypedComponentActionVariantTargetSelector, target, nil, selector})
   {

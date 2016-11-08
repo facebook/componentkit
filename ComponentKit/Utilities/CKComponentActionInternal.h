@@ -15,6 +15,8 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKComponentScope.h>
 
+#import <type_traits>
+
 @class CKComponent;
 
 /**
@@ -56,6 +58,12 @@ private:
 #pragma mark - Typed Helpers
 
 template <typename... Ts> struct CKTypedComponentActionTypelist { };
+
+template <bool... b>
+struct CKTypedComponentActionBoolPack {};
+
+template <typename... TS>
+struct CKTypedComponentActionDenyType : std::true_type {};
 
 /** Base case, recursion should stop here. */
 void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list);
