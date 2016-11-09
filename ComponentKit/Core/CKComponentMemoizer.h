@@ -22,6 +22,8 @@ struct CKMemoizationKey;
 
 id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void));
 
+CKComponentLayout CKMemoizeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize, CKComponentLayout (^block)());
+
 /**
  
  How to use the component memoization:
@@ -34,10 +36,13 @@ id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void));
             [CKStackLayoutComponent
               newWith...
    });
- 
  }
  
  MyKey must consist only of objects that define -hash and -isEqual:.
+ 
+ You should have a CKMemoizingComponent at the root of your component hierarchy above the component you wish to memoize,
+ or the memoization call will fail, and new versions of your components and layouts will be created every time they are
+ requested.
 
  If you're building something that calls CKMountComponentLayout() directly,
  just add a CKComponentMemoizer in the right scope:
@@ -56,15 +61,27 @@ id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void));
 
  }
  
- How to use component layout memoization, override -shouldMemoizeLayout in your component subclass.
- See CKComponentSubclass.h for more info.
+ How to use component layout memoization, override computeLayoutThatFits:restrictedToSize:relativeToParentSize: in your
+ component subclass, and call super within the block you provide to CKMemoizeLayout. The results of the computation for
+ your component at these constraints will be saved and returned without calling your provided block, if possible.
+ 
+ - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize 
+                           restrictedToSize:(const CKComponentSize &)size
+                       relativeToParentSize:(CGSize)parentSize
+ {
+   return CKMemoizeLayout(self, constrainedSize, size, parentSize, ^CKComponentLayout{
+     return [super computeLayoutThatFits:constrainedSize
+                        restrictedToSize:size
+                    relativeToParentSize:parentSize];
+   });
+ }
 
  */
 
 struct CKComponentMemoizer {
 
   /**
-   Create a memoizer. If you pass in a memoizer state, components will be vended from reuse from there.
+   Create a memoizer. If you pass in a memoizer state, components will be vended for reuse from there.
    Creating a CKComponentMemoizer in a scope will make memoized components available to CKMemoize().
    This object must remain in scope for objects to be vended.
    */

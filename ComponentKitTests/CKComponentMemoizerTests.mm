@@ -8,6 +8,7 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKMemoizingComponent.h>
 
 #import <ComponentKit/CKStackLayoutComponent.h>
 
@@ -45,14 +46,13 @@
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize restrictedToSize:(const CKComponentSize &)size relativeToParentSize:(CGSize)parentSize
 {
-  CKComponentLayout l = [super computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
-  _computeCount++;
+  CKComponentLayout l = CKMemoizeLayout(self, constrainedSize, size, parentSize, ^CKComponentLayout{
+    _computeCount++;
+    return [super computeLayoutThatFits:constrainedSize
+                       restrictedToSize:size
+                   relativeToParentSize:parentSize];
+  });
   return l;
-}
-
-- (BOOL)shouldMemoizeLayout
-{
-  return YES;
 }
 
 @end
@@ -85,6 +85,28 @@
   }
 
   XCTAssertEqualObjects(result.component, result2.component, @"Should return the original component the second time");
+}
+
+- (void)testThatMemoizableComponentsAreMemoizedWithMemoizingComponentAsParent
+{
+  CKComponentScopeRoot *scopeRoot = [CKComponentScopeRoot rootWithListener:nil];
+  CKComponentStateUpdateMap pendingStateUpdates;
+
+  __block CKComponent *lastCreatedComponent = nil;
+
+  auto build = ^{
+    return [CKMemoizingComponent
+            newWithComponentBlock:^{
+              CKComponent *newResult = [CKTestMemoizedComponent newWithString:@"ABCD" number:123];
+              if (lastCreatedComponent != nil) {
+                XCTAssertEqualObjects(lastCreatedComponent, newResult, @"Components should be identical on the second run.");
+              }
+              lastCreatedComponent = newResult;
+              return newResult;
+            }];
+  };
+  CKBuildComponentResult result = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+  CKBuildComponent(result.scopeRoot, pendingStateUpdates, build);
 }
 
 - (void)testThatWhenMultipleComponentsAreMutuallyMemoizableTheyAreStillDistict

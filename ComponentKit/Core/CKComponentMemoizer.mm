@@ -99,7 +99,11 @@ struct CKLayoutMemoizationKey {
   self.next->componentCache_.insert({key, component});
 }
 
-- (CKComponentLayout)cachedLayout:(CKComponent *)component thatFits:(CKSizeRange)constrainedSize restrictedToSize:(CKComponentSize)size parentSize:(CGSize)parentSize
+- (CKComponentLayout)cachedLayout:(CKComponent *)component
+                         thatFits:(CKSizeRange)constrainedSize
+                 restrictedToSize:(CKComponentSize)size
+                       parentSize:(CGSize)parentSize
+                            block:(CKComponentLayout (^)())block
 {
   CKLayoutMemoizationKey key{.component = component, .thatFits = constrainedSize, .parentSize = parentSize};
   auto it = layoutCache_.find(key);
@@ -107,7 +111,7 @@ struct CKLayoutMemoizationKey {
     self.next->layoutCache_.insert({key, it->second});
     return it->second;
   } else {
-    CKComponentLayout layout = [component computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
+    CKComponentLayout layout = block();
     self.next->layoutCache_.insert({key, layout});
     return layout;
   }
@@ -131,12 +135,12 @@ struct CKLayoutMemoizationKey {
 
 CKComponentMemoizer::CKComponentMemoizer(id previousMemoizerState)
 {
-  _CKComponentMemoizerImpl *mipl = previousMemoizerState ?: [[_CKComponentMemoizerImpl alloc] init];
+  _CKComponentMemoizerImpl *impl = previousMemoizerState ?: [[_CKComponentMemoizerImpl alloc] init];
 
   // Push this memoizer onto the current thread
   id current = [_CKComponentMemoizerImpl currentMemoizer];
   previousMemoizer_ = current;
-  [_CKComponentMemoizerImpl setCurrentMemoizer:mipl];
+  [_CKComponentMemoizerImpl setCurrentMemoizer:impl];
 };
 
 CKComponentMemoizer::~CKComponentMemoizer()
@@ -148,11 +152,14 @@ CKComponentMemoizer::~CKComponentMemoizer()
 id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void))
 {
   _CKComponentMemoizerImpl *impl = [_CKComponentMemoizerImpl currentMemoizer];
+  // Attempt to get it from the cache on the current memoizer
   CKComponent *component = [impl dequeueComponentForKey:memoizationKey];
   if (!component && block) {
     component = block();
   }
+  CKCAssertNotNil(impl, @"There is no current memoizer, cannot memoize component generation. You probably forgot to add a CKMemoizingComponent in the hierarchy above %@", component);
   if (component) {
+    // Add it to the cache
     [impl enqueueComponent:component forKey:memoizationKey];
   }
   return component;
@@ -164,14 +171,17 @@ id CKComponentMemoizer::nextMemoizerState()
   return impl ? impl->_next : nil;
 }
 
-CKComponentLayout CKMemoizeOrComputeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize)
+CKComponentLayout CKMemoizeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize, CKComponentLayout (^block)())
 {
-  if (component && [component shouldMemoizeLayout]) {
-    _CKComponentMemoizerImpl *impl = [_CKComponentMemoizerImpl currentMemoizer];
-    if (impl) { // If component wants layout memoization but there isn't a current memoizer, fall down to compute case
-      return [impl cachedLayout:component thatFits:constrainedSize restrictedToSize:size parentSize:parentSize];
-    }
+  _CKComponentMemoizerImpl *impl = [_CKComponentMemoizerImpl currentMemoizer];
+  CKCAssertNotNil(impl, @"There is no current memoizer, cannot memoize layout. You probably forgot to add a CKMemoizingComponent in the hierarchy above %@", component);
+  if (impl) { // If component wants layout memoization but there isn't a current memoizer, fall down to compute case
+    return [impl cachedLayout:component
+                     thatFits:constrainedSize
+             restrictedToSize:size
+                   parentSize:parentSize
+                        block:block];
   }
-  return [component computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
+  return block();
 }
 
