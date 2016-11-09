@@ -115,11 +115,8 @@ struct CKTypedComponentAction {
   CKTypedComponentAction(SEL selector) : _internal(CKTypedComponentActionVariantRawSelector, nil, nil, selector) { };
 
   /** We support promotion from actions that take no arguments. */
-  template <typename T1, typename... Ts>
-  CKTypedComponentAction<T1, Ts...>(const CKTypedComponentAction<> &action) : _internal(action._internal) { };
-
-  /** Const copy constructor to allow for block capture of the struct. */
-  CKTypedComponentAction<T...>(const CKTypedComponentAction<T...> &action) : _internal(action._internal) { };
+  template <typename... Ts>
+  CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) : _internal(action._internal) { };
 
   /**
    We allow demotion from actions with types to untyped actions, but only when explicit. This means arguments to the
