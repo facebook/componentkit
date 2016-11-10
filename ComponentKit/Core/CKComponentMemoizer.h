@@ -20,13 +20,10 @@
 // Aspect-oriented type erasure of hash/equals on a tuple
 struct CKMemoizationKey;
 
-id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void));
-
-CKComponentLayout CKMemoizeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize, CKComponentLayout (^block)());
-
 /**
- 
  How to use the component memoization:
+ 
+ First, make sure your component hierarchy contains a CKMemoizingComponent near its root.
  
  + (instancetype)newWithMyModel:(MyModel *)model otherInput:(int)other
  {
@@ -39,7 +36,28 @@ CKComponentLayout CKMemoizeLayout(CKComponent *component, CKSizeRange constraine
  }
  
  MyKey must consist only of objects that define -hash and -isEqual:.
+ */
+id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void));
+
+/**
+ Using layout memoization: override computeLayoutThatFits:restrictedToSize:relativeToParentSize: in your
+ component subclass, and call super within the block you provide to CKMemoizeLayout. The results of the computation for
+ your component at these constraints will be saved and returned without calling your provided block, if possible.
  
+ - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize 
+                           restrictedToSize:(const CKComponentSize &)size
+                       relativeToParentSize:(CGSize)parentSize
+ {
+   return CKMemoizeLayout(self, constrainedSize, size, parentSize, ^CKComponentLayout{
+     return [super computeLayoutThatFits:constrainedSize
+                        restrictedToSize:size
+                    relativeToParentSize:parentSize];
+   });
+ }
+ */
+CKComponentLayout CKMemoizeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize, CKComponentLayout (^block)());
+
+/**
  You should have a CKMemoizingComponent at the root of your component hierarchy above the component you wish to memoize,
  or the memoization call will fail, and new versions of your components and layouts will be created every time they are
  requested.
@@ -58,26 +76,8 @@ CKComponentLayout CKMemoizeLayout(CKComponent *component, CKSizeRange constraine
    CKMountComponentLayout(layout)
 
    _memoizerState = memoizer.nextMemoizerState();
-
  }
- 
- How to use component layout memoization, override computeLayoutThatFits:restrictedToSize:relativeToParentSize: in your
- component subclass, and call super within the block you provide to CKMemoizeLayout. The results of the computation for
- your component at these constraints will be saved and returned without calling your provided block, if possible.
- 
- - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize 
-                           restrictedToSize:(const CKComponentSize &)size
-                       relativeToParentSize:(CGSize)parentSize
- {
-   return CKMemoizeLayout(self, constrainedSize, size, parentSize, ^CKComponentLayout{
-     return [super computeLayoutThatFits:constrainedSize
-                        restrictedToSize:size
-                    relativeToParentSize:parentSize];
-   });
- }
-
  */
-
 struct CKComponentMemoizer {
 
   /**

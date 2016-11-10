@@ -173,14 +173,16 @@ id CKComponentMemoizer::nextMemoizerState()
 
 CKComponentLayout CKMemoizeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize, CKComponentLayout (^block)())
 {
-  _CKComponentMemoizerImpl *impl = [_CKComponentMemoizerImpl currentMemoizer];
-  CKCAssertNotNil(impl, @"There is no current memoizer, cannot memoize layout. You probably forgot to add a CKMemoizingComponent in the hierarchy above %@", component);
-  if (impl) { // If component wants layout memoization but there isn't a current memoizer, fall down to compute case
-    return [impl cachedLayout:component
-                     thatFits:constrainedSize
-             restrictedToSize:size
-                   parentSize:parentSize
-                        block:block];
+  if (component != nil) {
+    _CKComponentMemoizerImpl *impl = [_CKComponentMemoizerImpl currentMemoizer];
+    CKCAssertNotNil(impl, @"There is no current memoizer, cannot memoize layout. You probably forgot to add a CKMemoizingComponent in the hierarchy above %@", component);
+    if (impl) { // If component wants layout memoization but there isn't a current memoizer, fall down to compute case
+      return [impl cachedLayout:component
+                       thatFits:constrainedSize
+               restrictedToSize:size
+                     parentSize:parentSize
+                          block:block];
+    }
   }
   return block();
 }
