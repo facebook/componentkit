@@ -48,3 +48,8 @@ CKComponentStateUpdater CKComponentScope::stateUpdater(void) const
   CKComponentScopeHandle *const scopeHandle = _scopeHandle;
   return ^(id (^update)(id), CKUpdateMode mode){ [scopeHandle updateState:update mode:mode]; };
 }
+
+CKComponentScopeHandle *CKComponentScope::scopeHandle(void) const
+{
+  return _scopeHandle;
+}

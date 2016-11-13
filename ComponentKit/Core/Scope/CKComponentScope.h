@@ -65,6 +65,13 @@ public:
   */
   CKComponentStateUpdater stateUpdater(void) const;
 
+  /**
+   @return The scope handle associated with this scope.
+   @discussion This is exposed for use by the framework. You should almost certainly never call this for any reason
+               in your components.
+   */
+  CKComponentScopeHandle *scopeHandle(void) const;
+
 private:
   CKComponentScope(const CKComponentScope&) = delete;
   CKComponentScope &operator=(const CKComponentScope&) = delete;

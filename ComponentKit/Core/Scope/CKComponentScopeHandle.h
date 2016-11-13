@@ -51,7 +51,15 @@
  return nil until `resolve` is called.
  */
 @property (nonatomic, strong, readonly) CKComponentController *controller;
+
+@property (nonatomic, assign, readonly) Class componentClass;
+
 @property (nonatomic, strong, readonly) id state;
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
+
+/**
+ Provides a responder corresponding with this scope handle. The controller will assert if called before resolution.
+ */
+- (id)responder;
 
 @end

@@ -11,61 +11,106 @@
 #import "CKComponentAction.h"
 
 #import <unordered_map>
+#import <vector>
+#import <array>
 
-#import <ComponentKit/CKAssert.h>
-
+#import "CKAssert.h"
 #import "CKMutex.h"
 #import "CKComponent.h"
+#import "CKInternalHelpers.h"
+#import "CKComponentScopeHandle.h"
 #import "CKComponentViewInterface.h"
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-function"
-// This method returns a friendly-print of a responder chain. Used for debug purposes.
-static NSString *_debugResponderChain(id responder) {
-  if (!responder) {
-    return @"nil";
-  } else {
-    return [NSString stringWithFormat:@"%@ -> %@", responder, _debugResponderChain([responder nextResponder])];
+void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list) { }
+void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) { }
+
+id CKTypedComponentActionValue::initialTarget(CKComponent *sender) const {
+  switch (_variant) {
+    case CKTypedComponentActionVariantRawSelector:
+      return sender;
+    case CKTypedComponentActionVariantTargetSelector:
+      return _target;
+    case CKTypedComponentActionVariantComponentScope:
+      return _scopeHandle.responder;
   }
 }
-#pragma clang diagnostic pop
 
-void CKComponentActionSend(CKComponentAction action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
+#pragma mark - CKTypedComponentActionValue
+
+CKTypedComponentActionValue::CKTypedComponentActionValue() : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(NULL) {}
+
+CKTypedComponentActionValue::CKTypedComponentActionValue(const CKTypedComponentActionValue &value) : _variant(value._variant), _target(value._target), _scopeHandle(value._scopeHandle), _selector(value._selector) {};
+
+CKTypedComponentActionValue::CKTypedComponentActionValue(CKTypedComponentActionVariant variant, __unsafe_unretained id target, __unsafe_unretained CKComponentScopeHandle *scopeHandle, SEL selector) : _variant(variant), _target(target), _scopeHandle(scopeHandle), _selector(selector) {};
+
+bool CKTypedComponentActionValue::operator==(const CKTypedComponentActionValue& rhs) const
 {
-  id initialResponder = (behavior == CKComponentActionSendBehaviorStartAtSender) ? sender : [sender nextResponder];
-  id responder = [initialResponder targetForAction:action withSender:sender];
-  CKCAssertNotNil(responder, @"Unhandled component action %@ following responder chain %@",
-                  NSStringFromSelector(action), _debugResponderChain(sender));
-
-  // ARC is worried that the selector might have a return value it doesn't know about, or be annotated with ns_consumed.
-  // Neither is the case for our action handlers, so ignore the warning.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-  [responder performSelector:action withObject:sender withObject:context];
-#pragma clang diagnostic pop
+  return (_variant == rhs._variant
+          && CKObjectIsEqual(_target, rhs._target)
+          && CKObjectIsEqual(_scopeHandle, rhs._scopeHandle)
+          && _selector == rhs._selector);
 }
 
+CKComponentActionSendBehavior CKTypedComponentActionValue::defaultBehavior() const
+{
+  return (_variant == CKTypedComponentActionVariantRawSelector
+          ? CKComponentActionSendBehaviorStartAtSenderNextResponder
+          : CKComponentActionSendBehaviorStartAtSender);
+};
+
+#pragma mark - Legacy Send Functions
+
+void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender)
+{
+  action.send(sender);
+}
+
+void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender, CKComponentActionSendBehavior behavior)
+{
+  action.send(sender, behavior);
+}
+
+void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context)
+{
+  action.send(sender, CKComponentActionSendBehaviorStartAtSenderNextResponder, context);
+}
+
+void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
+{
+  action.send(sender, behavior, context);
+}
+
+#pragma mark - Control Actions
+
 @interface CKComponentActionControlForwarder : NSObject
-- (instancetype)initWithAction:(CKComponentAction)action;
+- (instancetype)initWithAction:(CKTypedComponentAction<UIEvent *>)action;
 - (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event;
 @end
 
-typedef std::unordered_map<CKComponentAction, CKComponentActionControlForwarder *> ForwarderMap;
+struct CKComponentActionHasher
+{
+  std::size_t operator()(const CKTypedComponentAction<UIEvent *>& k) const
+  {
+    return std::hash<void *>()(k.selector());
+  }
+};
 
-CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction action,
+typedef std::unordered_map<CKTypedComponentAction<UIEvent *>, CKComponentActionControlForwarder *, CKComponentActionHasher> ForwarderMap;
+
+CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<UIEvent *> action,
                                                          UIControlEvents controlEvents)
 {
   static ForwarderMap *map = new ForwarderMap(); // never destructed to avoid static destruction fiasco
   static CK::StaticMutex lock = CK_MUTEX_INITIALIZER;   // protects map
-
-  if (action == NULL) {
+  
+  if (!action) {
     return {
       {"CKComponentActionAttribute-no-op", ^(UIControl *control, id value) {}, ^(UIControl *control, id value) {}},
       // Use a bogus value for the attribute's "value". All the information is encoded in the attribute itself.
       @YES
     };
   }
-
+  
   // We need a target for the control event. (We can't use the responder chain because we need to jump in and change the
   // sender from the UIControl to the CKComponent.)
   // Control event targets are __unsafe_unretained. We can't rely on the block to keep the target alive, since the block
@@ -86,10 +131,10 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction actio
       forwarder = it->second;
     }
   }
-
+  
   std::string identifier = std::string("CKComponentActionAttribute-")
-                         + std::string(sel_getName(action))
-                         + "-" + std::to_string(controlEvents);
+  + std::string(sel_getName(action.selector()))
+  + "-" + std::to_string(controlEvents);
   return {
     {
       identifier,
@@ -111,10 +156,10 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction actio
 
 @implementation CKComponentActionControlForwarder
 {
-  CKComponentAction _action;
+  CKTypedComponentAction<UIEvent *> _action;
 }
 
-- (instancetype)initWithAction:(CKComponentAction)action
+- (instancetype)initWithAction:(CKTypedComponentAction<UIEvent *>)action
 {
   if (self = [super init]) {
     _action = action;
@@ -125,7 +170,58 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKComponentAction actio
 - (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event
 {
   // If the action can be handled by the sender itself, send it there instead of looking up the chain.
-  CKComponentActionSend(_action, sender.ck_component, event, CKComponentActionSendBehaviorStartAtSender);
+  _action.send(sender.ck_component, CKComponentActionSendBehaviorStartAtSender, event);
+}
+
+#pragma mark - Debug Helpers
+
+static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSignature *signature, const std::vector<const char *> &typeEncodings)
+{
+  CKCAssert(typeEncodings.size() + 3 >= signature.numberOfArguments, @"Expected action method %@ to take less than %lu arguments, but it suppoorts %lu", NSStringFromSelector(selector), typeEncodings.size(), (unsigned long)signature.numberOfArguments - 3);
+
+  CKCAssert(signature.methodReturnLength == 0, @"Component action methods should not have any return value. Any objects returned from this method will be leaked.");
+
+  for (int i = 0; i + 3 < signature.numberOfArguments; i++) {
+    const char *methodEncoding = [signature getArgumentTypeAtIndex:i + 3];
+    const char *typeEncoding = typeEncodings[i];
+
+    CKCAssert(methodEncoding == NULL || typeEncoding == NULL || strcmp(methodEncoding, typeEncoding) == 0, @"Implementation of %@ does not match expected types.\nExpected type %s, got %s", NSStringFromSelector(selector), typeEncoding, methodEncoding);
+  }
+}
+
+void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings)
+{
+  // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
+  // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
+  // argument indices.
+  const Class klass = scope.scopeHandle().componentClass;
+  // We allow component actions to be implemented either in the component, or its controller.
+  const Class controllerKlass = CKComponentControllerClassFromComponentClass(klass);
+  CKCAssert([klass instancesRespondToSelector:selector] || [controllerKlass instancesRespondToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", klass, NSStringFromSelector(selector));
+
+  NSMethodSignature *signature = [klass instanceMethodSignatureForSelector:selector] ?: [controllerKlass instanceMethodSignatureForSelector:selector];
+
+  checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
+}
+
+void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings)
+{
+  // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
+  // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
+  // argument indices.
+  CKCAssert([target respondsToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", [target class], NSStringFromSelector(selector));
+
+  NSMethodSignature *signature = [target methodSignatureForSelector:selector];
+
+  checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
+}
+
+
+// This method returns a friendly-print of a responder chain. Used for debug purposes.
+NSString *_CKComponentResponderChainDebugResponderChain(id responder) {
+  return (responder
+          ? [NSString stringWithFormat:@"%@ -> %@", responder, _CKComponentResponderChainDebugResponderChain([responder nextResponder])]
+          : @"nil");
 }
 
 @end

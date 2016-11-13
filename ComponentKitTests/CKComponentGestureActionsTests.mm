@@ -50,7 +50,7 @@
 
   attr.first.applicator(view, attr.second);
   UITapGestureRecognizer *recognizer = [view.gestureRecognizers firstObject];
-  XCTAssertEqual([recognizer ck_componentAction], @selector(test), @"Expected ck_componentAction to be set on the GR");
+  XCTAssertEqual([recognizer ck_componentAction].selector(), @selector(test), @"Expected ck_componentAction to be set on the GR");
 
   attr.first.unapplicator(view, attr.second);
 }

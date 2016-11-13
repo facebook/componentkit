@@ -373,6 +373,7 @@
 		A29D85791D80D37F00913E60 /* CKComponentContextHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = A243B52C1D79A40800E6C393 /* CKComponentContextHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2CD66321AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2CD66311AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm */; };
 		A2D20CF41B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2D20CF31B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm */; };
+		B1EF8FE81DD1562B00E74F43 /* CKComponentActionInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = B1EF8FE71DD1562B00E74F43 /* CKComponentActionInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B342DC6A1AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */; };
 		B342DC6B1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */; };
 		B342DC6C1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4B1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm */; };
@@ -927,6 +928,7 @@
 		A27C72741AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceUpdateStateModificationTests.mm; sourceTree = "<group>"; };
 		A2CD66311AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceStateTests.mm; sourceTree = "<group>"; tabWidth = 2; };
 		A2D20CF31B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentHostingViewAsyncStateUpdateTests.mm; sourceTree = "<group>"; };
+		B1EF8FE71DD1562B00E74F43 /* CKComponentActionInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentActionInternal.h; sourceTree = "<group>"; };
 		B342DC401AC23E8200ACAC53 /* ComponentKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComponentKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKArrayControllerChangesetTests.mm; sourceTree = "<group>"; };
 		B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAccessibilityTests.mm; sourceTree = "<group>"; };
@@ -1880,6 +1882,7 @@
 				2D640D5C1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm */,
 				D0B47B861CBD926700BB33CE /* CKComponentAction.h */,
 				D0B47B871CBD926700BB33CE /* CKComponentAction.mm */,
+				B1EF8FE71DD1562B00E74F43 /* CKComponentActionInternal.h */,
 				D0B47B881CBD926700BB33CE /* CKComponentContext.h */,
 				A243B52C1D79A40800E6C393 /* CKComponentContextHelper.h */,
 				A243B52D1D79A40800E6C393 /* CKComponentContextHelper.mm */,
@@ -2247,6 +2250,7 @@
 				D0B47D2D1CBD948E00BB33CE /* CKComponentHostingViewInternal.h in Headers */,
 				D0B47D241CBD948E00BB33CE /* CKComponentPreparationQueueListener.h in Headers */,
 				D0B47D371CBD948E00BB33CE /* CKStackLayoutComponentUtilities.h in Headers */,
+				B1EF8FE81DD1562B00E74F43 /* CKComponentActionInternal.h in Headers */,
 				D0B47D1E1CBD948E00BB33CE /* CKComponentDataSourceInputItem.h in Headers */,
 				D0B47D391CBD948E00BB33CE /* CKStackUnpositionedLayout.h in Headers */,
 				D0B47D321CBD948E00BB33CE /* CKCenterLayoutComponent.h in Headers */,
