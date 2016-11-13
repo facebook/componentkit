@@ -58,6 +58,24 @@ CKComponentActionSendBehavior CKTypedComponentActionValue::defaultBehavior() con
           : CKComponentActionSendBehaviorStartAtSender);
 };
 
+#pragma mark - Sending
+
+NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender)
+{
+  id responder = [target targetForAction:selector withSender:target];
+  CKCAssertNotNil(responder, @"Unhandled component action %@ following responder chain %@",
+                  NSStringFromSelector(selector), _CKComponentResponderChainDebugResponderChain(target));
+  // This is not performance-sensitive, so we can just use an invocation here.
+  NSMethodSignature *signature = [responder methodSignatureForSelector:selector];
+  NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+  invocation.selector = selector;
+  invocation.target = responder;
+  if (signature.numberOfArguments >= 3) {
+    [invocation setArgument:&sender atIndex:2];
+  }
+  return invocation;
+}
+
 #pragma mark - Legacy Send Functions
 
 void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender)
@@ -177,6 +195,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
 
 static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSignature *signature, const std::vector<const char *> &typeEncodings)
 {
+#ifdef DEBUG
   CKCAssert(typeEncodings.size() + 3 >= signature.numberOfArguments, @"Expected action method %@ to take less than %lu arguments, but it suppoorts %lu", NSStringFromSelector(selector), typeEncodings.size(), (unsigned long)signature.numberOfArguments - 3);
 
   CKCAssert(signature.methodReturnLength == 0, @"Component action methods should not have any return value. Any objects returned from this method will be leaked.");
@@ -187,10 +206,12 @@ static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSigna
 
     CKCAssert(methodEncoding == NULL || typeEncoding == NULL || strcmp(methodEncoding, typeEncoding) == 0, @"Implementation of %@ does not match expected types.\nExpected type %s, got %s", NSStringFromSelector(selector), typeEncoding, methodEncoding);
   }
+#endif
 }
 
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings)
 {
+#ifdef DEBUG
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
@@ -202,10 +223,12 @@ void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SE
   NSMethodSignature *signature = [klass instanceMethodSignatureForSelector:selector] ?: [controllerKlass instanceMethodSignatureForSelector:selector];
 
   checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
+#endif
 }
 
 void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings)
 {
+#ifdef DEBUG
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
@@ -214,6 +237,7 @@ void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const st
   NSMethodSignature *signature = [target methodSignatureForSelector:selector];
 
   checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
+#endif
 }
 
 
