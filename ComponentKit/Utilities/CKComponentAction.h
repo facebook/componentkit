@@ -141,24 +141,9 @@ struct CKTypedComponentAction {
   { this->send(sender, _internal.defaultBehavior(), args...); }
   void send(CKComponent *sender, CKComponentActionSendBehavior behavior, T... args) const
   {
-    if (!_internal) {
-      return;
-    }
     const id target = _internal.initialTarget(sender);
     const id responder = behavior == CKComponentActionSendBehaviorStartAtSender ? target : [target nextResponder];
     CKComponentActionSendResponderChain(_internal.selector(), responder, sender, args...);
-  }
-  
-  /** Allows you to get a block that sends the action when executed. */
-  typedef void (^CKTypedComponentActionCurriedSenderExecutionBlock)(T... args);
-  CKTypedComponentActionCurriedSenderExecutionBlock curriedSenderBlock(id sender, CKComponentActionSendBehavior behavior) const
-  {
-    __weak id weakSender = sender;
-    CKTypedComponentAction<T...> copy {*this};
-    return ^(T... args) {
-      id strongSender = weakSender;
-      copy.send(strongSender, behavior, args...);
-    };
   }
 
   CKTypedComponentActionValue _internal;

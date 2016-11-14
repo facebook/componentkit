@@ -355,25 +355,6 @@
   XCTAssertTrue(calledBlock, @"Outer component should have received the action, even though the components are not mounted.");
 }
 
-- (void)testTargetSelectorActionCallsOnTargetWhenExecutionBlockInvokedWithCurriedSender
-{
-  __block id actionSender = nil;
-
-  CKComponent *innerComponent = [CKComponent new];
-  CKTestActionComponent *outerComponent =
-  [CKTestActionComponent
-   newWithSingleArgumentBlock:^(CKComponent *sender, id context){ actionSender = sender; }
-   secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
-   primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
-   component:innerComponent];
-
-  CKTypedComponentAction<id> action { outerComponent, @selector(testAction:context:) };
-  action.curriedSenderBlock(innerComponent, CKComponentActionSendBehaviorStartAtSender)(@"hello");
-
-  XCTAssertTrue(actionSender == innerComponent, @"Sender should be the inner component.");
-}
-
 - (void)testScopeActionCallsMethodOnScopedComponent
 {
   __block BOOL calledAction = NO;

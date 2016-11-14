@@ -107,19 +107,11 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder);
 
 #pragma mark - Sending
 
+NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender);
+
 template<typename... T>
 static void CKComponentActionSendResponderChain(SEL selector, id target, CKComponent *sender, T... args) {
-  id responder = [target targetForAction:selector withSender:target];
-  CKCAssertNotNil(responder, @"Unhandled component action %@ following responder chain %@",
-                  NSStringFromSelector(selector), _CKComponentResponderChainDebugResponderChain(target));
-  // This is not performance-sensitive, so we can just use an invocation here.
-  NSMethodSignature *signature = [responder methodSignatureForSelector:selector];
-  NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-  invocation.selector = selector;
-  invocation.target = responder;
-  if (signature.numberOfArguments >= 3) {
-    [invocation setArgument:&sender atIndex:2];
-  }
+  NSInvocation *invocation = CKComponentActionSendResponderInvocationPrepare(selector, target, sender);
   // We use a recursive argument unpack to unwrap the variadic arguments in-order on the invocation in a type-safe
   // manner.
   CKConfigureInvocationWithArguments(invocation, 3, args...);
