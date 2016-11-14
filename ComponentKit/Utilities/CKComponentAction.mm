@@ -195,7 +195,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
 
 static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSignature *signature, const std::vector<const char *> &typeEncodings)
 {
-#ifdef DEBUG
+#if DEBUG
   CKCAssert(typeEncodings.size() + 3 >= signature.numberOfArguments, @"Expected action method %@ to take less than %lu arguments, but it suppoorts %lu", NSStringFromSelector(selector), typeEncodings.size(), (unsigned long)signature.numberOfArguments - 3);
 
   CKCAssert(signature.methodReturnLength == 0, @"Component action methods should not have any return value. Any objects returned from this method will be leaked.");
@@ -211,7 +211,7 @@ static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSigna
 
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings)
 {
-#ifdef DEBUG
+#if DEBUG
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
@@ -228,7 +228,7 @@ void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SE
 
 void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings)
 {
-#ifdef DEBUG
+#if DEBUG
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
