@@ -269,3 +269,8 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) {
 }
 
 @end
+
+#pragma mark - Template instantiations
+
+template class CKTypedComponentAction<>;
+template class CKTypedComponentAction<id>;

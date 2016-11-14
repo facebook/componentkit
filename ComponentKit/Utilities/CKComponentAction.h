@@ -83,17 +83,16 @@
  {
    _action.send(self, @"hello", 4);
  }
-
  */
 template<typename... T>
-struct CKTypedComponentAction {
+class CKTypedComponentAction : public CKTypedComponentActionBase {
   static_assert(std::is_same<
                 CKTypedComponentActionBoolPack<(std::is_trivially_constructible<T>::value || std::is_pointer<T>::value)...>,
                 CKTypedComponentActionBoolPack<(CKTypedComponentActionDenyType<T>::value)...>
                 >::value, "You must either use a pointer (like an NSObject) or a trivially constructible type. Complex types are not allowed as arguments of component actions.");
-
-  CKTypedComponentAction<T...>() : _internal({}) {};
-  CKTypedComponentAction<T...>(id target, SEL selector) : _internal({CKTypedComponentActionVariantTargetSelector, target, nil, selector})
+public:
+  CKTypedComponentAction<T...>() : CKTypedComponentActionBase() {};
+  CKTypedComponentAction<T...>(id target, SEL selector) : CKTypedComponentActionBase(target, selector)
   {
 #if DEBUG
     std::vector<const char *> typeEncodings;
@@ -101,8 +100,8 @@ struct CKTypedComponentAction {
     _CKTypedComponentDebugCheckTargetSelector(target, selector, typeEncodings);
 #endif
   }
-
-  CKTypedComponentAction<T...>(const CKComponentScope &scope, SEL selector) : _internal({CKTypedComponentActionVariantComponentScope, nil, scope.scopeHandle(), selector})
+  
+  CKTypedComponentAction<T...>(const CKComponentScope &scope, SEL selector) : CKTypedComponentActionBase(scope, selector)
   {
 #if DEBUG
     std::vector<const char *> typeEncodings;
@@ -111,31 +110,26 @@ struct CKTypedComponentAction {
 #endif
   }
   
-  /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
-  CKTypedComponentAction(SEL selector) : _internal(CKTypedComponentActionVariantRawSelector, nil, nil, selector) { };
-
+  // Legacy constructor for raw selector actions. Traverse up the mount responder chain.
+  CKTypedComponentAction(SEL selector) : CKTypedComponentActionBase(selector) {};
+  
+  // Allows conversion from NULL actions.
+  CKTypedComponentAction(int s) : CKTypedComponentActionBase() {};
+  CKTypedComponentAction(long s) : CKTypedComponentActionBase() {};
+  CKTypedComponentAction(std::nullptr_t n) : CKTypedComponentActionBase() {};
+  
   /** We support promotion from actions that take no arguments. */
   template <typename... Ts>
-  CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) : _internal(action._internal) { };
-
+  CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) : CKTypedComponentActionBase(action) { };
+  
   /**
    We allow demotion from actions with types to untyped actions, but only when explicit. This means arguments to the
    method specified here will have nil values at runtime. Used for interoperation with older API's.
    */
   template<typename... Ts>
-  explicit CKTypedComponentAction<>(const CKTypedComponentAction<Ts...> &action) : _internal(action._internal) { };
-
-  /** Allows conversion from NULL actions. */
-  CKTypedComponentAction(int s) : _internal({}) {};
-  CKTypedComponentAction(long s) : _internal({}) {};
-  CKTypedComponentAction(std::nullptr_t n) : _internal({}) {};
-
-  ~CKTypedComponentAction() {};
-
-  explicit operator bool() const { return bool(_internal); };
-  bool operator==(const CKTypedComponentAction& rhs) const { return _internal == rhs._internal; }
+  explicit CKTypedComponentAction<>(const CKTypedComponentAction<Ts...> &action) : CKTypedComponentActionBase(action) { };
   
-  SEL selector() const { return _internal.selector(); };
+  ~CKTypedComponentAction() {};
   
   void send(CKComponent *sender, T... args) const
   { this->send(sender, _internal.defaultBehavior(), args...); }
@@ -145,11 +139,13 @@ struct CKTypedComponentAction {
     const id responder = behavior == CKComponentActionSendBehaviorStartAtSender ? target : [target nextResponder];
     CKComponentActionSendResponderChain(_internal.selector(), responder, sender, args...);
   }
-
-  CKTypedComponentActionValue _internal;
 };
 
 typedef CKTypedComponentAction<> CKComponentAction;
+
+/** Explicit instantiation of our most commonly-used templates to avoid bloat in callsites. */
+extern template class CKTypedComponentAction<>;
+extern template class CKTypedComponentAction<id>;
 
 /**
  Sends a component action up the responder chain by crawling up the responder chain until it finds a responder that
