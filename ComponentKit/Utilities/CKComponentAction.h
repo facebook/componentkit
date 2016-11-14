@@ -129,7 +129,9 @@ struct CKTypedComponentAction {
   CKTypedComponentAction(int s) : _internal({}) {};
   CKTypedComponentAction(long s) : _internal({}) {};
   CKTypedComponentAction(std::nullptr_t n) : _internal({}) {};
-  
+
+  ~CKTypedComponentAction() {};
+
   explicit operator bool() const { return bool(_internal); };
   bool operator==(const CKTypedComponentAction& rhs) const { return _internal == rhs._internal; }
   
