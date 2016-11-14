@@ -70,9 +70,7 @@ NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id t
   while (!signature) {
     // From https://www.mikeash.com/pyblog/friday-qa-2009-03-27-objective-c-message-forwarding.html
     // 1. Lazy method resolution
-    BOOL resolved = [[responder class] resolveInstanceMethod:selector];
-    
-    if (resolved) {
+    if ( [[responder class] resolveInstanceMethod:selector]) {
       signature = [responder methodSignatureForSelector:selector];
       // The responder resolved its instance method, we now have a valid responder/signature
       break;
