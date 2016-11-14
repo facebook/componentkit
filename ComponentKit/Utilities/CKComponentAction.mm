@@ -67,6 +67,27 @@ NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id t
                   NSStringFromSelector(selector), _CKComponentResponderChainDebugResponderChain(target));
   // This is not performance-sensitive, so we can just use an invocation here.
   NSMethodSignature *signature = [responder methodSignatureForSelector:selector];
+  while (!signature) {
+    // From https://www.mikeash.com/pyblog/friday-qa-2009-03-27-objective-c-message-forwarding.html
+    // 1. Lazy method resolution
+    [[responder class] resolveInstanceMethod:selector];
+    signature = [responder methodSignatureForSelector:selector];
+    if (signature) {
+      // The responder resolved its instance method, we now have a valid responder/signature
+      break;
+    }
+    
+    // 2. Fast-forwarding path
+    id forwardingTarget = [responder forwardingTargetForSelector:selector];
+    if (!forwardingTarget || forwardingTarget == responder) {
+      // Bail, the object they're asking us to message will just crash if the method is invoked on them
+      CKCFailAssert(@"Forwarding target failed for action:%@ %@", target, NSStringFromSelector(selector));
+      return nil;
+    }
+    
+    responder = forwardingTarget;
+    signature = [responder methodSignatureForSelector:selector];
+  }
   NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
   invocation.selector = selector;
   invocation.target = responder;
