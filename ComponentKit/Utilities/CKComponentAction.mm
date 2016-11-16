@@ -58,6 +58,26 @@ CKComponentActionSendBehavior CKTypedComponentActionValue::defaultBehavior() con
           : CKComponentActionSendBehaviorStartAtSender);
 };
 
+#pragma mark - CKTypedComponentActionBase
+
+CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) : _internal({CKTypedComponentActionVariantTargetSelector, target, nil, selector}) {};
+
+CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) : _internal({CKTypedComponentActionVariantComponentScope, nil, scope.scopeHandle(), selector}) {};
+
+CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) : _internal(CKTypedComponentActionVariantRawSelector, nil, nil, selector) {};
+
+CKTypedComponentActionBase::CKTypedComponentActionBase(int s) : _internal({}) {};
+
+CKTypedComponentActionBase::CKTypedComponentActionBase(long s) : _internal({}) {};
+
+CKTypedComponentActionBase::CKTypedComponentActionBase(std::nullptr_t n) : _internal({}) {};
+
+CKTypedComponentActionBase::operator bool() const { return bool(_internal); };
+
+bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) const { return _internal == rhs._internal; };
+
+SEL CKTypedComponentActionBase::selector() const { return _internal.selector(); };
+
 #pragma mark - Sending
 
 NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender)
@@ -75,7 +95,7 @@ NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id t
       // The responder resolved its instance method, we now have a valid responder/signature
       break;
     }
-    
+
     // 2. Fast-forwarding path
     id forwardingTarget = [responder forwardingTargetForSelector:selector];
     if (!forwardingTarget || forwardingTarget == responder) {
@@ -83,7 +103,7 @@ NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id t
       CKCFailAssert(@"Forwarding target failed for action:%@ %@", target, NSStringFromSelector(selector));
       return nil;
     }
-    
+
     responder = forwardingTarget;
     signature = [responder methodSignatureForSelector:selector];
   }
@@ -140,7 +160,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
 {
   static ForwarderMap *map = new ForwarderMap(); // never destructed to avoid static destruction fiasco
   static CK::StaticMutex lock = CK_MUTEX_INITIALIZER;   // protects map
-  
+
   if (!action) {
     return {
       {"CKComponentActionAttribute-no-op", ^(UIControl *control, id value) {}, ^(UIControl *control, id value) {}},
@@ -148,7 +168,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
       @YES
     };
   }
-  
+
   // We need a target for the control event. (We can't use the responder chain because we need to jump in and change the
   // sender from the UIControl to the CKComponent.)
   // Control event targets are __unsafe_unretained. We can't rely on the block to keep the target alive, since the block
@@ -169,7 +189,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
       forwarder = it->second;
     }
   }
-  
+
   std::string identifier = std::string("CKComponentActionAttribute-")
   + std::string(sel_getName(action.selector()))
   + "-" + std::to_string(controlEvents);

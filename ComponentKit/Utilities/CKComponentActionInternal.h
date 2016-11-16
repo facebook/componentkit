@@ -61,26 +61,25 @@ private:
 class CKTypedComponentActionBase {
 protected:
   CKTypedComponentActionBase() = default;
-  CKTypedComponentActionBase(id target, SEL selector) : _internal({CKTypedComponentActionVariantTargetSelector, target, nil, selector}) {};
-  
-  CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) : _internal({CKTypedComponentActionVariantComponentScope, nil, scope.scopeHandle(), selector}) {};
-  
+  CKTypedComponentActionBase(id target, SEL selector);
+
+  CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector);
+
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
-  CKTypedComponentActionBase(SEL selector) : _internal(CKTypedComponentActionVariantRawSelector, nil, nil, selector) {};
-  
+  CKTypedComponentActionBase(SEL selector);
+
   /** Allows conversion from NULL actions. */
-  CKTypedComponentActionBase(int s) : _internal({}) {};
-  CKTypedComponentActionBase(long s) : _internal({}) {};
-  CKTypedComponentActionBase(std::nullptr_t n) : _internal({}) {};
-  
+  CKTypedComponentActionBase(int s);
+  CKTypedComponentActionBase(long s);
+  CKTypedComponentActionBase(std::nullptr_t n);
+
   ~CKTypedComponentActionBase() {};
-  
+
   CKTypedComponentActionValue _internal;
 public:
-  explicit operator bool() const { return bool(_internal); };
-  bool operator==(const CKTypedComponentActionBase &rhs) const { return _internal == rhs._internal; }
-  
-  SEL selector() const { return _internal.selector(); };
+  explicit operator bool() const;
+  bool isEqual(const CKTypedComponentActionBase &rhs) const;
+  SEL selector() const;
 };
 
 #pragma mark - Typed Helpers
