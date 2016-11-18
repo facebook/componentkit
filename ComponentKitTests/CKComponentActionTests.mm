@@ -54,7 +54,7 @@
 
 - (void)triggerAction:(id)context
 {
-  _action.send(self, context);
+  _action(self, context);
 }
 
 @end
@@ -94,7 +94,7 @@
 
 - (void)triggerAction:(id)context
 {
-  _action.send(self, context);
+  _action(self, context);
 }
 
 @end
@@ -186,7 +186,7 @@
   id context2 = @"context2";
 
   CKTypedComponentAction<id, id> action = { @selector(testAction2:context1:context2:) };
-  action.send(innerComponent, context, context2);
+  action(innerComponent, context, context2);
 
   XCTAssert(actionContext == context && actionContext2 == context2, @"Contexts should match what was passed to CKComponentActionSend");
 
@@ -213,7 +213,7 @@
   int integer = 1337;
 
   CKTypedComponentAction<int> action = { @selector(testPrimitive:integer:) };
-  action.send(innerComponent, integer);
+  action(innerComponent, integer);
 
   XCTAssert(actionInteger == integer, @"Contexts should match what was passed to CKComponentActionSend");
 
@@ -238,7 +238,7 @@
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
   CKTypedComponentAction<> action = { @selector(testNoArgumentAction) };
-  action.send(innerComponent);
+  action(innerComponent);
 
   XCTAssert(calledNoArgumentBlock, @"Contexts should match what was passed to CKComponentActionSend");
 
@@ -263,7 +263,7 @@
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
   CKTypedComponentAction<id> action = { @selector(testNoArgumentAction) };
-  action.send(innerComponent, @"hello");
+  action(innerComponent, @"hello");
 
   XCTAssert(calledNoArgumentBlock, @"Contexts should match what was passed to CKComponentActionSend");
 
@@ -350,7 +350,7 @@
    component:innerComponent];
 
   CKTypedComponentAction<id> action { outerComponent, @selector(testAction:context:) };
-  action.send(innerComponent, CKComponentActionSendBehaviorStartAtSender, @"hello");
+  action(innerComponent, CKComponentActionSendBehaviorStartAtSender, @"hello");
 
   XCTAssertTrue(calledBlock, @"Outer component should have received the action, even though the components are not mounted.");
 }

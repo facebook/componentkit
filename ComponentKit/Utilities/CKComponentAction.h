@@ -131,9 +131,9 @@ public:
 
   ~CKTypedComponentAction() {};
 
-  void send(CKComponent *sender, T... args) const
-  { this->send(sender, defaultBehavior(), args...); };
-  void send(CKComponent *sender, CKComponentActionSendBehavior behavior, T... args) const
+  void operator()(CKComponent *sender, T... args) const
+  { (*this)(sender, defaultBehavior(), args...); };
+  void operator()(CKComponent *sender, CKComponentActionSendBehavior behavior, T... args) const
   {
     const id target = initialTarget(sender);
     const id responder = behavior == CKComponentActionSendBehaviorStartAtSender ? target : [target nextResponder];

@@ -119,22 +119,22 @@ NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id t
 
 void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender)
 {
-  action.send(sender);
+  action(sender);
 }
 
 void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender, CKComponentActionSendBehavior behavior)
 {
-  action.send(sender, behavior);
+  action(sender, behavior);
 }
 
 void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context)
 {
-  action.send(sender, CKComponentActionSendBehaviorStartAtSenderNextResponder, context);
+  action(sender, CKComponentActionSendBehaviorStartAtSenderNextResponder, context);
 }
 
 void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
 {
-  action.send(sender, behavior, context);
+  action(sender, behavior, context);
 }
 
 #pragma mark - Control Actions
@@ -227,7 +227,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
 - (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event
 {
   // If the action can be handled by the sender itself, send it there instead of looking up the chain.
-  _action.send(sender.ck_component, CKComponentActionSendBehaviorStartAtSender, event);
+  _action(sender.ck_component, CKComponentActionSendBehaviorStartAtSender, event);
 }
 
 #pragma mark - Debug Helpers
