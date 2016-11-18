@@ -104,10 +104,6 @@ void CKComponentBoundsAnimationApplyAfterCollectionViewBatchUpdates(id context, 
   if (animation.duration == 0) {
     return;
   }
-  // Don't animate the collection view if it is not being displayed.
-  if (!_collectionView.window) {
-    return;
-  }
   // The documentation states that you must not use these functions with inserts or deletes. Let's be safe:
   if ([_collectionView numberOfSections] != _numberOfSections) {
     return;

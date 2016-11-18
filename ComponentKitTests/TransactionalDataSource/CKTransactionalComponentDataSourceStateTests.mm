@@ -90,14 +90,14 @@
 
 - (void)testStateEquality
 {
-  CKTransactionalComponentDataSourceItem *firstItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout() model:@"model" scopeRoot:nil boundsAnimation:{}];
+  CKTransactionalComponentDataSourceItem *firstItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout() model:@"model" scopeRoot:nil];
   CKTransactionalComponentDataSourceConfiguration *firstConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceStateTests class]
                                                                              context:@"context"
                                                                            sizeRange:CKSizeRange()];
   CKTransactionalComponentDataSourceState *firstState = [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:firstConfiguration sections:@[@[firstItem]]];
 
-  CKTransactionalComponentDataSourceItem *secondItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout() model:@"model" scopeRoot:nil boundsAnimation:{}];
+  CKTransactionalComponentDataSourceItem *secondItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout() model:@"model" scopeRoot:nil];
   CKTransactionalComponentDataSourceConfiguration *secondConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceStateTests class]
                                                                              context:@"context"
@@ -109,14 +109,14 @@
 
 - (void)testNonEqualStates
 {
-  CKTransactionalComponentDataSourceItem *firstItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout() model:@"model" scopeRoot:nil boundsAnimation:{}];
+  CKTransactionalComponentDataSourceItem *firstItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout() model:@"model" scopeRoot:nil];
   CKTransactionalComponentDataSourceConfiguration *firstConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceStateTests class]
                                                                              context:@"context"
                                                                            sizeRange:CKSizeRange()];
   CKTransactionalComponentDataSourceState *firstState = [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:firstConfiguration sections:@[@[firstItem]]];
 
-  CKTransactionalComponentDataSourceItem *secondItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout() model:@"model2" scopeRoot:nil boundsAnimation:{}];
+  CKTransactionalComponentDataSourceItem *secondItem = [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout() model:@"model2" scopeRoot:nil];
   CKTransactionalComponentDataSourceConfiguration *secondConfiguration =
   [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[CKTransactionalComponentDataSourceStateTests class]
                                                                              context:@"context"

@@ -15,7 +15,6 @@
 
 - (instancetype)initWithLayout:(const CKComponentLayout &)layout
                          model:(id)model
-                     scopeRoot:(CKComponentScopeRoot *)scopeRoot
-               boundsAnimation:(CKComponentBoundsAnimation)boundsAnimation;
+                     scopeRoot:(CKComponentScopeRoot *)scopeRoot;
 
 @end

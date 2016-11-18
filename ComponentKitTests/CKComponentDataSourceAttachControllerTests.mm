@@ -36,7 +36,7 @@
   CKComponent *component = [CKComponent new];
   CKComponentScopeRootIdentifier scopeIdentifier = 0x5C09E;
 
-  [_attachController attachComponentLayout:{component, {0, 0}} withScopeIdentifier:scopeIdentifier withBoundsAnimation:{} toView:view];
+  [_attachController attachComponentLayout:{component, {0, 0}} withScopeIdentifier:scopeIdentifier toView:view];
   CKComponentDataSourceAttachState *attachState = [_attachController attachStateForScopeIdentifier:scopeIdentifier];
   XCTAssertEqualObjects(attachState.mountedComponents, [NSSet setWithObject:component]);
   XCTAssertEqual(attachState.scopeIdentifier, scopeIdentifier);
@@ -51,11 +51,11 @@
   UIView *view = [UIView new];
   CKComponent *component = [CKComponent new];
   CKComponentScopeRootIdentifier scopeIdentifier = 0x5C09E;
-  [_attachController attachComponentLayout:{component, {0, 0}} withScopeIdentifier:scopeIdentifier withBoundsAnimation:{} toView:view];
+  [_attachController attachComponentLayout:{component, {0, 0}} withScopeIdentifier:scopeIdentifier toView:view];
 
   CKComponent *component2 = [CKComponent new];
   CKComponentScopeRootIdentifier scopeIdentifier2 = 0x5C09E2;
-  [_attachController attachComponentLayout:{component2, {0, 0}} withScopeIdentifier:scopeIdentifier2 withBoundsAnimation:{} toView:view];
+  [_attachController attachComponentLayout:{component2, {0, 0}} withScopeIdentifier:scopeIdentifier2 toView:view];
 
   // the first component is now detached
   CKComponentDataSourceAttachState *attachState = [_attachController attachStateForScopeIdentifier:scopeIdentifier];
