@@ -23,13 +23,11 @@
 - (instancetype)initWithLayout:(const CKComponentLayout &)layout
                          model:(id)model
                      scopeRoot:(CKComponentScopeRoot *)scopeRoot
-               boundsAnimation:(CKComponentBoundsAnimation)boundsAnimation
 {
   if (self = [super init]) {
     _layout = layout;
     _model = model;
     _scopeRoot = scopeRoot;
-    _boundsAnimation = boundsAnimation;
   }
   return self;
 }

@@ -41,7 +41,6 @@
  */
 - (void)attachComponentLayout:(CKComponentLayout)layout
           withScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
-          withBoundsAnimation:(CKComponentBoundsAnimation)boundsAnimation
                        toView:(UIView *)view;
 /**
  Detaching a component tree will cause it to be unmounted from the view it is currently attached to and will mark the view as available to be
