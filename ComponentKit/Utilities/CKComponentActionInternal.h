@@ -55,6 +55,33 @@ private:
   SEL _selector;
 };
 
+#pragma mark - Action Base
+
+/** A base-class for typed components that doesn't use templates to avoid template bloat. */
+class CKTypedComponentActionBase {
+protected:
+  CKTypedComponentActionBase() = default;
+  CKTypedComponentActionBase(id target, SEL selector);
+
+  CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector);
+
+  /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
+  CKTypedComponentActionBase(SEL selector);
+
+  /** Allows conversion from NULL actions. */
+  CKTypedComponentActionBase(int s);
+  CKTypedComponentActionBase(long s);
+  CKTypedComponentActionBase(std::nullptr_t n);
+
+  ~CKTypedComponentActionBase() {};
+
+  CKTypedComponentActionValue _internal;
+public:
+  explicit operator bool() const;
+  bool isEqual(const CKTypedComponentActionBase &rhs) const;
+  SEL selector() const;
+};
+
 #pragma mark - Typed Helpers
 
 template <typename... Ts> struct CKTypedComponentActionTypelist { };

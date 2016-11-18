@@ -83,17 +83,16 @@
  {
    _action.send(self, @"hello", 4);
  }
-
  */
 template<typename... T>
-struct CKTypedComponentAction {
+class CKTypedComponentAction : public CKTypedComponentActionBase {
   static_assert(std::is_same<
                 CKTypedComponentActionBoolPack<(std::is_trivially_constructible<T>::value || std::is_pointer<T>::value)...>,
                 CKTypedComponentActionBoolPack<(CKTypedComponentActionDenyType<T>::value)...>
                 >::value, "You must either use a pointer (like an NSObject) or a trivially constructible type. Complex types are not allowed as arguments of component actions.");
-
-  CKTypedComponentAction<T...>() : _internal({}) {};
-  CKTypedComponentAction<T...>(id target, SEL selector) : _internal({CKTypedComponentActionVariantTargetSelector, target, nil, selector})
+public:
+  CKTypedComponentAction<T...>() : CKTypedComponentActionBase() {};
+  CKTypedComponentAction<T...>(id target, SEL selector) : CKTypedComponentActionBase(target, selector)
   {
 #if DEBUG
     std::vector<const char *> typeEncodings;
@@ -102,7 +101,7 @@ struct CKTypedComponentAction {
 #endif
   }
 
-  CKTypedComponentAction<T...>(const CKComponentScope &scope, SEL selector) : _internal({CKTypedComponentActionVariantComponentScope, nil, scope.scopeHandle(), selector})
+  CKTypedComponentAction<T...>(const CKComponentScope &scope, SEL selector) : CKTypedComponentActionBase(scope, selector)
   {
 #if DEBUG
     std::vector<const char *> typeEncodings;
@@ -110,51 +109,52 @@ struct CKTypedComponentAction {
     _CKTypedComponentDebugCheckComponentScope(scope, selector, typeEncodings);
 #endif
   }
-  
+
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
-  CKTypedComponentAction(SEL selector) : _internal(CKTypedComponentActionVariantRawSelector, nil, nil, selector) { };
+  CKTypedComponentAction(SEL selector) : CKTypedComponentActionBase(selector) {};
+
+  /** Allows conversion from NULL actions. */
+  CKTypedComponentAction(int s) : CKTypedComponentActionBase() {};
+  CKTypedComponentAction(long s) : CKTypedComponentActionBase() {};
+  CKTypedComponentAction(std::nullptr_t n) : CKTypedComponentActionBase() {};
 
   /** We support promotion from actions that take no arguments. */
   template <typename... Ts>
-  CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) : _internal(action._internal) { };
+  CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) : CKTypedComponentActionBase(action) { };
 
   /**
    We allow demotion from actions with types to untyped actions, but only when explicit. This means arguments to the
    method specified here will have nil values at runtime. Used for interoperation with older API's.
    */
   template<typename... Ts>
-  explicit CKTypedComponentAction<>(const CKTypedComponentAction<Ts...> &action) : _internal(action._internal) { };
-
-  /** Allows conversion from NULL actions. */
-  CKTypedComponentAction(int s) : _internal({}) {};
-  CKTypedComponentAction(long s) : _internal({}) {};
-  CKTypedComponentAction(std::nullptr_t n) : _internal({}) {};
+  explicit CKTypedComponentAction<>(const CKTypedComponentAction<Ts...> &action) : CKTypedComponentActionBase(action) { };
 
   ~CKTypedComponentAction() {};
 
-  explicit operator bool() const { return bool(_internal); };
-  bool operator==(const CKTypedComponentAction& rhs) const { return _internal == rhs._internal; }
-  
-  SEL selector() const { return _internal.selector(); };
-  
   void send(CKComponent *sender, T... args) const
-  { this->send(sender, _internal.defaultBehavior(), args...); }
+  { this->send(sender, _internal.defaultBehavior(), args...); };
   void send(CKComponent *sender, CKComponentActionSendBehavior behavior, T... args) const
   {
     const id target = _internal.initialTarget(sender);
     const id responder = behavior == CKComponentActionSendBehaviorStartAtSender ? target : [target nextResponder];
     CKComponentActionSendResponderChain(_internal.selector(), responder, sender, args...);
-  }
+  };
 
-  CKTypedComponentActionValue _internal;
+  bool operator==(const CKTypedComponentAction<T...> &rhs) const {
+    return isEqual(rhs);
+  };
 };
 
 typedef CKTypedComponentAction<> CKComponentAction;
 
+/** Explicit instantiation of our most commonly-used templates to avoid bloat in callsites. */
+extern template class CKTypedComponentAction<>;
+extern template class CKTypedComponentAction<id>;
+
 /**
  Sends a component action up the responder chain by crawling up the responder chain until it finds a responder that
  responds to the action's selector, then invokes it. These remain for legacy reasons, and simply call action.send(...);
- 
+
  @param action The action to send up the responder chain.
  @param sender The component sending the action. Traversal starts from the component itself, then its next responder.
  @param context An optional context-dependent second parameter to the component action.
@@ -168,7 +168,7 @@ void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sende
 /**
  Returns a view attribute that configures a component that creates a UIControl to send the given CKComponentAction.
  You can use this with e.g. CKButtonComponent.
- 
+
  @param action Sent up the responder chain when an event occurs. Sender is the component that created the UIControl;
  context is the UIEvent that triggered the action. May be NULL, in which case no action will be sent.
  @param controlEvents The events that should result in the action being sent. Default is touch up inside.
