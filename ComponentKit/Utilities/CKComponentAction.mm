@@ -24,7 +24,24 @@
 void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list) { }
 void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) { }
 
-id CKTypedComponentActionValue::initialTarget(CKComponent *sender) const {
+#pragma mark - CKTypedComponentActionBase
+
+bool CKTypedComponentActionBase::operator==(const CKTypedComponentActionBase& rhs) const
+{
+  return (_variant == rhs._variant
+          && CKObjectIsEqual(_target, rhs._target)
+          && CKObjectIsEqual(_scopeHandle, rhs._scopeHandle)
+          && _selector == rhs._selector);
+}
+
+CKComponentActionSendBehavior CKTypedComponentActionBase::defaultBehavior() const
+{
+  return (_variant == CKTypedComponentActionVariantRawSelector
+          ? CKComponentActionSendBehaviorStartAtSenderNextResponder
+          : CKComponentActionSendBehaviorStartAtSender);
+};
+
+id CKTypedComponentActionBase::initialTarget(CKComponent *sender) const {
   switch (_variant) {
     case CKTypedComponentActionVariantRawSelector:
       return sender;
@@ -35,48 +52,30 @@ id CKTypedComponentActionValue::initialTarget(CKComponent *sender) const {
   }
 }
 
-#pragma mark - CKTypedComponentActionValue
+CKTypedComponentActionBase::CKTypedComponentActionBase() : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(NULL) {}
 
-CKTypedComponentActionValue::CKTypedComponentActionValue() : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(NULL) {}
+CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) : _variant(CKTypedComponentActionVariantTargetSelector), _target(target), _scopeHandle(nil), _selector(selector) {};
 
-CKTypedComponentActionValue::CKTypedComponentActionValue(const CKTypedComponentActionValue &value) : _variant(value._variant), _target(value._target), _scopeHandle(value._scopeHandle), _selector(value._selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) : _variant(CKTypedComponentActionVariantComponentScope), _target(nil), _scopeHandle(scope.scopeHandle()), _selector(selector) {};
 
-CKTypedComponentActionValue::CKTypedComponentActionValue(CKTypedComponentActionVariant variant, __unsafe_unretained id target, __unsafe_unretained CKComponentScopeHandle *scopeHandle, SEL selector) : _variant(variant), _target(target), _scopeHandle(scopeHandle), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(selector) {};
 
-bool CKTypedComponentActionValue::operator==(const CKTypedComponentActionValue& rhs) const
-{
+CKTypedComponentActionBase::CKTypedComponentActionBase(int s) : CKTypedComponentActionBase() {};
+
+CKTypedComponentActionBase::CKTypedComponentActionBase(long s) : CKTypedComponentActionBase() {};
+
+CKTypedComponentActionBase::CKTypedComponentActionBase(std::nullptr_t n) : CKTypedComponentActionBase() {};
+
+CKTypedComponentActionBase::operator bool() const { return _selector != NULL; };
+
+bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) const {
   return (_variant == rhs._variant
           && CKObjectIsEqual(_target, rhs._target)
           && CKObjectIsEqual(_scopeHandle, rhs._scopeHandle)
           && _selector == rhs._selector);
-}
-
-CKComponentActionSendBehavior CKTypedComponentActionValue::defaultBehavior() const
-{
-  return (_variant == CKTypedComponentActionVariantRawSelector
-          ? CKComponentActionSendBehaviorStartAtSenderNextResponder
-          : CKComponentActionSendBehaviorStartAtSender);
 };
 
-#pragma mark - CKTypedComponentActionBase
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) : _internal({CKTypedComponentActionVariantTargetSelector, target, nil, selector}) {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) : _internal({CKTypedComponentActionVariantComponentScope, nil, scope.scopeHandle(), selector}) {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) : _internal(CKTypedComponentActionVariantRawSelector, nil, nil, selector) {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(int s) : _internal({}) {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(long s) : _internal({}) {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(std::nullptr_t n) : _internal({}) {};
-
-CKTypedComponentActionBase::operator bool() const { return bool(_internal); };
-
-bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) const { return _internal == rhs._internal; };
-
-SEL CKTypedComponentActionBase::selector() const { return _internal.selector(); };
+SEL CKTypedComponentActionBase::selector() const { return _selector; };
 
 #pragma mark - Sending
 
@@ -95,7 +94,7 @@ NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id t
       // The responder resolved its instance method, we now have a valid responder/signature
       break;
     }
-
+    
     // 2. Fast-forwarding path
     id forwardingTarget = [responder forwardingTargetForSelector:selector];
     if (!forwardingTarget || forwardingTarget == responder) {
@@ -103,7 +102,7 @@ NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id t
       CKCFailAssert(@"Forwarding target failed for action:%@ %@", target, NSStringFromSelector(selector));
       return nil;
     }
-
+    
     responder = forwardingTarget;
     signature = [responder methodSignatureForSelector:selector];
   }
@@ -160,7 +159,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
 {
   static ForwarderMap *map = new ForwarderMap(); // never destructed to avoid static destruction fiasco
   static CK::StaticMutex lock = CK_MUTEX_INITIALIZER;   // protects map
-
+  
   if (!action) {
     return {
       {"CKComponentActionAttribute-no-op", ^(UIControl *control, id value) {}, ^(UIControl *control, id value) {}},
@@ -168,7 +167,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
       @YES
     };
   }
-
+  
   // We need a target for the control event. (We can't use the responder chain because we need to jump in and change the
   // sender from the UIControl to the CKComponent.)
   // Control event targets are __unsafe_unretained. We can't rely on the block to keep the target alive, since the block
@@ -189,7 +188,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
       forwarder = it->second;
     }
   }
-
+  
   std::string identifier = std::string("CKComponentActionAttribute-")
   + std::string(sel_getName(action.selector()))
   + "-" + std::to_string(controlEvents);
@@ -237,13 +236,13 @@ static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSigna
 {
 #if DEBUG
   CKCAssert(typeEncodings.size() + 3 >= signature.numberOfArguments, @"Expected action method %@ to take less than %lu arguments, but it suppoorts %lu", NSStringFromSelector(selector), typeEncodings.size(), (unsigned long)signature.numberOfArguments - 3);
-
+  
   CKCAssert(signature.methodReturnLength == 0, @"Component action methods should not have any return value. Any objects returned from this method will be leaked.");
-
+  
   for (int i = 0; i + 3 < signature.numberOfArguments; i++) {
     const char *methodEncoding = [signature getArgumentTypeAtIndex:i + 3];
     const char *typeEncoding = typeEncodings[i];
-
+    
     CKCAssert(methodEncoding == NULL || typeEncoding == NULL || strcmp(methodEncoding, typeEncoding) == 0, @"Implementation of %@ does not match expected types.\nExpected type %s, got %s", NSStringFromSelector(selector), typeEncoding, methodEncoding);
   }
 #endif
@@ -259,9 +258,9 @@ void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SE
   // We allow component actions to be implemented either in the component, or its controller.
   const Class controllerKlass = CKComponentControllerClassFromComponentClass(klass);
   CKCAssert([klass instancesRespondToSelector:selector] || [controllerKlass instancesRespondToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", klass, NSStringFromSelector(selector));
-
+  
   NSMethodSignature *signature = [klass instanceMethodSignatureForSelector:selector] ?: [controllerKlass instanceMethodSignatureForSelector:selector];
-
+  
   checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
 #endif
 }
@@ -273,9 +272,9 @@ void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const st
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
   CKCAssert([target respondsToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", [target class], NSStringFromSelector(selector));
-
+  
   NSMethodSignature *signature = [target methodSignatureForSelector:selector];
-
+  
   checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
 #endif
 }
