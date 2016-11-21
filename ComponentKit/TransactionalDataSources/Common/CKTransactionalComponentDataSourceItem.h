@@ -9,6 +9,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <ComponentKit/CKComponentBoundsAnimation.h>
 
 class CKComponentLayout;
 @class CKComponentScopeRoot;
@@ -22,5 +23,8 @@ class CKComponentLayout;
 
 /** The scope root for this item, which holds references to component controllers and state */
 @property (nonatomic, strong, readonly) CKComponentScopeRoot *scopeRoot;
+
+/** The bounds animation with which to apply the layout */
+@property (nonatomic, readonly) CKComponentBoundsAnimation boundsAnimation;
 
 @end
