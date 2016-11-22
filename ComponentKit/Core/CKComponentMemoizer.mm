@@ -57,7 +57,7 @@ struct CKLayoutMemoizationKey {
 
 
 
-@interface _CKComponentMemoizerImpl : NSObject {
+@interface _CKComponentMemoizerImpl : NSObject <NSCopying> {
   @package
 
   // Store into the next state, read from the current
@@ -73,6 +73,15 @@ struct CKLayoutMemoizationKey {
 
 
 @implementation _CKComponentMemoizerImpl
+
+- (id)copyWithZone:(nullable NSZone *)zone
+{
+  _CKComponentMemoizerImpl *copy = [[_CKComponentMemoizerImpl allocWithZone:zone] init];
+  copy->_next = [_next copyWithZone:zone];
+  copy->componentCache_ = componentCache_;
+  copy->layoutCache_ = layoutCache_;
+  return copy;
+}
 
 - (CKComponent *)dequeueComponentForKey:(CKMemoizationKey)key
 {
@@ -131,7 +140,7 @@ struct CKLayoutMemoizationKey {
 
 CKComponentMemoizer::CKComponentMemoizer(id previousMemoizerState)
 {
-  _CKComponentMemoizerImpl *mipl = previousMemoizerState ?: [[_CKComponentMemoizerImpl alloc] init];
+  _CKComponentMemoizerImpl *mipl = [previousMemoizerState copy] ?: [[_CKComponentMemoizerImpl alloc] init];
 
   // Push this memoizer onto the current thread
   id current = [_CKComponentMemoizerImpl currentMemoizer];
