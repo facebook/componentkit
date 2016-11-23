@@ -56,9 +56,4 @@ private:
 
 @interface CKTypedPropsComponent : CKComponent
 
-#define CKTypedPropsComponentConstructor(PropType) \
-+ (instancetype)newWithProps:(const PropType &)props \
-                        view:(const CKComponentViewConfiguration &)view \
-                        size:(const CKComponentSize &)size;
-
 @end
