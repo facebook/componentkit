@@ -26,7 +26,7 @@
              @"%@ overrides -newWithView:size: which is not allowed. "
              "Consider subclassing CKComponent or CKCompositeComponent directly.",
              self);
-    CKAssert(!CKSubclassOverridesSelector([CKTypedPropsComponent class], self, @selector(newWithProps:view:size:)),
+    CKAssert(!CKSubclassOverridesSelector([CKTypedPropsComponent class], self, @selector(newWithPropsStruct:view:size:)),
              @"%@ overrides -newWithProps:view:size: which is not allowed. "
              "Instead, you should implement renderWithProps:state:view:size:.",
              self);
@@ -34,27 +34,27 @@
 }
 #endif
 
-+ (instancetype)newWithProps:(const CKTypedComponentStruct &)props
-                        view:(const CKComponentViewConfiguration &)view
-                        size:(const CKComponentSize &)size
++ (instancetype)newWithPropsStruct:(const CKTypedComponentStruct &)props
+                              view:(const CKComponentViewConfiguration &)view
+                              size:(const CKComponentSize &)size
 {
   CKComponentScope scope(self);
   CKTypedPropsComponent *c = [super newWithView:view size:size];
   if (c) {
     c->_props = props;
     c->_state = scope.state();
-    c->_child = [self renderWithProps:props
-                                state:c->_state
-                                 view:view
-                                 size:size];
+    c->_child = [self renderWithPropsStruct:props
+                                      state:c->_state
+                                       view:view
+                                       size:size];
   }
   return c;
 }
 
-+ (CKComponent *)renderWithProps:(const CKTypedComponentStruct &)props
-                           state:(id)state
-                            view:(const CKComponentViewConfiguration &)view
-                            size:(const CKComponentSize &)size
++ (CKComponent *)renderWithPropsStruct:(const CKTypedComponentStruct &)props
+                                 state:(id)state
+                                  view:(const CKComponentViewConfiguration &)view
+                                  size:(const CKComponentSize &)size
 {
   return nil;
 }

@@ -13,16 +13,17 @@
 
 @implementation CKTestTypedPropsComponent
 
-+ (CKComponent *)renderWithProps:(const CKTypedComponentStruct &)props
+CKTypedPropsComponentConstructorImpl(CKTestTypedPropsComponentProps);
+
++ (CKComponent *)renderWithProps:(const CKTestTypedPropsComponentProps &)props
                            state:(id)state
                             view:(const CKComponentViewConfiguration &)view
                             size:(const CKComponentSize &)size
 {
-  const CKTestTypedPropsComponentProps p = props;
   return [CKLabelComponent
           newWithLabelAttributes:{
-            .string = p.string,
-            .font = p.font
+            .string = props.string,
+            .font = props.font
           }
           viewAttributes:*view.attributes()
           size:size];

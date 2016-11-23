@@ -15,4 +15,6 @@ struct CKTestTypedPropsComponentProps {
 
 @interface CKTestTypedPropsComponent : CKTypedPropsComponent
 
+CKTypedPropsComponentConstructor(CKTestTypedPropsComponentProps);
+
 @end
