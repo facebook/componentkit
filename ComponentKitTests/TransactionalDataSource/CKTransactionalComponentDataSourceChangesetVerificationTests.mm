@@ -997,7 +997,8 @@ static CKTransactionalComponentDataSourceItem *itemWithModel(id model)
 {
   return [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:CKComponentLayout()
                                                                   model:model
-                                                              scopeRoot:nil];
+                                                              scopeRoot:nil
+                                                        boundsAnimation:{}];
 }
 
 @end
