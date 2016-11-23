@@ -43,6 +43,17 @@ private:
   std::shared_ptr<placeholder> _content;
 };
 
+template <typename T>
+struct CKRequiredProp {
+  CKRequiredProp<T>() = delete;
+  CKRequiredProp<T>(const T &val) : _value(val) {};
+  operator T() const {
+    return _value;
+  }
+private:
+  T _value;
+};
+
 @interface CKTypedPropsComponent : CKComponent
 
 #define CKTypedPropsComponentConstructor(PropType) \

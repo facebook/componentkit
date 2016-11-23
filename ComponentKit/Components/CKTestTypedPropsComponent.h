@@ -9,7 +9,7 @@
 #import <ComponentKit/CKTypedPropsComponent.h>
 
 struct CKTestTypedPropsComponentProps {
-  NSString *string;
+  CKRequiredProp<NSString *> string;
   UIFont *font;
 };
 
