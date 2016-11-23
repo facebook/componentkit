@@ -15,6 +15,8 @@ struct CKTestTypedPropsComponentProps {
 
 @interface CKTestTypedPropsComponent : CKTypedPropsComponent
 
-CKTypedPropsComponentConstructor(CKTestTypedPropsComponentProps);
++ (instancetype)newWithProps:(const CKTestTypedPropsComponentProps &)props
+                        view:(const CKComponentViewConfiguration &)view
+                        size:(const CKComponentSize &)size;
 
 @end

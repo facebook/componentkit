@@ -13,13 +13,21 @@
 
 @implementation CKTestTypedPropsComponent
 
-CKTypedPropsComponentConstructorImpl(CKTestTypedPropsComponentProps);
++ (instancetype)newWithProps:(const CKTestTypedPropsComponentProps &)props
+                        view:(const CKComponentViewConfiguration &)view
+                        size:(const CKComponentSize &)size
+{
+  return [self newWithPropsStruct:props
+                             view:view
+                             size:size];
+}
 
-+ (CKComponent *)renderWithProps:(const CKTestTypedPropsComponentProps &)props
++ (CKComponent *)renderWithProps:(const CKTypedComponentStruct &)p
                            state:(id)state
                             view:(const CKComponentViewConfiguration &)view
                             size:(const CKComponentSize &)size
 {
+  const CKTestTypedPropsComponentProps props = p;
   return [CKLabelComponent
           newWithLabelAttributes:{
             .string = props.string,
