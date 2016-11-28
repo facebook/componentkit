@@ -110,6 +110,38 @@ static UIScrollView *findScrollView(UIView *v)
   XCTAssertFalse(hierarchy.receivedScroll, @"Should not have triggered on old hierarchy either.");
 }
 
+- (void)testProxiedEventsProxyThrowsAssertionButDoesNotCrashWhenUnmounted
+{
+  CKDetectScrollComponent *hierarchy =
+  [CKDetectScrollComponent
+   newWithComponent:[CKComponent
+                     newWithView:{[UIScrollView class],
+                       {CKComponentDelegateAttribute(@selector(setDelegate:), {
+                         @selector(scrollViewDidScroll:),
+                       })}}
+                     size:{}]];
+  
+  
+  CKComponentLayout layout = [hierarchy layoutThatFits:{} parentSize:{NAN, NAN}];
+  
+  UIView *container = [UIView new];
+  NSSet *mounted = CKMountComponentLayout(layout, container, nil, nil);
+  
+  XCTAssertFalse(hierarchy.receivedScroll, @"Should not have triggered yet");
+  
+  UIScrollView *scroll = findScrollView(container);
+  
+  CKUnmountComponents(mounted);
+  
+  XCTAssertThrows(scroll.contentOffset = CGPointMake(0, 100));
+  
+  XCTAssertFalse(hierarchy.receivedScroll, @"Should not have recived scroll event");
+  
+  // Un-set the delegate since deallocation will trigger a scroll event, which will throw the same assertion as we are
+  // catching above.
+  scroll.delegate = nil;
+}
+
 @end
 
 
