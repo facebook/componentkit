@@ -61,7 +61,6 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
 - (id)forwardingTargetForSelector:(SEL)aSelector
 {
   CKComponent *responder = _view.ck_component;
-  CKAssertNotNil(responder, @"Delegate method is being called on an unmounted component's view: %@", _view);
   return [responder targetForAction:aSelector withSender:responder];
 }
 
@@ -75,6 +74,8 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
   const BOOL shouldRespond = std::find(_selectors.begin(), _selectors.end(), aSelector) != std::end(_selectors);
   if (!shouldRespond) {
     [super doesNotRecognizeSelector:aSelector];
+  } else {
+    CKFailAssert(@"Delegate method is being called on an unmounted component's view: %@ selector:%@", _view, NSStringFromSelector(aSelector));
   }
 }
 
