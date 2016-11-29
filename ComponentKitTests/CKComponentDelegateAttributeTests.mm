@@ -133,7 +133,11 @@ static UIScrollView *findScrollView(UIView *v)
   
   CKUnmountComponents(mounted);
   
+#if CK_ASSERTIONS_ENABLED
   XCTAssertThrows(scroll.contentOffset = CGPointMake(0, 100));
+#else
+  scroll.contentOffset = CGPointMake(0, 100);
+#endif
   
   XCTAssertFalse(hierarchy.receivedScroll, @"Should not have recived scroll event");
   

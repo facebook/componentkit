@@ -29,10 +29,6 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
   return so;
 }
 
-static BOOL selectorInList(SEL selector, const CKComponentForwardedSelectors &selectors) {
-  return std::find(selectors.begin(), selectors.end(), selector) != std::end(selectors);
-}
-
 @interface CKComponentDelegateForwarder () {
   @package
   CKComponentForwardedSelectors _selectors;
@@ -51,6 +47,12 @@ static BOOL selectorInList(SEL selector, const CKComponentForwardedSelectors &se
 
   return f;
 }
+
+/** 
+ This method is never invoked, and is used to provide a dummy method signature to the forwarding system if our
+ normal fast-path forwarding doesn't work because the component has been unmounted.
+ */
+- (void)_doNothing {}
 
 - (BOOL)respondsToSelector:(SEL)aSelector
 {
@@ -77,14 +79,10 @@ static BOOL selectorInList(SEL selector, const CKComponentForwardedSelectors &se
       return;
     }
     [anInvocation invokeWithTarget:target];
-  } else if(selector == @selector(_doNothing)) {
-    
-  } else {
+  } else if(selector != @selector(_doNothing)) {
     [super forwardInvocation:anInvocation];
   }
 }
-
-- (void)_doNothing {}
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector
 {
@@ -92,7 +90,6 @@ static BOOL selectorInList(SEL selector, const CKComponentForwardedSelectors &se
   if (sig) {
     return sig;
   }
-
   if (selectorInList(aSelector, _selectors)) {
     CKComponent *responder = _view.ck_component;
     id target = [responder targetForAction:aSelector withSender:responder];
@@ -100,7 +97,6 @@ static BOOL selectorInList(SEL selector, const CKComponentForwardedSelectors &se
     // crash in the forwarding system. This ensures the forwardInvocation: call above is called.
     return (target ? [target methodSignatureForSelector:aSelector] : [self methodSignatureForSelector:@selector(_doNothing)]);
   }
-
   return nil;
 }
 
@@ -108,6 +104,11 @@ static BOOL selectorInList(SEL selector, const CKComponentForwardedSelectors &se
 {
   CKComponent *responder = _view.ck_component;
   return [responder targetForAction:aSelector withSender:responder];
+}
+
+static BOOL selectorInList(SEL selector, const CKComponentForwardedSelectors &selectors)
+{
+  return std::find(selectors.begin(), selectors.end(), selector) != std::end(selectors);
 }
 
 @end
