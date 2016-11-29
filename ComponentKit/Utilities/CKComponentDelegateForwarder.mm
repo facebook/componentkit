@@ -108,7 +108,7 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
 
 static BOOL selectorInList(SEL selector, const CKComponentForwardedSelectors &selectors)
 {
-  return std::find(selectors.begin(), selectors.end(), selector) != std::end(selectors);
+  return std::find(selectors.begin(), selectors.end(), selector) != selectors.end();
 }
 
 @end
