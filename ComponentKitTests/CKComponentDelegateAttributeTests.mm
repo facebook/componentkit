@@ -66,11 +66,11 @@ static UIScrollView *findScrollView(UIView *v)
   CKDetectScrollComponent *hierarchy =
   [CKDetectScrollComponent
    newWithComponent:[CKComponent
-   newWithView:{[UIScrollView class],
-     {CKComponentDelegateAttribute(@selector(setDelegate:), {
-       @selector(scrollViewDidScroll:),
-     })}}
-   size:{}]];
+                     newWithView:{[UIScrollView class],
+                       {CKComponentDelegateAttribute(@selector(setDelegate:), {
+                         @selector(scrollViewDidScroll:),
+                       })}}
+                     size:{}]];
 
 
   CKComponentLayout layout = [hierarchy layoutThatFits:{} parentSize:{NAN, NAN}];
@@ -120,27 +120,27 @@ static UIScrollView *findScrollView(UIView *v)
                          @selector(scrollViewDidScroll:),
                        })}}
                      size:{}]];
-  
-  
+
+
   CKComponentLayout layout = [hierarchy layoutThatFits:{} parentSize:{NAN, NAN}];
-  
+
   UIView *container = [UIView new];
   NSSet *mounted = CKMountComponentLayout(layout, container, nil, nil);
-  
+
   XCTAssertFalse(hierarchy.receivedScroll, @"Should not have triggered yet");
-  
+
   UIScrollView *scroll = findScrollView(container);
-  
+
   CKUnmountComponents(mounted);
-  
-#if CK_ASSERTIONS_ENABLED
-  XCTAssertThrows(scroll.contentOffset = CGPointMake(0, 100));
-#else
-  scroll.contentOffset = CGPointMake(0, 100);
-#endif
-  
+
+  @try {
+    // We have an assertion that may throw an exception depending on build flags. We don't want to assert that it throws
+    // but we do want to make sure we don't crash, so we catch it and ignore the results.
+    scroll.contentOffset = CGPointMake(0, 100);
+  } @catch (NSException *exception) { }
+
   XCTAssertFalse(hierarchy.receivedScroll, @"Should not have recived scroll event");
-  
+
   // Un-set the delegate since deallocation will trigger a scroll event, which will throw the same assertion as we are
   // catching above.
   scroll.delegate = nil;
@@ -156,4 +156,4 @@ static UIScrollView *findScrollView(UIView *v)
   _receivedScroll = YES;
 }
 
- @end
+@end
