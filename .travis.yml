@@ -1,6 +1,5 @@
-os: osx
-osx_image: xcode8
 language: objective-c
+osx_image: xcode8.1
 
 install:
   - gem install xcpretty -N --no-ri --no-rdoc
