@@ -94,7 +94,7 @@ NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id t
       // The responder resolved its instance method, we now have a valid responder/signature
       break;
     }
-    
+
     // 2. Fast-forwarding path
     id forwardingTarget = [responder forwardingTargetForSelector:selector];
     if (!forwardingTarget || forwardingTarget == responder) {
@@ -102,7 +102,7 @@ NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id t
       CKCFailAssert(@"Forwarding target failed for action:%@ %@", target, NSStringFromSelector(selector));
       return nil;
     }
-    
+
     responder = forwardingTarget;
     signature = [responder methodSignatureForSelector:selector];
   }
@@ -159,7 +159,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
 {
   static ForwarderMap *map = new ForwarderMap(); // never destructed to avoid static destruction fiasco
   static CK::StaticMutex lock = CK_MUTEX_INITIALIZER;   // protects map
-  
+
   if (!action) {
     return {
       {"CKComponentActionAttribute-no-op", ^(UIControl *control, id value) {}, ^(UIControl *control, id value) {}},
@@ -167,7 +167,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
       @YES
     };
   }
-  
+
   // We need a target for the control event. (We can't use the responder chain because we need to jump in and change the
   // sender from the UIControl to the CKComponent.)
   // Control event targets are __unsafe_unretained. We can't rely on the block to keep the target alive, since the block
@@ -188,7 +188,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
       forwarder = it->second;
     }
   }
-  
+
   std::string identifier = std::string("CKComponentActionAttribute-")
   + std::string(sel_getName(action.selector()))
   + "-" + std::to_string(controlEvents);
@@ -236,13 +236,13 @@ static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSigna
 {
 #if DEBUG
   CKCAssert(typeEncodings.size() + 3 >= signature.numberOfArguments, @"Expected action method %@ to take less than %lu arguments, but it suppoorts %lu", NSStringFromSelector(selector), typeEncodings.size(), (unsigned long)signature.numberOfArguments - 3);
-  
+
   CKCAssert(signature.methodReturnLength == 0, @"Component action methods should not have any return value. Any objects returned from this method will be leaked.");
-  
+
   for (int i = 0; i + 3 < signature.numberOfArguments; i++) {
     const char *methodEncoding = [signature getArgumentTypeAtIndex:i + 3];
     const char *typeEncoding = typeEncodings[i];
-    
+
     CKCAssert(methodEncoding == NULL || typeEncoding == NULL || strcmp(methodEncoding, typeEncoding) == 0, @"Implementation of %@ does not match expected types.\nExpected type %s, got %s", NSStringFromSelector(selector), typeEncoding, methodEncoding);
   }
 #endif
@@ -258,9 +258,9 @@ void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SE
   // We allow component actions to be implemented either in the component, or its controller.
   const Class controllerKlass = CKComponentControllerClassFromComponentClass(klass);
   CKCAssert([klass instancesRespondToSelector:selector] || [controllerKlass instancesRespondToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", klass, NSStringFromSelector(selector));
-  
+
   NSMethodSignature *signature = [klass instanceMethodSignatureForSelector:selector] ?: [controllerKlass instanceMethodSignatureForSelector:selector];
-  
+
   checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
 #endif
 }
@@ -272,9 +272,9 @@ void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const st
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
   CKCAssert([target respondsToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", [target class], NSStringFromSelector(selector));
-  
+
   NSMethodSignature *signature = [target methodSignatureForSelector:selector];
-  
+
   checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
 #endif
 }
