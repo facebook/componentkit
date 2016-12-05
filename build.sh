@@ -31,7 +31,7 @@ function ci() {
 }
 
 function ios_ci() {
-  ci $1 $2 iphonesimulator10.0 "platform=iOS Simulator,OS=10.0,name=iPhone 5s" $3
+  ci $1 $2 iphonesimulator10.1 "platform=iOS Simulator,OS=10.0,name=iPhone 5s" $3
 }
 
 function tvos_ci() {
