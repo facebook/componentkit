@@ -71,6 +71,3 @@
 @property (nonatomic, assign, readonly) CKComponentSize size;
 
 @end
-
-// Internal, for CKComponent
-CKComponentLayout CKMemoizeOrComputeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize);

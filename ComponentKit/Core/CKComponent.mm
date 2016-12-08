@@ -11,7 +11,6 @@
 #import "CKComponent.h"
 #import "CKComponentControllerInternal.h"
 #import "CKComponentInternal.h"
-#import "CKComponentMemoizer.h"
 #import "CKComponentSubclass.h"
 
 #import <ComponentKit/CKArgumentPrecondition.h>
@@ -221,7 +220,9 @@ struct CKComponentMountInfo {
 {
   CK::Component::LayoutContext context(self, constrainedSize);
 
-  CKComponentLayout layout = CKMemoizeOrComputeLayout(self, constrainedSize, _size, parentSize);
+  CKComponentLayout layout = [self computeLayoutThatFits:constrainedSize
+                                        restrictedToSize:_size
+                                    relativeToParentSize:parentSize];
 
   CKAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
            [self class], [layout.component class]);
@@ -247,11 +248,6 @@ struct CKComponentMountInfo {
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   return {self, constrainedSize.min};
-}
-
-- (BOOL)shouldMemoizeLayout
-{
-  return NO;
 }
 
 #pragma mark - Responder

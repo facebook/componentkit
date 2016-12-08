@@ -19,7 +19,6 @@
 #import "CKComponentDebugController.h"
 #import "CKComponentLayout.h"
 #import "CKComponentLifecycleManagerAsynchronousUpdateHandler.h"
-#import "CKComponentMemoizer.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScope.h"
 #import "CKComponentScopeFrame.h"
@@ -92,9 +91,6 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
   CKComponentScopeRoot *previousRoot = _previousRoot ?: [CKComponentScopeRoot rootWithListener:self];
 
-  // Vend components from the current layout to be available in the new state and layout calculations
-  CKComponentMemoizer memoizer(_state.memoizerState);
-
   CKBuildComponentResult result = CKBuildComponent(previousRoot, _pendingStateUpdates, ^{
     return [_componentProvider componentForModel:model context:context];
   });
@@ -109,7 +105,6 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
     .context = context,
     .constrainedSize = constrainedSize,
     .layout = layout,
-    .memoizerState = memoizer.nextMemoizerState(),
     .root = result.scopeRoot,
     .boundsAnimation = result.boundsAnimation,
   };
