@@ -24,7 +24,24 @@
 void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list) { }
 void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) { }
 
-id CKTypedComponentActionValue::initialTarget(CKComponent *sender) const {
+#pragma mark - CKTypedComponentActionBase
+
+bool CKTypedComponentActionBase::operator==(const CKTypedComponentActionBase& rhs) const
+{
+  return (_variant == rhs._variant
+          && CKObjectIsEqual(_target, rhs._target)
+          && CKObjectIsEqual(_scopeHandle, rhs._scopeHandle)
+          && _selector == rhs._selector);
+}
+
+CKComponentActionSendBehavior CKTypedComponentActionBase::defaultBehavior() const
+{
+  return (_variant == CKTypedComponentActionVariantRawSelector
+          ? CKComponentActionSendBehaviorStartAtSenderNextResponder
+          : CKComponentActionSendBehaviorStartAtSender);
+};
+
+id CKTypedComponentActionBase::initialTarget(CKComponent *sender) const {
   switch (_variant) {
     case CKTypedComponentActionVariantRawSelector:
       return sender;
@@ -35,48 +52,30 @@ id CKTypedComponentActionValue::initialTarget(CKComponent *sender) const {
   }
 }
 
-#pragma mark - CKTypedComponentActionValue
+CKTypedComponentActionBase::CKTypedComponentActionBase() : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(NULL) {}
 
-CKTypedComponentActionValue::CKTypedComponentActionValue() : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(NULL) {}
+CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) : _variant(CKTypedComponentActionVariantTargetSelector), _target(target), _scopeHandle(nil), _selector(selector) {};
 
-CKTypedComponentActionValue::CKTypedComponentActionValue(const CKTypedComponentActionValue &value) : _variant(value._variant), _target(value._target), _scopeHandle(value._scopeHandle), _selector(value._selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) : _variant(CKTypedComponentActionVariantComponentScope), _target(nil), _scopeHandle(scope.scopeHandle()), _selector(selector) {};
 
-CKTypedComponentActionValue::CKTypedComponentActionValue(CKTypedComponentActionVariant variant, __unsafe_unretained id target, __unsafe_unretained CKComponentScopeHandle *scopeHandle, SEL selector) : _variant(variant), _target(target), _scopeHandle(scopeHandle), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(selector) {};
 
-bool CKTypedComponentActionValue::operator==(const CKTypedComponentActionValue& rhs) const
-{
+CKTypedComponentActionBase::CKTypedComponentActionBase(int s) : CKTypedComponentActionBase() {};
+
+CKTypedComponentActionBase::CKTypedComponentActionBase(long s) : CKTypedComponentActionBase() {};
+
+CKTypedComponentActionBase::CKTypedComponentActionBase(std::nullptr_t n) : CKTypedComponentActionBase() {};
+
+CKTypedComponentActionBase::operator bool() const { return _selector != NULL; };
+
+bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) const {
   return (_variant == rhs._variant
           && CKObjectIsEqual(_target, rhs._target)
           && CKObjectIsEqual(_scopeHandle, rhs._scopeHandle)
           && _selector == rhs._selector);
-}
-
-CKComponentActionSendBehavior CKTypedComponentActionValue::defaultBehavior() const
-{
-  return (_variant == CKTypedComponentActionVariantRawSelector
-          ? CKComponentActionSendBehaviorStartAtSenderNextResponder
-          : CKComponentActionSendBehaviorStartAtSender);
 };
 
-#pragma mark - CKTypedComponentActionBase
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) : _internal({CKTypedComponentActionVariantTargetSelector, target, nil, selector}) {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) : _internal({CKTypedComponentActionVariantComponentScope, nil, scope.scopeHandle(), selector}) {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) : _internal(CKTypedComponentActionVariantRawSelector, nil, nil, selector) {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(int s) : _internal({}) {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(long s) : _internal({}) {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(std::nullptr_t n) : _internal({}) {};
-
-CKTypedComponentActionBase::operator bool() const { return bool(_internal); };
-
-bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) const { return _internal == rhs._internal; };
-
-SEL CKTypedComponentActionBase::selector() const { return _internal.selector(); };
+SEL CKTypedComponentActionBase::selector() const { return _selector; };
 
 #pragma mark - Sending
 
