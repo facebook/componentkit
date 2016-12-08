@@ -13,6 +13,7 @@
 #import <ComponentKit/CKComponentLifecycleManager.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKStatefulViewRelinquishController.h>
 
 #import <ComponentKitTestLib/CKComponentTestRootScope.h>
 
@@ -66,6 +67,58 @@
   }), @"Expected view to be relinquished");
 }
 
+- (void)testUnmountingStatefulViewComponentImmediatelyRelinquishesStatefulViewWhenDelayedRelinquishControllerDeactivated
+{
+  CKComponentLifecycleManager *m = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  const CKComponentLifecycleManagerState state = [m prepareForUpdateWithModel:nil constrainedSize:{{100, 100}, {100, 100}} context:nil];
+  [m updateWithState:state];
+
+  UIView *container = [[UIView alloc] init];
+  [m attachToView:container];
+
+  auto component = (CKTestStatefulViewComponent *)state.layout.component;
+  auto controller = (CKTestStatefulViewComponentController *)[component controller];
+  XCTAssertNotNil([controller statefulView], @"Expected to have a stateful view while mounted");
+
+  BOOL defaultValue = [CKStatefulViewRelinquishController sharedInstance].delayedRelinquishEnabled;
+  [[CKStatefulViewRelinquishController sharedInstance] setDelayedRelinquishDefault:NO];
+
+  [m detachFromView];
+  XCTAssertTrue([controller statefulView] == nil, @"Expected view to be relinquished");
+
+  // Clean up the singleton.
+  [[CKStatefulViewRelinquishController sharedInstance] setDelayedRelinquishDefault:defaultValue];
+}
+
+- (void)testUnmountingStatefulViewComponentEventuallyRelinquishesStatefulViewWhenDelayedRelinquishControllerDeactivated
+{
+  CKComponentLifecycleManager *m = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  const CKComponentLifecycleManagerState state = [m prepareForUpdateWithModel:nil constrainedSize:{{100, 100}, {100, 100}} context:nil];
+  [m updateWithState:state];
+
+  UIView *container = [[UIView alloc] init];
+  [m attachToView:container];
+
+  auto component = (CKTestStatefulViewComponent *)state.layout.component;
+  auto controller = (CKTestStatefulViewComponentController *)[component controller];
+  XCTAssertNotNil([controller statefulView], @"Expected to have a stateful view while mounted");
+
+  BOOL defaultValue = [CKStatefulViewRelinquishController sharedInstance].delayedRelinquishEnabled;
+  // Disable the relinquish controller default value
+  [[CKStatefulViewRelinquishController sharedInstance] setDelayedRelinquishDefault:NO];
+
+  [[CKStatefulViewRelinquishController sharedInstance] delayRelinquishForRunloopTurn];
+  [m detachFromView];
+  XCTAssertTrue([controller statefulView] != nil, @"Expected view to be relinquished");
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return [controller statefulView] == nil;
+  }), @"Expected view to be relinquished");
+
+  // Clean up the singleton.
+  [[CKStatefulViewRelinquishController sharedInstance] setDelayedRelinquishDefault:defaultValue];
+}
+
 - (void)testMountingStatefulViewComponentOnNewRootViewMovesStatefulView
 {
   CKComponentLifecycleManager *m = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
@@ -107,6 +160,24 @@
 
   [m updateWithState:[m prepareForUpdateWithModel:[UIColor redColor] constrainedSize:{{100, 100}, {100, 100}} context:nil]];
   XCTAssertEqualObjects([[controller statefulView] backgroundColor], [UIColor redColor], @"Stateful view size should be updated to match new color");
+}
+
+- (void)testEnablingDelayedRelinquishForOneRunloopEventuallyReturnsToDefault
+{
+  BOOL defaultValue = [CKStatefulViewRelinquishController sharedInstance].delayedRelinquishEnabled;
+  [[CKStatefulViewRelinquishController sharedInstance] setDelayedRelinquishDefault:NO];
+
+  CKAssertFalse([[CKStatefulViewRelinquishController sharedInstance] delayedRelinquishEnabled]);
+
+  [[CKStatefulViewRelinquishController sharedInstance] delayRelinquishForRunloopTurn];
+
+  CKAssertTrue([[CKStatefulViewRelinquishController sharedInstance] delayedRelinquishEnabled]);
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return [[CKStatefulViewRelinquishController sharedInstance] delayedRelinquishEnabled] == NO;
+  }), @"Expected relinquish value to eventually return to the default value we set.");
+
+  [[CKStatefulViewRelinquishController sharedInstance] setDelayedRelinquishDefault:defaultValue];
 }
 
 @end

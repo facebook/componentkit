@@ -15,6 +15,7 @@
 
 #import "CKStatefulViewComponent.h"
 #import "CKStatefulViewReusePool.h"
+#import "CKStatefulViewRelinquishController.h"
 
 #import <objc/runtime.h>
 
@@ -131,18 +132,29 @@
 
 - (void)_relinquishStatefulViewIfPossible
 {
-  // Wait for the run loop to turn over before trying to relinquish the view. That ensures that if we are remounted on
-  // a different root view, we reuse the same view (since didMount will be called immediately after didUnmount).
-  dispatch_async(dispatch_get_main_queue(), ^{
-    if (_statefulView && !_mounted && [self canRelinquishStatefulView]) {
-      [self willRelinquishStatefulView:_statefulView];
-      [[CKStatefulViewReusePool sharedPool] enqueueStatefulView:_statefulView
-                                             forControllerClass:[self class]
-                                                        context:_statefulViewContext];
-      _statefulView = nil;
-      _statefulViewContext = nil;
-    }
-  });
+  if ([CKStatefulViewRelinquishController sharedInstance].delayedRelinquishEnabled) {
+    // Wait for the run loop to turn over before trying to relinquish the view. That ensures that if we are remounted on
+    // a different root view, we reuse the same view (since didMount will be called immediately after didUnmount).
+    // We only do this if the relinquish controller allows us to. For normal scrolling, we don't want to do this, since
+    // we want our stateful view to re-enter the reuse pool.
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self _immediatelyRelinquishStatefulViewIfPossible];
+    });
+  } else {
+    [self _immediatelyRelinquishStatefulViewIfPossible];
+  }
+}
+
+- (void)_immediatelyRelinquishStatefulViewIfPossible
+{
+  if (_statefulView && !_mounted && [self canRelinquishStatefulView]) {
+    [self willRelinquishStatefulView:_statefulView];
+    [[CKStatefulViewReusePool sharedPool] enqueueStatefulView:_statefulView
+                                           forControllerClass:[self class]
+                                                      context:_statefulViewContext];
+    _statefulView = nil;
+    _statefulViewContext = nil;
+  }
 }
 
 @end
