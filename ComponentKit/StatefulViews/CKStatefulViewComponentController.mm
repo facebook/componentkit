@@ -63,7 +63,7 @@
 
 - (void)canRelinquishStatefulViewDidChange
 {
-  [self _relinquishStatefulViewIfPossible];
+  [self relinquishStatefulViewIfPossible];
 }
 
 #pragma mark - Lifecycle
@@ -89,14 +89,14 @@
     [[self class] configureStatefulView:_statefulView forComponent:[self component]];
     [self didAcquireStatefulView:_statefulView];
   }
-  [self _presentStatefulView];
+  [self presentStatefulView];
   _mounted = YES;
 }
 
 - (void)didRemount
 {
   [super didRemount];
-  [self _presentStatefulView];
+  [self presentStatefulView];
 }
 
 - (void)didUpdateComponent
@@ -111,12 +111,12 @@
 {
   [super didUnmount];
   _mounted = NO;
-  [self _relinquishStatefulViewIfPossible];
+  [self relinquishStatefulViewIfPossible];
 }
 
 #pragma mark - Helpers
 
-- (void)_presentStatefulView
+- (void)presentStatefulView
 {
   const CKComponentViewContext &context = [[self component] viewContext];
   [_statefulView setFrame:context.frame];
@@ -130,7 +130,7 @@
   [context.view addSubview:_statefulView];
 }
 
-- (void)_relinquishStatefulViewIfPossible
+- (void)relinquishStatefulViewIfPossible
 {
   if ([CKStatefulViewRelinquishController sharedInstance].delayedRelinquishEnabled) {
     // Wait for the run loop to turn over before trying to relinquish the view. That ensures that if we are remounted on
@@ -138,14 +138,14 @@
     // We only do this if the relinquish controller allows us to. For normal scrolling, we don't want to do this, since
     // we want our stateful view to re-enter the reuse pool.
     dispatch_async(dispatch_get_main_queue(), ^{
-      [self _immediatelyRelinquishStatefulViewIfPossible];
+      [self immediatelyRelinquishStatefulViewIfPossible];
     });
   } else {
-    [self _immediatelyRelinquishStatefulViewIfPossible];
+    [self immediatelyRelinquishStatefulViewIfPossible];
   }
 }
 
-- (void)_immediatelyRelinquishStatefulViewIfPossible
+- (void)immediatelyRelinquishStatefulViewIfPossible
 {
   if (_statefulView && !_mounted && [self canRelinquishStatefulView]) {
     [self willRelinquishStatefulView:_statefulView];
