@@ -16,6 +16,7 @@
 
 #import "CKComponent.h"
 #import "CKComponentInternal.h"
+#import "CKComponentDebugController.h"
 #import "CKComponentLayout.h"
 #import "CKComponentLifecycleManagerAsynchronousUpdateHandler.h"
 #import "CKComponentMemoizer.h"
@@ -36,6 +37,9 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   .layout = {},
   .root = nil,
 };
+
+@interface CKComponentLifecycleManager () <CKComponentDebugReflowListener>
+@end
 
 @implementation CKComponentLifecycleManager
 {
@@ -62,6 +66,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   if (self = [super init]) {
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
+    [CKComponentDebugController registerReflowListener:self];
   }
   return self;
 }
@@ -218,6 +223,11 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 - (const CKComponentLifecycleManagerState &)state
 {
   return _state;
+}
+
+- (void)didReceiveReflowComponentsRequest
+{
+  [self prepareForUpdateWithModel:_state.model constrainedSize:_state.constrainedSize context:_state.context];
 }
 
 @end

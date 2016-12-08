@@ -12,6 +12,7 @@
 #import "CKTransactionalComponentDataSourceInternal.h"
 
 #import "CKAssert.h"
+#import "CKComponentDebugController.h"
 #import "CKComponentScopeRoot.h"
 #import "CKTransactionalComponentDataSourceChange.h"
 #import "CKTransactionalComponentDataSourceChangesetModification.h"
@@ -35,7 +36,7 @@
 
 @end
 
-@interface CKTransactionalComponentDataSource () <CKComponentStateListener>
+@interface CKTransactionalComponentDataSource () <CKComponentStateListener, CKComponentDebugReflowListener>
 {
   CKTransactionalComponentDataSourceState *_state;
   CKTransactionalComponentDataSourceListenerAnnouncer *_announcer;
@@ -60,6 +61,7 @@
     _workQueue = dispatch_queue_create("org.componentkit.CKTransactionalComponentDataSource", DISPATCH_QUEUE_SERIAL);
     _pendingAsynchronousModifications = [NSMutableArray array];
     _workThreadOverride = configuration.workThreadOverride;
+    [CKComponentDebugController registerReflowListener:self];
   }
   return self;
 }
@@ -161,6 +163,13 @@
   } else {
     _pendingSynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});
   }
+}
+
+#pragma mark - CKComponentDebugReflowListener
+
+- (void)didReceiveReflowComponentsRequest
+{
+  [self reloadWithMode:CKUpdateModeAsynchronous userInfo:nil];
 }
 
 #pragma mark - Internal
