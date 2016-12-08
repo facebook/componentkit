@@ -373,11 +373,15 @@
 		A29D85791D80D37F00913E60 /* CKComponentContextHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = A243B52C1D79A40800E6C393 /* CKComponentContextHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2CD66321AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2CD66311AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm */; };
 		A2D20CF41B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2D20CF31B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm */; };
-		B1EF8FE81DD1562B00E74F43 /* CKComponentActionInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = B1EF8FE71DD1562B00E74F43 /* CKComponentActionInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B107DA951DFA091D00754473 /* CKStatefulViewRelinquishController.h in Headers */ = {isa = PBXBuildFile; fileRef = B107DA931DFA091D00754473 /* CKStatefulViewRelinquishController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B107DA961DFA091D00754473 /* CKStatefulViewRelinquishController.m in Sources */ = {isa = PBXBuildFile; fileRef = B107DA941DFA091D00754473 /* CKStatefulViewRelinquishController.m */; };
+		B107DAA11DFA0EC600754473 /* CKStatefulViewRelinquishController.h in Headers */ = {isa = PBXBuildFile; fileRef = B107DA931DFA091D00754473 /* CKStatefulViewRelinquishController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B107DAA21DFA0ED500754473 /* CKStatefulViewRelinquishController.m in Sources */ = {isa = PBXBuildFile; fileRef = B107DA941DFA091D00754473 /* CKStatefulViewRelinquishController.m */; };
 		B167C70F1DD38E4200769084 /* CKMemoizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = B167C70D1DD38E4200769084 /* CKMemoizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B167C7101DD38E4200769084 /* CKMemoizingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = B167C70E1DD38E4200769084 /* CKMemoizingComponent.mm */; };
 		B1DC105F1DD480FB00CCBF2F /* CKMemoizingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = B167C70E1DD38E4200769084 /* CKMemoizingComponent.mm */; };
 		B1DC106A1DD4810700CCBF2F /* CKMemoizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = B167C70D1DD38E4200769084 /* CKMemoizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B1EF8FE81DD1562B00E74F43 /* CKComponentActionInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = B1EF8FE71DD1562B00E74F43 /* CKComponentActionInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B342DC6A1AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */; };
 		B342DC6B1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */; };
 		B342DC6C1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4B1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm */; };
@@ -932,9 +936,11 @@
 		A27C72741AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceUpdateStateModificationTests.mm; sourceTree = "<group>"; };
 		A2CD66311AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceStateTests.mm; sourceTree = "<group>"; tabWidth = 2; };
 		A2D20CF31B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentHostingViewAsyncStateUpdateTests.mm; sourceTree = "<group>"; };
-		B1EF8FE71DD1562B00E74F43 /* CKComponentActionInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentActionInternal.h; sourceTree = "<group>"; };
+		B107DA931DFA091D00754473 /* CKStatefulViewRelinquishController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStatefulViewRelinquishController.h; sourceTree = "<group>"; };
+		B107DA941DFA091D00754473 /* CKStatefulViewRelinquishController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKStatefulViewRelinquishController.m; sourceTree = "<group>"; };
 		B167C70D1DD38E4200769084 /* CKMemoizingComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMemoizingComponent.h; sourceTree = "<group>"; };
 		B167C70E1DD38E4200769084 /* CKMemoizingComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKMemoizingComponent.mm; sourceTree = "<group>"; };
+		B1EF8FE71DD1562B00E74F43 /* CKComponentActionInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentActionInternal.h; sourceTree = "<group>"; };
 		B342DC401AC23E8200ACAC53 /* ComponentKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComponentKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKArrayControllerChangesetTests.mm; sourceTree = "<group>"; };
 		B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAccessibilityTests.mm; sourceTree = "<group>"; };
@@ -1818,6 +1824,8 @@
 				D0B47B5C1CBD926700BB33CE /* CKStatefulViewComponent.mm */,
 				D0B47B5D1CBD926700BB33CE /* CKStatefulViewComponentController.h */,
 				D0B47B5E1CBD926700BB33CE /* CKStatefulViewComponentController.mm */,
+				B107DA931DFA091D00754473 /* CKStatefulViewRelinquishController.h */,
+				B107DA941DFA091D00754473 /* CKStatefulViewRelinquishController.m */,
 				D0B47B5F1CBD926700BB33CE /* CKStatefulViewReusePool.h */,
 				D0B47B601CBD926700BB33CE /* CKStatefulViewReusePool.mm */,
 			);
@@ -2070,6 +2078,7 @@
 				03B8B4D31D2A346F00EDFF59 /* CKCollectionViewTransactionalDataSource.h in Headers */,
 				03B8B4D41D2A346F00EDFF59 /* CKWeakObjectContainer.h in Headers */,
 				03B8B4D51D2A346F00EDFF59 /* CKTransactionalComponentDataSourceInternal.h in Headers */,
+				B107DAA11DFA0EC600754473 /* CKStatefulViewRelinquishController.h in Headers */,
 				03B8B4D61D2A346F00EDFF59 /* CKTransactionalComponentDataSourceUpdateStateModification.h in Headers */,
 				03B8B4D71D2A346F00EDFF59 /* CKTransactionalComponentDataSourceChangeset.h in Headers */,
 				B1DC106A1DD4810700CCBF2F /* CKMemoizingComponent.h in Headers */,
@@ -2248,6 +2257,7 @@
 				D0B47D271CBD948E00BB33CE /* CKComponentProvider.h in Headers */,
 				D0B47D161CBD948E00BB33CE /* CKComponentAnnouncerBase.h in Headers */,
 				D0B47CF61CBD948E00BB33CE /* CKComponentLayout.h in Headers */,
+				B107DA951DFA091D00754473 /* CKStatefulViewRelinquishController.h in Headers */,
 				D0B47D3F1CBD948E00BB33CE /* CKTransactionalComponentDataSourceAppliedChanges.h in Headers */,
 				D0B47D3C1CBD948E00BB33CE /* CKStatefulViewComponentController.h in Headers */,
 				D0B47D5E1CBD948E00BB33CE /* CKSectionedArrayController.h in Headers */,
@@ -2845,6 +2855,7 @@
 				03B8B4731D2A346F00EDFF59 /* CKComponentBoundsAnimation.mm in Sources */,
 				03B8B4741D2A346F00EDFF59 /* CKComponentController.mm in Sources */,
 				03B8B4751D2A346F00EDFF59 /* CKComponentLayout.mm in Sources */,
+				B107DAA21DFA0ED500754473 /* CKStatefulViewRelinquishController.m in Sources */,
 				03B8B4761D2A346F00EDFF59 /* CKComponentLifecycleManager.mm in Sources */,
 				03B8B4771D2A346F00EDFF59 /* CKComponentMemoizer.mm in Sources */,
 				2D34A4AA1D777EB80020B11C /* CKArrayControllerChangesetVerification.mm in Sources */,
@@ -3191,6 +3202,7 @@
 				D0B47CCE1CBD943400BB33CE /* CKOptimisticViewMutations.mm in Sources */,
 				D0B47CCF1CBD943400BB33CE /* CKSectionedArrayController.mm in Sources */,
 				D0B47CD01CBD943400BB33CE /* CKWeakObjectContainer.m in Sources */,
+				B107DA961DFA091D00754473 /* CKStatefulViewRelinquishController.m in Sources */,
 				2D7A98181DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.mm in Sources */,
 				D0B47CD11CBD943400BB33CE /* CKLabelComponent.mm in Sources */,
 				D0B47CD21CBD943400BB33CE /* CKTextComponent.mm in Sources */,
