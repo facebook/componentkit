@@ -10,6 +10,7 @@
 #import "CKStatefulViewComponentController.h"
 
 #import "CKStatefulViewReusePool.h"
+#import "CKAssert.h"
 
 #import <unordered_map>
 
@@ -72,8 +73,8 @@ struct PoolKeyHasher {
                                preferredSuperview:(UIView *)preferredSuperview
                                           context:(id)context
 {
-  NSAssert([NSThread isMainThread], nil);
-  NSParameterAssert(controllerClass != nil);
+  CKAssertMainThread();
+  CKAssertNotNil(controllerClass, @"Must provide a controller class");
   const auto it = _pool.find(std::make_pair(controllerClass, context));
   if (it == _pool.end()) { // Avoid overhead of creating the item unless it already exists
     return nil;
@@ -85,9 +86,9 @@ struct PoolKeyHasher {
          forControllerClass:(Class)controllerClass
                     context:(id)context
 {
-  NSAssert([NSThread isMainThread], nil);
-  NSParameterAssert(view != nil);
-  NSParameterAssert(controllerClass != nil);
+  CKAssertMainThread();
+  CKAssertNotNil(view, @"Must provide a view");
+  CKAssertNotNil(controllerClass, @"Must provide a controller class");
   
   // maximumPoolSize will be -1 by default
   NSInteger maximumPoolSize = [controllerClass maximumPoolSize:context];
