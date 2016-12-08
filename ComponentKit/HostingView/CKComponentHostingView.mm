@@ -15,6 +15,7 @@
 #import <ComponentKit/CKMacros.h>
 
 #import "CKComponentAnimation.h"
+#import "CKComponentDebugController.h"
 #import "CKComponentHostingViewDelegate.h"
 #import "CKComponentLayout.h"
 #import "CKComponentRootView.h"
@@ -33,7 +34,7 @@ struct CKComponentHostingViewInputs {
   };
 };
 
-@interface CKComponentHostingView () <CKComponentStateListener>
+@interface CKComponentHostingView () <CKComponentStateListener, CKComponentDebugReflowListener>
 {
   Class<CKComponentProvider> _componentProvider;
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
@@ -75,6 +76,8 @@ struct CKComponentHostingViewInputs {
 
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
+
+    [CKComponentDebugController registerReflowListener:self];
   }
   return self;
 }
@@ -148,6 +151,13 @@ struct CKComponentHostingViewInputs {
   CKAssertMainThread();
   _pendingInputs.stateUpdates.insert({globalIdentifier, stateUpdate});
   [self _setNeedsUpdateWithMode:mode];
+}
+
+#pragma mark - CKComponentDebugController
+
+- (void)didReceiveReflowComponentsRequest
+{
+  [self _setNeedsUpdateWithMode:CKUpdateModeAsynchronous];
 }
 
 #pragma mark - Private
