@@ -131,13 +131,13 @@ public:
 
   ~CKTypedComponentAction() {};
 
-  void send(CKComponent *sender, T... args) const
-  { this->send(sender, _internal.defaultBehavior(), args...); };
-  void send(CKComponent *sender, CKComponentActionSendBehavior behavior, T... args) const
+  void operator()(CKComponent *sender, T... args) const
+  { (*this)(sender, defaultBehavior(), args...); };
+  void operator()(CKComponent *sender, CKComponentActionSendBehavior behavior, T... args) const
   {
-    const id target = _internal.initialTarget(sender);
+    const id target = initialTarget(sender);
     const id responder = behavior == CKComponentActionSendBehaviorStartAtSender ? target : [target nextResponder];
-    CKComponentActionSendResponderChain(_internal.selector(), responder, sender, args...);
+    CKComponentActionSendResponderChain(selector(), responder, sender, args...);
   };
 
   bool operator==(const CKTypedComponentAction<T...> &rhs) const {

@@ -36,46 +36,36 @@ typedef NS_ENUM(NSUInteger, CKComponentActionSendBehavior) {
   CKComponentActionSendBehaviorStartAtSender,
 };
 
-struct CKTypedComponentActionValue {
-  CKTypedComponentActionValue();
-  CKTypedComponentActionValue(const CKTypedComponentActionValue &value);
-  CKTypedComponentActionValue(CKTypedComponentActionVariant variant, __unsafe_unretained id target, __unsafe_unretained CKComponentScopeHandle *scopeHandle, SEL selector);
-
-  id initialTarget(CKComponent *sender) const;
-  SEL selector() const { return _selector; };
-  CKComponentActionSendBehavior defaultBehavior() const;
-
-  explicit operator bool() const { return _selector != NULL; };
-  bool operator==(const CKTypedComponentActionValue& rhs) const;
-
-private:
-  CKTypedComponentActionVariant _variant;
-  __weak id _target;
-  __weak CKComponentScopeHandle *_scopeHandle;
-  SEL _selector;
-};
-
 #pragma mark - Action Base
 
 /** A base-class for typed components that doesn't use templates to avoid template bloat. */
 class CKTypedComponentActionBase {
 protected:
-  CKTypedComponentActionBase() = default;
+  CKTypedComponentActionBase();
   CKTypedComponentActionBase(id target, SEL selector);
-
+  
   CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector);
-
+  
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
   CKTypedComponentActionBase(SEL selector);
-
+  
   /** Allows conversion from NULL actions. */
   CKTypedComponentActionBase(int s);
   CKTypedComponentActionBase(long s);
   CKTypedComponentActionBase(std::nullptr_t n);
-
+  
   ~CKTypedComponentActionBase() {};
-
-  CKTypedComponentActionValue _internal;
+  
+  id initialTarget(CKComponent *sender) const;
+  CKComponentActionSendBehavior defaultBehavior() const;
+  
+  bool operator==(const CKTypedComponentActionBase& rhs) const;
+  
+  CKTypedComponentActionVariant _variant;
+  __weak id _target;
+  __weak CKComponentScopeHandle *_scopeHandle;
+  SEL _selector;
+  
 public:
   explicit operator bool() const;
   bool isEqual(const CKTypedComponentActionBase &rhs) const;
@@ -95,7 +85,7 @@ struct CKTypedComponentActionDenyType : std::true_type {};
 /** Base case, recursion should stop here. */
 void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list);
 
-/** 
+/**
  Recursion through variadic argument type unpacking. This allows us to build a vector of encoded const char * before
  any actual arguments have been provided. All of this is done at compile-time.
  */
