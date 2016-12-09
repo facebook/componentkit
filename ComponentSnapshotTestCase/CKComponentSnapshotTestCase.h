@@ -10,13 +10,9 @@
 
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKInsetComponent.h>
+#import <ComponentKit/CKAvailability.h>
 
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
-
-#define CK_AT_LEAST_IOS8 (kCFCoreFoundationVersionNumber > 847.27)
-#define CK_AT_LEAST_IOS8_2 (kCFCoreFoundationVersionNumber >= 1142.16)
-#define CK_AT_LEAST_IOS9 (kCFCoreFoundationVersionNumber >= 1223.1)
-#define CK_AT_LEAST_IOS10_BETA_4 (kCFCoreFoundationVersionNumber >= 1345.0)
 
 #if __LP64__
 #define CK_64 1
