@@ -131,19 +131,21 @@
 
 - (void)_relinquishStatefulViewIfPossible
 {
-  [[CKStatefulViewReusePool sharedPool]
-   enqueueStatefulView:_statefulView
-   forControllerClass:[self class]
-   context:_statefulViewContext
-   enqueueComplete:^BOOL{
-     if (!_mounted && [self canRelinquishStatefulView]) {
-       [self willRelinquishStatefulView:_statefulView];
-       _statefulView = nil;
-       _statefulViewContext = nil;
-       return YES;
-     }
-     return NO;
-   }];
+  if ([self canRelinquishStatefulView]) {
+    [[CKStatefulViewReusePool sharedPool]
+     enqueueStatefulView:_statefulView
+     forControllerClass:[self class]
+     context:_statefulViewContext
+     enqueueComplete:^BOOL{
+       if (!_mounted && [self canRelinquishStatefulView]) {
+         [self willRelinquishStatefulView:_statefulView];
+         _statefulView = nil;
+         _statefulViewContext = nil;
+         return YES;
+       }
+       return NO;
+     }];
+  }
 }
 
 @end
