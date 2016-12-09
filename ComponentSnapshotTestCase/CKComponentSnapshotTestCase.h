@@ -14,6 +14,12 @@
 
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 
+#if __LP64__
+#define CK_64 1
+#else
+#define CK_64 0
+#endif
+
 /**
  Maps platform to reference image directory suffix
  */
