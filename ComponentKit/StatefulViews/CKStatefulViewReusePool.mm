@@ -14,37 +14,72 @@
 
 #import <unordered_map>
 
+struct FBStatefulReusePoolItemEntry {
+  UIView *view;
+  CKStatefulViewReusePoolPendingMayRelinquishBlock block;
+};
+
 class FBStatefulReusePoolItem {
 public:
-  FBStatefulReusePoolItem()
-  : views([NSMutableArray array]) {};
-
   UIView *viewWithPreferredSuperview(UIView *preferredSuperview)
   {
-    if ([views count] == 0) {
+    if (_entries.empty()) {
       return nil;
     }
-    const NSUInteger matchingIndex = [views indexOfObjectPassingTest:^BOOL(UIView *view, NSUInteger idx, BOOL *stop) {
-      return [view superview] == preferredSuperview;
-    }];
-    const NSUInteger viewIndex = (matchingIndex == NSNotFound) ? 0 : matchingIndex;
-    UIView *view = views[viewIndex];
-    [views removeObjectAtIndex:viewIndex];
-    return view;
+    // Preferentially return the parent view.
+    auto preferIt = std::find_if(_entries.begin(), _entries.end(),
+                           [preferredSuperview](const FBStatefulReusePoolItemEntry entry)->bool {
+                             return entry.view == preferredSuperview;
+                           });
+    if (preferIt != _entries.end()) {
+      FBStatefulReusePoolItemEntry entry = *preferIt;
+      _entries.erase(preferIt);
+      if (entry.block == NULL || entry.block()) {
+        return entry.view;
+      }
+    }
+
+    if (_entries.empty()) {
+      return nil;
+    }
+
+    // We didn't find the item preferentially. Time to fall back to going from start to finish.
+    auto it = _entries.begin();
+    while (it != _entries.end()) {
+      FBStatefulReusePoolItemEntry entry = *it;
+      _entries.erase(++it);
+      if (entry.block == NULL || entry.block()) {
+        // The block tells us it's OK to reuse this view
+        return entry.view;
+      }
+    }
+
+    return nil;
   };
   
   NSUInteger viewCount()
   {
-    return [views count];
+    return _entries.size();
   };
 
-  void addView(UIView *view)
+  void addEntry(const FBStatefulReusePoolItemEntry &entry)
   {
-    [views addObject:view];
+    _entries.push_back(entry);
   };
+
+  void absorbPendingPool(const FBStatefulReusePoolItem &otherPool, NSInteger maxEntries) {
+    for (const FBStatefulReusePoolItemEntry &entry : otherPool._entries) {
+      if (entry.block == NULL || entry.block()) {
+        // The block was either not present, or evaluated to true, indicating it can join the normal reuse pool
+        if (maxEntries < 0 || viewCount() < maxEntries) {
+          _entries.push_back({entry.view});
+        }
+      }
+    }
+  }
 
 private:
-  NSMutableArray<UIView *> *views;
+  std::vector<FBStatefulReusePoolItemEntry> _entries;
 };
 
 struct PoolKeyHasher {
@@ -57,6 +92,8 @@ struct PoolKeyHasher {
 @implementation CKStatefulViewReusePool
 {
   std::unordered_map<std::pair<__unsafe_unretained Class, id>, FBStatefulReusePoolItem, PoolKeyHasher> _pool;
+  std::unordered_map<std::pair<__unsafe_unretained Class, id>, FBStatefulReusePoolItem, PoolKeyHasher> _pendingPool;
+  BOOL _enqueuedPendingPurge;
 }
 
 + (instancetype)sharedPool
@@ -75,28 +112,57 @@ struct PoolKeyHasher {
 {
   CKAssertMainThread();
   CKAssertNotNil(controllerClass, @"Must provide a controller class");
-  const auto it = _pool.find(std::make_pair(controllerClass, context));
+  const std::pair<__unsafe_unretained Class, id> key = std::make_pair(controllerClass, context);
+  const auto it = _pool.find(key);
   if (it == _pool.end()) { // Avoid overhead of creating the item unless it already exists
     return nil;
   }
-  return it->second.viewWithPreferredSuperview(preferredSuperview);
+  UIView *candidate = it->second.viewWithPreferredSuperview(preferredSuperview);
+  if (candidate) {
+    return candidate;
+  }
+  const auto pendingIt = _pendingPool.find(key);
+  if (pendingIt == _pendingPool.end()) {
+    return nil;
+  }
+  return pendingIt->second.viewWithPreferredSuperview(preferredSuperview);
 }
 
 - (void)enqueueStatefulView:(UIView *)view
          forControllerClass:(Class)controllerClass
                     context:(id)context
+            enqueueComplete:(CKStatefulViewReusePoolPendingMayRelinquishBlock)enqueueComplete
 {
   CKAssertMainThread();
   CKAssertNotNil(view, @"Must provide a view");
   CKAssertNotNil(controllerClass, @"Must provide a controller class");
-  
-  // maximumPoolSize will be -1 by default
-  NSInteger maximumPoolSize = [controllerClass maximumPoolSize:context];
-  
-  FBStatefulReusePoolItem poolItem = _pool[std::make_pair(controllerClass, context)];
-  if (maximumPoolSize < 0 || poolItem.viewCount() < maximumPoolSize) {
-    poolItem.addView(view);
+  CKAssertNotNil(enqueueComplete, @"Must provide a completion block");
+
+  FBStatefulReusePoolItem poolItem = _pendingPool[std::make_pair(controllerClass, context)];
+  poolItem.addEntry({view, enqueueComplete});
+  if (_enqueuedPendingPurge) {
+    return;
   }
+  _enqueuedPendingPurge = YES;
+  // Wait for the run loop to turn over before trying to relinquish the view. That ensures that if we are remounted on
+  // a different root view, we reuse the same view (since didMount will be called immediately after didUnmount).
+  dispatch_async(dispatch_get_main_queue(), ^{
+    _enqueuedPendingPurge = NO;
+    [self purgePendingPool];
+  });
+}
+
+- (void)purgePendingPool
+{
+  CKAssertMainThread();
+  for (const auto &it : _pendingPool) {
+    // maximumPoolSize will be -1 by default
+    NSInteger maximumPoolSize = [it.first.first maximumPoolSize:it.first.second];
+
+    FBStatefulReusePoolItem poolItem = _pool[it.first];
+    poolItem.absorbPendingPool(it.second, maximumPoolSize);
+  }
+  _pendingPool.clear();
 }
 
 @end

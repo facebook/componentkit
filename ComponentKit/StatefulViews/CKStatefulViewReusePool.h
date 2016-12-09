@@ -10,6 +10,8 @@
 
 #import <UIKit/UIKit.h>
 
+typedef BOOL (^CKStatefulViewReusePoolPendingMayRelinquishBlock)(void);
+
 @interface CKStatefulViewReusePool : NSObject
 
 + (instancetype)sharedPool;
@@ -20,6 +22,7 @@
 
 - (void)enqueueStatefulView:(UIView *)view
          forControllerClass:(Class)controllerClass
-                    context:(id)context;
+                    context:(id)context
+            enqueueComplete:(CKStatefulViewReusePoolPendingMayRelinquishBlock)enqueueComplete;
 
 @end
