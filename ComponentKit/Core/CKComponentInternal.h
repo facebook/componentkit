@@ -16,6 +16,9 @@
 
 @interface CKComponent ()
 
+- (instancetype)initWithView:(const CKComponentViewConfiguration &)view
+                        size:(const CKComponentSize &)size;
+
 /**
  Mounts the component in the given context:
  - Stores references to the supercomponent and superview for -nextResponder and -viewConfiguration.
