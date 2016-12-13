@@ -99,13 +99,13 @@
 
 @end
 
-@interface CKTestControllerScopeActionComponentController : CKComponentController
+@interface CKTestControllerScopeActionComponentController : CKComponentController<CKTestControllerScopeActionComponent *>
 @end
 
 @implementation CKTestControllerScopeActionComponentController
 - (void)actionMethod:(CKComponent *)sender context:(id)context
 {
-  ((CKTestControllerScopeActionComponent *)self.component).block(sender, context);
+  self.component.block(sender, context);
 }
 @end
 
