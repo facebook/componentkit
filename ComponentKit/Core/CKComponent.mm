@@ -154,7 +154,7 @@ struct CKComponentMountInfo {
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
     return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
   } else {
-    CKAssertNil(_mountInfo->view, @"Didn't expect to sometimes have a view and sometimes not have a view");
+    CKAssertNil(_mountInfo->view, @"Didn't expect %@ to have a mounted view: %@", [self class], [_mountInfo->view class]);
     _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, size}};
     return {.mountChildren = YES, .contextForChildren = effectiveContext};
   }
