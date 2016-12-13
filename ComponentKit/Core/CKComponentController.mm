@@ -13,6 +13,8 @@
 
 #import <ComponentKit/CKAssert.h>
 
+#import <memory>
+
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 
@@ -66,17 +68,37 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
   }
 }
 
+struct CKComponentControllerAnimationData {
+  CKComponentAnimationID nextAnimationID;
+  std::vector<CKPendingComponentAnimation> pendingAnimationsOnInitialMount;
+  CKAppliedComponentAnimationMap appliedAnimationsOnInitialMount;
+  std::vector<CKPendingComponentAnimation> pendingAnimations;
+  CKAppliedComponentAnimationMap appliedAnimations;
+};
+
+struct CKComponentControllerAnimationWrapper {
+public:
+  CKComponentControllerAnimationData *operator->() {
+    if (_animationData == nullptr) {
+      _animationData.reset(new CKComponentControllerAnimationData());
+    }
+    return _animationData.get();
+  };
+
+  explicit operator bool() const {
+    return _animationData != nullptr;
+  };
+private:
+  std::unique_ptr<CKComponentControllerAnimationData> _animationData;
+};
+
 @implementation CKComponentController
 {
   CKComponentControllerState _state;
   BOOL _updatingComponent;
   BOOL _performedInitialMount;
   CKComponent *_previousComponent;
-  CKComponentAnimationID _nextAnimationID;
-  std::vector<CKPendingComponentAnimation> _pendingAnimationsOnInitialMount;
-  CKAppliedComponentAnimationMap _appliedAnimationsOnInitialMount;
-  std::vector<CKPendingComponentAnimation> _pendingAnimations;
-  CKAppliedComponentAnimationMap _appliedAnimations;
+  CKComponentControllerAnimationWrapper _animationData;
 }
 
 - (instancetype)initWithComponent:(CKComponent *)component
@@ -118,7 +140,7 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
       if (!_performedInitialMount) {
         _performedInitialMount = YES;
         for (const auto &animation : [component animationsOnInitialMount]) {
-          _pendingAnimationsOnInitialMount.push_back({animation, animation.willRemount()});
+          _animationData->pendingAnimationsOnInitialMount.push_back({animation, animation.willRemount()});
         }
       }
       break;
@@ -127,7 +149,7 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
       [self willRemount];
       if (_previousComponent) { // Only animate if updating from an old component to a new one, and previously mounted
         for (const auto &animation : [component animationsFromPreviousComponent:_previousComponent]) {
-          _pendingAnimations.push_back({animation, animation.willRemount()});
+          _animationData->pendingAnimations.push_back({animation, animation.willRemount()});
         }
       }
       break;
@@ -142,32 +164,36 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
     case CKComponentControllerStateMounting:
       _state = CKComponentControllerStateMounted;
       [self didMount];
-      for (const auto &pendingAnimation : _pendingAnimationsOnInitialMount) {
-        const CKComponentAnimation &anim = pendingAnimation.animation;
-        [CATransaction begin];
-        CKComponentAnimationID animationID = _nextAnimationID++;
-        [CATransaction setCompletionBlock:^() {
-          eraseAnimation(_appliedAnimationsOnInitialMount, animationID);
-        }];
-        _appliedAnimationsOnInitialMount.insert({animationID, {anim, anim.didRemount(pendingAnimation.context)}});
-        [CATransaction commit];
+      if (_animationData) {
+        for (const auto &pendingAnimation : _animationData->pendingAnimationsOnInitialMount) {
+          const CKComponentAnimation &anim = pendingAnimation.animation;
+          [CATransaction begin];
+          CKComponentAnimationID animationID = _animationData->nextAnimationID++;
+          [CATransaction setCompletionBlock:^() {
+            eraseAnimation(_animationData->appliedAnimationsOnInitialMount, animationID);
+          }];
+          _animationData->appliedAnimationsOnInitialMount.insert({animationID, {anim, anim.didRemount(pendingAnimation.context)}});
+          [CATransaction commit];
+        }
+        _animationData->pendingAnimationsOnInitialMount.clear();
       }
-      _pendingAnimationsOnInitialMount.clear();
       break;
     case CKComponentControllerStateRemounting:
       _state = CKComponentControllerStateMounted;
       [self didRemount];
-      for (const auto &pendingAnimation : _pendingAnimations) {
-        const CKComponentAnimation &anim = pendingAnimation.animation;
-        [CATransaction begin];
-        CKComponentAnimationID animationID = _nextAnimationID++;
-        [CATransaction setCompletionBlock:^() {
-          eraseAnimation(_appliedAnimations, animationID);
-        }];
-        _appliedAnimations.insert({animationID, {anim, anim.didRemount(pendingAnimation.context)}});
-        [CATransaction commit];
+      if (_animationData) {
+        for (const auto &pendingAnimation : _animationData->pendingAnimations) {
+          const CKComponentAnimation &anim = pendingAnimation.animation;
+          [CATransaction begin];
+          CKComponentAnimationID animationID = _animationData->nextAnimationID++;
+          [CATransaction setCompletionBlock:^() {
+            eraseAnimation(_animationData->appliedAnimations, animationID);
+          }];
+          _animationData->appliedAnimations.insert({animationID, {anim, anim.didRemount(pendingAnimation.context)}});
+          [CATransaction commit];
+        }
+        _animationData->pendingAnimations.clear();
       }
-      _pendingAnimations.clear();
       break;
     default:
       CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
@@ -227,14 +253,16 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
 
 - (void)_cleanupAppliedAnimations
 {
-  for (const auto &appliedAnimation : _appliedAnimationsOnInitialMount) {
-    appliedAnimation.second.animation.cleanup(appliedAnimation.second.context);
+  if (_animationData) {
+    for (const auto &appliedAnimation : _animationData->appliedAnimationsOnInitialMount) {
+      appliedAnimation.second.animation.cleanup(appliedAnimation.second.context);
+    }
+    _animationData->appliedAnimationsOnInitialMount.clear();
+    for (const auto &appliedAnimation : _animationData->appliedAnimations) {
+      appliedAnimation.second.animation.cleanup(appliedAnimation.second.context);
+    }
+    _animationData->appliedAnimations.clear();
   }
-  _appliedAnimationsOnInitialMount.clear();
-  for (const auto &appliedAnimation : _appliedAnimations) {
-    appliedAnimation.second.animation.cleanup(appliedAnimation.second.context);
-  }
-  _appliedAnimations.clear();
 }
 
 - (void)component:(CKComponent *)component willRelinquishView:(UIView *)view
