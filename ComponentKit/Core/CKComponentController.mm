@@ -13,8 +13,6 @@
 
 #import <ComponentKit/CKAssert.h>
 
-#import <memory>
-
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 
