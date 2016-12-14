@@ -136,7 +136,7 @@
      enqueueStatefulView:_statefulView
      forControllerClass:[self class]
      context:_statefulViewContext
-     enqueueComplete:^BOOL{
+     mayRelinquishBlock:^BOOL{
        if (!_mounted && [self canRelinquishStatefulView]) {
          [self willRelinquishStatefulView:_statefulView];
          _statefulView = nil;

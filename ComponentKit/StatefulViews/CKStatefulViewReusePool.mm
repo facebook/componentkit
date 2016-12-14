@@ -39,15 +39,12 @@ public:
       }
     }
 
-    if (_entries.empty()) {
-      return nil;
-    }
-
     // We didn't find the item preferentially. Time to fall back to going from start to finish.
     auto it = _entries.begin();
     while (it != _entries.end()) {
       FBStatefulReusePoolItemEntry entry = *it;
-      _entries.erase(++it);
+      // erase returns the next iterator
+      it = _entries.erase(it);
       if (entry.block == NULL || entry.block()) {
         // The block tells us it's OK to reuse this view
         return entry.view;
@@ -67,7 +64,8 @@ public:
     _entries.push_back(entry);
   };
 
-  void absorbPendingPool(const FBStatefulReusePoolItem &otherPool, NSInteger maxEntries) {
+  void absorbPendingPool(const FBStatefulReusePoolItem &otherPool, NSInteger maxEntries)
+  {
     for (const FBStatefulReusePoolItemEntry &entry : otherPool._entries) {
       if (entry.block == NULL || entry.block()) {
         // The block was either not present, or evaluated to true, indicating it can join the normal reuse pool
@@ -118,7 +116,7 @@ struct PoolKeyHasher {
     return nil;
   }
   UIView *candidate = it->second.viewWithPreferredSuperview(preferredSuperview);
-  if (candidate) {
+  if (!_pendingReusePoolEnabled || candidate) {
     return candidate;
   }
   const auto pendingIt = _pendingPool.find(key);
@@ -131,15 +129,15 @@ struct PoolKeyHasher {
 - (void)enqueueStatefulView:(UIView *)view
          forControllerClass:(Class)controllerClass
                     context:(id)context
-            enqueueComplete:(CKStatefulViewReusePoolPendingMayRelinquishBlock)enqueueComplete
+         mayRelinquishBlock:(CKStatefulViewReusePoolPendingMayRelinquishBlock)mayRelinquishBlock
 {
   CKAssertMainThread();
   CKAssertNotNil(view, @"Must provide a view");
   CKAssertNotNil(controllerClass, @"Must provide a controller class");
-  CKAssertNotNil(enqueueComplete, @"Must provide a completion block");
+  CKAssertNotNil(mayRelinquishBlock, @"Must provide a relinquish block");
 
-  FBStatefulReusePoolItem poolItem = _pendingPool[std::make_pair(controllerClass, context)];
-  poolItem.addEntry({view, enqueueComplete});
+  FBStatefulReusePoolItem &poolItem = _pendingPool[std::make_pair(controllerClass, context)];
+  poolItem.addEntry({view, mayRelinquishBlock});
   if (_enqueuedPendingPurge) {
     return;
   }
@@ -159,7 +157,7 @@ struct PoolKeyHasher {
     // maximumPoolSize will be -1 by default
     NSInteger maximumPoolSize = [it.first.first maximumPoolSize:it.first.second];
 
-    FBStatefulReusePoolItem poolItem = _pool[it.first];
+    FBStatefulReusePoolItem &poolItem = _pool[it.first];
     poolItem.absorbPendingPool(it.second, maximumPoolSize);
   }
   _pendingPool.clear();

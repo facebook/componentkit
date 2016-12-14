@@ -10,11 +10,16 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ Should return YES if the stateful view can be reused, or NO to block reuse of the stateful view.
+ */
 typedef BOOL (^CKStatefulViewReusePoolPendingMayRelinquishBlock)(void);
 
 @interface CKStatefulViewReusePool : NSObject
 
 + (instancetype)sharedPool;
+
+@property (nonatomic, assign) BOOL pendingReusePoolEnabled;
 
 - (UIView *)dequeueStatefulViewForControllerClass:(Class)controllerClass
                                preferredSuperview:(UIView *)preferredSuperview
@@ -23,6 +28,6 @@ typedef BOOL (^CKStatefulViewReusePoolPendingMayRelinquishBlock)(void);
 - (void)enqueueStatefulView:(UIView *)view
          forControllerClass:(Class)controllerClass
                     context:(id)context
-            enqueueComplete:(CKStatefulViewReusePoolPendingMayRelinquishBlock)enqueueComplete;
+         mayRelinquishBlock:(CKStatefulViewReusePoolPendingMayRelinquishBlock)mayRelinquishBlock;
 
 @end
