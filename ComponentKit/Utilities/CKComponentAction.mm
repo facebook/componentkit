@@ -239,7 +239,7 @@ static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSigna
 
   CKCAssert(signature.methodReturnLength == 0, @"Component action methods should not have any return value. Any objects returned from this method will be leaked.");
 
-  for (int i = 0; i + 3 < signature.numberOfArguments; i++) {
+  for (int i = 0; i + 3 < signature.numberOfArguments && i < typeEncodings.size(); i++) {
     const char *methodEncoding = [signature getArgumentTypeAtIndex:i + 3];
     const char *typeEncoding = typeEncodings[i];
 
