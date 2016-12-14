@@ -37,7 +37,7 @@ static BOOL notified;
 }
 @end
 
-@interface CKCoolComponentController : CKComponentController
+@interface CKCoolComponentController : CKComponentController<CKCoolComponent *>
 @end
 
 @implementation CKCoolComponentController
@@ -50,7 +50,7 @@ static BOOL notified;
 - (void)didUpdateComponent
 {
   [super didUpdateComponent];
-  ((CKCoolComponent *)self.component).controller = self;
+  self.component.controller = self;
 }
 
 @end

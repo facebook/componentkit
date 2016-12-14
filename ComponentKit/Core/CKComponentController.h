@@ -14,7 +14,7 @@
 
 @class CKComponent;
 
-@interface CKComponentController : NSObject
+@interface CKComponentController<__covariant ComponentType:CKComponent *> : NSObject
 
 /** The controller's component is not mounted, but is about to be. */
 - (void)willMount NS_REQUIRES_SUPER;
@@ -58,7 +58,7 @@
 - (void)componentTreeDidDisappear NS_REQUIRES_SUPER;
 
 /** The current version of the component. */
-@property (nonatomic, weak, readonly) CKComponent *component;
+@property (nonatomic, weak, readonly) ComponentType component;
 
 /** The view created by the component, if currently mounted. */
 @property (nonatomic, strong, readonly) UIView *view;
@@ -83,7 +83,7 @@
  Initializes a controller with the first generation of component. You should not directly initialize a controller,
  they are initialized for you by the infrastructure.
  */
-- (instancetype)initWithComponent:(CKComponent *)component NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithComponent:(ComponentType)component NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
