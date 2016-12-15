@@ -408,4 +408,22 @@
   XCTAssertTrue(calledAction, @"Should have called the action on the test component");
 }
 
+- (void)testDemotedTargetSelectorActionCallsMethodOnScopedComponent
+{
+  __block BOOL calledAction = NO;
+
+  // We have to use build component here to ensure the scopes are properly configured.
+  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, ^{
+    return [CKTestScopeActionComponent
+            newWithBlock:^(CKComponent *sender, id context) {
+              calledAction = YES;
+            }];
+  }).component;
+
+  CKComponentAction action = CKComponentAction(CKTypedComponentAction<id>(component, @selector(actionMethod:context:)));
+  action.send(component);
+
+  XCTAssertTrue(calledAction, @"Should have called the action on the test component");
+}
+
 @end
