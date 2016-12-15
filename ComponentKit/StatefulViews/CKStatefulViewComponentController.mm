@@ -144,7 +144,7 @@
          return YES;
        }
        if (!strongSelf->_mounted && [strongSelf canRelinquishStatefulView]) {
-         [strongSelf willRelinquishStatefulView:_statefulView];
+         [strongSelf willRelinquishStatefulView:strongSelf->_statefulView];
          strongSelf->_statefulView = nil;
          strongSelf->_statefulViewContext = nil;
          return YES;
