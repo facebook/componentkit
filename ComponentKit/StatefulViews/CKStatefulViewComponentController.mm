@@ -133,13 +133,13 @@
 {
   if ([self canRelinquishStatefulView]) {
     // There is no guarantee when this reuse pool will execute this block
-    __weak __typeof(self) weakSelf = self;
+    CKStatefulViewComponentController *__weak weakSelf = self;
     [[CKStatefulViewReusePool sharedPool]
      enqueueStatefulView:_statefulView
      forControllerClass:[self class]
      context:_statefulViewContext
      mayRelinquishBlock:^BOOL{
-       __typeof(self) strongSelf = weakSelf;
+       CKStatefulViewComponentController *strongSelf = weakSelf;
        if (!strongSelf) {
          return YES;
        }
