@@ -67,8 +67,12 @@ public:
   void absorbPendingPool(const FBStatefulReusePoolItem &otherPool, NSInteger maxEntries)
   {
     for (const FBStatefulReusePoolItemEntry &entry : otherPool._entries) {
+      // In the future, we should consider not evaluating the block here immediately, and letting it move into the
+      // normal reuse pool. That way we can let stateful components hold onto their own views without any
+      // reconfiguration for a longer period of time.
       if (entry.block == NULL || entry.block()) {
-        // The block was either not present, or evaluated to true, indicating it can join the normal reuse pool
+        // The stateful view component can decide not to allow reuse of its view if the component has re-mounted before
+        // the block is evaluated.
         if (maxEntries < 0 || viewCount() < maxEntries) {
           _entries.push_back({entry.view});
         }
@@ -145,7 +149,7 @@ struct PoolKeyHasher {
   // Wait for the run loop to turn over before trying to relinquish the view. That ensures that if we are remounted on
   // a different root view, we reuse the same view (since didMount will be called immediately after didUnmount).
   dispatch_async(dispatch_get_main_queue(), ^{
-    _enqueuedPendingPurge = NO;
+    self->_enqueuedPendingPurge = NO;
     [self purgePendingPool];
   });
 }
