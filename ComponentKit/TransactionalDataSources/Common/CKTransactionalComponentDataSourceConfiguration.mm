@@ -55,7 +55,7 @@
   } else {
     CKTransactionalComponentDataSourceConfiguration *obj = (CKTransactionalComponentDataSourceConfiguration *)object;
     return (_componentProvider == obj.componentProvider
-            && [_context isEqual:obj.context]
+            && (_context == obj.context || [_context isEqual:obj.context])
             && _sizeRange == obj.sizeRange
             && _workThreadOverride == obj.workThreadOverride);
   }
