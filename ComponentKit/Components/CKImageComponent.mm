@@ -10,24 +10,22 @@
 
 #import "CKImageComponent.h"
 
-#import "CKComponentSize.h"
-#import "CKComponentSubclass.h"
-
 @implementation CKImageComponent
 
 + (instancetype)newWithImage:(UIImage *)image
-{
-  return [self
-          newWithImage:image
-          size:CKComponentSize::fromCGSize(image.size)];
-}
-
-+ (instancetype)newWithImage:(UIImage *)image
+                  attributes:(const CKViewComponentAttributeValueMap &)attributes
                         size:(const CKComponentSize &)size
 {
+  CKViewComponentAttributeValueMap updatedAttributes(attributes);
+  updatedAttributes.insert({
+    {@selector(setImage:), image},
+  });
+
   return [self
-          newWithView:{[UIImageView class], {{@selector(setImage:), image}}}
-          size:size];
+          newWithView:{
+            [UIImageView class],
+            std::move(updatedAttributes)
+          } size:size];
 }
 
 @end

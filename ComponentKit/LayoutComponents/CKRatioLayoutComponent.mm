@@ -28,7 +28,7 @@
                    component:(CKComponent *)component
 {
   CKAssert(ratio > 0, @"Ratio should be strictly positive, but received %f", ratio);
-  if (ratio <= 0) {
+  if (ratio <= 0 || component == nil) {
     return nil;
   }
 
@@ -62,7 +62,8 @@
   });
 
   // If there is no max size in *either* dimension, we can't apply the ratio, so just pass our size range through.
-  const CKSizeRange childRange = (bestSize == sizeOptions.end()) ? constrainedSize : CKSizeRange(*bestSize, *bestSize);
+  const CKSizeRange childRange = (bestSize == sizeOptions.end())
+  ? constrainedSize : constrainedSize.intersect(CKSizeRange(*bestSize, *bestSize));
   const CGSize parentSize = (bestSize == sizeOptions.end()) ? kCKComponentParentSizeUndefined : *bestSize;
   const CKComponentLayout childLayout = CKComputeComponentLayout(_component, childRange, parentSize);
   return {self, childLayout.size, {{{0,0}, childLayout}}};

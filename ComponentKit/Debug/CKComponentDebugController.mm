@@ -12,6 +12,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import <mutex>
+
 #import "CKComponent.h"
 #import "CKComponentAnimation.h"
 #import "CKComponentHostingView.h"
@@ -109,9 +111,6 @@ CK::Component::MountContext CKDebugMountContext(Class componentClass,
     return context; // no need for a debug view if the component has a view.
   }
 
-  static CK::StaticMutex l = CK_MUTEX_INITIALIZER;
-  CK::StaticMutexLocker lock(l);
-
   // Avoid the static destructor fiasco, use a pointer:
   static std::unordered_map<Class, CKComponentViewConfiguration> *debugViewConfigurations =
   new std::unordered_map<Class, CKComponentViewConfiguration>();
@@ -133,46 +132,35 @@ CK::Component::MountContext CKDebugMountContext(Class componentClass,
 
 #pragma mark - Synchronous Reflow
 
+static NSHashTable<id<CKComponentDebugReflowListener>> *reflowListeners;
+static std::mutex reflowMutex;
+
 + (void)reflowComponents
 {
   if (![NSThread isMainThread]) {
     dispatch_async(dispatch_get_main_queue(), ^{ [self reflowComponents]; });
-  } else {
-    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-    CKRecursiveComponentReflow(window);
+    return;
+  }
+  NSArray<id<CKComponentDebugReflowListener>> *copiedListeners;
+  {
+    std::lock_guard<std::mutex> l(reflowMutex);
+    copiedListeners = [reflowListeners allObjects];
+  }
+  for (id<CKComponentDebugReflowListener> listener in copiedListeners) {
+    [listener didReceiveReflowComponentsRequest];
   }
 }
 
-+ (void)reflowComponentsForView:(UIView *)view searchUpwards:(BOOL)upwards
++ (void)registerReflowListener:(id<CKComponentDebugReflowListener>)listener
 {
-  if (upwards) {
-    while (view && ![view isKindOfClass:[CKComponentRootView class]]) {
-      view = view.superview;
-    }
+  if (listener == nil) {
+    return;
   }
-  if (view) {
-    CKRecursiveComponentReflow(view);
+  std::lock_guard<std::mutex> l(reflowMutex);
+  if (reflowListeners == nil) {
+    reflowListeners = [NSHashTable weakObjectsHashTable];
   }
-}
-
-static void CKRecursiveComponentReflow(UIView *view)
-{
-  if (view.ck_componentLifecycleManager) {
-    CKComponentLifecycleManager *lifecycleManager = view.ck_componentLifecycleManager;
-    CKComponentLifecycleManagerState oldState = [lifecycleManager state];
-    CKComponentLifecycleManagerState state =
-    [lifecycleManager prepareForUpdateWithModel:oldState.model
-                                constrainedSize:oldState.constrainedSize
-                                        context:oldState.context];
-    [lifecycleManager updateWithState:state];
-  } else if ([view.superview isKindOfClass:[CKComponentHostingView class]]) {
-    CKComponentHostingView *hostingView = (CKComponentHostingView *)view.superview;
-    [hostingView setNeedsLayout];
-  } else {
-    for (UIView *subview in view.subviews) {
-      CKRecursiveComponentReflow(subview);
-    }
-  }
+  [reflowListeners addObject:listener];
 }
 
 @end

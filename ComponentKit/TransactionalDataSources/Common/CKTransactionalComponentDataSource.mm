@@ -12,10 +12,13 @@
 #import "CKTransactionalComponentDataSourceInternal.h"
 
 #import "CKAssert.h"
+#import "CKComponentDebugController.h"
 #import "CKComponentScopeRoot.h"
 #import "CKTransactionalComponentDataSourceChange.h"
 #import "CKTransactionalComponentDataSourceChangesetModification.h"
+#import "CKTransactionalComponentDataSourceChangesetVerification.h"
 #import "CKTransactionalComponentDataSourceConfiguration.h"
+#import "CKTransactionalComponentDataSourceConfigurationInternal.h"
 #import "CKTransactionalComponentDataSourceListenerAnnouncer.h"
 #import "CKTransactionalComponentDataSourceReloadModification.h"
 #import "CKTransactionalComponentDataSourceStateInternal.h"
@@ -23,7 +26,17 @@
 #import "CKTransactionalComponentDataSourceUpdateConfigurationModification.h"
 #import "CKTransactionalComponentDataSourceUpdateStateModification.h"
 
-@interface CKTransactionalComponentDataSource () <CKComponentStateListener>
+@interface CKTransactionalComponentDataSourceModificationPair : NSObject
+
+@property (nonatomic, strong, readonly) id<CKTransactionalComponentDataSourceStateModifying> modification;
+@property (nonatomic, strong, readonly) CKTransactionalComponentDataSourceState *state;
+
+- (instancetype)initWithModification:(id<CKTransactionalComponentDataSourceStateModifying>)modification
+                               state:(CKTransactionalComponentDataSourceState *)state;
+
+@end
+
+@interface CKTransactionalComponentDataSource () <CKComponentStateListener, CKComponentDebugReflowListener>
 {
   CKTransactionalComponentDataSourceState *_state;
   CKTransactionalComponentDataSourceListenerAnnouncer *_announcer;
@@ -31,7 +44,9 @@
   CKComponentStateUpdatesMap _pendingAsynchronousStateUpdates;
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
 
-  NSMutableArray *_pendingAsynchronousModifications;
+  NSMutableArray<id<CKTransactionalComponentDataSourceStateModifying>> *_pendingAsynchronousModifications;
+
+  NSThread *_workThreadOverride;
 }
 @end
 
@@ -45,6 +60,8 @@
     _announcer = [[CKTransactionalComponentDataSourceListenerAnnouncer alloc] init];
     _workQueue = dispatch_queue_create("org.componentkit.CKTransactionalComponentDataSource", DISPATCH_QUEUE_SERIAL);
     _pendingAsynchronousModifications = [NSMutableArray array];
+    _workThreadOverride = configuration.workThreadOverride;
+    [CKComponentDebugController registerReflowListener:self];
   }
   return self;
 }
@@ -60,6 +77,7 @@
               userInfo:(NSDictionary *)userInfo
 {
   CKAssertMainThread();
+  verifyChangeset(changeset, _state, _pendingAsynchronousModifications);
   id<CKTransactionalComponentDataSourceStateModifying> modification =
   [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset stateListener:self userInfo:userInfo];
   switch (mode) {
@@ -147,6 +165,13 @@
   }
 }
 
+#pragma mark - CKComponentDebugReflowListener
+
+- (void)didReceiveReflowComponentsRequest
+{
+  [self reloadWithMode:CKUpdateModeAsynchronous userInfo:nil];
+}
+
 #pragma mark - Internal
 
 - (void)_enqueueModification:(id<CKTransactionalComponentDataSourceStateModifying>)modification
@@ -161,22 +186,19 @@
 - (void)_startFirstAsynchronousModification
 {
   CKAssertMainThread();
-  id<CKTransactionalComponentDataSourceStateModifying> modification = _pendingAsynchronousModifications[0];
-  CKTransactionalComponentDataSourceState *baseState = _state;
-  dispatch_async(_workQueue, ^{
-    CKTransactionalComponentDataSourceChange *change = [modification changeFromState:baseState];
-    dispatch_async(dispatch_get_main_queue(), ^{
-      // If the first object in _pendingAsynchronousModifications is not still the modification,
-      // it may have been canceled; don't apply it.
-      if ([_pendingAsynchronousModifications firstObject] == modification && _state == baseState) {
-        [self _synchronouslyApplyChange:change];
-        [_pendingAsynchronousModifications removeObjectAtIndex:0];
-      }
-      if ([_pendingAsynchronousModifications count] != 0) {
-        [self _startFirstAsynchronousModification];
-      }
+  CKTransactionalComponentDataSourceModificationPair *modificationPair =
+  [[CKTransactionalComponentDataSourceModificationPair alloc] initWithModification:_pendingAsynchronousModifications[0]
+                                                                             state:_state];
+  if (_workThreadOverride) {
+    [self performSelector:@selector(_applyModificationPair:)
+                 onThread:_workThreadOverride
+               withObject:modificationPair
+            waitUntilDone:NO];
+  } else {
+    dispatch_async(_workQueue, ^{
+      [self _applyModificationPair:modificationPair];
     });
-  });
+  }
 }
 
 /** Returns the canceled matching modifications, in the order they would have been applied. */
@@ -216,6 +238,53 @@
     _pendingSynchronousStateUpdates.clear();
     [self _synchronouslyApplyChange:[sm changeFromState:_state]];
   }
+}
+
+- (void)_applyModificationPair:(CKTransactionalComponentDataSourceModificationPair *)modificationPair
+{
+  CKTransactionalComponentDataSourceChange *change = [modificationPair.modification changeFromState:modificationPair.state];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    // If the first object in _pendingAsynchronousModifications is not still the modification,
+    // it may have been canceled; don't apply it.
+    if ([_pendingAsynchronousModifications firstObject] == modificationPair.modification && self->_state == modificationPair.state) {
+      [self _synchronouslyApplyChange:change];
+      [_pendingAsynchronousModifications removeObjectAtIndex:0];
+    }
+    if ([_pendingAsynchronousModifications count] != 0) {
+      [self _startFirstAsynchronousModification];
+    }
+  });
+}
+
+static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changeset,
+                            CKTransactionalComponentDataSourceState *state,
+                            NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications)
+{
+#if CK_ASSERTIONS_ENABLED
+  const CKBadChangesetOperationType badChangesetOperationType = CKIsValidChangesetForState(changeset,
+                                                                                           state,
+                                                                                           pendingAsynchronousModifications);
+  CKCAssert(badChangesetOperationType == CKBadChangesetOperationTypeNone,
+            @"Bad operation: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@",
+            CKHumanReadableBadChangesetOperationType(badChangesetOperationType),
+            changeset,
+            state,
+            pendingAsynchronousModifications);
+#endif
+}
+
+@end
+
+@implementation CKTransactionalComponentDataSourceModificationPair
+
+- (instancetype)initWithModification:(id<CKTransactionalComponentDataSourceStateModifying>)modification
+                               state:(CKTransactionalComponentDataSourceState *)state
+{
+  if (self = [super init]) {
+    _modification = modification;
+    _state = state;
+  }
+  return self;
 }
 
 @end

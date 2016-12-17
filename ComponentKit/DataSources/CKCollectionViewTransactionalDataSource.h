@@ -67,6 +67,18 @@
                        mode:(CKUpdateMode)mode
                    userInfo:(NSDictionary *)userInfo;
 
+/**
+ Sends -componentTreeWillAppear to all CKComponentControllers for the given cell.
+ If needed, call this from -collectionView:willDisplayCell:forItemAtIndexPath:
+ */
+- (void)announceWillDisplayCell:(UICollectionViewCell *)cell;
+
+/**
+ Sends -componentTreeDidDisappear to all CKComponentControllers for the given cell.
+ If needed, call this from -collectionView:didEndDisplayingCell:forItemAtIndexPath:
+ */
+- (void)announceDidEndDisplayingCell:(UICollectionViewCell *)cell;
+
 @property (readonly, nonatomic, strong) UICollectionView *collectionView;
 /**
  Supplementary views are not handled with components; the datasource will forward any call to

@@ -67,7 +67,7 @@
 /** For internal use only; don't touch this. */
 @property (nonatomic, strong, readonly) id<NSObject> scopeFrameToken;
 
-@end
+/** The size that was passed into the component; don't touch this. */
+@property (nonatomic, assign, readonly) CKComponentSize size;
 
-// Internal, for CKComponent
-CKComponentLayout CKMemoizeOrComputeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize);
+@end

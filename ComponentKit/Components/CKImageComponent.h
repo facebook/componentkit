@@ -18,14 +18,10 @@ struct CKComponentSize;
 @interface CKImageComponent : CKComponent
 
 /**
- Uses a static layout with the image's size.
- */
-+ (instancetype)newWithImage:(UIImage *)image;
-
-/**
- Uses a static layout with the given image size.
+ Uses a static layout with the given image size and applies additional attributes.
  */
 + (instancetype)newWithImage:(UIImage *)image
+                  attributes:(const CKViewComponentAttributeValueMap &)attributes
                         size:(const CKComponentSize &)size;
 
 @end

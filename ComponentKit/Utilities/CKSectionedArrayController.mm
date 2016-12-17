@@ -8,6 +8,8 @@
  *
  */
 
+#import <ComponentKit/CKArrayControllerChangesetVerification.h>
+#import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKSectionedArrayController.h>
 
 #import <UIKit/UIKit.h>
@@ -130,6 +132,8 @@ NS_INLINE NSArray *_createEmptySections(NSUInteger count)
 
 - (CKArrayControllerOutputChangeset)applyChangeset:(CKArrayControllerInputChangeset)changeset
 {
+  verifyChangeset(changeset, _sections);
+
   Sections outputSections;
   __block Output::Items outputItems;
 
@@ -226,6 +230,14 @@ NS_INLINE NSArray *_createEmptySections(NSUInteger count)
   }
 
   return {outputSections, outputItems};
+}
+
+static void verifyChangeset(CKArrayControllerInputChangeset changeset, NSArray<NSArray *> *sections)
+{
+#if CK_ASSERTIONS_ENABLED
+  CKBadChangesetOperationType badChangesetOperationType = CKIsValidChangesetForSections(changeset, sections);
+  CKCAssert(badChangesetOperationType == CKBadChangesetOperationTypeNone, @"Bad operation: %@\nChangeset:\n************\n %@\n************\nCurrent data source state: %@", CKHumanReadableBadChangesetOperationType(badChangesetOperationType), changeset.description(), sections);
+#endif
 }
 
 @end

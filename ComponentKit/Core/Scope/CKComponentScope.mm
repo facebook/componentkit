@@ -17,6 +17,7 @@
 CKComponentScope::~CKComponentScope()
 {
   if (_threadLocalScope != nullptr) {
+    [_scopeHandle resolve];
     _threadLocalScope->stack.pop();
   }
 }
@@ -46,4 +47,9 @@ CKComponentStateUpdater CKComponentScope::stateUpdater(void) const
   // We must capture _scopeHandle in a local, since this may be destroyed by the time the block executes.
   CKComponentScopeHandle *const scopeHandle = _scopeHandle;
   return ^(id (^update)(id), CKUpdateMode mode){ [scopeHandle updateState:update mode:mode]; };
+}
+
+CKComponentScopeHandle *CKComponentScope::scopeHandle(void) const
+{
+  return _scopeHandle;
 }

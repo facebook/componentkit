@@ -19,7 +19,7 @@
 #import <ComponentKit/CKTransactionalComponentDataSourceState.h>
 
 #import "CKStateExposingComponent.h"
-#import "CKTestRunLoopRunning.h"
+#import <ComponentKitTestLib/CKTestRunLoopRunning.h>
 #import "CKTransactionalComponentDataSourceStateTestHelpers.h"
 
 @interface CKTransactionalComponentDataSourceStateUpdateTests : XCTestCase <CKComponentProvider>

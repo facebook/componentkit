@@ -11,7 +11,6 @@
 #import "CKComponent.h"
 #import "CKComponentControllerInternal.h"
 #import "CKComponentInternal.h"
-#import "CKComponentMemoizer.h"
 #import "CKComponentSubclass.h"
 
 #import <ComponentKit/CKArgumentPrecondition.h>
@@ -21,6 +20,7 @@
 #import "CKAssert.h"
 #import "CKComponentAccessibility.h"
 #import "CKComponentAnimation.h"
+#import "CKComponentBacktraceDescription.h"
 #import "CKComponentController.h"
 #import "CKComponentDebugController.h"
 #import "CKComponentLayout.h"
@@ -45,7 +45,6 @@ struct CKComponentMountInfo {
 {
   CKComponentScopeHandle *_scopeHandle;
   CKComponentViewConfiguration _viewConfiguration;
-  CKComponentSize _size;
 
   /** Only non-null while mounted. */
   std::unique_ptr<CKComponentMountInfo> _mountInfo;
@@ -101,6 +100,7 @@ struct CKComponentMountInfo {
 
 - (CKComponentViewContext)viewContext
 {
+  CKAssertMainThread();
   return _mountInfo ? _mountInfo->viewContext : CKComponentViewContext();
 }
 
@@ -111,6 +111,7 @@ struct CKComponentMountInfo {
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
 {
+  CKAssertMainThread();
   // Taking a const ref to a temporary extends the lifetime of the temporary to the lifetime of the const ref
   const CKComponentViewConfiguration &viewConfiguration = CK::Component::Accessibility::IsAccessibilityEnabled() ? CK::Component::Accessibility::AccessibleViewConfiguration(_viewConfiguration) : _viewConfiguration;
 
@@ -139,14 +140,23 @@ struct CKComponentMountInfo {
       CKAssert(v.ck_component == self, @"");
     }
 
-    const CGPoint anchorPoint = v.layer.anchorPoint;
-    [v setCenter:effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
-    [v setBounds:{v.bounds.origin, size}];
+    @try {
+      const CGPoint anchorPoint = v.layer.anchorPoint;
+      [v setCenter:effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
+      [v setBounds:{v.bounds.origin, size}];
+    } @catch (NSException *exception) {
+      NSString *const componentBacktraceDescription =
+      CKComponentBacktraceDescription(generateComponentBacktrace(supercomponent));
+      [NSException raise:exception.name
+                  format:@"%@ raised %@ during mount: %@\n%@", [self class], exception.name, exception.reason, componentBacktraceDescription];
+    }
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
     return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
   } else {
-    CKAssertNil(_mountInfo->view, @"Didn't expect to sometimes have a view and sometimes not have a view");
+    CKAssertNil(_mountInfo->view,
+                @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
+                [self class], [_mountInfo->view class], CKComponentBacktraceDescription(generateComponentBacktrace(self)));
     _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, size}};
     return {.mountChildren = YES, .contextForChildren = effectiveContext};
   }
@@ -154,6 +164,7 @@ struct CKComponentMountInfo {
 
 - (void)unmount
 {
+  CKAssertMainThread();
   if (_mountInfo != nullptr) {
     [_scopeHandle.controller componentWillUnmount:self];
     [self _relinquishMountedView];
@@ -164,12 +175,16 @@ struct CKComponentMountInfo {
 
 - (void)_relinquishMountedView
 {
-  UIView *view = _mountInfo->view;
-  if (view) {
-    CKAssert(view.ck_component == self, @"");
-    [_scopeHandle.controller component:self willRelinquishView:view];
-    view.ck_component = nil;
-    _mountInfo->view = nil;
+  CKAssertMainThread();
+  CKAssert(_mountInfo != nullptr, @"_mountInfo should not be null");
+  if (_mountInfo != nullptr) {
+    UIView *view = _mountInfo->view;
+    if (view) {
+      CKAssert(view.ck_component == self, @"");
+      [_scopeHandle.controller component:self willRelinquishView:view];
+      view.ck_component = nil;
+      _mountInfo->view = nil;
+    }
   }
 }
 
@@ -197,6 +212,7 @@ struct CKComponentMountInfo {
 
 - (UIView *)viewForAnimation
 {
+  CKAssertMainThread();
   return _mountInfo ? _mountInfo->view : nil;
 }
 
@@ -206,7 +222,9 @@ struct CKComponentMountInfo {
 {
   CK::Component::LayoutContext context(self, constrainedSize);
 
-  CKComponentLayout layout = CKMemoizeOrComputeLayout(self, constrainedSize, _size, parentSize);
+  CKComponentLayout layout = [self computeLayoutThatFits:constrainedSize
+                                        restrictedToSize:_size
+                                    relativeToParentSize:parentSize];
 
   CKAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
            [self class], [layout.component class]);
@@ -234,11 +252,6 @@ struct CKComponentMountInfo {
   return {self, constrainedSize.min};
 }
 
-- (BOOL)shouldMemoizeLayout
-{
-  return NO;
-}
-
 #pragma mark - Responder
 
 - (id)nextResponder
@@ -248,6 +261,7 @@ struct CKComponentMountInfo {
 
 - (id)nextResponderAfterController
 {
+  CKAssertMainThread();
   return (_mountInfo ? _mountInfo->supercomponent : nil) ?: [self rootComponentMountedView];
 }
 
@@ -298,6 +312,17 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 - (id<NSObject>)scopeFrameToken
 {
   return _scopeHandle ? @(_scopeHandle.globalIdentifier) : nil;
+}
+
+static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component)
+{
+  NSMutableArray<CKComponent *> *const componentBacktrace = [NSMutableArray arrayWithObject:component];
+  while ([componentBacktrace lastObject]
+         && [componentBacktrace lastObject]->_mountInfo
+         && [componentBacktrace lastObject]->_mountInfo->supercomponent) {
+    [componentBacktrace addObject:[componentBacktrace lastObject]->_mountInfo->supercomponent];
+  }
+  return componentBacktrace;
 }
 
 @end

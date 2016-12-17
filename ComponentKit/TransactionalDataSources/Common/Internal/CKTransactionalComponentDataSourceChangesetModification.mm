@@ -25,7 +25,6 @@
 
 @implementation CKTransactionalComponentDataSourceChangesetModification
 {
-  CKTransactionalComponentDataSourceChangeset *_changeset;
   id<CKComponentStateListener> _stateListener;
   NSDictionary *_userInfo;
 }
@@ -65,7 +64,7 @@
     const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange);
 
     [section replaceObjectAtIndex:indexPath.item withObject:
-     [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot]];
+     [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation]];
   }];
 
   __block std::unordered_map<NSUInteger, std::map<NSUInteger, CKTransactionalComponentDataSourceItem *>> insertedItemsBySection;
@@ -110,7 +109,7 @@
     });
     const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange);
     insertedItemsBySection[indexPath.section][indexPath.item] =
-    [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot];
+    [[CKTransactionalComponentDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation];
   }];
 
   for (const auto &sectionIt : insertedItemsBySection) {
@@ -139,6 +138,11 @@
 
   return [[CKTransactionalComponentDataSourceChange alloc] initWithState:newState
                                                           appliedChanges:appliedChanges];
+}
+
+- (NSString *)description
+{
+  return [_changeset description];
 }
 
 static NSArray *emptyMutableArrays(NSUInteger count)

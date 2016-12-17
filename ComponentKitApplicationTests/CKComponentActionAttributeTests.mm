@@ -39,7 +39,10 @@
 
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
-   newWithBlock:^(CKComponent *sender, id context){ actionSender = sender; }
+   newWithSingleArgumentBlock:^(CKComponent *sender, id context) { actionSender = sender; }
+   secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
+   primitiveArgumentBlock:^(CKComponent *sender, int value) { }
+   noArgumentBlock:^{ }
    component:controlComponent];
 
   // Must be mounted to send actions:
@@ -66,7 +69,10 @@
 
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
-   newWithBlock:^(CKComponent *sender, id context){ receivedAction = YES; }
+   newWithSingleArgumentBlock:^(CKComponent *sender, id context){ receivedAction = YES; }
+   secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
+   primitiveArgumentBlock:^(CKComponent *sender, int value) { }
+   noArgumentBlock:^{ }
    component:controlComponent];
 
   // Must be mounted to send actions:
@@ -93,7 +99,10 @@
 
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
-   newWithBlock:^(CKComponent *sender, id context){ receivedAction = YES; }
+   newWithSingleArgumentBlock:^(CKComponent *sender, id context){ receivedAction = YES; }
+   secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
+   primitiveArgumentBlock:^(CKComponent *sender, int value) { }
+   noArgumentBlock:^{ }
    component:controlComponent];
 
   // Must be mounted to send actions:
@@ -120,7 +129,10 @@
 
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
-   newWithBlock:^(CKComponent *sender, id context){ receivedAction = YES; }
+   newWithSingleArgumentBlock:^(CKComponent *sender, id context){ receivedAction = YES; }
+   secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
+   primitiveArgumentBlock:^(CKComponent *sender, int value) { }
+   noArgumentBlock:^{ }
    component:controlComponent];
 
   // Must be mounted to send actions:

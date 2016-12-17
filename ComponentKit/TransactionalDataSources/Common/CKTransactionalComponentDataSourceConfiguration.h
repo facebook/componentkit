@@ -18,7 +18,6 @@
 @interface CKTransactionalComponentDataSourceConfiguration : NSObject
 
 /**
- Designated initializer.
  @param componentProvider See @protocol(CKComponentProvider)
  @param context Passed to methods exposed by @protocol(CKComponentProvider).
  @param sizeRange Used for the root layout.
@@ -29,6 +28,7 @@
 
 @property (nonatomic, strong, readonly) Class<CKComponentProvider> componentProvider;
 @property (nonatomic, strong, readonly) id<NSObject> context;
+
 - (const CKSizeRange &)sizeRange;
 
 @end

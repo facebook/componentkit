@@ -32,7 +32,7 @@
 
  This controller's corresponding component must subclass CKStatefulViewComponent.
  */
-@interface CKStatefulViewComponentController : CKComponentController
+@interface CKStatefulViewComponentController<__covariant ComponentType:CKComponent *> : CKComponentController<ComponentType>
 
 /** Return a new instance of the stateful view type used by this controller. Views are automatically recycled. */
 + (UIView *)newStatefulView:(id)context;

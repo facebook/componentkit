@@ -19,6 +19,7 @@
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentViewInterface.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
 
 @interface CKComponentControllerTests : XCTestCase <CKComponentProvider>
 @end
@@ -26,11 +27,14 @@
 @interface CKFooComponentController : CKComponentController
 @property (nonatomic, assign) BOOL calledDidAcquireView;
 @property (nonatomic, assign) BOOL calledWillRelinquishView;
+@property (nonatomic, assign) BOOL calledComponentTreeWillAppear;
+@property (nonatomic, assign) BOOL calledComponentTreeDidDisappear;
 @property (nonatomic, assign) BOOL calledDidUpdateComponent;
 @end
 
 @interface CKFooComponent : CKComponent
-@property (nonatomic, weak) CKFooComponentController *controller;
++ (void)setShouldEarlyReturnNew:(BOOL)shouldEarlyReturnNew;
+- (CKFooComponentController *)controller;
 - (void)updateStateToIncludeNewAttribute;
 @end
 
@@ -41,12 +45,11 @@
   return [CKFooComponent new];
 }
 
-- (void)testThatCreatingComponentDoesNotInstantiateItsController
+- (void)testThatCreatingComponentCreatesAController
 {
   CKComponentTestRootScope scope;
-
   CKFooComponent *fooComponent = [CKFooComponent new];
-  XCTAssertNil(fooComponent.controller, @"Didn't expect creating a component to create a controller");
+  XCTAssertNotNil(fooComponent.controller);
 }
 
 - (void)testThatAttachingManagerInstantiatesComponentController
@@ -182,10 +185,106 @@
   XCTAssertEqualObjects([fooComponent targetForAction:nil withSender:nil], fooComponent.controller, @"Component's controller should respond to this action");
 }
 
+- (void)testThatEarlyReturnNew_fromFirstComponent_allowsComponentCreation_whenNotEarlyReturning_onStateUpdate
+{
+  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  UIView *view = [[UIView alloc] init];
+
+  [CKFooComponent setShouldEarlyReturnNew:YES];
+
+  CKComponentLifecycleManagerState state1 = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
+  [clm updateWithState:state1];
+  [clm attachToView:view];
+
+  [CKFooComponent setShouldEarlyReturnNew:NO];
+
+  CKComponentLifecycleManagerState state2 = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
+  [clm updateWithState:state2];
+  CKFooComponent *fooComponent2 = (CKFooComponent *)state2.layout.component;
+
+  XCTAssertTrue([fooComponent2.controller isKindOfClass:[CKFooComponentController class]],
+                @"Expected controller %@ to exist and be of type CKFooComponentController",
+                fooComponent2.controller);
+}
+
+- (void)testThatComponentControllerReceivesComponentTreeWillAppearEvent
+{
+  CKComponentLifecycleManager *lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleManagerState state = [lifecycleManager prepareForUpdateWithModel:nil
+                                                                       constrainedSize:{{0,0}, {100, 100}}
+                                                                               context:nil];
+  [lifecycleManager attachToView:[UIView new]];
+  [lifecycleManager updateWithState:state];
+  [[lifecycleManager scopeRoot] announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  CKFooComponent *fooComponent = (CKFooComponent *)[lifecycleManager componentLayout].component;
+  XCTAssertTrue(fooComponent.controller.calledComponentTreeWillAppear,
+                @"Expected controller %@ to have received component tree will appear event", fooComponent.controller);
+}
+
+- (void)testThatComponentControllerReceivesComponentTreeDidDisappearEvent
+{
+  CKComponentLifecycleManager *lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleManagerState state = [lifecycleManager prepareForUpdateWithModel:nil
+                                                                       constrainedSize:{{0,0}, {100, 100}}
+                                                                               context:nil];
+  [lifecycleManager attachToView:[UIView new]];
+  [lifecycleManager updateWithState:state];
+  [[lifecycleManager scopeRoot] announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  [lifecycleManager detachFromView];
+  [[lifecycleManager scopeRoot] announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+  CKFooComponent *fooComponent = (CKFooComponent *)[lifecycleManager componentLayout].component;
+  XCTAssertTrue(fooComponent.controller.calledComponentTreeDidDisappear,
+                @"Expected controller %@ to have received component tree did disappear event", fooComponent.controller);
+}
+
+- (void)testThatComponentControllerReceivesComponentTreeWillAppearEventAfterAdditionalStateUpdates
+{
+  CKComponentLifecycleManager *lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleManagerState state1 = [lifecycleManager prepareForUpdateWithModel:nil
+                                                                        constrainedSize:{{0,0}, {100, 100}}
+                                                                                context:nil];
+  CKComponentLifecycleManagerState state2 = [lifecycleManager prepareForUpdateWithModel:nil
+                                                                        constrainedSize:{{0,0}, {100, 100}}
+                                                                                context:nil];
+  [lifecycleManager attachToView:[UIView new]];
+  [lifecycleManager updateWithState:state1];
+  [lifecycleManager updateWithState:state2];
+  [[lifecycleManager scopeRoot] announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  CKFooComponent *fooComponent = (CKFooComponent *)[lifecycleManager componentLayout].component;
+  XCTAssertTrue(fooComponent.controller.calledComponentTreeWillAppear,
+                @"Expected controller %@ to have received component tree will appear event", fooComponent.controller);
+}
+
+- (void)testThatComponentControllerReceivesComponentTreeDidDisappearEventAfterAdditionalStateUpdates
+{
+  CKComponentLifecycleManager *lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleManagerState state1 = [lifecycleManager prepareForUpdateWithModel:nil
+                                                                        constrainedSize:{{0,0}, {100, 100}}
+                                                                                context:nil];
+  CKComponentLifecycleManagerState state2 = [lifecycleManager prepareForUpdateWithModel:nil
+                                                                        constrainedSize:{{0,0}, {100, 100}}
+                                                                                context:nil];
+  [lifecycleManager attachToView:[UIView new]];
+  [lifecycleManager updateWithState:state1];
+  [lifecycleManager updateWithState:state2];
+  [[lifecycleManager scopeRoot] announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  [lifecycleManager detachFromView];
+  [[lifecycleManager scopeRoot] announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+  CKFooComponent *fooComponent = (CKFooComponent *)[lifecycleManager componentLayout].component;
+  XCTAssertTrue(fooComponent.controller.calledComponentTreeDidDisappear,
+                @"Expected controller %@ to have received component tree did disappear event", fooComponent.controller);
+}
+
 @end
 
-
 @implementation CKFooComponent
+
+static BOOL _shouldEarlyReturnNew = NO;
+
++ (void)setShouldEarlyReturnNew:(BOOL)shouldEarlyReturnNew
+{
+  _shouldEarlyReturnNew = shouldEarlyReturnNew;
+}
 
 + (id)initialState
 {
@@ -195,11 +294,20 @@
 + (instancetype)new
 {
   CKComponentScope scope(self); // components with controllers must have a scope
+  if (_shouldEarlyReturnNew) {
+    return nil;
+  }
   CKViewComponentAttributeValueMap attrs;
   if ([scope.state() boolValue]) {
     attrs.insert({@selector(setBackgroundColor:), [UIColor redColor]});
   }
   return [super newWithView:{[UIView class], std::move(attrs)} size:{}];
+}
+
+- (CKFooComponentController *)controller
+{
+  // We provide this convenience method here to avoid having all the casts in the tests above.
+  return (CKFooComponentController *)[super controller];
 }
 
 - (void)updateStateToIncludeNewAttribute
@@ -218,11 +326,10 @@
 
 @implementation CKFooComponentController
 
-- (void)didUpdateComponent
+- (void)componentDidAcquireView
 {
-  [super didUpdateComponent];
-  ((CKFooComponent *)self.component).controller = self;
-  _calledDidUpdateComponent = YES;
+  [super componentDidAcquireView];
+  _calledDidAcquireView = YES;
 }
 
 - (void)componentWillRelinquishView
@@ -231,10 +338,22 @@
   _calledWillRelinquishView = YES;
 }
 
-- (void)componentDidAcquireView
+- (void)componentTreeWillAppear
 {
-  [super componentDidAcquireView];
-  _calledDidAcquireView = YES;
+  [super componentTreeWillAppear];
+  _calledComponentTreeWillAppear = YES;
+}
+
+- (void)componentTreeDidDisappear
+{
+  [super componentTreeDidDisappear];
+  _calledComponentTreeDidDisappear = YES;
+}
+
+- (void)didUpdateComponent
+{
+  [super didUpdateComponent];
+  _calledDidUpdateComponent = YES;
 }
 
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender

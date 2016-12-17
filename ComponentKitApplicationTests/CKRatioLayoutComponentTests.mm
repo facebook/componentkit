@@ -53,4 +53,14 @@ static CKRatioLayoutComponent *ratioLayoutComponent(CGFloat ratio, const CKCompo
   CKSnapshotVerifyComponent(ratioLayoutComponent(10.0, tallSize), kFixedSize, @"TenTimesRatioWithItemTooBig");
 }
 
+- (void)testRatioLayoutRendersToNilForNilInput
+{
+  CKRatioLayoutComponent *c =
+  [CKRatioLayoutComponent
+   newWithRatio:0.5
+   size:{}
+   component:nil];
+  XCTAssertNil(c);
+}
+
 @end

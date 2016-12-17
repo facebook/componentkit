@@ -9,6 +9,7 @@
  */
 
 #import "CKTransactionalComponentDataSourceConfiguration.h"
+#import "CKTransactionalComponentDataSourceConfigurationInternal.h"
 
 #import "CKEqualityHashHelpers.h"
 #import "CKMacros.h"
@@ -22,10 +23,22 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
 {
+  return [self initWithComponentProvider:componentProvider
+                                 context:context
+                               sizeRange:sizeRange
+                      workThreadOverride:nil];
+}
+
+- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
+                                  context:(id<NSObject>)context
+                                sizeRange:(const CKSizeRange &)sizeRange
+                       workThreadOverride:(NSThread *)workThreadOverride
+{
   if (self = [super init]) {
     _componentProvider = componentProvider;
     _context = context;
     _sizeRange = sizeRange;
+    _workThreadOverride = workThreadOverride;
   }
   return self;
 }
@@ -41,7 +54,10 @@
     return NO;
   } else {
     CKTransactionalComponentDataSourceConfiguration *obj = (CKTransactionalComponentDataSourceConfiguration *)object;
-    return _componentProvider == obj.componentProvider && [_context isEqual:obj.context] && _sizeRange == obj.sizeRange;
+    return (_componentProvider == obj.componentProvider
+            && [_context isEqual:obj.context]
+            && _sizeRange == obj.sizeRange
+            && _workThreadOverride == obj.workThreadOverride);
   }
 }
 

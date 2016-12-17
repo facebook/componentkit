@@ -11,8 +11,10 @@
 #import "CKComponentScopeHandle.h"
 
 #import "CKComponentController.h"
+#import "CKComponentControllerInternal.h"
 #import "CKComponentScopeRootInternal.h"
 #import "CKComponentSubclass.h"
+#import "CKComponentInternal.h"
 #import "CKInternalHelpers.h"
 #import "CKMutex.h"
 #import "CKThreadLocalComponentScope.h"
@@ -20,9 +22,11 @@
 @implementation CKComponentScopeHandle
 {
   id<CKComponentStateListener> __weak _listener;
-  Class _componentClass;
+  CKComponentController *_controller;
   CKComponentScopeRootIdentifier _rootIdentifier;
   BOOL _acquired;
+  BOOL _resolved;
+  CKComponent *__weak _acquiredComponent;
 }
 
 + (CKComponentScopeHandle *)handleForComponent:(CKComponent *)component
@@ -39,7 +43,7 @@
     }
     return handle;
   }
-  CKCAssertNil(controllerClassForComponentClass([component class]), @"%@ has a controller but no scope! "
+  CKCAssertNil(CKComponentControllerClassFromComponentClass([component class]), @"%@ has a controller but no scope! "
                "Use CKComponentScope scope(self) before constructing the component or CKComponentTestRootScope "
                "at the start of the test.", [component class]);
   return nil;
@@ -56,7 +60,7 @@
                  rootIdentifier:rootIdentifier
                  componentClass:componentClass
                           state:initialStateCreator ? initialStateCreator() : [componentClass initialState]
-                     controller:newController(componentClass)];
+                     controller:nil]; // controllers are built on resolution of the handle
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -78,12 +82,14 @@
 }
 
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                       componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot
 {
   id updatedState = _state;
   const auto range = stateUpdates.equal_range(_globalIdentifier);
   for (auto it = range.first; it != range.second; ++it) {
     updatedState = it->second(updatedState);
   }
+  [componentScopeRoot registerAnnounceableEventsForController:_controller];
   return [[CKComponentScopeHandle alloc] initWithListener:_listener
                                          globalIdentifier:_globalIdentifier
                                            rootIdentifier:_rootIdentifier
@@ -100,6 +106,17 @@
                                            componentClass:_componentClass
                                                     state:_state
                                                controller:_controller];
+}
+
+- (CKComponentController *)controller
+{
+  CKAssert(_resolved, @"Requesting controller from scope handle before resolution. The controller will be nil.");
+  return _controller;
+}
+
+- (void)dealloc
+{
+  CKAssert(_resolved, @"Must be resolved before deallocation.");
 }
 
 #pragma mark - State
@@ -125,48 +142,47 @@
 {
   if (!_acquired && [component isMemberOfClass:_componentClass]) {
     _acquired = YES;
+    _acquiredComponent = component;
     return YES;
   } else {
     return NO;
   }
 }
 
-#pragma mark Controllers
-
-static Class controllerClassForComponentClass(Class componentClass)
+- (void)resolve
 {
-  if (componentClass == [CKComponent class]) {
-    return Nil; // Don't create root CKComponentControllers as it does nothing interesting.
+  CKAssertFalse(_resolved);
+  // _acquiredComponent may be nil if a component scope was declared before an early return. In that case, the scope
+  // handle will not be acquired, and we should avoid creating a component controller for the nil component.
+  if (!_controller && _acquiredComponent) {
+    CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
+    CKAssert(currentScope != nullptr, @"Current scope should never be null here. Thread-local stack is corrupted.");
+
+    // A controller can be non-nil at this callsite during component re-generation because a new scope handle is
+    // generated in a new tree, that is acquired by a new component. We pass in the original component controller
+    // in that case, and we should avoid re-generating a new controller in that case.
+    _controller = newController(_acquiredComponent, currentScope->newScopeRoot);
   }
-
-  static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER; // protects cache
-  CK::StaticMutexLocker l(mutex);
-
-  static std::unordered_map<Class, Class> *cache = new std::unordered_map<Class, Class>();
-  const auto &it = cache->find(componentClass);
-  if (it == cache->end()) {
-    Class c = NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"]);
-
-    // If you override animationsFromPreviousComponent: or animationsOnInitialMount then we need a controller.
-    if (c == nil &&
-        (CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
-         CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnInitialMount)))) {
-      c = [CKComponentController class];
-    }
-
-    cache->insert({componentClass, c});
-    return c;
-  }
-  return it->second;
+  _resolved = YES;
 }
 
-static CKComponentController *newController(Class componentClass)
+- (id)responder
 {
-  Class controllerClass = controllerClassForComponentClass(componentClass);
+  CKAssert(_resolved, @"Asking for responder from scope handle before resolution:%@", NSStringFromClass(_componentClass));
+  return _acquiredComponent;
+}
+
+#pragma mark Controllers
+
+static CKComponentController *newController(CKComponent *component, CKComponentScopeRoot *root)
+{
+  Class controllerClass = CKComponentControllerClassFromComponentClass([component class]);
   if (controllerClass) {
     CKCAssert([controllerClass isSubclassOfClass:[CKComponentController class]],
               @"%@ must inherit from CKComponentController", controllerClass);
-    return [[controllerClass alloc] init];
+    CKComponentController *controller = [[controllerClass alloc] initWithComponent:component];
+    [root registerAnnounceableEventsForController:controller];
+    return controller;
   }
   return nil;
 }

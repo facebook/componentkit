@@ -14,6 +14,8 @@
 
 BOOL CKSubclassOverridesSelector(Class superclass, Class subclass, SEL selector);
 
+Class CKComponentControllerClassFromComponentClass(Class componentClass);
+
 std::string CKStringFromPointer(const void *ptr);
 
 CGFloat CKScreenScale();

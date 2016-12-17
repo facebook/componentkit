@@ -16,9 +16,9 @@
 
 #import "CKComponent.h"
 #import "CKComponentInternal.h"
+#import "CKComponentDebugController.h"
 #import "CKComponentLayout.h"
 #import "CKComponentLifecycleManagerAsynchronousUpdateHandler.h"
-#import "CKComponentMemoizer.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScope.h"
 #import "CKComponentScopeFrame.h"
@@ -36,6 +36,9 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   .layout = {},
   .root = nil,
 };
+
+@interface CKComponentLifecycleManager () <CKComponentDebugReflowListener>
+@end
 
 @implementation CKComponentLifecycleManager
 {
@@ -62,6 +65,7 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
   if (self = [super init]) {
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
+    [CKComponentDebugController registerReflowListener:self];
   }
   return self;
 }
@@ -87,9 +91,6 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 
   CKComponentScopeRoot *previousRoot = _previousRoot ?: [CKComponentScopeRoot rootWithListener:self];
 
-  // Vend components from the current layout to be available in the new state and layout calculations
-  CKComponentMemoizer memoizer(_state.memoizerState);
-
   CKBuildComponentResult result = CKBuildComponent(previousRoot, _pendingStateUpdates, ^{
     return [_componentProvider componentForModel:model context:context];
   });
@@ -104,7 +105,6 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
     .context = context,
     .constrainedSize = constrainedSize,
     .layout = layout,
-    .memoizerState = memoizer.nextMemoizerState(),
     .root = result.scopeRoot,
     .boundsAnimation = result.boundsAnimation,
   };
@@ -218,6 +218,11 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
 - (const CKComponentLifecycleManagerState &)state
 {
   return _state;
+}
+
+- (void)didReceiveReflowComponentsRequest
+{
+  [self prepareForUpdateWithModel:_state.model constrainedSize:_state.constrainedSize context:_state.context];
 }
 
 @end

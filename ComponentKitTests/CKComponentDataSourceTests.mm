@@ -17,7 +17,7 @@
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/ComponentUtilities.h>
 
-#import "CKTestRunLoopRunning.h"
+#import <ComponentKitTestLib/CKTestRunLoopRunning.h>
 #import "CKComponentDataSourceTestDelegate.h"
 #import "CKComponentLifecycleManagerAsynchronousUpdateHandler.h"
 
@@ -297,7 +297,7 @@ static const CKSizeRange constrainedSize = {{320, 0}, {320, INFINITY}};
   Input::Changeset changeset = {sections, {}};
   XCTAssertThrowsSpecificNamed([_dataSource enqueueChangeset:changeset constrainedSize:constrainedSize],
                                NSException,
-                               NSRangeException);
+                               NSInternalInconsistencyException);
 }
 
 - (void)testRemovalOfSingleEmptySectionLeavesDataSourceEmpty
@@ -464,7 +464,7 @@ static const CKSizeRange constrainedSize = {{320, 0}, {320, INFINITY}};
   Input::Changeset changeset = {{}, items};
   XCTAssertThrowsSpecificNamed([_dataSource enqueueChangeset:changeset constrainedSize:constrainedSize],
                                NSException,
-                               NSRangeException);
+                               NSInternalInconsistencyException);
 }
 
 - (void)testRemovalOfLastItemLeavesSectionEmpty

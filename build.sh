@@ -3,12 +3,14 @@
 if [ -z $1 ]; then
   echo "usage: build.sh <subcommand>"
   echo "available subcommands:"
-  echo "  ci"
+  echo "  ci-componentkit-ios"
+  echo "  ci-componentkit-tvos"
+  echo "  ci-wildeguess-ios"
   echo "  docs"
   exit
 fi
 
-BUILDOUTPUTFILTER="tee" # handle xcpretty not being installed, tee will act like a noop
+BUILDOUTPUTFILTER="tee"
 if type xcpretty > /dev/null 2>&1; then
   BUILDOUTPUTFILTER="xcpretty"
 fi
@@ -19,7 +21,7 @@ MODE=$1
 
 function ci() {
   xcodebuild \
-    -project $1.xcodeproj \
+    -project $1 \
     -scheme $2 \
     -sdk $3 \
     -destination "$4" \
@@ -29,27 +31,30 @@ function ci() {
 }
 
 function ios_ci() {
-  ci $1 $1 iphonesimulator9.3 "platform=iOS Simulator,OS=9.3,name=iPhone 5" $2
+  ci $1 $2 iphonesimulator10.1 "platform=iOS Simulator,OS=10.0,name=iPhone 5s" $3
 }
 
 function tvos_ci() {
-  ci $1 $1AppleTV appletvsimulator "platform=tvOS Simulator,OS=9.2,name=Apple TV 1080p" $2
+  ci $1 $2 appletvsimulator10.0 "platform=tvOS Simulator,OS=10.0,name=Apple TV 1080p" $3
 }
 
-if [ "$MODE" = "ci" ]; then
-  ios_ci ComponentKit test
-  tvos_ci ComponentKit test
+if [ "$MODE" = "ci-componentkit-ios" ]; then
+  carthage bootstrap --platform iOS
+  ios_ci ComponentKit.xcodeproj ComponentKit test
+fi
 
-  pushd Examples/WildeGuess
-  ios_ci WildeGuess build
-  popd
+if [ "$MODE" = "ci-componentkit-tvos" ]; then
+  carthage bootstrap --platform tvOS
+  tvos_ci ComponentKit.xcodeproj ComponentKitAppleTV test
+fi
 
+if [ "$MODE" = "ci-wildeguess-ios" ]; then
+  ios_ci Examples/WildeGuess/WildeGuess.xcodeproj WildeGuess build
 fi
 
 if [ "$MODE" = "docs" ]; then
   HEADERS=`ls ComponentKit/**/*.h ComponentTextKit/**/*.h`
   rm -rf appledoc
-
   appledoc \
     --no-create-docset \
     --create-html \
