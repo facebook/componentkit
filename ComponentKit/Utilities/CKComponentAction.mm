@@ -41,7 +41,8 @@ CKComponentActionSendBehavior CKTypedComponentActionBase::defaultBehavior() cons
           : CKComponentActionSendBehaviorStartAtSender);
 };
 
-id CKTypedComponentActionBase::initialTarget(CKComponent *sender) const {
+id CKTypedComponentActionBase::initialTarget(CKComponent *sender) const
+{
   switch (_variant) {
     case CKTypedComponentActionVariantRawSelector:
       return sender;
@@ -68,7 +69,8 @@ CKTypedComponentActionBase::CKTypedComponentActionBase(std::nullptr_t n) : CKTyp
 
 CKTypedComponentActionBase::operator bool() const { return _selector != NULL; };
 
-bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) const {
+bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) const
+{
   return (_variant == rhs._variant
           && CKObjectIsEqual(_target, rhs._target)
           && CKObjectIsEqual(_scopeHandle, rhs._scopeHandle)
@@ -76,6 +78,11 @@ bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) 
 };
 
 SEL CKTypedComponentActionBase::selector() const { return _selector; };
+
+std::string CKTypedComponentActionBase::identifier() const
+{
+  return std::string(sel_getName(_selector)) + "-" + std::to_string((long)(_target ?: _scopeHandle));
+}
 
 #pragma mark - Sending
 
@@ -190,7 +197,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
   }
 
   std::string identifier = std::string("CKComponentActionAttribute-")
-  + std::string(sel_getName(action.selector()))
+  + action.identifier()
   + "-" + std::to_string(controlEvents);
   return {
     {
