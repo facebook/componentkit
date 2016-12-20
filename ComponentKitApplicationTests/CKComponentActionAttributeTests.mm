@@ -172,4 +172,12 @@
   XCTAssertNotEqual(attr1.first.identifier, attr2.first.identifier);
 }
 
+- (void)testControlActionsWithRawSelectorActionsHaveEqualIdentifiers
+{
+  CKComponentViewAttributeValue attr1 = CKComponentActionAttribute(@selector(someAction));
+  CKComponentViewAttributeValue attr2 = CKComponentActionAttribute(@selector(someAction));
+
+  XCTAssertEqual(attr1.first.identifier, attr2.first.identifier);
+}
+
 @end
