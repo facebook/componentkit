@@ -23,7 +23,7 @@
 static UIGestureRecognizer *recognizerForAction(UIView *view, CKTypedComponentAction<UIGestureRecognizer *> action)
 {
   for (UIGestureRecognizer *recognizer in view.gestureRecognizers) {
-    if (sel_isEqual([recognizer ck_componentAction].selector(), action.selector())) {
+    if ([recognizer ck_componentAction] == action) {
       return recognizer;
     }
   }
@@ -126,7 +126,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
     {
       std::string(class_getName(gestureRecognizerClass))
       + "-" + CKStringFromPointer((const void *)setupFunction)
-      + "-" + std::string(sel_getName(action.selector()))
+      + "-" + action.identifier()
       + CKIdentifierFromDelegateForwarderSelectors(delegateSelectors),
       ^(UIView *view, id value){
         CKCAssertNil(recognizerForAction(view, blockAction),
