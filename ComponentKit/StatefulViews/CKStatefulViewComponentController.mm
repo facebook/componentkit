@@ -131,18 +131,27 @@
 
 - (void)_relinquishStatefulViewIfPossible
 {
-  // Wait for the run loop to turn over before trying to relinquish the view. That ensures that if we are remounted on
-  // a different root view, we reuse the same view (since didMount will be called immediately after didUnmount).
-  dispatch_async(dispatch_get_main_queue(), ^{
-    if (_statefulView && !_mounted && [self canRelinquishStatefulView]) {
-      [self willRelinquishStatefulView:_statefulView];
-      [[CKStatefulViewReusePool sharedPool] enqueueStatefulView:_statefulView
-                                             forControllerClass:[self class]
-                                                        context:_statefulViewContext];
-      _statefulView = nil;
-      _statefulViewContext = nil;
-    }
-  });
+  if ([self canRelinquishStatefulView]) {
+    // There is no guarantee when this reuse pool will execute this block
+    CKStatefulViewComponentController *__weak weakSelf = self;
+    [[CKStatefulViewReusePool sharedPool]
+     enqueueStatefulView:_statefulView
+     forControllerClass:[self class]
+     context:_statefulViewContext
+     mayRelinquishBlock:^BOOL{
+       CKStatefulViewComponentController *strongSelf = weakSelf;
+       if (!strongSelf) {
+         return YES;
+       }
+       if (!strongSelf->_mounted && [strongSelf canRelinquishStatefulView]) {
+         [strongSelf willRelinquishStatefulView:strongSelf->_statefulView];
+         strongSelf->_statefulView = nil;
+         strongSelf->_statefulViewContext = nil;
+         return YES;
+       }
+       return NO;
+     }];
+  }
 }
 
 @end
