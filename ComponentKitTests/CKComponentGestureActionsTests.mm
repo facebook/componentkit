@@ -120,7 +120,25 @@
   XCTAssertNil(gesture.delegate, @"Gesture delegate should not be set");
 }
 
+- (void)testThatApplyingATapRecognizerAttributeWithDifferentTargetToViewWithExistingRecognizerUpdatesAction
+{
 
+  CKFakeActionComponent *fake1 = [CKFakeActionComponent new];
+  CKComponentViewAttributeValue attr1 = CKComponentTapGestureAttribute({fake1, @selector(test:)});
+
+  CKFakeActionComponent *fake2 = [CKFakeActionComponent new];
+  CKTypedComponentAction<UIGestureRecognizer *> action2 = {fake2, @selector(test:)};
+  CKComponentViewAttributeValue attr2 = CKComponentTapGestureAttribute(action2);
+  UIView *view = [[UIView alloc] init];
+
+  attr1.first.applicator(view, attr1.second);
+  attr1.first.unapplicator(view, attr1.second);
+
+  attr2.first.applicator(view, attr2.second);
+  UITapGestureRecognizer *recognizer = [view.gestureRecognizers firstObject];
+  XCTAssert([recognizer ck_componentAction] == action2, @"Expected ck_componentAction to be set on the GR");
+  attr2.first.unapplicator(view, attr2.second);
+}
 
 @end
 
