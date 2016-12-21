@@ -70,6 +70,7 @@ public:
   explicit operator bool() const;
   bool isEqual(const CKTypedComponentActionBase &rhs) const;
   SEL selector() const;
+  std::string identifier() const;
 };
 
 #pragma mark - Typed Helpers
