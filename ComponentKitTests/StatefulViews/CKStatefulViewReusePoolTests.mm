@@ -13,8 +13,6 @@
 
 #import <ComponentKit/CKStatefulViewReusePool.h>
 
-#import <ComponentKitTestLib/CKTestRunLoopRunning.h>
-
 #import "CKTestStatefulViewComponent.h"
 
 @interface CKStatefulViewReusePoolTests : XCTestCase
@@ -47,48 +45,16 @@
 
 - (void)testEnqueueingViewThenDequeueingReturnsSameView
 {
-  __block BOOL calledBlock = NO;
   CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
   CKTestStatefulView *view = [[CKTestStatefulView alloc] init];
   [pool enqueueStatefulView:view
          forControllerClass:[CKTestStatefulViewComponentController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           calledBlock = YES;
-           return YES;
-         }];
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return calledBlock;
-  });
+                    context:nil];
   UIView *container = [[UIView alloc] init];
   UIView *dequeuedView = [pool dequeueStatefulViewForControllerClass:[CKTestStatefulViewComponentController class]
                                                   preferredSuperview:container
                                                              context:nil];
-  XCTAssertEqualObjects(dequeuedView, view, @"Expected enqueued view to be returned");
-}
-
-- (void)testEnqueueingViewThenDequeueingWhileRefusingToRelinquishReturnsNil
-{
-  __block BOOL calledBlock = NO;
-  CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
-  CKTestStatefulView *view = [[CKTestStatefulView alloc] init];
-  [pool enqueueStatefulView:view
-         forControllerClass:[CKTestStatefulViewComponentController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           calledBlock = YES;
-           return NO;
-         }];
-
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return calledBlock;
-  });
-
-  UIView *container = [[UIView alloc] init];
-  UIView *dequeuedView = [pool dequeueStatefulViewForControllerClass:[CKTestStatefulViewComponentController class]
-                                                  preferredSuperview:container
-                                                             context:nil];
-  XCTAssertTrue(calledBlock && dequeuedView == nil, @"Expected dequeued view to be nil");
+  XCTAssertTrue(dequeuedView == view, @"Expected enqueued view to be returned");
 }
 
 - (void)testEnqueueingViewThenDequeueingWithDifferentControllerClassReturnsNil
@@ -97,10 +63,7 @@
   CKTestStatefulView *view = [[CKTestStatefulView alloc] init];
   [pool enqueueStatefulView:view
          forControllerClass:[CKTestStatefulViewComponentController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           return YES;
-         }];
+                    context:nil];
   UIView *container = [[UIView alloc] init];
   XCTAssertNil([pool dequeueStatefulViewForControllerClass:[CKOtherStatefulViewComponentController class]
                                        preferredSuperview:container
@@ -111,33 +74,19 @@
 {
   CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
 
-  __block int blockCallCount = 0;
-
   UIView *container1 = [[UIView alloc] init];
   CKTestStatefulView *view1 = [[CKTestStatefulView alloc] init];
   [container1 addSubview:view1];
   [pool enqueueStatefulView:view1
          forControllerClass:[CKTestStatefulViewComponentController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           blockCallCount++;
-           return YES;
-         }];
+                    context:nil];
 
   UIView *container2 = [[UIView alloc] init];
   CKTestStatefulView *view2 = [[CKTestStatefulView alloc] init];
   [container2 addSubview:view2];
   [pool enqueueStatefulView:view2
          forControllerClass:[CKTestStatefulViewComponentController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           blockCallCount++;
-           return YES;
-         }];
-
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return blockCallCount == 2;
-  });
+                    context:nil];
 
   UIView *dequeuedView = [pool dequeueStatefulViewForControllerClass:[CKTestStatefulViewComponentController class]
                                                   preferredSuperview:container1
@@ -154,10 +103,7 @@
   [container1 addSubview:view];
   [pool enqueueStatefulView:view
          forControllerClass:[CKTestStatefulViewComponentController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           return YES;
-         }];
+                    context:nil];
 
   UIView *container2 = [[UIView alloc] init];
   [pool dequeueStatefulViewForControllerClass:[CKTestStatefulViewComponentController class]
@@ -177,10 +123,7 @@
   UIView *firstView =[[UIView alloc] init];
   [pool enqueueStatefulView:firstView
          forControllerClass:[CKTestStatefulViewComponentController class]
-                    context:@"context1"
-         mayRelinquishBlock:^BOOL{
-           return YES;
-         }];
+                    context:@"context1"];
 
   UIView *dequeuedView = [pool dequeueStatefulViewForControllerClass:[CKTestStatefulViewComponentController class]
                                                      preferredSuperview:containerView
@@ -192,21 +135,12 @@
 {
   CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
 
-  __block BOOL calledBlock = NO;
   UIView *container1 = [[UIView alloc] init];
   CKTestStatefulView *view = [[CKTestStatefulView alloc] init];
   [container1 addSubview:view];
   [pool enqueueStatefulView:view
          forControllerClass:[CKTestStatefulViewComponentController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           calledBlock = YES;
-           return YES;
-         }];
-
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return calledBlock;
-  });
+                    context:nil];
 
   // remove the statefull view from the container
   [view removeFromSuperview];
@@ -228,34 +162,20 @@
 - (void)testMaximumPoolSizeOfOneByEnqueueingTwoViewsThenDequeueingTwoViewsReturnsNewView
 {
   CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
-
-  __block int calledBlockCount = 0;
-
+  
   UIView *container1 = [[UIView alloc] init];
   CKTestStatefulView *view1 = [[CKTestStatefulView alloc] init];
   [container1 addSubview:view1];
   [pool enqueueStatefulView:view1
          forControllerClass:[CKStatefulViewComponentWithMaximumController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           calledBlockCount++;
-           return YES;
-         }];
+                    context:nil];
   
   UIView *container2 = [[UIView alloc] init];
   CKTestStatefulView *view2 = [[CKTestStatefulView alloc] init];
   [container2 addSubview:view2];
   [pool enqueueStatefulView:view2
          forControllerClass:[CKStatefulViewComponentWithMaximumController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           calledBlockCount++;
-           return YES;
-         }];
-
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return calledBlockCount == 2;
-  });
+                    context:nil];
   
   UIView *dequeuedView1 = [pool dequeueStatefulViewForControllerClass:[CKStatefulViewComponentWithMaximumController class]
                                                   preferredSuperview:container1
@@ -266,90 +186,6 @@
                                                    preferredSuperview:container2
                                                               context:nil];
   XCTAssertTrue(dequeuedView2 != view2, @"Didn't expect view in container2 to be returned");
-}
-
-#pragma mark - Pending pool tests
-
-- (void)testEnqueueingViewThenDequeueingWithPendingEnabledReturnsSameViewImmediately
-{
-  __block BOOL calledBlock = NO;
-  CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
-  pool.pendingReusePoolEnabled = YES;
-
-  // Warm up the pool so that pending reuse will occur
-  [pool enqueueStatefulView:[[CKTestStatefulView alloc] init]
-         forControllerClass:[CKTestStatefulViewComponentController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           calledBlock = YES;
-           return YES;
-         }];
-
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return calledBlock;
-  });
-
-  [pool dequeueStatefulViewForControllerClass:[CKTestStatefulViewComponentController class]
-                           preferredSuperview:nil
-                                      context:nil];
-
-  calledBlock = NO;
-  CKTestStatefulView *view = [[CKTestStatefulView alloc] init];
-  [pool enqueueStatefulView:view
-         forControllerClass:[CKTestStatefulViewComponentController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           calledBlock = YES;
-           return YES;
-         }];
-
-  UIView *container = [[UIView alloc] init];
-  UIView *dequeuedView = [pool dequeueStatefulViewForControllerClass:[CKTestStatefulViewComponentController class]
-                                                  preferredSuperview:container
-                                                             context:nil];
-  XCTAssertTrue(calledBlock);
-  XCTAssertEqualObjects(dequeuedView, view, @"Expected enqueued view to be returned");
-}
-
-- (void)testEnqueueingViewThenDequeueingWhileRefusingToRelinquishWithPendingEnabledReturnsNilImmediately
-{
-  __block BOOL calledBlock = NO;
-  CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
-  pool.pendingReusePoolEnabled = YES;
-
-  // Warm up the pool so that pending reuse will occur
-  [pool enqueueStatefulView:[[CKTestStatefulView alloc] init]
-         forControllerClass:[CKTestStatefulViewComponentController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           calledBlock = YES;
-           return YES;
-         }];
-
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return calledBlock;
-  });
-
-  [pool dequeueStatefulViewForControllerClass:[CKTestStatefulViewComponentController class]
-                           preferredSuperview:nil
-                                      context:nil];
-
-  calledBlock = NO;
-  CKTestStatefulView *view = [[CKTestStatefulView alloc] init];
-  [pool enqueueStatefulView:view
-         forControllerClass:[CKTestStatefulViewComponentController class]
-                    context:nil
-         mayRelinquishBlock:^BOOL{
-           calledBlock = YES;
-           return NO;
-         }];
-
-  UIView *container = [[UIView alloc] init];
-  UIView *dequeuedView = [pool dequeueStatefulViewForControllerClass:[CKTestStatefulViewComponentController class]
-                                                  preferredSuperview:container
-                                                             context:nil];
-  XCTAssertTrue(calledBlock);
-  XCTAssertTrue(dequeuedView == nil, @"Expected dequeued view to be nil");
 }
 
 @end
