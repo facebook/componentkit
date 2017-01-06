@@ -43,19 +43,12 @@
 		03B8B4841D2A346F00EDFF59 /* CKComponentScopeHandle.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B071CBD926700BB33CE /* CKComponentScopeHandle.mm */; };
 		03B8B4851D2A346F00EDFF59 /* CKComponentScopeRoot.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B091CBD926700BB33CE /* CKComponentScopeRoot.mm */; };
 		03B8B4861D2A346F00EDFF59 /* CKThreadLocalComponentScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B0D1CBD926700BB33CE /* CKThreadLocalComponentScope.mm */; };
-		03B8B4871D2A346F00EDFF59 /* CKCollectionViewDataSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B101CBD926700BB33CE /* CKCollectionViewDataSource.mm */; };
 		03B8B4881D2A346F00EDFF59 /* CKCollectionViewDataSourceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.m */; };
 		03B8B4891D2A346F00EDFF59 /* CKCollectionViewTransactionalDataSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B141CBD926700BB33CE /* CKCollectionViewTransactionalDataSource.mm */; };
 		03B8B48A1D2A346F00EDFF59 /* CKComponentBoundsAnimation+UICollectionView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B161CBD926700BB33CE /* CKComponentBoundsAnimation+UICollectionView.mm */; };
 		03B8B48B1D2A346F00EDFF59 /* CKComponentAnnouncerBase.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B1A1CBD926700BB33CE /* CKComponentAnnouncerBase.mm */; };
 		03B8B48C1D2A346F00EDFF59 /* CKComponentAnnouncerHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B1D1CBD926700BB33CE /* CKComponentAnnouncerHelper.mm */; };
-		03B8B48D1D2A346F00EDFF59 /* CKComponentConstantDecider.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B1F1CBD926700BB33CE /* CKComponentConstantDecider.m */; };
-		03B8B48E1D2A346F00EDFF59 /* CKComponentDataSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B211CBD926700BB33CE /* CKComponentDataSource.mm */; };
 		03B8B48F1D2A346F00EDFF59 /* CKComponentDataSourceAttachController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B231CBD926700BB33CE /* CKComponentDataSourceAttachController.mm */; };
-		03B8B4901D2A346F00EDFF59 /* CKComponentDataSourceInputItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B271CBD926700BB33CE /* CKComponentDataSourceInputItem.mm */; };
-		03B8B4911D2A346F00EDFF59 /* CKComponentDataSourceOutputItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B2A1CBD926700BB33CE /* CKComponentDataSourceOutputItem.mm */; };
-		03B8B4921D2A346F00EDFF59 /* CKComponentPreparationQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B2D1CBD926700BB33CE /* CKComponentPreparationQueue.mm */; };
-		03B8B4931D2A346F00EDFF59 /* CKComponentPreparationQueueListenerAnnouncer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B311CBD926700BB33CE /* CKComponentPreparationQueueListenerAnnouncer.mm */; };
 		03B8B4941D2A346F00EDFF59 /* CKComponentFlexibleSizeRangeProvider.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B3C1CBD926700BB33CE /* CKComponentFlexibleSizeRangeProvider.mm */; };
 		03B8B4951D2A346F00EDFF59 /* CKComponentHostingView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B3E1CBD926700BB33CE /* CKComponentHostingView.mm */; };
 		03B8B4961D2A346F00EDFF59 /* CKComponentRootView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B421CBD926700BB33CE /* CKComponentRootView.m */; };
@@ -83,7 +76,6 @@
 		03B8B4AC1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceReloadModification.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B7C1CBD926700BB33CE /* CKTransactionalComponentDataSourceReloadModification.mm */; };
 		03B8B4AD1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceUpdateConfigurationModification.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B7F1CBD926700BB33CE /* CKTransactionalComponentDataSourceUpdateConfigurationModification.mm */; };
 		03B8B4AE1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceUpdateStateModification.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B811CBD926700BB33CE /* CKTransactionalComponentDataSourceUpdateStateModification.mm */; };
-		03B8B4AF1D2A346F00EDFF59 /* CKArrayControllerChangeset.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B841CBD926700BB33CE /* CKArrayControllerChangeset.mm */; };
 		03B8B4B01D2A346F00EDFF59 /* CKComponentAction.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B871CBD926700BB33CE /* CKComponentAction.mm */; };
 		03B8B4B11D2A346F00EDFF59 /* CKComponentDelegateAttribute.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B8B1CBD926700BB33CE /* CKComponentDelegateAttribute.mm */; };
 		03B8B4B21D2A346F00EDFF59 /* CKComponentDelegateForwarder.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B8D1CBD926700BB33CE /* CKComponentDelegateForwarder.mm */; };
@@ -91,7 +83,6 @@
 		03B8B4B41D2A346F00EDFF59 /* CKEqualityHashHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B921CBD926700BB33CE /* CKEqualityHashHelpers.mm */; };
 		03B8B4B51D2A346F00EDFF59 /* CKInternalHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B941CBD926700BB33CE /* CKInternalHelpers.mm */; };
 		03B8B4B61D2A346F00EDFF59 /* CKOptimisticViewMutations.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B981CBD926700BB33CE /* CKOptimisticViewMutations.mm */; };
-		03B8B4B71D2A346F00EDFF59 /* CKSectionedArrayController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B9A1CBD926700BB33CE /* CKSectionedArrayController.mm */; };
 		03B8B4B81D2A346F00EDFF59 /* CKWeakObjectContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B9C1CBD926700BB33CE /* CKWeakObjectContainer.m */; };
 		03B8B4B91D2A346F00EDFF59 /* CKLabelComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C411CBD92C200BB33CE /* CKLabelComponent.mm */; };
 		03B8B4BA1D2A346F00EDFF59 /* CKTextComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C431CBD92C200BB33CE /* CKTextComponent.mm */; };
@@ -114,8 +105,6 @@
 		03B8B4CB1D2A346F00EDFF59 /* CKAsyncTransactionContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C6A1CBD92C200BB33CE /* CKAsyncTransactionContainer.m */; };
 		03B8B4CC1D2A346F00EDFF59 /* CKAsyncTransactionGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C6C1CBD92C200BB33CE /* CKAsyncTransactionGroup.m */; };
 		03B8B4CD1D2A346F00EDFF59 /* CKHighlightOverlayLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C701CBD92C200BB33CE /* CKHighlightOverlayLayer.mm */; };
-		03B8B4D01D2A346F00EDFF59 /* CKCollectionViewDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0F1CBD926700BB33CE /* CKCollectionViewDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03B8B4D11D2A346F00EDFF59 /* CKArrayControllerChangeset.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B831CBD926700BB33CE /* CKArrayControllerChangeset.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4D21D2A346F00EDFF59 /* CKComponentRootView.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B411CBD926700BB33CE /* CKComponentRootView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4D31D2A346F00EDFF59 /* CKCollectionViewTransactionalDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B131CBD926700BB33CE /* CKCollectionViewTransactionalDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4D41D2A346F00EDFF59 /* CKWeakObjectContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B9B1CBD926700BB33CE /* CKWeakObjectContainer.h */; };
@@ -127,22 +116,17 @@
 		03B8B4DA1D2A346F00EDFF59 /* CKComponentLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE01CBD926700BB33CE /* CKComponentLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4DB1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceAppliedChanges.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B651CBD926700BB33CE /* CKTransactionalComponentDataSourceAppliedChanges.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4DC1D2A346F00EDFF59 /* CKStatefulViewComponentController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B5D1CBD926700BB33CE /* CKStatefulViewComponentController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03B8B4DD1D2A346F00EDFF59 /* CKSectionedArrayController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B991CBD926700BB33CE /* CKSectionedArrayController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03B8B4DE1D2A346F00EDFF59 /* CKComponentPreparationQueueListenerAnnouncer.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B301CBD926700BB33CE /* CKComponentPreparationQueueListenerAnnouncer.h */; };
 		03B8B4DF1D2A346F00EDFF59 /* CKComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AD51CBD926700BB33CE /* CKComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4E01D2A346F00EDFF59 /* CKComponentLifecycleManagerAsynchronousUpdateHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE51CBD926700BB33CE /* CKComponentLifecycleManagerAsynchronousUpdateHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4E11D2A346F00EDFF59 /* CKComponentController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47ADC1CBD926700BB33CE /* CKComponentController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4E21D2A346F00EDFF59 /* CKComponentHostingView.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B3D1CBD926700BB33CE /* CKComponentHostingView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4E31D2A346F00EDFF59 /* CKComponentAccessibility.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AC41CBD926700BB33CE /* CKComponentAccessibility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4E41D2A346F00EDFF59 /* CKComponentHostingViewInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B401CBD926700BB33CE /* CKComponentHostingViewInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		03B8B4E51D2A346F00EDFF59 /* CKComponentPreparationQueueListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B2F1CBD926700BB33CE /* CKComponentPreparationQueueListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4E61D2A346F00EDFF59 /* CKStackLayoutComponentUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B531CBD926700BB33CE /* CKStackLayoutComponentUtilities.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		03B8B4E71D2A346F00EDFF59 /* CKComponentDataSourceInputItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B261CBD926700BB33CE /* CKComponentDataSourceInputItem.h */; };
 		03B8B4E81D2A346F00EDFF59 /* CKStackUnpositionedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B561CBD926700BB33CE /* CKStackUnpositionedLayout.h */; };
 		03B8B4E91D2A346F00EDFF59 /* CKCenterLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B491CBD926700BB33CE /* CKCenterLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4EA1D2A346F00EDFF59 /* CKSupplementaryViewDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B171CBD926700BB33CE /* CKSupplementaryViewDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4EB1D2A346F00EDFF59 /* CKComponentDataSourceAttachControllerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B241CBD926700BB33CE /* CKComponentDataSourceAttachControllerInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		03B8B4EC1D2A346F00EDFF59 /* CKComponentDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B201CBD926700BB33CE /* CKComponentDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4ED1D2A346F00EDFF59 /* CKComponentHierarchyDebugHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B371CBD926700BB33CE /* CKComponentHierarchyDebugHelper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B4EE1D2A346F00EDFF59 /* CKTextComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C421CBD92C200BB33CE /* CKTextComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4EF1D2A346F00EDFF59 /* CKStatefulViewReusePool.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B5F1CBD926700BB33CE /* CKStatefulViewReusePool.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -154,7 +138,6 @@
 		03B8B4F51D2A346F00EDFF59 /* CKTransactionalComponentDataSourceReloadModification.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B7B1CBD926700BB33CE /* CKTransactionalComponentDataSourceReloadModification.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B4F61D2A346F00EDFF59 /* CKComponentAnnouncerBaseInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B1B1CBD926700BB33CE /* CKComponentAnnouncerBaseInternal.h */; };
 		03B8B4F71D2A346F00EDFF59 /* CKTransactionalComponentDataSourceStateModifying.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B7D1CBD926700BB33CE /* CKTransactionalComponentDataSourceStateModifying.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		03B8B4F81D2A346F00EDFF59 /* CKArrayControllerChangeType.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B851CBD926700BB33CE /* CKArrayControllerChangeType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4F91D2A346F00EDFF59 /* CKStackPositionedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B541CBD926700BB33CE /* CKStackPositionedLayout.h */; };
 		03B8B4FA1D2A346F00EDFF59 /* CKTextKitRenderer+TextChecking.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C561CBD92C200BB33CE /* CKTextKitRenderer+TextChecking.h */; };
 		03B8B4FB1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceState.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B731CBD926700BB33CE /* CKTransactionalComponentDataSourceState.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -170,8 +153,6 @@
 		03B8B5061D2A346F00EDFF59 /* CKComponentAction.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B861CBD926700BB33CE /* CKComponentAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5071D2A346F00EDFF59 /* CKTransactionalComponentDataSourceUpdateConfigurationModification.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B7E1CBD926700BB33CE /* CKTransactionalComponentDataSourceUpdateConfigurationModification.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B5081D2A346F00EDFF59 /* CKComponentDelegateAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B8A1CBD926700BB33CE /* CKComponentDelegateAttribute.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03B8B5091D2A346F00EDFF59 /* CKComponentDataSourceOutputItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B291CBD926700BB33CE /* CKComponentDataSourceOutputItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03B8B50A1D2A346F00EDFF59 /* CKComponentPreparationQueueTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B321CBD926700BB33CE /* CKComponentPreparationQueueTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B50B1D2A346F00EDFF59 /* CKInternalHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B931CBD926700BB33CE /* CKInternalHelpers.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B50C1D2A346F00EDFF59 /* CKComponentSizeRangeProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B441CBD926700BB33CE /* CKComponentSizeRangeProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B50D1D2A346F00EDFF59 /* CKSizeRange.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF61CBD926700BB33CE /* CKSizeRange.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -179,14 +160,12 @@
 		03B8B50F1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceChangesetInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B691CBD926700BB33CE /* CKTransactionalComponentDataSourceChangesetInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B5101D2A346F00EDFF59 /* CKComponentViewAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AEC1CBD926700BB33CE /* CKComponentViewAttribute.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5111D2A346F00EDFF59 /* CKTransactionalComponentDataSourceChange.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B771CBD926700BB33CE /* CKTransactionalComponentDataSourceChange.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		03B8B5121D2A346F00EDFF59 /* CKComponentPreparationQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B2C1CBD926700BB33CE /* CKComponentPreparationQueue.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B5131D2A346F00EDFF59 /* CKComponentAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AD71CBD926700BB33CE /* CKComponentAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5141D2A346F00EDFF59 /* CKBackgroundLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B471CBD926700BB33CE /* CKBackgroundLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5151D2A346F00EDFF59 /* CKTransactionalComponentDataSourceChangesetModification.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B791CBD926700BB33CE /* CKTransactionalComponentDataSourceChangesetModification.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B5161D2A346F00EDFF59 /* CKDimension.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF41CBD926700BB33CE /* CKDimension.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5171D2A346F00EDFF59 /* CKTextComponentLayerHighlighter.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C461CBD92C200BB33CE /* CKTextComponentLayerHighlighter.h */; };
 		03B8B5181D2A346F00EDFF59 /* CKTransactionalComponentDataSourceItemInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B6F1CBD926700BB33CE /* CKTransactionalComponentDataSourceItemInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		03B8B5191D2A346F00EDFF59 /* CKComponentConstantDecider.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B1E1CBD926700BB33CE /* CKComponentConstantDecider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B51A1D2A346F00EDFF59 /* CKComponentSize.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE91CBD926700BB33CE /* CKComponentSize.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B51B1D2A346F00EDFF59 /* ComponentKit.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47ACB1CBD926700BB33CE /* ComponentKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B51C1D2A346F00EDFF59 /* CKComponentControllerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47ADE1CBD926700BB33CE /* CKComponentControllerInternal.h */; };
@@ -194,12 +173,10 @@
 		03B8B51E1D2A346F00EDFF59 /* CKLabelComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C401CBD92C200BB33CE /* CKLabelComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B51F1D2A346F00EDFF59 /* CKComponentFlexibleSizeRangeProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B3B1CBD926700BB33CE /* CKComponentFlexibleSizeRangeProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5201D2A346F00EDFF59 /* CKComponentBoundsAnimation+UICollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B151CBD926700BB33CE /* CKComponentBoundsAnimation+UICollectionView.h */; };
-		03B8B5211D2A346F00EDFF59 /* CKComponentPreparationQueueInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B2E1CBD926700BB33CE /* CKComponentPreparationQueueInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B5221D2A346F00EDFF59 /* CKStatefulViewComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B5B1CBD926700BB33CE /* CKStatefulViewComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5231D2A346F00EDFF59 /* CKTextComponentLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C441CBD92C200BB33CE /* CKTextComponentLayer.h */; };
 		03B8B5241D2A346F00EDFF59 /* CKRatioLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B4F1CBD926700BB33CE /* CKRatioLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5251D2A346F00EDFF59 /* CKNetworkImageComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AD11CBD926700BB33CE /* CKNetworkImageComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03B8B5261D2A346F00EDFF59 /* CKComponentDataSourceDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B251CBD926700BB33CE /* CKComponentDataSourceDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5271D2A346F00EDFF59 /* CKImageComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47ACF1CBD926700BB33CE /* CKImageComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5281D2A346F00EDFF59 /* CKComponentLifecycleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE21CBD926700BB33CE /* CKComponentLifecycleManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5291D2A346F00EDFF59 /* CKStaticLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B581CBD926700BB33CE /* CKStaticLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -209,7 +186,6 @@
 		03B8B52D1D2A346F00EDFF59 /* CKComponentDataSourceAttachController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B221CBD926700BB33CE /* CKComponentDataSourceAttachController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B52E1D2A346F00EDFF59 /* CKButtonComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47ACD1CBD926700BB33CE /* CKButtonComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B52F1D2A346F00EDFF59 /* CKComponentDelegateForwarder.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B8C1CBD926700BB33CE /* CKComponentDelegateForwarder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03B8B5301D2A346F00EDFF59 /* CKComponentDeciding.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B2B1CBD926700BB33CE /* CKComponentDeciding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5311D2A346F00EDFF59 /* CKInsetComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B4B1CBD926700BB33CE /* CKInsetComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5321D2A346F00EDFF59 /* CKUpdateMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF81CBD926700BB33CE /* CKUpdateMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5331D2A346F00EDFF59 /* CKComponentAnnouncerHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B1C1CBD926700BB33CE /* CKComponentAnnouncerHelper.h */; };
@@ -258,7 +234,6 @@
 		03B8B55E1D2A346F00EDFF59 /* CKTextKitEntityAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C521CBD92C200BB33CE /* CKTextKitEntityAttribute.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B55F1D2A346F00EDFF59 /* CKAsyncLayerSubclass.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C651CBD92C200BB33CE /* CKAsyncLayerSubclass.h */; };
 		03B8B5601D2A346F00EDFF59 /* CKComponentDebugController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B351CBD926700BB33CE /* CKComponentDebugController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		03B8B5611D2A346F00EDFF59 /* CKComponentDataSourceInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B281CBD926700BB33CE /* CKComponentDataSourceInternal.h */; };
 		03B8B5621D2A346F00EDFF59 /* CKTextComponentViewControlTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C4A1CBD92C200BB33CE /* CKTextComponentViewControlTracker.h */; };
 		03B8B5631D2A346F00EDFF59 /* ComponentLayoutContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF91CBD926700BB33CE /* ComponentLayoutContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5641D2A346F00EDFF59 /* CKCompositeComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF21CBD926700BB33CE /* CKCompositeComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -270,15 +245,12 @@
 		03F1ABCB1D2B2A9B00867584 /* CKOptimisticViewMutationsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */; };
 		03F1ABCC1D2B2A9B00867584 /* CKComponentActionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A241C6A41AFCFFDB00D4F661 /* CKComponentActionTests.mm */; };
 		03F1ABCD1D2B2A9B00867584 /* CKComponentAccessibilityTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */; };
-		03F1ABCE1D2B2A9B00867584 /* CKArrayControllerChangesetTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */; };
 		03F1ABCF1D2B2A9B00867584 /* CKTransactionalComponentDataSourceConfigurationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B761C8AA1CB36AAE00CDD03F /* CKTransactionalComponentDataSourceConfigurationTests.mm */; };
 		03F1ABD01D2B2A9B00867584 /* CKComponentControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4E1AC23EA900ACAC53 /* CKComponentControllerTests.mm */; };
 		03F1ABD11D2B2A9B00867584 /* CKComponentScopeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC681AC23EA900ACAC53 /* CKComponentScopeTests.mm */; };
 		03F1ABD21D2B2A9B00867584 /* CKTransactionalComponentDataSourceStateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2CD66311AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm */; };
-		03F1ABD31D2B2A9B00867584 /* CKComponentDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC511AC23EA900ACAC53 /* CKComponentDataSourceTests.mm */; };
 		03F1ABD41D2B2A9B00867584 /* CKComponentMountTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */; };
 		03F1ABD51D2B2A9B00867584 /* CKComponentHostingViewTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC561AC23EA900ACAC53 /* CKComponentHostingViewTests.mm */; };
-		03F1ABD61D2B2A9B00867584 /* CKComponentPreparationQueueTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5B1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm */; };
 		03F1ABD71D2B2A9B00867584 /* CKVectorHelperTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B7E2E59E1D077098002A4442 /* CKVectorHelperTests.mm */; };
 		03F1ABD81D2B2A9B00867584 /* CKComponentViewManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5F1AC23EA900ACAC53 /* CKComponentViewManagerTests.mm */; };
 		03F1ABD91D2B2A9B00867584 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A25C02D01AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm */; };
@@ -296,7 +268,6 @@
 		03F1ABE51D2B2A9B00867584 /* CKTransactionalComponentDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A279EA9D1AF087A70046B5AA /* CKTransactionalComponentDataSourceTests.mm */; };
 		03F1ABE61D2B2A9B00867584 /* CKDimensionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */; };
 		03F1ABE71D2B2A9B00867584 /* CKTestStatefulViewComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE41B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm */; };
-		03F1ABE81D2B2A9B00867584 /* CKComponentPreparationQueueAsyncTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5A1AC23EA900ACAC53 /* CKComponentPreparationQueueAsyncTests.mm */; };
 		03F1ABE91D2B2A9B00867584 /* CKComponentControllerLifecycleMethodTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4D1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm */; };
 		03F1ABEA1D2B2A9B00867584 /* CKTransactionalComponentDataSourceChangesetTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B761C8AD1CB36BF700CDD03F /* CKTransactionalComponentDataSourceChangesetTests.mm */; };
 		03F1ABEB1D2B2A9B00867584 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2100E0C1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm */; };
@@ -306,10 +277,8 @@
 		03F1ABEF1D2B2A9B00867584 /* CKStateScopeComponentBuilderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC691AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm */; };
 		03F1ABF01D2B2A9B00867584 /* CKComponentViewReuseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */; };
 		03F1ABF11D2B2A9B00867584 /* CKTransactionalComponentDataSourceReloadModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27436F61AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm */; };
-		03F1ABF21D2B2A9B00867584 /* CKComponentDataSourceTestDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC501AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm */; };
 		03F1ABF41D2B2A9B00867584 /* CKComponentGestureActionsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC531AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm */; };
 		03F1ABF51D2B2A9B00867584 /* CKStatefulViewReusePoolTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE21B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm */; };
-		03F1ABF61D2B2A9B00867584 /* CKSectionedArrayControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC631AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm */; };
 		03F1ABF71D2B2A9B00867584 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27C72741AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm */; };
 		03F1ABF81D2B2A9B00867584 /* CKComponentMemoizerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 991DE3401B3B308900AA05B2 /* CKComponentMemoizerTests.mm */; };
 		03F1ABFA1D2B2A9B00867584 /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04977E31CC4145E0046CBCC /* OCMock.framework */; };
@@ -322,11 +291,9 @@
 		18644AE51B3CB8E60028AF87 /* CKStatefulViewComponentControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE11B3CB8E60028AF87 /* CKStatefulViewComponentControllerTests.mm */; };
 		18644AE61B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE21B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm */; };
 		18644AE71B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18644AE41B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm */; };
-		2D019D281DC0371300EC9EA2 /* CKArrayControllerChangesetVerificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B797C04C1D49F794006461CC /* CKArrayControllerChangesetVerificationTests.mm */; };
 		2D019D291DC0371300EC9EA2 /* CKTransactionalComponentDataSourceIntegrationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49FA174D1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm */; };
 		2D03A6601D3869A800E4F890 /* CKDetectComponentScopeCollisions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm */; };
 		2D03A6611D3869C700E4F890 /* CKDetectComponentScopeCollisions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2D34A4AA1D777EB80020B11C /* CKArrayControllerChangesetVerification.mm in Sources */ = {isa = PBXBuildFile; fileRef = B797C03F1D49F701006461CC /* CKArrayControllerChangesetVerification.mm */; };
 		2D640D5D1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D640D5C1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm */; };
 		2D640D5E1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D640D5C1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm */; };
 		2D7A98161DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D7A98141DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h */; };
@@ -380,14 +347,11 @@
 		B1DC105F1DD480FB00CCBF2F /* CKMemoizingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = B167C70E1DD38E4200769084 /* CKMemoizingComponent.mm */; };
 		B1DC106A1DD4810700CCBF2F /* CKMemoizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = B167C70D1DD38E4200769084 /* CKMemoizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B1EF8FE81DD1562B00E74F43 /* CKComponentActionInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = B1EF8FE71DD1562B00E74F43 /* CKComponentActionInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B342DC6A1AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */; };
 		B342DC6B1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */; };
 		B342DC6C1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4B1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm */; };
 		B342DC6D1AC23EA900ACAC53 /* CKComponentContextTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4C1AC23EA900ACAC53 /* CKComponentContextTests.mm */; };
 		B342DC6E1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4D1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm */; };
 		B342DC6F1AC23EA900ACAC53 /* CKComponentControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4E1AC23EA900ACAC53 /* CKComponentControllerTests.mm */; };
-		B342DC701AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC501AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm */; };
-		B342DC711AC23EA900ACAC53 /* CKComponentDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC511AC23EA900ACAC53 /* CKComponentDataSourceTests.mm */; };
 		B342DC721AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC521AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm */; };
 		B342DC731AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC531AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm */; };
 		B342DC741AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC551AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm */; };
@@ -395,8 +359,6 @@
 		B342DC761AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC571AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm */; };
 		B342DC771AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */; };
 		B342DC781AC23EA900ACAC53 /* CKComponentMountTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */; };
-		B342DC791AC23EA900ACAC53 /* CKComponentPreparationQueueAsyncTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5A1AC23EA900ACAC53 /* CKComponentPreparationQueueAsyncTests.mm */; };
-		B342DC7A1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5B1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm */; };
 		B342DC7B1AC23EA900ACAC53 /* CKComponentSizeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5C1AC23EA900ACAC53 /* CKComponentSizeTests.mm */; };
 		B342DC7C1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */; };
 		B342DC7D1AC23EA900ACAC53 /* CKComponentViewContextTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */; };
@@ -404,7 +366,6 @@
 		B342DC7F1AC23EA900ACAC53 /* CKComponentViewReuseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */; };
 		B342DC801AC23EA900ACAC53 /* CKDimensionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */; };
 		B342DC811AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */; };
-		B342DC821AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC631AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm */; };
 		B342DC851AC23EA900ACAC53 /* CKComponentScopeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC681AC23EA900ACAC53 /* CKComponentScopeTests.mm */; };
 		B342DC861AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC691AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm */; };
 		B342DC9E1AC23EE800ACAC53 /* CKButtonComponentTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC961AC23EE800ACAC53 /* CKButtonComponentTests.mm */; };
@@ -423,9 +384,6 @@
 		B761C8AB1CB36AAE00CDD03F /* CKTransactionalComponentDataSourceConfigurationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B761C8AA1CB36AAE00CDD03F /* CKTransactionalComponentDataSourceConfigurationTests.mm */; };
 		B761C8AE1CB36BF700CDD03F /* CKTransactionalComponentDataSourceChangesetTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B761C8AD1CB36BF700CDD03F /* CKTransactionalComponentDataSourceChangesetTests.mm */; };
 		B761C8B11CB36FA200CDD03F /* CKTransactionalComponentDataSourceAppliedChangesTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B761C8B01CB36FA200CDD03F /* CKTransactionalComponentDataSourceAppliedChangesTests.mm */; };
-		B797C0401D49F701006461CC /* CKArrayControllerChangesetVerification.h in Headers */ = {isa = PBXBuildFile; fileRef = B797C03E1D49F701006461CC /* CKArrayControllerChangesetVerification.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B797C0411D49F701006461CC /* CKArrayControllerChangesetVerification.mm in Sources */ = {isa = PBXBuildFile; fileRef = B797C03F1D49F701006461CC /* CKArrayControllerChangesetVerification.mm */; };
-		B797C04D1D49F794006461CC /* CKArrayControllerChangesetVerificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B797C04C1D49F794006461CC /* CKArrayControllerChangesetVerificationTests.mm */; };
 		B7E2E59F1D077098002A4442 /* CKVectorHelperTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B7E2E59E1D077098002A4442 /* CKVectorHelperTests.mm */; };
 		D000B81D1CC45427005A27CF /* OCMock.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D04977E31CC4145E0046CBCC /* OCMock.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D000B81E1CC45440005A27CF /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D000B8101CC41535005A27CF /* FBSnapshotTestCase.framework */; };
@@ -461,19 +419,12 @@
 		D0B47C9C1CBD943400BB33CE /* CKComponentScopeHandle.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B071CBD926700BB33CE /* CKComponentScopeHandle.mm */; };
 		D0B47C9D1CBD943400BB33CE /* CKComponentScopeRoot.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B091CBD926700BB33CE /* CKComponentScopeRoot.mm */; };
 		D0B47C9E1CBD943400BB33CE /* CKThreadLocalComponentScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B0D1CBD926700BB33CE /* CKThreadLocalComponentScope.mm */; };
-		D0B47C9F1CBD943400BB33CE /* CKCollectionViewDataSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B101CBD926700BB33CE /* CKCollectionViewDataSource.mm */; };
 		D0B47CA01CBD943400BB33CE /* CKCollectionViewDataSourceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.m */; };
 		D0B47CA11CBD943400BB33CE /* CKCollectionViewTransactionalDataSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B141CBD926700BB33CE /* CKCollectionViewTransactionalDataSource.mm */; };
 		D0B47CA21CBD943400BB33CE /* CKComponentBoundsAnimation+UICollectionView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B161CBD926700BB33CE /* CKComponentBoundsAnimation+UICollectionView.mm */; };
 		D0B47CA31CBD943400BB33CE /* CKComponentAnnouncerBase.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B1A1CBD926700BB33CE /* CKComponentAnnouncerBase.mm */; };
 		D0B47CA41CBD943400BB33CE /* CKComponentAnnouncerHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B1D1CBD926700BB33CE /* CKComponentAnnouncerHelper.mm */; };
-		D0B47CA51CBD943400BB33CE /* CKComponentConstantDecider.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B1F1CBD926700BB33CE /* CKComponentConstantDecider.m */; };
-		D0B47CA61CBD943400BB33CE /* CKComponentDataSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B211CBD926700BB33CE /* CKComponentDataSource.mm */; };
 		D0B47CA71CBD943400BB33CE /* CKComponentDataSourceAttachController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B231CBD926700BB33CE /* CKComponentDataSourceAttachController.mm */; };
-		D0B47CA81CBD943400BB33CE /* CKComponentDataSourceInputItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B271CBD926700BB33CE /* CKComponentDataSourceInputItem.mm */; };
-		D0B47CA91CBD943400BB33CE /* CKComponentDataSourceOutputItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B2A1CBD926700BB33CE /* CKComponentDataSourceOutputItem.mm */; };
-		D0B47CAA1CBD943400BB33CE /* CKComponentPreparationQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B2D1CBD926700BB33CE /* CKComponentPreparationQueue.mm */; };
-		D0B47CAB1CBD943400BB33CE /* CKComponentPreparationQueueListenerAnnouncer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B311CBD926700BB33CE /* CKComponentPreparationQueueListenerAnnouncer.mm */; };
 		D0B47CAC1CBD943400BB33CE /* CKComponentFlexibleSizeRangeProvider.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B3C1CBD926700BB33CE /* CKComponentFlexibleSizeRangeProvider.mm */; };
 		D0B47CAD1CBD943400BB33CE /* CKComponentHostingView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B3E1CBD926700BB33CE /* CKComponentHostingView.mm */; };
 		D0B47CAE1CBD943400BB33CE /* CKComponentRootView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B421CBD926700BB33CE /* CKComponentRootView.m */; };
@@ -501,7 +452,6 @@
 		D0B47CC41CBD943400BB33CE /* CKTransactionalComponentDataSourceReloadModification.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B7C1CBD926700BB33CE /* CKTransactionalComponentDataSourceReloadModification.mm */; };
 		D0B47CC51CBD943400BB33CE /* CKTransactionalComponentDataSourceUpdateConfigurationModification.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B7F1CBD926700BB33CE /* CKTransactionalComponentDataSourceUpdateConfigurationModification.mm */; };
 		D0B47CC61CBD943400BB33CE /* CKTransactionalComponentDataSourceUpdateStateModification.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B811CBD926700BB33CE /* CKTransactionalComponentDataSourceUpdateStateModification.mm */; };
-		D0B47CC71CBD943400BB33CE /* CKArrayControllerChangeset.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B841CBD926700BB33CE /* CKArrayControllerChangeset.mm */; };
 		D0B47CC81CBD943400BB33CE /* CKComponentAction.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B871CBD926700BB33CE /* CKComponentAction.mm */; };
 		D0B47CC91CBD943400BB33CE /* CKComponentDelegateAttribute.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B8B1CBD926700BB33CE /* CKComponentDelegateAttribute.mm */; };
 		D0B47CCA1CBD943400BB33CE /* CKComponentDelegateForwarder.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B8D1CBD926700BB33CE /* CKComponentDelegateForwarder.mm */; };
@@ -509,7 +459,6 @@
 		D0B47CCC1CBD943400BB33CE /* CKEqualityHashHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B921CBD926700BB33CE /* CKEqualityHashHelpers.mm */; };
 		D0B47CCD1CBD943400BB33CE /* CKInternalHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B941CBD926700BB33CE /* CKInternalHelpers.mm */; };
 		D0B47CCE1CBD943400BB33CE /* CKOptimisticViewMutations.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B981CBD926700BB33CE /* CKOptimisticViewMutations.mm */; };
-		D0B47CCF1CBD943400BB33CE /* CKSectionedArrayController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B9A1CBD926700BB33CE /* CKSectionedArrayController.mm */; };
 		D0B47CD01CBD943400BB33CE /* CKWeakObjectContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B9C1CBD926700BB33CE /* CKWeakObjectContainer.m */; };
 		D0B47CD11CBD943400BB33CE /* CKLabelComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C411CBD92C200BB33CE /* CKLabelComponent.mm */; };
 		D0B47CD21CBD943400BB33CE /* CKTextComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47C431CBD92C200BB33CE /* CKTextComponent.mm */; };
@@ -575,7 +524,6 @@
 		D0B47D0E1CBD948E00BB33CE /* CKComponentScopeRootInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0A1CBD926700BB33CE /* CKComponentScopeRootInternal.h */; };
 		D0B47D0F1CBD948E00BB33CE /* CKComponentScopeTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0B1CBD926700BB33CE /* CKComponentScopeTypes.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D101CBD948E00BB33CE /* CKThreadLocalComponentScope.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0C1CBD926700BB33CE /* CKThreadLocalComponentScope.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D0B47D111CBD948E00BB33CE /* CKCollectionViewDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0F1CBD926700BB33CE /* CKCollectionViewDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D121CBD948E00BB33CE /* CKCollectionViewDataSourceCell.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B111CBD926700BB33CE /* CKCollectionViewDataSourceCell.h */; };
 		D0B47D131CBD948E00BB33CE /* CKCollectionViewTransactionalDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B131CBD926700BB33CE /* CKCollectionViewTransactionalDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D141CBD948E00BB33CE /* CKComponentBoundsAnimation+UICollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B151CBD926700BB33CE /* CKComponentBoundsAnimation+UICollectionView.h */; };
@@ -583,20 +531,8 @@
 		D0B47D161CBD948E00BB33CE /* CKComponentAnnouncerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B191CBD926700BB33CE /* CKComponentAnnouncerBase.h */; };
 		D0B47D171CBD948E00BB33CE /* CKComponentAnnouncerBaseInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B1B1CBD926700BB33CE /* CKComponentAnnouncerBaseInternal.h */; };
 		D0B47D181CBD948E00BB33CE /* CKComponentAnnouncerHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B1C1CBD926700BB33CE /* CKComponentAnnouncerHelper.h */; };
-		D0B47D191CBD948E00BB33CE /* CKComponentConstantDecider.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B1E1CBD926700BB33CE /* CKComponentConstantDecider.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47D1A1CBD948E00BB33CE /* CKComponentDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B201CBD926700BB33CE /* CKComponentDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D1B1CBD948E00BB33CE /* CKComponentDataSourceAttachController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B221CBD926700BB33CE /* CKComponentDataSourceAttachController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D1C1CBD948E00BB33CE /* CKComponentDataSourceAttachControllerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B241CBD926700BB33CE /* CKComponentDataSourceAttachControllerInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D0B47D1D1CBD948E00BB33CE /* CKComponentDataSourceDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B251CBD926700BB33CE /* CKComponentDataSourceDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47D1E1CBD948E00BB33CE /* CKComponentDataSourceInputItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B261CBD926700BB33CE /* CKComponentDataSourceInputItem.h */; };
-		D0B47D1F1CBD948E00BB33CE /* CKComponentDataSourceInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B281CBD926700BB33CE /* CKComponentDataSourceInternal.h */; };
-		D0B47D201CBD948E00BB33CE /* CKComponentDataSourceOutputItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B291CBD926700BB33CE /* CKComponentDataSourceOutputItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47D211CBD948E00BB33CE /* CKComponentDeciding.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B2B1CBD926700BB33CE /* CKComponentDeciding.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47D221CBD948E00BB33CE /* CKComponentPreparationQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B2C1CBD926700BB33CE /* CKComponentPreparationQueue.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D0B47D231CBD948E00BB33CE /* CKComponentPreparationQueueInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B2E1CBD926700BB33CE /* CKComponentPreparationQueueInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D0B47D241CBD948E00BB33CE /* CKComponentPreparationQueueListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B2F1CBD926700BB33CE /* CKComponentPreparationQueueListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47D251CBD948E00BB33CE /* CKComponentPreparationQueueListenerAnnouncer.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B301CBD926700BB33CE /* CKComponentPreparationQueueListenerAnnouncer.h */; };
-		D0B47D261CBD948E00BB33CE /* CKComponentPreparationQueueTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B321CBD926700BB33CE /* CKComponentPreparationQueueTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D271CBD948E00BB33CE /* CKComponentProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B331CBD926700BB33CE /* CKComponentProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D281CBD948E00BB33CE /* CKComponentDebugController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B351CBD926700BB33CE /* CKComponentDebugController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D291CBD948E00BB33CE /* CKComponentHierarchyDebugHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B371CBD926700BB33CE /* CKComponentHierarchyDebugHelper.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -638,8 +574,6 @@
 		D0B47D4D1CBD948E00BB33CE /* CKTransactionalComponentDataSourceStateModifying.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B7D1CBD926700BB33CE /* CKTransactionalComponentDataSourceStateModifying.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D4E1CBD948E00BB33CE /* CKTransactionalComponentDataSourceUpdateConfigurationModification.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B7E1CBD926700BB33CE /* CKTransactionalComponentDataSourceUpdateConfigurationModification.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D4F1CBD948E00BB33CE /* CKTransactionalComponentDataSourceUpdateStateModification.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B801CBD926700BB33CE /* CKTransactionalComponentDataSourceUpdateStateModification.h */; };
-		D0B47D501CBD948E00BB33CE /* CKArrayControllerChangeset.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B831CBD926700BB33CE /* CKArrayControllerChangeset.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47D511CBD948E00BB33CE /* CKArrayControllerChangeType.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B851CBD926700BB33CE /* CKArrayControllerChangeType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D521CBD948E00BB33CE /* CKComponentAction.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B861CBD926700BB33CE /* CKComponentAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D531CBD948E00BB33CE /* CKComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B881CBD926700BB33CE /* CKComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D551CBD948E00BB33CE /* CKComponentDelegateAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B8A1CBD926700BB33CE /* CKComponentDelegateAttribute.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -651,7 +585,6 @@
 		D0B47D5B1CBD948E00BB33CE /* CKMountAnimationGuard.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B951CBD926700BB33CE /* CKMountAnimationGuard.h */; };
 		D0B47D5C1CBD948E00BB33CE /* CKMutex.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B961CBD926700BB33CE /* CKMutex.h */; };
 		D0B47D5D1CBD948E00BB33CE /* CKOptimisticViewMutations.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B971CBD926700BB33CE /* CKOptimisticViewMutations.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D0B47D5E1CBD948E00BB33CE /* CKSectionedArrayController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B991CBD926700BB33CE /* CKSectionedArrayController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D5F1CBD948E00BB33CE /* CKWeakObjectContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B9B1CBD926700BB33CE /* CKWeakObjectContainer.h */; };
 		D0B47D601CBD948E00BB33CE /* CKLabelComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C401CBD92C200BB33CE /* CKLabelComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D611CBD948E00BB33CE /* CKTextComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C421CBD92C200BB33CE /* CKTextComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -940,15 +873,11 @@
 		B167C70E1DD38E4200769084 /* CKMemoizingComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKMemoizingComponent.mm; sourceTree = "<group>"; };
 		B1EF8FE71DD1562B00E74F43 /* CKComponentActionInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentActionInternal.h; sourceTree = "<group>"; };
 		B342DC401AC23E8200ACAC53 /* ComponentKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComponentKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKArrayControllerChangesetTests.mm; sourceTree = "<group>"; };
 		B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAccessibilityTests.mm; sourceTree = "<group>"; };
 		B342DC4B1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentBoundsAnimationTests.mm; sourceTree = "<group>"; };
 		B342DC4C1AC23EA900ACAC53 /* CKComponentContextTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentContextTests.mm; sourceTree = "<group>"; };
 		B342DC4D1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentControllerLifecycleMethodTests.mm; sourceTree = "<group>"; };
 		B342DC4E1AC23EA900ACAC53 /* CKComponentControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentControllerTests.mm; sourceTree = "<group>"; };
-		B342DC4F1AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentDataSourceTestDelegate.h; sourceTree = "<group>"; };
-		B342DC501AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDataSourceTestDelegate.mm; sourceTree = "<group>"; };
-		B342DC511AC23EA900ACAC53 /* CKComponentDataSourceTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDataSourceTests.mm; sourceTree = "<group>"; };
 		B342DC521AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentFlexibleSizeRangeProviderTests.mm; sourceTree = "<group>"; };
 		B342DC531AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentGestureActionsTests.mm; sourceTree = "<group>"; };
 		B342DC541AC23EA900ACAC53 /* CKComponentHostingViewTestModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentHostingViewTestModel.h; sourceTree = "<group>"; };
@@ -957,8 +886,6 @@
 		B342DC571AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentLifecycleManagerTests.mm; sourceTree = "<group>"; };
 		B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentMountContextLayoutGuideTests.mm; sourceTree = "<group>"; };
 		B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentMountTests.mm; sourceTree = "<group>"; };
-		B342DC5A1AC23EA900ACAC53 /* CKComponentPreparationQueueAsyncTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentPreparationQueueAsyncTests.mm; sourceTree = "<group>"; };
-		B342DC5B1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentPreparationQueueTests.mm; sourceTree = "<group>"; };
 		B342DC5C1AC23EA900ACAC53 /* CKComponentSizeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentSizeTests.mm; sourceTree = "<group>"; };
 		B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewAttributeTests.mm; sourceTree = "<group>"; };
 		B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewContextTests.mm; sourceTree = "<group>"; };
@@ -966,7 +893,6 @@
 		B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewReuseTests.mm; sourceTree = "<group>"; };
 		B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDimensionTests.mm; sourceTree = "<group>"; };
 		B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKOptimisticViewMutationsTests.mm; sourceTree = "<group>"; };
-		B342DC631AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSectionedArrayControllerTests.mm; sourceTree = "<group>"; };
 		B342DC661AC23EA900ACAC53 /* ComponentKitTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ComponentKitTests-Info.plist"; sourceTree = "<group>"; };
 		B342DC681AC23EA900ACAC53 /* CKComponentScopeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentScopeTests.mm; sourceTree = "<group>"; };
 		B342DC691AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStateScopeComponentBuilderTests.mm; sourceTree = "<group>"; };
@@ -993,9 +919,6 @@
 		B761C8AA1CB36AAE00CDD03F /* CKTransactionalComponentDataSourceConfigurationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceConfigurationTests.mm; sourceTree = "<group>"; };
 		B761C8AD1CB36BF700CDD03F /* CKTransactionalComponentDataSourceChangesetTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceChangesetTests.mm; sourceTree = "<group>"; };
 		B761C8B01CB36FA200CDD03F /* CKTransactionalComponentDataSourceAppliedChangesTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceAppliedChangesTests.mm; sourceTree = "<group>"; };
-		B797C03E1D49F701006461CC /* CKArrayControllerChangesetVerification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKArrayControllerChangesetVerification.h; sourceTree = "<group>"; };
-		B797C03F1D49F701006461CC /* CKArrayControllerChangesetVerification.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKArrayControllerChangesetVerification.mm; sourceTree = "<group>"; };
-		B797C04C1D49F794006461CC /* CKArrayControllerChangesetVerificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKArrayControllerChangesetVerificationTests.mm; sourceTree = "<group>"; };
 		B7E2E59E1D077098002A4442 /* CKVectorHelperTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKVectorHelperTests.mm; sourceTree = "<group>"; };
 		D000B8081CC4152A005A27CF /* FBSnapshotTestCase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSnapshotTestCase.xcodeproj; path = "Carthage/Checkouts/ios-snapshot-test-case/FBSnapshotTestCase.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		D023D12D1E242CD4004A0A61 /* CKComponentAccessibilityCustomActionsAttributeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAccessibilityCustomActionsAttributeTests.mm; sourceTree = "<group>"; tabWidth = 2; };
@@ -1071,8 +994,6 @@
 		D0B47B0B1CBD926700BB33CE /* CKComponentScopeTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentScopeTypes.h; sourceTree = "<group>"; };
 		D0B47B0C1CBD926700BB33CE /* CKThreadLocalComponentScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKThreadLocalComponentScope.h; sourceTree = "<group>"; };
 		D0B47B0D1CBD926700BB33CE /* CKThreadLocalComponentScope.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKThreadLocalComponentScope.mm; sourceTree = "<group>"; };
-		D0B47B0F1CBD926700BB33CE /* CKCollectionViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewDataSource.h; sourceTree = "<group>"; };
-		D0B47B101CBD926700BB33CE /* CKCollectionViewDataSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCollectionViewDataSource.mm; sourceTree = "<group>"; };
 		D0B47B111CBD926700BB33CE /* CKCollectionViewDataSourceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewDataSourceCell.h; sourceTree = "<group>"; };
 		D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKCollectionViewDataSourceCell.m; sourceTree = "<group>"; };
 		D0B47B131CBD926700BB33CE /* CKCollectionViewTransactionalDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewTransactionalDataSource.h; sourceTree = "<group>"; };
@@ -1085,27 +1006,9 @@
 		D0B47B1B1CBD926700BB33CE /* CKComponentAnnouncerBaseInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentAnnouncerBaseInternal.h; sourceTree = "<group>"; };
 		D0B47B1C1CBD926700BB33CE /* CKComponentAnnouncerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentAnnouncerHelper.h; sourceTree = "<group>"; };
 		D0B47B1D1CBD926700BB33CE /* CKComponentAnnouncerHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAnnouncerHelper.mm; sourceTree = "<group>"; };
-		D0B47B1E1CBD926700BB33CE /* CKComponentConstantDecider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentConstantDecider.h; sourceTree = "<group>"; };
-		D0B47B1F1CBD926700BB33CE /* CKComponentConstantDecider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKComponentConstantDecider.m; sourceTree = "<group>"; };
-		D0B47B201CBD926700BB33CE /* CKComponentDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentDataSource.h; sourceTree = "<group>"; };
-		D0B47B211CBD926700BB33CE /* CKComponentDataSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDataSource.mm; sourceTree = "<group>"; };
 		D0B47B221CBD926700BB33CE /* CKComponentDataSourceAttachController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentDataSourceAttachController.h; sourceTree = "<group>"; };
 		D0B47B231CBD926700BB33CE /* CKComponentDataSourceAttachController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDataSourceAttachController.mm; sourceTree = "<group>"; };
 		D0B47B241CBD926700BB33CE /* CKComponentDataSourceAttachControllerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentDataSourceAttachControllerInternal.h; sourceTree = "<group>"; };
-		D0B47B251CBD926700BB33CE /* CKComponentDataSourceDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentDataSourceDelegate.h; sourceTree = "<group>"; };
-		D0B47B261CBD926700BB33CE /* CKComponentDataSourceInputItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentDataSourceInputItem.h; sourceTree = "<group>"; };
-		D0B47B271CBD926700BB33CE /* CKComponentDataSourceInputItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDataSourceInputItem.mm; sourceTree = "<group>"; };
-		D0B47B281CBD926700BB33CE /* CKComponentDataSourceInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentDataSourceInternal.h; sourceTree = "<group>"; };
-		D0B47B291CBD926700BB33CE /* CKComponentDataSourceOutputItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentDataSourceOutputItem.h; sourceTree = "<group>"; };
-		D0B47B2A1CBD926700BB33CE /* CKComponentDataSourceOutputItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDataSourceOutputItem.mm; sourceTree = "<group>"; };
-		D0B47B2B1CBD926700BB33CE /* CKComponentDeciding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentDeciding.h; sourceTree = "<group>"; };
-		D0B47B2C1CBD926700BB33CE /* CKComponentPreparationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentPreparationQueue.h; sourceTree = "<group>"; };
-		D0B47B2D1CBD926700BB33CE /* CKComponentPreparationQueue.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentPreparationQueue.mm; sourceTree = "<group>"; };
-		D0B47B2E1CBD926700BB33CE /* CKComponentPreparationQueueInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentPreparationQueueInternal.h; sourceTree = "<group>"; };
-		D0B47B2F1CBD926700BB33CE /* CKComponentPreparationQueueListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentPreparationQueueListener.h; sourceTree = "<group>"; };
-		D0B47B301CBD926700BB33CE /* CKComponentPreparationQueueListenerAnnouncer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentPreparationQueueListenerAnnouncer.h; sourceTree = "<group>"; };
-		D0B47B311CBD926700BB33CE /* CKComponentPreparationQueueListenerAnnouncer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentPreparationQueueListenerAnnouncer.mm; sourceTree = "<group>"; };
-		D0B47B321CBD926700BB33CE /* CKComponentPreparationQueueTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentPreparationQueueTypes.h; sourceTree = "<group>"; };
 		D0B47B331CBD926700BB33CE /* CKComponentProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentProvider.h; sourceTree = "<group>"; };
 		D0B47B351CBD926700BB33CE /* CKComponentDebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentDebugController.h; sourceTree = "<group>"; };
 		D0B47B361CBD926700BB33CE /* CKComponentDebugController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDebugController.mm; sourceTree = "<group>"; };
@@ -1178,9 +1081,6 @@
 		D0B47B7F1CBD926700BB33CE /* CKTransactionalComponentDataSourceUpdateConfigurationModification.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceUpdateConfigurationModification.mm; sourceTree = "<group>"; };
 		D0B47B801CBD926700BB33CE /* CKTransactionalComponentDataSourceUpdateStateModification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTransactionalComponentDataSourceUpdateStateModification.h; sourceTree = "<group>"; };
 		D0B47B811CBD926700BB33CE /* CKTransactionalComponentDataSourceUpdateStateModification.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceUpdateStateModification.mm; sourceTree = "<group>"; };
-		D0B47B831CBD926700BB33CE /* CKArrayControllerChangeset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKArrayControllerChangeset.h; sourceTree = "<group>"; };
-		D0B47B841CBD926700BB33CE /* CKArrayControllerChangeset.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKArrayControllerChangeset.mm; sourceTree = "<group>"; };
-		D0B47B851CBD926700BB33CE /* CKArrayControllerChangeType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKArrayControllerChangeType.h; sourceTree = "<group>"; };
 		D0B47B861CBD926700BB33CE /* CKComponentAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentAction.h; sourceTree = "<group>"; };
 		D0B47B871CBD926700BB33CE /* CKComponentAction.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAction.mm; sourceTree = "<group>"; };
 		D0B47B881CBD926700BB33CE /* CKComponentContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentContext.h; sourceTree = "<group>"; };
@@ -1199,8 +1099,6 @@
 		D0B47B961CBD926700BB33CE /* CKMutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMutex.h; sourceTree = "<group>"; };
 		D0B47B971CBD926700BB33CE /* CKOptimisticViewMutations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKOptimisticViewMutations.h; sourceTree = "<group>"; };
 		D0B47B981CBD926700BB33CE /* CKOptimisticViewMutations.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKOptimisticViewMutations.mm; sourceTree = "<group>"; };
-		D0B47B991CBD926700BB33CE /* CKSectionedArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKSectionedArrayController.h; sourceTree = "<group>"; };
-		D0B47B9A1CBD926700BB33CE /* CKSectionedArrayController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSectionedArrayController.mm; sourceTree = "<group>"; };
 		D0B47B9B1CBD926700BB33CE /* CKWeakObjectContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKWeakObjectContainer.h; sourceTree = "<group>"; };
 		D0B47B9C1CBD926700BB33CE /* CKWeakObjectContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKWeakObjectContainer.m; sourceTree = "<group>"; };
 		D0B47C401CBD92C200BB33CE /* CKLabelComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKLabelComponent.h; sourceTree = "<group>"; };
@@ -1422,8 +1320,6 @@
 		B342DC411AC23E8200ACAC53 /* ComponentKitTests */ = {
 			isa = PBXGroup;
 			children = (
-				B342DC491AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm */,
-				B797C04C1D49F794006461CC /* CKArrayControllerChangesetVerificationTests.mm */,
 				B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */,
 				A241C6A41AFCFFDB00D4F661 /* CKComponentActionTests.mm */,
 				D023D12D1E242CD4004A0A61 /* CKComponentAccessibilityCustomActionsAttributeTests.mm */,
@@ -1431,9 +1327,6 @@
 				B342DC4D1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm */,
 				B342DC4E1AC23EA900ACAC53 /* CKComponentControllerTests.mm */,
 				39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */,
-				B342DC4F1AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.h */,
-				B342DC501AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm */,
-				B342DC511AC23EA900ACAC53 /* CKComponentDataSourceTests.mm */,
 				B342DC521AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm */,
 				B342DC531AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm */,
 				B342DC541AC23EA900ACAC53 /* CKComponentHostingViewTestModel.h */,
@@ -1443,8 +1336,6 @@
 				B342DC571AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm */,
 				B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */,
 				B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */,
-				B342DC5A1AC23EA900ACAC53 /* CKComponentPreparationQueueAsyncTests.mm */,
-				B342DC5B1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm */,
 				B342DC5C1AC23EA900ACAC53 /* CKComponentSizeTests.mm */,
 				B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */,
 				B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */,
@@ -1454,7 +1345,6 @@
 				991DE3401B3B308900AA05B2 /* CKComponentMemoizerTests.mm */,
 				B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */,
 				B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */,
-				B342DC631AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm */,
 				A22FE3041AF2CF0C00EC30B8 /* CKStateExposingComponent.h */,
 				A22FE3051AF2CF0C00EC30B8 /* CKStateExposingComponent.mm */,
 				B342DC661AC23EA900ACAC53 /* ComponentKitTests-Info.plist */,
@@ -1715,8 +1605,6 @@
 		D0B47B0E1CBD926700BB33CE /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
-				D0B47B0F1CBD926700BB33CE /* CKCollectionViewDataSource.h */,
-				D0B47B101CBD926700BB33CE /* CKCollectionViewDataSource.mm */,
 				D0B47B111CBD926700BB33CE /* CKCollectionViewDataSourceCell.h */,
 				D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.m */,
 				D0B47B131CBD926700BB33CE /* CKCollectionViewTransactionalDataSource.h */,
@@ -1737,27 +1625,9 @@
 				D0B47B1B1CBD926700BB33CE /* CKComponentAnnouncerBaseInternal.h */,
 				D0B47B1C1CBD926700BB33CE /* CKComponentAnnouncerHelper.h */,
 				D0B47B1D1CBD926700BB33CE /* CKComponentAnnouncerHelper.mm */,
-				D0B47B1E1CBD926700BB33CE /* CKComponentConstantDecider.h */,
-				D0B47B1F1CBD926700BB33CE /* CKComponentConstantDecider.m */,
-				D0B47B201CBD926700BB33CE /* CKComponentDataSource.h */,
-				D0B47B211CBD926700BB33CE /* CKComponentDataSource.mm */,
 				D0B47B221CBD926700BB33CE /* CKComponentDataSourceAttachController.h */,
 				D0B47B231CBD926700BB33CE /* CKComponentDataSourceAttachController.mm */,
 				D0B47B241CBD926700BB33CE /* CKComponentDataSourceAttachControllerInternal.h */,
-				D0B47B251CBD926700BB33CE /* CKComponentDataSourceDelegate.h */,
-				D0B47B261CBD926700BB33CE /* CKComponentDataSourceInputItem.h */,
-				D0B47B271CBD926700BB33CE /* CKComponentDataSourceInputItem.mm */,
-				D0B47B281CBD926700BB33CE /* CKComponentDataSourceInternal.h */,
-				D0B47B291CBD926700BB33CE /* CKComponentDataSourceOutputItem.h */,
-				D0B47B2A1CBD926700BB33CE /* CKComponentDataSourceOutputItem.mm */,
-				D0B47B2B1CBD926700BB33CE /* CKComponentDeciding.h */,
-				D0B47B2C1CBD926700BB33CE /* CKComponentPreparationQueue.h */,
-				D0B47B2D1CBD926700BB33CE /* CKComponentPreparationQueue.mm */,
-				D0B47B2E1CBD926700BB33CE /* CKComponentPreparationQueueInternal.h */,
-				D0B47B2F1CBD926700BB33CE /* CKComponentPreparationQueueListener.h */,
-				D0B47B301CBD926700BB33CE /* CKComponentPreparationQueueListenerAnnouncer.h */,
-				D0B47B311CBD926700BB33CE /* CKComponentPreparationQueueListenerAnnouncer.mm */,
-				D0B47B321CBD926700BB33CE /* CKComponentPreparationQueueTypes.h */,
 				D0B47B331CBD926700BB33CE /* CKComponentProvider.h */,
 			);
 			path = Common;
@@ -1890,9 +1760,6 @@
 		D0B47B821CBD926700BB33CE /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				D0B47B831CBD926700BB33CE /* CKArrayControllerChangeset.h */,
-				D0B47B841CBD926700BB33CE /* CKArrayControllerChangeset.mm */,
-				D0B47B851CBD926700BB33CE /* CKArrayControllerChangeType.h */,
 				2D7A98271DB571700064FC6D /* CKBadChangesetOperationType.h */,
 				2D640D5C1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm */,
 				D0B47B861CBD926700BB33CE /* CKComponentAction.h */,
@@ -1916,10 +1783,6 @@
 				D0B47B961CBD926700BB33CE /* CKMutex.h */,
 				D0B47B971CBD926700BB33CE /* CKOptimisticViewMutations.h */,
 				D0B47B981CBD926700BB33CE /* CKOptimisticViewMutations.mm */,
-				D0B47B991CBD926700BB33CE /* CKSectionedArrayController.h */,
-				D0B47B9A1CBD926700BB33CE /* CKSectionedArrayController.mm */,
-				B797C03E1D49F701006461CC /* CKArrayControllerChangesetVerification.h */,
-				B797C03F1D49F701006461CC /* CKArrayControllerChangesetVerification.mm */,
 				D0B47B9B1CBD926700BB33CE /* CKWeakObjectContainer.h */,
 				D0B47B9C1CBD926700BB33CE /* CKWeakObjectContainer.m */,
 			);
@@ -2071,8 +1934,6 @@
 			files = (
 				9092AE9C1DFA4853009878B2 /* CKAvailability.h in Headers */,
 				A29D85791D80D37F00913E60 /* CKComponentContextHelper.h in Headers */,
-				03B8B4D01D2A346F00EDFF59 /* CKCollectionViewDataSource.h in Headers */,
-				03B8B4D11D2A346F00EDFF59 /* CKArrayControllerChangeset.h in Headers */,
 				2D7A98291DB571700064FC6D /* CKBadChangesetOperationType.h in Headers */,
 				03B8B4D21D2A346F00EDFF59 /* CKComponentRootView.h in Headers */,
 				03B8B4D31D2A346F00EDFF59 /* CKCollectionViewTransactionalDataSource.h in Headers */,
@@ -2086,23 +1947,18 @@
 				03B8B4DA1D2A346F00EDFF59 /* CKComponentLayout.h in Headers */,
 				03B8B4DB1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceAppliedChanges.h in Headers */,
 				03B8B4DC1D2A346F00EDFF59 /* CKStatefulViewComponentController.h in Headers */,
-				03B8B4DD1D2A346F00EDFF59 /* CKSectionedArrayController.h in Headers */,
-				03B8B4DE1D2A346F00EDFF59 /* CKComponentPreparationQueueListenerAnnouncer.h in Headers */,
 				03B8B4DF1D2A346F00EDFF59 /* CKComponent.h in Headers */,
 				03B8B4E01D2A346F00EDFF59 /* CKComponentLifecycleManagerAsynchronousUpdateHandler.h in Headers */,
 				03B8B4E11D2A346F00EDFF59 /* CKComponentController.h in Headers */,
 				03B8B4E21D2A346F00EDFF59 /* CKComponentHostingView.h in Headers */,
 				03B8B4E31D2A346F00EDFF59 /* CKComponentAccessibility.h in Headers */,
 				03B8B4E41D2A346F00EDFF59 /* CKComponentHostingViewInternal.h in Headers */,
-				03B8B4E51D2A346F00EDFF59 /* CKComponentPreparationQueueListener.h in Headers */,
 				2DA523991DCA8CA0007EF261 /* CKComponentBacktraceDescription.h in Headers */,
 				03B8B4E61D2A346F00EDFF59 /* CKStackLayoutComponentUtilities.h in Headers */,
-				03B8B4E71D2A346F00EDFF59 /* CKComponentDataSourceInputItem.h in Headers */,
 				03B8B4E81D2A346F00EDFF59 /* CKStackUnpositionedLayout.h in Headers */,
 				03B8B4E91D2A346F00EDFF59 /* CKCenterLayoutComponent.h in Headers */,
 				03B8B4EA1D2A346F00EDFF59 /* CKSupplementaryViewDataSource.h in Headers */,
 				03B8B4EB1D2A346F00EDFF59 /* CKComponentDataSourceAttachControllerInternal.h in Headers */,
-				03B8B4EC1D2A346F00EDFF59 /* CKComponentDataSource.h in Headers */,
 				03B8B4ED1D2A346F00EDFF59 /* CKComponentHierarchyDebugHelper.h in Headers */,
 				03B8B4EE1D2A346F00EDFF59 /* CKTextComponent.h in Headers */,
 				03B8B4EF1D2A346F00EDFF59 /* CKStatefulViewReusePool.h in Headers */,
@@ -2116,7 +1972,6 @@
 				03B8B4F61D2A346F00EDFF59 /* CKComponentAnnouncerBaseInternal.h in Headers */,
 				2D7A98171DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h in Headers */,
 				03B8B4F71D2A346F00EDFF59 /* CKTransactionalComponentDataSourceStateModifying.h in Headers */,
-				03B8B4F81D2A346F00EDFF59 /* CKArrayControllerChangeType.h in Headers */,
 				03B8B4F91D2A346F00EDFF59 /* CKStackPositionedLayout.h in Headers */,
 				03B8B4FA1D2A346F00EDFF59 /* CKTextKitRenderer+TextChecking.h in Headers */,
 				03B8B4FB1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceState.h in Headers */,
@@ -2132,8 +1987,6 @@
 				03B8B5061D2A346F00EDFF59 /* CKComponentAction.h in Headers */,
 				03B8B5071D2A346F00EDFF59 /* CKTransactionalComponentDataSourceUpdateConfigurationModification.h in Headers */,
 				03B8B5081D2A346F00EDFF59 /* CKComponentDelegateAttribute.h in Headers */,
-				03B8B5091D2A346F00EDFF59 /* CKComponentDataSourceOutputItem.h in Headers */,
-				03B8B50A1D2A346F00EDFF59 /* CKComponentPreparationQueueTypes.h in Headers */,
 				03B8B50B1D2A346F00EDFF59 /* CKInternalHelpers.h in Headers */,
 				03B8B50C1D2A346F00EDFF59 /* CKComponentSizeRangeProviding.h in Headers */,
 				03B8B50D1D2A346F00EDFF59 /* CKSizeRange.h in Headers */,
@@ -2141,14 +1994,12 @@
 				03B8B50F1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceChangesetInternal.h in Headers */,
 				03B8B5101D2A346F00EDFF59 /* CKComponentViewAttribute.h in Headers */,
 				03B8B5111D2A346F00EDFF59 /* CKTransactionalComponentDataSourceChange.h in Headers */,
-				03B8B5121D2A346F00EDFF59 /* CKComponentPreparationQueue.h in Headers */,
 				03B8B5131D2A346F00EDFF59 /* CKComponentAnimation.h in Headers */,
 				03B8B5141D2A346F00EDFF59 /* CKBackgroundLayoutComponent.h in Headers */,
 				03B8B5151D2A346F00EDFF59 /* CKTransactionalComponentDataSourceChangesetModification.h in Headers */,
 				03B8B5161D2A346F00EDFF59 /* CKDimension.h in Headers */,
 				03B8B5171D2A346F00EDFF59 /* CKTextComponentLayerHighlighter.h in Headers */,
 				03B8B5181D2A346F00EDFF59 /* CKTransactionalComponentDataSourceItemInternal.h in Headers */,
-				03B8B5191D2A346F00EDFF59 /* CKComponentConstantDecider.h in Headers */,
 				03B8B51A1D2A346F00EDFF59 /* CKComponentSize.h in Headers */,
 				03B8B51B1D2A346F00EDFF59 /* ComponentKit.h in Headers */,
 				03B8B51C1D2A346F00EDFF59 /* CKComponentControllerInternal.h in Headers */,
@@ -2156,12 +2007,10 @@
 				03B8B51E1D2A346F00EDFF59 /* CKLabelComponent.h in Headers */,
 				03B8B51F1D2A346F00EDFF59 /* CKComponentFlexibleSizeRangeProvider.h in Headers */,
 				03B8B5201D2A346F00EDFF59 /* CKComponentBoundsAnimation+UICollectionView.h in Headers */,
-				03B8B5211D2A346F00EDFF59 /* CKComponentPreparationQueueInternal.h in Headers */,
 				03B8B5221D2A346F00EDFF59 /* CKStatefulViewComponent.h in Headers */,
 				03B8B5231D2A346F00EDFF59 /* CKTextComponentLayer.h in Headers */,
 				03B8B5241D2A346F00EDFF59 /* CKRatioLayoutComponent.h in Headers */,
 				03B8B5251D2A346F00EDFF59 /* CKNetworkImageComponent.h in Headers */,
-				03B8B5261D2A346F00EDFF59 /* CKComponentDataSourceDelegate.h in Headers */,
 				03B8B5271D2A346F00EDFF59 /* CKImageComponent.h in Headers */,
 				03B8B5281D2A346F00EDFF59 /* CKComponentLifecycleManager.h in Headers */,
 				03B8B5291D2A346F00EDFF59 /* CKStaticLayoutComponent.h in Headers */,
@@ -2172,7 +2021,6 @@
 				03B8B52D1D2A346F00EDFF59 /* CKComponentDataSourceAttachController.h in Headers */,
 				03B8B52E1D2A346F00EDFF59 /* CKButtonComponent.h in Headers */,
 				03B8B52F1D2A346F00EDFF59 /* CKComponentDelegateForwarder.h in Headers */,
-				03B8B5301D2A346F00EDFF59 /* CKComponentDeciding.h in Headers */,
 				03B8B5311D2A346F00EDFF59 /* CKInsetComponent.h in Headers */,
 				03B8B5321D2A346F00EDFF59 /* CKUpdateMode.h in Headers */,
 				03B8B5331D2A346F00EDFF59 /* CKComponentAnnouncerHelper.h in Headers */,
@@ -2222,7 +2070,6 @@
 				03B8B55E1D2A346F00EDFF59 /* CKTextKitEntityAttribute.h in Headers */,
 				03B8B55F1D2A346F00EDFF59 /* CKAsyncLayerSubclass.h in Headers */,
 				03B8B5601D2A346F00EDFF59 /* CKComponentDebugController.h in Headers */,
-				03B8B5611D2A346F00EDFF59 /* CKComponentDataSourceInternal.h in Headers */,
 				03B8B5621D2A346F00EDFF59 /* CKTextComponentViewControlTracker.h in Headers */,
 				03B8B5631D2A346F00EDFF59 /* ComponentLayoutContext.h in Headers */,
 				03B8B5641D2A346F00EDFF59 /* CKCompositeComponent.h in Headers */,
@@ -2244,9 +2091,7 @@
 			files = (
 				906125EA1DFA49E600EE18ED /* CKAvailability.h in Headers */,
 				B167C70F1DD38E4200769084 /* CKMemoizingComponent.h in Headers */,
-				D0B47D111CBD948E00BB33CE /* CKCollectionViewDataSource.h in Headers */,
 				A243B52E1D79A40800E6C393 /* CKComponentContextHelper.h in Headers */,
-				D0B47D501CBD948E00BB33CE /* CKArrayControllerChangeset.h in Headers */,
 				2D7A98281DB571700064FC6D /* CKBadChangesetOperationType.h in Headers */,
 				D0B47D2E1CBD948E00BB33CE /* CKComponentRootView.h in Headers */,
 				D0B47D131CBD948E00BB33CE /* CKCollectionViewTransactionalDataSource.h in Headers */,
@@ -2259,23 +2104,18 @@
 				D0B47CF61CBD948E00BB33CE /* CKComponentLayout.h in Headers */,
 				D0B47D3F1CBD948E00BB33CE /* CKTransactionalComponentDataSourceAppliedChanges.h in Headers */,
 				D0B47D3C1CBD948E00BB33CE /* CKStatefulViewComponentController.h in Headers */,
-				D0B47D5E1CBD948E00BB33CE /* CKSectionedArrayController.h in Headers */,
-				D0B47D251CBD948E00BB33CE /* CKComponentPreparationQueueListenerAnnouncer.h in Headers */,
 				D0B47CEF1CBD948E00BB33CE /* CKComponent.h in Headers */,
 				D0B47CF91CBD948E00BB33CE /* CKComponentLifecycleManagerAsynchronousUpdateHandler.h in Headers */,
 				D0B47CF31CBD948E00BB33CE /* CKComponentController.h in Headers */,
 				D0B47D2B1CBD948E00BB33CE /* CKComponentHostingView.h in Headers */,
 				D0B47CE51CBD948E00BB33CE /* CKComponentAccessibility.h in Headers */,
 				D0B47D2D1CBD948E00BB33CE /* CKComponentHostingViewInternal.h in Headers */,
-				D0B47D241CBD948E00BB33CE /* CKComponentPreparationQueueListener.h in Headers */,
 				D0B47D371CBD948E00BB33CE /* CKStackLayoutComponentUtilities.h in Headers */,
 				B1EF8FE81DD1562B00E74F43 /* CKComponentActionInternal.h in Headers */,
-				D0B47D1E1CBD948E00BB33CE /* CKComponentDataSourceInputItem.h in Headers */,
 				D0B47D391CBD948E00BB33CE /* CKStackUnpositionedLayout.h in Headers */,
 				D0B47D321CBD948E00BB33CE /* CKCenterLayoutComponent.h in Headers */,
 				D0B47D151CBD948E00BB33CE /* CKSupplementaryViewDataSource.h in Headers */,
 				D0B47D1C1CBD948E00BB33CE /* CKComponentDataSourceAttachControllerInternal.h in Headers */,
-				D0B47D1A1CBD948E00BB33CE /* CKComponentDataSource.h in Headers */,
 				D0B47D291CBD948E00BB33CE /* CKComponentHierarchyDebugHelper.h in Headers */,
 				D0B47D611CBD948E00BB33CE /* CKTextComponent.h in Headers */,
 				D0B47D3D1CBD948E00BB33CE /* CKStatefulViewReusePool.h in Headers */,
@@ -2287,7 +2127,6 @@
 				D0B47D4C1CBD948E00BB33CE /* CKTransactionalComponentDataSourceReloadModification.h in Headers */,
 				D0B47D171CBD948E00BB33CE /* CKComponentAnnouncerBaseInternal.h in Headers */,
 				D0B47D4D1CBD948E00BB33CE /* CKTransactionalComponentDataSourceStateModifying.h in Headers */,
-				D0B47D511CBD948E00BB33CE /* CKArrayControllerChangeType.h in Headers */,
 				D0B47D381CBD948E00BB33CE /* CKStackPositionedLayout.h in Headers */,
 				D0B47D6B1CBD948E00BB33CE /* CKTextKitRenderer+TextChecking.h in Headers */,
 				D0B47D481CBD948E00BB33CE /* CKTransactionalComponentDataSourceState.h in Headers */,
@@ -2304,8 +2143,6 @@
 				D0B47D521CBD948E00BB33CE /* CKComponentAction.h in Headers */,
 				D0B47D4E1CBD948E00BB33CE /* CKTransactionalComponentDataSourceUpdateConfigurationModification.h in Headers */,
 				D0B47D551CBD948E00BB33CE /* CKComponentDelegateAttribute.h in Headers */,
-				D0B47D201CBD948E00BB33CE /* CKComponentDataSourceOutputItem.h in Headers */,
-				D0B47D261CBD948E00BB33CE /* CKComponentPreparationQueueTypes.h in Headers */,
 				D0B47D5A1CBD948E00BB33CE /* CKInternalHelpers.h in Headers */,
 				D0B47D301CBD948E00BB33CE /* CKComponentSizeRangeProviding.h in Headers */,
 				D0B47D031CBD948E00BB33CE /* CKSizeRange.h in Headers */,
@@ -2314,14 +2151,12 @@
 				D0B47D411CBD948E00BB33CE /* CKTransactionalComponentDataSourceChangesetInternal.h in Headers */,
 				D0B47CFE1CBD948E00BB33CE /* CKComponentViewAttribute.h in Headers */,
 				D0B47D4A1CBD948E00BB33CE /* CKTransactionalComponentDataSourceChange.h in Headers */,
-				D0B47D221CBD948E00BB33CE /* CKComponentPreparationQueue.h in Headers */,
 				D0B47CF01CBD948E00BB33CE /* CKComponentAnimation.h in Headers */,
 				D0B47D311CBD948E00BB33CE /* CKBackgroundLayoutComponent.h in Headers */,
 				D0B47D4B1CBD948E00BB33CE /* CKTransactionalComponentDataSourceChangesetModification.h in Headers */,
 				D0B47D021CBD948E00BB33CE /* CKDimension.h in Headers */,
 				D0B47D631CBD948E00BB33CE /* CKTextComponentLayerHighlighter.h in Headers */,
 				D0B47D451CBD948E00BB33CE /* CKTransactionalComponentDataSourceItemInternal.h in Headers */,
-				D0B47D191CBD948E00BB33CE /* CKComponentConstantDecider.h in Headers */,
 				D0B47CFC1CBD948E00BB33CE /* CKComponentSize.h in Headers */,
 				D0B47CEA1CBD948E00BB33CE /* ComponentKit.h in Headers */,
 				D0B47CF41CBD948E00BB33CE /* CKComponentControllerInternal.h in Headers */,
@@ -2329,13 +2164,10 @@
 				D0B47D601CBD948E00BB33CE /* CKLabelComponent.h in Headers */,
 				D0B47D2A1CBD948E00BB33CE /* CKComponentFlexibleSizeRangeProvider.h in Headers */,
 				D0B47D141CBD948E00BB33CE /* CKComponentBoundsAnimation+UICollectionView.h in Headers */,
-				D0B47D231CBD948E00BB33CE /* CKComponentPreparationQueueInternal.h in Headers */,
 				D0B47D3B1CBD948E00BB33CE /* CKStatefulViewComponent.h in Headers */,
 				D0B47D621CBD948E00BB33CE /* CKTextComponentLayer.h in Headers */,
-				B797C0401D49F701006461CC /* CKArrayControllerChangesetVerification.h in Headers */,
 				D0B47D351CBD948E00BB33CE /* CKRatioLayoutComponent.h in Headers */,
 				D0B47CED1CBD948E00BB33CE /* CKNetworkImageComponent.h in Headers */,
-				D0B47D1D1CBD948E00BB33CE /* CKComponentDataSourceDelegate.h in Headers */,
 				D0B47CEC1CBD948E00BB33CE /* CKImageComponent.h in Headers */,
 				D0B47CF71CBD948E00BB33CE /* CKComponentLifecycleManager.h in Headers */,
 				D0B47D3A1CBD948E00BB33CE /* CKStaticLayoutComponent.h in Headers */,
@@ -2345,7 +2177,6 @@
 				D0B47D1B1CBD948E00BB33CE /* CKComponentDataSourceAttachController.h in Headers */,
 				D0B47CEB1CBD948E00BB33CE /* CKButtonComponent.h in Headers */,
 				D0B47D561CBD948E00BB33CE /* CKComponentDelegateForwarder.h in Headers */,
-				D0B47D211CBD948E00BB33CE /* CKComponentDeciding.h in Headers */,
 				2D7A98161DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h in Headers */,
 				D0B47D331CBD948E00BB33CE /* CKInsetComponent.h in Headers */,
 				D0B47D041CBD948E00BB33CE /* CKUpdateMode.h in Headers */,
@@ -2397,7 +2228,6 @@
 				D0B47D691CBD948E00BB33CE /* CKTextKitEntityAttribute.h in Headers */,
 				D0B47D731CBD948E00BB33CE /* CKAsyncLayerSubclass.h in Headers */,
 				D0B47D281CBD948E00BB33CE /* CKComponentDebugController.h in Headers */,
-				D0B47D1F1CBD948E00BB33CE /* CKComponentDataSourceInternal.h in Headers */,
 				D0B47D651CBD948E00BB33CE /* CKTextComponentViewControlTracker.h in Headers */,
 				D0B47D051CBD948E00BB33CE /* ComponentLayoutContext.h in Headers */,
 				D0B47D011CBD948E00BB33CE /* CKCompositeComponent.h in Headers */,
@@ -2856,7 +2686,6 @@
 				03B8B4751D2A346F00EDFF59 /* CKComponentLayout.mm in Sources */,
 				03B8B4761D2A346F00EDFF59 /* CKComponentLifecycleManager.mm in Sources */,
 				03B8B4771D2A346F00EDFF59 /* CKComponentMemoizer.mm in Sources */,
-				2D34A4AA1D777EB80020B11C /* CKArrayControllerChangesetVerification.mm in Sources */,
 				03B8B4781D2A346F00EDFF59 /* CKComponentSize.mm in Sources */,
 				03B8B4791D2A346F00EDFF59 /* CKComponentViewAttribute.mm in Sources */,
 				03B8B47A1D2A346F00EDFF59 /* CKComponentViewConfiguration.mm in Sources */,
@@ -2872,19 +2701,12 @@
 				03B8B4841D2A346F00EDFF59 /* CKComponentScopeHandle.mm in Sources */,
 				03B8B4851D2A346F00EDFF59 /* CKComponentScopeRoot.mm in Sources */,
 				03B8B4861D2A346F00EDFF59 /* CKThreadLocalComponentScope.mm in Sources */,
-				03B8B4871D2A346F00EDFF59 /* CKCollectionViewDataSource.mm in Sources */,
 				03B8B4881D2A346F00EDFF59 /* CKCollectionViewDataSourceCell.m in Sources */,
 				03B8B4891D2A346F00EDFF59 /* CKCollectionViewTransactionalDataSource.mm in Sources */,
 				03B8B48A1D2A346F00EDFF59 /* CKComponentBoundsAnimation+UICollectionView.mm in Sources */,
 				03B8B48B1D2A346F00EDFF59 /* CKComponentAnnouncerBase.mm in Sources */,
 				03B8B48C1D2A346F00EDFF59 /* CKComponentAnnouncerHelper.mm in Sources */,
-				03B8B48D1D2A346F00EDFF59 /* CKComponentConstantDecider.m in Sources */,
-				03B8B48E1D2A346F00EDFF59 /* CKComponentDataSource.mm in Sources */,
 				03B8B48F1D2A346F00EDFF59 /* CKComponentDataSourceAttachController.mm in Sources */,
-				03B8B4901D2A346F00EDFF59 /* CKComponentDataSourceInputItem.mm in Sources */,
-				03B8B4911D2A346F00EDFF59 /* CKComponentDataSourceOutputItem.mm in Sources */,
-				03B8B4921D2A346F00EDFF59 /* CKComponentPreparationQueue.mm in Sources */,
-				03B8B4931D2A346F00EDFF59 /* CKComponentPreparationQueueListenerAnnouncer.mm in Sources */,
 				03B8B4941D2A346F00EDFF59 /* CKComponentFlexibleSizeRangeProvider.mm in Sources */,
 				03B8B4951D2A346F00EDFF59 /* CKComponentHostingView.mm in Sources */,
 				03B8B4961D2A346F00EDFF59 /* CKComponentRootView.m in Sources */,
@@ -2914,7 +2736,6 @@
 				03B8B4AC1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceReloadModification.mm in Sources */,
 				03B8B4AD1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceUpdateConfigurationModification.mm in Sources */,
 				03B8B4AE1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceUpdateStateModification.mm in Sources */,
-				03B8B4AF1D2A346F00EDFF59 /* CKArrayControllerChangeset.mm in Sources */,
 				03B8B4B01D2A346F00EDFF59 /* CKComponentAction.mm in Sources */,
 				03B8B4B11D2A346F00EDFF59 /* CKComponentDelegateAttribute.mm in Sources */,
 				03B8B4B21D2A346F00EDFF59 /* CKComponentDelegateForwarder.mm in Sources */,
@@ -2922,7 +2743,6 @@
 				03B8B4B41D2A346F00EDFF59 /* CKEqualityHashHelpers.mm in Sources */,
 				03B8B4B51D2A346F00EDFF59 /* CKInternalHelpers.mm in Sources */,
 				03B8B4B61D2A346F00EDFF59 /* CKOptimisticViewMutations.mm in Sources */,
-				03B8B4B71D2A346F00EDFF59 /* CKSectionedArrayController.mm in Sources */,
 				03B8B4B81D2A346F00EDFF59 /* CKWeakObjectContainer.m in Sources */,
 				2D7A98191DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.mm in Sources */,
 				03B8B4B91D2A346F00EDFF59 /* CKLabelComponent.mm in Sources */,
@@ -2954,7 +2774,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D019D281DC0371300EC9EA2 /* CKArrayControllerChangesetVerificationTests.mm in Sources */,
 				2D019D291DC0371300EC9EA2 /* CKTransactionalComponentDataSourceIntegrationTests.mm in Sources */,
 				03F1ABC71D2B2A9B00867584 /* CKComponentHostingViewAsyncStateUpdateTests.mm in Sources */,
 				03F1ABC81D2B2A9B00867584 /* CKComponentMountContextLayoutGuideTests.mm in Sources */,
@@ -2964,15 +2783,12 @@
 				03F1ABCC1D2B2A9B00867584 /* CKComponentActionTests.mm in Sources */,
 				2D7A98261DB56D8D0064FC6D /* CKTransactionalComponentDataSourceChangesetVerificationTests.mm in Sources */,
 				03F1ABCD1D2B2A9B00867584 /* CKComponentAccessibilityTests.mm in Sources */,
-				03F1ABCE1D2B2A9B00867584 /* CKArrayControllerChangesetTests.mm in Sources */,
 				03F1ABCF1D2B2A9B00867584 /* CKTransactionalComponentDataSourceConfigurationTests.mm in Sources */,
 				03F1ABD01D2B2A9B00867584 /* CKComponentControllerTests.mm in Sources */,
 				03F1ABD11D2B2A9B00867584 /* CKComponentScopeTests.mm in Sources */,
 				03F1ABD21D2B2A9B00867584 /* CKTransactionalComponentDataSourceStateTests.mm in Sources */,
-				03F1ABD31D2B2A9B00867584 /* CKComponentDataSourceTests.mm in Sources */,
 				03F1ABD41D2B2A9B00867584 /* CKComponentMountTests.mm in Sources */,
 				03F1ABD51D2B2A9B00867584 /* CKComponentHostingViewTests.mm in Sources */,
-				03F1ABD61D2B2A9B00867584 /* CKComponentPreparationQueueTests.mm in Sources */,
 				03F1ABD71D2B2A9B00867584 /* CKVectorHelperTests.mm in Sources */,
 				03F1ABD81D2B2A9B00867584 /* CKComponentViewManagerTests.mm in Sources */,
 				03F1ABD91D2B2A9B00867584 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm in Sources */,
@@ -2990,7 +2806,6 @@
 				03F1ABE51D2B2A9B00867584 /* CKTransactionalComponentDataSourceTests.mm in Sources */,
 				03F1ABE61D2B2A9B00867584 /* CKDimensionTests.mm in Sources */,
 				03F1ABE71D2B2A9B00867584 /* CKTestStatefulViewComponent.mm in Sources */,
-				03F1ABE81D2B2A9B00867584 /* CKComponentPreparationQueueAsyncTests.mm in Sources */,
 				03F1ABE91D2B2A9B00867584 /* CKComponentControllerLifecycleMethodTests.mm in Sources */,
 				03F1ABEA1D2B2A9B00867584 /* CKTransactionalComponentDataSourceChangesetTests.mm in Sources */,
 				03F1ABEB1D2B2A9B00867584 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm in Sources */,
@@ -3000,10 +2815,8 @@
 				03F1ABEF1D2B2A9B00867584 /* CKStateScopeComponentBuilderTests.mm in Sources */,
 				03F1ABF01D2B2A9B00867584 /* CKComponentViewReuseTests.mm in Sources */,
 				03F1ABF11D2B2A9B00867584 /* CKTransactionalComponentDataSourceReloadModificationTests.mm in Sources */,
-				03F1ABF21D2B2A9B00867584 /* CKComponentDataSourceTestDelegate.mm in Sources */,
 				03F1ABF41D2B2A9B00867584 /* CKComponentGestureActionsTests.mm in Sources */,
 				03F1ABF51D2B2A9B00867584 /* CKStatefulViewReusePoolTests.mm in Sources */,
-				03F1ABF61D2B2A9B00867584 /* CKSectionedArrayControllerTests.mm in Sources */,
 				03F1ABF71D2B2A9B00867584 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm in Sources */,
 				03F1ABF81D2B2A9B00867584 /* CKComponentMemoizerTests.mm in Sources */,
 			);
@@ -3028,16 +2841,13 @@
 				B342DC811AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm in Sources */,
 				A241C6A51AFCFFDB00D4F661 /* CKComponentActionTests.mm in Sources */,
 				B342DC6B1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm in Sources */,
-				B342DC6A1AC23EA900ACAC53 /* CKArrayControllerChangesetTests.mm in Sources */,
 				B761C8AB1CB36AAE00CDD03F /* CKTransactionalComponentDataSourceConfigurationTests.mm in Sources */,
 				B342DC6F1AC23EA900ACAC53 /* CKComponentControllerTests.mm in Sources */,
 				D023D12E1E242CD4004A0A61 /* CKComponentAccessibilityCustomActionsAttributeTests.mm in Sources */,
 				B342DC851AC23EA900ACAC53 /* CKComponentScopeTests.mm in Sources */,
 				A2CD66321AF2F0C70083A839 /* CKTransactionalComponentDataSourceStateTests.mm in Sources */,
-				B342DC711AC23EA900ACAC53 /* CKComponentDataSourceTests.mm in Sources */,
 				B342DC781AC23EA900ACAC53 /* CKComponentMountTests.mm in Sources */,
 				B342DC751AC23EA900ACAC53 /* CKComponentHostingViewTests.mm in Sources */,
-				B342DC7A1AC23EA900ACAC53 /* CKComponentPreparationQueueTests.mm in Sources */,
 				B7E2E59F1D077098002A4442 /* CKVectorHelperTests.mm in Sources */,
 				B342DC7E1AC23EA900ACAC53 /* CKComponentViewManagerTests.mm in Sources */,
 				A25C02D11AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm in Sources */,
@@ -3056,7 +2866,6 @@
 				A279EA9E1AF087A70046B5AA /* CKTransactionalComponentDataSourceTests.mm in Sources */,
 				B342DC801AC23EA900ACAC53 /* CKDimensionTests.mm in Sources */,
 				18644AE71B3CB8E60028AF87 /* CKTestStatefulViewComponent.mm in Sources */,
-				B342DC791AC23EA900ACAC53 /* CKComponentPreparationQueueAsyncTests.mm in Sources */,
 				B342DC6E1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm in Sources */,
 				B761C8AE1CB36BF700CDD03F /* CKTransactionalComponentDataSourceChangesetTests.mm in Sources */,
 				A2100E0D1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm in Sources */,
@@ -3065,13 +2874,10 @@
 				A22FE3031AF2CEB000EC30B8 /* CKTransactionalComponentDataSourceStateUpdateTests.mm in Sources */,
 				B342DC861AC23EA900ACAC53 /* CKStateScopeComponentBuilderTests.mm in Sources */,
 				B342DC7F1AC23EA900ACAC53 /* CKComponentViewReuseTests.mm in Sources */,
-				B797C04D1D49F794006461CC /* CKArrayControllerChangesetVerificationTests.mm in Sources */,
 				A27436F71AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm in Sources */,
-				B342DC701AC23EA900ACAC53 /* CKComponentDataSourceTestDelegate.mm in Sources */,
 				B342DC731AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm in Sources */,
 				49FA174E1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm in Sources */,
 				18644AE61B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm in Sources */,
-				B342DC821AC23EA900ACAC53 /* CKSectionedArrayControllerTests.mm in Sources */,
 				A27C72751AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm in Sources */,
 				991DE3411B3B308900AA05B2 /* CKComponentMemoizerTests.mm in Sources */,
 			);
@@ -3135,7 +2941,6 @@
 				D0B47C921CBD943400BB33CE /* CKComponentViewConfiguration.mm in Sources */,
 				D0B47C931CBD943400BB33CE /* CKComponentViewInterface.mm in Sources */,
 				D0B47C941CBD943400BB33CE /* CKCompositeComponent.mm in Sources */,
-				B797C0411D49F701006461CC /* CKArrayControllerChangesetVerification.mm in Sources */,
 				D0B47C951CBD943400BB33CE /* CKDimension.mm in Sources */,
 				D0B47C961CBD943400BB33CE /* CKSizeRange.mm in Sources */,
 				D0B47C971CBD943400BB33CE /* ComponentLayoutContext.mm in Sources */,
@@ -3146,19 +2951,12 @@
 				D0B47C9C1CBD943400BB33CE /* CKComponentScopeHandle.mm in Sources */,
 				D0B47C9D1CBD943400BB33CE /* CKComponentScopeRoot.mm in Sources */,
 				D0B47C9E1CBD943400BB33CE /* CKThreadLocalComponentScope.mm in Sources */,
-				D0B47C9F1CBD943400BB33CE /* CKCollectionViewDataSource.mm in Sources */,
 				D0B47CA01CBD943400BB33CE /* CKCollectionViewDataSourceCell.m in Sources */,
 				D0B47CA11CBD943400BB33CE /* CKCollectionViewTransactionalDataSource.mm in Sources */,
 				D0B47CA21CBD943400BB33CE /* CKComponentBoundsAnimation+UICollectionView.mm in Sources */,
 				D0B47CA31CBD943400BB33CE /* CKComponentAnnouncerBase.mm in Sources */,
 				D0B47CA41CBD943400BB33CE /* CKComponentAnnouncerHelper.mm in Sources */,
-				D0B47CA51CBD943400BB33CE /* CKComponentConstantDecider.m in Sources */,
-				D0B47CA61CBD943400BB33CE /* CKComponentDataSource.mm in Sources */,
 				D0B47CA71CBD943400BB33CE /* CKComponentDataSourceAttachController.mm in Sources */,
-				D0B47CA81CBD943400BB33CE /* CKComponentDataSourceInputItem.mm in Sources */,
-				D0B47CA91CBD943400BB33CE /* CKComponentDataSourceOutputItem.mm in Sources */,
-				D0B47CAA1CBD943400BB33CE /* CKComponentPreparationQueue.mm in Sources */,
-				D0B47CAB1CBD943400BB33CE /* CKComponentPreparationQueueListenerAnnouncer.mm in Sources */,
 				D0B47CAC1CBD943400BB33CE /* CKComponentFlexibleSizeRangeProvider.mm in Sources */,
 				D0B47CAD1CBD943400BB33CE /* CKComponentHostingView.mm in Sources */,
 				D0B47CAE1CBD943400BB33CE /* CKComponentRootView.m in Sources */,
@@ -3190,7 +2988,6 @@
 				2D640D5D1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm in Sources */,
 				D0B47CC51CBD943400BB33CE /* CKTransactionalComponentDataSourceUpdateConfigurationModification.mm in Sources */,
 				D0B47CC61CBD943400BB33CE /* CKTransactionalComponentDataSourceUpdateStateModification.mm in Sources */,
-				D0B47CC71CBD943400BB33CE /* CKArrayControllerChangeset.mm in Sources */,
 				D0B47CC81CBD943400BB33CE /* CKComponentAction.mm in Sources */,
 				D0B47CC91CBD943400BB33CE /* CKComponentDelegateAttribute.mm in Sources */,
 				A243B52F1D79A40800E6C393 /* CKComponentContextHelper.mm in Sources */,
@@ -3199,7 +2996,6 @@
 				D0B47CCC1CBD943400BB33CE /* CKEqualityHashHelpers.mm in Sources */,
 				D0B47CCD1CBD943400BB33CE /* CKInternalHelpers.mm in Sources */,
 				D0B47CCE1CBD943400BB33CE /* CKOptimisticViewMutations.mm in Sources */,
-				D0B47CCF1CBD943400BB33CE /* CKSectionedArrayController.mm in Sources */,
 				D0B47CD01CBD943400BB33CE /* CKWeakObjectContainer.m in Sources */,
 				2D7A98181DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.mm in Sources */,
 				D0B47CD11CBD943400BB33CE /* CKLabelComponent.mm in Sources */,
