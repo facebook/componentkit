@@ -175,3 +175,10 @@ void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sende
  */
 CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<UIEvent *> action,
                                                          UIControlEvents controlEvents = UIControlEventTouchUpInside);
+
+/**
+ Returns a view attribute that configures a view to have custom accessibility actions.
+
+ @param actions An ordered list of actions, each with a name and an associated CKComponentAction
+ */
+CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKComponentAction>> &actions);
