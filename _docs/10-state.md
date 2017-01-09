@@ -15,7 +15,7 @@ Just like React, `CKComponent` has state.
 
 {% highlight objc %}
 @interface CKComponent
-- (void)updateState:(id (^)(id))updateBlock;
+- (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode;
 @end
 {% endhighlight %}
 
@@ -46,7 +46,7 @@ Let's make a simple example of using state for the "Continue Reading…" link.
 
 - (void)didTapContinueReading
 {
-  [self updateState:^(id oldState){ return @YES; }];
+  [self updateState:^(id oldState){ return @YES; } mode:CKUpdateModeAsynchronous];
 }
 
 @end
