@@ -18,6 +18,22 @@ struct CKButtonComponentAccessibilityConfiguration {
   NSString *accessibilityLabel;
 };
 
+struct CKButtonTitle {
+  CKButtonTitle() : title(nil), attributedTitle(nil) {};
+  CKButtonTitle(std::nullptr_t v) : title(nil), attributedTitle(nil) {};
+  CKButtonTitle(NSString *t) : title(t), attributedTitle(nil) {};
+  CKButtonTitle(NSAttributedString *t) : title(nil), attributedTitle(t) {};
+
+  NSString *title;
+  NSAttributedString *attributedTitle;
+  
+  bool operator==(const CKButtonTitle &other) const
+  {
+    return CKObjectIsEqual(title, other.title)
+    && CKObjectIsEqual(attributedTitle, other.attributedTitle);
+  }
+};
+
 /**
  A component that creates a UIButton.
 
@@ -26,7 +42,7 @@ struct CKButtonComponentAccessibilityConfiguration {
  */
 @interface CKButtonComponent : CKComponent
 
-+ (instancetype)newWithTitles:(const std::unordered_map<UIControlState, NSString *> &)titles
++ (instancetype)newWithTitles:(const std::unordered_map<UIControlState, CKButtonTitle> &)titles
                   titleColors:(const std::unordered_map<UIControlState, UIColor *> &)titleColors
                        images:(const std::unordered_map<UIControlState, UIImage *> &)images
              backgroundImages:(const std::unordered_map<UIControlState, UIImage *> &)backgroundImages

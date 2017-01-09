@@ -53,14 +53,14 @@ static inline NSUInteger indexForState(UIControlState state)
 }
 
 struct CKStateConfiguration {
-  NSString *title;
+  CKButtonTitle title;
   UIColor *titleColor;
   UIImage *image;
   UIImage *backgroundImage;
 
   bool operator==(const CKStateConfiguration &other) const
   {
-    return CKObjectIsEqual(title, other.title)
+    return title == other.title
     && CKObjectIsEqual(titleColor, other.titleColor)
     && CKObjectIsEqual(image, other.image)
     && CKObjectIsEqual(backgroundImage, other.backgroundImage);
@@ -83,7 +83,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   CGSize _intrinsicSize;
 }
 
-+ (instancetype)newWithTitles:(const std::unordered_map<UIControlState, NSString *> &)titles
++ (instancetype)newWithTitles:(const std::unordered_map<UIControlState, CKButtonTitle> &)titles
                   titleColors:(const std::unordered_map<UIControlState, UIColor *> &)titleColors
                        images:(const std::unordered_map<UIControlState, UIImage *> &)images
              backgroundImages:(const std::unordered_map<UIControlState, UIImage *> &)backgroundImages
@@ -104,8 +104,11 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     ^(UIButton *view, CKButtonComponentConfiguration *config) {
       enumerateAllStates(^(UIControlState state) {
         const CKStateConfiguration &stateConfig = config->_configurations[indexForState(state)];
-        if (stateConfig.title) {
-          [view setTitle:stateConfig.title forState:state];
+        const CKButtonTitle title = stateConfig.title;
+        if (title.title) {
+          [view setTitle:title.title forState:state];
+        } else if (title.attributedTitle) {
+          [view setAttributedTitle:title.attributedTitle forState:state];
         }
         if (stateConfig.titleColor) {
           [view setTitleColor:stateConfig.titleColor forState:state];
@@ -124,8 +127,14 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
       enumerateAllStates(^(UIControlState state) {
         const CKStateConfiguration &oldStateConfig = oldConfig->_configurations[indexForState(state)];
         const CKStateConfiguration &newStateConfig = newConfig->_configurations[indexForState(state)];
-        if (!CKObjectIsEqual(oldStateConfig.title, newStateConfig.title)) {
-          [view setTitle:newStateConfig.title forState:state];
+        if (!(oldStateConfig.title == newStateConfig.title)) {
+          if (newStateConfig.title.title) {
+            [view setTitle:newStateConfig.title.title forState:state];
+            [view setAttributedTitle:nil forState:state];
+          } else if (newStateConfig.title.attributedTitle) {
+            [view setTitle:nil forState:state];
+            [view setAttributedTitle:newStateConfig.title.attributedTitle forState:state];
+          }
         }
         if (!CKObjectIsEqual(oldStateConfig.titleColor, newStateConfig.titleColor)) {
           [view setTitleColor:newStateConfig.titleColor forState:state];
@@ -183,7 +192,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   return {self, constrainedSize.clamp(_intrinsicSize)};
 }
 
-static CKButtonComponentConfiguration *configurationFromValues(const std::unordered_map<UIControlState, NSString *> &titles,
+static CKButtonComponentConfiguration *configurationFromValues(const std::unordered_map<UIControlState, CKButtonTitle> &titles,
                                                                const std::unordered_map<UIControlState, UIColor *> &titleColors,
                                                                const std::unordered_map<UIControlState, UIImage *> &images,
                                                                const std::unordered_map<UIControlState, UIImage *> &backgroundImages)
@@ -193,7 +202,7 @@ static CKButtonComponentConfiguration *configurationFromValues(const std::unorde
   NSUInteger hash = 0;
   for (const auto it : titles) {
     configs[indexForState(it.first)].title = it.second;
-    hash ^= (it.first ^ [it.second hash]);
+    hash ^= (it.first ^ [(it.second.title ?: it.second.attributedTitle) hash]);
   }
   for (const auto it : titleColors) {
     configs[indexForState(it.first)].titleColor = it.second;
@@ -228,14 +237,14 @@ static T valueForState(const std::unordered_map<UIControlState, T> &m, UIControl
 }
 
 #if !TARGET_OS_TV // sizeWithFont is not available on tvOS
-static CGSize intrinsicSize(NSString *title, UIFont *titleFont, UIImage *image,
+static CGSize intrinsicSize(CKButtonTitle title, UIFont *titleFont, UIImage *image,
                             UIImage *backgroundImage, UIEdgeInsets contentEdgeInsets)
 {
   // This computation is based on observing [UIButton -sizeThatFits:], which uses the deprecated method
   // sizeWithFont in iOS 7 and iOS 8
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-  CGSize titleSize = [title sizeWithFont:titleFont ?: [UIFont systemFontOfSize:[UIFont buttonFontSize]]];
+  CGSize titleSize = (title.attributedTitle ? title.attributedTitle.size : [title.title sizeWithFont:titleFont ?: [UIFont systemFontOfSize:[UIFont buttonFontSize]]]);
 #pragma clang diagnostic pop
   CGSize imageSize = image.size;
   CGSize contentSize = {
