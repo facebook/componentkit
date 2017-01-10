@@ -143,6 +143,8 @@ public:
   bool operator==(const CKTypedComponentAction<T...> &rhs) const {
     return isEqual(rhs);
   };
+
+  friend void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context);
 };
 
 typedef CKTypedComponentAction<> CKComponentAction;
