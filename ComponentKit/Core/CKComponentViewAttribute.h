@@ -107,7 +107,8 @@ struct CKBoxedValue {
   // Define conversions for common Apple types
   CKBoxedValue(CGRect v) : __actual([NSValue valueWithCGRect:v]) {};
   CKBoxedValue(CGPoint v) : __actual([NSValue valueWithCGPoint:v]) {};
-  CKBoxedValue(UIEdgeInsets v) : __actual([NSValue valueWithBytes:&v objCType:@encode(decltype(v))]) {};
+  CKBoxedValue(CGSize v) : __actual([NSValue valueWithCGSize:v]) {};
+  CKBoxedValue(UIEdgeInsets v) : __actual([NSValue valueWithUIEdgeInsets:v]) {};
   
   operator id () const {
     return __actual;
