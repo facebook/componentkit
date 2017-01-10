@@ -296,6 +296,59 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) {
 
 @end
 
+#pragma mark - Accessibility Actions
+
+@interface CKComponentAccessibilityCustomAction : UIAccessibilityCustomAction
+- (instancetype)initWithName:(NSString *)name action:(CKComponentAction)action view:(UIView *)view;
+@end
+
+@implementation CKComponentAccessibilityCustomAction
+{
+  UIView *_ck_view;
+  CKComponentAction _ck_action;
+}
+
+- (instancetype)initWithName:(NSString *)name action:(CKComponentAction)action view:(UIView *)view
+{
+  if (self = [super initWithName:name target:self selector:@selector(ck_send)]) {
+    _ck_view = view;
+    _ck_action = action;
+  }
+  return self;
+}
+
+- (BOOL)ck_send
+{
+  _ck_action.send(_ck_view.ck_component, CKComponentActionSendBehaviorStartAtSender);
+  return YES;
+}
+
+@end
+
+CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKComponentAction>> &passedActions)
+{
+  auto const actions = passedActions;
+  return {
+    {
+      std::string(sel_getName(@selector(setAccessibilityCustomActions:))),
+      ^(UIView *view, id value){
+        NSMutableArray<CKComponentAccessibilityCustomAction *> *accessibilityCustomActions = [NSMutableArray new];
+        for (auto const& action : actions) {
+          if (action.first && action.second) {
+            [accessibilityCustomActions addObject:[[CKComponentAccessibilityCustomAction alloc] initWithName:action.first action:action.second view:view]];
+          }
+        }
+        view.accessibilityCustomActions = accessibilityCustomActions;
+      },
+      ^(UIView *view, id value){
+        view.accessibilityCustomActions = nil;
+      }
+    },
+    // Use a bogus value for the attribute's "value". All the information is encoded in the attribute itself.
+    @YES
+  };
+}
+
 #pragma mark - Template instantiations
 
 template class CKTypedComponentAction<>;
