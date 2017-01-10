@@ -136,7 +136,7 @@ void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender,
 
 void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context)
 {
-  action.send(sender, CKComponentActionSendBehaviorStartAtSenderNextResponder, context);
+  action.send(sender, action.defaultBehavior(), context);
 }
 
 void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
