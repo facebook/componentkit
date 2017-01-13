@@ -8,8 +8,6 @@
  *
  */
 
-#import <vector>
-
 #import <UIKit/UIKit.h>
 
 @class CKComponent;
