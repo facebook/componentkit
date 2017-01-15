@@ -18,8 +18,8 @@
                        style:(QuoteDisplayStyle)style
 {
   if (self = [super init]) {
-    _text = [text copy];
-    _author = [author copy];
+    _text = text;
+    _author = author;
     _style = style;
   }
   return self;
