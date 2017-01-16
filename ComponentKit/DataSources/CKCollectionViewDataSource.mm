@@ -128,11 +128,7 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
 {
   CKComponentDataSourceOutputItem *outputItem = [_componentDataSource objectAtIndexPath:indexPath];
   CKCollectionViewDataSourceCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:kReuseIdentifier forIndexPath:indexPath];
-  if (_cellConfigurationFunction) {
-    _cellConfigurationFunction(cell, indexPath, [outputItem model]);
-  }
-  CKComponentLifecycleManager *lifecycleManager = [outputItem lifecycleManager];
-  [lifecycleManager attachToView:[cell rootView]];
+  attachToCell(cell, indexPath, _cellConfigurationFunction, outputItem);
   // We maintain this map to be able to announce appearance events.
   [_cellToItemMap setObject:outputItem forKey:cell];
   return cell;
@@ -178,7 +174,7 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
 {
   [_collectionView performBatchUpdates:^{
     const auto &changeset = changesetApplicator();
-    applyChangesetToCollectionView(changeset, _collectionView);
+    applyChangesetToCollectionView(changeset, _collectionView, _componentDataSource, _cellConfigurationFunction);
   } completion:nil];
 }
 
@@ -198,7 +194,16 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
 
 #pragma mark - Private
 
-static void applyChangesetToCollectionView(const Output::Changeset &changeset, UICollectionView *collectionView)
+static void attachToCell(CKCollectionViewDataSourceCell *cell, NSIndexPath *indexPath, CKCellConfigurationFunction cellConfigurationFunction, CKComponentDataSourceOutputItem *outputItem) {
+  if (cellConfigurationFunction) {
+    cellConfigurationFunction(cell, indexPath, [outputItem model]);
+  }
+
+  CKComponentLifecycleManager *lifecycleManager = [outputItem lifecycleManager];
+  [lifecycleManager attachToView:[cell rootView]];
+}
+
+static void applyChangesetToCollectionView(const Output::Changeset &changeset, UICollectionView *collectionView, CKComponentDataSource *_componentDataSource, CKCellConfigurationFunction cellConfigurationFunction)
 {
   NSMutableArray *itemRemovalIndexPaths = [[NSMutableArray alloc] init];
   NSMutableArray *itemInsertionIndexPaths = [[NSMutableArray alloc] init];
@@ -248,6 +253,17 @@ static void applyChangesetToCollectionView(const Output::Changeset &changeset, U
     [collectionView deleteItemsAtIndexPaths:itemRemovalIndexPaths];
   }
   if (itemUpdateIndexPaths.count > 0) {
+		[itemUpdateIndexPaths enumerateObjectsWithOptions:NSEnumerationReverse
+                                           usingBlock:^(NSIndexPath *indexPath,
+                                                        NSUInteger idx,
+                                                        BOOL *stop)
+    {
+      if (CKCollectionViewDataSourceCell *cell = (CKCollectionViewDataSourceCell*) [collectionView cellForItemAtIndexPath:indexPath])
+      {
+        attachToCell(cell, indexPath, cellConfigurationFunction, [_componentDataSource objectAtIndexPath:indexPath]);
+        [itemUpdateIndexPaths removeObject:indexPath];
+      }
+    }];
     [collectionView reloadItemsAtIndexPaths:itemUpdateIndexPaths];
   }
   if (itemInsertionIndexPaths.count > 0) {
