@@ -17,9 +17,17 @@
                       author:(NSString *)author
                        style:(QuoteDisplayStyle)style
 {
-  if (self = [super init]) {
-    _text = text;
-    _author = author;
+    if (self = [super init]) {
+        if ([text isKindOfClass:[NSMutableString class]])
+            _text = text.copy;
+      else
+          _text = text;
+      
+        if ([author isKindOfClass:[NSMutableString class]])
+            _author = author.copy;
+        else
+            _author = author;
+      
     _style = style;
   }
   return self;
