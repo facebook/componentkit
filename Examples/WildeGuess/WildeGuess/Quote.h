@@ -15,9 +15,9 @@
 
 @interface Quote : NSObject
 
-@property (nonatomic, readonly, strong) NSString *text;
-@property (nonatomic, readonly, strong) NSString *author;
-@property (nonatomic, readonly, assign) QuoteDisplayStyle style;
+@property (nonatomic, readonly, copy) NSString *text;
+@property (nonatomic, readonly, copy) NSString *author;
+@property (nonatomic, readonly) QuoteDisplayStyle style;
 
 - (instancetype)initWithText:(NSString *)text
                       author:(NSString *)author
