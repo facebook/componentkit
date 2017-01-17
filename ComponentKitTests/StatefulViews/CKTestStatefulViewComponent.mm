@@ -31,14 +31,14 @@
 
 @implementation CKTestStatefulViewComponentController
 
-+ (UIView *)newStatefulView:(id)context
++ (CKTestStatefulView *)newStatefulView:(id)context
 {
   return [[CKTestStatefulView alloc] init];
 }
 
-+ (void)configureStatefulView:(UIView *)statefulView forComponent:(CKComponent *)component
++ (void)configureStatefulView:(CKTestStatefulView *)statefulView forComponent:(CKTestStatefulViewComponent *)component
 {
-  statefulView.backgroundColor = [(CKTestStatefulViewComponent *)component color];
+  statefulView.backgroundColor = component.color;
 }
 
 @end
