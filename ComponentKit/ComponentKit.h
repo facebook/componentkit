@@ -13,8 +13,10 @@
 //Components
 #import <ComponentKit/CKButtonComponent.h>
 #import <ComponentKit/CKImageComponent.h>
+#import <ComponentKit/CKAutoSizedImageComponent.h>
 #import <ComponentKit/CKNetworkImageComponent.h>
 #import <ComponentKit/CKNetworkImageDownloading.h>
+#import <ComponentKit/CKMemoizingComponent.h>
 //Core
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAnimation.h>
