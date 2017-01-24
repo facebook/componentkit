@@ -39,6 +39,9 @@
 /** The controller's component was previously mounted, but now it no longer is. */
 - (void)didUnmount NS_REQUIRES_SUPER;
 
+/** The controller is about to reach the end of it's lifecycle. */
+- (void)willDealloc NS_REQUIRES_SUPER;
+
 /** If the controller's component is changing, invoked immediately before the updated component is mounted. */
 - (void)willUpdateComponent NS_REQUIRES_SUPER;
 

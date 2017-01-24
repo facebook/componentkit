@@ -81,6 +81,17 @@ const CKComponentLifecycleManagerState CKComponentLifecycleManagerStateEmpty = {
       dispatch_async(dispatch_get_main_queue(), unmountBlock);
     }
   }
+  
+  // Send the willDealloc event to all controllers that implement the lifecycle's root scope
+  if (_previousRoot) {
+    CKComponentScopeRoot *scope = _previousRoot;
+    dispatch_block_t willDeallocBlock = ^{ [scope announceEventToControllers:CKComponentAnnouncedEventControllerWillDealloc]; };
+    if ([NSThread isMainThread]) {
+      willDeallocBlock();
+    } else {
+      dispatch_async(dispatch_get_main_queue(), willDeallocBlock);
+    }
+  }
 }
 
 #pragma mark - Updates
