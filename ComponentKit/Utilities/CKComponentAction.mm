@@ -242,6 +242,10 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
 #if DEBUG
 static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSignature *signature, const std::vector<const char *> &typeEncodings)
 {
+  if (selector == NULL) {
+    return;
+  }
+
   CKCAssert(typeEncodings.size() + 3 >= signature.numberOfArguments, @"Expected action method %@ to take less than %lu arguments, but it suppoorts %lu", NSStringFromSelector(selector), typeEncodings.size(), (unsigned long)signature.numberOfArguments - 3);
 
   CKCAssert(signature.methodReturnLength == 0, @"Component action methods should not have any return value. Any objects returned from this method will be leaked.");
@@ -264,7 +268,7 @@ void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SE
   const Class klass = scope.scopeHandle().componentClass;
   // We allow component actions to be implemented either in the component, or its controller.
   const Class controllerKlass = CKComponentControllerClassFromComponentClass(klass);
-  CKCAssert([klass instancesRespondToSelector:selector] || [controllerKlass instancesRespondToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", klass, NSStringFromSelector(selector));
+  CKCAssert(selector == NULL || [klass instancesRespondToSelector:selector] || [controllerKlass instancesRespondToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", klass, NSStringFromSelector(selector));
 
   NSMethodSignature *signature = [klass instanceMethodSignatureForSelector:selector] ?: [controllerKlass instanceMethodSignatureForSelector:selector];
 
@@ -278,7 +282,7 @@ void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const st
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
-  CKCAssert([target respondsToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", [target class], NSStringFromSelector(selector));
+  CKCAssert(selector == NULL || [target respondsToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", [target class], NSStringFromSelector(selector));
 
   NSMethodSignature *signature = [target methodSignatureForSelector:selector];
 
