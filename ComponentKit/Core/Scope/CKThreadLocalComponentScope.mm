@@ -17,7 +17,7 @@
 
 #import "CKComponentScopeRoot.h"
 
-static pthread_key_t _threadKey()
+static pthread_key_t _threadKey() noexcept
 {
   static pthread_key_t thread_key;
   static dispatch_once_t onceToken;
@@ -27,7 +27,7 @@ static pthread_key_t _threadKey()
   return thread_key;
 }
 
-CKThreadLocalComponentScope *CKThreadLocalComponentScope::currentScope()
+CKThreadLocalComponentScope *CKThreadLocalComponentScope::currentScope() noexcept
 {
   return (CKThreadLocalComponentScope *)pthread_getspecific(_threadKey());
 }
@@ -48,7 +48,7 @@ CKThreadLocalComponentScope::~CKThreadLocalComponentScope()
   pthread_setspecific(_threadKey(), nullptr);
 }
 
-CKThreadLocalComponentScopeOverride::CKThreadLocalComponentScopeOverride(CKThreadLocalComponentScope *scope)
+CKThreadLocalComponentScopeOverride::CKThreadLocalComponentScopeOverride(CKThreadLocalComponentScope *scope) noexcept
 : previousScope(CKThreadLocalComponentScope::currentScope())
 {
   pthread_setspecific(_threadKey(), scope);

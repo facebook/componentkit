@@ -22,7 +22,7 @@ CKComponentScope::~CKComponentScope()
   }
 }
 
-CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id identifier, id (^initialStateCreator)(void))
+CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id identifier, id (^initialStateCreator)(void)) noexcept
 {
   _threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (_threadLocalScope != nullptr) {
@@ -37,19 +37,19 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
   }
 }
 
-id CKComponentScope::state(void) const
+id CKComponentScope::state(void) const noexcept
 {
   return _scopeHandle.state;
 }
 
-CKComponentStateUpdater CKComponentScope::stateUpdater(void) const
+CKComponentStateUpdater CKComponentScope::stateUpdater(void) const noexcept
 {
   // We must capture _scopeHandle in a local, since this may be destroyed by the time the block executes.
   CKComponentScopeHandle *const scopeHandle = _scopeHandle;
   return ^(id (^update)(id), CKUpdateMode mode){ [scopeHandle updateState:update mode:mode]; };
 }
 
-CKComponentScopeHandle *CKComponentScope::scopeHandle(void) const
+CKComponentScopeHandle *CKComponentScope::scopeHandle(void) const noexcept
 {
   return _scopeHandle;
 }
