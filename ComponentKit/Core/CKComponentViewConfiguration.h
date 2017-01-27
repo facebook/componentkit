@@ -28,13 +28,13 @@ struct CKComponentViewClass {
   /**
    The no-argument default constructor, which specifies that the component should not have a corresponding view.
    */
-  CKComponentViewClass();
+  CKComponentViewClass() noexcept;
 
   /**
    Specifies that the component should have a view of the given class. The class will be instantiated with UIView's
    designated initializer -initWithFrame:.
    */
-  CKComponentViewClass(Class viewClass);
+  CKComponentViewClass(Class viewClass) noexcept;
 
   /**
    A variant that allows you to specify two selectors that are sent as a view is hidden/unhidden for future reuse.
@@ -42,7 +42,7 @@ struct CKComponentViewClass {
    @param didEnterReusePoolMessage Sent to the view just after it has been hidden for future reuse.
    @param willLeaveReusePool Sent to the view just before it is revealed after being reused.
    */
-  CKComponentViewClass(Class viewClass, SEL didEnterReusePoolMessage, SEL willLeaveReusePoolMessage);
+  CKComponentViewClass(Class viewClass, SEL didEnterReusePoolMessage, SEL willLeaveReusePoolMessage) noexcept;
 
   /**
    Specifies a view class that cannot be instantiated with -initWithFrame:.
@@ -54,7 +54,7 @@ struct CKComponentViewClass {
    */
   CKComponentViewClass(UIView *(*factory)(void),
                        CKComponentViewReuseBlock didEnterReusePool = nil,
-                       CKComponentViewReuseBlock willLeaveReusePool = nil);
+                       CKComponentViewReuseBlock willLeaveReusePool = nil) noexcept;
 
   /** Invoked by the infrastructure to create a new instance of the view. You should not call this directly. */
   UIView *createView() const;
@@ -62,16 +62,16 @@ struct CKComponentViewClass {
   /** Invoked by the infrastructure to determine if this will create a view or not. */
   BOOL hasView() const;
 
-  bool operator==(const CKComponentViewClass &other) const { return other.identifier == identifier; }
-  bool operator!=(const CKComponentViewClass &other) const { return other.identifier != identifier; }
+  bool operator==(const CKComponentViewClass &other) const noexcept { return other.identifier == identifier; }
+  bool operator!=(const CKComponentViewClass &other) const noexcept { return other.identifier != identifier; }
 
-  const std::string &getIdentifier() const { return identifier; }
+  const std::string &getIdentifier() const noexcept { return identifier; }
 
 private:
   CKComponentViewClass(const std::string &ident,
                        UIView *(^factory)(void),
                        CKComponentViewReuseBlock didEnterReusePool = nil,
-                       CKComponentViewReuseBlock willLeaveReusePool = nil);
+                       CKComponentViewReuseBlock willLeaveReusePool = nil) noexcept;
   std::string identifier;
   UIView *(^factory)(void);
   CKComponentViewReuseBlock didEnterReusePool;
@@ -98,21 +98,21 @@ namespace std {
  */
 struct CKComponentViewConfiguration {
 
-  CKComponentViewConfiguration();
+  CKComponentViewConfiguration() noexcept;
 
   CKComponentViewConfiguration(CKComponentViewClass &&cls,
-                               CKViewComponentAttributeValueMap &&attrs = {});
+                               CKViewComponentAttributeValueMap &&attrs = {}) noexcept;
 
   CKComponentViewConfiguration(CKComponentViewClass &&cls,
                                CKViewComponentAttributeValueMap &&attrs,
-                               CKComponentAccessibilityContext &&accessibilityCtx);
+                               CKComponentAccessibilityContext &&accessibilityCtx) noexcept;
 
   ~CKComponentViewConfiguration();
-  bool operator==(const CKComponentViewConfiguration &other) const;
+  bool operator==(const CKComponentViewConfiguration &other) const noexcept;
 
-  const CKComponentViewClass &viewClass() const;
-  std::shared_ptr<const CKViewComponentAttributeValueMap> attributes() const;
-  const CKComponentAccessibilityContext &accessibilityContext() const;
+  const CKComponentViewClass &viewClass() const noexcept;
+  std::shared_ptr<const CKViewComponentAttributeValueMap> attributes() const noexcept;
+  const CKComponentAccessibilityContext &accessibilityContext() const noexcept;
 
 private:
   struct Repr {
@@ -131,7 +131,7 @@ private:
 namespace std {
   template<> struct hash<CKComponentViewConfiguration>
   {
-    size_t operator()(const CKComponentViewConfiguration &cl) const;
+    size_t operator()(const CKComponentViewConfiguration &cl) const noexcept;
   };
 }
 

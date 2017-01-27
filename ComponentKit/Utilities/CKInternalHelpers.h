@@ -12,16 +12,16 @@
 
 #import <UIKit/UIKit.h>
 
-BOOL CKSubclassOverridesSelector(Class superclass, Class subclass, SEL selector);
+BOOL CKSubclassOverridesSelector(Class superclass, Class subclass, SEL selector) noexcept;
 
-Class CKComponentControllerClassFromComponentClass(Class componentClass);
+Class CKComponentControllerClassFromComponentClass(Class componentClass) noexcept;
 
-std::string CKStringFromPointer(const void *ptr);
+std::string CKStringFromPointer(const void *ptr) noexcept;
 
-CGFloat CKScreenScale();
+CGFloat CKScreenScale() noexcept;
 
-CGFloat CKFloorPixelValue(CGFloat f);
+CGFloat CKFloorPixelValue(CGFloat f) noexcept;
 
-CGFloat CKCeilPixelValue(CGFloat f);
+CGFloat CKCeilPixelValue(CGFloat f) noexcept;
 
-CGFloat CKRoundPixelValue(CGFloat f);
+CGFloat CKRoundPixelValue(CGFloat f) noexcept;

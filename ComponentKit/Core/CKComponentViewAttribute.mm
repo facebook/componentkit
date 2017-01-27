@@ -204,7 +204,7 @@ static void performSetter(id object, SEL setter, id value)
 #pragma clang diagnostic pop
 }
 
-CKComponentViewAttribute::CKComponentViewAttribute(SEL setter) :
+CKComponentViewAttribute::CKComponentViewAttribute(SEL setter) noexcept :
 identifier(sel_getName(setter)),
 applicator(^(UIView *view, id value){
   performSetter(view, setter, value);
@@ -213,7 +213,7 @@ applicator(^(UIView *view, id value){
 // Explicit destructor to prevent inlining, reduce code size. See D1814602.
 CKComponentViewAttribute::~CKComponentViewAttribute() {}
 
-CKComponentViewAttribute CKComponentViewAttribute::LayerAttribute(SEL setter)
+CKComponentViewAttribute CKComponentViewAttribute::LayerAttribute(SEL setter) noexcept
 {
   return CKComponentViewAttribute(std::string("layer") + sel_getName(setter), ^(UIView *view, id value){
     performSetter(view.layer, setter, value);

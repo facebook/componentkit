@@ -12,4 +12,4 @@
 
 @class CKComponent;
 
-NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace);
+NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept;

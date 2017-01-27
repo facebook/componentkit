@@ -23,12 +23,12 @@
 
 using namespace CK::Component;
 
-static void _deleteComponentLayoutChild(void *target)
+static void _deleteComponentLayoutChild(void *target) noexcept
 {
   delete (std::vector<CKComponentLayoutChild> *)target;
 }
 
-void CKOffMainThreadDeleter::operator()(std::vector<CKComponentLayoutChild> *target)
+void CKOffMainThreadDeleter::operator()(std::vector<CKComponentLayoutChild> *target) noexcept
 {
   // When deallocating a large layout tree this is called first on the root node
   // so we dispatch once and deallocate the whole tree on a background thread.

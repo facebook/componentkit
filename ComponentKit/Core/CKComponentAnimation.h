@@ -34,10 +34,10 @@ struct CKComponentAnimation {
    @param animation A CAAnimation to apply on the component's layer.
    @param layerPath A key path to a sublayer of the component's view. Defaults to nil.
    */
-  CKComponentAnimation(CKComponent *component, CAAnimation *animation, NSString *layerPath = nil);
+  CKComponentAnimation(CKComponent *component, CAAnimation *animation, NSString *layerPath = nil) noexcept;
   
   /** Creates a completely custom animation with arbitrary hooks. */
-  CKComponentAnimation(const CKComponentAnimationHooks &hooks);
+  CKComponentAnimation(const CKComponentAnimationHooks &hooks) noexcept;
 
   id willRemount() const;
   id didRemount(id context) const;

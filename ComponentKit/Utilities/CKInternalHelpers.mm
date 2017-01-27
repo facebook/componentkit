@@ -21,7 +21,7 @@
 #import "CKComponentSubclass.h"
 #import "CKMutex.h"
 
-BOOL CKSubclassOverridesSelector(Class superclass, Class subclass, SEL selector)
+BOOL CKSubclassOverridesSelector(Class superclass, Class subclass, SEL selector) noexcept
 {
   Method superclassMethod = class_getInstanceMethod(superclass, selector);
   Method subclassMethod = class_getInstanceMethod(subclass, selector);
@@ -30,7 +30,7 @@ BOOL CKSubclassOverridesSelector(Class superclass, Class subclass, SEL selector)
   return (superclassIMP != subclassIMP);
 }
 
-Class CKComponentControllerClassFromComponentClass(Class componentClass)
+Class CKComponentControllerClassFromComponentClass(Class componentClass) noexcept
 {
   if (componentClass == [CKComponent class]) {
     return Nil; // Don't create root CKComponentControllers as it does nothing interesting.
@@ -57,14 +57,14 @@ Class CKComponentControllerClassFromComponentClass(Class componentClass)
   return it->second;
 }
 
-std::string CKStringFromPointer(const void *ptr)
+std::string CKStringFromPointer(const void *ptr) noexcept
 {
   char buf[64];
   snprintf(buf, sizeof(buf), "%p", ptr);
   return buf;
 }
 
-CGFloat CKScreenScale()
+CGFloat CKScreenScale() noexcept
 {
   static CGFloat _scale;
   static dispatch_once_t onceToken;
@@ -74,17 +74,17 @@ CGFloat CKScreenScale()
   return _scale;
 }
 
-CGFloat CKFloorPixelValue(CGFloat f)
+CGFloat CKFloorPixelValue(CGFloat f) noexcept
 {
   return floorf(f * CKScreenScale()) / CKScreenScale();
 }
 
-CGFloat CKCeilPixelValue(CGFloat f)
+CGFloat CKCeilPixelValue(CGFloat f) noexcept
 {
   return ceilf(f * CKScreenScale()) / CKScreenScale();
 }
 
-CGFloat CKRoundPixelValue(CGFloat f)
+CGFloat CKRoundPixelValue(CGFloat f) noexcept
 {
   return roundf(f * CKScreenScale()) / CKScreenScale();
 }

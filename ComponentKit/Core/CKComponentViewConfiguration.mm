@@ -16,13 +16,13 @@
 
 #import "CKInternalHelpers.h"
 
-CKComponentViewClass::CKComponentViewClass() : factory(nil) {}
+CKComponentViewClass::CKComponentViewClass() noexcept : factory(nil) {}
 
-CKComponentViewClass::CKComponentViewClass(Class viewClass) :
+CKComponentViewClass::CKComponentViewClass(Class viewClass) noexcept :
 identifier(class_getName(viewClass)),
 factory(^{return [[viewClass alloc] init];}) {}
 
-static CKComponentViewReuseBlock blockFromSEL(SEL sel)
+static CKComponentViewReuseBlock blockFromSEL(SEL sel) noexcept
 {
   if (sel) {
 #pragma clang diagnostic push
@@ -33,7 +33,7 @@ static CKComponentViewReuseBlock blockFromSEL(SEL sel)
   return nil;
 }
 
-CKComponentViewClass::CKComponentViewClass(Class viewClass, SEL enter, SEL leave) :
+CKComponentViewClass::CKComponentViewClass(Class viewClass, SEL enter, SEL leave) noexcept :
 identifier(std::string(class_getName(viewClass)) + "-" + sel_getName(enter) + "-" + sel_getName(leave)),
 factory(^{return [[viewClass alloc] init];}),
 didEnterReusePool(blockFromSEL(enter)),
@@ -41,7 +41,7 @@ willLeaveReusePool(blockFromSEL(leave)) {}
 
 CKComponentViewClass::CKComponentViewClass(UIView *(*fact)(void),
                                            void (^enter)(UIView *),
-                                           void (^leave)(UIView *))
+                                           void (^leave)(UIView *)) noexcept
 : identifier(CKStringFromPointer((const void *)fact)), factory(^UIView*(void) {return fact();}), didEnterReusePool(enter), willLeaveReusePool(leave)
 {
 }
@@ -49,7 +49,7 @@ CKComponentViewClass::CKComponentViewClass(UIView *(*fact)(void),
 CKComponentViewClass::CKComponentViewClass(const std::string &i,
                                            UIView *(^fact)(void),
                                            void (^enter)(UIView *),
-                                           void (^leave)(UIView *))
+                                           void (^leave)(UIView *)) noexcept
 : identifier(i), factory(fact), didEnterReusePool(enter), willLeaveReusePool(leave)
 {
 #if DEBUG
@@ -66,19 +66,19 @@ std::shared_ptr<const CKComponentViewConfiguration::Repr> CKComponentViewConfigu
   return p;
 }
 
-CKComponentViewConfiguration::CKComponentViewConfiguration()
+CKComponentViewConfiguration::CKComponentViewConfiguration() noexcept
   :rep(singletonViewConfiguration()) {}
 
 // Prefer overloaded constructors to default arguments to prevent code bloat; with default arguments
 // the compiler must insert initialization of each default value inline at the callsite.
 CKComponentViewConfiguration::CKComponentViewConfiguration(
     CKComponentViewClass &&cls,
-    CKViewComponentAttributeValueMap &&attrs)
+    CKViewComponentAttributeValueMap &&attrs) noexcept
 : CKComponentViewConfiguration(std::move(cls), std::move(attrs), {}) {}
 
 CKComponentViewConfiguration::CKComponentViewConfiguration(CKComponentViewClass &&cls,
                                                            CKViewComponentAttributeValueMap &&attrs,
-                                                           CKComponentAccessibilityContext &&accessibilityCtx)
+                                                           CKComponentAccessibilityContext &&accessibilityCtx) noexcept
 {
   // Need to use attrs before we move it below.
   CK::Component::PersistentAttributeShape attributeShape(attrs);
@@ -92,7 +92,7 @@ CKComponentViewConfiguration::CKComponentViewConfiguration(CKComponentViewClass 
 // Constructors and destructors are defined out-of-line to prevent code bloat.
 CKComponentViewConfiguration::~CKComponentViewConfiguration() {}
 
-bool CKComponentViewConfiguration::operator==(const CKComponentViewConfiguration &other) const
+bool CKComponentViewConfiguration::operator==(const CKComponentViewConfiguration &other) const noexcept
 {
   if (other.rep == rep) {
     return true;
@@ -118,17 +118,17 @@ bool CKComponentViewConfiguration::operator==(const CKComponentViewConfiguration
   }
 }
 
-const CKComponentViewClass &CKComponentViewConfiguration::viewClass() const
+const CKComponentViewClass &CKComponentViewConfiguration::viewClass() const noexcept
 {
   return rep->viewClass;
 }
 
-std::shared_ptr<const CKViewComponentAttributeValueMap> CKComponentViewConfiguration::attributes() const
+std::shared_ptr<const CKViewComponentAttributeValueMap> CKComponentViewConfiguration::attributes() const noexcept
 {
   return rep->attributes;
 }
 
-const CKComponentAccessibilityContext &CKComponentViewConfiguration::accessibilityContext() const
+const CKComponentAccessibilityContext &CKComponentViewConfiguration::accessibilityContext() const noexcept
 {
   return rep->accessibilityContext;
 }
@@ -143,7 +143,7 @@ BOOL CKComponentViewClass::hasView() const
   return factory != nil;
 }
 
-size_t std::hash<CKComponentViewConfiguration>::operator()(const CKComponentViewConfiguration &cl) const
+size_t std::hash<CKComponentViewConfiguration>::operator()(const CKComponentViewConfiguration &cl) const noexcept
 {
   NSUInteger subhashes[] = {
     std::hash<CKComponentViewClass>()(cl.viewClass()),

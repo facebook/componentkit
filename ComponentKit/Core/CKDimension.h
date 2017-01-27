@@ -44,25 +44,25 @@ class CKRelativeDimension;
 
 namespace std {
   template <> struct hash<CKRelativeDimension> {
-    size_t operator ()(const CKRelativeDimension &);
+    size_t operator ()(const CKRelativeDimension &) noexcept;
   };
 }
 
 class CKRelativeDimension {
 public:
-  CKRelativeDimension() : CKRelativeDimension(Type::AUTO, 0) {}
-  CKRelativeDimension(CGFloat points) : CKRelativeDimension(Type::POINTS, points) {}
+  CKRelativeDimension() noexcept : CKRelativeDimension(Type::AUTO, 0) {}
+  CKRelativeDimension(CGFloat points) noexcept : CKRelativeDimension(Type::POINTS, points) {}
 
-  static CKRelativeDimension Auto() { return CKRelativeDimension(); }
-  static CKRelativeDimension Points(CGFloat p) { return CKRelativeDimension(p); }
-  static CKRelativeDimension Percent(CGFloat p) { return {CKRelativeDimension::Type::PERCENT, p}; }
+  static CKRelativeDimension Auto() noexcept { return CKRelativeDimension(); }
+  static CKRelativeDimension Points(CGFloat p) noexcept { return CKRelativeDimension(p); }
+  static CKRelativeDimension Percent(CGFloat p) noexcept { return {CKRelativeDimension::Type::PERCENT, p}; }
 
   CKRelativeDimension(const CKRelativeDimension &) = default;
   CKRelativeDimension &operator=(const CKRelativeDimension &) = default;
 
-  bool operator==(const CKRelativeDimension &) const;
-  NSString *description() const;
-  CGFloat resolve(CGFloat autoSize, CGFloat parent) const;
+  bool operator==(const CKRelativeDimension &) const noexcept;
+  NSString *description() const noexcept;
+  CGFloat resolve(CGFloat autoSize, CGFloat parent) const noexcept;
 
 private:
   enum class Type {
@@ -89,19 +89,19 @@ private:
 struct CKRelativeSize {
   CKRelativeDimension width;
   CKRelativeDimension height;
-  CKRelativeSize(const CKRelativeDimension &width, const CKRelativeDimension &height);
+  CKRelativeSize(const CKRelativeDimension &width, const CKRelativeDimension &height) noexcept;
 
   /** Convenience constructor to provide size in Points. */
-  CKRelativeSize(const CGSize &size);
+  CKRelativeSize(const CGSize &size) noexcept;
 
   /** Convenience constructor for {Auto, Auto} */
-  CKRelativeSize();
+  CKRelativeSize() noexcept;
 
   /** Resolve this size relative to a parent size and an auto size. */
-  CGSize resolveSize(const CGSize &parentSize, const CGSize &autoSize) const;
+  CGSize resolveSize(const CGSize &parentSize, const CGSize &autoSize) const noexcept;
 
-  bool operator==(const CKRelativeSize &other) const;
-  NSString *description() const;
+  bool operator==(const CKRelativeSize &other) const noexcept;
+  NSString *description() const noexcept;
 };
 
 /**
@@ -116,12 +116,12 @@ struct CKRelativeSizeRange {
    Convenience constructors to provide an exact size (min == max).
    CKRelativeSizeRange r = {80, 60} // width: [80, 80], height: [60, 60].
    */
-  CKRelativeSizeRange(const CKRelativeSize &exact);
-  CKRelativeSizeRange(const CGSize &exact);
-  CKRelativeSizeRange(const CKRelativeDimension &exactWidth, const CKRelativeDimension &exactHeight);
+  CKRelativeSizeRange(const CKRelativeSize &exact) noexcept;
+  CKRelativeSizeRange(const CGSize &exact) noexcept;
+  CKRelativeSizeRange(const CKRelativeDimension &exactWidth, const CKRelativeDimension &exactHeight) noexcept;
 
   /** Convenience constructor for {{Auto, Auto}, {Auto, Auto}}. */
-  CKRelativeSizeRange();
+  CKRelativeSizeRange() noexcept;
 
   /**
    Provided a parent size and values to use in place of Auto, compute final dimensions for this RelativeSizeRange
@@ -134,5 +134,5 @@ struct CKRelativeSizeRange {
    The default for Auto() is *everything*, meaning min = {0,0}; max = {INFINITY, INFINITY};
    */
   CKSizeRange resolveSizeRange(const CGSize &parentSize,
-                               const CKSizeRange &autoSizeRange = {{0,0}, {INFINITY, INFINITY}}) const;
+                               const CKSizeRange &autoSizeRange = {{0,0}, {INFINITY, INFINITY}}) const noexcept;
 };

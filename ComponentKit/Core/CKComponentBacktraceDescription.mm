@@ -12,7 +12,7 @@
 
 #import "CKComponent.h"
 
-NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace)
+NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept
 {
   NSMutableString *const description = [NSMutableString string];
   [componentBacktrace enumerateObjectsWithOptions:NSEnumerationReverse

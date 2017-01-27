@@ -33,16 +33,16 @@ struct CKComponentSize {
   CKRelativeDimension maxWidth;
   CKRelativeDimension maxHeight;
 
-  static CKComponentSize fromCGSize(CGSize size);
+  static CKComponentSize fromCGSize(CGSize size) noexcept;
 
-  CKSizeRange resolve(const CGSize &parentSize) const;
+  CKSizeRange resolve(const CGSize &parentSize) const noexcept;
 
-  bool operator==(const CKComponentSize &other) const;
-  NSString *description() const;
+  bool operator==(const CKComponentSize &other) const noexcept;
+  NSString *description() const noexcept;
 };
 
 namespace std {
   template <> struct hash<CKComponentSize> {
-    size_t operator ()(const CKComponentSize &);
+    size_t operator ()(const CKComponentSize &) noexcept;
   };
 }

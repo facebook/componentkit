@@ -18,7 +18,7 @@
 @property (nonatomic, copy, readonly) NSString *key;
 @end
 
-static CKComponentAnimationHooks hooksForCAAnimation(CKComponent *component, CAAnimation *originalAnimation, NSString *layerPath)
+static CKComponentAnimationHooks hooksForCAAnimation(CKComponent *component, CAAnimation *originalAnimation, NSString *layerPath) noexcept
 {
   CKCAssertNotNil(component, @"Component being animated must be non-nil");
   CKCAssertNotNil(originalAnimation, @"Animation being added must be non-nil");
@@ -47,10 +47,10 @@ static CKComponentAnimationHooks hooksForCAAnimation(CKComponent *component, CAA
   };
 }
 
-CKComponentAnimation::CKComponentAnimation(CKComponent *component, CAAnimation *animation, NSString *layerPath)
+CKComponentAnimation::CKComponentAnimation(CKComponent *component, CAAnimation *animation, NSString *layerPath) noexcept
 : hooks(hooksForCAAnimation(component, animation, layerPath)) {}
 
-CKComponentAnimation::CKComponentAnimation(const CKComponentAnimationHooks &h) : hooks(h) {}
+CKComponentAnimation::CKComponentAnimation(const CKComponentAnimationHooks &h) noexcept : hooks(h) {}
 
 id CKComponentAnimation::willRemount() const
 {
