@@ -41,18 +41,18 @@ typedef NS_ENUM(NSUInteger, CKComponentActionSendBehavior) {
 /** A base-class for typed components that doesn't use templates to avoid template bloat. */
 class CKTypedComponentActionBase {
 protected:
-  CKTypedComponentActionBase();
-  CKTypedComponentActionBase(id target, SEL selector);
+  CKTypedComponentActionBase() noexcept;
+  CKTypedComponentActionBase(id target, SEL selector) noexcept;
   
-  CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector);
+  CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept;
   
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
-  CKTypedComponentActionBase(SEL selector);
+  CKTypedComponentActionBase(SEL selector) noexcept;
   
   /** Allows conversion from NULL actions. */
-  CKTypedComponentActionBase(int s);
-  CKTypedComponentActionBase(long s);
-  CKTypedComponentActionBase(std::nullptr_t n);
+  CKTypedComponentActionBase(int s) noexcept;
+  CKTypedComponentActionBase(long s) noexcept;
+  CKTypedComponentActionBase(std::nullptr_t n) noexcept;
   
   ~CKTypedComponentActionBase() {};
   
@@ -67,10 +67,10 @@ protected:
   SEL _selector;
   
 public:
-  explicit operator bool() const;
-  bool isEqual(const CKTypedComponentActionBase &rhs) const;
-  SEL selector() const;
-  std::string identifier() const;
+  explicit operator bool() const noexcept;
+  bool isEqual(const CKTypedComponentActionBase &rhs) const noexcept;
+  SEL selector() const noexcept;
+  std::string identifier() const noexcept;
 };
 
 #pragma mark - Typed Helpers
@@ -84,28 +84,28 @@ template <typename... TS>
 struct CKTypedComponentActionDenyType : std::true_type {};
 
 /** Base case, recursion should stop here. */
-void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list);
+void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list) noexcept;
 
 /**
  Recursion through variadic argument type unpacking. This allows us to build a vector of encoded const char * before
  any actual arguments have been provided. All of this is done at compile-time.
  */
 template<typename T, typename... Ts>
-void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<T, Ts...> &list)
+void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<T, Ts...> &list) noexcept
 {
   typeVector.push_back(@encode(T));
   CKTypedComponentActionTypeVectorBuild(typeVector, CKTypedComponentActionTypelist<Ts...>{});
 }
 
 /** Base case, recursion should stop here. */
-void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index);
+void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) noexcept;
 
 /**
  Recursion here is through normal variadic argument list unpacking. Unlike above, we have the arguments, so we don't
  require the intermediary struct.
  */
 template <typename T, typename... Ts>
-void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index, T t, Ts... args)
+void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index, T t, Ts... args) noexcept
 {
   // We have to be able to handle methods that take less than the provided number of arguments, since that will cause
   // an exception to be thrown.
@@ -117,15 +117,15 @@ void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger inde
 
 #pragma mark - Debug Helpers
 
-void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings);
+void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 
-void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings);
+void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 
-NSString *_CKComponentResponderChainDebugResponderChain(id responder);
+NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept;
 
 #pragma mark - Sending
 
-NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender);
+NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender) noexcept;
 
 template<typename... T>
 static void CKComponentActionSendResponderChain(SEL selector, id target, CKComponent *sender, T... args) {

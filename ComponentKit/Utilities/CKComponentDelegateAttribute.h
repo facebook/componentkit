@@ -35,4 +35,4 @@
 
  */
 CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL delegatePropertySelector,
-                                                           CKComponentForwardedSelectors selectors);
+                                                           CKComponentForwardedSelectors selectors) noexcept;

@@ -24,7 +24,7 @@
 @end
 
 CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
-                                                           CKComponentForwardedSelectors selectors)
+                                                           CKComponentForwardedSelectors selectors) noexcept
 {
   if (selector == NULL) {
     return {
