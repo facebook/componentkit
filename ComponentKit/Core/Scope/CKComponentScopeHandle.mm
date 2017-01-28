@@ -121,18 +121,33 @@
 
 #pragma mark - State
 
-- (void)updateState:(id (^)(id))updateFunction mode:(CKUpdateMode)mode
+- (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode
 {
-  CKAssertNotNil(updateFunction, @"The block for updating state cannot be nil");
+  CKAssertNotNil(updateBlock, @"The update block cannot be nil");
   if (![NSThread isMainThread]) {
     dispatch_async(dispatch_get_main_queue(), ^{
-      [self updateState:updateFunction mode:mode];
+      [self updateState:updateBlock mode:mode];
     });
     return;
   }
   [_listener componentScopeHandleWithIdentifier:_globalIdentifier
                                  rootIdentifier:_rootIdentifier
-                          didReceiveStateUpdate:updateFunction
+             didReceiveStateUpdateToBeScheduled:updateBlock
+                                           mode:mode];
+}
+
+- (void)enqueueState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode
+{
+  CKAssertNotNil(updateBlock, @"The update block cannot be nil");
+  if (![NSThread isMainThread]) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self enqueueState:updateBlock mode:mode];
+    });
+    return;
+  }
+  [_listener componentScopeHandleWithIdentifier:_globalIdentifier
+                                 rootIdentifier:_rootIdentifier
+              didReceiveStateUpdateToBeEnqueued:updateBlock
                                            mode:mode];
 }
 

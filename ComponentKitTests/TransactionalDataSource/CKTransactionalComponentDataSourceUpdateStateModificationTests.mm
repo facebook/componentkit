@@ -54,12 +54,20 @@
   return [CKStatefulTestComponent new];
 }
 
-- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
-                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                     didReceiveStateUpdate:(id (^)(id))stateUpdate
+- (void)componentScopeHandleWithIdentifier:(int32_t)globalIdentifier
+                            rootIdentifier:(int32_t)rootIdentifier
+        didReceiveStateUpdateToBeScheduled:(id (^)(id))updateBlock
                                       mode:(CKUpdateMode)mode
 {
-  _pendingStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});
+  _pendingStateUpdates[rootIdentifier].insert({globalIdentifier, updateBlock});
+}
+
+- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
+                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+         didReceiveStateUpdateToBeEnqueued:(id (^)(id))updateBlock
+                                      mode:(CKUpdateMode)mode
+{
+  _pendingStateUpdates[rootIdentifier].insert({globalIdentifier, updateBlock});
 }
 
 - (void)tearDown

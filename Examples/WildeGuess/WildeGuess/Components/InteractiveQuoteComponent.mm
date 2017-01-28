@@ -13,6 +13,7 @@
 
 #import <ComponentKit/CKComponentSubclass.h>
 
+#import "EnqueueStateButtonComponent.h"
 #import "Quote.h"
 #import "QuoteComponent.h"
 #import "QuoteContext.h"
@@ -42,19 +43,29 @@ static NSString *const oscarWilde = @"Oscar Wilde";
   InteractiveQuoteComponent *c =
   [super newWithComponent:
    [CKStackLayoutComponent
-    newWithView:{
-      [UIView class],
-      {CKComponentTapGestureAttribute(@selector(didTap))}
-    }
+    newWithView:{}
     size:{}
     style:{
       .alignItems = CKStackLayoutAlignItemsStretch
     }
     children:{
-      {[CKOverlayLayoutComponent
-        newWithComponent:[QuoteComponent newWithQuote:quote context:context]
-        overlay:overlay]},
-      {hairlineComponent()}
+      {[CKStackLayoutComponent
+        newWithView:{
+          [UIView class],
+          {CKComponentTapGestureAttribute(@selector(didTap))}
+        }
+        size:{}
+        style:{
+          .alignItems = CKStackLayoutAlignItemsStretch
+        }
+        children:{
+          {[CKOverlayLayoutComponent
+            newWithComponent:[QuoteComponent newWithQuote:quote context:context]
+            overlay:overlay]},
+        }]},
+      {hairlineComponent()},
+      {[EnqueueStateButtonComponent newWithContext:context]},
+      {hairlineComponent()},
     }]];
   if (c) {
     c->_overlay = overlay;

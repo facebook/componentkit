@@ -10,7 +10,14 @@
 
 #import <Foundation/Foundation.h>
 
+/** The update mode is used to inform ComponentKit how to apply changes. */
 typedef NS_ENUM(NSUInteger, CKUpdateMode) {
+  /** Apply the update off the main thread. */
   CKUpdateModeAsynchronous,
+  /**
+   Apply the update on the main thread.
+   The synchronous update mode will not immediately block the executing thread when apply updates. Instead ComponentKit
+   will schedule the update to be performed on the next tick of the main thread's run loop.
+   */
   CKUpdateModeSynchronous,
 };
