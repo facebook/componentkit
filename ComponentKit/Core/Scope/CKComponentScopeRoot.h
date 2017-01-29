@@ -21,6 +21,7 @@
 typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
   CKComponentAnnouncedEventTreeWillAppear,
   CKComponentAnnouncedEventTreeDidDisappear,
+  CKComponentAnnouncedEventScrollViewDidScroll
 };
 
 /** Component state announcements will always be made on the main thread. */

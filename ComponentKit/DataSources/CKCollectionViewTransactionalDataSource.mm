@@ -31,6 +31,7 @@ CKTransactionalComponentDataSourceListener
   CKTransactionalComponentDataSourceState *_currentState;
   CKComponentDataSourceAttachController *_attachController;
   NSMapTable<UICollectionViewCell *, CKTransactionalComponentDataSourceItem *> *_cellToItemMap;
+  NSMutableSet<CKTransactionalComponentDataSourceItem *> *_visibleItems;
 }
 @end
 
@@ -53,6 +54,7 @@ CKTransactionalComponentDataSourceListener
     _attachController = [[CKComponentDataSourceAttachController alloc] init];
     _supplementaryViewDataSource = supplementaryViewDataSource;
     _cellToItemMap = [NSMapTable weakToStrongObjectsMapTable];
+    _visibleItems = [NSMutableSet set];
   }
   return self;
 }
@@ -196,12 +198,23 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
 
 - (void)announceWillDisplayCell:(UICollectionViewCell *)cell
 {
-  [[_cellToItemMap objectForKey:cell].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  CKTransactionalComponentDataSourceItem *item = [_cellToItemMap objectForKey:cell];
+  [item.scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  [_visibleItems addObject:item];
 }
 
 - (void)announceDidEndDisplayingCell:(UICollectionViewCell *)cell
 {
-  [[_cellToItemMap objectForKey:cell].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+  CKTransactionalComponentDataSourceItem *item = [_cellToItemMap objectForKey:cell];
+  [item.scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+  [_visibleItems removeObject:item];
+}
+
+- (void)announceScrollEventToVisibleCells
+{
+  for (CKTransactionalComponentDataSourceItem *item in _visibleItems) {
+    [item.scopeRoot announceEventToControllers:CKComponentAnnouncedEventScrollViewDidScroll];
+  }
 }
 
 #pragma mark - UICollectionViewDataSource

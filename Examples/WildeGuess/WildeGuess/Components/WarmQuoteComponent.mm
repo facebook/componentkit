@@ -11,6 +11,8 @@
 
 #import "WarmQuoteComponent.h"
 
+#import <ComponentKit/CKIncrementalMountComponent.h>
+
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"
 
@@ -19,28 +21,30 @@
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context
 {
   return [super newWithComponent:
-          [QuoteWithBackgroundComponent
-           newWithBackgroundImage:[context imageNamed:@"Powell"]
-           quoteComponent:
-           [CKRatioLayoutComponent
-            newWithRatio:1.3
-            size:{}
-            component:
-            [CKInsetComponent
-             // Left and right inset of 30pts; centered vertically:
-             newWithInsets:{.left = 30, .right = 30, .top = INFINITY, .bottom = INFINITY}
+          [CKIncrementalMountComponent
+           newWithComponent:
+           [QuoteWithBackgroundComponent
+            newWithBackgroundImage:[context imageNamed:@"Powell"]
+            quoteComponent:
+            [CKRatioLayoutComponent
+             newWithRatio:1.3
+             size:{}
              component:
-             [CKLabelComponent
-              newWithLabelAttributes:{
-                .string = text,
-                .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
-              }
-              viewAttributes:{
-                {@selector(setBackgroundColor:), [UIColor clearColor]},
-                {@selector(setUserInteractionEnabled:), @NO},
-              }
-              size:{ }]]]]];
-
+             [CKInsetComponent
+              // Left and right inset of 30pts; centered vertically:
+              newWithInsets:{.left = 30, .right = 30, .top = INFINITY, .bottom = INFINITY}
+              component:
+              [CKLabelComponent
+               newWithLabelAttributes:{
+                 .string = text,
+                 .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
+               }
+               viewAttributes:{
+                 {@selector(setBackgroundColor:), [UIColor clearColor]},
+                 {@selector(setUserInteractionEnabled:), @NO},
+               }
+               size:{ }]]]]]];
+  
 }
 
 @end

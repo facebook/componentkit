@@ -123,6 +123,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+  [_dataSource announceScrollEventToVisibleCells];
   if( scrollView.contentSize.height == 0 ) {
     return ;
   }

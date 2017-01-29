@@ -110,7 +110,7 @@ struct CKComponentHostingViewInputs {
       _mountedLayout = CKComputeRootComponentLayout(_component, {size, size});
     }
     CKComponentBoundsAnimationApply(_boundsAnimation, ^{
-      _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil) copy];
+      _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil, CK::Component::MountContext::RootContext(_containerView)) copy];
     }, nil);
     _boundsAnimation = {};
     _isMountingComponent = NO;
