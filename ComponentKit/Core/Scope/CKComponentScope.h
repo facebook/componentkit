@@ -49,12 +49,12 @@ public:
                               for why this is usually a bad idea:
                               http://facebook.github.io/react/tips/props-in-getInitialState-as-anti-pattern.html
    */
-  CKComponentScope(Class __unsafe_unretained componentClass, id identifier = nil, id (^initialStateCreator)(void) = nil);
+  CKComponentScope(Class __unsafe_unretained componentClass, id identifier = nil, id (^initialStateCreator)(void) = nil) noexcept;
 
   ~CKComponentScope();
 
   /** @return The current state for the component being built. */
-  id state(void) const;
+  id state(void) const noexcept;
 
   /**
    @return A block that schedules a state update when invoked.
@@ -63,14 +63,14 @@ public:
    CKComponentAction and the parent should call -updateState:mode: on itself; this hides the implementation details
    of the parent's state from the child.)
   */
-  CKComponentStateUpdater stateUpdater(void) const;
+  CKComponentStateUpdater stateUpdater(void) const noexcept;
 
   /**
    @return The scope handle associated with this scope.
    @discussion This is exposed for use by the framework. You should almost certainly never call this for any reason
                in your components.
    */
-  CKComponentScopeHandle *scopeHandle(void) const;
+  CKComponentScopeHandle *scopeHandle(void) const noexcept;
 
 private:
   CKComponentScope(const CKComponentScope&) = delete;

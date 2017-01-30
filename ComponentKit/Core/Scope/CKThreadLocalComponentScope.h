@@ -22,7 +22,7 @@ public:
   ~CKThreadLocalComponentScope();
 
   /** Returns nullptr if there isn't a current scope */
-  static CKThreadLocalComponentScope *currentScope();
+  static CKThreadLocalComponentScope *currentScope() noexcept;
 
   CKComponentScopeRoot *const newScopeRoot;
   const CKComponentStateUpdateMap stateUpdates;
@@ -35,7 +35,7 @@ public:
  */
 class CKThreadLocalComponentScopeOverride {
 public:
-  CKThreadLocalComponentScopeOverride(CKThreadLocalComponentScope *scope);
+  CKThreadLocalComponentScopeOverride(CKThreadLocalComponentScope *scope) noexcept;
   ~CKThreadLocalComponentScopeOverride();
 
 private:

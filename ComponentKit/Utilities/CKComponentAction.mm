@@ -21,8 +21,8 @@
 #import "CKComponentScopeHandle.h"
 #import "CKComponentViewInterface.h"
 
-void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list) { }
-void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) { }
+void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list) noexcept { }
+void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) noexcept { }
 
 #pragma mark - CKTypedComponentActionBase
 
@@ -53,23 +53,23 @@ id CKTypedComponentActionBase::initialTarget(CKComponent *sender) const
   }
 }
 
-CKTypedComponentActionBase::CKTypedComponentActionBase() : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(NULL) {}
+CKTypedComponentActionBase::CKTypedComponentActionBase() noexcept : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(NULL) {}
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) : _variant(CKTypedComponentActionVariantTargetSelector), _target(target), _scopeHandle(nil), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) noexcept : _variant(CKTypedComponentActionVariantTargetSelector), _target(target), _scopeHandle(nil), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) : _variant(CKTypedComponentActionVariantComponentScope), _target(nil), _scopeHandle(scope.scopeHandle()), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept : _variant(CKTypedComponentActionVariantComponentScope), _target(nil), _scopeHandle(scope.scopeHandle()), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(int s) : CKTypedComponentActionBase() {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(int s) noexcept : CKTypedComponentActionBase() {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(long s) : CKTypedComponentActionBase() {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(long s) noexcept : CKTypedComponentActionBase() {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(std::nullptr_t n) : CKTypedComponentActionBase() {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(std::nullptr_t n) noexcept : CKTypedComponentActionBase() {};
 
-CKTypedComponentActionBase::operator bool() const { return _selector != NULL; };
+CKTypedComponentActionBase::operator bool() const noexcept { return _selector != NULL; };
 
-bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) const
+bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) const noexcept
 {
   return (_variant == rhs._variant
           && CKObjectIsEqual(_target, rhs._target)
@@ -77,16 +77,16 @@ bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) 
           && _selector == rhs._selector);
 };
 
-SEL CKTypedComponentActionBase::selector() const { return _selector; };
+SEL CKTypedComponentActionBase::selector() const noexcept { return _selector; };
 
-std::string CKTypedComponentActionBase::identifier() const
+std::string CKTypedComponentActionBase::identifier() const noexcept
 {
   return std::string(sel_getName(_selector)) + "-" + std::to_string((long)(_target ?: _scopeHandle));
 }
 
 #pragma mark - Sending
 
-NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender)
+NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender) noexcept
 {
   id responder = [target targetForAction:selector withSender:target];
   CKCAssertNotNil(responder, @"Unhandled component action %@ following responder chain %@",
@@ -162,7 +162,7 @@ struct CKComponentActionHasher
 typedef std::unordered_map<CKTypedComponentAction<UIEvent *>, CKComponentActionControlForwarder *, CKComponentActionHasher> ForwarderMap;
 
 CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<UIEvent *> action,
-                                                         UIControlEvents controlEvents)
+                                                         UIControlEvents controlEvents) noexcept
 {
   static ForwarderMap *map = new ForwarderMap(); // never destructed to avoid static destruction fiasco
   static CK::StaticMutex lock = CK_MUTEX_INITIALIZER;   // protects map
@@ -255,7 +255,7 @@ static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSigna
 }
 #endif
 
-void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings)
+void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
 {
 #if DEBUG
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
@@ -272,7 +272,7 @@ void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SE
 #endif
 }
 
-void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings)
+void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
 {
 #if DEBUG
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
@@ -288,7 +288,7 @@ void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const st
 
 
 // This method returns a friendly-print of a responder chain. Used for debug purposes.
-NSString *_CKComponentResponderChainDebugResponderChain(id responder) {
+NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {
   return (responder
           ? [NSString stringWithFormat:@"%@ -> %@", responder, _CKComponentResponderChainDebugResponderChain([responder nextResponder])]
           : @"nil");
@@ -325,7 +325,7 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) {
 
 @end
 
-CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKComponentAction>> &passedActions)
+CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKComponentAction>> &passedActions) noexcept
 {
   auto const actions = passedActions;
   return {

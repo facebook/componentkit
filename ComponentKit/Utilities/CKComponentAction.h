@@ -91,8 +91,8 @@ class CKTypedComponentAction : public CKTypedComponentActionBase {
                 CKTypedComponentActionBoolPack<(CKTypedComponentActionDenyType<T>::value)...>
                 >::value, "You must either use a pointer (like an NSObject) or a trivially constructible type. Complex types are not allowed as arguments of component actions.");
 public:
-  CKTypedComponentAction<T...>() : CKTypedComponentActionBase() {};
-  CKTypedComponentAction<T...>(id target, SEL selector) : CKTypedComponentActionBase(target, selector)
+  CKTypedComponentAction<T...>() noexcept : CKTypedComponentActionBase() {};
+  CKTypedComponentAction<T...>(id target, SEL selector) noexcept : CKTypedComponentActionBase(target, selector)
   {
 #if DEBUG
     std::vector<const char *> typeEncodings;
@@ -101,7 +101,7 @@ public:
 #endif
   }
 
-  CKTypedComponentAction<T...>(const CKComponentScope &scope, SEL selector) : CKTypedComponentActionBase(scope, selector)
+  CKTypedComponentAction<T...>(const CKComponentScope &scope, SEL selector) noexcept : CKTypedComponentActionBase(scope, selector)
   {
 #if DEBUG
     std::vector<const char *> typeEncodings;
@@ -111,23 +111,23 @@ public:
   }
 
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
-  CKTypedComponentAction(SEL selector) : CKTypedComponentActionBase(selector) {};
+  CKTypedComponentAction(SEL selector) noexcept : CKTypedComponentActionBase(selector) {};
 
   /** Allows conversion from NULL actions. */
-  CKTypedComponentAction(int s) : CKTypedComponentActionBase() {};
-  CKTypedComponentAction(long s) : CKTypedComponentActionBase() {};
-  CKTypedComponentAction(std::nullptr_t n) : CKTypedComponentActionBase() {};
+  CKTypedComponentAction(int s) noexcept : CKTypedComponentActionBase() {};
+  CKTypedComponentAction(long s) noexcept : CKTypedComponentActionBase() {};
+  CKTypedComponentAction(std::nullptr_t n) noexcept : CKTypedComponentActionBase() {};
 
   /** We support promotion from actions that take no arguments. */
   template <typename... Ts>
-  CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) : CKTypedComponentActionBase(action) { };
+  CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) noexcept : CKTypedComponentActionBase(action) { };
 
   /**
    We allow demotion from actions with types to untyped actions, but only when explicit. This means arguments to the
    method specified here will have nil values at runtime. Used for interoperation with older API's.
    */
   template<typename... Ts>
-  explicit CKTypedComponentAction<>(const CKTypedComponentAction<Ts...> &action) : CKTypedComponentActionBase(action) { };
+  explicit CKTypedComponentAction<>(const CKTypedComponentAction<Ts...> &action) noexcept : CKTypedComponentActionBase(action) { };
 
   ~CKTypedComponentAction() {};
 
@@ -140,7 +140,7 @@ public:
     CKComponentActionSendResponderChain(selector(), responder, sender, args...);
   };
 
-  bool operator==(const CKTypedComponentAction<T...> &rhs) const {
+  bool operator==(const CKTypedComponentAction<T...> &rhs) const noexcept {
     return isEqual(rhs);
   };
 
@@ -176,11 +176,11 @@ void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sende
  @param controlEvents The events that should result in the action being sent. Default is touch up inside.
  */
 CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<UIEvent *> action,
-                                                         UIControlEvents controlEvents = UIControlEventTouchUpInside);
+                                                         UIControlEvents controlEvents = UIControlEventTouchUpInside) noexcept;
 
 /**
  Returns a view attribute that configures a view to have custom accessibility actions.
 
  @param actions An ordered list of actions, each with a name and an associated CKComponentAction
  */
-CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKComponentAction>> &actions);
+CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKComponentAction>> &actions) noexcept;

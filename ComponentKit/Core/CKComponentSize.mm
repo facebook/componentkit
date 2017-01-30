@@ -13,12 +13,12 @@
 
 #import <ComponentKit/CKAssert.h>
 
-CKComponentSize CKComponentSize::fromCGSize(CGSize size)
+CKComponentSize CKComponentSize::fromCGSize(CGSize size) noexcept
 {
   return {size.width, size.height};
 }
 
-static inline void CKCSConstrain(CGFloat minVal, CGFloat exactVal, CGFloat maxVal, CGFloat *outMin, CGFloat *outMax)
+static inline void CKCSConstrain(CGFloat minVal, CGFloat exactVal, CGFloat maxVal, CGFloat *outMin, CGFloat *outMax) noexcept
 {
     CKCAssert(!isnan(minVal), @"minVal must not be NaN. Current stack description: %@", CK::Component::LayoutContext::currentStackDescription());
     CKCAssert(!isnan(maxVal), @"maxVal must not be NaN. Current stack description: %@", CK::Component::LayoutContext::currentStackDescription());
@@ -50,7 +50,7 @@ static inline void CKCSConstrain(CGFloat minVal, CGFloat exactVal, CGFloat maxVa
     }
 }
 
-CKSizeRange CKComponentSize::resolve(const CGSize &parentSize) const
+CKSizeRange CKComponentSize::resolve(const CGSize &parentSize) const noexcept
 {
   CGSize resolvedExact = CKRelativeSize(width, height).resolveSize(parentSize, {NAN, NAN});
   CGSize resolvedMin = CKRelativeSize(minWidth, minHeight).resolveSize(parentSize, {0, 0});
@@ -62,14 +62,14 @@ CKSizeRange CKComponentSize::resolve(const CGSize &parentSize) const
   return {rangeMin, rangeMax};
 }
 
-bool CKComponentSize::operator==(const CKComponentSize &other) const
+bool CKComponentSize::operator==(const CKComponentSize &other) const noexcept
 {
   return width == other.width && height == other.height
   && minWidth == other.minWidth && minHeight == other.minHeight
   && maxWidth == other.maxWidth && maxHeight == other.maxHeight;
 }
 
-NSString *CKComponentSize::description() const
+NSString *CKComponentSize::description() const noexcept
 {
   return [NSString stringWithFormat:
           @"<CKComponentSize: exact=%@, min=%@, max=%@>",
@@ -78,7 +78,7 @@ NSString *CKComponentSize::description() const
           CKRelativeSize(maxWidth, maxHeight).description()];
 }
 
-size_t std::hash<CKComponentSize>::operator ()(const CKComponentSize &size) {
+size_t std::hash<CKComponentSize>::operator ()(const CKComponentSize &size) noexcept {
   NSUInteger subhashes[] = {
     std::hash<CKRelativeDimension>()(size.width),
     std::hash<CKRelativeDimension>()(size.height),

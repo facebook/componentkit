@@ -23,7 +23,7 @@ struct CKComponentLayoutChild;
 
 /** Deletes the target off the main thread; important since component layouts are large recursive structures. */
 struct CKOffMainThreadDeleter {
-  void operator()(std::vector<CKComponentLayoutChild> *target);
+  void operator()(std::vector<CKComponentLayoutChild> *target) noexcept;
 };
 
 /** Represents the computed size of a component, as well as the computed sizes and positions of its children. */
@@ -33,12 +33,12 @@ struct CKComponentLayout {
   std::shared_ptr<const std::vector<CKComponentLayoutChild>> children;
   NSDictionary *extra;
 
-  CKComponentLayout(CKComponent *c, CGSize s, std::vector<CKComponentLayoutChild> ch = {}, NSDictionary *e = nil)
+  CKComponentLayout(CKComponent *c, CGSize s, std::vector<CKComponentLayoutChild> ch = {}, NSDictionary *e = nil) noexcept
   : component(c), size(s), children(new std::vector<CKComponentLayoutChild>(std::move(ch)), CKOffMainThreadDeleter()), extra(e) {
     CKCAssertNotNil(c, @"Nil components are not allowed");
   };
 
-  CKComponentLayout()
+  CKComponentLayout() noexcept
   : component(nil), size({0, 0}), children(new std::vector<CKComponentLayoutChild>(), CKOffMainThreadDeleter()), extra(nil) {};
 };
 
