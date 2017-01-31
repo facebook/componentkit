@@ -10,13 +10,12 @@
 
 #import "CKComponentLifecycleTestController.h"
 
-#import "CKComponentDataSourceAttachController.h"
-#import "CKComponentLayout.h"
-#import "CKComponentProvider.h"
-#import "CKComponentScopeRoot.h"
-#import "CKComponentSizeRangeProviding.h"
-#import "CKDimension.h"
-#import "CKMutex.h"
+#import <ComponentKit/CKComponentDataSourceAttachController.h>
+#import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentSizeRangeProviding.h>
+#import <ComponentKit/CKDimension.h>
 
 @interface CKComponentLifecycleTestController () <CKComponentStateListener>
 @end

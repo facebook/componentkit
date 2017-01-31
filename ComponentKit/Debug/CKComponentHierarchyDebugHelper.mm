@@ -12,6 +12,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import "CKComponent+UIView.h"
 #import "CKComponent.h"
 #import "CKComponentInternal.h"
 #import "CKComponentDataSourceAttachController.h"
