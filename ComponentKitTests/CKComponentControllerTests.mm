@@ -10,15 +10,14 @@
 
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestLib/CKComponentTestRootScope.h>
+#import <ComponentKitTestHelpers/CKComponentLifecycleTestController.h>
+#import <ComponentKitTestHelpers/CKComponentTestRootScope.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentController.h>
-#import <ComponentKit/CKComponentLifecycleManager.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentSubclass.h>
-#import <ComponentKit/CKComponentViewInterface.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 
 @interface CKComponentControllerTests : XCTestCase <CKComponentProvider>
@@ -54,48 +53,59 @@
 
 - (void)testThatAttachingManagerInstantiatesComponentController
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  UIView *view = [[UIView alloc] init];
-  [clm attachToView:view];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
 
-  CKFooComponent *fooComponent = (CKFooComponent *)state.layout.component;
+  CKFooComponent *fooComponent = (CKFooComponent *)state.componentLayout.component;
   XCTAssertNotNil(fooComponent.controller, @"Expected mounting a component to create controller");
 }
 
 - (void)testThatRemountingUnchangedComponentDoesNotCallDidUpdateComponent
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  UIView *view = [[UIView alloc] init];
-  [clm attachToView:view];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
 
-  CKFooComponent *fooComponent = (CKFooComponent *)state.layout.component;
+  CKFooComponent *fooComponent = (CKFooComponent *)state.componentLayout.component;
   CKFooComponentController *controller = fooComponent.controller;
 
-  [clm detachFromView];
+  [componentLifecycleTestController detachFromView];
   controller.calledDidUpdateComponent = NO; // Reset to NO
-  [clm attachToView:view];
+  [componentLifecycleTestController attachToView:view];
   XCTAssertFalse(controller.calledDidUpdateComponent, @"Component did not update so should not call didUpdateComponent");
 }
 
 - (void)testThatUpdatingManagerUpdatesComponentController
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  UIView *view = [[UIView alloc] init];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  UIView *view = [UIView new];
 
-  CKComponentLifecycleManagerState state1 = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state1];
-  [clm attachToView:view];
-  CKFooComponent *fooComponent1 = (CKFooComponent *)state1.layout.component;
+  const CKComponentLifecycleTestControllerState state1 = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                     constrainedSize:{{0,0}, {100, 100}}
+                                                                                                             context:nil];
+  [componentLifecycleTestController updateWithState:state1];
+  [componentLifecycleTestController attachToView:view];
+  CKFooComponent *fooComponent1 = (CKFooComponent *)state1.componentLayout.component;
 
-  CKComponentLifecycleManagerState state2 = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state2];
-  CKFooComponent *fooComponent2 = (CKFooComponent *)state1.layout.component;
+  const CKComponentLifecycleTestControllerState state2 = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                     constrainedSize:{{0,0}, {100, 100}}
+                                                                                                             context:nil];
+  [componentLifecycleTestController updateWithState:state2];
+  CKFooComponent *fooComponent2 = (CKFooComponent *)state1.componentLayout.component;
 
   XCTAssertTrue(fooComponent1.controller == fooComponent2.controller,
                 @"Expected controller %@ to match %@",
@@ -104,45 +114,54 @@
 
 - (void)testThatAttachingManagerCallsDidAcquireView
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  UIView *view = [[UIView alloc] init];
-  [clm attachToView:view];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
 
-  CKFooComponent *fooComponent = (CKFooComponent *)state.layout.component;
+  CKFooComponent *fooComponent = (CKFooComponent *)state.componentLayout.component;
   XCTAssertTrue(fooComponent.controller.calledDidAcquireView, @"Expected mounting to acquire view");
   XCTAssertNotNil(fooComponent.controller.view, @"Expected mounting to acquire view");
 }
 
 - (void)testThatDetachingManagerCallsDidRelinquishView
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  UIView *view = [[UIView alloc] init];
-  [clm attachToView:view];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
 
-  CKFooComponent *fooComponent = (CKFooComponent *)state.layout.component;
+  CKFooComponent *fooComponent = (CKFooComponent *)state.componentLayout.component;
   XCTAssertFalse(fooComponent.controller.calledWillRelinquishView, @"Did not expect view to be released before detach");
 
-  [clm detachFromView];
+  [componentLifecycleTestController detachFromView];
   XCTAssertTrue(fooComponent.controller.calledWillRelinquishView, @"Expected detach to call release view");
   XCTAssertNil(fooComponent.controller.view, @"Expected detach to release view");
 }
 
 - (void)testThatUpdatingStateWhileAttachedRelinquishesOldViewAndAcquiresNewOne
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  UIView *view = [[UIView alloc] init];
-  [clm attachToView:view];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
 
-  CKFooComponent *fooComponent = (CKFooComponent *)state.layout.component;
+  CKFooComponent *fooComponent = (CKFooComponent *)state.componentLayout.component;
   XCTAssertTrue(fooComponent.controller.calledDidAcquireView, @"Expected mounting to acquire view");
   XCTAssertNotNil(fooComponent.controller.view, @"Expected mounting to acquire view");
   UIView *originalView = fooComponent.controller.view;
@@ -157,14 +176,17 @@
 
 - (void)testThatResponderChainIsInOrderComponentThenControllerThenRootView
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  UIView *view = [[UIView alloc] init];
-  [clm attachToView:view];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
 
-  CKFooComponent *fooComponent = (CKFooComponent *)state.layout.component;
+  CKFooComponent *fooComponent = (CKFooComponent *)state.componentLayout.component;
   XCTAssertEqualObjects([fooComponent nextResponder], fooComponent.controller,
                        @"Component's nextResponder should be component controller");
   XCTAssertEqualObjects([fooComponent.controller nextResponder], view,
@@ -173,34 +195,42 @@
 
 - (void)testThatResponderChainTargetsCorrectResponder
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
   
-  UIView *view = [[UIView alloc] init];
-  [clm attachToView:view];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
   
-  CKFooComponent *fooComponent = (CKFooComponent *)state.layout.component;
+  CKFooComponent *fooComponent = (CKFooComponent *)state.componentLayout.component;
   XCTAssertEqualObjects([fooComponent targetForAction:nil withSender:fooComponent], fooComponent, @"Component should respond to this action");
   XCTAssertEqualObjects([fooComponent targetForAction:nil withSender:nil], fooComponent.controller, @"Component's controller should respond to this action");
 }
 
 - (void)testThatEarlyReturnNew_fromFirstComponent_allowsComponentCreation_whenNotEarlyReturning_onStateUpdate
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  UIView *view = [[UIView alloc] init];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  UIView *view = [UIView new];
 
   [CKFooComponent setShouldEarlyReturnNew:YES];
 
-  CKComponentLifecycleManagerState state1 = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state1];
-  [clm attachToView:view];
+  const CKComponentLifecycleTestControllerState state1 = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                     constrainedSize:{{0,0}, {100, 100}}
+                                                                                                             context:nil];
+  [componentLifecycleTestController updateWithState:state1];
+  [componentLifecycleTestController attachToView:view];
 
   [CKFooComponent setShouldEarlyReturnNew:NO];
 
-  CKComponentLifecycleManagerState state2 = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state2];
-  CKFooComponent *fooComponent2 = (CKFooComponent *)state2.layout.component;
+  const CKComponentLifecycleTestControllerState state2 = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                     constrainedSize:{{0,0}, {100, 100}}
+                                                                                                             context:nil];
+  [componentLifecycleTestController updateWithState:state2];
+  CKFooComponent *fooComponent2 = (CKFooComponent *)state2.componentLayout.component;
 
   XCTAssertTrue([fooComponent2.controller isKindOfClass:[CKFooComponentController class]],
                 @"Expected controller %@ to exist and be of type CKFooComponentController",
@@ -209,68 +239,72 @@
 
 - (void)testThatComponentControllerReceivesComponentTreeWillAppearEvent
 {
-  CKComponentLifecycleManager *lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  CKComponentLifecycleManagerState state = [lifecycleManager prepareForUpdateWithModel:nil
-                                                                       constrainedSize:{{0,0}, {100, 100}}
-                                                                               context:nil];
-  [lifecycleManager attachToView:[UIView new]];
-  [lifecycleManager updateWithState:state];
-  [[lifecycleManager scopeRoot] announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
-  CKFooComponent *fooComponent = (CKFooComponent *)[lifecycleManager componentLayout].component;
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController attachToView:[UIView new]];
+  [componentLifecycleTestController updateWithState:state];
+  [[componentLifecycleTestController state].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  CKFooComponent *fooComponent = (CKFooComponent *)[componentLifecycleTestController state].componentLayout.component;
   XCTAssertTrue(fooComponent.controller.calledComponentTreeWillAppear,
                 @"Expected controller %@ to have received component tree will appear event", fooComponent.controller);
 }
 
 - (void)testThatComponentControllerReceivesComponentTreeDidDisappearEvent
 {
-  CKComponentLifecycleManager *lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  CKComponentLifecycleManagerState state = [lifecycleManager prepareForUpdateWithModel:nil
-                                                                       constrainedSize:{{0,0}, {100, 100}}
-                                                                               context:nil];
-  [lifecycleManager attachToView:[UIView new]];
-  [lifecycleManager updateWithState:state];
-  [[lifecycleManager scopeRoot] announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
-  [lifecycleManager detachFromView];
-  [[lifecycleManager scopeRoot] announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
-  CKFooComponent *fooComponent = (CKFooComponent *)[lifecycleManager componentLayout].component;
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController attachToView:[UIView new]];
+  [componentLifecycleTestController updateWithState:state];
+  [[componentLifecycleTestController state].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  [componentLifecycleTestController detachFromView];
+  [[componentLifecycleTestController state].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+  CKFooComponent *fooComponent = (CKFooComponent *)[componentLifecycleTestController state].componentLayout.component;
   XCTAssertTrue(fooComponent.controller.calledComponentTreeDidDisappear,
                 @"Expected controller %@ to have received component tree did disappear event", fooComponent.controller);
 }
 
 - (void)testThatComponentControllerReceivesComponentTreeWillAppearEventAfterAdditionalStateUpdates
 {
-  CKComponentLifecycleManager *lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  CKComponentLifecycleManagerState state1 = [lifecycleManager prepareForUpdateWithModel:nil
-                                                                        constrainedSize:{{0,0}, {100, 100}}
-                                                                                context:nil];
-  CKComponentLifecycleManagerState state2 = [lifecycleManager prepareForUpdateWithModel:nil
-                                                                        constrainedSize:{{0,0}, {100, 100}}
-                                                                                context:nil];
-  [lifecycleManager attachToView:[UIView new]];
-  [lifecycleManager updateWithState:state1];
-  [lifecycleManager updateWithState:state2];
-  [[lifecycleManager scopeRoot] announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
-  CKFooComponent *fooComponent = (CKFooComponent *)[lifecycleManager componentLayout].component;
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state1 = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                     constrainedSize:{{0,0}, {100, 100}}
+                                                                                                             context:nil];
+  const CKComponentLifecycleTestControllerState state2 = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                     constrainedSize:{{0,0}, {100, 100}}
+                                                                                                             context:nil];
+  [componentLifecycleTestController attachToView:[UIView new]];
+  [componentLifecycleTestController updateWithState:state1];
+  [componentLifecycleTestController updateWithState:state2];
+  [[componentLifecycleTestController state].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  CKFooComponent *fooComponent = (CKFooComponent *)[componentLifecycleTestController state].componentLayout.component;
   XCTAssertTrue(fooComponent.controller.calledComponentTreeWillAppear,
                 @"Expected controller %@ to have received component tree will appear event", fooComponent.controller);
 }
 
 - (void)testThatComponentControllerReceivesComponentTreeDidDisappearEventAfterAdditionalStateUpdates
 {
-  CKComponentLifecycleManager *lifecycleManager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  CKComponentLifecycleManagerState state1 = [lifecycleManager prepareForUpdateWithModel:nil
-                                                                        constrainedSize:{{0,0}, {100, 100}}
-                                                                                context:nil];
-  CKComponentLifecycleManagerState state2 = [lifecycleManager prepareForUpdateWithModel:nil
-                                                                        constrainedSize:{{0,0}, {100, 100}}
-                                                                                context:nil];
-  [lifecycleManager attachToView:[UIView new]];
-  [lifecycleManager updateWithState:state1];
-  [lifecycleManager updateWithState:state2];
-  [[lifecycleManager scopeRoot] announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
-  [lifecycleManager detachFromView];
-  [[lifecycleManager scopeRoot] announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
-  CKFooComponent *fooComponent = (CKFooComponent *)[lifecycleManager componentLayout].component;
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state1 = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                     constrainedSize:{{0,0}, {100, 100}}
+                                                                                                             context:nil];
+  const CKComponentLifecycleTestControllerState state2 = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                     constrainedSize:{{0,0}, {100, 100}}
+                                                                                                             context:nil];
+  [componentLifecycleTestController attachToView:[UIView new]];
+  [componentLifecycleTestController updateWithState:state1];
+  [componentLifecycleTestController updateWithState:state2];
+  [[componentLifecycleTestController state].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  [componentLifecycleTestController detachFromView];
+  [[componentLifecycleTestController state].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+  CKFooComponent *fooComponent = (CKFooComponent *)[componentLifecycleTestController state].componentLayout.component;
   XCTAssertTrue(fooComponent.controller.calledComponentTreeDidDisappear,
                 @"Expected controller %@ to have received component tree did disappear event", fooComponent.controller);
 }

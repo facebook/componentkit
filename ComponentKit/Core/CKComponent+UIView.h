@@ -8,14 +8,15 @@
  *
  */
 
-#import <ComponentKit/CKComponentLifecycleManager.h>
-#import <ComponentKit/CKComponentScopeRoot.h>
+#import <vector>
 
-/**
- Debug Purposes Only.
- */
-@interface CKComponentLifecycleManager () <CKComponentStateListener>
+#import <UIKit/UIKit.h>
 
-- (const CKComponentLifecycleManagerState &)state;
+@class CKComponent;
+
+@interface UIView (CKComponent)
+
+/** Strong reference back to the associated component while the component is mounted. */
+@property (nonatomic, strong, setter=ck_setComponent:) CKComponent *ck_component;
 
 @end

@@ -55,13 +55,13 @@
 
 - (id)nextResponderAfterController;
 
-/** Called by the CKComponentLifecycleManager when the component and all its children have been mounted. */
+/** Called when the component and all its children have been mounted. */
 - (void)childrenDidMount;
 
 /** Called by the animation machinery. Do not access this externally. */
 - (UIView *)viewForAnimation;
 
-/** Used by CKComponentLifecycleManager to get the root component in the responder chain; don't touch this. */
+/** Used to get the root component in the responder chain; don't touch this. */
 @property (nonatomic, weak) UIView *rootComponentMountedView;
 
 /** For internal use only; don't touch this. */

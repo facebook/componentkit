@@ -7,14 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		035FD04C1D83218100D28351 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = 035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */; };
-		035FD04E1D83219000D28351 /* CKComponentTestRootScope.h in Headers */ = {isa = PBXBuildFile; fileRef = 035FD0491D83218100D28351 /* CKComponentTestRootScope.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		035FD04F1D83219100D28351 /* CKTestRunLoopRunning.h in Headers */ = {isa = PBXBuildFile; fileRef = 035FD04A1D83218100D28351 /* CKTestRunLoopRunning.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		035FD0501D8321FF00D28351 /* libComponentKitTestLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 035FD0361D83212400D28351 /* libComponentKitTestLib.a */; };
-		035FD05E1D83227500D28351 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = 035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */; };
-		035FD0601D83228200D28351 /* CKComponentTestRootScope.h in Headers */ = {isa = PBXBuildFile; fileRef = 035FD0491D83218100D28351 /* CKComponentTestRootScope.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		035FD0611D83228400D28351 /* CKTestRunLoopRunning.h in Headers */ = {isa = PBXBuildFile; fileRef = 035FD04A1D83218100D28351 /* CKTestRunLoopRunning.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		035FD0621D83229300D28351 /* libComponentKitTestLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 035FD0551D83223600D28351 /* libComponentKitTestLib.a */; };
 		03A98A6B1D2B2BFD00C5BAC2 /* CKTestActionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = A273801E1AFD144100E6F222 /* CKTestActionComponent.mm */; };
 		03A98A6E1D2B2BFD00C5BAC2 /* CKTestActionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = A273801C1AFD144100E6F222 /* CKTestActionComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B46D1D2A346F00EDFF59 /* CKComponentAccessibility.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AC51CBD926700BB33CE /* CKComponentAccessibility.mm */; };
@@ -26,12 +18,11 @@
 		03B8B4731D2A346F00EDFF59 /* CKComponentBoundsAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47ADB1CBD926700BB33CE /* CKComponentBoundsAnimation.mm */; };
 		03B8B4741D2A346F00EDFF59 /* CKComponentController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47ADD1CBD926700BB33CE /* CKComponentController.mm */; };
 		03B8B4751D2A346F00EDFF59 /* CKComponentLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AE11CBD926700BB33CE /* CKComponentLayout.mm */; };
-		03B8B4761D2A346F00EDFF59 /* CKComponentLifecycleManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AE31CBD926700BB33CE /* CKComponentLifecycleManager.mm */; };
 		03B8B4771D2A346F00EDFF59 /* CKComponentMemoizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AE81CBD926700BB33CE /* CKComponentMemoizer.mm */; };
 		03B8B4781D2A346F00EDFF59 /* CKComponentSize.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AEA1CBD926700BB33CE /* CKComponentSize.mm */; };
 		03B8B4791D2A346F00EDFF59 /* CKComponentViewAttribute.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AED1CBD926700BB33CE /* CKComponentViewAttribute.mm */; };
 		03B8B47A1D2A346F00EDFF59 /* CKComponentViewConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AEF1CBD926700BB33CE /* CKComponentViewConfiguration.mm */; };
-		03B8B47B1D2A346F00EDFF59 /* CKComponentViewInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AF11CBD926700BB33CE /* CKComponentViewInterface.mm */; };
+		03B8B47B1D2A346F00EDFF59 /* CKComponent+UIView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AF11CBD926700BB33CE /* CKComponent+UIView.mm */; };
 		03B8B47C1D2A346F00EDFF59 /* CKCompositeComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AF31CBD926700BB33CE /* CKCompositeComponent.mm */; };
 		03B8B47D1D2A346F00EDFF59 /* CKDimension.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AF51CBD926700BB33CE /* CKDimension.mm */; };
 		03B8B47E1D2A346F00EDFF59 /* CKSizeRange.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AF71CBD926700BB33CE /* CKSizeRange.mm */; };
@@ -117,7 +108,6 @@
 		03B8B4DB1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceAppliedChanges.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B651CBD926700BB33CE /* CKTransactionalComponentDataSourceAppliedChanges.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4DC1D2A346F00EDFF59 /* CKStatefulViewComponentController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B5D1CBD926700BB33CE /* CKStatefulViewComponentController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4DF1D2A346F00EDFF59 /* CKComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AD51CBD926700BB33CE /* CKComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03B8B4E01D2A346F00EDFF59 /* CKComponentLifecycleManagerAsynchronousUpdateHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE51CBD926700BB33CE /* CKComponentLifecycleManagerAsynchronousUpdateHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4E11D2A346F00EDFF59 /* CKComponentController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47ADC1CBD926700BB33CE /* CKComponentController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4E21D2A346F00EDFF59 /* CKComponentHostingView.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B3D1CBD926700BB33CE /* CKComponentHostingView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4E31D2A346F00EDFF59 /* CKComponentAccessibility.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AC41CBD926700BB33CE /* CKComponentAccessibility.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -178,7 +168,6 @@
 		03B8B5241D2A346F00EDFF59 /* CKRatioLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B4F1CBD926700BB33CE /* CKRatioLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5251D2A346F00EDFF59 /* CKNetworkImageComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AD11CBD926700BB33CE /* CKNetworkImageComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5271D2A346F00EDFF59 /* CKImageComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47ACF1CBD926700BB33CE /* CKImageComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03B8B5281D2A346F00EDFF59 /* CKComponentLifecycleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE21CBD926700BB33CE /* CKComponentLifecycleManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5291D2A346F00EDFF59 /* CKStaticLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B581CBD926700BB33CE /* CKStaticLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B52A1D2A346F00EDFF59 /* CKComponentAccessibility_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AC61CBD926700BB33CE /* CKComponentAccessibility_Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B52B1D2A346F00EDFF59 /* CKComponentBoundsAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47ADA1CBD926700BB33CE /* CKComponentBoundsAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -189,7 +178,6 @@
 		03B8B5311D2A346F00EDFF59 /* CKInsetComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B4B1CBD926700BB33CE /* CKInsetComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5321D2A346F00EDFF59 /* CKUpdateMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF81CBD926700BB33CE /* CKUpdateMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5331D2A346F00EDFF59 /* CKComponentAnnouncerHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B1C1CBD926700BB33CE /* CKComponentAnnouncerHelper.h */; };
-		03B8B5341D2A346F00EDFF59 /* CKComponentLifecycleManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE41CBD926700BB33CE /* CKComponentLifecycleManager_Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B5351D2A346F00EDFF59 /* CKTextKitAttributes.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C4E1CBD92C200BB33CE /* CKTextKitAttributes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B5361D2A346F00EDFF59 /* CKComponentScopeTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0B1CBD926700BB33CE /* CKComponentScopeTypes.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B5371D2A346F00EDFF59 /* CKEqualityHashHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B911CBD926700BB33CE /* CKEqualityHashHelpers.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -209,8 +197,7 @@
 		03B8B5451D2A346F00EDFF59 /* CKArgumentPrecondition.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AC81CBD926700BB33CE /* CKArgumentPrecondition.h */; };
 		03B8B5461D2A346F00EDFF59 /* CKAsyncTransactionGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C6B1CBD92C200BB33CE /* CKAsyncTransactionGroup.h */; };
 		03B8B5471D2A346F00EDFF59 /* CKTextKitTruncating.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C601CBD92C200BB33CE /* CKTextKitTruncating.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		03B8B5481D2A346F00EDFF59 /* CKComponentLifecycleManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE61CBD926700BB33CE /* CKComponentLifecycleManagerInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		03B8B5491D2A346F00EDFF59 /* CKComponentViewInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF01CBD926700BB33CE /* CKComponentViewInterface.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		03B8B5491D2A346F00EDFF59 /* CKComponent+UIView.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF01CBD926700BB33CE /* CKComponent+UIView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B54A1D2A346F00EDFF59 /* CKAsyncLayerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C641CBD92C200BB33CE /* CKAsyncLayerInternal.h */; };
 		03B8B54B1D2A346F00EDFF59 /* ComponentViewReuseUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AFF1CBD926700BB33CE /* ComponentViewReuseUtilities.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B54C1D2A346F00EDFF59 /* CKComponentMemoizer.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE71CBD926700BB33CE /* CKComponentMemoizer.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -252,12 +239,10 @@
 		03F1ABD41D2B2A9B00867584 /* CKComponentMountTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */; };
 		03F1ABD51D2B2A9B00867584 /* CKComponentHostingViewTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC561AC23EA900ACAC53 /* CKComponentHostingViewTests.mm */; };
 		03F1ABD71D2B2A9B00867584 /* CKVectorHelperTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B7E2E59E1D077098002A4442 /* CKVectorHelperTests.mm */; };
-		03F1ABD81D2B2A9B00867584 /* CKComponentViewManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5F1AC23EA900ACAC53 /* CKComponentViewManagerTests.mm */; };
 		03F1ABD91D2B2A9B00867584 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A25C02D01AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm */; };
 		03F1ABDA1D2B2A9B00867584 /* CKTransactionalComponentDataSourceStateTestHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = A27436F91AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm */; };
 		03F1ABDB1D2B2A9B00867584 /* CKComponentDataSourceAttachControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */; };
 		03F1ABDC1D2B2A9B00867584 /* CKComponentHostingViewTestModel.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC551AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm */; };
-		03F1ABDD1D2B2A9B00867584 /* CKComponentLifecycleManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC571AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm */; };
 		03F1ABDE1D2B2A9B00867584 /* CKCollectionViewTransactionalDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 497824741BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm */; };
 		03F1ABDF1D2B2A9B00867584 /* CKStateExposingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = A22FE3051AF2CF0C00EC30B8 /* CKStateExposingComponent.mm */; };
 		03F1ABE01D2B2A9B00867584 /* CKComponentFlexibleSizeRangeProviderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC521AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm */; };
@@ -294,6 +279,7 @@
 		2D019D291DC0371300EC9EA2 /* CKTransactionalComponentDataSourceIntegrationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49FA174D1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm */; };
 		2D03A6601D3869A800E4F890 /* CKDetectComponentScopeCollisions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm */; };
 		2D03A6611D3869C700E4F890 /* CKDetectComponentScopeCollisions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2D1A21D11E40E33300A22D45 /* CKComponentLifecycleTestController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D8270F91E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm */; };
 		2D640D5D1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D640D5C1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm */; };
 		2D640D5E1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D640D5C1DB7FD7800271CB4 /* CKBadChangesetOperationType.mm */; };
 		2D7A98161DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D7A98141DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h */; };
@@ -304,6 +290,11 @@
 		2D7A98261DB56D8D0064FC6D /* CKTransactionalComponentDataSourceChangesetVerificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D7A98241DB56D8D0064FC6D /* CKTransactionalComponentDataSourceChangesetVerificationTests.mm */; };
 		2D7A98281DB571700064FC6D /* CKBadChangesetOperationType.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D7A98271DB571700064FC6D /* CKBadChangesetOperationType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2D7A98291DB571700064FC6D /* CKBadChangesetOperationType.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D7A98271DB571700064FC6D /* CKBadChangesetOperationType.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2D8270F61E3F72DE008C1A26 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = 035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */; };
+		2D8270F71E3F72F1008C1A26 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = 035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */; };
+		2D8270FA1E3F74D0008C1A26 /* CKComponentLifecycleTestController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D8270F81E3F74D0008C1A26 /* CKComponentLifecycleTestController.h */; };
+		2D8270FB1E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D8270F91E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm */; };
+		2D8270FC1E3F7581008C1A26 /* libComponentKitTestHelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */; };
 		2D8C3D441D64F41E00E6D47A /* ReferenceImages_IOS10_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */; };
 		2D8C3D521D64F43E00E6D47A /* ReferenceImages_IOS10_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */; };
 		2D8C3D541D64F44B00E6D47A /* ReferenceImages_IOS9_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D531D64F44B00E6D47A /* ReferenceImages_IOS9_64 */; };
@@ -356,13 +347,11 @@
 		B342DC731AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC531AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm */; };
 		B342DC741AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC551AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm */; };
 		B342DC751AC23EA900ACAC53 /* CKComponentHostingViewTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC561AC23EA900ACAC53 /* CKComponentHostingViewTests.mm */; };
-		B342DC761AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC571AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm */; };
 		B342DC771AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */; };
 		B342DC781AC23EA900ACAC53 /* CKComponentMountTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */; };
 		B342DC7B1AC23EA900ACAC53 /* CKComponentSizeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5C1AC23EA900ACAC53 /* CKComponentSizeTests.mm */; };
 		B342DC7C1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */; };
 		B342DC7D1AC23EA900ACAC53 /* CKComponentViewContextTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */; };
-		B342DC7E1AC23EA900ACAC53 /* CKComponentViewManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC5F1AC23EA900ACAC53 /* CKComponentViewManagerTests.mm */; };
 		B342DC7F1AC23EA900ACAC53 /* CKComponentViewReuseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */; };
 		B342DC801AC23EA900ACAC53 /* CKDimensionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */; };
 		B342DC811AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */; };
@@ -402,12 +391,11 @@
 		D0B47C8B1CBD943400BB33CE /* CKComponentBoundsAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47ADB1CBD926700BB33CE /* CKComponentBoundsAnimation.mm */; };
 		D0B47C8C1CBD943400BB33CE /* CKComponentController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47ADD1CBD926700BB33CE /* CKComponentController.mm */; };
 		D0B47C8D1CBD943400BB33CE /* CKComponentLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AE11CBD926700BB33CE /* CKComponentLayout.mm */; };
-		D0B47C8E1CBD943400BB33CE /* CKComponentLifecycleManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AE31CBD926700BB33CE /* CKComponentLifecycleManager.mm */; };
 		D0B47C8F1CBD943400BB33CE /* CKComponentMemoizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AE81CBD926700BB33CE /* CKComponentMemoizer.mm */; };
 		D0B47C901CBD943400BB33CE /* CKComponentSize.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AEA1CBD926700BB33CE /* CKComponentSize.mm */; };
 		D0B47C911CBD943400BB33CE /* CKComponentViewAttribute.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AED1CBD926700BB33CE /* CKComponentViewAttribute.mm */; };
 		D0B47C921CBD943400BB33CE /* CKComponentViewConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AEF1CBD926700BB33CE /* CKComponentViewConfiguration.mm */; };
-		D0B47C931CBD943400BB33CE /* CKComponentViewInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AF11CBD926700BB33CE /* CKComponentViewInterface.mm */; };
+		D0B47C931CBD943400BB33CE /* CKComponent+UIView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AF11CBD926700BB33CE /* CKComponent+UIView.mm */; };
 		D0B47C941CBD943400BB33CE /* CKCompositeComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AF31CBD926700BB33CE /* CKCompositeComponent.mm */; };
 		D0B47C951CBD943400BB33CE /* CKDimension.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AF51CBD926700BB33CE /* CKDimension.mm */; };
 		D0B47C961CBD943400BB33CE /* CKSizeRange.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AF71CBD926700BB33CE /* CKSizeRange.mm */; };
@@ -498,16 +486,12 @@
 		D0B47CF41CBD948E00BB33CE /* CKComponentControllerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47ADE1CBD926700BB33CE /* CKComponentControllerInternal.h */; };
 		D0B47CF51CBD948E00BB33CE /* CKComponentInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47ADF1CBD926700BB33CE /* CKComponentInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47CF61CBD948E00BB33CE /* CKComponentLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE01CBD926700BB33CE /* CKComponentLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47CF71CBD948E00BB33CE /* CKComponentLifecycleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE21CBD926700BB33CE /* CKComponentLifecycleManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47CF81CBD948E00BB33CE /* CKComponentLifecycleManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE41CBD926700BB33CE /* CKComponentLifecycleManager_Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D0B47CF91CBD948E00BB33CE /* CKComponentLifecycleManagerAsynchronousUpdateHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE51CBD926700BB33CE /* CKComponentLifecycleManagerAsynchronousUpdateHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47CFA1CBD948E00BB33CE /* CKComponentLifecycleManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE61CBD926700BB33CE /* CKComponentLifecycleManagerInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47CFB1CBD948E00BB33CE /* CKComponentMemoizer.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE71CBD926700BB33CE /* CKComponentMemoizer.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47CFC1CBD948E00BB33CE /* CKComponentSize.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AE91CBD926700BB33CE /* CKComponentSize.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47CFD1CBD948E00BB33CE /* CKComponentSubclass.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AEB1CBD926700BB33CE /* CKComponentSubclass.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47CFE1CBD948E00BB33CE /* CKComponentViewAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AEC1CBD926700BB33CE /* CKComponentViewAttribute.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47CFF1CBD948E00BB33CE /* CKComponentViewConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AEE1CBD926700BB33CE /* CKComponentViewConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47D001CBD948E00BB33CE /* CKComponentViewInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF01CBD926700BB33CE /* CKComponentViewInterface.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D0B47D001CBD948E00BB33CE /* CKComponent+UIView.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF01CBD926700BB33CE /* CKComponent+UIView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D011CBD948E00BB33CE /* CKCompositeComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF21CBD926700BB33CE /* CKCompositeComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D021CBD948E00BB33CE /* CKDimension.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF41CBD926700BB33CE /* CKDimension.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D031CBD948E00BB33CE /* CKSizeRange.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AF61CBD926700BB33CE /* CKSizeRange.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -635,13 +619,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		035FD0631D83235200D28351 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 035FD0541D83223600D28351;
-			remoteInfo = ComponentKitTestLibAppleTV;
-		};
 		035FD0651D83236600D28351 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
@@ -655,13 +632,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = A27380191AFD144100E6F222;
 			remoteInfo = ComponentKitTestHelpers;
-		};
-		035FD06D1D83238100D28351 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 035FD0351D83212400D28351;
-			remoteInfo = ComponentKitTestLib;
 		};
 		035FD06F1D83238A00D28351 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -764,24 +734,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		035FD0341D83212400D28351 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		035FD0531D83223600D28351 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		03F1AC011D2B2A9B00867584 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -819,11 +771,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		035FD0361D83212400D28351 /* libComponentKitTestLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComponentKitTestLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		035FD0491D83218100D28351 /* CKComponentTestRootScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentTestRootScope.h; sourceTree = "<group>"; };
 		035FD04A1D83218100D28351 /* CKTestRunLoopRunning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTestRunLoopRunning.h; sourceTree = "<group>"; };
 		035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTestRunLoopRunning.mm; sourceTree = "<group>"; };
-		035FD0551D83223600D28351 /* libComponentKitTestLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComponentKitTestLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		03A98A721D2B2BFD00C5BAC2 /* libComponentKitTestHelpers.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComponentKitTestHelpers.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		03B8B56A1D2A346F00EDFF59 /* ComponentKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ComponentKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		03F1AC061D2B2A9B00867584 /* ComponentKitTestsAppleTV.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComponentKitTestsAppleTV.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -836,6 +786,8 @@
 		2D7A98151DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceChangesetVerification.mm; sourceTree = "<group>"; };
 		2D7A98241DB56D8D0064FC6D /* CKTransactionalComponentDataSourceChangesetVerificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceChangesetVerificationTests.mm; sourceTree = "<group>"; };
 		2D7A98271DB571700064FC6D /* CKBadChangesetOperationType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKBadChangesetOperationType.h; sourceTree = "<group>"; };
+		2D8270F81E3F74D0008C1A26 /* CKComponentLifecycleTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentLifecycleTestController.h; sourceTree = "<group>"; };
+		2D8270F91E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentLifecycleTestController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10_64; sourceTree = "<group>"; };
 		2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10_64; sourceTree = "<group>"; };
 		2D8C3D531D64F44B00E6D47A /* ReferenceImages_IOS9_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS9_64; sourceTree = "<group>"; };
@@ -876,20 +828,18 @@
 		B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAccessibilityTests.mm; sourceTree = "<group>"; };
 		B342DC4B1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentBoundsAnimationTests.mm; sourceTree = "<group>"; };
 		B342DC4C1AC23EA900ACAC53 /* CKComponentContextTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentContextTests.mm; sourceTree = "<group>"; };
-		B342DC4D1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentControllerLifecycleMethodTests.mm; sourceTree = "<group>"; };
-		B342DC4E1AC23EA900ACAC53 /* CKComponentControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentControllerTests.mm; sourceTree = "<group>"; };
+		B342DC4D1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentControllerLifecycleMethodTests.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		B342DC4E1AC23EA900ACAC53 /* CKComponentControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentControllerTests.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		B342DC521AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentFlexibleSizeRangeProviderTests.mm; sourceTree = "<group>"; };
 		B342DC531AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentGestureActionsTests.mm; sourceTree = "<group>"; };
 		B342DC541AC23EA900ACAC53 /* CKComponentHostingViewTestModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentHostingViewTestModel.h; sourceTree = "<group>"; };
 		B342DC551AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentHostingViewTestModel.mm; sourceTree = "<group>"; };
 		B342DC561AC23EA900ACAC53 /* CKComponentHostingViewTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentHostingViewTests.mm; sourceTree = "<group>"; };
-		B342DC571AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentLifecycleManagerTests.mm; sourceTree = "<group>"; };
-		B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentMountContextLayoutGuideTests.mm; sourceTree = "<group>"; };
+		B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentMountContextLayoutGuideTests.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentMountTests.mm; sourceTree = "<group>"; };
 		B342DC5C1AC23EA900ACAC53 /* CKComponentSizeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentSizeTests.mm; sourceTree = "<group>"; };
 		B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewAttributeTests.mm; sourceTree = "<group>"; };
 		B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewContextTests.mm; sourceTree = "<group>"; };
-		B342DC5F1AC23EA900ACAC53 /* CKComponentViewManagerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewManagerTests.mm; sourceTree = "<group>"; };
 		B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewReuseTests.mm; sourceTree = "<group>"; };
 		B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDimensionTests.mm; sourceTree = "<group>"; };
 		B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKOptimisticViewMutationsTests.mm; sourceTree = "<group>"; };
@@ -951,11 +901,6 @@
 		D0B47ADF1CBD926700BB33CE /* CKComponentInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentInternal.h; sourceTree = "<group>"; };
 		D0B47AE01CBD926700BB33CE /* CKComponentLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentLayout.h; sourceTree = "<group>"; };
 		D0B47AE11CBD926700BB33CE /* CKComponentLayout.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentLayout.mm; sourceTree = "<group>"; };
-		D0B47AE21CBD926700BB33CE /* CKComponentLifecycleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentLifecycleManager.h; sourceTree = "<group>"; };
-		D0B47AE31CBD926700BB33CE /* CKComponentLifecycleManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentLifecycleManager.mm; sourceTree = "<group>"; };
-		D0B47AE41CBD926700BB33CE /* CKComponentLifecycleManager_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentLifecycleManager_Private.h; sourceTree = "<group>"; };
-		D0B47AE51CBD926700BB33CE /* CKComponentLifecycleManagerAsynchronousUpdateHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentLifecycleManagerAsynchronousUpdateHandler.h; sourceTree = "<group>"; };
-		D0B47AE61CBD926700BB33CE /* CKComponentLifecycleManagerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentLifecycleManagerInternal.h; sourceTree = "<group>"; };
 		D0B47AE71CBD926700BB33CE /* CKComponentMemoizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentMemoizer.h; sourceTree = "<group>"; };
 		D0B47AE81CBD926700BB33CE /* CKComponentMemoizer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentMemoizer.mm; sourceTree = "<group>"; };
 		D0B47AE91CBD926700BB33CE /* CKComponentSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentSize.h; sourceTree = "<group>"; };
@@ -965,8 +910,8 @@
 		D0B47AED1CBD926700BB33CE /* CKComponentViewAttribute.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewAttribute.mm; sourceTree = "<group>"; };
 		D0B47AEE1CBD926700BB33CE /* CKComponentViewConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentViewConfiguration.h; sourceTree = "<group>"; };
 		D0B47AEF1CBD926700BB33CE /* CKComponentViewConfiguration.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewConfiguration.mm; sourceTree = "<group>"; };
-		D0B47AF01CBD926700BB33CE /* CKComponentViewInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentViewInterface.h; sourceTree = "<group>"; };
-		D0B47AF11CBD926700BB33CE /* CKComponentViewInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewInterface.mm; sourceTree = "<group>"; };
+		D0B47AF01CBD926700BB33CE /* CKComponent+UIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKComponent+UIView.h"; sourceTree = "<group>"; };
+		D0B47AF11CBD926700BB33CE /* CKComponent+UIView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CKComponent+UIView.mm"; sourceTree = "<group>"; };
 		D0B47AF21CBD926700BB33CE /* CKCompositeComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCompositeComponent.h; sourceTree = "<group>"; };
 		D0B47AF31CBD926700BB33CE /* CKCompositeComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCompositeComponent.mm; sourceTree = "<group>"; };
 		D0B47AF41CBD926700BB33CE /* CKDimension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDimension.h; sourceTree = "<group>"; };
@@ -1153,7 +1098,7 @@
 		D0B47D891CBDA25A00BB33CE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D0B47D971CBDA97400BB33CE /* CKComponentSnapshotTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentSnapshotTestCase.h; sourceTree = "<group>"; };
-		D0B47D981CBDA97400BB33CE /* CKComponentSnapshotTestCase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentSnapshotTestCase.mm; sourceTree = "<group>"; };
+		D0B47D981CBDA97400BB33CE /* CKComponentSnapshotTestCase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentSnapshotTestCase.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0B47DB31CBDACDE00BB33CE /* ReferenceImages_IOS9_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS9_64; sourceTree = "<group>"; };
 		EB14A33F1D8267DF0004BECF /* CKAutoSizedImageComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAutoSizedImageComponent.h; sourceTree = "<group>"; };
 		EB14A3401D8267DF0004BECF /* CKAutoSizedImageComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAutoSizedImageComponent.mm; sourceTree = "<group>"; };
@@ -1161,20 +1106,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		035FD0331D83212400D28351 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		035FD0521D83223600D28351 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		03A98A6C1D2B2BFD00C5BAC2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1193,13 +1124,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03F1ABFA1D2B2A9B00867584 /* OCMock.framework in Frameworks */,
+				03F1ABFE1D2B2A9B00867584 /* ComponentKit.framework in Frameworks */,
 				03F1ABFB1D2B2A9B00867584 /* CoreGraphics.framework in Frameworks */,
+				03F1ABFA1D2B2A9B00867584 /* OCMock.framework in Frameworks */,
 				03F1ABFC1D2B2A9B00867584 /* QuartzCore.framework in Frameworks */,
 				03F1ABFD1D2B2A9B00867584 /* UIKit.framework in Frameworks */,
-				03F1ABFE1D2B2A9B00867584 /* ComponentKit.framework in Frameworks */,
 				03F1ABFF1D2B2A9B00867584 /* libComponentKitTestHelpers.a in Frameworks */,
-				035FD0621D83229300D28351 /* libComponentKitTestLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1214,13 +1144,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D093265F1CC4551600CFEBC4 /* OCMock.framework in Frameworks */,
+				D0B47D7E1CBD9E1400BB33CE /* ComponentKit.framework in Frameworks */,
 				D0B47D8C1CBDA25E00BB33CE /* CoreGraphics.framework in Frameworks */,
+				D093265F1CC4551600CFEBC4 /* OCMock.framework in Frameworks */,
 				D0B47D8A1CBDA25A00BB33CE /* QuartzCore.framework in Frameworks */,
 				D0B47D881CBDA24900BB33CE /* UIKit.framework in Frameworks */,
-				D0B47D7E1CBD9E1400BB33CE /* ComponentKit.framework in Frameworks */,
 				A27380321AFD160600E6F222 /* libComponentKitTestHelpers.a in Frameworks */,
-				035FD0501D8321FF00D28351 /* libComponentKitTestLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1228,10 +1157,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D000B81F1CC45446005A27CF /* FBSnapshotTestCase.framework in Frameworks */,
-				D0B47D9F1CBDA9B600BB33CE /* CoreGraphics.framework in Frameworks */,
-				D0B47D921CBDA90000BB33CE /* UIKit.framework in Frameworks */,
 				D0B47D7F1CBD9E1900BB33CE /* ComponentKit.framework in Frameworks */,
+				D0B47D9F1CBDA9B600BB33CE /* CoreGraphics.framework in Frameworks */,
+				D000B81F1CC45446005A27CF /* FBSnapshotTestCase.framework in Frameworks */,
+				D0B47D921CBDA90000BB33CE /* UIKit.framework in Frameworks */,
 				A27380311AFD160200E6F222 /* libComponentKitTestHelpers.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1240,10 +1169,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D000B81E1CC45440005A27CF /* FBSnapshotTestCase.framework in Frameworks */,
-				D0B47DA01CBDA9C200BB33CE /* CoreGraphics.framework in Frameworks */,
-				D0B47D9E1CBDA9AC00BB33CE /* UIKit.framework in Frameworks */,
 				D0B47D801CBD9E1D00BB33CE /* ComponentKit.framework in Frameworks */,
+				D0B47DA01CBDA9C200BB33CE /* CoreGraphics.framework in Frameworks */,
+				D000B81E1CC45440005A27CF /* FBSnapshotTestCase.framework in Frameworks */,
+				D0B47D9E1CBDA9AC00BB33CE /* UIKit.framework in Frameworks */,
+				2D8270FC1E3F7581008C1A26 /* libComponentKitTestHelpers.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1265,16 +1195,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		035FD0371D83212400D28351 /* ComponentKitTestLib */ = {
-			isa = PBXGroup;
-			children = (
-				035FD0491D83218100D28351 /* CKComponentTestRootScope.h */,
-				035FD04A1D83218100D28351 /* CKTestRunLoopRunning.h */,
-				035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */,
-			);
-			path = ComponentKitTestLib;
-			sourceTree = "<group>";
-		};
 		18644AE01B3CB8E60028AF87 /* StatefulViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -1289,8 +1209,13 @@
 		A273801B1AFD144100E6F222 /* ComponentKitTestHelpers */ = {
 			isa = PBXGroup;
 			children = (
+				2D8270F81E3F74D0008C1A26 /* CKComponentLifecycleTestController.h */,
+				2D8270F91E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm */,
+				035FD0491D83218100D28351 /* CKComponentTestRootScope.h */,
 				A273801C1AFD144100E6F222 /* CKTestActionComponent.h */,
 				A273801E1AFD144100E6F222 /* CKTestActionComponent.mm */,
+				035FD04A1D83218100D28351 /* CKTestRunLoopRunning.h */,
+				035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */,
 			);
 			path = ComponentKitTestHelpers;
 			sourceTree = "<group>";
@@ -1333,13 +1258,11 @@
 				B342DC551AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm */,
 				B342DC561AC23EA900ACAC53 /* CKComponentHostingViewTests.mm */,
 				A2D20CF31B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm */,
-				B342DC571AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm */,
 				B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */,
 				B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */,
 				B342DC5C1AC23EA900ACAC53 /* CKComponentSizeTests.mm */,
 				B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */,
 				B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */,
-				B342DC5F1AC23EA900ACAC53 /* CKComponentViewManagerTests.mm */,
 				B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */,
 				994EF6FA1B1FD77700E2236F /* CKComponentDelegateAttributeTests.mm */,
 				991DE3401B3B308900AA05B2 /* CKComponentMemoizerTests.mm */,
@@ -1419,7 +1342,6 @@
 				B342DCAB1AC23F2A00ACAC53 /* ComponentTextKitApplicationTests */,
 				A273801B1AFD144100E6F222 /* ComponentKitTestHelpers */,
 				D0B47D961CBDA97400BB33CE /* ComponentSnapshotTestCase */,
-				035FD0371D83212400D28351 /* ComponentKitTestLib */,
 				D0B47D811CBD9E7C00BB33CE /* Frameworks */,
 				B3EECEC31AC2366600BFC5DA /* Products */,
 			);
@@ -1437,8 +1359,6 @@
 				03B8B56A1D2A346F00EDFF59 /* ComponentKit.framework */,
 				03F1AC061D2B2A9B00867584 /* ComponentKitTestsAppleTV.xctest */,
 				03A98A721D2B2BFD00C5BAC2 /* libComponentKitTestHelpers.a */,
-				035FD0361D83212400D28351 /* libComponentKitTestLib.a */,
-				035FD0551D83223600D28351 /* libComponentKitTestLib.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1530,6 +1450,8 @@
 		D0B47AD41CBD926700BB33CE /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				D0B47AF01CBD926700BB33CE /* CKComponent+UIView.h */,
+				D0B47AF11CBD926700BB33CE /* CKComponent+UIView.mm */,
 				D0B47AD51CBD926700BB33CE /* CKComponent.h */,
 				D0B47AD61CBD926700BB33CE /* CKComponent.mm */,
 				D0B47AD71CBD926700BB33CE /* CKComponentAnimation.h */,
@@ -1545,11 +1467,6 @@
 				D0B47ADF1CBD926700BB33CE /* CKComponentInternal.h */,
 				D0B47AE01CBD926700BB33CE /* CKComponentLayout.h */,
 				D0B47AE11CBD926700BB33CE /* CKComponentLayout.mm */,
-				D0B47AE21CBD926700BB33CE /* CKComponentLifecycleManager.h */,
-				D0B47AE31CBD926700BB33CE /* CKComponentLifecycleManager.mm */,
-				D0B47AE41CBD926700BB33CE /* CKComponentLifecycleManager_Private.h */,
-				D0B47AE51CBD926700BB33CE /* CKComponentLifecycleManagerAsynchronousUpdateHandler.h */,
-				D0B47AE61CBD926700BB33CE /* CKComponentLifecycleManagerInternal.h */,
 				D0B47AE71CBD926700BB33CE /* CKComponentMemoizer.h */,
 				D0B47AE81CBD926700BB33CE /* CKComponentMemoizer.mm */,
 				D0B47AE91CBD926700BB33CE /* CKComponentSize.h */,
@@ -1559,8 +1476,6 @@
 				D0B47AED1CBD926700BB33CE /* CKComponentViewAttribute.mm */,
 				D0B47AEE1CBD926700BB33CE /* CKComponentViewConfiguration.h */,
 				D0B47AEF1CBD926700BB33CE /* CKComponentViewConfiguration.mm */,
-				D0B47AF01CBD926700BB33CE /* CKComponentViewInterface.h */,
-				D0B47AF11CBD926700BB33CE /* CKComponentViewInterface.mm */,
 				D0B47AF21CBD926700BB33CE /* CKCompositeComponent.h */,
 				D0B47AF31CBD926700BB33CE /* CKCompositeComponent.mm */,
 				D0B47AF41CBD926700BB33CE /* CKDimension.h */,
@@ -1902,24 +1817,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		035FD04D1D83218600D28351 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				035FD04E1D83219000D28351 /* CKComponentTestRootScope.h in Headers */,
-				035FD04F1D83219100D28351 /* CKTestRunLoopRunning.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		035FD05F1D83227D00D28351 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				035FD0601D83228200D28351 /* CKComponentTestRootScope.h in Headers */,
-				035FD0611D83228400D28351 /* CKTestRunLoopRunning.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		03A98A6D1D2B2BFD00C5BAC2 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -1948,7 +1845,6 @@
 				03B8B4DB1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceAppliedChanges.h in Headers */,
 				03B8B4DC1D2A346F00EDFF59 /* CKStatefulViewComponentController.h in Headers */,
 				03B8B4DF1D2A346F00EDFF59 /* CKComponent.h in Headers */,
-				03B8B4E01D2A346F00EDFF59 /* CKComponentLifecycleManagerAsynchronousUpdateHandler.h in Headers */,
 				03B8B4E11D2A346F00EDFF59 /* CKComponentController.h in Headers */,
 				03B8B4E21D2A346F00EDFF59 /* CKComponentHostingView.h in Headers */,
 				03B8B4E31D2A346F00EDFF59 /* CKComponentAccessibility.h in Headers */,
@@ -2012,7 +1908,6 @@
 				03B8B5241D2A346F00EDFF59 /* CKRatioLayoutComponent.h in Headers */,
 				03B8B5251D2A346F00EDFF59 /* CKNetworkImageComponent.h in Headers */,
 				03B8B5271D2A346F00EDFF59 /* CKImageComponent.h in Headers */,
-				03B8B5281D2A346F00EDFF59 /* CKComponentLifecycleManager.h in Headers */,
 				03B8B5291D2A346F00EDFF59 /* CKStaticLayoutComponent.h in Headers */,
 				03B8B52A1D2A346F00EDFF59 /* CKComponentAccessibility_Private.h in Headers */,
 				2D03A6611D3869C700E4F890 /* CKDetectComponentScopeCollisions.h in Headers */,
@@ -2024,7 +1919,6 @@
 				03B8B5311D2A346F00EDFF59 /* CKInsetComponent.h in Headers */,
 				03B8B5321D2A346F00EDFF59 /* CKUpdateMode.h in Headers */,
 				03B8B5331D2A346F00EDFF59 /* CKComponentAnnouncerHelper.h in Headers */,
-				03B8B5341D2A346F00EDFF59 /* CKComponentLifecycleManager_Private.h in Headers */,
 				03B8B5351D2A346F00EDFF59 /* CKTextKitAttributes.h in Headers */,
 				03B8B5361D2A346F00EDFF59 /* CKComponentScopeTypes.h in Headers */,
 				03B8B5371D2A346F00EDFF59 /* CKEqualityHashHelpers.h in Headers */,
@@ -2045,8 +1939,7 @@
 				03B8B5451D2A346F00EDFF59 /* CKArgumentPrecondition.h in Headers */,
 				03B8B5461D2A346F00EDFF59 /* CKAsyncTransactionGroup.h in Headers */,
 				03B8B5471D2A346F00EDFF59 /* CKTextKitTruncating.h in Headers */,
-				03B8B5481D2A346F00EDFF59 /* CKComponentLifecycleManagerInternal.h in Headers */,
-				03B8B5491D2A346F00EDFF59 /* CKComponentViewInterface.h in Headers */,
+				03B8B5491D2A346F00EDFF59 /* CKComponent+UIView.h in Headers */,
 				03B8B54A1D2A346F00EDFF59 /* CKAsyncLayerInternal.h in Headers */,
 				03B8B54B1D2A346F00EDFF59 /* ComponentViewReuseUtilities.h in Headers */,
 				03B8B54C1D2A346F00EDFF59 /* CKComponentMemoizer.h in Headers */,
@@ -2082,6 +1975,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A27380341AFD172500E6F222 /* CKTestActionComponent.h in Headers */,
+				2D8270FA1E3F74D0008C1A26 /* CKComponentLifecycleTestController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2105,7 +1999,6 @@
 				D0B47D3F1CBD948E00BB33CE /* CKTransactionalComponentDataSourceAppliedChanges.h in Headers */,
 				D0B47D3C1CBD948E00BB33CE /* CKStatefulViewComponentController.h in Headers */,
 				D0B47CEF1CBD948E00BB33CE /* CKComponent.h in Headers */,
-				D0B47CF91CBD948E00BB33CE /* CKComponentLifecycleManagerAsynchronousUpdateHandler.h in Headers */,
 				D0B47CF31CBD948E00BB33CE /* CKComponentController.h in Headers */,
 				D0B47D2B1CBD948E00BB33CE /* CKComponentHostingView.h in Headers */,
 				D0B47CE51CBD948E00BB33CE /* CKComponentAccessibility.h in Headers */,
@@ -2169,7 +2062,6 @@
 				D0B47D351CBD948E00BB33CE /* CKRatioLayoutComponent.h in Headers */,
 				D0B47CED1CBD948E00BB33CE /* CKNetworkImageComponent.h in Headers */,
 				D0B47CEC1CBD948E00BB33CE /* CKImageComponent.h in Headers */,
-				D0B47CF71CBD948E00BB33CE /* CKComponentLifecycleManager.h in Headers */,
 				D0B47D3A1CBD948E00BB33CE /* CKStaticLayoutComponent.h in Headers */,
 				D0B47CE61CBD948E00BB33CE /* CKComponentAccessibility_Private.h in Headers */,
 				D0B47CF21CBD948E00BB33CE /* CKComponentBoundsAnimation.h in Headers */,
@@ -2181,7 +2073,6 @@
 				D0B47D331CBD948E00BB33CE /* CKInsetComponent.h in Headers */,
 				D0B47D041CBD948E00BB33CE /* CKUpdateMode.h in Headers */,
 				D0B47D181CBD948E00BB33CE /* CKComponentAnnouncerHelper.h in Headers */,
-				D0B47CF81CBD948E00BB33CE /* CKComponentLifecycleManager_Private.h in Headers */,
 				D0B47D671CBD948E00BB33CE /* CKTextKitAttributes.h in Headers */,
 				D0B47D0F1CBD948E00BB33CE /* CKComponentScopeTypes.h in Headers */,
 				D0B47D591CBD948E00BB33CE /* CKEqualityHashHelpers.h in Headers */,
@@ -2203,8 +2094,7 @@
 				D0B47CE71CBD948E00BB33CE /* CKArgumentPrecondition.h in Headers */,
 				D0B47D771CBD948E00BB33CE /* CKAsyncTransactionGroup.h in Headers */,
 				D0B47D701CBD948E00BB33CE /* CKTextKitTruncating.h in Headers */,
-				D0B47CFA1CBD948E00BB33CE /* CKComponentLifecycleManagerInternal.h in Headers */,
-				D0B47D001CBD948E00BB33CE /* CKComponentViewInterface.h in Headers */,
+				D0B47D001CBD948E00BB33CE /* CKComponent+UIView.h in Headers */,
 				D0B47D721CBD948E00BB33CE /* CKAsyncLayerInternal.h in Headers */,
 				D0B47D091CBD948E00BB33CE /* ComponentViewReuseUtilities.h in Headers */,
 				D0B47CFB1CBD948E00BB33CE /* CKComponentMemoizer.h in Headers */,
@@ -2238,42 +2128,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		035FD0351D83212400D28351 /* ComponentKitTestLib */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 035FD0481D83212400D28351 /* Build configuration list for PBXNativeTarget "ComponentKitTestLib" */;
-			buildPhases = (
-				035FD0321D83212400D28351 /* Sources */,
-				035FD0331D83212400D28351 /* Frameworks */,
-				035FD0341D83212400D28351 /* CopyFiles */,
-				035FD04D1D83218600D28351 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = ComponentKitTestLib;
-			productName = ComponentKitTestLib;
-			productReference = 035FD0361D83212400D28351 /* libComponentKitTestLib.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		035FD0541D83223600D28351 /* ComponentKitTestLibAppleTV */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 035FD05B1D83223700D28351 /* Build configuration list for PBXNativeTarget "ComponentKitTestLibAppleTV" */;
-			buildPhases = (
-				035FD0511D83223600D28351 /* Sources */,
-				035FD0521D83223600D28351 /* Frameworks */,
-				035FD0531D83223600D28351 /* CopyFiles */,
-				035FD05F1D83227D00D28351 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = ComponentKitTestLibAppleTV;
-			productName = ComponentKitTestLibAppleTV;
-			productReference = 035FD0551D83223600D28351 /* libComponentKitTestLib.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		03A98A691D2B2BFD00C5BAC2 /* ComponentKitTestHelpersAppleTV */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 03A98A6F1D2B2BFD00C5BAC2 /* Build configuration list for PBXNativeTarget "ComponentKitTestHelpersAppleTV" */;
@@ -2322,7 +2176,6 @@
 			);
 			dependencies = (
 				035FD0661D83236600D28351 /* PBXTargetDependency */,
-				035FD0641D83235200D28351 /* PBXTargetDependency */,
 			);
 			name = ComponentKitTestsAppleTV;
 			productName = ComponentKitTests;
@@ -2359,7 +2212,6 @@
 			);
 			dependencies = (
 				035FD06C1D83238100D28351 /* PBXTargetDependency */,
-				035FD06E1D83238100D28351 /* PBXTargetDependency */,
 			);
 			name = ComponentKitTests;
 			productName = ComponentKitTests;
@@ -2448,12 +2300,6 @@
 			attributes = {
 				LastUpgradeCheck = 0800;
 				TargetAttributes = {
-					035FD0351D83212400D28351 = {
-						CreatedOnToolsVersion = 7.3.1;
-					};
-					035FD0541D83223600D28351 = {
-						CreatedOnToolsVersion = 7.3.1;
-					};
 					A27380191AFD144100E6F222 = {
 						CreatedOnToolsVersion = 6.3.1;
 					};
@@ -2500,16 +2346,14 @@
 			projectRoot = "";
 			targets = (
 				D0B47AB41CBD924100BB33CE /* ComponentKit */,
-				B3EECEC11AC2366600BFC5DA /* ComponentKitApplicationsTestsHost */,
+				A27380191AFD144100E6F222 /* ComponentKitTestHelpers */,
 				B342DC3F1AC23E8200ACAC53 /* ComponentKitTests */,
 				B342DC8A1AC23EC300ACAC53 /* ComponentKitApplicationTests */,
 				B342DCA91AC23F2A00ACAC53 /* ComponentTextKitApplicationTests */,
-				A27380191AFD144100E6F222 /* ComponentKitTestHelpers */,
-				035FD0351D83212400D28351 /* ComponentKitTestLib */,
+				B3EECEC11AC2366600BFC5DA /* ComponentKitApplicationsTestsHost */,
 				03B8B46B1D2A346F00EDFF59 /* ComponentKitAppleTV */,
-				03F1ABC51D2B2A9B00867584 /* ComponentKitTestsAppleTV */,
 				03A98A691D2B2BFD00C5BAC2 /* ComponentKitTestHelpersAppleTV */,
-				035FD0541D83223600D28351 /* ComponentKitTestLibAppleTV */,
+				03F1ABC51D2B2A9B00867584 /* ComponentKitTestsAppleTV */,
 			);
 		};
 /* End PBXProject section */
@@ -2644,27 +2488,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		035FD0321D83212400D28351 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				035FD04C1D83218100D28351 /* CKTestRunLoopRunning.mm in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		035FD0511D83223600D28351 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				035FD05E1D83227500D28351 /* CKTestRunLoopRunning.mm in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		03A98A6A1D2B2BFD00C5BAC2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D1A21D11E40E33300A22D45 /* CKComponentLifecycleTestController.mm in Sources */,
 				03A98A6B1D2B2BFD00C5BAC2 /* CKTestActionComponent.mm in Sources */,
+				2D8270F71E3F72F1008C1A26 /* CKTestRunLoopRunning.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2684,12 +2514,11 @@
 				03B8B4731D2A346F00EDFF59 /* CKComponentBoundsAnimation.mm in Sources */,
 				03B8B4741D2A346F00EDFF59 /* CKComponentController.mm in Sources */,
 				03B8B4751D2A346F00EDFF59 /* CKComponentLayout.mm in Sources */,
-				03B8B4761D2A346F00EDFF59 /* CKComponentLifecycleManager.mm in Sources */,
 				03B8B4771D2A346F00EDFF59 /* CKComponentMemoizer.mm in Sources */,
 				03B8B4781D2A346F00EDFF59 /* CKComponentSize.mm in Sources */,
 				03B8B4791D2A346F00EDFF59 /* CKComponentViewAttribute.mm in Sources */,
 				03B8B47A1D2A346F00EDFF59 /* CKComponentViewConfiguration.mm in Sources */,
-				03B8B47B1D2A346F00EDFF59 /* CKComponentViewInterface.mm in Sources */,
+				03B8B47B1D2A346F00EDFF59 /* CKComponent+UIView.mm in Sources */,
 				03B8B47C1D2A346F00EDFF59 /* CKCompositeComponent.mm in Sources */,
 				03B8B47D1D2A346F00EDFF59 /* CKDimension.mm in Sources */,
 				03B8B47E1D2A346F00EDFF59 /* CKSizeRange.mm in Sources */,
@@ -2790,12 +2619,10 @@
 				03F1ABD41D2B2A9B00867584 /* CKComponentMountTests.mm in Sources */,
 				03F1ABD51D2B2A9B00867584 /* CKComponentHostingViewTests.mm in Sources */,
 				03F1ABD71D2B2A9B00867584 /* CKVectorHelperTests.mm in Sources */,
-				03F1ABD81D2B2A9B00867584 /* CKComponentViewManagerTests.mm in Sources */,
 				03F1ABD91D2B2A9B00867584 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm in Sources */,
 				03F1ABDA1D2B2A9B00867584 /* CKTransactionalComponentDataSourceStateTestHelpers.mm in Sources */,
 				03F1ABDB1D2B2A9B00867584 /* CKComponentDataSourceAttachControllerTests.mm in Sources */,
 				03F1ABDC1D2B2A9B00867584 /* CKComponentHostingViewTestModel.mm in Sources */,
-				03F1ABDD1D2B2A9B00867584 /* CKComponentLifecycleManagerTests.mm in Sources */,
 				03F1ABDE1D2B2A9B00867584 /* CKCollectionViewTransactionalDataSourceTests.mm in Sources */,
 				03F1ABDF1D2B2A9B00867584 /* CKStateExposingComponent.mm in Sources */,
 				03F1ABE01D2B2A9B00867584 /* CKComponentFlexibleSizeRangeProviderTests.mm in Sources */,
@@ -2826,7 +2653,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D8270FB1E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm in Sources */,
 				A273801F1AFD144100E6F222 /* CKTestActionComponent.mm in Sources */,
+				2D8270F61E3F72DE008C1A26 /* CKTestRunLoopRunning.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2849,12 +2678,10 @@
 				B342DC781AC23EA900ACAC53 /* CKComponentMountTests.mm in Sources */,
 				B342DC751AC23EA900ACAC53 /* CKComponentHostingViewTests.mm in Sources */,
 				B7E2E59F1D077098002A4442 /* CKVectorHelperTests.mm in Sources */,
-				B342DC7E1AC23EA900ACAC53 /* CKComponentViewManagerTests.mm in Sources */,
 				A25C02D11AF0767700F4C864 /* CKTransactionalComponentDataSourceChangesetModificationTests.mm in Sources */,
 				A27436FA1AE9589700832359 /* CKTransactionalComponentDataSourceStateTestHelpers.mm in Sources */,
 				39B090BF1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm in Sources */,
 				B342DC741AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm in Sources */,
-				B342DC761AC23EA900ACAC53 /* CKComponentLifecycleManagerTests.mm in Sources */,
 				2D7A98251DB56D8D0064FC6D /* CKTransactionalComponentDataSourceChangesetVerificationTests.mm in Sources */,
 				497824751BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm in Sources */,
 				A22FE3061AF2CF0C00EC30B8 /* CKStateExposingComponent.mm in Sources */,
@@ -2934,12 +2761,11 @@
 				D0B47C8B1CBD943400BB33CE /* CKComponentBoundsAnimation.mm in Sources */,
 				D0B47C8C1CBD943400BB33CE /* CKComponentController.mm in Sources */,
 				D0B47C8D1CBD943400BB33CE /* CKComponentLayout.mm in Sources */,
-				D0B47C8E1CBD943400BB33CE /* CKComponentLifecycleManager.mm in Sources */,
 				D0B47C8F1CBD943400BB33CE /* CKComponentMemoizer.mm in Sources */,
 				D0B47C901CBD943400BB33CE /* CKComponentSize.mm in Sources */,
 				D0B47C911CBD943400BB33CE /* CKComponentViewAttribute.mm in Sources */,
 				D0B47C921CBD943400BB33CE /* CKComponentViewConfiguration.mm in Sources */,
-				D0B47C931CBD943400BB33CE /* CKComponentViewInterface.mm in Sources */,
+				D0B47C931CBD943400BB33CE /* CKComponent+UIView.mm in Sources */,
 				D0B47C941CBD943400BB33CE /* CKCompositeComponent.mm in Sources */,
 				D0B47C951CBD943400BB33CE /* CKDimension.mm in Sources */,
 				D0B47C961CBD943400BB33CE /* CKSizeRange.mm in Sources */,
@@ -3026,11 +2852,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		035FD0641D83235200D28351 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 035FD0541D83223600D28351 /* ComponentKitTestLibAppleTV */;
-			targetProxy = 035FD0631D83235200D28351 /* PBXContainerItemProxy */;
-		};
 		035FD0661D83236600D28351 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 03A98A691D2B2BFD00C5BAC2 /* ComponentKitTestHelpersAppleTV */;
@@ -3040,11 +2861,6 @@
 			isa = PBXTargetDependency;
 			target = A27380191AFD144100E6F222 /* ComponentKitTestHelpers */;
 			targetProxy = 035FD06B1D83238100D28351 /* PBXContainerItemProxy */;
-		};
-		035FD06E1D83238100D28351 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 035FD0351D83212400D28351 /* ComponentKitTestLib */;
-			targetProxy = 035FD06D1D83238100D28351 /* PBXContainerItemProxy */;
 		};
 		035FD0701D83238A00D28351 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3069,60 +2885,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		035FD03C1D83212400D28351 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_NO_COMMON_BLOCKS = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		035FD03D1D83212400D28351 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_NO_COMMON_BLOCKS = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		035FD05C1D83223700D28351 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_NO_COMMON_BLOCKS = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = ComponentKitTestLib;
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Debug;
-		};
-		035FD05D1D83223700D28351 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_NO_COMMON_BLOCKS = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = ComponentKitTestLib;
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Release;
-		};
 		03A98A701D2B2BFD00C5BAC2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3491,24 +3253,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		035FD0481D83212400D28351 /* Build configuration list for PBXNativeTarget "ComponentKitTestLib" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				035FD03C1D83212400D28351 /* Debug */,
-				035FD03D1D83212400D28351 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		035FD05B1D83223700D28351 /* Build configuration list for PBXNativeTarget "ComponentKitTestLibAppleTV" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				035FD05C1D83223700D28351 /* Debug */,
-				035FD05D1D83223700D28351 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		03A98A6F1D2B2BFD00C5BAC2 /* Build configuration list for PBXNativeTarget "ComponentKitTestHelpersAppleTV" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

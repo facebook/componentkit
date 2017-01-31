@@ -18,6 +18,7 @@
 #import <ComponentKit/CKMacros.h>
 
 #import "CKAssert.h"
+#import "CKComponent+UIView.h"
 #import "CKComponentAccessibility.h"
 #import "CKComponentAnimation.h"
 #import "CKComponentBacktraceDescription.h"
@@ -26,7 +27,6 @@
 #import "CKComponentLayout.h"
 #import "CKComponentScopeHandle.h"
 #import "CKComponentViewConfiguration.h"
-#import "CKComponentViewInterface.h"
 #import "CKInternalHelpers.h"
 #import "CKMountAnimationGuard.h"
 #import "CKWeakObjectContainer.h"

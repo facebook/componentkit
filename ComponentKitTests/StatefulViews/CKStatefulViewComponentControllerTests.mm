@@ -10,13 +10,11 @@
 
 #import <XCTest/XCTest.h>
 
-#import <ComponentKit/CKComponentLifecycleManager.h>
+#import <ComponentKitTestHelpers/CKComponentLifecycleTestController.h>
+#import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
+
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentSubclass.h>
-
-#import <ComponentKitTestLib/CKComponentTestRootScope.h>
-
-#import <ComponentKitTestLib/CKTestRunLoopRunning.h>
 
 #import "CKTestStatefulViewComponent.h"
 
@@ -32,14 +30,17 @@
 
 - (void)testMountingStatefulViewComponentCreatesStatefulView
 {
-  CKComponentLifecycleManager *m = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  const CKComponentLifecycleManagerState state = [m prepareForUpdateWithModel:[UIColor blueColor] constrainedSize:{{100, 100}, {100, 100}} context:nil];
-  [m updateWithState:state];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:[UIColor blueColor]
+                                                                                                    constrainedSize:{{100, 100}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  UIView *container = [[UIView alloc] init];
-  [m attachToView:container];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
 
-  auto component = (CKTestStatefulViewComponent *)state.layout.component;
+  auto component = (CKTestStatefulViewComponent *)state.componentLayout.component;
   auto controller = (CKTestStatefulViewComponentController *)[component controller];
   auto statefulView = [controller statefulView];
   XCTAssertTrue([statefulView isKindOfClass:[CKTestStatefulView class]], @"Expected stateful view but couldn't find it");
@@ -49,18 +50,21 @@
 
 - (void)testUnmountingStatefulViewComponentEventuallyRelinquishesStatefulView
 {
-  CKComponentLifecycleManager *m = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  const CKComponentLifecycleManagerState state = [m prepareForUpdateWithModel:nil constrainedSize:{{100, 100}, {100, 100}} context:nil];
-  [m updateWithState:state];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{100, 100}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  UIView *container = [[UIView alloc] init];
-  [m attachToView:container];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
 
-  auto component = (CKTestStatefulViewComponent *)state.layout.component;
+  auto component = (CKTestStatefulViewComponent *)state.componentLayout.component;
   auto controller = (CKTestStatefulViewComponentController *)[component controller];
   XCTAssertNotNil([controller statefulView], @"Expected to have a stateful view while mounted");
 
-  [m detachFromView];
+  [componentLifecycleTestController detachFromView];
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return [controller statefulView] == nil;
   }), @"Expected view to be relinquished");
@@ -68,44 +72,57 @@
 
 - (void)testMountingStatefulViewComponentOnNewRootViewMovesStatefulView
 {
-  CKComponentLifecycleManager *m = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  const CKComponentLifecycleManagerState state = [m prepareForUpdateWithModel:nil constrainedSize:{{100, 100}, {100, 100}} context:nil];
-  [m updateWithState:state];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{100, 100}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  auto controller = (CKTestStatefulViewComponentController *)[(CKTestStatefulViewComponent *)state.layout.component controller];
+  auto controller = (CKTestStatefulViewComponentController *)[(CKTestStatefulViewComponent *)state.componentLayout.component controller];
 
-  UIView *container1 = [[UIView alloc] init];
-  [m attachToView:container1];
-  XCTAssertTrue([[controller statefulView] isDescendantOfView:container1], @"Expected view to be in container1");
+  UIView *view1 = [UIView new];
+  [componentLifecycleTestController attachToView:view1];
+  XCTAssertTrue([[controller statefulView] isDescendantOfView:view1], @"Expected view to be in view1");
 
-  UIView *container2 = [[UIView alloc] init];
-  [m attachToView:container2];
-  XCTAssertTrue([[controller statefulView] isDescendantOfView:container2], @"Expected view to be moved to container2");
+  UIView *view2 = [UIView new];
+  [componentLifecycleTestController attachToView:view2];
+  XCTAssertTrue([[controller statefulView] isDescendantOfView:view2], @"Expected view to be moved to view2");
 }
 
 - (void)testUpdatingStatefulViewComponentSizeUpdatesStatefulViewSize
 {
-  CKComponentLifecycleManager *m = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  const CKComponentLifecycleManagerState state = [m prepareForUpdateWithModel:nil constrainedSize:{{100, 100}, {100, 100}} context:nil];
-  [m updateWithState:state];
-  UIView *container = [[UIView alloc] init];
-  [m attachToView:container];
-  auto controller = (CKTestStatefulViewComponentController *)[(CKTestStatefulViewComponent *)state.layout.component controller];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{100, 100}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
+  auto controller = (CKTestStatefulViewComponentController *)[(CKTestStatefulViewComponent *)state.componentLayout.component controller];
 
-  [m updateWithState:[m prepareForUpdateWithModel:nil constrainedSize:{{50, 50}, {50, 50}} context:nil]];
+  [componentLifecycleTestController updateWithState:[componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                constrainedSize:{{50, 50}, {50, 50}}
+                                                                                                        context:nil]];
   XCTAssertTrue(CGRectEqualToRect([[controller statefulView] frame], CGRectMake(0, 0, 50, 50)), @"Stateful view size should be updated to match new size");
 }
 
 - (void)testUpdatingStatefulViewComponentColorUpdatesStatefulViewColor
 {
-  CKComponentLifecycleManager *m = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  const CKComponentLifecycleManagerState state = [m prepareForUpdateWithModel:[UIColor whiteColor] constrainedSize:{{0, 0}, {100, 100}} context:nil];
-  [m updateWithState:state];
-  UIView *container = [[UIView alloc] init];
-  [m attachToView:container];
-  auto controller = (CKTestStatefulViewComponentController *)[(CKTestStatefulViewComponent *)state.layout.component controller];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:[UIColor whiteColor]
+                                                                                                    constrainedSize:{{0, 0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
+  auto controller = (CKTestStatefulViewComponentController *)[(CKTestStatefulViewComponent *)state.componentLayout.component controller];
 
-  [m updateWithState:[m prepareForUpdateWithModel:[UIColor redColor] constrainedSize:{{100, 100}, {100, 100}} context:nil]];
+  [componentLifecycleTestController updateWithState:[componentLifecycleTestController prepareForUpdateWithModel:[UIColor redColor]
+                                                                                                constrainedSize:{{100, 100}, {100, 100}}
+                                                                                                        context:nil]];
   XCTAssertEqualObjects([[controller statefulView] backgroundColor], [UIColor redColor], @"Stateful view size should be updated to match new color");
 }
 

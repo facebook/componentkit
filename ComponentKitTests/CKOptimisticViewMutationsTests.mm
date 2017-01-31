@@ -10,10 +10,11 @@
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKitTestHelpers/CKComponentLifecycleTestController.h>
+
 #import <ComponentKit/CKButtonComponent.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAnimation.h>
-#import <ComponentKit/CKComponentLifecycleManager.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKOptimisticViewMutations.h>
 
@@ -26,13 +27,14 @@
 {
   CKComponent *blueComponent =
   [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{}];
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] init];
-  [clm updateWithState:{
-    .layout = [blueComponent layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:nil
+                                                                                                                             sizeRangeProvider:nil];
+  [componentLifecycleTestController updateWithState:{
+    .componentLayout = [blueComponent layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
   }];
 
-  UIView *container = [[UIView alloc] init];
-  [clm attachToView:container];
+  UIView *containerView = [UIView new];
+  [componentLifecycleTestController attachToView:containerView];
 
   UIView *view = [blueComponent viewContext].view;
   XCTAssertEqualObjects(view.backgroundColor, [UIColor blueColor], @"Expected blue view");
@@ -41,8 +43,8 @@
   XCTAssertEqualObjects(view.backgroundColor, [UIColor redColor], @"Expected optimistic red mutation");
 
   // detaching and reattaching to the view should reset it back to blue.
-  [clm detachFromView];
-  [clm attachToView:container];
+  [componentLifecycleTestController detachFromView];
+  [componentLifecycleTestController attachToView:containerView];
   XCTAssertEqualObjects(view.backgroundColor, [UIColor blueColor], @"Expected blue to be reset by OptimisticViewMutation");
 }
 
@@ -50,13 +52,14 @@
 {
   CKComponent *blueComponent =
   [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{}];
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] init];
-  [clm updateWithState:{
-    .layout = [blueComponent layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:nil
+                                                                                                                             sizeRangeProvider:nil];
+  [componentLifecycleTestController updateWithState:{
+    .componentLayout = [blueComponent layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
   }];
 
-  UIView *container = [[UIView alloc] init];
-  [clm attachToView:container];
+  UIView *containerView = [UIView new];
+  [componentLifecycleTestController attachToView:containerView];
 
   UIView *view = [blueComponent viewContext].view;
   XCTAssertEqualObjects(view.backgroundColor, [UIColor blueColor], @"Expected blue view");
@@ -66,14 +69,14 @@
   XCTAssertEqualObjects(view.backgroundColor, [UIColor yellowColor], @"Expected view to yellow after second optimistic mutation");
 
   // detaching and reattaching to the view should reset it back to blue.
-  [clm detachFromView];
-  [clm attachToView:container];
+  [componentLifecycleTestController detachFromView];
+  [componentLifecycleTestController attachToView:containerView];
   XCTAssertEqualObjects(view.backgroundColor, [UIColor blueColor], @"Expected blue to be reset by OptimisticViewMutation");
 }
 
 - (void)testFunctionBasedViewMutationsAreAppliedAndTornDownCorrectly
 {
-  CKButtonComponent *button =
+  CKButtonComponent *buttonComponent =
   [CKButtonComponent
    newWithTitles:{{UIControlStateNormal, @"Original"}}
    titleColors:{}
@@ -86,23 +89,24 @@
    size:{}
    attributes:{}
    accessibilityConfiguration:{}];
-   CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] init];
-  [clm updateWithState:{
-    .layout = [button layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:nil
+                                                                                                                             sizeRangeProvider:nil];
+  [componentLifecycleTestController updateWithState:{
+    .componentLayout = [buttonComponent layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
   }];
 
-  UIView *container = [[UIView alloc] init];
-  [clm attachToView:container];
+  UIView *containerView = [UIView new];
+  [componentLifecycleTestController attachToView:containerView];
 
-  UIButton *view = (UIButton *)[button viewContext].view;
+  UIButton *view = (UIButton *)[buttonComponent viewContext].view;
   XCTAssertEqualObjects([view titleForState:UIControlStateNormal], @"Original");
 
   CKPerformOptimisticViewMutation(view, &buttonTitleGetter, &buttonTitleSetter, @"NewValue");
   XCTAssertEqualObjects([view titleForState:UIControlStateNormal], @"NewValue");
 
   // detaching and reattaching to the view should reset it back to blue.
-  [clm detachFromView];
-  [clm attachToView:container];
+  [componentLifecycleTestController detachFromView];
+  [componentLifecycleTestController attachToView:containerView];
   XCTAssertEqualObjects([view titleForState:UIControlStateNormal], @"Original", @"Expected title to be reset by OptimisticViewMutation");
 }
 

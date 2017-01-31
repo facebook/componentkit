@@ -153,7 +153,7 @@ static void _tearDownAttachStateFromViews(NSArray *views)
 
 @end
 
-@implementation UIView(CKComponentDataSourceAttachController)
+@implementation UIView (CKComponentDataSourceAttachController)
 
 static char const kViewAttachStateKey = ' ';
 

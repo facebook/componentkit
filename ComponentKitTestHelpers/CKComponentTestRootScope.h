@@ -14,11 +14,12 @@
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 
 /**
- If you are constructing components manually in a test without using CKComponentLifecycleManager, you must wrap their
- creation in CKComponentTestRootScope. For example:
+ Opens a root component scope when constructing components manually in tests:
 
    CKComponentTestRootScope scope;
    CKComponent *c = ...;
+
+ In the example above the test root scope will be made available to the component and all of its children.
  */
 class CKComponentTestRootScope {
 public:

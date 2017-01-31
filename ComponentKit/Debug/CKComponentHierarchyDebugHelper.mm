@@ -16,9 +16,6 @@
 #import "CKComponentInternal.h"
 #import "CKComponentDataSourceAttachController.h"
 #import "CKComponentDataSourceAttachControllerInternal.h"
-#import "CKComponentLifecycleManager.h"
-#import "CKComponentLifecycleManagerInternal.h"
-#import "CKComponentViewInterface.h"
 #import "CKComponentLayout.h"
 #import "CKComponentRootView.h"
 #import "CKComponentHostingView.h"
@@ -249,9 +246,7 @@ static CKComponentRootView *rootViewForView(UIView *view)
 static const CKComponentLayout *rootLayoutFromRootView(CKComponentRootView *rootView)
 {
   const CKComponentLayout *rootLayout;
-  if (rootView.ck_componentLifecycleManager) {
-    rootLayout = &rootView.ck_componentLifecycleManager.state.layout;
-  } else if (rootView.ck_attachState) {
+  if (rootView.ck_attachState) {
     rootLayout = &[rootView.ck_attachState layout];
   } else if ([rootView.superview isKindOfClass:[CKComponentHostingView class]]) {
     CKComponentHostingView *hostingView = (CKComponentHostingView *)rootView.superview;

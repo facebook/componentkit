@@ -10,9 +10,9 @@
 
 #import "CKTestRunLoopRunning.h"
 
-#import <QuartzCore/QuartzCore.h>
+#import <atomic>
 
-#import <libkern/OSAtomic.h>
+#import <QuartzCore/QuartzCore.h>
 
 // Poll the condition 1000 times a second.
 static CFTimeInterval kSingleRunLoopTimeout = 0.001;
@@ -25,9 +25,9 @@ BOOL CKRunRunLoopUntilBlockIsTrue(BOOL (^block)(void))
   CFTimeInterval timeoutDate = CACurrentMediaTime() + kTimeoutInterval;
   BOOL passed = NO;
   while (true) {
-    OSMemoryBarrier();
+    std::atomic_thread_fence(std::memory_order_seq_cst);
     passed = block();
-    OSMemoryBarrier();
+    std::atomic_thread_fence(std::memory_order_seq_cst);
     if (passed) {
       break;
     }
