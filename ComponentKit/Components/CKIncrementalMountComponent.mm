@@ -17,7 +17,22 @@
 #import <ComponentKit/ComponentViewManager.h>
 #import <ComponentKit/CKComponentContext.h>
 
-@interface CKIncrementalMountComponent ()
+#import "CKScrollAnnouncingView.h"
+
+static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, UIView *view)
+{
+  UIView *currentView = view;
+  NSMutableArray *tokens = [NSMutableArray array];
+  while (currentView) {
+    if ([currentView isKindOfClass:[UIScrollView class]]) {
+      [tokens addObject:[(UIScrollView *)currentView ck_addScrollListener:listener]];
+    }
+    currentView = [currentView superview];
+  }
+  return tokens;
+}
+
+@interface CKIncrementalMountComponent () <CKScrollListener>
 
 - (void)mountVisibleChildren;
 
@@ -30,18 +45,15 @@
   // Main-thread only. Mutable mount-based state. These parameters will be
   // empty when not mounted.
   CKComponentLayout _mountedChildLayout;
+  NSArray<CKScrollListeningToken *> *_scrollListeningTokens;
   NSSet<CKComponent *> *_currentlyMountedComponents;
 }
 
 + (instancetype)newWithComponent:(CKComponent *)component
 {
-  CKComponentScope scope(self);
-
   CKIncrementalMountComponent *c =
   [super
-   newWithView:{
-     [UIView class]
-   }
+   newWithView:{}
    size:{}];
   if (c) {
     c->_component = component;
@@ -67,6 +79,7 @@
                                                    children:children
                                              supercomponent:supercomponent];
   _mountedChildLayout = children->at(0).layout;
+  _scrollListeningTokens = addListenerForParentScrollViews(self, self.viewContext.view);
   return result;
 }
 
@@ -76,6 +89,9 @@
   CKUnmountComponents(_currentlyMountedComponents);
   _currentlyMountedComponents = nil;
   _mountedChildLayout = {};
+  for (CKScrollListeningToken *token in _scrollListeningTokens) {
+    [token removeListener];
+  }
 }
 
 - (void)mountVisibleChildren
@@ -127,27 +143,12 @@
                          CK::Component::MountContext::RootContext(view));
 }
 
-@end
+#pragma mark - CKScrollListener
 
-@interface CKIncrementalMountComponentController : CKComponentController<CKIncrementalMountComponent *>
-
-@end
-
-@implementation CKIncrementalMountComponentController
+- (void)scrollViewDidScroll
 {
-
-}
-
-- (void)viewDidScroll
-{
-  [super viewDidScroll];
-  [self.component mountVisibleChildren];
-}
-
-- (void)didMount
-{
-  [super didMount];
-  [self.component mountVisibleChildren];
+  CKAssertMainThread();
+  [self mountVisibleChildren];
 }
 
 @end

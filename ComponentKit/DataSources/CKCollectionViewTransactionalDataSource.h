@@ -79,8 +79,6 @@
  */
 - (void)announceDidEndDisplayingCell:(UICollectionViewCell *)cell;
 
-- (void)announceScrollEventToVisibleCells;
-
 @property (readonly, nonatomic, strong) UICollectionView *collectionView;
 /**
  Supplementary views are not handled with components; the datasource will forward any call to

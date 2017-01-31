@@ -210,13 +210,6 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
   [_visibleItems removeObject:item];
 }
 
-- (void)announceScrollEventToVisibleCells
-{
-  for (CKTransactionalComponentDataSourceItem *item in _visibleItems) {
-    [item.scopeRoot announceEventToControllers:CKComponentAnnouncedEventScrollViewDidScroll];
-  }
-}
-
 #pragma mark - UICollectionViewDataSource
 
 static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_data_source.cell";

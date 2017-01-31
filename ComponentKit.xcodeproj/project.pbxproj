@@ -339,6 +339,10 @@
 		B116AF431E3D1D1F00A420A6 /* CKIncrementalMountComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = B116AF411E3D1D1F00A420A6 /* CKIncrementalMountComponent.mm */; };
 		B167C70F1DD38E4200769084 /* CKMemoizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = B167C70D1DD38E4200769084 /* CKMemoizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B167C7101DD38E4200769084 /* CKMemoizingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = B167C70E1DD38E4200769084 /* CKMemoizingComponent.mm */; };
+		B16A34CD1E411E7700C691F5 /* CKScrollAnnouncingView.h in Headers */ = {isa = PBXBuildFile; fileRef = B16A34CC1E411E7700C691F5 /* CKScrollAnnouncingView.h */; };
+		B16A34D91E411FAC00C691F5 /* CKScrollAnnouncingView.m in Sources */ = {isa = PBXBuildFile; fileRef = B16A34D81E411FAC00C691F5 /* CKScrollAnnouncingView.m */; };
+		B16A34DF1E41349700C691F5 /* CKScrollComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = B16A34DD1E41349700C691F5 /* CKScrollComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B16A34E01E41349700C691F5 /* CKScrollComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = B16A34DE1E41349700C691F5 /* CKScrollComponent.mm */; };
 		B1DC105F1DD480FB00CCBF2F /* CKMemoizingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = B167C70E1DD38E4200769084 /* CKMemoizingComponent.mm */; };
 		B1DC106A1DD4810700CCBF2F /* CKMemoizingComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = B167C70D1DD38E4200769084 /* CKMemoizingComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B1EF8FE81DD1562B00E74F43 /* CKComponentActionInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = B1EF8FE71DD1562B00E74F43 /* CKComponentActionInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -830,6 +834,10 @@
 		B116AF411E3D1D1F00A420A6 /* CKIncrementalMountComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKIncrementalMountComponent.mm; sourceTree = "<group>"; };
 		B167C70D1DD38E4200769084 /* CKMemoizingComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMemoizingComponent.h; sourceTree = "<group>"; };
 		B167C70E1DD38E4200769084 /* CKMemoizingComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKMemoizingComponent.mm; sourceTree = "<group>"; };
+		B16A34CC1E411E7700C691F5 /* CKScrollAnnouncingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKScrollAnnouncingView.h; sourceTree = "<group>"; };
+		B16A34D81E411FAC00C691F5 /* CKScrollAnnouncingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKScrollAnnouncingView.m; sourceTree = "<group>"; };
+		B16A34DD1E41349700C691F5 /* CKScrollComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKScrollComponent.h; sourceTree = "<group>"; };
+		B16A34DE1E41349700C691F5 /* CKScrollComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKScrollComponent.mm; sourceTree = "<group>"; };
 		B1EF8FE71DD1562B00E74F43 /* CKComponentActionInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentActionInternal.h; sourceTree = "<group>"; };
 		B342DC401AC23E8200ACAC53 /* ComponentKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComponentKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAccessibilityTests.mm; sourceTree = "<group>"; };
@@ -1453,6 +1461,10 @@
 				B167C70E1DD38E4200769084 /* CKMemoizingComponent.mm */,
 				B116AF401E3D1D1F00A420A6 /* CKIncrementalMountComponent.h */,
 				B116AF411E3D1D1F00A420A6 /* CKIncrementalMountComponent.mm */,
+				B16A34CC1E411E7700C691F5 /* CKScrollAnnouncingView.h */,
+				B16A34D81E411FAC00C691F5 /* CKScrollAnnouncingView.m */,
+				B16A34DD1E41349700C691F5 /* CKScrollComponent.h */,
+				B16A34DE1E41349700C691F5 /* CKScrollComponent.mm */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -2052,6 +2064,7 @@
 				D0B47D0A1CBD948E00BB33CE /* CKComponentScope.h in Headers */,
 				B116AF421E3D1D1F00A420A6 /* CKIncrementalMountComponent.h in Headers */,
 				2DA523981DCA8CA0007EF261 /* CKComponentBacktraceDescription.h in Headers */,
+				B16A34DF1E41349700C691F5 /* CKScrollComponent.h in Headers */,
 				D0B47D411CBD948E00BB33CE /* CKTransactionalComponentDataSourceChangesetInternal.h in Headers */,
 				D0B47CFE1CBD948E00BB33CE /* CKComponentViewAttribute.h in Headers */,
 				D0B47D4A1CBD948E00BB33CE /* CKTransactionalComponentDataSourceChange.h in Headers */,
@@ -2114,6 +2127,7 @@
 				D0B47D681CBD948E00BB33CE /* CKTextKitContext.h in Headers */,
 				D0B47D0C1CBD948E00BB33CE /* CKComponentScopeHandle.h in Headers */,
 				D0B47D741CBD948E00BB33CE /* CKAsyncTransaction.h in Headers */,
+				B16A34CD1E411E7700C691F5 /* CKScrollAnnouncingView.h in Headers */,
 				D0B47D781CBD948E00BB33CE /* CKCacheImpl.h in Headers */,
 				D0B47D071CBD948E00BB33CE /* ComponentUtilities.h in Headers */,
 				D0B47D6A1CBD948E00BB33CE /* CKTextKitRenderer+Positioning.h in Headers */,
@@ -2797,6 +2811,7 @@
 				D0B47CA41CBD943400BB33CE /* CKComponentAnnouncerHelper.mm in Sources */,
 				D0B47CA71CBD943400BB33CE /* CKComponentDataSourceAttachController.mm in Sources */,
 				D0B47CAC1CBD943400BB33CE /* CKComponentFlexibleSizeRangeProvider.mm in Sources */,
+				B16A34D91E411FAC00C691F5 /* CKScrollAnnouncingView.m in Sources */,
 				D0B47CAD1CBD943400BB33CE /* CKComponentHostingView.mm in Sources */,
 				D0B47CAE1CBD943400BB33CE /* CKComponentRootView.m in Sources */,
 				D0B47CAF1CBD943400BB33CE /* CKBackgroundLayoutComponent.mm in Sources */,
@@ -2843,6 +2858,7 @@
 				D0B47CD41CBD943400BB33CE /* CKTextComponentLayerHighlighter.mm in Sources */,
 				D0B47CD51CBD943400BB33CE /* CKTextComponentView.mm in Sources */,
 				D0B47CD61CBD943400BB33CE /* CKTextComponentViewControlTracker.mm in Sources */,
+				B16A34E01E41349700C691F5 /* CKScrollComponent.mm in Sources */,
 				D0B47CD71CBD943400BB33CE /* CKTextKitAttributes.mm in Sources */,
 				D0B47CD81CBD943400BB33CE /* CKTextKitContext.mm in Sources */,
 				D0B47CD91CBD943400BB33CE /* CKTextKitEntityAttribute.m in Sources */,

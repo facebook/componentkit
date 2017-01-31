@@ -12,6 +12,7 @@
 #import "WarmQuoteComponent.h"
 
 #import <ComponentKit/CKIncrementalMountComponent.h>
+#import <ComponentKit/CKScrollComponent.h>
 
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"
@@ -20,30 +21,46 @@
 
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context
 {
+  std::vector<CKStackLayoutComponentChild> children;
+  for (int i = 0; i < 40; i++) {
+    children.push_back({[QuoteWithBackgroundComponent
+                         newWithBackgroundImage:[context imageNamed:@"Powell"]
+                         quoteComponent:
+                         [CKRatioLayoutComponent
+                          newWithRatio:1.3
+                          size:{
+                            .width = [UIScreen mainScreen].bounds.size.width * 0.8
+                          }
+                          component:
+                          [CKInsetComponent
+                           // Left and right inset of 30pts; centered vertically:
+                           newWithInsets:{.left = 30, .right = 30, .top = INFINITY, .bottom = INFINITY}
+                           component:
+                           [CKLabelComponent
+                            newWithLabelAttributes:{
+                              .string = text,
+                              .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
+                            }
+                            viewAttributes:{
+                              {@selector(setBackgroundColor:), [UIColor clearColor]},
+                              {@selector(setUserInteractionEnabled:), @NO},
+                            }
+                            size:{ }]]]]});
+  }
+
   return [super newWithComponent:
-          [CKIncrementalMountComponent
-           newWithComponent:
-           [QuoteWithBackgroundComponent
-            newWithBackgroundImage:[context imageNamed:@"Powell"]
-            quoteComponent:
-            [CKRatioLayoutComponent
-             newWithRatio:1.3
+          [CKScrollComponent
+           newWithAttributes:{}
+           component:
+           [CKIncrementalMountComponent
+            newWithComponent:
+            [CKStackLayoutComponent
+             newWithView:{}
              size:{}
-             component:
-             [CKInsetComponent
-              // Left and right inset of 30pts; centered vertically:
-              newWithInsets:{.left = 30, .right = 30, .top = INFINITY, .bottom = INFINITY}
-              component:
-              [CKLabelComponent
-               newWithLabelAttributes:{
-                 .string = text,
-                 .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
-               }
-               viewAttributes:{
-                 {@selector(setBackgroundColor:), [UIColor clearColor]},
-                 {@selector(setUserInteractionEnabled:), @NO},
-               }
-               size:{ }]]]]]];
+             style:{
+               .direction = CKStackLayoutDirectionHorizontal
+             }
+             children:children]]]];
   
 }
 
