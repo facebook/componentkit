@@ -30,6 +30,8 @@ CKTransactionalComponentDataSourceListener
   __weak id<CKSupplementaryViewDataSource> _supplementaryViewDataSource;
   CKTransactionalComponentDataSourceState *_currentState;
   CKComponentDataSourceAttachController *_attachController;
+  NSMapTable<UICollectionViewCell *, NSIndexPath *> *_cellToIndexPathMap;
+  NSMapTable<NSIndexPath *, UICollectionViewCell *> *_indexPathToCellMap;
   NSMapTable<UICollectionViewCell *, CKTransactionalComponentDataSourceItem *> *_cellToItemMap;
 }
 @end
@@ -52,6 +54,8 @@ CKTransactionalComponentDataSourceListener
     
     _attachController = [[CKComponentDataSourceAttachController alloc] init];
     _supplementaryViewDataSource = supplementaryViewDataSource;
+    _cellToIndexPathMap = [NSMapTable weakToStrongObjectsMapTable];
+    _indexPathToCellMap = [NSMapTable strongToWeakObjectsMapTable];
     _cellToItemMap = [NSMapTable weakToStrongObjectsMapTable];
   }
   return self;
@@ -114,16 +118,32 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
         break;
     }
     
+    // If none of the cells changed size, we can remount the updated cells directly
+    // without notifying the collection view
+    BOOL sizeChanged = NO;
+    for (NSIndexPath *indexPath in changes.updatedIndexPaths) {
+      CKTransactionalComponentDataSourceItem *oldItem = [_currentState objectAtIndexPath:indexPath];
+      CKTransactionalComponentDataSourceItem *newItem = [state objectAtIndexPath:indexPath];
+      sizeChanged = !CGSizeEqualToSize(oldItem.layout.size, newItem.layout.size);
+      if (sizeChanged)
+        break;
+    }
+    
     void (^applyUpdatedState)(CKTransactionalComponentDataSourceState *) = ^(CKTransactionalComponentDataSourceState *updatedState) {
-      [_collectionView performBatchUpdates:^{
+      if (sizeChanged) {
+        [_collectionView performBatchUpdates:^{
+          _currentState = updatedState;
+        } completion:^(BOOL finished) {}];
+      } else {
         _currentState = updatedState;
-      } completion:^(BOOL finished) {}];
+      }
     };
 
-    // We only apply the bounds animation if we found one with a duration.
+    // We only apply the bounds animation if the bounds of one of the cells
+    // changes, and if we found a bounds animation with a duration.
     // Animating the collection view is an expensive operation and should be
     // avoided when possible.
-    if (boundsAnimation.duration) {
+    if (sizeChanged && boundsAnimation.duration) {
       id boundsAnimationContext = CKComponentBoundsAnimationPrepareForCollectionViewBatchUpdates(_collectionView);
       [UIView performWithoutAnimation:^{
         applyUpdatedState(state);
@@ -138,7 +158,11 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
     CKComponentBoundsAnimationApply(boundsAnimation, ^{
       for (NSIndexPath *indexPath in changes.updatedIndexPaths) {
         CKTransactionalComponentDataSourceItem *item = [state objectAtIndexPath:indexPath];
-        CKCollectionViewDataSourceCell *cell = (CKCollectionViewDataSourceCell *)[_collectionView cellForItemAtIndexPath:indexPath];
+          
+        // There is a race condition that causes this method to return nil
+        // between when the cell is first requested and when the cell is
+        // placed in the collection view. Thus we fall back on our mapping.
+        CKCollectionViewDataSourceCell *const cell = (CKCollectionViewDataSourceCell *)([_collectionView cellForItemAtIndexPath:indexPath] ?: [_indexPathToCellMap objectForKey:indexPath]);
         if (cell) {
           attachToCell(cell, item, _attachController, _cellToItemMap);
         }
@@ -212,6 +236,9 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
 {
   CKCollectionViewDataSourceCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:kReuseIdentifier forIndexPath:indexPath];
   attachToCell(cell, [_currentState objectAtIndexPath:indexPath], _attachController, _cellToItemMap);
+  [_indexPathToCellMap removeObjectForKey:[_cellToIndexPathMap objectForKey:cell]];
+  [_indexPathToCellMap setObject:cell forKey:indexPath];
+  [_cellToIndexPathMap setObject:indexPath forKey:cell];
   return cell;
 }
 
