@@ -169,7 +169,8 @@ struct CKComponentHostingViewInputs {
 
 - (void)_setNeedsUpdateWithMode:(CKUpdateMode)mode
 {
-  if (_componentNeedsUpdate && _requestedUpdateMode == CKUpdateModeSynchronous) {
+  if (_componentNeedsUpdate
+      && _requestedUpdateMode == CKUpdateModeSynchronous) {
     return; // Already scheduled a synchronous update; nothing more to do.
   }
 

@@ -11,6 +11,8 @@
 
 #import "QuoteWithBackgroundComponent.h"
 
+#import <ComponentKit/CKComponentInternal.h>
+
 @implementation QuoteWithBackgroundComponent
 
 + (instancetype)newWithBackgroundImage:(UIImage *)backgroundImage
@@ -31,6 +33,11 @@
               }
             }
             size:{}]]];
+}
+
+- (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context size:(const CGSize)size children:(std::shared_ptr<const std::vector<CKComponentLayoutChild> >)children supercomponent:(CKComponent *)supercomponent
+{
+  return [super mountInContext:context size:size children:children supercomponent:supercomponent];
 }
 
 @end

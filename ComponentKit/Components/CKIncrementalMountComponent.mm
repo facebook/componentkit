@@ -34,7 +34,7 @@ static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, U
 
 @interface CKIncrementalMountComponent () <CKScrollListener>
 
-- (void)mountVisibleChildren;
+- (void)mountVisibleChildren:(const std::shared_ptr<CK::Component::MountContext> &)mountContext;
 
 @end
 
@@ -45,6 +45,8 @@ static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, U
   // Main-thread only. Mutable mount-based state. These parameters will be
   // empty when not mounted.
   CKComponentLayout _mountedChildLayout;
+  CGPoint _mountedPosition;
+  UIEdgeInsets _mountedLayoutGuide;
   NSArray<CKScrollListeningToken *> *_scrollListeningTokens;
   NSSet<CKComponent *> *_currentlyMountedComponents;
 }
@@ -53,7 +55,7 @@ static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, U
 {
   CKIncrementalMountComponent *c =
   [super
-   newWithView:{}
+   newWithView:{[UIView class]}
    size:{}];
   if (c) {
     c->_component = component;
@@ -78,8 +80,11 @@ static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, U
                                                        size:size
                                                    children:children
                                              supercomponent:supercomponent];
+  result.mountChildren = NO;
   _mountedChildLayout = children->at(0).layout;
   _scrollListeningTokens = addListenerForParentScrollViews(self, self.viewContext.view);
+  _mountedPosition = result.contextForChildren.position;
+  [self mountVisibleChildren:nullptr];
   return result;
 }
 
@@ -94,18 +99,28 @@ static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, U
   }
 }
 
-- (void)mountVisibleChildren
+- (void)mountVisibleChildren:(const std::shared_ptr<CK::Component::MountContext> &)mountContext
 {
   CKAssertMainThread();
 
-  if (!self.viewContext.view) {
+  UIView *const view = self.viewContext.view;
+
+  if (!view) {
     return;
   }
 
-  UIView *const view = self.viewContext.view;
   const CGRect bounds = view.bounds;
-  const CGRect visibleWindowBounds = [view convertRect:view.window.bounds
-                                              fromView:view.window];
+  UIView *rootView = view.window;
+  if (!rootView) {
+    rootView = view;
+    // We're not in a window yet, so we just traverse upwards until we find a root. This commonly
+    // happens when a cell is initially being returned for a collection view.
+    while ([rootView superview]) {
+      rootView = [rootView superview];
+    }
+  }
+  const CGRect visibleWindowBounds = [rootView convertRect:rootView.bounds
+                                                    toView:view];
   // Within the coordinate-space of this component's mounted view.
   const CGRect visibleBounds = CGRectIntersection(bounds, visibleWindowBounds);
 
@@ -140,7 +155,7 @@ static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, U
                          view,
                          _currentlyMountedComponents,
                          self,
-                         CK::Component::MountContext::RootContext(view));
+                         mountContext ? *mountContext : CK::Component::MountContext(std::make_shared<CK::Component::ViewManager>(self.viewContext.view, CK::Component::ViewReusePoolMap::alternateReusePoolMapForView(view, "CKIncrementalMountComponent")), _mountedPosition, _mountedLayoutGuide, NO));
 }
 
 #pragma mark - CKScrollListener
@@ -148,7 +163,11 @@ static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, U
 - (void)scrollViewDidScroll
 {
   CKAssertMainThread();
-  [self mountVisibleChildren];
+  if (!self.viewContext.view) {
+    return;
+  }
+
+  [self mountVisibleChildren:nullptr];
 }
 
 @end

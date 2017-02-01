@@ -105,6 +105,7 @@ int32_t PersistentAttributeShape::computeIdentifier(const CKViewComponentAttribu
 @interface CKComponentViewReusePoolMapWrapper : NSObject {
 @public
   ViewReusePoolMap _viewReusePoolMap;
+  std::unordered_map<std::string, ViewReusePoolMap> _alternateReusePoolMaps;
 }
 @end
 
@@ -137,6 +138,17 @@ void ViewReusePool::reset()
 }
 
 const char kComponentViewReusePoolMapAssociatedObjectKey = ' ';
+
+
+ViewReusePoolMap &ViewReusePoolMap::alternateReusePoolMapForView(UIView *v, const std::string &i)
+{
+  CKComponentViewReusePoolMapWrapper *wrapper = objc_getAssociatedObject(v, &kComponentViewReusePoolMapAssociatedObjectKey);
+  if (!wrapper) {
+    wrapper = [[CKComponentViewReusePoolMapWrapper alloc] init];
+    objc_setAssociatedObject(v, &kComponentViewReusePoolMapAssociatedObjectKey, wrapper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  }
+  return wrapper->_alternateReusePoolMaps[i];
+}
 
 ViewReusePoolMap &ViewReusePoolMap::viewReusePoolMapForView(UIView *v)
 {

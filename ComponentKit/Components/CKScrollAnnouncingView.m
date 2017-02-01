@@ -63,6 +63,7 @@ static char kAssociatedObjectKey;
 {
   CKAssertMainThread();
   CKScrollListeningToken *token = [[CKScrollListeningToken alloc] initWithController:self];
+  _tokenToListenerMap = [_tokenToListenerMap copy];
   [_tokenToListenerMap setObject:listener forKey:token];
   return token;
 }
@@ -70,6 +71,7 @@ static char kAssociatedObjectKey;
 - (void)removeListener:(CKScrollListeningToken *)token
 {
   CKAssertMainThread();
+  _tokenToListenerMap = [_tokenToListenerMap copy];
   [_tokenToListenerMap removeObjectForKey:token];
 }
 
@@ -79,8 +81,9 @@ static char kAssociatedObjectKey;
                        context:(void *)context
 {
   CKAssertMainThread();
-  for (CKScrollListeningToken *token in _tokenToListenerMap) {
-    id<CKScrollListener> listener = [_tokenToListenerMap objectForKey:token];
+  NSMapTable *tokenToListenerMap = _tokenToListenerMap;
+  for (CKScrollListeningToken *token in tokenToListenerMap) {
+    id<CKScrollListener> listener = [tokenToListenerMap objectForKey:token];
     [listener scrollViewDidScroll];
   }
 }

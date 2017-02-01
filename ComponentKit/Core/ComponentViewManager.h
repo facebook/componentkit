@@ -122,6 +122,7 @@ namespace CK {
     class ViewReusePoolMap {
     public:
       static ViewReusePoolMap &viewReusePoolMapForView(UIView *view);
+      static ViewReusePoolMap &alternateReusePoolMapForView(UIView *view, const std::string &identifier);
       ViewReusePoolMap() {};
 
       /** Resets each individual pool inside the map. */
@@ -147,6 +148,7 @@ namespace CK {
      */
     class ViewManager {
     public:
+      ViewManager(UIView *v, ViewReusePoolMap &m) : view(v), viewReusePoolMap(m) {};
       ViewManager(UIView *v) : view(v), viewReusePoolMap(ViewReusePoolMap::viewReusePoolMapForView(v)) {};
       ~ViewManager() { viewReusePoolMap.reset(view); }
 

@@ -11,6 +11,8 @@
 
 #import "QuoteComponent.h"
 
+#import <ComponentKit/CKUniqueComponent.h>
+
 #import "FrostedQuoteComponent.h"
 #import "MonochromeQuoteComponent.h"
 #import "Quote.h"
@@ -22,6 +24,7 @@
 
 + (instancetype)newWithQuote:(Quote *)quote context:(QuoteContext *)context
 {
+  CKComponentScope scope(self, quote);
   return [super newWithComponent:quoteComponent(quote, context)];
 }
 

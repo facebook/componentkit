@@ -13,17 +13,46 @@
 #import "CKComponentSubclass.h"
 #import "CKComponentController.h"
 
+@interface CKScrollComponent ()
+
+- (const CKScrollComponentConfiguration &)configuration;
+
+@end
+
 @implementation CKScrollComponent
 {
+  CKScrollComponentConfiguration _configuration;
+
   CKComponent *_component;
 }
 
-+ (instancetype)newWithAttributes:(const CKViewComponentAttributeValueMap &)passedAttributes
-                        component:(CKComponent *)component
++ (instancetype)newWithConfiguration:(const CKScrollComponentConfiguration &)configuration
+                          attributes:(const CKViewComponentAttributeValueMap &)passedAttributes
+                           component:(CKComponent *)component
 {
   CKComponentScope scope(self);
 
-  CKViewComponentAttributeValueMap attributes(passedAttributes);
+  CKViewComponentAttributeValueMap attributes {
+    { @selector(setDirectionalLockEnabled:), (BOOL)configuration.options.directionalLockEnabled },
+    { @selector(setBounces:), (BOOL)configuration.options.bounces },
+    { @selector(setAlwaysBounceVertical:), (BOOL)configuration.options.alwaysBounceVertical },
+    { @selector(setPagingEnabled:), (BOOL)configuration.options.pagingEnabled },
+    { @selector(setScrollEnabled:), (BOOL)configuration.options.scrollEnabled },
+    { @selector(setShowsHorizontalScrollIndicator:), (BOOL)configuration.options.showsHorizontalScrollIndicator },
+    { @selector(setShowsVerticalScrollIndicator:), (BOOL)configuration.options.showsVerticalScrollIndicator },
+    { @selector(setScrollIndicatorInsets:), (UIEdgeInsets)configuration.options.scrollIndicatorInsets },
+    { @selector(setIndicatorStyle:), (UIScrollViewIndicatorStyle)configuration.options.indicatorStyle },
+    { @selector(setDecelerationRate:), (CGFloat)configuration.options.decelerationRate},
+    { @selector(setDelaysContentTouches:), (BOOL)configuration.options.delaysContentTouches},
+    { @selector(setCanCancelContentTouches:), (BOOL)configuration.options.canCancelContentTouches},
+    { @selector(setDelaysContentTouches:), (BOOL)configuration.options.canCancelContentTouches},
+    { @selector(setScrollsToTop:), (BOOL)configuration.options.scrollsToTop},
+  };
+
+  // Apply the passed attributes after the normal configuration. This allows overriding
+  // any values defined in 
+  attributes.insert(passedAttributes.begin(), passedAttributes.end());
+
   CKScrollComponent *c = [super
                           newWithView:{
                             {[UIScrollView class]},
@@ -32,6 +61,7 @@
                           size:{}];
   if (c) {
     c->_component = component;
+    c->_configuration = configuration;
   }
   return c;
 }
@@ -59,6 +89,11 @@
   return result;
 }
 
+- (const CKScrollComponentConfiguration &)configuration
+{
+  return _configuration;
+}
+
 @end
 
 @interface CKScrollComponentController : CKComponentController<CKScrollComponent *> <UIScrollViewDelegate>
@@ -66,6 +101,24 @@
 @end
 
 @implementation CKScrollComponentController
+{
+  CGPoint _lastRecordedContentOffset;
+  CKScrollComponentConfiguration _configuration;
+}
+
+- (instancetype)initWithComponent:(CKScrollComponent *)component
+{
+  if (self = [super initWithComponent:component]) {
+    _configuration = component.configuration;
+  }
+  return self;
+}
+
+- (void)didUpdateComponent
+{
+  [super didUpdateComponent];
+  _configuration = self.component.configuration;
+}
 
 - (UIScrollView *)scrollView
 {
@@ -77,7 +130,7 @@
   [super didMount];
   self.scrollView.delegate = self;
 
-  // TODO: reconfigure the scroll view on mounting.
+  [self.scrollView setContentOffset:_lastRecordedContentOffset animated:NO];
 }
 
 - (void)didRemount
@@ -90,13 +143,87 @@
 {
   [super willUnmount];
   self.scrollView.delegate = nil;
+  _lastRecordedContentOffset = self.scrollView.contentOffset;
 }
 
 #pragma mark - UIScrollViewDelegate
 
+static CKScrollViewState scrollViewState(UIScrollView *scrollView)
+{
+  return {
+    .contentOffset = scrollView.contentOffset,
+    .contentSize = scrollView.contentSize,
+    .contentInset = scrollView.contentInset,
+    .bounds = scrollView.bounds
+  };
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+  if (_configuration.scrollViewDidScroll) {
+    _configuration.scrollViewDidScroll.send(self.component, scrollViewState(scrollView));
+  }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+  if (_configuration.scrollViewWillBeginDragging) {
+    _configuration.scrollViewWillBeginDragging.send(self.component, scrollViewState(scrollView));
+  }
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView
+                     withVelocity:(CGPoint)velocity
+              targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+  if (_configuration.scrollViewWillEndDragging) {
+    _configuration.scrollViewWillEndDragging.send(self.component, scrollViewState(scrollView), velocity, targetContentOffset);
+  }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
+                  willDecelerate:(BOOL)decelerate
+{
+  if (_configuration.scrollViewDidEndDragging) {
+    _configuration.scrollViewDidEndDragging.send(self.component, scrollViewState(scrollView), decelerate);
+  }
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+  if (_configuration.scrollViewWillBeginDecelerating) {
+    _configuration.scrollViewWillBeginDecelerating.send(self.component, scrollViewState(scrollView));
+  }
+}
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+  if (_configuration.scrollViewDidEndDecelerating) {
+    _configuration.scrollViewDidEndDecelerating.send(self.component, scrollViewState(scrollView));
+  }
+}
 
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+  if (_configuration.scrollViewDidEndScrollingAnimation) {
+    _configuration.scrollViewDidEndScrollingAnimation.send(self.component, scrollViewState(scrollView));
+  }
+}
+
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
+{
+  BOOL shouldScrollToTop = YES;
+  if (_configuration.scrollViewShouldScrollToTop) {
+    _configuration.scrollViewShouldScrollToTop.send(self.component, scrollViewState(scrollView), &shouldScrollToTop);
+  }
+  return shouldScrollToTop;
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView
+{
+  if (_configuration.scrollViewDidScrollToTop) {
+    _configuration.scrollViewDidScrollToTop.send(self.component, scrollViewState(scrollView));
+  }
 }
 
 @end

@@ -13,6 +13,7 @@
 
 #import <ComponentKit/CKIncrementalMountComponent.h>
 #import <ComponentKit/CKScrollComponent.h>
+#import <ComponentKit/CKComponentScope.h>
 
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"
@@ -50,7 +51,10 @@
 
   return [super newWithComponent:
           [CKScrollComponent
-           newWithAttributes:{}
+           newWithConfiguration:{
+             .scrollViewDidEndDragging = {@selector(scrollViewDidEndDraggingWithSender:scrollViewState:willDecelerate:)}
+           }
+           attributes:{}
            component:
            [CKIncrementalMountComponent
             newWithComponent:
@@ -58,10 +62,37 @@
              newWithView:{}
              size:{}
              style:{
-               .direction = CKStackLayoutDirectionHorizontal
+               .direction = CKStackLayoutDirectionVertical
              }
-             children:children]]]];
-  
+             children:{
+               {[CKLabelComponent
+                 newWithLabelAttributes:{
+                   .string = @"string",
+                   .font = [UIFont systemFontOfSize:40]
+                 }
+                 viewAttributes:{}
+                 size:{}]},
+               {
+                 [CKIncrementalMountComponent
+                 newWithComponent:
+                 [CKStackLayoutComponent
+                  newWithView:{}
+                  size:{}
+                  style:{
+                    .direction = CKStackLayoutDirectionHorizontal
+                  }
+                  children:children]]
+               }
+             }]]
+           ]];
+
+}
+
+- (void)scrollViewDidEndDraggingWithSender:(CKComponent *)sender
+                           scrollViewState:(CKScrollViewState)scrollViewState
+                            willDecelerate:(BOOL)willDecelerate
+{
+  NSLog(@"%s", __PRETTY_FUNCTION__);
 }
 
 @end
