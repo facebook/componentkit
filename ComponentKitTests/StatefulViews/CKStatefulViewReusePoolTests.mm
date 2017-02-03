@@ -11,9 +11,9 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
-#import <ComponentKit/CKStatefulViewReusePool.h>
+#import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
-#import <ComponentKitTestLib/CKTestRunLoopRunning.h>
+#import <ComponentKit/CKStatefulViewReusePool.h>
 
 #import "CKTestStatefulViewComponent.h"
 

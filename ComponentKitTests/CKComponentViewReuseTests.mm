@@ -10,14 +10,15 @@
 
 #import <XCTest/XCTest.h>
 
-#import "ComponentViewManager.h"
-#import "ComponentViewReuseUtilities.h"
+#import <ComponentKitTestHelpers/CKComponentLifecycleTestController.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
-#import <ComponentKit/CKComponentLifecycleManager.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKCompositeComponent.h>
+
+#import "ComponentViewManager.h"
+#import "ComponentViewReuseUtilities.h"
 
 @interface CKComponentViewReuseTests : XCTestCase <CKComponentProvider>
 @end
@@ -249,16 +250,21 @@ static UIView *viewFactory()
 {
   UIView *rootView = [[UIView alloc] init];
 
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  [clm updateWithState:[clm prepareForUpdateWithModel:@NO constrainedSize:{{0,0}, {100, 100}} context:nil]];
-  [clm attachToView:rootView];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  [componentLifecycleTestController updateWithState:[componentLifecycleTestController prepareForUpdateWithModel:@NO
+                                                                                                constrainedSize:{{0,0}, {100, 100}}
+                                                                                                        context:nil]];
+  [componentLifecycleTestController attachToView:rootView];
 
   // Find the reuse aware view
   CKReuseAwareView *reuseAwareView = [[[[[[rootView subviews] firstObject] subviews] firstObject] subviews] firstObject];
   XCTAssertFalse(reuseAwareView.inReusePool, @"Shouldn't be in reuse pool now, it's just been mounted");
 
   // Update to a totally different component so that the reuse aware view's parent should be hidden
-  [clm updateWithState:[clm prepareForUpdateWithModel:@YES constrainedSize:{{0,0}, {100, 100}} context:nil]];
+  [componentLifecycleTestController updateWithState:[componentLifecycleTestController prepareForUpdateWithModel:@YES
+                                                                                                constrainedSize:{{0,0}, {100, 100}}
+                                                                                                        context:nil]];
   XCTAssertTrue(reuseAwareView.inReusePool, @"Should be in reuse pool as its parent is hidden by components");
 }
 

@@ -10,15 +10,15 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CKComponentHostingViewTestModel.h"
-#import <ComponentKitTestLib/CKTestRunLoopRunning.h>
+#import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
 #import <ComponentKit/CKComponentHostingView.h>
 #import <ComponentKit/CKComponentHostingViewDelegate.h>
 #import <ComponentKit/CKComponentHostingViewInternal.h>
-#import <ComponentKit/CKComponentViewInterface.h>
+
+#import "CKComponentHostingViewTestModel.h"
 
 @interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate>
 @end

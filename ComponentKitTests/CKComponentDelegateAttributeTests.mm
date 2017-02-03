@@ -12,13 +12,13 @@
 
 #import <OCMock/OCMock.h>
 
-#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKComponent+UIView.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentDelegateAttribute.h>
-#import <ComponentKit/CKComponentViewInterface.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKCompositeComponent.h>
 
 
 @interface CKDetectScrollComponent : CKCompositeComponent <UIScrollViewDelegate>

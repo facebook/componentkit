@@ -12,8 +12,6 @@
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKComponentLayout.h>
 
-@class CKComponentLifecycleManager;
-
 @interface CKComponentHostingView ()
 
 @property (nonatomic, strong, readonly) UIView *containerView;

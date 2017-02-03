@@ -15,11 +15,11 @@
 #import <array>
 
 #import "CKAssert.h"
-#import "CKMutex.h"
+#import "CKComponent+UIView.h"
 #import "CKComponent.h"
-#import "CKInternalHelpers.h"
 #import "CKComponentScopeHandle.h"
-#import "CKComponentViewInterface.h"
+#import "CKInternalHelpers.h"
+#import "CKMutex.h"
 
 void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list) noexcept { }
 void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) noexcept { }

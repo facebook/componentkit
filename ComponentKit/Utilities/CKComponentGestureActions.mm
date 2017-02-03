@@ -15,9 +15,9 @@
 #import <objc/runtime.h>
 
 #import "CKAssert.h"
+#import "CKComponent+UIView.h"
 #import "CKInternalHelpers.h"
 #import "CKMutex.h"
-#import "CKComponentViewInterface.h"
 
 /** Find a UIGestureRecognizer attached to a view that has a given ck_componentAction. */
 static UIGestureRecognizer *recognizerForAction(UIView *view, CKTypedComponentAction<UIGestureRecognizer *> action)

@@ -24,8 +24,6 @@
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentLayout.h>
-#import <ComponentKit/CKComponentLifecycleManager.h>
-#import <ComponentKit/CKComponentLifecycleManagerAsynchronousUpdateHandler.h>
 #import <ComponentKit/CKComponentSize.h>
 #import <ComponentKit/CKComponentViewAttribute.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>

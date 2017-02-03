@@ -13,10 +13,10 @@
 
 #import <OCMock/OCMock.h>
 
+#import <ComponentKit/CKComponent+UIView.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentGestureActions.h>
 #import <ComponentKit/CKComponentGestureActionsInternal.h>
-#import <ComponentKit/CKComponentViewInterface.h>
 
 @interface CKFakeActionComponent : CKComponent <UIGestureRecognizerDelegate>
 - (void)test:(CKComponent *)sender;
@@ -34,7 +34,7 @@
 - (void)testThatApplyingATapRecognizerAttributeAddsRecognizerToViewAndUnApplyingItRemovesIt
 {
   CKComponentViewAttributeValue attr = CKComponentTapGestureAttribute(@selector(test));
-  UIView *view = [[UIView alloc] init];
+  UIView *view = [UIView new];
 
   attr.first.applicator(view, attr.second);
   XCTAssertEqual([view.gestureRecognizers count], 1u, @"Expected tap gesture recognizer to be attached");
@@ -46,7 +46,7 @@
 - (void)testThatTapRecognizerHasComponentActionStoredOnIt
 {
   CKComponentViewAttributeValue attr = CKComponentTapGestureAttribute(@selector(test));
-  UIView *view = [[UIView alloc] init];
+  UIView *view = [UIView new];
 
   attr.first.applicator(view, attr.second);
   UITapGestureRecognizer *recognizer = [view.gestureRecognizers firstObject];
@@ -76,7 +76,7 @@
 - (void)testThatApplyingATapRecognizerAttributeWithNoActionDoesNotAddRecognizerToView
 {
   CKComponentViewAttributeValue attr = CKComponentTapGestureAttribute(NULL);
-  UIView *view = [[UIView alloc] init];
+  UIView *view = [UIView new];
 
   attr.first.applicator(view, attr.second);
   XCTAssertEqual([view.gestureRecognizers count], 0u, @"Expected no gesture recognizer");
@@ -122,14 +122,13 @@
 
 - (void)testThatApplyingATapRecognizerAttributeWithDifferentTargetToViewWithExistingRecognizerUpdatesAction
 {
-
   CKFakeActionComponent *fake1 = [CKFakeActionComponent new];
   CKComponentViewAttributeValue attr1 = CKComponentTapGestureAttribute({fake1, @selector(test:)});
 
   CKFakeActionComponent *fake2 = [CKFakeActionComponent new];
   CKTypedComponentAction<UIGestureRecognizer *> action2 = {fake2, @selector(test:)};
   CKComponentViewAttributeValue attr2 = CKComponentTapGestureAttribute(action2);
-  UIView *view = [[UIView alloc] init];
+  UIView *view = [UIView new];
 
   attr1.first.applicator(view, attr1.second);
   attr1.first.unapplicator(view, attr1.second);

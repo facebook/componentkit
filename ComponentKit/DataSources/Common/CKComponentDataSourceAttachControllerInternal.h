@@ -30,7 +30,7 @@
 
 @end
 
-@interface UIView(CKComponentDataSourceAttachController)
+@interface UIView (CKComponentDataSourceAttachController)
 
 @property (nonatomic, strong, setter=ck_setAttachState:) CKComponentDataSourceAttachState *ck_attachState;
 

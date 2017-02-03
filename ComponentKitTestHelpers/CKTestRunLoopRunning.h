@@ -15,8 +15,9 @@ extern "C" {
 #endif
 
 /**
- Runs the current thread's run loop until the block returns YES or a timeout is reached.  Returns YES if the block
- returns YES by the end of the timeout, NO otherwise.
+ Runs the current thread's run loop until the block returns YES or a timeout is reached.
+ @param block The block to run on the current thread's run loop before it returns YES, or a timeout is reached.
+ @return YES if the block returns YES by the end of the timeout, NO otherwise.
  */
 extern BOOL CKRunRunLoopUntilBlockIsTrue(BOOL (^block)(void));
 
