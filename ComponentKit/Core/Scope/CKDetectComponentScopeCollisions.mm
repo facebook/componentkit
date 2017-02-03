@@ -16,6 +16,7 @@
 #import "CKComponentBacktraceDescription.h"
 #import "CKComponentInternal.h"
 
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component,
@@ -29,11 +30,71 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
   }
   return componentBacktrace;
 }
-#pragma clang diagnostic pop
+//#pragma clang diagnostic pop
 
-void CKDetectComponentScopeCollisions(const CKComponentLayout &layout)
+static CKComponent * findCollisionComponent(CKComponent *component,
+                                            id<NSObject> collisionScope,
+                                            NSMapTable<CKComponent *, CKComponent*> *componentsToParentComponents)
 {
-#if CK_ASSERTIONS_ENABLED
+  for(CKComponent* componentKey in componentsToParentComponents){
+    const id<NSObject> scopeFrameToken = [componentKey scopeFrameToken];
+    // The colission node has the same scopeToken but it's not this node.
+    if([collisionScope isEqual:scopeFrameToken] && ![component isEqual:componentKey]){
+      return componentKey;
+    }
+  }
+  return nil;
+}
+
+NSUInteger heightOfComponent(CKComponent *component,
+                             NSMapTable<CKComponent *, CKComponent*> *componentsToParentComponents)
+{
+  NSUInteger heightOnTree = 0;
+  CKComponent *parentComponent = [componentsToParentComponents objectForKey:component];
+  while (parentComponent) {
+    parentComponent = [componentsToParentComponents objectForKey:parentComponent];
+    heightOnTree += 1;
+  }
+  return heightOnTree;
+}
+
+static CKComponent* lowestCommonAncestor(CKComponent *component,
+                                         id<NSObject> collisionScope,
+                                         NSMapTable<CKComponent *, CKComponent*> *componentsToParentComponents)
+{
+  // First we need to find the node we're having a collision with.
+  CKComponent *component2 = findCollisionComponent(component, collisionScope, componentsToParentComponents);
+  
+  // Then we find the How deep each node is
+  NSUInteger heightNode1 = heightOfComponent(component, componentsToParentComponents);
+  NSUInteger heightNode2 = heightOfComponent(component2, componentsToParentComponents);
+  
+  if (heightNode1 > heightNode2) {
+    std::swap(heightNode1, heightNode2);
+    std::swap(component, component2);
+  }
+  
+  // Just making sure both paths start from the same deep level
+  while (heightNode1 < heightNode2) {
+    if (!component2)
+      return nil;
+    component2 = [componentsToParentComponents objectForKey:component2];
+    heightNode2 -= 1;
+  }
+  
+  // Just comparing the paths until we find the lowest common ancestor
+  while (component && component2) {
+    if (component == component2)
+      return component;
+    component = [componentsToParentComponents objectForKey:component];
+    component2 = [componentsToParentComponents objectForKey:component2];
+  }
+  
+  return nil;
+}
+
+CKComponentCollision CKReturnComponentScopeCollision(const CKComponentLayout &layout)
+{
   std::queue<const CKComponentLayout> queue;
   NSMutableSet<id<NSObject>> *const previouslySeenScopeFrameTokens = [NSMutableSet new];
   NSMapTable<CKComponent *, CKComponent*> *const componentsToParentComponents = [NSMapTable strongToStrongObjectsMapTable];
@@ -44,9 +105,9 @@ void CKDetectComponentScopeCollisions(const CKComponentLayout &layout)
     CKComponent *const component = componentLayout.component;
     const id<NSObject> scopeFrameToken = [component scopeFrameToken];
     if (scopeFrameToken && [previouslySeenScopeFrameTokens containsObject:scopeFrameToken]) {
-      CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for component: %@\n%@",
-                    [component class],
-                    CKComponentBacktraceDescription(generateComponentBacktrace(component, componentsToParentComponents)));
+       return {component,
+         lowestCommonAncestor(component,scopeFrameToken,componentsToParentComponents),
+         CKComponentBacktraceDescription(generateComponentBacktrace(component, componentsToParentComponents))};
     }
     if (scopeFrameToken) {
       [previouslySeenScopeFrameTokens addObject:scopeFrameToken];
@@ -57,6 +118,18 @@ void CKDetectComponentScopeCollisions(const CKComponentLayout &layout)
         [componentsToParentComponents setObject:componentLayout.component forKey:childComponentLayout.layout.component];
       }
     }
+  }
+  return CKComponentCollision();
+}
+
+void CKDetectComponentScopeCollisions(const CKComponentLayout &layout) {
+#if CK_ASSERTIONS_ENABLED
+  CKComponentCollision collision = CKReturnComponentScopeCollision(layout);
+  if (collision.hasCollision()) {
+    CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for component: %@ with lca: %@\n%@",
+                  [collision.component class],
+                  collision.lowestCommonAncestor ? [collision.lowestCommonAncestor class] : [layout.component class],
+                  collision.backtraceString);
   }
 #endif
 }

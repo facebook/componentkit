@@ -11,9 +11,37 @@
 #import <Foundation/Foundation.h>
 
 struct CKComponentLayout;
+@class CKComponent;
+
+/** Represents a component scope collision. contains the component with the collision, the lowest common ancestor of the colliding components and the backtrace description */
+struct CKComponentCollision {
+  CKComponent *component;
+  CKComponent *lowestCommonAncestor;
+  NSString *backtraceString;
+  
+  CKComponentCollision(CKComponent *c, CKComponent *lca, NSString* bt)
+  : component(c), lowestCommonAncestor(lca), backtraceString(bt) {};
+  
+  CKComponentCollision()
+  : component(nil), lowestCommonAncestor(nil), backtraceString(nil) {};
+  
+  bool hasCollision() {
+    return (component != nil);
+  }
+};
+
+
+/**
+ Helper function to detect component scope collisions found in the given component layout.
+ @param layout The top-level component layout of the component hierarchy.
+ @return CKComponentCollision struct that contains the component with collision, the lowest common ancestor and the backtrace description
+ */
+CKComponentCollision CKReturnComponentScopeCollision(const CKComponentLayout &layout);
 
 /**
  Detects, and reports, component scope collisions found in the given component layout.
  @param layout The top-level component layout of the component hierarchy.
  */
 void CKDetectComponentScopeCollisions(const CKComponentLayout &layout);
+
+
