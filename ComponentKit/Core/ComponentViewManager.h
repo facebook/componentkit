@@ -110,6 +110,9 @@ namespace CK {
       void reset();
 
       UIView *viewForClass(const CKComponentViewClass &viewClass, UIView *container);
+
+      void checkOutView(UIView *view);
+      void checkInView(UIView *view);
     private:
       std::vector<UIView *> pool;
       /** Points to the next view in pool that has *not* yet been vended. */
@@ -128,10 +131,18 @@ namespace CK {
       /** Resets each individual pool inside the map. */
       void reset(UIView *container);
 
+      struct VendedViewCheckout {
+        ViewKey viewKey;
+        UIView *view;
+      };
+
+      std::vector<VendedViewCheckout> checkOutVendedViews(void);
+      void checkInVendedViews(const std::vector<VendedViewCheckout> &checkout);
+
       UIView *viewForConfiguration(Class componentClass, const CKComponentViewConfiguration &config, UIView *container);
     private:
       std::unordered_map<ViewKey, ViewReusePool> map;
-      std::vector<UIView *> vendedViews;
+      std::vector<VendedViewCheckout> vendedViews;
 
       ViewReusePoolMap(const ViewReusePoolMap&) = delete;
       ViewReusePoolMap &operator=(const ViewReusePoolMap&) = delete;

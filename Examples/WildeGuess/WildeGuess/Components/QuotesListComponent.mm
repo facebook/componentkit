@@ -19,6 +19,7 @@
 #import "QuoteModelController.h"
 #import "QuotesPage.h"
 #import "QuoteContext.h"
+#import "InteractiveQuoteComponent.h"
 
 @interface QuotesListComponentController : CKComponentController<QuotesListComponent *>
 
@@ -29,6 +30,7 @@
 @implementation QuotesListComponent
 
 + (instancetype)newWithQuoteContext:(QuoteContext *)quoteContext
+                          direction:(CKStackLayoutDirection)direction
 {
   CKComponentScope scope(self);
 
@@ -38,8 +40,8 @@
            context:quoteContext
            configuration:{
              .componentGenerator = ^CKComponent *(id<NSObject> model, id<NSObject> context) {
-               return [QuoteComponent newWithQuote:(Quote *)model
-                                           context:(QuoteContext *)context];
+               return [InteractiveQuoteComponent newWithQuote:(Quote *)model
+                                                      context:(QuoteContext *)context];
              },
              .collectionComponentGenerator = ^CKComponent *(const std::vector<CKComponent *> children, id<NSObject> context) {
                std::vector<CKStackLayoutComponentChild> stackChildren;
@@ -56,10 +58,10 @@
                        newWithView:{}
                        size:{
                          .minWidth = CKRelativeDimension::Percent(1),
-                         .maxWidth = CKRelativeDimension::Percent(1)
+                         .maxWidth = CKRelativeDimension::Percent(1),
                        }
                        style:{
-                         .direction = CKStackLayoutDirectionVertical,
+                         .direction = direction,
                          .alignItems = CKStackLayoutAlignItemsStretch
                        }
                        children:stackChildren];

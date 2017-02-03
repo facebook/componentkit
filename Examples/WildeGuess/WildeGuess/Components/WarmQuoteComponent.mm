@@ -56,8 +56,8 @@
            }
            attributes:{}
            component:
-           [CKIncrementalMountComponent
-            newWithComponent:
+           //[CKIncrementalMountComponent
+            //newWithComponent:
             [CKStackLayoutComponent
              newWithView:{}
              size:{}
@@ -84,7 +84,8 @@
                   children:children]]
                }
              }]]
-           ]];
+           //]
+  ];
 
 }
 

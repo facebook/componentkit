@@ -24,7 +24,6 @@
 
 + (instancetype)newWithQuote:(Quote *)quote context:(QuoteContext *)context
 {
-  CKComponentScope scope(self, quote);
   return [super newWithComponent:quoteComponent(quote, context)];
 }
 

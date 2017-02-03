@@ -125,25 +125,18 @@
   return (UIScrollView *)self.view;
 }
 
-- (void)didMount
+- (void)componentWillRelinquishView
 {
-  [super didMount];
-  self.scrollView.delegate = self;
-
-  [self.scrollView setContentOffset:_lastRecordedContentOffset animated:NO];
-}
-
-- (void)didRemount
-{
-  [super didRemount];
-  self.scrollView.delegate = self;
-}
-
-- (void)willUnmount
-{
-  [super willUnmount];
+  [super componentWillRelinquishView];
   self.scrollView.delegate = nil;
   _lastRecordedContentOffset = self.scrollView.contentOffset;
+}
+
+- (void)componentDidAcquireView
+{
+  [super componentDidAcquireView];
+  self.scrollView.delegate = self;
+  [self.scrollView setContentOffset:_lastRecordedContentOffset animated:NO];
 }
 
 #pragma mark - UIScrollViewDelegate

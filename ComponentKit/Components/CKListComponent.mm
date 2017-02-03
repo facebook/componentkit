@@ -48,9 +48,17 @@
 
 - (void)scrollViewDidEndDragging:(CKComponent *)sender scrollState:(CKScrollViewState)scrollState
 {
-  if (CGRectGetMaxY(scrollState.bounds) > scrollState.contentSize.height - 2.f * CGRectGetHeight(scrollState.bounds)) {
-    if (_configuration.nearingListEndAction) {
-      _configuration.nearingListEndAction.send(self);
+  if (scrollState.contentSize.width < scrollState.contentSize.height) {
+    if (CGRectGetMaxY(scrollState.bounds) > scrollState.contentSize.height - 2.f * CGRectGetHeight(scrollState.bounds)) {
+      if (_configuration.nearingListEndAction) {
+        _configuration.nearingListEndAction.send(self);
+      }
+    }
+  } else {
+    if (CGRectGetMaxX(scrollState.bounds) > scrollState.contentSize.width - 2.f * CGRectGetWidth(scrollState.bounds)) {
+      if (_configuration.nearingListEndAction) {
+        _configuration.nearingListEndAction.send(self);
+      }
     }
   }
 }

@@ -34,6 +34,7 @@ static char kAssociatedObjectKey;
 @implementation CKScrollListeningController
 {
   NSMapTable *_tokenToListenerMap;
+  NSMapTable *_listenerToTokenMap;
   UIScrollView *__weak _scrollView;
 }
 
@@ -41,6 +42,7 @@ static char kAssociatedObjectKey;
 {
   if (self = [super init]) {
     _tokenToListenerMap = [NSMapTable strongToWeakObjectsMapTable];
+    _listenerToTokenMap = [NSMapTable weakToStrongObjectsMapTable];
     _scrollView = scrollView;
     [scrollView addObserver:self
                  forKeyPath:@"contentOffset"
@@ -62,15 +64,24 @@ static char kAssociatedObjectKey;
 - (CKScrollListeningToken *)addScrollListener:(id<CKScrollListener>)listener
 {
   CKAssertMainThread();
-  CKScrollListeningToken *token = [[CKScrollListeningToken alloc] initWithController:self];
-  _tokenToListenerMap = [_tokenToListenerMap copy];
-  [_tokenToListenerMap setObject:listener forKey:token];
+  CKScrollListeningToken *token = [_listenerToTokenMap objectForKey:listener];
+  if (!token) {
+    token = [[CKScrollListeningToken alloc] initWithController:self];
+    _tokenToListenerMap = [_tokenToListenerMap copy];
+    [_tokenToListenerMap setObject:listener forKey:token];
+    _listenerToTokenMap = [_listenerToTokenMap copy];
+    [_listenerToTokenMap setObject:token forKey:listener];
+  }
   return token;
 }
 
 - (void)removeListener:(CKScrollListeningToken *)token
 {
   CKAssertMainThread();
+  id<CKScrollListener> listener = [_tokenToListenerMap objectForKey:token];
+
+  _listenerToTokenMap = [_listenerToTokenMap copy];
+  [_listenerToTokenMap removeObjectForKey:listener];
   _tokenToListenerMap = [_tokenToListenerMap copy];
   [_tokenToListenerMap removeObjectForKey:token];
 }

@@ -7,11 +7,13 @@
 //
 
 #import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKStackLayoutComponent.h>
 
 @class QuoteContext;
 
 @interface QuotesListComponent : CKCompositeComponent
 
-+ (instancetype)newWithQuoteContext:(QuoteContext *)quoteContext;
++ (instancetype)newWithQuoteContext:(QuoteContext *)quoteContext
+                          direction:(CKStackLayoutDirection)direction;
 
 @end

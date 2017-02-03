@@ -34,8 +34,6 @@ static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, U
 
 @interface CKIncrementalMountComponent () <CKScrollListener>
 
-- (void)mountVisibleChildren:(const std::shared_ptr<CK::Component::MountContext> &)mountContext;
-
 @end
 
 @implementation CKIncrementalMountComponent
@@ -49,10 +47,15 @@ static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, U
   UIEdgeInsets _mountedLayoutGuide;
   NSArray<CKScrollListeningToken *> *_scrollListeningTokens;
   NSSet<CKComponent *> *_currentlyMountedComponents;
+  std::vector<CK::Component::ViewReusePoolMap::VendedViewCheckout> _checkedOutViews;
 }
 
 + (instancetype)newWithComponent:(CKComponent *)component
 {
+  if (!component) {
+    return nil;
+  }
+
   CKIncrementalMountComponent *c =
   [super
    newWithView:{[UIView class]}
@@ -81,35 +84,40 @@ static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, U
                                                    children:children
                                              supercomponent:supercomponent];
   result.mountChildren = NO;
+  _currentlyMountedComponents = nil;
   _mountedChildLayout = children->at(0).layout;
   _scrollListeningTokens = addListenerForParentScrollViews(self, self.viewContext.view);
   _mountedPosition = result.contextForChildren.position;
-  [self mountVisibleChildren:nullptr];
+  [self mountVisibleChildren];
   return result;
 }
 
 - (void)unmount
 {
+  if (!_checkedOutViews.empty() && self.viewContext.view) {
+    CK::Component::ViewReusePoolMap &reusePoolMap = CK::Component::ViewReusePoolMap::alternateReusePoolMapForView(self.viewContext.view, "CKIncrementalMountComponent");
+    reusePoolMap.checkInVendedViews(_checkedOutViews);
+    _checkedOutViews.clear();
+  }
+
   [super unmount];
-  CKUnmountComponents(_currentlyMountedComponents);
+
   _currentlyMountedComponents = nil;
-  _mountedChildLayout = {};
   for (CKScrollListeningToken *token in _scrollListeningTokens) {
     [token removeListener];
   }
 }
 
-- (void)mountVisibleChildren:(const std::shared_ptr<CK::Component::MountContext> &)mountContext
+- (void)mountVisibleChildren
 {
   CKAssertMainThread();
 
   UIView *const view = self.viewContext.view;
 
-  if (!view) {
+  if (!view || view.isHidden) {
     return;
   }
 
-  const CGRect bounds = view.bounds;
   UIView *rootView = view.window;
   if (!rootView) {
     rootView = view;
@@ -121,41 +129,63 @@ static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, U
   }
   const CGRect visibleWindowBounds = [rootView convertRect:rootView.bounds
                                                     toView:view];
-  // Within the coordinate-space of this component's mounted view.
-  const CGRect visibleBounds = CGRectIntersection(bounds, visibleWindowBounds);
 
   // Enumerate over all children, and identify which ones intersect with the
   // current visible rect.
 
+  NSMutableSet *visibleChildrenComponents = [NSMutableSet set];
+
   std::vector<CKComponentLayoutChild> visibleChildren;
-  BOOL needsUpdate = NO;
-  for (const auto &child : *_mountedChildLayout.children) {
-    const CGRect childFrame = CGRectMake(child.position.x,
-                                         child.position.y,
-                                         child.layout.size.width,
-                                         child.layout.size.height);
-    const CGRect childIntersection = CGRectIntersection(childFrame, visibleBounds);
+  for (auto it = _mountedChildLayout.children->begin(); it != _mountedChildLayout.children->end(); it++) {
+    const CGRect childFrame = CGRectMake(it->position.x,
+                                         it->position.y,
+                                         it->layout.size.width,
+                                         it->layout.size.height);
+    const CGRect childIntersection = CGRectIntersection(childFrame, visibleWindowBounds);
     if (!CGRectIsNull(childIntersection) && !CGRectIsEmpty(childIntersection)) {
-      visibleChildren.push_back(child);
-      if (![_currentlyMountedComponents containsObject:child.layout.component]) {
-        needsUpdate = YES;
+      if (![_currentlyMountedComponents containsObject:it->layout.component]) {
+        visibleChildren.push_back(*it);
       }
+      [visibleChildrenComponents addObject:it->layout.component];
     }
   }
 
-  if (!needsUpdate) {
+  if (visibleChildren.empty()) {
     // We don't need to re-mount since there are no new components visible. We
     // only remove components when new ones come within the viewport.
     return;
   }
 
+  CK::Component::ViewReusePoolMap &reusePoolMap = CK::Component::ViewReusePoolMap::alternateReusePoolMapForView(view, "CKIncrementalMountComponent");
+  CK::Component::MountContext mountContext = CK::Component::MountContext
+  (std::make_shared<CK::Component::ViewManager>
+   (self.viewContext.view, reusePoolMap),
+   _mountedPosition,
+   _mountedLayoutGuide,
+   NO);
+
+  std::vector<CK::Component::ViewReusePoolMap::VendedViewCheckout> toAddBackToReusePool;
+  for (auto it = _checkedOutViews.begin(); it != _checkedOutViews.end(); it++) {
+    const CGRect viewIntersection = CGRectIntersection([it->view frame], visibleWindowBounds);
+    if (CGRectIsNull(viewIntersection) || CGRectIsEmpty(viewIntersection)) {
+      toAddBackToReusePool.push_back(*it);
+      _checkedOutViews.erase(it--);
+    }
+  }
+  if (!toAddBackToReusePool.empty()) {
+    reusePoolMap.checkInVendedViews(toAddBackToReusePool);
+  }
+
   // Mount if not already mounted.
-  _currentlyMountedComponents =
   CKMountComponentLayout({ _component, _mountedChildLayout.size, visibleChildren, nil },
                          view,
-                         _currentlyMountedComponents,
+                         nil,
                          self,
-                         mountContext ? *mountContext : CK::Component::MountContext(std::make_shared<CK::Component::ViewManager>(self.viewContext.view, CK::Component::ViewReusePoolMap::alternateReusePoolMapForView(view, "CKIncrementalMountComponent")), _mountedPosition, _mountedLayoutGuide, NO));
+                         mountContext);
+
+  _currentlyMountedComponents = visibleChildrenComponents;
+  std::vector<CK::Component::ViewReusePoolMap::VendedViewCheckout> checkout = reusePoolMap.checkOutVendedViews();
+  _checkedOutViews.insert(_checkedOutViews.end(), checkout.begin(), checkout.end());
 }
 
 #pragma mark - CKScrollListener
@@ -167,7 +197,7 @@ static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, U
     return;
   }
 
-  [self mountVisibleChildren:nullptr];
+  [self mountVisibleChildren];
 }
 
 @end

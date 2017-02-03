@@ -26,7 +26,8 @@
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(QuoteContext *)context
 {
   return [QuotesListComponent
-          newWithQuoteContext:context];
+          newWithQuoteContext:context
+          direction:CKStackLayoutDirectionVertical];
 }
 
 - (instancetype)init

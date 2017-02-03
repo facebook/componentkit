@@ -124,6 +124,20 @@ UIView *ViewReusePool::viewForClass(const CKComponentViewClass &viewClass, UIVie
   }
 }
 
+void ViewReusePool::checkOutView(UIView *view)
+{
+  auto viewPosition = std::find(pool.begin(), pool.end(), view);
+  if (viewPosition <= position && position != pool.begin()) {
+    position--;
+  }
+  pool.erase(viewPosition);
+}
+
+void ViewReusePool::checkInView(UIView *view)
+{
+  pool.push_back(view);
+}
+
 void ViewReusePool::reset()
 {
   for (auto it = pool.begin(); it != position; ++it) {
@@ -168,7 +182,7 @@ void ViewReusePoolMap::reset(UIView *container)
 
   // Now we need to ensure that the ordering of container.subviews matches vendedViews.
   NSMutableArray *subviews = [[container subviews] mutableCopy];
-  std::vector<UIView *>::const_iterator nextVendedViewIt = vendedViews.cbegin();
+  std::vector<VendedViewCheckout>::const_iterator nextVendedViewIt = vendedViews.cbegin();
 
   // Can't use NSFastEnumeration since we mutate subviews during enumeration.
   for (NSUInteger i = 0; i < [subviews count]; i++) {
@@ -176,7 +190,9 @@ void ViewReusePoolMap::reset(UIView *container)
 
     // We use linear search here. We could create a std::unordered_set of vended views, but given the typical size of
     // the list of vended views, I guessed a linear search would probably be faster considering constant factors.
-    const auto &vendedViewIt = std::find(nextVendedViewIt, vendedViews.cend(), subview);
+    const auto &vendedViewIt = std::find_if(nextVendedViewIt, vendedViews.cend(), [subview](const VendedViewCheckout &c) {
+      return subview == c.view;
+    });
 
     if (vendedViewIt == vendedViews.cend()) {
       // Ignore subviews not created by components infra, or that were not vended during this pass (they are hidden).
@@ -184,9 +200,9 @@ void ViewReusePoolMap::reset(UIView *container)
     }
 
     if (vendedViewIt != nextVendedViewIt) {
-      NSUInteger swapIndex = [subviews indexOfObjectIdenticalTo:*nextVendedViewIt];
+      NSUInteger swapIndex = [subviews indexOfObjectIdenticalTo:nextVendedViewIt->view];
       CKCAssert(swapIndex != NSNotFound, @"Expected to find subview %@ in %@",
-                [*nextVendedViewIt class], [container class]);
+                [nextVendedViewIt->view class], [container class]);
 
       // This naive algorithm does not do the minimal number of swaps. But it's simple, and swaps should be relatively
       // rare in any case, so let's go with it.
@@ -215,14 +231,35 @@ UIView *ViewReusePoolMap::viewForConfiguration(Class componentClass,
   };
   // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
   UIView *v = map[key].viewForClass(config.viewClass(), container);
-  vendedViews.push_back(v);
+  vendedViews.push_back({key, v});
   return v;
+}
+
+std::vector<ViewReusePoolMap::VendedViewCheckout> ViewReusePoolMap::checkOutVendedViews(void)
+{
+  std::vector<ViewReusePoolMap::VendedViewCheckout> copiedVendedViews = vendedViews;
+  for (const auto &c : vendedViews) {
+    [c.view setHidden:NO];
+    map[c.viewKey].checkOutView(c.view);
+  }
+  vendedViews.clear();
+  return copiedVendedViews;
+}
+
+void ViewReusePoolMap::checkInVendedViews(const std::vector<ViewReusePoolMap::VendedViewCheckout> &checkout)
+{
+  for (const auto &c : checkout) {
+    [c.view setHidden:YES];
+    map[c.viewKey].checkInView(c.view);
+  }
 }
 
 UIView *ViewManager::viewForConfiguration(Class componentClass, const CKComponentViewConfiguration &config)
 {
   return viewReusePoolMap.viewForConfiguration(componentClass, config, view);
 }
+
+
 
 static char kPersistentAttributesViewKey = ' ';
 
