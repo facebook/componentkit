@@ -95,6 +95,8 @@ struct CKStackLayoutComponentChild {
   CKStackLayoutAlignSelf alignSelf;
 };
 
+extern template class std::vector<CKStackLayoutComponentChild>;
+
 /**
  A simple layout component that stacks a list of children vertically or horizontally.
 

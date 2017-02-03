@@ -100,7 +100,7 @@ struct CKBoxedValue {
   CKBoxedValue(double v) noexcept : __actual(@(v)) {};
   CKBoxedValue(SEL v) noexcept : __actual([NSValue valueWithPointer:v]) {};
   CKBoxedValue(std::nullptr_t v) noexcept : __actual(nil) {};
-  
+
   // Any objects go here
   CKBoxedValue(id obj) noexcept : __actual(obj) {};
 
@@ -109,7 +109,7 @@ struct CKBoxedValue {
   CKBoxedValue(CGPoint v) noexcept : __actual([NSValue valueWithCGPoint:v]) {};
   CKBoxedValue(CGSize v) noexcept : __actual([NSValue valueWithCGSize:v]) {};
   CKBoxedValue(UIEdgeInsets v) noexcept : __actual([NSValue valueWithUIEdgeInsets:v]) {};
-  
+
   operator id () const {
     return __actual;
   };
@@ -154,5 +154,8 @@ namespace std {
       return CKHash64ToNative(hash);
     }
   };
-  
+
 }
+
+// Explicitly instantiate this CKViewComponentAttributeValueMap to improve compile time.
+extern template class std::unordered_map<CKComponentViewAttribute, CKBoxedValue>;

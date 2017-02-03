@@ -219,3 +219,5 @@ CKComponentViewAttribute CKComponentViewAttribute::LayerAttribute(SEL setter) no
     performSetter(view.layer, setter, value);
   });
 }
+
+template class std::unordered_map<CKComponentViewAttribute, CKBoxedValue>;
