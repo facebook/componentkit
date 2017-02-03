@@ -20,6 +20,8 @@
 #import "CKStackPositionedLayout.h"
 #import "CKStackUnpositionedLayout.h"
 
+template class std::vector<CKStackLayoutComponentChild>;
+
 @implementation CKStackLayoutComponent
 {
   CKStackLayoutComponentStyle _style;
