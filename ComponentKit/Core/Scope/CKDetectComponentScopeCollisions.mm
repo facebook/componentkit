@@ -30,7 +30,7 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
   }
   return componentBacktrace;
 }
-//#pragma clang diagnostic pop
+#pragma clang diagnostic pop
 
 static CKComponent * findCollisionComponent(CKComponent *component,
                                             id<NSObject> collisionScope,
