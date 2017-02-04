@@ -8,6 +8,7 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKComponentOptionUtilities.h>
 
 struct CKScrollViewState {
   CGPoint contentOffset;
@@ -21,28 +22,6 @@ struct CKScrollViewState {
 - (void)setScrollViewState:(const CKScrollViewState &)scrollViewState;
 
 @end
-
-/** 
- Allows us to define default values for optional primitive parameters while
- supporting aggregate initialization syntax in callsites.
- */
-template<typename T, T const &def>
-struct CKOptionalValue {
-  CKOptionalValue() : _value(def) {};
-  CKOptionalValue(T val) : _value(val) {};
-  operator T() const { return _value; };
-private:
-  T _value;
-};
-
-template<typename T, T def>
-struct CKOptionalPrimitiveValue {
-  CKOptionalPrimitiveValue() : _value(def) {};
-  CKOptionalPrimitiveValue(T val) : _value(val) {};
-  operator T() const { return _value; };
-private:
-  T _value;
-};
 
 struct CKScrollComponentOptions {
   CKOptionalValue<UIEdgeInsets, UIEdgeInsetsZero> contentInset;

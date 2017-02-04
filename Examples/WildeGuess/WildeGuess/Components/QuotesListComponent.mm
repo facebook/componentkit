@@ -20,6 +20,8 @@
 #import "QuotesPage.h"
 #import "QuoteContext.h"
 #import "InteractiveQuoteComponent.h"
+#import "Quote.h"
+#import "LoadingIndicatorComponent.h"
 
 @interface QuotesListComponentController : CKComponentController<QuotesListComponent *>
 
@@ -29,39 +31,41 @@
 
 @implementation QuotesListComponent
 
++ (id)initialState
+{
+  return [CKListComponentStateWrapper new];
+}
+
 + (instancetype)newWithQuoteContext:(QuoteContext *)quoteContext
                           direction:(CKStackLayoutDirection)direction
 {
   CKComponentScope scope(self);
 
+  CKListComponentStateWrapper *wrapper = scope.state();
+
   return [super newWithComponent:
           [CKListComponent
-           newWithItems:scope.state()
+           newWithItems:wrapper.items
            context:quoteContext
            configuration:{
-             .componentGenerator = ^CKComponent *(id<NSObject> model, id<NSObject> context) {
+             .componentGenerator = [](id<NSObject> model, id<NSObject> context) -> CKComponent * {
                return [InteractiveQuoteComponent newWithQuote:(Quote *)model
                                                       context:(QuoteContext *)context];
              },
-             .collectionComponentGenerator = ^CKComponent *(const std::vector<CKComponent *> children, id<NSObject> context) {
+             .collectionComponentGenerator = [](const std::vector<id<NSObject>> &items, id<NSObject> context, const CKListComponentItemComponentGenerator &componentGenerator)
+             {
                std::vector<CKStackLayoutComponentChild> stackChildren;
-               int index = 0;
-               for (const auto &c : children) {
-                 stackChildren.push_back({
-                   [CKUniqueComponent
-                    newWithIdentifier:@(index)
-                    component:c]
-                 });
-                 index++;
+               for (const auto &item : items) {
+                 stackChildren.push_back({componentGenerator(item, context)});
                }
+               stackChildren.push_back({[LoadingIndicatorComponent new]});
                return [CKStackLayoutComponent
                        newWithView:{}
                        size:{
-                         .minWidth = CKRelativeDimension::Percent(1),
-                         .maxWidth = CKRelativeDimension::Percent(1),
+                         .width = CKRelativeDimension::Percent(1)
                        }
                        style:{
-                         .direction = direction,
+                         .direction = CKStackLayoutDirectionVertical,
                          .alignItems = CKStackLayoutAlignItemsStretch
                        }
                        children:stackChildren];
@@ -82,12 +86,8 @@
 {
   if (self = [super initWithComponent:component]) {
     _modelController = [[QuoteModelController alloc] init];
-    _isLoading = YES;
     dispatch_async(dispatch_get_main_queue(), ^{
-      [component updateState:^NSArray *(NSArray *currentItems) {
-        _isLoading = NO;
-        return [_modelController fetchNewQuotesPageWithCount:30].quotes;
-      } mode:CKUpdateModeAsynchronous];
+      [self loadMore];
     });
   }
   return self;
@@ -99,11 +99,14 @@
     return;
   }
   _isLoading = YES;
-  [self.component updateState:^NSArray *(NSArray *currentItems) {
+  [self.component updateState:^CKListComponentStateWrapper *(CKListComponentStateWrapper *wrapper) {
     _isLoading = NO;
-    NSMutableArray *output = [NSMutableArray arrayWithArray:currentItems];
-    [output addObjectsFromArray:[_modelController fetchNewQuotesPageWithCount:5].quotes];
-    return output;
+    std::vector<id<NSObject>> copied = wrapper.items;
+    NSArray *quotes = [_modelController fetchNewQuotesPageWithCount:20].quotes;
+    for (Quote *quote in quotes) {
+      copied.push_back(quote);
+    }
+    return [[CKListComponentStateWrapper alloc] initWithItems:copied];
   } mode:CKUpdateModeAsynchronous];
 }
 

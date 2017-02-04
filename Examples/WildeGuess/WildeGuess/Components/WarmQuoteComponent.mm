@@ -14,86 +14,87 @@
 #import <ComponentKit/CKIncrementalMountComponent.h>
 #import <ComponentKit/CKScrollComponent.h>
 #import <ComponentKit/CKComponentScope.h>
+#import <ComponentKit/CKListComponent.h>
+#import <ComponentKit/CKComponentSubclass.h>
 
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"
+#import "LoadingIndicatorComponent.h"
 
 @implementation WarmQuoteComponent
 
-+ (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context
++ (id)initialState
 {
-  std::vector<CKStackLayoutComponentChild> children;
-  for (int i = 0; i < 40; i++) {
-    children.push_back({[QuoteWithBackgroundComponent
-                         newWithBackgroundImage:[context imageNamed:@"Powell"]
-                         quoteComponent:
-                         [CKRatioLayoutComponent
-                          newWithRatio:1.3
-                          size:{
-                            .width = [UIScreen mainScreen].bounds.size.width * 0.8
-                          }
-                          component:
-                          [CKInsetComponent
-                           // Left and right inset of 30pts; centered vertically:
-                           newWithInsets:{.left = 30, .right = 30, .top = INFINITY, .bottom = INFINITY}
-                           component:
-                           [CKLabelComponent
-                            newWithLabelAttributes:{
-                              .string = text,
-                              .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
-                            }
-                            viewAttributes:{
-                              {@selector(setBackgroundColor:), [UIColor clearColor]},
-                              {@selector(setUserInteractionEnabled:), @NO},
-                            }
-                            size:{ }]]]]});
-  }
-
-  return [super newWithComponent:
-          [CKScrollComponent
-           newWithConfiguration:{
-             .scrollViewDidEndDragging = {@selector(scrollViewDidEndDraggingWithSender:scrollViewState:willDecelerate:)}
-           }
-           attributes:{}
-           component:
-           //[CKIncrementalMountComponent
-            //newWithComponent:
-            [CKStackLayoutComponent
-             newWithView:{}
-             size:{}
-             style:{
-               .direction = CKStackLayoutDirectionVertical
-             }
-             children:{
-               {[CKLabelComponent
-                 newWithLabelAttributes:{
-                   .string = @"string",
-                   .font = [UIFont systemFontOfSize:40]
-                 }
-                 viewAttributes:{}
-                 size:{}]},
-               {
-                 [CKIncrementalMountComponent
-                 newWithComponent:
-                 [CKStackLayoutComponent
-                  newWithView:{}
-                  size:{}
-                  style:{
-                    .direction = CKStackLayoutDirectionHorizontal
-                  }
-                  children:children]]
-               }
-             }]]
-           //]
-  ];
-
+  return [[CKListComponentStateWrapper alloc] initWithItems:{@YES, @YES, @YES, @YES, @YES}];
 }
 
-- (void)scrollViewDidEndDraggingWithSender:(CKComponent *)sender
-                           scrollViewState:(CKScrollViewState)scrollViewState
-                            willDecelerate:(BOOL)willDecelerate
++ (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  CKComponentScope scope(self);
+
+  CKListComponentStateWrapper *wrapper = scope.state();
+
+  return [super newWithComponent:
+          [CKListComponent
+           newWithItems:wrapper.items
+           context:context
+           configuration:{
+             .componentGenerator = [text, context](NSNumber *model, QuoteContext *context) -> CKComponent * {
+               return [QuoteWithBackgroundComponent
+                       newWithBackgroundImage:[context imageNamed:@"Powell"]
+                       quoteComponent:
+                       [CKRatioLayoutComponent
+                        newWithRatio:1.3
+                        size:{
+                          .width = [UIScreen mainScreen].bounds.size.width * 0.8
+                        }
+                        component:
+                        [CKInsetComponent
+                         // Left and right inset of 30pts; centered vertically:
+                         newWithInsets:{.left = 30, .right = 30, .top = INFINITY, .bottom = INFINITY}
+                         component:
+                         [CKLabelComponent
+                          newWithLabelAttributes:{
+                            .string = text,
+                            .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
+                          }
+                          viewAttributes:{
+                            {@selector(setBackgroundColor:), [UIColor clearColor]},
+                            {@selector(setUserInteractionEnabled:), @NO},
+                          }
+                          size:{ }]]]];
+             },
+             .collectionComponentGenerator = [](const std::vector<id<NSObject>> &items, id<NSObject> context, const CKListComponentItemComponentGenerator &componentGenerator) -> CKComponent *
+             {
+               std::vector<CKStackLayoutComponentChild> stackChildren;
+               for (const auto &item : items) {
+                 stackChildren.push_back({componentGenerator(item, context)});
+               }
+               stackChildren.push_back({[LoadingIndicatorComponent new]});
+               return [CKStackLayoutComponent
+                       newWithView:{}
+                       size:{
+                         .height = CKRelativeDimension::Percent(1)
+                       }
+                       style:{
+                         .direction = CKStackLayoutDirectionHorizontal,
+                         .alignItems = CKStackLayoutAlignItemsStretch
+                       }
+                       children:stackChildren];
+             },
+             .nearingListEndAction = {scope, @selector(loadMore)}
+           }]];
+}
+
+- (void)loadMore
+{
+  [self updateState:^CKListComponentStateWrapper *(CKListComponentStateWrapper *wrapper) {
+    std::vector<id<NSObject>> items = wrapper.items;
+    for (int i = 0; i < 20; i++) {
+      items.push_back(@YES);
+    }
+    return [[CKListComponentStateWrapper alloc] initWithItems:items];
+  } mode:CKUpdateModeAsynchronous];
 }
 
 @end

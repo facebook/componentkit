@@ -20,9 +20,13 @@
 
 #import "CKScrollAnnouncingView.h"
 
+struct _CKIncrementalMountResult {
+  NSSet *mountedComponents;
+  std::vector<CK::Component::ViewReusePoolMap::VendedViewCheckout> checkedOutViews;
+};
+
 typedef std::unordered_set<CKComponent *, CK::HashFunctor<id>, CK::EqualFunctor<id>> _CKComponentSet;
-typedef std::unordered_map<CKComponent *, NSSet *, CK::HashFunctor<id>, CK::EqualFunctor<id>> _CKMountedComponentMap;
-typedef std::unordered_map<CKComponent *, std::vector<CK::Component::ViewReusePoolMap::VendedViewCheckout>, CK::HashFunctor<id>, CK::EqualFunctor<id>> _CKCheckedOutViewMap;
+typedef std::unordered_map<CKComponent *, _CKIncrementalMountResult, CK::HashFunctor<id>, CK::EqualFunctor<id>> _CKMountedComponentResultMap;
 
 static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, UIView *view)
 {
@@ -76,13 +80,13 @@ struct _CKIncrementalMountVisibleChildPartition {
   }
 };
 
-class _CKIncrementalMountVisibleChildController {
+class _CKIncrementalMountVisibilityController {
   CKComponentLayout _layout;
   std::vector<_CKIncrementalMountVisibleChildPartition> _partitions;
 
 public:
-  _CKIncrementalMountVisibleChildController() : _layout({}) {};
-  _CKIncrementalMountVisibleChildController(const CKComponentLayout &l) : _layout(l)
+  _CKIncrementalMountVisibilityController() : _layout({}) {};
+  _CKIncrementalMountVisibilityController(const CKComponentLayout &l) : _layout(l)
   {
     // We want at most 10 child layouts per bucket, we can't guarantee that the children are all spatially distributed,
     // but we still try our best here. The idea is that searching for children that overlap with a rect takes 1/10th of
@@ -127,7 +131,7 @@ public:
     std::vector<CKComponentLayoutChild> newlyVisibleChildren;
   };
 
-  bool areNewChildrenVisible(const CGRect &bounds, const _CKMountedComponentMap &previouslyVisible) const
+  bool areNewChildrenVisible(const CGRect &bounds, const _CKMountedComponentResultMap &previouslyVisible) const
   {
     // Makes no allocations. This method has to remain fast since it is executed on every scroll tick
     for (const auto &partition : _partitions) {
@@ -143,7 +147,7 @@ public:
     return false;
   }
 
-  VisibleChildren visibleChildren(const CGRect &bounds, const _CKMountedComponentMap &previouslyVisible) const
+  VisibleChildren visibleChildren(const CGRect &bounds, const _CKMountedComponentResultMap &previouslyVisible) const
   {
     VisibleChildren output;
     std::unordered_set<const CKComponentLayoutChild *> visitedChildren;
@@ -166,6 +170,118 @@ public:
   }
 };
 
+class _CKIncrementalMountController {
+  CKComponent *_childComponent;
+  CKComponent *_superComponent;
+  UIView *_view;
+  _CKIncrementalMountVisibilityController _visibilityController;
+  struct {
+    CGPoint position;
+    UIEdgeInsets layoutGuide;
+  } _mountInfo;
+  _CKMountedComponentResultMap _mountedComponentResultMap;
+
+public:
+
+  void unmountAllChildren(void)
+  {
+    if (!_view) {
+      return;
+    }
+    CK::Component::ViewReusePoolMap &reusePoolMap =
+    CK::Component::ViewReusePoolMap::alternateReusePoolMapForView(_view, "CKIncrementalMountComponent");
+    for (const auto &mountResult : _mountedComponentResultMap) {
+      CKUnmountComponents(mountResult.second.mountedComponents);
+      reusePoolMap.checkInVendedViews(mountResult.second.checkedOutViews);
+    }
+    _mountedComponentResultMap.clear();
+  }
+
+  void checkInAllViewsForReuse(void)
+  {
+    if (!_view) {
+      return;
+    }
+    CK::Component::ViewReusePoolMap &reusePoolMap =
+    CK::Component::ViewReusePoolMap::alternateReusePoolMapForView(_view, "CKIncrementalMountComponent");
+    for (auto &mountResult : _mountedComponentResultMap) {
+      reusePoolMap.checkInVendedViews(mountResult.second.checkedOutViews);
+      mountResult.second.checkedOutViews.clear();
+    }
+  }
+
+  void mountVisibleChildren(void)
+  {
+    if (!_view) {
+      return;
+    }
+    UIView *rootView = _view.window;
+    if (!rootView) {
+      rootView = _view;
+      // We're not in a window yet, so we just traverse upwards until we find a root. This commonly
+      // happens when a cell is initially being returned for a collection view.
+      while ([rootView superview]) {
+        rootView = [rootView superview];
+      }
+    }
+    const CGRect visibleBounds = [rootView convertRect:rootView.bounds
+                                                      toView:_view];
+
+    if (!_visibilityController.areNewChildrenVisible(visibleBounds, _mountedComponentResultMap)) {
+      return;
+    }
+
+    _CKIncrementalMountVisibilityController::VisibleChildren visibleChildren =
+    _visibilityController.visibleChildren(visibleBounds, _mountedComponentResultMap);
+
+    CKCAssert(!visibleChildren.newlyVisibleChildren.empty(), @"Should have newly visible children");
+
+    CK::Component::ViewReusePoolMap &reusePoolMap =
+    CK::Component::ViewReusePoolMap::alternateReusePoolMapForView(_view, "CKIncrementalMountComponent");
+    CK::Component::MountContext mountContext = CK::Component::MountContext
+    (std::make_shared<CK::Component::ViewManager>
+     (_view, reusePoolMap),
+     _mountInfo.position,
+     _mountInfo.layoutGuide,
+     NO);
+
+    for (auto it = _mountedComponentResultMap.begin(); it != _mountedComponentResultMap.end();) {
+      if (visibleChildren.allVisibleComponents.find(it->first) == visibleChildren.allVisibleComponents.end()) {
+        CKUnmountComponents(it->second.mountedComponents);
+        reusePoolMap.checkInVendedViews(it->second.checkedOutViews);
+        it = _mountedComponentResultMap.erase(it);
+      } else {
+        ++it;
+      }
+    }
+
+    // Mount if not already mounted.
+    for (const auto &c : visibleChildren.newlyVisibleChildren) {
+      _CKViewReusePoolMapCheckoutContext context(reusePoolMap);
+      _CKIncrementalMountResult &result = _mountedComponentResultMap[c.layout.component];
+      result.mountedComponents = CKMountComponentLayout({ _childComponent, _visibilityController.size(), {c}, nil },
+                                                        _view,
+                                                        result.mountedComponents,
+                                                        _superComponent,
+                                                        mountContext);
+      result.checkedOutViews = reusePoolMap.checkOutVendedViews();
+    }
+  }
+
+  _CKIncrementalMountController() {};
+  _CKIncrementalMountController(CKComponent *childComponent,
+                                CKComponent *superComponent,
+                                UIView *view,
+                                const CKComponentLayout &layout,
+                                CGPoint position,
+                                UIEdgeInsets layoutGuide) :
+  _childComponent(childComponent),
+  _superComponent(superComponent),
+  _view(view),
+  _visibilityController(layout),
+  _mountInfo({position, layoutGuide}) {};
+};
+
 @interface CKIncrementalMountComponent () <CKScrollListener>
 
 - (void)unmountChildren;
@@ -180,12 +296,8 @@ static NSString *kIncrementalMountVisibleChildControllerWrapperKey = @"_CKIncrem
 
   // Main-thread only. Mutable mount-based state. These parameters will be
   // empty when not mounted.
-  _CKIncrementalMountVisibleChildController _visibilityController;
-  CGPoint _mountedPosition;
-  UIEdgeInsets _mountedLayoutGuide;
+  _CKIncrementalMountController _mountController;
   NSArray<CKScrollListeningToken *> *_scrollListeningTokens;
-  _CKCheckedOutViewMap _mountedComponentToCheckedOutViews;
-  _CKMountedComponentMap _mountedComponentToChildMountedComponents;
 }
 
 + (instancetype)newWithComponent:(CKComponent *)component
@@ -220,7 +332,7 @@ static NSString *kIncrementalMountVisibleChildControllerWrapperKey = @"_CKIncrem
                               supercomponent:(CKComponent *)supercomponent
 {
   // On re-mount we have to drop our views back into the reuse pool and re-render everything
-  [self clearCheckedInViews];
+  _mountController.checkInAllViewsForReuse();
 
   CK::Component::MountResult result = [super mountInContext:context
                                                        size:size
@@ -229,20 +341,25 @@ static NSString *kIncrementalMountVisibleChildControllerWrapperKey = @"_CKIncrem
 
   result.mountChildren = NO;
   if (children && !children->empty()) {
-    _visibilityController = {children->at(0).layout};
+    _mountController = {
+      _component,
+      self,
+      self.viewContext.view,
+      children->at(0).layout,
+      result.contextForChildren.position,
+      result.contextForChildren.layoutGuide
+    };
   } else {
-    _visibilityController = {};
+    _mountController = {};
   }
   _scrollListeningTokens = addListenerForParentScrollViews(self, self.viewContext.view);
-  _mountedPosition = result.contextForChildren.position;
-  _mountedLayoutGuide = result.contextForChildren.layoutGuide;
-  [self mountVisibleChildren];
+  _mountController.mountVisibleChildren();
   return result;
 }
 
 - (void)unmount
 {
-  [self clearCheckedInViews];
+  _mountController.checkInAllViewsForReuse();
 
   [super unmount];
 
@@ -253,91 +370,8 @@ static NSString *kIncrementalMountVisibleChildControllerWrapperKey = @"_CKIncrem
 
 - (void)unmountChildren
 {
-  for (const auto &c : _mountedComponentToChildMountedComponents) {
-    CKUnmountComponents(c.second);
-  }
-  _mountedComponentToChildMountedComponents.clear();
-}
-
-- (void)clearCheckedInViews
-{
-  if (!_mountedComponentToCheckedOutViews.empty()) {
-    CKAssertNotNil(self.viewContext.view, @"Should have view if we have checked out views");
-    CK::Component::ViewReusePoolMap &reusePoolMap = getReusePoolMap(self.viewContext.view);
-    for (const auto &c : _mountedComponentToCheckedOutViews) {
-      reusePoolMap.checkInVendedViews(c.second);
-    }
-    _mountedComponentToCheckedOutViews.clear();
-  }
-}
-
-- (void)mountVisibleChildren
-{
   CKAssertMainThread();
-
-  UIView *const view = self.viewContext.view;
-
-  UIView *rootView = view.window;
-  if (!rootView) {
-    rootView = view;
-    // We're not in a window yet, so we just traverse upwards until we find a root. This commonly
-    // happens when a cell is initially being returned for a collection view.
-    while ([rootView superview]) {
-      rootView = [rootView superview];
-    }
-  }
-  const CGRect visibleWindowBounds = [rootView convertRect:rootView.bounds
-                                                    toView:view];
-
-  if (!_visibilityController.areNewChildrenVisible(visibleWindowBounds, _mountedComponentToChildMountedComponents)) {
-    return;
-  }
-
-  _CKIncrementalMountVisibleChildController::VisibleChildren visibleChildren =
-  _visibilityController.visibleChildren(visibleWindowBounds, _mountedComponentToChildMountedComponents);
-
-  CKAssert(!visibleChildren.newlyVisibleChildren.empty(), @"Should have newly visible children");
-
-  CK::Component::ViewReusePoolMap &reusePoolMap = getReusePoolMap(view);
-  CK::Component::MountContext mountContext = CK::Component::MountContext
-  (std::make_shared<CK::Component::ViewManager>
-   (self.viewContext.view, reusePoolMap),
-   _mountedPosition,
-   _mountedLayoutGuide,
-   NO);
-
-  std::vector<CK::Component::ViewReusePoolMap::VendedViewCheckout> toAddBackToReusePool;
-  for (auto it = _mountedComponentToCheckedOutViews.begin(); it != _mountedComponentToCheckedOutViews.end();) {
-    if (visibleChildren.allVisibleComponents.find(it->first) == visibleChildren.allVisibleComponents.end()) {
-      toAddBackToReusePool.insert(toAddBackToReusePool.end(), it->second.begin(), it->second.end());
-      it = _mountedComponentToCheckedOutViews.erase(it);
-    } else {
-      ++it;
-    }
-  }
-  if (!toAddBackToReusePool.empty()) {
-    reusePoolMap.checkInVendedViews(toAddBackToReusePool);
-  }
-  for (auto it = _mountedComponentToChildMountedComponents.begin(); it != _mountedComponentToChildMountedComponents.end();) {
-    if (visibleChildren.allVisibleComponents.find(it->first) == visibleChildren.allVisibleComponents.end()) {
-      CKUnmountComponents(it->second);
-      it = _mountedComponentToChildMountedComponents.erase(it);
-    } else {
-      ++it;
-    }
-  }
-
-  // Mount if not already mounted.
-  for (const auto &c : visibleChildren.newlyVisibleChildren) {
-    _CKViewReusePoolMapCheckoutContext context(reusePoolMap);
-    _mountedComponentToChildMountedComponents[c.layout.component] =
-    CKMountComponentLayout({ _component, _visibilityController.size(), {c}, nil },
-                           view,
-                           nil,
-                           self,
-                           mountContext);
-    _mountedComponentToCheckedOutViews[c.layout.component] = reusePoolMap.checkOutVendedViews();
-  }
+  _mountController.unmountAllChildren();
 }
 
 #pragma mark - CKScrollListener
@@ -349,15 +383,7 @@ static NSString *kIncrementalMountVisibleChildControllerWrapperKey = @"_CKIncrem
     return;
   }
 
-  [self mountVisibleChildren];
-}
-
-#pragma mark - Reuse Pool Management
-
-static CK::Component::ViewReusePoolMap &getReusePoolMap(UIView *view)
-{
-  return
-  CK::Component::ViewReusePoolMap::alternateReusePoolMapForView(view, "CKIncrementalMountComponent");
+  _mountController.mountVisibleChildren();
 }
 
 @end

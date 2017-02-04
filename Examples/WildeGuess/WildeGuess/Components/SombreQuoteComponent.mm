@@ -43,7 +43,7 @@
                  }
                  size:{ }]},
                {lineComponent()},
-             }]]]];;
+             }]]]];
 }
 
 static CKComponent *lineComponent()

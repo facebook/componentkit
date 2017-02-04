@@ -10,6 +10,7 @@
 		A2BC94DC1AC235A60043B82F /* QuoteComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2BC94DB1AC235A60043B82F /* QuoteComponent.mm */; };
 		B19D4EDC1E41C64B0013DBCB /* QuotesListComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = B19D4EDB1E41C64B0013DBCB /* QuotesListComponent.mm */; };
 		B19D4EF71E41CA0D0013DBCB /* WildeGuessComponentViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B19D4EF61E41CA0D0013DBCB /* WildeGuessComponentViewController.mm */; };
+		B1ECA5821E467F460096BFF7 /* LoadingIndicatorComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = B1ECA5811E467F460096BFF7 /* LoadingIndicatorComponent.mm */; };
 		B34FB9761ABE8BA300D2D896 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B34FB95B1ABE8BA300D2D896 /* AppDelegate.mm */; };
 		B34FB9771ABE8BA300D2D896 /* FrostedQuoteComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = B34FB95E1ABE8BA300D2D896 /* FrostedQuoteComponent.mm */; };
 		B34FB9781ABE8BA300D2D896 /* InteractiveQuoteComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = B34FB9601ABE8BA300D2D896 /* InteractiveQuoteComponent.mm */; };
@@ -130,6 +131,8 @@
 		B19D4EDB1E41C64B0013DBCB /* QuotesListComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QuotesListComponent.mm; sourceTree = "<group>"; };
 		B19D4EF51E41CA0D0013DBCB /* WildeGuessComponentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WildeGuessComponentViewController.h; sourceTree = "<group>"; };
 		B19D4EF61E41CA0D0013DBCB /* WildeGuessComponentViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WildeGuessComponentViewController.mm; sourceTree = "<group>"; };
+		B1ECA5801E467F460096BFF7 /* LoadingIndicatorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingIndicatorComponent.h; sourceTree = "<group>"; };
+		B1ECA5811E467F460096BFF7 /* LoadingIndicatorComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LoadingIndicatorComponent.mm; sourceTree = "<group>"; };
 		B34FB95A1ABE8BA300D2D896 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B34FB95B1ABE8BA300D2D896 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		B34FB95D1ABE8BA300D2D896 /* FrostedQuoteComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrostedQuoteComponent.h; sourceTree = "<group>"; };
@@ -205,6 +208,8 @@
 				A2BC94DB1AC235A60043B82F /* QuoteComponent.mm */,
 				B19D4EDA1E41C64B0013DBCB /* QuotesListComponent.h */,
 				B19D4EDB1E41C64B0013DBCB /* QuotesListComponent.mm */,
+				B1ECA5801E467F460096BFF7 /* LoadingIndicatorComponent.h */,
+				B1ECA5811E467F460096BFF7 /* LoadingIndicatorComponent.mm */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -433,6 +438,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1ECA5821E467F460096BFF7 /* LoadingIndicatorComponent.mm in Sources */,
 				B19D4EDC1E41C64B0013DBCB /* QuotesListComponent.mm in Sources */,
 				B34FB97F1ABE8BA300D2D896 /* QuoteContext.m in Sources */,
 				B34FB9811ABE8BA300D2D896 /* QuotesPage.m in Sources */,
