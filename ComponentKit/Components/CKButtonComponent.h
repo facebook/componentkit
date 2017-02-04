@@ -19,18 +19,18 @@ struct CKButtonComponentAccessibilityConfiguration {
 };
 
 struct CKButtonTitle {
-  CKButtonTitle() : title(nil), attributedTitle(nil) {};
-  CKButtonTitle(std::nullptr_t v) : title(nil), attributedTitle(nil) {};
-  CKButtonTitle(NSString *t) : title(t), attributedTitle(nil) {};
-  CKButtonTitle(NSAttributedString *t) : title(nil), attributedTitle(t) {};
+  CKButtonTitle() : string(nil), attributedString(nil) {};
+  CKButtonTitle(std::nullptr_t v) : string(nil), attributedString(nil) {};
+  CKButtonTitle(NSString *t) : string(t), attributedString(nil) {};
+  CKButtonTitle(NSAttributedString *t) : string(nil), attributedString(t) {};
 
-  NSString *title;
-  NSAttributedString *attributedTitle;
+  NSString *string;
+  NSAttributedString *attributedString;
   
   bool operator==(const CKButtonTitle &other) const
   {
-    return CKObjectIsEqual(title, other.title)
-    && CKObjectIsEqual(attributedTitle, other.attributedTitle);
+    return CKObjectIsEqual(string, other.string)
+    && CKObjectIsEqual(attributedString, other.attributedString);
   }
 };
 

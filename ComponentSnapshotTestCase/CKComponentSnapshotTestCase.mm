@@ -19,6 +19,8 @@
 static CKComponent *(^_componentBlock)();
 static CKComponent *_leakyComponent;
 
+NSString * const CKComponentSnapshotErrorDomain = @"CKComponentSnapshotErrorDomain";
+
 @interface CKComponentSnapshotTestCase () <CKComponentProvider>
 @end
 
@@ -26,18 +28,38 @@ static CKComponent *_leakyComponent;
 
 - (BOOL)compareSnapshotOfComponent:(CKComponent *)component
                          sizeRange:(CKSizeRange)sizeRange
+               verifyIntrinsicSize:(BOOL)verifyIntrinsicSize
           referenceImagesDirectory:(NSString *)referenceImagesDirectory
                         identifier:(NSString *)identifier
                              error:(NSError **)errorPtr
 {
   const CKComponentLayout componentLayout = [component layoutThatFits:sizeRange parentSize:sizeRange.max];
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:nil
-                                                                                                                             sizeRangeProvider:nil];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:nil sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:(CKComponentLifecycleTestControllerState){
     .componentLayout = componentLayout
   }];
   UIView *view = [[UIView alloc] initWithFrame:{{0,0}, componentLayout.size}];
   [componentLifecycleTestController attachToView:view];
+  
+  if (verifyIntrinsicSize) {
+    UIView *componentView = component.viewContext.view;
+    if (componentView && !CGSizeEqualToSize(componentView.intrinsicContentSize, componentLayout.size)) {
+      if (errorPtr) {
+        NSString *description = [NSString stringWithFormat:@"The intrinsic size of the %@ %@ was not equal to the computed size of the %@ %@ within the range %@-%@",
+                                 [componentView class],
+                                 NSStringFromCGSize(componentView.intrinsicContentSize),
+                                 [component class],
+                                 NSStringFromCGSize(componentLayout.size),
+                                 NSStringFromCGSize(sizeRange.min),
+                                 NSStringFromCGSize(sizeRange.max)];
+        *errorPtr = [NSError errorWithDomain:CKComponentSnapshotErrorDomain
+                                        code:CKComponentSnapshotErrorCodeInvalidIntrinsicSize
+                                    userInfo:@{NSLocalizedDescriptionKey: description}];
+      }
+      return NO;
+    }
+  }
+  
   return [self compareSnapshotOfView:view
             referenceImagesDirectory:referenceImagesDirectory
                           identifier:identifier
@@ -48,9 +70,10 @@ static CKComponent *_leakyComponent;
 - (BOOL)compareSnapshotOfComponentBlock:(CKComponent *(^)())componentBlock
                        updateStateBlock:(id (^)(id))updateStackBlock
                               sizeRange:(CKSizeRange)sizeRange
+                    verifyIntrinsicSize:(BOOL)verifyIntrinsicSize
                referenceImagesDirectory:(NSString *)referenceImagesDirectory
                              identifier:(NSString *)identifier
-                                  error:(NSError **)errorPtr;
+                                  error:(NSError **)errorPtr
 {
   _componentBlock = componentBlock;
   CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
@@ -61,6 +84,7 @@ static CKComponent *_leakyComponent;
   [_leakyComponent updateState:updateStackBlock mode:CKUpdateModeSynchronous];
   return [self compareSnapshotOfComponent:[componentLifecycleTestController state].componentLayout.component
                                 sizeRange:sizeRange
+                      verifyIntrinsicSize:verifyIntrinsicSize
                  referenceImagesDirectory:referenceImagesDirectory
                                identifier:identifier
                                     error:errorPtr];

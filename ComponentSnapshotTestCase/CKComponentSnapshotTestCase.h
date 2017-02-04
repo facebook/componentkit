@@ -34,6 +34,10 @@ CK_AT_LEAST_IOS8 ? @"_IOS8" : \
 CK_64 ? [suffix stringByAppendingString:@"_64"] : suffix; \
 })
 
+typedef NS_ENUM(NSInteger, CKComponentSnapshotErrorCode) {
+  CKComponentSnapshotErrorCodeInvalidIntrinsicSize,
+};
+
 @class CKComponent;
 
 /**
@@ -46,7 +50,21 @@ CK_64 ? [suffix stringByAppendingString:@"_64"] : suffix; \
 { \
 NSError *error__ = nil; \
 NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%@%@", [self getReferenceImageDirectoryWithDefault:(@ FB_REFERENCE_IMAGE_DIR)], CKSnapshotReferenceDirectorySuffix()]; \
-BOOL comparisonSuccess__ = [self compareSnapshotOfComponent:(component__) sizeRange:(sizeRange__) referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) error:&error__]; \
+BOOL comparisonSuccess__ = [self compareSnapshotOfComponent:(component__) sizeRange:(sizeRange__) verifyIntrinsicSize:NO referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) error:&error__]; \
+XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); \
+}
+
+/**
+ Similar to our much-loved XCTAssert() macros. Use this to perform your test. No need to write an explanation, though.
+ @param component The component to snapshot
+ @param sizeRange An CKSizeRange specifying the size the component should be mounted at
+ @param identifier An optional identifier, used if there are multiple snapshot tests in a given -test method.
+ */
+#define CKSnapshotVerifyComponentAndIntrinsicSize(component__, sizeRange__, identifier__) \
+{ \
+NSError *error__ = nil; \
+NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%@%@", [self getReferenceImageDirectoryWithDefault:(@ FB_REFERENCE_IMAGE_DIR)], CKSnapshotReferenceDirectorySuffix()]; \
+BOOL comparisonSuccess__ = [self compareSnapshotOfComponent:(component__) sizeRange:(sizeRange__) verifyIntrinsicSize:YES referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) error:&error__]; \
 XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); \
 }
 
@@ -76,7 +94,7 @@ CKSnapshotVerifyComponent([CKInsetComponent newWithInsets:insets__ component:com
 { \
 NSError *error__ = nil; \
 NSString *referenceImagesDirectory__ = [NSString stringWithFormat:@"%@%@", [self getReferenceImageDirectoryWithDefault:(@ FB_REFERENCE_IMAGE_DIR)], CKSnapshotReferenceDirectorySuffix()]; \
-BOOL comparisonSuccess__ = [self compareSnapshotOfComponentBlock:(componentBlock__) updateStateBlock:(updateStateBlock__) sizeRange:(sizeRange__) referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) error:&error__]; \
+BOOL comparisonSuccess__ = [self compareSnapshotOfComponentBlock:(componentBlock__) updateStateBlock:(updateStateBlock__) sizeRange:(sizeRange__) verifyIntrinsicSize:NO referenceImagesDirectory:referenceImagesDirectory__ identifier:(identifier__) error:&error__]; \
 XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); \
 }
 
@@ -90,6 +108,8 @@ XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); 
 /**
  Performs the comparison or records a snapshot of the view if recordMode is YES.
  @param component The component to snapshot
+ @param sizeRange The size range used to calculate the layout
+ @param verifyIntrinsicSize If this is set to YES and the component has a backing view, the computed size will be checked for equality with the view's intrinsic size
  @param referenceImagesDirectory The directory in which reference images are stored.
  @param identifier An optional identifier, used is there are muliptle snapshot tests in a given -test method.
  @param error An error to log in an XCTAssert() macro if the method fails (missing reference image, images differ, etc).
@@ -97,6 +117,7 @@ XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); 
  */
 - (BOOL)compareSnapshotOfComponent:(CKComponent *)component
                          sizeRange:(CKSizeRange)sizeRange
+               verifyIntrinsicSize:(BOOL)verifyIntrinsicSize
           referenceImagesDirectory:(NSString *)referenceImagesDirectory
                         identifier:(NSString *)identifier
                              error:(NSError **)errorPtr;
@@ -106,6 +127,8 @@ XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); 
  Allows you to test a component with a particular state (i.e. CKComponentScope state).
  @param componentBlock A block that returns a component to snapshot
  @param updateStateBlock An update state block for the component. Returns the state you want the component to be tested with.
+ @param sizeRange The size range used to calculate the layout
+ @param verifyIntrinsicSize If this is set to YES and the component has a backing view, the computed size will be checked for equality with the view's intrinsic size
  @param referenceImagesDirectory The directory in which reference images are stored.
  @param identifier An optional identifier, used is there are muliptle snapshot tests in a given -test method.
  @param error An error to log in an XCTAssert() macro if the method fails (missing reference image, images differ, etc).
@@ -114,6 +137,7 @@ XCTAssertTrue(comparisonSuccess__, @"Snapshot comparison failed: %@", error__); 
 - (BOOL)compareSnapshotOfComponentBlock:(CKComponent *(^)())componentBlock
                        updateStateBlock:(id (^)(id))updateStackBlock
                               sizeRange:(CKSizeRange)sizeRange
+                    verifyIntrinsicSize:(BOOL)verifyIntrinsicSize
                referenceImagesDirectory:(NSString *)referenceImagesDirectory
                              identifier:(NSString *)identifier
                                   error:(NSError **)errorPtr;
