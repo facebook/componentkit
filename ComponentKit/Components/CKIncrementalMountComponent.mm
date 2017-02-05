@@ -172,7 +172,7 @@ public:
 
 class _CKIncrementalMountController {
   CKComponent *_childComponent;
-  CKComponent *_superComponent;
+  CKComponent *__weak _superComponent;
   UIView *_view;
   _CKIncrementalMountVisibilityController _visibilityController;
   struct {
@@ -264,6 +264,7 @@ public:
                                                         result.mountedComponents,
                                                         _superComponent,
                                                         mountContext);
+      CKCAssert(result.checkedOutViews.empty(), @"Overwriting views");
       result.checkedOutViews = reusePoolMap.checkOutVendedViews();
     }
   }
