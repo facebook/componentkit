@@ -145,12 +145,7 @@ void ViewReusePool::checkOutView(UIView *view)
 
 void ViewReusePool::checkInView(UIView *view)
 {
-  if (position == pool.end()) {
-    pool.push_back(view);
-    position = std::prev(pool.end());
-  } else {
-    pool.push_back(view);
-  }
+  position = pool.insert(position, view);
 }
 
 void ViewReusePool::reset()

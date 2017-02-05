@@ -136,7 +136,9 @@
 {
   [super componentDidAcquireView];
   self.scrollView.delegate = self;
-  [self.scrollView setContentOffset:_lastRecordedContentOffset animated:NO];
+  if (!CGPointEqualToPoint(self.scrollView.contentOffset, _lastRecordedContentOffset)) {
+    [self.scrollView setContentOffset:_lastRecordedContentOffset animated:NO];
+  }
 }
 
 #pragma mark - UIScrollViewDelegate

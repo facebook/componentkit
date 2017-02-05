@@ -52,6 +52,8 @@ CKComponent *CKListComponentHorizontalStackGenerator(const std::vector<id<NSObje
 @implementation CKListComponent
 {
   CKListComponentConfiguration _configuration;
+
+  BOOL _sentNearingEnd;
 }
 
 + (instancetype)newWithItems:(const std::vector<id<NSObject>> &)items
@@ -61,7 +63,7 @@ CKComponent *CKListComponentHorizontalStackGenerator(const std::vector<id<NSObje
   CKComponentScope scope(self);
 
   CKScrollComponentConfiguration scrollConfiguration {configuration.scrollConfiguration};
-  scrollConfiguration.scrollViewDidEndDragging = {scope, @selector(scrollViewDidEndDragging:scrollState:willDecelerate:)};
+  scrollConfiguration.scrollViewDidScroll = {scope, @selector(scrollViewDidScroll:scrollState:)};
 
   CKListComponent *c =
   [super newWithComponent:
@@ -78,23 +80,32 @@ CKComponent *CKListComponentHorizontalStackGenerator(const std::vector<id<NSObje
   return c;
 }
 
-- (void)scrollViewDidEndDragging:(CKComponent *)sender scrollState:(CKScrollViewState)scrollState willDecelerate:(BOOL)willDecelerate
+- (void)scrollViewDidScroll:(CKComponent *)sender scrollState:(CKScrollViewState)scrollState
 {
-  if (scrollState.contentSize.width < scrollState.contentSize.height) {
-    if (CGRectGetMaxY(scrollState.bounds) > scrollState.contentSize.height - 2.f * CGRectGetHeight(scrollState.bounds)) {
-      if (_configuration.nearingListEndAction) {
-        _configuration.nearingListEndAction.send(self);
+  if (_configuration.nearingListEndAction) {
+    if (scrollState.contentSize.width < scrollState.contentSize.height) {
+      if (CGRectGetMaxY(scrollState.bounds) > scrollState.contentSize.height - 2.f * CGRectGetHeight(scrollState.bounds)) {
+        if (!_sentNearingEnd) {
+          _configuration.nearingListEndAction.send(self);
+          _sentNearingEnd = YES;
+        }
+      } else {
+        _sentNearingEnd = NO;
       }
-    }
-  } else {
-    if (CGRectGetMaxX(scrollState.bounds) > scrollState.contentSize.width - 2.f * CGRectGetWidth(scrollState.bounds)) {
-      if (_configuration.nearingListEndAction) {
-        _configuration.nearingListEndAction.send(self);
+    } else {
+      if (CGRectGetMaxX(scrollState.bounds) > scrollState.contentSize.width - 2.f * CGRectGetWidth(scrollState.bounds)) {
+        if (!_sentNearingEnd) {
+          _configuration.nearingListEndAction.send(self);
+          _sentNearingEnd = YES;
+        }
+      } else {
+        _sentNearingEnd = NO;
       }
     }
   }
-  if (_configuration.scrollConfiguration.scrollViewDidEndDragging) {
-    _configuration.scrollConfiguration.scrollViewDidEndDragging.send(sender, scrollState, willDecelerate);
+
+  if (_configuration.scrollConfiguration.scrollViewDidScroll) {
+    _configuration.scrollConfiguration.scrollViewDidScroll.send(sender, scrollState);
   }
 }
 
