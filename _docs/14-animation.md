@@ -82,7 +82,7 @@ If updating your component's [state](state.html) changes it's bounds, both `boun
 
 ### UIKit Animations
 
-Engineers on iOS are used to the simple UIView implicit animations. Here’s what they look like:
+Engineers on iOS are used to the simple UIView block-based animations. Here’s what they look like:
 
 {% highlight objc %}
 UIView *view = ...;
