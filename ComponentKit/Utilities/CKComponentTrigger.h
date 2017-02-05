@@ -33,7 +33,7 @@ public:
 };
 
 template <typename... T>
-class CKComponentTrigger : CKComponentTriggerBase {
+class CKComponentTrigger : public CKComponentTriggerBase {
 public:
 #if DEBUG
   void resolve(const CKComponentScope &scope, SEL selector)
@@ -67,9 +67,18 @@ public:
 template <typename... T>
 class CKComponentTriggerHandle {
   std::shared_ptr<CKComponentTrigger<T...>> _trigger;
+  BOOL _validate;
 public:
-  CKComponentTriggerHandle<T...>() : _trigger(nullptr) {};
-  CKComponentTriggerHandle<T...>(std::shared_ptr<CKComponentTrigger<T...>> ptr) : _trigger(ptr) {};
+  CKComponentTriggerHandle<T...>() : _trigger(nullptr), _validate(NO) {};
+  CKComponentTriggerHandle<T...>(std::shared_ptr<CKComponentTrigger<T...>> ptr) : _trigger(ptr), _validate(YES) {};
+  CKComponentTriggerHandle<T...>(const CKComponentTriggerHandle<T...> &other) : _trigger(other._trigger), _validate(NO) {};
+  ~CKComponentTriggerHandle<T...>() {
+#if DEBUG
+    if (_validate) {
+      CKCAssert(_trigger != nullptr && (BOOL)*_trigger, @"Trigger was not resolved");
+    }
+#endif
+  }
 
   static CKComponentTriggerHandle<T...> acquire()
   {

@@ -40,9 +40,9 @@
 {
   CKComponentScope scope(self);
 
-//  if (configuration.contentOffsetTrigger) {
-//    configuration.contentOffsetTrigger->resolve(scope, @selector(triggerContentOffsetChange:contentOffset:animated:));
-//  }
+  if (configuration.contentOffsetTrigger) {
+    configuration.contentOffsetTrigger->resolve(scope, @selector(triggerContentOffsetChange:contentOffset:animated:));
+  }
 
   CKViewComponentAttributeValueMap attributes {
     { @selector(setDirectionalLockEnabled:), (BOOL)configuration.options.directionalLockEnabled },
