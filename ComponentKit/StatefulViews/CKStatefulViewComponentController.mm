@@ -131,13 +131,13 @@
 
 - (void)_relinquishStatefulViewIfPossible
 {
-  if ([self canRelinquishStatefulView]) {
+  if (_statefulView && [self canRelinquishStatefulView]) {
     [[CKStatefulViewReusePool sharedPool]
      enqueueStatefulView:_statefulView
      forControllerClass:[self class]
      context:_statefulViewContext
      mayRelinquishBlock:^BOOL{
-       if (!self->_mounted && [self canRelinquishStatefulView]) {
+       if (self->_statefulView && !self->_mounted && [self canRelinquishStatefulView]) {
          [self willRelinquishStatefulView:self->_statefulView];
          self->_statefulView = nil;
          self->_statefulViewContext = nil;
