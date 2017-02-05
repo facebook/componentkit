@@ -9,6 +9,7 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAction.h>
 #import <ComponentKit/CKComponentOptionUtilities.h>
+#import <ComponentKit/CKComponentTrigger.h>
 
 struct CKScrollViewState {
   CGPoint contentOffset;
@@ -70,6 +71,9 @@ struct CKScrollComponentConfiguration {
    */
   CKTypedComponentAction<CKScrollViewState, BOOL *> scrollViewShouldScrollToTop;
   CKTypedComponentAction<CKScrollViewState> scrollViewDidScrollToTop;
+
+  /** Arguments are the new contentOffset, and animated. */
+  CKComponentTriggerHandle<CGPoint, BOOL> contentOffsetTrigger;
 };
 
 @interface CKScrollComponent : CKComponent

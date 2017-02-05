@@ -13,6 +13,14 @@
 #import "CKComponentSubclass.h"
 #import "CKComponentController.h"
 
+@interface CKScrollComponentController : CKComponentController<CKScrollComponent *> <UIScrollViewDelegate>
+
+- (void)triggerContentOffsetChange:(CKComponent *)sender
+                     contentOffset:(CGPoint)contentOffset
+                          animated:(BOOL)animated;
+
+@end
+
 @interface CKScrollComponent ()
 
 - (const CKScrollComponentConfiguration &)configuration;
@@ -31,6 +39,10 @@
                            component:(CKComponent *)component
 {
   CKComponentScope scope(self);
+
+//  if (configuration.contentOffsetTrigger) {
+//    configuration.contentOffsetTrigger->resolve(scope, @selector(triggerContentOffsetChange:contentOffset:animated:));
+//  }
 
   CKViewComponentAttributeValueMap attributes {
     { @selector(setDirectionalLockEnabled:), (BOOL)configuration.options.directionalLockEnabled },
@@ -96,10 +108,6 @@
 
 @end
 
-@interface CKScrollComponentController : CKComponentController<CKScrollComponent *> <UIScrollViewDelegate>
-
-@end
-
 @implementation CKScrollComponentController
 {
   CGPoint _lastRecordedContentOffset;
@@ -139,6 +147,16 @@
   if (!CGPointEqualToPoint(self.scrollView.contentOffset, _lastRecordedContentOffset)) {
     [self.scrollView setContentOffset:_lastRecordedContentOffset animated:NO];
   }
+}
+
+#pragma mark - Triggers
+
+- (void)triggerContentOffsetChange:(CKComponent *)sender
+                     contentOffset:(CGPoint)contentOffset
+                        animated:(BOOL)animated
+{
+  CKAssert(self.scrollView, @"Trigger invoked when no scroll view is present");
+  [self.scrollView setContentOffset:contentOffset animated:animated];
 }
 
 #pragma mark - UIScrollViewDelegate

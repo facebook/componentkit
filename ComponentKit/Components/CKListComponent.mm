@@ -53,6 +53,8 @@ CKComponent *CKListComponentHorizontalStackGenerator(const std::vector<id<NSObje
 {
   CKListComponentConfiguration _configuration;
 
+  CKComponentTriggerHandle<CGPoint, BOOL> _trigger;
+
   BOOL _sentNearingEnd;
 }
 
@@ -62,8 +64,11 @@ CKComponent *CKListComponentHorizontalStackGenerator(const std::vector<id<NSObje
 {
   CKComponentScope scope(self);
 
+  CKComponentTriggerHandle<CGPoint, BOOL> trigger = CKComponentTriggerHandle<CGPoint, BOOL>::acquire();
+
   CKScrollComponentConfiguration scrollConfiguration {configuration.scrollConfiguration};
   scrollConfiguration.scrollViewDidScroll = {scope, @selector(scrollViewDidScroll:scrollState:)};
+  scrollConfiguration.contentOffsetTrigger = trigger;
 
   CKListComponent *c =
   [super newWithComponent:
@@ -76,12 +81,14 @@ CKComponent *CKListComponentHorizontalStackGenerator(const std::vector<id<NSObje
      (configuration.collectionComponentGenerator ?: CKListComponentVerticalStackGenerator)(items, context, configuration.componentGenerator)]]];
   if (c) {
     c->_configuration = configuration;
+    c->_trigger = trigger;
   }
   return c;
 }
 
 - (void)scrollViewDidScroll:(CKComponent *)sender scrollState:(CKScrollViewState)scrollState
 {
+  _trigger->trigger(self, {0,0}, YES);
   if (_configuration.nearingListEndAction) {
     if (scrollState.contentSize.width < scrollState.contentSize.height) {
       if (CGRectGetMaxY(scrollState.bounds) > scrollState.contentSize.height - 2.f * CGRectGetHeight(scrollState.bounds)) {
