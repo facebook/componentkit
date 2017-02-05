@@ -91,15 +91,15 @@ UIView *view = ...;
 }];
 {% endhighlight %}
 
-With this little bit of code, we’ve taken a UIView, and changed its frame’s origin to be (50, 50).  This is what’s called an implicit animation, since what we’ve done here is just alter a  property within a block. UIKit records mutations  to its model data within this block, and forms a transaction that it bundles into an animation for the render server lasting 300 ms. from the view’s current position to its new position.
+With this little bit of code, we’ve taken a UIView and changed its frame’s origin to be (50, 50), and animate it along a straight line to the new position. By making the change within a block, UIKit is able to record mutations to its model data and forms a transaction that it bundles into an animation for the render server lasting 300 ms. from the view’s current position to its new position.
 
-There are all kinds of properties I can animate with this API: alpha, scale, rotation, Z position. Implicit animations can control their durations, easing curves, and can specify that the animated property should begin at its current display or model properties.
+There are all kinds of properties the developer can animate with this API: alpha, scale, rotation, Z position. Implicit animations can control their durations, easing curves, and can specify that the animated property should begin at its current display or model properties.
 
 This API is used for the majority of animations that you see in apps on iOS.
 
 #### CoreAnimation
 
-CoreAnimation is the underlying rendering engine that is used on iOS and most of Mac OS to render contents on the screen using OpenGL. It operates in a different process from our app. It has its own representations of all the layers on the screen, and their current properties, as displayed to the user. Mutations to the views and layers inside our app get packaged into a transaction which are transmitted to the render server through a special-purpose XPC bridge.
+CoreAnimation is the underlying rendering engine that is used on iOS and most of Mac OS to render contents on the screen using Metal. It operates in a different process from our app. It has its own representations of all the layers on the screen, and their current properties, as displayed to the user. Mutations to the views and layers inside our app get packaged into a transaction which are transmitted to the render server through a special-purpose IPC bridge.
 
 This architecture is largely responsible for the “smoothness” of iOS apps. Animations are packaged into a declaration of the intended effects, and are usually conducted on the render server directly. This means that although our main thread may be blocked, we can still animate content around the screen.
 
