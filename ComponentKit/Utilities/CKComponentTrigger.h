@@ -77,7 +77,7 @@
    
      - (void)activateTrigger
      {
-       _handle->invoke(YES);
+       _handle->invoke(self, YES);
      }
  */
 
