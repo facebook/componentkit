@@ -189,7 +189,7 @@
   std::vector<CKComponentLayoutChild> childrenOf1 = { {{0,0}, x2}, {{0,0}, x3}, {{0,0}, x4}};
   CKComponentLayout x1 = CKComponentLayout(componentMock1, CGSizeZero, childrenOf1, nil);
   
-  CKComponentCollision collision = CKFindComponentScopeCollision(x1);
+  const CKComponentCollision collision = CKFindComponentScopeCollision(x1);
   
   XCTAssertFalse(collision.hasCollision());
 }
@@ -264,7 +264,7 @@
   std::vector<CKComponentLayoutChild> childrenOf1 = { {{0,0}, x2}, {{0,0}, x3}, {{0,0}, x4}};
   CKComponentLayout x1 = CKComponentLayout(componentMock1, CGSizeZero, childrenOf1, nil);
   
-  CKComponentCollision collision = CKFindComponentScopeCollision(x1);
+  const CKComponentCollision collision = CKFindComponentScopeCollision(x1);
   
   // Component Twelve and Nine should collide
   XCTAssertTrue(collision.hasCollision());
@@ -346,7 +346,7 @@
   std::vector<CKComponentLayoutChild> childrenOf1 = { {{0,0}, x2}, {{0,0}, x3}, {{0,0}, x4}};
   CKComponentLayout x1 = CKComponentLayout(componentMock1, CGSizeZero, childrenOf1, nil);
   
-  CKComponentCollision collision = CKFindComponentScopeCollision(x1);
+  const CKComponentCollision collision = CKFindComponentScopeCollision(x1);
   
   // Component Twelve and One should collide
   XCTAssertTrue(collision.hasCollision());
@@ -429,7 +429,7 @@
   std::vector<CKComponentLayoutChild> childrenOf1 = { {{0,0}, x2}, {{0,0}, x3}, {{0,0}, x4}};
   CKComponentLayout x1 = CKComponentLayout(componentMock1, CGSizeZero, childrenOf1, nil);
   
-  CKComponentCollision collision = CKFindComponentScopeCollision(x1);
+  const CKComponentCollision collision = CKFindComponentScopeCollision(x1);
   
   // Component Twelve and Ten should collide
   XCTAssertTrue(collision.hasCollision());

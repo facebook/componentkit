@@ -19,13 +19,7 @@ struct CKComponentCollision {
   CKComponent *lowestCommonAncestor;
   NSString *backtraceDescription;
   
-//  CKComponentCollision(CKComponent *c, CKComponent *lca, NSString* bt)
-//  : component(c), lowestCommonAncestor(lca), backtraceDescription(bt) {};
-  
-//  CKComponentCollision()
-//  : component(nil), lowestCommonAncestor(nil), backtraceDescription(nil) {};
-  
-  bool hasCollision() {
+  bool hasCollision() const {
     return (component != nil);
   }
 };

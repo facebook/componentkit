@@ -31,7 +31,7 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
 }
 #pragma clang diagnostic pop
 
-static CKComponent * completeComponentScopeCollisionPair(CKComponent *collidingComponent,
+static CKComponent *completeComponentScopeCollisionPair(CKComponent *collidingComponent,
                                             id<NSObject> collidingScope,
                                             NSMapTable<CKComponent *, CKComponent*> *componentsToParentComponents)
 {
@@ -44,7 +44,7 @@ static CKComponent * completeComponentScopeCollisionPair(CKComponent *collidingC
   return nil;
 }
 
-static CKComponent* lowestCommonAncestor(CKComponent *component,
+static CKComponent *lowestCommonAncestor(CKComponent *component,
                                          id<NSObject> collisionScope,
                                          NSMapTable<CKComponent *, CKComponent*> *componentsToParentComponents)
 {
@@ -109,7 +109,7 @@ CKComponentCollision CKFindComponentScopeCollision(const CKComponentLayout &layo
 
 void CKDetectComponentScopeCollisions(const CKComponentLayout &layout) {
 #if CK_ASSERTIONS_ENABLED
-  CKComponentCollision collision = CKFindComponentScopeCollision(layout);
+  const CKComponentCollision collision = CKFindComponentScopeCollision(layout);
   if (collision.hasCollision()) {
     CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for component: %@ with Lowest common ancestor: %@\n%@",
                   [collision.component class],
