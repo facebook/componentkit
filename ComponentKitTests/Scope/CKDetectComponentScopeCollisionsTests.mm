@@ -358,7 +358,6 @@
   XCTAssertNil(collision.lowestCommonAncestor);
 }
 
-
 - (void)testCollisionIsDirectParent
 {
   id componentMock1 = OCMClassMock([CKOneComponent class]);
@@ -439,8 +438,6 @@
   
   // The lowest common ancestor of the two should be Ten itself
   XCTAssertTrue([collision.lowestCommonAncestor isKindOfClass:[CKTenComponent class]]);
- 
 }
-
 
 @end

@@ -19,7 +19,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component,
-                                                          NSMapTable<CKComponent *, CKComponent*> *componentsToParentComponents)
+                                                          NSMapTable<CKComponent *, CKComponent *> *componentsToParentComponents)
 {
   NSMutableArray<CKComponent *> *componentBacktrace = [NSMutableArray arrayWithObject:component];
   CKComponent *parentComponent = [componentsToParentComponents objectForKey:component];
@@ -32,10 +32,10 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
 #pragma clang diagnostic pop
 
 static CKComponent *completeComponentScopeCollisionPair(CKComponent *collidingComponent,
-                                            id<NSObject> collidingScope,
-                                            NSMapTable<CKComponent *, CKComponent*> *componentsToParentComponents)
+                                                        id<NSObject> collidingScope,
+                                                        NSMapTable<CKComponent *, CKComponent *> *componentsToParentComponents)
 {
-  for (CKComponent* componentKey in componentsToParentComponents) {
+  for (CKComponent *componentKey in componentsToParentComponents) {
     const id<NSObject> scopeFrameToken = [componentKey scopeFrameToken];
     if ([collidingScope isEqual:scopeFrameToken] && ![collidingComponent isEqual:componentKey]) {
       return componentKey;
@@ -46,15 +46,12 @@ static CKComponent *completeComponentScopeCollisionPair(CKComponent *collidingCo
 
 static CKComponent *lowestCommonAncestor(CKComponent *component,
                                          id<NSObject> collisionScope,
-                                         NSMapTable<CKComponent *, CKComponent*> *componentsToParentComponents)
+                                         NSMapTable<CKComponent *, CKComponent *> *componentsToParentComponents)
 {
   // First we need to find the node we're having a collision with.
   CKComponent *collidingComponent = completeComponentScopeCollisionPair(component, collisionScope, componentsToParentComponents);
-  if ([collidingComponent isEqual:component]) {
-    return [componentsToParentComponents objectForKey:component];
-  }
   if (collidingComponent && component) {
-    NSMutableSet<CKComponent*> *const previouslySeenParentsComponent = [NSMutableSet setWithObjects:component, collidingComponent, nil];
+    NSMutableSet<CKComponent *> *const previouslySeenParentsComponent = [NSMutableSet setWithObjects:component, collidingComponent, nil];
     // Walking up the both paths until we find the same parent
     while (collidingComponent || component) {
       component = [componentsToParentComponents objectForKey:component];
@@ -80,7 +77,7 @@ CKComponentCollision CKFindComponentScopeCollision(const CKComponentLayout &layo
 {
   std::queue<const CKComponentLayout> queue;
   NSMutableSet<id<NSObject>> *const previouslySeenScopeFrameTokens = [NSMutableSet new];
-  NSMapTable<CKComponent *, CKComponent*> *const componentsToParentComponents = [NSMapTable strongToStrongObjectsMapTable];
+  NSMapTable<CKComponent *, CKComponent *> *const componentsToParentComponents = [NSMapTable strongToStrongObjectsMapTable];
   queue.push(layout);
   while (!queue.empty()) {
     const auto componentLayout = queue.front();

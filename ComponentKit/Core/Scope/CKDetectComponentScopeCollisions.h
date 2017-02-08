@@ -13,12 +13,31 @@
 struct CKComponentLayout;
 @class CKComponent;
 
-/** Represents a component scope collision. contains the component with the collision, the lowest common ancestor of the colliding components and the backtrace description */
+/** Represents a component scope collision. */
 struct CKComponentCollision {
+  
+  /** 
+   The component with the collision. the lowest common ancestor of the colliding components and the backtrace description.
+   @var CKComponent
+   */
   CKComponent *component;
+  
+  /**
+   The lowest common ancestor of the colliding components.
+   @var CKComponent
+   */
   CKComponent *lowestCommonAncestor;
+  
+  /**
+   The backtrace description starting from the component.
+   @var NSString
+   */
   NSString *backtraceDescription;
   
+  /**
+   Helper function to see if the struct has a colliding component or not.
+   @return true if the struct has a component
+   */
   bool hasCollision() const {
     return (component != nil);
   }
