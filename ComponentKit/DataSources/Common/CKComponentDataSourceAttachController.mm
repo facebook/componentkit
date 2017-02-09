@@ -11,7 +11,6 @@
 #import <objc/runtime.h>
 #import "CKComponentInternal.h"
 
-#import "CKComponentDataSourceAttachController.h"
 #import "CKComponentDataSourceAttachControllerInternal.h"
 
 @implementation CKComponentDataSourceAttachController

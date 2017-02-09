@@ -89,3 +89,76 @@
 }
 
 @end
+
+
+NSDictionary<NSIndexPath *, NSIndexPath *> *CKComputeFinalUpdatedIndexPathsForAppliedChanges(CKTransactionalComponentDataSourceAppliedChanges *changes)
+{
+  NSMutableDictionary<NSIndexPath *, NSIndexPath *> *mapping = [NSMutableDictionary new];
+  for (NSIndexPath *indexPath in changes.updatedIndexPaths) {
+    // If the index path in quesiton was removed, then there is no new
+    // index path.
+    if ([changes.removedIndexPaths containsObject:indexPath]) {
+      continue;
+    }
+    
+    __block NSInteger section = indexPath.section;
+    NSInteger item = indexPath.item;
+    
+    // If the section of the index path in question was removed then there is
+    // no new index path.
+    if ([changes.removedSections containsIndex:section]) {
+      continue;
+    }
+    
+    // Every index path deleted before the index path in question in the same section
+    // moves the index path forward by one item.
+    for (NSIndexPath *removedIndexPath in changes.removedIndexPaths) {
+      if (removedIndexPath.section == section && removedIndexPath.item < indexPath.item) {
+        item--;
+      }
+    }
+    
+    // Let's count moves as deletes from the source index path.
+    for (NSIndexPath *sourceIndexPath in changes.movedIndexPaths.keyEnumerator) {
+      if (sourceIndexPath.section == section && sourceIndexPath.item < indexPath.item) {
+        item--;
+      }
+    }
+    
+    // Every section deleted before the index path in question bumps the index path
+    // forward by one section. This calculates that in one step.
+    section -= [changes.removedSections countOfIndexesInRange:NSMakeRange(0, section)];
+    
+    // Every section inserted before the index path in question moves the index path
+    // back by one section. However, inserts function differently than removals. If there
+    // is a section 0, and a new section is inserted at index 0, then the previous section
+    // moves to section 1. Inserts also cascade, so if there is a section 0, and sections
+    // are inserted at indexes 0,1 and 2, then the previous section would be at index 3.
+    // Notice how the comparison is `<= section`, where `section` is the incremented value.
+    [changes.insertedSections enumerateIndexesUsingBlock:^(NSUInteger insertedSection, BOOL *stop) {
+      if (insertedSection <= section) {
+        section++;
+      } else {
+        *stop = YES;
+      }
+    }];
+    
+    // We apply the same cascading insert behavior here for index paths inserted in the
+    // same section.
+    for (NSIndexPath *insertedIndexPath in changes.insertedIndexPaths) {
+      if (insertedIndexPath.section == section && insertedIndexPath.item <= item) {
+        item++;
+      }
+    }
+    
+    // Let's count moves as inserts at the destination index path.
+    for (NSIndexPath *destinationIndexPath in changes.movedIndexPaths.objectEnumerator) {
+      if (destinationIndexPath.section == section && destinationIndexPath.item <= item) {
+        item++;
+      }
+    }
+    
+    mapping[indexPath] = [NSIndexPath indexPathForItem:item inSection:section];
+  }
+  return mapping;
+}

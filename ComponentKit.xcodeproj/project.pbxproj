@@ -171,7 +171,7 @@
 		03B8B5291D2A346F00EDFF59 /* CKStaticLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B581CBD926700BB33CE /* CKStaticLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B52A1D2A346F00EDFF59 /* CKComponentAccessibility_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AC61CBD926700BB33CE /* CKComponentAccessibility_Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B52B1D2A346F00EDFF59 /* CKComponentBoundsAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47ADA1CBD926700BB33CE /* CKComponentBoundsAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03B8B52C1D2A346F00EDFF59 /* CKCollectionViewDataSourceCell.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B111CBD926700BB33CE /* CKCollectionViewDataSourceCell.h */; };
+		03B8B52C1D2A346F00EDFF59 /* CKCollectionViewDataSourceCell.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B111CBD926700BB33CE /* CKCollectionViewDataSourceCell.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B52D1D2A346F00EDFF59 /* CKComponentDataSourceAttachController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B221CBD926700BB33CE /* CKComponentDataSourceAttachController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B52E1D2A346F00EDFF59 /* CKButtonComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47ACD1CBD926700BB33CE /* CKButtonComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B52F1D2A346F00EDFF59 /* CKComponentDelegateForwarder.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B8C1CBD926700BB33CE /* CKComponentDelegateForwarder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -510,7 +510,7 @@
 		D0B47D0E1CBD948E00BB33CE /* CKComponentScopeRootInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0A1CBD926700BB33CE /* CKComponentScopeRootInternal.h */; };
 		D0B47D0F1CBD948E00BB33CE /* CKComponentScopeTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0B1CBD926700BB33CE /* CKComponentScopeTypes.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D101CBD948E00BB33CE /* CKThreadLocalComponentScope.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B0C1CBD926700BB33CE /* CKThreadLocalComponentScope.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D0B47D121CBD948E00BB33CE /* CKCollectionViewDataSourceCell.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B111CBD926700BB33CE /* CKCollectionViewDataSourceCell.h */; };
+		D0B47D121CBD948E00BB33CE /* CKCollectionViewDataSourceCell.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B111CBD926700BB33CE /* CKCollectionViewDataSourceCell.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D131CBD948E00BB33CE /* CKCollectionViewTransactionalDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B131CBD926700BB33CE /* CKCollectionViewTransactionalDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D141CBD948E00BB33CE /* CKComponentBoundsAnimation+UICollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B151CBD926700BB33CE /* CKComponentBoundsAnimation+UICollectionView.h */; };
 		D0B47D151CBD948E00BB33CE /* CKSupplementaryViewDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B171CBD926700BB33CE /* CKSupplementaryViewDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };

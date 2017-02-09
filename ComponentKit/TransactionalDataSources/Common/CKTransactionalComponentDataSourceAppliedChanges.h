@@ -33,3 +33,5 @@
                                  userInfo:(NSDictionary *)userInfo NS_DESIGNATED_INITIALIZER;
 
 @end
+
+extern NSDictionary<NSIndexPath *, NSIndexPath *> *CKComputeFinalUpdatedIndexPathsForAppliedChanges(CKTransactionalComponentDataSourceAppliedChanges *changes);
