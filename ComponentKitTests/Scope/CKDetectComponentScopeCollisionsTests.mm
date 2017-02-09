@@ -123,45 +123,45 @@
 
 - (void)testNoCollisionsFound
 {
-  id componentMock1 = OCMClassMock([CKOneComponent class]);
-  OCMStub([componentMock1 scopeFrameToken]).andReturn(@(1));
-  
-  id componentMock2 = OCMClassMock([CKTwoComponent class]);
-  OCMStub([componentMock2 scopeFrameToken]).andReturn(@(2));
-  
-  id componentMock3 = OCMClassMock([CKThreeComponent class]);
-  OCMStub([componentMock3 scopeFrameToken]).andReturn(@(3));
-  
-  id componentMock4 = OCMClassMock([CKFourComponent class]);
-  OCMStub([componentMock4 scopeFrameToken]).andReturn(@(4));
-  
-  id componentMock5 = OCMClassMock([CKFiveComponent class]);
-  OCMStub([componentMock5 scopeFrameToken]).andReturn(@(5));
-  
-  id componentMock6 = OCMClassMock([CKSixComponent class]);
-  OCMStub([componentMock6 scopeFrameToken]).andReturn(@(6));
-  
-  id componentMock7 = OCMClassMock([CKSevenComponent class]);
-  OCMStub([componentMock7 scopeFrameToken]).andReturn(@(7));
-  
-  id componentMock8 = OCMClassMock([CKEightComponent class]);
-  OCMStub([componentMock8 scopeFrameToken]).andReturn(@(8));
-  
-  id componentMock9 = OCMClassMock([CKNineComponent class]);
-  OCMStub([componentMock9 scopeFrameToken]).andReturn(@(9));
-  
-  id componentMock10 = OCMClassMock([CKTenComponent class]);
-  OCMStub([componentMock10 scopeFrameToken]).andReturn(@(10));
-  
-  id componentMock11 = OCMClassMock([CKElevenComponent class]);
-  OCMStub([componentMock11 scopeFrameToken]).andReturn(@(11));
-  
-  id componentMock12 = OCMClassMock([CKTwelveComponent class]);
-  OCMStub([componentMock12 scopeFrameToken]).andReturn(@(12));
-  
-  id componentMock13 = OCMClassMock([CKThirteenComponent class]);
-  OCMStub([componentMock13 scopeFrameToken]).andReturn(@(13));
-  
+  id componentMock1 = [OCMockObject mockForClass:[CKOneComponent class]];
+  [[[componentMock1 stub] andReturn:@1] scopeFrameToken];
+
+  id componentMock2 = [OCMockObject mockForClass:[CKTwoComponent class]];
+  [[[componentMock2 stub] andReturn:@2] scopeFrameToken];
+
+  id componentMock3 = [OCMockObject mockForClass:[CKThreeComponent class]];
+  [[[componentMock3 stub] andReturn:@3] scopeFrameToken];
+
+  id componentMock4 = [OCMockObject mockForClass:[CKFourComponent class]];
+  [[[componentMock4 stub] andReturn:@4] scopeFrameToken];
+
+  id componentMock5 = [OCMockObject mockForClass:[CKFiveComponent class]];
+  [[[componentMock5 stub] andReturn:@5] scopeFrameToken];
+
+  id componentMock6 = [OCMockObject mockForClass:[CKSixComponent class]];
+  [[[componentMock6 stub] andReturn:@6] scopeFrameToken];
+
+  id componentMock7 = [OCMockObject mockForClass:[CKSevenComponent class]];
+  [[[componentMock7 stub] andReturn:@7] scopeFrameToken];
+
+  id componentMock8 = [OCMockObject mockForClass:[CKEightComponent class]];
+  [[[componentMock8 stub] andReturn:@8] scopeFrameToken];
+
+  id componentMock9 = [OCMockObject mockForClass:[CKNineComponent class]];
+  [[[componentMock9 stub] andReturn:@9] scopeFrameToken];
+
+  id componentMock10 = [OCMockObject mockForClass:[CKTenComponent class]];
+  [[[componentMock10 stub] andReturn:@10] scopeFrameToken];
+
+  id componentMock11 = [OCMockObject mockForClass:[CKElevenComponent class]];
+  [[[componentMock11 stub] andReturn:@11] scopeFrameToken];
+
+  id componentMock12 = [OCMockObject mockForClass:[CKTwelveComponent class]];
+  [[[componentMock12 stub] andReturn:@12] scopeFrameToken];
+
+  id componentMock13 = [OCMockObject mockForClass:[CKThirteenComponent class]];
+  [[[componentMock13 stub] andReturn:@13] scopeFrameToken];
+
   CKComponentLayout x13 = CKComponentLayout(componentMock13, CGSizeZero, {}, nil);
   CKComponentLayout x12 = CKComponentLayout(componentMock12, CGSizeZero, {}, nil);
   
@@ -196,47 +196,47 @@
 
 - (void)testCollisionDetected
 {
-  id componentMock1 = OCMClassMock([CKOneComponent class]);
-  OCMStub([componentMock1 scopeFrameToken]).andReturn(@(1));
-  
-  id componentMock2 = OCMClassMock([CKTwoComponent class]);
-  OCMStub([componentMock2 scopeFrameToken]).andReturn(@(2));
-  
-  id componentMock3 = OCMClassMock([CKThreeComponent class]);
-  OCMStub([componentMock3 scopeFrameToken]).andReturn(@(3));
-  
-  id componentMock4 = OCMClassMock([CKFourComponent class]);
-  OCMStub([componentMock4 scopeFrameToken]).andReturn(@(4));
-  
-  id componentMock5 = OCMClassMock([CKFiveComponent class]);
-  OCMStub([componentMock5 scopeFrameToken]).andReturn(@(5));
-  
-  id componentMock6 = OCMClassMock([CKSixComponent class]);
-  OCMStub([componentMock6 scopeFrameToken]).andReturn(@(6));
-  
-  id componentMock7 = OCMClassMock([CKSevenComponent class]);
-  OCMStub([componentMock7 scopeFrameToken]).andReturn(@(7));
-  
-  id componentMock8 = OCMClassMock([CKEightComponent class]);
-  OCMStub([componentMock8 scopeFrameToken]).andReturn(@(8));
-  
-  id componentMock9 = OCMClassMock([CKNineComponent class]);
-  //We set the scopeToken to 30 for a collision
-  OCMStub([componentMock9 scopeFrameToken]).andReturn(@(30));
-  
-  id componentMock10 = OCMClassMock([CKTenComponent class]);
-  OCMStub([componentMock10 scopeFrameToken]).andReturn(@(10));
-  
-  id componentMock11 = OCMClassMock([CKElevenComponent class]);
-  OCMStub([componentMock11 scopeFrameToken]).andReturn(@(11));
-  
-  id componentMock12 = OCMClassMock([CKTwelveComponent class]);
-  //We set the scopeToken to 30 for a collision
-  OCMStub([componentMock12 scopeFrameToken]).andReturn(@(30));
-  
-  id componentMock13 = OCMClassMock([CKThirteenComponent class]);
-  OCMStub([componentMock13 scopeFrameToken]).andReturn(@(13));
-  
+  id componentMock1 = [OCMockObject mockForClass:[CKOneComponent class]];
+  [[[componentMock1 stub] andReturn:@1] scopeFrameToken];
+
+  id componentMock2 = [OCMockObject mockForClass:[CKTwoComponent class]];
+  [[[componentMock2 stub] andReturn:@2] scopeFrameToken];
+
+  id componentMock3 = [OCMockObject mockForClass:[CKThreeComponent class]];
+  [[[componentMock3 stub] andReturn:@3] scopeFrameToken];
+
+  id componentMock4 = [OCMockObject mockForClass:[CKFourComponent class]];
+  [[[componentMock4 stub] andReturn:@4] scopeFrameToken];
+
+  id componentMock5 = [OCMockObject mockForClass:[CKFiveComponent class]];
+  [[[componentMock5 stub] andReturn:@5] scopeFrameToken];
+
+  id componentMock6 = [OCMockObject mockForClass:[CKSixComponent class]];
+  [[[componentMock6 stub] andReturn:@6] scopeFrameToken];
+
+  id componentMock7 = [OCMockObject mockForClass:[CKSevenComponent class]];
+  [[[componentMock7 stub] andReturn:@7] scopeFrameToken];
+
+  id componentMock8 = [OCMockObject mockForClass:[CKEightComponent class]];
+  [[[componentMock8 stub] andReturn:@8] scopeFrameToken];
+
+  // We set the scopeToken to 30 for a collision
+  id componentMock9 = [OCMockObject mockForClass:[CKNineComponent class]];
+  [[[componentMock9 stub] andReturn:@30] scopeFrameToken];
+
+  id componentMock10 = [OCMockObject mockForClass:[CKTenComponent class]];
+  [[[componentMock10 stub] andReturn:@10] scopeFrameToken];
+
+  id componentMock11 = [OCMockObject mockForClass:[CKElevenComponent class]];
+  [[[componentMock11 stub] andReturn:@11] scopeFrameToken];
+
+  // We set the scopeToken to 30 for a collision
+  id componentMock12 = [OCMockObject mockForClass:[CKTwelveComponent class]];
+  [[[componentMock12 stub] andReturn:@30] scopeFrameToken];
+
+  id componentMock13 = [OCMockObject mockForClass:[CKThirteenComponent class]];
+  [[[componentMock13 stub] andReturn:@13] scopeFrameToken];
+
   CKComponentLayout x13 = CKComponentLayout(componentMock13, CGSizeZero, {}, nil);
   CKComponentLayout x12 = CKComponentLayout(componentMock12, CGSizeZero, {}, nil);
   
@@ -278,47 +278,47 @@
 
 - (void)testCollisionIsRootElement
 {
-  id componentMock1 = OCMClassMock([CKOneComponent class]);
-  //We set the scopeToken to 30 for a collision
-  OCMStub([componentMock1 scopeFrameToken]).andReturn(@(30));
-  
-  id componentMock2 = OCMClassMock([CKTwoComponent class]);
-  OCMStub([componentMock2 scopeFrameToken]).andReturn(@(2));
-  
-  id componentMock3 = OCMClassMock([CKThreeComponent class]);
-  OCMStub([componentMock3 scopeFrameToken]).andReturn(@(3));
-  
-  id componentMock4 = OCMClassMock([CKFourComponent class]);
-  OCMStub([componentMock4 scopeFrameToken]).andReturn(@(4));
-  
-  id componentMock5 = OCMClassMock([CKFiveComponent class]);
-  OCMStub([componentMock5 scopeFrameToken]).andReturn(@(5));
-  
-  id componentMock6 = OCMClassMock([CKSixComponent class]);
-  OCMStub([componentMock6 scopeFrameToken]).andReturn(@(6));
-  
-  id componentMock7 = OCMClassMock([CKSevenComponent class]);
-  OCMStub([componentMock7 scopeFrameToken]).andReturn(@(7));
-  
-  id componentMock8 = OCMClassMock([CKEightComponent class]);
-  OCMStub([componentMock8 scopeFrameToken]).andReturn(@(8));
-  
-  id componentMock9 = OCMClassMock([CKNineComponent class]);
-  OCMStub([componentMock9 scopeFrameToken]).andReturn(@(9));
-  
-  id componentMock10 = OCMClassMock([CKTenComponent class]);
-  OCMStub([componentMock10 scopeFrameToken]).andReturn(@(10));
-  
-  id componentMock11 = OCMClassMock([CKElevenComponent class]);
-  OCMStub([componentMock11 scopeFrameToken]).andReturn(@(11));
-  
-  id componentMock12 = OCMClassMock([CKTwelveComponent class]);
-  //We set the scopeToken to 30 for a collision
-  OCMStub([componentMock12 scopeFrameToken]).andReturn(@(30));
-  
-  id componentMock13 = OCMClassMock([CKThirteenComponent class]);
-  OCMStub([componentMock13 scopeFrameToken]).andReturn(@(13));
-  
+  // We set the scopeToken to 30 for a collision
+  id componentMock1 = [OCMockObject mockForClass:[CKOneComponent class]];
+  [[[componentMock1 stub] andReturn:@30] scopeFrameToken];
+
+  id componentMock2 = [OCMockObject mockForClass:[CKTwoComponent class]];
+  [[[componentMock2 stub] andReturn:@2] scopeFrameToken];
+
+  id componentMock3 = [OCMockObject mockForClass:[CKThreeComponent class]];
+  [[[componentMock3 stub] andReturn:@3] scopeFrameToken];
+
+  id componentMock4 = [OCMockObject mockForClass:[CKFourComponent class]];
+  [[[componentMock4 stub] andReturn:@4] scopeFrameToken];
+
+  id componentMock5 = [OCMockObject mockForClass:[CKFiveComponent class]];
+  [[[componentMock5 stub] andReturn:@5] scopeFrameToken];
+
+  id componentMock6 = [OCMockObject mockForClass:[CKSixComponent class]];
+  [[[componentMock6 stub] andReturn:@6] scopeFrameToken];
+
+  id componentMock7 = [OCMockObject mockForClass:[CKSevenComponent class]];
+  [[[componentMock7 stub] andReturn:@7] scopeFrameToken];
+
+  id componentMock8 = [OCMockObject mockForClass:[CKEightComponent class]];
+  [[[componentMock8 stub] andReturn:@8] scopeFrameToken];
+
+  id componentMock9 = [OCMockObject mockForClass:[CKNineComponent class]];
+  [[[componentMock9 stub] andReturn:@9] scopeFrameToken];
+
+  id componentMock10 = [OCMockObject mockForClass:[CKTenComponent class]];
+  [[[componentMock10 stub] andReturn:@10] scopeFrameToken];
+
+  id componentMock11 = [OCMockObject mockForClass:[CKElevenComponent class]];
+  [[[componentMock11 stub] andReturn:@11] scopeFrameToken];
+
+  // We set the scopeToken to 30 for a collision
+  id componentMock12 = [OCMockObject mockForClass:[CKTwelveComponent class]];
+  [[[componentMock12 stub] andReturn:@30] scopeFrameToken];
+
+  id componentMock13 = [OCMockObject mockForClass:[CKThirteenComponent class]];
+  [[[componentMock13 stub] andReturn:@13] scopeFrameToken];
+
   CKComponentLayout x13 = CKComponentLayout(componentMock13, CGSizeZero, {}, nil);
   CKComponentLayout x12 = CKComponentLayout(componentMock12, CGSizeZero, {}, nil);
   
@@ -360,47 +360,47 @@
 
 - (void)testCollisionIsDirectParent
 {
-  id componentMock1 = OCMClassMock([CKOneComponent class]);
-  OCMStub([componentMock1 scopeFrameToken]).andReturn(@(1));
-  
-  id componentMock2 = OCMClassMock([CKTwoComponent class]);
-  OCMStub([componentMock2 scopeFrameToken]).andReturn(@(2));
-  
-  id componentMock3 = OCMClassMock([CKThreeComponent class]);
-  OCMStub([componentMock3 scopeFrameToken]).andReturn(@(3));
-  
-  id componentMock4 = OCMClassMock([CKFourComponent class]);
-  OCMStub([componentMock4 scopeFrameToken]).andReturn(@(4));
-  
-  id componentMock5 = OCMClassMock([CKFiveComponent class]);
-  OCMStub([componentMock5 scopeFrameToken]).andReturn(@(5));
-  
-  id componentMock6 = OCMClassMock([CKSixComponent class]);
-  OCMStub([componentMock6 scopeFrameToken]).andReturn(@(6));
-  
-  id componentMock7 = OCMClassMock([CKSevenComponent class]);
-  OCMStub([componentMock7 scopeFrameToken]).andReturn(@(7));
-  
-  id componentMock8 = OCMClassMock([CKEightComponent class]);
-  OCMStub([componentMock8 scopeFrameToken]).andReturn(@(8));
-  
-  id componentMock9 = OCMClassMock([CKNineComponent class]);
-  OCMStub([componentMock9 scopeFrameToken]).andReturn(@(9));
-  
-  id componentMock10 = OCMClassMock([CKTenComponent class]);
-  //We set the scopeToken to 30 for a collision
-  OCMStub([componentMock10 scopeFrameToken]).andReturn(@(30));
-  
-  id componentMock11 = OCMClassMock([CKElevenComponent class]);
-  OCMStub([componentMock11 scopeFrameToken]).andReturn(@(11));
-  
-  id componentMock12 = OCMClassMock([CKTwelveComponent class]);
-  //We set the scopeToken to 30 for a collision
-  OCMStub([componentMock12 scopeFrameToken]).andReturn(@(30));
-  
-  id componentMock13 = OCMClassMock([CKThirteenComponent class]);
-  OCMStub([componentMock13 scopeFrameToken]).andReturn(@(13));
-  
+  id componentMock1 = [OCMockObject mockForClass:[CKOneComponent class]];
+  [[[componentMock1 stub] andReturn:@1] scopeFrameToken];
+
+  id componentMock2 = [OCMockObject mockForClass:[CKTwoComponent class]];
+  [[[componentMock2 stub] andReturn:@2] scopeFrameToken];
+
+  id componentMock3 = [OCMockObject mockForClass:[CKThreeComponent class]];
+  [[[componentMock3 stub] andReturn:@3] scopeFrameToken];
+
+  id componentMock4 = [OCMockObject mockForClass:[CKFourComponent class]];
+  [[[componentMock4 stub] andReturn:@4] scopeFrameToken];
+
+  id componentMock5 = [OCMockObject mockForClass:[CKFiveComponent class]];
+  [[[componentMock5 stub] andReturn:@5] scopeFrameToken];
+
+  id componentMock6 = [OCMockObject mockForClass:[CKSixComponent class]];
+  [[[componentMock6 stub] andReturn:@6] scopeFrameToken];
+
+  id componentMock7 = [OCMockObject mockForClass:[CKSevenComponent class]];
+  [[[componentMock7 stub] andReturn:@7] scopeFrameToken];
+
+  id componentMock8 = [OCMockObject mockForClass:[CKEightComponent class]];
+  [[[componentMock8 stub] andReturn:@8] scopeFrameToken];
+
+  id componentMock9 = [OCMockObject mockForClass:[CKNineComponent class]];
+  [[[componentMock9 stub] andReturn:@9] scopeFrameToken];
+
+  // We set the scopeToken to 30 for a collision
+  id componentMock10 = [OCMockObject mockForClass:[CKTenComponent class]];
+  [[[componentMock10 stub] andReturn:@30] scopeFrameToken];
+
+  id componentMock11 = [OCMockObject mockForClass:[CKElevenComponent class]];
+  [[[componentMock11 stub] andReturn:@11] scopeFrameToken];
+
+  // We set the scopeToken to 30 for a collision
+  id componentMock12 = [OCMockObject mockForClass:[CKTwelveComponent class]];
+  [[[componentMock12 stub] andReturn:@30] scopeFrameToken];
+
+  id componentMock13 = [OCMockObject mockForClass:[CKThirteenComponent class]];
+  [[[componentMock13 stub] andReturn:@13] scopeFrameToken];
+
   CKComponentLayout x13 = CKComponentLayout(componentMock13, CGSizeZero, {}, nil);
   CKComponentLayout x12 = CKComponentLayout(componentMock12, CGSizeZero, {}, nil);
   
