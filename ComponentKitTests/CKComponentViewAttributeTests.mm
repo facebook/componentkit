@@ -43,6 +43,26 @@
 @property (nonatomic) float primitiveFloat;
 @end
 
+struct CKCustomType {
+  int anInt;
+
+  bool operator==(const CKCustomType &other) const
+  {
+    return anInt == other.anInt;
+  }
+};
+
+template<> struct std::hash<CKCustomType> {
+  size_t operator()(const CKCustomType &a) const
+  {
+    return std::hash<int>()(a.anInt);
+  }
+};
+
+@interface CKCustomTypeAttributedView : UIView
+@property (nonatomic) CKCustomType customTypeAttribute;
+@end
+
 @implementation CKComponentViewAttributeTests
 
 - (void)testThatMountingViewWithNSValueAttributeActuallyAppliesAttributeToView
@@ -107,6 +127,22 @@
   XCTAssertTrue(c.layer.opacity == 0.5, @"Expected opacity to be applied to view's layer");
 }
 
+- (void)testThatMountingViewWithCustomTypeAttributeActuallyAppliesAttributeToView
+{
+  CKComponent *testComponent = [CKComponent newWithView:{[CKCustomTypeAttributedView class], {
+    {@selector(setCustomTypeAttribute:), CKCustomType { .anInt = 5 }},
+  }} size:{}];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:nil
+                                                                                                                             sizeRangeProvider:nil];
+  [componentLifecycleTestController updateWithState:{
+    .componentLayout = [testComponent layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
+  }];
+
+  UIView *container = [[UIView alloc] init];
+  [componentLifecycleTestController attachToView:container];
+  CKCustomTypeAttributedView *c = [[container subviews] firstObject];
+  XCTAssertTrue(c.customTypeAttribute == CKCustomType { .anInt = 5 }, @"Expected customTypeAttribute to be applied to view");
+}
 
 - (void)testThatRecyclingViewWithSameAttributeValueDoesNotReApplyAttributeToView
 {
@@ -322,4 +358,7 @@
 @end
 
 @implementation CKNSNumberView
+@end
+
+@implementation CKCustomTypeAttributedView
 @end

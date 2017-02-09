@@ -109,9 +109,9 @@ bool CKComponentViewConfiguration::operator==(const CKComponentViewConfiguration
   } else if (otherAttributes->size() == rep->attributes->size()) {
     return std::find_if(rep->attributes->begin(),
                         rep->attributes->end(),
-                        [&](std::pair<const CKComponentViewAttribute &, id> elem) {
+                        [&](std::pair<const CKComponentViewAttribute &, CK::ViewAttribute::BoxedValue> elem) {
                           const auto otherElem = otherAttributes->find(elem.first);
-                          return otherElem == otherAttributes->end() || !CKObjectIsEqual(otherElem->second, elem.second);
+                          return otherElem == otherAttributes->end() || otherElem->second != elem.second;
                         }) == rep->attributes->end();
   } else {
     return false;

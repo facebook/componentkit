@@ -9,16 +9,28 @@
  */
 
 #import <string>
+#import <type_traits>
+#import <typeinfo>
 #import <unordered_map>
 
 #import <UIKit/UIKit.h>
 #import <ComponentKit/CKEqualityHashHelpers.h>
+
+namespace CK {
+  namespace ViewAttribute {
+    struct BoxedValue;
+  }
+}
 
 /**
  View attributes usually correspond to properties (like background color or alpha) but can represent arbitrarily complex
  operations on the view.
  */
 struct CKComponentViewAttribute {
+
+  using ApplicatorFunc = std::function<void (id, CK::ViewAttribute::BoxedValue)>;
+  using UpdaterFunc = std::function<void (id, CK::ViewAttribute::BoxedValue, CK::ViewAttribute::BoxedValue)>;
+
   /**
    The most common way to specify an attribute is by using a SEL corresponding to a setter, e.g. @selector(setColor:).
    This single-argument constructor allows implicit conversions, so you can pass a SEL as an attribute without actually
@@ -56,14 +68,41 @@ struct CKComponentViewAttribute {
    |        |          | Updater is called if the attribute was previously applied and the value changes.              |
    |--------|----------|-----------------------------------------------------------------------------------------------|
    */
+  template<typename T, typename U, typename = typename std::enable_if<std::is_convertible<T, id>::value>::type>
   CKComponentViewAttribute(const std::string &ident,
-                           void (^app)(id view, id value),
-                           void (^unapp)(id view, id value) = nil,
-                           void (^upd)(id view, id oldValue, id newValue) = nil) :
+                           void (^app)(T view, U value),
+                           void (^unapp)(T view, U value),
+                           void (^upd)(T view, U oldValue, U newValue)) :
   identifier(ident),
-  applicator(app),
-  unapplicator(unapp),
-  updater(upd) {};
+  applicator([=](T view, U value) { app(view, value); }),
+  unapplicator(unapp ? ApplicatorFunc([=](T view, U value) { unapp(view, value); }) : ApplicatorFunc(nullptr)),
+  updater(upd ? UpdaterFunc([=](T view, U oldValue, U newValue) { upd(view, oldValue, newValue); }) : UpdaterFunc(nullptr)) {};
+
+  template<typename T, typename U, typename = typename std::enable_if<std::is_convertible<T, id>::value>::type>
+  CKComponentViewAttribute(const std::string &ident,
+                           void (^app)(T view, U value),
+                           std::nullptr_t unapp,
+                           void (^upd)(T view, U oldValue, U newValue)) :
+  identifier(ident),
+  applicator([=](T view, U value) { app(view, value); }),
+  updater(upd ? UpdaterFunc([=](T view, U oldValue, U newValue) { upd(view, oldValue, newValue); }) : UpdaterFunc(nullptr)) {}
+
+  template<typename T, typename U, typename = typename std::enable_if<std::is_convertible<T, id>::value>::type>
+  CKComponentViewAttribute(const std::string &ident,
+                           void (^app)(T view, U value),
+                           void (^unapp)(T view, U value),
+                           std::nullptr_t upd = nil) :
+  identifier(ident),
+  applicator([=](T view, U value) { app(view, value); }),
+  unapplicator(unapp ? ApplicatorFunc([=](T view, U value) { unapp(view, value); }) : ApplicatorFunc(nullptr)) {}
+
+  template<typename T, typename U, typename = typename std::enable_if<std::is_convertible<T, id>::value>::type>
+  CKComponentViewAttribute(const std::string &ident,
+                           void (^app)(T view, U value),
+                           std::nullptr_t unapp = nil,
+                           std::nullptr_t upd = nil) :
+  identifier(ident),
+  applicator([=](T view, U value) { app(view, value); }) {}
 
   ~CKComponentViewAttribute();
 
@@ -74,52 +113,216 @@ struct CKComponentViewAttribute {
   static CKComponentViewAttribute LayerAttribute(SEL setter) noexcept;
 
   std::string identifier;
-  void (^applicator)(id view, id value);
-  void (^unapplicator)(id view, id value);
-  void (^updater)(id view, id oldValue, id newValue);
+  ApplicatorFunc applicator;
+  ApplicatorFunc unapplicator;
+  UpdaterFunc updater;
 
   bool operator==(const CKComponentViewAttribute &attr) const { return identifier == attr.identifier; };
 };
 
-struct CKBoxedValue {
-  CKBoxedValue() noexcept : __actual(nil) {};
+namespace CK {
+  namespace ViewAttribute {
 
-  // Could replace this with !CK::is_objc_class<T>
-  CKBoxedValue(bool v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(int8_t v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(uint8_t v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(int16_t v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(uint16_t v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(int32_t v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(uint32_t v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(int64_t v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(uint64_t v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(long v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(unsigned long v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(float v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(double v) noexcept : __actual(@(v)) {};
-  CKBoxedValue(SEL v) noexcept : __actual([NSValue valueWithPointer:v]) {};
-  CKBoxedValue(std::nullptr_t v) noexcept : __actual(nil) {};
+    struct CachedSetter {
+      NSInvocation *invocation;
+      NSUInteger argumentSize;
+      const char *argumentType;
 
-  // Any objects go here
-  CKBoxedValue(id obj) noexcept : __actual(obj) {};
+      CachedSetter(NSInvocation *inv, NSUInteger argSize, const char *argType) :
+      invocation(inv),
+      argumentSize(argSize),
+      argumentType(argType) {}
+    };
 
-  // Define conversions for common Apple types
-  CKBoxedValue(CGRect v) noexcept : __actual([NSValue valueWithCGRect:v]) {};
-  CKBoxedValue(CGPoint v) noexcept : __actual([NSValue valueWithCGPoint:v]) {};
-  CKBoxedValue(CGSize v) noexcept : __actual([NSValue valueWithCGSize:v]) {};
-  CKBoxedValue(UIEdgeInsets v) noexcept : __actual([NSValue valueWithUIEdgeInsets:v]) {};
+    extern const CachedSetter &CachedSetterInvocation(id object, SEL setter);
 
-  operator id () const {
-    return __actual;
-  };
+    // Singleton object to signify non-ID-type object. For internal use only.
+    extern id nonIDObject;
 
-private:
-  id __actual;
+    /**
+     An abstract base type for the value type. This is a hack to store multiple templated objects in a non
+     templated collection.
+     */
+    struct ValueBase
+    {
+      ValueBase(std::string typeName) : _typeName(typeName) {}
+      ValueBase(const ValueBase &) = delete;
+      ~ValueBase() {}
 
-};
+      virtual operator id() const = 0;
+      virtual size_t hash() const noexcept = 0;
+      virtual BOOL isEqualTo(const ValueBase &) const = 0;
+      virtual void performSetter(id object, SEL setter) const = 0;
 
-typedef std::unordered_map<CKComponentViewAttribute, CKBoxedValue> CKViewComponentAttributeValueMap;
+      const std::string typeName() const
+      {
+        return _typeName;
+      }
+
+    protected:
+      const std::string _typeName;
+    };
+
+    /**
+     Templated type used to store an underlying value.
+     */
+    template<typename T> struct Value : ValueBase
+    {
+      Value(const T &value) : ValueBase(typeid(Value<T>).name()), _value(value) {}
+      Value(const Value<T> &) = delete;
+      ~Value() {}
+
+      operator T() const
+      {
+        return _value;
+      }
+
+      operator id() const
+      {
+        return nonIDObject;
+      }
+
+      size_t hash() const noexcept
+      {
+        return CK::hash<T>()(_value);
+      }
+
+      BOOL isEqualTo(const ValueBase &other) const
+      {
+        return this->typeName() == other.typeName() && CK::is_equal<T>()(_value, static_cast<const Value<T> &>(other)._value);
+      }
+
+      void performSetter(id object, SEL setter) const
+      {
+        const CachedSetter &set = CachedSetterInvocation(object, setter);
+        T value = _value;
+        [set.invocation setArgument:&value atIndex:2];
+        [set.invocation setSelector:setter];
+        [set.invocation invokeWithTarget:object];
+      }
+
+    private:
+      T _value;
+    };
+
+    /**
+     Template specialization for ID types.
+     */
+    template<> struct Value<id> : ValueBase
+    {
+      Value(const id &value) : ValueBase(typeid(Value<id>).name()), _value(value) {}
+      Value(const Value<id> &) = delete;
+      ~Value() {}
+
+      operator id() const
+      {
+        return _value;
+      }
+
+      size_t hash() const noexcept
+      {
+        return CK::hash<id>()(_value);
+      }
+
+      BOOL isEqualTo(const ValueBase &other) const
+      {
+        return this->typeName() == other.typeName() && CK::is_equal<id>()(_value, static_cast<const Value<id> &>(other)._value);
+      }
+
+      void performSetter(id object, SEL setter) const;
+      
+    private:
+      id _value;
+    };
+
+    /**
+     NSValue conversions from primitives for backwards compatibility.
+     */
+    template<> extern Value<bool>::operator id() const;
+    template<> extern Value<int8_t>::operator id() const;
+    template<> extern Value<uint8_t>::operator id() const;
+    template<> extern Value<int16_t>::operator id() const;
+    template<> extern Value<uint16_t>::operator id() const;
+    template<> extern Value<int32_t>::operator id() const;
+    template<> extern Value<uint32_t>::operator id() const;
+    template<> extern Value<int64_t>::operator id() const;
+    template<> extern Value<uint64_t>::operator id() const;
+    template<> extern Value<long>::operator id() const;
+    template<> extern Value<unsigned long>::operator id() const;
+    template<> extern Value<float>::operator id() const;
+    template<> extern Value<double>::operator id() const;
+    template<> extern Value<SEL>::operator id() const;
+    template<> extern Value<CGRect>::operator id() const;
+    template<> extern Value<CGPoint>::operator id() const;
+    template<> extern Value<CGSize>::operator id() const;
+    template<> extern Value<UIEdgeInsets>::operator id() const;
+    template<> extern Value<CGAffineTransform>::operator id() const;
+    template<> extern Value<CATransform3D>::operator id() const;
+
+    /**
+     Non-templated value wrappers to be used for component view attributes.
+     */
+    struct BoxedValue {
+      BoxedValue() : _value(std::make_shared<Value<id>>(nil)) {}
+
+      template <typename T, typename = typename std::enable_if<!std::is_convertible<T, id>::value>::type>
+      BoxedValue(const T &value) : _value(std::make_shared<Value<T>>(value)) {}
+
+      BoxedValue(const id &value) : _value(std::make_shared<Value<id>>(value)) {}
+
+      BoxedValue(const BoxedValue &other) : _value(other._value) {}
+
+      ~BoxedValue() {}
+
+      BoxedValue operator=(const BoxedValue &other)
+      {
+        _value = other._value;
+        return *this;
+      }
+
+      template <typename T, typename = typename std::enable_if<!std::is_convertible<T, id>::value>::type>
+      operator T() const
+      {
+        return static_cast<const Value<T> &>(*_value);
+      }
+
+      operator id() const
+      {
+        id const idObject = *_value;
+        if (idObject != nonIDObject) {
+          return idObject;
+        }
+        throw;
+      }
+
+      size_t hash() const noexcept
+      {
+        return _value->hash();
+      }
+
+      BOOL operator==(const BoxedValue &other) const
+      {
+        return _value->isEqualTo(*other._value);
+      }
+
+      BOOL operator!=(const BoxedValue &other) const
+      {
+        return !(*this == other);
+      }
+
+      void performSetter(id object, SEL setter) const
+      {
+        _value->performSetter(object, setter);
+      }
+
+    private:
+      std::shared_ptr<ValueBase> _value;
+    };
+    
+  }
+}
+
+typedef std::unordered_map<CKComponentViewAttribute, CK::ViewAttribute::BoxedValue> CKViewComponentAttributeValueMap;
 
 namespace std {
 
@@ -149,7 +352,7 @@ namespace std {
       uint64_t hash = 0;
       for (const auto& it: attr) {
         hash = CKHashCombine(hash, std::hash<CKComponentViewAttribute>()(it.first));
-        hash = CKHashCombine(hash, CK::hash<id>()(it.second));
+        hash = CKHashCombine(hash, it.second.hash());
       }
       return CKHash64ToNative(hash);
     }
@@ -157,5 +360,48 @@ namespace std {
 
 }
 
-// Explicitly instantiate this CKViewComponentAttributeValueMap to improve compile time.
-extern template class std::unordered_map<CKComponentViewAttribute, CKBoxedValue>;
+// Explicitly instantiate these types to improve compile time.
+extern template class std::unordered_map<CKComponentViewAttribute, CK::ViewAttribute::BoxedValue>;
+
+extern template class CK::ViewAttribute::Value<id>;
+extern template class CK::ViewAttribute::Value<bool>;
+extern template class CK::ViewAttribute::Value<int8_t>;
+extern template class CK::ViewAttribute::Value<uint8_t>;
+extern template class CK::ViewAttribute::Value<int16_t>;
+extern template class CK::ViewAttribute::Value<uint16_t>;
+extern template class CK::ViewAttribute::Value<int32_t>;
+extern template class CK::ViewAttribute::Value<uint32_t>;
+extern template class CK::ViewAttribute::Value<int64_t>;
+extern template class CK::ViewAttribute::Value<uint64_t>;
+extern template class CK::ViewAttribute::Value<long>;
+extern template class CK::ViewAttribute::Value<unsigned long>;
+extern template class CK::ViewAttribute::Value<float>;
+extern template class CK::ViewAttribute::Value<double>;
+extern template class CK::ViewAttribute::Value<SEL>;
+extern template class CK::ViewAttribute::Value<CGRect>;
+extern template class CK::ViewAttribute::Value<CGPoint>;
+extern template class CK::ViewAttribute::Value<CGSize>;
+extern template class CK::ViewAttribute::Value<UIEdgeInsets>;
+extern template class CK::ViewAttribute::Value<CGAffineTransform>;
+extern template class CK::ViewAttribute::Value<CATransform3D>;
+
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const bool &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const int8_t &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const uint8_t &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const int16_t &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const uint16_t &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const int32_t &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const uint32_t &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const int64_t &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const uint64_t &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const long &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const unsigned long &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const float &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const double &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const SEL &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const CGRect &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const CGPoint &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const CGSize &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const UIEdgeInsets &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const CGAffineTransform &);
+extern template CK::ViewAttribute::BoxedValue::BoxedValue(const CATransform3D &);
