@@ -53,6 +53,7 @@
 #import <ComponentKit/CKComponentAction.h>
 #import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKComponentGestureActions.h>
+#import <ComponentKit/CKContainerWrapper.h>
 #import <ComponentKit/CKOptimisticViewMutations.h>
 #import <ComponentKit/CKComponentDelegateAttribute.h>
 //Text
