@@ -14,39 +14,46 @@
 #import "CKComponentActionInternal.h"
 #import "CKComponentScopeHandle.h"
 
-CKComponentTriggerBase::CKComponentTriggerBase() : _resolved(NO), _target(nil), _scopeHandle(nil), _selector(NULL) {}
-CKComponentTriggerBase::~CKComponentTriggerBase() {
+CKComponentTriggerTargetBase::CKComponentTriggerTargetBase() : _resolved(NO), _scopeHandle(nil), _selector(NULL) {}
+CKComponentTriggerTargetBase::~CKComponentTriggerTargetBase() {
   CKCAssert(_resolved, @"Triggers must be resolved before destruction");
 }
 
-void CKComponentTriggerBase::resolve(const CKComponentScope &scope, SEL selector)
+void CKComponentTriggerTargetBase::resolve(void)
 {
   CKCAssert(!_resolved, @"Triggers may be resolved once, and only once");
   _resolved = YES;
+}
+
+void CKComponentTriggerTargetBase::resolve(const CKComponentScope &scope, SEL selector)
+{
+  resolve();
   _scopeHandle = scope.scopeHandle();
   _selector = selector;
 }
 
-void CKComponentTriggerBase::resolve(id target, SEL selector)
+CKComponentTriggerTargetBase::operator bool() const
 {
-  CKCAssert(!_resolved, @"Triggers may be resolved once, and only once");
-  _resolved = YES;
-  _target = target;
-  _selector = selector;
-}
-
-void CKComponentTriggerBase::resolve(void)
-{
-  CKCAssert(!_resolved, @"Triggers may be resolved once, and only once");
-  _resolved = YES;
-}
-
-CKComponentTriggerBase::operator bool() const
-{
-  return _resolved && _selector != nil && (_target || _scopeHandle);
+  return _resolved && _selector != nil && _scopeHandle;
 };
 
-NSInvocation *CKComponentTriggerBase::invocation(CKComponent *sender) const
+NSInvocation *CKComponentTriggerTargetBase::invocation(CKComponent *sender) const
 {
-  return CKComponentActionSendResponderInvocationPrepare(_selector, _target ?: _scopeHandle.responder, sender);
+  return CKComponentActionSendResponderInvocationPrepare(_selector, _scopeHandle.responder, sender);
 }
+
+CKComponentTriggerBase::CKComponentTriggerBase() : _target(nullptr), _validate(NO) {}
+
+CKComponentTriggerBase::CKComponentTriggerBase(std::shared_ptr<CKComponentTriggerTargetBase> ptr) : _target(ptr), _validate(YES) {}
+
+CKComponentTriggerBase::CKComponentTriggerBase(const CKComponentTriggerBase &other) : _target(other._target), _validate(NO) {}
+
+CKComponentTriggerBase::~CKComponentTriggerBase()
+{
+  CKCAssert(!_validate || (_target != nullptr && (BOOL)*_target), @"Trigger was not resolved");
+}
+
+#pragma mark - Template instantiations
+
+template class CKTypedComponentTrigger<>;
+template class CKTypedComponentTrigger<id>;
