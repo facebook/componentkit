@@ -187,7 +187,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
 
 @interface _CKGestureActionWrapper : NSObject <NSCopying>
 
-- (instancetype)initWithGestureAction:(CKTypedComponentAction<UIGestureRecognizer *>)action;
+- (instancetype)initWithGestureAction:(const CKTypedComponentAction<UIGestureRecognizer *> &)action;
 
 - (CKTypedComponentAction<UIGestureRecognizer *>)action;
 
@@ -198,7 +198,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
   CKTypedComponentAction<UIGestureRecognizer *> _action;
 }
 
-- (instancetype)initWithGestureAction:(CKTypedComponentAction<UIGestureRecognizer *>)action
+- (instancetype)initWithGestureAction:(const CKTypedComponentAction<UIGestureRecognizer *> &)action
 {
   if (self = [super init]) {
     _action = action;
@@ -233,7 +233,7 @@ static const char kCKComponentActionGestureRecognizerKey = ' ';
   }
 }
 
-- (void)ck_setComponentAction:(CKTypedComponentAction<UIGestureRecognizer *>)action
+- (void)ck_setComponentAction:(const CKTypedComponentAction<UIGestureRecognizer *> &)action
 {
   _CKGestureActionWrapper *wrapper = [[_CKGestureActionWrapper alloc] initWithGestureAction:action];
   objc_setAssociatedObject(self, &kCKComponentActionGestureRecognizerKey, wrapper, OBJC_ASSOCIATION_COPY_NONATOMIC);

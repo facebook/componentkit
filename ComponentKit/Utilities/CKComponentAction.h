@@ -30,7 +30,7 @@
  Usage in your component header:
  
  @interface MyComponent : CKComponent
- + (instancetype)newWithAction:(CKTypedComponentAction<NSString *, int>)action;
+ + (instancetype)newWithAction:(const CKTypedComponentAction<NSString *, int> &)action;
  @end
  
  When creating the action:
@@ -144,7 +144,7 @@ public:
     return isEqual(rhs);
   };
 
-  friend void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context);
+  friend void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent *sender, id context);
 };
 
 typedef CKTypedComponentAction<> CKComponentAction;
@@ -164,8 +164,8 @@ extern template class CKTypedComponentAction<id>;
  */
 void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender);
 void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender, CKComponentActionSendBehavior behavior);
-void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context);
-void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior);
+void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent *sender, id context);
+void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior);
 
 /**
  Returns a view attribute that configures a component that creates a UIControl to send the given CKComponentAction.
@@ -175,7 +175,7 @@ void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sende
  context is the UIEvent that triggered the action. May be NULL, in which case no action will be sent.
  @param controlEvents The events that should result in the action being sent. Default is touch up inside.
  */
-CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<UIEvent *> action,
+CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentAction<UIEvent *> &action,
                                                          UIControlEvents controlEvents = UIControlEventTouchUpInside) noexcept;
 
 /**
