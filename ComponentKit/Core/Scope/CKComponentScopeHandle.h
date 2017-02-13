@@ -41,7 +41,15 @@
 /** Creates a new, but identical, instance of the scope handle that will be reacquired due to a scope collision. */
 - (instancetype)newHandleToBeReacquiredDueToScopeCollision;
 
-- (void)updateState:(id (^)(id))updateFunction mode:(CKUpdateMode)mode;
+/** Schedules a state update to be applied to the scope with the given mode. */
+- (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode;
+
+/**
+ Enqueues a state update to be applied to the scope with the given mode.
+ State updates that are enqueued will not be immediately scheduled. Instead they will be delayed until a future state
+ update is scheduled.
+ */
+- (void)enqueueState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode;
 
 /** Informs the scope handle that it should complete its configuration. This will generate the controller */
 - (void)resolve;

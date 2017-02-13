@@ -148,14 +148,23 @@ struct CKComponentHostingViewInputs {
 
 #pragma mark - CKComponentStateListener
 
-- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
-                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                     didReceiveStateUpdate:(id (^)(id))stateUpdate
+- (void)componentScopeHandleWithIdentifier:(int32_t)globalIdentifier
+                            rootIdentifier:(int32_t)rootIdentifier
+        didReceiveStateUpdateToBeScheduled:(id (^)(id))updateBlock
                                       mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
-  _pendingInputs.stateUpdates.insert({globalIdentifier, stateUpdate});
+  _pendingInputs.stateUpdates.insert({globalIdentifier, updateBlock});
   [self _setNeedsUpdateWithMode:mode];
+}
+
+- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
+                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+         didReceiveStateUpdateToBeEnqueued:(id (^)(id))updateBlock
+                                      mode:(CKUpdateMode)mode
+{
+  CKAssertMainThread();
+  _pendingInputs.stateUpdates.insert({globalIdentifier, updateBlock});
 }
 
 #pragma mark - CKComponentDebugController

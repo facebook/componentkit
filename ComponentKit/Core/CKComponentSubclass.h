@@ -79,10 +79,9 @@ extern CGSize const kCKComponentParentSizeUndefined;
                       relativeToParentSize:(CGSize)parentSize;
 
 /**
- Enqueue a change to the state.
+ Schedule a change to the state.
 
- @param updateBlock A block that takes the current state as a parameter and returns an instance of the new state.
- The state *must* be immutable since components themselves are. A possible use might be:
+ The state must be immutable since components themselves are. A possible use might be:
 
    [self updateState:^MyState *(MyState *currentState) {
      MyMutableState *nextState = [currentState mutableCopy];
@@ -90,9 +89,20 @@ extern CGSize const kCKComponentParentSizeUndefined;
      return [nextState copy]; // immutable! :D
    }];
 
- @param mode @see CKUpdateMode
+ @param updateBlock A block that takes the current state as a parameter and returns an instance of the new state.
+ @param mode The update mode used to apply the state update.
+ @see CKUpdateMode
  */
 - (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode;
+
+/**
+ Enqueue a change to the state without scheduling.
+
+ @param updateBlock A block that takes the current state as a parameter and returns an instance of the new state.
+ @param mode The update mode used to apply the state update.
+ @see CKUpdateMode
+ */
+- (void)enqueueState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode;
 
 /**
  Allows an action to be forwarded to another target. By default, returns the receiver if it implements action,

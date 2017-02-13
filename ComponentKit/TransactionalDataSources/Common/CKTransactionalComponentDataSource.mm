@@ -144,11 +144,11 @@
   [_announcer removeListener:listener];
 }
 
-#pragma mark - State Listener
+#pragma mark - CKComponentStateListener
 
-- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
-                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                     didReceiveStateUpdate:(id (^)(id))stateUpdate
+- (void)componentScopeHandleWithIdentifier:(int32_t)globalIdentifier
+                            rootIdentifier:(int32_t)rootIdentifier
+        didReceiveStateUpdateToBeScheduled:(id (^)(id))updateBlock
                                       mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
@@ -157,11 +157,23 @@
       [self _processStateUpdates];
     });
   }
-
   if (mode == CKUpdateModeAsynchronous) {
-    _pendingAsynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});
+    _pendingAsynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, updateBlock});
   } else {
-    _pendingSynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});
+    _pendingSynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, updateBlock});
+  }
+}
+
+- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
+                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+         didReceiveStateUpdateToBeEnqueued:(id (^)(id))updateBlock
+                                      mode:(CKUpdateMode)mode
+{
+  CKAssertMainThread();
+  if (mode == CKUpdateModeAsynchronous) {
+    _pendingAsynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, updateBlock});
+  } else {
+    _pendingSynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, updateBlock});
   }
 }
 

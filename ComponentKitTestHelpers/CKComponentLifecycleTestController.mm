@@ -106,15 +106,25 @@
 
 - (void)componentScopeHandleWithIdentifier:(int32_t)globalIdentifier
                             rootIdentifier:(int32_t)rootIdentifier
-                     didReceiveStateUpdate:(id (^)(id))stateUpdate
+        didReceiveStateUpdateToBeScheduled:(id (^)(id))updateBlock
                                       mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
-  _pendingStateUpdates.insert({globalIdentifier, stateUpdate});
-  const CKSizeRange constrainedSize = _sizeRangeProvider ? [_sizeRangeProvider sizeRangeForBoundingSize:_state.constrainedSize.max] : _state.constrainedSize;
+  _pendingStateUpdates.insert({globalIdentifier, updateBlock});
   [self updateWithState:[self prepareForUpdateWithModel:_state.model
-                                        constrainedSize:constrainedSize
+                                        constrainedSize:_sizeRangeProvider
+                                                        ? [_sizeRangeProvider sizeRangeForBoundingSize:_state.constrainedSize.max]
+                                                        : _state.constrainedSize
                                                 context:_state.context]];
+}
+
+- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
+                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+         didReceiveStateUpdateToBeEnqueued:(id (^)(id))updateBlock
+                                      mode:(CKUpdateMode)mode
+{
+  CKAssertMainThread();
+  _pendingStateUpdates.insert({globalIdentifier, updateBlock});
 }
 
 @end
