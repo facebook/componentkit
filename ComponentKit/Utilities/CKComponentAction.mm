@@ -134,12 +134,12 @@ void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender,
   action.send(sender, behavior);
 }
 
-void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context)
+void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent *sender, id context)
 {
   action.send(sender, action.defaultBehavior(), context);
 }
 
-void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
+void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
 {
   action.send(sender, behavior, context);
 }
@@ -147,13 +147,13 @@ void CKComponentActionSend(CKTypedComponentAction<id> action, CKComponent *sende
 #pragma mark - Control Actions
 
 @interface CKComponentActionControlForwarder : NSObject
-- (instancetype)initWithAction:(CKTypedComponentAction<UIEvent *>)action;
+- (instancetype)initWithAction:(const CKTypedComponentAction<UIEvent *> &)action;
 - (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event;
 @end
 
 struct CKComponentActionHasher
 {
-  std::size_t operator()(const CKTypedComponentAction<UIEvent *>& k) const
+  std::size_t operator()(const CKTypedComponentAction<UIEvent *> &k) const
   {
     return std::hash<void *>()(k.selector());
   }
@@ -161,7 +161,7 @@ struct CKComponentActionHasher
 
 typedef std::unordered_map<CKTypedComponentAction<UIEvent *>, CKComponentActionControlForwarder *, CKComponentActionHasher> ForwarderMap;
 
-CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<UIEvent *> action,
+CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentAction<UIEvent *> &action,
                                                          UIControlEvents controlEvents) noexcept
 {
   static ForwarderMap *map = new ForwarderMap(); // never destructed to avoid static destruction fiasco
@@ -223,7 +223,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(CKTypedComponentAction<
   CKTypedComponentAction<UIEvent *> _action;
 }
 
-- (instancetype)initWithAction:(CKTypedComponentAction<UIEvent *>)action
+- (instancetype)initWithAction:(const CKTypedComponentAction<UIEvent *> &)action
 {
   if (self = [super init]) {
     _action = action;
@@ -303,7 +303,7 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {
 #pragma mark - Accessibility Actions
 
 @interface CKComponentAccessibilityCustomAction : UIAccessibilityCustomAction
-- (instancetype)initWithName:(NSString *)name action:(CKComponentAction)action view:(UIView *)view;
+- (instancetype)initWithName:(NSString *)name action:(const CKComponentAction &)action view:(UIView *)view;
 @end
 
 @implementation CKComponentAccessibilityCustomAction
@@ -312,7 +312,7 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {
   CKComponentAction _ck_action;
 }
 
-- (instancetype)initWithName:(NSString *)name action:(CKComponentAction)action view:(UIView *)view
+- (instancetype)initWithName:(NSString *)name action:(const CKComponentAction &)action view:(UIView *)view
 {
   if (self = [super initWithName:name target:self selector:@selector(ck_send)]) {
     _ck_view = view;

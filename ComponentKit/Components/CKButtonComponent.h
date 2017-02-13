@@ -33,7 +33,7 @@ struct CKButtonComponentAccessibilityConfiguration {
                     titleFont:(UIFont *)titleFont
                      selected:(BOOL)selected
                       enabled:(BOOL)enabled
-                       action:(CKTypedComponentAction<UIEvent *>)action
+                       action:(const CKTypedComponentAction<UIEvent *> &)action
                          size:(const CKComponentSize &)size
                    attributes:(const CKViewComponentAttributeValueMap &)attributes
    accessibilityConfiguration:(CKButtonComponentAccessibilityConfiguration)accessibilityConfiguration;
