@@ -104,8 +104,8 @@
   return _state;
 }
 
-- (void)componentScopeHandleWithIdentifier:(int32_t)globalIdentifier
-                            rootIdentifier:(int32_t)rootIdentifier
+- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
+                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
                                       mode:(CKUpdateMode)mode
 {

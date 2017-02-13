@@ -23,12 +23,14 @@ typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
   CKComponentAnnouncedEventTreeDidDisappear,
 };
 
+/** Component state announcements will always be made on the main thread. */
 @protocol CKComponentStateListener <NSObject>
-/** Always sent on the main thread. */
+
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                             rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
                                       mode:(CKUpdateMode)mode;
+
 @end
 
 struct CKBuildComponentResult {
