@@ -12,6 +12,7 @@
 #import <type_traits>
 #import <typeinfo>
 #import <unordered_map>
+#import <vector>
 
 #import <UIKit/UIKit.h>
 #import <ComponentKit/CKEqualityHashHelpers.h>
@@ -123,19 +124,6 @@ struct CKComponentViewAttribute {
 namespace CK {
   namespace ViewAttribute {
 
-    struct CachedSetter {
-      NSInvocation *invocation;
-      NSUInteger argumentSize;
-      const char *argumentType;
-
-      CachedSetter(NSInvocation *inv, NSUInteger argSize, const char *argType) :
-      invocation(inv),
-      argumentSize(argSize),
-      argumentType(argType) {}
-    };
-
-    extern const CachedSetter &CachedSetterInvocation(id object, SEL setter);
-
     // Singleton object to signify non-ID-type object. For internal use only.
     extern id nonIDObject;
 
@@ -172,7 +160,7 @@ namespace CK {
       Value(const Value<T> &) = delete;
       ~Value() {}
 
-      operator T() const
+      operator const T() const
       {
         return _value;
       }
@@ -182,9 +170,14 @@ namespace CK {
         return nonIDObject;
       }
 
+      template<typename U> operator const Value<U>() const
+      {
+        return Value<U>(_value);
+      }
+
       size_t hash() const noexcept
       {
-        return CK::hash<T>()(_value);
+        return CK::hash(_value);
       }
 
       BOOL isEqualTo(const ValueBase &other) const
@@ -194,11 +187,8 @@ namespace CK {
 
       void performSetter(id object, SEL setter) const
       {
-        const CachedSetter &set = CachedSetterInvocation(object, setter);
-        T value = _value;
-        [set.invocation setArgument:&value atIndex:2];
-        [set.invocation setSelector:setter];
-        [set.invocation invokeWithTarget:object];
+        const auto setterIMP = (void (*)(id, SEL, T))[object methodForSelector:setter];
+        setterIMP(object, setter, _value);
       }
 
     private:
@@ -221,7 +211,7 @@ namespace CK {
 
       size_t hash() const noexcept
       {
-        return CK::hash<id>()(_value);
+        return CK::hash(_value);
       }
 
       BOOL isEqualTo(const ValueBase &other) const

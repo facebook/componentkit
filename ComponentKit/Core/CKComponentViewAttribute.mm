@@ -75,7 +75,18 @@ CKComponentViewAttribute CKComponentViewAttribute::LayerAttribute(SEL setter) no
 namespace CK {
   namespace ViewAttribute {
 
-    const CachedSetter &CachedSetterInvocation(id object, SEL setter)
+    struct CachedSetter {
+      NSInvocation *invocation;
+      NSUInteger argumentSize;
+      const char *argumentType;
+
+      CachedSetter(NSInvocation *inv, NSUInteger argSize, const char *argType) :
+      invocation(inv),
+      argumentSize(argSize),
+      argumentType(argType) {}
+    };
+
+    static const CachedSetter &CachedSetterInvocation(id object, SEL setter)
     {
       CKCAssertMainThread();
       static auto *cachedInvocations = new std::unordered_map<SetterCacheKey, CachedSetter>();

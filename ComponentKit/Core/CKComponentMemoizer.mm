@@ -37,10 +37,10 @@ struct CKLayoutMemoizationKey {
   struct Hash {
     size_t operator ()(CKLayoutMemoizationKey a) const {
       NSUInteger subhashes[] = {
-        CK::hash<id>()(a.component),
-        CK::hash<CKSizeRange>()(a.thatFits),
-        CK::hash<CGFloat>()(a.parentSize.width),
-        CK::hash<CGFloat>()(a.parentSize.height),
+        CK::hash(a.component),
+        CK::hash(a.thatFits),
+        CK::hash(a.parentSize.width),
+        CK::hash(a.parentSize.height),
       };
       return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
     };
