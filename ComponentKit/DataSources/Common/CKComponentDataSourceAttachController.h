@@ -39,9 +39,9 @@
  @param scopeIdentifier The scope identifier for the component tree, this identifier should be stable among multiple versions
  of the component tree representing the same logical item.
  */
-- (void)attachComponentLayout:(CKComponentLayout)layout
+- (void)attachComponentLayout:(const CKComponentLayout &)layout
           withScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
-          withBoundsAnimation:(CKComponentBoundsAnimation)boundsAnimation
+          withBoundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation
                        toView:(UIView *)view;
 /**
  Detaching a component tree will cause it to be unmounted from the view it is currently attached to and will mark the view as available to be
