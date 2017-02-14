@@ -30,7 +30,7 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
 
 {% highlight objc %}
 @interface CKButtonComponent : CKCompositeComponent
-+ (instancetype)newWithAction:(CKTypedComponentAction<UIEvent *>)action;
++ (instancetype)newWithAction:(const CKTypedComponentAction<UIEvent *> &)action;
 @end
 
 @implementation SampleComponent
@@ -104,7 +104,7 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
 
 <div class="note-important">
   <p>
-    Component actions will only be sent up the component responder chain in a mounted component hierarchy. Trying to call <code>CKComponentActionSend</code> from an unmounted component will raise an assertion.
+    Component actions will only be sent up the component responder chain in a mounted component hierarchy. Trying to call send on a responder chain-based action from an unmounted component will raise an assertion. Use a scope-based component action if you need to send an action while not mounted.
   </p>
 </div>
 
