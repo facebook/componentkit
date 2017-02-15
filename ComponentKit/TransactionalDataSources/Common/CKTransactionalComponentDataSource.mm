@@ -260,17 +260,14 @@ static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changes
                             CKTransactionalComponentDataSourceState *state,
                             NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications)
 {
-#if CK_ASSERTIONS_ENABLED
   const CKBadChangesetOperationType badChangesetOperationType = CKIsValidChangesetForState(changeset,
                                                                                            state,
                                                                                            pendingAsynchronousModifications);
-  CKCAssert(badChangesetOperationType == CKBadChangesetOperationTypeNone,
-            @"Bad operation: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@",
-            CKHumanReadableBadChangesetOperationType(badChangesetOperationType),
-            changeset,
-            state,
-            pendingAsynchronousModifications);
-#endif
+  if (badChangesetOperationType != CKBadChangesetOperationTypeNone) {
+    NSString *const humanReadableBadChangesetOperationType = CKHumanReadableBadChangesetOperationType(badChangesetOperationType);
+    [NSException raise:NSInternalInconsistencyException
+                format:@"Bad operation: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@", humanReadableBadChangesetOperationType, changeset, state, pendingAsynchronousModifications];
+  }
 }
 
 @end
