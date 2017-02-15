@@ -18,7 +18,18 @@
 #import <ComponentKit/CKComponentViewConfiguration.h>
 
 struct CKComponentViewContext {
+  /**
+   View managed by the component.
+   */
   UIView *view;
+  /**
+   Frame of the component in view coordinates.
+
+   @example To calculate component frame in the corresponding window coordinates you can do
+
+      [c.viewContext.view convertRect:c.viewContext.frame toView:nil];
+
+   */
   CGRect frame;
 };
 
