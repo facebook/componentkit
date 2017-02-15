@@ -36,6 +36,6 @@ struct CKButtonComponentAccessibilityConfiguration {
                        action:(const CKTypedComponentAction<UIEvent *> &)action
                          size:(const CKComponentSize &)size
                    attributes:(const CKViewComponentAttributeValueMap &)attributes
-   accessibilityConfiguration:(CKButtonComponentAccessibilityConfiguration)accessibilityConfiguration;
+   accessibilityConfiguration:(const CKButtonComponentAccessibilityConfiguration &)accessibilityConfiguration;
 
 @end
