@@ -39,11 +39,6 @@
                            component:(CKComponent *)component
 {
   CKComponentScope scope(self);
-
-  if (configuration.contentOffsetTrigger) {
-    configuration.contentOffsetTrigger->resolve(scope, @selector(triggerContentOffsetChange:contentOffset:animated:));
-  }
-
   CKViewComponentAttributeValueMap attributes {
     { @selector(setDirectionalLockEnabled:), (BOOL)configuration.options.directionalLockEnabled },
     { @selector(setBounces:), (BOOL)configuration.options.bounces },
@@ -111,21 +106,6 @@
 @implementation CKScrollComponentController
 {
   CGPoint _lastRecordedContentOffset;
-  CKScrollComponentConfiguration _configuration;
-}
-
-- (instancetype)initWithComponent:(CKScrollComponent *)component
-{
-  if (self = [super initWithComponent:component]) {
-    _configuration = component.configuration;
-  }
-  return self;
-}
-
-- (void)didUpdateComponent
-{
-  [super didUpdateComponent];
-  _configuration = self.component.configuration;
 }
 
 - (UIScrollView *)scrollView
@@ -173,15 +153,15 @@ static CKScrollViewState scrollViewState(UIScrollView *scrollView)
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-  if (_configuration.scrollViewDidScroll) {
-    _configuration.scrollViewDidScroll.send(self.component, scrollViewState(scrollView));
+  if (self.view && self.component.configuration.scrollViewDidScroll) {
+    self.component.configuration.scrollViewDidScroll.send(self.component, scrollViewState(scrollView));
   }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-  if (_configuration.scrollViewWillBeginDragging) {
-    _configuration.scrollViewWillBeginDragging.send(self.component, scrollViewState(scrollView));
+  if (self.view && self.component.configuration.scrollViewWillBeginDragging) {
+    self.component.configuration.scrollViewWillBeginDragging.send(self.component, scrollViewState(scrollView));
   }
 }
 
@@ -189,53 +169,53 @@ static CKScrollViewState scrollViewState(UIScrollView *scrollView)
                      withVelocity:(CGPoint)velocity
               targetContentOffset:(inout CGPoint *)targetContentOffset
 {
-  if (_configuration.scrollViewWillEndDragging) {
-    _configuration.scrollViewWillEndDragging.send(self.component, scrollViewState(scrollView), velocity, targetContentOffset);
+  if (self.view && self.component.configuration.scrollViewWillEndDragging) {
+    self.component.configuration.scrollViewWillEndDragging.send(self.component, scrollViewState(scrollView), velocity, targetContentOffset);
   }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
                   willDecelerate:(BOOL)decelerate
 {
-  if (_configuration.scrollViewDidEndDragging) {
-    _configuration.scrollViewDidEndDragging.send(self.component, scrollViewState(scrollView), decelerate);
+  if (self.view && self.component.configuration.scrollViewDidEndDragging) {
+    self.component.configuration.scrollViewDidEndDragging.send(self.component, scrollViewState(scrollView), decelerate);
   }
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
 {
-  if (_configuration.scrollViewWillBeginDecelerating) {
-    _configuration.scrollViewWillBeginDecelerating.send(self.component, scrollViewState(scrollView));
+  if (self.view && self.component.configuration.scrollViewWillBeginDecelerating) {
+    self.component.configuration.scrollViewWillBeginDecelerating.send(self.component, scrollViewState(scrollView));
   }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-  if (_configuration.scrollViewDidEndDecelerating) {
-    _configuration.scrollViewDidEndDecelerating.send(self.component, scrollViewState(scrollView));
+  if (self.view && self.component.configuration.scrollViewDidEndDecelerating) {
+    self.component.configuration.scrollViewDidEndDecelerating.send(self.component, scrollViewState(scrollView));
   }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
-  if (_configuration.scrollViewDidEndScrollingAnimation) {
-    _configuration.scrollViewDidEndScrollingAnimation.send(self.component, scrollViewState(scrollView));
+  if (self.view && self.component.configuration.scrollViewDidEndScrollingAnimation) {
+    self.component.configuration.scrollViewDidEndScrollingAnimation.send(self.component, scrollViewState(scrollView));
   }
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
 {
   BOOL shouldScrollToTop = YES;
-  if (_configuration.scrollViewShouldScrollToTop) {
-    _configuration.scrollViewShouldScrollToTop.send(self.component, scrollViewState(scrollView), &shouldScrollToTop);
+  if (self.view && self.component.configuration.scrollViewShouldScrollToTop) {
+    self.component.configuration.scrollViewShouldScrollToTop.send(self.component, scrollViewState(scrollView), &shouldScrollToTop);
   }
   return shouldScrollToTop;
 }
 
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView
 {
-  if (_configuration.scrollViewDidScrollToTop) {
-    _configuration.scrollViewDidScrollToTop.send(self.component, scrollViewState(scrollView));
+  if (self.view && self.component.configuration.scrollViewDidScrollToTop) {
+    self.component.configuration.scrollViewDidScrollToTop.send(self.component, scrollViewState(scrollView));
   }
 }
 

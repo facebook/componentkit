@@ -28,17 +28,18 @@ struct _CKIncrementalMountResult {
 typedef std::unordered_set<CKComponent *, CK::HashFunctor<id>, CK::EqualFunctor<id>> _CKComponentSet;
 typedef std::unordered_map<CKComponent *, _CKIncrementalMountResult, CK::HashFunctor<id>, CK::EqualFunctor<id>> _CKMountedComponentResultMap;
 
-static NSArray *addListenerForParentScrollViews(id<CKScrollListener> listener, UIView *view)
+static std::pair<CKScrollListeningToken *, UIView *> addListenerForParentScrollView(id<CKScrollListener> listener, UIView *view)
 {
   UIView *currentView = view;
-  NSMutableArray *tokens = [NSMutableArray array];
+  UIView *lastView = view;
   while (currentView) {
     if ([currentView isKindOfClass:[UIScrollView class]]) {
-      [tokens addObject:[(UIScrollView *)currentView ck_addScrollListener:listener]];
+      return {[(UIScrollView *)currentView ck_addScrollListener:listener], currentView};
     }
+    lastView = currentView;
     currentView = [currentView superview];
   }
-  return tokens;
+  return {nil, lastView};
 }
 
 class _CKViewReusePoolMapCheckoutContext {
@@ -174,6 +175,7 @@ class _CKIncrementalMountController {
   CKComponent *_childComponent;
   CKComponent *__weak _superComponent;
   UIView *_view;
+  UIView *_rootView;
   _CKIncrementalMountVisibilityController _visibilityController;
   struct {
     CGPoint position;
@@ -215,17 +217,8 @@ public:
     if (!_view) {
       return;
     }
-    UIView *rootView = _view.window;
-    if (!rootView) {
-      rootView = _view;
-      // We're not in a window yet, so we just traverse upwards until we find a root. This commonly
-      // happens when a cell is initially being returned for a collection view.
-      while ([rootView superview]) {
-        rootView = [rootView superview];
-      }
-    }
-    const CGRect visibleBounds = [rootView convertRect:rootView.bounds
-                                                      toView:_view];
+    const CGRect visibleBounds = [_rootView convertRect:_rootView.bounds
+                                                 toView:_view];
 
     if (!_visibilityController.areNewChildrenVisible(visibleBounds, _mountedComponentResultMap)) {
       return;
@@ -273,12 +266,14 @@ public:
   _CKIncrementalMountController(CKComponent *childComponent,
                                 CKComponent *superComponent,
                                 UIView *view,
+                                UIView *rootView,
                                 const CKComponentLayout &layout,
                                 CGPoint position,
                                 UIEdgeInsets layoutGuide) :
   _childComponent(childComponent),
   _superComponent(superComponent),
   _view(view),
+  _rootView(rootView),
   _visibilityController(layout),
   _mountInfo({position, layoutGuide}) {};
 };
@@ -298,7 +293,7 @@ static NSString *kIncrementalMountVisibleChildControllerWrapperKey = @"_CKIncrem
   // Main-thread only. Mutable mount-based state. These parameters will be
   // empty when not mounted.
   _CKIncrementalMountController _mountController;
-  NSArray<CKScrollListeningToken *> *_scrollListeningTokens;
+  CKScrollListeningToken *_scrollListeningToken;
 }
 
 + (instancetype)newWithComponent:(CKComponent *)component
@@ -342,10 +337,13 @@ static NSString *kIncrementalMountVisibleChildControllerWrapperKey = @"_CKIncrem
 
   result.mountChildren = NO;
   if (children && !children->empty()) {
+    const auto pair = addListenerForParentScrollView(self, self.viewContext.view);
+    _scrollListeningToken = pair.first;
     _mountController = {
       _component,
       self,
       self.viewContext.view,
+      pair.second,
       children->at(0).layout,
       result.contextForChildren.position,
       result.contextForChildren.layoutGuide
@@ -353,7 +351,6 @@ static NSString *kIncrementalMountVisibleChildControllerWrapperKey = @"_CKIncrem
   } else {
     _mountController = {};
   }
-  _scrollListeningTokens = addListenerForParentScrollViews(self, self.viewContext.view);
   _mountController.mountVisibleChildren();
   return result;
 }
@@ -364,9 +361,8 @@ static NSString *kIncrementalMountVisibleChildControllerWrapperKey = @"_CKIncrem
 
   [super unmount];
 
-  for (CKScrollListeningToken *token in _scrollListeningTokens) {
-    [token removeListener];
-  }
+  [_scrollListeningToken removeListener];
+  _scrollListeningToken = nil;
 }
 
 - (void)unmountChildren
