@@ -11,12 +11,12 @@
 #import <ComponentKit/CKStatefulViewComponent.h>
 #import <ComponentKit/CKStatefulViewComponentController.h>
 
-@interface CKTestStatefulViewComponentController : CKStatefulViewComponentController
-@end
-
 @interface CKTestStatefulViewComponent : CKStatefulViewComponent
 + (instancetype)newWithColor:(UIColor *)color;
 @end
 
 @interface CKTestStatefulView : UIView
+@end
+
+@interface CKTestStatefulViewComponentController : CKStatefulViewComponentController<CKTestStatefulViewComponent *, CKTestStatefulView *, id>
 @end
