@@ -107,10 +107,12 @@ CKComponentCollision CKFindComponentScopeCollision(const CKComponentLayout &layo
 void CKDetectComponentScopeCollisions(const CKComponentLayout &layout) {
 #if CK_ASSERTIONS_ENABLED
   const CKComponentCollision collision = CKFindComponentScopeCollision(layout);
+  CKComponent *const lowestCommonAncestor = collision.lowestCommonAncestor ?: layout.component;
   if (collision.hasCollision()) {
-    CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for component: %@ with Lowest common ancestor: %@\n%@",
+    CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for %@\nLowest common ancestor: <%@: %p>\nComponent backtrace:\n%@",
                   [collision.component class],
-                  collision.lowestCommonAncestor ? [collision.lowestCommonAncestor class] : [layout.component class],
+                  lowestCommonAncestor,
+                  lowestCommonAncestor,
                   collision.backtraceDescription);
   }
 #endif
