@@ -82,9 +82,13 @@ template<> struct std::hash<CKCustomNontrivialType> {
 };
 
 @interface CKCustomTypeAttributedView : UIView
+
 @property (nonatomic) CKCustomTrivialType customTrivialTypeAttribute;
 @property (nonatomic) CKCustomNontrivialType customNontrivialTypeAttribute;
 @property (nonatomic) std::vector<CKCustomTrivialType> customTrivialVectorTypeAttribute;
+
+- (void)setCustomNontrivialConstRefTypeAttribute:(const CKCustomNontrivialType &)customNontrivialConstRefTypeAttribute;
+
 @end
 
 @implementation CKComponentViewAttributeTests
@@ -94,7 +98,7 @@ template<> struct std::hash<CKCustomNontrivialType> {
   CKComponent *testComponent = [CKComponent newWithView:{[CKNSNumberView class], {
       {@selector(setSelected:), @YES},
       {CKComponentViewAttribute::LayerAttribute(@selector(setOpacity:)), @(0.5) },
-      {@selector(setTag:), @2},
+      {@selector(setTag:), @((NSInteger)2)},
       {@selector(setPrimitiveChar:), @'D'},
       {@selector(setPrimitiveShort:), @(short(1))},
       {@selector(setPrimitiveInt:), @14},
@@ -125,15 +129,15 @@ template<> struct std::hash<CKCustomNontrivialType> {
   CKComponent *testComponent = [CKComponent newWithView:{[CKNSNumberView class], {
     {@selector(setSelected:), YES},
     {CKComponentViewAttribute::LayerAttribute(@selector(setOpacity:)), @0.5},
-    {@selector(setTag:), 2},
+    {@selector(setTag:), (NSInteger)2},
     {@selector(setPrimitiveChar:), 'D'},
-    {@selector(setPrimitiveShort:), short(1)},
+    {@selector(setPrimitiveShort:), (short)1},
     {@selector(setPrimitiveInt:), 14},
-    {@selector(setPrimitiveInt32:), 9L},
+    {@selector(setPrimitiveInt32:), (int32_t)9},
     {@selector(setPrimitiveInt64:), 5LL},
     {@selector(setPrimitiveUChar:), (unsigned char)('L')},
-    {@selector(setPrimitiveUShort:), (ushort)(23)},
-    {@selector(setPrimitiveUInt32:), 15UL},
+    {@selector(setPrimitiveUShort:), (unsigned short)(23)},
+    {@selector(setPrimitiveUInt32:), (uint32_t)15},
     {@selector(setPrimitiveUInt64:), 18ULL},
     {@selector(setPrimitiveDouble:), 11.3},
     {@selector(setPrimitiveFloat:), 21.1F},
@@ -185,7 +189,24 @@ template<> struct std::hash<CKCustomNontrivialType> {
   XCTAssertTrue(c.customNontrivialTypeAttribute == CKCustomNontrivialType(1, 2), @"Expected customNontrivialTypeAttribute to be applied to view");
 }
 
-- (void)testThatMountingViewWithCustomNontrivialVectorTypeAttributeActuallyAppliesAttributeToView
+- (void)testThatMountingViewWithCustomNontrivialConstRefTypeAttributeActuallyAppliesAttributeToView
+{
+  CKComponent *testComponent = [CKComponent newWithView:{[CKCustomTypeAttributedView class], {
+    {@selector(setCustomNontrivialConstRefTypeAttribute:), CKCustomNontrivialType(1, 2)},
+  }} size:{}];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:nil
+                                                                                                                             sizeRangeProvider:nil];
+  [componentLifecycleTestController updateWithState:{
+    .componentLayout = [testComponent layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
+  }];
+
+  UIView *container = [[UIView alloc] init];
+  [componentLifecycleTestController attachToView:container];
+  CKCustomTypeAttributedView *c = [[container subviews] firstObject];
+  XCTAssertTrue(c.customNontrivialTypeAttribute == CKCustomNontrivialType(1, 2), @"Expected customNontrivialTypeAttribute to be applied to view");
+}
+
+- (void)testThatMountingViewWithCustomTrivialVectorTypeAttributeActuallyAppliesAttributeToView
 {
   CKComponent *testComponent = [CKComponent newWithView:{[CKCustomTypeAttributedView class], {
     {@selector(setCustomTrivialVectorTypeAttribute:), std::vector<CKCustomTrivialType> {{1}, {2}}},
@@ -431,6 +452,11 @@ template<> struct std::hash<CKCustomNontrivialType> {
 - (void)setCustomNontrivialTypeAttribute:(CKCustomNontrivialType)customNontrivialTypeAttribute
 {
   _customNontrivialTypeAttribute = std::make_shared<CKCustomNontrivialType>(std::move(customNontrivialTypeAttribute));
+}
+
+- (void)setCustomNontrivialConstRefTypeAttribute:(const CKCustomNontrivialType &)customNontrivialConstRefTypeAttribute
+{
+  _customNontrivialTypeAttribute = std::make_shared<CKCustomNontrivialType>(std::move(customNontrivialConstRefTypeAttribute));
 }
 
 @end

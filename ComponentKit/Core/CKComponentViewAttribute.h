@@ -15,111 +15,8 @@
 #import <vector>
 
 #import <UIKit/UIKit.h>
+#import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKEqualityHashHelpers.h>
-
-namespace CK {
-  namespace ViewAttribute {
-    struct BoxedValue;
-  }
-}
-
-/**
- View attributes usually correspond to properties (like background color or alpha) but can represent arbitrarily complex
- operations on the view.
- */
-struct CKComponentViewAttribute {
-
-  using ApplicatorFunc = std::function<void (id, CK::ViewAttribute::BoxedValue)>;
-  using UpdaterFunc = std::function<void (id, CK::ViewAttribute::BoxedValue, CK::ViewAttribute::BoxedValue)>;
-
-  /**
-   The most common way to specify an attribute is by using a SEL corresponding to a setter, e.g. @selector(setColor:).
-   This single-argument constructor allows implicit conversions, so you can pass a SEL as an attribute without actually
-   typing CKComponentViewAttribute().
-   */
-  CKComponentViewAttribute(SEL setter) noexcept;
-  /**
-   Constructor for complex attributes.
-
-   @param ident A unique identifier for the attribute, used by the infrastructure to distinguish them internally.
-   @param app   An "applicator" for the attribute. If the value of an attribute differs from the previously applied
-                value for a recycled view (or if the view is newly created), the applicator is called with the view
-                and the attribute's value.
-   @param unapp An optional "un-applicator". This is called when a view that had an applicator is being reused. This
-                is where you do teardown that requires more than just the next applicator smashing over an
-                old value. Note: the unapplicator will not be called before a view is released.
-   @param upd   An optional "updater". This may be used as an advanced performance optimization if you can reconfigure
-                the view more efficiently if you know the previous value.
-
-   This diagram summarizes the behaviors of unapplicator and updater in combination:
-
-   |--------|----------|-----------------------------------------------------------------------------------------------|
-   | unapp? | updater? | Behavior                                                                                      |
-   |--------|----------|-----------------------------------------------------------------------------------------------|
-   | no     | no       | Views cannot be recycled to show components that do not have the attribute.                   |
-   |        |          | In almost all cases, this is the best option.                                                 |
-   |--------|----------|-----------------------------------------------------------------------------------------------|
-   | yes    | no       | Unapplic. is called if the view is being recycled to show a component without the attribute,  |
-   |        |          | or if the value of the attribute has changed (followed by applicator with new value).         |
-   |--------|----------|-----------------------------------------------------------------------------------------------|
-   | no     | yes      | Views cannot be recycled to show components that do not have the attribute.                   |
-   |        |          | Applicator is called first time; subsequently, updater is called if the value changes.        |
-   |--------|----------|-----------------------------------------------------------------------------------------------|
-   | yes    | yes      | Unapplic. is called if the view is being recycled to show a component without the attribute.  |
-   |        |          | Updater is called if the attribute was previously applied and the value changes.              |
-   |--------|----------|-----------------------------------------------------------------------------------------------|
-   */
-  template<typename T, typename U, typename = typename std::enable_if<std::is_convertible<T, id>::value>::type>
-  CKComponentViewAttribute(const std::string &ident,
-                           void (^app)(T view, U value),
-                           void (^unapp)(T view, U value),
-                           void (^upd)(T view, U oldValue, U newValue)) :
-  identifier(ident),
-  applicator([=](T view, U value) { app(view, value); }),
-  unapplicator(unapp ? ApplicatorFunc([=](T view, U value) { unapp(view, value); }) : ApplicatorFunc(nullptr)),
-  updater(upd ? UpdaterFunc([=](T view, U oldValue, U newValue) { upd(view, oldValue, newValue); }) : UpdaterFunc(nullptr)) {};
-
-  template<typename T, typename U, typename = typename std::enable_if<std::is_convertible<T, id>::value>::type>
-  CKComponentViewAttribute(const std::string &ident,
-                           void (^app)(T view, U value),
-                           std::nullptr_t unapp,
-                           void (^upd)(T view, U oldValue, U newValue)) :
-  identifier(ident),
-  applicator([=](T view, U value) { app(view, value); }),
-  updater(upd ? UpdaterFunc([=](T view, U oldValue, U newValue) { upd(view, oldValue, newValue); }) : UpdaterFunc(nullptr)) {}
-
-  template<typename T, typename U, typename = typename std::enable_if<std::is_convertible<T, id>::value>::type>
-  CKComponentViewAttribute(const std::string &ident,
-                           void (^app)(T view, U value),
-                           void (^unapp)(T view, U value),
-                           std::nullptr_t upd = nil) :
-  identifier(ident),
-  applicator([=](T view, U value) { app(view, value); }),
-  unapplicator(unapp ? ApplicatorFunc([=](T view, U value) { unapp(view, value); }) : ApplicatorFunc(nullptr)) {}
-
-  template<typename T, typename U, typename = typename std::enable_if<std::is_convertible<T, id>::value>::type>
-  CKComponentViewAttribute(const std::string &ident,
-                           void (^app)(T view, U value),
-                           std::nullptr_t unapp = nil,
-                           std::nullptr_t upd = nil) :
-  identifier(ident),
-  applicator([=](T view, U value) { app(view, value); }) {}
-
-  ~CKComponentViewAttribute();
-
-  /**
-   Creates an attribute that invokes the given setter on the view's layer (rather than the view itself). Useful for
-   easy access to layer properties, e.g. @selector(setBorderColor:), @selector(setAnchorPoint:), and so on.
-   */
-  static CKComponentViewAttribute LayerAttribute(SEL setter) noexcept;
-
-  std::string identifier;
-  ApplicatorFunc applicator;
-  ApplicatorFunc unapplicator;
-  UpdaterFunc updater;
-
-  bool operator==(const CKComponentViewAttribute &attr) const { return identifier == attr.identifier; };
-};
 
 namespace CK {
   namespace ViewAttribute {
@@ -128,8 +25,7 @@ namespace CK {
     extern id nonIDObject;
 
     /**
-     An abstract base type for the value type. This is a hack to store multiple templated objects in a non
-     templated collection.
+     An abstract base type for the value type.
      */
     struct ValueBase
     {
@@ -188,6 +84,11 @@ namespace CK {
       void performSetter(id object, SEL setter) const
       {
         const auto setterIMP = (void (*)(id, SEL, T))[object methodForSelector:setter];
+#if DEBUG
+        const auto setterSignature = [object methodSignatureForSelector:setter];
+        const std::string argumentType = [setterSignature getArgumentTypeAtIndex:2];
+        CKCAssert(argumentType.find(@encode(T)) != std::string::npos, @"Setter's argument and current value are of different types.");
+#endif
         setterIMP(object, setter, _value);
       }
 
@@ -282,7 +183,8 @@ namespace CK {
         if (idObject != nonIDObject) {
           return idObject;
         }
-        throw;
+        CKCFailAssert(@"value isn't an ID type object.");
+        return nil;
       }
 
       size_t hash() const noexcept
@@ -311,6 +213,96 @@ namespace CK {
     
   }
 }
+
+/**
+ View attributes usually correspond to properties (like background color or alpha) but can represent arbitrarily complex
+ operations on the view.
+ */
+struct CKComponentViewAttribute {
+
+  using ApplicatorFunc = std::function<void (id, CK::ViewAttribute::BoxedValue)>;
+  using UpdaterFunc = std::function<void (id, CK::ViewAttribute::BoxedValue, CK::ViewAttribute::BoxedValue)>;
+
+  /**
+   The most common way to specify an attribute is by using a SEL corresponding to a setter, e.g. @selector(setColor:).
+   This single-argument constructor allows implicit conversions, so you can pass a SEL as an attribute without actually
+   typing CKComponentViewAttribute().
+   */
+  CKComponentViewAttribute(SEL setter) noexcept;
+  /**
+   Constructor for complex attributes.
+
+   @param ident A unique identifier for the attribute, used by the infrastructure to distinguish them internally.
+   @param app   An "applicator" for the attribute. If the value of an attribute differs from the previously applied
+   value for a recycled view (or if the view is newly created), the applicator is called with the view
+   and the attribute's value.
+   @param unapp An optional "un-applicator". This is called when a view that had an applicator is being reused. This
+   is where you do teardown that requires more than just the next applicator smashing over an
+   old value. Note: the unapplicator will not be called before a view is released.
+   @param upd   An optional "updater". This may be used as an advanced performance optimization if you can reconfigure
+   the view more efficiently if you know the previous value.
+
+   This diagram summarizes the behaviors of unapplicator and updater in combination:
+
+   |--------|----------|-----------------------------------------------------------------------------------------------|
+   | unapp? | updater? | Behavior                                                                                      |
+   |--------|----------|-----------------------------------------------------------------------------------------------|
+   | no     | no       | Views cannot be recycled to show components that do not have the attribute.                   |
+   |        |          | In almost all cases, this is the best option.                                                 |
+   |--------|----------|-----------------------------------------------------------------------------------------------|
+   | yes    | no       | Unapplic. is called if the view is being recycled to show a component without the attribute,  |
+   |        |          | or if the value of the attribute has changed (followed by applicator with new value).         |
+   |--------|----------|-----------------------------------------------------------------------------------------------|
+   | no     | yes      | Views cannot be recycled to show components that do not have the attribute.                   |
+   |        |          | Applicator is called first time; subsequently, updater is called if the value changes.        |
+   |--------|----------|-----------------------------------------------------------------------------------------------|
+   | yes    | yes      | Unapplic. is called if the view is being recycled to show a component without the attribute.  |
+   |        |          | Updater is called if the attribute was previously applied and the value changes.              |
+   |--------|----------|-----------------------------------------------------------------------------------------------|
+   */
+  template <typename AppFunc, typename UpdFunc>
+  CKComponentViewAttribute(const std::string &ident, AppFunc app, AppFunc unapp, UpdFunc upd) :
+  identifier(ident),
+  applicator([=](id view, CK::ViewAttribute::BoxedValue value){ app(view, value); }),
+  unapplicator([=](id view, CK::ViewAttribute::BoxedValue value){ unapp(view, value); }),
+  updater([=](id view, CK::ViewAttribute::BoxedValue oldValue, CK::ViewAttribute::BoxedValue newValue){ upd(view, oldValue, newValue); }) {};
+
+  template <typename AppFunc, typename UpdFunc>
+  CKComponentViewAttribute(const std::string &ident, AppFunc app, std::nullptr_t unapp, UpdFunc upd) :
+  identifier(ident),
+  applicator([=](id view, CK::ViewAttribute::BoxedValue value){ app(view, value); }),
+  unapplicator(nullptr),
+  updater([=](id view, CK::ViewAttribute::BoxedValue oldValue, CK::ViewAttribute::BoxedValue newValue){ upd(view, oldValue, newValue); }) {};
+
+  template <typename AppFunc>
+  CKComponentViewAttribute(const std::string &ident, AppFunc app, AppFunc unapp, std::nullptr_t upd = nil) :
+  identifier(ident),
+  applicator([=](id view, CK::ViewAttribute::BoxedValue value){ app(view, value); }),
+  unapplicator([=](id view, CK::ViewAttribute::BoxedValue value){ unapp(view, value); }),
+  updater(nullptr) {};
+
+  template <typename AppFunc>
+  CKComponentViewAttribute(const std::string &ident, AppFunc app, std::nullptr_t unapp = nil, std::nullptr_t upd = nil) :
+  identifier(ident),
+  applicator([=](id view, CK::ViewAttribute::BoxedValue value){ app(view, value); }),
+  unapplicator(nullptr),
+  updater(nullptr) {};
+
+  ~CKComponentViewAttribute();
+
+  /**
+   Creates an attribute that invokes the given setter on the view's layer (rather than the view itself). Useful for
+   easy access to layer properties, e.g. @selector(setBorderColor:), @selector(setAnchorPoint:), and so on.
+   */
+  static CKComponentViewAttribute LayerAttribute(SEL setter) noexcept;
+
+  std::string identifier;
+  ApplicatorFunc applicator;
+  ApplicatorFunc unapplicator;
+  UpdaterFunc updater;
+
+  bool operator==(const CKComponentViewAttribute &attr) const { return identifier == attr.identifier; };
+};
 
 typedef std::unordered_map<CKComponentViewAttribute, CK::ViewAttribute::BoxedValue> CKViewComponentAttributeValueMap;
 

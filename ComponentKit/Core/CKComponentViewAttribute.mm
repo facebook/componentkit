@@ -66,7 +66,7 @@ CKComponentViewAttribute CKComponentViewAttribute::LayerAttribute(SEL setter) no
 {
   return {
     std::string("layer") + sel_getName(setter),
-    ^(UIView *view, CK::ViewAttribute::BoxedValue value) {
+    [=](UIView *view, CK::ViewAttribute::BoxedValue value) {
       value.performSetter(view.layer, setter);
     }
   };

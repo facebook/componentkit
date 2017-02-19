@@ -95,9 +95,9 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
                    attributes:(const CKViewComponentAttributeValueMap &)passedAttributes
    accessibilityConfiguration:(CKButtonComponentAccessibilityConfiguration)accessibilityConfiguration
 {
-  static const CKComponentViewAttribute titleFontAttribute = {"CKButtonComponent.titleFont", ^(UIButton *button, id value){
+  static const CKComponentViewAttribute titleFontAttribute = CKComponentViewAttribute("CKButtonComponent.titleFont", [](UIButton *button, id value){
     button.titleLabel.font = value;
-  }};
+  });
 
   static const CKComponentViewAttribute configurationAttribute = {
     "CKButtonComponent.config",
