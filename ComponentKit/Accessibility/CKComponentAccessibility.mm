@@ -49,8 +49,13 @@ CKComponentViewConfiguration CK::Component::Accessibility::AccessibleViewConfigu
   }
 }
 
+#if TARGET_OS_SIMULATOR
+static BOOL _forceAccessibilityEnabled = YES;
+static BOOL _forceAccessibilityDisabled = NO;
+#else
 static BOOL _forceAccessibilityEnabled = NO;
 static BOOL _forceAccessibilityDisabled = NO;
+#endif
 
 void CK::Component::Accessibility::SetForceAccessibilityEnabled(BOOL enabled)
 {
