@@ -66,7 +66,7 @@ namespace CK {
   struct is_std_hashable<T, typename std::enable_if<std::is_same<decltype(std::hash<T>()(std::declval<T>())), size_t>::value>::type> : std::true_type { };
 
   // Default is not an iterable
-  template <typename T, typename V = bool>
+  template <typename T, typename = void>
   struct is_iterable : std::false_type { };
 
   // Conditionally enable when T can be iterated on.
@@ -78,39 +78,100 @@ namespace CK {
   using collection_element_t = typename std::iterator_traits<decltype(std::declval<T>().begin())>::value_type;
 
   // Defer to std:hash when available.
-  template <typename T, typename = typename std::enable_if<is_std_hashable<T>::value && !is_objc_class<T>::value>::type>
-  size_t hash(const T &a)
-  {
-    return std::hash<T>()(a);
-  }
+  template <typename T, typename = void>
+  struct hash : std::hash<typename std::decay<T>::type> { };
 
   // For objc types, call [o hash]
-  template <typename T, typename = typename std::enable_if<is_objc_class<T>::value>::type>
-  size_t hash(T a)
-  {
-    return [a hash];
-  }
+  template <typename T>
+  struct hash<T, typename std::enable_if<is_objc_class<T>::value>::type> {
+    size_t operator()(T a) {
+      return [a hash];
+    }
+  };
 
   // std::hash doesn't have a default implementation for std::vector<T> and other collection types
   // when T is hashable. This stubs in for that.
-  template <typename T, typename = typename std::enable_if<!is_std_hashable<T>::value>::type, typename = typename std::enable_if<is_std_hashable<collection_element_t<T>>::value>::type>
-  size_t hash(const T &a)
-  {
-    uint64_t value = 0;
-    for (const auto elem : a) {
-      value = CKHashCombine(value, hash(elem));
+  template <typename T>
+  struct hash<T, typename std::enable_if<is_iterable<T>::value>::type> {
+    size_t operator()(const T &a)
+    {
+      uint64_t value = 0;
+      for (const auto elem : a) {
+        value = CKHashCombine(value, hash<decltype(elem)>()(elem));
+      }
+      return CKHash64ToNative(value);
     }
-    return CKHash64ToNative(value);
-  }
+  };
 
   // Hash definitions for common Cocoa structs.
-  extern size_t hash(const CGFloat &a);
-  extern size_t hash(const CGPoint &a);
-  extern size_t hash(const CGSize &a);
-  extern size_t hash(const CGRect &a);
-  extern size_t hash(const UIEdgeInsets &a);
-  extern size_t hash(const CGAffineTransform &a);
-  extern size_t hash(const CATransform3D &a);
+  template<> struct hash<CGPoint> {
+    size_t operator()(const CGPoint &a) {
+      uint64_t value = 0;
+      value = CKHashCombine(value, hash<CGFloat>()(a.x));
+      value = CKHashCombine(value, hash<CGFloat>()(a.y));
+      return CKHash64ToNative(value);
+    }
+  };
+  template<> struct hash<CGSize> {
+    size_t operator()(const CGSize &a) {
+      uint64_t value = 0;
+      value = CKHashCombine(value, hash<CGFloat>()(a.width));
+      value = CKHashCombine(value, hash<CGFloat>()(a.height));
+      return CKHash64ToNative(value);
+    }
+  };
+  template<> struct hash<CGRect> {
+    size_t operator()(const CGRect &a) {
+      uint64_t value = 0;
+      value = CKHashCombine(value, hash<CGPoint>()(a.origin));
+      value = CKHashCombine(value, hash<CGSize>()(a.size));
+      return CKHash64ToNative(value);
+    }
+  };
+  template<> struct hash<UIEdgeInsets> {
+    size_t operator()(const UIEdgeInsets &a) {
+      uint64_t value = 0;
+      value = CKHashCombine(value, hash<CGFloat>()(a.top));
+      value = CKHashCombine(value, hash<CGFloat>()(a.left));
+      value = CKHashCombine(value, hash<CGFloat>()(a.bottom));
+      value = CKHashCombine(value, hash<CGFloat>()(a.right));
+      return CKHash64ToNative(value);
+    }
+  };
+  template<> struct hash<CGAffineTransform> {
+    size_t operator()(const CGAffineTransform &a) {
+      uint64_t value = 0;
+      value = CKHashCombine(value, hash<CGFloat>()(a.a));
+      value = CKHashCombine(value, hash<CGFloat>()(a.b));
+      value = CKHashCombine(value, hash<CGFloat>()(a.c));
+      value = CKHashCombine(value, hash<CGFloat>()(a.d));
+      value = CKHashCombine(value, hash<CGFloat>()(a.tx));
+      value = CKHashCombine(value, hash<CGFloat>()(a.ty));
+      return CKHash64ToNative(value);
+    }
+  };
+  template<> struct hash<CATransform3D> {
+    size_t operator()(const CATransform3D &a) {
+      uint64_t value = 0;
+      value = CKHashCombine(value, hash<CGFloat>()(a.m11));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m12));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m13));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m14));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m21));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m22));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m23));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m24));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m31));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m32));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m33));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m34));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m41));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m42));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m43));
+      value = CKHashCombine(value, hash<CGFloat>()(a.m44));
+      return CKHash64ToNative(value);
+    }
+  };
 
   template <typename T, typename Enable = void> struct is_equal;
 
@@ -207,7 +268,7 @@ namespace CKTupleOperations
     static size_t hash(Tuple const& tuple)
     {
       size_t prev = _hash_helper<Tuple, Index-1>::hash(tuple);
-      size_t thisHash = CK::hash(std::get<Index>(tuple));
+      size_t thisHash = CK::hash<decltype(std::get<Index>(tuple))>()(std::get<Index>(tuple));
       return CKHash64ToNative(CKHashCombine(prev, thisHash));
     }
   };
@@ -218,7 +279,7 @@ namespace CKTupleOperations
   {
     static size_t hash(Tuple const& tuple)
     {
-      return CK::hash(std::get<0>(tuple));
+      return CK::hash<decltype(std::get<0>(tuple))>()(std::get<0>(tuple));
     }
   };
 

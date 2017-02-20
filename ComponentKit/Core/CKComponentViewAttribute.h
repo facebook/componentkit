@@ -73,7 +73,7 @@ namespace CK {
 
       size_t hash() const noexcept
       {
-        return CK::hash(_value);
+        return CK::hash<T>()(_value);
       }
 
       BOOL isEqualTo(const ValueBase &other) const
@@ -112,7 +112,7 @@ namespace CK {
 
       size_t hash() const noexcept
       {
-        return CK::hash(_value);
+        return CK::hash<id>()(_value);
       }
 
       BOOL isEqualTo(const ValueBase &other) const
