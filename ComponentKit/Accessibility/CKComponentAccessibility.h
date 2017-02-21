@@ -42,7 +42,8 @@ private:
 };
 
 /**
- Separate structure to handle accessibility as we want the components infrastructure to decide wether to use it or not depending if accessibility is enabled or not.
+ Separate structure to handle accessibility as we want the components infrastructure to decide whether to use it or not depending if accessibility is enabled or not.
+ Accessibility is enabled by default on the simulator, but only enabled on device if VoiceOver is on.
  Not to be confused with accessibilityIdentifier which is used for automation to identify elements on the screen. To set the identifier pass in {@selector(setAccessibilityIdentifier:), @"accessibilityId"} with the viewConfiguration's attributes
  */
 struct CKComponentAccessibilityContext {
