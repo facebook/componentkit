@@ -220,8 +220,8 @@ namespace CK {
  */
 struct CKComponentViewAttribute {
 
-  using ApplicatorFunc = std::function<void (id, CK::ViewAttribute::BoxedValue)>;
-  using UpdaterFunc = std::function<void (id, CK::ViewAttribute::BoxedValue, CK::ViewAttribute::BoxedValue)>;
+  using ApplicatorFunc = std::function<void (id, const CK::ViewAttribute::BoxedValue &)>;
+  using UpdaterFunc = std::function<void (id, const CK::ViewAttribute::BoxedValue &, const CK::ViewAttribute::BoxedValue &)>;
 
   /**
    The most common way to specify an attribute is by using a SEL corresponding to a setter, e.g. @selector(setColor:).
@@ -260,33 +260,17 @@ struct CKComponentViewAttribute {
    |        |          | Updater is called if the attribute was previously applied and the value changes.              |
    |--------|----------|-----------------------------------------------------------------------------------------------|
    */
-  template <typename AppFunc, typename UpdFunc>
-  CKComponentViewAttribute(const std::string &ident, AppFunc app, AppFunc unapp, UpdFunc upd) :
+  CKComponentViewAttribute(const std::string &ident, ApplicatorFunc app, ApplicatorFunc unapp = nullptr, UpdaterFunc upd = nullptr) :
   identifier(ident),
-  applicator([=](id view, CK::ViewAttribute::BoxedValue value){ app(view, value); }),
-  unapplicator([=](id view, CK::ViewAttribute::BoxedValue value){ unapp(view, value); }),
-  updater([=](id view, CK::ViewAttribute::BoxedValue oldValue, CK::ViewAttribute::BoxedValue newValue){ upd(view, oldValue, newValue); }) {};
-
-  template <typename AppFunc, typename UpdFunc>
-  CKComponentViewAttribute(const std::string &ident, AppFunc app, std::nullptr_t unapp, UpdFunc upd) :
-  identifier(ident),
-  applicator([=](id view, CK::ViewAttribute::BoxedValue value){ app(view, value); }),
-  unapplicator(nullptr),
-  updater([=](id view, CK::ViewAttribute::BoxedValue oldValue, CK::ViewAttribute::BoxedValue newValue){ upd(view, oldValue, newValue); }) {};
-
-  template <typename AppFunc>
-  CKComponentViewAttribute(const std::string &ident, AppFunc app, AppFunc unapp, std::nullptr_t upd = nil) :
-  identifier(ident),
-  applicator([=](id view, CK::ViewAttribute::BoxedValue value){ app(view, value); }),
-  unapplicator([=](id view, CK::ViewAttribute::BoxedValue value){ unapp(view, value); }),
-  updater(nullptr) {};
-
-  template <typename AppFunc>
-  CKComponentViewAttribute(const std::string &ident, AppFunc app, std::nullptr_t unapp = nil, std::nullptr_t upd = nil) :
-  identifier(ident),
-  applicator([=](id view, CK::ViewAttribute::BoxedValue value){ app(view, value); }),
-  unapplicator(nullptr),
-  updater(nullptr) {};
+  applicator([=](id view, const CK::ViewAttribute::BoxedValue &value) {
+    app(view, value);
+  }),
+  unapplicator(unapp ? ApplicatorFunc([=](id view, const CK::ViewAttribute::BoxedValue &value) {
+    unapp(view, value);
+  }) : ApplicatorFunc(nullptr)),
+  updater(upd ? UpdaterFunc([=](id view, const CK::ViewAttribute::BoxedValue &oldValue, const CK::ViewAttribute::BoxedValue &newValue) {
+    upd(view, oldValue, newValue);
+  }) : UpdaterFunc(nullptr)) {}
 
   ~CKComponentViewAttribute();
 
