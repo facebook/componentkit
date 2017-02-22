@@ -18,7 +18,7 @@
 #import <ComponentKit/CKComponentViewConfiguration.h>
 
 struct CKComponentViewContext {
-  UIView *view;
+  __kindof UIView *view;
   CGRect frame;
 };
 
