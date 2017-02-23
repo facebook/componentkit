@@ -41,7 +41,6 @@ static UIImage *ck_fakeImage(UIColor *imageBackgroundColor, CGSize size)
 }
 
 typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
-                                                      id scenePath,
                                                       id caller,
                                                       dispatch_queue_t callbackQueue,
                                                       void (^downloadProgressBlock)(CGFloat),
@@ -65,13 +64,12 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
 }
 
 - (id)downloadImageWithURL:(NSURL *)URL
-                 scenePath:(id)scenePath
                     caller:(id)caller
              callbackQueue:(dispatch_queue_t)callbackQueue
      downloadProgressBlock:(void (^)(CGFloat))downloadProgressBlock
                 completion:(void (^)(CGImageRef, NSError *))completion
 {
-  return _downloadImageBlock(URL, scenePath, caller, callbackQueue, downloadProgressBlock, completion);
+  return _downloadImageBlock(URL, caller, callbackQueue, downloadProgressBlock, completion);
 }
 
 - (void)cancelImageDownload:(id)download { /* no-op */ }
@@ -97,7 +95,6 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
   [CKNetworkImageComponent
    newWithURL:nil
    imageDownloader:nil
-   scenePath:nil
    size:{}
    options:{}
    attributes:{
@@ -114,7 +111,6 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
   [CKNetworkImageComponent
    newWithURL:nil
    imageDownloader:nil
-   scenePath:nil
    size:{}
    options:{
      .defaultImage = ck_fakeImage([UIColor greenColor], CGSizeMake(50, 50)),
@@ -131,7 +127,6 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
 {
   CKTestImageDownloader *imageDownloader =
     [[CKTestImageDownloader alloc] initWithDownloadImageBlock:^id(NSURL *url,
-                                                                  id scenePath,
                                                                   id caller,
                                                                   dispatch_queue_t callbackQueue,
                                                                   void (^downloadProgressBlock)(CGFloat),
@@ -146,7 +141,6 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
   [CKNetworkImageComponent
    newWithURL:nil
    imageDownloader:imageDownloader
-   scenePath:nil
    size:{}
    options:{}
    attributes:{
@@ -162,7 +156,6 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
 {
   CKTestImageDownloader *imageDownloader =
     [[CKTestImageDownloader alloc] initWithDownloadImageBlock:^id(NSURL *url,
-                                                                  id scenePath,
                                                                   id caller,
                                                                   dispatch_queue_t callbackQueue,
                                                                   void (^downloadProgressBlock)(CGFloat),
@@ -178,7 +171,6 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
   [CKNetworkImageComponent
    newWithURL:[NSURL URLWithString:@"http://literally-any-non-nil-url-can-be-used-here.com"]
    imageDownloader:imageDownloader
-   scenePath:nil
    size:{}
    options:{
      // This opaque green default image will be replaced in favor of the image provided by the image downloader.
@@ -198,7 +190,6 @@ typedef id (^CKTestImageDownloaderDownloadImageBlock)(NSURL *url,
   [CKNetworkImageComponent
    newWithURL:nil
    imageDownloader:nil
-   scenePath:nil
    size:{}
    options:{
      .cropRect = CGRectMake(0, 0, 40, 40),
