@@ -18,7 +18,8 @@
 // This is the Hash128to64 function from Google's cityhash (available
 // under the MIT License).  We use it to reduce multiple 64 bit hashes
 // into a single hash.
-inline uint64_t CKHashCombine(const uint64_t upper, const uint64_t lower) {
+inline uint64_t CKHashCombine(const uint64_t upper, const uint64_t lower)
+{
   // Murmur-inspired hashing.
   const uint64_t kMul = 0x9ddfea08eb382d69ULL;
   uint64_t a = (lower ^ upper) * kMul;
@@ -30,12 +31,14 @@ inline uint64_t CKHashCombine(const uint64_t upper, const uint64_t lower) {
 }
 
 #if __LP64__
-inline size_t CKHash64ToNative(uint64_t key) {
+inline size_t CKHash64ToNative(uint64_t key)
+{
   return key;
 }
 #else
 // Thomas Wang downscaling hash function
-inline size_t CKHash64ToNative(uint64_t key) {
+inline size_t CKHash64ToNative(uint64_t key)
+{
   key = (~key) + (key << 18);
   key = key ^ (key >> 31);
   key = key * 21;
@@ -59,7 +62,7 @@ namespace CK {
 
   // Default isn't hashable.
   template <typename T, typename = void>
-  struct is_std_hashable : std::false_type {};
+  struct is_std_hashable : std::false_type { };
 
   // Conditionally enable when T is hashable by std::hash.
   template <typename T>
@@ -84,7 +87,8 @@ namespace CK {
   // For objc types, call [o hash]
   template <typename T>
   struct hash<T, typename std::enable_if<is_objc_class<T>::value>::type> {
-    size_t operator()(T a) {
+    inline size_t operator()(T a)
+    {
       return [a hash];
     }
   };
@@ -93,7 +97,7 @@ namespace CK {
   // when T is hashable. This stubs in for that.
   template <typename T>
   struct hash<T, typename std::enable_if<is_iterable<T>::value>::type> {
-    size_t operator()(const T &a)
+    __attribute__((noinline)) size_t operator()(const T &a)
     {
       uint64_t value = 0;
       for (const auto elem : a) {
@@ -105,7 +109,8 @@ namespace CK {
 
   // Hash definitions for common Cocoa structs.
   template<> struct hash<CGPoint> {
-    size_t operator()(const CGPoint &a) {
+    __attribute__((noinline)) size_t operator()(const CGPoint &a)
+    {
       uint64_t value = 0;
       value = CKHashCombine(value, hash<CGFloat>()(a.x));
       value = CKHashCombine(value, hash<CGFloat>()(a.y));
@@ -113,7 +118,8 @@ namespace CK {
     }
   };
   template<> struct hash<CGSize> {
-    size_t operator()(const CGSize &a) {
+    __attribute__((noinline)) size_t operator()(const CGSize &a)
+    {
       uint64_t value = 0;
       value = CKHashCombine(value, hash<CGFloat>()(a.width));
       value = CKHashCombine(value, hash<CGFloat>()(a.height));
@@ -121,7 +127,8 @@ namespace CK {
     }
   };
   template<> struct hash<CGRect> {
-    size_t operator()(const CGRect &a) {
+    __attribute__((noinline)) size_t operator()(const CGRect &a)
+    {
       uint64_t value = 0;
       value = CKHashCombine(value, hash<CGPoint>()(a.origin));
       value = CKHashCombine(value, hash<CGSize>()(a.size));
@@ -129,7 +136,8 @@ namespace CK {
     }
   };
   template<> struct hash<UIEdgeInsets> {
-    size_t operator()(const UIEdgeInsets &a) {
+    __attribute__((noinline)) size_t operator()(const UIEdgeInsets &a)
+    {
       uint64_t value = 0;
       value = CKHashCombine(value, hash<CGFloat>()(a.top));
       value = CKHashCombine(value, hash<CGFloat>()(a.left));
@@ -139,7 +147,8 @@ namespace CK {
     }
   };
   template<> struct hash<CGAffineTransform> {
-    size_t operator()(const CGAffineTransform &a) {
+    __attribute__((noinline)) size_t operator()(const CGAffineTransform &a)
+    {
       uint64_t value = 0;
       value = CKHashCombine(value, hash<CGFloat>()(a.a));
       value = CKHashCombine(value, hash<CGFloat>()(a.b));
@@ -151,7 +160,8 @@ namespace CK {
     }
   };
   template<> struct hash<CATransform3D> {
-    size_t operator()(const CATransform3D &a) {
+    __attribute__((noinline)) size_t operator()(const CATransform3D &a)
+    {
       uint64_t value = 0;
       value = CKHashCombine(value, hash<CGFloat>()(a.m11));
       value = CKHashCombine(value, hash<CGFloat>()(a.m12));
@@ -177,48 +187,55 @@ namespace CK {
 
   // For non-objc types use == operator
   template <typename T> struct is_equal<T, typename std::enable_if<!is_objc_class<T>::value>::type> {
-    bool operator ()(const T& a, const T& b) {
+    inline bool operator ()(const T& a, const T& b)
+    {
       return a == b;
     }
   };
 
   // For objc types, check pointer equality, then use -isEqual:
   template <typename T> struct is_equal<T, typename std::enable_if<is_objc_class<T>::value>::type> {
-    bool operator ()(id a, id b) {
+    inline bool operator ()(id a, id b)
+    {
       return a == b || [a isEqual:b];
     }
   };
 
   // Equals definitions for common Cocoa structs.
   template<> struct is_equal<CGFloat> {
-    bool operator ()(const CGFloat &a, const CGFloat &b) {
+    inline bool operator ()(const CGFloat &a, const CGFloat &b)
+    {
       return a == b;
     }
   };
 
   template<> struct is_equal<CGPoint> {
-    bool operator ()(const CGPoint &a, const CGPoint &b) {
+    inline bool operator ()(const CGPoint &a, const CGPoint &b)
+    {
       return (is_equal<CGFloat>()(a.x, b.x) &&
               is_equal<CGFloat>()(a.y, b.y));
     }
   };
 
   template<> struct is_equal<CGSize> {
-    bool operator ()(const CGSize &a, const CGSize &b) {
+    inline bool operator ()(const CGSize &a, const CGSize &b)
+    {
       return (is_equal<CGFloat>()(a.width, b.width) &&
               is_equal<CGFloat>()(a.height, b.height));
     }
   };
 
   template<> struct is_equal<CGRect> {
-    bool operator ()(const CGRect &a, const CGRect &b) {
+    inline bool operator ()(const CGRect &a, const CGRect &b)
+    {
       return (is_equal<CGPoint>()(a.origin, b.origin) &&
               is_equal<CGSize>()(a.size, b.size));
     }
   };
 
   template<> struct is_equal<UIEdgeInsets> {
-    bool operator ()(const UIEdgeInsets &a, const UIEdgeInsets &b) {
+    inline bool operator ()(const UIEdgeInsets &a, const UIEdgeInsets &b)
+    {
       return (is_equal<CGFloat>()(a.top, b.top) &&
               is_equal<CGFloat>()(a.left, b.left) &&
               is_equal<CGFloat>()(a.bottom, b.bottom) &&
@@ -227,7 +244,8 @@ namespace CK {
   };
 
   template<> struct is_equal<CGAffineTransform> {
-    bool operator ()(const CGAffineTransform &a, const CGAffineTransform &b) {
+    __attribute__((noinline)) bool operator ()(const CGAffineTransform &a, const CGAffineTransform &b)
+    {
       return (is_equal<CGFloat>()(a.a, b.a) &&
               is_equal<CGFloat>()(a.b, b.b) &&
               is_equal<CGFloat>()(a.c, b.c) &&
@@ -238,7 +256,8 @@ namespace CK {
   };
 
   template<> struct is_equal<CATransform3D> {
-    bool operator ()(const CATransform3D &a, const CATransform3D &b) {
+    __attribute__((noinline)) bool operator ()(const CATransform3D &a, const CATransform3D &b)
+    {
       return (is_equal<CGFloat>()(a.m11, b.m11) &&
               is_equal<CGFloat>()(a.m12, b.m12) &&
               is_equal<CGFloat>()(a.m13, b.m13) &&

@@ -29,22 +29,22 @@ namespace CK {
      */
     struct ValueBase
     {
-      ValueBase(std::string typeName) : _typeName(typeName) {}
+      __attribute__((noinline)) explicit ValueBase(const char *typeName) : _typeName(typeName) {}
       ValueBase(const ValueBase &) = delete;
-      ~ValueBase() {}
+      __attribute__ ((noinline)) virtual ~ValueBase() {}
 
       virtual operator id() const = 0;
       virtual size_t hash() const noexcept = 0;
       virtual BOOL isEqualTo(const ValueBase &) const = 0;
       virtual void performSetter(id object, SEL setter) const = 0;
 
-      const std::string typeName() const
+      const char *typeName() const
       {
         return _typeName;
       }
 
     protected:
-      const std::string _typeName;
+      const char *_typeName;
     };
 
     /**
@@ -154,22 +154,14 @@ namespace CK {
      Non-templated value wrappers to be used for component view attributes.
      */
     struct BoxedValue {
-      BoxedValue() : _value(std::make_shared<Value<id>>(nil)) {}
+      __attribute__((noinline)) BoxedValue() : _value(std::make_shared<Value<id>>(nil)) {}
 
       template <typename T, typename = typename std::enable_if<!std::is_convertible<T, id>::value>::type>
-      BoxedValue(const T &value) : _value(std::make_shared<Value<T>>(value)) {}
+      __attribute__((noinline)) BoxedValue(const T &value) : _value(std::make_shared<Value<T>>(value)) {}
 
-      BoxedValue(const id &value) : _value(std::make_shared<Value<id>>(value)) {}
+      __attribute__((noinline)) BoxedValue(id value) : _value(std::make_shared<Value<id>>(value)) {}
 
-      BoxedValue(const BoxedValue &other) : _value(other._value) {}
-
-      ~BoxedValue() {}
-
-      BoxedValue operator=(const BoxedValue &other)
-      {
-        _value = other._value;
-        return *this;
-      }
+      __attribute__((noinline)) ~BoxedValue() {}
 
       template <typename T, typename = typename std::enable_if<!std::is_convertible<T, id>::value>::type>
       operator T() const
