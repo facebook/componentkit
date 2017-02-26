@@ -81,6 +81,8 @@
 
   CKTransactionalComponentDataSourceChange *change = [updateStateModification changeFromState:originalState];
 
+  const auto stateUpdatesForItem = _pendingStateUpdates.find([[item scopeRoot] globalIdentifier]);
+  NSInteger globalIdentifier = (stateUpdatesForItem->second).begin()->first;
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChanges =
   [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:ip]
                                                                     removedIndexPaths:nil
@@ -88,7 +90,7 @@
                                                                       movedIndexPaths:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                                                             userInfo:@{@"updatedComponentIdentifier":@(globalIdentifier)}];
 
   XCTAssertEqualObjects([change appliedChanges], expectedAppliedChanges);
 }
