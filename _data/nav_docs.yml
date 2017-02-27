@@ -46,7 +46,6 @@
   - keep-controller-in-component
 - title: Infrastructure
   items:
-  - lifecycle-manager
   - component-hosting-view
 - title: Appendix
   items:
