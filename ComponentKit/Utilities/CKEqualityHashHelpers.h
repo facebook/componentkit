@@ -97,90 +97,37 @@ namespace CK {
   // when T is hashable. This stubs in for that.
   template <typename T>
   struct hash<T, typename std::enable_if<is_iterable<T>::value>::type> {
-    __attribute__((noinline)) size_t operator()(const T &a)
-    {
-      uint64_t value = 0;
-      for (const auto elem : a) {
-        value = CKHashCombine(value, hash<decltype(elem)>()(elem));
-      }
-      return CKHash64ToNative(value);
-    }
+    size_t operator()(const T &a);
   };
+
+  template <typename T>
+  size_t hash<T, typename std::enable_if<is_iterable<T>::value>::type>::operator()(const T &a)
+  {
+    uint64_t value = 0;
+    for (const auto elem : a) {
+      value = CKHashCombine(value, hash<decltype(elem)>()(elem));
+    }
+    return CKHash64ToNative(value);
+  }
 
   // Hash definitions for common Cocoa structs.
   template<> struct hash<CGPoint> {
-    __attribute__((noinline)) size_t operator()(const CGPoint &a)
-    {
-      uint64_t value = 0;
-      value = CKHashCombine(value, hash<CGFloat>()(a.x));
-      value = CKHashCombine(value, hash<CGFloat>()(a.y));
-      return CKHash64ToNative(value);
-    }
+    size_t operator()(const CGPoint &a);
   };
   template<> struct hash<CGSize> {
-    __attribute__((noinline)) size_t operator()(const CGSize &a)
-    {
-      uint64_t value = 0;
-      value = CKHashCombine(value, hash<CGFloat>()(a.width));
-      value = CKHashCombine(value, hash<CGFloat>()(a.height));
-      return CKHash64ToNative(value);
-    }
+    size_t operator()(const CGSize &a);
   };
   template<> struct hash<CGRect> {
-    __attribute__((noinline)) size_t operator()(const CGRect &a)
-    {
-      uint64_t value = 0;
-      value = CKHashCombine(value, hash<CGPoint>()(a.origin));
-      value = CKHashCombine(value, hash<CGSize>()(a.size));
-      return CKHash64ToNative(value);
-    }
+    size_t operator()(const CGRect &a);
   };
   template<> struct hash<UIEdgeInsets> {
-    __attribute__((noinline)) size_t operator()(const UIEdgeInsets &a)
-    {
-      uint64_t value = 0;
-      value = CKHashCombine(value, hash<CGFloat>()(a.top));
-      value = CKHashCombine(value, hash<CGFloat>()(a.left));
-      value = CKHashCombine(value, hash<CGFloat>()(a.bottom));
-      value = CKHashCombine(value, hash<CGFloat>()(a.right));
-      return CKHash64ToNative(value);
-    }
+    size_t operator()(const UIEdgeInsets &a);
   };
   template<> struct hash<CGAffineTransform> {
-    __attribute__((noinline)) size_t operator()(const CGAffineTransform &a)
-    {
-      uint64_t value = 0;
-      value = CKHashCombine(value, hash<CGFloat>()(a.a));
-      value = CKHashCombine(value, hash<CGFloat>()(a.b));
-      value = CKHashCombine(value, hash<CGFloat>()(a.c));
-      value = CKHashCombine(value, hash<CGFloat>()(a.d));
-      value = CKHashCombine(value, hash<CGFloat>()(a.tx));
-      value = CKHashCombine(value, hash<CGFloat>()(a.ty));
-      return CKHash64ToNative(value);
-    }
+    size_t operator()(const CGAffineTransform &a);
   };
   template<> struct hash<CATransform3D> {
-    __attribute__((noinline)) size_t operator()(const CATransform3D &a)
-    {
-      uint64_t value = 0;
-      value = CKHashCombine(value, hash<CGFloat>()(a.m11));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m12));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m13));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m14));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m21));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m22));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m23));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m24));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m31));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m32));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m33));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m34));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m41));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m42));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m43));
-      value = CKHashCombine(value, hash<CGFloat>()(a.m44));
-      return CKHash64ToNative(value);
-    }
+    size_t operator()(const CATransform3D &a);
   };
 
   template <typename T, typename Enable = void> struct is_equal;
@@ -244,37 +191,11 @@ namespace CK {
   };
 
   template<> struct is_equal<CGAffineTransform> {
-    __attribute__((noinline)) bool operator ()(const CGAffineTransform &a, const CGAffineTransform &b)
-    {
-      return (is_equal<CGFloat>()(a.a, b.a) &&
-              is_equal<CGFloat>()(a.b, b.b) &&
-              is_equal<CGFloat>()(a.c, b.c) &&
-              is_equal<CGFloat>()(a.d, b.d) &&
-              is_equal<CGFloat>()(a.tx, b.tx) &&
-              is_equal<CGFloat>()(a.ty, b.ty));
-    }
+    __attribute__((noinline)) bool operator ()(const CGAffineTransform &a, const CGAffineTransform &b);
   };
 
   template<> struct is_equal<CATransform3D> {
-    __attribute__((noinline)) bool operator ()(const CATransform3D &a, const CATransform3D &b)
-    {
-      return (is_equal<CGFloat>()(a.m11, b.m11) &&
-              is_equal<CGFloat>()(a.m12, b.m12) &&
-              is_equal<CGFloat>()(a.m13, b.m13) &&
-              is_equal<CGFloat>()(a.m14, b.m14) &&
-              is_equal<CGFloat>()(a.m21, b.m21) &&
-              is_equal<CGFloat>()(a.m22, b.m22) &&
-              is_equal<CGFloat>()(a.m23, b.m23) &&
-              is_equal<CGFloat>()(a.m24, b.m24) &&
-              is_equal<CGFloat>()(a.m31, b.m31) &&
-              is_equal<CGFloat>()(a.m32, b.m32) &&
-              is_equal<CGFloat>()(a.m33, b.m33) &&
-              is_equal<CGFloat>()(a.m34, b.m34) &&
-              is_equal<CGFloat>()(a.m41, b.m41) &&
-              is_equal<CGFloat>()(a.m42, b.m42) &&
-              is_equal<CGFloat>()(a.m43, b.m43) &&
-              is_equal<CGFloat>()(a.m44, b.m44));
-    }
+    bool operator ()(const CATransform3D &a, const CATransform3D &b);
   };
 };
 

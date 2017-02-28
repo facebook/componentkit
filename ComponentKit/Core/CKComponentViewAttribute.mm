@@ -59,8 +59,19 @@ applicator([=](UIView *view, CK::ViewAttribute::BoxedValue value) {
   value.performSetter(view, setter);
 }) {}
 
-// Explicit destructor to prevent inlining, reduce code size. See D1814602.
-CKComponentViewAttribute::~CKComponentViewAttribute() {}
+CKComponentViewAttribute::CKComponentViewAttribute(const std::string &ident, ApplicatorFunc app, ApplicatorFunc unapp, UpdaterFunc upd) :
+identifier(ident),
+applicator([=](id view, const CK::ViewAttribute::BoxedValue &value) {
+  app(view, value);
+}),
+unapplicator(unapp ? ApplicatorFunc([=](id view, const CK::ViewAttribute::BoxedValue &value) {
+  unapp(view, value);
+}) : ApplicatorFunc(nullptr)),
+updater(upd ? UpdaterFunc([=](id view, const CK::ViewAttribute::BoxedValue &oldValue, const CK::ViewAttribute::BoxedValue &newValue) {
+  upd(view, oldValue, newValue);
+}) : UpdaterFunc(nullptr)) {}
+
+CKComponentViewAttribute::~CKComponentViewAttribute() = default;
 
 CKComponentViewAttribute CKComponentViewAttribute::LayerAttribute(SEL setter) noexcept
 {
@@ -106,6 +117,27 @@ namespace CK {
       } else {
         return cachedInvocations->emplace(key, CachedSetter(nil, 0, nullptr)).first->second;
       }
+    }
+
+    ValueBase::ValueBase(const char *typeName) : _typeName(typeName) {}
+    ValueBase::~ValueBase() = default;
+
+    Value<id>::Value(const id &value) : ValueBase(typeid(Value<id>).name()), _value(value) {}
+    Value<id>::~Value() = default;
+
+    Value<id>::operator id() const
+    {
+      return _value;
+    }
+
+    size_t Value<id>::hash() const noexcept
+    {
+      return CK::hash<id>()(_value);
+    }
+
+    BOOL Value<id>::isEqualTo(const ValueBase &other) const
+    {
+      return this->typeName() == other.typeName() && CK::is_equal<id>()(_value, static_cast<const Value<id> &>(other)._value);
     }
 
     void CK::ViewAttribute::Value<id>::performSetter(id object, SEL setter) const
@@ -329,6 +361,40 @@ namespace CK {
     template<> Value<CATransform3D>::operator id() const
     {
       return [NSValue valueWithCATransform3D:_value];
+    }
+
+    BoxedValue::BoxedValue() : _value(std::make_shared<Value<id>>(nil)) {}
+    BoxedValue::BoxedValue(id value) : _value(std::make_shared<Value<id>>(value)) {}
+    BoxedValue::~BoxedValue() = default;
+
+    BoxedValue::operator id() const
+    {
+      id const idObject = *_value;
+      if (idObject != nonIDObject) {
+        return idObject;
+      }
+      CKCFailAssert(@"value isn't an ID type object.");
+      return nil;
+    }
+
+    size_t BoxedValue::hash() const noexcept
+    {
+      return _value->hash();
+    }
+
+    BOOL BoxedValue::operator==(const BoxedValue &other) const
+    {
+      return _value->isEqualTo(*other._value);
+    }
+
+    BOOL BoxedValue::operator!=(const BoxedValue &other) const
+    {
+      return !(*this == other);
+    }
+
+    void BoxedValue::performSetter(id object, SEL setter) const
+    {
+      _value->performSetter(object, setter);
     }
 
   }

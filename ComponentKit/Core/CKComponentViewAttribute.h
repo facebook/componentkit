@@ -29,9 +29,9 @@ namespace CK {
      */
     struct ValueBase
     {
-      __attribute__((noinline)) explicit ValueBase(const char *typeName) : _typeName(typeName) {}
+      explicit ValueBase(const char *typeName);
       ValueBase(const ValueBase &) = delete;
-      __attribute__ ((noinline)) virtual ~ValueBase() {}
+      virtual ~ValueBase();
 
       virtual operator id() const = 0;
       virtual size_t hash() const noexcept = 0;
@@ -52,74 +52,73 @@ namespace CK {
      */
     template<typename T> struct Value : ValueBase
     {
-      Value(const T &value) : ValueBase(typeid(Value<T>).name()), _value(value) {}
+      Value(const T &value);
       Value(const Value<T> &) = delete;
-      ~Value() {}
+      ~Value();
 
-      operator const T() const
-      {
-        return _value;
-      }
+      operator T() const;
+      operator id() const;
+      template<typename U> operator const Value<U>() const;
+      size_t hash() const noexcept;
+      BOOL isEqualTo(const ValueBase &other) const;
+      void performSetter(id object, SEL setter) const;
 
-      operator id() const
-      {
-        return nonIDObject;
-      }
-
-      template<typename U> operator const Value<U>() const
-      {
-        return Value<U>(_value);
-      }
-
-      size_t hash() const noexcept
-      {
-        return CK::hash<T>()(_value);
-      }
-
-      BOOL isEqualTo(const ValueBase &other) const
-      {
-        return this->typeName() == other.typeName() && CK::is_equal<T>()(_value, static_cast<const Value<T> &>(other)._value);
-      }
-
-      void performSetter(id object, SEL setter) const
-      {
-        const auto setterIMP = (void (*)(id, SEL, T))[object methodForSelector:setter];
-#if DEBUG
-        const auto setterSignature = [object methodSignatureForSelector:setter];
-        const std::string argumentType = [setterSignature getArgumentTypeAtIndex:2];
-        CKCAssert(argumentType.find(@encode(T)) != std::string::npos, @"Setter's argument and current value are of different types.");
-#endif
-        setterIMP(object, setter, _value);
-      }
 
     private:
       T _value;
     };
+
+    template<typename T> Value<T>::Value(const T &value) : ValueBase(typeid(Value<T>).name()), _value(value) {}
+    template<typename T> Value<T>::~Value() = default;
+
+    template<typename T> Value<T>::operator T() const
+    {
+      return _value;
+    }
+
+    template<typename T> Value<T>::operator id() const
+    {
+      return nonIDObject;
+    }
+
+    template<typename T> template<typename U> Value<T>::operator const Value<U>() const
+    {
+      return Value<U>(_value);
+    }
+
+    template<typename T> size_t Value<T>::hash() const noexcept
+    {
+      return CK::hash<T>()(_value);
+    }
+
+    template<typename T> BOOL Value<T>::isEqualTo(const ValueBase &other) const
+    {
+      return this->typeName() == other.typeName() && CK::is_equal<T>()(_value, static_cast<const Value<T> &>(other)._value);
+    }
+
+    template<typename T> void Value<T>::performSetter(id object, SEL setter) const
+    {
+      const auto setterIMP = (void (*)(id, SEL, T))[object methodForSelector:setter];
+#if DEBUG
+      const auto setterSignature = [object methodSignatureForSelector:setter];
+      const std::string argumentType = [setterSignature getArgumentTypeAtIndex:2];
+      CKCAssert(argumentType.find(@encode(T)) != std::string::npos, @"Setter's argument and current value are of different types.");
+#endif
+      setterIMP(object, setter, _value);
+    }
 
     /**
      Template specialization for ID types.
      */
     template<> struct Value<id> : ValueBase
     {
-      Value(const id &value) : ValueBase(typeid(Value<id>).name()), _value(value) {}
+      Value(const id &value);
       Value(const Value<id> &) = delete;
-      ~Value() {}
+      ~Value();
 
-      operator id() const
-      {
-        return _value;
-      }
-
-      size_t hash() const noexcept
-      {
-        return CK::hash<id>()(_value);
-      }
-
-      BOOL isEqualTo(const ValueBase &other) const
-      {
-        return this->typeName() == other.typeName() && CK::is_equal<id>()(_value, static_cast<const Value<id> &>(other)._value);
-      }
-
+      operator id() const;
+      size_t hash() const noexcept;
+      BOOL isEqualTo(const ValueBase &other) const;
       void performSetter(id object, SEL setter) const;
       
     private:
@@ -154,55 +153,35 @@ namespace CK {
      Non-templated value wrappers to be used for component view attributes.
      */
     struct BoxedValue {
-      __attribute__((noinline)) BoxedValue() : _value(std::make_shared<Value<id>>(nil)) {}
+      BoxedValue();
+      BoxedValue(id value);
+      ~BoxedValue();
 
       template <typename T, typename = typename std::enable_if<!std::is_convertible<T, id>::value>::type>
-      __attribute__((noinline)) BoxedValue(const T &value) : _value(std::make_shared<Value<T>>(value)) {}
-
-      __attribute__((noinline)) BoxedValue(id value) : _value(std::make_shared<Value<id>>(value)) {}
-
-      __attribute__((noinline)) ~BoxedValue() {}
+      BoxedValue(const T &value);
 
       template <typename T, typename = typename std::enable_if<!std::is_convertible<T, id>::value>::type>
-      operator T() const
-      {
-        return static_cast<const Value<T> &>(*_value);
-      }
+      operator T() const;
 
-      operator id() const
-      {
-        id const idObject = *_value;
-        if (idObject != nonIDObject) {
-          return idObject;
-        }
-        CKCFailAssert(@"value isn't an ID type object.");
-        return nil;
-      }
-
-      size_t hash() const noexcept
-      {
-        return _value->hash();
-      }
-
-      BOOL operator==(const BoxedValue &other) const
-      {
-        return _value->isEqualTo(*other._value);
-      }
-
-      BOOL operator!=(const BoxedValue &other) const
-      {
-        return !(*this == other);
-      }
-
-      void performSetter(id object, SEL setter) const
-      {
-        _value->performSetter(object, setter);
-      }
+      operator id() const;
+      size_t hash() const noexcept;
+      BOOL operator==(const BoxedValue &other) const;
+      BOOL operator!=(const BoxedValue &other) const;
+      void performSetter(id object, SEL setter) const;
 
     private:
       std::shared_ptr<ValueBase> _value;
     };
-    
+
+    template <typename T, typename>
+    BoxedValue::BoxedValue(const T &value) : _value(std::make_shared<Value<T>>(value)) {}
+
+    template <typename T, typename>
+    BoxedValue::operator T() const
+    {
+      return static_cast<const Value<T> &>(*_value);
+    }
+
   }
 }
 
@@ -252,18 +231,7 @@ struct CKComponentViewAttribute {
    |        |          | Updater is called if the attribute was previously applied and the value changes.              |
    |--------|----------|-----------------------------------------------------------------------------------------------|
    */
-  CKComponentViewAttribute(const std::string &ident, ApplicatorFunc app, ApplicatorFunc unapp = nullptr, UpdaterFunc upd = nullptr) :
-  identifier(ident),
-  applicator([=](id view, const CK::ViewAttribute::BoxedValue &value) {
-    app(view, value);
-  }),
-  unapplicator(unapp ? ApplicatorFunc([=](id view, const CK::ViewAttribute::BoxedValue &value) {
-    unapp(view, value);
-  }) : ApplicatorFunc(nullptr)),
-  updater(upd ? UpdaterFunc([=](id view, const CK::ViewAttribute::BoxedValue &oldValue, const CK::ViewAttribute::BoxedValue &newValue) {
-    upd(view, oldValue, newValue);
-  }) : UpdaterFunc(nullptr)) {}
-
+  CKComponentViewAttribute(const std::string &ident, ApplicatorFunc app, ApplicatorFunc unapp = nullptr, UpdaterFunc upd = nullptr);
   ~CKComponentViewAttribute();
 
   /**
