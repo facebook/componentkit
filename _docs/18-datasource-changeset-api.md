@@ -30,6 +30,7 @@ sections.insert(2);
 sections.insert(3);
 
 [datasource enqueueChangeset:{sections, items}];
+
 {% endhighlight %}
 
 Changes can also be created from `NSIndexPaths` :
@@ -38,6 +39,7 @@ Changes can also be created from `NSIndexPaths` :
 CKArrayControllerInputItems items;
 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForItem:0 inSection:0];
 items.insert({insertionIndexPath}, @"Hello");
+
 {% endhighlight %}
 
 You can even get rid of the brackets around the `NSIndexPath`, thanks to [C++ converting constructors](http://en.cppreference.com/w/cpp/language/converting_constructor) :
