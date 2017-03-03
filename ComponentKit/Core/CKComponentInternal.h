@@ -45,7 +45,6 @@
  Unmounts the component:
  - Clears the references to supercomponent and superview.
  - If the component has a _mountedView:
-   - Calls the unapplicator for any attributes that have one.
    - Clears the view's reference back to this component in ck_component.
    - Clears _mountedView.
  */
