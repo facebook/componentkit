@@ -49,8 +49,6 @@
 		03B8B49A1D2A346F00EDFF59 /* CKOverlayLayoutComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B4E1CBD926700BB33CE /* CKOverlayLayoutComponent.mm */; };
 		03B8B49B1D2A346F00EDFF59 /* CKRatioLayoutComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B501CBD926700BB33CE /* CKRatioLayoutComponent.mm */; };
 		03B8B49C1D2A346F00EDFF59 /* CKStackLayoutComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B521CBD926700BB33CE /* CKStackLayoutComponent.mm */; };
-		03B8B49D1D2A346F00EDFF59 /* CKStackPositionedLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B551CBD926700BB33CE /* CKStackPositionedLayout.mm */; };
-		03B8B49E1D2A346F00EDFF59 /* CKStackUnpositionedLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B571CBD926700BB33CE /* CKStackUnpositionedLayout.mm */; };
 		03B8B49F1D2A346F00EDFF59 /* CKStaticLayoutComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B591CBD926700BB33CE /* CKStaticLayoutComponent.mm */; };
 		03B8B4A01D2A346F00EDFF59 /* CKStatefulViewComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B5C1CBD926700BB33CE /* CKStatefulViewComponent.mm */; };
 		03B8B4A11D2A346F00EDFF59 /* CKStatefulViewComponentController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B5E1CBD926700BB33CE /* CKStatefulViewComponentController.mm */; };
@@ -112,8 +110,6 @@
 		03B8B4E21D2A346F00EDFF59 /* CKComponentHostingView.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B3D1CBD926700BB33CE /* CKComponentHostingView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4E31D2A346F00EDFF59 /* CKComponentAccessibility.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AC41CBD926700BB33CE /* CKComponentAccessibility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4E41D2A346F00EDFF59 /* CKComponentHostingViewInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B401CBD926700BB33CE /* CKComponentHostingViewInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		03B8B4E61D2A346F00EDFF59 /* CKStackLayoutComponentUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B531CBD926700BB33CE /* CKStackLayoutComponentUtilities.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		03B8B4E81D2A346F00EDFF59 /* CKStackUnpositionedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B561CBD926700BB33CE /* CKStackUnpositionedLayout.h */; };
 		03B8B4E91D2A346F00EDFF59 /* CKCenterLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B491CBD926700BB33CE /* CKCenterLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4EA1D2A346F00EDFF59 /* CKSupplementaryViewDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B171CBD926700BB33CE /* CKSupplementaryViewDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4EB1D2A346F00EDFF59 /* CKComponentDataSourceAttachControllerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B241CBD926700BB33CE /* CKComponentDataSourceAttachControllerInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -128,7 +124,6 @@
 		03B8B4F51D2A346F00EDFF59 /* CKTransactionalComponentDataSourceReloadModification.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B7B1CBD926700BB33CE /* CKTransactionalComponentDataSourceReloadModification.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B4F61D2A346F00EDFF59 /* CKComponentAnnouncerBaseInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B1B1CBD926700BB33CE /* CKComponentAnnouncerBaseInternal.h */; };
 		03B8B4F71D2A346F00EDFF59 /* CKTransactionalComponentDataSourceStateModifying.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B7D1CBD926700BB33CE /* CKTransactionalComponentDataSourceStateModifying.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		03B8B4F91D2A346F00EDFF59 /* CKStackPositionedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B541CBD926700BB33CE /* CKStackPositionedLayout.h */; };
 		03B8B4FA1D2A346F00EDFF59 /* CKTextKitRenderer+TextChecking.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C561CBD92C200BB33CE /* CKTextKitRenderer+TextChecking.h */; };
 		03B8B4FB1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceState.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B731CBD926700BB33CE /* CKTransactionalComponentDataSourceState.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B4FC1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B701CBD926700BB33CE /* CKTransactionalComponentDataSourceListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -309,6 +304,14 @@
 		39B090BF1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */; };
 		497824751BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 497824741BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm */; };
 		49FA174E1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49FA174D1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm */; };
+		7F8DDAF81E68EFC1007CE033 /* CKStackLayoutComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B521CBD926700BB33CE /* CKStackLayoutComponent.mm */; };
+		7F8DDAF91E68EFC1007CE033 /* CKStackLayoutComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B521CBD926700BB33CE /* CKStackLayoutComponent.mm */; };
+		7F8DDB031E68F0FB007CE033 /* YGEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F8DDAFD1E68F0FB007CE033 /* YGEnums.h */; };
+		7F8DDB041E68F0FB007CE033 /* YGMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F8DDAFE1E68F0FB007CE033 /* YGMacros.h */; };
+		7F8DDB051E68F0FB007CE033 /* YGNodeList.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F8DDAFF1E68F0FB007CE033 /* YGNodeList.c */; };
+		7F8DDB061E68F0FB007CE033 /* YGNodeList.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F8DDB001E68F0FB007CE033 /* YGNodeList.h */; };
+		7F8DDB071E68F0FB007CE033 /* Yoga.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F8DDB011E68F0FB007CE033 /* Yoga.c */; };
+		7F8DDB081E68F0FB007CE033 /* Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F8DDB021E68F0FB007CE033 /* Yoga.h */; };
 		824416C21E44E34600904340 /* CKDetectComponentScopeCollisionsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 824416B51E44E19300904340 /* CKDetectComponentScopeCollisionsTests.mm */; };
 		824416C31E44E34800904340 /* CKDetectComponentScopeCollisionsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 824416B51E44E19300904340 /* CKDetectComponentScopeCollisionsTests.mm */; };
 		906125EA1DFA49E600EE18ED /* CKAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 9092AE911DFA46D3009878B2 /* CKAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -424,8 +427,6 @@
 		D0B47CB21CBD943400BB33CE /* CKOverlayLayoutComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B4E1CBD926700BB33CE /* CKOverlayLayoutComponent.mm */; };
 		D0B47CB31CBD943400BB33CE /* CKRatioLayoutComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B501CBD926700BB33CE /* CKRatioLayoutComponent.mm */; };
 		D0B47CB41CBD943400BB33CE /* CKStackLayoutComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B521CBD926700BB33CE /* CKStackLayoutComponent.mm */; };
-		D0B47CB51CBD943400BB33CE /* CKStackPositionedLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B551CBD926700BB33CE /* CKStackPositionedLayout.mm */; };
-		D0B47CB61CBD943400BB33CE /* CKStackUnpositionedLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B571CBD926700BB33CE /* CKStackUnpositionedLayout.mm */; };
 		D0B47CB71CBD943400BB33CE /* CKStaticLayoutComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B591CBD926700BB33CE /* CKStaticLayoutComponent.mm */; };
 		D0B47CB81CBD943400BB33CE /* CKStatefulViewComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B5C1CBD926700BB33CE /* CKStatefulViewComponent.mm */; };
 		D0B47CB91CBD943400BB33CE /* CKStatefulViewComponentController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B5E1CBD926700BB33CE /* CKStatefulViewComponentController.mm */; };
@@ -535,9 +536,6 @@
 		D0B47D341CBD948E00BB33CE /* CKOverlayLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B4D1CBD926700BB33CE /* CKOverlayLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D351CBD948E00BB33CE /* CKRatioLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B4F1CBD926700BB33CE /* CKRatioLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D361CBD948E00BB33CE /* CKStackLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B511CBD926700BB33CE /* CKStackLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47D371CBD948E00BB33CE /* CKStackLayoutComponentUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B531CBD926700BB33CE /* CKStackLayoutComponentUtilities.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D0B47D381CBD948E00BB33CE /* CKStackPositionedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B541CBD926700BB33CE /* CKStackPositionedLayout.h */; };
-		D0B47D391CBD948E00BB33CE /* CKStackUnpositionedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B561CBD926700BB33CE /* CKStackUnpositionedLayout.h */; };
 		D0B47D3A1CBD948E00BB33CE /* CKStaticLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B581CBD926700BB33CE /* CKStaticLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D3B1CBD948E00BB33CE /* CKStatefulViewComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B5B1CBD926700BB33CE /* CKStatefulViewComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D3C1CBD948E00BB33CE /* CKStatefulViewComponentController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B5D1CBD926700BB33CE /* CKStatefulViewComponentController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -801,6 +799,12 @@
 		39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDataSourceAttachControllerTests.mm; sourceTree = "<group>"; };
 		497824741BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCollectionViewTransactionalDataSourceTests.mm; sourceTree = "<group>"; };
 		49FA174D1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceIntegrationTests.mm; sourceTree = "<group>"; };
+		7F8DDAFD1E68F0FB007CE033 /* YGEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YGEnums.h; path = Carthage/Checkouts/yoga/yoga/YGEnums.h; sourceTree = SOURCE_ROOT; };
+		7F8DDAFE1E68F0FB007CE033 /* YGMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YGMacros.h; path = Carthage/Checkouts/yoga/yoga/YGMacros.h; sourceTree = SOURCE_ROOT; };
+		7F8DDAFF1E68F0FB007CE033 /* YGNodeList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = YGNodeList.c; path = Carthage/Checkouts/yoga/yoga/YGNodeList.c; sourceTree = SOURCE_ROOT; };
+		7F8DDB001E68F0FB007CE033 /* YGNodeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YGNodeList.h; path = Carthage/Checkouts/yoga/yoga/YGNodeList.h; sourceTree = SOURCE_ROOT; };
+		7F8DDB011E68F0FB007CE033 /* Yoga.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Yoga.c; path = Carthage/Checkouts/yoga/yoga/Yoga.c; sourceTree = SOURCE_ROOT; };
+		7F8DDB021E68F0FB007CE033 /* Yoga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Yoga.h; path = Carthage/Checkouts/yoga/yoga/Yoga.h; sourceTree = SOURCE_ROOT; };
 		824416B51E44E19300904340 /* CKDetectComponentScopeCollisionsTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDetectComponentScopeCollisionsTests.mm; sourceTree = "<group>"; };
 		9092AE911DFA46D3009878B2 /* CKAvailability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAvailability.h; sourceTree = "<group>"; };
 		991DE3401B3B308900AA05B2 /* CKComponentMemoizerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentMemoizerTests.mm; sourceTree = "<group>"; };
@@ -986,11 +990,6 @@
 		D0B47B501CBD926700BB33CE /* CKRatioLayoutComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRatioLayoutComponent.mm; sourceTree = "<group>"; };
 		D0B47B511CBD926700BB33CE /* CKStackLayoutComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStackLayoutComponent.h; sourceTree = "<group>"; };
 		D0B47B521CBD926700BB33CE /* CKStackLayoutComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStackLayoutComponent.mm; sourceTree = "<group>"; };
-		D0B47B531CBD926700BB33CE /* CKStackLayoutComponentUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStackLayoutComponentUtilities.h; sourceTree = "<group>"; };
-		D0B47B541CBD926700BB33CE /* CKStackPositionedLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStackPositionedLayout.h; sourceTree = "<group>"; };
-		D0B47B551CBD926700BB33CE /* CKStackPositionedLayout.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStackPositionedLayout.mm; sourceTree = "<group>"; };
-		D0B47B561CBD926700BB33CE /* CKStackUnpositionedLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStackUnpositionedLayout.h; sourceTree = "<group>"; };
-		D0B47B571CBD926700BB33CE /* CKStackUnpositionedLayout.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStackUnpositionedLayout.mm; sourceTree = "<group>"; };
 		D0B47B581CBD926700BB33CE /* CKStaticLayoutComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStaticLayoutComponent.h; sourceTree = "<group>"; };
 		D0B47B591CBD926700BB33CE /* CKStaticLayoutComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStaticLayoutComponent.mm; sourceTree = "<group>"; };
 		D0B47B5B1CBD926700BB33CE /* CKStatefulViewComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStatefulViewComponent.h; sourceTree = "<group>"; };
@@ -1209,6 +1208,19 @@
 			path = StatefulViews;
 			sourceTree = "<group>";
 		};
+		7F8DDAFC1E68F0E7007CE033 /* yoga */ = {
+			isa = PBXGroup;
+			children = (
+				7F8DDAFD1E68F0FB007CE033 /* YGEnums.h */,
+				7F8DDAFE1E68F0FB007CE033 /* YGMacros.h */,
+				7F8DDAFF1E68F0FB007CE033 /* YGNodeList.c */,
+				7F8DDB001E68F0FB007CE033 /* YGNodeList.h */,
+				7F8DDB011E68F0FB007CE033 /* Yoga.c */,
+				7F8DDB021E68F0FB007CE033 /* Yoga.h */,
+			);
+			name = yoga;
+			sourceTree = "<group>";
+		};
 		A273801B1AFD144100E6F222 /* ComponentKitTestHelpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1394,6 +1406,7 @@
 		D0B47AC21CBD926700BB33CE /* ComponentKit */ = {
 			isa = PBXGroup;
 			children = (
+				7F8DDAFC1E68F0E7007CE033 /* yoga */,
 				D0B47ACB1CBD926700BB33CE /* ComponentKit.h */,
 				D0B47B451CBD926700BB33CE /* Info.plist */,
 				D0B47D7D1CBD9C6600BB33CE /* ComponentKit.xcconfig */,
@@ -1596,11 +1609,6 @@
 				D0B47B501CBD926700BB33CE /* CKRatioLayoutComponent.mm */,
 				D0B47B511CBD926700BB33CE /* CKStackLayoutComponent.h */,
 				D0B47B521CBD926700BB33CE /* CKStackLayoutComponent.mm */,
-				D0B47B531CBD926700BB33CE /* CKStackLayoutComponentUtilities.h */,
-				D0B47B541CBD926700BB33CE /* CKStackPositionedLayout.h */,
-				D0B47B551CBD926700BB33CE /* CKStackPositionedLayout.mm */,
-				D0B47B561CBD926700BB33CE /* CKStackUnpositionedLayout.h */,
-				D0B47B571CBD926700BB33CE /* CKStackUnpositionedLayout.mm */,
 				D0B47B581CBD926700BB33CE /* CKStaticLayoutComponent.h */,
 				D0B47B591CBD926700BB33CE /* CKStaticLayoutComponent.mm */,
 			);
@@ -1854,8 +1862,6 @@
 				03B8B4E31D2A346F00EDFF59 /* CKComponentAccessibility.h in Headers */,
 				03B8B4E41D2A346F00EDFF59 /* CKComponentHostingViewInternal.h in Headers */,
 				2DA523991DCA8CA0007EF261 /* CKComponentBacktraceDescription.h in Headers */,
-				03B8B4E61D2A346F00EDFF59 /* CKStackLayoutComponentUtilities.h in Headers */,
-				03B8B4E81D2A346F00EDFF59 /* CKStackUnpositionedLayout.h in Headers */,
 				03B8B4E91D2A346F00EDFF59 /* CKCenterLayoutComponent.h in Headers */,
 				03B8B4EA1D2A346F00EDFF59 /* CKSupplementaryViewDataSource.h in Headers */,
 				03B8B4EB1D2A346F00EDFF59 /* CKComponentDataSourceAttachControllerInternal.h in Headers */,
@@ -1872,7 +1878,6 @@
 				03B8B4F61D2A346F00EDFF59 /* CKComponentAnnouncerBaseInternal.h in Headers */,
 				2D7A98171DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h in Headers */,
 				03B8B4F71D2A346F00EDFF59 /* CKTransactionalComponentDataSourceStateModifying.h in Headers */,
-				03B8B4F91D2A346F00EDFF59 /* CKStackPositionedLayout.h in Headers */,
 				03B8B4FA1D2A346F00EDFF59 /* CKTextKitRenderer+TextChecking.h in Headers */,
 				03B8B4FB1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceState.h in Headers */,
 				03B8B4FC1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceListener.h in Headers */,
@@ -2007,9 +2012,7 @@
 				D0B47D2B1CBD948E00BB33CE /* CKComponentHostingView.h in Headers */,
 				D0B47CE51CBD948E00BB33CE /* CKComponentAccessibility.h in Headers */,
 				D0B47D2D1CBD948E00BB33CE /* CKComponentHostingViewInternal.h in Headers */,
-				D0B47D371CBD948E00BB33CE /* CKStackLayoutComponentUtilities.h in Headers */,
 				B1EF8FE81DD1562B00E74F43 /* CKComponentActionInternal.h in Headers */,
-				D0B47D391CBD948E00BB33CE /* CKStackUnpositionedLayout.h in Headers */,
 				D0B47D321CBD948E00BB33CE /* CKCenterLayoutComponent.h in Headers */,
 				D0B47D151CBD948E00BB33CE /* CKSupplementaryViewDataSource.h in Headers */,
 				D0B47D1C1CBD948E00BB33CE /* CKComponentDataSourceAttachControllerInternal.h in Headers */,
@@ -2024,20 +2027,22 @@
 				D0B47D4C1CBD948E00BB33CE /* CKTransactionalComponentDataSourceReloadModification.h in Headers */,
 				D0B47D171CBD948E00BB33CE /* CKComponentAnnouncerBaseInternal.h in Headers */,
 				D0B47D4D1CBD948E00BB33CE /* CKTransactionalComponentDataSourceStateModifying.h in Headers */,
-				D0B47D381CBD948E00BB33CE /* CKStackPositionedLayout.h in Headers */,
 				D0B47D6B1CBD948E00BB33CE /* CKTextKitRenderer+TextChecking.h in Headers */,
 				D0B47D481CBD948E00BB33CE /* CKTransactionalComponentDataSourceState.h in Headers */,
 				D0B47D461CBD948E00BB33CE /* CKTransactionalComponentDataSourceListener.h in Headers */,
+				7F8DDB041E68F0FB007CE033 /* YGMacros.h in Headers */,
 				D0B47D3E1CBD948E00BB33CE /* CKTransactionalComponentDataSource.h in Headers */,
 				D0B47D471CBD948E00BB33CE /* CKTransactionalComponentDataSourceListenerAnnouncer.h in Headers */,
 				D0B47D441CBD948E00BB33CE /* CKTransactionalComponentDataSourceItem.h in Headers */,
 				D0B47D491CBD948E00BB33CE /* CKTransactionalComponentDataSourceStateInternal.h in Headers */,
+				7F8DDB061E68F0FB007CE033 /* YGNodeList.h in Headers */,
 				D0B47D581CBD948E00BB33CE /* CKComponentGestureActionsInternal.h in Headers */,
 				D0B47D341CBD948E00BB33CE /* CKOverlayLayoutComponent.h in Headers */,
 				EB14A3411D8267DF0004BECF /* CKAutoSizedImageComponent.h in Headers */,
 				D0B47D571CBD948E00BB33CE /* CKComponentGestureActions.h in Headers */,
 				D0B47D5D1CBD948E00BB33CE /* CKOptimisticViewMutations.h in Headers */,
 				D0B47D521CBD948E00BB33CE /* CKComponentAction.h in Headers */,
+				7F8DDB031E68F0FB007CE033 /* YGEnums.h in Headers */,
 				D0B47D4E1CBD948E00BB33CE /* CKTransactionalComponentDataSourceUpdateConfigurationModification.h in Headers */,
 				D0B47D551CBD948E00BB33CE /* CKComponentDelegateAttribute.h in Headers */,
 				D0B47D5A1CBD948E00BB33CE /* CKInternalHelpers.h in Headers */,
@@ -2114,6 +2119,7 @@
 				D0B47D0B1CBD948E00BB33CE /* CKComponentScopeFrame.h in Headers */,
 				D0B47CF51CBD948E00BB33CE /* CKComponentInternal.h in Headers */,
 				D0B47D6D1CBD948E00BB33CE /* CKTextKitRendererCache.h in Headers */,
+				7F8DDB081E68F0FB007CE033 /* Yoga.h in Headers */,
 				D0B47D751CBD948E00BB33CE /* CKAsyncTransactionContainer+Private.h in Headers */,
 				D0B47CFD1CBD948E00BB33CE /* CKComponentSubclass.h in Headers */,
 				D0B47D6F1CBD948E00BB33CE /* CKTextKitTailTruncater.h in Headers */,
@@ -2550,8 +2556,6 @@
 				03B8B49B1D2A346F00EDFF59 /* CKRatioLayoutComponent.mm in Sources */,
 				EB14A3441D8267DF0004BECF /* CKAutoSizedImageComponent.mm in Sources */,
 				03B8B49C1D2A346F00EDFF59 /* CKStackLayoutComponent.mm in Sources */,
-				03B8B49D1D2A346F00EDFF59 /* CKStackPositionedLayout.mm in Sources */,
-				03B8B49E1D2A346F00EDFF59 /* CKStackUnpositionedLayout.mm in Sources */,
 				03B8B49F1D2A346F00EDFF59 /* CKStaticLayoutComponent.mm in Sources */,
 				03B8B4A01D2A346F00EDFF59 /* CKStatefulViewComponent.mm in Sources */,
 				03B8B4A11D2A346F00EDFF59 /* CKStatefulViewComponentController.mm in Sources */,
@@ -2660,6 +2664,7 @@
 			files = (
 				2D8270FB1E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm in Sources */,
 				A273801F1AFD144100E6F222 /* CKTestActionComponent.mm in Sources */,
+				7F8DDAF81E68EFC1007CE033 /* CKStackLayoutComponent.mm in Sources */,
 				2D8270F61E3F72DE008C1A26 /* CKTestRunLoopRunning.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2710,6 +2715,7 @@
 				A27436F71AE94FE300832359 /* CKTransactionalComponentDataSourceReloadModificationTests.mm in Sources */,
 				B342DC731AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm in Sources */,
 				49FA174E1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm in Sources */,
+				7F8DDAF91E68EFC1007CE033 /* CKStackLayoutComponent.mm in Sources */,
 				18644AE61B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm in Sources */,
 				A27C72751AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm in Sources */,
 				991DE3411B3B308900AA05B2 /* CKComponentMemoizerTests.mm in Sources */,
@@ -2797,10 +2803,9 @@
 				D0B47CB11CBD943400BB33CE /* CKInsetComponent.mm in Sources */,
 				D0B47CB21CBD943400BB33CE /* CKOverlayLayoutComponent.mm in Sources */,
 				D0B47CB31CBD943400BB33CE /* CKRatioLayoutComponent.mm in Sources */,
+				7F8DDB071E68F0FB007CE033 /* Yoga.c in Sources */,
 				D0B47CB41CBD943400BB33CE /* CKStackLayoutComponent.mm in Sources */,
-				D0B47CB51CBD943400BB33CE /* CKStackPositionedLayout.mm in Sources */,
 				EB14A3431D8267DF0004BECF /* CKAutoSizedImageComponent.mm in Sources */,
-				D0B47CB61CBD943400BB33CE /* CKStackUnpositionedLayout.mm in Sources */,
 				D0B47CB71CBD943400BB33CE /* CKStaticLayoutComponent.mm in Sources */,
 				D0B47CB81CBD943400BB33CE /* CKStatefulViewComponent.mm in Sources */,
 				D0B47CB91CBD943400BB33CE /* CKStatefulViewComponentController.mm in Sources */,
@@ -2846,6 +2851,7 @@
 				D0B47CDD1CBD943400BB33CE /* CKTextKitRendererCache.mm in Sources */,
 				D0B47CDE1CBD943400BB33CE /* CKTextKitShadower.mm in Sources */,
 				D0B47D7B1CBD94EC00BB33CE /* CKComponentDebugController.mm in Sources */,
+				7F8DDB051E68F0FB007CE033 /* YGNodeList.c in Sources */,
 				D0B47CDF1CBD943400BB33CE /* CKTextKitTailTruncater.mm in Sources */,
 				D0B47CE01CBD943400BB33CE /* CKAsyncLayer.mm in Sources */,
 				D0B47CE11CBD943400BB33CE /* CKAsyncTransaction.m in Sources */,
@@ -3119,6 +3125,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Checkouts/yoga";
 			};
 			name = Debug;
 		};
@@ -3158,6 +3165,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Checkouts/yoga";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
