@@ -99,6 +99,22 @@
 
 @end
 
+@interface CKTestObjectTarget : NSObject
+
+- (void)someMethod;
+
+@property (nonatomic, assign, readonly) BOOL calledSomeMethod;
+
+@end
+@implementation CKTestObjectTarget
+
+- (void)someMethod
+{
+  _calledSomeMethod = YES;
+}
+
+@end
+
 @interface CKTestControllerScopeActionComponentController : CKComponentController<CKTestControllerScopeActionComponent *>
 @end
 
@@ -424,6 +440,15 @@
   action.send(component);
 
   XCTAssertTrue(calledAction, @"Should have called the action on the test component");
+}
+
+- (void)testTargetSelectorActionCallsOnNormalNSObject
+{
+  CKTestObjectTarget *target =[CKTestObjectTarget new];
+  CKComponentAction action = CKComponentAction(CKTypedComponentAction<>(target, @selector(someMethod)));
+  action.send([CKComponent new]);
+
+  XCTAssertTrue(target.calledSomeMethod, @"Should have called the method on target");
 }
 
 @end
