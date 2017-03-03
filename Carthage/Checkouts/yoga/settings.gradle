@@ -1,3 +1,0 @@
-include ':yoga', ':yoga-layout'
-project(':yoga').projectDir = file('java')
-project(':yoga-layout').projectDir = file('android')
