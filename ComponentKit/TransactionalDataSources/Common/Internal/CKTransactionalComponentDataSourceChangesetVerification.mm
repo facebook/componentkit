@@ -35,13 +35,14 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
    This process ensures that the modified state represents the state the changeset will be eventually applied to.
    */
   NSMutableArray<NSNumber *> *sectionCounts = [sectionCountsWithModificationsFoldedIntoState(state, pendingAsynchronousModifications) mutableCopy];
+  NSArray *originalSectionCounts = [sectionCounts copy];
   __block BOOL invalidChangeFound = NO;
   // Updated items
-  [changeset.updatedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, id _Nonnull model, BOOL * _Nonnull stop) {
-    const NSInteger section = indexPath.section;
-    const NSInteger item = indexPath.item;
-    if (section >= sectionCounts.count
-        || item >= [sectionCounts[section] integerValue]
+  [changeset.updatedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull fromIndexPath, id _Nonnull model, BOOL * _Nonnull stop) {
+    const NSInteger section = fromIndexPath.section;
+    const NSInteger item = fromIndexPath.item;
+    if (section >= originalSectionCounts.count
+        || item >= [originalSectionCounts[section] integerValue]
         || section < 0
         || item < 0) {
       invalidChangeFound = YES;
@@ -57,12 +58,12 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
    As long as each item is located within the bounds of its section the changeset is valid.
    */
   NSMutableDictionary<NSNumber *, NSMutableIndexSet *> *itemsToRemove = [NSMutableDictionary new];
-  [changeset.removedItems enumerateObjectsUsingBlock:^(NSIndexPath *_Nonnull indexPath, BOOL * _Nonnull stop) {
-    const NSInteger section = indexPath.section;
-    const NSInteger item = indexPath.item;
+  [changeset.removedItems enumerateObjectsUsingBlock:^(NSIndexPath *_Nonnull fromIndexPath, BOOL * _Nonnull stop) {
+    const NSInteger section = fromIndexPath.section;
+    const NSInteger item = fromIndexPath.item;
     if (section >= sectionCounts.count
         || section < 0
-        || item >= [sectionCounts[section] integerValue]) {
+        || item >= [originalSectionCounts[section] integerValue]) {
       invalidChangeFound = YES;
       *stop = YES;
     } else {
@@ -85,12 +86,12 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
    As long as each section is located within the bounds of all sections the changeset is valid.
    */
   NSMutableIndexSet *sectionsToRemove = [NSMutableIndexSet indexSet];
-  [changeset.removedSections enumerateIndexesUsingBlock:^(NSUInteger section, BOOL * _Nonnull stop) {
-    if (section >= sectionCounts.count) {
+  [changeset.removedSections enumerateIndexesUsingBlock:^(NSUInteger fromSection, BOOL * _Nonnull stop) {
+    if (fromSection >= originalSectionCounts.count) {
       invalidChangeFound = YES;
       *stop = YES;
     } else {
-      [sectionsToRemove addIndex:section];
+      [sectionsToRemove addIndex:fromSection];
     }
   }];
   if (invalidChangeFound) {
@@ -103,12 +104,12 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
    Section counts may immediately reflect insertions as they are guaranteed to be contiguous by virtue of NSIndexSet.
    As long as each section is located within the bounds of all sections the changeset is valid.
    */
-  [changeset.insertedSections enumerateIndexesUsingBlock:^(NSUInteger section, BOOL * _Nonnull stop) {
-    if (section > sectionCounts.count) {
+  [changeset.insertedSections enumerateIndexesUsingBlock:^(NSUInteger toSection, BOOL * _Nonnull stop) {
+    if (toSection > sectionCounts.count) {
       invalidChangeFound = YES;
       *stop = YES;
     } else {
-      [sectionCounts insertObject:@0 atIndex:section];
+      [sectionCounts insertObject:@0 atIndex:toSection];
     }
   }];
   if (invalidChangeFound) {
@@ -119,9 +120,9 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
    Section counts may immediately reflect insertions as they are guaranteed to be contiguous by virtue of sorting the index paths.
    As long as each item is located within the bounds of its section the changeset is valid.
    */
-  [sortedIndexPaths(changeset.insertedItems.allKeys) enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, NSUInteger index, BOOL * _Nonnull stop) {
-    const NSInteger section = indexPath.section;
-    const NSInteger item = indexPath.item;
+  [sortedIndexPaths(changeset.insertedItems.allKeys) enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull toIndexPath, NSUInteger index, BOOL * _Nonnull stop) {
+    const NSInteger section = toIndexPath.section;
+    const NSInteger item = toIndexPath.item;
     if (section >= sectionCounts.count
         || section < 0
         || item > [sectionCounts[section] integerValue]) {
@@ -142,7 +143,7 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
       invalidChangeFound = YES;
       *stop = YES;
     } else {
-      const BOOL fromIndexPathItemInvalid = fromIndexPath.item >= [sectionCounts[fromIndexPath.section] integerValue];
+      const BOOL fromIndexPathItemInvalid = fromIndexPath.item >= [originalSectionCounts[fromIndexPath.section] integerValue];
       const BOOL toIndexPathItemInvalid = ((fromIndexPath.section == toIndexPath.section)
                                            ? toIndexPath.item >= [sectionCounts[toIndexPath.section] integerValue]
                                            : toIndexPath.item > [sectionCounts[toIndexPath.section] integerValue]);
