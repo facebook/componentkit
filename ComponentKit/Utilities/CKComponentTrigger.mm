@@ -32,7 +32,7 @@ void CKComponentTriggerTargetBase::resolve(const CKComponentScope &scope, SEL se
   _selector = selector;
 }
 
-CKComponentTriggerTargetBase::operator bool() const
+bool CKComponentTriggerTargetBase::isValid() const
 {
   return _resolved && _selector != nil && _scopeHandle;
 };
@@ -50,7 +50,7 @@ CKComponentTriggerBase::CKComponentTriggerBase(const CKComponentTriggerBase &oth
 
 CKComponentTriggerBase::~CKComponentTriggerBase()
 {
-  CKCAssert(!_validate || (_target != nullptr && (BOOL)*_target), @"Trigger was not resolved");
+  CKCAssert(!_validate || (_target != nullptr && _target->isValid()), @"Trigger was not resolved");
 }
 
 #pragma mark - Template instantiations

@@ -29,7 +29,7 @@ protected:
   CKComponentTriggerTargetBase();
   ~CKComponentTriggerTargetBase();
   void resolve(const CKComponentScope &scope, SEL selector);
-  explicit operator bool() const;
+  bool isValid() const;
 
   friend class CKComponentTriggerBase;
 };
