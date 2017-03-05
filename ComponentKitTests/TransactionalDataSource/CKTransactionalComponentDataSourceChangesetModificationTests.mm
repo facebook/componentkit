@@ -200,5 +200,25 @@
   XCTAssertEqualObjects(c.model, @0);
 }
 
+- (void)testMoveWithRemovals
+{
+  CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 4);
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withMovedItems:@{[NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0] }]
+    withRemovedItems:[NSSet setWithArray:@[[NSIndexPath indexPathForItem:1 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0]]]]
+   build];
+  CKTransactionalComponentDataSourceChangesetModification *changesetModification =
+  [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset
+                                                                       stateListener:nil
+                                                                            userInfo:nil];
+  CKTransactionalComponentDataSourceChange *change = [changesetModification changeFromState:originalState];
+
+  // Initial state: [0, 1, 2, 3], Final state: [3, 0]
+  auto c0 = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] layout].component;
+  auto c1 = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] layout].component;
+  XCTAssertEqualObjects(c0.model, @3);
+  XCTAssertEqualObjects(c1.model, @0);
+}
 
 @end
