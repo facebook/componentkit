@@ -20,7 +20,7 @@
 - (void)setUp
 {
   [super setUp];
-  self.recordMode = NO;
+//  self.recordMode = YES;
 }
 
 static UIImage *fakeImage()
@@ -35,10 +35,10 @@ static UIImage *fakeImage()
     CGContextRef ref = CGBitmapContextCreate(NULL, size.width, size.height, 8, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little);
     CGColorSpaceRelease(colorSpace);
 
-    CGContextSetAllowsAntialiasing(ref, YES);
+    CGContextSetAllowsAntialiasing(ref, true);
     CGContextSetInterpolationQuality(ref, kCGInterpolationHigh);
     CGContextSetFillColorWithColor(ref, [[UIColor redColor] CGColor]);
-    CGContextFillRect(ref, {{0,0}, {17, 17}});
+    CGContextFillRect(ref, {CGPointZero, size});
     CGImageRef im = CGBitmapContextCreateImage(ref);
     CGContextRelease(ref);
     fakeImage = [UIImage imageWithCGImage:im scale:1.0 orientation:UIImageOrientationUp];
@@ -61,7 +61,31 @@ static UIImage *fakeImage()
                                                attributes:{}
                                accessibilityConfiguration:{}];
   CKSizeRange size;
-  CKSnapshotVerifyComponent(b, size, nil);
+  CKSnapshotVerifyComponentAndIntrinsicSize(b, size, nil);
+}
+
+- (void)testButtonWithAttributedTitle
+{
+  NSDictionary *attributes = @{NSFontAttributeName: [UIFont fontWithName:@"Menlo" size:17.0f]};
+  NSMutableAttributedString *attributedTitle = [[NSMutableAttributedString alloc] initWithString:@"Hello World" attributes:attributes];
+  
+  [attributedTitle setAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Menlo-Bold" size:24.0f],
+                                   NSForegroundColorAttributeName: [UIColor greenColor]}
+                           range:NSMakeRange(6, 5)];
+  
+  CKButtonComponent *b = [CKButtonComponent newWithTitles:{{UIControlStateNormal, attributedTitle}}
+                                              titleColors:{}
+                                                   images:{}
+                                         backgroundImages:{}
+                                                titleFont:nil
+                                                 selected:NO
+                                                  enabled:YES
+                                                   action:{}
+                                                     size:{}
+                                               attributes:{}
+                               accessibilityConfiguration:{}];
+  CKSizeRange size;
+  CKSnapshotVerifyComponentAndIntrinsicSize(b, size, nil);
 }
 
 - (void)testButtonWithImage
@@ -78,7 +102,7 @@ static UIImage *fakeImage()
                                                attributes:{}
                                accessibilityConfiguration:{}];
   CKSizeRange size;
-  CKSnapshotVerifyComponent(b, size, nil);
+  CKSnapshotVerifyComponentAndIntrinsicSize(b, size, nil);
 }
 
 - (void)testButtonWithTitleAndImage
@@ -95,7 +119,30 @@ static UIImage *fakeImage()
                                                attributes:{}
                                accessibilityConfiguration:{}];
   CKSizeRange size;
-  CKSnapshotVerifyComponent(b, size, nil);
+  CKSnapshotVerifyComponentAndIntrinsicSize(b, size, nil);
+}
+
+- (void)testButtonWithAttributedTitleAndImage
+{
+  NSMutableAttributedString *attributedTitle = [[NSMutableAttributedString alloc] initWithString:@"Hello World" attributes:@{}];
+  
+  [attributedTitle setAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:12.0f weight:UIFontWeightLight],
+                                   NSForegroundColorAttributeName: [UIColor whiteColor]}
+                           range:NSMakeRange(6, 5)];
+  
+  CKButtonComponent *b = [CKButtonComponent newWithTitles:{{UIControlStateNormal, attributedTitle}}
+                                              titleColors:{}
+                                                   images:{{UIControlStateNormal, fakeImage()}}
+                                         backgroundImages:{}
+                                                titleFont:nil
+                                                 selected:NO
+                                                  enabled:YES
+                                                   action:{}
+                                                     size:{}
+                                               attributes:{}
+                               accessibilityConfiguration:{}];
+  CKSizeRange size;
+  CKSnapshotVerifyComponentAndIntrinsicSize(b, size, nil);
 }
 
 - (void)testButtonWithTitleAndImageAndContentEdgeInsets
@@ -113,7 +160,7 @@ static UIImage *fakeImage()
                                                attributes:{{@selector(setContentEdgeInsets:), insets}}
                                accessibilityConfiguration:{}];
   CKSizeRange size;
-  CKSnapshotVerifyComponent(b, size, nil);
+  CKSnapshotVerifyComponentAndIntrinsicSize(b, size, nil);
 }
 
 - (void)testButtonStates
@@ -139,7 +186,7 @@ static UIImage *fakeImage()
                                                           size:{}
                                                     attributes:{}
                                     accessibilityConfiguration:{}];
-  CKSnapshotVerifyComponent(normal, size, @"normal");
+  CKSnapshotVerifyComponentAndIntrinsicSize(normal, size, @"normal");
 
   CKButtonComponent *hi = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello"}}
                                                titleColors:titleColors
@@ -152,7 +199,7 @@ static UIImage *fakeImage()
                                                       size:{}
                                                 attributes:{{@selector(setHighlighted:), @YES}}
                                 accessibilityConfiguration:{}];
-  CKSnapshotVerifyComponent(hi, size, @"highlighted");
+  CKSnapshotVerifyComponentAndIntrinsicSize(hi, size, @"highlighted");
 
   CKButtonComponent *sel = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello"}}
                                                 titleColors:titleColors
@@ -165,7 +212,7 @@ static UIImage *fakeImage()
                                                        size:{}
                                                  attributes:{}
                                  accessibilityConfiguration:{}];
-  CKSnapshotVerifyComponent(sel, size, @"selected");
+  CKSnapshotVerifyComponentAndIntrinsicSize(sel, size, @"selected");
 
   CKButtonComponent *dis = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello"}}
                                                 titleColors:titleColors
@@ -178,7 +225,7 @@ static UIImage *fakeImage()
                                                        size:{}
                                                  attributes:{}
                                  accessibilityConfiguration:{}];
-  CKSnapshotVerifyComponent(dis, size, @"disabled");
+  CKSnapshotVerifyComponentAndIntrinsicSize(dis, size, @"disabled");
 
   CKButtonComponent *dissel = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello"}}
                                                    titleColors:titleColors
@@ -191,7 +238,7 @@ static UIImage *fakeImage()
                                                           size:{}
                                                     attributes:{}
                                     accessibilityConfiguration:{}];
-  CKSnapshotVerifyComponent(dissel, size, @"disabled_selected");
+  CKSnapshotVerifyComponentAndIntrinsicSize(dissel, size, @"disabled_selected");
 
   CKButtonComponent *selhi = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello"}}
                                                   titleColors:titleColors
@@ -204,7 +251,7 @@ static UIImage *fakeImage()
                                                          size:{}
                                                    attributes:{{@selector(setHighlighted:), @YES}}
                                    accessibilityConfiguration:{}];
-  CKSnapshotVerifyComponent(selhi, size, @"selected_highlighted");
+  CKSnapshotVerifyComponentAndIntrinsicSize(selhi, size, @"selected_highlighted");
 }
 
 @end

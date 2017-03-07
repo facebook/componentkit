@@ -53,14 +53,14 @@ static inline NSUInteger indexForState(UIControlState state)
 }
 
 struct CKStateConfiguration {
-  NSString *title;
+  CKButtonTitle title;
   UIColor *titleColor;
   UIImage *image;
   UIImage *backgroundImage;
 
   bool operator==(const CKStateConfiguration &other) const
   {
-    return CKObjectIsEqual(title, other.title)
+    return title == other.title
     && CKObjectIsEqual(titleColor, other.titleColor)
     && CKObjectIsEqual(image, other.image)
     && CKObjectIsEqual(backgroundImage, other.backgroundImage);
@@ -83,7 +83,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   CGSize _intrinsicSize;
 }
 
-+ (instancetype)newWithTitles:(const std::unordered_map<UIControlState, NSString *> &)titles
++ (instancetype)newWithTitles:(const std::unordered_map<UIControlState, CKButtonTitle> &)titles
                   titleColors:(const std::unordered_map<UIControlState, UIColor *> &)titleColors
                        images:(const std::unordered_map<UIControlState, UIImage *> &)images
              backgroundImages:(const std::unordered_map<UIControlState, UIImage *> &)backgroundImages
@@ -104,8 +104,11 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     ^(UIButton *view, CKButtonComponentConfiguration *config) {
       enumerateAllStates(^(UIControlState state) {
         const CKStateConfiguration &stateConfig = config->_configurations[indexForState(state)];
-        if (stateConfig.title) {
-          [view setTitle:stateConfig.title forState:state];
+        const CKButtonTitle title = stateConfig.title;
+        if (title.string) {
+          [view setTitle:title.string forState:state];
+        } else if (title.attributedString) {
+          [view setAttributedTitle:title.attributedString forState:state];
         }
         if (stateConfig.titleColor) {
           [view setTitleColor:stateConfig.titleColor forState:state];
@@ -124,8 +127,14 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
       enumerateAllStates(^(UIControlState state) {
         const CKStateConfiguration &oldStateConfig = oldConfig->_configurations[indexForState(state)];
         const CKStateConfiguration &newStateConfig = newConfig->_configurations[indexForState(state)];
-        if (!CKObjectIsEqual(oldStateConfig.title, newStateConfig.title)) {
-          [view setTitle:newStateConfig.title forState:state];
+        if (!(oldStateConfig.title == newStateConfig.title)) {
+          if (newStateConfig.title.string) {
+            [view setTitle:newStateConfig.title.string forState:state];
+            [view setAttributedTitle:nil forState:state];
+          } else if (newStateConfig.title.attributedString) {
+            [view setTitle:nil forState:state];
+            [view setAttributedTitle:newStateConfig.title.attributedString forState:state];
+          }
         }
         if (!CKObjectIsEqual(oldStateConfig.titleColor, newStateConfig.titleColor)) {
           [view setTitleColor:newStateConfig.titleColor forState:state];
@@ -166,15 +175,11 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
                           }
                           size:size];
 
-#if !TARGET_OS_TV
   UIControlState state = (selected ? UIControlStateSelected : UIControlStateNormal)
                        | (enabled ? UIControlStateNormal : UIControlStateDisabled);
   b->_intrinsicSize = intrinsicSize(valueForState(titles, state), titleFont, valueForState(images, state),
                                     valueForState(backgroundImages, state), contentEdgeInsets);
-#else
-  // intrinsicSize not available on tvOS (can't use `sizeWithFont`) so set to infinity
-  b->_intrinsicSize = {INFINITY, INFINITY};
-#endif // !TARGET_OS_TV
+
   return b;
 }
 
@@ -183,7 +188,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   return {self, constrainedSize.clamp(_intrinsicSize)};
 }
 
-static CKButtonComponentConfiguration *configurationFromValues(const std::unordered_map<UIControlState, NSString *> &titles,
+static CKButtonComponentConfiguration *configurationFromValues(const std::unordered_map<UIControlState, CKButtonTitle> &titles,
                                                                const std::unordered_map<UIControlState, UIColor *> &titleColors,
                                                                const std::unordered_map<UIControlState, UIImage *> &images,
                                                                const std::unordered_map<UIControlState, UIImage *> &backgroundImages)
@@ -193,7 +198,7 @@ static CKButtonComponentConfiguration *configurationFromValues(const std::unorde
   NSUInteger hash = 0;
   for (const auto it : titles) {
     configs[indexForState(it.first)].title = it.second;
-    hash ^= (it.first ^ [it.second hash]);
+    hash ^= (it.first ^ [(it.second.string ?: it.second.attributedString) hash]);
   }
   for (const auto it : titleColors) {
     configs[indexForState(it.first)].titleColor = it.second;
@@ -227,28 +232,40 @@ static T valueForState(const std::unordered_map<UIControlState, T> &m, UIControl
   return nil;
 }
 
-#if !TARGET_OS_TV // sizeWithFont is not available on tvOS
-static CGSize intrinsicSize(NSString *title, UIFont *titleFont, UIImage *image,
+static CGSize intrinsicSize(CKButtonTitle title, UIFont *titleFont, UIImage *image,
                             UIImage *backgroundImage, UIEdgeInsets contentEdgeInsets)
 {
-  // This computation is based on observing [UIButton -sizeThatFits:], which uses the deprecated method
-  // sizeWithFont in iOS 7 and iOS 8
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-  CGSize titleSize = [title sizeWithFont:titleFont ?: [UIFont systemFontOfSize:[UIFont buttonFontSize]]];
-#pragma clang diagnostic pop
-  CGSize imageSize = image.size;
-  CGSize contentSize = {
+  if (!titleFont)
+    titleFont = [UIFont systemFontOfSize:17.0f];
+  NSDictionary *attributes = @{NSFontAttributeName: titleFont};
+
+  const CGSize infiniteSize = CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX);
+  
+  CGSize titleSize = CGSizeZero;
+  if (title.attributedString.length) {
+    NSMutableAttributedString *attributedString = [title.attributedString mutableCopy];
+    [title.attributedString enumerateAttributesInRange:NSMakeRange(0, attributedString.length) options:0 usingBlock:^(NSDictionary<NSString *,id> *attrs, NSRange range, BOOL *stop) {
+      NSMutableDictionary *mergedAttributes = [attributes mutableCopy];
+      [mergedAttributes addEntriesFromDictionary:attrs];
+      [attributedString addAttributes:mergedAttributes range:range];
+    }];
+    titleSize = [attributedString boundingRectWithSize:infiniteSize options:NSStringDrawingUsesLineFragmentOrigin context:NULL].size;
+  } else if (title.string.length) {
+    titleSize = [title.string boundingRectWithSize:infiniteSize options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:NULL].size;
+  }
+  titleSize = CGSizeMake(ceil(titleSize.width), ceil(titleSize.height));
+  
+  const CGSize imageSize = image.size;
+  const CGSize contentSize = {
     titleSize.width + imageSize.width + contentEdgeInsets.left + contentEdgeInsets.right,
     MAX(titleSize.height, imageSize.height) + contentEdgeInsets.top + contentEdgeInsets.bottom
   };
-  CGSize backgroundImageSize = backgroundImage.size;
+  const CGSize backgroundImageSize = backgroundImage.size;
   return {
     MAX(backgroundImageSize.width, contentSize.width),
     MAX(backgroundImageSize.height, contentSize.height)
   };
 }
-#endif // !TARGET_OS_TV
 
 @end
 
