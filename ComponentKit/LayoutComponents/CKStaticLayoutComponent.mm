@@ -20,18 +20,18 @@
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
-                   children:(const std::vector<CKStaticLayoutComponentChild> &)children
+                   children:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
 {
   CKStaticLayoutComponent *c = [super newWithView:view size:size];
   if (c) {
-    c->_children = children;
+    c->_children = children.take();
   }
   return c;
 }
 
-+ (instancetype)newWithChildren:(const std::vector<CKStaticLayoutComponentChild> &)children
++ (instancetype)newWithChildren:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
 {
-  return [self newWithView:{} size:{} children:children];
+  return [self newWithView:{} size:{} children:std::move(children)];
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
