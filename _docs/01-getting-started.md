@@ -63,8 +63,4 @@ Run the app once more. Now it looks a lot better:
 
 <img src="/static/images/quote-tweaked.png" width="250" height="431" alt="FrostedQuoteComponent screenshot with spacing tweaked">
 
-Congratulations! You've done your first development with ComponentKit. Keep poking around the sample app to learn more, or start using it in your own apps. Just add the following to your Podfile:
-
-~~~
-pod 'ComponentKit', '~> 0.14'
-~~~
+Congratulations! You've done your first development with ComponentKit. Keep poking around the sample app to learn more, or start using it in your own apps.
