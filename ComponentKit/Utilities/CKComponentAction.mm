@@ -29,14 +29,13 @@ void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger inde
 bool CKTypedComponentActionBase::operator==(const CKTypedComponentActionBase& rhs) const
 {
   return (_variant == rhs._variant
-          && CKObjectIsEqual(_target, rhs._target)
-          && CKObjectIsEqual(_scopeHandle, rhs._scopeHandle)
+          && CKObjectIsEqual(_targetOrScopeHandle, rhs._targetOrScopeHandle)
           && _selector == rhs._selector);
 }
 
 CKComponentActionSendBehavior CKTypedComponentActionBase::defaultBehavior() const
 {
-  return (_variant == CKTypedComponentActionVariantRawSelector
+  return (_variant == CKTypedComponentActionVariant::RawSelector
           ? CKComponentActionSendBehaviorStartAtSenderNextResponder
           : CKComponentActionSendBehaviorStartAtSender);
 };
@@ -44,44 +43,30 @@ CKComponentActionSendBehavior CKTypedComponentActionBase::defaultBehavior() cons
 id CKTypedComponentActionBase::initialTarget(CKComponent *sender) const
 {
   switch (_variant) {
-    case CKTypedComponentActionVariantRawSelector:
+    case CKTypedComponentActionVariant::RawSelector:
       return sender;
-    case CKTypedComponentActionVariantTargetSelector:
-      return _target;
-    case CKTypedComponentActionVariantComponentScope:
-      return _scopeHandle.responder;
+    case CKTypedComponentActionVariant::TargetSelector:
+      return _targetOrScopeHandle;
+    case CKTypedComponentActionVariant::ComponentScope:
+      return ((CKComponentScopeHandle *) _targetOrScopeHandle).responder;
   }
 }
 
-CKTypedComponentActionBase::CKTypedComponentActionBase() noexcept : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(NULL) {}
+CKTypedComponentActionBase::CKTypedComponentActionBase() noexcept : _targetOrScopeHandle(nil), _variant(CKTypedComponentActionVariant::RawSelector), _selector(nullptr) {}
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) noexcept : _variant(CKTypedComponentActionVariantTargetSelector), _target(target), _scopeHandle(nil), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) noexcept : _targetOrScopeHandle(target), _variant(CKTypedComponentActionVariant::TargetSelector), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept : _variant(CKTypedComponentActionVariantComponentScope), _target(nil), _scopeHandle(scope.scopeHandle()), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept : _targetOrScopeHandle(scope.scopeHandle()), _variant(CKTypedComponentActionVariant::ComponentScope), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(selector) {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(int s) noexcept : CKTypedComponentActionBase() {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(long s) noexcept : CKTypedComponentActionBase() {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(std::nullptr_t n) noexcept : CKTypedComponentActionBase() {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : _targetOrScopeHandle(nil), _variant(CKTypedComponentActionVariant::RawSelector), _selector(selector) {};
 
 CKTypedComponentActionBase::operator bool() const noexcept { return _selector != NULL; };
-
-bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) const noexcept
-{
-  return (_variant == rhs._variant
-          && CKObjectIsEqual(_target, rhs._target)
-          && CKObjectIsEqual(_scopeHandle, rhs._scopeHandle)
-          && _selector == rhs._selector);
-};
 
 SEL CKTypedComponentActionBase::selector() const noexcept { return _selector; };
 
 std::string CKTypedComponentActionBase::identifier() const noexcept
 {
-  return std::string(sel_getName(_selector)) + "-" + std::to_string((long)(_target ?: _scopeHandle));
+  return std::string(sel_getName(_selector)) + "-" + std::to_string((long)(_targetOrScopeHandle));
 }
 
 #pragma mark - Sending
