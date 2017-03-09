@@ -28,6 +28,24 @@ outlined on that page and do not file a public issue.
 ## Coding Style
 * 2 spaces for indentation rather than tabs
 
+## Updating Testing Dependencies
+
+If you need a different version of one of the testing dependencies, you will need to first install `carthage`:
+
+```
+brew install carthage
+```
+
+Then, edit `Cartfile.private` to specify the [version](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#user-content-version-requirement) of the dependency you'd like to use.
+
+Finally, run
+
+```
+carthage update --use-submodules --platform iOS
+```
+
+to update the dependency to that version.
+
 ## License
 By contributing to ComponentKit, you agree that your contributions will be
 licensed under its BSD license.

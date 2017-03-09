@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -15,14 +15,11 @@
 
 #import "CKComponentSubclass.h"
 
-@interface CKBackgroundLayoutComponent ()
+@implementation CKBackgroundLayoutComponent
 {
   CKComponent *_component;
   CKComponent *_background;
 }
-@end
-
-@implementation CKBackgroundLayoutComponent
 
 + (instancetype)newWithComponent:(CKComponent *)component
                       background:(CKComponent *)background
@@ -31,8 +28,10 @@
     return nil;
   }
   CKBackgroundLayoutComponent *c = [super newWithView:{} size:{}];
-  c->_component = component;
-  c->_background = background;
+  if (c) {
+    c->_component = component;
+    c->_background = background;
+  }
   return c;
 }
 
@@ -54,15 +53,18 @@
 
   const CKComponentLayout contentsLayout = [_component layoutThatFits:constrainedSize parentSize:parentSize];
 
-  std::vector<CKComponentLayoutChild> children;
-  if (_background) {
-    // Size background to exactly the same size.
-    children.push_back({{0,0}, [_background layoutThatFits:{contentsLayout.size, contentsLayout.size}
-                                                parentSize:contentsLayout.size]});
-  }
-  children.push_back({{0,0}, contentsLayout});
-
-  return {self, contentsLayout.size, children};
+  return {
+    self,
+    contentsLayout.size,
+    _background
+    ? std::vector<CKComponentLayoutChild> {
+      {{0,0}, [_background layoutThatFits:{contentsLayout.size, contentsLayout.size} parentSize:contentsLayout.size]},
+      {{0,0}, contentsLayout},
+    }
+    : std::vector<CKComponentLayoutChild> {
+      {{0,0}, contentsLayout}
+    }
+  };
 }
 
 @end

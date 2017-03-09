@@ -3,18 +3,18 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKitTestLib/CKComponentSnapshotTestCase.h>
+#import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
-#import "CKBackgroundLayoutComponent.h"
-#import "CKCenterLayoutComponent.h"
-#import "CKStackLayoutComponent.h"
+#import <ComponentKit/CKBackgroundLayoutComponent.h>
+#import <ComponentKit/CKCenterLayoutComponent.h>
+#import <ComponentKit/CKStackLayoutComponent.h>
 
 static const CKSizeRange kSize = {{100, 120}, {320, 160}};
 
@@ -108,7 +108,7 @@ static NSString *suffixForCenteringOptions(CKCenterLayoutComponentCenteringOptio
          [CKComponent
           newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}}
           size:{10,10}],
-         .flexGrow = YES,
+         .flexGrow = 1,
        }
      }]
     background:

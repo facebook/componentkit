@@ -1,0 +1,9 @@
+[submodule "Carthage/Checkouts/ocmock"]
+	path = Carthage/Checkouts/ocmock
+	url = https://github.com/erikdoe/ocmock.git
+[submodule "Carthage/Checkouts/xcconfigs"]
+	path = Carthage/Checkouts/xcconfigs
+	url = https://github.com/jspahrsummers/xcconfigs.git
+[submodule "Carthage/Checkouts/ios-snapshot-test-case"]
+	path = Carthage/Checkouts/ios-snapshot-test-case
+	url = https://github.com/facebook/ios-snapshot-test-case.git

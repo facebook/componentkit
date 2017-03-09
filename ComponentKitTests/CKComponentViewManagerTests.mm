@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -12,8 +12,9 @@
 
 #import "ComponentViewManager.h"
 #import "ComponentViewReuseUtilities.h"
-#import "CKComponent.h"
-#import "CKComponentInternal.h"
+
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentInternal.h>
 
 using CK::Component::ViewManager;
 
@@ -151,9 +152,14 @@ static NSArray *arrayByPerformingBlock(NSArray *array, id (^block)(id))
   }
 }
 
+static UIView *imageViewFactory()
+{
+  return [[UIImageView alloc] init];
+}
+
 - (void)testThatGettingViewForViewComponentWithNilViewClassCallsClassMethodNewView
 {
-  CKComponentViewClass customClass("customimage", ^{ return [[UIImageView alloc] init]; });
+  CKComponentViewClass customClass(&imageViewFactory);
   CKComponent *testComponent = [CKComponent newWithView:{std::move(customClass), {}} size:{}];
   UIView *container = [[UIView alloc] init];
   CK::Component::ViewReuseUtilities::mountingInRootView(container);

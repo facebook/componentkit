@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -72,11 +72,12 @@
 
   if (truncationTokenRange.location == NSNotFound) {
     // The truncation string didn't specify a substring which should be highlighted, so we just highlight it all
-    truncationTokenRange = { 0, self.attributes.truncationAttributedString.length };
+    truncationTokenRange = { 0, truncationAttributedString.length };
   }
 
   truncationTokenRange.location += NSMaxRange(visibleRange);
 
+  __block CGFloat minDistance = CGFLOAT_MAX;
   [self enumerateTextIndexesAtPosition:point usingBlock:^(NSUInteger index, CGRect glyphBoundingRect, BOOL *stop){
     if (index >= truncationTokenRange.location) {
       result = [[CKTextKitTextCheckingResult alloc] initWithType:CKTextKitTextCheckingTypeTruncation
@@ -86,14 +87,13 @@
       NSRange range;
       NSDictionary *attributes = [attributedString attributesAtIndex:index effectiveRange:&range];
       CKTextKitEntityAttribute *entityAttribute = attributes[CKTextKitEntityAttributeName];
-      if (entityAttribute) {
+      CGFloat distance = hypot(CGRectGetMidX(glyphBoundingRect) - point.x, CGRectGetMidY(glyphBoundingRect) - point.y);
+      if (entityAttribute && distance < minDistance) {
         result = [[CKTextKitTextCheckingResult alloc] initWithType:CKTextKitTextCheckingTypeEntity
                                                    entityAttribute:entityAttribute
                                                              range:range];
+        minDistance = distance;
       }
-    }
-    if (result != nil) {
-      *stop = YES;
     }
   }];
   return result;

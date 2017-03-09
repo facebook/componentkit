@@ -11,11 +11,6 @@
 
 #import "SombreQuoteComponent.h"
 
-#import <ComponentKit/CKInsetComponent.h>
-#import <ComponentKit/CKStackLayoutComponent.h>
-
-#import <ComponentKit/CKLabelComponent.h>
-
 #import "QuoteWithBackgroundComponent.h"
 #import "QuoteContext.h"
 
@@ -45,7 +40,8 @@
                  viewAttributes:{
                    {@selector(setBackgroundColor:), [UIColor clearColor]},
                    {@selector(setUserInteractionEnabled:), @NO},
-                 }]},
+                 }
+                 size:{ }]},
                {lineComponent()},
              }]]]];;
 }

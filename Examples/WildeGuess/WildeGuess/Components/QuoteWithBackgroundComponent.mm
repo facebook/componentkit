@@ -11,8 +11,6 @@
 
 #import "QuoteWithBackgroundComponent.h"
 
-#import <ComponentKit/CKBackgroundLayoutComponent.h>
-
 @implementation QuoteWithBackgroundComponent
 
 + (instancetype)newWithBackgroundImage:(UIImage *)backgroundImage

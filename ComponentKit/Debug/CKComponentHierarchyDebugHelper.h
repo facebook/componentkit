@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -24,6 +24,6 @@
  find views which have a lifecycle manager, from which we can get the component layout hierarchies.
  @return A string with a description of the hierarchy.
  */
-+ (NSString *)componentHierarchyDescription;
++ (NSString *)componentHierarchyDescription NS_EXTENSION_UNAVAILABLE("Recursively describes components using -[UIApplication keyWindow]");
 
 @end

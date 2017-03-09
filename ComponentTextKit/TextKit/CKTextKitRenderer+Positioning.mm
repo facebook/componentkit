@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -27,9 +27,8 @@ static const CGFloat CKTextKitRendererTextCapHeightPadding = 1.3;
 {
   __block NSArray *textRects = @[];
   [self.context performBlockWithLockedTextKitComponents:^(NSLayoutManager *layoutManager, NSTextStorage *textStorage, NSTextContainer *textContainer) {
-    BOOL textRangeIsValid = (NSMaxRange(textRange) <= [textStorage length]);
-    CKCAssertTrue(textRangeIsValid);
-    if (!textRangeIsValid) {
+    NSRange clampedRange = NSIntersectionRange(textRange, NSMakeRange(0, [textStorage length]));
+    if (clampedRange.location == NSNotFound || clampedRange.length == 0) {
       return;
     }
 
@@ -41,7 +40,7 @@ static const CGFloat CKTextKitRendererTextCapHeightPadding = 1.3;
 
     NSString *string = textStorage.string;
 
-    NSRange totalGlyphRange = [layoutManager glyphRangeForCharacterRange:textRange actualCharacterRange:NULL];
+    NSRange totalGlyphRange = [layoutManager glyphRangeForCharacterRange:clampedRange actualCharacterRange:NULL];
 
     [layoutManager enumerateLineFragmentsForGlyphRange:totalGlyphRange usingBlock:^(CGRect rect,
                                                                                     CGRect usedRect,
@@ -358,7 +357,7 @@ static const CGFloat CKTextKitRendererTextCapHeightPadding = 1.3;
   [self.context performBlockWithLockedTextKitComponents:^(NSLayoutManager *layoutManager, NSTextStorage *textStorage, NSTextContainer *textContainer) {
     // Bail on invalid range.
     if (NSMaxRange(textRange) > [textStorage length]) {
-      CKFailAssert(@"Invalid range");
+      CKCFailAssert(@"Invalid range");
       return;
     }
 

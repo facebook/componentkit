@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -83,18 +83,22 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   CGSize _intrinsicSize;
 }
 
-+ (instancetype)newWithTitles:(const std::unordered_map<UIControlState, NSString *> &)titles
-                  titleColors:(const std::unordered_map<UIControlState, UIColor *> &)titleColors
-                       images:(const std::unordered_map<UIControlState, UIImage *> &)images
-             backgroundImages:(const std::unordered_map<UIControlState, UIImage *> &)backgroundImages
++ (instancetype)newWithTitles:(CKContainerWrapper<std::unordered_map<UIControlState, NSString *>> &&)titlesParam
+                  titleColors:(CKContainerWrapper<std::unordered_map<UIControlState, UIColor *>> &&)titleColorsParam
+                       images:(CKContainerWrapper<std::unordered_map<UIControlState, UIImage *>> &&)imagesParam
+             backgroundImages:(CKContainerWrapper<std::unordered_map<UIControlState, UIImage *>> &&)backgroundImagesParam
                     titleFont:(UIFont *)titleFont
                      selected:(BOOL)selected
                       enabled:(BOOL)enabled
-                       action:(CKComponentAction)action
+                       action:(const CKTypedComponentAction<UIEvent *> &)action
                          size:(const CKComponentSize &)size
                    attributes:(const CKViewComponentAttributeValueMap &)passedAttributes
    accessibilityConfiguration:(CKButtonComponentAccessibilityConfiguration)accessibilityConfiguration
 {
+  const auto titles = titlesParam.take();
+  const auto titleColors = titleColorsParam.take();
+  const auto images = imagesParam.take();
+  const auto backgroundImages = backgroundImagesParam.take();
   static const CKComponentViewAttribute titleFontAttribute = {"CKButtonComponent.titleFont", ^(UIButton *button, id value){
     button.titleLabel.font = value;
   }};
@@ -146,11 +150,8 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     {titleFontAttribute, titleFont},
     {@selector(setSelected:), @(selected)},
     {@selector(setEnabled:), @(enabled)},
-    {@selector(setAccessibilityIdentifier:), accessibilityConfiguration.accessibilityIdentifier},
+    CKComponentActionAttribute(action, UIControlEventTouchUpInside),
   });
-  if (action) {
-    attributes.insert(CKComponentActionAttribute(action, UIControlEventTouchUpInside));
-  }
 
   UIEdgeInsets contentEdgeInsets = UIEdgeInsetsZero;
   auto it = passedAttributes.find(@selector(setContentEdgeInsets:));
@@ -163,17 +164,21 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
                             [UIButton class],
                             std::move(attributes),
                             {
-                              .accessibilityIdentifier = accessibilityConfiguration.accessibilityIdentifier,
                               .accessibilityLabel = accessibilityConfiguration.accessibilityLabel,
-                              .accessibilityComponentAction = enabled ? action : NULL
+                              .accessibilityComponentAction = enabled ? CKComponentAction(action) : NULL
                             }
                           }
                           size:size];
 
+#if !TARGET_OS_TV
   UIControlState state = (selected ? UIControlStateSelected : UIControlStateNormal)
                        | (enabled ? UIControlStateNormal : UIControlStateDisabled);
   b->_intrinsicSize = intrinsicSize(valueForState(titles, state), titleFont, valueForState(images, state),
                                     valueForState(backgroundImages, state), contentEdgeInsets);
+#else
+  // intrinsicSize not available on tvOS (can't use `sizeWithFont`) so set to infinity
+  b->_intrinsicSize = {INFINITY, INFINITY};
+#endif // !TARGET_OS_TV
   return b;
 }
 
@@ -226,6 +231,7 @@ static T valueForState(const std::unordered_map<UIControlState, T> &m, UIControl
   return nil;
 }
 
+#if !TARGET_OS_TV // sizeWithFont is not available on tvOS
 static CGSize intrinsicSize(NSString *title, UIFont *titleFont, UIImage *image,
                             UIImage *backgroundImage, UIEdgeInsets contentEdgeInsets)
 {
@@ -246,6 +252,7 @@ static CGSize intrinsicSize(NSString *title, UIFont *titleFont, UIImage *image,
     MAX(backgroundImageSize.height, contentSize.height)
   };
 }
+#endif // !TARGET_OS_TV
 
 @end
 

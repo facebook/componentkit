@@ -3,21 +3,20 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
 
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestLib/CKComponentTestRootScope.h>
+#import <ComponentKitTestHelpers/CKComponentLifecycleTestController.h>
 
-#import "CKComponent.h"
-#import "CKComponentController.h"
-#import "CKComponentLifecycleManager.h"
-#import "CKComponentProvider.h"
-#import "CKComponentScope.h"
-#import "CKComponentSubclass.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentController.h>
+#import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKComponentScope.h>
+#import <ComponentKit/CKComponentSubclass.h>
 
 @interface CKComponentControllerLifecycleMethodTests : XCTestCase <CKComponentProvider>
 @end
@@ -53,7 +52,6 @@ struct CKLifecycleMethodCounts {
 @end
 
 @interface CKLifecycleComponent : CKComponent
-@property (nonatomic, weak) CKLifecycleComponentController *controller;
 - (void)updateStateToIncludeNewAttribute;
 @end
 
@@ -66,14 +64,17 @@ struct CKLifecycleMethodCounts {
 
 - (void)testThatMountingComponentCallsWillAndDidMount
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
 
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  UIView *view = [[UIView alloc] init];
-  [clm attachToView:view];
-  CKLifecycleComponentController *controller = ((CKLifecycleComponent *)state.layout.component).controller;
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
+  CKLifecycleComponentController *controller = (CKLifecycleComponentController *)state.componentLayout.component.controller;
   const CKLifecycleMethodCounts actual = controller->_counts;
   const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
@@ -81,16 +82,19 @@ struct CKLifecycleMethodCounts {
 
 - (void)testThatUnmountingComponentCallsWillAndDidUnmount
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
 
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  UIView *view = [[UIView alloc] init];
-  [clm attachToView:view];
-  [clm detachFromView];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
+  [componentLifecycleTestController detachFromView];
 
-  CKLifecycleComponentController *controller = ((CKLifecycleComponent *)state.layout.component).controller;
+  CKLifecycleComponentController *controller = (CKLifecycleComponentController *)state.componentLayout.component.controller;
   const CKLifecycleMethodCounts actual = controller->_counts;
   const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
@@ -98,17 +102,20 @@ struct CKLifecycleMethodCounts {
 
 - (void)testThatUpdatingComponentWhileMountedCallsWillAndDidRemount
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
 
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  UIView *view = [[UIView alloc] init];
-  [clm attachToView:view];
-  CKLifecycleComponent *component = (CKLifecycleComponent *)state.layout.component;
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
+  CKLifecycleComponent *component = (CKLifecycleComponent *)state.componentLayout.component;
   [component updateStateToIncludeNewAttribute];
 
-  CKLifecycleComponentController *controller = component.controller;
+  CKLifecycleComponentController *controller = (CKLifecycleComponentController *)component.controller;
   const CKLifecycleMethodCounts actual = controller->_counts;
   const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willRemount = 1, .didRemount = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
@@ -116,24 +123,27 @@ struct CKLifecycleMethodCounts {
 
 - (void)testThatUpdatingComponentWhileNotMountedCallsNothing
 {
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
 
-  CKComponentLifecycleManagerState state = [clm prepareForUpdateWithModel:nil constrainedSize:{{0,0}, {100, 100}} context:nil];
-  [clm updateWithState:state];
+  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                                                                    constrainedSize:{{0,0}, {100, 100}}
+                                                                                                            context:nil];
+  [componentLifecycleTestController updateWithState:state];
 
-  UIView *view = [[UIView alloc] init];
-  [clm attachToView:view];
-  [clm detachFromView];
+  UIView *view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
+  [componentLifecycleTestController detachFromView];
 
-  CKLifecycleComponent *component = (CKLifecycleComponent *)state.layout.component;
-  CKLifecycleComponentController *controller = component.controller;
+  CKLifecycleComponent *component = (CKLifecycleComponent *)state.componentLayout.component;
+  CKLifecycleComponentController *controller = (CKLifecycleComponentController *)component.controller;
   {
     const CKLifecycleMethodCounts actual = controller->_counts;
     const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1};
     XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
   }
 
-  controller->_counts = {}; // Reset all to zero
+  controller->_counts = {};
   [component updateStateToIncludeNewAttribute];
   {
     const CKLifecycleMethodCounts actual = controller->_counts;
@@ -141,7 +151,7 @@ struct CKLifecycleMethodCounts {
     XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
   }
 
-  [clm attachToView:view];
+  [componentLifecycleTestController attachToView:view];
   {
     const CKLifecycleMethodCounts actual = controller->_counts;
     const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1};
@@ -160,7 +170,7 @@ struct CKLifecycleMethodCounts {
 
 + (instancetype)new
 {
-  CKComponentScope scope(self); // components with controllers must have a scope
+  CKComponentScope scope(self);
   CKViewComponentAttributeValueMap attrs;
   if ([scope.state() boolValue]) {
     attrs.insert({@selector(setBackgroundColor:), [UIColor redColor]});
@@ -172,17 +182,11 @@ struct CKLifecycleMethodCounts {
 {
   [self updateState:^(id oldState){
     return @YES;
-  }];
+  } mode:CKUpdateModeSynchronous];
 }
 @end
 
 @implementation CKLifecycleComponentController
-
-- (void)didUpdateComponent
-{
-  [super didUpdateComponent];
-  [(CKLifecycleComponent *)[self component] setController:self];
-}
 
 - (void)willMount { [super willMount]; _counts.willMount++; }
 - (void)didMount { [super didMount]; _counts.didMount++; }

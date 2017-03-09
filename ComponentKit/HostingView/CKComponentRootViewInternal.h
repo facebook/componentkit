@@ -12,7 +12,13 @@
 
 #import <ComponentKit/CKComponentRootView.h>
 
-typedef UIView *(^CKComponentRootViewHitTestHook)(UIView *rootView, CGPoint point, UIEvent *event);
+/**
+ @param rootView The CKComponentRootView instance being hit-tested.
+ @param point The hit point in rootView's local coordinate system.
+ @param event The event sent with the hit test.
+ @param hitView The view that would be returned by the default hit-testing implementation.
+ */
+typedef UIView *(^CKComponentRootViewHitTestHook)(UIView *rootView, CGPoint point, UIEvent *event, UIView *hitView);
 
 @interface CKComponentRootView ()
 

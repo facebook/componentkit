@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -20,6 +20,8 @@
 #import "CKStackPositionedLayout.h"
 #import "CKStackUnpositionedLayout.h"
 
+template class std::vector<CKStackLayoutComponentChild>;
+
 @implementation CKStackLayoutComponent
 {
   CKStackLayoutComponentStyle _style;
@@ -28,13 +30,13 @@
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
-                      style:(CKStackLayoutComponentStyle)style
-                   children:(const std::vector<CKStackLayoutComponentChild> &)children
+                      style:(const CKStackLayoutComponentStyle &)style
+                   children:(CKContainerWrapper<std::vector<CKStackLayoutComponentChild>> &&)children
 {
   CKStackLayoutComponent *c = [super newWithView:view size:size];
   if (c) {
     c->_style = style;
-    c->_children = children;
+    c->_children = children.take();
   }
   return c;
 }

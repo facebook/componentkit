@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -12,10 +12,9 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKContainerWrapper.h>
 
 struct CKButtonComponentAccessibilityConfiguration {
-  /** Accessibility identifier */
-  NSString *accessibilityIdentifier;
   /** Accessibility label for the button. If one is not provided, the button title will be used as a label */
   NSString *accessibilityLabel;
 };
@@ -28,14 +27,14 @@ struct CKButtonComponentAccessibilityConfiguration {
  */
 @interface CKButtonComponent : CKComponent
 
-+ (instancetype)newWithTitles:(const std::unordered_map<UIControlState, NSString *> &)titles
-                  titleColors:(const std::unordered_map<UIControlState, UIColor *> &)titleColors
-                       images:(const std::unordered_map<UIControlState, UIImage *> &)images
-             backgroundImages:(const std::unordered_map<UIControlState, UIImage *> &)backgroundImages
++ (instancetype)newWithTitles:(CKContainerWrapper<std::unordered_map<UIControlState, NSString *>> &&)titles
+                  titleColors:(CKContainerWrapper<std::unordered_map<UIControlState, UIColor *>> &&)titleColors
+                       images:(CKContainerWrapper<std::unordered_map<UIControlState, UIImage *>> &&)images
+             backgroundImages:(CKContainerWrapper<std::unordered_map<UIControlState, UIImage *>> &&)backgroundImages
                     titleFont:(UIFont *)titleFont
                      selected:(BOOL)selected
                       enabled:(BOOL)enabled
-                       action:(CKComponentAction)action
+                       action:(const CKTypedComponentAction<UIEvent *> &)action
                          size:(const CKComponentSize &)size
                    attributes:(const CKViewComponentAttributeValueMap &)attributes
    accessibilityConfiguration:(CKButtonComponentAccessibilityConfiguration)accessibilityConfiguration;

@@ -26,6 +26,7 @@
                            lineBreakMode:(NSLineBreakMode)lineBreakMode
                     maximumNumberOfLines:(NSUInteger)maximumNumberOfLines
                          constrainedSize:(CGSize)constrainedSize
+                    layoutManagerFactory:(NSLayoutManager*(*)(void))layoutManagerFactory
 {
   if (self = [super init]) {
     // Concurrently initialising TextKit components crashes (rdar://18448377) so we use a global lock.
@@ -33,7 +34,7 @@
     std::lock_guard<std::mutex> l(__static_mutex);
     // Create the TextKit component stack with our default configuration.
     _textStorage = (attributedString ? [[NSTextStorage alloc] initWithAttributedString:attributedString] : [[NSTextStorage alloc] init]);
-    _layoutManager = [[NSLayoutManager alloc] init];
+    _layoutManager = layoutManagerFactory ? layoutManagerFactory() : [[NSLayoutManager alloc] init];
     _layoutManager.usesFontLeading = NO;
     [_textStorage addLayoutManager:_layoutManager];
     _textContainer = [[NSTextContainer alloc] initWithSize:constrainedSize];

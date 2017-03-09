@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -33,10 +33,16 @@ struct CKComponentSize {
   CKRelativeDimension maxWidth;
   CKRelativeDimension maxHeight;
 
-  static CKComponentSize fromCGSize(CGSize size);
+  static CKComponentSize fromCGSize(CGSize size) noexcept;
 
-  CKSizeRange resolve(const CGSize &parentSize) const;
+  CKSizeRange resolve(const CGSize &parentSize) const noexcept;
 
-  bool operator==(const CKComponentSize &other) const;
-  NSString *description() const;
+  bool operator==(const CKComponentSize &other) const noexcept;
+  NSString *description() const noexcept;
 };
+
+namespace std {
+  template <> struct hash<CKComponentSize> {
+    size_t operator ()(const CKComponentSize &) noexcept;
+  };
+}

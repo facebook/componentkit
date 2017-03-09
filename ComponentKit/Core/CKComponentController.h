@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -14,7 +14,7 @@
 
 @class CKComponent;
 
-@interface CKComponentController : NSObject
+@interface CKComponentController<__covariant ComponentType:CKComponent *> : NSObject
 
 /** The controller's component is not mounted, but is about to be. */
 - (void)willMount NS_REQUIRES_SUPER;
@@ -58,7 +58,7 @@
 - (void)componentTreeDidDisappear NS_REQUIRES_SUPER;
 
 /** The current version of the component. */
-@property (nonatomic, weak, readonly) CKComponent *component;
+@property (nonatomic, weak, readonly) ComponentType component;
 
 /** The view created by the component, if currently mounted. */
 @property (nonatomic, strong, readonly) UIView *view;
@@ -69,5 +69,23 @@
  - The view the controller's component is mounted within, if it is the root component.
  */
 - (id)nextResponder;
+
+/**
+ When an action is triggered, a component controller may use this method to either capture or ignore the given action.
+ The default implementation simply uses respondsToSelector: to determine if the controller can perform the given action.
+
+ In practice, this is useful only for integrations with UIMenuController whose API walks the UIResponder chain to
+ determine which menu items to display. You should not override this method for standard component actions.
+ */
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
+
+/** 
+ Initializes a controller with the first generation of component. You should not directly initialize a controller,
+ they are initialized for you by the infrastructure.
+ */
+- (instancetype)initWithComponent:(ComponentType)component NS_DESIGNATED_INITIALIZER;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 @end

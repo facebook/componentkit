@@ -16,13 +16,15 @@
 
 + (instancetype)newWithLabelAttributes:(const CKLabelAttributes &)attributes
                         viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
+                                  size:(const CKComponentSize &)size
 {
   CKViewComponentAttributeValueMap copiedMap = viewAttributes;
   return [super newWithComponent:
           [CKTextComponent
            newWithTextAttributes:textKitAttributes(attributes)
            viewAttributes:std::move(copiedMap)
-           accessibilityContext:{}]];
+           options:{.accessibilityContext = {.isAccessibilityElement = @(YES)}}
+           size:size]];
 }
 
 static const CKTextKitAttributes textKitAttributes(const CKLabelAttributes &labelAttributes)

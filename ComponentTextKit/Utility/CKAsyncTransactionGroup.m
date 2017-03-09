@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -19,8 +19,6 @@ static void _transactionGroupRunLoopObserverCallback(CFRunLoopObserverRef observ
 
 @implementation CKAsyncTransactionGroup {
   NSHashTable *_containerLayers;
-  NSHashTable *_pendingContainerLayers;
-  NSMutableArray *_pendingCompletionHandlers;
 }
 
 + (CKAsyncTransactionGroup *)mainTransactionGroup
@@ -62,35 +60,10 @@ static void _transactionGroupRunLoopObserverCallback(CFRunLoopObserverRef observ
   CFRelease(observer);
 }
 
-+ (void)layoutAndDisplaySublayersOfLayerIfNeeded:(CALayer *)rootLayer
-{
-  [rootLayer layoutIfNeeded];
-  [self displaySublayersOfLayerIfNeeded:rootLayer];
-}
-
-+ (void)displaySublayersOfLayerIfNeeded:(CALayer *)rootLayer
-{
-  [rootLayer displayIfNeeded];
-
-  for (CALayer *sublayer in rootLayer.sublayers) {
-    [self displaySublayersOfLayerIfNeeded:sublayer];
-  }
-}
-
-+ (void)layoutAndDisplayAllWindowsIfNeeded
-{
-  for (UIWindow *window in [[UIApplication sharedApplication] windows]) {
-    CALayer *windowLayer = window.layer;
-    [self layoutAndDisplaySublayersOfLayerIfNeeded:windowLayer];
-  }
-}
-
 - (id)init
 {
   if ((self = [super init])) {
     _containerLayers = [[NSHashTable alloc] initWithOptions:NSHashTableStrongMemory|NSHashTableObjectPointerPersonality capacity:0];
-    _pendingContainerLayers = [[NSHashTable alloc] initWithOptions:NSHashTableStrongMemory|NSHashTableObjectPointerPersonality capacity:0];
-    _pendingCompletionHandlers = [NSMutableArray array];
   }
   return self;
 }
@@ -102,32 +75,6 @@ static void _transactionGroupRunLoopObserverCallback(CFRunLoopObserverRef observ
   CKAssertMainThread();
   CKAssertNotNil(containerLayer, @"Cannot add a nil layer to the group");
   [_containerLayers addObject:containerLayer];
-}
-
-- (void)removeTransactionContainer:(CALayer *)containerLayer
-{
-  CKAssertMainThread();
-  CKAssertNotNil(containerLayer, @"Cannot remove a nil layer from the group");
-
-  [_containerLayers removeObject:containerLayer];
-
-  if ([_pendingContainerLayers containsObject:containerLayer]) {
-    [_pendingContainerLayers removeObject:containerLayer];
-    [self forceLayoutAndFlushPendingTransactionsIfNeeded];
-  }
-}
-
-- (void)flushPendingTransactions:(dispatch_block_t)completionHandler
-{
-  CKAssertMainThread();
-  CKAssert(completionHandler != NULL, @"Calling this method without a completion handler makes no sense");
-  BOOL shouldTriggerLayout = ([_pendingCompletionHandlers count] == 0);
-
-  [_pendingCompletionHandlers addObject:completionHandler];
-
-  if (shouldTriggerLayout) {
-    [self forceLayoutAndFlushPendingTransactions];
-  }
 }
 
 #pragma mark Transactions
@@ -145,33 +92,7 @@ static void _transactionGroupRunLoopObserverCallback(CFRunLoopObserverRef observ
       // so we must nil out the transaction we're committing first.
       CKAsyncTransaction *transaction = containerLayer.ck_currentAsyncLayerTransaction;
       containerLayer.ck_currentAsyncLayerTransaction = nil;
-      [_pendingContainerLayers addObject:containerLayer];
       [transaction commit];
-    }
-  }
-}
-
-#pragma mark Flushing
-
-- (void)forceLayoutAndFlushPendingTransactionsIfNeeded
-{
-  if ([_pendingContainerLayers count] == 0 && [_pendingCompletionHandlers count] != 0) {
-    [self forceLayoutAndFlushPendingTransactions];
-  }
-}
-
-- (void)forceLayoutAndFlushPendingTransactions
-{
-  [[self class] layoutAndDisplayAllWindowsIfNeeded];
-  [self commit];
-
-  if ([_pendingContainerLayers count] == 0) {
-    NSSet *pendingCompletionHandlers = [_pendingCompletionHandlers copy];
-
-    [_pendingCompletionHandlers removeAllObjects];
-
-    for (void (^completionHandler)(void) in pendingCompletionHandlers) {
-      completionHandler();
     }
   }
 }

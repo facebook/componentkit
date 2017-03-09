@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -14,6 +14,8 @@
 
 #import "CKAsyncTransaction.h"
 #import "CKAsyncTransactionGroup.h"
+
+#import <objc/runtime.h>
 
 @implementation CALayer (CKAsyncTransactionContainerTransactions)
 @dynamic ck_asyncLayerTransactions;
@@ -69,7 +71,6 @@
       [self ck_asyncTransactionContainerDidCompleteTransaction:completedTransaction];
       if ([transactions count] == 0) {
         [self ck_asyncTransactionContainerStateDidChange];
-        [[CKAsyncTransactionGroup mainTransactionGroup] removeTransactionContainer:self];
       }
     }];
     [transactions addObject:transaction];
@@ -119,6 +120,22 @@
 - (void)ck_asyncTransactionContainerStateDidChange
 {
   // No-op in the base class.
+}
+
+@end
+
+static void *ck_asyncTransactionContainerKey = &ck_asyncTransactionContainerKey;
+
+@implementation CALayer (CKAsyncTransactionContainerStorage)
+
+- (BOOL)ck_isAsyncTransactionContainer
+{
+  return [objc_getAssociatedObject(self, ck_asyncTransactionContainerKey) boolValue];
+}
+
+- (void)ck_setAsyncTransactionContainer:(BOOL)asyncTransactionContainer
+{
+  objc_setAssociatedObject(self, ck_asyncTransactionContainerKey, @(asyncTransactionContainer), OBJC_ASSOCIATION_RETAIN);
 }
 
 @end

@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -12,12 +12,15 @@
 
 #import <UIKit/UIKit.h>
 
+#import <mutex>
+
+#import "CKComponent+UIView.h"
 #import "CKComponent.h"
 #import "CKComponentAnimation.h"
+#import "CKComponentHostingView.h"
+#import "CKComponentHostingViewInternal.h"
 #import "CKComponentInternal.h"
-#import "CKComponentLifecycleManager.h"
-#import "CKComponentLifecycleManagerInternal.h"
-#import "CKComponentViewInterface.h"
+#import "CKComponentRootView.h"
 #import "CKMutex.h"
 
 #import <objc/runtime.h>
@@ -106,10 +109,7 @@ CK::Component::MountContext CKDebugMountContext(Class componentClass,
     return context; // no need for a debug view if the component has a view.
   }
 
-  static CK::StaticMutex l = CK_MUTEX_INITIALIZER;
-  CK::StaticMutexLocker lock(l);
-
-  // This is a pointer because of https://our.intern.facebook.com/intern/dex/qa/657083164365634/
+  // Avoid the static destructor fiasco, use a pointer:
   static std::unordered_map<Class, CKComponentViewConfiguration> *debugViewConfigurations =
   new std::unordered_map<Class, CKComponentViewConfiguration>();
 
@@ -125,49 +125,40 @@ CK::Component::MountContext CKDebugMountContext(Class componentClass,
 
   UIView *debugView = context.viewManager->viewForConfiguration(componentClass, debugViewConfigurations->at(componentClass));
   debugView.frame = {context.position, size};
-  return context.childContextForSubview(debugView);
+  return context.childContextForSubview(debugView, NO);
 }
 
 #pragma mark - Synchronous Reflow
+
+static NSHashTable<id<CKComponentDebugReflowListener>> *reflowListeners;
+static std::mutex reflowMutex;
 
 + (void)reflowComponents
 {
   if (![NSThread isMainThread]) {
     dispatch_async(dispatch_get_main_queue(), ^{ [self reflowComponents]; });
-  } else {
-    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-    CKRecursiveComponentReflow(window);
+    return;
+  }
+  NSArray<id<CKComponentDebugReflowListener>> *copiedListeners;
+  {
+    std::lock_guard<std::mutex> l(reflowMutex);
+    copiedListeners = [reflowListeners allObjects];
+  }
+  for (id<CKComponentDebugReflowListener> listener in copiedListeners) {
+    [listener didReceiveReflowComponentsRequest];
   }
 }
 
-+ (void)reflowComponentsForView:(UIView *)view searchUpwards:(BOOL)upwards
++ (void)registerReflowListener:(id<CKComponentDebugReflowListener>)listener
 {
-  if (upwards) {
-    while (view && !view.ck_componentLifecycleManager) {
-      view = view.superview;
-    }
-    if (!view) {
-      return;
-    }
+  if (listener == nil) {
+    return;
   }
-  CKRecursiveComponentReflow(view);
-}
-
-static void CKRecursiveComponentReflow(UIView *view)
-{
-  if (view.ck_componentLifecycleManager) {
-    CKComponentLifecycleManager *lifecycleManager = view.ck_componentLifecycleManager;
-    CKComponentLifecycleManagerState oldState = [lifecycleManager state];
-    CKComponentLifecycleManagerState state =
-    [lifecycleManager prepareForUpdateWithModel:oldState.model
-                                constrainedSize:oldState.constrainedSize
-                                        context:oldState.context];
-    [lifecycleManager updateWithState:state];
-  } else {
-    for (UIView *subview in view.subviews) {
-      CKRecursiveComponentReflow(subview);
-    }
+  std::lock_guard<std::mutex> l(reflowMutex);
+  if (reflowListeners == nil) {
+    reflowListeners = [NSHashTable weakObjectsHashTable];
   }
+  [reflowListeners addObject:listener];
 }
 
 @end

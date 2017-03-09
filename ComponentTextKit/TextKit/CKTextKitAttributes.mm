@@ -10,7 +10,7 @@
 
 #import <ComponentKit/CKTextKitAttributes.h>
 
-#import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKEqualityHashHelpers.h>
 
 #include <functional>
 
@@ -23,6 +23,7 @@ size_t CKTextKitAttributes::hash() const
     [attributedString hash],
     [truncationAttributedString hash],
     [avoidTailTruncationSet hash],
+    std::hash<NSUInteger>()((NSUInteger) layoutManagerFactory),
     std::hash<NSInteger>()(lineBreakMode),
     std::hash<NSInteger>()(maximumNumberOfLines),
     std::hash<CGFloat>()(shadowOffset.width),

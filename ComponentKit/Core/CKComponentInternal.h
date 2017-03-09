@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -55,19 +55,19 @@
 
 - (id)nextResponderAfterController;
 
-/** Called by the CKComponentLifecycleManager when the component and all its children have been mounted. */
+/** Called when the component and all its children have been mounted. */
 - (void)childrenDidMount;
 
 /** Called by the animation machinery. Do not access this externally. */
 - (UIView *)viewForAnimation;
 
-/** Called in specific cases for expensive state updates. Do not access this externally. */
-- (void)updateStateWithExpensiveReflow:(id (^)(id))updateBlock;
-
-/** Used by CKComponentLifecycleManager to get the root component in the responder chain; don't touch this. */
+/** Used to get the root component in the responder chain; don't touch this. */
 @property (nonatomic, weak) UIView *rootComponentMountedView;
 
 /** For internal use only; don't touch this. */
-@property (nonatomic, strong, readonly) id scopeFrameToken;
+@property (nonatomic, strong, readonly) id<NSObject> scopeFrameToken;
+
+/** The size that was passed into the component; don't touch this. */
+@property (nonatomic, assign, readonly) CKComponentSize size;
 
 @end

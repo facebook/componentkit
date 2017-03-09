@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -18,14 +18,10 @@ struct CKComponentSize;
 @interface CKImageComponent : CKComponent
 
 /**
- Uses a static layout with the image's size.
- */
-+ (instancetype)newWithImage:(UIImage *)image;
-
-/**
- Uses a static layout with the given image size.
+ Uses a static layout with the given image size and applies additional attributes.
  */
 + (instancetype)newWithImage:(UIImage *)image
+                  attributes:(const CKViewComponentAttributeValueMap &)attributes
                         size:(const CKComponentSize &)size;
 
 @end

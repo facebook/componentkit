@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -15,19 +15,44 @@
 #import <ComponentKit/CKMacros.h>
 
 #import "CKComponentAnimation.h"
+#import "CKComponentDebugController.h"
 #import "CKComponentHostingViewDelegate.h"
-#import "CKComponentLifecycleManager.h"
-#import "CKComponentLifecycleManager_Private.h"
+#import "CKComponentLayout.h"
 #import "CKComponentRootView.h"
+#import "CKComponentScopeRoot.h"
 #import "CKComponentSizeRangeProviding.h"
+#import "CKComponentSubclass.h"
 
-@interface CKComponentHostingView () <CKComponentLifecycleManagerDelegate>
+struct CKComponentHostingViewInputs {
+  CKComponentScopeRoot *scopeRoot;
+  id<NSObject> model;
+  id<NSObject> context;
+  CKComponentStateUpdateMap stateUpdates;
+
+  bool operator==(const CKComponentHostingViewInputs &i) const {
+    return scopeRoot == i.scopeRoot && model == i.model && context == i.context && stateUpdates == i.stateUpdates;
+  };
+};
+
+@interface CKComponentHostingView () <CKComponentStateListener, CKComponentDebugReflowListener>
 {
-  CKComponentLifecycleManager *_lifecycleManager;
+  Class<CKComponentProvider> _componentProvider;
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
-  CKComponentRootView *_containerView;
-  BOOL _isUpdating;
-  id<NSObject> _context;
+
+  CKComponentHostingViewInputs _pendingInputs;
+
+  CKComponentBoundsAnimation _boundsAnimation;
+    
+  CKComponent *_component;
+  BOOL _componentNeedsUpdate;
+  CKUpdateMode _requestedUpdateMode;
+
+  CKComponentLayout _mountedLayout;
+  NSSet *_mountedComponents;
+
+  BOOL _scheduledAsynchronousComponentUpdate;
+  BOOL _isSynchronouslyUpdatingComponent;
+  BOOL _isMountingComponent;
 }
 @end
 
@@ -40,110 +65,202 @@
   CK_NOT_DESIGNATED_INITIALIZER();
 }
 
-- (instancetype)initWithLifecycleManager:(CKComponentLifecycleManager *)manager
-                       sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                                 context:(id<NSObject>)context
+- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
+                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
 {
   if (self = [super initWithFrame:CGRectZero]) {
-    // Injected dependencies
+    _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
-    _context = context;
-    
-    // Internal dependencies
-    _lifecycleManager = manager;
-    _lifecycleManager.delegate = self;
-    
+    _pendingInputs = {.scopeRoot = [CKComponentScopeRoot rootWithListener:self]};
+
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
+
+    _componentNeedsUpdate = YES;
+    _requestedUpdateMode = CKUpdateModeSynchronous;
+
+    [CKComponentDebugController registerReflowListener:self];
   }
   return self;
 }
 
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                                  context:(id<NSObject>)context
-{
-  CKComponentLifecycleManager *manager = [[CKComponentLifecycleManager alloc] initWithComponentProvider:componentProvider sizeRangeProvider:sizeRangeProvider];
-  return [self initWithLifecycleManager:manager sizeRangeProvider:sizeRangeProvider context:context];
-}
-
 - (void)dealloc
 {
-  [_lifecycleManager detachFromView];
+  CKAssertMainThread(); // UIKit should guarantee this
+  CKUnmountComponents(_mountedComponents);
 }
 
 #pragma mark - Layout
 
 - (void)layoutSubviews
 {
+  CKAssertMainThread();
   [super layoutSubviews];
-  _containerView.frame = self.bounds;
 
-  if (_model && !CGRectIsEmpty(self.bounds)) {
-    [self _update];
+  // It is possible for a view change due to mounting to trigger a re-layout of the entire screen. This can
+  // synchronously call layoutIfNeeded on this view, which could cause a re-entrant component mount, which we want
+  // to avoid.
+  if (!_isMountingComponent) {
+    _isMountingComponent = YES;
+    _containerView.frame = self.bounds;
 
-    if (![_lifecycleManager isAttachedToView]) {
-      [_lifecycleManager attachToView:_containerView];
+    [self _synchronouslyUpdateComponentIfNeeded];
+    const CGSize size = self.bounds.size;
+    if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
+      _mountedLayout = CKComputeRootComponentLayout(_component, {size, size});
     }
+    CKComponentBoundsAnimationApply(_boundsAnimation, ^{
+      _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil) copy];
+    }, nil);
+    _boundsAnimation = {};
+    _isMountingComponent = NO;
   }
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
-  CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-  CKComponentLayout layout = [_lifecycleManager layoutForModel:_model constrainedSize:constrainedSize context:_context];
-  return layout.size;
+  CKAssertMainThread();
+  [self _synchronouslyUpdateComponentIfNeeded];
+  const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
+  return CKComputeRootComponentLayout(_component, constrainedSize).size;
 }
 
 #pragma mark - Accessors
 
-- (void)setModel:(id)model
+- (void)updateModel:(id<NSObject>)model mode:(CKUpdateMode)mode
 {
-  if (_model != model) {
-    _model = model;
-    CKAssertNotNil(_model, @"Model can not be nil.");
-
-    [self setNeedsLayout];
-  }
+  CKAssertMainThread();
+  _pendingInputs.model = model;
+  [self _setNeedsUpdateWithMode:mode];
 }
 
-- (void)setContext:(id<NSObject>)context
+- (void)updateContext:(id<NSObject>)context mode:(CKUpdateMode)mode
 {
-  if (_context != context) {
-    _context = context;
-    [self setNeedsLayout];
-  }
+  CKAssertMainThread();
+  _pendingInputs.context = context;
+  [self _setNeedsUpdateWithMode:mode];
 }
 
-- (UIView *)containerView
+- (const CKComponentLayout &)mountedLayout
 {
-  return _containerView;
+  return _mountedLayout;
 }
 
-#pragma mark - CKComponentLifecycleManagerDelegate
+#pragma mark - CKComponentStateListener
 
-- (void)componentLifecycleManager:(CKComponentLifecycleManager *)manager
-       sizeDidChangeWithAnimation:(const CKComponentBoundsAnimation &)animation
+- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
+                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+                     didReceiveStateUpdate:(id (^)(id))stateUpdate
+                                      mode:(CKUpdateMode)mode
 {
-  [_delegate componentHostingViewDidInvalidateSize:self];
+  CKAssertMainThread();
+  _pendingInputs.stateUpdates.insert({globalIdentifier, stateUpdate});
+  [self _setNeedsUpdateWithMode:mode];
+}
+
+#pragma mark - CKComponentDebugController
+
+- (void)didReceiveReflowComponentsRequest
+{
+  [self _setNeedsUpdateWithMode:CKUpdateModeAsynchronous];
 }
 
 #pragma mark - Private
 
-- (void)_update
+- (void)_setNeedsUpdateWithMode:(CKUpdateMode)mode
 {
-  if (_isUpdating) {
-    CKFailAssert(@"CKComponentHostingView -_update is not re-entrant. This is called by -layoutSubviews, so ensure that there is nothing that is triggering a nested call to -layoutSubviews. This call will be a no-op in production.");
-    return;
-  } else {
-    _isUpdating = YES;
+  if (_componentNeedsUpdate && _requestedUpdateMode == CKUpdateModeSynchronous) {
+    return; // Already scheduled a synchronous update; nothing more to do.
   }
 
-  const CGRect bounds = self.bounds;
-  CKComponentLifecycleManagerState state = [_lifecycleManager prepareForUpdateWithModel:_model constrainedSize:CKSizeRange(bounds.size, bounds.size) context:_context];
-  [_lifecycleManager updateWithState:state];
+  _componentNeedsUpdate = YES;
+  _requestedUpdateMode = mode;
 
-  _isUpdating = NO;
+  switch (mode) {
+    case CKUpdateModeAsynchronous:
+      [self _asynchronouslyUpdateComponentIfNeeded];
+      break;
+    case CKUpdateModeSynchronous:
+      [self setNeedsLayout];
+      [_delegate componentHostingViewDidInvalidateSize:self];
+      break;
+  }
+}
+
+- (void)_asynchronouslyUpdateComponentIfNeeded
+{
+  if (_scheduledAsynchronousComponentUpdate) {
+    return;
+  }
+  _scheduledAsynchronousComponentUpdate = YES;
+
+  // Wait until the end of the run loop so that if multiple async updates are triggered we don't thrash.
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self _scheduleAsynchronousUpdate];
+  });
+}
+
+- (void)_scheduleAsynchronousUpdate
+{
+  if (_requestedUpdateMode != CKUpdateModeAsynchronous) {
+    // A synchronous update was either scheduled or completed, so we can skip the async update.
+    _scheduledAsynchronousComponentUpdate = NO;
+    return;
+  }
+
+  const auto inputs = std::make_shared<const CKComponentHostingViewInputs>(_pendingInputs);
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    const auto result = std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
+      inputs->scopeRoot,
+      inputs->stateUpdates,
+      ^{ return [_componentProvider componentForModel:inputs->model context:inputs->context]; }
+    ));
+    dispatch_async(dispatch_get_main_queue(), ^{
+      if (!_componentNeedsUpdate) {
+        // A synchronous update snuck in and took care of it for us.
+        _scheduledAsynchronousComponentUpdate = NO;
+        return;
+      }
+
+      // If the inputs haven't changed, apply the result; otherwise, retry.
+      if (_pendingInputs == *inputs) {
+        _scheduledAsynchronousComponentUpdate = NO;
+        [self _applyResult:*result];
+        [self setNeedsLayout];
+        [_delegate componentHostingViewDidInvalidateSize:self];
+      } else {
+        [self _scheduleAsynchronousUpdate];
+      }
+    });
+  });
+}
+
+- (void)_applyResult:(const CKBuildComponentResult &)result
+{
+  _pendingInputs.scopeRoot = result.scopeRoot;
+  _pendingInputs.stateUpdates = {};
+  _component = result.component;
+  _boundsAnimation = result.boundsAnimation;
+  _componentNeedsUpdate = NO;
+}
+
+- (void)_synchronouslyUpdateComponentIfNeeded
+{
+  if (_componentNeedsUpdate == NO || _requestedUpdateMode == CKUpdateModeAsynchronous) {
+    return;
+  }
+
+  if (_isSynchronouslyUpdatingComponent) {
+    CKFailAssert(@"CKComponentHostingView is not re-entrant. This is called by -layoutSubviews, so ensure "
+                 "that there is nothing that is triggering a nested call to -layoutSubviews.");
+    return;
+  }
+
+  _isSynchronouslyUpdatingComponent = YES;
+  [self _applyResult:CKBuildComponent(_pendingInputs.scopeRoot, _pendingInputs.stateUpdates, ^CKComponent *{
+    return [_componentProvider componentForModel:_pendingInputs.model context:_pendingInputs.context];
+  })];
+  _isSynchronouslyUpdatingComponent = NO;
 }
 
 @end

@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -12,137 +12,98 @@
 
 #import <ComponentKit/CKCompositeComponent.h>
 
-#import "CKComponentScopeFrame.h"
-#import "CKThreadLocalComponentScope.h"
+#import <ComponentKit/CKComponentScope.h>
+#import <ComponentKit/CKComponentScopeFrame.h>
+#import <ComponentKit/CKComponentScopeHandle.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
 
 @interface CKComponentScopeTests : XCTestCase
 @end
 
 @implementation CKComponentScopeTests
 
-- (void)testThreadLocalStateIsEmptyByDefault
+#pragma mark - Thread Local Component Scope
+
+- (void)testThreadLocalComponentScopeIsEmptyWhenNoScopeExists
 {
-  XCTAssertTrue(CKThreadLocalComponentScope::cursor() != nullptr);
-  XCTAssertTrue(CKThreadLocalComponentScope::cursor()->empty());
+  XCTAssertTrue(CKThreadLocalComponentScope::currentScope() == nullptr);
 }
 
-- (void)testThreadLocalStateIsNotNullAfterCreatingThreadStateScope
+- (void)testThreadLocalComponentScopeIsNotEmptyWhenTheScopeExists
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKThreadLocalComponentScope threadScope(nil,frame);
-  XCTAssertTrue(CKThreadLocalComponentScope::cursor() != nullptr);
+  CKThreadLocalComponentScope threadScope([CKComponentScopeRoot rootWithListener:nil], {});
+  XCTAssertTrue(CKThreadLocalComponentScope::currentScope() != nullptr);
 }
 
-- (void)testThreadLocalStateStoresPassedInFrameAsEquivalentPreviousFrame
+- (void)testThreadLocalComponentScopeStoresTheProvidedFrameAsTheEquivalentPreviousFrame
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKThreadLocalComponentScope threadScope(nil, frame);
-  XCTAssertEqualObjects(CKThreadLocalComponentScope::cursor()->equivalentPreviousFrame(), frame);
+  CKComponentScopeRoot *root = [CKComponentScopeRoot rootWithListener:nil];
+  CKThreadLocalComponentScope threadScope(root, {});
+  XCTAssertEqualObjects(CKThreadLocalComponentScope::currentScope()->stack.top().equivalentPreviousFrame, root.rootFrame);
 }
 
-- (void)testThreadLocalStateBeginsWithRootCurrentFrame
+- (void)testThreadLocalComponentScopePushesChildComponentScope
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKThreadLocalComponentScope threadScope(nil, frame);
-
-  CKComponentScopeFrame *currentFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
-  XCTAssertTrue(currentFrame != NULL);
-}
-
-- (void)testThreadLocalStatePushesChildScope
-{
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKThreadLocalComponentScope threadScope(nil, frame);
-
-  CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
-
+  CKComponentScopeRoot *root = [CKComponentScopeRoot rootWithListener:nil];
+  CKThreadLocalComponentScope threadScope(root, {});
+  CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
   CKComponentScope scope([CKCompositeComponent class]);
-
-  CKComponentScopeFrame *currentFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
+  CKComponentScopeFrame *currentFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
   XCTAssertTrue(currentFrame != rootFrame);
 }
 
-- (void)testCreatingThreadLocalStateScopeThrowsIfScopeAlreadyExists
+- (void)testThreadLocalComponentScopeCanBeOverridden
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeRoot *root = [CKComponentScopeRoot rootWithListener:nil];
+  CKThreadLocalComponentScope threadScope(root, {});
+  CKThreadLocalComponentScope *threadScopePtr = &threadScope;
 
-  CKThreadLocalComponentScope threadScope(nil, frame);
-  XCTAssertThrows(CKThreadLocalComponentScope(nil, frame));
+  dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    XCTAssertTrue(CKThreadLocalComponentScope::currentScope() == nullptr);
+    {
+      CKThreadLocalComponentScopeOverride scopeOverride(threadScopePtr);
+      XCTAssertEqual(CKThreadLocalComponentScope::currentScope(), threadScopePtr);
+    }
+    XCTAssertTrue(CKThreadLocalComponentScope::currentScope() == nullptr);
+    dispatch_semaphore_signal(sema);
+  });
+  dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC));
+  dispatch_semaphore_wait(sema, timeout);
+
+  XCTAssertEqual(CKThreadLocalComponentScope::currentScope(), threadScopePtr);
 }
 
-#pragma mark - Scope Frame
+#pragma mark - Component Scope Frame
 
-- (void)testHasChildScopeIsCreatedWithCorrectKeys
+- (void)testComponentScopeFrameIsPoppedWhenComponentScopeCloses
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKComponentScopeFrame *childFrame = [frame childFrameWithComponentClass:[CKCompositeComponent class]
-                                                               identifier:@"moose"
-                                                                    state:@123
-                                                               controller:nil];
-
-  XCTAssertEqual(childFrame.componentClass, [CKCompositeComponent class]);
-  XCTAssertEqualObjects(childFrame.identifier, @"moose");
-  XCTAssertEqualObjects(childFrame.state, @123);
-}
-
-- (void)testHasChildScopeReturnsTrueWhenTheScopeMatches
-{
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKComponentScopeFrame __unused *childFrame = [frame childFrameWithComponentClass:[CKCompositeComponent class]
-                                                                        identifier:@"moose"
-                                                                             state:@123
-                                                                        controller:nil];
-
-  XCTAssertNotNil([frame existingChildFrameWithClass:[CKCompositeComponent class] identifier:@"moose"]);
-  XCTAssertNil([frame existingChildFrameWithClass:[CKCompositeComponent class] identifier:@"meese"]);
-  XCTAssertNil([frame existingChildFrameWithClass:[CKCompositeComponent class] identifier:nil]);
-
-  XCTAssertNil([frame existingChildFrameWithClass:[NSArray class] identifier:@"moose"]);
-  XCTAssertNil([frame existingChildFrameWithClass:[NSArray class] identifier:nil]);
-}
-
-- (void)testFrameIsPoppedWhenScopeCloses
-{
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKThreadLocalComponentScope threadScope(nil, frame);
-
-  CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
+  CKComponentScopeRoot *root = [CKComponentScopeRoot rootWithListener:nil];
+  CKThreadLocalComponentScope threadScope(root, {});
+  CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
   {
     CKComponentScope scope([CKCompositeComponent class], @"moose");
-    XCTAssertTrue(CKThreadLocalComponentScope::cursor()->currentFrame() != rootFrame);
+    XCTAssertTrue(CKThreadLocalComponentScope::currentScope()->stack.top().frame != rootFrame);
   }
-  XCTAssertEqual(CKThreadLocalComponentScope::cursor()->currentFrame(), rootFrame);
+  XCTAssertEqual(CKThreadLocalComponentScope::currentScope()->stack.top().frame, rootFrame);
 }
 
-- (void)testHasChildScopeIsTrueEvenAfterScopeClosesAndPopsAFrame
-{
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKThreadLocalComponentScope threadScope(nil, frame);
+#pragma mark - Component Scope State
 
-  CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
-  {
-    CKComponentScope scope([CKCompositeComponent class], @"moose");
-  }
-  XCTAssertEqual(CKThreadLocalComponentScope::cursor()->currentFrame(), rootFrame);
-}
-
-- (void)testThreadStateScopeAcquiringPreviousScopeStateOneLevelDown
+- (void)testComponentScopeStateIsAcquiredFromPreviousComponentScopeStateOneLevelDown
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKComponentScopeFrame *createdFrame = NULL;
+  CKComponentScopeRoot *root1 = [CKComponentScopeRoot rootWithListener:nil];
+  CKComponentScopeRoot *root2;
   {
-    CKThreadLocalComponentScope threadScope(nil, frame);
+    CKThreadLocalComponentScope threadScope(root1, {});
     {
       CKComponentScope scope([CKCompositeComponent class], @"macaque", ^{ return @42; });
-      id __unused state = scope.state();
     }
-
-    createdFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
+    root2 = CKThreadLocalComponentScope::currentScope()->newScopeRoot;
   }
-
-  CKComponentScopeFrame *createdFrame2 = NULL;
   {
-    CKThreadLocalComponentScope threadScope(nil, createdFrame);
+    CKThreadLocalComponentScope threadScope(root2, {});
     {
       // This block should never be called. We should inherit the previous scope.
       BOOL __block blockCalled = NO;
@@ -154,17 +115,15 @@
       XCTAssertFalse(blockCalled);
       XCTAssertEqualObjects(state, @42);
     }
-
-    createdFrame2 = CKThreadLocalComponentScope::cursor()->currentFrame();
   }
 }
 
-- (void)testThreadStateScopeAcquiringPreviousScopeStateOneLevelDownWithSibling
+- (void)testComponentScopeStateIsAcquiredFromPreviousComponentScopeStateOneLevelDownWithSibling
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKComponentScopeFrame *createdFrame = NULL;
+  CKComponentScopeRoot *root1 = [CKComponentScopeRoot rootWithListener:nil];
+  CKComponentScopeRoot *root2;
   {
-    CKThreadLocalComponentScope threadScope(nil, frame);
+    CKThreadLocalComponentScope threadScope(root1, {});
     {
       CKComponentScope scope([CKCompositeComponent class], @"spongebob", ^{ return @"FUN"; });
       id __unused state = scope.state();
@@ -173,13 +132,10 @@
       CKComponentScope scope([CKCompositeComponent class], @"patrick", ^{ return @"HAHA"; });
       id __unused state = scope.state();
     }
-
-    createdFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
+    root2 = CKThreadLocalComponentScope::currentScope()->newScopeRoot;
   }
-
-  CKComponentScopeFrame *createdFrame2 = nullptr;
   {
-    CKThreadLocalComponentScope threadScope(nil, createdFrame);
+    CKThreadLocalComponentScope threadScope(root2, {});
     {
       // This block should never be called. We should inherit the previous scope.
       CKComponentScope scope([CKCompositeComponent class], @"spongebob", ^{ return @"rotlf-nope!"; });
@@ -192,17 +148,15 @@
       id state = scope.state();
       XCTAssertEqualObjects(state, @"HAHA");
     }
-
-    createdFrame2 = CKThreadLocalComponentScope::cursor()->currentFrame();
   }
 }
 
-- (void)testThreadStateScopeAcquiringPreviousScopeStateOneLevelDownWithSiblingThatDoesNotAcquire
+- (void)testComponentScopeStateIsAcquiredFromPreviousComponentScopeStateOneLevelDownWithSiblingThatDoesNotAcquire
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKComponentScopeFrame *createdFrame = NULL;
+  CKComponentScopeRoot *root1 = [CKComponentScopeRoot rootWithListener:nil];
+  CKComponentScopeRoot *root2;
   {
-    CKThreadLocalComponentScope threadScope(nil, frame);
+    CKThreadLocalComponentScope threadScope(root1, {});
     {
       CKComponentScope scope([CKCompositeComponent class], @"Quoth", ^{ return @"nevermore"; });
       id __unused state = scope.state();
@@ -211,13 +165,10 @@
       CKComponentScope scope([CKCompositeComponent class], @"perched", ^{ return @"raven"; });
       id __unused state = scope.state();
     }
-
-    createdFrame = CKThreadLocalComponentScope::cursor()->currentFrame();
+    root2 = CKThreadLocalComponentScope::currentScope()->newScopeRoot;
   }
-
-  CKComponentScopeFrame *createdFrame2 = nullptr;
   {
-    CKThreadLocalComponentScope threadScope(nil, createdFrame);
+    CKThreadLocalComponentScope threadScope(root2, {});
     {
       // This block should never be called. We should inherit the previous scope.
       CKComponentScope scope([CKCompositeComponent class], @"Quoth", ^{ return @"Lenore"; });
@@ -229,64 +180,128 @@
       id state = scope.state();
       XCTAssertEqualObjects(state, @"door");
     }
-
-    createdFrame2 = CKThreadLocalComponentScope::cursor()->currentFrame();
   }
 }
 
-- (void)testCreatingSiblingScopeWithSameClassNameThrows
+#pragma mark - Component Scope Handle Global Identifier
+
+- (void)testComponentScopeHandleGlobalIdentifierIsAcquiredFromPreviousComponentScopeOneLevelDown
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKThreadLocalComponentScope threadScope(nil, frame);
+  CKComponentScopeRoot *root1 = [CKComponentScopeRoot rootWithListener:nil];
+  CKComponentScopeRoot *root2;
+  int32_t globalIdentifier;
   {
-    CKComponentScope scope([CKCompositeComponent class]);
+    CKThreadLocalComponentScope threadScope(root1, {});
+    {
+      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      globalIdentifier = CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier;
+    }
+    root2 = CKThreadLocalComponentScope::currentScope()->newScopeRoot;
   }
   {
-    XCTAssertThrows(CKComponentScope([CKCompositeComponent class]));
+    CKThreadLocalComponentScope threadScope(root2, {});
+    {
+      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      XCTAssertEqual(globalIdentifier, CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier);
+    }
   }
 }
 
-- (void)testCreatingSiblingScopeWithSameClassNameAndSameIdentifierThrows
+- (void)testComponentScopeHandleGlobalIdentifierIsNotTheSameBetweenSiblings
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKThreadLocalComponentScope threadScope(nil, frame);
+  CKComponentScopeRoot *root = [CKComponentScopeRoot rootWithListener:nil];
   {
-    CKComponentScope scope([CKCompositeComponent class], @"lasagna");
-  }
-  {
-    XCTAssertThrows(CKComponentScope([CKCompositeComponent class], @"lasagna"));
+    CKThreadLocalComponentScope threadScope(root, {});
+    int32_t globalIdentifier;
+    {
+      CKComponentScope scope([CKCompositeComponent class], @"moose");
+      globalIdentifier = CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier;
+    }
+    {
+      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      XCTAssertNotEqual(globalIdentifier, CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier);
+    }
   }
 }
 
-- (void)testCreatingSiblingScopeWithSameClassButDifferentIdenfitiferDoesNotThrow
+- (void)testComponentScopeHandleGlobalIdentifierIsTheSameBetweenSiblingsWithComponentScopeCollision
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-  CKThreadLocalComponentScope threadScope(nil, frame);
+  CKComponentScopeRoot *root = [CKComponentScopeRoot rootWithListener:nil];
   {
-    CKComponentScope scope([CKCompositeComponent class], @"linguine");
-  }
-  {
-    XCTAssertNoThrow(CKComponentScope([CKCompositeComponent class], @"spaghetti"));
+    CKThreadLocalComponentScope threadScope(root, {});
+    int32_t globalIdentifier;
+    {
+      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      globalIdentifier = CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier;
+    }
+    {
+      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      XCTAssertEqual(globalIdentifier, CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier);
+    }
   }
 }
 
-- (void)testTeardownThrowsIfStateScopeHasNotBeenPoppedBackToTheRoot
+- (void)testComponentScopeHandleGlobalIdentifierIsTheSameBetweenDescendantsWithComponentScopeCollision
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
-
-  BOOL exceptionThrown = NO;
-  @try {
-    CKThreadLocalComponentScope threadScope(nil, frame);
-
-    CKComponentScopeFrame *frame2 = [CKComponentScopeFrame rootFrameWithListener:nil];
-    CKThreadLocalComponentScope::cursor()->pushFrameAndEquivalentPreviousFrame(frame2, nil);
-  } @catch(...) {
-    exceptionThrown = YES;
+  CKComponentScopeRoot *root = [CKComponentScopeRoot rootWithListener:nil];
+  {
+    CKThreadLocalComponentScope threadScope(root, {});
+    int32_t globalIdentifier;
+    {
+      CKComponentScope scope1([CKCompositeComponent class], @"macaque");
+      {
+        CKComponentScope scope2([CKCompositeComponent class], @"moose");
+        globalIdentifier = CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier;
+      }
+    }
+    {
+      CKComponentScope scope1([CKCompositeComponent class], @"macaque");
+      {
+        CKComponentScope scope2([CKCompositeComponent class], @"moose");
+        XCTAssertEqual(globalIdentifier, CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier);
+      }
+    }
   }
+}
 
-  XCTAssertTrue(exceptionThrown);
-  CKThreadLocalComponentScope::cursor()->popFrame();
-  XCTAssertTrue(CKThreadLocalComponentScope::cursor()->empty());
+- (void)testComponentScopeHandleGlobalIdentifierIsTheSameBetweenDescendantsWithComponentScopeCollisionAcrossComponentScopeRoots
+{
+  CKComponentScopeRoot *root1 = [CKComponentScopeRoot rootWithListener:nil];
+  CKComponentScopeRoot *root2;
+  int32_t globalIdentifier;
+  {
+    CKThreadLocalComponentScope threadScope(root1, {});
+    {
+      CKComponentScope scope1([CKCompositeComponent class], @"macaque");
+      {
+        CKComponentScope scope2([CKCompositeComponent class], @"moose");
+      }
+    }
+    {
+      CKComponentScope scope1([CKCompositeComponent class], @"macaque");
+      {
+        CKComponentScope scope2([CKCompositeComponent class], @"moose");
+        globalIdentifier = CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier;
+      }
+    }
+    root2 = threadScope.newScopeRoot;
+  }
+  {
+    CKThreadLocalComponentScope threadScope(root2, {});
+    {
+      CKComponentScope scope1([CKCompositeComponent class], @"macaque");
+      {
+        CKComponentScope scope2([CKCompositeComponent class], @"moose");
+      }
+    }
+    {
+      CKComponentScope scope1([CKCompositeComponent class], @"macaque");
+      {
+        CKComponentScope scope2([CKCompositeComponent class], @"moose");
+        XCTAssertEqual(globalIdentifier, CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier);
+      }
+    }
+  }
 }
 
 @end

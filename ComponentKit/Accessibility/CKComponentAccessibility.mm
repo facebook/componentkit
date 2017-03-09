@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -20,9 +20,6 @@
 static CKViewComponentAttributeValueMap ViewAttributesFromAccessibilityContext(const CKComponentAccessibilityContext &accessibilityContext)
 {
   CKViewComponentAttributeValueMap accessibilityAttributes;
-  if (accessibilityContext.accessibilityIdentifier) {
-    accessibilityAttributes[@selector(setAccessibilityIdentifier:)] = accessibilityContext.accessibilityIdentifier;
-  }
   if (accessibilityContext.isAccessibilityElement) {
     accessibilityAttributes[@selector(setIsAccessibilityElement:)] = accessibilityContext.isAccessibilityElement;
   }
@@ -52,7 +49,12 @@ CKComponentViewConfiguration CK::Component::Accessibility::AccessibleViewConfigu
   }
 }
 
+#if TARGET_OS_SIMULATOR
+static BOOL _forceAccessibilityEnabled = YES;
+#else
 static BOOL _forceAccessibilityEnabled = NO;
+#endif
+
 static BOOL _forceAccessibilityDisabled = NO;
 
 void CK::Component::Accessibility::SetForceAccessibilityEnabled(BOOL enabled)

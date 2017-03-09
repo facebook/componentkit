@@ -3,12 +3,18 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
 
 #pragma once
+
+#if !defined(NS_BLOCK_ASSERTIONS)
+#define CK_ASSERTIONS_ENABLED 1
+#else
+#define CK_ASSERTIONS_ENABLED 0
+#endif
 
 #define CKAssert(condition, description, ...) NSAssert(condition, description, ##__VA_ARGS__)
 #define CKCAssert(condition, description, ...) NSCAssert(condition, description, ##__VA_ARGS__)

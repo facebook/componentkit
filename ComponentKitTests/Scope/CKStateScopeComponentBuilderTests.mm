@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -15,11 +15,13 @@
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKComponentScope.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentScopeFrame.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
 
-#import "CKComponentInternal.h"
-#import "CKComponentScopeFrame.h"
-#import "CKComponentScopeInternal.h"
-#import "CKThreadLocalComponentScope.h"
+#import "CKStateExposingComponent.h"
 
 #pragma mark - Test Components and Controllers
 
@@ -40,26 +42,7 @@
 
 @implementation CKMonkeyComponentWithAnimations
 - (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(CKComponent *)previousComponent { return {}; }
-@end
-
-@interface CKStateExposingComponent : CKComponent
-@property (nonatomic, strong, readonly) id state;
-@end
-
-@implementation CKStateExposingComponent
-+ (id)initialState
-{
-  return @12345;
-}
-+ (instancetype)new
-{
-  CKComponentScope scope(self);
-  CKStateExposingComponent *c = [super newWithView:{} size:{}];
-  if (c) {
-    c->_state = scope.state();
-  }
-  return c;
-}
+- (std::vector<CKComponentAnimation>)animationsOnInitialMount { return {}; }
 @end
 
 #pragma mark - Tests
@@ -73,63 +56,30 @@
 
 - (void)testThreadLocalStateIsSet
 {
-  CKComponentScopeFrame *frame = [CKComponentScopeFrame rootFrameWithListener:nil];
+  CKComponentScopeRoot *root = [CKComponentScopeRoot rootWithListener:nil];
 
   CKComponent *(^block)(void) = ^CKComponent *{
-    XCTAssertEqualObjects(CKThreadLocalComponentScope::cursor()->equivalentPreviousFrame(), frame);
+    XCTAssertEqualObjects(CKThreadLocalComponentScope::currentScope()->stack.top().equivalentPreviousFrame, root.rootFrame);
     return [CKComponent new];
   };
 
-  (void)CKBuildComponent(nil, frame, block);
-}
-
-- (void)testThreadLocalStateIsUnset
-{
-  CKComponentScopeFrame *frame = nil;
-
-  CKComponent *(^block)(void) = ^CKComponent *{
-    return [CKComponent new];
-  };
-
-  (void)CKBuildComponent(nil, frame, block);
-
-  XCTAssertTrue(CKThreadLocalComponentScope::cursor()->empty());
+  (void)CKBuildComponent(root, {}, block);
 }
 
 - (void)testCorrectComponentIsReturned
 {
-  CKComponentScopeFrame *frame = nil;
-
   CKComponent __block *c = nil;
   CKComponent *(^block)(void) = ^CKComponent *{
     c = [CKComponent new];
     return c;
   };
 
-  const CKBuildComponentResult result = CKBuildComponent(nil, frame, block);
+  const CKBuildComponentResult result = CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, block);
   XCTAssertEqualObjects(result.component, c);
-}
-
-- (void)testResultingFrameContainsCorrectState
-{
-  CKComponentScopeFrame *frame = nil;
-
-  id state = @12345;
-
-  CKComponent *(^block)(void) = ^CKComponent *{
-    CKComponentScope scope([CKComponent class], nil, ^{ return state; });
-    (void)scope.state();
-    return [CKComponent new];
-  };
-
-  const CKBuildComponentResult result = CKBuildComponent(nil, frame, block);
-  XCTAssertEqualObjects([result.scopeFrame existingChildFrameWithClass:[CKComponent class] identifier:nil].state, state);
 }
 
 - (void)testStateIsReacquiredAndNewInitialValueBlockIsNotUsed
 {
-  CKComponentScopeFrame *frame = nil;
-
   id state = @12345;
 
   CKComponent *(^block)(void) = ^CKComponent *{
@@ -138,7 +88,7 @@
     return [CKComponent new];
   };
 
-  const CKBuildComponentResult firstBuildResult = CKBuildComponent(nil, frame, block);
+  const CKBuildComponentResult firstBuildResult = CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, block);
 
   id __block nextState = nil;
   CKComponent *(^block2)(void) = ^CKComponent *{
@@ -147,7 +97,7 @@
     return [CKComponent new];
   };
 
-  (void)CKBuildComponent(nil, firstBuildResult.scopeFrame, block2);
+  (void)CKBuildComponent(firstBuildResult.scopeRoot, {}, block2);
 
   XCTAssertEqualObjects(state, nextState);
 }
@@ -156,20 +106,16 @@
 
 - (void)testComponentStateIsSetToInitialStateValue
 {
-  CKComponentScopeFrame *frame = nil;
-
   CKComponent *(^block)(void) = ^CKComponent *{
     return [CKStateExposingComponent new];
   };
 
-  CKStateExposingComponent *component = (CKStateExposingComponent *)CKBuildComponent(nil, frame, block).component;
+  CKStateExposingComponent *component = (CKStateExposingComponent *)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, block).component;
   XCTAssertEqualObjects(component.state, [CKStateExposingComponent initialState]);
 }
 
 - (void)testStateScopeFrameIsNotFoundForComponentWhenClassNamesDoNotMatch
 {
-  CKComponentScopeFrame *frame = nil;
-
   id state = @12345;
 
   CKComponent *(^block)(void) = ^CKComponent *{
@@ -179,14 +125,12 @@
     return c;
   };
 
-  CKComponent *component = CKBuildComponent(nil, frame, block).component;
+  CKComponent *component = CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, block).component;
   XCTAssertNil(component.scopeFrameToken);
 }
 
 - (void)testStateScopeFrameIsNotFoundWhenAnotherComponentInTheSameScopeAcquiresItFirst
 {
-  CKComponentScopeFrame *frame = nil;
-
   CKComponent __block *innerComponent = nil;
 
   id state = @12345;
@@ -200,53 +144,9 @@
     return [CKComponent new];
   };
 
-  CKComponent *outerComponent = CKBuildComponent(nil, frame, block).component;
+  CKComponent *outerComponent = CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, block).component;
   XCTAssertNotNil(innerComponent.scopeFrameToken);
   XCTAssertNil(outerComponent.scopeFrameToken);
-}
-
-#pragma mark - Controller Construction
-
-- (void)testComponentWithControllerThrowsIfNoScopeExistsForTheComponent
-{
-  CKComponent *(^block)(void) = ^CKComponent *{
-    return [CKMonkeyComponent new];
-  };
-
-  CKComponentScopeFrame *frame = nil;
-  XCTAssertThrows((void)CKBuildComponent(nil, frame, block));
-}
-
-- (void)testComponentWithControllerDoesNotThrowIfScopeExistsForTheComponent
-{
-  CKComponent *(^block)(void) = ^CKComponent *{
-    CKComponentScope scope([CKMonkeyComponent class]);
-    return [CKMonkeyComponent new];
-  };
-
-  CKComponentScopeFrame *frame = nil;
-  XCTAssertNoThrow((void)CKBuildComponent(nil, frame, block));
-}
-
-- (void)testComponentWithControllerThatHasAnimationsThrowsIfNoScopeExistsForTheComponent
-{
-  CKComponent *(^block)(void) = ^CKComponent *{
-    return [CKMonkeyComponentWithAnimations new];
-  };
-
-  CKComponentScopeFrame *frame = nil;
-  XCTAssertThrows((void)CKBuildComponent(nil, frame, block));
-}
-
-- (void)testComponentWithControllerThatHasAnimationsDoesNotThrowIfScopeExistsForTheComponent
-{
-  CKComponent *(^block)(void) = ^CKComponent *{
-    CKComponentScope scope([CKMonkeyComponentWithAnimations class]);
-    return [CKMonkeyComponentWithAnimations new];
-  };
-
-  CKComponentScopeFrame *frame = nil;
-  XCTAssertNoThrow((void)CKBuildComponent(nil, frame, block));
 }
 
 @end

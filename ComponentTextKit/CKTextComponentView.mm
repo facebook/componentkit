@@ -134,11 +134,4 @@
   return [super gestureRecognizerShouldBegin:recognizer];
 }
 
-#pragma mark - Accessibility
-
-- (NSString *)accessibilityLabel
-{
-  return self.renderer.attributes.attributedString.string;
-}
-
 @end

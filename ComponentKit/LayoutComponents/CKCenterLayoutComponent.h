@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -37,6 +37,7 @@ typedef NS_OPTIONS(NSUInteger, CKCenterLayoutComponentSizingOptions) {
 
 /**
  @param centeringOptions, see CKCenterLayoutComponentCenteringOptions.
+ @param sizingOptions, see CKCenterLayoutComponentSizingOptions.
  @param child The child to center.
  @param size The component size or {} for the default which is for the layout to take the maximum space available.
  */

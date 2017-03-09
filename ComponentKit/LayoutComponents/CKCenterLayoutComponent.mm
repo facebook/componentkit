@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -11,8 +11,8 @@
 #import "CKCenterLayoutComponent.h"
 
 #import "CKInternalHelpers.h"
-#import "ComponentUtilities.h"
 #import "CKComponentSubclass.h"
+#import "ComponentUtilities.h"
 
 @implementation CKCenterLayoutComponent
 {
@@ -50,7 +50,7 @@
     (_centeringOptions & CKCenterLayoutComponentCenteringX) != 0 ? 0 : constrainedSize.min.width,
     (_centeringOptions & CKCenterLayoutComponentCenteringY) != 0 ? 0 : constrainedSize.min.height,
   };
-  const CKComponentLayout childLayout = [_child layoutThatFits:{minChildSize, {constrainedSize.max}} parentSize:size];
+  const CKComponentLayout childLayout = CKComputeComponentLayout(_child, {minChildSize, {constrainedSize.max}}, size);
 
   // If we have an undetermined height or width, use the child size to define the layout
   // size

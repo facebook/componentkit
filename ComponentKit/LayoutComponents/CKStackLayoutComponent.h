@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -11,6 +11,7 @@
 #import <vector>
 
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKContainerWrapper.h>
 
 typedef NS_ENUM(NSUInteger, CKStackLayoutDirection) {
   CKStackLayoutDirectionVertical,
@@ -77,15 +78,25 @@ struct CKStackLayoutComponentChild {
   CGFloat spacingBefore;
   /** Additional space to place after the component in the stacking direction. */
   CGFloat spacingAfter;
-  /** If the sum of childrens' stack dimensions is less than the minimum size, should this component grow? */
-  BOOL flexGrow;
-  /** If the sum of childrens' stack dimensions is greater than the maximum size, should this component shrink? */
-  BOOL flexShrink;
+  /**
+   If the sum of childrens' stack dimensions is less than the minimum size, how much should this component grow?
+   This value represents the "flex grow factor" and determines how much this component should grow in relation to any
+   other flexible children.
+   */
+  CGFloat flexGrow;
+  /**
+   If the sum of childrens' stack dimensions is greater than the maximum size, how much should this component shrink?
+   This value represents the "flex shrink factor" and determines how much this component should shink in relation to
+   other flexible children.
+   */
+  CGFloat flexShrink;
   /** Specifies the initial size in the stack dimension for the child. */
   CKRelativeDimension flexBasis;
   /** Orientation of the child along cross axis, overriding alignItems */
   CKStackLayoutAlignSelf alignSelf;
 };
+
+extern template class std::vector<CKStackLayoutComponentChild>;
 
 /**
  A simple layout component that stacks a list of children vertically or horizontally.
@@ -117,7 +128,7 @@ struct CKStackLayoutComponentChild {
  */
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
-                      style:(CKStackLayoutComponentStyle)style
-                   children:(const std::vector<CKStackLayoutComponentChild> &)children;
+                      style:(const CKStackLayoutComponentStyle &)style
+                   children:(CKContainerWrapper<std::vector<CKStackLayoutComponentChild>> &&)children;
 
 @end

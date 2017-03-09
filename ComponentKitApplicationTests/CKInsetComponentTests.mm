@@ -3,17 +3,17 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
 
-#import <ComponentKitTestLib/CKComponentSnapshotTestCase.h>
+#import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
-#import "CKBackgroundLayoutComponent.h"
-#import "CKCompositeComponent.h"
-#import "CKInsetComponent.h"
-#import "CKStaticLayoutComponent.h"
+#import <ComponentKit/CKBackgroundLayoutComponent.h>
+#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKInsetComponent.h>
+#import <ComponentKit/CKStaticLayoutComponent.h>
 
 
 typedef NS_OPTIONS(NSUInteger, CKInsetComponentTestEdge) {

@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -537,7 +537,7 @@ namespace CK {
     virtual void onInsertItem(KeyT const& key, NSUInteger cost) override { _cacheStrategy.insertItem(key, cost); }
     virtual void onItemHit(KeyT const& key) override { _cacheStrategy.moveItemAfterHit(key); }
     virtual std::vector<KeyT> onCompact(NSUInteger toEraseCost) override { return _cacheStrategy.compactWithCost(toEraseCost); }
-    virtual NSUInteger getCurrentCost() const { return _cacheStrategy.getCurrentCost(); }
+    virtual NSUInteger getCurrentCost() const override { return _cacheStrategy.getCurrentCost(); }
   public:
   template <typename ...StrategyArgs>
     CacheImpl(const std::string &cacheName, NSUInteger maxCost, CGFloat compactionFactor, StrategyArgs&&... args)

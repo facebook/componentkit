@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -15,7 +15,7 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKEqualityHashHelpers.h>
 #import <ComponentKit/CKMacros.h>
 
 /**
@@ -204,7 +204,7 @@ static void performSetter(id object, SEL setter, id value)
 #pragma clang diagnostic pop
 }
 
-CKComponentViewAttribute::CKComponentViewAttribute(SEL setter) :
+CKComponentViewAttribute::CKComponentViewAttribute(SEL setter) noexcept :
 identifier(sel_getName(setter)),
 applicator(^(UIView *view, id value){
   performSetter(view, setter, value);
@@ -213,9 +213,11 @@ applicator(^(UIView *view, id value){
 // Explicit destructor to prevent inlining, reduce code size. See D1814602.
 CKComponentViewAttribute::~CKComponentViewAttribute() {}
 
-CKComponentViewAttribute CKComponentViewAttribute::LayerAttribute(SEL setter)
+CKComponentViewAttribute CKComponentViewAttribute::LayerAttribute(SEL setter) noexcept
 {
   return CKComponentViewAttribute(std::string("layer") + sel_getName(setter), ^(UIView *view, id value){
     performSetter(view.layer, setter, value);
   });
 }
+
+template class std::unordered_map<CKComponentViewAttribute, CKBoxedValue>;

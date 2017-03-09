@@ -11,13 +11,6 @@
 
 #import "SuccessIndicatorComponent.h"
 
-#import <ComponentKit/CKBackgroundLayoutComponent.h>
-#import <ComponentKit/CKCenterLayoutComponent.h>
-#import <ComponentKit/CKInsetComponent.h>
-#import <ComponentKit/CKStackLayoutComponent.h>
-
-#import <ComponentKit/CKLabelComponent.h>
-
 @implementation SuccessIndicatorComponent
 
 + (instancetype)newWithIndicatesSuccess:(BOOL)indicatesSuccess
@@ -61,7 +54,8 @@
                     viewAttributes:{
                       {@selector(setBackgroundColor:), [UIColor clearColor]},
                       {@selector(setUserInteractionEnabled:), @NO},
-                    }]
+                    }
+                    size:{ }]
                  },
                  {[CKLabelComponent
                    newWithLabelAttributes:{
@@ -73,7 +67,8 @@
                    viewAttributes:{
                      {@selector(setBackgroundColor:), [UIColor clearColor]},
                      {@selector(setUserInteractionEnabled:), @NO},
-                   }],
+                   }
+                   size:{ }],
                    .spacingBefore = 20
                  }
                }]]

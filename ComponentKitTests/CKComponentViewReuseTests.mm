@@ -3,20 +3,22 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKitTestHelpers/CKComponentLifecycleTestController.h>
+
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKCompositeComponent.h>
+
 #import "ComponentViewManager.h"
 #import "ComponentViewReuseUtilities.h"
-#import "CKComponent.h"
-#import "CKComponentInternal.h"
-#import "CKComponentLifecycleManager.h"
-#import "CKComponentProvider.h"
-#import "CKCompositeComponent.h"
 
 @interface CKComponentViewReuseTests : XCTestCase <CKComponentProvider>
 @end
@@ -34,14 +36,18 @@ using namespace CK::Component;
 
 @implementation CKComponentViewReuseTests
 
+static UIView *viewFactory()
+{
+  return [[UIView alloc] init];
+}
+
 - (void)testThatRecyclingViewWithoutEnteringReusePoolDoesNotCallReuseBlocks
 {
   CKComponent *component =
   [CKComponent
    newWithView:{
      {
-       "reuse-aware-view",
-       ^{ return [[UIView alloc] init]; },
+       &viewFactory,
        ^(UIView *v){ XCTFail(@"Didn't expect to have didEnterReusePool called"); },
        ^(UIView *v){ XCTFail(@"Didn't expect to have willLeaveReusePool called"); }
      },
@@ -70,8 +76,7 @@ using namespace CK::Component;
   [CKComponent
    newWithView:{
      {
-       "reuse-aware-view",
-       ^{ return [[UIView alloc] init]; },
+       &viewFactory,
        ^(UIView *v){ viewThatEnteredReusePool = v; },
        ^(UIView *v){ XCTFail(@"Didn't expect to have willLeaveReusePool called"); }
      },
@@ -105,8 +110,7 @@ using namespace CK::Component;
   [CKComponent
    newWithView:{
      {
-       "reuse-aware-view",
-       ^{ return [[UIView alloc] init]; },
+       &viewFactory,
        ^(UIView *v){ viewThatEnteredReusePool = v; },
        ^(UIView *v){
          XCTAssertTrue(v == viewThatEnteredReusePool, @"Expected %@ but got %@", viewThatEnteredReusePool, v);
@@ -146,8 +150,7 @@ using namespace CK::Component;
   [CKComponent
    newWithView:{
      {
-       "reuse-aware-view",
-       ^{ return [[UIView alloc] init]; },
+       &viewFactory,
        ^(UIView *v){ viewThatEnteredReusePool = v; },
        ^(UIView *v){ XCTFail(@"Didn't expect willLeaveReusePool"); }
      },
@@ -191,8 +194,7 @@ using namespace CK::Component;
   [CKComponent
    newWithView:{
      {
-       "reuse-aware-view",
-       ^{ return [[UIView alloc] init]; },
+       &viewFactory,
        ^(UIView *v){ viewThatEnteredReusePool = v; },
        ^(UIView *v){ XCTFail(@"Didn't expect willLeaveReusePool"); }
      },
@@ -248,17 +250,27 @@ using namespace CK::Component;
 {
   UIView *rootView = [[UIView alloc] init];
 
-  CKComponentLifecycleManager *clm = [[CKComponentLifecycleManager alloc] initWithComponentProvider:[self class]];
-  [clm updateWithState:[clm prepareForUpdateWithModel:@NO constrainedSize:{{0,0}, {100, 100}} context:nil]];
-  [clm attachToView:rootView];
+  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+                                                                                                                             sizeRangeProvider:nil];
+  [componentLifecycleTestController updateWithState:[componentLifecycleTestController prepareForUpdateWithModel:@NO
+                                                                                                constrainedSize:{{0,0}, {100, 100}}
+                                                                                                        context:nil]];
+  [componentLifecycleTestController attachToView:rootView];
 
   // Find the reuse aware view
   CKReuseAwareView *reuseAwareView = [[[[[[rootView subviews] firstObject] subviews] firstObject] subviews] firstObject];
   XCTAssertFalse(reuseAwareView.inReusePool, @"Shouldn't be in reuse pool now, it's just been mounted");
 
   // Update to a totally different component so that the reuse aware view's parent should be hidden
-  [clm updateWithState:[clm prepareForUpdateWithModel:@YES constrainedSize:{{0,0}, {100, 100}} context:nil]];
+  [componentLifecycleTestController updateWithState:[componentLifecycleTestController prepareForUpdateWithModel:@YES
+                                                                                                constrainedSize:{{0,0}, {100, 100}}
+                                                                                                        context:nil]];
   XCTAssertTrue(reuseAwareView.inReusePool, @"Should be in reuse pool as its parent is hidden by components");
+}
+
+static UIView *reuseAwareViewFactory()
+{
+  return [[CKReuseAwareView alloc] init];
 }
 
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
@@ -271,8 +283,7 @@ using namespace CK::Component;
             [CKComponent
              newWithView:{
                {
-                 "reuse-aware-view",
-                 ^{ return [[CKReuseAwareView alloc] init]; },
+                 &reuseAwareViewFactory,
                  ^(UIView *v){ ((CKReuseAwareView *)v).inReusePool = YES; },
                  ^(UIView *v){ ((CKReuseAwareView *)v).inReusePool = NO; }
                },
@@ -320,7 +331,7 @@ supercomponent:(CKComponent *)supercomponent
   CKInjectingView *injectingView = (CKInjectingView *)result.contextForChildren.viewManager->view;
   return {
     .mountChildren = YES,
-    .contextForChildren = result.contextForChildren.childContextForSubview(injectingView.injectedView),
+    .contextForChildren = result.contextForChildren.childContextForSubview(injectingView.injectedView, NO),
   };
 }
 

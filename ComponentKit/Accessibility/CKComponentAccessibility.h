@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -42,18 +42,18 @@ private:
 };
 
 /**
- Separate structure to handle accessibility as we want the components infrastructure to decide wether to use it or not depending if accessibility is enabled or not.
+ Separate structure to handle accessibility as we want the components infrastructure to decide whether to use it or not depending if accessibility is enabled or not.
+ Accessibility is enabled by default on the simulator, but only enabled on device if VoiceOver is on.
+ Not to be confused with accessibilityIdentifier which is used for automation to identify elements on the screen. To set the identifier pass in {@selector(setAccessibilityIdentifier:), @"accessibilityId"} with the viewConfiguration's attributes
  */
 struct CKComponentAccessibilityContext {
   NSNumber *isAccessibilityElement;
-  NSString *accessibilityIdentifier;
   CKComponentAccessibilityTextAttribute accessibilityLabel;
   CKComponentAction accessibilityComponentAction;
 
   bool operator==(const CKComponentAccessibilityContext &other) const
   {
-    return CKObjectIsEqual(other.accessibilityIdentifier, accessibilityIdentifier)
-    && CKObjectIsEqual(other.isAccessibilityElement, isAccessibilityElement)
+    return CKObjectIsEqual(other.isAccessibilityElement, isAccessibilityElement)
     && CKObjectIsEqual(other.accessibilityLabel.value(), accessibilityLabel.value())
     && other.accessibilityComponentAction == accessibilityComponentAction;
   }
@@ -64,8 +64,8 @@ namespace CK {
     namespace Accessibility {
       /**
        @return A modified configuration for which extra view component attributes have been added to handle accessibility.
-       e.g: The following view configuration `{[UIView class], {{@selector(setBlah:), @"Blah"}}, {.accessibilityIdentifier = @"accessibilityId"}}`
-       will become `{[UIView class], {{@selector(setBlah:), @"Blah"}, {@selector(setAccessibilityIdentifier), @"accessibilityId"}}, {.accessibilityIdentifier = @"accessibilityId"}}`
+       e.g: The following view configuration `{[UIView class], {{@selector(setBlah:), @"Blah"}}, {.accessibilityLabel = @"accessibilityLabel"}}`
+       will become `{[UIView class], {{@selector(setBlah:), @"Blah"}, {@selector(setAccessibilityLabel), @"accessibilityLabel"}}, {.accessibilityLabel = @"accessibilityLabel"}}`
        */
       CKComponentViewConfiguration AccessibleViewConfiguration(const CKComponentViewConfiguration &viewConfiguration);
       BOOL IsAccessibilityEnabled();

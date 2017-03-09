@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -11,7 +11,6 @@
 #import "CKStaticLayoutComponent.h"
 
 #import "ComponentUtilities.h"
-#import "CKComponentLayout.h"
 #import "CKComponentSubclass.h"
 
 @implementation CKStaticLayoutComponent
@@ -21,18 +20,18 @@
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
-                   children:(const std::vector<CKStaticLayoutComponentChild> &)children
+                   children:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
 {
   CKStaticLayoutComponent *c = [super newWithView:view size:size];
   if (c) {
-    c->_children = children;
+    c->_children = children.take();
   }
   return c;
 }
 
-+ (instancetype)newWithChildren:(const std::vector<CKStaticLayoutComponentChild> &)children
++ (instancetype)newWithChildren:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
 {
-  return [self newWithView:{} size:{} children:children];
+  return [self newWithView:{} size:{} children:std::move(children)];
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
@@ -49,8 +48,7 @@
       constrainedSize.max.height - child.position.y
     };
     CKSizeRange childConstraint = child.size.resolveSizeRange(size, {{0,0}, autoMaxSize});
-    return CKComponentLayoutChild({child.position, [child.component layoutThatFits:childConstraint
-                                                                        parentSize:size]});
+    return CKComponentLayoutChild({child.position, CKComputeComponentLayout(child.component, childConstraint, size)});
   });
 
   if (isnan(size.width)) {

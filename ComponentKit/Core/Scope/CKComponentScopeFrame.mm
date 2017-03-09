@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -11,19 +11,17 @@
 #import "CKComponentScopeFrame.h"
 
 #import <unordered_map>
-#import <vector>
+#import <libkern/OSAtomic.h>
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKMacros.h>
-#import <ComponentKit/CKComponentSubclass.h>
-
-#import "CKInternalHelpers.h"
+#import "CKAssert.h"
 #import "CKComponentController.h"
 #import "CKComponentInternal.h"
-#import "CKComponentScopeInternal.h"
-#import "CKCompositeComponent.h"
-
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+#import "CKComponentScopeHandle.h"
+#import "CKComponentScopeRootInternal.h"
+#import "CKComponentSubclass.h"
+#import "CKEqualityHashHelpers.h"
+#import "CKMacros.h"
+#import "CKThreadLocalComponentScope.h"
 
 typedef struct _CKStateScopeKey {
   Class __unsafe_unretained componentClass;
@@ -44,151 +42,139 @@ namespace std {
   };
 }
 
-static const std::vector<SEL> announceableEvents = {
-  @selector(componentTreeWillAppear),
-  @selector(componentTreeDidDisappear),
-};
-
-@interface CKComponentScopeFrame ()
-@property (nonatomic, weak, readwrite) CKComponentScopeFrame *root;
-@end
-
-@implementation CKComponentScopeFrame {
-  id _modifiedState;
+@implementation CKComponentScopeFrame
+{
   std::unordered_map<_CKStateScopeKey, CKComponentScopeFrame *> _children;
-  std::unordered_multimap<SEL, CKComponentController *> _eventRegistration;
 }
 
-- (instancetype)initWithListener:(id<CKComponentStateListener>)listener
-                           class:(Class __unsafe_unretained)aClass
-                      identifier:(id)identifier
-                           state:(id)state
-                      controller:(CKComponentController *)controller
-                            root:(CKComponentScopeFrame *)rootFrame
++ (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
+                                      newRoot:(CKComponentScopeRoot *)newRoot
+                               componentClass:(Class)componentClass
+                                   identifier:(id)identifier
+                          initialStateCreator:(id (^)())initialStateCreator
+                                 stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+{
+  CKCAssert([componentClass isSubclassOfClass:[CKComponent class]], @"%@ is not a component", NSStringFromClass(componentClass));
+  CKAssertNotNil(pair.frame, @"Must have frame");
+
+  CKComponentScopeFrame *existingChildFrameOfEquivalentPreviousFrame;
+  if (pair.equivalentPreviousFrame) {
+    const auto &equivalentPreviousFrameChildren = pair.equivalentPreviousFrame->_children;
+    const auto it = equivalentPreviousFrameChildren.find({componentClass, identifier});
+    existingChildFrameOfEquivalentPreviousFrame = (it == equivalentPreviousFrameChildren.end()) ? nil : it->second;
+  }
+
+  const auto existingChild = pair.frame->_children.find({componentClass, identifier});
+  if (!pair.frame->_children.empty() && (existingChild != pair.frame->_children.end())) {
+    /*
+     The component was involved in a scope collision and the scope handle needs to be reacquired.
+
+     In the event of a component scope collision the component scope frame reuses the existing scope handle; any
+     existing state will be made available to the component that introduced the scope collision. This leads to some
+     interesting side effects:
+
+       1. Any component state associated with the scope handle will be shared between components with colliding scopes
+       2. Any component controller associated with the scope handle will be responsible for each component with
+          colliding scopes; resulting in strange behavior while components are mounted, unmounted, etc.
+
+     Reusing the existing scope handle allows ComponentKit to detect component scope collisions during layout. Moving
+     component scope collision detection to component layout makes it possible to create multiple components that may
+     normally result in a scope collision even if only one component actually makes it to layout.
+    */
+    CKComponentScopeHandle *newHandle = [existingChild->second.handle newHandleToBeReacquiredDueToScopeCollision];
+    CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
+    /*
+     Share the initial component scope tree across all colliding component scopes.
+
+     This behavior ensures the initial component scope tree "wins" in the event of a component scope collision:
+
+                                       +-------+         +-------+         +-------+
+                                       |       |         |       |         |       |
+                                       |   A   |         |   A   |         |   A   |
+                                       |      1|         |      2|         |      3|
+                                       +-------+         +-------+         +-------+
+                                           |                 | collision       | collision
+                                           +-----------------+-----------------+
+                                          /|\
+                                         / | \
+                                        /  |  \
+                                   +---+ +---+ +---+
+                                   | 1 | | 2 | | 3 |
+                                   +---+ +---+ +---+
+                                    / \
+                                +---+ +---+
+                                | 4 | | 5 |
+                                +---+ +---+
+
+     In the example above the component scope frames labeled as "A" are involved in scope collisions. Notice that only
+     one component scope tree exists for all three component scope frames involved in the collision. Any component state
+     or component controllers present in the intial component scope tree are now present across all colliding component
+     scope frames.
+
+     Now assume each component scope frame above is paired with a matching component. Component scope frame A1 belongs
+     to component A1, colliding component scope frame A2 belongs to component A2, component scope frame 4 belongs to
+     component 4, and so on. If only component A2 finds its way to layout (i.e. both A1 and A3 were simply created and
+     not added to the component hierarchy) this behavior guarantees that component 4 always acquires the same component
+     scope.
+
+     Compare this behavior to the behavior that would exist if the initial component scope tree were not shared:
+
+                                       +-------+         +-------+         +-------+
+                                       |       |         |       |         |       |
+                                       |   A   |         |   A   |         |   A   |
+                                       |      1|         |      2|         |      3|
+                                       +-------+         +-------+         +-------+
+                                           |                 | collision       | collision
+                                           +-----------------+-----------------+
+                                          /|\                .                /|\
+                                         / | \               .               / | \
+                                        /  |  \              .              /  |  \
+                                   +---+ +---+ +---+                   +---+ +---+ +---+
+                                   | 1 | | 2 | | 3 |                   | 1'| | 2'| | 3'|
+                                   +---+ +---+ +---+                   +---+ +---+ +---+
+                                    / \                                 / \
+                                +---+ +---+                         +---+ +---+
+                                | 4 | | 5 |                         | 4'| | 5'|
+                                +---+ +---+                         +---+ +---+
+
+     Each component scope frame participating in the collision now has its own unique component scope tree. For
+     component scope frame A1 the outcome is largely the same. Things get a bit more interesting for A2 and A3. Notice
+     that A3 now has its own, nearly identical, component scope tree. The structure is the same but the component state
+     and component controllers are different.
+
+     Problems arise when the component that owns component scope frame A3 is added to the component hierarchy. Suppose
+     A3 is building its component scope tree for the first time. The component that owns component scope frame 4' will
+     acquire a new component controller as there is no equivalent previous frame, as expected.
+
+     The next time the component hierarchy is created (e.g. after a component state update) component scope frame 4'
+     actually finds component scope frame 4 in the equivalent previous frame. This means component 4' will acquire a
+     DIFFERENT component controller instance than it had originally. Why? Because the component scope frame above
+     component scope frame A will only ever have A1 as a child because A1 was inserted before A2 and A3.
+     */
+    newChild->_children = existingChild->second->_children;
+    return {.frame = newChild, .equivalentPreviousFrame = existingChildFrameOfEquivalentPreviousFrame};
+  }
+
+  CKComponentScopeHandle *newHandle =
+  existingChildFrameOfEquivalentPreviousFrame
+  ? [existingChildFrameOfEquivalentPreviousFrame.handle newHandleWithStateUpdates:stateUpdates
+                                                               componentScopeRoot:newRoot]
+  : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
+                                      rootIdentifier:newRoot.globalIdentifier
+                                      componentClass:componentClass
+                                 initialStateCreator:initialStateCreator];
+
+  CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
+  pair.frame->_children.insert({{componentClass, identifier}, newChild});
+  return {.frame = newChild, .equivalentPreviousFrame = existingChildFrameOfEquivalentPreviousFrame};
+}
+
+- (instancetype)initWithHandle:(CKComponentScopeHandle *)handle
 {
   if (self = [super init]) {
-    _listener = listener;
-    _componentClass = aClass;
-    _identifier = identifier;
-    _state = state;
-    _controller = controller;
-    _root = rootFrame ? rootFrame : self;
-
-    for (const auto announceableEvent : announceableEvents) {
-      if (CKSubclassOverridesSelector([CKComponentController class], [controller class], announceableEvent)) {
-        [_root registerController:controller forSelector:announceableEvent];
-      }
-    }
+    _handle = handle;
   }
   return self;
-}
-
-- (instancetype)init
-{
-  CK_NOT_DESIGNATED_INITIALIZER();
-}
-
-+ (instancetype)rootFrameWithListener:(id<CKComponentStateListener>)listener
-{
-  return [[self alloc] initWithListener:listener class:Nil identifier:nil state:nil controller:nil root:nil];
-}
-
-- (instancetype)childFrameWithComponentClass:(Class __unsafe_unretained)aClass
-                                  identifier:(id)identifier
-                                       state:(id)state
-                                  controller:(CKComponentController *)controller
-{
-  CKComponentScopeFrame *child = [[[self class] alloc] initWithListener:_listener
-                                                                  class:aClass
-                                                             identifier:identifier
-                                                                  state:state
-                                                             controller:controller
-                                                                   root:_root];
-  const auto result = _children.insert({{child.componentClass, child.identifier}, child});
-  CKCAssert(result.second, @"Scope collision! Attempting to create scope %@::%@ when it already exists.",
-            aClass, identifier);
-  return child;
-}
-
-- (CKComponentScopeFrame *)existingChildFrameWithClass:(__unsafe_unretained Class)aClass identifier:(id)identifier
-{
-  const auto it = _children.find({aClass, identifier});
-  return (it == _children.end()) ? nil : it->second;
-}
-
-- (CKComponentBoundsAnimation)boundsAnimationFromPreviousFrame:(CKComponentScopeFrame *)previousFrame
-{
-  if (previousFrame == nil) {
-    return {};
-  }
-
-  // _owningComponent is __weak, so we must store into strong locals to prevent racing with it becoming nil.
-  CKComponent *newComponent = _owningComponent;
-  CKComponent *oldComponent = previousFrame->_owningComponent;
-  if (newComponent && oldComponent) {
-    const CKComponentBoundsAnimation anim = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
-    if (anim.duration != 0) {
-      return anim;
-    }
-  }
-
-  const auto &oldChildren = previousFrame->_children;
-  for (const auto &newIt : _children) {
-    const auto oldIt = oldChildren.find(newIt.first);
-    if (oldIt != oldChildren.end()) {
-      const CKComponentBoundsAnimation anim = [newIt.second boundsAnimationFromPreviousFrame:oldIt->second];
-      if (anim.duration != 0) {
-        return anim;
-      }
-    }
-  }
-
-  return {};
-}
-
-#pragma mark - State
-
-- (id)updatedState
-{
-  return _modifiedState ?: _state;
-}
-
-- (void)updateState:(id (^)(id))updateFunction tryAsynchronousUpdate:(BOOL)tryAsynchronousUpdate
-{
-  CKAssertNotNil(updateFunction, @"The block for updating state cannot be nil. What would that even mean?");
-
-  _modifiedState = updateFunction(_state);
-  [_listener componentStateDidEnqueueStateModificationWithTryAsynchronousUpdate:tryAsynchronousUpdate];
-}
-
-#pragma mark - Component State Acquisition
-
-- (void)markAcquiredByComponent:(CKComponent *)component
-{
-  CKAssert(_acquired == NO, @"To acquire state for this component you must declare a scope in the -init method with "
-           "CKComponentScope([%@ class], identifier).", NSStringFromClass([component class]));
-
-  /* We keep a separate boolean since _owningComponent is __weak and we want this to be write-once. */
-  _acquired = YES;
-  _owningComponent = component;
-}
-
-- (void)registerController:(CKComponentController *)controller forSelector:(SEL)selector
-{
-  _eventRegistration.insert({{selector, controller}});
-}
-
-- (void)announceEventToControllers:(SEL)selector
-{
-  CKAssert(std::find(announceableEvents.begin(), announceableEvents.end(), selector) != announceableEvents.end(),
-           @"Can only announce a whitelisted events, and %@ is not on the list.", NSStringFromSelector(selector));
-  auto range = _eventRegistration.equal_range(selector);
-  for (auto it = range.first; it != range.second; ++it) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [it->second performSelector:selector];
-#pragma clang diagnostic pop
-  }
 }
 
 @end

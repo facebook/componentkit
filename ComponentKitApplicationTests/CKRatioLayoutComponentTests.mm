@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -14,7 +14,7 @@
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKRatioLayoutComponent.h>
 
-#import <ComponentKitTestLib/CKComponentSnapshotTestCase.h>
+#import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
 @interface CKRatioLayoutComponentTests : CKComponentSnapshotTestCase
 
@@ -51,6 +51,16 @@ static CKRatioLayoutComponent *ratioLayoutComponent(CGFloat ratio, const CKCompo
 
   CKComponentSize tallSize = {20, 200};
   CKSnapshotVerifyComponent(ratioLayoutComponent(10.0, tallSize), kFixedSize, @"TenTimesRatioWithItemTooBig");
+}
+
+- (void)testRatioLayoutRendersToNilForNilInput
+{
+  CKRatioLayoutComponent *c =
+  [CKRatioLayoutComponent
+   newWithRatio:0.5
+   size:{}
+   component:nil];
+  XCTAssertNil(c);
 }
 
 @end

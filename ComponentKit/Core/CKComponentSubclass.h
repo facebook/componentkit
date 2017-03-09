@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -15,6 +15,7 @@
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKDimension.h>
+#import <ComponentKit/CKUpdateMode.h>
 
 /** A constant that indicates that the parent's size is not yet determined in a given dimension. */
 extern CGFloat const kCKComponentParentDimensionUndefined;
@@ -36,6 +37,7 @@ extern CGSize const kCKComponentParentSizeUndefined;
  Call this on children components to compute their layouts within your implementation of -computeLayoutThatFits:.
 
  @warning You may not override this method. Override -computeLayoutThatFits: instead.
+ @warning In almost all cases, prefer the use of CKComputeComponentLayout in CKComponentLayout
 
  @param constrainedSize Specifies a minimum and maximum size. The receiver must choose a size that is in this range.
  @param parentSize The parent component's size. If the parent component does not have a final size in a given dimension,
@@ -77,24 +79,44 @@ extern CGSize const kCKComponentParentSizeUndefined;
                       relativeToParentSize:(CGSize)parentSize;
 
 /**
- Call this to enqueue a change to the state.
+ Enqueue a change to the state.
 
- The block takes the current state as a parameter and returns an instance of the new state.
- The state *must* be immutable since components themselves are. A possible use might be:
+ The state must be immutable since components themselves are. A possible use might be:
 
- [self updateState:^MyState *(MyState *currentState) {
-   MyMutableState *nextState = [currentState mutableCopy];
-   [nextState setFoo:[nextState bar] * 2];
-   return [nextState copy]; // immutable! :D
- }];
+   [self updateState:^MyState *(MyState *currentState) {
+     MyMutableState *nextState = [currentState mutableCopy];
+     [nextState setFoo:[nextState bar] * 2];
+     return [nextState copy]; // immutable! :D
+   }];
+
+ @param updateBlock A block that takes the current state as a parameter and returns an instance of the new state.
+ @param mode The update mode used to apply the state update.
+ @@see CKUpdateMode
  */
-- (void)updateState:(id (^)(id))updateBlock;
+- (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode;
 
 /**
  Allows an action to be forwarded to another target. By default, returns the receiver if it implements action,
  and proceeds up the responder chain otherwise.
  */
 - (id)targetForAction:(SEL)action withSender:(id)sender;
+
+/**
+ When an action is triggered, a component may use this method to either capture or ignore the given action. The default
+ implementation simply uses respondsToSelector: to determine if the component can perform the given action.
+
+ In practice, this is useful only for integrations with UIMenuController whose API walks the UIResponder chain to
+ determine which menu items to display. You should not override this method for standard component actions.
+ */
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
+
+/**
+ Override to return a list of animations that will be applied to the component when it is first mounted.
+
+ @warning If you override this method, your component MUST declare a scope (see CKComponentScope). This is used to
+ identify equivalent components between trees.
+ */
+- (std::vector<CKComponentAnimation>)animationsOnInitialMount;
 
 /**
  Override to return a list of animations from the previous version of the same component.

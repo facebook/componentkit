@@ -11,12 +11,7 @@
 
 #import "InteractiveQuoteComponent.h"
 
-#import <ComponentKit/CKComponentGestureActions.h>
-#import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentSubclass.h>
-#import <ComponentKit/CKCompositeComponent.h>
-#import <ComponentKit/CKOverlayLayoutComponent.h>
-#import <ComponentKit/CKStackLayoutComponent.h>
 
 #import "Quote.h"
 #import "QuoteComponent.h"
@@ -86,7 +81,7 @@ static CKComponent *hairlineComponent()
 {
   [self updateState:^(NSNumber *oldState){
     return [oldState boolValue] ? @NO : @YES;
-  }];
+  } mode:CKUpdateModeSynchronous];
 }
 
 - (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(InteractiveQuoteComponent *)previousComponent

@@ -10,12 +10,12 @@
 
 #import <ComponentKit/CKComponent.h>
 
+#import <ComponentKit/CKAsyncLayer.h>
 #import <ComponentKit/CKTextKitAttributes.h>
 
 struct CKTextComponentAccessibilityContext
 {
   NSNumber *isAccessibilityElement;
-  NSString *accessibilityIdentifier;
   NSNumber *providesAccessibleElements;
   /**
    Should rarely be used, the component's text will be used by default.
@@ -23,10 +23,21 @@ struct CKTextComponentAccessibilityContext
   CKComponentAccessibilityTextAttribute accessibilityLabel;
 };
 
+struct CKTextComponentOptions
+{
+  /**
+   Controls if rendering should be done synchronously or async
+   See @CKAsyncLayer
+   */
+  CKAsyncLayerDisplayMode displayMode;
+  CKTextComponentAccessibilityContext accessibilityContext;
+};
+
 @interface CKTextComponent : CKComponent
 
 + (instancetype)newWithTextAttributes:(const CKTextKitAttributes &)attributes
                        viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
-                 accessibilityContext:(const CKTextComponentAccessibilityContext &)accessibilityContext;
+                              options:(const CKTextComponentOptions &)options
+                                 size:(const CKComponentSize &)size;
 
 @end

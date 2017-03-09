@@ -3,14 +3,14 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKitTestLib/CKComponentSnapshotTestCase.h>
+#import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
 #import <ComponentKit/CKTextComponent.h>
 
@@ -27,6 +27,25 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
   ps.alignment = NSTextAlignmentNatural;
   ps.baseWritingDirection = NSWritingDirectionRightToLeft;
   return ps;
+}
+
+@interface CKTextComponentTestLayoutManager : NSLayoutManager
+
+@end
+
+@implementation CKTextComponentTestLayoutManager
+
+- (void)fillBackgroundRectArray:(const CGRect *)rectArray count:(NSUInteger)rectCount forCharacterRange:(NSRange)charRange color:(UIColor *)color
+{
+  CGContextRef ctx = UIGraphicsGetCurrentContext();
+  CGContextSetFillColorWithColor(ctx, [UIColor redColor].CGColor);
+  CGContextFillRects(ctx, rectArray, rectCount);
+}
+
+@end
+
+static NSLayoutManager *testLayoutManagerFactory(void) {
+  return [[CKTextComponentTestLayoutManager alloc] init];
 }
 
 @interface CKTextComponentTests : CKComponentSnapshotTestCase
@@ -53,7 +72,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -70,7 +90,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -91,7 +112,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -107,7 +129,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -124,7 +147,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -142,7 +166,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -164,7 +189,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -187,7 +213,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -210,7 +237,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -238,7 +266,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -258,7 +287,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -276,7 +306,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -296,7 +327,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -316,7 +348,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kStrictSize, @"");
 }
 
@@ -335,7 +368,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -360,7 +394,8 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kFlexibleSize, @"");
 }
 
@@ -380,7 +415,59 @@ static NSParagraphStyle *rtlWritingDirectionParagraphStyle() {
    viewAttributes:{
      {{@selector(setBackgroundColor:), [UIColor clearColor]}}
    }
-   accessibilityContext:{ }];
+   options:{ }
+   size:{ }];
+  CKSnapshotVerifyComponent(c, kUnrestrictedSize, @"");
+}
+
+- (void)testTruncationStringLargerThanLastLine
+{
+  CKTextComponent *c =
+  [CKTextComponent
+   newWithTextAttributes:{
+     .attributedString =
+     [[NSAttributedString
+       alloc]
+      initWithString:@"asdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf\nasdf"
+      attributes:@{NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue" size:12.5]}],
+     .maximumNumberOfLines = 3,
+     .truncationAttributedString = [[NSAttributedString
+                                     alloc]
+                                    initWithString:@"... Read More"
+                                    attributes:@{NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue" size:12.5]}],
+   }
+   viewAttributes:{
+     {{@selector(setBackgroundColor:), [UIColor clearColor]}}
+   }
+   options:{ }
+   size:{ }];
+  CKSnapshotVerifyComponent(c, kUnrestrictedSize, @"");
+}
+
+- (void)testShouldUseCustomLayoutManagerClass
+{
+	NSString *contentString = @"This is a string with a border behind every other word";
+  NSMutableAttributedString *attributed = [[NSMutableAttributedString alloc] initWithString:contentString attributes:@{NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue" size:12.5]}];
+  __block NSUInteger index = 0;
+  [contentString enumerateSubstringsInRange:[contentString rangeOfString:contentString]
+                                    options:NSStringEnumerationByWords
+                                 usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+                                   if (index++ % 2) {
+                                     [attributed addAttribute:NSBackgroundColorAttributeName value:[UIColor greenColor] range:substringRange];
+                                   }
+                                 }];
+
+  CKTextComponent *c =
+  [CKTextComponent
+   newWithTextAttributes:{
+     .attributedString = attributed,
+     .layoutManagerFactory = testLayoutManagerFactory
+   }
+   viewAttributes:{
+     {{@selector(setBackgroundColor:), [UIColor clearColor]}}
+   }
+   options:{ }
+   size:{ }];
   CKSnapshotVerifyComponent(c, kUnrestrictedSize, @"");
 }
 
