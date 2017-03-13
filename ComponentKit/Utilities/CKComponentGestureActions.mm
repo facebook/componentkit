@@ -179,8 +179,10 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
 
 - (void)handleGesture:(UIGestureRecognizer *)recognizer
 {
-  // If the action can be handled by the sender itself, send it there instead of looking up the chain.
-  [recognizer ck_componentAction].send(recognizer.view.ck_component, CKComponentActionSendBehaviorStartAtSender, recognizer);
+  if (recognizer.view.ck_component) {
+    // If the action can be handled by the sender itself, send it there instead of looking up the chain.
+    [recognizer ck_componentAction].send(recognizer.view.ck_component, CKComponentActionSendBehaviorStartAtSender, recognizer);
+  }
 }
 
 @end
