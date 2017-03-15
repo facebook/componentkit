@@ -12,14 +12,10 @@ The base `CKComponent` class is quite simple. Leaving out a few methods, it look
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size;
 
-/** Returns a layout for the component and its children. */
-- (CKComponentLayout)layoutThatFits:(CKSizeRange)constrainedSize
-                         parentSize:(CGSize)parentSize;
-
 @end
 {% endhighlight %}
 
-We'll get to these two methods in a moment. For now, note:
+Notes:
 
 - A component is totally immutable. For example, there is no `addSubcomponent:` method.
 - A component can be created on any thread. This helps keep all sizing and construction operations off the main thread.
