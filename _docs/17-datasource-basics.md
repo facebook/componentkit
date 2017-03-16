@@ -56,10 +56,10 @@ Ok, so now we have our view controller as the component provider, let's create o
 	[super viewDidLoad];
 	...
 	self.dataSource = _dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
-                                                                  supplementaryViewDataSource:nil
-                                                                            componentProvider:[self class]
-                                                                                      context:context
-                                                                    cellConfigurationFunction:nil];
+                                                                       supplementaryViewDataSource:nil
+                                                                                 componentProvider:[self class]
+                                                                                           context:context
+                                                                         cellConfigurationFunction:nil];
 {% endhighlight %}
 
 
@@ -137,8 +137,7 @@ Time to interact with those items now; nothing special here the regular selectio
 	- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 	{
  		MyModel *model = (MyModel *)[self.dataSource modelForItemAtIndexPath:indexPath];
- 		NSURL *navURL = model.url;
- 		if (navURL) {
+ 		if (model.url != nil) {
  			[[UIApplication sharedApplication] openURL:navURL];
  		}
  	}
