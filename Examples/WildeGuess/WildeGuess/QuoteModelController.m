@@ -42,22 +42,22 @@
 
 #pragma mark - Random Quote Generation
 
-static NSArray *generateRandomQuotes(NSInteger count)
+static NSArray<Quote *> *generateRandomQuotes(NSInteger count)
 {
-  NSMutableArray *_quotes = [NSMutableArray new];
+  NSMutableArray<Quote *> *quotes = [[NSMutableArray alloc] initWithCapacity:count];
   for (NSUInteger i = 0; i< count; i++) {
-    NSDictionary *randomQuote = generateRandomQuoteInfo();
-    Quote *quote  = [[Quote alloc] initWithText:randomQuote[@"text"]
-                                         author:randomQuote[@"author"]
+    NSDictionary<NSString *, NSString *> *quoteInfo = generateRandomQuoteInfo();
+    Quote *quote  = [[Quote alloc] initWithText:quoteInfo[@"text"]
+                                         author:quoteInfo[@"author"]
                                           style:generateStyle(i)];
-    [_quotes addObject:quote];
+    [quotes addObject:quote];
   }
-  return _quotes;
+  return quotes;
 }
 
-static NSDictionary *generateRandomQuoteInfo()
+static NSDictionary<NSString *, NSString *> *generateRandomQuoteInfo()
 {
-  NSArray *quotes = quotesList();
+  NSArray<NSDictionary<NSString *, NSString *> *> *quotes = quotesList();
   return quotes[arc4random_uniform((uint32_t)[quotes count])];
 }
 
@@ -76,7 +76,7 @@ static QuoteDisplayStyle generateStyle(NSUInteger index)
   }
 }
 
-static NSArray *quotesList()
+static NSArray<NSDictionary<NSString *, NSString *> *> *quotesList()
 {
   static NSArray *quotes;
   static dispatch_once_t once;

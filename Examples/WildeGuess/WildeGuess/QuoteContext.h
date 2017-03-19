@@ -14,7 +14,7 @@
 
 @interface QuoteContext : NSObject
 
-- (instancetype)initWithImageNames:(NSSet *)imageNames;
+- (instancetype)initWithImageNames:(NSSet<NSString *> *)imageNames;
 
 - (UIImage *)imageNamed:(NSString *)imageName;
 

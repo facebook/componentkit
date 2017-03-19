@@ -54,22 +54,17 @@ static NSString *const oscarWilde = @"Oscar Wilde";
       {[CKOverlayLayoutComponent
         newWithComponent:[QuoteComponent newWithQuote:quote context:context]
         overlay:overlay]},
-      {hairlineComponent()}
+      {[CKComponent
+        newWithView:{
+          [UIView class],
+          {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}
+        }
+        size:{.height = 1/[UIScreen mainScreen].scale}]}
     }]];
   if (c) {
     c->_overlay = overlay;
   }
   return c;
-}
-
-static CKComponent *hairlineComponent()
-{
-  return [CKComponent
-          newWithView:{
-            [UIView class],
-            {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}
-          }
-          size:{.height = 1/[UIScreen mainScreen].scale}];
 }
 
 + (id)initialState
