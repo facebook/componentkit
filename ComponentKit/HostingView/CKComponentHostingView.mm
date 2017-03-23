@@ -146,6 +146,18 @@ struct CKComponentHostingViewInputs {
   return _mountedLayout;
 }
 
+#pragma mark - Appearance
+
+- (void)hostingViewWillAppear
+{
+  [_pendingInputs.scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+}
+
+- (void)hostingViewDidDisappear
+{
+  [_pendingInputs.scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+}
+
 #pragma mark - CKComponentStateListener
 
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
