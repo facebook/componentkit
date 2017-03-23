@@ -33,6 +33,10 @@
 /** Updates the context used to render the component. */
 - (void)updateContext:(id<NSObject>)context mode:(CKUpdateMode)mode;
 
+/** Appearance events to be funneled to the component tree. */
+- (void)hostingViewWillAppear;
+- (void)hostingViewDidDisappear;
+
 - (instancetype)init CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 - (instancetype)initWithFrame:(CGRect)frame CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
