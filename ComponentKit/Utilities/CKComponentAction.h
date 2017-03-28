@@ -85,9 +85,9 @@
  }
 
 
- In the even that an action does not contain a target or a selector, it will no-op.
- As a result, it is the responsibility of the component to check (and possibly) assert
- when it has been given an invalid action.
+ In the event that an action does not contain a target or a selector, it will no-op.
+ As a result, it is the responsibility of the component to check (and possibly assert)
+ when it has been given an "invalid" action.
  */
 template<typename... T>
 class CKTypedComponentAction : public CKTypedComponentActionBase {
