@@ -451,4 +451,9 @@
   XCTAssertTrue(target.calledSomeMethod, @"Should have called the method on target");
 }
 
+- (void)testInvocationIsNilWhenSelectorAndTargetAreNil
+{
+  XCTAssertNil(CKComponentActionSendResponderInvocationPrepare(nil, nil, nil));
+}
+
 @end

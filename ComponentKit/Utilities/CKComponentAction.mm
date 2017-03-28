@@ -76,8 +76,12 @@ NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id t
   id responder = ([target respondsToSelector:@selector(targetForAction:withSender:)]
                   ? [target targetForAction:selector withSender:target]
                   : target);
-  CKCAssertNotNil(responder, @"Unhandled component action %@ following responder chain %@",
-                  NSStringFromSelector(selector), _CKComponentResponderChainDebugResponderChain(target));
+
+  // If we have no responder to start, bail early.
+  if (responder == nil) {
+    return nil;
+  }
+
   // This is not performance-sensitive, so we can just use an invocation here.
   NSMethodSignature *signature = [responder methodSignatureForSelector:selector];
   while (!signature) {
