@@ -9,126 +9,109 @@
  */
 
 #import "CKComponentScopeRoot.h"
-#import "CKComponentScopeRootInternal.h"
 
 #import <libkern/OSAtomic.h>
 
-#import "CKComponentController.h"
-#import "CKComponentInternal.h"
+#import "CKScopedComponent.h"
+#import "CKScopedComponentController.h"
 #import "CKComponentSubclass.h"
 #import "CKInternalHelpers.h"
 #import "CKThreadLocalComponentScope.h"
 
-typedef std::unordered_map<CKComponentAnnouncedEvent, SEL, std::hash<NSUInteger>, std::equal_to<NSUInteger>> CKAnounceableEventMap;
-
-static const CKAnounceableEventMap &announceableEvents()
-{
-  // Avoid the static destructor fiasco, use a pointer:
-  static const CKAnounceableEventMap *announceableEvents = new CKAnounceableEventMap({
-    {CKComponentAnnouncedEventTreeWillAppear, @selector(componentTreeWillAppear)},
-    {CKComponentAnnouncedEventTreeDidDisappear, @selector(componentTreeDidDisappear)},
-  });
-  return *announceableEvents;
-}
-
-CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
-                                        const CKComponentStateUpdateMap &stateUpdates,
-                                        CKComponent *(^function)(void))
-{
-  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
-  // Order of operations matters, so first store into locals and then return a struct.
-  CKComponent *component = function();
-  return {
-    .component = component,
-    .scopeRoot = threadScope.newScopeRoot,
-    .boundsAnimation = [threadScope.newScopeRoot boundsAnimationFromPreviousScopeRoot:previousRoot],
-  };
-}
+typedef std::unordered_map<CKComponentScopePredicate, __weak id<CKScopedComponent>> _CKRegisteredComponentsMap;
+typedef std::unordered_map<CKComponentControllerScopePredicate, __weak id<CKScopedComponentController>> _CKRegisteredComponentControllerMap;
 
 @implementation CKComponentScopeRoot
 {
-  std::unordered_multimap<CKComponentAnnouncedEvent, CKComponentController *, std::hash<NSUInteger>, std::equal_to<NSUInteger>> _eventRegistration;
-  NSHashTable *_boundsAnimationComponents; // weakly held
+  std::vector<CKComponentScopePredicate> _componentPredicates;
+  std::vector<CKComponentControllerScopePredicate> _componentControllerPredicates;
+  
+  _CKRegisteredComponentsMap _registeredComponents;
+  _CKRegisteredComponentControllerMap _registeredComponentControllers;
 }
 
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
+             componentPredicates:(const std::vector<CKComponentScopePredicate> &)componentPredicates
+   componentControllerPredicates:(const std::vector<CKComponentControllerScopePredicate> &)componentControllerPredicates
 {
   static int32_t nextGlobalIdentifier = 0;
-  return [[CKComponentScopeRoot alloc] initWithListener:listener globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)];
+  return [[CKComponentScopeRoot alloc] initWithListener:listener
+                                       globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)
+                                    componentPredicates:componentPredicates
+                          componentControllerPredicates:componentControllerPredicates];
 }
 
 - (instancetype)newRoot
 {
-  return [[CKComponentScopeRoot alloc] initWithListener:_listener globalIdentifier:_globalIdentifier];
+  return [[CKComponentScopeRoot alloc] initWithListener:_listener
+                                       globalIdentifier:_globalIdentifier
+                                    componentPredicates:_componentPredicates
+                          componentControllerPredicates:_componentControllerPredicates];
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                 globalIdentifier:(CKComponentScopeRootIdentifier)globalIdentifier
+             componentPredicates:(const std::vector<CKComponentScopePredicate> &)componentPredicates
+   componentControllerPredicates:(const std::vector<CKComponentControllerScopePredicate> &)componentControllerPredicates
 {
   if (self = [super init]) {
     _listener = listener;
     _globalIdentifier = globalIdentifier;
     _rootFrame = [[CKComponentScopeFrame alloc] initWithHandle:nil];
-    _boundsAnimationComponents = [NSHashTable weakObjectsHashTable];
+    _componentPredicates = componentPredicates;
+    _componentControllerPredicates = componentControllerPredicates;
   }
   return self;
 }
 
-- (void)registerAnnounceableEventsForController:(CKComponentController *)controller
+- (void)registerComponent:(id<CKScopedComponent>)component
 {
-  for (const auto &announceableEvent : announceableEvents()) {
-    if (CKSubclassOverridesSelector([CKComponentController class], [controller class], announceableEvent.second)) {
-      _eventRegistration.insert({{announceableEvent.first, controller}});
+  if (!component) {
+    // Handle this gracefully so we don't have a bunch of nils being passed to predicates.
+    return;
+  }
+  for (const auto &predicate : _componentPredicates) {
+    if (predicate(component)) {
+      _registeredComponents.insert({predicate, component});
     }
   }
 }
 
-- (void)announceEventToControllers:(CKComponentAnnouncedEvent)announcedEvent
+- (void)registerComponentController:(id<CKScopedComponentController>)componentController
 {
-  const auto range = _eventRegistration.equal_range(announcedEvent);
-  const SEL sel = announceableEvents().at(announcedEvent);
-  for (auto it = range.first; it != range.second; ++it) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [it->second performSelector:sel];
-#pragma clang diagnostic pop
+  if (!componentController) {
+    // As above, handle a nil component controller gracefully instead of passing through to predicate.
+    return;
   }
-}
-
-- (void)registerBoundsAnimationComponent:(CKComponent *)component
-{
-  [_boundsAnimationComponents addObject:component];
-}
-
-- (NSHashTable *)boundsAnimationComponents
-{
-  return _boundsAnimationComponents;
-}
-
-- (CKComponentBoundsAnimation)boundsAnimationFromPreviousScopeRoot:(CKComponentScopeRoot *)previousRoot
-{
-  NSMapTable *scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
-  for (CKComponent *oldComponent in [previousRoot boundsAnimationComponents]) {
-    id scopeFrameToken = [oldComponent scopeFrameToken];
-    if (scopeFrameToken) {
-      [scopeFrameTokenToOldComponent setObject:oldComponent forKey:scopeFrameToken];
+  for (const auto &predicate : _componentControllerPredicates) {
+    if (predicate(componentController)) {
+      _registeredComponentControllers.insert({predicate, componentController});
     }
   }
+}
 
-  for (CKComponent *newComponent in [self boundsAnimationComponents]) {
-    id scopeFrameToken = [newComponent scopeFrameToken];
-    if (scopeFrameToken) {
-      CKComponent *oldComponent = [scopeFrameTokenToOldComponent objectForKey:scopeFrameToken];
-      if (oldComponent) {
-        const CKComponentBoundsAnimation ba = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
-        if (ba.duration != 0) {
-          return ba;
-        }
-      }
-    }
+- (void)enumerateComponentsMatchingPredicate:(CKComponentScopePredicate)predicate
+                                       block:(CKComponentScopeEnumerator)block
+{
+  if (!block) {
+    CKFailAssert(@"Must be given a block to enumerate.");
+    return;
   }
+  for (auto it = _registeredComponents.find(predicate); it != _registeredComponents.end(); ++it) {
+    block(it->second);
+  }
+}
 
-  return {};
+- (void)enumerateComponentControllersMatchingPredicate:(CKComponentControllerScopePredicate)predicate
+                                                 block:(CKComponentControllerScopeEnumerator)block
+{
+  if (!block) {
+    CKFailAssert(@"Must be given a block to enumerate.");
+    return;
+  }
+  for (auto it = _registeredComponentControllers.find(predicate); it != _registeredComponentControllers.end(); ++it) {
+    block(it->second);
+  }
 }
 
 @end

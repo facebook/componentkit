@@ -13,8 +13,9 @@
 #import <ComponentKit/ComponentMountContext.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKScopedComponent.h>
 
-@interface CKComponent ()
+@interface CKComponent () <CKScopedComponent>
 
 /**
  Mounts the component in the given context:

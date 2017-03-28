@@ -18,6 +18,7 @@
 @class CKComponentScopeRoot;
 
 @protocol CKComponentStateListener;
+@protocol CKScopedComponent;
 
 @interface CKComponentScopeHandle : NSObject
 
@@ -26,7 +27,7 @@
  handle corresponding to the current scope. Otherwise it returns nil.
  This is only meant to be called when constructing a component and as part of the implementation itself.
  */
-+ (instancetype)handleForComponent:(CKComponent *)component;
++ (instancetype)handleForComponent:(id<CKScopedComponent>)component;
 
 /** Creates a conceptually brand new scope handle */
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener

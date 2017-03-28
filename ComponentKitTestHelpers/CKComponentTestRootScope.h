@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 
 /**
@@ -23,7 +24,7 @@
  */
 class CKComponentTestRootScope {
 public:
-  CKComponentTestRootScope() : _threadScope([CKComponentScopeRoot rootWithListener:nil], {}) {};
+  CKComponentTestRootScope() : _threadScope(CKComponentScopeRootWithListener(nil), {}) {};
 private:
   CKThreadLocalComponentScope _threadScope;
 };

@@ -1,9 +1,11 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
+#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentMemoizer.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKInternalHelpers.h>
@@ -62,7 +64,7 @@
 
 - (void)testThatMemoizableComponentsAreMemoized
 {
-  CKComponentScopeRoot *scopeRoot = [CKComponentScopeRoot rootWithListener:nil];
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithListener(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
@@ -89,7 +91,7 @@
 
 - (void)testThatMemoizableComponentsAreMemoizedWithMemoizingComponentAsParent
 {
-  CKComponentScopeRoot *scopeRoot = [CKComponentScopeRoot rootWithListener:nil];
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithListener(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   __block CKComponent *lastCreatedComponent = nil;
@@ -111,7 +113,7 @@
 
 - (void)testThatWhenMultipleComponentsAreMutuallyMemoizableTheyAreStillDistict
 {
-  CKComponentScopeRoot *scopeRoot = [CKComponentScopeRoot rootWithListener:nil];
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithListener(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
@@ -173,7 +175,7 @@
 
 - (void)testComputeLayoutOnlyCalledOnceWhenEqualInputs
 {
-  CKComponentScopeRoot *scopeRoot = [CKComponentScopeRoot rootWithListener:nil];
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithListener(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
@@ -207,7 +209,7 @@
 
 - (void)testComponentMemoizationKeysCompareObjCObjectsWithIsEqual
 {
-  CKComponentScopeRoot *scopeRoot = [CKComponentScopeRoot rootWithListener:nil];
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithListener(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   // Make two objects here that are mutable copies

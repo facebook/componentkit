@@ -10,18 +10,23 @@
 
 #import <Foundation/Foundation.h>
 
+#import <vector>
+
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKUpdateMode.h>
 
-@class CKComponent;
+@protocol CKScopedComponent;
+@protocol CKScopedComponentController;
+
 @class CKComponentScopeFrame;
 @class CKComponentScopeRoot;
 
-typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
-  CKComponentAnnouncedEventTreeWillAppear,
-  CKComponentAnnouncedEventTreeDidDisappear,
-};
+typedef BOOL (*CKComponentScopePredicate)(id<CKScopedComponent>);
+typedef BOOL (*CKComponentControllerScopePredicate)(id<CKScopedComponentController>);
+
+typedef void (^CKComponentScopeEnumerator)(id<CKScopedComponent>);
+typedef void (^CKComponentControllerScopeEnumerator)(id<CKScopedComponentController>);
 
 /** Component state announcements will always be made on the main thread. */
 @protocol CKComponentStateListener <NSObject>
@@ -33,28 +38,25 @@ typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
 
 @end
 
-struct CKBuildComponentResult {
-  CKComponent *component;
-  CKComponentScopeRoot *scopeRoot;
-  CKComponentBoundsAnimation boundsAnimation;
-};
-
-CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
-                                        const CKComponentStateUpdateMap &stateUpdates,
-                                        CKComponent *(^function)(void));
-
 @interface CKComponentScopeRoot : NSObject
 
 /** Creates a conceptually brand new scope root */
-+ (instancetype)rootWithListener:(id<CKComponentStateListener>)listener;
++ (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
+             componentPredicates:(const std::vector<CKComponentScopePredicate> &)componentPredicates
+   componentControllerPredicates:(const std::vector<CKComponentControllerScopePredicate> &)componentControllerPredicates;
 
 /** Creates a new version of an existing scope root, ready to be used for building a component tree */
 - (instancetype)newRoot;
 
-/** Sends the given event to all component controllers that implement it. */
-- (void)announceEventToControllers:(CKComponentAnnouncedEvent)event;
+- (void)registerComponentController:(id<CKScopedComponentController>)componentController;
 
-- (CKComponentBoundsAnimation)boundsAnimationFromPreviousScopeRoot:(CKComponentScopeRoot *)previousRoot;
+- (void)registerComponent:(id<CKScopedComponent>)component;
+
+- (void)enumerateComponentsMatchingPredicate:(CKComponentScopePredicate)predicate
+                                       block:(CKComponentScopeEnumerator)block;
+
+- (void)enumerateComponentControllersMatchingPredicate:(CKComponentControllerScopePredicate)predicate
+                                                 block:(CKComponentControllerScopeEnumerator)block;
 
 @property (nonatomic, weak, readonly) id<CKComponentStateListener> listener;
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier globalIdentifier;

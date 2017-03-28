@@ -20,6 +20,7 @@
 #import "CKComponentLayout.h"
 #import "CKComponentDataSourceAttachController.h"
 #import "CKComponentBoundsAnimation+UICollectionView.h"
+#import "CKComponentControllerAppearanceEvents.h"
 
 @interface CKCollectionViewTransactionalDataSource () <
 UICollectionViewDataSource,
@@ -196,12 +197,12 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
 
 - (void)announceWillDisplayCell:(UICollectionViewCell *)cell
 {
-  [[_cellToItemMap objectForKey:cell].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  CKComponentControllerAnnounceAppearance([_cellToItemMap objectForKey:cell].scopeRoot);
 }
 
 - (void)announceDidEndDisplayingCell:(UICollectionViewCell *)cell
 {
-  [[_cellToItemMap objectForKey:cell].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+  CKComponentControllerAnnounceDisappearance([_cellToItemMap objectForKey:cell].scopeRoot);
 }
 
 #pragma mark - UICollectionViewDataSource
