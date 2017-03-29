@@ -73,8 +73,7 @@ std::string CKTypedComponentActionBase::identifier() const noexcept
 
 NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender) noexcept
 {
-  // If we have a nil selector, we bail early.
-  if (selector == nil) {
+  if (selector == NULL) {
     return nil;
   }
 
