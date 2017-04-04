@@ -73,11 +73,15 @@ std::string CKTypedComponentActionBase::identifier() const noexcept
 
 NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender) noexcept
 {
+  // If we have a nil selector, we bail early.
+  if (selector == nil) {
+    return nil;
+  }
+
   id responder = ([target respondsToSelector:@selector(targetForAction:withSender:)]
                   ? [target targetForAction:selector withSender:target]
                   : target);
-  CKCAssertNotNil(responder, @"Unhandled component action %@ following responder chain %@",
-                  NSStringFromSelector(selector), _CKComponentResponderChainDebugResponderChain(target));
+
   // This is not performance-sensitive, so we can just use an invocation here.
   NSMethodSignature *signature = [responder methodSignatureForSelector:selector];
   while (!signature) {
