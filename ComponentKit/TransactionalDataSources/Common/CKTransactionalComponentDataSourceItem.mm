@@ -39,4 +39,9 @@
   return _layout;
 }
 
+- (NSString *)description
+{
+  return [NSString stringWithFormat:@"%@ - model:%@", [super description], _model];
+}
+
 @end
