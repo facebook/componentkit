@@ -68,7 +68,22 @@
 
 - (NSString *)description
 {
-  return [_sections description];
+  if (!_sections || _sections.count == 0) {
+    return @"()";
+  }
+
+  NSMutableString *mutableString = [NSMutableString new];
+  [mutableString appendFormat:@"(\n"];
+
+  NSUInteger sectionsCount = 0;
+  for (NSArray *items in _sections) {
+    NSUInteger itemCount = 0;
+    for (NSArray *i in items) {
+      [mutableString appendFormat:@"\t<indexpath: %@ - %@> = %@\n", @(sectionsCount++), @(itemCount++), i];
+    }
+  }
+  [mutableString appendFormat:@")\n"];
+  return mutableString;
 }
 
 - (BOOL)isEqual:(id)object

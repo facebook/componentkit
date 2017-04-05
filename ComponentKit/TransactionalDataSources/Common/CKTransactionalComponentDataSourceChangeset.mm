@@ -7,11 +7,14 @@
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
-
+#import "CKTransactionalComponentDataSourceChangeset.h"
 #import "CKTransactionalComponentDataSourceChangesetInternal.h"
+
+#import <UIKit/UITableView.h>
 
 #import "CKEqualityHashHelpers.h"
 #import "CKMacros.h"
+#import "CKAssert.h"
 
 @implementation CKTransactionalComponentDataSourceChangeset
 
@@ -33,10 +36,29 @@
   return self;
 }
 
+static NSString *ReadableStringForSortedItemsDictionary(NSDictionary *dict)
+{
+  if (!dict || dict.count == 0) {
+    return @"{}";
+  }
+  NSMutableString *mutableString = [NSMutableString new];
+  [mutableString appendFormat:@"{\n"];
+  NSMutableArray *keys = [[dict allKeys] mutableCopy];
+  [keys sortUsingSelector:@selector(compare:)];
+
+  for (NSIndexPath *key in keys) {
+    id value = [dict objectForKey:key];
+    CKCAssertTrue([key isKindOfClass:[NSIndexPath class]]);
+    [mutableString appendFormat:@"\t<indexpath = %ld - %ld> = \"%@\",\n\t", (long)key.section, (long)key.row, value ? : @""];
+  }
+  [mutableString appendString:@"}\n"];
+  return mutableString;
+}
+
 
 - (NSString *)description
 {
-  return [NSString stringWithFormat:@"Updates: %@\nRemoved Items: %@\nRemove Sections: %@\nMoves: %@\nInserted Sections: %@\nInserted Items: %@", _updatedItems, _removedItems, _removedSections, _movedItems, _insertedSections, _insertedItems];
+  return [NSString stringWithFormat:@"Updates: %@\n\tRemoved Items: %@\n\tRemove Sections: %@\n\tMoves: %@\n\tInserted Sections: %@\n\tInserted Items: %@", ReadableStringForSortedItemsDictionary(_updatedItems), _removedItems, _removedSections, ReadableStringForSortedItemsDictionary(_movedItems), _insertedSections, ReadableStringForSortedItemsDictionary(_insertedItems)];
 }
 
 - (BOOL)isEqual:(id)object
