@@ -25,6 +25,9 @@ struct CKComponentContextContents {
   NSDictionary<Class, id> *objects;
   /** The dynamic lookup implementation, if any; used for classes not found in objects. */
   id<CKComponentContextDynamicLookup> dynamicLookup;
+
+  bool operator==(const CKComponentContextContents&) const;
+  bool operator!=(const CKComponentContextContents&) const;
 };
 
 struct CKComponentContextPreviousDynamicLookupState {
