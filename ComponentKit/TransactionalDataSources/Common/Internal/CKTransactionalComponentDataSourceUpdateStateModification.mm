@@ -42,6 +42,7 @@
 
   NSMutableArray *newSections = [NSMutableArray array];
   NSMutableSet *updatedIndexPaths = [NSMutableSet set];
+  __block CKComponentScopeRootIdentifier globalIdentifier = 0;
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     NSMutableArray *newItems = [NSMutableArray array];
     [items enumerateObjectsUsingBlock:^(CKTransactionalComponentDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
@@ -49,6 +50,11 @@
       if (stateUpdatesForItem == _stateUpdates.end()) {
         [newItems addObject:item];
       } else {
+        const auto stateUpdateMap = stateUpdatesForItem->second;
+        const auto stateUpdate = stateUpdateMap.begin();
+        if (stateUpdate != stateUpdateMap.end()) {
+          globalIdentifier = stateUpdate->first;
+        }
         [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
         const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], stateUpdatesForItem->second, ^{
           return [componentProvider componentForModel:[item model] context:context];
@@ -74,7 +80,7 @@
                                                                       movedIndexPaths:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                                                             userInfo:@{@"updatedComponentIdentifier":@(globalIdentifier)}];
 
   return [[CKTransactionalComponentDataSourceChange alloc] initWithState:newState
                                                           appliedChanges:appliedChanges];

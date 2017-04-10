@@ -50,10 +50,11 @@ namespace std {
 
 class CKRelativeDimension {
 public:
-  CKRelativeDimension() noexcept : CKRelativeDimension(Type::AUTO, 0) {}
+  /** Default constructor is equivalent to "Auto". */
+  constexpr CKRelativeDimension() noexcept : _type(Type::AUTO), _value(0) {}
   CKRelativeDimension(CGFloat points) noexcept : CKRelativeDimension(Type::POINTS, points) {}
 
-  static CKRelativeDimension Auto() noexcept { return CKRelativeDimension(); }
+  constexpr static CKRelativeDimension Auto() noexcept { return CKRelativeDimension(); }
   static CKRelativeDimension Points(CGFloat p) noexcept { return CKRelativeDimension(p); }
   static CKRelativeDimension Percent(CGFloat p) noexcept { return {CKRelativeDimension::Type::PERCENT, p}; }
 
@@ -95,7 +96,7 @@ struct CKRelativeSize {
   CKRelativeSize(const CGSize &size) noexcept;
 
   /** Convenience constructor for {Auto, Auto} */
-  CKRelativeSize() noexcept;
+  constexpr CKRelativeSize() = default;
 
   /** Resolve this size relative to a parent size and an auto size. */
   CGSize resolveSize(const CGSize &parentSize, const CGSize &autoSize) const noexcept;
@@ -121,7 +122,7 @@ struct CKRelativeSizeRange {
   CKRelativeSizeRange(const CKRelativeDimension &exactWidth, const CKRelativeDimension &exactHeight) noexcept;
 
   /** Convenience constructor for {{Auto, Auto}, {Auto, Auto}}. */
-  CKRelativeSizeRange() noexcept;
+  constexpr CKRelativeSizeRange() = default;
 
   /**
    Provided a parent size and values to use in place of Auto, compute final dimensions for this RelativeSizeRange

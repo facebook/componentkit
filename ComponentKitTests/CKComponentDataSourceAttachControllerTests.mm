@@ -9,7 +9,6 @@
  */
 
 #import <XCTest/XCTest.h>
-#import <OCMock/OCMock.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>

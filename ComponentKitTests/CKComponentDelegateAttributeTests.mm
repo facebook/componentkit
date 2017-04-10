@@ -10,8 +10,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import <OCMock/OCMock.h>
-
 #import <ComponentKit/CKComponent+UIView.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentDelegateAttribute.h>

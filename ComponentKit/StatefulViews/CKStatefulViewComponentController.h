@@ -32,30 +32,30 @@
 
  This controller's corresponding component must subclass CKStatefulViewComponent.
  */
-@interface CKStatefulViewComponentController<__covariant ComponentType:CKComponent *> : CKComponentController<ComponentType>
+@interface CKStatefulViewComponentController<__covariant ComponentType:CKComponent *, ViewType:UIView *, ContextType:id> : CKComponentController<ComponentType>
 
 /** Return a new instance of the stateful view type used by this controller. Views are automatically recycled. */
-+ (UIView *)newStatefulView:(id)context;
++ (ViewType)newStatefulView:(ContextType)context;
 
 /**
  Optionally override this to return a context that should be passed to +newStatefulView.
  Views will be recycled based on the context returned here. The default is nil.
  */
-+ (id)contextForNewStatefulView:(CKComponent *)component;
++ (ContextType)contextForNewStatefulView:(ComponentType)component;
 
 /**
  Configure a given instance of a stateful view with the state from a given CKComponent instance. This has two purposes:
  - Configuring a view for the first time, before it appears in the view hierarchy;
  - Reconfiguring the current view when the CKComponent instance is updated and remounted.
  */
-+ (void)configureStatefulView:(UIView *)statefulView
-                 forComponent:(CKComponent *)component;
++ (void)configureStatefulView:(ViewType)statefulView
+                 forComponent:(ComponentType)component;
 
 /**
  Optionally override this to return the maximum number of stateful components that should be enqueued into the
  reuse pool. After this limit is reached, relinquished components will no longer be retained.
  */
-+ (NSInteger)maximumPoolSize:(id)context;
++ (NSInteger)maximumPoolSize:(ContextType)context;
 
 /**
  The current stateful view owned by this controller, if any.
@@ -65,13 +65,13 @@
  - Do not change this view's size. (Trigger a component reflow to change the value passed to +newWithSize: for the
    corresponding component instead.)
  */
-- (UIView *)statefulView;
+- (ViewType)statefulView;
 
 /**
  Called when a stateful view has been acquired (either created or recycled) and configured.
  You could use this method to e.g. set the component controller as the view's delegate.
  */
-- (void)didAcquireStatefulView:(UIView *)statefulView NS_REQUIRES_SUPER;
+- (void)didAcquireStatefulView:(ViewType)statefulView NS_REQUIRES_SUPER;
 
 /**
  Called when the controller is about to relinquish the given stateful view, returning it to the reuse pool.
@@ -81,7 +81,7 @@
  the view might already have been removed from its superview so consider carefully where you need to cleanup
  your view's state.
  */
-- (void)willRelinquishStatefulView:(UIView *)statefulView NS_REQUIRES_SUPER;
+- (void)willRelinquishStatefulView:(ViewType)statefulView NS_REQUIRES_SUPER;
 
 /**
  Override this method to delay relinquishing a stateful view when the controller's component is unmounted.

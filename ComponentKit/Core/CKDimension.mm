@@ -69,7 +69,6 @@ size_t std::hash<CKRelativeDimension>::operator ()(const CKRelativeDimension &si
 
 CKRelativeSize::CKRelativeSize(const CKRelativeDimension &_width, const CKRelativeDimension &_height) noexcept : width(_width), height(_height) {}
 CKRelativeSize::CKRelativeSize(const CGSize &size) noexcept : CKRelativeSize(size.width, size.height) {}
-CKRelativeSize::CKRelativeSize() noexcept : CKRelativeSize({}, {}) {}
 
 CGSize CKRelativeSize::resolveSize(const CGSize &parentSize, const CGSize &autoSize) const noexcept
 {
@@ -93,7 +92,6 @@ CKRelativeSizeRange::CKRelativeSizeRange(const CKRelativeSize &_min, const CKRel
 CKRelativeSizeRange::CKRelativeSizeRange(const CKRelativeSize &exact) noexcept : CKRelativeSizeRange(exact, exact) {}
 CKRelativeSizeRange::CKRelativeSizeRange(const CGSize &exact) noexcept : CKRelativeSizeRange(CKRelativeSize(exact)) {}
 CKRelativeSizeRange::CKRelativeSizeRange(const CKRelativeDimension &exactWidth, const CKRelativeDimension &exactHeight) noexcept : CKRelativeSizeRange(CKRelativeSize(exactWidth, exactHeight)) {}
-CKRelativeSizeRange::CKRelativeSizeRange() noexcept : CKRelativeSizeRange(CKRelativeSize(), CKRelativeSize()) {}
 
 CKSizeRange CKRelativeSizeRange::resolveSizeRange(const CGSize &parentSize, const CKSizeRange &autoCKSizeRange) const noexcept
 {

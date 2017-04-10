@@ -266,8 +266,22 @@ static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changes
   if (badChangesetOperationType != CKBadChangesetOperationTypeNone) {
     NSString *const humanReadableBadChangesetOperationType = CKHumanReadableBadChangesetOperationType(badChangesetOperationType);
     [NSException raise:NSInternalInconsistencyException
-                format:@"Bad operation: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@", humanReadableBadChangesetOperationType, changeset, state, pendingAsynchronousModifications];
+                format:@"Bad operation: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@", humanReadableBadChangesetOperationType, changeset, state, readableStringForArray(pendingAsynchronousModifications)];
   }
+}
+
+static NSString *readableStringForArray(NSArray *array)
+{
+  if (!array || array.count == 0) {
+    return @"()";
+  }
+  NSMutableString *mutableString = [NSMutableString new];
+  [mutableString appendFormat:@"(\n"];
+  for (id value in array) {
+    [mutableString appendFormat:@"\t%@,\n", value];
+  }
+  [mutableString appendString:@")\n"];
+  return mutableString;
 }
 
 @end

@@ -565,6 +565,32 @@
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
 }
 
+- (void)test_validMoveBackwardWithOriginalIndexRemoved
+{
+  CKTransactionalComponentDataSourceState *state =
+  [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
+                                                                sections:@[
+                                                                           @[
+                                                                             itemWithModel(@"A"),
+                                                                             itemWithModel(@"B"),
+                                                                             itemWithModel(@"C"),
+                                                                             itemWithModel(@"D"),
+                                                                             ],
+                                                                            ]];
+  // Changeset for transition from [A, B, C, D] to [D, A]
+  CKTransactionalComponentDataSourceChangeset *changeset =
+  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withMovedItems:@{
+                      [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0],
+                      }]
+    withRemovedItems:[NSSet setWithArray:@[
+                                           [NSIndexPath indexPathForItem:1 inSection:0],
+                                           [NSIndexPath indexPathForItem:2 inSection:0],
+                                           ]]]
+   build];
+  XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKBadChangesetOperationTypeNone);
+}
+
 #pragma mark - Invalid changesets
 
 - (void)test_invalidUpdateInNegativeSection

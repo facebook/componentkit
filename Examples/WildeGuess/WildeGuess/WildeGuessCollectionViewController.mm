@@ -33,7 +33,7 @@
 {
   if (self = [super initWithCollectionViewLayout:layout]) {
     _sizeRangeProvider = [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleHeight];
-    _quoteModelController = [[QuoteModelController alloc] init];
+    _quoteModelController = [QuoteModelController new];
     self.title = @"Wilde Guess";
     self.navigationItem.prompt = @"Tap to reveal which quotes are from Oscar Wilde";
   }
@@ -46,12 +46,12 @@
   // Preload images for the component context that need to be used in component preparation. Components preparation
   // happens on background threads but +[UIImage imageNamed:] is not thread safe and needs to be called on the main
   // thread. The preloaded images are then cached on the component context for use inside components.
-  NSSet *imageNames = [NSSet setWithObjects:
-                       @"LosAngeles",
-                       @"MarketStreet",
-                       @"Drops",
-                       @"Powell",
-                       nil];
+  NSSet<NSString *> *imageNames = [NSSet setWithObjects:
+                                   @"LosAngeles",
+                                   @"MarketStreet",
+                                   @"Drops",
+                                   @"Powell",
+                                   nil];
   self.collectionView.backgroundColor = [UIColor whiteColor];
   self.collectionView.delegate = self;
   QuoteContext *context = [[QuoteContext alloc] initWithImageNames:imageNames];
