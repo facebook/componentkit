@@ -272,12 +272,10 @@ static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changes
   if (crashOnBadChangesetOperation) {
     const CKBadChangesetOperationType badChangesetOperationType = CKIsValidChangesetForState(changeset, state, pendingAsynchronousModifications);
     if (badChangesetOperationType != CKBadChangesetOperationTypeNone) {
-      [[NSException
-        exceptionWithName:NSInternalInconsistencyException
-        reason:badOperationDescriptionForType(badChangesetOperationType)
-        userInfo:nil]
-       raise];
-
+      NSException *const exception = [NSException exceptionWithName:NSInternalInconsistencyException
+                                                             reason:badOperationDescriptionForType(badChangesetOperationType)
+                                                           userInfo:nil];
+      [exception raise];
     }
   } else {
 #if CK_ASSERTIONS_ENABLED
