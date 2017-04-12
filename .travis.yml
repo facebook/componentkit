@@ -1,9 +1,5 @@
 language: objective-c
-osx_image: xcode8.2
-
-before_install:
-  # Delete the duplicate iPhone 5s simulator
-  - xcrun simctl delete 79C525D3-2383-4201-AC3A-81810F9F4E03
+osx_image: xcode8.3
 
 install:
   - gem install xcpretty -N --no-ri --no-rdoc
