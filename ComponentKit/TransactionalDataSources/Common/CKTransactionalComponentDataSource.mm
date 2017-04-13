@@ -280,7 +280,7 @@ static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changes
   } else {
 #if CK_ASSERTIONS_ENABLED
     const CKBadChangesetOperationType badChangesetOperationType = CKIsValidChangesetForState(changeset, state, pendingAsynchronousModifications);
-    CKCAssert(badChangesetOperationType == CKBadChangesetOperationTypeNone, badOperationDescriptionForType(badChangesetOperationType));
+    CKCAssert(badChangesetOperationType == CKBadChangesetOperationTypeNone, @"@%", badOperationDescriptionForType(badChangesetOperationType));
 #endif
   }
 }
