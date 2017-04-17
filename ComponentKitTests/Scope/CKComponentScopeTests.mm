@@ -17,7 +17,32 @@
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
+#import <ComponentKit/CKScopedComponent.h>
+#import <ComponentKit/CKScopedComponentController.h>
+#import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
+
+@protocol TestScopedProtocol <NSObject>
+@end
+
+@interface TestComponentWithScopedProtocol : NSObject <CKScopedComponent, TestScopedProtocol>
+@end
+@implementation TestComponentWithScopedProtocol
+@end
+
+@interface TestComponentWithoutScopedProtocol : NSObject <CKScopedComponent>
+@end
+@implementation TestComponentWithoutScopedProtocol
+@end
+
+@interface TestComponentControllerWithScopedProtocol : NSObject <CKScopedComponentController, TestScopedProtocol>
+@end
+@implementation TestComponentControllerWithScopedProtocol
+- (instancetype)initWithComponent:(id<CKScopedComponent>)component
+{
+  return [super init];
+}
+@end
 
 @interface CKComponentScopeTests : XCTestCase
 @end
@@ -303,6 +328,138 @@
       }
     }
   }
+}
+
+static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
+{
+  return [component conformsToProtocol:@protocol(TestScopedProtocol)];
+}
+
+- (void)testComponentScopeRootRegisteringProtocolComponentFindsThatComponentWhenEnumerating
+{
+  CKComponentScopeRoot *root = [CKComponentScopeRoot
+                                rootWithListener:nil
+                                componentPredicates:{&testComponentProtocolPredicate}
+                                componentControllerPredicates:{}];
+  CKThreadLocalComponentScope threadScope(root, {});
+
+  TestComponentWithScopedProtocol *c = [TestComponentWithScopedProtocol new];
+  [root registerComponent:c];
+
+  __block BOOL foundComponent = NO;
+  [root
+   enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate
+   block:^(id<CKScopedComponent> component) {
+     if (c == component) {
+       foundComponent = YES;
+     }
+   }];
+
+  XCTAssert(foundComponent, @"Should have enumerated and found the input component");
+}
+
+- (void)testComponentScopeRootRegisteringMultipleProtocolComponentFindsBothComponentsWhenEnumerating
+{
+  CKComponentScopeRoot *root = [CKComponentScopeRoot
+                                rootWithListener:nil
+                                componentPredicates:{&testComponentProtocolPredicate}
+                                componentControllerPredicates:{}];
+  CKThreadLocalComponentScope threadScope(root, {});
+
+  TestComponentWithScopedProtocol *c1 = [TestComponentWithScopedProtocol new];
+  [root registerComponent:c1];
+  TestComponentWithScopedProtocol *c2 = [TestComponentWithScopedProtocol new];
+  [root registerComponent:c2];
+
+  __block BOOL foundC1 = NO;
+  __block BOOL foundC2 = NO;
+  [root
+   enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate
+   block:^(id<CKScopedComponent> component) {
+     if (c1 == component) {
+       foundC1 = YES;
+     }
+     if (c2 == component) {
+       foundC2 = YES;
+     }
+   }];
+
+  XCTAssert(foundC1 && foundC2, @"Should have enumerated and found the input components");
+}
+
+- (void)testComponentScopeRootRegisteringNonProtocolComponentFindsNoComponentsWhenEnumerating
+{
+  CKComponentScopeRoot *root = [CKComponentScopeRoot
+                                rootWithListener:nil
+                                componentPredicates:{&testComponentProtocolPredicate}
+                                componentControllerPredicates:{}];
+  CKThreadLocalComponentScope threadScope(root, {});
+
+  TestComponentWithoutScopedProtocol *c = [TestComponentWithoutScopedProtocol new];
+  [root registerComponent:c];
+
+  [root
+   enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate
+   block:^(id<CKScopedComponent> component) {
+     XCTFail(@"Should not have found any components");
+   }];
+}
+
+static BOOL testComponentControllerProtocolPredicate(id<CKScopedComponentController> component)
+{
+  return [component conformsToProtocol:@protocol(TestScopedProtocol)];
+}
+
+- (void)testComponentScopeRootRegisteringProtocolComponentControllerFindsThatControllerWhenEnumerating
+{
+  CKComponentScopeRoot *root = [CKComponentScopeRoot
+                                rootWithListener:nil
+                                componentPredicates:{}
+                                componentControllerPredicates:{&testComponentControllerProtocolPredicate}];
+  CKThreadLocalComponentScope threadScope(root, {});
+
+  TestComponentControllerWithScopedProtocol *c = [TestComponentControllerWithScopedProtocol new];
+  [root registerComponentController:c];
+
+  __block BOOL foundController = NO;
+  [root
+   enumerateComponentControllersMatchingPredicate:&testComponentControllerProtocolPredicate
+   block:^(id<CKScopedComponentController> componentController) {
+     if (c == componentController) {
+       foundController = YES;
+     }
+   }];
+
+  XCTAssert(foundController, @"Should have enumerated and found the input controller");
+}
+
+- (void)testComponentScopeRootRegisteringMultipleProtocolComponentControllersFindsBothControllersWhenEnumerating
+{
+  CKComponentScopeRoot *root = [CKComponentScopeRoot
+                                rootWithListener:nil
+                                componentPredicates:{}
+                                componentControllerPredicates:{&testComponentControllerProtocolPredicate}];
+  CKThreadLocalComponentScope threadScope(root, {});
+
+  TestComponentControllerWithScopedProtocol *c1 = [TestComponentControllerWithScopedProtocol new];
+  [root registerComponentController:c1];
+  TestComponentControllerWithScopedProtocol *c2 = [TestComponentControllerWithScopedProtocol new];
+  [root registerComponentController:c2];
+
+  __block BOOL foundC1 = NO;
+  __block BOOL foundC2 = NO;
+  [root
+   enumerateComponentControllersMatchingPredicate:&testComponentControllerProtocolPredicate
+   block:^(id<CKScopedComponentController> componentController) {
+     if (c1 == componentController) {
+       foundC1 = YES;
+     }
+     if (c2 == componentController) {
+       foundC2 = YES;
+     }
+   }];
+
+  XCTAssert(foundC1 && foundC2, @"Should have enumerated and found the input controllers");
 }
 
 @end

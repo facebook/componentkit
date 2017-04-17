@@ -1,10 +1,12 @@
-//
-//  CKBuildComponent.m
-//  ComponentKit
-//
-//  Created by Oliver Rickard on 3/28/17.
-//
-//
+/*
+ *  Copyright (c) 2014-present, Facebook, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant
+ *  of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
 
 #import "CKBuildComponent.h"
 
@@ -17,7 +19,7 @@
 
 static CKComponentBoundsAnimation boundsAnimationFromPreviousScopeRoot(CKComponentScopeRoot *newRoot, CKComponentScopeRoot *previousRoot)
 {
-  NSMapTable *scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
+  NSMapTable *const scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
   [previousRoot
    enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
    block:^(id<CKScopedComponent> component) {
@@ -53,7 +55,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 {
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   // Order of operations matters, so first store into locals and then return a struct.
-  CKComponent *component = function();
+  CKComponent *const component = function();
   return {
     .component = component,
     .scopeRoot = threadScope.newScopeRoot,

@@ -18,21 +18,21 @@
 #import "CKInternalHelpers.h"
 #import "CKThreadLocalComponentScope.h"
 
-typedef std::unordered_map<CKComponentScopePredicate, __weak id<CKScopedComponent>> _CKRegisteredComponentsMap;
-typedef std::unordered_map<CKComponentControllerScopePredicate, __weak id<CKScopedComponentController>> _CKRegisteredComponentControllerMap;
+typedef std::unordered_multimap<CKComponentScopePredicate, __weak id<CKScopedComponent>> _CKRegisteredComponentsMap;
+typedef std::unordered_multimap<CKComponentControllerScopePredicate, __weak id<CKScopedComponentController>> _CKRegisteredComponentControllerMap;
 
 @implementation CKComponentScopeRoot
 {
-  std::vector<CKComponentScopePredicate> _componentPredicates;
-  std::vector<CKComponentControllerScopePredicate> _componentControllerPredicates;
+  std::unordered_set<CKComponentScopePredicate> _componentPredicates;
+  std::unordered_set<CKComponentControllerScopePredicate> _componentControllerPredicates;
   
   _CKRegisteredComponentsMap _registeredComponents;
   _CKRegisteredComponentControllerMap _registeredComponentControllers;
 }
 
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
-             componentPredicates:(const std::vector<CKComponentScopePredicate> &)componentPredicates
-   componentControllerPredicates:(const std::vector<CKComponentControllerScopePredicate> &)componentControllerPredicates
+             componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
+   componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
 {
   static int32_t nextGlobalIdentifier = 0;
   return [[CKComponentScopeRoot alloc] initWithListener:listener
@@ -51,8 +51,8 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, __weak id<CKScop
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                 globalIdentifier:(CKComponentScopeRootIdentifier)globalIdentifier
-             componentPredicates:(const std::vector<CKComponentScopePredicate> &)componentPredicates
-   componentControllerPredicates:(const std::vector<CKComponentControllerScopePredicate> &)componentControllerPredicates
+             componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
+   componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
 {
   if (self = [super init]) {
     _listener = listener;
@@ -97,6 +97,7 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, __weak id<CKScop
     CKFailAssert(@"Must be given a block to enumerate.");
     return;
   }
+  CKAssert(_componentPredicates.find(predicate) != _componentPredicates.end(), @"Scope root must be initialized with predicate to enumerate.");
   for (auto it = _registeredComponents.find(predicate); it != _registeredComponents.end(); ++it) {
     block(it->second);
   }
@@ -109,6 +110,7 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, __weak id<CKScop
     CKFailAssert(@"Must be given a block to enumerate.");
     return;
   }
+  CKAssert(_componentControllerPredicates.find(predicate) != _componentControllerPredicates.end(), @"Scope root must be initialized with predicate to enumerate.");
   for (auto it = _registeredComponentControllers.find(predicate); it != _registeredComponentControllers.end(); ++it) {
     block(it->second);
   }
