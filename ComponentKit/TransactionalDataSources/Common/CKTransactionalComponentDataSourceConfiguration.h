@@ -26,7 +26,7 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange;
 
-@property (nonatomic, strong, readonly) Class<CKComponentProvider> componentProvider;
+@property (nonatomic, weak, readonly) Class<CKComponentProvider> componentProvider;
 @property (nonatomic, strong, readonly) id<NSObject> context;
 
 - (const CKSizeRange &)sizeRange;
