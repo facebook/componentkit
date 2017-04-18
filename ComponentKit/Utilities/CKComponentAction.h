@@ -95,6 +95,9 @@ class CKTypedComponentAction : public CKTypedComponentActionBase {
                 CKTypedComponentActionBoolPack<(std::is_trivially_constructible<T>::value || std::is_pointer<T>::value)...>,
                 CKTypedComponentActionBoolPack<(CKTypedComponentActionDenyType<T>::value)...>
                 >::value, "You must either use a pointer (like an NSObject) or a trivially constructible type. Complex types are not allowed as arguments of component actions.");
+  
+  CKTypedComponentAction<T...>(void(^block)(CKComponent *, T...)) noexcept : CKTypedComponentActionBase((dispatch_block_t)block) {};
+  
 public:
   CKTypedComponentAction<T...>() noexcept : CKTypedComponentActionBase() {};
   CKTypedComponentAction<T...>(id target, SEL selector) noexcept : CKTypedComponentActionBase(target, selector)
@@ -117,6 +120,10 @@ public:
 
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
   CKTypedComponentAction(SEL selector) noexcept : CKTypedComponentActionBase(selector) {};
+  
+  static CKTypedComponentAction<T...> actionFromBlock(void(^block)(CKComponent *, T...)) {
+    return CKTypedComponentAction<T...>(block);
+  }
 
   /** Allows conversion from NULL actions. */
   CKTypedComponentAction(int s) noexcept : CKTypedComponentActionBase() {};
@@ -125,14 +132,27 @@ public:
 
   /** We support promotion from actions that take no arguments. */
   template <typename... Ts>
-  CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) noexcept : CKTypedComponentActionBase(action) { };
+  CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) noexcept : CKTypedComponentActionBase(action) {
+    if (_variant == CKTypedComponentActionVariant::Block) {
+      void (^oldBlock)(CKComponent *) = (void (^)(CKComponent *))action._block;
+      _block = ^(CKComponent *sender, Ts...) { oldBlock(sender); };
+    }
+    // At runtime if we provide more arguments to a block on invocation than accepted by the block, the behavior is
+    // undefined. If you hit this assert, it means somewhere in your code you're doing this:
+    // CKTypedComponentAction<BOOL, int> = ^(CKComponent *sender) {
+    // To fix the error, you must handle all arguments:
+    // CKTypedComponentAction<BOOL, int> = ^(CKComponent *sender, BOOL foo, int bar) {
+    CKCAssert(_variant != CKTypedComponentActionVariant::Block, @"Block actions should not be promoted, you will not receive arguments.");
+  };
 
   /**
    We allow demotion from actions with types to untyped actions, but only when explicit. This means arguments to the
    method specified here will have nil values at runtime. Used for interoperation with older API's.
    */
   template<typename... Ts>
-  explicit CKTypedComponentAction<>(const CKTypedComponentAction<Ts...> &action) noexcept : CKTypedComponentActionBase(action) { };
+  explicit CKTypedComponentAction<>(const CKTypedComponentAction<Ts...> &action) noexcept : CKTypedComponentActionBase(action) {
+    CKCAssert(_variant != CKTypedComponentActionVariant::Block, @"Block actions cannot be promoted, you are depending on undefined behavior and will cause crashes.");
+  };
 
   ~CKTypedComponentAction() {};
 
@@ -140,6 +160,11 @@ public:
   { this->send(sender, defaultBehavior(), args...); };
   void send(CKComponent *sender, CKComponentActionSendBehavior behavior, T... args) const
   {
+    if (_variant == CKTypedComponentActionVariant::Block) {
+      void (^block)(CKComponent *sender, T... args) = (void (^)(CKComponent *sender, T... args))_block;
+      block(sender, args...);
+      return;
+    }
     const id target = initialTarget(sender);
     const id responder = behavior == CKComponentActionSendBehaviorStartAtSender ? target : [target nextResponder];
     CKComponentActionSendResponderChain(selector(), responder, sender, args...);

@@ -44,7 +44,9 @@ static NSString *const oscarWilde = @"Oscar Wilde";
    [CKStackLayoutComponent
     newWithView:{
       [UIView class],
-      {CKComponentTapGestureAttribute(@selector(didTap))}
+      {CKComponentTapGestureAttribute(CKTypedComponentAction<UIGestureRecognizer *>::actionFromBlock(^(CKComponent *sender, UIGestureRecognizer *recognizer) {
+        NSLog(@"action!");
+      }))}
     }
     size:{}
     style:{
