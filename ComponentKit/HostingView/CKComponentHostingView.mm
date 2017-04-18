@@ -166,9 +166,11 @@ struct CKComponentHostingViewInputs {
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                             rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
+                                  userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
                                       mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
+
   _pendingInputs.stateUpdates.insert({globalIdentifier, stateUpdate});
   [self _setNeedsUpdateWithMode:mode];
 }
