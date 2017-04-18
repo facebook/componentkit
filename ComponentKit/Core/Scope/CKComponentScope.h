@@ -15,7 +15,7 @@
 class CKThreadLocalComponentScope;
 @class CKComponentScopeHandle;
 
-typedef void (^CKComponentStateUpdater)(id (^)(id), CKUpdateMode mode);
+typedef void (^CKComponentStateUpdater)(id (^)(id), NSDictionary<NSString *, NSString *> *, CKUpdateMode mode);
 
 /**
  Components have local "state" that is independent of the values passed into its +new method. Components can update
