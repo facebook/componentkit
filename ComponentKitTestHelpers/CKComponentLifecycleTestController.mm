@@ -49,7 +49,7 @@
                                                              context:(id<NSObject>)context
 {
   CKAssertMainThread();
-  CKComponentScopeRoot *previousScopeRoot = _previousScopeRoot ?: CKComponentScopeRootWithListener(self);
+  CKComponentScopeRoot *previousScopeRoot = _previousScopeRoot ?: CKComponentScopeRootWithDefaultPredicates(self);
   CKBuildComponentResult result = CKBuildComponent(previousScopeRoot, _pendingStateUpdates, ^{
     return [_componentProvider componentForModel:model context:context];
   });

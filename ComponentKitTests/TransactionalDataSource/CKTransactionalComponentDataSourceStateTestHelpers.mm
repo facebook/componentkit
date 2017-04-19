@@ -25,7 +25,7 @@
 
 static CKTransactionalComponentDataSourceItem *item(CKTransactionalComponentDataSourceConfiguration *configuration, id<CKComponentStateListener> listener, id model)
 {
-  const CKBuildComponentResult result = CKBuildComponent(CKComponentScopeRootWithListener(listener), {}, ^CKComponent *{
+  const CKBuildComponentResult result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, ^CKComponent *{
     return [configuration.componentProvider componentForModel:model context:configuration.context];
   });
   const CKComponentLayout layout = [result.component layoutThatFits:configuration.sizeRange parentSize:configuration.sizeRange.max];

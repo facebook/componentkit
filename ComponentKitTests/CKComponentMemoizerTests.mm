@@ -64,7 +64,7 @@
 
 - (void)testThatMemoizableComponentsAreMemoized
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
@@ -91,7 +91,7 @@
 
 - (void)testThatMemoizableComponentsAreMemoizedWithMemoizingComponentAsParent
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   __block CKComponent *lastCreatedComponent = nil;
@@ -113,7 +113,7 @@
 
 - (void)testThatWhenMultipleComponentsAreMutuallyMemoizableTheyAreStillDistict
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
@@ -175,7 +175,7 @@
 
 - (void)testComputeLayoutOnlyCalledOnceWhenEqualInputs
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
@@ -209,7 +209,7 @@
 
 - (void)testComponentMemoizationKeysCompareObjCObjectsWithIsEqual
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   // Make two objects here that are mutable copies

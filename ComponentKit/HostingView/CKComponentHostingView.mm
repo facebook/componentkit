@@ -74,7 +74,7 @@ struct CKComponentHostingViewInputs {
   if (self = [super initWithFrame:CGRectZero]) {
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
-    _pendingInputs = {.scopeRoot = CKComponentScopeRootWithListener(self)};
+    _pendingInputs = {.scopeRoot = CKComponentScopeRootWithDefaultPredicates(self)};
 
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];

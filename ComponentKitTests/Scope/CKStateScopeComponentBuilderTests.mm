@@ -58,7 +58,7 @@
 
 - (void)testThreadLocalStateIsSet
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
 
   CKComponent *(^block)(void) = ^CKComponent *{
     XCTAssertEqualObjects(CKThreadLocalComponentScope::currentScope()->stack.top().equivalentPreviousFrame, root.rootFrame);
@@ -76,7 +76,7 @@
     return c;
   };
 
-  const CKBuildComponentResult result = CKBuildComponent(CKComponentScopeRootWithListener(nil), {}, block);
+  const CKBuildComponentResult result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, block);
   XCTAssertEqualObjects(result.component, c);
 }
 
@@ -90,7 +90,7 @@
     return [CKComponent new];
   };
 
-  const CKBuildComponentResult firstBuildResult = CKBuildComponent(CKComponentScopeRootWithListener(nil), {}, block);
+  const CKBuildComponentResult firstBuildResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, block);
 
   id __block nextState = nil;
   CKComponent *(^block2)(void) = ^CKComponent *{
@@ -112,7 +112,7 @@
     return [CKStateExposingComponent new];
   };
 
-  CKStateExposingComponent *component = (CKStateExposingComponent *)CKBuildComponent(CKComponentScopeRootWithListener(nil), {}, block).component;
+  CKStateExposingComponent *component = (CKStateExposingComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, block).component;
   XCTAssertEqualObjects(component.state, [CKStateExposingComponent initialState]);
 }
 
@@ -127,7 +127,7 @@
     return c;
   };
 
-  CKComponent *component = CKBuildComponent(CKComponentScopeRootWithListener(nil), {}, block).component;
+  CKComponent *component = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, block).component;
   XCTAssertNil(component.scopeFrameToken);
 }
 
@@ -146,7 +146,7 @@
     return [CKComponent new];
   };
 
-  CKComponent *outerComponent = CKBuildComponent(CKComponentScopeRootWithListener(nil), {}, block).component;
+  CKComponent *outerComponent = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, block).component;
   XCTAssertNotNil(innerComponent.scopeFrameToken);
   XCTAssertNil(outerComponent.scopeFrameToken);
 }

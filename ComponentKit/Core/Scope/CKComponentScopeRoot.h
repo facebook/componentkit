@@ -48,7 +48,7 @@ typedef void (^CKComponentControllerScopeEnumerator)(id<CKScopedComponentControl
 @interface CKComponentScopeRoot : NSObject
 
 /**
- Creates a conceptually brand new scope root.
+ Creates a conceptually brand new scope root. Prefer to use CKComponentScopeRootWithDefaultPredicates instead of this.
  
  @param listener A listener for state updates that flow through the scope root.
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope

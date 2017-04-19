@@ -14,4 +14,8 @@
 
 @class CKComponentScopeRoot;
 
-CKComponentScopeRoot *CKComponentScopeRootWithListener(id<CKComponentStateListener> listener);
+/**
+ Initializes a CKComponentScopeRoot with the normal, infrastructure-provided predicates necessary for the framework
+ to work. You should use this function to create scope roots unless you really know what you're doing.
+ */
+CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener);

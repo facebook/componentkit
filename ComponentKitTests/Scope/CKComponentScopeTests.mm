@@ -58,20 +58,20 @@
 
 - (void)testThreadLocalComponentScopeIsNotEmptyWhenTheScopeExists
 {
-  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithListener(nil), {});
+  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil), {});
   XCTAssertTrue(CKThreadLocalComponentScope::currentScope() != nullptr);
 }
 
 - (void)testThreadLocalComponentScopeStoresTheProvidedFrameAsTheEquivalentPreviousFrame
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
   CKThreadLocalComponentScope threadScope(root, {});
   XCTAssertEqualObjects(CKThreadLocalComponentScope::currentScope()->stack.top().equivalentPreviousFrame, root.rootFrame);
 }
 
 - (void)testThreadLocalComponentScopePushesChildComponentScope
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
   CKThreadLocalComponentScope threadScope(root, {});
   CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
   CKComponentScope scope([CKCompositeComponent class]);
@@ -81,7 +81,7 @@
 
 - (void)testThreadLocalComponentScopeCanBeOverridden
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
   CKThreadLocalComponentScope threadScope(root, {});
   CKThreadLocalComponentScope *threadScopePtr = &threadScope;
 
@@ -105,7 +105,7 @@
 
 - (void)testComponentScopeFrameIsPoppedWhenComponentScopeCloses
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
   CKThreadLocalComponentScope threadScope(root, {});
   CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
   {
@@ -119,7 +119,7 @@
 
 - (void)testComponentScopeStateIsAcquiredFromPreviousComponentScopeStateOneLevelDown
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentScopeRoot *root2;
   {
     CKThreadLocalComponentScope threadScope(root1, {});
@@ -146,7 +146,7 @@
 
 - (void)testComponentScopeStateIsAcquiredFromPreviousComponentScopeStateOneLevelDownWithSibling
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentScopeRoot *root2;
   {
     CKThreadLocalComponentScope threadScope(root1, {});
@@ -179,7 +179,7 @@
 
 - (void)testComponentScopeStateIsAcquiredFromPreviousComponentScopeStateOneLevelDownWithSiblingThatDoesNotAcquire
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentScopeRoot *root2;
   {
     CKThreadLocalComponentScope threadScope(root1, {});
@@ -213,7 +213,7 @@
 
 - (void)testComponentScopeHandleGlobalIdentifierIsAcquiredFromPreviousComponentScopeOneLevelDown
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentScopeRoot *root2;
   int32_t globalIdentifier;
   {
@@ -235,7 +235,7 @@
 
 - (void)testComponentScopeHandleGlobalIdentifierIsNotTheSameBetweenSiblings
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
   {
     CKThreadLocalComponentScope threadScope(root, {});
     int32_t globalIdentifier;
@@ -252,7 +252,7 @@
 
 - (void)testComponentScopeHandleGlobalIdentifierIsTheSameBetweenSiblingsWithComponentScopeCollision
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
   {
     CKThreadLocalComponentScope threadScope(root, {});
     int32_t globalIdentifier;
@@ -269,7 +269,7 @@
 
 - (void)testComponentScopeHandleGlobalIdentifierIsTheSameBetweenDescendantsWithComponentScopeCollision
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
   {
     CKThreadLocalComponentScope threadScope(root, {});
     int32_t globalIdentifier;
@@ -292,7 +292,7 @@
 
 - (void)testComponentScopeHandleGlobalIdentifierIsTheSameBetweenDescendantsWithComponentScopeCollisionAcrossComponentScopeRoots
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithListener(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentScopeRoot *root2;
   int32_t globalIdentifier;
   {

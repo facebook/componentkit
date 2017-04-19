@@ -13,7 +13,7 @@
 #import "CKComponentControllerAppearanceEvents.h"
 #import "CKComponentBoundsAnimationPredicates.h"
 
-CKComponentScopeRoot *CKComponentScopeRootWithListener(id<CKComponentStateListener> listener)
+CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener)
 {
   return [CKComponentScopeRoot
    rootWithListener:listener

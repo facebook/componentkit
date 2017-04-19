@@ -24,7 +24,7 @@
  */
 class CKComponentTestRootScope {
 public:
-  CKComponentTestRootScope() : _threadScope(CKComponentScopeRootWithListener(nil), {}) {};
+  CKComponentTestRootScope() : _threadScope(CKComponentScopeRootWithDefaultPredicates(nil), {}) {};
 private:
   CKThreadLocalComponentScope _threadScope;
 };
