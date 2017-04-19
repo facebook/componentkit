@@ -14,7 +14,6 @@
 
 #import "CKScopedComponent.h"
 #import "CKScopedComponentController.h"
-#import "CKComponentSubclass.h"
 #import "CKInternalHelpers.h"
 #import "CKThreadLocalComponentScope.h"
 
