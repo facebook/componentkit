@@ -153,12 +153,12 @@ struct CKComponentHostingViewInputs {
 
 - (void)hostingViewWillAppear
 {
-  CKComponentControllerAnnounceAppearance(_pendingInputs.scopeRoot);
+  CKComponentScopeRootAnnounceControllerAppearance(_pendingInputs.scopeRoot);
 }
 
 - (void)hostingViewDidDisappear
 {
-  CKComponentControllerAnnounceDisappearance(_pendingInputs.scopeRoot);
+  CKComponentScopeRootAnnounceControllerDisappearance(_pendingInputs.scopeRoot);
 }
 
 #pragma mark - CKComponentStateListener

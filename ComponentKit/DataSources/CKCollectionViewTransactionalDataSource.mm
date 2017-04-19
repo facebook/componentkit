@@ -197,12 +197,12 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
 
 - (void)announceWillDisplayCell:(UICollectionViewCell *)cell
 {
-  CKComponentControllerAnnounceAppearance([_cellToItemMap objectForKey:cell].scopeRoot);
+  CKComponentScopeRootAnnounceControllerAppearance([_cellToItemMap objectForKey:cell].scopeRoot);
 }
 
 - (void)announceDidEndDisplayingCell:(UICollectionViewCell *)cell
 {
-  CKComponentControllerAnnounceDisappearance([_cellToItemMap objectForKey:cell].scopeRoot);
+  CKComponentScopeRootAnnounceControllerDisappearance([_cellToItemMap objectForKey:cell].scopeRoot);
 }
 
 #pragma mark - UICollectionViewDataSource

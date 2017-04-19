@@ -24,7 +24,7 @@ BOOL CKComponentControllerDisappearanceEventPredicate(id<CKScopedComponentContro
   return CKSubclassOverridesSelector([CKComponentController class], [controller class], @selector(componentTreeDidDisappear));
 }
 
-void CKComponentControllerAnnounceAppearance(CKComponentScopeRoot *scopeRoot)
+void CKComponentScopeRootAnnounceControllerAppearance(CKComponentScopeRoot *scopeRoot)
 {
   [scopeRoot enumerateComponentControllersMatchingPredicate:&CKComponentControllerAppearanceEventPredicate block:^(id<CKScopedComponentController> scopedController) {
     CKComponentController *controller = (CKComponentController *)scopedController;
@@ -32,7 +32,7 @@ void CKComponentControllerAnnounceAppearance(CKComponentScopeRoot *scopeRoot)
   }];
 }
 
-void CKComponentControllerAnnounceDisappearance(CKComponentScopeRoot *scopeRoot)
+void CKComponentScopeRootAnnounceControllerDisappearance(CKComponentScopeRoot *scopeRoot)
 {
   [scopeRoot enumerateComponentControllersMatchingPredicate:&CKComponentControllerDisappearanceEventPredicate block:^(id<CKScopedComponentController> scopedController) {
     CKComponentController *controller = (CKComponentController *)scopedController;

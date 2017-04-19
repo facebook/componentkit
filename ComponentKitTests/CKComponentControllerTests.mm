@@ -247,7 +247,7 @@
                                                                                                             context:nil];
   [componentLifecycleTestController attachToView:[UIView new]];
   [componentLifecycleTestController updateWithState:state];
-  CKComponentControllerAnnounceAppearance([componentLifecycleTestController state].scopeRoot);
+  CKComponentScopeRootAnnounceControllerAppearance([componentLifecycleTestController state].scopeRoot);
   CKFooComponent *fooComponent = (CKFooComponent *)[componentLifecycleTestController state].componentLayout.component;
   XCTAssertTrue(fooComponent.controller.calledComponentTreeWillAppear,
                 @"Expected controller %@ to have received component tree will appear event", fooComponent.controller);
@@ -262,9 +262,9 @@
                                                                                                             context:nil];
   [componentLifecycleTestController attachToView:[UIView new]];
   [componentLifecycleTestController updateWithState:state];
-  CKComponentControllerAnnounceAppearance([componentLifecycleTestController state].scopeRoot);
+  CKComponentScopeRootAnnounceControllerAppearance([componentLifecycleTestController state].scopeRoot);
   [componentLifecycleTestController detachFromView];
-  CKComponentControllerAnnounceDisappearance([componentLifecycleTestController state].scopeRoot);
+  CKComponentScopeRootAnnounceControllerDisappearance([componentLifecycleTestController state].scopeRoot);
   CKFooComponent *fooComponent = (CKFooComponent *)[componentLifecycleTestController state].componentLayout.component;
   XCTAssertTrue(fooComponent.controller.calledComponentTreeDidDisappear,
                 @"Expected controller %@ to have received component tree did disappear event", fooComponent.controller);
@@ -283,7 +283,7 @@
   [componentLifecycleTestController attachToView:[UIView new]];
   [componentLifecycleTestController updateWithState:state1];
   [componentLifecycleTestController updateWithState:state2];
-  CKComponentControllerAnnounceAppearance([componentLifecycleTestController state].scopeRoot);
+  CKComponentScopeRootAnnounceControllerAppearance([componentLifecycleTestController state].scopeRoot);
   CKFooComponent *fooComponent = (CKFooComponent *)[componentLifecycleTestController state].componentLayout.component;
   XCTAssertTrue(fooComponent.controller.calledComponentTreeWillAppear,
                 @"Expected controller %@ to have received component tree will appear event", fooComponent.controller);
@@ -302,9 +302,9 @@
   [componentLifecycleTestController attachToView:[UIView new]];
   [componentLifecycleTestController updateWithState:state1];
   [componentLifecycleTestController updateWithState:state2];
-  CKComponentControllerAnnounceAppearance([componentLifecycleTestController state].scopeRoot);
+  CKComponentScopeRootAnnounceControllerAppearance([componentLifecycleTestController state].scopeRoot);
   [componentLifecycleTestController detachFromView];
-  CKComponentControllerAnnounceDisappearance([componentLifecycleTestController state].scopeRoot);
+  CKComponentScopeRootAnnounceControllerDisappearance([componentLifecycleTestController state].scopeRoot);
   CKFooComponent *fooComponent = (CKFooComponent *)[componentLifecycleTestController state].componentLayout.component;
   XCTAssertTrue(fooComponent.controller.calledComponentTreeDidDisappear,
                 @"Expected controller %@ to have received component tree did disappear event", fooComponent.controller);

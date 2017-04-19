@@ -12,4 +12,14 @@
 
 #import <ComponentKit/CKComponentScopeRoot.h>
 
-BOOL CKComponentBoundsAnimationPredicate(id<CKScopedComponent> controller);
+/**
+ A predicate that identifies if a component implements bounds animations. This predicate is passed to the scope root
+ and is checked on the initialization of components and cached. This allows us to rapidly identify which components
+ require animating.
+ */
+BOOL CKComponentBoundsAnimationPredicate(id<CKScopedComponent> component);
+
+/**
+ Computes and returns the bounds animations for the transition from a prior generation's scope root.
+ */
+CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKComponentScopeRoot *newRoot, CKComponentScopeRoot *previousRoot);

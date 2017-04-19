@@ -17,49 +17,18 @@
 #import "CKComponentSubclass.h"
 #import "CKThreadLocalComponentScope.h"
 
-static CKComponentBoundsAnimation boundsAnimationFromPreviousScopeRoot(CKComponentScopeRoot *newRoot, CKComponentScopeRoot *previousRoot)
-{
-  NSMapTable *const scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
-  [previousRoot
-   enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
-   block:^(id<CKScopedComponent> component) {
-     CKComponent *oldComponent = (CKComponent *)component;
-     id scopeFrameToken = [oldComponent scopeFrameToken];
-     if (scopeFrameToken) {
-       [scopeFrameTokenToOldComponent setObject:oldComponent forKey:scopeFrameToken];
-     }
-   }];
-  
-  __block CKComponentBoundsAnimation boundsAnimation {};
-  [newRoot
-   enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
-   block:^(id<CKScopedComponent> component) {
-     CKComponent *newComponent = (CKComponent *)component;
-     id scopeFrameToken = [newComponent scopeFrameToken];
-     if (scopeFrameToken) {
-       CKComponent *oldComponent = [scopeFrameTokenToOldComponent objectForKey:scopeFrameToken];
-       if (oldComponent) {
-         const CKComponentBoundsAnimation ba = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
-         if (ba.duration != 0) {
-           boundsAnimation = ba;
-         }
-       }
-     }
-   }];
-  return boundsAnimation;
-}
-
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
-                                        CKComponent *(^function)(void))
+                                        CKComponent *(^componentFactory)(void))
 {
+  CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   // Order of operations matters, so first store into locals and then return a struct.
-  CKComponent *const component = function();
+  CKComponent *const component = componentFactory();
   return {
     .component = component,
     .scopeRoot = threadScope.newScopeRoot,
-    .boundsAnimation = boundsAnimationFromPreviousScopeRoot(threadScope.newScopeRoot, previousRoot)
+    .boundsAnimation = CKComponentBoundsAnimationFromPreviousScopeRoot(threadScope.newScopeRoot, previousRoot)
   };
 }
 
