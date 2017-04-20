@@ -444,7 +444,7 @@
 
 - (void)testTargetSelectorActionCallsOnNormalNSObject
 {
-  CKTestObjectTarget *target =[CKTestObjectTarget new];
+  CKTestObjectTarget *target = [CKTestObjectTarget new];
   CKComponentAction action = CKComponentAction(CKTypedComponentAction<>(target, @selector(someMethod)));
   action.send([CKComponent new]);
 
@@ -454,6 +454,43 @@
 - (void)testInvocationIsNilWhenSelectorIsNil
 {
   XCTAssertNil(CKComponentActionSendResponderInvocationPrepare(nil, nil, nil));
+}
+
+- (void)testBlockActionFires
+{
+  __block BOOL firedAction = NO;
+  CKComponentAction action = CKComponentAction::actionFromBlock(^(CKComponent *) {
+    firedAction = YES;
+  });
+
+  action.send([CKComponent new]);
+
+  XCTAssertTrue(firedAction);
+}
+
+- (void)testBlockActionFiresAndDeliversComponentAsSender
+{
+  __block BOOL equalComponents = NO;
+  CKComponent *c = [CKComponent new];
+  CKComponentAction action = CKComponentAction::actionFromBlock(^(CKComponent *passedComponent) {
+    equalComponents = (passedComponent == c);
+  });
+
+  action.send(c);
+
+  XCTAssertTrue(equalComponents);
+}
+
+- (void)testBlockActionFiresAndDeliversAdditionalParameterAsArgument
+{
+  __block BOOL equalArguments = NO;
+  NSObject *arg = [NSObject new];
+  CKTypedComponentAction<NSObject *> action = CKTypedComponentAction<NSObject *>::actionFromBlock(^(CKComponent *c, NSObject *passedArgument) {
+    equalArguments = (passedArgument == arg);
+  });
+
+  action.send([CKComponent new], arg);
+  XCTAssertTrue(equalArguments);
 }
 
 @end
