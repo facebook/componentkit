@@ -75,6 +75,7 @@ public:
     return *this == rhs;
   }
   SEL selector() const noexcept;
+  dispatch_block_t block() const noexcept;
   std::string identifier() const noexcept;
 };
 

@@ -133,16 +133,12 @@ public:
   /** We support promotion from actions that take no arguments. */
   template <typename... Ts>
   CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) noexcept : CKTypedComponentActionBase(action) {
-    if (_variant == CKTypedComponentActionVariant::Block) {
-      void (^oldBlock)(CKComponent *) = (void (^)(CKComponent *))action._block;
-      _block = ^(CKComponent *sender, Ts...) { oldBlock(sender); };
-    }
     // At runtime if we provide more arguments to a block on invocation than accepted by the block, the behavior is
     // undefined. If you hit this assert, it means somewhere in your code you're doing this:
     // CKTypedComponentAction<BOOL, int> = ^(CKComponent *sender) {
     // To fix the error, you must handle all arguments:
     // CKTypedComponentAction<BOOL, int> = ^(CKComponent *sender, BOOL foo, int bar) {
-    CKCAssert(_variant != CKTypedComponentActionVariant::Block, @"Block actions should not be promoted, you will not receive arguments.");
+    CKCAssert(_variant != CKTypedComponentActionVariant::Block, @"Block actions should not take fewer arguments than defined in the declaration of the action, you are depending on undefined behavior and will cause crashes.");
   };
 
   /**
@@ -151,7 +147,7 @@ public:
    */
   template<typename... Ts>
   explicit CKTypedComponentAction<>(const CKTypedComponentAction<Ts...> &action) noexcept : CKTypedComponentActionBase(action) {
-    CKCAssert(_variant != CKTypedComponentActionVariant::Block, @"Block actions cannot be promoted, you are depending on undefined behavior and will cause crashes.");
+    CKCAssert(_variant != CKTypedComponentActionVariant::Block, @"Block actions cannot take fewer arguments than provided in the declaration of the action, you are depending on undefined behavior and will cause crashes.");
   };
 
   ~CKTypedComponentAction() {};

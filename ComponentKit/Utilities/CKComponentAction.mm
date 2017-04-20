@@ -36,7 +36,6 @@ bool CKTypedComponentActionBase::operator==(const CKTypedComponentActionBase& rh
 
 CKComponentActionSendBehavior CKTypedComponentActionBase::defaultBehavior() const
 {
-  CKCAssertTrue(_variant != CKTypedComponentActionVariant::Block);
   return (_variant == CKTypedComponentActionVariant::RawSelector
           ? CKComponentActionSendBehaviorStartAtSenderNextResponder
           : CKComponentActionSendBehaviorStartAtSender);
@@ -75,6 +74,8 @@ std::string CKTypedComponentActionBase::identifier() const noexcept
 {
   return std::string(sel_getName(_selector)) + "-" + std::to_string((long)(_targetOrScopeHandle));
 }
+
+dispatch_block_t CKTypedComponentActionBase::block() const noexcept { return _block; };
 
 #pragma mark - Sending
 
