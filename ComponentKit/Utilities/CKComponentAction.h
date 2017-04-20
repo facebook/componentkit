@@ -95,7 +95,8 @@ class CKTypedComponentAction : public CKTypedComponentActionBase {
                 CKTypedComponentActionBoolPack<(std::is_trivially_constructible<T>::value || std::is_pointer<T>::value)...>,
                 CKTypedComponentActionBoolPack<(CKTypedComponentActionDenyType<T>::value)...>
                 >::value, "You must either use a pointer (like an NSObject) or a trivially constructible type. Complex types are not allowed as arguments of component actions.");
-  
+
+  /** This constructor is private to forbid direct usage. Use actionFromBlock. */
   CKTypedComponentAction<T...>(void(^block)(CKComponent *, T...)) noexcept : CKTypedComponentActionBase((dispatch_block_t)block) {};
   
 public:
@@ -122,8 +123,8 @@ public:
   CKTypedComponentAction(SEL selector) noexcept : CKTypedComponentActionBase(selector) {};
 
   /** 
-   Allows passing a block as an action since it is easy to create retain cycles with this API. Always prefer scoped
-   actions over this if possible.
+   Allows passing a block as an action. It is easy to create retain cycles with this API, always prefer scoped actions
+   over this if possible.
    */
   static CKTypedComponentAction<T...> actionFromBlock(void(^block)(CKComponent *, T...)) {
     return CKTypedComponentAction<T...>(block);
