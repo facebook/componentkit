@@ -124,7 +124,11 @@ public:
 
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
   CKTypedComponentAction(SEL selector) noexcept : CKTypedComponentActionBase(selector) {};
-  
+
+  /** 
+   Allows passing a block as an action since it is easy to create retain cycles with this API. Always prefer scoped
+   actions over this if possible.
+   */
   static CKTypedComponentAction<T...> actionFromBlock(void(^block)(CKComponent *, T...)) {
     return CKTypedComponentAction<T...>(block);
   }
