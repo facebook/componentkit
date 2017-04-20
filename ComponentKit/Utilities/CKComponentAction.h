@@ -72,10 +72,6 @@
              ...
              - (void)methodWithSender:(CKComponent *)sender {}
  
- Option 3 - (HIGHLY DISCOURAGED) Block action. We support passing blocks to actions through the actionForBlock() static
-            function, however it is likely to lead to retain cycles unless carefully managed. Avoid this unless there
-            is no other option.
- 
  When using the action, simply use the send() function with the sender, an optional behavior parameter, and the
  arguments defined in the declaration of the action.
 
