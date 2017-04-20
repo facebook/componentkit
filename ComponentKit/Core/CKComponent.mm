@@ -166,10 +166,11 @@ struct CKComponentMountInfo {
 {
   CKAssertMainThread();
   if (_mountInfo != nullptr) {
-    [_scopeHandle.controller componentWillUnmount:self];
+    CKComponentController *const controller = (CKComponentController *)_scopeHandle.controller;
+    [controller componentWillUnmount:self];
     [self _relinquishMountedView];
     _mountInfo.reset();
-    [_scopeHandle.controller componentDidUnmount:self];
+    [controller componentDidUnmount:self];
   }
 }
 
@@ -181,7 +182,7 @@ struct CKComponentMountInfo {
     UIView *view = _mountInfo->view;
     if (view) {
       CKAssert(view.ck_component == self, @"");
-      [_scopeHandle.controller component:self willRelinquishView:view];
+      [(CKComponentController *)_scopeHandle.controller component:self willRelinquishView:view];
       view.ck_component = nil;
       _mountInfo->view = nil;
     }
@@ -190,7 +191,7 @@ struct CKComponentMountInfo {
 
 - (void)childrenDidMount
 {
-  [_scopeHandle.controller componentDidMount:self];
+  [(CKComponentController *)_scopeHandle.controller componentDidMount:self];
 }
 
 #pragma mark - Animation

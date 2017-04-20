@@ -12,4 +12,6 @@
 
 @protocol CKScopedComponent <NSObject>
 
++ (id)initialState;
+
 @end

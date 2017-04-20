@@ -17,3 +17,5 @@
 - (instancetype)initWithComponent:(id<CKScopedComponent>)component;
 
 @end
+
+typedef Class<CKScopedComponentController> (*CKScopedComponentControllerClassGenerator)(Class<CKScopedComponent>);

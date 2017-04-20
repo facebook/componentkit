@@ -12,6 +12,8 @@
 #import "CKComponentControllerInternal.h"
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKMutex.h>
 
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
@@ -301,3 +303,30 @@ private:
 }
 
 @end
+
+Class<CKScopedComponentController> CKComponentControllerClassFromComponentClass(Class<CKScopedComponent> componentClass) noexcept
+{
+  if (componentClass == [CKComponent class]) {
+    return Nil; // Don't create root CKComponentControllers as it does nothing interesting.
+  }
+
+  static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER; // protects cache
+  CK::StaticMutexLocker l(mutex);
+
+  static std::unordered_map<Class, Class> *cache = new std::unordered_map<Class, Class>();
+  const auto &it = cache->find(componentClass);
+  if (it == cache->end()) {
+    Class c = NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"]);
+
+    // If you override animationsFromPreviousComponent: or animationsOnInitialMount then we need a controller.
+    if (c == nil &&
+        (CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
+         CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnInitialMount)))) {
+          c = [CKComponentController class];
+        }
+
+    cache->insert({componentClass, c});
+    return c;
+  }
+  return it->second;
+}

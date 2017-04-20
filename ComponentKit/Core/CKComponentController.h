@@ -13,6 +13,8 @@
 #import <UIKit/UIKit.h>
 
 @class CKComponent;
+@protocol CKScopedComponentController;
+@protocol CKScopedComponent;
 
 @interface CKComponentController<__covariant ComponentType:CKComponent *> : NSObject
 
@@ -89,3 +91,14 @@
 + (instancetype)new NS_UNAVAILABLE;
 
 @end
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+Class<CKScopedComponentController> CKComponentControllerClassFromComponentClass(Class<CKScopedComponent> componentClass) noexcept;
+
+#ifdef __cplusplus
+}
+#endif
+

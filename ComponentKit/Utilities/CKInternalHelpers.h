@@ -14,8 +14,6 @@
 
 BOOL CKSubclassOverridesSelector(Class superclass, Class subclass, SEL selector) noexcept;
 
-Class CKComponentControllerClassFromComponentClass(Class componentClass) noexcept;
-
 std::string CKStringFromPointer(const void *ptr) noexcept;
 
 CGFloat CKScreenScale() noexcept;
