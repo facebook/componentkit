@@ -10,3 +10,6 @@
 [submodule "Carthage/Checkouts/yoga"]
   path = Carthage/Checkouts/yoga
   url = https://github.com/facebook/yoga.git
+[submodule "yoga"]
+	path = yoga
+	url = https://github.com/facebook/yoga.git

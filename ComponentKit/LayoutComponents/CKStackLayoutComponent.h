@@ -11,10 +11,13 @@
 #import <vector>
 
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKContainerWrapper.h>
 
 typedef NS_ENUM(NSUInteger, CKStackLayoutDirection) {
   CKStackLayoutDirectionVertical,
   CKStackLayoutDirectionHorizontal,
+  CKStackLayoutDirectionVerticalReverse,
+  CKStackLayoutDirectionHorizontalReverse,
 };
 
 /** If no children are flexible, how should this component justify its children in the available space? */
@@ -34,6 +37,14 @@ typedef NS_ENUM(NSUInteger, CKStackLayoutJustifyContent) {
    On underflow, children are right/bottom-aligned within this component's bounds.
    */
   CKStackLayoutJustifyContentEnd,
+  /**
+   Items are positioned with space between the lines.
+   */
+  CKStackLayoutJustifyContentSpaceBetween,
+  /**
+   Items are positioned with space before, between, and after the line.
+   */
+  CKStackLayoutJustifyContentSpaceAround,
 };
 
 typedef NS_ENUM(NSUInteger, CKStackLayoutAlignItems) {
@@ -60,6 +71,31 @@ typedef NS_ENUM(NSUInteger, CKStackLayoutAlignSelf) {
   CKStackLayoutAlignSelfStretch,
 };
 
+typedef NS_ENUM(NSUInteger, CKStackLayoutWrap) {
+  /** Children are not wrapped */
+  CKStackLayoutWrapNoWrap,
+  /** Children are wrapped if necessary */
+  CKStackLayoutWrapWrap,
+  /** Children are wrapped if necessary in reverse order of lines */
+  CKStackLayoutWrapWrapReverse,
+};
+
+typedef NS_ENUM(NSUInteger, CKStackLayoutPositionType) {
+  /** Specifies the type of position children are stacked in */
+  CKStackLayoutPositionTypeRelative,
+  /** With the absolute position, child is positioned relative to parent */
+  CKStackLayoutPositionTypeAbsolute,
+};
+
+struct CKStackLayoutPosition {
+  CKStackLayoutPositionType type;
+  /** For absolute position, defines offset from starting edge of parent to starting edge of child */
+  CGFloat start;
+  /** For absolute position, defines offset from top edge of parent to top edge of child */
+  CGFloat top;
+};
+
+
 struct CKStackLayoutComponentStyle {
   /** Specifies the direction children are stacked in. */
   CKStackLayoutDirection direction;
@@ -69,6 +105,8 @@ struct CKStackLayoutComponentStyle {
   CKStackLayoutJustifyContent justifyContent;
   /** Orientation of children along cross axis */
   CKStackLayoutAlignItems alignItems;
+  /** Wrapping style of children in case there isn't enough space */
+  CKStackLayoutWrap wrap;
 };
 
 struct CKStackLayoutComponentChild {
@@ -93,29 +131,36 @@ struct CKStackLayoutComponentChild {
   CKRelativeDimension flexBasis;
   /** Orientation of the child along cross axis, overriding alignItems */
   CKStackLayoutAlignSelf alignSelf;
+  /** Position for the child */
+  CKStackLayoutPosition position;
+  /** Stack order of the child.
+   Child with greater stack order will be in front of an child with a lower stack order.
+   If children have the same zIndex, the one declared first will appear below
+   */
+  NSInteger zIndex;
 };
 
 extern template class std::vector<CKStackLayoutComponentChild>;
 
 /**
  A simple layout component that stacks a list of children vertically or horizontally.
-
+ 
  - All children are initially laid out with the an infinite available size in the stacking direction.
  - In the other direction, this component's constraint is passed.
  - The children's sizes are summed in the stacking direction.
-   - If this sum is less than this component's minimum size in stacking direction, children with flexGrow are flexed.
-   - If it is greater than this component's maximum size in the stacking direction, children with flexShrink are flexed.
-   - If, even after flexing, the sum is still greater than this component's maximum size in the stacking direction,
-     justifyContent determines how children are laid out.
-
+ - If this sum is less than this component's minimum size in stacking direction, children with flexGrow are flexed.
+ - If it is greater than this component's maximum size in the stacking direction, children with flexShrink are flexed.
+ - If, even after flexing, the sum is still greater than this component's maximum size in the stacking direction,
+ justifyContent determines how children are laid out.
+ 
  For example:
  - Suppose stacking direction is Vertical, min-width=100, max-width=300, min-height=200, max-height=500.
  - All children are laid out with min-width=100, max-width=300, min-height=0, max-height=INFINITY.
  - If the sum of the childrens' heights is less than 200, components with flexGrow are flexed larger.
  - If the sum of the childrens' heights is greater than 500, components with flexShrink are flexed smaller.
-   Each component is shrunk by `((sum of heights) - 500)/(number of components)`.
+ Each component is shrunk by `((sum of heights) - 500)/(number of components)`.
  - If the sum of the childrens' heights is greater than 500 even after flexShrink-able components are flexed,
-   justifyContent determines how children are laid out.
+ justifyContent determines how children are laid out.
  */
 @interface CKStackLayoutComponent : CKComponent
 
@@ -128,6 +173,6 @@ extern template class std::vector<CKStackLayoutComponentChild>;
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
                       style:(const CKStackLayoutComponentStyle &)style
-                   children:(const std::vector<CKStackLayoutComponentChild> &)children;
+                   children:(CKContainerWrapper<std::vector<CKStackLayoutComponentChild>> &&)children;
 
 @end
