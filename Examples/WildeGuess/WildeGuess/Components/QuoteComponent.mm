@@ -11,6 +11,8 @@
 
 #import "QuoteComponent.h"
 
+#import <ComponentKit/CKUniqueComponent.h>
+
 #import "FrostedQuoteComponent.h"
 #import "MonochromeQuoteComponent.h"
 #import "Quote.h"

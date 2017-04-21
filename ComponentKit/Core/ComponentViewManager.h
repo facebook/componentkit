@@ -14,6 +14,8 @@
 #import <unordered_set>
 #import <utility>
 #import <vector>
+#import <list>
+#import <stack>
 
 #import <UIKit/UIKit.h>
 
@@ -110,10 +112,13 @@ namespace CK {
       void reset();
 
       UIView *viewForClass(const CKComponentViewClass &viewClass, UIView *container);
+
+      void checkOutView(UIView *view);
+      void checkInView(UIView *view);
     private:
-      std::vector<UIView *> pool;
+      std::list<UIView *> pool;
       /** Points to the next view in pool that has *not* yet been vended. */
-      std::vector<UIView *>::iterator position;
+      std::list<UIView *>::iterator position;
 
       ViewReusePool(const ViewReusePool&) = delete;
       ViewReusePool &operator=(const ViewReusePool&) = delete;
@@ -122,15 +127,29 @@ namespace CK {
     class ViewReusePoolMap {
     public:
       static ViewReusePoolMap &viewReusePoolMapForView(UIView *view);
-      ViewReusePoolMap() {};
+      static ViewReusePoolMap &alternateReusePoolMapForView(UIView *view, const std::string &identifier);
+      ViewReusePoolMap() {
+        vendedViews.push({});
+      };
 
       /** Resets each individual pool inside the map. */
       void reset(UIView *container);
 
+      struct VendedViewCheckout {
+        ViewKey viewKey;
+        UIView *view;
+      };
+
+      void pushCheckoutContext(void);
+      void popCheckoutContext(void);
+
+      std::vector<VendedViewCheckout> checkOutVendedViews(void);
+      void checkInVendedViews(const std::vector<VendedViewCheckout> &checkout);
+
       UIView *viewForConfiguration(Class componentClass, const CKComponentViewConfiguration &config, UIView *container);
     private:
       std::unordered_map<ViewKey, ViewReusePool> map;
-      std::vector<UIView *> vendedViews;
+      std::stack<std::vector<VendedViewCheckout>> vendedViews;
 
       ViewReusePoolMap(const ViewReusePoolMap&) = delete;
       ViewReusePoolMap &operator=(const ViewReusePoolMap&) = delete;
@@ -147,6 +166,7 @@ namespace CK {
      */
     class ViewManager {
     public:
+      ViewManager(UIView *v, ViewReusePoolMap &m) : view(v), viewReusePoolMap(m) {};
       ViewManager(UIView *v) : view(v), viewReusePoolMap(ViewReusePoolMap::viewReusePoolMapForView(v)) {};
       ~ViewManager() { viewReusePoolMap.reset(view); }
 

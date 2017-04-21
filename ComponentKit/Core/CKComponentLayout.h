@@ -15,6 +15,7 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKSizeRange.h>
+#import <ComponentKit/ComponentMountContext.h>
 
 @class CKComponent;
 @class CKComponentScopeRoot;
@@ -57,9 +58,10 @@ struct CKComponentLayoutChild {
         component responder chain can be connected correctly.
  */
 NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
-                              UIView *view,
+                              UIView *rootComponentMountedView,
                               NSSet *previouslyMountedComponents,
-                              CKComponent *supercomponent);
+                              CKComponent *supercomponent,
+                              const CK::Component::MountContext &rootContext);
 
 /**
  Safely computes the layout of the given root component by guarding against nil components.

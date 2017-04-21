@@ -20,7 +20,7 @@
 
 typedef NS_ENUM(NSUInteger, CKComponentAnnouncedEvent) {
   CKComponentAnnouncedEventTreeWillAppear,
-  CKComponentAnnouncedEventTreeDidDisappear,
+  CKComponentAnnouncedEventTreeDidDisappear
 };
 
 /** Component state announcements will always be made on the main thread. */

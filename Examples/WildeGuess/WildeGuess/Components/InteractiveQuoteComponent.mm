@@ -28,7 +28,7 @@ static NSString *const oscarWilde = @"Oscar Wilde";
 + (instancetype)newWithQuote:(Quote *)quote
                      context:(QuoteContext *)context
 {
-  CKComponentScope scope(self);
+  CKComponentScope scope(self, quote);
   const BOOL revealAnswer = [scope.state() boolValue];
 
   CKComponent *overlay =

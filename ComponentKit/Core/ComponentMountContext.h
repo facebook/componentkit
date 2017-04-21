@@ -45,9 +45,11 @@ namespace CK {
         return MountContext(std::make_shared<ViewManager>(subview), {0,0}, layoutGuide, shouldBlockChildAnimations);
       };
 
-    private:
       MountContext(const std::shared_ptr<ViewManager> &m, const CGPoint p, const UIEdgeInsets l, const BOOL b)
       : viewManager(m), position(p), layoutGuide(l), shouldBlockAnimations(b) {}
+
+    private:
+
 
       static UIEdgeInsets adjustedGuide(const UIEdgeInsets layoutGuide, const CGPoint offset,
                                         const CGSize parentSize, const CGSize childSize) {

@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 
 #import "WildeGuessCollectionViewController.h"
+#import "WildeGuessComponentViewController.h"
 
 @implementation AppDelegate
 {
@@ -22,12 +23,14 @@
 {
   _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-  UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-  [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
-  [flowLayout setMinimumInteritemSpacing:0];
-  [flowLayout setMinimumLineSpacing:0];
+  WildeGuessComponentViewController *viewController = [[WildeGuessComponentViewController alloc] init];
 
-  WildeGuessCollectionViewController *viewController = [[WildeGuessCollectionViewController alloc] initWithCollectionViewLayout:flowLayout];
+//  UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+//  [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
+//  [flowLayout setMinimumInteritemSpacing:0];
+//  [flowLayout setMinimumLineSpacing:0];
+//
+//  WildeGuessCollectionViewController *viewController = [[WildeGuessCollectionViewController alloc] initWithCollectionViewLayout:flowLayout];
 
   [_window setRootViewController:[[UINavigationController alloc] initWithRootViewController:viewController]];
   [_window makeKeyAndVisible];

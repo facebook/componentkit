@@ -107,7 +107,7 @@ static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComp
   NSSet *currentlyMountedComponents = view.ck_attachState.mountedComponents;
   __block NSSet *newMountedComponents = nil;
   CKComponentBoundsAnimationApply(boundsAnimation, ^{
-    newMountedComponents = CKMountComponentLayout(layout, view, currentlyMountedComponents, nil);
+    newMountedComponents = CKMountComponentLayout(layout, view, currentlyMountedComponents, nil, CK::Component::MountContext::RootContext(view));
   }, nil);
   return [[CKComponentDataSourceAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents layout:layout];
 }

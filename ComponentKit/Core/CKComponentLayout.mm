@@ -44,9 +44,10 @@ void CKOffMainThreadDeleter::operator()(std::vector<CKComponentLayoutChild> *tar
 }
 
 NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
-                              UIView *view,
+                              UIView *rootComponentMountedView,
                               NSSet *previouslyMountedComponents,
-                              CKComponent *supercomponent)
+                              CKComponent *supercomponent,
+                              const MountContext &rootContext)
 {
   struct MountItem {
     const CKComponentLayout &layout;
@@ -58,10 +59,10 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
   // in a DFS fashion which is handy if you want to animate a subpart
   // of the tree
   std::stack<MountItem> stack;
-  stack.push({layout, MountContext::RootContext(view), supercomponent, NO});
+  stack.push({layout, rootContext, supercomponent, NO});
   NSMutableSet *mountedComponents = [NSMutableSet set];
 
-  layout.component.rootComponentMountedView = view;
+  layout.component.rootComponentMountedView = rootComponentMountedView;
 
   while (!stack.empty()) {
     MountItem &item = stack.top();
