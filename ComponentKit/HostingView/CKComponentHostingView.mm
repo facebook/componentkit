@@ -14,14 +14,17 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
 
+#import "CKBuildComponent.h"
 #import "CKComponentAnimation.h"
 #import "CKComponentDebugController.h"
 #import "CKComponentHostingViewDelegate.h"
 #import "CKComponentLayout.h"
 #import "CKComponentRootView.h"
 #import "CKComponentScopeRoot.h"
+#import "CKComponentScopeRootFactory.h"
 #import "CKComponentSizeRangeProviding.h"
 #import "CKComponentSubclass.h"
+#import "CKComponentControllerAppearanceEvents.h"
 
 struct CKComponentHostingViewInputs {
   CKComponentScopeRoot *scopeRoot;
@@ -71,7 +74,7 @@ struct CKComponentHostingViewInputs {
   if (self = [super initWithFrame:CGRectZero]) {
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
-    _pendingInputs = {.scopeRoot = [CKComponentScopeRoot rootWithListener:self]};
+    _pendingInputs = {.scopeRoot = CKComponentScopeRootWithDefaultPredicates(self)};
 
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
@@ -150,12 +153,12 @@ struct CKComponentHostingViewInputs {
 
 - (void)hostingViewWillAppear
 {
-  [_pendingInputs.scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+  CKComponentScopeRootAnnounceControllerAppearance(_pendingInputs.scopeRoot);
 }
 
 - (void)hostingViewDidDisappear
 {
-  [_pendingInputs.scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+  CKComponentScopeRootAnnounceControllerDisappearance(_pendingInputs.scopeRoot);
 }
 
 #pragma mark - CKComponentStateListener

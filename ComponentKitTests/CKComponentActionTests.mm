@@ -13,12 +13,14 @@
 
 #import <ComponentKitTestHelpers/CKTestActionComponent.h>
 
+#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentAction.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentController.h>
 
 @interface CKTestScopeActionComponent : CKComponent
@@ -376,7 +378,7 @@
   __block BOOL calledAction = NO;
 
   // We have to use build component here to ensure the scopes are properly configured.
-  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, ^{
+  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
     return [CKTestScopeActionComponent
             newWithBlock:^(CKComponent *sender, id context) {
               calledAction = YES;
@@ -393,7 +395,7 @@
   __block id actionContext = nil;
 
   // We have to use build component here to ensure the scopes are properly configured.
-  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, ^{
+  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
     return [CKTestScopeActionComponent
             newWithBlock:^(CKComponent *sender, id context) {
               actionContext = context;
@@ -412,7 +414,7 @@
   __block BOOL calledAction = NO;
 
   // We have to use build component here to ensure the scopes are properly configured.
-  CKTestControllerScopeActionComponent *component = (CKTestControllerScopeActionComponent *)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, ^{
+  CKTestControllerScopeActionComponent *component = (CKTestControllerScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
     return [CKTestControllerScopeActionComponent
             newWithBlock:^(CKComponent *sender, id context) {
               calledAction = YES;
@@ -429,7 +431,7 @@
   __block BOOL calledAction = NO;
 
   // We have to use build component here to ensure the scopes are properly configured.
-  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent([CKComponentScopeRoot rootWithListener:nil], {}, ^{
+  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
     return [CKTestScopeActionComponent
             newWithBlock:^(CKComponent *sender, id context) {
               calledAction = YES;
