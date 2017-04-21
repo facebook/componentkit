@@ -57,6 +57,7 @@
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                             rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
+                                  userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
                                       mode:(CKUpdateMode)mode
 {
   _pendingStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});

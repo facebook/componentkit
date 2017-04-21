@@ -118,18 +118,21 @@
 
 #pragma mark - State
 
-- (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode
+- (void)updateState:(id (^)(id))updateBlock
+           userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
+               mode:(CKUpdateMode)mode
 {
   CKAssertNotNil(updateBlock, @"The update block cannot be nil");
   if (![NSThread isMainThread]) {
     dispatch_async(dispatch_get_main_queue(), ^{
-      [self updateState:updateBlock mode:mode];
+      [self updateState:updateBlock userInfo:userInfo mode:mode];
     });
     return;
   }
   [_listener componentScopeHandleWithIdentifier:_globalIdentifier
                                  rootIdentifier:_rootIdentifier
                           didReceiveStateUpdate:updateBlock
+                                       userInfo:userInfo
                                            mode:mode];
 }
 

@@ -43,7 +43,9 @@
 - (instancetype)newHandleToBeReacquiredDueToScopeCollision;
 
 /** Enqueues a state update to be applied to the scope with the given mode. */
-- (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode;
+- (void)updateState:(id (^)(id))updateBlock
+           userInfo:(NSDictionary<NSString *, NSString *> *)userInfo
+               mode:(CKUpdateMode)mode;
 
 /** Informs the scope handle that it should complete its configuration. This will generate the controller */
 - (void)resolve;
