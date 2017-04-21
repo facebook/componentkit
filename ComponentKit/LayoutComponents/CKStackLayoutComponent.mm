@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKFlexboxComponent.h"
+#import "CKStackLayoutComponent.h"
 
 #import <yoga/Yoga.h>
 
@@ -17,9 +17,9 @@
 #import "CKInternalHelpers.h"
 
 /*
- This class contains information about cached layout for FlexboxComponent child
+ This class contains information about cached layout for StackLayoutComponent child
  */
-@interface CKFlexboxChildCachedLayout : NSObject
+@interface CKStackChildCachedLayout : NSObject
 
 @property (nonatomic) CKComponent *component;
 @property (nonatomic) CKComponentLayout componentLayout;
@@ -33,7 +33,7 @@
 
 @end
 
-@implementation CKFlexboxChildCachedLayout
+@implementation CKStackChildCachedLayout
 
 @end
 
@@ -72,7 +72,7 @@ static YGSize measureCssComponent(YGNodeRef node,
                                   float height,
                                   YGMeasureMode heightMode)
 {
-  CKFlexboxChildCachedLayout *cachedLayout = (__bridge CKFlexboxChildCachedLayout *)YGNodeGetContext(node);
+  CKStackChildCachedLayout *cachedLayout = (__bridge CKStackChildCachedLayout *)YGNodeGetContext(node);
   const CGSize minSize = {
     .width = (widthMode == YGMeasureModeExactly) ? width : 0,
     .height = (heightMode == YGMeasureModeExactly) ? height : 0
@@ -81,7 +81,7 @@ static YGSize measureCssComponent(YGNodeRef node,
     .width = (widthMode == YGMeasureModeExactly || widthMode == YGMeasureModeAtMost) ? width : INFINITY,
     .height = (heightMode == YGMeasureModeExactly || heightMode == YGMeasureModeAtMost) ? height : INFINITY
   };
-  // We cache measurements for the duration of single layout calculation of FlexboxComponent
+  // We cache measurements for the duration of single layout calculation of Component
   // ComponentKit and Yoga handle caching between calculations
   // We don't have any guarantees about when and how this will be called,
   // so we just cache the results to try to reuse them during final layout
@@ -176,7 +176,7 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
  and mutate it within that thread
  Layout cache shouldn't be exposed publicly
  */
-- (YGNodeRef)cssStackLayoutNode:(CKSizeRange)constrainedSize cache:(NSArray<CKFlexboxChildCachedLayout *> **)layoutCache
+- (YGNodeRef)cssStackLayoutNode:(CKSizeRange)constrainedSize cache:(NSArray<CKStackChildCachedLayout *> **)layoutCache
 {
   const YGNodeRef stackNode = YGNodeNewWithConfig([[self class] ckYogaDefaultConfig]);
   YGEdge spacingEdge = _style.direction == CKStackLayoutDirectionHorizontal ? YGEdgeStart : YGEdgeTop;
@@ -198,7 +198,7 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
     const YGNodeRef childNode = YGNodeNewWithConfig([[self class] ckYogaDefaultConfig]);
     
     // We add object only if there is actual used element
-    CKFlexboxChildCachedLayout *childLayout = [CKFlexboxChildCachedLayout new];
+    CKStackChildCachedLayout *childLayout = [CKStackChildCachedLayout new];
     childLayout.component = child.component;
     childLayout.widthMode = (YGMeasureMode) -1;
     childLayout.heightMode = (YGMeasureMode) -1;
@@ -266,7 +266,7 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
   // The cache is strictly internal and shouldn't be exposed in any way
   // The purpose of the cache is to save calculations done in measure() function in Yoga to reuse
   // for final layout
-  NSArray<CKFlexboxChildCachedLayout *> *layoutCache = nil;
+  NSArray<CKStackChildCachedLayout *> *layoutCache = nil;
   YGNodeRef layoutNode = [self ygNode:constrainedSize cache:&layoutCache];
   
   YGNodeCalculateLayout(layoutNode, YGUndefined, YGUndefined, YGDirectionLTR);
@@ -281,8 +281,8 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
   }
   std::sort(sortedChildNodes.begin(), sortedChildNodes.end(),
             [] (YGNodeRef const& a, YGNodeRef const& b) {
-              CKFlexboxChildCachedLayout *aCachedContext = (__bridge CKFlexboxChildCachedLayout *)YGNodeGetContext(a);
-              CKFlexboxChildCachedLayout *bCachedContext = (__bridge CKFlexboxChildCachedLayout *)YGNodeGetContext(b);
+              CKStackChildCachedLayout *aCachedContext = (__bridge CKStackChildCachedLayout *)YGNodeGetContext(a);
+              CKStackChildCachedLayout *bCachedContext = (__bridge CKStackChildCachedLayout *)YGNodeGetContext(b);
               return aCachedContext.zIndex < bCachedContext.zIndex;
             });
   
@@ -297,11 +297,11 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
     const CGFloat childY = YGNodeLayoutGetTop(childNode);
     const CGFloat childWidth = YGNodeLayoutGetWidth(childNode);
     const CGFloat childHeight = YGNodeLayoutGetHeight(childNode);
-    CKFlexboxChildCachedLayout *childCachedLayout = layoutCache[i];
+    CKStackChildCachedLayout *childCachedLayout = layoutCache[i];
     
     childrenLayout[i].position = CGPointMake(childX, childY);
     const CGSize childSize = CGSizeMake(childWidth, childHeight);
-    // We cache measurements for the duration of single layout calculation of FlexboxComponent
+    // We cache measurements for the duration of single layout calculation of Component
     // ComponentKit and Yoga handle caching between calculations
     
     // We can reuse caching even if main dimension isn't exact, but we did AtMost measurement previously
@@ -346,7 +346,7 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
  and mutate it within that thread
  Layout cache shouldn't be exposed publicly
  */
-- (YGNodeRef)ygNode:(CKSizeRange)constrainedSize cache:(NSArray<CKFlexboxChildCachedLayout *> **)layoutCache
+- (YGNodeRef)ygNode:(CKSizeRange)constrainedSize cache:(NSArray<CKStackChildCachedLayout *> **)layoutCache
 {
   const YGNodeRef node = [self cssStackLayoutNode:constrainedSize cache:layoutCache];
   
