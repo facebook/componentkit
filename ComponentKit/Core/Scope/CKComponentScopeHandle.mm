@@ -64,8 +64,8 @@
                  rootIdentifier:rootIdentifier
                  componentClass:componentClass
                           state:initialStateCreator ? initialStateCreator() : [componentClass initialState]
-                     controller:nil
-       controllerClassGenerator:controllerClassGenerator]; // controllers are built on resolution of the handle
+                     controller:nil // controllers are built on resolution of the handle
+       controllerClassGenerator:controllerClassGenerator];
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -76,7 +76,6 @@
                       controller:(id<CKScopedComponentController>)controller
         controllerClassGenerator:(CKScopedComponentControllerClassGenerator)controllerClassGenerator
 {
-  CKAssertTrue(controllerClassGenerator != NULL);
   if (self = [super init]) {
     _controller = controller;
     _controllerClassGenerator = controllerClassGenerator;
@@ -104,7 +103,7 @@
                                            componentClass:_componentClass
                                                     state:updatedState
                                                controller:_controller
-                                        controllerClassGenerator:_controllerClassGenerator];
+                                 controllerClassGenerator:_controllerClassGenerator];
 }
 
 - (instancetype)newHandleToBeReacquiredDueToScopeCollision
@@ -115,7 +114,7 @@
                                            componentClass:_componentClass
                                                     state:_state
                                                controller:_controller
-                                        controllerClassGenerator:_controllerClassGenerator];
+                                 controllerClassGenerator:_controllerClassGenerator];
 }
 
 - (id<CKScopedComponentController>)controller
