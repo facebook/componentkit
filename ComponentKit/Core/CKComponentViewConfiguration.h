@@ -18,6 +18,8 @@
 #import <ComponentKit/ComponentViewReuseUtilities.h>
 #import <ComponentKit/CKComponentAccessibility.h>
 #import <ComponentKit/CKComponentViewAttribute.h>
+#import <ComponentKit/CKContainerWrapper.h>
+
 
 class CKComponentDebugConfiguration;
 
@@ -101,10 +103,10 @@ struct CKComponentViewConfiguration {
   CKComponentViewConfiguration() noexcept;
 
   CKComponentViewConfiguration(CKComponentViewClass &&cls,
-                               CKViewComponentAttributeValueMap &&attrs = {}) noexcept;
+                               CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs = {}) noexcept;
 
   CKComponentViewConfiguration(CKComponentViewClass &&cls,
-                               CKViewComponentAttributeValueMap &&attrs,
+                               CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs,
                                CKComponentAccessibilityContext &&accessibilityCtx) noexcept;
 
   ~CKComponentViewConfiguration();
@@ -134,4 +136,3 @@ namespace std {
     size_t operator()(const CKComponentViewConfiguration &cl) const noexcept;
   };
 }
-

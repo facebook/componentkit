@@ -37,7 +37,7 @@
 
 @end
 
-@implementation CKFlexboxComponent {
+@implementation CKStackLayoutComponent {
   CKStackLayoutComponentStyle _style;
   std::vector<CKStackLayoutComponentChild> _children;
 }
@@ -45,12 +45,12 @@
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
                       style:(const CKStackLayoutComponentStyle &)style
-                   children:(const std::vector<CKStackLayoutComponentChild> &)children
+                   children:(CKContainerWrapper<std::vector<CKStackLayoutComponentChild>> &&)children
 {
-  CKFlexboxComponent * const component = [super newWithView:view size:size];
-  if (component) {
-    component->_style = style;
-    component->_children = children;
+  CKStackLayoutComponent *c = [super newWithView:view size:size];
+  if (c) {
+    c->_style = style;
+    c->_children = children.take();
   }
   return component;
 }

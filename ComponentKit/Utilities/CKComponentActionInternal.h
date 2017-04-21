@@ -19,15 +19,6 @@
 
 @class CKComponent;
 
-/**
- We support several different types of action variants. You don't need to use this value anywhere, it's set for you
- by whatever initializer you end up using.
- */
-typedef NS_ENUM(NSUInteger, CKTypedComponentActionVariant) {
-  CKTypedComponentActionVariantRawSelector = 0,
-  CKTypedComponentActionVariantTargetSelector,
-  CKTypedComponentActionVariantComponentScope
-};
 
 typedef NS_ENUM(NSUInteger, CKComponentActionSendBehavior) {
   /** Starts searching at the sender's next responder. Usually this is what you want to prevent infinite loops. */
@@ -40,36 +31,51 @@ typedef NS_ENUM(NSUInteger, CKComponentActionSendBehavior) {
 
 /** A base-class for typed components that doesn't use templates to avoid template bloat. */
 class CKTypedComponentActionBase {
-protected:
+  protected:
+  
+  /**
+   We support several different types of action variants. You don't need to use this value anywhere, it's set for you
+   by whatever initializer you end up using.
+   */
+  enum class CKTypedComponentActionVariant {
+    RawSelector,
+    TargetSelector,
+    ComponentScope,
+    Block
+  };
+
   CKTypedComponentActionBase() noexcept;
   CKTypedComponentActionBase(id target, SEL selector) noexcept;
-  
+
   CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept;
-  
+
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
   CKTypedComponentActionBase(SEL selector) noexcept;
   
-  /** Allows conversion from NULL actions. */
-  CKTypedComponentActionBase(int s) noexcept;
-  CKTypedComponentActionBase(long s) noexcept;
-  CKTypedComponentActionBase(std::nullptr_t n) noexcept;
-  
+  CKTypedComponentActionBase(dispatch_block_t block) noexcept;
+
   ~CKTypedComponentActionBase() {};
-  
+
   id initialTarget(CKComponent *sender) const;
   CKComponentActionSendBehavior defaultBehavior() const;
-  
+
   bool operator==(const CKTypedComponentActionBase& rhs) const;
-  
+
+  // Destroying this field calls objc_destroyWeak. Since this is the only field
+  // that runs code on destruction, making this field the first field of this
+  // object saves an offset calculation instruction in the destructor.
+  __weak id _targetOrScopeHandle;
+  dispatch_block_t _block;
   CKTypedComponentActionVariant _variant;
-  __weak id _target;
-  __weak CKComponentScopeHandle *_scopeHandle;
   SEL _selector;
-  
+
 public:
   explicit operator bool() const noexcept;
-  bool isEqual(const CKTypedComponentActionBase &rhs) const noexcept;
+  bool isEqual(const CKTypedComponentActionBase &rhs) const noexcept {
+    return *this == rhs;
+  }
   SEL selector() const noexcept;
+  dispatch_block_t block() const noexcept;
   std::string identifier() const noexcept;
 };
 

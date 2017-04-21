@@ -11,13 +11,14 @@
 
 #import <Foundation/Foundation.h>
 
+@class Quote;
 
 @interface QuotesPage : NSObject
 
-@property (nonatomic, readonly, strong) NSArray *quotes;
+@property (nonatomic, readonly, copy) NSArray<Quote *> *quotes;
 @property (nonatomic, readonly, assign) NSInteger position;
 
-- (instancetype)initWithQuotes:(NSArray *)quotes
+- (instancetype)initWithQuotes:(NSArray<Quote *> *)quotes
                       position:(NSInteger)position;
 
 @end

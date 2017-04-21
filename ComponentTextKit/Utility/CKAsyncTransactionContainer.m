@@ -125,6 +125,8 @@
 @end
 
 static void *ck_asyncTransactionContainerKey = &ck_asyncTransactionContainerKey;
+static void *ck_asyncLayerTransactionsKey = &ck_asyncLayerTransactionsKey;
+static void *ck_currentAsyncLayerTransactionKey = &ck_currentAsyncLayerTransactionKey;
 
 @implementation CALayer (CKAsyncTransactionContainerStorage)
 
@@ -136,6 +138,26 @@ static void *ck_asyncTransactionContainerKey = &ck_asyncTransactionContainerKey;
 - (void)ck_setAsyncTransactionContainer:(BOOL)asyncTransactionContainer
 {
   objc_setAssociatedObject(self, ck_asyncTransactionContainerKey, @(asyncTransactionContainer), OBJC_ASSOCIATION_RETAIN);
+}
+// https://github.com/facebook/componentkit/issues/761
+- (NSHashTable *)ck_asyncLayerTransactions
+{
+  return objc_getAssociatedObject(self, ck_asyncLayerTransactionsKey);
+}
+
+- (void)ck_setAsyncLayerTransactions:(NSHashTable *)transactions
+{
+  objc_setAssociatedObject(transactions, ck_asyncLayerTransactionsKey, transactions, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (CKAsyncTransaction *)ck_currentAsyncLayerTransaction
+{
+  return objc_getAssociatedObject(self, ck_currentAsyncLayerTransactionKey);
+}
+
+- (void)ck_setCurrentAsyncLayerTransaction:(CKAsyncTransaction *)transaction
+{
+  objc_setAssociatedObject(self, ck_currentAsyncLayerTransactionKey, transaction, OBJC_ASSOCIATION_RETAIN);
 }
 
 @end

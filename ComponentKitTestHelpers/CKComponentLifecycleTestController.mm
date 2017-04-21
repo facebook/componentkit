@@ -10,10 +10,12 @@
 
 #import "CKComponentLifecycleTestController.h"
 
+#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentDataSourceAttachController.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentSizeRangeProviding.h>
 #import <ComponentKit/CKDimension.h>
 
@@ -47,7 +49,7 @@
                                                              context:(id<NSObject>)context
 {
   CKAssertMainThread();
-  CKComponentScopeRoot *previousScopeRoot = _previousScopeRoot ?: [CKComponentScopeRoot rootWithListener:self];
+  CKComponentScopeRoot *previousScopeRoot = _previousScopeRoot ?: CKComponentScopeRootWithDefaultPredicates(self);
   CKBuildComponentResult result = CKBuildComponent(previousScopeRoot, _pendingStateUpdates, ^{
     return [_componentProvider componentForModel:model context:context];
   });
@@ -107,9 +109,11 @@
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                             rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
+                                  userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
                                       mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
+
   _pendingStateUpdates.insert({globalIdentifier, stateUpdate});
   const CKSizeRange constrainedSize = _sizeRangeProvider ? [_sizeRangeProvider sizeRangeForBoundingSize:_state.constrainedSize.max] : _state.constrainedSize;
   [self updateWithState:[self prepareForUpdateWithModel:_state.model

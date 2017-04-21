@@ -35,6 +35,17 @@ static CKComponentContextValue *contextValue(BOOL create)
   return contextValue;
 }
 
+bool CKComponentContextContents::operator==(const CKComponentContextContents &other) const
+{
+  return ((other.objects == nil && objects == nil) || [other.objects isEqualToDictionary:objects])
+  && other.dynamicLookup == dynamicLookup;
+}
+
+bool CKComponentContextContents::operator!=(const CKComponentContextContents &other) const
+{
+  return !(*this == other);
+}
+
 static void clearContextValueIfEmpty(CKComponentContextValue *const currentValue)
 {
   if ([currentValue->_dictionary count] == 0 && currentValue->_dynamicLookup == nil) {

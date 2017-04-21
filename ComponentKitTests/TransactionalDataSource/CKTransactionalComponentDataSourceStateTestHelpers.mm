@@ -10,10 +10,12 @@
 
 #import "CKTransactionalComponentDataSourceStateTestHelpers.h"
 
+#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKTransactionalComponentDataSource.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
@@ -23,7 +25,7 @@
 
 static CKTransactionalComponentDataSourceItem *item(CKTransactionalComponentDataSourceConfiguration *configuration, id<CKComponentStateListener> listener, id model)
 {
-  const CKBuildComponentResult result = CKBuildComponent([CKComponentScopeRoot rootWithListener:listener], {}, ^CKComponent *{
+  const CKBuildComponentResult result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, ^CKComponent *{
     return [configuration.componentProvider componentForModel:model context:configuration.context];
   });
   const CKComponentLayout layout = [result.component layoutThatFits:configuration.sizeRange parentSize:configuration.sizeRange.max];

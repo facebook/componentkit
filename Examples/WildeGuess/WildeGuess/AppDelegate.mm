@@ -13,7 +13,8 @@
 
 #import "WildeGuessCollectionViewController.h"
 
-@implementation AppDelegate {
+@implementation AppDelegate
+{
   UIWindow *_window;
 }
 

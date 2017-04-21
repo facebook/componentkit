@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKContainerWrapper.h>
 
 struct CKButtonComponentAccessibilityConfiguration {
   /** Accessibility label for the button. If one is not provided, the button title will be used as a label */
@@ -26,10 +27,10 @@ struct CKButtonComponentAccessibilityConfiguration {
  */
 @interface CKButtonComponent : CKComponent
 
-+ (instancetype)newWithTitles:(const std::unordered_map<UIControlState, NSString *> &)titles
-                  titleColors:(const std::unordered_map<UIControlState, UIColor *> &)titleColors
-                       images:(const std::unordered_map<UIControlState, UIImage *> &)images
-             backgroundImages:(const std::unordered_map<UIControlState, UIImage *> &)backgroundImages
++ (instancetype)newWithTitles:(CKContainerWrapper<std::unordered_map<UIControlState, NSString *>> &&)titles
+                  titleColors:(CKContainerWrapper<std::unordered_map<UIControlState, UIColor *>> &&)titleColors
+                       images:(CKContainerWrapper<std::unordered_map<UIControlState, UIImage *>> &&)images
+             backgroundImages:(CKContainerWrapper<std::unordered_map<UIControlState, UIImage *>> &&)backgroundImages
                     titleFont:(UIFont *)titleFont
                      selected:(BOOL)selected
                       enabled:(BOOL)enabled

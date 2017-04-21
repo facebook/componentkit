@@ -57,6 +57,7 @@
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                             rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
+                                  userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
                                       mode:(CKUpdateMode)mode
 {
   _pendingStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});
@@ -81,6 +82,8 @@
 
   CKTransactionalComponentDataSourceChange *change = [updateStateModification changeFromState:originalState];
 
+  const auto stateUpdatesForItem = _pendingStateUpdates.find([[item scopeRoot] globalIdentifier]);
+  NSInteger globalIdentifier = (stateUpdatesForItem->second).begin()->first;
   CKTransactionalComponentDataSourceAppliedChanges *expectedAppliedChanges =
   [[CKTransactionalComponentDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:ip]
                                                                     removedIndexPaths:nil
@@ -88,7 +91,7 @@
                                                                       movedIndexPaths:nil
                                                                      insertedSections:nil
                                                                    insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                                                             userInfo:@{@"updatedComponentIdentifier":@(globalIdentifier)}];
 
   XCTAssertEqualObjects([change appliedChanges], expectedAppliedChanges);
 }

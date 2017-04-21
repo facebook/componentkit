@@ -11,7 +11,6 @@
 
 #import <Foundation/Foundation.h>
 
-@class CKCollectionViewDataSource;
 @class QuotesPage;
 
 /**

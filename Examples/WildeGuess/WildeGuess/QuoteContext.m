@@ -13,13 +13,13 @@
 
 @implementation QuoteContext
 {
-  NSDictionary *_images;
+  NSDictionary<NSString *, UIImage *> *_images;
 }
 
-- (instancetype)initWithImageNames:(NSSet *)imageNames
+- (instancetype)initWithImageNames:(NSSet<NSString *> *)imageNames
 {
   if (self = [super init]) {
-       _images = loadImages(imageNames);
+    _images = loadImages(imageNames);
   }
   return self;
 }
@@ -29,9 +29,9 @@
   return _images[imageName];
 }
 
-static NSDictionary *loadImages(NSSet *imageNames)
+static NSDictionary<NSString *, UIImage *> *loadImages(NSSet *imageNames)
 {
-  NSMutableDictionary *imageDictionary = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary<NSString *, UIImage *> *imageDictionary = [NSMutableDictionary new];
   for (NSString *imageName in imageNames) {
     UIImage *image = [UIImage imageNamed:imageName];
     if (image) {

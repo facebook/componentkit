@@ -10,26 +10,25 @@
 
 #import "CKComponentScopeHandle.h"
 
-#import "CKComponentController.h"
-#import "CKComponentControllerInternal.h"
-#import "CKComponentScopeRootInternal.h"
+#import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentInternal.h"
 #import "CKInternalHelpers.h"
 #import "CKMutex.h"
+#import "CKScopedComponentController.h"
 #import "CKThreadLocalComponentScope.h"
 
 @implementation CKComponentScopeHandle
 {
   id<CKComponentStateListener> __weak _listener;
-  CKComponentController *_controller;
+  id<CKScopedComponentController> _controller;
   CKComponentScopeRootIdentifier _rootIdentifier;
   BOOL _acquired;
   BOOL _resolved;
   CKComponent *__weak _acquiredComponent;
 }
 
-+ (CKComponentScopeHandle *)handleForComponent:(CKComponent *)component
++ (CKComponentScopeHandle *)handleForComponent:(id<CKScopedComponent>)component
 {
   CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
   if (currentScope == nullptr) {
@@ -38,9 +37,7 @@
 
   CKComponentScopeHandle *handle = currentScope->stack.top().frame.handle;
   if ([handle acquireFromComponent:component]) {
-    if (CKSubclassOverridesSelector([CKComponent class], [component class], @selector(boundsAnimationFromPreviousComponent:))) {
-      [currentScope->newScopeRoot registerBoundsAnimationComponent:component];
-    }
+    [currentScope->newScopeRoot registerComponent:component];
     return handle;
   }
   CKCAssertNil(CKComponentControllerClassFromComponentClass([component class]), @"%@ has a controller but no scope! "
@@ -68,7 +65,7 @@
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class)componentClass
                            state:(id)state
-                      controller:(CKComponentController *)controller
+                      controller:(id<CKScopedComponentController>)controller
 {
   if (self = [super init]) {
     _listener = listener;
@@ -89,7 +86,7 @@
   for (auto it = range.first; it != range.second; ++it) {
     updatedState = it->second(updatedState);
   }
-  [componentScopeRoot registerAnnounceableEventsForController:_controller];
+  [componentScopeRoot registerComponentController:_controller];
   return [[CKComponentScopeHandle alloc] initWithListener:_listener
                                          globalIdentifier:_globalIdentifier
                                            rootIdentifier:_rootIdentifier
@@ -108,7 +105,7 @@
                                                controller:_controller];
 }
 
-- (CKComponentController *)controller
+- (id<CKScopedComponentController>)controller
 {
   CKAssert(_resolved, @"Requesting controller from scope handle before resolution. The controller will be nil.");
   return _controller;
@@ -121,24 +118,27 @@
 
 #pragma mark - State
 
-- (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode
+- (void)updateState:(id (^)(id))updateBlock
+           userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
+               mode:(CKUpdateMode)mode
 {
   CKAssertNotNil(updateBlock, @"The update block cannot be nil");
   if (![NSThread isMainThread]) {
     dispatch_async(dispatch_get_main_queue(), ^{
-      [self updateState:updateBlock mode:mode];
+      [self updateState:updateBlock userInfo:userInfo mode:mode];
     });
     return;
   }
   [_listener componentScopeHandleWithIdentifier:_globalIdentifier
                                  rootIdentifier:_rootIdentifier
                           didReceiveStateUpdate:updateBlock
+                                       userInfo:userInfo
                                            mode:mode];
 }
 
 #pragma mark - Component Scope Handle Acquisition
 
-- (BOOL)acquireFromComponent:(CKComponent *)component
+- (BOOL)acquireFromComponent:(id<CKScopedComponent>)component
 {
   if (!_acquired && [component isMemberOfClass:_componentClass]) {
     _acquired = YES;
@@ -174,14 +174,14 @@
 
 #pragma mark Controllers
 
-static CKComponentController *newController(CKComponent *component, CKComponentScopeRoot *root)
+static id<CKScopedComponentController> newController(CKComponent *component, CKComponentScopeRoot *root)
 {
   Class controllerClass = CKComponentControllerClassFromComponentClass([component class]);
   if (controllerClass) {
-    CKCAssert([controllerClass isSubclassOfClass:[CKComponentController class]],
+    CKCAssert([controllerClass conformsToProtocol:@protocol(CKScopedComponentController)],
               @"%@ must inherit from CKComponentController", controllerClass);
-    CKComponentController *controller = [[controllerClass alloc] initWithComponent:component];
-    [root registerAnnounceableEventsForController:controller];
+    id<CKScopedComponentController> controller = [[controllerClass alloc] initWithComponent:component];
+    [root registerComponentController:controller];
     return controller;
   }
   return nil;

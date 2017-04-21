@@ -73,18 +73,19 @@ CKComponentViewConfiguration::CKComponentViewConfiguration() noexcept
 // the compiler must insert initialization of each default value inline at the callsite.
 CKComponentViewConfiguration::CKComponentViewConfiguration(
     CKComponentViewClass &&cls,
-    CKViewComponentAttributeValueMap &&attrs) noexcept
+    CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs) noexcept
 : CKComponentViewConfiguration(std::move(cls), std::move(attrs), {}) {}
 
 CKComponentViewConfiguration::CKComponentViewConfiguration(CKComponentViewClass &&cls,
-                                                           CKViewComponentAttributeValueMap &&attrs,
+                                                           CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs,
                                                            CKComponentAccessibilityContext &&accessibilityCtx) noexcept
 {
   // Need to use attrs before we move it below.
-  CK::Component::PersistentAttributeShape attributeShape(attrs);
+  CKViewComponentAttributeValueMap attrsMap = attrs.take();
+  CK::Component::PersistentAttributeShape attributeShape(attrsMap);
   rep.reset(new Repr({
     .viewClass = std::move(cls),
-    .attributes = std::make_shared<CKViewComponentAttributeValueMap>(std::move(attrs)),
+    .attributes = std::make_shared<CKViewComponentAttributeValueMap>(std::move(attrsMap)),
     .accessibilityContext = std::move(accessibilityCtx),
     .attributeShape = std::move(attributeShape)}));
 }

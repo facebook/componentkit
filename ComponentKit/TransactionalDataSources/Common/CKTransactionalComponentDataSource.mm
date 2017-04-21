@@ -149,6 +149,7 @@
 - (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                             rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                      didReceiveStateUpdate:(id (^)(id))stateUpdate
+                                  userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
                                       mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
@@ -256,6 +257,22 @@
   });
 }
 
+static NSString *ReadableStringForArray(NSArray *array)
+{
+  if (!array || array.count == 0) {
+    return @"()";
+  }
+
+  NSMutableString *mutableString = [NSMutableString new];
+  [mutableString appendFormat:@"(\n"];
+
+  for (id value in array) {
+    [mutableString appendFormat:@"\t%@,\n", value];
+  }
+  [mutableString appendString:@")\n"];
+  return mutableString;
+}
+
 static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changeset,
                             CKTransactionalComponentDataSourceState *state,
                             NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications)
@@ -269,7 +286,7 @@ static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changes
             CKHumanReadableBadChangesetOperationType(badChangesetOperationType),
             changeset,
             state,
-            pendingAsynchronousModifications);
+            ReadableStringForArray(pendingAsynchronousModifications));
 #endif
 }
 

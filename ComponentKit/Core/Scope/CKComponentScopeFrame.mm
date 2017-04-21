@@ -17,7 +17,7 @@
 #import "CKComponentController.h"
 #import "CKComponentInternal.h"
 #import "CKComponentScopeHandle.h"
-#import "CKComponentScopeRootInternal.h"
+#import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"
 #import "CKEqualityHashHelpers.h"
 #import "CKMacros.h"

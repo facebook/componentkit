@@ -29,14 +29,14 @@ void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger inde
 bool CKTypedComponentActionBase::operator==(const CKTypedComponentActionBase& rhs) const
 {
   return (_variant == rhs._variant
-          && CKObjectIsEqual(_target, rhs._target)
-          && CKObjectIsEqual(_scopeHandle, rhs._scopeHandle)
-          && _selector == rhs._selector);
+          && CKObjectIsEqual(_targetOrScopeHandle, rhs._targetOrScopeHandle)
+          && _selector == rhs._selector
+          && _block == rhs._block);
 }
 
 CKComponentActionSendBehavior CKTypedComponentActionBase::defaultBehavior() const
 {
-  return (_variant == CKTypedComponentActionVariantRawSelector
+  return (_variant == CKTypedComponentActionVariant::RawSelector
           ? CKComponentActionSendBehaviorStartAtSenderNextResponder
           : CKComponentActionSendBehaviorStartAtSender);
 };
@@ -44,53 +44,52 @@ CKComponentActionSendBehavior CKTypedComponentActionBase::defaultBehavior() cons
 id CKTypedComponentActionBase::initialTarget(CKComponent *sender) const
 {
   switch (_variant) {
-    case CKTypedComponentActionVariantRawSelector:
+    case CKTypedComponentActionVariant::RawSelector:
       return sender;
-    case CKTypedComponentActionVariantTargetSelector:
-      return _target;
-    case CKTypedComponentActionVariantComponentScope:
-      return _scopeHandle.responder;
+    case CKTypedComponentActionVariant::TargetSelector:
+      return _targetOrScopeHandle;
+    case CKTypedComponentActionVariant::ComponentScope:
+      return ((CKComponentScopeHandle *) _targetOrScopeHandle).responder;
+    case CKTypedComponentActionVariant::Block:
+      CKCFailAssert(@"Should not be asking for target for block action.");
+      return nil;
   }
 }
 
-CKTypedComponentActionBase::CKTypedComponentActionBase() noexcept : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(NULL) {}
+CKTypedComponentActionBase::CKTypedComponentActionBase() noexcept : _targetOrScopeHandle(nil), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(nullptr) {}
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) noexcept : _variant(CKTypedComponentActionVariantTargetSelector), _target(target), _scopeHandle(nil), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) noexcept : _targetOrScopeHandle(target), _block(NULL), _variant(CKTypedComponentActionVariant::TargetSelector), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept : _variant(CKTypedComponentActionVariantComponentScope), _target(nil), _scopeHandle(scope.scopeHandle()), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept : _targetOrScopeHandle(scope.scopeHandle()), _block(NULL), _variant(CKTypedComponentActionVariant::ComponentScope), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : _variant(CKTypedComponentActionVariantRawSelector), _target(nil), _scopeHandle(nil), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : _targetOrScopeHandle(nil), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(int s) noexcept : CKTypedComponentActionBase() {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(dispatch_block_t block) noexcept : _targetOrScopeHandle(nil), _block(block), _variant(CKTypedComponentActionVariant::Block), _selector(NULL) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(long s) noexcept : CKTypedComponentActionBase() {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(std::nullptr_t n) noexcept : CKTypedComponentActionBase() {};
-
-CKTypedComponentActionBase::operator bool() const noexcept { return _selector != NULL; };
-
-bool CKTypedComponentActionBase::isEqual(const CKTypedComponentActionBase &rhs) const noexcept
-{
-  return (_variant == rhs._variant
-          && CKObjectIsEqual(_target, rhs._target)
-          && CKObjectIsEqual(_scopeHandle, rhs._scopeHandle)
-          && _selector == rhs._selector);
-};
+CKTypedComponentActionBase::operator bool() const noexcept { return _selector != NULL || _block != NULL; };
 
 SEL CKTypedComponentActionBase::selector() const noexcept { return _selector; };
 
 std::string CKTypedComponentActionBase::identifier() const noexcept
 {
-  return std::string(sel_getName(_selector)) + "-" + std::to_string((long)(_target ?: _scopeHandle));
+  return std::string(sel_getName(_selector)) + "-" + std::to_string((long)(_targetOrScopeHandle));
 }
+
+dispatch_block_t CKTypedComponentActionBase::block() const noexcept { return _block; };
 
 #pragma mark - Sending
 
 NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender) noexcept
 {
-  id responder = [target targetForAction:selector withSender:target];
-  CKCAssertNotNil(responder, @"Unhandled component action %@ following responder chain %@",
-                  NSStringFromSelector(selector), _CKComponentResponderChainDebugResponderChain(target));
+  // If we have a nil selector, we bail early.
+  if (selector == nil) {
+    return nil;
+  }
+
+  id responder = ([target respondsToSelector:@selector(targetForAction:withSender:)]
+                  ? [target targetForAction:selector withSender:target]
+                  : target);
+
   // This is not performance-sensitive, so we can just use an invocation here.
   NSMethodSignature *signature = [responder methodSignatureForSelector:selector];
   while (!signature) {

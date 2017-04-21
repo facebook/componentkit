@@ -81,6 +81,23 @@
   XCTAssertEqualObjects(contents.objects, @{[NSObject class]: o});
 }
 
+- (void)testFetchingAllComponentContextItemsTwiceReturnsEqualContents
+{
+  CKComponentContext<NSObject> context([[NSObject alloc] init]);
+  const CKComponentContextContents contents1 = CKComponentContextHelper::fetchAll();
+  const CKComponentContextContents contents2 = CKComponentContextHelper::fetchAll();
+  XCTAssertTrue(contents1 == contents2);
+}
+
+- (void)testFetchingAllComponentContextItemsBeforeAndAfterModificationReturnsUnequalContents
+{
+  CKComponentContext<NSObject> context1([[NSObject alloc] init]);
+  const CKComponentContextContents contents1 = CKComponentContextHelper::fetchAll();
+  CKComponentContext<NSObject> context2([[NSObject alloc] init]);
+  const CKComponentContextContents contents2 = CKComponentContextHelper::fetchAll();
+  XCTAssertTrue(contents1 != contents2);
+}
+
 - (void)testDynamicLookupIsConsultedOnFetch
 {
   NSObject *const objectInDynamicLookup = [[NSObject alloc] init];
