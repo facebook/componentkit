@@ -50,18 +50,8 @@
                          newWithAction:{scope, @selector(methodWithSender:)}]];
              }
              - (void)methodWithSender:(CKComponent *)sender {}
- 
- Option 2 - Target/selector action. Ensures that the target responds to the given selector. Target must directly
-            respond to the selector. Targets are captured weakly by the action. Promotion, as in option 2 above is also
-            supported for target/selector actions. This constructor is useful for triggering actions on objects outside
-            of the component hierarchy like view controllers. Does not depend on the mount-based responder chain to
-            call on the target.
 
-             [MyComponent newWithAction:{[SomeObject sharedInstance], @selector(methodWithNoArguments)}];
-             ...
-             on SomeObject: - (void)methodWithNoArguments {}
-
- Option 3 - (Discouraged) Raw-selector component action. Uses a raw selector which traverses upwards looking for a
+ Option 2 - (Discouraged) Raw-selector component action. Uses a raw selector which traverses upwards looking for a
             parent that implements methodWithNoArguments, and calls that method without any arguments. The component
             responder chain is only present while the component is mounted, so you should use a target/selector action
             or a scope action if your action will be fired either before or after your component is mounted. We support
@@ -104,14 +94,6 @@ class CKTypedComponentAction : public CKTypedComponentActionBase {
   
 public:
   CKTypedComponentAction<T...>() noexcept : CKTypedComponentActionBase() {};
-  CKTypedComponentAction<T...>(id target, SEL selector) noexcept : CKTypedComponentActionBase(target, selector)
-  {
-#if DEBUG
-    std::vector<const char *> typeEncodings;
-    CKTypedComponentActionTypeVectorBuild(typeEncodings, CKTypedComponentActionTypelist<T...>{});
-    _CKTypedComponentDebugCheckTargetSelector(target, selector, typeEncodings);
-#endif
-  }
 
   CKTypedComponentAction<T...>(const CKComponentScope &scope, SEL selector) noexcept : CKTypedComponentActionBase(scope, selector)
   {

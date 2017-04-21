@@ -32,20 +32,13 @@ typedef NS_ENUM(NSUInteger, CKComponentActionSendBehavior) {
 /** A base-class for typed components that doesn't use templates to avoid template bloat. */
 class CKTypedComponentActionBase {
   protected:
-  
-  /**
-   We support several different types of action variants. You don't need to use this value anywhere, it's set for you
-   by whatever initializer you end up using.
-   */
   enum class CKTypedComponentActionVariant {
     RawSelector,
-    TargetSelector,
     ComponentScope,
     Block
   };
 
   CKTypedComponentActionBase() noexcept;
-  CKTypedComponentActionBase(id target, SEL selector) noexcept;
 
   CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept;
 
@@ -64,7 +57,7 @@ class CKTypedComponentActionBase {
   // Destroying this field calls objc_destroyWeak. Since this is the only field
   // that runs code on destruction, making this field the first field of this
   // object saves an offset calculation instruction in the destructor.
-  __weak id _targetOrScopeHandle;
+  CKComponentScopeHandle *__weak _scopeHandle;
   dispatch_block_t _block;
   CKTypedComponentActionVariant _variant;
   SEL _selector;
