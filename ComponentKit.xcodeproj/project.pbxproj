@@ -313,6 +313,15 @@
 		7F8DDB071E68F0FB007CE033 /* Yoga.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F8DDB011E68F0FB007CE033 /* Yoga.c */; };
 		7F8DDB081E68F0FB007CE033 /* Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F8DDB021E68F0FB007CE033 /* Yoga.h */; };
 		7FF8E9001EABA71F00B1DBF0 /* YGEnums.c in Sources */ = {isa = PBXBuildFile; fileRef = 7FF8E8FF1EABA71F00B1DBF0 /* YGEnums.c */; };
+		7FF8E9121EABAB9900B1DBF0 /* YGEnums.c in Sources */ = {isa = PBXBuildFile; fileRef = 7FF8E8FF1EABA71F00B1DBF0 /* YGEnums.c */; };
+		7FF8E9131EABAB9900B1DBF0 /* YGNodeList.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F8DDAFF1E68F0FB007CE033 /* YGNodeList.c */; };
+		7FF8E9141EABAB9900B1DBF0 /* Yoga.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F8DDB011E68F0FB007CE033 /* Yoga.c */; };
+		7FF8E91F1EABAB9A00B1DBF0 /* YGEnums.c in Sources */ = {isa = PBXBuildFile; fileRef = 7FF8E8FF1EABA71F00B1DBF0 /* YGEnums.c */; };
+		7FF8E9201EABAB9A00B1DBF0 /* YGNodeList.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F8DDAFF1E68F0FB007CE033 /* YGNodeList.c */; };
+		7FF8E9211EABAB9A00B1DBF0 /* Yoga.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F8DDB011E68F0FB007CE033 /* Yoga.c */; };
+		7FF8E9221EABAB9B00B1DBF0 /* YGEnums.c in Sources */ = {isa = PBXBuildFile; fileRef = 7FF8E8FF1EABA71F00B1DBF0 /* YGEnums.c */; };
+		7FF8E9231EABAB9B00B1DBF0 /* YGNodeList.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F8DDAFF1E68F0FB007CE033 /* YGNodeList.c */; };
+		7FF8E9241EABAB9B00B1DBF0 /* Yoga.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F8DDB011E68F0FB007CE033 /* Yoga.c */; };
 		824416C21E44E34600904340 /* CKDetectComponentScopeCollisionsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 824416B51E44E19300904340 /* CKDetectComponentScopeCollisionsTests.mm */; };
 		824416C31E44E34800904340 /* CKDetectComponentScopeCollisionsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 824416B51E44E19300904340 /* CKDetectComponentScopeCollisionsTests.mm */; };
 		906125EA1DFA49E600EE18ED /* CKAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 9092AE911DFA46D3009878B2 /* CKAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2566,6 +2575,7 @@
 				A243B5311D79B88100E6C393 /* CKComponentContextHelper.mm in Sources */,
 				2D03A6601D3869A800E4F890 /* CKDetectComponentScopeCollisions.mm in Sources */,
 				03B8B46D1D2A346F00EDFF59 /* CKComponentAccessibility.mm in Sources */,
+				7FF8E9241EABAB9B00B1DBF0 /* Yoga.c in Sources */,
 				03B8B46E1D2A346F00EDFF59 /* CKButtonComponent.mm in Sources */,
 				03B8B46F1D2A346F00EDFF59 /* CKImageComponent.mm in Sources */,
 				03B8B4701D2A346F00EDFF59 /* CKNetworkImageComponent.mm in Sources */,
@@ -2585,6 +2595,7 @@
 				03B8B47D1D2A346F00EDFF59 /* CKDimension.mm in Sources */,
 				03B8B47E1D2A346F00EDFF59 /* CKSizeRange.mm in Sources */,
 				03B8B47F1D2A346F00EDFF59 /* ComponentLayoutContext.mm in Sources */,
+				7FF8E9221EABAB9B00B1DBF0 /* YGEnums.c in Sources */,
 				03B8B4801D2A346F00EDFF59 /* ComponentViewManager.mm in Sources */,
 				03B8B4811D2A346F00EDFF59 /* ComponentViewReuseUtilities.mm in Sources */,
 				03B8B4821D2A346F00EDFF59 /* CKComponentScope.mm in Sources */,
@@ -2627,6 +2638,7 @@
 				03B8B4AC1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceReloadModification.mm in Sources */,
 				03B8B4AD1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceUpdateConfigurationModification.mm in Sources */,
 				03B8B4AE1D2A346F00EDFF59 /* CKTransactionalComponentDataSourceUpdateStateModification.mm in Sources */,
+				7FF8E9231EABAB9B00B1DBF0 /* YGNodeList.c in Sources */,
 				03B8B4B01D2A346F00EDFF59 /* CKComponentAction.mm in Sources */,
 				03B8B4B11D2A346F00EDFF59 /* CKComponentDelegateAttribute.mm in Sources */,
 				03B8B4B21D2A346F00EDFF59 /* CKComponentDelegateForwarder.mm in Sources */,
@@ -2718,9 +2730,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D8270FB1E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm in Sources */,
+				7FF8E9121EABAB9900B1DBF0 /* YGEnums.c in Sources */,
 				A273801F1AFD144100E6F222 /* CKTestActionComponent.mm in Sources */,
+				7FF8E9141EABAB9900B1DBF0 /* Yoga.c in Sources */,
 				7F8DDAF81E68EFC1007CE033 /* CKStackLayoutComponent.mm in Sources */,
 				2D8270F61E3F72DE008C1A26 /* CKTestRunLoopRunning.mm in Sources */,
+				7FF8E9131EABAB9900B1DBF0 /* YGNodeList.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2762,6 +2777,7 @@
 				B342DC6E1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm in Sources */,
 				B761C8AE1CB36BF700CDD03F /* CKTransactionalComponentDataSourceChangesetTests.mm in Sources */,
 				A2100E0D1AE9751500281861 /* CKTransactionalComponentDataSourceUpdateConfigurationModificationTests.mm in Sources */,
+				7FF8E91F1EABAB9A00B1DBF0 /* YGEnums.c in Sources */,
 				B342DC7C1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm in Sources */,
 				18644AE51B3CB8E60028AF87 /* CKStatefulViewComponentControllerTests.mm in Sources */,
 				A22FE3031AF2CEB000EC30B8 /* CKTransactionalComponentDataSourceStateUpdateTests.mm in Sources */,
@@ -2772,8 +2788,10 @@
 				49FA174E1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm in Sources */,
 				7F8DDAF91E68EFC1007CE033 /* CKStackLayoutComponent.mm in Sources */,
 				18644AE61B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm in Sources */,
+				7FF8E9211EABAB9A00B1DBF0 /* Yoga.c in Sources */,
 				A27C72751AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm in Sources */,
 				991DE3411B3B308900AA05B2 /* CKComponentMemoizerTests.mm in Sources */,
+				7FF8E9201EABAB9A00B1DBF0 /* YGNodeList.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
