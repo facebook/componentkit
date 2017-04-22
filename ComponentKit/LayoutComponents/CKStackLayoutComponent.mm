@@ -10,11 +10,13 @@
 
 #import "CKStackLayoutComponent.h"
 
-#import <yoga/Yoga.h>
+#import "yoga/Yoga.h"
 
 #import "CKComponentSubclass.h"
 #import "CKComponentInternal.h"
 #import "CKInternalHelpers.h"
+
+template class std::vector<CKStackLayoutComponentChild>;
 
 /*
  This class contains information about cached layout for StackLayoutComponent child
@@ -52,7 +54,7 @@
     c->_style = style;
     c->_children = children.take();
   }
-  return component;
+  return c;
 }
 
 + (YGConfigRef)ckYogaDefaultConfig
@@ -276,7 +278,7 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
   // They should be mounted later and thus shown on top of children with lower z-order  const NSInteger childCount = YGNodeGetChildCount(layoutNode);
   const NSInteger childCount = YGNodeGetChildCount(layoutNode);
   std::vector<YGNodeRef> sortedChildNodes(childCount);
-  for (NSUInteger i = 0; i < childCount; i++) {
+  for (uint32_t i = 0; i < childCount; i++) {
     sortedChildNodes[i] = YGNodeGetChild(layoutNode, i);
   }
   std::sort(sortedChildNodes.begin(), sortedChildNodes.end(),

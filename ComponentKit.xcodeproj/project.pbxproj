@@ -312,6 +312,7 @@
 		7F8DDB061E68F0FB007CE033 /* YGNodeList.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F8DDB001E68F0FB007CE033 /* YGNodeList.h */; };
 		7F8DDB071E68F0FB007CE033 /* Yoga.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F8DDB011E68F0FB007CE033 /* Yoga.c */; };
 		7F8DDB081E68F0FB007CE033 /* Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F8DDB021E68F0FB007CE033 /* Yoga.h */; };
+		7FF8E9001EABA71F00B1DBF0 /* YGEnums.c in Sources */ = {isa = PBXBuildFile; fileRef = 7FF8E8FF1EABA71F00B1DBF0 /* YGEnums.c */; };
 		824416C21E44E34600904340 /* CKDetectComponentScopeCollisionsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 824416B51E44E19300904340 /* CKDetectComponentScopeCollisionsTests.mm */; };
 		824416C31E44E34800904340 /* CKDetectComponentScopeCollisionsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 824416B51E44E19300904340 /* CKDetectComponentScopeCollisionsTests.mm */; };
 		906125EA1DFA49E600EE18ED /* CKAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 9092AE911DFA46D3009878B2 /* CKAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -823,6 +824,7 @@
 		7F8DDB001E68F0FB007CE033 /* YGNodeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YGNodeList.h; path = Carthage/Checkouts/yoga/yoga/YGNodeList.h; sourceTree = SOURCE_ROOT; };
 		7F8DDB011E68F0FB007CE033 /* Yoga.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Yoga.c; path = Carthage/Checkouts/yoga/yoga/Yoga.c; sourceTree = SOURCE_ROOT; };
 		7F8DDB021E68F0FB007CE033 /* Yoga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Yoga.h; path = Carthage/Checkouts/yoga/yoga/Yoga.h; sourceTree = SOURCE_ROOT; };
+		7FF8E8FF1EABA71F00B1DBF0 /* YGEnums.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = YGEnums.c; path = Carthage/Checkouts/yoga/yoga/YGEnums.c; sourceTree = SOURCE_ROOT; };
 		824416B51E44E19300904340 /* CKDetectComponentScopeCollisionsTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDetectComponentScopeCollisionsTests.mm; sourceTree = "<group>"; };
 		9092AE911DFA46D3009878B2 /* CKAvailability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAvailability.h; sourceTree = "<group>"; };
 		991DE3401B3B308900AA05B2 /* CKComponentMemoizerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentMemoizerTests.mm; sourceTree = "<group>"; };
@@ -1239,6 +1241,7 @@
 		7F8DDAFC1E68F0E7007CE033 /* yoga */ = {
 			isa = PBXGroup;
 			children = (
+				7FF8E8FF1EABA71F00B1DBF0 /* YGEnums.c */,
 				7F8DDAFD1E68F0FB007CE033 /* YGEnums.h */,
 				7F8DDAFE1E68F0FB007CE033 /* YGMacros.h */,
 				7F8DDAFF1E68F0FB007CE033 /* YGNodeList.c */,
@@ -2893,6 +2896,7 @@
 				2D7A98181DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.mm in Sources */,
 				D0B47CD11CBD943400BB33CE /* CKLabelComponent.mm in Sources */,
 				D0B47CD21CBD943400BB33CE /* CKTextComponent.mm in Sources */,
+				7FF8E9001EABA71F00B1DBF0 /* YGEnums.c in Sources */,
 				D0B47CD31CBD943400BB33CE /* CKTextComponentLayer.mm in Sources */,
 				D0B47CD41CBD943400BB33CE /* CKTextComponentLayerHighlighter.mm in Sources */,
 				D0B47CD51CBD943400BB33CE /* CKTextComponentView.mm in Sources */,
