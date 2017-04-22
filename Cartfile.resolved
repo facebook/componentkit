@@ -1,4 +1,4 @@
 github "erikdoe/ocmock" "v3.4"
 github "facebook/ios-snapshot-test-case" "2.1.4"
-github "facebook/yoga" "v2017.02.07.00"
+github "facebook/yoga" "1.4.0"
 github "jspahrsummers/xcconfigs" "0.9"
