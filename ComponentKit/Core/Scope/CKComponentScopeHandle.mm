@@ -7,14 +7,15 @@
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
-
 #import "CKComponentScopeHandle.h"
 
+#import "CKAssert.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentInternal.h"
 #import "CKInternalHelpers.h"
 #import "CKMutex.h"
+#import "CKScopedComponent.h"
 #import "CKScopedComponentController.h"
 #import "CKThreadLocalComponentScope.h"
 
@@ -27,7 +28,6 @@
   CKComponent *__weak _acquiredComponent;
 
   id<CKScopedComponentController> _controller;
-  CKScopedComponentControllerClassGenerator _controllerClassGenerator;
 }
 
 + (CKComponentScopeHandle *)handleForComponent:(id<CKScopedComponent>)component
@@ -44,7 +44,7 @@
   }
 
   if (handle) {
-    CKCAssertNil(handle->_controllerClassGenerator([component class]), @"%@ has a controller but no scope! "
+    CKAssertNil([component.class controllerClass], @"%@ has a controller but no scope! "
                  "Make sure you construct your scope(self) before constructing the component or CKComponentTestRootScope "
                  "at the start of the test.", [component class]);
   }
@@ -56,7 +56,6 @@
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class)componentClass
              initialStateCreator:(id (^)(void))initialStateCreator
-        controllerClassGenerator:(CKScopedComponentControllerClassGenerator)controllerClassGenerator
 {
   static int32_t nextGlobalIdentifier = 0;
   return [self initWithListener:listener
@@ -64,8 +63,7 @@
                  rootIdentifier:rootIdentifier
                  componentClass:componentClass
                           state:initialStateCreator ? initialStateCreator() : [componentClass initialState]
-                     controller:nil // controllers are built on resolution of the handle
-       controllerClassGenerator:controllerClassGenerator];
+                     controller:nil]; // controllers are built on resolution of the handle;
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -74,11 +72,9 @@
                   componentClass:(Class)componentClass
                            state:(id)state
                       controller:(id<CKScopedComponentController>)controller
-        controllerClassGenerator:(CKScopedComponentControllerClassGenerator)controllerClassGenerator
 {
   if (self = [super init]) {
     _controller = controller;
-    _controllerClassGenerator = controllerClassGenerator;
     _listener = listener;
     _globalIdentifier = globalIdentifier;
     _rootIdentifier = rootIdentifier;
@@ -102,8 +98,7 @@
                                            rootIdentifier:_rootIdentifier
                                            componentClass:_componentClass
                                                     state:updatedState
-                                               controller:_controller
-                                 controllerClassGenerator:_controllerClassGenerator];
+                                               controller:_controller];
 }
 
 - (instancetype)newHandleToBeReacquiredDueToScopeCollision
@@ -113,8 +108,7 @@
                                            rootIdentifier:_rootIdentifier
                                            componentClass:_componentClass
                                                     state:_state
-                                               controller:_controller
-                                 controllerClassGenerator:_controllerClassGenerator];
+                                               controller:_controller];
 }
 
 - (id<CKScopedComponentController>)controller
@@ -126,13 +120,6 @@
 - (void)dealloc
 {
   CKAssert(_resolved, @"Must be resolved before deallocation.");
-}
-
-#pragma mark - Debug
-
-- (CKScopedComponentControllerClassGenerator)controllerClassGenerator
-{
-  return _controllerClassGenerator;
 }
 
 #pragma mark - State
@@ -174,7 +161,7 @@
     CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
     CKAssert(currentScope != nullptr, @"Current scope should never be null here. Thread-local stack is corrupted.");
 
-    Class<CKScopedComponentController> controllerClass = _controllerClassGenerator([_acquiredComponent class]);
+    const Class<CKScopedComponentController> controllerClass = [_acquiredComponent.class controllerClass];
     if (controllerClass) {
       // The compiler is not happy when I don't explicitly cast as (Class)
       // See: http://stackoverflow.com/questions/21699755/create-an-instance-from-a-class-that-conforms-to-a-protocol

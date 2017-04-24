@@ -15,7 +15,9 @@
 
 #import <ComponentKit/CKArgumentPrecondition.h>
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKMutex.h>
 
 #import "CKAssert.h"
 #import "CKComponent+UIView.h"
@@ -43,7 +45,7 @@ struct CKComponentMountInfo {
 
 @implementation CKComponent
 {
-  CKComponentScopeHandle *_scopeHandle;
+  CKComponentScopeHandle<CKComponentController *> *_scopeHandle;
   CKComponentViewConfiguration _viewConfiguration;
 
   /** Only non-null while mounted. */
@@ -166,7 +168,7 @@ struct CKComponentMountInfo {
 {
   CKAssertMainThread();
   if (_mountInfo != nullptr) {
-    CKComponentController *const controller = (CKComponentController *)_scopeHandle.controller;
+    CKComponentController *const controller = _scopeHandle.controller;
     [controller componentWillUnmount:self];
     [self _relinquishMountedView];
     _mountInfo.reset();
@@ -182,7 +184,7 @@ struct CKComponentMountInfo {
     UIView *view = _mountInfo->view;
     if (view) {
       CKAssert(view.ck_component == self, @"");
-      [(CKComponentController *)_scopeHandle.controller component:self willRelinquishView:view];
+      [_scopeHandle.controller component:self willRelinquishView:view];
       view.ck_component = nil;
       _mountInfo->view = nil;
     }
@@ -191,7 +193,7 @@ struct CKComponentMountInfo {
 
 - (void)childrenDidMount
 {
-  [(CKComponentController *)_scopeHandle.controller componentDidMount:self];
+  [_scopeHandle.controller componentDidMount:self];
 }
 
 #pragma mark - Animation
@@ -291,12 +293,43 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return ck_objc_getAssociatedWeakObject(self, kRootComponentMountedViewKey);
 }
 
-#pragma mark - State
+#pragma mark - CKScopedComponent
+
++ (Class<CKScopedComponentController>)controllerClass
+{
+  const Class componentClass = self.class;
+
+  if (componentClass == [CKComponent class]) {
+    return Nil; // Don't create root CKComponentControllers as it does nothing interesting.
+  }
+
+  static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER; // protects cache
+  CK::StaticMutexLocker l(mutex);
+
+  static std::unordered_map<Class, Class> *cache = new std::unordered_map<Class, Class>();
+  const auto &it = cache->find(componentClass);
+  if (it == cache->end()) {
+    Class c = NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"]);
+
+    // If you override animationsFromPreviousComponent: or animationsOnInitialMount then we need a controller.
+    if (c == nil &&
+        (CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
+         CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnInitialMount)))) {
+          c = [CKComponentController class];
+        }
+
+    cache->insert({componentClass, c});
+    return c;
+  }
+  return it->second;
+}
 
 + (id)initialState
 {
   return nil;
 }
+
+#pragma mark - State
 
 - (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode
 {

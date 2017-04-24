@@ -49,7 +49,6 @@ namespace std {
 + (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
                                       newRoot:(CKComponentScopeRoot *)newRoot
                                componentClass:(Class)componentClass
-                     controllerClassGenerator:(CKScopedComponentControllerClassGenerator)controllerClassGenerator
                                    identifier:(id)identifier
                           initialStateCreator:(id (^)())initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
@@ -162,8 +161,7 @@ namespace std {
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                       rootIdentifier:newRoot.globalIdentifier
                                       componentClass:componentClass
-                                 initialStateCreator:initialStateCreator
-                            controllerClassGenerator:controllerClassGenerator];
+                                 initialStateCreator:initialStateCreator];
 
   CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
   pair.frame->_children.insert({{componentClass, identifier}, newChild});

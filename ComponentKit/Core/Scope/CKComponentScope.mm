@@ -10,7 +10,6 @@
 
 #import "CKComponentScope.h"
 
-#import "CKComponentController.h"
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeHandle.h"
 #import "CKThreadLocalComponentScope.h"
@@ -30,7 +29,6 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
     const auto childPair = [CKComponentScopeFrame childPairForPair:_threadLocalScope->stack.top()
                                                            newRoot:_threadLocalScope->newScopeRoot
                                                     componentClass:componentClass
-                                          controllerClassGenerator:&CKComponentControllerClassFromComponentClass
                                                         identifier:identifier
                                                initialStateCreator:initialStateCreator
                                                       stateUpdates:_threadLocalScope->stateUpdates];

@@ -91,14 +91,3 @@
 + (instancetype)new NS_UNAVAILABLE;
 
 @end
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-Class<CKScopedComponentController> CKComponentControllerClassFromComponentClass(Class<CKScopedComponent> componentClass) noexcept;
-
-#ifdef __cplusplus
-}
-#endif
-

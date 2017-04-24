@@ -268,7 +268,7 @@ void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SE
   // argument indices.
   const Class klass = scopeHandle.componentClass;
   // We allow component actions to be implemented either in the component, or its controller.
-  const Class controllerKlass = scopeHandle.controllerClassGenerator(klass);
+  const Class controllerKlass = [klass controllerClass];
   CKCAssert(selector == NULL || [klass instancesRespondToSelector:selector] || [controllerKlass instancesRespondToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", klass, NSStringFromSelector(selector));
 
   NSMethodSignature *signature = [klass instanceMethodSignatureForSelector:selector] ?: [controllerKlass instanceMethodSignatureForSelector:selector];

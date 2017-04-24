@@ -11,7 +11,6 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
-#import <ComponentKit/CKScopedComponentController.h>
 
 @class CKComponentScopeFrame;
 @class CKComponentScopeHandle;
@@ -27,7 +26,6 @@ struct CKComponentScopeFramePair {
 + (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
                                       newRoot:(CKComponentScopeRoot *)newRoot
                                componentClass:(Class)aClass
-                     controllerClassGenerator:(CKScopedComponentControllerClassGenerator)controllerClassGenerator
                                    identifier:(id)identifier
                           initialStateCreator:(id (^)(void))initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;

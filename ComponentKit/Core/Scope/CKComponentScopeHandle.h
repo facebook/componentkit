@@ -20,7 +20,7 @@
 @protocol CKComponentStateListener;
 @protocol CKScopedComponent;
 
-@interface CKComponentScopeHandle : NSObject
+@interface CKComponentScopeHandle<__covariant ControllerType:id<CKScopedComponentController>> : NSObject
 
 /**
  This method looks to see if the currently defined scope matches that of the given component; if so it returns the
@@ -33,8 +33,7 @@
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class<CKScopedComponent>)componentClass
-             initialStateCreator:(id (^)(void))initialStateCreator
-        controllerClassGenerator:(CKScopedComponentControllerClassGenerator)controllerClassGenerator;
+             initialStateCreator:(id (^)(void))initialStateCreator;
 
 /** Creates a new instance of the scope handle that incorporates the given state updates. */
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
@@ -53,7 +52,7 @@
  Should not be called until after handleForComponent:. The controller will assert (if assertions are compiled), and
  return nil until `resolve` is called.
  */
-@property (nonatomic, strong, readonly) id<CKScopedComponentController> controller;
+@property (nonatomic, strong, readonly) ControllerType controller;
 
 @property (nonatomic, assign, readonly) Class<CKScopedComponent> componentClass;
 
@@ -64,11 +63,5 @@
  Provides a responder corresponding with this scope handle. The controller will assert if called before resolution.
  */
 - (id)responder;
-
-@end
-
-@interface CKComponentScopeHandle (Debug)
-
-- (CKScopedComponentControllerClassGenerator)controllerClassGenerator;
 
 @end
