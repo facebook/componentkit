@@ -47,6 +47,7 @@
   NSMutableArray<id<CKTransactionalComponentDataSourceStateModifying>> *_pendingAsynchronousModifications;
 
   NSThread *_workThreadOverride;
+  BOOL _crashOnBadChangesetOperation;
 }
 @end
 
@@ -61,6 +62,7 @@
     _workQueue = dispatch_queue_create("org.componentkit.CKTransactionalComponentDataSource", DISPATCH_QUEUE_SERIAL);
     _pendingAsynchronousModifications = [NSMutableArray array];
     _workThreadOverride = configuration.workThreadOverride;
+    _crashOnBadChangesetOperation = configuration.crashOnBadChangesetOperation;
     [CKComponentDebugController registerReflowListener:self];
   }
   return self;
@@ -77,7 +79,7 @@
               userInfo:(NSDictionary *)userInfo
 {
   CKAssertMainThread();
-  verifyChangeset(changeset, _state, _pendingAsynchronousModifications);
+  verifyChangeset(changeset, _state, _pendingAsynchronousModifications, _crashOnBadChangesetOperation);
   id<CKTransactionalComponentDataSourceStateModifying> modification =
   [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:changeset stateListener:self userInfo:userInfo];
   switch (mode) {
@@ -257,37 +259,45 @@
   });
 }
 
-static NSString *ReadableStringForArray(NSArray *array)
+static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changeset,
+                            CKTransactionalComponentDataSourceState *state,
+                            NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications,
+                            const BOOL crashOnBadChangesetOperation)
+{
+  NSString *(^badOperationDescriptionForType)(CKBadChangesetOperationType badChangesetOperationType) =
+  ^NSString *(CKBadChangesetOperationType badChangesetOperationType) {
+    NSString *const humanReadableBadChangesetOperationType = CKHumanReadableBadChangesetOperationType(badChangesetOperationType);
+    NSString *const humanReadablePendingAsynchronousModifications = readableStringForArray(pendingAsynchronousModifications);
+    return [NSString stringWithFormat:@"Bad operation: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@", humanReadableBadChangesetOperationType, changeset, state, humanReadablePendingAsynchronousModifications];
+  };
+  if (crashOnBadChangesetOperation) {
+    const CKBadChangesetOperationType badChangesetOperationType = CKIsValidChangesetForState(changeset, state, pendingAsynchronousModifications);
+    if (badChangesetOperationType != CKBadChangesetOperationTypeNone) {
+      NSException *const exception = [NSException exceptionWithName:NSInternalInconsistencyException
+                                                             reason:badOperationDescriptionForType(badChangesetOperationType)
+                                                           userInfo:nil];
+      [exception raise];
+    }
+  } else {
+#if CK_ASSERTIONS_ENABLED
+    const CKBadChangesetOperationType badChangesetOperationType = CKIsValidChangesetForState(changeset, state, pendingAsynchronousModifications);
+    CKCAssert(badChangesetOperationType == CKBadChangesetOperationTypeNone, @"%@", badOperationDescriptionForType(badChangesetOperationType));
+#endif
+  }
+}
+
+static NSString *readableStringForArray(NSArray *array)
 {
   if (!array || array.count == 0) {
     return @"()";
   }
-
   NSMutableString *mutableString = [NSMutableString new];
   [mutableString appendFormat:@"(\n"];
-
   for (id value in array) {
     [mutableString appendFormat:@"\t%@,\n", value];
   }
   [mutableString appendString:@")\n"];
   return mutableString;
-}
-
-static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changeset,
-                            CKTransactionalComponentDataSourceState *state,
-                            NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications)
-{
-#if CK_ASSERTIONS_ENABLED
-  const CKBadChangesetOperationType badChangesetOperationType = CKIsValidChangesetForState(changeset,
-                                                                                           state,
-                                                                                           pendingAsynchronousModifications);
-  CKCAssert(badChangesetOperationType == CKBadChangesetOperationTypeNone,
-            @"Bad operation: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@",
-            CKHumanReadableBadChangesetOperationType(badChangesetOperationType),
-            changeset,
-            state,
-            ReadableStringForArray(pendingAsynchronousModifications));
-#endif
 }
 
 @end
