@@ -11,7 +11,6 @@
 #import "CKComponentScopeRootFactory.h"
 
 #import "CKComponentControllerAppearanceEvents.h"
-#import "CKComponentController.h"
 #import "CKComponentBoundsAnimationPredicates.h"
 
 CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener)

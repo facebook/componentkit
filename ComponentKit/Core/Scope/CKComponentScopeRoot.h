@@ -59,8 +59,7 @@ typedef void (^CKComponentControllerScopeEnumerator)(id<CKScopedComponentControl
  */
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
              componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
-   componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
-             ;
+   componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
 
 /** Creates a new version of an existing scope root, ready to be used for building a component tree */
 - (instancetype)newRoot;

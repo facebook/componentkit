@@ -13,8 +13,6 @@
 #import <UIKit/UIKit.h>
 
 @class CKComponent;
-@protocol CKScopedComponentController;
-@protocol CKScopedComponent;
 
 @interface CKComponentController<__covariant ComponentType:CKComponent *> : NSObject
 

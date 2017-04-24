@@ -7,9 +7,9 @@
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
+
 #import "CKComponentScopeHandle.h"
 
-#import "CKAssert.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentInternal.h"
@@ -22,12 +22,11 @@
 @implementation CKComponentScopeHandle
 {
   id<CKComponentStateListener> __weak _listener;
+  id<CKScopedComponentController> _controller;
   CKComponentScopeRootIdentifier _rootIdentifier;
   BOOL _acquired;
   BOOL _resolved;
   CKComponent *__weak _acquiredComponent;
-
-  id<CKScopedComponentController> _controller;
 }
 
 + (CKComponentScopeHandle *)handleForComponent:(id<CKScopedComponent>)component
@@ -63,7 +62,7 @@
                  rootIdentifier:rootIdentifier
                  componentClass:componentClass
                           state:initialStateCreator ? initialStateCreator() : [componentClass initialState]
-                     controller:nil]; // controllers are built on resolution of the handle;
+                     controller:nil]; // controllers are built on resolution of the handle
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -74,12 +73,12 @@
                       controller:(id<CKScopedComponentController>)controller
 {
   if (self = [super init]) {
-    _controller = controller;
     _listener = listener;
     _globalIdentifier = globalIdentifier;
     _rootIdentifier = rootIdentifier;
     _componentClass = componentClass;
     _state = state;
+    _controller = controller;
   }
   return self;
 }
