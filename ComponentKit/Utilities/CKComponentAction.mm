@@ -261,7 +261,7 @@ static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSigna
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
 {
 #if DEBUG
-  const CKComponentScopeHandle *scopeHandle = scope.scopeHandle();
+  CKComponentScopeHandle *const scopeHandle = scope.scopeHandle();
 
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right

@@ -297,7 +297,7 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 + (Class<CKScopedComponentController>)controllerClass
 {
-  const Class componentClass = self.class;
+  const Class componentClass = self;
 
   if (componentClass == [CKComponent class]) {
     return Nil; // Don't create root CKComponentControllers as it does nothing interesting.
