@@ -15,6 +15,7 @@
 #import "CKComponentInternal.h"
 #import "CKInternalHelpers.h"
 #import "CKMutex.h"
+#import "CKScopedComponent.h"
 #import "CKScopedComponentController.h"
 #import "CKThreadLocalComponentScope.h"
 
@@ -40,9 +41,10 @@
     [currentScope->newScopeRoot registerComponent:component];
     return handle;
   }
-  CKCAssertNil(CKComponentControllerClassFromComponentClass([component class]), @"%@ has a controller but no scope! "
-               "Use CKComponentScope scope(self) before constructing the component or CKComponentTestRootScope "
+  CKCAssertNil([component.class controllerClass], @"%@ has a controller but no scope! "
+               "Make sure you construct your scope(self) before constructing the component or CKComponentTestRootScope "
                "at the start of the test.", [component class]);
+
   return nil;
 }
 
@@ -158,10 +160,13 @@
     CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
     CKAssert(currentScope != nullptr, @"Current scope should never be null here. Thread-local stack is corrupted.");
 
-    // A controller can be non-nil at this callsite during component re-generation because a new scope handle is
-    // generated in a new tree, that is acquired by a new component. We pass in the original component controller
-    // in that case, and we should avoid re-generating a new controller in that case.
-    _controller = newController(_acquiredComponent, currentScope->newScopeRoot);
+    const Class<CKScopedComponentController> controllerClass = [_acquiredComponent.class controllerClass];
+    if (controllerClass) {
+      // The compiler is not happy when I don't explicitly cast as (Class)
+      // See: http://stackoverflow.com/questions/21699755/create-an-instance-from-a-class-that-conforms-to-a-protocol
+      _controller = [[(Class)controllerClass alloc] initWithComponent:_acquiredComponent];
+      [currentScope->newScopeRoot registerComponentController:_controller];
+    }
   }
   _resolved = YES;
 }
@@ -170,21 +175,6 @@
 {
   CKAssert(_resolved, @"Asking for responder from scope handle before resolution:%@", NSStringFromClass(_componentClass));
   return _acquiredComponent;
-}
-
-#pragma mark Controllers
-
-static id<CKScopedComponentController> newController(CKComponent *component, CKComponentScopeRoot *root)
-{
-  Class controllerClass = CKComponentControllerClassFromComponentClass([component class]);
-  if (controllerClass) {
-    CKCAssert([controllerClass conformsToProtocol:@protocol(CKScopedComponentController)],
-              @"%@ must inherit from CKComponentController", controllerClass);
-    id<CKScopedComponentController> controller = [[controllerClass alloc] initWithComponent:component];
-    [root registerComponentController:controller];
-    return controller;
-  }
-  return nil;
 }
 
 @end

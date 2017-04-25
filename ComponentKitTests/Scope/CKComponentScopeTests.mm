@@ -28,11 +28,15 @@
 @interface TestComponentWithScopedProtocol : NSObject <CKScopedComponent, TestScopedProtocol>
 @end
 @implementation TestComponentWithScopedProtocol
++ (id)initialState { return nil; }
++ (Class<CKScopedComponentController>)controllerClass { return nil; };
 @end
 
 @interface TestComponentWithoutScopedProtocol : NSObject <CKScopedComponent>
 @end
 @implementation TestComponentWithoutScopedProtocol
++ (id)initialState { return nil; }
++ (Class<CKScopedComponentController>)controllerClass { return nil; };
 @end
 
 @interface TestComponentControllerWithScopedProtocol : NSObject <CKScopedComponentController, TestScopedProtocol>
