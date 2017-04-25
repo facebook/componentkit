@@ -41,12 +41,9 @@
     [currentScope->newScopeRoot registerComponent:component];
     return handle;
   }
-
-  if (handle) {
-    CKAssertNil([component.class controllerClass], @"%@ has a controller but no scope! "
-                 "Make sure you construct your scope(self) before constructing the component or CKComponentTestRootScope "
-                 "at the start of the test.", [component class]);
-  }
+  CKCAssertNil([component.class controllerClass], @"%@ has a controller but no scope! "
+               "Make sure you construct your scope(self) before constructing the component or CKComponentTestRootScope "
+               "at the start of the test.", [component class]);
 
   return nil;
 }
