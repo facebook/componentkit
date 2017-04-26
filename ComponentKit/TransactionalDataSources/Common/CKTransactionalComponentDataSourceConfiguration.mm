@@ -26,19 +26,22 @@
   return [self initWithComponentProvider:componentProvider
                                  context:context
                                sizeRange:sizeRange
-                      workThreadOverride:nil];
+                      workThreadOverride:nil
+            crashOnBadChangesetOperation:NO];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
                        workThreadOverride:(NSThread *)workThreadOverride
+             crashOnBadChangesetOperation:(BOOL)crashOnBadChangesetOperation
 {
   if (self = [super init]) {
     _componentProvider = componentProvider;
     _context = context;
     _sizeRange = sizeRange;
     _workThreadOverride = workThreadOverride;
+    _crashOnBadChangesetOperation = crashOnBadChangesetOperation;
   }
   return self;
 }
@@ -57,7 +60,8 @@
     return (_componentProvider == obj.componentProvider
             && (_context == obj.context || [_context isEqual:obj.context])
             && _sizeRange == obj.sizeRange
-            && _workThreadOverride == obj.workThreadOverride);
+            && _workThreadOverride == obj.workThreadOverride
+            && _crashOnBadChangesetOperation == obj.crashOnBadChangesetOperation);
   }
 }
 
