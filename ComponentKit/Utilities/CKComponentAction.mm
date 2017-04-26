@@ -17,6 +17,7 @@
 #import "CKAssert.h"
 #import "CKComponent+UIView.h"
 #import "CKComponent.h"
+#import "CKComponentInternal.h"
 #import "CKComponentScopeHandle.h"
 #import "CKInternalHelpers.h"
 #import "CKMutex.h"
