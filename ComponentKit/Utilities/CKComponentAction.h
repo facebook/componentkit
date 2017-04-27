@@ -92,7 +92,10 @@
 template<typename... T>
 class CKTypedComponentAction : public CKTypedComponentActionBase {
   static_assert(std::is_same<
-                CKTypedComponentActionBoolPack<(std::is_trivially_constructible<T>::value || std::is_pointer<T>::value)...>,
+                CKTypedComponentActionBoolPack<(std::is_reference<T>::value
+                                                || std::is_pointer<T>::value
+                                                || std::is_fundamental<T>::value
+                                                || std::is_convertible<T, id>::value)...>,
                 CKTypedComponentActionBoolPack<(CKTypedComponentActionDenyType<T>::value)...>
                 >::value, "You must either use a pointer (like an NSObject) or a trivially constructible type. Complex types are not allowed as arguments of component actions.");
 
