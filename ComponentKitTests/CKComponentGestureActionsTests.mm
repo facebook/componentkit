@@ -93,7 +93,7 @@
 
 - (void)testThatApplyingATapRecognizerAttributeWithNoActionDoesNotAddRecognizerToView
 {
-  CKComponentViewAttributeValue attr = CKComponentTapGestureAttribute(NULL);
+  CKComponentViewAttributeValue attr = CKComponentTapGestureAttribute(nullptr);
   UIView *view = [UIView new];
 
   attr.first.applicator(view, attr.second);

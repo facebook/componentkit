@@ -133,9 +133,10 @@ public:
     return CKTypedComponentAction<T...>(block);
   }
 
-  /** Allows conversion from NULL actions. */
-  CKTypedComponentAction(int s) noexcept : CKTypedComponentActionBase() {};
-  CKTypedComponentAction(long s) noexcept : CKTypedComponentActionBase() {};
+  /**
+   Allows explicit null actions. NULL can cause ambiguity in constructor resolution and is best avoided where
+   nullptr is available.
+   */
   CKTypedComponentAction(std::nullptr_t n) noexcept : CKTypedComponentActionBase() {};
 
   /** We support promotion from actions that take no arguments. */
