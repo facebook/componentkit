@@ -22,20 +22,23 @@
 #import "CKMacros.h"
 #import "CKThreadLocalComponentScope.h"
 
-typedef struct _CKStateScopeKey {
+struct CKStateScopeKey {
   Class __unsafe_unretained componentClass;
   id identifier;
+  NSArray<id> *keys;
 
-  bool operator==(const _CKStateScopeKey &v) const {
-    return (CKObjectIsEqual(this->componentClass, v.componentClass) && CKObjectIsEqual(this->identifier, v.identifier));
+  bool operator==(const CKStateScopeKey &v) const {
+    return (CKObjectIsEqual(this->componentClass, v.componentClass)
+            && CKObjectIsEqual(this->identifier, v.identifier)
+            && CKObjectIsEqual(this->keys, v.keys));
   }
-} _CKStateScopeKey;
+};
 
 namespace std {
   template <>
-  struct hash<_CKStateScopeKey> {
-    size_t operator ()(_CKStateScopeKey k) const {
-      NSUInteger subhashes[] = { [k.componentClass hash], [k.identifier hash] };
+  struct hash<CKStateScopeKey> {
+    size_t operator ()(CKStateScopeKey k) const {
+      NSUInteger subhashes[] = { [k.componentClass hash], [k.identifier hash], [k.keys hash] };
       return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
     }
   };
@@ -43,13 +46,14 @@ namespace std {
 
 @implementation CKComponentScopeFrame
 {
-  std::unordered_map<_CKStateScopeKey, CKComponentScopeFrame *> _children;
+  std::unordered_map<CKStateScopeKey, CKComponentScopeFrame *> _children;
 }
 
 + (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
                                       newRoot:(CKComponentScopeRoot *)newRoot
                                componentClass:(Class)componentClass
                                    identifier:(id)identifier
+                                         keys:(NSArray<id> *)keys
                           initialStateCreator:(id (^)())initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
@@ -59,11 +63,11 @@ namespace std {
   CKComponentScopeFrame *existingChildFrameOfEquivalentPreviousFrame;
   if (pair.equivalentPreviousFrame) {
     const auto &equivalentPreviousFrameChildren = pair.equivalentPreviousFrame->_children;
-    const auto it = equivalentPreviousFrameChildren.find({componentClass, identifier});
+    const auto it = equivalentPreviousFrameChildren.find({componentClass, identifier, keys});
     existingChildFrameOfEquivalentPreviousFrame = (it == equivalentPreviousFrameChildren.end()) ? nil : it->second;
   }
 
-  const auto existingChild = pair.frame->_children.find({componentClass, identifier});
+  const auto existingChild = pair.frame->_children.find({componentClass, identifier, keys});
   if (!pair.frame->_children.empty() && (existingChild != pair.frame->_children.end())) {
     /*
      The component was involved in a scope collision and the scope handle needs to be reacquired.
@@ -164,7 +168,7 @@ namespace std {
                                  initialStateCreator:initialStateCreator];
 
   CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
-  pair.frame->_children.insert({{componentClass, identifier}, newChild});
+  pair.frame->_children.insert({{componentClass, identifier, keys}, newChild});
   return {.frame = newChild, .equivalentPreviousFrame = existingChildFrameOfEquivalentPreviousFrame};
 }
 
