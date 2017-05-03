@@ -39,7 +39,7 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
     _scopeHandle = childPair.frame.handle;
     _clearKeys.reset(new CKComponentContext<CKComponentKeyStorage>(nil)); // clear keys *after* reading them
   } else {
-    CKCFailAssert(@"ThreadLocalScope isn't available. Generally, this means you are trying to access scopes outside of component construction.");
+    CKCFailAssert(@"ThreadLocalScope isn't available. Generally, this means you are trying to create a scope after a component has been constructed.");
   }
 }
 
