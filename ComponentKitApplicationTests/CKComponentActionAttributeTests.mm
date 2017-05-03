@@ -131,7 +131,7 @@
   [CKComponent
    newWithView:{
      [UIButton class],
-     {CKComponentActionAttribute(NULL)}
+     {CKComponentActionAttribute(nullptr)}
    }
    size:{}];
 

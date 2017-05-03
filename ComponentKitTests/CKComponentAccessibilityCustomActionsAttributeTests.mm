@@ -98,7 +98,7 @@
    newWithView:{
      [UIView class],
      {CKComponentAccessibilityCustomActionsAttribute({
-       {@"Test", NULL},
+       {@"Test", nullptr},
        {@"Test 2", @selector(testAction:context:)},
      })}
    }

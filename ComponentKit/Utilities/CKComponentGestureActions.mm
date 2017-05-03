@@ -149,7 +149,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
         UIGestureRecognizer *recognizer = recognizerForAction(view, blockAction);
         CKCAssertNotNil(recognizer, @"Expected to find recognizer for %@ on teardown", NSStringFromSelector(blockAction.selector()));
         [view removeGestureRecognizer:recognizer];
-        [recognizer ck_setComponentAction:NULL];
+        [recognizer ck_setComponentAction:nullptr];
         
         // Tear down delegate proxying if applicable
         if (delegateSelectors.size() > 0) {
