@@ -10,6 +10,7 @@
 
 #import "CKComponentScope.h"
 
+#import "CKComponentKeyStorage.h"
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeHandle.h"
 #import "CKThreadLocalComponentScope.h"
@@ -17,6 +18,7 @@
 CKComponentScope::~CKComponentScope()
 {
   if (_threadLocalScope != nullptr) {
+    _clearKeys.reset(nullptr); // restore keys that were reset in constructor
     [_scopeHandle resolve];
     _threadLocalScope->stack.pop();
   }
@@ -30,10 +32,12 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
                                                            newRoot:_threadLocalScope->newScopeRoot
                                                     componentClass:componentClass
                                                         identifier:identifier
+                                                              keys:[CKComponentKeyStorage currentKeys]
                                                initialStateCreator:initialStateCreator
                                                       stateUpdates:_threadLocalScope->stateUpdates];
     _threadLocalScope->stack.push({.frame = childPair.frame, .equivalentPreviousFrame = childPair.equivalentPreviousFrame});
     _scopeHandle = childPair.frame.handle;
+    _clearKeys.reset(new CKComponentContext<CKComponentKeyStorage>(nil)); // clear keys *after* reading them
   }
 }
 

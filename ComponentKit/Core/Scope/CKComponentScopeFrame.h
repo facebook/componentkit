@@ -27,6 +27,7 @@ struct CKComponentScopeFramePair {
                                       newRoot:(CKComponentScopeRoot *)newRoot
                                componentClass:(Class)aClass
                                    identifier:(id)identifier
+                                         keys:(NSArray<id> *)keys
                           initialStateCreator:(id (^)(void))initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 

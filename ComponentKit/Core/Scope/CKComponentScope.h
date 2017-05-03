@@ -10,10 +10,14 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKUpdateMode.h>
+
+#include <memory>
 
 class CKThreadLocalComponentScope;
 @class CKComponentScopeHandle;
+@class CKComponentKeyStorage;
 
 typedef void (^CKComponentStateUpdater)(id (^updateBlock)(id),
                                         NSDictionary<NSString *, NSString *> * userInfo,
@@ -79,4 +83,5 @@ private:
   CKComponentScope &operator=(const CKComponentScope&) = delete;
   CKThreadLocalComponentScope *_threadLocalScope;
   CKComponentScopeHandle *_scopeHandle;
+  std::unique_ptr<CKComponentContext<CKComponentKeyStorage>> _clearKeys;
 };
