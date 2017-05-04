@@ -274,21 +274,6 @@ void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SE
 #endif
 }
 
-void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
-{
-#if DEBUG
-  // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
-  // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
-  // argument indices.
-  CKCAssert(selector == NULL || [target respondsToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", [target class], NSStringFromSelector(selector));
-
-  NSMethodSignature *signature = [target methodSignatureForSelector:selector];
-
-  checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
-#endif
-}
-
-
 // This method returns a friendly-print of a responder chain. Used for debug purposes.
 NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {
   return (responder

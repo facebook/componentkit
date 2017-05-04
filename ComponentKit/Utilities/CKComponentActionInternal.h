@@ -118,8 +118,6 @@ void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger inde
 
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 
-void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
-
 NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept;
 
 #pragma mark - Sending
