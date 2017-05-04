@@ -202,6 +202,7 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
     // We add object only if there is actual used element
     CKStackChildCachedLayout *childLayout = [CKStackChildCachedLayout new];
     childLayout.component = child.component;
+    childLayout.componentLayout = {child.component, {0, 0}};
     childLayout.widthMode = (YGMeasureMode) -1;
     childLayout.heightMode = (YGMeasureMode) -1;
     childLayout.parentSize = parentSize;
