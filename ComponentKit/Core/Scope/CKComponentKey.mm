@@ -10,7 +10,21 @@
 
 #import "CKComponentKey.h"
 
-#import "CKComponentKeyStorage.h"
+#import "CKAssert.h"
 
-CKComponentKey::CKComponentKey(id key) noexcept
-: _storage([CKComponentKeyStorage newWithAdditionalKey:key]) {}
+CKComponentKey::CKComponentKey(id<NSObject> key) noexcept
+: _threadLocalScope(CKThreadLocalComponentScope::currentScope()), _key(key)
+{
+  if (_threadLocalScope && _key) {
+    _threadLocalScope->keys.top().push_back(key);
+  }
+}
+
+CKComponentKey::~CKComponentKey() noexcept
+{
+  if (_threadLocalScope && _key) {
+    CKCAssert(_threadLocalScope->keys.top().back() == _key, @"Key mismatch: %@ vs %@",
+              _threadLocalScope->keys.top().back(), _key);
+    _threadLocalScope->keys.top().pop_back();
+  }
+}

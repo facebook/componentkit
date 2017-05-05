@@ -9,6 +9,7 @@
  */
 
 #import <stack>
+#import <vector>
 
 #import <Foundation/Foundation.h>
 
@@ -27,6 +28,7 @@ public:
   CKComponentScopeRoot *const newScopeRoot;
   const CKComponentStateUpdateMap stateUpdates;
   std::stack<CKComponentScopeFramePair> stack;
+  std::stack<std::vector<id<NSObject>>> keys;
 };
 
 /**

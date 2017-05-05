@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKComponentContext.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
 
 @class CKComponentKeyStorage;
 
@@ -30,9 +30,11 @@
  */
 class CKComponentKey {
 public:
-  CKComponentKey(id key) noexcept;
+  CKComponentKey(id<NSObject> key) noexcept;
+  ~CKComponentKey() noexcept;
 private:
   CKComponentKey(const CKComponentKey&) = delete;
   CKComponentKey &operator=(const CKComponentKey&) = delete;
-  CKComponentContext<CKComponentKeyStorage> _storage;
+  CKThreadLocalComponentScope *_threadLocalScope;
+  id<NSObject> _key;
 };

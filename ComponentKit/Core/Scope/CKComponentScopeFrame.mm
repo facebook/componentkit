@@ -10,6 +10,7 @@
 
 #import "CKComponentScopeFrame.h"
 
+#import <algorithm>
 #import <unordered_map>
 #import <libkern/OSAtomic.h>
 
@@ -22,15 +23,25 @@
 #import "CKMacros.h"
 #import "CKThreadLocalComponentScope.h"
 
+static bool keyVectorsEqual(const std::vector<id<NSObject>> &a, const std::vector<id<NSObject>> &b)
+{
+  if (a.size() != b.size()) {
+    return false;
+  }
+  return std::equal(a.begin(), a.end(), b.begin(), [](id<NSObject> x, id<NSObject> y){
+    return CKObjectIsEqual(x, y) == YES; // be pedantic here becuase BOOL != bool
+  });
+}
+
 struct CKStateScopeKey {
   Class __unsafe_unretained componentClass;
   id identifier;
-  NSArray<id> *keys;
+  std::vector<id<NSObject>> keys;
 
   bool operator==(const CKStateScopeKey &v) const {
     return (CKObjectIsEqual(this->componentClass, v.componentClass)
             && CKObjectIsEqual(this->identifier, v.identifier)
-            && CKObjectIsEqual(this->keys, v.keys));
+            && keyVectorsEqual(this->keys, v.keys));
   }
 };
 
@@ -38,7 +49,9 @@ namespace std {
   template <>
   struct hash<CKStateScopeKey> {
     size_t operator ()(CKStateScopeKey k) const {
-      NSUInteger subhashes[] = { [k.componentClass hash], [k.identifier hash], [k.keys hash] };
+      // Note we just use k.keys.size() for the hash of keys. Otherwise we'd have to enumerate over each item and
+      // call [NSObject -hash] on it and incorporate every element into the overall hash somehow.
+      NSUInteger subhashes[] = { [k.componentClass hash], [k.identifier hash], k.keys.size() };
       return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
     }
   };
@@ -53,7 +66,7 @@ namespace std {
                                       newRoot:(CKComponentScopeRoot *)newRoot
                                componentClass:(Class)componentClass
                                    identifier:(id)identifier
-                                         keys:(NSArray<id> *)keys
+                                         keys:(const std::vector<id<NSObject>> &)keys
                           initialStateCreator:(id (^)())initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {

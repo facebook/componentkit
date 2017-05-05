@@ -12,6 +12,8 @@
 
 #import <ComponentKit/CKComponentScopeTypes.h>
 
+#import <vector>
+
 @class CKComponentScopeFrame;
 @class CKComponentScopeHandle;
 @class CKComponentScopeRoot;
@@ -27,7 +29,7 @@ struct CKComponentScopeFramePair {
                                       newRoot:(CKComponentScopeRoot *)newRoot
                                componentClass:(Class)aClass
                                    identifier:(id)identifier
-                                         keys:(NSArray<id> *)keys
+                                         keys:(const std::vector<id<NSObject>> &)keys
                           initialStateCreator:(id (^)(void))initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
