@@ -29,7 +29,7 @@ static bool keyVectorsEqual(const std::vector<id<NSObject>> &a, const std::vecto
     return false;
   }
   return std::equal(a.begin(), a.end(), b.begin(), [](id<NSObject> x, id<NSObject> y){
-    return CKObjectIsEqual(x, y) == YES; // be pedantic here becuase BOOL != bool
+    return CKObjectIsEqual(x, y); // be pedantic and use a lambda here becuase BOOL != bool
   });
 }
 
