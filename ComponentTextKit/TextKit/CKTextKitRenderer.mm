@@ -110,7 +110,7 @@ static NSCharacterSet *_defaultAvoidTruncationCharacterSet()
   UIGraphicsPushContext(context);
 
   [_context performBlockWithLockedTextKitComponents:^(NSLayoutManager *layoutManager, NSTextStorage *textStorage, NSTextContainer *textContainer) {
-    NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+    NSRange glyphRange = [layoutManager glyphRangeForBoundingRect:bounds inTextContainer:textContainer];
     [layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:shadowInsetBounds.origin];
     [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:shadowInsetBounds.origin];
   }];
