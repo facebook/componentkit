@@ -139,5 +139,8 @@ static void CKComponentActionSendResponderChain(SEL selector, id target, CKCompo
   // We use a recursive argument unpack to unwrap the variadic arguments in-order on the invocation in a type-safe
   // manner.
   CKConfigureInvocationWithArguments(invocation, 3, args...);
+  // NSInvocation does not by default retain its target or object arguments. We have to manually call this to ensure
+  // that these arguments and target are not deallocated through the scope of the invocation.
+  [invocation retainArguments];
   [invocation invoke];
 }
