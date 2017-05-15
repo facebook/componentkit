@@ -64,13 +64,12 @@ namespace std {
 
 + (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
                                       newRoot:(CKComponentScopeRoot *)newRoot
-                               componentClass:(Class)componentClass
+                               componentClass:(Class<CKScopedComponent>)componentClass
                                    identifier:(id)identifier
                                          keys:(const std::vector<id<NSObject>> &)keys
                           initialStateCreator:(id (^)())initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  CKCAssert([componentClass isSubclassOfClass:[CKComponent class]], @"%@ is not a component", NSStringFromClass(componentClass));
   CKAssertNotNil(pair.frame, @"Must have frame");
 
   CKComponentScopeFrame *existingChildFrameOfEquivalentPreviousFrame;

@@ -17,6 +17,7 @@
 @class CKComponentScopeFrame;
 @class CKComponentScopeHandle;
 @class CKComponentScopeRoot;
+@protocol CKScopedComponent;
 
 struct CKComponentScopeFramePair {
   CKComponentScopeFrame *frame;
@@ -27,7 +28,7 @@ struct CKComponentScopeFramePair {
 
 + (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
                                       newRoot:(CKComponentScopeRoot *)newRoot
-                               componentClass:(Class)aClass
+                               componentClass:(Class<CKScopedComponent>)aClass
                                    identifier:(id)identifier
                                          keys:(const std::vector<id<NSObject>> &)keys
                           initialStateCreator:(id (^)(void))initialStateCreator
