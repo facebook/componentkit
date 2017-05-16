@@ -10,7 +10,7 @@
 
 #import "CKComponentAnimation.h"
 
-#import "CKComponentInternal.h"
+#import "CKComponentSubclass.h"
 
 @interface CKAppliedAnimationContext : NSObject
 - (instancetype)initWithTargetLayer:(CALayer *)layer key:(NSString *)key;
