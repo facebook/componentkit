@@ -31,5 +31,5 @@ public:
   std::stack<std::vector<id<NSObject>>> keys;
 
 private:
-  CKThreadLocalComponentScope *previousScope;
+  CKThreadLocalComponentScope *const previousScope;
 };
