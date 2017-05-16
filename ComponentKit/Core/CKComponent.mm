@@ -193,6 +193,7 @@ struct CKComponentMountInfo {
 
 - (void)childrenDidMount
 {
+  [_scopeHandle assignNewResponder];
   [_scopeHandle.controller componentDidMount:self];
 }
 
