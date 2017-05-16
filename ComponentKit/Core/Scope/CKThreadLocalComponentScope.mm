@@ -47,6 +47,7 @@ CKThreadLocalComponentScope::~CKThreadLocalComponentScope()
   stack.pop();
   CKCAssert(stack.empty(), @"Didn't expect stack to contain anything in destructor");
   CKCAssert(keys.size() == 1 && keys.top().empty(), @"Expected keys to be at initial state in destructor");
+  [newScopeRoot applyPendingResponderMap];
   pthread_setspecific(_threadKey(), nullptr);
 }
 

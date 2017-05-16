@@ -11,9 +11,11 @@
 #import "CKComponentScopeRoot.h"
 
 #import <libkern/OSAtomic.h>
+#import <mutex>
 
 #import "CKScopedComponent.h"
 #import "CKScopedComponentController.h"
+#import "CKScopedResponderManager.h"
 #import "CKInternalHelpers.h"
 #import "CKThreadLocalComponentScope.h"
 
@@ -27,6 +29,10 @@ typedef std::unordered_multimap<CKComponentControllerScopePredicate, __weak id<C
   
   _CKRegisteredComponentsMap _registeredComponents;
   _CKRegisteredComponentControllerMap _registeredComponentControllers;
+  
+  std::mutex _pendingMapAccess;
+  CKHandleToResponderMap _pendingHandleToResponderMap;
+  CKScopedResponderManager *_responderManager;
 }
 
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
@@ -34,10 +40,12 @@ typedef std::unordered_multimap<CKComponentControllerScopePredicate, __weak id<C
    componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
 {
   static int32_t nextGlobalIdentifier = 0;
+  CKScopedResponderManager *const responderManager = [CKScopedResponderManager new];
   return [[CKComponentScopeRoot alloc] initWithListener:listener
                                        globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)
                                     componentPredicates:componentPredicates
-                          componentControllerPredicates:componentControllerPredicates];
+                          componentControllerPredicates:componentControllerPredicates
+                                       responderManager:responderManager];
 }
 
 - (instancetype)newRoot
@@ -45,13 +53,15 @@ typedef std::unordered_multimap<CKComponentControllerScopePredicate, __weak id<C
   return [[CKComponentScopeRoot alloc] initWithListener:_listener
                                        globalIdentifier:_globalIdentifier
                                     componentPredicates:_componentPredicates
-                          componentControllerPredicates:_componentControllerPredicates];
+                          componentControllerPredicates:_componentControllerPredicates
+                                       responderManager:_responderManager];
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                 globalIdentifier:(CKComponentScopeRootIdentifier)globalIdentifier
              componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
    componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+                responderManager:(CKScopedResponderManager *)responderManager
 {
   if (self = [super init]) {
     _listener = listener;
@@ -59,16 +69,23 @@ typedef std::unordered_multimap<CKComponentControllerScopePredicate, __weak id<C
     _rootFrame = [[CKComponentScopeFrame alloc] initWithHandle:nil];
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
+    _responderManager = responderManager;
   }
   return self;
 }
 
-- (void)registerComponent:(id<CKScopedComponent>)component
+- (void)registerComponent:(id<CKScopedComponent>)component withHandleIdentifier:(CKComponentScopeHandleIdentifier)identifier
 {
   if (!component) {
     // Handle this gracefully so we don't have a bunch of nils being passed to predicates.
     return;
   }
+  
+  {
+    std::lock_guard<std::mutex> l(_pendingMapAccess);
+    _pendingHandleToResponderMap.insert({identifier, component});
+  }
+  
   for (const auto &predicate : _componentPredicates) {
     if (predicate(component)) {
       _registeredComponents.insert({predicate, component});
@@ -113,6 +130,18 @@ typedef std::unordered_multimap<CKComponentControllerScopePredicate, __weak id<C
   for (auto it = _registeredComponentControllers.find(predicate); it != _registeredComponentControllers.end(); ++it) {
     block(it->second);
   }
+}
+
+- (CKScopedResponderManager *)responderManager
+{
+  return _responderManager;
+}
+
+- (void)applyPendingResponderMap
+{
+  std::lock_guard<std::mutex> l(_pendingMapAccess);
+  [_responderManager setResponderMap:_pendingHandleToResponderMap];
+  _pendingHandleToResponderMap.clear();
 }
 
 @end

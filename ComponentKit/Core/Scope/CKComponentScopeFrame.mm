@@ -176,6 +176,7 @@ namespace std {
                                                                componentScopeRoot:newRoot]
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                       rootIdentifier:newRoot.globalIdentifier
+                                    responderManager:newRoot.responderManager
                                       componentClass:componentClass
                                  initialStateCreator:initialStateCreator];
 

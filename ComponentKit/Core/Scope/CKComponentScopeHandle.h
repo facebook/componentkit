@@ -16,9 +16,12 @@
 
 @class CKComponent;
 @class CKComponentScopeRoot;
+@class CKScopedResponderManager;
 
 @protocol CKComponentStateListener;
 @protocol CKScopedComponent;
+
+typedef id (^CKResponderGenerationBlock)(void);
 
 @interface CKComponentScopeHandle<__covariant ControllerType:id<CKScopedComponentController>> : NSObject
 
@@ -32,6 +35,7 @@
 /** Creates a conceptually brand new scope handle */
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+                responderManager:(CKScopedResponderManager *)responderManager
                   componentClass:(Class<CKScopedComponent>)componentClass
              initialStateCreator:(id (^)(void))initialStateCreator;
 
@@ -62,8 +66,8 @@
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
 
 /**
- Provides a responder corresponding with this scope handle. The controller will assert if called before resolution.
+ Provides a block that, when called, will return the responder associated with the "current" component generation.
  */
-- (id)responder;
+- (CKResponderGenerationBlock)responderBlock;
 
 @end
