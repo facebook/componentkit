@@ -17,6 +17,7 @@
 #import "CKMutex.h"
 #import "CKScopedComponent.h"
 #import "CKScopedComponentController.h"
+#import "CKScopedResponderManager.h"
 #import "CKThreadLocalComponentScope.h"
 
 @implementation CKComponentScopeHandle
@@ -27,6 +28,7 @@
   BOOL _acquired;
   BOOL _resolved;
   CKComponent *__weak _acquiredComponent;
+  CKScopedResponderManager *_responderManager;
 }
 
 + (CKComponentScopeHandle *)handleForComponent:(id<CKScopedComponent>)component
@@ -38,7 +40,7 @@
 
   CKComponentScopeHandle *handle = currentScope->stack.top().frame.handle;
   if ([handle acquireFromComponent:component]) {
-    [currentScope->newScopeRoot registerComponent:component];
+    [currentScope->newScopeRoot registerComponent:component withHandleIdentifier:handle.globalIdentifier];
     return handle;
   }
   CKCAssertNil([component.class controllerClass], @"%@ has a controller but no scope! "
@@ -50,6 +52,7 @@
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+                responderManager:(CKScopedResponderManager *)responderManager
                   componentClass:(Class)componentClass
              initialStateCreator:(id (^)(void))initialStateCreator
 {
@@ -57,6 +60,7 @@
   return [self initWithListener:listener
                globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)
                  rootIdentifier:rootIdentifier
+               responderManager:responderManager
                  componentClass:componentClass
                           state:initialStateCreator ? initialStateCreator() : [componentClass initialState]
                      controller:nil]; // controllers are built on resolution of the handle
@@ -65,6 +69,7 @@
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                 globalIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+                responderManager:(CKScopedResponderManager *)responderManager
                   componentClass:(Class)componentClass
                            state:(id)state
                       controller:(id<CKScopedComponentController>)controller
@@ -76,6 +81,7 @@
     _componentClass = componentClass;
     _state = state;
     _controller = controller;
+    _responderManager = responderManager;
   }
   return self;
 }
@@ -92,6 +98,7 @@
   return [[CKComponentScopeHandle alloc] initWithListener:_listener
                                          globalIdentifier:_globalIdentifier
                                            rootIdentifier:_rootIdentifier
+                                         responderManager:_responderManager
                                            componentClass:_componentClass
                                                     state:updatedState
                                                controller:_controller];
@@ -102,6 +109,7 @@
   return [[CKComponentScopeHandle alloc] initWithListener:_listener
                                          globalIdentifier:_globalIdentifier
                                            rootIdentifier:_rootIdentifier
+                                         responderManager:_responderManager
                                            componentClass:_componentClass
                                                     state:_state
                                                controller:_controller];
@@ -171,10 +179,17 @@
   _resolved = YES;
 }
 
-- (id)responder
+- (CKResponderGenerationBlock)responderBlock
 {
-  CKAssert(_resolved, @"Asking for responder from scope handle before resolution:%@", NSStringFromClass(_componentClass));
-  return _acquiredComponent;
+  __weak __typeof(self) weakSelf = self;
+  return ^id(void) {
+    __typeof(self) strongSelf = weakSelf;
+    if (strongSelf != nil) {
+      return [strongSelf->_responderManager responderForIdentifier:strongSelf->_globalIdentifier];
+    }
+    
+    return nil;
+  };
 }
 
 @end

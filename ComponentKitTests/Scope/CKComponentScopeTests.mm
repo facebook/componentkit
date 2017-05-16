@@ -348,7 +348,7 @@ static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
   CKThreadLocalComponentScope threadScope(root, {});
 
   TestComponentWithScopedProtocol *c = [TestComponentWithScopedProtocol new];
-  [root registerComponent:c];
+  [root registerComponent:c withHandleIdentifier:0];
 
   __block BOOL foundComponent = NO;
   [root
@@ -371,9 +371,9 @@ static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
   CKThreadLocalComponentScope threadScope(root, {});
 
   TestComponentWithScopedProtocol *c1 = [TestComponentWithScopedProtocol new];
-  [root registerComponent:c1];
+  [root registerComponent:c1 withHandleIdentifier:0];
   TestComponentWithScopedProtocol *c2 = [TestComponentWithScopedProtocol new];
-  [root registerComponent:c2];
+  [root registerComponent:c2 withHandleIdentifier:1];
 
   __block BOOL foundC1 = NO;
   __block BOOL foundC2 = NO;
@@ -400,7 +400,7 @@ static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
   CKThreadLocalComponentScope threadScope(root, {});
 
   TestComponentWithoutScopedProtocol *c = [TestComponentWithoutScopedProtocol new];
-  [root registerComponent:c];
+  [root registerComponent:c withHandleIdentifier:0];
 
   [root
    enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate

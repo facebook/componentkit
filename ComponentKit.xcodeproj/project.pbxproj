@@ -307,6 +307,8 @@
 		2DCA4E721D889D0300AAB2B3 /* CKTransactionalComponentDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKTransactionalComponentDataSourceConfigurationInternal.h */; };
 		2DCA4E731D889D1500AAB2B3 /* CKTransactionalComponentDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKTransactionalComponentDataSourceConfigurationInternal.h */; };
 		39B090BF1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */; };
+		408A0FB41ECA784F00BE153E /* CKScopedResponderManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 408A0FB21ECA784F00BE153E /* CKScopedResponderManager.h */; };
+		408A0FB51ECA784F00BE153E /* CKScopedResponderManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 408A0FB31ECA784F00BE153E /* CKScopedResponderManager.mm */; };
 		497824751BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 497824741BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm */; };
 		49FA174E1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49FA174D1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm */; };
 		824416C21E44E34600904340 /* CKDetectComponentScopeCollisionsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 824416B51E44E19300904340 /* CKDetectComponentScopeCollisionsTests.mm */; };
@@ -822,6 +824,8 @@
 		2DBF1D791D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDetectComponentScopeCollisions.mm; sourceTree = "<group>"; };
 		2DCA4E711D889B8500AAB2B3 /* CKTransactionalComponentDataSourceConfigurationInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKTransactionalComponentDataSourceConfigurationInternal.h; sourceTree = "<group>"; };
 		39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDataSourceAttachControllerTests.mm; sourceTree = "<group>"; };
+		408A0FB21ECA784F00BE153E /* CKScopedResponderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKScopedResponderManager.h; sourceTree = "<group>"; };
+		408A0FB31ECA784F00BE153E /* CKScopedResponderManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKScopedResponderManager.mm; sourceTree = "<group>"; };
 		497824741BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCollectionViewTransactionalDataSourceTests.mm; sourceTree = "<group>"; };
 		49FA174D1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceIntegrationTests.mm; sourceTree = "<group>"; };
 		824416B51E44E19300904340 /* CKDetectComponentScopeCollisionsTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDetectComponentScopeCollisionsTests.mm; sourceTree = "<group>"; };
@@ -1565,6 +1569,8 @@
 				2DBF1D791D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm */,
 				D0B47B0C1CBD926700BB33CE /* CKThreadLocalComponentScope.h */,
 				D0B47B0D1CBD926700BB33CE /* CKThreadLocalComponentScope.mm */,
+				408A0FB21ECA784F00BE153E /* CKScopedResponderManager.h */,
+				408A0FB31ECA784F00BE153E /* CKScopedResponderManager.mm */,
 			);
 			path = Scope;
 			sourceTree = "<group>";
@@ -2171,6 +2177,7 @@
 				D0B47D071CBD948E00BB33CE /* ComponentUtilities.h in Headers */,
 				D0B47D6A1CBD948E00BB33CE /* CKTextKitRenderer+Positioning.h in Headers */,
 				D0B47D081CBD948E00BB33CE /* ComponentViewManager.h in Headers */,
+				408A0FB41ECA784F00BE153E /* CKScopedResponderManager.h in Headers */,
 				D0B47D0B1CBD948E00BB33CE /* CKComponentScopeFrame.h in Headers */,
 				D0B47CF51CBD948E00BB33CE /* CKComponentInternal.h in Headers */,
 				D0B47D6D1CBD948E00BB33CE /* CKTextKitRendererCache.h in Headers */,
@@ -2879,6 +2886,7 @@
 				D0B47CBA1CBD943400BB33CE /* CKStatefulViewReusePool.mm in Sources */,
 				D0B47CBB1CBD943400BB33CE /* CKTransactionalComponentDataSource.mm in Sources */,
 				D0B47CBC1CBD943400BB33CE /* CKTransactionalComponentDataSourceAppliedChanges.mm in Sources */,
+				408A0FB51ECA784F00BE153E /* CKScopedResponderManager.mm in Sources */,
 				D0B47CBD1CBD943400BB33CE /* CKTransactionalComponentDataSourceChangeset.mm in Sources */,
 				D0B47CBE1CBD943400BB33CE /* CKTransactionalComponentDataSourceConfiguration.mm in Sources */,
 				D0B47CBF1CBD943400BB33CE /* CKTransactionalComponentDataSourceItem.mm in Sources */,

@@ -22,6 +22,7 @@
 
 @class CKComponentScopeFrame;
 @class CKComponentScopeRoot;
+@class CKScopedResponderManager;
 
 /**
  Scope predicates are a tool used by the framework to register components and controllers on initialization that have
@@ -67,7 +68,7 @@ typedef void (^CKComponentControllerScopeEnumerator)(id<CKScopedComponentControl
 
 /** Must be called when initializing a component or controller. */
 - (void)registerComponentController:(id<CKScopedComponentController>)componentController;
-- (void)registerComponent:(id<CKScopedComponent>)component;
+- (void)registerComponent:(id<CKScopedComponent>)component withHandleIdentifier:(CKComponentScopeHandleIdentifier)identifier;
 
 /**
  Allows rapid enumeration over the components or controllers that matched a predicate. The predicate should be provided
@@ -83,5 +84,8 @@ typedef void (^CKComponentControllerScopeEnumerator)(id<CKScopedComponentControl
 @property (nonatomic, weak, readonly) id<CKComponentStateListener> listener;
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier globalIdentifier;
 @property (nonatomic, strong, readonly) CKComponentScopeFrame *rootFrame;
+
+@property (nonatomic, readonly, strong) CKScopedResponderManager *responderManager;
+- (void)applyPendingResponderMap;
 
 @end
