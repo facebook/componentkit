@@ -83,26 +83,22 @@
   XCTAssertTrue(currentFrame != rootFrame);
 }
 
-- (void)testThreadLocalComponentScopeCanBeOverridden
+- (void)testThreadLocalComponentScopeCanBeNested
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
-  CKThreadLocalComponentScope threadScope(root, {});
-  CKThreadLocalComponentScope *threadScopePtr = &threadScope;
+  {
+    CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
+    CKThreadLocalComponentScope threadScope(root, {});
 
-  dispatch_semaphore_t sema = dispatch_semaphore_create(0);
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    XCTAssertTrue(CKThreadLocalComponentScope::currentScope() == nullptr);
     {
-      CKThreadLocalComponentScopeOverride scopeOverride(threadScopePtr);
-      XCTAssertEqual(CKThreadLocalComponentScope::currentScope(), threadScopePtr);
+      CKComponentScopeRoot *root2 = CKComponentScopeRootWithDefaultPredicates(nil);
+      CKThreadLocalComponentScope threadScope2(root2, {});
+      XCTAssertEqual(CKThreadLocalComponentScope::currentScope(), &threadScope2);
     }
-    XCTAssertTrue(CKThreadLocalComponentScope::currentScope() == nullptr);
-    dispatch_semaphore_signal(sema);
-  });
-  dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC));
-  dispatch_semaphore_wait(sema, timeout);
 
-  XCTAssertEqual(CKThreadLocalComponentScope::currentScope(), threadScopePtr);
+    XCTAssertEqual(CKThreadLocalComponentScope::currentScope(), &threadScope);
+  }
+
+  XCTAssertEqual(CKThreadLocalComponentScope::currentScope(), nullptr);
 }
 
 #pragma mark - Component Scope Frame
