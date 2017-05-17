@@ -27,6 +27,7 @@
   BOOL _acquired;
   BOOL _resolved;
   CKComponent *__weak _acquiredComponent;
+  id __weak _responder;
 }
 
 + (CKComponentScopeHandle *)handleForComponent:(id<CKScopedComponent>)component
@@ -39,6 +40,11 @@
   CKComponentScopeHandle *handle = currentScope->stack.top().frame.handle;
   if ([handle acquireFromComponent:component]) {
     [currentScope->newScopeRoot registerComponent:component];
+
+    if (handle->_responder == nil) {
+      handle->_responder = component;
+    }
+
     return handle;
   }
   CKCAssertNil([component.class controllerClass], @"%@ has a controller but no scope! "
@@ -171,10 +177,22 @@
   _resolved = YES;
 }
 
-- (id)responder
+- (void)assignNewResponder
 {
-  CKAssert(_resolved, @"Asking for responder from scope handle before resolution:%@", NSStringFromClass(_componentClass));
-  return _acquiredComponent;
+  _responder = _acquiredComponent;
+}
+
+- (CKResponderGenerationBlock)responderBlock
+{
+  __weak __typeof(self) weakSelf = self;
+  return ^id(void) {
+    __typeof(self) strongSelf = weakSelf;
+    if (strongSelf != nil) {
+      return strongSelf->_responder;
+    }
+    
+    return nil;
+  };
 }
 
 @end

@@ -11,12 +11,12 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentContext.h>
+#import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKUpdateMode.h>
 
 #include <memory>
 
 class CKThreadLocalComponentScope;
-@class CKComponentScopeHandle;
 @class CKComponentKeyStorage;
 
 typedef void (^CKComponentStateUpdater)(id (^updateBlock)(id),
@@ -72,11 +72,15 @@ public:
   CKComponentStateUpdater stateUpdater(void) const noexcept;
 
   /**
-   @return The scope handle associated with this scope.
-   @discussion This is exposed for use by the framework. You should almost certainly never call this for any reason
-               in your components.
+   @return A block that, when called, will generate a responder in the most "current"
+     generation of the component hierarchy.
    */
-  CKComponentScopeHandle *scopeHandle(void) const noexcept;
+  CKResponderGenerationBlock responderGenerationBlock() const noexcept;
+  
+  /**
+   @return The class of the component that was used to create this scope.
+   */
+  Class<CKScopedComponent> componentClass() const noexcept;
 
 private:
   CKComponentScope(const CKComponentScope&) = delete;
