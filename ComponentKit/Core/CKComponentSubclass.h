@@ -136,6 +136,21 @@ extern CGSize const kCKComponentParentSizeUndefined;
  */
 - (CKComponentBoundsAnimation)boundsAnimationFromPreviousComponent:(CKComponent *)previousComponent;
 
+/**
+ Attempts to return a view suitable for rendering an animation.
+
+ Since a component may or may not be backed by a view nil may be returned. Composite components may, given the fact
+ they are composed of other components, return the animatable view of its descendant. As a rule of thumb:
+
+   1. CKComponent subclasses backed by a view will return the backing view
+   2. CKComponent subclasses not backed by a view will return nil
+   3. CKCompositeComponent subclasses backed by a view will return the backing view
+   4. CKCompositeComponent subclasses not backed by a view will return the animatable view of its descendant
+
+ This method may be overridden in rare situations where a more suitable view should be used for rendering animations.
+ */
+- (UIView *)viewForAnimation;
+
 /** Returns the component's controller, if any. */
 - (CKComponentController *)controller;
 
