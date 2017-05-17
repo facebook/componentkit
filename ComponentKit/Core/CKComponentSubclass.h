@@ -146,6 +146,8 @@ extern CGSize const kCKComponentParentSizeUndefined;
    2. CKComponent subclasses not backed by a view will return nil
    3. CKCompositeComponent subclasses backed by a view will return the backing view
    4. CKCompositeComponent subclasses not backed by a view will return the animatable view of its descendant
+
+ This method may be overridden in rare situations where a more suitable view should be used for rendering animations.
  */
 - (UIView *)viewForAnimation;
 
