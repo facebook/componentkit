@@ -17,8 +17,8 @@
 #import "CKInternalHelpers.h"
 #import "CKThreadLocalComponentScope.h"
 
-typedef std::unordered_multimap<CKComponentScopePredicate, __weak id<CKScopedComponent>> _CKRegisteredComponentsMap;
-typedef std::unordered_multimap<CKComponentControllerScopePredicate, __weak id<CKScopedComponentController>> _CKRegisteredComponentControllerMap;
+typedef std::unordered_map<CKComponentScopePredicate, NSHashTable<id<CKScopedComponent>> *> _CKRegisteredComponentsMap;
+typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id<CKScopedComponentController>> *> _CKRegisteredComponentControllerMap;
 
 @implementation CKComponentScopeRoot
 {
@@ -71,7 +71,12 @@ typedef std::unordered_multimap<CKComponentControllerScopePredicate, __weak id<C
   }
   for (const auto &predicate : _componentPredicates) {
     if (predicate(component)) {
-      _registeredComponents.insert({predicate, component});
+      auto hashTable = _registeredComponents[predicate];
+      if (!hashTable) {
+        hashTable = [NSHashTable weakObjectsHashTable];
+        _registeredComponents[predicate] = hashTable;
+      }
+      [hashTable addObject:component];
     }
   }
 }
@@ -84,7 +89,12 @@ typedef std::unordered_multimap<CKComponentControllerScopePredicate, __weak id<C
   }
   for (const auto &predicate : _componentControllerPredicates) {
     if (predicate(componentController)) {
-      _registeredComponentControllers.insert({predicate, componentController});
+      auto hashTable = _registeredComponentControllers[predicate];
+      if (!hashTable) {
+        hashTable = [NSHashTable weakObjectsHashTable];
+        _registeredComponentControllers[predicate] = hashTable;
+      }
+      [hashTable addObject:componentController];
     }
   }
 }
@@ -97,8 +107,12 @@ typedef std::unordered_multimap<CKComponentControllerScopePredicate, __weak id<C
     return;
   }
   CKAssert(_componentPredicates.find(predicate) != _componentPredicates.end(), @"Scope root must be initialized with predicate to enumerate.");
-  for (auto it = _registeredComponents.find(predicate); it != _registeredComponents.end(); ++it) {
-    block(it->second);
+  
+  const auto foundIter = _registeredComponents.find(predicate);
+  if (foundIter != _registeredComponents.end()) {
+    for (id<CKScopedComponent> component in foundIter->second) {
+      block(component);
+    }
   }
 }
 
@@ -110,8 +124,12 @@ typedef std::unordered_multimap<CKComponentControllerScopePredicate, __weak id<C
     return;
   }
   CKAssert(_componentControllerPredicates.find(predicate) != _componentControllerPredicates.end(), @"Scope root must be initialized with predicate to enumerate.");
-  for (auto it = _registeredComponentControllers.find(predicate); it != _registeredComponentControllers.end(); ++it) {
-    block(it->second);
+
+  const auto foundIter = _registeredComponentControllers.find(predicate);
+  if (foundIter != _registeredComponentControllers.end()) {
+    for (id<CKScopedComponentController> componentController in foundIter->second) {
+      block(componentController);
+    }
   }
 }
 
