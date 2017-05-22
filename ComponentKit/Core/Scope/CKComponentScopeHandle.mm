@@ -10,6 +10,8 @@
 
 #import "CKComponentScopeHandle.h"
 
+#include <mutex>
+
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentInternal.h"
@@ -67,8 +69,8 @@
                  rootIdentifier:rootIdentifier
                  componentClass:componentClass
                           state:initialStateCreator ? initialStateCreator() : [componentClass initialState]
-                     controller:nil
-                scopedResponder:[CKScopedResponder new]]; // controllers are built on resolution of the handle
+                     controller:nil // controllers are built on resolution of the handle
+                scopedResponder:[CKScopedResponder new]];
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -196,40 +198,30 @@
 @implementation CKScopedResponder
 {
   std::vector<__weak CKComponentScopeHandle *> _handles;
-  dispatch_queue_t _responderQueue;
-}
-
-- (instancetype)init
-{
-  if (self = [super init]) {
-    _responderQueue = dispatch_queue_create("com.facebook.componentkit.responderqueue", DISPATCH_QUEUE_SERIAL);
-  }
-  
-  return self;
+  std::mutex _mutex;
 }
 
 - (void)addHandleToChain:(CKComponentScopeHandle *)handle
 {
-  if (handle) {
-    dispatch_async(_responderQueue, ^{
-      _handles.push_back(handle);
-    });
+  if (!handle) {
+    return;
   }
+  
+  std::lock_guard<std::mutex> l(_mutex);
+  _handles.push_back(handle);
 }
 
 - (id)responder
 {
-  __block id<CKScopedComponent> responder = nil;
-  dispatch_sync(_responderQueue, ^{
-    for (const auto &handle: _handles) {
-      responder = handle.acquiredComponent;
+  std::lock_guard<std::mutex> l(_mutex);
+  for (const auto &handle: _handles) {
+      const id<CKScopedComponent> responder = handle.acquiredComponent;
       if (responder != nil) {
-        break;
+        return responder;
       }
-    }
-  });
+  }
   
-  return responder;
+  return nil;
 }
 
 @end
