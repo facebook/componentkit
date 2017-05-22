@@ -43,7 +43,7 @@
   if (currentScope == nullptr) {
     return nil;
   }
-  
+
   CKComponentScopeHandle *handle = currentScope->stack.top().frame.handle;
   if ([handle acquireFromComponent:component]) {
     [currentScope->newScopeRoot registerComponent:component];

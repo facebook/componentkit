@@ -266,7 +266,7 @@ void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SE
 {
 #if DEBUG
   CKComponentScopeHandle *const scopeHandle = scope.scopeHandle();
-  
+
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
