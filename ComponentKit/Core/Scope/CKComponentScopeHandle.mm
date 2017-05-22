@@ -19,6 +19,14 @@
 #import "CKScopedComponentController.h"
 #import "CKThreadLocalComponentScope.h"
 
+@interface CKScopedResponder ()
+- (void)addHandleToChain:(CKComponentScopeHandle *)component;
+@end
+
+@interface CKComponentScopeHandle ()
+@property (nonatomic, readonly, weak) id<CKScopedComponent> acquiredComponent;
+@end
+
 @implementation CKComponentScopeHandle
 {
   id<CKComponentStateListener> __weak _listener;
@@ -26,7 +34,7 @@
   CKComponentScopeRootIdentifier _rootIdentifier;
   BOOL _acquired;
   BOOL _resolved;
-  CKComponent *__weak _acquiredComponent;
+  CKScopedResponder *_scopedResponder;
 }
 
 + (CKComponentScopeHandle *)handleForComponent:(id<CKScopedComponent>)component
@@ -35,7 +43,7 @@
   if (currentScope == nullptr) {
     return nil;
   }
-
+  
   CKComponentScopeHandle *handle = currentScope->stack.top().frame.handle;
   if ([handle acquireFromComponent:component]) {
     [currentScope->newScopeRoot registerComponent:component];
@@ -59,7 +67,8 @@
                  rootIdentifier:rootIdentifier
                  componentClass:componentClass
                           state:initialStateCreator ? initialStateCreator() : [componentClass initialState]
-                     controller:nil]; // controllers are built on resolution of the handle
+                     controller:nil
+                scopedResponder:[CKScopedResponder new]]; // controllers are built on resolution of the handle
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -68,6 +77,7 @@
                   componentClass:(Class)componentClass
                            state:(id)state
                       controller:(id<CKScopedComponentController>)controller
+                 scopedResponder:(CKScopedResponder *)scopedResponder
 {
   if (self = [super init]) {
     _listener = listener;
@@ -76,6 +86,9 @@
     _componentClass = componentClass;
     _state = state;
     _controller = controller;
+
+    _scopedResponder = scopedResponder;
+    [scopedResponder addHandleToChain:self];
   }
   return self;
 }
@@ -94,7 +107,8 @@
                                            rootIdentifier:_rootIdentifier
                                            componentClass:_componentClass
                                                     state:updatedState
-                                               controller:_controller];
+                                               controller:_controller
+                                          scopedResponder:_scopedResponder];
 }
 
 - (instancetype)newHandleToBeReacquiredDueToScopeCollision
@@ -104,7 +118,8 @@
                                            rootIdentifier:_rootIdentifier
                                            componentClass:_componentClass
                                                     state:_state
-                                               controller:_controller];
+                                               controller:_controller
+                                          scopedResponder:_scopedResponder];
 }
 
 - (id<CKScopedComponentController>)controller
@@ -171,10 +186,50 @@
   _resolved = YES;
 }
 
+- (CKScopedResponder *)scopedResponder
+{
+  return _scopedResponder;
+}
+
+@end
+
+@implementation CKScopedResponder
+{
+  std::vector<__weak CKComponentScopeHandle *> _handles;
+  dispatch_queue_t _responderQueue;
+}
+
+- (instancetype)init
+{
+  if (self = [super init]) {
+    _responderQueue = dispatch_queue_create("com.facebook.componentkit.responderqueue", DISPATCH_QUEUE_SERIAL);
+  }
+  
+  return self;
+}
+
+- (void)addHandleToChain:(CKComponentScopeHandle *)handle
+{
+  if (handle) {
+    dispatch_async(_responderQueue, ^{
+      _handles.push_back(handle);
+    });
+  }
+}
+
 - (id)responder
 {
-  CKAssert(_resolved, @"Asking for responder from scope handle before resolution:%@", NSStringFromClass(_componentClass));
-  return _acquiredComponent;
+  __block id<CKScopedComponent> responder = nil;
+  dispatch_sync(_responderQueue, ^{
+    for (const auto &handle: _handles) {
+      responder = handle.acquiredComponent;
+      if (responder != nil) {
+        break;
+      }
+    }
+  });
+  
+  return responder;
 }
 
 @end
