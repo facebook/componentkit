@@ -20,7 +20,9 @@ CKComponentViewClass::CKComponentViewClass() noexcept : factory(nil) {}
 
 CKComponentViewClass::CKComponentViewClass(Class viewClass) noexcept :
 identifier(class_getName(viewClass)),
-factory(^{return [[viewClass alloc] init];}) {}
+factory(^{ return [[viewClass alloc] init]; }) {
+  CKCAssert([viewClass isSubclassOfClass:[UIView class]], @"%@ is not a subclass of UIView", viewClass);
+}
 
 static CKComponentViewReuseBlock blockFromSEL(SEL sel) noexcept
 {
