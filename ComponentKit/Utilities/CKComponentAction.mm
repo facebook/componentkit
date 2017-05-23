@@ -30,7 +30,7 @@ void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger inde
 bool CKTypedComponentActionBase::operator==(const CKTypedComponentActionBase& rhs) const
 {
   return (_variant == rhs._variant
-          && CKObjectIsEqual(_targetOrScopeHandle, rhs._targetOrScopeHandle)
+          && CKObjectIsEqual(_scopeHandle, rhs._scopeHandle)
           && _selector == rhs._selector
           && _block == rhs._block);
 }
@@ -47,25 +47,21 @@ id CKTypedComponentActionBase::initialTarget(CKComponent *sender) const
   switch (_variant) {
     case CKTypedComponentActionVariant::RawSelector:
       return sender;
-    case CKTypedComponentActionVariant::TargetSelector:
-      return _targetOrScopeHandle;
     case CKTypedComponentActionVariant::ComponentScope:
-      return ((CKComponentScopeHandle *) _targetOrScopeHandle).responder;
+      return _scopeHandle.responder;
     case CKTypedComponentActionVariant::Block:
       CKCFailAssert(@"Should not be asking for target for block action.");
       return nil;
   }
 }
 
-CKTypedComponentActionBase::CKTypedComponentActionBase() noexcept : _targetOrScopeHandle(nil), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(nullptr) {}
+CKTypedComponentActionBase::CKTypedComponentActionBase() noexcept : _scopeHandle(nil), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(nullptr) {}
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) noexcept : _targetOrScopeHandle(target), _block(NULL), _variant(CKTypedComponentActionVariant::TargetSelector), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept : _scopeHandle(scope.scopeHandle()), _block(NULL), _variant(CKTypedComponentActionVariant::ComponentScope), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept : _targetOrScopeHandle(scope.scopeHandle()), _block(NULL), _variant(CKTypedComponentActionVariant::ComponentScope), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : _scopeHandle(nil), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : _targetOrScopeHandle(nil), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(selector) {};
-
-CKTypedComponentActionBase::CKTypedComponentActionBase(dispatch_block_t block) noexcept : _targetOrScopeHandle(nil), _block(block), _variant(CKTypedComponentActionVariant::Block), _selector(NULL) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(dispatch_block_t block) noexcept : _scopeHandle(nil), _block(block), _variant(CKTypedComponentActionVariant::Block), _selector(NULL) {};
 
 CKTypedComponentActionBase::operator bool() const noexcept { return _selector != NULL || _block != NULL; };
 
@@ -73,7 +69,7 @@ SEL CKTypedComponentActionBase::selector() const noexcept { return _selector; };
 
 std::string CKTypedComponentActionBase::identifier() const noexcept
 {
-  return std::string(sel_getName(_selector)) + "-" + std::to_string((long)(_targetOrScopeHandle));
+  return std::string(sel_getName(_selector)) + "-" + std::to_string((long)(_scopeHandle));
 }
 
 dispatch_block_t CKTypedComponentActionBase::block() const noexcept { return _block; };
@@ -277,21 +273,6 @@ void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SE
   checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
 #endif
 }
-
-void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
-{
-#if DEBUG
-  // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
-  // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
-  // argument indices.
-  CKCAssert(selector == NULL || [target respondsToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", [target class], NSStringFromSelector(selector));
-
-  NSMethodSignature *signature = [target methodSignatureForSelector:selector];
-
-  checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
-#endif
-}
-
 
 // This method returns a friendly-print of a responder chain. Used for debug purposes.
 NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {

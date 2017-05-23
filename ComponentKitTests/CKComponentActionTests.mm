@@ -354,25 +354,6 @@
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
 
-- (void)testTargetSelectorActionCallsOnTargetWithoutMounting
-{
-  __block BOOL calledBlock = NO;
-
-  CKComponent *innerComponent = [CKComponent new];
-  CKTestActionComponent *outerComponent =
-  [CKTestActionComponent
-   newWithSingleArgumentBlock:^(CKComponent *sender, id context){ calledBlock = YES; }
-   secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
-   primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
-   component:innerComponent];
-
-  CKTypedComponentAction<id> action { outerComponent, @selector(testAction:context:) };
-  action.send(innerComponent, CKComponentActionSendBehaviorStartAtSender, @"hello");
-
-  XCTAssertTrue(calledBlock, @"Outer component should have received the action, even though the components are not mounted.");
-}
-
 - (void)testScopeActionCallsMethodOnScopedComponent
 {
   __block BOOL calledAction = NO;
@@ -424,33 +405,6 @@
   [component triggerAction:nil];
 
   XCTAssertTrue(calledAction, @"Should have called the action on the test component");
-}
-
-- (void)testDemotedTargetSelectorActionCallsMethodOnScopedComponent
-{
-  __block BOOL calledAction = NO;
-
-  // We have to use build component here to ensure the scopes are properly configured.
-  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
-    return [CKTestScopeActionComponent
-            newWithBlock:^(CKComponent *sender, id context) {
-              calledAction = YES;
-            }];
-  }).component;
-
-  CKComponentAction action = CKComponentAction(CKTypedComponentAction<id>(component, @selector(actionMethod:context:)));
-  action.send(component);
-
-  XCTAssertTrue(calledAction, @"Should have called the action on the test component");
-}
-
-- (void)testTargetSelectorActionCallsOnNormalNSObject
-{
-  CKTestObjectTarget *target = [CKTestObjectTarget new];
-  CKComponentAction action = CKComponentAction(CKTypedComponentAction<>(target, @selector(someMethod)));
-  action.send([CKComponent new]);
-
-  XCTAssertTrue(target.calledSomeMethod, @"Should have called the method on target");
 }
 
 - (void)testInvocationIsNilWhenSelectorIsNil

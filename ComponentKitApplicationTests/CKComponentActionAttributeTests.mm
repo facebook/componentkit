@@ -153,25 +153,6 @@
   CKUnmountComponents(mountedComponents);
 }
 
-- (void)testControlActionsWithEqualTargetsHasEqualIdentifiers
-{
-  CKComponentActionAttributeTestObject *obj1 = [CKComponentActionAttributeTestObject new];
-  CKComponentViewAttributeValue attr1 = CKComponentActionAttribute({obj1, @selector(someAction)});
-  CKComponentViewAttributeValue attr2 = CKComponentActionAttribute({obj1, @selector(someAction)});
-
-  XCTAssertEqual(attr1.first.identifier, attr2.first.identifier);
-}
-
-- (void)testControlActionsWithNonEqualTargetsHasNonEqualIdentifiers
-{
-  CKComponentActionAttributeTestObject *obj1 = [CKComponentActionAttributeTestObject new];
-  CKComponentActionAttributeTestObject *obj2 = [CKComponentActionAttributeTestObject new];
-  CKComponentViewAttributeValue attr1 = CKComponentActionAttribute({obj1, @selector(someAction)});
-  CKComponentViewAttributeValue attr2 = CKComponentActionAttribute({obj2, @selector(someAction)});
-
-  XCTAssertNotEqual(attr1.first.identifier, attr2.first.identifier);
-}
-
 - (void)testControlActionsWithRawSelectorActionsHaveEqualIdentifiers
 {
   CKComponentViewAttributeValue attr1 = CKComponentActionAttribute(@selector(someAction));
