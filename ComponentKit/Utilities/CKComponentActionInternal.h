@@ -14,11 +14,11 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKComponentScope.h>
+#import <ComponentKit/CKComponentScopeHandle.h>
 
 #import <type_traits>
 
 @class CKComponent;
-
 
 typedef NS_ENUM(NSUInteger, CKComponentActionSendBehavior) {
   /** Starts searching at the sender's next responder. Usually this is what you want to prevent infinite loops. */
@@ -40,7 +40,7 @@ class CKTypedComponentActionBase {
   enum class CKTypedComponentActionVariant {
     RawSelector,
     TargetSelector,
-    ComponentScope,
+    Responder,
     Block
   };
 
@@ -64,7 +64,8 @@ class CKTypedComponentActionBase {
   // Destroying this field calls objc_destroyWeak. Since this is the only field
   // that runs code on destruction, making this field the first field of this
   // object saves an offset calculation instruction in the destructor.
-  __weak id _targetOrScopeHandle;
+  __weak id _target;
+  CKScopedResponder *_scopedResponder;
   dispatch_block_t _block;
   CKTypedComponentActionVariant _variant;
   SEL _selector;

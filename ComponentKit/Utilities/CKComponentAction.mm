@@ -18,7 +18,6 @@
 #import "CKComponent+UIView.h"
 #import "CKComponent.h"
 #import "CKComponentInternal.h"
-#import "CKComponentScopeHandle.h"
 #import "CKInternalHelpers.h"
 #import "CKMutex.h"
 
@@ -30,7 +29,8 @@ void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger inde
 bool CKTypedComponentActionBase::operator==(const CKTypedComponentActionBase& rhs) const
 {
   return (_variant == rhs._variant
-          && CKObjectIsEqual(_targetOrScopeHandle, rhs._targetOrScopeHandle)
+          && CKObjectIsEqual(_target, rhs._target)
+          && _scopedResponder == rhs._scopedResponder
           && _selector == rhs._selector
           && _block == rhs._block);
 }
@@ -48,24 +48,27 @@ id CKTypedComponentActionBase::initialTarget(CKComponent *sender) const
     case CKTypedComponentActionVariant::RawSelector:
       return sender;
     case CKTypedComponentActionVariant::TargetSelector:
-      return _targetOrScopeHandle;
-    case CKTypedComponentActionVariant::ComponentScope:
-      return ((CKComponentScopeHandle *) _targetOrScopeHandle).responder;
+      return _target;
+    case CKTypedComponentActionVariant::Responder:
+      return _scopedResponder.responder;
     case CKTypedComponentActionVariant::Block:
       CKCFailAssert(@"Should not be asking for target for block action.");
       return nil;
   }
 }
 
-CKTypedComponentActionBase::CKTypedComponentActionBase() noexcept : _targetOrScopeHandle(nil), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(nullptr) {}
+CKTypedComponentActionBase::CKTypedComponentActionBase() noexcept : _target(nil), _scopedResponder(nil), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(nullptr) {}
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) noexcept : _targetOrScopeHandle(target), _block(NULL), _variant(CKTypedComponentActionVariant::TargetSelector), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) noexcept : _target(target), _scopedResponder(nil), _block(NULL), _variant(CKTypedComponentActionVariant::TargetSelector), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept : _targetOrScopeHandle(scope.scopeHandle()), _block(NULL), _variant(CKTypedComponentActionVariant::ComponentScope), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept : _target(nil), _scopedResponder([scope.scopeHandle() scopedResponder]),  _block(NULL), _variant(CKTypedComponentActionVariant::Responder), _selector(selector)
+{
+  CKCAssert(_scopedResponder, @"You are creating an action that will not fire because you have an invalid scope handle.");
+};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : _targetOrScopeHandle(nil), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : _target(nil), _scopedResponder(nil), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(dispatch_block_t block) noexcept : _targetOrScopeHandle(nil), _block(block), _variant(CKTypedComponentActionVariant::Block), _selector(NULL) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(dispatch_block_t block) noexcept : _target(nil), _scopedResponder(nil), _block(block), _variant(CKTypedComponentActionVariant::Block), _selector(NULL) {};
 
 CKTypedComponentActionBase::operator bool() const noexcept { return _selector != NULL || _block != NULL; };
 
@@ -73,7 +76,7 @@ SEL CKTypedComponentActionBase::selector() const noexcept { return _selector; };
 
 std::string CKTypedComponentActionBase::identifier() const noexcept
 {
-  return std::string(sel_getName(_selector)) + "-" + std::to_string((long)(_targetOrScopeHandle));
+  return std::string(sel_getName(_selector)) + "-" + std::to_string((long)(_target));
 }
 
 dispatch_block_t CKTypedComponentActionBase::block() const noexcept { return _block; };

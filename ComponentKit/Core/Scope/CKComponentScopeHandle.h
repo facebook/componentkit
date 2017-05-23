@@ -16,6 +16,7 @@
 
 @class CKComponent;
 @class CKComponentScopeRoot;
+@class CKScopedResponder;
 
 @protocol CKComponentStateListener;
 @protocol CKScopedComponent;
@@ -64,6 +65,10 @@
 /**
  Provides a responder corresponding with this scope handle. The controller will assert if called before resolution.
  */
-- (id)responder;
+- (CKScopedResponder *)scopedResponder;
 
+@end
+
+@interface CKScopedResponder : NSObject
+- (id)responder;
 @end
