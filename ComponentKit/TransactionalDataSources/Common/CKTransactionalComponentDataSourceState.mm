@@ -79,8 +79,9 @@
   for (NSArray *items in _sections) {
     NSUInteger itemCount = 0;
     for (NSArray *i in items) {
-      [mutableString appendFormat:@"\t<indexpath: %@ - %@> = %@\n", @(sectionsCount++), @(itemCount++), i];
+      [mutableString appendFormat:@"\t<indexpath: %@ - %@> = %@\n", @(sectionsCount), @(itemCount++), i];
     }
+    sectionsCount++;
   }
   [mutableString appendFormat:@")\n"];
   return mutableString;
