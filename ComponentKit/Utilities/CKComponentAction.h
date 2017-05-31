@@ -13,6 +13,9 @@
 #import <ComponentKit/CKComponentViewAttribute.h>
 #import <ComponentKit/CKComponentActionInternal.h>
 
+#import <utility>
+#import <tuple>
+
 @class CKComponent;
 
 /**
@@ -102,6 +105,19 @@ class CKTypedComponentAction : public CKTypedComponentActionBase {
   /** This constructor is private to forbid direct usage. Use actionFromBlock. */
   CKTypedComponentAction<T...>(void(^block)(CKComponent *, T...)) noexcept : CKTypedComponentActionBase((dispatch_block_t)block) {};
   
+  /**
+   This demotes the _block from accepting sender, Ts... to only sender.
+   */
+  template<typename... Ts, std::size_t... Is>
+  void demoteBlock(std::index_sequence<Is...>) {
+    auto copy = (void (^)(CKComponent *sender, Ts... args))[_block copy];
+    _block = (dispatch_block_t)^(CKComponent *sender) {
+      copy(sender,
+           std::decay_t<typename std::tuple_element<Is, std::tuple<Ts...>>::type>{}...
+           );
+    };
+  }
+
 public:
   CKTypedComponentAction<T...>() noexcept : CKTypedComponentActionBase() {};
   CKTypedComponentAction<T...>(id target, SEL selector) noexcept : CKTypedComponentActionBase(target, selector)
@@ -142,12 +158,13 @@ public:
   /** We support promotion from actions that take no arguments. */
   template <typename... Ts>
   CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) noexcept : CKTypedComponentActionBase(action) {
-    // At runtime if we provide more arguments to a block on invocation than accepted by the block, the behavior is
-    // undefined. If you hit this assert, it means somewhere in your code you're doing this:
-    // CKTypedComponentAction<BOOL, int> = ^(CKComponent *sender) {
-    // To fix the error, you must handle all arguments:
-    // CKTypedComponentAction<BOOL, int> = ^(CKComponent *sender, BOOL foo, int bar) {
-    CKCAssert(_variant != CKTypedComponentActionVariant::Block, @"Block actions should not take fewer arguments than defined in the declaration of the action, you are depending on undefined behavior and will cause crashes.");
+    // If it's block based action, we need to convert the block to have Ts... argument for sender.
+    if (_variant == CKTypedComponentActionVariant::Block) {
+      auto copy = (void (^)(CKComponent *sender))[_block copy];
+      _block = (dispatch_block_t)^(CKComponent *sender, Ts... args) {
+        copy(sender);
+      };
+    }
   };
 
   /**
@@ -156,7 +173,13 @@ public:
    */
   template<typename... Ts>
   explicit CKTypedComponentAction<>(const CKTypedComponentAction<Ts...> &action) noexcept : CKTypedComponentActionBase(action) {
-    CKCAssert(_variant != CKTypedComponentActionVariant::Block, @"Block actions cannot take fewer arguments than provided in the declaration of the action, you are depending on undefined behavior and will cause crashes.");
+    /**
+     If it's block based action, we need to convert the block to have only 1 argument for sender
+     while filling the rest argument with default value.
+     */
+    if (_variant == CKTypedComponentActionVariant::Block) {
+      demoteBlock<Ts...>(std::make_index_sequence<sizeof...(Ts)>{});
+    }
   };
 
   ~CKTypedComponentAction() {};
