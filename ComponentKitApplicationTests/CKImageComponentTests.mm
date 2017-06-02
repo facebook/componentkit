@@ -75,7 +75,7 @@ static UIImage *TestImageWithColorAndSize(UIColor *color, CGSize size)
    newWithImage:nil
    attributes:{
      {@selector(setBackgroundColor:), [UIColor darkGrayColor]},
-     {CKComponentViewAttribute::LayerAttribute(@selector(setCornerRadius:)), 50}
+     {CKComponentViewAttribute::LayerAttribute(@selector(setCornerRadius:)), 50.0}
    }
    size:CKComponentSize::fromCGSize(CGSizeMake(180, 180))];
 

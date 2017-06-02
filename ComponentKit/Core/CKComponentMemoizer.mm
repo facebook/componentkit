@@ -55,8 +55,6 @@ struct CKLayoutMemoizationKey {
   };
 };
 
-
-
 @interface _CKComponentMemoizerImpl : NSObject {
   @package
 
@@ -186,4 +184,3 @@ CKComponentLayout CKMemoizeLayout(CKComponent *component, CKSizeRange constraine
   }
   return block();
 }
-

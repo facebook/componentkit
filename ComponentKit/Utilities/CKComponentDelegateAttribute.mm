@@ -30,16 +30,17 @@ CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
     return {
       {
         std::string("Delegate-noop-") + sel_getName(selector) + "-",
-        ^(UIView *view, id value) {}, ^(UIView *view, id value) {}
+        ^(UIView *, CK::ViewAttribute::BoxedValue) {},
+        ^(UIView *, CK::ViewAttribute::BoxedValue) {}
       },
-      @YES  // Bogus value, we don't use it.
+      nil  // Bogus value, we don't use it.
     };
   }
 
   return {
     {
       std::string(sel_getName(selector)) + CKIdentifierFromDelegateForwarderSelectors(selectors),
-      ^(UIView *view, id value){
+      ^(UIView *view, CK::ViewAttribute::BoxedValue){
 
         // Create a proxy for this set of selectors
 
@@ -56,7 +57,7 @@ CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
 #pragma clang diagnostic pop
 
       },
-      ^(UIView *view, id value){
+      ^(UIView *view, CK::ViewAttribute::BoxedValue){
 
         // When unapplied, remove association with the view
         CKComponentDelegateForwarder *proxy = view.ck_delegateProxy;
@@ -70,6 +71,6 @@ CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
 
       }
     },
-    @YES // Bogus value, we don't use it.
+    nil // Bogus value, we don't use it.
   };
 }
