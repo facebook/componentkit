@@ -69,6 +69,12 @@
 
 @end
 
+typedef int32_t CKScopedResponderUniqueIdentifier;
+
 @interface CKScopedResponder : NSObject
+
+@property (nonatomic, readonly, assign) CKScopedResponderUniqueIdentifier uniqueIdentifier;
+
 - (id)responder;
+
 @end

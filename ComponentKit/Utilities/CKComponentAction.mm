@@ -70,13 +70,18 @@ CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : 
 
 CKTypedComponentActionBase::CKTypedComponentActionBase(dispatch_block_t block) noexcept : _target(nil), _scopedResponder(nil), _block(block), _variant(CKTypedComponentActionVariant::Block), _selector(NULL) {};
 
-CKTypedComponentActionBase::operator bool() const noexcept { return _selector != NULL || _block != NULL; };
+CKTypedComponentActionBase::operator bool() const noexcept { return _selector != NULL || _block != NULL || _scopedResponder != nil; };
 
 SEL CKTypedComponentActionBase::selector() const noexcept { return _selector; };
 
 std::string CKTypedComponentActionBase::identifier() const noexcept
 {
-  return std::string(sel_getName(_selector)) + "-" + std::to_string((long)(_target));
+  const BOOL isResponderVariant = (_variant == CKTypedComponentActionVariant::Responder);
+  const std::string identifier = isResponderVariant
+                                  ? std::to_string([_scopedResponder uniqueIdentifier])
+                                  : std::to_string((long)(_target));
+  
+  return std::string(sel_getName(_selector)) + "-" + identifier;
 }
 
 dispatch_block_t CKTypedComponentActionBase::block() const noexcept { return _block; };
