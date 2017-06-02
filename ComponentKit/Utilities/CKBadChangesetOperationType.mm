@@ -14,19 +14,19 @@ NSString *CKHumanReadableBadChangesetOperationType(CKBadChangesetOperationType t
 {
   switch (type) {
     case CKBadChangesetOperationTypeUpdate:
-      return @"Bad Update";
+      return @"Update";
     case CKBadChangesetOperationTypeRemoveRow:
-      return @"Bad Row Removal";
+      return @"Row Removal";
     case CKBadChangesetOperationTypeRemoveSection:
-      return @"Bad Section Removal";
+      return @"Section Removal";
     case CKBadChangesetOperationTypeInsertSection:
-      return @"Bad Section Insertion";
+      return @"Section Insertion";
     case CKBadChangesetOperationTypeMoveSection:
-      return @"Bad Section Move";
+      return @"Section Move";
     case CKBadChangesetOperationTypeInsertRow:
-      return @"Bad Row Insertion";
+      return @"Row Insertion";
     case CKBadChangesetOperationTypeMoveRow:
-      return @"Bad Row Move";
+      return @"Row Move";
     case CKBadChangesetOperationTypeNone:
       return @"No Issue";
   }
