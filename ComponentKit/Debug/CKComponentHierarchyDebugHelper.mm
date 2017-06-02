@@ -52,6 +52,9 @@ static NSString *const indentString = @"| ";
 
 + (NSString *)componentHierarchyDescriptionForView:(UIView *)view searchUpwards:(BOOL)upwards showViews:(BOOL)showViews
 {
+  if ([view isKindOfClass:[CKComponent class]]) {
+    view = ((CKComponent *)view).viewContext.view;
+  }
   if (upwards) {
     return ancestorComponentHierarchyDescriptionForView(view, showViews);
   } else {
