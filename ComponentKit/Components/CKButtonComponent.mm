@@ -93,7 +93,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
                        action:(const CKTypedComponentAction<UIEvent *> &)action
                          size:(const CKComponentSize &)size
                    attributes:(const CKViewComponentAttributeValueMap &)passedAttributes
-   accessibilityConfiguration:(CKButtonComponentAccessibilityConfiguration)accessibilityConfiguration
+   accessibilityConfiguration:(const CKButtonComponentAccessibilityConfiguration &)accessibilityConfiguration
 {
   const auto titles = titlesParam.take();
   const auto titleColors = titleColorsParam.take();
