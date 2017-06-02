@@ -201,6 +201,16 @@
   std::mutex _mutex;
 }
 
+- (instancetype)init
+{
+  if (self = [super init]) {
+    static CKScopedResponderUniqueIdentifier nextIdentifier = 0;
+    _uniqueIdentifier = OSAtomicIncrement32(&nextIdentifier);
+  }
+  
+  return self;
+}
+
 - (void)addHandleToChain:(CKComponentScopeHandle *)handle
 {
   if (!handle) {

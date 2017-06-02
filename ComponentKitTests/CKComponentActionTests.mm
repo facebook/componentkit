@@ -22,6 +22,7 @@
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentController.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
 
 @interface CKTestScopeActionComponent : CKComponent
 
@@ -493,6 +494,19 @@
 
   action.send([CKComponent new], arg);
   XCTAssertTrue(equalArguments);
+}
+
+- (void)testThatScopeActionWithSameSelectorHaveUniqueIdentifiers
+{
+  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil), {});
+  
+  CKComponentScope scope([CKTestScopeActionComponent class], @"moose");
+  const CKComponentAction action1 = {scope, @selector(triggerAction:)};
+  
+  CKComponentScope scope2([CKTestScopeActionComponent class], @"cat");
+  const CKComponentAction action2 = {scope2, @selector(triggerAction:)};
+
+  XCTAssertNotEqual(action1.identifier(), action2.identifier());
 }
 
 @end
