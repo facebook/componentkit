@@ -190,9 +190,8 @@
 
 - (CKScopedResponder *)scopedResponder
 {
-  CKAssertFalse(_resolved);
-
   if (!_scopedResponder) {
+    CKAssertFalse(_resolved);
     _scopedResponder = [CKScopedResponder new];
     [_scopedResponder addHandleToChain:self];
   }
