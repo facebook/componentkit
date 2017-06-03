@@ -69,8 +69,8 @@
                  rootIdentifier:rootIdentifier
                  componentClass:componentClass
                           state:initialStateCreator ? initialStateCreator() : [componentClass initialState]
-                     controller:nil // controllers are built on resolution of the handle
-                scopedResponder:[CKScopedResponder new]];
+                     controller:nil  // Controllers are built on resolution of the handle.
+                scopedResponder:nil];// Scoped responders are created lazily. Once they exist, we use that reference for future handles.
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -190,6 +190,12 @@
 
 - (CKScopedResponder *)scopedResponder
 {
+  if (!_scopedResponder) {
+    CKAssertFalse(_resolved);
+    _scopedResponder = [CKScopedResponder new];
+    [_scopedResponder addHandleToChain:self];
+  }
+
   return _scopedResponder;
 }
 
