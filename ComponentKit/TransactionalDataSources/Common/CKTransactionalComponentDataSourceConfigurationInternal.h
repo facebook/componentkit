@@ -18,15 +18,12 @@
  @param sizeRange Used for the root layout.
  @param workThreadOverride The optional thread used by the data source to perform its work instead of the internal
                            dispatch queue; if provided this thread must be executing.
- @param crashOnBadChangesetOperation If YES the data source will crash when encountering an invalid changeset.
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-                       workThreadOverride:(NSThread *)workThreadOverride
-             crashOnBadChangesetOperation:(BOOL)crashOnBadChangesetOperation;
+                       workThreadOverride:(NSThread *)workThreadOverride;
 
 @property (nonatomic, strong, readonly) NSThread *workThreadOverride;
-@property (nonatomic, assign, readonly) BOOL crashOnBadChangesetOperation;
 
 @end
