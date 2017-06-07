@@ -26,9 +26,9 @@ static NSArray<NSNumber *> *updatedSectionCountsWithModification(NSArray<NSNumbe
 
 static NSArray<NSIndexPath *> *sortedIndexPaths(NSArray<NSIndexPath *> *indexPaths);
 
-CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentDataSourceChangeset *changeset,
-                                                       CKTransactionalComponentDataSourceState *state,
-                                                       NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications)
+CKInvalidChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentDataSourceChangeset *changeset,
+                                                           CKTransactionalComponentDataSourceState *state,
+                                                           NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications)
 {
   /*
    "Fold" any pending asynchronous modifications into the supplied state and compute the number of items in each section.
@@ -50,7 +50,7 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
     }
   }];
   if (invalidChangeFound) {
-    return CKBadChangesetOperationTypeUpdate;
+    return CKInvalidChangesetOperationTypeUpdate;
   }
   /*
    Removed items
@@ -74,7 +74,7 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
     }
   }];
   if (invalidChangeFound) {
-    return CKBadChangesetOperationTypeRemoveRow;
+    return CKInvalidChangesetOperationTypeRemoveRow;
   } else {
     [itemsToRemove enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull section, NSMutableIndexSet * _Nonnull indexSet, BOOL * _Nonnull stop) {
       sectionCounts[[section integerValue]] = @([sectionCounts[[section integerValue]] integerValue] - [indexSet count]);
@@ -95,7 +95,7 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
     }
   }];
   if (invalidChangeFound) {
-    return CKBadChangesetOperationTypeRemoveSection;
+    return CKInvalidChangesetOperationTypeRemoveSection;
   } else {
     [sectionCounts removeObjectsAtIndexes:sectionsToRemove];
   }
@@ -113,7 +113,7 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
     }
   }];
   if (invalidChangeFound) {
-    return CKBadChangesetOperationTypeInsertSection;
+    return CKInvalidChangesetOperationTypeInsertSection;
   }
   /*
    Inserted items
@@ -133,7 +133,7 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
     }
   }];
   if (invalidChangeFound) {
-    return CKBadChangesetOperationTypeInsertRow;
+    return CKInvalidChangesetOperationTypeInsertRow;
   }
   // Moved items
   [changeset.movedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull fromIndexPath, NSIndexPath * _Nonnull toIndexPath, BOOL * _Nonnull stop) {
@@ -156,7 +156,7 @@ CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentD
       }
     }
   }];
-  return invalidChangeFound ? CKBadChangesetOperationTypeMoveRow : CKBadChangesetOperationTypeNone;
+  return invalidChangeFound ? CKInvalidChangesetOperationTypeMoveRow : CKInvalidChangesetOperationTypeNone;
 }
 
 static NSArray<NSNumber *> *sectionCountsWithModificationsFoldedIntoState(CKTransactionalComponentDataSourceState *state,
