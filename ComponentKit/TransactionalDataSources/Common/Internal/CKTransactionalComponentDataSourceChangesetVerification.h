@@ -10,13 +10,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKBadChangesetOperationType.h>
+#import <ComponentKit/CKInvalidChangesetOperationType.h>
 
 @class CKTransactionalComponentDataSourceChangeset;
 @class CKTransactionalComponentDataSourceState;
 
 @protocol CKTransactionalComponentDataSourceStateModifying;
 
-CKBadChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentDataSourceChangeset *changeset,
-                                                       CKTransactionalComponentDataSourceState *state,
-                                                       NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications);
+CKInvalidChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentDataSourceChangeset *changeset,
+                                                           CKTransactionalComponentDataSourceState *state,
+                                                           NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications);

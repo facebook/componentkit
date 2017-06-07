@@ -8,26 +8,26 @@
  *
  */
 
-#import "CKBadChangesetOperationType.h"
+#import "CKInvalidChangesetOperationType.h"
 
-NSString *CKHumanReadableBadChangesetOperationType(CKBadChangesetOperationType type)
+NSString *CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationType type)
 {
   switch (type) {
-    case CKBadChangesetOperationTypeUpdate:
+    case CKInvalidChangesetOperationTypeUpdate:
       return @"Update";
-    case CKBadChangesetOperationTypeRemoveRow:
+    case CKInvalidChangesetOperationTypeRemoveRow:
       return @"Row Removal";
-    case CKBadChangesetOperationTypeRemoveSection:
+    case CKInvalidChangesetOperationTypeRemoveSection:
       return @"Section Removal";
-    case CKBadChangesetOperationTypeInsertSection:
+    case CKInvalidChangesetOperationTypeInsertSection:
       return @"Section Insertion";
-    case CKBadChangesetOperationTypeMoveSection:
+    case CKInvalidChangesetOperationTypeMoveSection:
       return @"Section Move";
-    case CKBadChangesetOperationTypeInsertRow:
+    case CKInvalidChangesetOperationTypeInsertRow:
       return @"Row Insertion";
-    case CKBadChangesetOperationTypeMoveRow:
+    case CKInvalidChangesetOperationTypeMoveRow:
       return @"Row Move";
-    case CKBadChangesetOperationTypeNone:
+    case CKInvalidChangesetOperationTypeNone:
       return @"No Issue";
   }
 }
