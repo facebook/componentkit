@@ -266,7 +266,7 @@ static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changes
   if (badChangesetOperationType != CKBadChangesetOperationTypeNone) {
     NSString *const humanReadableBadChangesetOperationType = CKHumanReadableBadChangesetOperationType(badChangesetOperationType);
     NSString *const humanReadablePendingAsynchronousModifications = readableStringForArray(pendingAsynchronousModifications);
-    CKCFatalAssert(@"Invalid changeset: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@", humanReadableBadChangesetOperationType, changeset, state, humanReadablePendingAsynchronousModifications);
+    CKCFatal(@"Invalid changeset: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@", humanReadableBadChangesetOperationType, changeset, state, humanReadablePendingAsynchronousModifications);
   }
 #endif
 }

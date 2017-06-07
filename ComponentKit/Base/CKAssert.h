@@ -40,5 +40,5 @@
 #define CKFailAssert(description, ...) CKAssert(NO, nil, (description), ##__VA_ARGS__)
 #define CKCFailAssert(description, ...) CKCAssert(NO, nil, (description), ##__VA_ARGS__)
 
-#define CKFatalAssert(description, ...) CKAssert(NO, nil, (description), ##__VA_ARGS__)
-#define CKCFatalAssert(description, ...) CKCAssert(NO, nil, (description), ##__VA_ARGS__)
+#define CKFatal(description, ...) CKAssert(NO, nil, (description), ##__VA_ARGS__)
+#define CKCFatal(description, ...) CKCAssert(NO, nil, (description), ##__VA_ARGS__)
