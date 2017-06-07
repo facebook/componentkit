@@ -43,6 +43,12 @@ void CKOffMainThreadDeleter::operator()(std::vector<CKComponentLayoutChild> *tar
   }
 }
 
+std::shared_ptr<const std::vector<CKComponentLayoutChild>> CKComponentLayout::emptyChildren() noexcept
+{
+  static std::shared_ptr<const std::vector<CKComponentLayoutChild>> cached(new std::vector<CKComponentLayoutChild>());
+  return cached;
+}
+
 NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
                               UIView *view,
                               NSSet *previouslyMountedComponents,

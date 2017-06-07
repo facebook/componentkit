@@ -33,13 +33,20 @@ struct CKComponentLayout {
   std::shared_ptr<const std::vector<CKComponentLayoutChild>> children;
   NSDictionary *extra;
 
-  CKComponentLayout(CKComponent *c, CGSize s, std::vector<CKComponentLayoutChild> ch = {}, NSDictionary *e = nil) noexcept
+  CKComponentLayout(CKComponent *c, CGSize s) noexcept
+  : component(c), size(s), children(emptyChildren()), extra(nil) {
+    CKCAssertNotNil(c, @"Nil components are not allowed");
+  };
+
+  CKComponentLayout(CKComponent *c, CGSize s, std::vector<CKComponentLayoutChild> ch, NSDictionary *e = nil) noexcept
   : component(c), size(s), children(new std::vector<CKComponentLayoutChild>(std::move(ch)), CKOffMainThreadDeleter()), extra(e) {
     CKCAssertNotNil(c, @"Nil components are not allowed");
   };
 
   CKComponentLayout() noexcept
-  : component(nil), size({0, 0}), children(new std::vector<CKComponentLayoutChild>(), CKOffMainThreadDeleter()), extra(nil) {};
+  : component(nil), size({0, 0}), children(emptyChildren()), extra(nil) {};
+private:
+  static std::shared_ptr<const std::vector<CKComponentLayoutChild>> emptyChildren() noexcept;
 };
 
 struct CKComponentLayoutChild {
