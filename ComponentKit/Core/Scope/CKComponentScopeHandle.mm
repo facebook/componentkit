@@ -253,7 +253,7 @@
 
   const size_t numberOfHandles = _handles.size();
   if (key < 0 || key >= numberOfHandles) {
-    CKFailAssert(@"Invalid key \"%d\" for responder with %d handles", key, numberOfHandles);
+    CKFailAssert(@"Invalid key \"%d\" for responder with %zu handles", key, numberOfHandles);
     return nil;
   }
 
