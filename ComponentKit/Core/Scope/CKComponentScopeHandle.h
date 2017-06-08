@@ -70,11 +70,20 @@
 @end
 
 typedef int32_t CKScopedResponderUniqueIdentifier;
+typedef int CKScopedResponderKey;
 
 @interface CKScopedResponder : NSObject
 
 @property (nonatomic, readonly, assign) CKScopedResponderUniqueIdentifier uniqueIdentifier;
 
-- (id)responder;
+/**
+ Returns the key needed to access the responder at a later time.
+ */
+- (CKScopedResponderKey)keyForHandle:(CKComponentScopeHandle *)handle;
+
+/**
+ Returns the proper responder based on the key provided.
+ */
+- (id)responderForKey:(CKScopedResponderKey)key;
 
 @end

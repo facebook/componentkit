@@ -227,10 +227,38 @@
   _handles.push_back(handle);
 }
 
-- (id)responder
+- (CKScopedResponderKey)keyForHandle:(CKComponentScopeHandle *)handle
+{
+  static const CKScopedResponderKey notFoundKey = INT_MAX;
+
+  if (handle == nil) {
+    return notFoundKey;
+  }
+
+  std::lock_guard<std::mutex> l(_mutex);
+  auto result = std::find(_handles.begin(), _handles.end(), handle);
+
+  if (result == _handles.end()) {
+    CKFailAssert(@"This scope handle is not associated with this Responder.");
+    return notFoundKey;
+  }
+
+  // Returning the index of an element in a vector: https://stackoverflow.com/a/15099743
+  return (int)std::distance(_handles.begin(), result);
+}
+
+- (id)responderForKey:(CKScopedResponderKey)key
 {
   std::lock_guard<std::mutex> l(_mutex);
-  for (const auto &handle: _handles) {
+
+  const size_t numberOfHandles = _handles.size();
+  if (key < 0 || key >= numberOfHandles) {
+    CKFailAssert(@"Invalid key \"%d\" for responder with %d handles", key, numberOfHandles);
+    return nil;
+  }
+
+  for (int i = key; i < numberOfHandles; i++) {
+      const auto handle = _handles[i];
       const id<CKScopedComponent> responder = handle.acquiredComponent;
       if (responder != nil) {
         return responder;

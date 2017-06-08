@@ -20,6 +20,7 @@
 
 @class CKComponent;
 
+typedef id (^CKResponderGenerationBlock)(void);
 typedef NS_ENUM(NSUInteger, CKComponentActionSendBehavior) {
   /** Starts searching at the sender's next responder. Usually this is what you want to prevent infinite loops. */
   CKComponentActionSendBehaviorStartAtSenderNextResponder,
@@ -65,7 +66,7 @@ class CKTypedComponentActionBase {
   // that runs code on destruction, making this field the first field of this
   // object saves an offset calculation instruction in the destructor.
   __weak id _target;
-  CKScopedResponder *_scopedResponder;
+  std::pair<CKScopedResponderUniqueIdentifier, CKResponderGenerationBlock> _scopeIdentifierAndResponderGenerator;
   dispatch_block_t _block;
   CKTypedComponentActionVariant _variant;
   SEL _selector;
