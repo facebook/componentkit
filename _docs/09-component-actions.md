@@ -110,7 +110,7 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
 
 <div class="note-important">
   <p>
-    <code>CKComponentAction</code> is a C++ object. ObjC block captures C++ objects passed by reference (<code>const&</code>) by reference. That can lead to memory bugs where an action you want to trigger doesn't exist anymore. Avoid this by passing the action by value or creating a copy.
+    <code>CKTypedComponentAction</code> is a C++ object which can lead to subtle problems when a <code>CKTypedComponentAction</code> reference (e.g. <code>CKTypedComponentAction &</code> or <code>const CKTypedComponentAction &</code>) is captured by a block. The reason? C++ references are not managed by ARC, which can result in crashes that are difficult to debug. The best way to avoid this problem is the pass actions by value, or by explicitly creating a copy for use within the block.
   </p>
 </div>
 
