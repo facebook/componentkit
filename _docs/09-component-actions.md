@@ -108,6 +108,12 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
   </p>
 </div>
 
+<div class="note-important">
+  <p>
+    <code>CKComponentAction</code> is a C++ object. ObjC block captures C++ objects passed by reference (<code>const&</code>) by reference. That can lead to memory bugs where an action you want to trigger doesn't exist anymore. Avoid this by passing the action by value or creating a copy.
+  </p>
+</div>
+
 ### Why not blocks? 
 
 Blocks might seem like a more natural way to specify callbacks. Unfortunately it's far too easy to introduce retain cycles when using blocks: components hold strong references to their child components, and the child might hold a block with a strong reference back to the parent.
