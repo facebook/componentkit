@@ -108,6 +108,12 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
   </p>
 </div>
 
+<div class="note-important">
+  <p>
+    <code>CKTypedComponentAction</code> is a C++ object which can lead to subtle problems when a <code>CKTypedComponentAction</code> reference (e.g. <code>CKTypedComponentAction &</code> or <code>const CKTypedComponentAction &</code>) is captured by a block. The reason? C++ references are not managed by ARC, which can result in crashes that are difficult to debug. The best way to avoid this problem is the pass actions by value, or by explicitly creating a copy for use within the block.
+  </p>
+</div>
+
 ### Why not blocks? 
 
 Blocks might seem like a more natural way to specify callbacks. Unfortunately it's far too easy to introduce retain cycles when using blocks: components hold strong references to their child components, and the child might hold a block with a strong reference back to the parent.
