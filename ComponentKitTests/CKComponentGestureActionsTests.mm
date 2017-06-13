@@ -138,6 +138,16 @@
   XCTAssertNil(gesture.delegate, @"Gesture delegate should not be set");
 }
 
+- (void)testThatApplyingANilRecognizerClassResultsInNoRecognizer
+{
+  CKComponentViewAttributeValue attr = CKComponentGestureAttribute(Nil, nullptr, @selector(test));
+  UIView *view = [UIView new];
+
+  attr.first.applicator(view, attr.second);
+  XCTAssertEqual([view.gestureRecognizers count], 0u, @"Expected no gesture recognizer to be attached");
+  attr.first.unapplicator(view, attr.second);
+}
+
 - (void)testThatApplyingATapRecognizerAttributeWithDifferentTargetToViewWithExistingRecognizerUpdatesAction
 {
   CKFakeActionComponent *fake1 = [CKFakeActionComponent new];

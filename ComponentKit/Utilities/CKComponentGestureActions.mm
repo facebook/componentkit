@@ -103,7 +103,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
                                                           CKTypedComponentAction<UIGestureRecognizer *> action,
                                                           CKComponentForwardedSelectors delegateSelectors)
 {
-  if (!action) {
+  if (!action || gestureRecognizerClass == Nil) {
     return {
       {
         std::string(class_getName(gestureRecognizerClass)) + "-"
