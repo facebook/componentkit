@@ -30,7 +30,7 @@ bool CKTypedComponentActionBase::operator==(const CKTypedComponentActionBase& rh
 {
   return (_variant == rhs._variant
           && CKObjectIsEqual(_target, rhs._target)
-          // If we are using a scoped action, we are only concerned that selector and the
+          // If we are using a scoped action, we are only concerned that the selector and the
           // scoped responder match. Since the scoped responder is abstracted away to the block
           // within in the pair, we provide a identifier to quickly verify the scoped responders are the same.
           && _scopeIdentifierAndResponderGenerator.first == rhs._scopeIdentifierAndResponderGenerator.first
@@ -238,8 +238,6 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentA
           forControlEvents:controlEvents];
       },
       ^(UIControl *control, id value){
-        CKCAssert([control actionsForTarget:forwarder forControlEvent:controlEvents].count > 0,
-                 @"We are trying to remove an action from a view that never had it in the first place.");
         [control removeTarget:forwarder
                        action:@selector(handleControlEventFromSender:withEvent:)
              forControlEvents:controlEvents];
