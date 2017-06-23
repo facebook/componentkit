@@ -56,6 +56,10 @@
 </ul>
 </li>
 
+	<li><a href="Classes/CKComponentController.html">CKComponentController</a></li>
+
+	<li><a href="Classes/CKStatefulViewComponentController.html">CKStatefulViewComponentController</a></li>
+
 	<li>NSObject
 <ul>
 
@@ -63,7 +67,7 @@
 
 	<li><a href="Classes/CKAsyncTransactionGroup.html">CKAsyncTransactionGroup</a></li>
 
-	<li><a href="Classes/CKCollectionViewDataSource.html">CKCollectionViewDataSource</a></li>
+	<li><a href="Classes/CKCollectionViewTransactionalDataSource.html">CKCollectionViewTransactionalDataSource</a></li>
 
 	<li><a href="Classes/CKComponent.html">CKComponent</a>
 <ul>
@@ -74,11 +78,19 @@
 
 	<li><a href="Classes/CKCenterLayoutComponent.html">CKCenterLayoutComponent</a></li>
 
-	<li><a href="Classes/CKCompositeComponent.html">CKCompositeComponent</a></li>
+	<li><a href="Classes/CKCompositeComponent.html">CKCompositeComponent</a>
+<ul>
+
+	<li><a href="Classes/CKAutoSizedImageComponent.html">CKAutoSizedImageComponent</a></li>
+
+</ul>
+</li>
 
 	<li><a href="Classes/CKImageComponent.html">CKImageComponent</a></li>
 
 	<li><a href="Classes/CKInsetComponent.html">CKInsetComponent</a></li>
+
+	<li><a href="Classes/CKMemoizingComponent.html">CKMemoizingComponent</a></li>
 
 	<li><a href="Classes/CKNetworkImageComponent.html">CKNetworkImageComponent</a></li>
 
@@ -95,14 +107,6 @@
 </ul>
 </li>
 
-	<li><a href="Classes/CKComponentController.html">CKComponentController</a>
-<ul>
-
-	<li><a href="Classes/CKStatefulViewComponentController.html">CKStatefulViewComponentController</a></li>
-
-</ul>
-</li>
-
 	<li><a href="Classes/CKComponentDebugController.html">CKComponentDebugController</a></li>
 
 	<li><a href="Classes/CKComponentDelegateForwarder.html">CKComponentDelegateForwarder</a></li>
@@ -112,10 +116,6 @@
 	<li><a href="Classes/CKComponentGestureActionForwarder.html">CKComponentGestureActionForwarder</a></li>
 
 	<li><a href="Classes/CKComponentHierarchyDebugHelper.html">CKComponentHierarchyDebugHelper</a></li>
-
-	<li><a href="Classes/CKComponentLifecycleManager.html">CKComponentLifecycleManager</a></li>
-
-	<li><a href="Classes/CKSectionedArrayController.html">CKSectionedArrayController</a></li>
 
 	<li><a href="Classes/CKTextKitContext.html">CKTextKitContext</a></li>
 
@@ -161,10 +161,6 @@
 							
 							<li><a href="Protocols/CKComponentHostingViewDelegate.html">CKComponentHostingViewDelegate</a></li>
 							
-							<li><a href="Protocols/CKComponentLifecycleManagerAsynchronousUpdateHandler.html">CKComponentLifecycleManagerAsynchronousUpdateHandler</a></li>
-							
-							<li><a href="Protocols/CKComponentLifecycleManagerDelegate.html">CKComponentLifecycleManagerDelegate</a></li>
-							
 							<li><a href="Protocols/CKComponentSizeRangeProviding.html">CKComponentSizeRangeProviding</a></li>
 							
 							<li><a href="Protocols/CKNetworkImageDownloading.html">CKNetworkImageDownloading</a></li>
@@ -179,8 +175,6 @@
 						<h2 class="index-title">Constant References</h2>
 						<ul>
 	                        
-	                        <li><a href="Constants/CKArrayControllerChangeType.html">CKArrayControllerChangeType</a></li>
-	                        
 	                        <li><a href="Constants/CKAsyncLayerDisplayMode.html">CKAsyncLayerDisplayMode</a></li>
 	                        
 	                        <li><a href="Constants/CKAsyncTransactionContainerState.html">CKAsyncTransactionContainerState</a></li>
@@ -191,11 +185,11 @@
 	                        
 	                        <li><a href="Constants/CKCenterLayoutComponentSizingOptions.html">CKCenterLayoutComponentSizingOptions</a></li>
 	                        
-	                        <li><a href="Constants/CKComponentActionSendBehavior.html">CKComponentActionSendBehavior</a></li>
-	                        
 	                        <li><a href="Constants/CKComponentBoundsAnimationMode.html">CKComponentBoundsAnimationMode</a></li>
 	                        
 	                        <li><a href="Constants/CKComponentSizeRangeFlexibility.html">CKComponentSizeRangeFlexibility</a></li>
+	                        
+	                        <li><a href="Constants/CKInvalidChangesetOperationType.html">CKInvalidChangesetOperationType</a></li>
 	                        
 	                        <li><a href="Constants/CKStackLayoutAlignItems.html">CKStackLayoutAlignItems</a></li>
 	                        
@@ -227,10 +221,6 @@
 							
 							<li><a href="Categories/CKComponentHostingView+.html">CKComponentHostingView()</a></li>
 							
-							<li><a href="Categories/CKComponentLifecycleManager+.html">CKComponentLifecycleManager()</a></li>
-							
-							<li><a href="Categories/CKComponentLifecycleManager+Private.html">CKComponentLifecycleManager(Private)</a></li>
-							
 							<li><a href="Categories/CKComponentRootView+.html">CKComponentRootView()</a></li>
 							
 							<li><a href="Categories/CKTextKitRenderer+Positioning.html">CKTextKitRenderer(Positioning)</a></li>
@@ -247,7 +237,7 @@
 					<footer>
 						<div class="footer-copyright">
 							
-							<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-07-08</p>
+							<p class="copyright">Copyright &copy; 2017 Facebook. All rights reserved. Updated: 2017-06-26</p>
 							
 							
 							<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>

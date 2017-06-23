@@ -60,6 +60,8 @@
 		
 		<option value="//api/name/scopeFrameToken">scopeFrameToken</option>
 		
+		<option value="//api/name/size">size</option>
+		
 	</optgroup>
 	
 
@@ -122,6 +124,9 @@
 					
 					<div class="section section-specification"><table cellspacing="0"><tbody>
 						<tr>
+	<th>Conforms to</th>
+	<td>CKScopedComponent</td>
+</tr><tr>
 	<th>Declared in</th>
 	<td>CKComponentInternal.h<br />CKComponentSubclass.h</td>
 </tr>
@@ -250,7 +255,6 @@ used to specify that subcomponents should be mounted inside the view.</p>
 				<p>Unmounts the component:
 - Clears the references to supercomponent and superview.
 - If the component has a <em>mountedView:
-   - Calls the unapplicator for any attributes that have one.
    - Clears the view&rsquo;s reference back to this component in ck_component.
    - Clears </em>mountedView.</p>
 			</div>
@@ -293,53 +297,12 @@ used to specify that subcomponents should be mounted inside the view.</p>
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Called by the CKComponentLifecycleManager when the component and all its children have been mounted.</p>
+				<p>Called when the component and all its children have been mounted.</p>
 			</div>
 			
 		    
 
 			<div class="method-subsection method-declaration"><code>- (void)childrenDidMount</code></div>
-
-		    
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/viewForAnimation" title="viewForAnimation"></a>
-	<h3 class="method-title"><code><a href="#//api/name/viewForAnimation">&ndash;&nbsp;viewForAnimation</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>Called by the animation machinery. Do not access this externally.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (UIView *)viewForAnimation</code></div>
 
 		    
 			
@@ -375,7 +338,7 @@ used to specify that subcomponents should be mounted inside the view.</p>
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Used by CKComponentLifecycleManager to get the root component in the responder chain; don&rsquo;t touch this.</p>
+				<p>Used to get the root component in the responder chain; don&rsquo;t touch this.</p>
 			</div>
 			
 		    
@@ -421,7 +384,48 @@ used to specify that subcomponents should be mounted inside the view.</p>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) id scopeFrameToken</code></div>
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) id&lt;NSObject&gt; scopeFrameToken</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/size" title="size"></a>
+	<h3 class="method-title"><code><a href="#//api/name/size">&nbsp;&nbsp;size</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The size that was passed into the component; don&rsquo;t touch this.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, assign, readonly) CKComponentSize size</code></div>
 
 		    
 			
@@ -547,7 +551,7 @@ used to specify that subcomponents should be mounted inside the view.</p>
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<div class="warning"><p><strong>Warning:</strong> You may not override this method. Override -computeLayoutThatFits: instead.</p></div>
+				<div class="warning"><p><strong>Warning:</strong> You may not override this method. Override -computeLayoutThatFits: instead.</p></div><div class="warning"><p><strong>Warning:</strong> In almost all cases, prefer the use of CKComputeComponentLayout in CKComponentLayout</p></div>
 			</div>
 			
 
@@ -704,19 +708,13 @@ three parameters and do the computation yourself.</p><div class="warning"><p><st
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>updateBlock</code></th>
-						<td><p>A block that takes the current state as a parameter and returns an instance of the new state.
-The state <em>must</em> be immutable since components themselves are. A possible use might be:</p>
-
-<p>   [self updateState:^MyState <em>(MyState </em>currentState) {
-     MyMutableState *nextState = [currentState mutableCopy];
-     [nextState setFoo:[nextState bar] * 2];
-     return [nextState copy]; // immutable! :D
-   }];</p></td>
+						<td><p>A block that takes the current state as a parameter and returns an instance of the new state.</p></td>
 					</tr>
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>mode</code></th>
-						<td><p>@see CKUpdateMode</p></td>
+						<td><p>The update mode used to apply the state update.
+@@see CKUpdateMode</p></td>
 					</tr>
 				
 				</table>
@@ -727,6 +725,17 @@ The state <em>must</em> be immutable since components themselves are. A possible
 
 			
 
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>The state must be immutable since components themselves are. A possible use might be:</p>
+
+<p>   [self updateState:^MyState <em>(MyState </em>currentState) {
+     MyMutableState *nextState = [currentState mutableCopy];
+     [nextState setFoo:[nextState bar] * 2];
+     return [nextState copy]; // immutable! :D
+   }];</p>
+			</div>
 			
 
 			
@@ -974,6 +983,63 @@ identify equivalent components between trees.</p></div>
 		</div>
 	</div>
 </div><div class="section-method">
+	<a name="//api/name/viewForAnimation" title="viewForAnimation"></a>
+	<h3 class="method-title"><code><a href="#//api/name/viewForAnimation">&ndash;&nbsp;viewForAnimation</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Attempts to return a view suitable for rendering an animation.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (UIView *)viewForAnimation</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Since a component may or may not be backed by a view nil may be returned. Composite components may, given the fact
+they are composed of other components, return the animatable view of its descendant. As a rule of thumb:</p>
+
+<ol>
+<li>. CKComponent subclasses backed by a view will return the backing view</li>
+<li>. CKComponent subclasses not backed by a view will return nil</li>
+<li>. CKCompositeComponent subclasses backed by a view will return the backing view</li>
+<li>. CKCompositeComponent subclasses not backed by a view will return the animatable view of its descendant</li>
+</ol>
+
+
+<p>This method may be overridden in rare situations where a more suitable view should be used for rendering animations.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/controller" title="controller"></a>
 	<h3 class="method-title"><code><a href="#//api/name/controller">&ndash;&nbsp;controller</a></code>
 </h3>
@@ -1029,7 +1095,7 @@ identify equivalent components between trees.</p></div>
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2015 Facebook. All rights reserved. Updated: 2015-07-08</p>
+						<p class="copyright">Copyright &copy; 2017 Facebook. All rights reserved. Updated: 2017-06-26</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
