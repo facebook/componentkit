@@ -23,19 +23,6 @@
 @class CKComponentScopeFrame;
 @class CKComponentScopeRoot;
 
-/**
- Scope predicates are a tool used by the framework to register components and controllers on initialization that have
- specific characteristics. These predicates allow rapid enumeration over matching components and controllers.
- */
-typedef BOOL (*CKComponentScopePredicate)(id<CKScopedComponent>);
-typedef BOOL (*CKComponentControllerScopePredicate)(id<CKScopedComponentController>);
-
-/**
- Enumerator blocks allow a consumer to enumerate over all of the components or controllers that matched a predicate.
- */
-typedef void (^CKComponentScopeEnumerator)(id<CKScopedComponent>);
-typedef void (^CKComponentControllerScopeEnumerator)(id<CKScopedComponentController>);
-
 /** Component state announcements will always be made on the main thread. */
 @protocol CKComponentStateListener <NSObject>
 
@@ -47,7 +34,7 @@ typedef void (^CKComponentControllerScopeEnumerator)(id<CKScopedComponentControl
 
 @end
 
-@interface CKComponentScopeRoot : NSObject
+@interface CKComponentScopeRoot : NSObject <CKComponentScopeEnumeratorProvider>
 
 /**
  Creates a conceptually brand new scope root. Prefer to use CKComponentScopeRootWithDefaultPredicates instead of this.
@@ -68,17 +55,6 @@ typedef void (^CKComponentControllerScopeEnumerator)(id<CKScopedComponentControl
 /** Must be called when initializing a component or controller. */
 - (void)registerComponentController:(id<CKScopedComponentController>)componentController;
 - (void)registerComponent:(id<CKScopedComponent>)component;
-
-/**
- Allows rapid enumeration over the components or controllers that matched a predicate. The predicate should be provided
- in the initializer of the scope root in order to reduce the runtime costs of the enumeration.
- 
- There is no guaranteed ordering of arguments that are provided to the enumerators.
- */
-- (void)enumerateComponentsMatchingPredicate:(CKComponentScopePredicate)predicate
-                                       block:(CKComponentScopeEnumerator)block;
-- (void)enumerateComponentControllersMatchingPredicate:(CKComponentControllerScopePredicate)predicate
-                                                 block:(CKComponentControllerScopeEnumerator)block;
 
 @property (nonatomic, weak, readonly) id<CKComponentStateListener> listener;
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier globalIdentifier;
