@@ -149,6 +149,11 @@ struct CKComponentHostingViewInputs {
   return _mountedLayout;
 }
 
+- (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider
+{
+  return _pendingInputs.scopeRoot;
+}
+
 #pragma mark - Appearance
 
 - (void)hostingViewWillAppear
