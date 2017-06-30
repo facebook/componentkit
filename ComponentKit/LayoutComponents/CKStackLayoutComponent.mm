@@ -15,6 +15,7 @@
 #import "CKComponentSubclass.h"
 #import "CKComponentInternal.h"
 #import "CKInternalHelpers.h"
+#import "CKComponentLayoutBaseline.h"
 
 template class std::vector<CKStackLayoutComponentChild>;
 
@@ -49,7 +50,7 @@ template class std::vector<CKStackLayoutComponentChild>;
                       style:(const CKStackLayoutComponentStyle &)style
                    children:(CKContainerWrapper<std::vector<CKStackLayoutComponentChild>> &&)children
 {
-  CKStackLayoutComponent *c = [super newWithView:view size:size];
+  CKStackLayoutComponent * const c = [super newWithView:view size:size];
   if (c) {
     c->_style = style;
     c->_children = children.take();
@@ -57,13 +58,13 @@ template class std::vector<CKStackLayoutComponentChild>;
   return c;
 }
 
-+ (YGConfigRef)ckYogaDefaultConfig
+static YGConfigRef ckYogaDefaultConfig()
 {
   static YGConfigRef defaultConfig;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     defaultConfig = YGConfigNew();
-    YGConfigSetExperimentalFeatureEnabled(defaultConfig, YGExperimentalFeatureMinFlexFix, true);
+    YGConfigSetPointScaleFactor(defaultConfig, [UIScreen mainScreen].scale);
   });
   return defaultConfig;
 }
@@ -83,13 +84,14 @@ static YGSize measureCssComponent(YGNodeRef node,
     .width = (widthMode == YGMeasureModeExactly || widthMode == YGMeasureModeAtMost) ? width : INFINITY,
     .height = (heightMode == YGMeasureModeExactly || heightMode == YGMeasureModeAtMost) ? height : INFINITY
   };
-  // We cache measurements for the duration of single layout calculation of Component
+  // We cache measurements for the duration of single layout calculation of FlexboxComponent
   // ComponentKit and Yoga handle caching between calculations
   // We don't have any guarantees about when and how this will be called,
   // so we just cache the results to try to reuse them during final layout
   if (!YGNodeCanUseCachedMeasurement(widthMode, width, heightMode, height,
                                      cachedLayout.widthMode, cachedLayout.width, cachedLayout.heightMode, cachedLayout.height,
-                                     cachedLayout.componentLayout.size.width, cachedLayout.componentLayout.size.height, 0, 0)) {
+                                     cachedLayout.componentLayout.size.width, cachedLayout.componentLayout.size.height, 0, 0,
+                                     ckYogaDefaultConfig())) {
     CKComponent *component = cachedLayout.component;
     CKComponentLayout componentLayout = CKComputeComponentLayout(component, CKSizeRange(minSize, maxSize), cachedLayout.parentSize);
     cachedLayout.componentLayout = componentLayout;
@@ -99,6 +101,33 @@ static YGSize measureCssComponent(YGNodeRef node,
     cachedLayout.heightMode = heightMode;
   }
   return {static_cast<float>(cachedLayout.componentLayout.size.width), static_cast<float>(cachedLayout.componentLayout.size.height)};
+}
+
+static float computeBaseline(YGNodeRef node, const float width, const float height)
+{
+  CKStackChildCachedLayout *cachedLayout = (__bridge CKStackChildCachedLayout *)YGNodeGetContext(node);
+  
+  if (!YGNodeCanUseCachedMeasurement(YGMeasureModeExactly, width, YGMeasureModeExactly, height,
+                                     cachedLayout.widthMode, cachedLayout.width,
+                                     cachedLayout.heightMode, cachedLayout.height,
+                                     cachedLayout.componentLayout.size.width, cachedLayout.componentLayout.size.height, 0, 0,
+                                     ckYogaDefaultConfig())) {
+    CKComponent *component = cachedLayout.component;
+    CGSize fixedSize = {width, height};
+    CKComponentLayout componentLayout = CKComputeComponentLayout(component, CKSizeRange(fixedSize, fixedSize), cachedLayout.parentSize);
+    cachedLayout.componentLayout = componentLayout;
+    cachedLayout.width = width;
+    cachedLayout.height = height;
+    cachedLayout.widthMode = YGMeasureModeExactly;
+    cachedLayout.heightMode = YGMeasureModeExactly;
+  }
+  
+  if ([cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey]) {
+    CKCAssert([[cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey] isKindOfClass:[NSNumber class]], @"You must set a NSNumber for kCKComponentLayoutExtraBaselineKey");
+    return [[cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey] floatValue];
+  }
+  
+  return height;
 }
 
 static YGFlexDirection ygDirectionFromStackStyle(const CKStackLayoutComponentStyle &style)
@@ -131,7 +160,7 @@ static YGJustify ygJustifyFromStackStyle(const CKStackLayoutComponentStyle &styl
   }
 }
 
-static YGAlign ygAlignFromStackStyle(const CKStackLayoutComponentStyle &style)
+static YGAlign ygAlignItemsFromStackStyle(const CKStackLayoutComponentStyle &style)
 {
   switch (style.alignItems) {
     case CKStackLayoutAlignItemsEnd:
@@ -140,8 +169,28 @@ static YGAlign ygAlignFromStackStyle(const CKStackLayoutComponentStyle &style)
       return YGAlignCenter;
     case CKStackLayoutAlignItemsStretch:
       return YGAlignStretch;
+    case CKStackLayoutAlignItemsBaseline:
+      return YGAlignBaseline;
     case CKStackLayoutAlignItemsStart:
       return YGAlignFlexStart;
+  }
+}
+
+static YGAlign ygAlignContentFromStackStyle(const CKStackLayoutComponentStyle &style)
+{
+  switch (style.alignContent) {
+    case CKStackLayoutAlignContentEnd:
+      return YGAlignFlexEnd;
+    case CKStackLayoutAlignContentCenter:
+      return YGAlignCenter;
+    case CKStackLayoutAlignContentStretch:
+      return YGAlignStretch;
+    case CKStackLayoutAlignContentStart:
+      return YGAlignFlexStart;
+    case CKStackLayoutAlignContentSpaceAround:
+      return YGAlignSpaceAround;
+    case CKStackLayoutAlignContentSpaceBetween:
+      return YGAlignSpaceBetween;
   }
 }
 
@@ -154,6 +203,8 @@ static YGAlign ygAlignFromChild(const CKStackLayoutComponentChild &child)
       return YGAlignFlexEnd;
     case CKStackLayoutAlignSelfCenter:
       return YGAlignCenter;
+    case CKStackLayoutAlignSelfBaseline:
+      return YGAlignBaseline;
     case CKStackLayoutAlignSelfStretch:
       return YGAlignStretch;
     case CKStackLayoutAlignSelfAuto:
@@ -178,9 +229,9 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
  and mutate it within that thread
  Layout cache shouldn't be exposed publicly
  */
-- (YGNodeRef)cssStackLayoutNode:(CKSizeRange)constrainedSize cache:(NSArray<CKStackChildCachedLayout *> **)layoutCache
+- (YGNodeRef)cssStackLayoutNode:(CKSizeRange)constrainedSize
 {
-  const YGNodeRef stackNode = YGNodeNewWithConfig([[self class] ckYogaDefaultConfig]);
+  const YGNodeRef stackNode = YGNodeNewWithConfig(ckYogaDefaultConfig());
   YGEdge spacingEdge = _style.direction == CKStackLayoutDirectionHorizontal ? YGEdgeStart : YGEdgeTop;
   CGFloat savedSpacing = 0;
   // We need this to resolve CKRelativeDimension with percentage bases
@@ -189,7 +240,6 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
   CGFloat parentMainDimension = (_style.direction == CKStackLayoutDirectionHorizontal) ? parentWidth : parentHeight;
   CGSize parentSize = CGSizeMake(parentWidth, parentHeight);
   
-  NSMutableArray *newLayoutCache = [NSMutableArray array];
   const auto children = CK::filter(_children, [](const CKStackLayoutComponentChild &child){
     return child.component != nil;
   });
@@ -197,7 +247,7 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
   for (auto iterator = children.begin(); iterator != children.end(); iterator++) {
     const CKStackLayoutComponentChild child = *iterator;
     CKComponent *childComponent = child.component;
-    const YGNodeRef childNode = YGNodeNewWithConfig([[self class] ckYogaDefaultConfig]);
+    const YGNodeRef childNode = YGNodeNewWithConfig(ckYogaDefaultConfig());
     
     // We add object only if there is actual used element
     CKStackChildCachedLayout *childLayout = [CKStackChildCachedLayout new];
@@ -208,24 +258,50 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
     childLayout.parentSize = parentSize;
     childLayout.align = child.alignSelf;
     childLayout.zIndex = child.zIndex;
+    if (child.aspectRatio.isDefined()) {
+      YGNodeStyleSetAspectRatio(childNode, child.aspectRatio.aspectRatio());
+    }
     
-    [newLayoutCache addObject:childLayout];
-    YGNodeSetContext(childNode, (__bridge void *)childLayout);
+    // We pass the pointer ownership to context to release it later.
+    // We want cachedLayout to be alive until we've finished calculations
+    YGNodeSetContext(childNode, (__bridge_retained void *)childLayout);
     YGNodeSetMeasureFunc(childNode, measureCssComponent);
+    YGNodeSetBaselineFunc(childNode, computeBaseline);
     
-    const CGSize childSize = {[childComponent size].width.resolve(YGUndefined, parentWidth),
-      [childComponent size].height.resolve(YGUndefined, parentHeight)};
-    YGNodeStyleSetWidth(childNode, childSize.width);
-    YGNodeStyleSetHeight(childNode, childSize.height);
+    const CKComponentSize childComponentSize = [childComponent size];
+    
+    YGNodeStyleSetWidth(childNode, childComponentSize.width.resolve(YGUndefined, parentWidth));
+    YGNodeStyleSetHeight(childNode, childComponentSize.height.resolve(YGUndefined, parentHeight));
+    YGNodeStyleSetMinWidth(childNode, childComponentSize.minWidth.resolve(YGUndefined, parentWidth));
+    YGNodeStyleSetMinHeight(childNode, childComponentSize.minHeight.resolve(YGUndefined, parentHeight));
+    YGNodeStyleSetMaxWidth(childNode, childComponentSize.maxWidth.resolve(YGUndefined, parentWidth));
+    YGNodeStyleSetMaxHeight(childNode, childComponentSize.maxHeight.resolve(YGUndefined, parentHeight));
+    
     YGNodeStyleSetFlexGrow(childNode, child.flexGrow);
     YGNodeStyleSetFlexShrink(childNode, child.flexShrink);
     YGNodeStyleSetAlignSelf(childNode, ygAlignFromChild(child));
     YGNodeStyleSetFlexBasis(childNode, child.flexBasis.resolve(YGUndefined, parentMainDimension));
+    // TODO: t18095186 Remove explicit opt-out when Yoga is going to move to opt-in for text rounding
+    YGNodeSetNodeType(childNode, child.useTextRounding ? YGNodeTypeText : YGNodeTypeDefault);
     
-    YGNodeStyleSetPosition(childNode, YGEdgeStart, child.position.start);
-    YGNodeStyleSetPosition(childNode, YGEdgeTop, child.position.top);
+    YGNodeStyleSetPosition(childNode, YGEdgeStart, child.position.start.resolve(YGUndefined, parentMainDimension));
+    YGNodeStyleSetPosition(childNode, YGEdgeEnd, child.position.end.resolve(YGUndefined, parentMainDimension));
+    YGNodeStyleSetPosition(childNode, YGEdgeTop, child.position.top.resolve(YGUndefined, parentHeight));
+    YGNodeStyleSetPosition(childNode, YGEdgeBottom, child.position.bottom.resolve(YGUndefined, parentHeight));
+    YGNodeStyleSetPosition(childNode, YGEdgeLeft, child.position.left.resolve(YGUndefined, parentWidth));
+    YGNodeStyleSetPosition(childNode, YGEdgeRight, child.position.right.resolve(YGUndefined, parentWidth));
+    
+    applyPaddingToEdge(childNode, YGEdgeTop, child.padding.top);
+    applyPaddingToEdge(childNode, YGEdgeBottom, child.padding.bottom);
+    applyPaddingToEdge(childNode, YGEdgeStart, child.padding.start);
+    applyPaddingToEdge(childNode, YGEdgeEnd, child.padding.end);
+    
     YGNodeStyleSetPositionType(childNode, (child.position.type == CKStackLayoutPositionTypeAbsolute) ? YGPositionTypeAbsolute : YGPositionTypeRelative);
     
+    if ((fabs(_style.spacing) > FLT_EPSILON || fabs(child.spacingBefore) > FLT_EPSILON || fabs(child.spacingAfter) > FLT_EPSILON)
+        && childHasMarginSet(child)) {
+      CKFailAssert(@"You shouldn't use both margin and spacing! Ignoring spacing and falling back to margin behavior.");
+    }
     // Spacing emulation
     // Stack layout defines spacing in terms of parent Spacing (used only between children) and
     // spacingAfter / spacingBefore for every children
@@ -246,21 +322,95 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
       // For the space between parent and last child we use only spacingAfter
       YGNodeStyleSetMargin(childNode, _style.direction == CKStackLayoutDirectionHorizontal ? YGEdgeEnd : YGEdgeBottom, savedSpacing);
     }
-  }
-  if (layoutCache) {
-    *layoutCache = [newLayoutCache copy];
+    
+    /** The margins will override any spacing we applied earlier */
+    applyMarginToEdge(childNode, YGEdgeTop, child.margin.top);
+    applyMarginToEdge(childNode, YGEdgeBottom, child.margin.bottom);
+    applyMarginToEdge(childNode, YGEdgeStart, child.margin.start);
+    applyMarginToEdge(childNode, YGEdgeEnd, child.margin.end);
   }
   
   YGNodeStyleSetFlexDirection(stackNode, ygDirectionFromStackStyle(_style));
   YGNodeStyleSetJustifyContent(stackNode, ygJustifyFromStackStyle(_style));
-  YGNodeStyleSetAlignItems(stackNode, ygAlignFromStackStyle(_style));
+  YGNodeStyleSetAlignItems(stackNode, ygAlignItemsFromStackStyle(_style));
+  YGNodeStyleSetAlignContent(stackNode, ygAlignContentFromStackStyle(_style));
   YGNodeStyleSetFlexWrap(stackNode, ygWrapFromStackStyle(_style));
+  // TODO: t18095186 Remove explicit opt-out when Yoga is going to move to opt-in for text rounding
+  YGNodeSetNodeType(stackNode, YGNodeTypeDefault);
   
-  // Parent can grow and shrink if children require so
-  YGNodeStyleSetFlexGrow(stackNode, 1.0);
-  YGNodeStyleSetFlexShrink(stackNode, 1.0);
+  applyPaddingToEdge(stackNode, YGEdgeTop, _style.padding.top);
+  applyPaddingToEdge(stackNode, YGEdgeBottom, _style.padding.bottom);
+  applyPaddingToEdge(stackNode, YGEdgeStart, _style.padding.start);
+  applyPaddingToEdge(stackNode, YGEdgeEnd, _style.padding.end);
+  
+  applyMarginToEdge(stackNode, YGEdgeTop, _style.margin.top);
+  applyMarginToEdge(stackNode, YGEdgeBottom, _style.margin.bottom);
+  applyMarginToEdge(stackNode, YGEdgeStart, _style.margin.start);
+  applyMarginToEdge(stackNode, YGEdgeEnd, _style.margin.end);
   
   return stackNode;
+}
+
+static void applyPaddingToEdge(YGNodeRef node, YGEdge edge, CKStackLayoutDimension value)
+{
+  CKRelativeDimension dimension = value.dimension();
+  
+  switch (dimension.type()) {
+    case CKRelativeDimension::Type::PERCENT:
+      YGNodeStyleSetPaddingPercent(node, edge, dimension.value() * 100);
+      break;
+    case CKRelativeDimension::Type::POINTS:
+      YGNodeStyleSetPadding(node, edge, dimension.value());
+      break;
+    case CKRelativeDimension::Type::AUTO:
+      // no-op
+      break;
+  }
+}
+
+static void applyMarginToEdge(YGNodeRef node, YGEdge edge, CKStackLayoutDimension value)
+{
+  if (value.isDefined() == false) {
+    return;
+  }
+  
+  CKRelativeDimension relativeDimension = value.dimension();
+  switch (relativeDimension.type()) {
+    case CKRelativeDimension::Type::PERCENT:
+      YGNodeStyleSetMarginPercent(node, edge, relativeDimension.value() * 100);
+      break;
+    case CKRelativeDimension::Type::POINTS:
+      YGNodeStyleSetMargin(node, edge, relativeDimension.value());
+      break;
+    case CKRelativeDimension::Type::AUTO:
+      YGNodeStyleSetMarginAuto(node, edge);
+      break;
+  }
+}
+
+static BOOL childHasMarginSet(CKStackLayoutComponentChild child)
+{
+  return
+  marginIsSet(child.margin.top) ||
+  marginIsSet(child.margin.bottom) ||
+  marginIsSet(child.margin.start) ||
+  marginIsSet(child.margin.end);
+}
+
+static BOOL marginIsSet(CKStackLayoutDimension margin)
+{
+  if (margin.isDefined() == false) {
+    return false;
+  }
+  
+  switch(margin.dimension().type()) {
+    case CKRelativeDimension::Type::PERCENT:
+      return fabs(margin.dimension().value()) > FLT_EPSILON;
+    case CKRelativeDimension::Type::POINTS:
+      return fabs(margin.dimension().value()) > FLT_EPSILON;
+    case CKRelativeDimension::Type::AUTO:
+      return false;
+  }
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
@@ -269,8 +419,7 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
   // The cache is strictly internal and shouldn't be exposed in any way
   // The purpose of the cache is to save calculations done in measure() function in Yoga to reuse
   // for final layout
-  NSArray<CKStackChildCachedLayout *> *layoutCache = nil;
-  YGNodeRef layoutNode = [self ygNode:constrainedSize cache:&layoutCache];
+  YGNodeRef layoutNode = [self ygNode:constrainedSize];
   
   YGNodeCalculateLayout(layoutNode, YGUndefined, YGUndefined, YGDirectionLTR);
   
@@ -279,7 +428,7 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
   // They should be mounted later and thus shown on top of children with lower z-order  const NSInteger childCount = YGNodeGetChildCount(layoutNode);
   const NSInteger childCount = YGNodeGetChildCount(layoutNode);
   std::vector<YGNodeRef> sortedChildNodes(childCount);
-  for (uint32_t i = 0; i < childCount; i++) {
+  for (NSUInteger i = 0; i < childCount; i++) {
     sortedChildNodes[i] = YGNodeGetChild(layoutNode, i);
   }
   std::sort(sortedChildNodes.begin(), sortedChildNodes.end(),
@@ -300,11 +449,12 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
     const CGFloat childY = YGNodeLayoutGetTop(childNode);
     const CGFloat childWidth = YGNodeLayoutGetWidth(childNode);
     const CGFloat childHeight = YGNodeLayoutGetHeight(childNode);
-    CKStackChildCachedLayout *childCachedLayout = layoutCache[i];
+    // Now we take back pointer ownership to be released, as we won't need it anymore
+    CKStackChildCachedLayout *childCachedLayout = (__bridge_transfer CKStackChildCachedLayout *)YGNodeGetContext(childNode);
     
     childrenLayout[i].position = CGPointMake(childX, childY);
     const CGSize childSize = CGSizeMake(childWidth, childHeight);
-    // We cache measurements for the duration of single layout calculation of Component
+    // We cache measurements for the duration of single layout calculation of FlexboxComponent
     // ComponentKit and Yoga handle caching between calculations
     
     // We can reuse caching even if main dimension isn't exact, but we did AtMost measurement previously
@@ -320,15 +470,17 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
       }
     }
     
-    if (YGNodeCanUseCachedMeasurement(verticalReusedMode, childWidth, horizontalReusedMode, childHeight,
+    if (YGNodeCanUseCachedMeasurement(horizontalReusedMode, childWidth, verticalReusedMode, childHeight,
                                       childCachedLayout.widthMode, childCachedLayout.width,
                                       childCachedLayout.heightMode, childCachedLayout.height,
                                       childCachedLayout.componentLayout.size.width,
-                                      childCachedLayout.componentLayout.size.height, 0, 0) ||
+                                      childCachedLayout.componentLayout.size.height, 0, 0,
+                                      ckYogaDefaultConfig()) ||
         YGNodeCanUseCachedMeasurement(YGMeasureModeExactly, childWidth, YGMeasureModeExactly, childHeight,
                                       childCachedLayout.widthMode, childCachedLayout.width,
                                       childCachedLayout.heightMode, childCachedLayout.height,
-                                      childCachedLayout.componentLayout.size.width, childCachedLayout.componentLayout.size.height, 0, 0) ||
+                                      childCachedLayout.componentLayout.size.width, childCachedLayout.componentLayout.size.height, 0, 0,
+                                      ckYogaDefaultConfig()) ||
         childSize.width == 0 ||
         childSize.height == 0) {
       childrenLayout[i].layout = childCachedLayout.componentLayout;
@@ -349,9 +501,9 @@ static YGWrap ygWrapFromStackStyle(const CKStackLayoutComponentStyle &style)
  and mutate it within that thread
  Layout cache shouldn't be exposed publicly
  */
-- (YGNodeRef)ygNode:(CKSizeRange)constrainedSize cache:(NSArray<CKStackChildCachedLayout *> **)layoutCache
+- (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
 {
-  const YGNodeRef node = [self cssStackLayoutNode:constrainedSize cache:layoutCache];
+  const YGNodeRef node = [self cssStackLayoutNode:constrainedSize];
   
   // At the moment Yoga does not optimise minWidth == maxWidth, so we want to do it here
   // ComponentKit and Yoga use different constants for +Inf, so we need to make sure the don't interfere
