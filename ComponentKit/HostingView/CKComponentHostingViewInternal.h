@@ -11,6 +11,7 @@
 #import <ComponentKit/CKComponentHostingView.h>
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentScopeTypes.h>
 
 @interface CKComponentHostingView ()
 
@@ -18,5 +19,8 @@
 
 /** Returns the layout that's currently mounted. Main thread only. */
 - (const CKComponentLayout &)mountedLayout;
+
+/** Returns the current scope enumerator provider. Main thread only. */
+- (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider;
 
 @end
