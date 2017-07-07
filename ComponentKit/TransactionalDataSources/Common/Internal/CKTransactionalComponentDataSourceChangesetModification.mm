@@ -12,7 +12,7 @@
 
 #import <map>
 
-#import "CKTransactionalComponentDataSourceConfiguration.h"
+#import "CKTransactionalComponentDataSourceConfigurationInternal.h"
 #import "CKTransactionalComponentDataSourceStateInternal.h"
 #import "CKTransactionalComponentDataSourceChange.h"
 #import "CKTransactionalComponentDataSourceChangesetInternal.h"
@@ -109,7 +109,9 @@
   // Insert items
   [[_changeset insertedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
     const CKBuildComponentResult result =
-    CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(_stateListener), {}, ^{
+    CKBuildComponent(CKComponentScopeRootWithPredicates(_stateListener,
+                                                        configuration.componentPredicates,
+                                                        configuration.componentControllerPredicates), {}, ^{
       return [componentProvider componentForModel:model context:context];
     });
     const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange);

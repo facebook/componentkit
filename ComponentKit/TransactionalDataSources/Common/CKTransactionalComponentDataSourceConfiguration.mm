@@ -17,6 +17,8 @@
 @implementation CKTransactionalComponentDataSourceConfiguration
 {
   CKSizeRange _sizeRange;
+  std::unordered_set<CKComponentScopePredicate> _componentPredicates;
+  std::unordered_set<CKComponentControllerScopePredicate> _componentControllerPredicates;
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -34,13 +36,40 @@
                                 sizeRange:(const CKSizeRange &)sizeRange
                        workThreadOverride:(NSThread *)workThreadOverride
 {
+  return [self initWithComponentProvider:componentProvider
+                                 context:context
+                               sizeRange:sizeRange
+                      workThreadOverride:nil
+                     componentPredicates:{}
+           componentControllerPredicates:{}];
+}
+
+- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
+                                  context:(id<NSObject>)context
+                                sizeRange:(const CKSizeRange &)sizeRange
+                       workThreadOverride:(NSThread *)workThreadOverride
+                      componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
+            componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+{
   if (self = [super init]) {
     _componentProvider = componentProvider;
     _context = context;
     _sizeRange = sizeRange;
     _workThreadOverride = workThreadOverride;
+    _componentPredicates = componentPredicates;
+    _componentControllerPredicates = componentControllerPredicates;
   }
   return self;
+}
+
+- (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
+{
+  return _componentPredicates;
+}
+
+- (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+{
+  return _componentControllerPredicates;
 }
 
 - (const CKSizeRange &)sizeRange

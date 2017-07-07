@@ -10,6 +10,10 @@
 
 #import <Foundation/Foundation.h>
 
+#import <unordered_set>
+
+#import <ComponentKit/CKComponentScopeTypes.h>
+
 @protocol CKComponentStateListener;
 
 @class CKComponentScopeRoot;
@@ -19,3 +23,15 @@
  to work. You should use this function to create scope roots unless you really know what you're doing.
  */
 CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener);
+
+/**
+ Initializes a CKComponentScopeRoot with your provided predicates in addition to the normal, infrastructure-provided
+ predicates necessary for the framework to work.
+ @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
+                            root. By passing in the predicates on initialization, we are able to cache which components
+                            match the predicate for rapid enumeration later.
+ @param componentControllerPredicates Same as componentPredicates above, but for component controllers. 
+ */
+CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> listener,
+                                                         const std::unordered_set<CKComponentScopePredicate> &componentPredicates,
+                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates);
