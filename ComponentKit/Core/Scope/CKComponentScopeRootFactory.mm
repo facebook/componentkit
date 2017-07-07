@@ -16,12 +16,34 @@
 CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener)
 {
   return [CKComponentScopeRoot
-   rootWithListener:listener
-   componentPredicates:{
-     &CKComponentBoundsAnimationPredicate
-   }
-   componentControllerPredicates:{
-     &CKComponentControllerAppearanceEventPredicate,
-     &CKComponentControllerDisappearanceEventPredicate
-   }];
+          rootWithListener:listener
+          componentPredicates:{
+            &CKComponentBoundsAnimationPredicate
+          }
+          componentControllerPredicates:{
+            &CKComponentControllerAppearanceEventPredicate,
+            &CKComponentControllerDisappearanceEventPredicate
+          }];
+}
+
+CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> listener,
+                                                         const std::unordered_set<CKComponentScopePredicate> &componentPredicates,
+                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates)
+{
+  std::unordered_set<CKComponentScopePredicate> componentPredicatesUnion = {
+    &CKComponentBoundsAnimationPredicate
+  };
+
+  std::unordered_set<CKComponentControllerScopePredicate> componentControllerPredicatesUnion = {
+    &CKComponentControllerAppearanceEventPredicate,
+    &CKComponentControllerDisappearanceEventPredicate
+  };
+
+  componentPredicatesUnion.insert(componentPredicates.begin(), componentPredicates.end());
+  componentControllerPredicatesUnion.insert(componentControllerPredicates.begin(), componentControllerPredicates.end());
+
+  return [CKComponentScopeRoot
+          rootWithListener:listener
+          componentPredicates:componentPredicatesUnion
+          componentControllerPredicates:componentControllerPredicatesUnion];
 }
