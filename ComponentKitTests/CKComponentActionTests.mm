@@ -509,4 +509,55 @@
   XCTAssertNotEqual(action1.identifier(), action2.identifier());
 }
 
+#pragma mark - Equality.
+
+- (void)testRawSelectorEquality
+{
+  const SEL selector = @selector(triggerAction:);
+  const CKComponentAction action1 = {selector};
+  const CKComponentAction action2 = {selector};
+  XCTAssertTrue(action1 == action2);
+
+  const CKComponentAction unequalAction = {@selector(stringWithFormat:)};
+  XCTAssertFalse(action1 == unequalAction);
+}
+
+- (void)testTargetSelectorActionEquality
+{
+  NSMutableArray *const target = [NSMutableArray new];
+  const SEL selector = @selector(removeLastObject);
+  const CKComponentAction action1 = {target, selector};
+  const CKComponentAction action2 = {target, selector};
+  XCTAssertTrue(action1 == action2);
+
+  const CKComponentAction actionWithUnequalTarget = {[NSMutableArray new], selector};
+  XCTAssertFalse(action1 == actionWithUnequalTarget);
+
+  const CKComponentAction actionWithUnequalSelector = {target, @selector(removeAllObjects)};
+  XCTAssertFalse(action1 == actionWithUnequalSelector);
+}
+
+- (void)testBlockActionEquality
+{
+  void (^block)(CKComponent *c, NSObject *passedArgument) {};
+  const CKTypedComponentAction<NSObject *> action = CKTypedComponentAction<NSObject *>::actionFromBlock(block);
+  XCTAssertTrue(action == CKTypedComponentAction<NSObject *>::actionFromBlock(block));
+  XCTAssertFalse(action == CKTypedComponentAction<NSObject *>::actionFromBlock(^(CKComponent *, NSObject *__strong) {}));
+}
+
+- (void)testScopedActionEquality
+{
+  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil), {});
+
+  const SEL selector = @selector(triggerAction:);
+  CKComponentScope scope([CKTestScopeActionComponent class], @"Marty McFly");
+  const CKComponentAction action1 = {scope, selector};
+  const CKComponentAction action2 = {scope, selector};
+  XCTAssertTrue(action1 == action2);
+
+  CKComponentScope scope2([CKTestScopeActionComponent class], @"Biff Tannon");
+  const CKComponentAction unequalAction = {scope2, selector};
+  XCTAssertFalse(action1 == unequalAction);
+}
+
 @end

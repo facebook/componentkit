@@ -23,7 +23,10 @@
 /** Notified when the view's ideal size (measured by -sizeThatFits:) may have changed. */
 @property (nonatomic, weak) id<CKComponentHostingViewDelegate> delegate;
 
-/** Designated initializer. */
+/**
+ @param componentProvider See @protocol(CKComponentProvider).
+ @param sizeRangeProvider See @protocol(CKComponentSizeRangeProviding).
+ */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
 

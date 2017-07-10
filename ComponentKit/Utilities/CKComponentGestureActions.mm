@@ -103,7 +103,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
                                                           CKTypedComponentAction<UIGestureRecognizer *> action,
                                                           CKComponentForwardedSelectors delegateSelectors)
 {
-  if (!action) {
+  if (!action || gestureRecognizerClass == Nil) {
     return {
       {
         std::string(class_getName(gestureRecognizerClass)) + "-"
@@ -147,7 +147,10 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
       },
       ^(UIView *view, id value){
         UIGestureRecognizer *recognizer = recognizerForAction(view, blockAction);
-        CKCAssertNotNil(recognizer, @"Expected to find recognizer for %@ on teardown", NSStringFromSelector(blockAction.selector()));
+        if (recognizer == nil) {
+          return;
+        }
+        
         [view removeGestureRecognizer:recognizer];
         [recognizer ck_setComponentAction:nullptr];
         

@@ -10,6 +10,10 @@
 
 #import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
 
+#import <ComponentKit/CKComponentScopeTypes.h>
+
+#import <unordered_set>
+
 @interface CKTransactionalComponentDataSourceConfiguration ()
 
 /**
@@ -18,15 +22,33 @@
  @param sizeRange Used for the root layout.
  @param workThreadOverride The optional thread used by the data source to perform its work instead of the internal
                            dispatch queue; if provided this thread must be executing.
- @param crashOnBadChangesetOperation If YES the data source will crash when encountering an invalid changeset.
+ */
+- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
+                                  context:(id<NSObject>)context
+                                sizeRange:(const CKSizeRange &)sizeRange
+                       workThreadOverride:(NSThread *)workThreadOverride;
+
+/**
+ @param componentProvider See @protocol(CKComponentProvider)
+ @param context Passed to methods exposed by @protocol(CKComponentProvider).
+ @param sizeRange Used for the root layout.
+ @param workThreadOverride The optional thread used by the data source to perform its work instead of the internal
+                           dispatch queue; if provided this thread must be executing.
+ @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
+                            root. By passing in the predicates on initialization, we are able to cache which components
+                            match the predicate for rapid enumeration later.
+ @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
                        workThreadOverride:(NSThread *)workThreadOverride
-             crashOnBadChangesetOperation:(BOOL)crashOnBadChangesetOperation;
+                      componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
+            componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
 
 @property (nonatomic, strong, readonly) NSThread *workThreadOverride;
-@property (nonatomic, assign, readonly) BOOL crashOnBadChangesetOperation;
+
+- (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;
+- (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
 
 @end

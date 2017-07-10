@@ -30,7 +30,10 @@ bool CKTypedComponentActionBase::operator==(const CKTypedComponentActionBase& rh
 {
   return (_variant == rhs._variant
           && CKObjectIsEqual(_target, rhs._target)
-          && _scopedResponder == rhs._scopedResponder
+          // If we are using a scoped action, we are only concerned that the selector and the
+          // scoped responder match. Since the scoped responder is abstracted away to the block
+          // within in the pair, we provide a identifier to quickly verify the scoped responders are the same.
+          && _scopeIdentifierAndResponderGenerator.first == rhs._scopeIdentifierAndResponderGenerator.first
           && _selector == rhs._selector
           && _block == rhs._block);
 }
@@ -50,27 +53,46 @@ id CKTypedComponentActionBase::initialTarget(CKComponent *sender) const
     case CKTypedComponentActionVariant::TargetSelector:
       return _target;
     case CKTypedComponentActionVariant::Responder:
-      return _scopedResponder.responder;
+      return _scopeIdentifierAndResponderGenerator.second ? _scopeIdentifierAndResponderGenerator.second() : nil;
     case CKTypedComponentActionVariant::Block:
       CKCFailAssert(@"Should not be asking for target for block action.");
       return nil;
   }
 }
 
-CKTypedComponentActionBase::CKTypedComponentActionBase() noexcept : _target(nil), _scopedResponder(nil), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(nullptr) {}
+CKTypedComponentActionBase::CKTypedComponentActionBase() noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(nullptr) {}
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) noexcept : _target(target), _scopedResponder(nil), _block(NULL), _variant(CKTypedComponentActionVariant::TargetSelector), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) noexcept : _target(target), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKTypedComponentActionVariant::TargetSelector), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept : _target(nil), _scopedResponder([scope.scopeHandle() scopedResponder]),  _block(NULL), _variant(CKTypedComponentActionVariant::Responder), _selector(selector)
+CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept : _target(nil), _block(NULL), _variant(CKTypedComponentActionVariant::Responder), _selector(selector)
 {
-  CKCAssert(_scopedResponder, @"You are creating an action that will not fire because you have an invalid scope handle.");
+  const auto handle = scope.scopeHandle();
+  CKCAssert(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
+
+  const auto scopedResponder = handle.scopedResponder;
+  const auto responderKey = [scopedResponder keyForHandle:handle];
+  _scopeIdentifierAndResponderGenerator = {
+    [handle globalIdentifier],
+    ^id(void) {
+
+      /** 
+       At one point in the history of ComponentKit, it was possible for a CKScopeResponder to
+       return a "stale" target for an action. This was often caused by retain cycles, or,
+       "old" component hierarchies with prolonged lifecycles.
+       
+       To prevent this from happening in the future we now provide a key which gives the 
+       scopeResponder the wisdom to ignore older generations.
+       */
+      return [scopedResponder responderForKey:responderKey];
+    }
+  };
 };
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : _target(nil), _scopedResponder(nil), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(selector) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(dispatch_block_t block) noexcept : _target(nil), _scopedResponder(nil), _block(block), _variant(CKTypedComponentActionVariant::Block), _selector(NULL) {};
+CKTypedComponentActionBase::CKTypedComponentActionBase(dispatch_block_t block) noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(block), _variant(CKTypedComponentActionVariant::Block), _selector(NULL) {};
 
-CKTypedComponentActionBase::operator bool() const noexcept { return _selector != NULL || _block != NULL || _scopedResponder != nil; };
+CKTypedComponentActionBase::operator bool() const noexcept { return _selector != NULL || _block != NULL || _scopeIdentifierAndResponderGenerator.second != nil; };
 
 SEL CKTypedComponentActionBase::selector() const noexcept { return _selector; };
 
@@ -78,7 +100,7 @@ std::string CKTypedComponentActionBase::identifier() const noexcept
 {
   const BOOL isResponderVariant = (_variant == CKTypedComponentActionVariant::Responder);
   const std::string identifier = isResponderVariant
-                                  ? std::to_string([_scopedResponder uniqueIdentifier])
+                                  ? std::to_string(_scopeIdentifierAndResponderGenerator.first)
                                   : std::to_string((long)(_target));
   
   return std::string(sel_getName(_selector)) + "-" + identifier;

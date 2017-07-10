@@ -71,10 +71,22 @@ struct CKComponentHostingViewInputs {
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
 {
+  return [self initWithComponentProvider:componentProvider
+                       sizeRangeProvider:sizeRangeProvider
+                     componentPredicates:{}
+           componentControllerPredicates:{}];
+}
+
+- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
+                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                      componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
+            componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+{
   if (self = [super initWithFrame:CGRectZero]) {
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
-    _pendingInputs = {.scopeRoot = CKComponentScopeRootWithDefaultPredicates(self)};
+
+    _pendingInputs = {.scopeRoot = CKComponentScopeRootWithPredicates(self, componentPredicates, componentControllerPredicates)};
 
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
@@ -147,6 +159,11 @@ struct CKComponentHostingViewInputs {
 - (const CKComponentLayout &)mountedLayout
 {
   return _mountedLayout;
+}
+
+- (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider
+{
+  return _pendingInputs.scopeRoot;
 }
 
 #pragma mark - Appearance
