@@ -165,7 +165,9 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
                             std::move(attributes),
                             {
                               .accessibilityLabel = accessibilityConfiguration.accessibilityLabel,
-                              .accessibilityComponentAction = enabled ? CKComponentAction(action) : nullptr
+                              .accessibilityComponentAction = enabled
+                                ? CKComponentAction::demotedFrom(action, static_cast<UIEvent*>(nil))
+                                : nullptr
                             }
                           }
                           size:size];

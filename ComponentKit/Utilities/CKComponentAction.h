@@ -134,6 +134,16 @@ public:
   }
 
   /**
+   Allows demoting an action to a simpler action while supplying defaults for the values that won't be passed in.
+   */
+  template<typename... U>
+  static CKTypedComponentAction<T...> demotedFrom(CKTypedComponentAction<T..., U...> action, U... defaults) {
+    return CKTypedComponentAction<T...>::actionFromBlock(^(CKComponent *sender, T... args) {
+      action.send(sender, args..., defaults...);
+    });
+  }
+
+  /**
    Allows explicit null actions. NULL can cause ambiguity in constructor resolution and is best avoided where
    nullptr is available.
    */
