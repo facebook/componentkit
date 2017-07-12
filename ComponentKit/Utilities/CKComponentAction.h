@@ -84,24 +84,15 @@
    _action.send(self, @"hello", 4);
  }
 
-
  In the event that an action does not contain a target or a selector, it will no-op.
  As a result, it is the responsibility of the component to check (and possibly assert)
  when it has been given an "invalid" action.
  */
 template<typename... T>
 class CKTypedComponentAction : public CKTypedComponentActionBase {
-  static_assert(std::is_same<
-                CKTypedComponentActionBoolPack<(std::is_reference<T>::value
-                                                || std::is_pointer<T>::value
-                                                || std::is_trivially_constructible<T>::value
-                                                || std::is_convertible<T, id>::value)...>,
-                CKTypedComponentActionBoolPack<(CKTypedComponentActionDenyType<T>::value)...>
-                >::value, "You must either use a pointer (like an NSObject) or a trivially constructible type. Complex types are not allowed as arguments of component actions.");
-
   /** This constructor is private to forbid direct usage. Use actionFromBlock. */
   CKTypedComponentAction<T...>(void(^block)(CKComponent *, T...)) noexcept : CKTypedComponentActionBase((dispatch_block_t)block) {};
-  
+
 public:
   CKTypedComponentAction<T...>() noexcept : CKTypedComponentActionBase() {};
   CKTypedComponentAction<T...>(id target, SEL selector) noexcept : CKTypedComponentActionBase(target, selector)
@@ -148,15 +139,6 @@ public:
     // To fix the error, you must handle all arguments:
     // CKTypedComponentAction<BOOL, int> = ^(CKComponent *sender, BOOL foo, int bar) {
     CKCAssert(_variant != CKTypedComponentActionVariant::Block, @"Block actions should not take fewer arguments than defined in the declaration of the action, you are depending on undefined behavior and will cause crashes.");
-  };
-
-  /**
-   We allow demotion from actions with types to untyped actions, but only when explicit. This means arguments to the
-   method specified here will have nil values at runtime. Used for interoperation with older API's.
-   */
-  template<typename... Ts>
-  explicit CKTypedComponentAction<>(const CKTypedComponentAction<Ts...> &action) noexcept : CKTypedComponentActionBase(action) {
-    CKCAssert(_variant != CKTypedComponentActionVariant::Block, @"Block actions cannot take fewer arguments than provided in the declaration of the action, you are depending on undefined behavior and will cause crashes.");
   };
 
   ~CKTypedComponentAction() {};

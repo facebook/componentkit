@@ -110,24 +110,25 @@ dispatch_block_t CKTypedComponentActionBase::block() const noexcept { return _bl
 
 #pragma mark - Sending
 
-NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender) noexcept
+_CKComponentActionInvocation _CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender) noexcept
 {
   // If we have a nil selector, we bail early.
   if (selector == nil) {
-    return nil;
+    return {};
   }
+
+  _CKComponentActionInvocation invocation;
 
   id responder = ([target respondsToSelector:@selector(targetForAction:withSender:)]
                   ? [target targetForAction:selector withSender:target]
                   : target);
 
-  // This is not performance-sensitive, so we can just use an invocation here.
-  NSMethodSignature *signature = [responder methodSignatureForSelector:selector];
-  while (!signature) {
+  IMP imp = [responder methodForSelector:selector];
+  while (!imp) {
     // From https://www.mikeash.com/pyblog/friday-qa-2009-03-27-objective-c-message-forwarding.html
     // 1. Lazy method resolution
     if ( [[responder class] resolveInstanceMethod:selector]) {
-      signature = [responder methodSignatureForSelector:selector];
+      imp = [responder methodForSelector:selector];
       // The responder resolved its instance method, we now have a valid responder/signature
       break;
     }
@@ -137,19 +138,14 @@ NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id t
     if (!forwardingTarget || forwardingTarget == responder) {
       // Bail, the object they're asking us to message will just crash if the method is invoked on them
       CKCFailAssert(@"Forwarding target failed for action:%@ %@", target, NSStringFromSelector(selector));
-      return nil;
+      return {};
     }
 
     responder = forwardingTarget;
-    signature = [responder methodSignatureForSelector:selector];
+    imp = [responder methodForSelector:selector];
   }
-  NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-  invocation.selector = selector;
-  invocation.target = responder;
-  if (signature.numberOfArguments >= 3) {
-    [invocation setArgument:&sender atIndex:2];
-  }
-  return invocation;
+
+  return {imp, responder};
 }
 
 #pragma mark - Legacy Send Functions
