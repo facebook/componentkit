@@ -15,13 +15,13 @@
   void (^_block)(CKComponent *, id);
   void (^_secondBlock)(CKComponent *, id, id);
   void (^_primitiveArgumentBlock)(CKComponent *, int);
-  void (^_noArgumentBlock)(void);
+  void (^_noArgumentBlock)(CKComponent *sender);
 }
 
 + (instancetype)newWithSingleArgumentBlock:(void (^)(CKComponent *sender, id context))singleArgumentBlock
                        secondArgumentBlock:(void (^)(CKComponent *sender, id obj1, id obj2))secondArgumentBlock
                     primitiveArgumentBlock:(void (^)(CKComponent *sender, int value))primitiveArgumentBlock
-                           noArgumentBlock:(void (^)(void))noArgumentBlock
+                           noArgumentBlock:(void (^)(CKComponent *sender))noArgumentBlock
                                  component:(CKComponent *)component
 {
   CKTestActionComponent *c = [super newWithComponent:component];
@@ -49,9 +49,9 @@
   _primitiveArgumentBlock(sender, integer);
 }
 
-- (void)testNoArgumentAction
+- (void)testNoArgumentAction:(CKComponent *)sender
 {
-  _noArgumentBlock();
+  _noArgumentBlock(sender);
 }
 
 @end

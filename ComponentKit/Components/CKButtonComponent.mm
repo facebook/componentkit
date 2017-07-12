@@ -159,13 +159,18 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     contentEdgeInsets = [it->second UIEdgeInsetsValue];
   }
 
+  CKTypedComponentAction<UIEvent *> capturedAction = action;
+  CKComponentAction accessibilityAction = CKComponentAction::actionFromBlock(^(CKComponent *sender) {
+    capturedAction.send(sender, nil);
+  });
+
   CKButtonComponent *b = [super
                           newWithView:{
                             [UIButton class],
                             std::move(attributes),
                             {
                               .accessibilityLabel = accessibilityConfiguration.accessibilityLabel,
-                              .accessibilityComponentAction = enabled ? CKComponentAction(action) : nullptr
+                              .accessibilityComponentAction = enabled ? accessibilityAction : nullptr
                             }
                           }
                           size:size];

@@ -85,12 +85,6 @@ public:
 
 template <typename... Ts> struct CKTypedComponentActionTypelist { };
 
-template <bool... b>
-struct CKTypedComponentActionBoolPack {};
-
-template <typename... TS>
-struct CKTypedComponentActionDenyType : std::true_type {};
-
 /** Base case, recursion should stop here. */
 void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list) noexcept;
 
@@ -105,24 +99,6 @@ void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector
   CKTypedComponentActionTypeVectorBuild(typeVector, CKTypedComponentActionTypelist<Ts...>{});
 }
 
-/** Base case, recursion should stop here. */
-void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) noexcept;
-
-/**
- Recursion here is through normal variadic argument list unpacking. Unlike above, we have the arguments, so we don't
- require the intermediary struct.
- */
-template <typename T, typename... Ts>
-void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index, T t, Ts... args) noexcept
-{
-  // We have to be able to handle methods that take less than the provided number of arguments, since that will cause
-  // an exception to be thrown.
-  if (index < invocation.methodSignature.numberOfArguments) {
-    [invocation setArgument:&t atIndex:index];
-    CKConfigureInvocationWithArguments(invocation, index + 1, args...);
-  }
-}
-
 #pragma mark - Debug Helpers
 
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
@@ -133,16 +109,23 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept;
 
 #pragma mark - Sending
 
-NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender) noexcept;
+struct _CKComponentActionInvocation {
+  IMP imp;
+  id target;
+};
+
+_CKComponentActionInvocation _CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender) noexcept;
 
 template<typename... T>
 static void CKComponentActionSendResponderChain(SEL selector, id target, CKComponent *sender, T... args) {
-  NSInvocation *invocation = CKComponentActionSendResponderInvocationPrepare(selector, target, sender);
-  // We use a recursive argument unpack to unwrap the variadic arguments in-order on the invocation in a type-safe
-  // manner.
-  CKConfigureInvocationWithArguments(invocation, 3, args...);
-  // NSInvocation does not by default retain its target or object arguments. We have to manually call this to ensure
-  // that these arguments and target are not deallocated through the scope of the invocation.
-  [invocation retainArguments];
-  [invocation invoke];
+  _CKComponentActionInvocation invocation =
+  _CKComponentActionSendResponderInvocationPrepare(selector, target, sender);
+
+  if (!invocation.target || !invocation.imp) {
+    return;
+  }
+
+  void (*imp)(id, SEL, id, T...) = (void (*)(id, SEL, id, T...))invocation.imp;
+
+  imp(invocation.target, selector, sender, args...);
 }

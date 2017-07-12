@@ -30,16 +30,16 @@
   [CKComponent
    newWithView:{
      [UIView class],
-     {CKComponentAccessibilityCustomActionsAttribute({{@"Test", @selector(testAction:context:)}})}
+     {CKComponentAccessibilityCustomActionsAttribute({{@"Test", @selector(testNoArgumentAction:)}})}
    }
    size:{}];
   
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
-   newWithSingleArgumentBlock:^(CKComponent *sender, id context) { actionSender = sender; }
+   newWithSingleArgumentBlock:^(CKComponent *sender, id context) { }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { }
-   noArgumentBlock:^{ }
+   noArgumentBlock:^(CKComponent *sender) { actionSender = sender; }
    component:controlComponent];
   
   // Must be mounted to send actions:
@@ -76,7 +76,7 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context) { actionSender = sender; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { }
-   noArgumentBlock:^{ }
+   noArgumentBlock:^(CKComponent *sender) { }
    component:controlComponent];
   
   // Must be mounted to send actions:
@@ -109,7 +109,7 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context) { actionSender = sender; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { }
-   noArgumentBlock:^{ }
+   noArgumentBlock:^(CKComponent *sender) { }
    component:controlComponent];
   
   // Must be mounted to send actions:
