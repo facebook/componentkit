@@ -26,3 +26,5 @@ Since in ComponentKit there is no duplication between `sizeThatFits:` and `layou
   newWithStyle:{.spacing = 5}
   ...
 {% endhighlight %}
+
+I agree with original poster. Readable is very subjectvie thing. Numbers by themself don't carry semantics, constant names do. 
