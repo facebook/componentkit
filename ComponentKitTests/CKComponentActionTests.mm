@@ -289,6 +289,13 @@
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
 
+static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKComponent*, int), int value) {
+  int& ref = value;
+  CKTypedComponentAction<int> action = CKTypedComponentAction<int>::actionFromBlock(callback);
+  CKTypedComponentAction<> d = CKTypedComponentAction<>::demotedFrom(action, ref);
+  return d;
+}
+
 - (void)testSendActionWithObjectArgumentsWithDemotedActionWithoutArguments
 {
   __block id actionContext = nil;
@@ -314,7 +321,13 @@
   CKTypedComponentAction<> demotedAction = CKTypedComponentAction<>::demotedFrom(action, context, context2);
   demotedAction.send(innerComponent);
 
-  XCTAssert(actionContext == context && actionContext2 == context2, @"Contexts should match what was passed to CKComponentActionSend");
+  __block int value;
+  int expectedValue = 5;
+  createDemotedWithReference(^(CKComponent *sender, int b) {
+    value = b;
+  }, expectedValue).send(innerComponent);
+
+  XCTAssert(actionContext == context && actionContext2 == context2 && value == expectedValue, @"Contexts should match what was passed to CKComponentActionSend");
 
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
