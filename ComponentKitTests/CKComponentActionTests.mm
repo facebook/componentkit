@@ -291,9 +291,9 @@
 
 static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKComponent*, int), int value) {
   int& ref = value;
-  CKTypedComponentAction<int> action = CKTypedComponentAction<int>::actionFromBlock(callback);
-  CKTypedComponentAction<> d = CKTypedComponentAction<>::demotedFrom(action, ref);
-  return d;
+  auto action = CKTypedComponentAction<int>::actionFromBlock(callback);
+  auto demoted = CKTypedComponentAction<>::demotedFrom(action, ref);
+  return demoted;
 }
 
 - (void)testSendActionWithObjectArgumentsWithDemotedActionWithoutArguments
