@@ -15,12 +15,14 @@
 
 @class CKComponent;
 
-namespace detail {
-  template<class...> struct any_references : std::false_type {};
-  template<class T> struct any_references<T> : std::is_reference<T> {};
-  template<class T, class... Ts>
-  struct any_references<T, Ts...>
-    : std::conditional<std::is_reference<T>::value, std::true_type, any_references<Ts...>>::type {};
+namespace CK {
+  namespace detail {
+    template<class...> struct any_references : std::false_type {};
+    template<class T> struct any_references<T> : std::is_reference<T> {};
+    template<class T, class... Ts>
+    struct any_references<T, Ts...>
+      : std::conditional<std::is_reference<T>::value, std::true_type, any_references<Ts...>>::type {};
+  }
 }
 
 /**
@@ -146,7 +148,7 @@ public:
    */
   template<typename... U>
   static CKTypedComponentAction<T...> demotedFrom(CKTypedComponentAction<T..., U...> action, U... defaults) {
-    static_assert(!detail::any_references<U...>::value, "Demoting an action with reference defaults is not allowed");
+    static_assert(!CK::detail::any_references<U...>::value, "Demoting an action with reference defaults is not allowed");
     return CKTypedComponentAction<T...>::actionFromBlock(^(CKComponent *sender, T... args) {
       action.send(sender, args..., defaults...);
     });
