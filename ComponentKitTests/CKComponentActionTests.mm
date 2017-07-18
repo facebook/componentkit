@@ -289,6 +289,49 @@
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
 
+static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKComponent*, int), int value) {
+  int& ref = value;
+  auto action = CKTypedComponentAction<int>::actionFromBlock(callback);
+  auto demoted = CKTypedComponentAction<>::demotedFrom(action, ref);
+  return demoted;
+}
+
+- (void)testSendActionWithObjectArgumentsWithDemotedActionWithoutArguments
+{
+  __block id actionContext = nil;
+  __block id actionContext2 = nil;
+
+  CKComponent *innerComponent = [CKComponent new];
+  CKTestActionComponent *outerComponent =
+  [CKTestActionComponent
+   newWithSingleArgumentBlock:^(CKComponent *sender, id context){ XCTFail(@"Should not be called."); }
+   secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { actionContext = obj1; actionContext2 = obj2; }
+   primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
+   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   component:innerComponent];
+
+  // Must be mounted to send actions:
+  UIView *rootView = [UIView new];
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
+
+  id context = @"hello";
+  id context2 = @"morty";
+
+  CKTypedComponentAction<id, id> action = { @selector(testAction2:context1:context2:) };
+  CKTypedComponentAction<> demotedAction = CKTypedComponentAction<>::demotedFrom(action, context, context2);
+  demotedAction.send(innerComponent);
+
+  __block int value;
+  int expectedValue = 5;
+  createDemotedWithReference(^(CKComponent *sender, int b) {
+    value = b;
+  }, expectedValue).send(innerComponent);
+
+  XCTAssert(actionContext == context && actionContext2 == context2 && value == expectedValue, @"Contexts should match what was passed to CKComponentActionSend");
+
+  [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
+}
+
 - (void)testSendActionStartingAtSenderNextResponderReachesParentComponent
 {
   __block BOOL outerReceivedTestAction = NO;
