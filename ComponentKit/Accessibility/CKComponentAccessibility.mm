@@ -26,6 +26,15 @@ static CKViewComponentAttributeValueMap ViewAttributesFromAccessibilityContext(c
   if (accessibilityContext.accessibilityLabel.hasText()) {
     accessibilityAttributes[@selector(setAccessibilityLabel:)] = accessibilityContext.accessibilityLabel.value();
   }
+  if (accessibilityContext.accessibilityHint.hasText()) {
+    accessibilityAttributes[@selector(setAccessibilityHint:)] = accessibilityContext.accessibilityHint.value();
+  }
+  if (accessibilityContext.accessibilityValue.hasText()) {
+    accessibilityAttributes[@selector(setAccessibilityValue:)] = accessibilityContext.accessibilityValue.value();
+  }
+  if (accessibilityContext.accessibilityTraits) {
+    accessibilityAttributes[@selector(setAccessibilityTraits:)] = accessibilityContext.accessibilityTraits;
+  }
   return accessibilityAttributes;
 }
 
