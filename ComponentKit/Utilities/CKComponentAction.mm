@@ -98,12 +98,16 @@ SEL CKTypedComponentActionBase::selector() const noexcept { return _selector; };
 
 std::string CKTypedComponentActionBase::identifier() const noexcept
 {
-  const BOOL isResponderVariant = (_variant == CKTypedComponentActionVariant::Responder);
-  const std::string identifier = isResponderVariant
-                                  ? std::to_string(_scopeIdentifierAndResponderGenerator.first)
-                                  : std::to_string((long)(_target));
-  
-  return std::string(sel_getName(_selector)) + "-" + identifier;
+  switch (_variant) {
+    case CKTypedComponentActionVariant::RawSelector:
+      return std::string(sel_getName(_selector)) + "-Selector";
+    case CKTypedComponentActionVariant::TargetSelector:
+      return std::string(sel_getName(_selector)) + "-TargetSelector-" + std::to_string((long)_target);
+    case CKTypedComponentActionVariant::Responder:
+      return std::string(sel_getName(_selector)) + "-Responder-" + std::to_string(_scopeIdentifierAndResponderGenerator.first);
+    case CKTypedComponentActionVariant::Block:
+      return std::string(sel_getName(_selector)) + "-Block-" + std::to_string((long)_block);
+  }
 }
 
 dispatch_block_t CKTypedComponentActionBase::block() const noexcept { return _block; };

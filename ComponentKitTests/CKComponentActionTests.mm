@@ -552,6 +552,17 @@ static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKCo
   XCTAssertNotEqual(action1.identifier(), action2.identifier());
 }
 
+- (void)testThatBlockActionsWithDistinctBlocksHaveUniqueIdentifiers
+{
+  const CKComponentAction action1 = CKTypedComponentAction<>::actionFromBlock(^(CKComponent *sender){
+    exit(1);
+  });
+  const CKComponentAction action2 = CKTypedComponentAction<>::actionFromBlock(^(CKComponent *sender){
+    exit(2);
+  });
+  XCTAssertNotEqual(action1.identifier(), action2.identifier());
+}
+
 #pragma mark - Equality.
 
 - (void)testRawSelectorEquality
