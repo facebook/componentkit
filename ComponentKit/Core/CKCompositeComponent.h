@@ -12,12 +12,12 @@
 
 /**
  CKCompositeComponent allows you to hide your implementation details and avoid subclassing layout components like
- CKStackLayoutComponent. In almost all cases, you should subclass CKCompositeComponent instead of subclassing any other
+ CKFlexboxComponent. In almost all cases, you should subclass CKCompositeComponent instead of subclassing any other
  class directly.
 
  For example, suppose you create a component that should lay out some children in a vertical stack.
- Incorrect: subclass CKStackLayoutComponent and call `self newWithChildren:`.
- Correct: subclass CKCompositeComponent and call `super newWithComponent:[CKStackLayoutComponent newWithChildren...`
+ Incorrect: subclass CKFlexboxComponent and call `self newWithChildren:`.
+ Correct: subclass CKCompositeComponent and call `super newWithComponent:[CKFlexboxComponent newWithChildren...`
 
  This hides your layout implementation details from the outside world.
 

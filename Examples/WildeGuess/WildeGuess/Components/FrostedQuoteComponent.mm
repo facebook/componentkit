@@ -26,7 +26,7 @@
            [CKInsetComponent
             newWithInsets:{.top = 70, .bottom = 25, .left = 20, .right = 20}
             component:
-            [CKStackLayoutComponent
+            [CKFlexboxComponent
              newWithView:{}
              size:{}
              style:{}
@@ -42,7 +42,7 @@
                     {@selector(setUserInteractionEnabled:), @NO},
                   }
                   size:{ }],
-                 .alignSelf = CKStackLayoutAlignSelfCenter
+                 .alignSelf = CKFlexboxAlignSelfCenter
                },
                {
                  // A semi-transparent end quote (") symbol placed below the quote.
@@ -60,7 +60,7 @@
                      {@selector(setUserInteractionEnabled:), @NO},
                    }
                    size:{ }]],
-                 .alignSelf = CKStackLayoutAlignSelfEnd, // Right aligned
+                 .alignSelf = CKFlexboxAlignSelfEnd, // Right aligned
                }
              }]]]];
 }

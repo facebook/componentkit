@@ -58,6 +58,16 @@ CGFloat CKRelativeDimension::resolve(CGFloat autoSize, CGFloat parent) const noe
   }
 }
 
+CKRelativeDimension::Type CKRelativeDimension::type(void) const noexcept
+{
+  return _type;
+}
+
+CGFloat CKRelativeDimension::value(void) const noexcept
+{
+  return _value;
+}
+
 size_t std::hash<CKRelativeDimension>::operator ()(const CKRelativeDimension &size) noexcept {
   NSUInteger subhashes[] = {
     (size_t)(size._type),

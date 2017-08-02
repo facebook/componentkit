@@ -12,7 +12,7 @@
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKMemoizingComponent.h>
 
-#import <ComponentKit/CKStackLayoutComponent.h>
+#import <ComponentKit/CKFlexboxComponent.h>
 
 @interface CKComponentMemoizerTests : XCTestCase
 
@@ -117,7 +117,7 @@
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
-    return [CKStackLayoutComponent
+    return [CKFlexboxComponent
             newWithView:{}
             size:{}
             style:{}

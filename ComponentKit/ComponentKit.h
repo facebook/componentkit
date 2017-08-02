@@ -44,10 +44,10 @@
 //Layout components
 #import <ComponentKit/CKBackgroundLayoutComponent.h>
 #import <ComponentKit/CKCenterLayoutComponent.h>
+#import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKit/CKInsetComponent.h>
 #import <ComponentKit/CKOverlayLayoutComponent.h>
 #import <ComponentKit/CKRatioLayoutComponent.h>
-#import <ComponentKit/CKStackLayoutComponent.h>
 #import <ComponentKit/CKStaticLayoutComponent.h>
 //Utilities
 #import <ComponentKit/CKComponentAction.h>

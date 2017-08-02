@@ -14,7 +14,7 @@
 
 #import <ComponentKit/CKBackgroundLayoutComponent.h>
 #import <ComponentKit/CKCenterLayoutComponent.h>
-#import <ComponentKit/CKStackLayoutComponent.h>
+#import <ComponentKit/CKFlexboxComponent.h>
 
 static const CKSizeRange kSize = {{100, 120}, {320, 160}};
 
@@ -99,7 +99,7 @@ static NSString *suffixForCenteringOptions(CKCenterLayoutComponentCenteringOptio
    child:
    [CKBackgroundLayoutComponent
     newWithComponent:
-    [CKStackLayoutComponent
+    [CKFlexboxComponent
      newWithView:{}
      size:{}
      style:{}

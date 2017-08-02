@@ -59,6 +59,10 @@ static NSString *const indentString = @"| ";
   }
 }
 
++ (const CKComponentLayout *) rootLayoutFromRootView: (CKComponentRootView *)view {
+  return rootLayoutFromRootView(view);
+}
+
 static NSString *ancestorComponentHierarchyDescriptionForView(UIView *view, BOOL showViews)
 {
   NSString *ancestorDescription;
