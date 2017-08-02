@@ -14,7 +14,13 @@ github "facebook/ComponentKit" ~> 0.20
 
 ### Opening the Xcode projects
 
-If you want to try out ComponentKit just clone the GitHub repository and open the Xcode project. To get started with the example app:
+If you want to try out ComponentKit just clone the GitHub repository, clone submodules and open the Xcode project.
+To clone submodules:
+```
+git submodule update --init
+```
+
+To get started with the example app:
 
 ```
 open Examples/WildeGuess/WildeGuess.xcodeproj
