@@ -273,6 +273,7 @@ static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changes
 #endif
 }
 
+#if CK_ASSERTIONS_ENABLED
 static NSString *readableStringForArray(NSArray *array)
 {
   if (!array || array.count == 0) {
@@ -286,6 +287,7 @@ static NSString *readableStringForArray(NSArray *array)
   [mutableString appendString:@")\n"];
   return mutableString;
 }
+#endif
 
 @end
 

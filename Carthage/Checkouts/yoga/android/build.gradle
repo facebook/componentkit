@@ -1,0 +1,45 @@
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
+
+version = VERSION_NAME
+group = GROUP
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    compileOptions {
+        targetCompatibility rootProject.targetCompatibilityVersion
+        sourceCompatibility rootProject.sourceCompatibilityVersion
+    }
+}
+
+dependencies {
+    compile project(':yoga')
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'source'
+    from android.sourceSets.main.java.srcDirs
+}
+
+task javadoc(type: Javadoc) {
+    failOnError false
+    source = android.sourceSets.main.java.sourceFiles
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.compile
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+apply from: rootProject.file('gradle/release.gradle')

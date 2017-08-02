@@ -39,12 +39,12 @@ function tvos_ci() {
 }
 
 if [ "$MODE" = "ci-componentkit-ios" ]; then
-  carthage bootstrap --platform iOS
+  carthage bootstrap --platform iOS --no-use-binaries
   ios_ci ComponentKit.xcodeproj ComponentKit test
 fi
 
 if [ "$MODE" = "ci-componentkit-tvos" ]; then
-  carthage bootstrap --platform tvOS
+  carthage bootstrap --platform tvOS --no-use-binaries
   tvos_ci ComponentKit.xcodeproj ComponentKitAppleTV test
 fi
 

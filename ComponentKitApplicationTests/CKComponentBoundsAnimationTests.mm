@@ -17,7 +17,7 @@
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentSubclass.h>
-#import <ComponentKit/CKStackLayoutComponent.h>
+#import <ComponentKit/CKFlexboxComponent.h>
 
 @interface CKComponentBoundsAnimationTests : XCTestCase
 @end
@@ -88,10 +88,10 @@
   UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
 
   const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
-    return [CKStackLayoutComponent
+    return [CKFlexboxComponent
             newWithView:{}
             size:{}
-            style:{.alignItems = CKStackLayoutAlignItemsStretch}
+            style:{.alignItems = CKFlexboxAlignItemsStretch}
             children:{
               {[CKBoundsAnimationComponent newWithIdentifier:@0], .flexGrow = 1},
             }];
@@ -100,10 +100,10 @@
   NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container, nil, nil);
 
   const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, ^{
-    return [CKStackLayoutComponent
+    return [CKFlexboxComponent
             newWithView:{}
             size:{}
-            style:{.alignItems = CKStackLayoutAlignItemsStretch}
+            style:{.alignItems = CKFlexboxAlignItemsStretch}
             children:{
               {[CKBoundsAnimationComponent newWithIdentifier:@0], .flexGrow = 1},
               {[CKBoundsAnimationComponent newWithIdentifier:@1], .flexGrow = 1},
@@ -146,11 +146,11 @@
   UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
 
   const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
-    CKComponentScope scope([CKStackLayoutComponent class], @"foo");
-    return [CKStackLayoutComponent
+    CKComponentScope scope([CKFlexboxComponent class], @"foo");
+    return [CKFlexboxComponent
             newWithView:{[CKBoundsAnimationRecordingView class]}
             size:{}
-            style:{.alignItems = CKStackLayoutAlignItemsStretch}
+            style:{.alignItems = CKFlexboxAlignItemsStretch}
             children:{
               {[CKComponent newWithView:{[CKBoundsAnimationRecordingView class]} size:{}], .flexGrow = 1},
             }];
@@ -165,11 +165,11 @@
 
     // NB: We use a plain CKComponent, not a CKBoundsAnimationComponent; otherwise the scope tokens of the child will
     // be different, and we will avoid animating the child view for that reason instead of the changing parent scope.
-    CKComponentScope scope([CKStackLayoutComponent class], @"bar");
-    return [CKStackLayoutComponent
+    CKComponentScope scope([CKFlexboxComponent class], @"bar");
+    return [CKFlexboxComponent
             newWithView:{[CKBoundsAnimationRecordingView class]}
             size:{}
-            style:{.alignItems = CKStackLayoutAlignItemsStretch}
+            style:{.alignItems = CKFlexboxAlignItemsStretch}
             children:{
               {[CKComponent newWithView:{[CKBoundsAnimationRecordingView class]} size:{}], .flexGrow = 1},
             }];

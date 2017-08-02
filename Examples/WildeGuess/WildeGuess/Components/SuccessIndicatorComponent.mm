@@ -37,11 +37,11 @@
              [CKInsetComponent
               newWithInsets:{.top = 40, .left = 20, .bottom = 40, .right = 20}
               component:
-              [CKStackLayoutComponent
+              [CKFlexboxComponent
                newWithView:{}
                size:{}
                style:{
-                 .alignItems = CKStackLayoutAlignItemsCenter
+                 .alignItems = CKFlexboxAlignItemsCenter
                }
                children:{
                  {[CKLabelComponent

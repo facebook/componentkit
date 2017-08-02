@@ -41,14 +41,14 @@ static NSString *const oscarWilde = @"Oscar Wilde";
 
   InteractiveQuoteComponent *c =
   [super newWithComponent:
-   [CKStackLayoutComponent
+   [CKFlexboxComponent
     newWithView:{
       [UIView class],
       {CKComponentTapGestureAttribute(@selector(didTap))}
     }
     size:{}
     style:{
-      .alignItems = CKStackLayoutAlignItemsStretch
+      .alignItems = CKFlexboxAlignItemsStretch
     }
     children:{
       {[CKOverlayLayoutComponent

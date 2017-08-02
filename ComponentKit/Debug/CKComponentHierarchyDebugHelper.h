@@ -13,7 +13,10 @@
 #import <ComponentKit/CKComponentViewConfiguration.h>
 
 @class CKComponent;
+@class CKComponentRootView;
 @class UIView;
+
+struct CKComponentLayout;
 
 /**
  CKComponentHierarchyDebugHelper allows
@@ -25,5 +28,7 @@
  @return A string with a description of the hierarchy.
  */
 + (NSString *)componentHierarchyDescription NS_EXTENSION_UNAVAILABLE("Recursively describes components using -[UIApplication keyWindow]");
+
++ (const CKComponentLayout *) rootLayoutFromRootView: (CKComponentRootView*) view;
 
 @end

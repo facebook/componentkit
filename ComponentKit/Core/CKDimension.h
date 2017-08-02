@@ -50,6 +50,11 @@ namespace std {
 
 class CKRelativeDimension {
 public:
+  enum class Type {
+    AUTO,
+    POINTS,
+    PERCENT,
+  };
   /** Default constructor is equivalent to "Auto". */
   constexpr CKRelativeDimension() noexcept : _type(Type::AUTO), _value(0) {}
   CKRelativeDimension(CGFloat points) noexcept : CKRelativeDimension(Type::POINTS, points) {}
@@ -64,13 +69,10 @@ public:
   bool operator==(const CKRelativeDimension &) const noexcept;
   NSString *description() const noexcept;
   CGFloat resolve(CGFloat autoSize, CGFloat parent) const noexcept;
+  Type type() const noexcept;
+  CGFloat value() const noexcept;
 
 private:
-  enum class Type {
-    AUTO,
-    POINTS,
-    PERCENT,
-  };
   CKRelativeDimension(Type type, CGFloat value)
     : _type(type), _value(value)
   {

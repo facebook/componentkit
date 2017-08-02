@@ -30,7 +30,7 @@ struct CKMemoizationKey;
    return CKMemoize(CKMakeTupleMemoizationKey(model, other), ^{
      return [self
             newWithComponent:
-            [CKStackLayoutComponent
+            [CKFlexboxComponent
               newWith...
    });
  }

@@ -35,11 +35,11 @@
     size:{ }]];
 
   CKComponent *quoteTextWithBookmarkComponent =
-  [CKStackLayoutComponent
+  [CKFlexboxComponent
    newWithView:{}
    size:{}
    style:{
-     .direction = CKStackLayoutDirectionHorizontal
+     .direction = CKFlexboxDirectionHorizontal
    }
    children:{
      {
