@@ -7,3 +7,6 @@
 [submodule "Carthage/Checkouts/ios-snapshot-test-case"]
 	path = Carthage/Checkouts/ios-snapshot-test-case
 	url = https://github.com/facebook/ios-snapshot-test-case.git
+[submodule "Carthage/Checkouts/yoga"]
+	path = Carthage/Checkouts/yoga
+	url = https://github.com/facebook/yoga.git
