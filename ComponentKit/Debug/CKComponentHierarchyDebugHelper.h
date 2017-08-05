@@ -29,6 +29,4 @@ struct CKComponentLayout;
  */
 + (NSString *)componentHierarchyDescription NS_EXTENSION_UNAVAILABLE("Recursively describes components using -[UIApplication keyWindow]");
 
-+ (const CKComponentLayout *) rootLayoutFromRootView: (CKComponentRootView*) view;
-
 @end
