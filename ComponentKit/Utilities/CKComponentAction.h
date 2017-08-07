@@ -231,7 +231,7 @@ void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent
  context is the UIEvent that triggered the action. May be NULL, in which case no action will be sent.
  @param controlEvents The events that should result in the action being sent. Default is touch up inside.
  */
-CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentAction<UIEvent *> action,
+CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentAction<UIEvent *> &action,
                                                          UIControlEvents controlEvents = UIControlEventTouchUpInside) noexcept;
 
 /**
