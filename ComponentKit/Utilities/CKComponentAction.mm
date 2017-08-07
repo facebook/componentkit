@@ -13,6 +13,7 @@
 #import <unordered_map>
 #import <vector>
 #import <array>
+#import <objc/runtime.h>
 
 #import "CKAssert.h"
 #import "CKComponent+UIView.h"
@@ -181,26 +182,27 @@ void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent
 #pragma mark - Control Actions
 
 @interface CKComponentActionControlForwarder : NSObject
-- (instancetype)initWithAction:(const CKTypedComponentAction<UIEvent *> &)action;
+- (instancetype)initWithControlEvents:(UIControlEvents)controlEvents;
 - (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event;
 @end
 
-struct CKComponentActionHasher
+/** Stashed as an associated object on UIControl instances; contains a list of CKComponentActions. */
+@interface CKComponentActionList : NSObject
 {
-  std::size_t operator()(const CKTypedComponentAction<UIEvent *> &k) const
-  {
-    return std::hash<void *>()(k.selector());
-  }
-};
+  @public
+  std::unordered_map<UIControlEvents, std::vector<CKTypedComponentAction<UIEvent *>>> _actions;
+  std::unordered_set<UIControlEvents> _registeredForwarders;
+}
+@end
+@implementation CKComponentActionList @end
 
-typedef std::unordered_map<CKTypedComponentAction<UIEvent *>, CKComponentActionControlForwarder *, CKComponentActionHasher> ForwarderMap;
+static void *ck_actionListKey = &ck_actionListKey;
 
-CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentAction<UIEvent *> &action,
+typedef std::unordered_map<UIControlEvents, CKComponentActionControlForwarder *> ForwarderMap;
+
+CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentAction<UIEvent *> action,
                                                          UIControlEvents controlEvents) noexcept
 {
-  static ForwarderMap *map = new ForwarderMap(); // never destructed to avoid static destruction fiasco
-  static CK::StaticMutex lock = CK_MUTEX_INITIALIZER;   // protects map
-
   if (!action) {
     return {
       {"CKComponentActionAttribute-no-op", ^(UIControl *control, id value) {}, ^(UIControl *control, id value) {}},
@@ -209,42 +211,35 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentA
     };
   }
 
-  // We need a target for the control event. (We can't use the responder chain because we need to jump in and change the
-  // sender from the UIControl to the CKComponent.)
-  // Control event targets are __unsafe_unretained. We can't rely on the block to keep the target alive, since the block
-  // is merely an "applicator"; if the attributes compare the same (say, two equivalent attributes used across two
-  // versions of the same component) then the block may be deallocated on the first one without removing the attribute.
-  // Thus we create a map from component action to forwarders and never release the forwarders.
-  // If this turns out to have memory overhead, we could capture a "token" in the blocks and have those tokens as ref-
-  // counts on the forwarder, and when the number of outstanding tokens goes to zero, release the forwarder.
-  // However I expect the number of actions to be O(200) at most and so the memory overhead is not a concern.
-  CKComponentActionControlForwarder *forwarder;
-  {
-    CK::StaticMutexLocker l(lock);
-    auto it = map->find(action);
-    if (it == map->end()) {
-      forwarder = [[CKComponentActionControlForwarder alloc] initWithAction:action];
-      map->insert({action, forwarder});
-    } else {
-      forwarder = it->second;
-    }
-  }
-
-  std::string identifier = std::string("CKComponentActionAttribute-")
-  + action.identifier()
-  + "-" + std::to_string(controlEvents);
+  static ForwarderMap *map = new ForwarderMap(); // access on main thread only; never destructed to avoid static destruction fiasco
   return {
     {
-      identifier,
+      std::string("CKComponentActionAttribute-") + action.identifier() + "-" + std::to_string(controlEvents),
       ^(UIControl *control, id value){
-        [control addTarget:forwarder
-                    action:@selector(handleControlEventFromSender:withEvent:)
-          forControlEvents:controlEvents];
+        CKComponentActionList *list = objc_getAssociatedObject(control, ck_actionListKey);
+        if (list == nil) {
+          list = [CKComponentActionList new];
+          objc_setAssociatedObject(control, ck_actionListKey, list, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+        if (list->_registeredForwarders.insert(controlEvents).second) {
+          // Since this is the first time we've seen this {control, events} pair, add a Forwarder as a target.
+          const auto it = map->find(controlEvents);
+          CKComponentActionControlForwarder *const forwarder =
+          (it == map->end())
+          ? map->insert({controlEvents, [[CKComponentActionControlForwarder alloc] initWithControlEvents:controlEvents]}).first->second
+          : it->second;
+          [control addTarget:forwarder
+                      action:@selector(handleControlEventFromSender:withEvent:)
+            forControlEvents:controlEvents];
+        }
+        list->_actions[controlEvents].push_back(action);
       },
       ^(UIControl *control, id value){
-        [control removeTarget:forwarder
-                       action:@selector(handleControlEventFromSender:withEvent:)
-             forControlEvents:controlEvents];
+        CKComponentActionList *const list = objc_getAssociatedObject(control, ck_actionListKey);
+        CKCAssertNotNil(list, @"Unapplicator should always find an action list installed by applicator");
+        auto &actionList = list->_actions[controlEvents];
+        actionList.erase(std::find(actionList.begin(), actionList.end(), action));
+        // Don't bother unsetting the action list or removing the forwarder as a target; both are harmless.
       }
     },
     // Use a bogus value for the attribute's "value". All the information is encoded in the attribute itself.
@@ -254,22 +249,31 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentA
 
 @implementation CKComponentActionControlForwarder
 {
-  CKTypedComponentAction<UIEvent *> _action;
+  UIControlEvents _controlEvents;
 }
 
-- (instancetype)initWithAction:(const CKTypedComponentAction<UIEvent *> &)action
+- (instancetype)initWithControlEvents:(UIControlEvents)controlEvents
 {
   if (self = [super init]) {
-    _action = action;
+    _controlEvents = controlEvents;
   }
   return self;
 }
 
 - (void)handleControlEventFromSender:(UIControl *)sender withEvent:(UIEvent *)event
 {
-  // If the action can be handled by the sender itself, send it there instead of looking up the chain.
-  _action.send(sender.ck_component, CKComponentActionSendBehaviorStartAtSender, event);
+  CKComponentActionList *const list = objc_getAssociatedObject(sender, ck_actionListKey);
+  CKCAssertNotNil(list, @"Forwarder should always find an action list installed by applicator");
+  // Protect against mutation-during-enumeration by copying the list of actions to send:
+  const std::vector<CKTypedComponentAction<UIEvent *>> copiedActions = list->_actions[_controlEvents];
+  CKComponent *const sendingComponent = sender.ck_component;
+  for (const auto &action : copiedActions) {
+    // If the action can be handled by the sender itself, send it there instead of looking up the chain.
+    action.send(sendingComponent, CKComponentActionSendBehaviorStartAtSender, event);
+  }
 }
+
+@end
 
 #pragma mark - Debug Helpers
 
@@ -333,8 +337,6 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {
           ? [NSString stringWithFormat:@"%@ -> %@", responder, _CKComponentResponderChainDebugResponderChain([responder nextResponder])]
           : @"nil");
 }
-
-@end
 
 #pragma mark - Accessibility Actions
 
