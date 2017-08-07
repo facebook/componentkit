@@ -93,6 +93,44 @@
   CKUnmountComponents(mountedComponents);
 }
 
+- (void)testMultipleControlActionAttributesWithControlEventSpecified
+{
+  __block NSUInteger actionCount = 0;
+
+  CKComponent *controlComponent =
+  [CKComponent
+   newWithView:{
+     [UIButton class],
+     {
+       CKComponentActionAttribute(@selector(testAction:context:), UIControlEventValueChanged),
+       CKComponentActionAttribute(@selector(testAction:context:), UIControlEventTouchUpInside),
+       CKComponentActionAttribute(@selector(testAction:context:), UIControlEventTouchDown),
+     }
+   }
+   size:{}];
+
+  CKTestActionComponent *outerComponent =
+  [CKTestActionComponent
+   newWithSingleArgumentBlock:^(CKComponent *sender, id context){ actionCount++; }
+   secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
+   primitiveArgumentBlock:^(CKComponent *sender, int value) { }
+   noArgumentBlock:^{ }
+   component:controlComponent];
+
+  // Must be mounted to send actions:
+  UIView *rootView = [UIView new];
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
+
+  [(UIControl *)[controlComponent viewContext].view sendActionsForControlEvents:UIControlEventValueChanged];
+  XCTAssertTrue(actionCount == 1, @"Should have received action for UIControlEventValueChanged");
+  [(UIControl *)[controlComponent viewContext].view sendActionsForControlEvents:UIControlEventTouchUpInside];
+  XCTAssertTrue(actionCount == 2, @"Should have received action for UIControlEventTouchUpInside");
+  [(UIControl *)[controlComponent viewContext].view sendActionsForControlEvents:UIControlEventTouchDown];
+  XCTAssertTrue(actionCount == 3, @"Should have received action for UIControlEventTouchDown");
+
+  CKUnmountComponents(mountedComponents);
+}
+
 - (void)testControlActionIsNotSentForControlEventsThatDoNotMatch
 {
   __block BOOL receivedAction = NO;

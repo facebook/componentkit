@@ -191,6 +191,7 @@ void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent
 {
   @public
   std::unordered_map<UIControlEvents, std::vector<CKTypedComponentAction<UIEvent *>>> _actions;
+  std::unordered_set<UIControlEvents> _registeredForwarders;
 }
 @end
 @implementation CKComponentActionList @end
@@ -219,8 +220,9 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentA
         if (list == nil) {
           list = [CKComponentActionList new];
           objc_setAssociatedObject(control, ck_actionListKey, list, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-
-          // Since this is the first time we've seen this control, add a Forwarder as a target.
+        }
+        if (list->_registeredForwarders.insert(controlEvents).second) {
+          // Since this is the first time we've seen this {control, events} pair, add a Forwarder as a target.
           const auto it = map->find(controlEvents);
           CKComponentActionControlForwarder *const forwarder =
           (it == map->end())
