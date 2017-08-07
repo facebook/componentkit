@@ -84,50 +84,29 @@
 {
   std::vector<int> a = {};
   std::vector<int> expected = {};
-  XCTAssertTrue(CK::intersperse(a, ^int{ return 0; }, [](const int t){return true;}) == expected);
+  XCTAssertTrue(CK::intersperse(a, ^int{ return 0; }) == expected);
 }
 
-- (void)test_intersperseSingleItem_allowItem
+- (void)test_intersperseSingleItem
 {
   std::vector<int> a = {1};
   std::vector<int> expected = {1};
-  XCTAssertTrue(CK::intersperse(a, ^int{ return 4; }, [](const int t){return true;}) == expected);
+  XCTAssertTrue(CK::intersperse(a, ^int{ return 4; }) == expected);
 }
 
-- (void)test_interspersSingleItem_denyItem
-{
-  std::vector<int> a = {1};
-  std::vector<int> expected = {};
-  XCTAssertTrue(CK::intersperse(a, ^int{ return 4; }, [](const int t){return false;}) == expected);
-}
-
-- (void)test_intersperseMultipleItems_allowAll
+- (void)test_intersperseMultipleItems
 {
   std::vector<int> a = {1,2,3};
   std::vector<int> expected = {1,4,2,4,3};
-  XCTAssertTrue(CK::intersperse(a, ^int{ return 4; }, [](const int t){return true;}) == expected);
-}
-
-- (void)test_intersperseMultipleItems_denyAll
-{
-  std::vector<int> a = {1,2,3};
-  std::vector<int> expected = {};
-  XCTAssertTrue(CK::intersperse(a, ^int{ return 4; }, [](const int t){return false;}) == expected);
-}
-
-- (void)test_intersperseMultipleItems_allowSome
-{
-  std::vector<int> a = {1,2,3,4,5,6};
-  std::vector<int> expected = {2,4,4,4,6};
-  XCTAssertTrue(CK::intersperse(a, ^int{ return 4; }, [](const int t){return t % 2 == 0;}) == expected);
+  XCTAssertTrue(CK::intersperse(a, ^int{ return 4; }) == expected);
 }
 
 - (void)test_intersperseTwice
 {
   std::vector<int> a = {1,2,3};
-  std::vector<int> b = CK::intersperse(a, ^int{ return 4; }, [](const int t){return true;});
+  std::vector<int> b = CK::intersperse(a, ^int{ return 4; });
   std::vector<int> expected = {1,5,4,5,2,5,4,5,3};
-  XCTAssertTrue(CK::intersperse(b, ^int{ return 5; }, [](const int t){return true;}) == expected);
+  XCTAssertTrue(CK::intersperse(b, ^int{ return 5; }) == expected);
 }
 
 @end
