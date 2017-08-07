@@ -77,9 +77,9 @@ namespace CK {
   }
 
   /**
-   This function takes a vector and returns a new vector after adding an additional object between every entry in the vector that passes the predicate
+   This function takes a vector and returns a new vector after adding an additional object between every entry in the vector
    Example:
-   inputs: { 1, 2, 3, 4, 5, 6 }, factory ^(int) { return 0; } predicate: ^BOOL(int a) { return a%2 == 0; }
+   inputs: { 2, 4, 6 }, factory ^(int) { return 0; }
    output: { 2, 0, 4, 0, 6 }
    */
   template <typename T, typename Func>
@@ -148,7 +148,7 @@ inline BOOL CKObjectIsEqual(id<NSObject> obj, id<NSObject> otherObj)
 
 typedef BOOL (^CKEqualityComparisonBlock)(id object, id comparisonObject);
 
-/** 
+/**
  * Correctly executes the comparisonBlock for two objects, including cases one of the objects is nil or
  * of a different type (where `isEqual:` would return NO).
  */
