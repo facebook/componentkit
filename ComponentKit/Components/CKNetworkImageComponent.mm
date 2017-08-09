@@ -10,6 +10,8 @@
 
 #import "CKNetworkImageComponent.h"
 
+#import <Availability.h>
+
 @interface CKNetworkImageSpecifier : NSObject
 - (instancetype)initWithURL:(NSURL *)url
                defaultImage:(UIImage *)defaultImage
@@ -47,6 +49,9 @@
                                                                    cropRect:cropRect]},
 
   });
+#ifdef __IPHONE_11_0
+  attributes.insert({@selector(setAccessibilityIgnoresInvertColors:), @YES});
+#endif
   return [super newWithView:{
     {[CKNetworkImageComponentView class], @selector(didEnterReusePool), @selector(willLeaveReusePool)},
     std::move(attributes)
