@@ -28,6 +28,8 @@ typedef NS_ENUM(NSUInteger, CKComponentActionSendBehavior) {
   CKComponentActionSendBehaviorStartAtSender,
 };
 
+class _CKTypedComponentDebugInitialTarget;
+
 #pragma mark - Action Base
 
 /** A base-class for typed components that doesn't use templates to avoid template bloat. */
@@ -79,6 +81,8 @@ public:
   SEL selector() const noexcept;
   dispatch_block_t block() const noexcept;
   std::string identifier() const noexcept;
+
+  friend _CKTypedComponentDebugInitialTarget;
 };
 
 #pragma mark - Typed Helpers
@@ -134,6 +138,25 @@ class CKTypedComponentAction;
  @return map of CKTypedComponentAction<> attached to the specifiec component.
  */
 std::unordered_map<UIControlEvents, std::vector<CKTypedComponentAction<UIEvent *>>> _CKComponentDebugControlActionsForComponent(CKComponent *const component);
+
+/**
+ Access the initialTarget of an action, for debug purposes.
+ */
+class _CKTypedComponentDebugInitialTarget {
+private:
+  CKTypedComponentActionBase &_action;
+
+public:
+  _CKTypedComponentDebugInitialTarget(CKTypedComponentActionBase &action) : _action(action) { }
+
+  id get(CKComponent *sender) const {
+#if DEBUG
+    return _action.initialTarget(sender);
+#else
+    return nil;
+#endif
+  }
+};
 
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 
