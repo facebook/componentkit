@@ -8,7 +8,7 @@
  *
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import <vector>
 
@@ -124,6 +124,16 @@ void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger inde
 }
 
 #pragma mark - Debug Helpers
+
+template<typename... T>
+class CKTypedComponentAction;
+
+/**
+ Get the list of control actions attached to the components view (if it has any), for debug purposes.
+
+ @return map of CKTypedComponentAction<> attached to the specifiec component.
+ */
+std::unordered_map<UIControlEvents, std::vector<CKTypedComponentAction<UIEvent *>>> _CKComponentDebugControlActionsForComponent(CKComponent *const component);
 
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 

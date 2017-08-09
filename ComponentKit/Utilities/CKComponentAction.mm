@@ -277,6 +277,19 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentA
 
 #pragma mark - Debug Helpers
 
+std::unordered_map<UIControlEvents, std::vector<CKTypedComponentAction<UIEvent *>>> _CKComponentDebugControlActionsForComponent(CKComponent *const component)
+{
+#if DEBUG
+  CKComponentActionList *const list = objc_getAssociatedObject(component.viewContext.view, ck_actionListKey);
+  if (list == nil) {
+    return {};
+  }
+  return list->_actions;
+#else
+  return {};
+#endif
+}
+
 #if DEBUG
 static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSignature *signature, const std::vector<const char *> &typeEncodings)
 {
@@ -329,7 +342,6 @@ void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const st
   checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
 #endif
 }
-
 
 // This method returns a friendly-print of a responder chain. Used for debug purposes.
 NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {
