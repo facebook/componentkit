@@ -154,6 +154,13 @@ public:
     });
   }
 
+  template<typename... U>
+  static CKTypedComponentAction<T..., U...> promotedFrom(CKTypedComponentAction<T...> action) {
+    return CKTypedComponentAction<T..., U...>::actionFromBlock(^(CKComponent* sender, T... argsT, U... argsU) {
+      action.send(sender, argsT...);
+    });
+  }
+
   /**
    Allows explicit null actions. NULL can cause ambiguity in constructor resolution and is best avoided where
    nullptr is available.
@@ -168,6 +175,7 @@ public:
     // CKTypedComponentAction<BOOL, int> = ^(CKComponent *sender) {
     // To fix the error, you must handle all arguments:
     // CKTypedComponentAction<BOOL, int> = ^(CKComponent *sender, BOOL foo, int bar) {
+    // You may also use the `promotedFrom` operator above.
     CKCAssert(_variant != CKTypedComponentActionVariant::Block, @"Block actions should not take fewer arguments than defined in the declaration of the action, you are depending on undefined behavior and will cause crashes.");
   };
 
