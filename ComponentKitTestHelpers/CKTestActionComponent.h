@@ -15,10 +15,10 @@
 + (instancetype)newWithSingleArgumentBlock:(void (^)(CKComponent *sender, id context))singleArgumentBlock
                        secondArgumentBlock:(void (^)(CKComponent *sender, id obj1, id obj2))secondArgumentBlock
                     primitiveArgumentBlock:(void (^)(CKComponent *sender, int value))primitiveArgumentBlock
-                           noArgumentBlock:(void (^)(void))noArgumentBlock
+                           noArgumentBlock:(void (^)(CKComponent *sender))noArgumentBlock
                                  component:(CKComponent *)component;
 - (void)testAction:(CKComponent *)sender context:(id)context;
 - (void)testAction2:(CKComponent *)sender context1:(id)context1 context2:(id)context2;
 - (void)testPrimitive:(CKComponent *)sender integer:(int)integer;
-- (void)testNoArgumentAction;
+- (void)testNoArgumentAction:(CKComponent *)sender;
 @end
