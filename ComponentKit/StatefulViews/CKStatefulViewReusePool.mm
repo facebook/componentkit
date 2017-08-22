@@ -120,7 +120,7 @@ struct PoolKeyHasher {
     return nil;
   }
   UIView *candidate = it->second.viewWithPreferredSuperview(preferredSuperview);
-  if (!_pendingReusePoolEnabled || candidate) {
+  if (candidate) {
     return candidate;
   }
   const auto pendingIt = _pendingPool.find(key);

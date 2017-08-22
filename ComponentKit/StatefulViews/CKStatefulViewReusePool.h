@@ -19,8 +19,6 @@ typedef BOOL (^CKStatefulViewReusePoolPendingMayRelinquishBlock)(void);
 
 + (instancetype)sharedPool;
 
-@property (nonatomic, assign) BOOL pendingReusePoolEnabled;
-
 - (UIView *)dequeueStatefulViewForControllerClass:(Class)controllerClass
                                preferredSuperview:(UIView *)preferredSuperview
                                           context:(id)context;

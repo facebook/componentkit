@@ -274,7 +274,6 @@
 {
   __block BOOL calledBlock = NO;
   CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
-  pool.pendingReusePoolEnabled = YES;
 
   // Warm up the pool so that pending reuse will occur
   [pool enqueueStatefulView:[[CKTestStatefulView alloc] init]
@@ -315,7 +314,6 @@
 {
   __block BOOL calledBlock = NO;
   CKStatefulViewReusePool *pool = [[CKStatefulViewReusePool alloc] init];
-  pool.pendingReusePoolEnabled = YES;
 
   // Warm up the pool so that pending reuse will occur
   [pool enqueueStatefulView:[[CKTestStatefulView alloc] init]
