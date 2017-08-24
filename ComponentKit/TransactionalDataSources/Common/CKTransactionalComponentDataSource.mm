@@ -160,9 +160,9 @@
   }
 
   if (mode == CKUpdateModeAsynchronous) {
-    _pendingAsynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});
+    _pendingAsynchronousStateUpdates[rootIdentifier][globalIdentifier].push_back(stateUpdate);
   } else {
-    _pendingSynchronousStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});
+    _pendingSynchronousStateUpdates[rootIdentifier][globalIdentifier].push_back(stateUpdate);
   }
 }
 

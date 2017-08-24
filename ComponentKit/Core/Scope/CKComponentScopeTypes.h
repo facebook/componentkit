@@ -15,7 +15,7 @@
 typedef int32_t CKComponentScopeHandleIdentifier;
 typedef int32_t CKComponentScopeRootIdentifier;
 
-typedef std::unordered_multimap<CKComponentScopeHandleIdentifier, id (^)(id)> CKComponentStateUpdateMap;
+typedef std::unordered_map<CKComponentScopeHandleIdentifier, std::vector<id (^)(id)>> CKComponentStateUpdateMap;
 
 @protocol CKScopedComponent;
 @protocol CKScopedComponentController;

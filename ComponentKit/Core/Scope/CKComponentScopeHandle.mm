@@ -99,10 +99,15 @@
                        componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot
 {
   id updatedState = _state;
-  const auto range = stateUpdates.equal_range(_globalIdentifier);
-  for (auto it = range.first; it != range.second; ++it) {
-    updatedState = it->second(updatedState);
+  const auto pendingUpdatesIt = stateUpdates.find(_globalIdentifier);
+  if (pendingUpdatesIt != stateUpdates.end()) {
+    for (auto pendingUpdate: pendingUpdatesIt->second) {
+      if (pendingUpdate != nil) {
+        updatedState = pendingUpdate(updatedState);
+      }
+    }
   }
+
   [componentScopeRoot registerComponentController:_controller];
   return [[CKComponentScopeHandle alloc] initWithListener:_listener
                                          globalIdentifier:_globalIdentifier

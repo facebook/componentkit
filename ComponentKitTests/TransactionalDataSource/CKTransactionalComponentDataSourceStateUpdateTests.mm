@@ -73,4 +73,20 @@
   }));
 }
 
+- (void)testStateUpdatesAreProcessedInTheOrderTheyWereEnqueued
+{
+  CKTransactionalComponentDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
+  CKTransactionalComponentDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+
+  CKComponent *const component = item.layout.component;
+  [component updateState:^(NSNumber *oldState){return @"NewState"; } mode:CKUpdateModeSynchronous];
+  [component updateState:^(NSString *oldState){return [NSMutableString stringWithFormat:@"%@Update1", oldState]; } mode:CKUpdateModeSynchronous];
+  [component updateState:^(NSString *oldState){return [NSMutableString stringWithFormat:@"%@Update2", oldState]; } mode:CKUpdateModeSynchronous];
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    CKTransactionalComponentDataSourceItem *updatedItem = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    return [((CKStateExposingComponent *)[updatedItem layout].component).state isEqual:@"NewStateUpdate1Update2"];
+  }));
+}
+
 @end

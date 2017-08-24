@@ -188,7 +188,7 @@ struct CKComponentHostingViewInputs {
 {
   CKAssertMainThread();
 
-  _pendingInputs.stateUpdates.insert({globalIdentifier, stateUpdate});
+  _pendingInputs.stateUpdates[globalIdentifier].push_back(stateUpdate);
   [self _setNeedsUpdateWithMode:mode];
 }
 

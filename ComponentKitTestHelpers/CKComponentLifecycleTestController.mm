@@ -114,7 +114,7 @@
 {
   CKAssertMainThread();
 
-  _pendingStateUpdates.insert({globalIdentifier, stateUpdate});
+  _pendingStateUpdates[globalIdentifier].push_back(stateUpdate);
   const CKSizeRange constrainedSize = _sizeRangeProvider ? [_sizeRangeProvider sizeRangeForBoundingSize:_state.constrainedSize.max] : _state.constrainedSize;
   [self updateWithState:[self prepareForUpdateWithModel:_state.model
                                         constrainedSize:constrainedSize

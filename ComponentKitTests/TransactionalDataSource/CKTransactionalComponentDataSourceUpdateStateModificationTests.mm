@@ -60,7 +60,7 @@
                                   userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
                                       mode:(CKUpdateMode)mode
 {
-  _pendingStateUpdates[rootIdentifier].insert({globalIdentifier, stateUpdate});
+  _pendingStateUpdates[rootIdentifier][globalIdentifier].push_back(stateUpdate);
 }
 
 - (void)tearDown
