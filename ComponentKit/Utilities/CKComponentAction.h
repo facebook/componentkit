@@ -167,9 +167,9 @@ public:
    */
   CKTypedComponentAction(std::nullptr_t n) noexcept : CKTypedComponentActionBase() {};
 
-  /** We support promotion from actions that take no arguments. */
+  /** We support promotion from actions that take no arguments, but only when explicit. */
   template <typename... Ts>
-  CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) noexcept : CKTypedComponentActionBase(action) {
+  explicit CKTypedComponentAction<Ts...>(const CKTypedComponentAction<> &action) noexcept : CKTypedComponentActionBase(action) {
     // At runtime if we provide more arguments to a block on invocation than accepted by the block, the behavior is
     // undefined. If you hit this assert, it means somewhere in your code you're doing this:
     // CKTypedComponentAction<BOOL, int> = ^(CKComponent *sender) {
