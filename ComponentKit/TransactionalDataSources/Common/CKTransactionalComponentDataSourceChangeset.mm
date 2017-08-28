@@ -58,7 +58,32 @@ static NSString *ReadableStringForSortedItemsDictionary(NSDictionary *dict)
 
 - (NSString *)description
 {
-  return [NSString stringWithFormat:@"Updates: %@\n\tRemoved Items: %@\n\tRemove Sections: %@\n\tMoves: %@\n\tInserted Sections: %@\n\tInserted Items: %@", ReadableStringForSortedItemsDictionary(_updatedItems), _removedItems, _removedSections, ReadableStringForSortedItemsDictionary(_movedItems), _insertedSections, ReadableStringForSortedItemsDictionary(_insertedItems)];
+  NSMutableString *mutableDescription = [NSMutableString stringWithFormat:@"<%@: %p; ", self.class, self];
+
+  NSMutableString *inputDescription = [NSMutableString new];
+  if (_updatedItems.count > 0) {
+    [inputDescription appendString:[NSString stringWithFormat:@"\n\tUpdates: %@", ReadableStringForSortedItemsDictionary(_updatedItems)]];
+  }
+  if (_removedItems.count > 0) {
+    [inputDescription appendString:[NSString stringWithFormat:@"\n\tRemoved Items: %@", _removedItems]];
+  }
+  if (_removedSections.count > 0) {
+    [inputDescription appendString:[NSString stringWithFormat:@"\n\tRemoved Sections: %@", _removedSections]];
+  }
+  if (_movedItems.count > 0) {
+    [inputDescription appendString:[NSString stringWithFormat:@"\n\tMoves: %@", ReadableStringForSortedItemsDictionary(_movedItems)]];
+  }
+  if (_insertedSections.count > 0) {
+    [inputDescription appendString:[NSString stringWithFormat:@"\n\tInserted Sections: %@", _insertedSections]];
+  }
+  if (_insertedItems.count > 0) {
+    [inputDescription appendString:[NSString stringWithFormat:@"\n\tInserted Items: %@", ReadableStringForSortedItemsDictionary(_insertedItems)]];
+  }
+
+  [mutableDescription appendString:(inputDescription.length > 0 ? inputDescription : @"Empty Changeset")];
+  [mutableDescription appendString:@">"];
+
+  return mutableDescription;
 }
 
 - (BOOL)isEqual:(id)object
