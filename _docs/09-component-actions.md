@@ -39,7 +39,7 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
   CKComponentScope scope(self);
   return [super newWithComponent:
           [CKButtonComponent
-           newWithAction:{@selector(someAction:event:), scope}]];
+           newWithAction:{scope, @selector(someAction:event:)}]];
 }
 
 - (void)someAction:(CKButtonComponent *)sender event:(UIEvent *)event
@@ -54,7 +54,7 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
   CKComponentScope scope(self);
   return [super newWithComponent:
           [CKButtonComponent
-           newWithAction:{@selector(someAction:), scope}]];
+           newWithAction:{scope, @selector(someAction:)}]];
 }
 
 - (void)someAction:(CKButtonComponent *)sender
@@ -69,7 +69,7 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
   CKComponentScope scope(self);
   return [super newWithComponent:
           [CKButtonComponent
-           newWithAction:{@selector(someAction), scope}]];
+           newWithAction:{scope, @selector(someAction)}]];
 }
 
 - (void)someAction
@@ -89,7 +89,7 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
   CKComponentScope scope(self);
   return [super newWithComponent:
           [CKButtonComponent
-           newWithAction:{@selector(someAction), scope}]];
+           newWithAction:{scope, @selector(someAction)}]];
 }
 @end
 
@@ -126,8 +126,8 @@ In general, you should avoid using the [component responder chain](responder-cha
 
 ### Automatic Promotion
 
-In order to support a progressive adoption of typed actions, we allow automatic "promotion" of component actions. By promotion, we mean you can provide a component action that takes less arguments to a component that expects more arguments. So, for instance, you can provide a `CKTypedComponentAction<id>(@selector(actionWithSender:firstParam:), scope)` to a component that expects a `CKTypedComponentAction<id, id>`. At runtime, your method will simply not receive the additional parameters that it does not expect.
+In order to support a progressive adoption of typed actions, we allow automatic "promotion" of component actions. By promotion, we mean you can provide a component action that takes less arguments to a component that expects more arguments. So, for instance, you can provide a `CKTypedComponentAction<id>(scope, @selector(actionWithSender:firstParam:))` to a component that expects a `CKTypedComponentAction<id, id>`. At runtime, your method will simply not receive the additional parameters that it does not expect.
 
 ### Explicit Demotion
 
-Legacy callsites also may use "demotion", but it is disabled by default. By demotion, we mean providing a component action that expects *more* parameters than handled. So for instance, this would be like passing `CKTypedComponentAction<id, id, id>` to a component which expects an action of type `CKTypedComponentAction<id>`. In this case, at action-call time we would be getting less parameters than we expected. For this reason, we have forced these conversions to be explicit. You must explicitly convert your action to demote it by calling the demoted copy constructor: `CKTypedComponentAction<id>(CKTypedComponentAction<id, id, id>(@selector(someMethodWithSender:param1:param2:param3:), scope))`. At runtime the parameters that aren't provided by the action will be filled with zeros (so nil for object types, zerod structs or primitives).
+Legacy callsites also may use "demotion", but it is disabled by default. By demotion, we mean providing a component action that expects *more* parameters than handled. So for instance, this would be like passing `CKTypedComponentAction<id, id, id>` to a component which expects an action of type `CKTypedComponentAction<id>`. In this case, at action-call time we would be getting less parameters than we expected. For this reason, we have forced these conversions to be explicit. You must explicitly convert your action to demote it by calling the demoted copy constructor: `CKTypedComponentAction<id>(CKTypedComponentAction<id, id, id>(scope, @selector(someMethodWithSender:param1:param2:param3:)))`. At runtime the parameters that aren't provided by the action will be filled with zeros (so nil for object types, zerod structs or primitives).

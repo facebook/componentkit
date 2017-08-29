@@ -38,9 +38,11 @@ Instead, always pass selectors from parents to children. In the following exampl
 @implementation ParentComponent
 + (instancetype)new
 {
+  CKComponentScope scope(self);
+
   return [super newWithComponent:
           [ChildComponent
-           newWithAction:@selector(someAction:)]];
+           newWithAction:{scope, @selector(someAction:)}]];
 }
 
 - (void)someAction:(CKComponent *)sender
