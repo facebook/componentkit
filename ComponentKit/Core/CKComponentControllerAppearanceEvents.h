@@ -20,8 +20,13 @@
  
  You should never use these predicates directly. They are built to work with CKComponentScopeRoot.
  */
+#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 BOOL CKComponentControllerAppearanceEventPredicate(id<CKScopedComponentController> controller);
 BOOL CKComponentControllerDisappearanceEventPredicate(id<CKScopedComponentController> controller);
+#else
+BOOL CKComponentControllerAppearanceEventPredicate(id controller);
+BOOL CKComponentControllerDisappearanceEventPredicate(id controller);
+#endif
 
 /**
  Called by the infrastructure when cells appear or disappear. These functions announce to all component controllers

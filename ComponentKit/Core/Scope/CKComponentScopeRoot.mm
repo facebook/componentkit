@@ -17,8 +17,13 @@
 #import "CKInternalHelpers.h"
 #import "CKThreadLocalComponentScope.h"
 
+#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 typedef std::unordered_map<CKComponentScopePredicate, NSHashTable<id<CKScopedComponent>> *> _CKRegisteredComponentsMap;
 typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id<CKScopedComponentController>> *> _CKRegisteredComponentControllerMap;
+#else
+typedef std::unordered_map<CKComponentScopePredicate, NSHashTable<id> *> _CKRegisteredComponentsMap;
+typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> *> _CKRegisteredComponentControllerMap;
+#endif
 
 @implementation CKComponentScopeRoot
 {

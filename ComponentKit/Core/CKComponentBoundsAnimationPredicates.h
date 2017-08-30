@@ -17,7 +17,11 @@
  and is checked on the initialization of components and cached. This allows us to rapidly identify which components
  require animating.
  */
+#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 BOOL CKComponentBoundsAnimationPredicate(id<CKScopedComponent> component);
+#else
+BOOL CKComponentBoundsAnimationPredicate(id component);
+#endif
 
 /**
  Computes and returns the bounds animations for the transition from a prior generation's scope root.

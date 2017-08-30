@@ -14,7 +14,11 @@
 #import "CKComponentSubclass.h"
 #import "CKInternalHelpers.h"
 
+#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 BOOL CKComponentBoundsAnimationPredicate(id<CKScopedComponent> component)
+#else
+BOOL CKComponentBoundsAnimationPredicate(id component)
+#endif
 {
   return CKSubclassOverridesSelector([CKComponent class], [component class], @selector(boundsAnimationFromPreviousComponent:));
 }
