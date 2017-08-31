@@ -50,7 +50,9 @@
 
   });
 #ifdef __IPHONE_11_0
-  attributes.insert({@selector(setAccessibilityIgnoresInvertColors:), @YES});
+  if (@available(iOS 11.0, tvOS 11.0, *)) {
+    attributes.insert({@selector(setAccessibilityIgnoresInvertColors:), @YES});
+  }
 #endif
   return [super newWithView:{
     {[CKNetworkImageComponentView class], @selector(didEnterReusePool), @selector(willLeaveReusePool)},
