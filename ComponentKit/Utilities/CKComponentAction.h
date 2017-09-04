@@ -212,6 +212,7 @@ public:
 };
 
 typedef CKTypedComponentAction<> CKComponentAction;
+typedef CKComponentAction CKUntypedComponentAction;
 
 /** Explicit instantiation of our most commonly-used templates to avoid bloat in callsites. */
 extern template class CKTypedComponentAction<>;
