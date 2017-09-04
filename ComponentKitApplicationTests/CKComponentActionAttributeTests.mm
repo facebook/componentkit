@@ -50,7 +50,7 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context) { actionSender = sender; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { }
-   noArgumentBlock:^{ }
+   noArgumentBlock:^(CKComponent *sender) { }
    component:controlComponent];
 
   // Must be mounted to send actions:
@@ -80,7 +80,7 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ receivedAction = YES; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { }
-   noArgumentBlock:^{ }
+   noArgumentBlock:^(CKComponent *sender) { }
    component:controlComponent];
 
   // Must be mounted to send actions:
@@ -114,7 +114,7 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ actionCount++; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { }
-   noArgumentBlock:^{ }
+   noArgumentBlock:^(CKComponent *sender) { }
    component:controlComponent];
 
   // Must be mounted to send actions:
@@ -148,7 +148,7 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ receivedAction = YES; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { }
-   noArgumentBlock:^{ }
+   noArgumentBlock:^(CKComponent *sender) { }
    component:controlComponent];
 
   // Must be mounted to send actions:
@@ -178,7 +178,7 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ receivedAction = YES; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { }
-   noArgumentBlock:^{ }
+   noArgumentBlock:^(CKComponent *sender) { }
    component:controlComponent];
 
   // Must be mounted to send actions:
