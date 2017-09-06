@@ -10,7 +10,7 @@
   - views
   - layout
   - responder-chain
-  - component-actions
+  - actions
   - state
   - scopes
   - component-controllers
@@ -32,7 +32,7 @@
   - avoid-local-variables
   - avoid-single-use-constants
   - no-underscores
-  - pass-in-component-actions
+  - pass-in-actions
   - no-side-effects
   - pass-in-immutable-objects
   - components-cant-be-delegates

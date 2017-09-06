@@ -1,9 +1,9 @@
 ---
-title: Pass in Component Actions
+title: Pass in Actions
 layout: docs
-permalink: /docs/pass-in-component-actions.html
+permalink: /docs/pass-in-actions.html
 ---
-Follow this simple rule: `CKComponentAction` selectors should be implemented in the same file they are referenced.
+Follow this simple rule: Selectors should be implemented in the same file they are referenced.
 
 The following counterexample establishes a hidden coupling between the parent and child component. If another component tries to use `ChildComponent` or if the method is renamed in `ParentComponent`, it will crash at runtime.
 
@@ -31,7 +31,7 @@ The following counterexample establishes a hidden coupling between the parent an
 @end
 {% endhighlight %}
 
-Instead, always pass selectors from parents to children. In the following example, it is explicit that the child component needs a `CKComponentAction` selector. If the parent component renames the `someAction:` method, it's far easier to catch renaming the parameter.
+Instead, always pass selectors from parents to children. In the following example, it is explicit that the child component needs a `CKTypedComponentAction<>` selector. If the parent component renames the `someAction:` method, it's far easier to catch renaming the parameter.
 
 {% highlight objc %}
 
@@ -52,7 +52,7 @@ Instead, always pass selectors from parents to children. In the following exampl
 @end
 
 @implementation ChildComponent
-+ (instancetype)newWithAction:(CKComponentAction)action
++ (instancetype)newWithAction:(CKTypedComponentAction<>)action
 {
   return [super newWithComponent:
           [CKButtonComponent

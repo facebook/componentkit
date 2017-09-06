@@ -1,7 +1,7 @@
 ---
-title: Component Actions
+title: Actions
 layout: docs
-permalink: /docs/component-actions.html
+permalink: /docs/actions.html
 ---
 
 Often child components must communicate back to their parents. For example, a button component may need to signal that it has been tapped. Component actions provide a way to do this.
@@ -11,8 +11,6 @@ Often child components must communicate back to their parents. For example, a bu
 `CKTypedComponentAction<T...>` is an Objective-C++ class that wraps a `SEL` (basically a method name in Objective-C), and a target. `CKTypedComponentAction<T...>` allows you to specify the types of the arguments that are provided to the receiving method.
 
 Where possible, you should explicitly define the target of your action using either a component scope, or a target for non-Component targets. 
-
-`CKComponentAction` is just an alias for `CKTypedComponentAction<>` — basically, a component action that provides no arguments. In general, prefer to use `CKTypedComponentAction<T>` to give your callers greater type-safety.
 
 An action may be sent through the `send` function on `CKTypedComponentAction`, which takes the sender component, and the parameters to be passed to the receiver.
 
