@@ -211,8 +211,7 @@ public:
   friend void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent *sender, id context);
 };
 
-typedef CKTypedComponentAction<> CKComponentAction;
-typedef CKComponentAction CKUntypedComponentAction;
+typedef CKTypedComponentAction<> CKUntypedComponentAction;
 
 /** Explicit instantiation of our most commonly-used templates to avoid bloat in callsites. */
 extern template class CKTypedComponentAction<>;
@@ -227,8 +226,8 @@ extern template class CKTypedComponentAction<id>;
  @param context An optional context-dependent second parameter to the component action.
  @param behavior @see CKComponentActionSendBehavior
  */
-void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender);
-void CKComponentActionSend(const CKComponentAction &action, CKComponent *sender, CKComponentActionSendBehavior behavior);
+void CKComponentActionSend(const CKUntypedComponentAction &action, CKComponent *sender);
+void CKComponentActionSend(const CKUntypedComponentAction &action, CKComponent *sender, CKComponentActionSendBehavior behavior);
 void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent *sender, id context);
 void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior);
 
@@ -246,6 +245,6 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentA
 /**
  Returns a view attribute that configures a view to have custom accessibility actions.
 
- @param actions An ordered list of actions, each with a name and an associated CKComponentAction
+ @param actions An ordered list of actions, each with a name and an associated CKUntypedComponentAction
  */
-CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKComponentAction>> &actions) noexcept;
+CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKUntypedComponentAction>> &actions) noexcept;
