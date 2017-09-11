@@ -119,6 +119,7 @@ private:
 - (void)componentDidAcquireView {}
 - (void)componentTreeWillAppear {}
 - (void)componentTreeDidDisappear {}
+- (void)invalidateController {}
 
 #pragma mark - Hooks
 

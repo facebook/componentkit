@@ -57,6 +57,9 @@
 /** Corresponds to -didEndDisplayingCell:for{Row|Item}AtIndexPath:. Not invoked for CKComponentHostingViews. */
 - (void)componentTreeDidDisappear NS_REQUIRES_SUPER;
 
+/** Is called on main thread prior to controller deallocation **/
+- (void)invalidateController NS_REQUIRES_SUPER;
+
 /** The current version of the component. */
 @property (nonatomic, weak, readonly) ComponentType component;
 

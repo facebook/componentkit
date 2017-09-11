@@ -23,9 +23,11 @@
 #if !defined(NO_PROTOCOLS_IN_OBJCPP)
 BOOL CKComponentControllerAppearanceEventPredicate(id<CKScopedComponentController> controller);
 BOOL CKComponentControllerDisappearanceEventPredicate(id<CKScopedComponentController> controller);
+BOOL CKComponentControllerInvalidateEventPredicate(id<CKScopedComponentController> controller);
 #else
 BOOL CKComponentControllerAppearanceEventPredicate(id controller);
 BOOL CKComponentControllerDisappearanceEventPredicate(id controller);
+BOOL CKComponentControllerInvalidateEventPredicate(id controller);
 #endif
 
 /**
@@ -34,3 +36,4 @@ BOOL CKComponentControllerDisappearanceEventPredicate(id controller);
  */
 void CKComponentScopeRootAnnounceControllerAppearance(CKComponentScopeRoot *scopeRoot);
 void CKComponentScopeRootAnnounceControllerDisappearance(CKComponentScopeRoot *scopeRoot);
+void CKComponentScopeRootAnnounceControllerInvalidation(CKComponentScopeRoot *scopeRoot);

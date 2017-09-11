@@ -32,6 +32,15 @@ BOOL CKComponentControllerDisappearanceEventPredicate(id controller)
   return CKSubclassOverridesSelector([CKComponentController class], [controller class], @selector(componentTreeDidDisappear));
 }
 
+#if !defined(NO_PROTOCOLS_IN_OBJCPP)
+BOOL CKComponentControllerInvalidateEventPredicate(id<CKScopedComponentController> controller)
+#else
+BOOL CKComponentControllerInvalidateEventPredicate(id controller)
+#endif
+{
+  return CKSubclassOverridesSelector([CKComponentController class], [controller class], @selector(invalidateController));
+}
+
 void CKComponentScopeRootAnnounceControllerAppearance(CKComponentScopeRoot *scopeRoot)
 {
   [scopeRoot enumerateComponentControllersMatchingPredicate:&CKComponentControllerAppearanceEventPredicate block:^(id<CKScopedComponentController> scopedController) {
@@ -45,5 +54,13 @@ void CKComponentScopeRootAnnounceControllerDisappearance(CKComponentScopeRoot *s
   [scopeRoot enumerateComponentControllersMatchingPredicate:&CKComponentControllerDisappearanceEventPredicate block:^(id<CKScopedComponentController> scopedController) {
     CKComponentController *controller = (CKComponentController *)scopedController;
     [controller componentTreeDidDisappear];
+  }];
+}
+
+void CKComponentScopeRootAnnounceControllerInvalidation(CKComponentScopeRoot *scopeRoot)
+{
+  [scopeRoot enumerateComponentControllersMatchingPredicate:&CKComponentControllerInvalidateEventPredicate block:^(id<CKScopedComponentController> scopedController) {
+    CKComponentController *controller = (CKComponentController *)scopedController;
+    [controller invalidateController];
   }];
 }
