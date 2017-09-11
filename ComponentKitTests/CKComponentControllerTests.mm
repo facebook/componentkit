@@ -15,7 +15,7 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentController.h>
-#import <ComponentKit/CKComponentControllerAppearanceEvents.h>
+#import <ComponentKit/CKComponentControllerEvents.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentSubclass.h>

@@ -24,7 +24,7 @@
 #import "CKComponentScopeRootFactory.h"
 #import "CKComponentSizeRangeProviding.h"
 #import "CKComponentSubclass.h"
-#import "CKComponentControllerAppearanceEvents.h"
+#import "CKComponentControllerEvents.h"
 
 struct CKComponentHostingViewInputs {
   CKComponentScopeRoot *scopeRoot;

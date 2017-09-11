@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKComponentControllerAppearanceEvents.h"
+#import "CKComponentControllerEvents.h"
 
 #import "CKInternalHelpers.h"
 #import "CKComponentController.h"

@@ -19,7 +19,7 @@
 #import "CKTransactionalComponentDataSourceItemInternal.h"
 #import "CKTransactionalComponentDataSourceAppliedChanges.h"
 #import "CKBuildComponent.h"
-#import "CKComponentControllerAppearanceEvents.h"
+#import "CKComponentControllerEvents.h"
 #import "CKComponentBoundsAnimationPredicates.h"
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"

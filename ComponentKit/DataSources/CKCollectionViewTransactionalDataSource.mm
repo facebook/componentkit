@@ -20,7 +20,7 @@
 #import "CKComponentLayout.h"
 #import "CKComponentDataSourceAttachController.h"
 #import "CKComponentBoundsAnimation+UICollectionView.h"
-#import "CKComponentControllerAppearanceEvents.h"
+#import "CKComponentControllerEvents.h"
 
 @interface CKCollectionViewTransactionalDataSource () <
 UICollectionViewDataSource,
