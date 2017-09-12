@@ -22,7 +22,8 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
           }
           componentControllerPredicates:{
             &CKComponentControllerAppearanceEventPredicate,
-            &CKComponentControllerDisappearanceEventPredicate
+            &CKComponentControllerDisappearanceEventPredicate,
+            &CKComponentControllerInvalidateEventPredicate
           }];
 }
 
@@ -36,7 +37,8 @@ CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateList
 
   std::unordered_set<CKComponentControllerScopePredicate> componentControllerPredicatesUnion = {
     &CKComponentControllerAppearanceEventPredicate,
-    &CKComponentControllerDisappearanceEventPredicate
+    &CKComponentControllerDisappearanceEventPredicate,
+    &CKComponentControllerInvalidateEventPredicate
   };
 
   componentPredicatesUnion.insert(componentPredicates.begin(), componentPredicates.end());

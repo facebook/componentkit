@@ -11,6 +11,7 @@
 #import <XCTest/XCTest.h>
 
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
+#import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
@@ -123,6 +124,18 @@ static CKComponentHostingView *hostingView()
   [view layoutIfNeeded];
 
   XCTAssertEqual([view.containerView.subviews count], 1u, @"Expect the component is mounted with empty bounds");
+}
+
+- (void)testComponentControllerReceivesInvalidateEventDuringDeallocation
+{
+  CKLifecycleTestComponent *testComponent = nil;
+  @autoreleasepool {
+    CKComponentHostingView *view = hostingView();
+    [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
+    testComponent = (CKLifecycleTestComponent *)view.mountedLayout.component;
+  }
+  XCTAssertTrue(testComponent.controller.calledInvalidateController,
+                @"Expected component controller to get invalidation event");
 }
 
 #pragma mark - CKComponentHostingViewDelegate

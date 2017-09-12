@@ -12,13 +12,16 @@
 #import "CKTransactionalComponentDataSourceInternal.h"
 
 #import "CKAssert.h"
+#import "CKComponentControllerEvents.h"
 #import "CKComponentDebugController.h"
 #import "CKComponentScopeRoot.h"
+#import "CKTransactionalComponentDataSourceAppliedChanges.h"
 #import "CKTransactionalComponentDataSourceChange.h"
 #import "CKTransactionalComponentDataSourceChangesetModification.h"
 #import "CKTransactionalComponentDataSourceChangesetVerification.h"
 #import "CKTransactionalComponentDataSourceConfiguration.h"
 #import "CKTransactionalComponentDataSourceConfigurationInternal.h"
+#import "CKTransactionalComponentDataSourceItem.h"
 #import "CKTransactionalComponentDataSourceListenerAnnouncer.h"
 #import "CKTransactionalComponentDataSourceReloadModification.h"
 #import "CKTransactionalComponentDataSourceStateInternal.h"
@@ -64,6 +67,13 @@
     [CKComponentDebugController registerReflowListener:self];
   }
   return self;
+}
+
+- (void)dealloc
+{
+  [_state enumerateObjectsUsingBlock:^(CKTransactionalComponentDataSourceItem *item, NSIndexPath *, BOOL *stop) {
+    CKComponentScopeRootAnnounceControllerInvalidation([item scopeRoot]);
+  }];
 }
 
 - (CKTransactionalComponentDataSourceState *)state
@@ -219,6 +229,12 @@
   CKAssertMainThread();
   CKTransactionalComponentDataSourceState *previousState = _state;
   _state = [change state];
+  
+  for (NSIndexPath *removedIndex in [[change appliedChanges] removedIndexPaths]) {
+    CKTransactionalComponentDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
+    CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
+  }
+  
   [_announcer transactionalComponentDataSource:self
                         didModifyPreviousState:previousState
                              byApplyingChanges:[change appliedChanges]];
