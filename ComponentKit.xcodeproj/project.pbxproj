@@ -272,7 +272,6 @@
 		2D019D291DC0371300EC9EA2 /* CKTransactionalComponentDataSourceIntegrationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49FA174D1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm */; };
 		2D03A6601D3869A800E4F890 /* CKDetectComponentScopeCollisions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm */; };
 		2D03A6611D3869C700E4F890 /* CKDetectComponentScopeCollisions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2D1A21D11E40E33300A22D45 /* CKComponentLifecycleTestController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D8270F91E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm */; };
 		2D640D5D1DB7FD7800271CB4 /* CKInvalidChangesetOperationType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D640D5C1DB7FD7800271CB4 /* CKInvalidChangesetOperationType.mm */; };
 		2D640D5E1DB7FD7800271CB4 /* CKInvalidChangesetOperationType.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D640D5C1DB7FD7800271CB4 /* CKInvalidChangesetOperationType.mm */; };
 		2D7A98161DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D7A98141DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.h */; };
@@ -285,8 +284,6 @@
 		2D7A98291DB571700064FC6D /* CKInvalidChangesetOperationType.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D7A98271DB571700064FC6D /* CKInvalidChangesetOperationType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2D8270F61E3F72DE008C1A26 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = 035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */; };
 		2D8270F71E3F72F1008C1A26 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = 035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */; };
-		2D8270FA1E3F74D0008C1A26 /* CKComponentLifecycleTestController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D8270F81E3F74D0008C1A26 /* CKComponentLifecycleTestController.h */; };
-		2D8270FB1E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D8270F91E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm */; };
 		2D8270FC1E3F7581008C1A26 /* libComponentKitTestHelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */; };
 		2D8C3D441D64F41E00E6D47A /* ReferenceImages_IOS10_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */; };
 		2D8C3D521D64F43E00E6D47A /* ReferenceImages_IOS10_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */; };
@@ -319,6 +316,11 @@
 		7F6BAF841F1F71A700600828 /* YGNodeList.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F6BAF791F1F71A700600828 /* YGNodeList.h */; };
 		7F6BAF851F1F71A700600828 /* Yoga.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F6BAF7A1F1F71A700600828 /* Yoga.c */; };
 		7F6BAF881F1F71A700600828 /* Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F6BAF7B1F1F71A700600828 /* Yoga.h */; };
+		7F80A4E71F63128B00242503 /* CKFlexboxComponentTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F80A4E61F63128B00242503 /* CKFlexboxComponentTests.mm */; };
+		7F98F58C1F67F2F600436978 /* CKLifecycleTestComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F98F58A1F67F2F600436978 /* CKLifecycleTestComponent.h */; };
+		7F98F58D1F67F2F600436978 /* CKLifecycleTestComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F98F58B1F67F2F600436978 /* CKLifecycleTestComponent.mm */; };
+		7FA099141F66F36800B81EED /* CKComponentLifecycleTestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA099121F66F36800B81EED /* CKComponentLifecycleTestHelper.h */; };
+		7FA099151F66F36800B81EED /* CKComponentLifecycleTestHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FA099131F66F36800B81EED /* CKComponentLifecycleTestHelper.mm */; };
 		7FC8CD9B1F1F86EC00821766 /* CKFlexboxComponentSnapshotTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8CD9A1F1F86EC00821766 /* CKFlexboxComponentSnapshotTests.mm */; };
 		7FF5435F1F1F6DF700EFEFDD /* CKComponentControllerEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF5435D1F1F6DF700EFEFDD /* CKComponentControllerEvents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FF543601F1F6DF700EFEFDD /* CKComponentControllerEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF5435E1F1F6DF700EFEFDD /* CKComponentControllerEvents.mm */; };
@@ -810,8 +812,6 @@
 		2D7A98151DB56BD10064FC6D /* CKTransactionalComponentDataSourceChangesetVerification.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKTransactionalComponentDataSourceChangesetVerification.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		2D7A98241DB56D8D0064FC6D /* CKTransactionalComponentDataSourceChangesetVerificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKTransactionalComponentDataSourceChangesetVerificationTests.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		2D7A98271DB571700064FC6D /* CKInvalidChangesetOperationType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CKInvalidChangesetOperationType.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		2D8270F81E3F74D0008C1A26 /* CKComponentLifecycleTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentLifecycleTestController.h; sourceTree = "<group>"; };
-		2D8270F91E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentLifecycleTestController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10_64; sourceTree = "<group>"; };
 		2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10_64; sourceTree = "<group>"; };
 		2D8C3D531D64F44B00E6D47A /* ReferenceImages_IOS9_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS9_64; sourceTree = "<group>"; };
@@ -834,6 +834,11 @@
 		7F6BAF791F1F71A700600828 /* YGNodeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGNodeList.h; sourceTree = "<group>"; };
 		7F6BAF7A1F1F71A700600828 /* Yoga.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Yoga.c; sourceTree = "<group>"; };
 		7F6BAF7B1F1F71A700600828 /* Yoga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Yoga.h; sourceTree = "<group>"; };
+		7F80A4E61F63128B00242503 /* CKFlexboxComponentTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKFlexboxComponentTests.mm; sourceTree = "<group>"; };
+		7F98F58A1F67F2F600436978 /* CKLifecycleTestComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKLifecycleTestComponent.h; sourceTree = "<group>"; };
+		7F98F58B1F67F2F600436978 /* CKLifecycleTestComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKLifecycleTestComponent.mm; sourceTree = "<group>"; };
+		7FA099121F66F36800B81EED /* CKComponentLifecycleTestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentLifecycleTestHelper.h; sourceTree = "<group>"; };
+		7FA099131F66F36800B81EED /* CKComponentLifecycleTestHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentLifecycleTestHelper.mm; sourceTree = "<group>"; };
 		7FC8CD9A1F1F86EC00821766 /* CKFlexboxComponentSnapshotTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKFlexboxComponentSnapshotTests.mm; sourceTree = "<group>"; };
 		7FF5435D1F1F6DF700EFEFDD /* CKComponentControllerEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentControllerEvents.h; sourceTree = "<group>"; };
 		7FF5435E1F1F6DF700EFEFDD /* CKComponentControllerEvents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentControllerEvents.mm; sourceTree = "<group>"; };
@@ -1266,8 +1271,10 @@
 		A273801B1AFD144100E6F222 /* ComponentKitTestHelpers */ = {
 			isa = PBXGroup;
 			children = (
-				2D8270F81E3F74D0008C1A26 /* CKComponentLifecycleTestController.h */,
-				2D8270F91E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm */,
+				7F98F58A1F67F2F600436978 /* CKLifecycleTestComponent.h */,
+				7F98F58B1F67F2F600436978 /* CKLifecycleTestComponent.mm */,
+				7FA099121F66F36800B81EED /* CKComponentLifecycleTestHelper.h */,
+				7FA099131F66F36800B81EED /* CKComponentLifecycleTestHelper.mm */,
 				035FD0491D83218100D28351 /* CKComponentTestRootScope.h */,
 				A273801C1AFD144100E6F222 /* CKTestActionComponent.h */,
 				A273801E1AFD144100E6F222 /* CKTestActionComponent.mm */,
@@ -1302,36 +1309,37 @@
 		B342DC411AC23E8200ACAC53 /* ComponentKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				D023D12D1E242CD4004A0A61 /* CKComponentAccessibilityCustomActionsAttributeTests.mm */,
 				B342DC4A1AC23EA900ACAC53 /* CKComponentAccessibilityTests.mm */,
 				A241C6A41AFCFFDB00D4F661 /* CKComponentActionTests.mm */,
-				D023D12D1E242CD4004A0A61 /* CKComponentAccessibilityCustomActionsAttributeTests.mm */,
 				B342DC4C1AC23EA900ACAC53 /* CKComponentContextTests.mm */,
 				B342DC4D1AC23EA900ACAC53 /* CKComponentControllerLifecycleMethodTests.mm */,
 				B342DC4E1AC23EA900ACAC53 /* CKComponentControllerTests.mm */,
 				39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */,
+				994EF6FA1B1FD77700E2236F /* CKComponentDelegateAttributeTests.mm */,
 				B342DC521AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm */,
 				B342DC531AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm */,
+				A2D20CF31B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm */,
 				B342DC541AC23EA900ACAC53 /* CKComponentHostingViewTestModel.h */,
 				B342DC551AC23EA900ACAC53 /* CKComponentHostingViewTestModel.mm */,
 				B342DC561AC23EA900ACAC53 /* CKComponentHostingViewTests.mm */,
-				A2D20CF31B431CCF002B2DC7 /* CKComponentHostingViewAsyncStateUpdateTests.mm */,
+				991DE3401B3B308900AA05B2 /* CKComponentMemoizerTests.mm */,
 				B342DC581AC23EA900ACAC53 /* CKComponentMountContextLayoutGuideTests.mm */,
 				B342DC591AC23EA900ACAC53 /* CKComponentMountTests.mm */,
 				B342DC5C1AC23EA900ACAC53 /* CKComponentSizeTests.mm */,
 				B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */,
 				B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */,
 				B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */,
-				994EF6FA1B1FD77700E2236F /* CKComponentDelegateAttributeTests.mm */,
-				991DE3401B3B308900AA05B2 /* CKComponentMemoizerTests.mm */,
 				B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */,
+				7F80A4E61F63128B00242503 /* CKFlexboxComponentTests.mm */,
 				B342DC621AC23EA900ACAC53 /* CKOptimisticViewMutationsTests.mm */,
 				A22FE3041AF2CF0C00EC30B8 /* CKStateExposingComponent.h */,
 				A22FE3051AF2CF0C00EC30B8 /* CKStateExposingComponent.mm */,
+				B7E2E59E1D077098002A4442 /* CKVectorHelperTests.mm */,
 				B342DC661AC23EA900ACAC53 /* ComponentKitTests-Info.plist */,
 				B342DC671AC23EA900ACAC53 /* Scope */,
-				A27436F51AE94FCA00832359 /* TransactionalDataSource */,
 				18644AE01B3CB8E60028AF87 /* StatefulViews */,
-				B7E2E59E1D077098002A4442 /* CKVectorHelperTests.mm */,
+				A27436F51AE94FCA00832359 /* TransactionalDataSource */,
 			);
 			path = ComponentKitTests;
 			sourceTree = "<group>";
@@ -2042,8 +2050,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F98F58C1F67F2F600436978 /* CKLifecycleTestComponent.h in Headers */,
 				A27380341AFD172500E6F222 /* CKTestActionComponent.h in Headers */,
-				2D8270FA1E3F74D0008C1A26 /* CKComponentLifecycleTestController.h in Headers */,
+				7FA099141F66F36800B81EED /* CKComponentLifecycleTestHelper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2569,7 +2578,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D1A21D11E40E33300A22D45 /* CKComponentLifecycleTestController.mm in Sources */,
 				03A98A6B1D2B2BFD00C5BAC2 /* CKTestActionComponent.mm in Sources */,
 				2D8270F71E3F72F1008C1A26 /* CKTestRunLoopRunning.mm in Sources */,
 			);
@@ -2737,9 +2745,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D8270FB1E3F74D0008C1A26 /* CKComponentLifecycleTestController.mm in Sources */,
+				7F98F58D1F67F2F600436978 /* CKLifecycleTestComponent.mm in Sources */,
 				A273801F1AFD144100E6F222 /* CKTestActionComponent.mm in Sources */,
 				2D8270F61E3F72DE008C1A26 /* CKTestRunLoopRunning.mm in Sources */,
+				7FA099151F66F36800B81EED /* CKComponentLifecycleTestHelper.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2792,6 +2801,7 @@
 				49FA174E1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm in Sources */,
 				18644AE61B3CB8E60028AF87 /* CKStatefulViewReusePoolTests.mm in Sources */,
 				A27C72751AEF0BE800DC6797 /* CKTransactionalComponentDataSourceUpdateStateModificationTests.mm in Sources */,
+				7F80A4E71F63128B00242503 /* CKFlexboxComponentTests.mm in Sources */,
 				991DE3411B3B308900AA05B2 /* CKComponentMemoizerTests.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

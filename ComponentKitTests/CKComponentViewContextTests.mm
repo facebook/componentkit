@@ -10,7 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestHelpers/CKComponentLifecycleTestController.h>
+#import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAnimation.h>
@@ -37,9 +37,9 @@ static const CKSizeRange size = {{100, 100}, {100, 100}};
 
 - (void)testMountingComponentWithViewExposesViewContextWithTheCreatedView
 {
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[CKSingleViewComponentProvider class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[CKSingleViewComponentProvider class]
                                                                                                                              sizeRangeProvider:nil];
-  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+  const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:size
                                                                                                             context:nil];
   [componentLifecycleTestController updateWithState:state];
@@ -58,9 +58,9 @@ static const CKSizeRange size = {{100, 100}, {100, 100}};
 
 - (void)testMountingComponentWithViewAndNestedComponentWithoutViewExposesViewContextWithSubcomponentFrameInOuterView
 {
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[CKNestedComponentProvider class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[CKNestedComponentProvider class]
                                                                                                                              sizeRangeProvider:nil];
-  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+  const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:size
                                                                                                             context:nil];
   [componentLifecycleTestController updateWithState:state];

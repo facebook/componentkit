@@ -17,7 +17,7 @@
 @protocol CKComponentProvider;
 @protocol CKComponentSizeRangeProviding;
 
-struct CKComponentLifecycleTestControllerState {
+struct CKComponentLifecycleTestHelperState {
   id model;
   id<NSObject> context;
   CKSizeRange constrainedSize;
@@ -26,25 +26,27 @@ struct CKComponentLifecycleTestControllerState {
   CKComponentBoundsAnimation boundsAnimation;
 };
 
-@interface CKComponentLifecycleTestController : NSObject
+// This class allows us to test Component lifecycle methods.
+// It can act as Data source and attach itself to views
+@interface CKComponentLifecycleTestHelper : NSObject
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 
-- (CKComponentLifecycleTestControllerState)prepareForUpdateWithModel:(id)model
+- (CKComponentLifecycleTestHelperState)prepareForUpdateWithModel:(id)model
                                                      constrainedSize:(CKSizeRange)constrainedSize
                                                              context:(id<NSObject>)context;
 
-- (void)updateWithState:(const CKComponentLifecycleTestControllerState &)state;
+- (void)updateWithState:(const CKComponentLifecycleTestHelperState &)state;
 
-- (void)updateWithStateWithoutMounting:(const CKComponentLifecycleTestControllerState &)state;
+- (void)updateWithStateWithoutMounting:(const CKComponentLifecycleTestHelperState &)state;
 
 - (void)attachToView:(UIView *)view;
 
 - (void)detachFromView;
 
-- (const CKComponentLifecycleTestControllerState &)state;
+- (const CKComponentLifecycleTestHelperState &)state;
 
 @end

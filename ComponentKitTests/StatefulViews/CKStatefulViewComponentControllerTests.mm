@@ -10,7 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestHelpers/CKComponentLifecycleTestController.h>
+#import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
 #import <ComponentKit/CKComponentProvider.h>
@@ -30,9 +30,9 @@
 
 - (void)testMountingStatefulViewComponentCreatesStatefulView
 {
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
                                                                                                                              sizeRangeProvider:nil];
-  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:[UIColor blueColor]
+  const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:[UIColor blueColor]
                                                                                                     constrainedSize:{{100, 100}, {100, 100}}
                                                                                                             context:nil];
   [componentLifecycleTestController updateWithState:state];
@@ -50,9 +50,9 @@
 
 - (void)testUnmountingStatefulViewComponentEventuallyRelinquishesStatefulView
 {
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
                                                                                                                              sizeRangeProvider:nil];
-  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+  const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:{{100, 100}, {100, 100}}
                                                                                                             context:nil];
   [componentLifecycleTestController updateWithState:state];
@@ -72,9 +72,9 @@
 
 - (void)testMountingStatefulViewComponentOnNewRootViewMovesStatefulView
 {
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
                                                                                                                              sizeRangeProvider:nil];
-  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+  const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:{{100, 100}, {100, 100}}
                                                                                                             context:nil];
   [componentLifecycleTestController updateWithState:state];
@@ -92,9 +92,9 @@
 
 - (void)testUpdatingStatefulViewComponentSizeUpdatesStatefulViewSize
 {
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
                                                                                                                              sizeRangeProvider:nil];
-  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
+  const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:{{100, 100}, {100, 100}}
                                                                                                             context:nil];
   [componentLifecycleTestController updateWithState:state];
@@ -110,9 +110,9 @@
 
 - (void)testUpdatingStatefulViewComponentColorUpdatesStatefulViewColor
 {
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
                                                                                                                              sizeRangeProvider:nil];
-  const CKComponentLifecycleTestControllerState state = [componentLifecycleTestController prepareForUpdateWithModel:[UIColor whiteColor]
+  const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:[UIColor whiteColor]
                                                                                                     constrainedSize:{{0, 0}, {100, 100}}
                                                                                                             context:nil];
   [componentLifecycleTestController updateWithState:state];

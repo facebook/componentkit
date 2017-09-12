@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKComponentLifecycleTestController.h"
+#import "CKComponentLifecycleTestHelper.h"
 
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentDataSourceAttachController.h>
@@ -19,16 +19,16 @@
 #import <ComponentKit/CKComponentSizeRangeProviding.h>
 #import <ComponentKit/CKDimension.h>
 
-@interface CKComponentLifecycleTestController () <CKComponentStateListener>
+@interface CKComponentLifecycleTestHelper () <CKComponentStateListener>
 @end
 
-@implementation CKComponentLifecycleTestController
+@implementation CKComponentLifecycleTestHelper
 {
   Class<CKComponentProvider> _componentProvider;
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
   CKComponentScopeRoot *_previousScopeRoot;
   CKComponentStateUpdateMap _pendingStateUpdates;
-  CKComponentLifecycleTestControllerState _state;
+  CKComponentLifecycleTestHelperState _state;
   UIView *_mountedView;
   CKComponentDataSourceAttachController *_componentDataSourceAttachController;
 }
@@ -44,7 +44,7 @@
   return self;
 }
 
-- (CKComponentLifecycleTestControllerState)prepareForUpdateWithModel:(id)model
+- (CKComponentLifecycleTestHelperState)prepareForUpdateWithModel:(id)model
                                                      constrainedSize:(CKSizeRange)constrainedSize
                                                              context:(id<NSObject>)context
 {
@@ -66,7 +66,7 @@
   };
 }
 
-- (void)updateWithState:(const CKComponentLifecycleTestControllerState &)state
+- (void)updateWithState:(const CKComponentLifecycleTestHelperState &)state
 {
   CKAssertMainThread();
   [self updateWithStateWithoutMounting:state];
@@ -77,7 +77,7 @@
   }
 }
 
-- (void)updateWithStateWithoutMounting:(const CKComponentLifecycleTestControllerState &)state
+- (void)updateWithStateWithoutMounting:(const CKComponentLifecycleTestHelperState &)state
 {
   CKAssertMainThread();
   _state = state;
@@ -100,7 +100,7 @@
   [_componentDataSourceAttachController detachComponentLayoutWithScopeIdentifier:_state.scopeRoot.globalIdentifier];
 }
 
-- (const CKComponentLifecycleTestControllerState &)state
+- (const CKComponentLifecycleTestHelperState &)state
 {
   CKAssertMainThread();
   return _state;

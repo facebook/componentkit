@@ -10,7 +10,7 @@
 
 #import "CKComponentSnapshotTestCase.h"
 
-#import <ComponentKitTestHelpers/CKComponentLifecycleTestController.h>
+#import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentProvider.h>
@@ -31,9 +31,9 @@ static CKComponent *_leakyComponent;
                              error:(NSError **)errorPtr
 {
   const CKComponentLayout componentLayout = [component layoutThatFits:sizeRange parentSize:sizeRange.max];
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
-  [componentLifecycleTestController updateWithState:(CKComponentLifecycleTestControllerState){
+  [componentLifecycleTestController updateWithState:(CKComponentLifecycleTestHelperState){
     .componentLayout = componentLayout
   }];
   UIView *view = [[UIView alloc] initWithFrame:{{0,0}, componentLayout.size}];
@@ -53,7 +53,7 @@ static CKComponent *_leakyComponent;
                                   error:(NSError **)errorPtr;
 {
   _componentBlock = componentBlock;
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:[componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                 constrainedSize:sizeRange

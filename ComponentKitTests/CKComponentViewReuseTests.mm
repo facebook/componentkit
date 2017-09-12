@@ -10,7 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestHelpers/CKComponentLifecycleTestController.h>
+#import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
@@ -250,7 +250,7 @@ static UIView *viewFactory()
 {
   UIView *rootView = [[UIView alloc] init];
 
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:[componentLifecycleTestController prepareForUpdateWithModel:@NO
                                                                                                 constrainedSize:{{0,0}, {100, 100}}

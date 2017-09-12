@@ -12,7 +12,7 @@
 
 #import <ComponentKit/CKFlexboxComponent.h>
 
-#import <yoga/Yoga.h>
+#import "yoga/Yoga.h"
 
 @interface CKFlexboxComponent (Test)
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize;

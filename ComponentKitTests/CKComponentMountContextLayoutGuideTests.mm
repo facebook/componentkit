@@ -10,7 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestHelpers/CKComponentLifecycleTestController.h>
+#import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
@@ -36,7 +36,7 @@
    children:{
      {{50, 50}, c, {100, 100}},
    }];
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
     .componentLayout = [layoutComponent layoutThatFits:{} parentSize:{NAN, NAN}]
@@ -65,7 +65,7 @@
    children:{
      {{100, 100}, innerLayoutComponent, {100, 100}},
    }];
-  CKComponentLifecycleTestController *componentLifecycleTestController = [[CKComponentLifecycleTestController alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
     .componentLayout = [outerLayoutComponent layoutThatFits:{} parentSize:{NAN, NAN}]

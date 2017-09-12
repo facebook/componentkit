@@ -10,7 +10,7 @@
 
 #import "CKComponentHostingViewTestModel.h"
 
-#import <ComponentKit/CKComponent.h>
+#import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 
 @implementation CKComponentHostingViewTestModel
 
@@ -28,6 +28,6 @@
 
 CKComponent *CKComponentWithHostingViewTestModel(CKComponentHostingViewTestModel *model)
 {
-  return [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [model color]}}}
+  return [CKLifecycleTestComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [model color]}}}
                              size:[model size]];
 }
