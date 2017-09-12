@@ -17,16 +17,19 @@
 template <typename V>
 class CKButtonComponentStateMap {
 public:
+  using Map = std::unordered_map<UIControlState, V>;
   /// Default constructor.
   CKButtonComponentStateMap() {}
   /// Single value (applied to `UIControlStateNormal`).
   CKButtonComponentStateMap(const V v) : map({{UIControlStateNormal, v}}) {}
-  /// Multiple values for specific `UIControlState`s.
-  CKButtonComponentStateMap(const std::unordered_map<UIControlState, V> &m) : map(m) {}
+  /// Multiple values for specific `UIControlState`s as inline list.
+  CKButtonComponentStateMap(std::initializer_list<typename Map::value_type> init) : map(std::move(init)) {}
+  /// Multiple values for specific `UIControlState`s as existing map.
+  CKButtonComponentStateMap(const std::unordered_map<UIControlState, V> &m) : map(m) {};
   /// Get the states map.
-  const std::unordered_map<UIControlState, V> &getMap() const { return map; }
+  const Map &getMap() const { return map; }
 private:
-  const std::unordered_map<UIControlState, V> map;
+  const Map map;
 };
 
 struct CKButtonComponentOptions {
