@@ -265,9 +265,9 @@ static void enumerateAllStates(void (^block)(UIControlState))
 static inline NSUInteger indexForState(UIControlState state)
 {
   return 0 +
-  state & UIControlStateHighlighted ? 4 : 0 +
-  state & UIControlStateDisabled ? 2 : 0 +
-  state & UIControlStateSelected ? 1 : 0;
+  (state & UIControlStateHighlighted ? 4 : 0) +
+  (state & UIControlStateDisabled ? 2 : 0) +
+  (state & UIControlStateSelected ? 1 : 0);
 }
 
 @end
