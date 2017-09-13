@@ -299,6 +299,10 @@
 		39B090BF1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */; };
 		497824751BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 497824741BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm */; };
 		49FA174E1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49FA174D1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm */; };
+		7F27E2C01F69CC0F00573E14 /* CKLifecycleTestComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F98F58A1F67F2F600436978 /* CKLifecycleTestComponent.h */; };
+		7F27E2C11F69CC0F00573E14 /* CKLifecycleTestComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F98F58B1F67F2F600436978 /* CKLifecycleTestComponent.mm */; };
+		7F27E2CE1F69E3FC00573E14 /* CKComponentLifecycleTestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA099121F66F36800B81EED /* CKComponentLifecycleTestHelper.h */; };
+		7F27E2CF1F69E3FC00573E14 /* CKComponentLifecycleTestHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FA099131F66F36800B81EED /* CKComponentLifecycleTestHelper.mm */; };
 		7F5A85301F1F903D00238338 /* CKFlexboxComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F6BAF671F1F6E5200600828 /* CKFlexboxComponent.mm */; };
 		7F5A853B1F1F904C00238338 /* CKComponentControllerEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF5435E1F1F6DF700EFEFDD /* CKComponentControllerEvents.mm */; };
 		7F5A853C1F1F905F00238338 /* YGEnums.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F6BAF751F1F71A700600828 /* YGEnums.c */; };
@@ -1899,6 +1903,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				03A98A6E1D2B2BFD00C5BAC2 /* CKTestActionComponent.h in Headers */,
+				7F27E2CE1F69E3FC00573E14 /* CKComponentLifecycleTestHelper.h in Headers */,
+				7F27E2C01F69CC0F00573E14 /* CKLifecycleTestComponent.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2578,7 +2584,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F27E2C11F69CC0F00573E14 /* CKLifecycleTestComponent.mm in Sources */,
 				03A98A6B1D2B2BFD00C5BAC2 /* CKTestActionComponent.mm in Sources */,
+				7F27E2CF1F69E3FC00573E14 /* CKComponentLifecycleTestHelper.mm in Sources */,
 				2D8270F71E3F72F1008C1A26 /* CKTestRunLoopRunning.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
