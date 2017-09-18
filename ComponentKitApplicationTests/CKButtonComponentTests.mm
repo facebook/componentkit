@@ -49,51 +49,37 @@ static UIImage *fakeImage()
 
 - (void)testButtonWithTitle
 {
-  CKButtonComponent *b = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello World"}}
-                                              titleColors:{}
-                                                   images:{}
-                                         backgroundImages:{}
-                                                titleFont:nil
-                                                 selected:NO
-                                                  enabled:YES
-                                                   action:{}
-                                                     size:{}
-                                               attributes:{}
-                               accessibilityConfiguration:{}];
+  CKButtonComponent *b = [CKButtonComponent
+                          newWithAction:{}
+                          options:{
+                            .titles = @"Hello World",
+                          }
+                         ];
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
 - (void)testButtonWithImage
 {
-  CKButtonComponent *b = [CKButtonComponent newWithTitles:{}
-                                              titleColors:{}
-                                                   images:{{UIControlStateNormal, fakeImage()}}
-                                         backgroundImages:{}
-                                                titleFont:nil
-                                                 selected:NO
-                                                  enabled:YES
-                                                   action:{}
-                                                     size:{}
-                                               attributes:{}
-                               accessibilityConfiguration:{}];
+  CKButtonComponent *b = [CKButtonComponent
+                          newWithAction:{}
+                          options:{
+                            .images = fakeImage(),
+                          }
+                         ];
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
 - (void)testButtonWithTitleAndImage
 {
-  CKButtonComponent *b = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello World"}}
-                                              titleColors:{}
-                                                   images:{{UIControlStateNormal, fakeImage()}}
-                                         backgroundImages:{}
-                                                titleFont:nil
-                                                 selected:NO
-                                                  enabled:YES
-                                                   action:{}
-                                                     size:{}
-                                               attributes:{}
-                               accessibilityConfiguration:{}];
+  CKButtonComponent *b = [CKButtonComponent
+                          newWithAction:{}
+                          options:{
+                            .titles = @"Hello World",
+                            .images = fakeImage(),
+                          }
+                         ];
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
@@ -101,17 +87,14 @@ static UIImage *fakeImage()
 - (void)testButtonWithTitleAndImageAndContentEdgeInsets
 {
   NSValue *insets = [NSValue valueWithUIEdgeInsets:UIEdgeInsetsMake(10, 10, 10, 10)];
-  CKButtonComponent *b = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello World"}}
-                                              titleColors:{}
-                                                   images:{{UIControlStateNormal, fakeImage()}}
-                                         backgroundImages:{}
-                                                titleFont:nil
-                                                 selected:NO
-                                                  enabled:YES
-                                                   action:{}
-                                                     size:{}
-                                               attributes:{{@selector(setContentEdgeInsets:), insets}}
-                               accessibilityConfiguration:{}];
+  CKButtonComponent *b = [CKButtonComponent
+                          newWithAction:{}
+                          options:{
+                            .titles = @"Hello World",
+                            .images = fakeImage(),
+                            .attributes = {{@selector(setContentEdgeInsets:), insets}},
+                          }
+                         ];
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
@@ -128,82 +111,65 @@ static UIImage *fakeImage()
   };
   CKSizeRange size;
 
-  CKButtonComponent *normal = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello"}}
-                                                   titleColors:titleColors
-                                                        images:{}
-                                              backgroundImages:{}
-                                                     titleFont:nil
-                                                      selected:NO
-                                                       enabled:YES
-                                                        action:{}
-                                                          size:{}
-                                                    attributes:{}
-                                    accessibilityConfiguration:{}];
+  CKButtonComponent *normal = [CKButtonComponent
+                               newWithAction:{}
+                               options:{
+                                 .titles = @"Hello",
+                                 .titleColors = titleColors,
+                               }
+                              ];
   CKSnapshotVerifyComponent(normal, size, @"normal");
 
-  CKButtonComponent *hi = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello"}}
-                                               titleColors:titleColors
-                                                    images:{}
-                                          backgroundImages:{}
-                                                 titleFont:nil
-                                                  selected:NO
-                                                   enabled:YES
-                                                    action:{}
-                                                      size:{}
-                                                attributes:{{@selector(setHighlighted:), @YES}}
-                                accessibilityConfiguration:{}];
+  CKButtonComponent *hi = [CKButtonComponent
+                           newWithAction:{}
+                           options:{
+                             .titles = @"Hello",
+                             .titleColors = titleColors,
+                             .attributes = {{@selector(setHighlighted:), @YES}},
+                           }
+                          ];
   CKSnapshotVerifyComponent(hi, size, @"highlighted");
 
-  CKButtonComponent *sel = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello"}}
-                                                titleColors:titleColors
-                                                     images:{}
-                                           backgroundImages:{}
-                                                  titleFont:nil
-                                                   selected:YES
-                                                    enabled:YES
-                                                     action:{}
-                                                       size:{}
-                                                 attributes:{}
-                                 accessibilityConfiguration:{}];
+  CKButtonComponent *sel = [CKButtonComponent
+                            newWithAction:{}
+                            options:{
+                              .titles = @"Hello",
+                              .titleColors = titleColors,
+                              .selected = YES,
+                            }
+                           ];
   CKSnapshotVerifyComponent(sel, size, @"selected");
 
-  CKButtonComponent *dis = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello"}}
-                                                titleColors:titleColors
-                                                     images:{}
-                                           backgroundImages:{}
-                                                  titleFont:nil
-                                                   selected:NO
-                                                    enabled:NO
-                                                     action:{}
-                                                       size:{}
-                                                 attributes:{}
-                                 accessibilityConfiguration:{}];
+  CKButtonComponent *dis = [CKButtonComponent
+                            newWithAction:{}
+                            options:{
+                              .titles = @"Hello",
+                              .titleColors = titleColors,
+                              .enabled = NO,
+                            }
+                           ];
   CKSnapshotVerifyComponent(dis, size, @"disabled");
 
-  CKButtonComponent *dissel = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello"}}
-                                                   titleColors:titleColors
-                                                        images:{}
-                                              backgroundImages:{}
-                                                     titleFont:nil
-                                                      selected:YES
-                                                       enabled:NO
-                                                        action:{}
-                                                          size:{}
-                                                    attributes:{}
-                                    accessibilityConfiguration:{}];
+  CKButtonComponent *dissel = [CKButtonComponent
+                               newWithAction:{}
+                               options:{
+                                 .titles = @"Hello",
+                                 .titleColors = titleColors,
+                                 .selected = YES,
+                                 .enabled = NO,
+                               }
+                              ];
   CKSnapshotVerifyComponent(dissel, size, @"disabled_selected");
 
-  CKButtonComponent *selhi = [CKButtonComponent newWithTitles:{{UIControlStateNormal, @"Hello"}}
-                                                  titleColors:titleColors
-                                                       images:{}
-                                             backgroundImages:{}
-                                                    titleFont:nil
-                                                     selected:YES
-                                                      enabled:YES
-                                                       action:{}
-                                                         size:{}
-                                                   attributes:{{@selector(setHighlighted:), @YES}}
-                                   accessibilityConfiguration:{}];
+  CKButtonComponent *selhi = [CKButtonComponent
+                              newWithAction:{}
+                              options:{
+                                .titles = @"Hello",
+                                .titleColors = titleColors,
+                                .selected = YES,
+                                .attributes = {{@selector(setHighlighted:), @YES}},
+                              }
+                             ];
   CKSnapshotVerifyComponent(selhi, size, @"selected_highlighted");
 }
 

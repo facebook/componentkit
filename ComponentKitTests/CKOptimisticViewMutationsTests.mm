@@ -78,17 +78,11 @@
 {
   CKButtonComponent *buttonComponent =
   [CKButtonComponent
-   newWithTitles:{{UIControlStateNormal, @"Original"}}
-   titleColors:{}
-   images:{}
-   backgroundImages:{}
-   titleFont:nil
-   selected:NO
-   enabled:YES
-   action:nullptr
-   size:{}
-   attributes:{}
-   accessibilityConfiguration:{}];
+   newWithAction:nullptr
+   options:{
+     .titles = @"Original",
+   }
+  ];
   CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
