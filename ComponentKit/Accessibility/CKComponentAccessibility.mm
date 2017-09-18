@@ -9,7 +9,6 @@
  */
 
 #import "CKComponentAccessibility.h"
-#import "CKComponentAccessibility_Private.h"
 
 #import <ComponentKit/CKAssert.h>
 
@@ -65,6 +64,12 @@ void CK::Component::Accessibility::SetForceAccessibilityEnabled(BOOL enabled)
 {
   _forceAccessibilityEnabled = enabled;
   _forceAccessibilityDisabled = !enabled;
+}
+
+void CK::Component::Accessibility::ResetForceAccessibility()
+{
+  _forceAccessibilityEnabled = NO;
+  _forceAccessibilityDisabled = NO;
 }
 
 BOOL CK::Component::Accessibility::IsAccessibilityEnabled()

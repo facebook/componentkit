@@ -74,6 +74,16 @@ namespace CK {
        */
       CKComponentViewConfiguration AccessibleViewConfiguration(const CKComponentViewConfiguration &viewConfiguration);
       BOOL IsAccessibilityEnabled();
+      /**
+       Force accessibility to be enabled or disabled.
+       @param enabled A Boolean value that determines whether accessibility is forcibly enabled or disabled.
+       @discussion Use for testing and tooling. Call ResetForceAccessibility() to reset to the default behavior.
+       */
+      void SetForceAccessibilityEnabled(BOOL enabled);
+      /**
+       Reset force accessibility to a default state (i.e. enabled only when VoiceOver is running)
+       */
+      void ResetForceAccessibility();
     }
   }
 }
