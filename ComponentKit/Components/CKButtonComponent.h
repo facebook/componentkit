@@ -68,18 +68,6 @@ struct CKButtonComponentAccessibilityConfiguration {
  */
 @interface CKButtonComponent : CKComponent
 
-+ (instancetype)newWithTitles:(CKContainerWrapper<std::unordered_map<UIControlState, NSString *>> &&)titles
-                  titleColors:(CKContainerWrapper<std::unordered_map<UIControlState, UIColor *>> &&)titleColors
-                       images:(CKContainerWrapper<std::unordered_map<UIControlState, UIImage *>> &&)images
-             backgroundImages:(CKContainerWrapper<std::unordered_map<UIControlState, UIImage *>> &&)backgroundImages
-                    titleFont:(UIFont *)titleFont
-                     selected:(BOOL)selected
-                      enabled:(BOOL)enabled
-                       action:(const CKTypedComponentAction<UIEvent *> &)action
-                         size:(const CKComponentSize &)size
-                   attributes:(const CKViewComponentAttributeValueMap &)attributes
-   accessibilityConfiguration:(CKButtonComponentAccessibilityConfiguration)accessibilityConfiguration;
-
 + (instancetype)newWithAction:(const CKTypedComponentAction<UIEvent *>)action
                       options:(const CKButtonComponentOptions &)options;
 

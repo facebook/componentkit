@@ -48,36 +48,6 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   CGSize _intrinsicSize;
 }
 
-+ (instancetype)newWithTitles:(CKContainerWrapper<std::unordered_map<UIControlState, NSString *>> &&)titlesParam
-                  titleColors:(CKContainerWrapper<std::unordered_map<UIControlState, UIColor *>> &&)titleColorsParam
-                       images:(CKContainerWrapper<std::unordered_map<UIControlState, UIImage *>> &&)imagesParam
-             backgroundImages:(CKContainerWrapper<std::unordered_map<UIControlState, UIImage *>> &&)backgroundImagesParam
-                    titleFont:(UIFont *)titleFont
-                     selected:(BOOL)selected
-                      enabled:(BOOL)enabled
-                       action:(const CKTypedComponentAction<UIEvent *> &)action
-                         size:(const CKComponentSize &)size
-                   attributes:(const CKViewComponentAttributeValueMap &)passedAttributes
-   accessibilityConfiguration:(CKButtonComponentAccessibilityConfiguration)accessibilityConfiguration
-{
-  return [self
-          newWithAction:action
-          options:{
-            .titles = titlesParam.take(),
-            .titleColors = titleColorsParam.take(),
-            .images = imagesParam.take(),
-            .backgroundImages = backgroundImagesParam.take(),
-            .titleFont = titleFont,
-            .selected = selected,
-            .enabled = enabled,
-            .attributes = passedAttributes,
-            .accessibilityContext = {
-              .accessibilityLabel = accessibilityConfiguration.accessibilityLabel,
-            },
-            .size = size,
-          }];
-}
-
 + (instancetype)newWithAction:(const CKTypedComponentAction<UIEvent *>)action
                       options:(const CKButtonComponentOptions &)options
 {
