@@ -57,4 +57,22 @@
   XCTAssertNotEqualObjects(firstChangeset, secondChangeset);
 }
 
+- (void)testChangesetIsEmpty
+{
+  XCTAssertTrue([[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] build].isEmpty);
+
+  XCTAssertFalse([[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+                   withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0] : @"A"}] build].isEmpty);
+  XCTAssertFalse([[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+                   withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]] build].isEmpty);
+  XCTAssertFalse([[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+                   withRemovedSections:[NSIndexSet indexSetWithIndex:2]] build].isEmpty);
+  XCTAssertFalse([[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+                   withUpdatedItems:@{[NSIndexPath indexPathForItem:2 inSection:0] : [NSIndexPath indexPathForItem:3 inSection:0]}] build].isEmpty);
+  XCTAssertFalse([[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+                   withInsertedSections:[NSIndexSet indexSetWithIndex:1]] build].isEmpty);
+  XCTAssertFalse([[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+                   withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:1] : @"C"}] build].isEmpty);
+}
+
 @end

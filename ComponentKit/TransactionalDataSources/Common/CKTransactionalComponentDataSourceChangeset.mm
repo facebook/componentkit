@@ -86,6 +86,17 @@ static NSString *ReadableStringForSortedItemsDictionary(NSDictionary *dict)
   return mutableDescription;
 }
 
+- (BOOL)isEmpty
+{
+  return
+  (_insertedSections.count == 0 &&
+   _removedSections.count == 0 &&
+   _updatedItems.count == 0 &&
+   _movedItems.count == 0 &&
+   _insertedItems.count == 0 &&
+   _removedItems.count == 0);
+}
+
 - (BOOL)isEqual:(id)object
 {
   if (![object isKindOfClass:[CKTransactionalComponentDataSourceChangeset class]]) {

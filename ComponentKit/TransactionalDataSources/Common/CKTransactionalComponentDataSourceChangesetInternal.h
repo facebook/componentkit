@@ -21,4 +21,6 @@
 @property (nonatomic, copy, readonly) NSDictionary *insertedItems;
 @property (nonatomic, copy, readonly) NSDictionary *userInfo;
 
+- (BOOL)isEmpty;
+
 @end
