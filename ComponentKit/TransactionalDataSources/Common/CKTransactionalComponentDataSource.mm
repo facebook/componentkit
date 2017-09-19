@@ -13,8 +13,10 @@
 
 #import "CKAssert.h"
 #import "CKComponentControllerEvents.h"
+#import "CKComponentControllerInternal.h"
 #import "CKComponentDebugController.h"
 #import "CKComponentScopeRoot.h"
+#import "CKComponentSubclass.h"
 #import "CKTransactionalComponentDataSourceAppliedChanges.h"
 #import "CKTransactionalComponentDataSourceChange.h"
 #import "CKTransactionalComponentDataSourceChangesetModification.h"
@@ -235,9 +237,28 @@
     CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
   }
   
+  std::vector<CKComponent *> updatedComponents;
+  if ([_state.configuration alwaysSendComponentUpdate]) {
+    NSDictionary *finalIndexPathsForUpdatedItems = [[change appliedChanges] finalUpdatedIndexPaths];
+    for (NSIndexPath *updatedIndex in finalIndexPathsForUpdatedItems) {
+      CKTransactionalComponentDataSourceItem *item = [_state objectAtIndexPath:updatedIndex];
+      getComponentsFromLayout(item.layout, updatedComponents);
+    }
+    
+    for (auto updatedComponent: updatedComponents) {
+      [updatedComponent.controller willStartUpdateToComponent:updatedComponent];
+    }
+  }
+
   [_announcer transactionalComponentDataSource:self
                         didModifyPreviousState:previousState
                              byApplyingChanges:[change appliedChanges]];
+  
+  if ([_state.configuration alwaysSendComponentUpdate]) {
+    for (auto updatedComponent: updatedComponents) {
+      [updatedComponent.controller didFinishComponentUpdate];
+    }
+  }
 }
 
 - (void)_processStateUpdates
@@ -271,6 +292,16 @@
       [self _startFirstAsynchronousModification];
     }
   });
+}
+
+static void getComponentsFromLayout(CKComponentLayout layout, std::vector<CKComponent *> &updatedComponents)
+{
+  updatedComponents.push_back(layout.component);
+  if (layout.children) {
+    for (const auto child : *layout.children) {
+      getComponentsFromLayout(child.layout, updatedComponents);
+    }
+  }
 }
 
 static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changeset,

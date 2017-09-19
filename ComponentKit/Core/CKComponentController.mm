@@ -123,7 +123,7 @@ private:
 
 #pragma mark - Hooks
 
-- (void)componentWillMount:(CKComponent *)component
+- (void)willStartUpdateToComponent:(CKComponent *)component
 {
   if (component != _component) {
     [self willUpdateComponent];
@@ -131,6 +131,20 @@ private:
     _component = component;
     _updatingComponent = YES;
   }
+}
+
+- (void)didFinishComponentUpdate
+{
+  if (_updatingComponent) {
+    [self didUpdateComponent];
+    _previousComponent = nil;
+    _updatingComponent = NO;
+  }
+}
+
+- (void)componentWillMount:(CKComponent *)component
+{
+  [self willStartUpdateToComponent:component];
 
   switch (_state) {
     case CKComponentControllerStateUnmounted:
@@ -198,11 +212,7 @@ private:
       CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
   }
 
-  if (_updatingComponent) {
-    [self didUpdateComponent];
-    _previousComponent = nil;
-    _updatingComponent = NO;
-  }
+  [self didFinishComponentUpdate];
 }
 
 - (void)componentWillUnmount:(CKComponent *)component

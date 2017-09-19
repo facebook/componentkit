@@ -58,11 +58,12 @@
 
 - (void)testThatRemountingUnchangedComponentDoesNotCallDidUpdateComponent
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
-                                                                                                                             sizeRangeProvider:nil];
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc]
+                                                                      initWithComponentProvider:[self class]
+                                                                              sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
-                                                                                                    constrainedSize:{{0,0}, {100, 100}}
-                                                                                                            context:nil];
+                                                                                                constrainedSize:{{0,0}, {100, 100}}
+                                                                                                        context:nil];
   [componentLifecycleTestController updateWithState:state];
 
   UIView *view = [UIView new];

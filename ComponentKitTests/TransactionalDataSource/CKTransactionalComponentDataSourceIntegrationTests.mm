@@ -25,7 +25,8 @@
 @end
 
 @implementation CKTransactionalComponentDataSourceIntegrationTestComponent
-+ (instancetype)newWithIdentifier:(id)identifier {
++ (instancetype)newWithIdentifier:(id)identifier
+{
   CKComponentScope scope(self, identifier);
   return [self newWithComponent:[CKComponent new]];
 }
@@ -36,7 +37,14 @@
 @end
 
 @implementation CKTransactionalComponentDataSourceIntegrationTestComponentController
-- (instancetype)initWithComponent:(CKComponent *)component {
+
+typedef NS_ENUM(NSUInteger, CKTestConfig) {
+  CKTestConfigDefault,
+  CKTestConfigAlwaysSendUpdates,
+};
+
+- (instancetype)initWithComponent:(CKComponent *)component
+{
   if ((self = [super initWithComponent:component])) {
     self.callbacks = [NSMutableArray array];
   }
@@ -75,22 +83,15 @@
 
 @implementation CKTransactionalComponentDataSourceIntegrationTests
 
-- (void)setUp {
+- (void)setUp
+{
   [super setUp];
 
   self.collectionViewController = [[UICollectionViewController alloc]
                                    initWithCollectionViewLayout:[UICollectionViewFlowLayout new]];
 
-  CKTransactionalComponentDataSourceConfiguration *config = [[CKTransactionalComponentDataSourceConfiguration alloc]
-                                                             initWithComponentProvider:(id) self
-                                                             context:nil
-                                                             sizeRange:CKSizeRange({50, 50}, {50, 50})];
-
   self.components = [NSMutableArray new];
-  self.dataSource = [[CKCollectionViewTransactionalDataSource alloc]
-                     initWithCollectionView:self.collectionViewController.collectionView
-                     supplementaryViewDataSource:nil
-                     configuration:config];
+  self.dataSource = [self generateDataSource:CKTestConfigDefault];
 
   [self.dataSource applyChangeset:
    [[[[CKTransactionalComponentDataSourceChangesetBuilder new]
@@ -106,13 +107,28 @@
   (CKTransactionalComponentDataSourceIntegrationTestComponentController*) self.components.lastObject.controller;
 }
 
-- (CKComponent *)componentForModel:(NSString*)model context:(id<NSObject>)context {
+- (CKCollectionViewTransactionalDataSource *)generateDataSource:(CKTestConfig)testConfig
+{
+  CKTransactionalComponentDataSourceConfiguration *config = [[CKTransactionalComponentDataSourceConfiguration alloc]
+                                                             initWithComponentProvider:(id) self
+                                                             context:nil
+                                                             sizeRange:CKSizeRange({50, 50}, {50, 50})
+                                                             alwaysSendComponentUpdate:(testConfig == CKTestConfigAlwaysSendUpdates)];
+
+  return [[CKCollectionViewTransactionalDataSource alloc] initWithCollectionView:self.collectionViewController.collectionView
+                                                     supplementaryViewDataSource:nil
+                                                                   configuration:config];
+}
+
+- (CKComponent *)componentForModel:(NSString*)model context:(id<NSObject>)context
+{
   CKComponent *component = [CKTransactionalComponentDataSourceIntegrationTestComponent newWithIdentifier:@"TestComponent"];
   [self.components addObject:component];
   return component;
 }
 
-- (void)testUpdateModelShouldCreateNewComponentAndTriggerControllerCallbacksForRemount {
+- (void)testUpdateModelShouldCreateNewComponentAndTriggerControllerCallbacksForRemount
+{
   [self.dataSource applyChangeset:
    [[[CKTransactionalComponentDataSourceChangesetBuilder new]
      withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0] : @""}]
@@ -125,6 +141,33 @@
                                                               NSStringFromSelector(@selector(didRemount)),
                                                               NSStringFromSelector(@selector(didUpdateComponent))
                                                               ]));
+}
+
+- (void)testUpdateModelAlwaysSendUpdateControllerCallbacks
+{
+  self.dataSource = [self generateDataSource:CKTestConfigAlwaysSendUpdates];
+  
+  [self.dataSource applyChangeset:
+   [[[[CKTransactionalComponentDataSourceChangesetBuilder new]
+      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+     withInsertedItems:@{ [NSIndexPath indexPathForItem:0 inSection:0] : @"" }]
+    build] mode:CKUpdateModeSynchronous userInfo:nil];
+
+  [self.dataSource applyChangeset:
+   [[[CKTransactionalComponentDataSourceChangesetBuilder new]
+     withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0] : @""}]
+    build] mode:CKUpdateModeSynchronous userInfo:nil];
+
+  CKTransactionalComponentDataSourceIntegrationTestComponentController * controller =
+    (CKTransactionalComponentDataSourceIntegrationTestComponentController*) self.components.lastObject.controller;
+  [controller.callbacks count];
+
+  XCTAssertEqualObjects(controller.callbacks, (@[
+                                                               NSStringFromSelector(@selector(willUpdateComponent)),
+                                                               NSStringFromSelector(@selector(willRemount)),
+                                                               NSStringFromSelector(@selector(didRemount)),
+                                                               NSStringFromSelector(@selector(didUpdateComponent))
+                                                               ]));
 }
 
 // This test checks that controller receives invalidateController callback when DataSource owning it
@@ -146,15 +189,7 @@
 {
   NSArray *callbacks = nil;
   @autoreleasepool {
-    CKTransactionalComponentDataSourceConfiguration *config = [[CKTransactionalComponentDataSourceConfiguration alloc]
-                                                               initWithComponentProvider:(id) self
-                                                               context:nil
-                                                               sizeRange:CKSizeRange({50, 50}, {50, 50})];
-    CKCollectionViewTransactionalDataSource *dataSource = [[CKCollectionViewTransactionalDataSource alloc]
-                                                           initWithCollectionView:self.collectionViewController.collectionView
-                                                           supplementaryViewDataSource:nil
-                                                           configuration:config];
-    self.dataSource = dataSource;
+    self.dataSource = [self generateDataSource:CKTestConfigDefault];
     
     [self.dataSource applyChangeset:
      [[[[CKTransactionalComponentDataSourceChangesetBuilder new]
@@ -168,9 +203,6 @@
     
     // We clean everything to ensure dataSource receives deallocation happens when autorelease pool is destroyed
     self.dataSource = nil;
-    self.components = nil;
-    self.componentController = nil;
-    self.collectionViewController = nil;
   }
   XCTAssertEqualObjects(callbacks, (@[NSStringFromSelector(@selector(invalidateController))]));
 }

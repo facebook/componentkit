@@ -22,4 +22,7 @@
 - (void)component:(CKComponent *)component willRelinquishView:(UIView *)view;
 - (void)component:(CKComponent *)component didAcquireView:(UIView *)view;
 
+- (void)willStartUpdateToComponent:(CKComponent *)component;
+- (void)didFinishComponentUpdate;
+
 @end
