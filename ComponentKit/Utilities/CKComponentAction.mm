@@ -307,6 +307,11 @@ static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSigna
 
     CKCAssert(methodEncoding == NULL || typeEncoding == NULL || strcmp(methodEncoding, typeEncoding) == 0, @"Implementation of %@ does not match expected types.\nExpected type %s, got %s", NSStringFromSelector(selector), typeEncoding, methodEncoding);
   }
+    
+  if (signature.numberOfArguments >= 3) {
+    const char *methodEncoding = [signature getArgumentTypeAtIndex:2];
+    CKCAssert(methodEncoding == NULL || strcmp(methodEncoding, "@") == 0, @"Implementation of %@ does not match expected types.\nExpected type @, got %s for first parameter", NSStringFromSelector(selector), methodEncoding);
+  }
 }
 #endif
 
