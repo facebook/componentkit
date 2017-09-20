@@ -84,7 +84,7 @@
   return _state;
 }
 
-- (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
+- (void)applyChangeset:(CKDataSourceChangeset *)changeset
                   mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo
 {
@@ -304,7 +304,7 @@ static void getComponentsFromLayout(CKComponentLayout layout, std::vector<CKComp
   }
 }
 
-static void verifyChangeset(CKTransactionalComponentDataSourceChangeset *changeset,
+static void verifyChangeset(CKDataSourceChangeset *changeset,
                             CKTransactionalComponentDataSourceState *state,
                             NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications)
 {

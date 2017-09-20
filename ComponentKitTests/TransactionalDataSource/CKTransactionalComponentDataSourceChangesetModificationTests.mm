@@ -17,7 +17,7 @@
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceAppliedChanges.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceChange.h>
-#import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
+#import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceItem.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceChangesetModification.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceState.h>
@@ -57,7 +57,7 @@
   CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 1);
   NSDictionary *userInfo = @{@"foo": @"bar"};
   CKTransactionalComponentDataSourceChangesetModification *changesetModification =
-  [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] build]
+  [[CKTransactionalComponentDataSourceChangesetModification alloc] initWithChangeset:[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] build]
                                                                        stateListener:nil
                                                                             userInfo:userInfo];
   CKTransactionalComponentDataSourceChange *change = [changesetModification changeFromState:originalState];
@@ -67,8 +67,8 @@
 - (void)testInsertingSectionAndItemsInEmptyStateExposesNewItems
 {
   CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 0, 0);
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1, [NSIndexPath indexPathForItem:1 inSection:0]: @2}]
    build];
@@ -84,8 +84,8 @@
 - (void)testAppliesRemovedItemsThenRemovedSections
 {
   CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 2, 2);
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
      withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]]
     withRemovedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
@@ -109,8 +109,8 @@
 - (void)testUpdateGeneratesNewComponent
 {
   CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 1);
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @"updated"}]
    build];
   CKTransactionalComponentDataSourceChangesetModification *changesetModification =
@@ -126,8 +126,8 @@
 - (void)testAppliesRemovedItemsThenInsertedItems
 {
   CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 2);
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
      withInsertedItems:@{[NSIndexPath indexPathForItem:1 inSection:0]: @2}]
     withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]]
    build];
@@ -149,8 +149,8 @@
 - (void)testMoveItem
 {
   CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 3);
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withMovedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:2 inSection:0]}]
    build];
   CKTransactionalComponentDataSourceChangesetModification *changesetModification =
@@ -176,8 +176,8 @@
 - (void)testSwapItemsWithMoves
 {
   CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 2, 2);
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withMovedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:1],
                      [NSIndexPath indexPathForItem:0 inSection:1]: [NSIndexPath indexPathForItem:0 inSection:0]}]
    build];
@@ -203,8 +203,8 @@
 - (void)testMoveWithRemovals
 {
   CKTransactionalComponentDataSourceState *originalState = CKTransactionalComponentDataSourceTestState([self class], nil, 1, 4);
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
      withMovedItems:@{[NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0] }]
     withRemovedItems:[NSSet setWithArray:@[[NSIndexPath indexPathForItem:1 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0]]]]
    build];

@@ -16,7 +16,7 @@
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKTransactionalComponentDataSource.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceAppliedChanges.h>
-#import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
+#import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceListener.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceState.h>
@@ -66,8 +66,8 @@ struct CKDataSourceAnnouncedUpdate {
                                                                             sizeRange:{}]];
   [ds addListener:self];
 
-  CKTransactionalComponentDataSourceChangeset *insertion =
-  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *insertion =
+  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];
@@ -94,8 +94,8 @@ struct CKDataSourceAnnouncedUpdate {
                                                                             sizeRange:{}]];
   [ds addListener:self];
 
-  CKTransactionalComponentDataSourceChangeset *insertion =
-  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *insertion =
+  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];

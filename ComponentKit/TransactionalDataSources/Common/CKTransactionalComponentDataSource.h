@@ -15,7 +15,7 @@
 @protocol CKComponentProvider;
 @protocol CKTransactionalComponentDataSourceListener;
 
-@class CKTransactionalComponentDataSourceChangeset;
+@class CKDataSourceChangeset;
 @class CKTransactionalComponentDataSourceConfiguration;
 @class CKTransactionalComponentDataSourceState;
 
@@ -32,7 +32,7 @@
  Applies the specified changes to the data source. If you apply a changeset synchronously while previous asynchronous
  changesets are still pending, they will all be applied synchronously before applying the new changeset.
  */
-- (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
+- (void)applyChangeset:(CKDataSourceChangeset *)changeset
                   mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo;
 

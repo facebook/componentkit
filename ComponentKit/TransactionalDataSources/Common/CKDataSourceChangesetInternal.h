@@ -8,10 +8,10 @@
  *
  */
 
-#import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
+#import <ComponentKit/CKDataSourceChangeset.h>
 
 /** Internal interface since this class is usually only consumed internally. */
-@interface CKTransactionalComponentDataSourceChangeset ()
+@interface CKDataSourceChangeset ()
 
 @property (nonatomic, copy, readonly) NSDictionary *updatedItems;
 @property (nonatomic, copy, readonly) NSSet *removedItems;

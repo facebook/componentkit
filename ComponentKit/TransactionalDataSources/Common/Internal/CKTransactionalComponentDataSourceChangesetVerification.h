@@ -12,11 +12,11 @@
 
 #import <ComponentKit/CKInvalidChangesetOperationType.h>
 
-@class CKTransactionalComponentDataSourceChangeset;
+@class CKDataSourceChangeset;
 @class CKTransactionalComponentDataSourceState;
 
 @protocol CKTransactionalComponentDataSourceStateModifying;
 
-CKInvalidChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentDataSourceChangeset *changeset,
+CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset *changeset,
                                                            CKTransactionalComponentDataSourceState *state,
                                                            NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications);

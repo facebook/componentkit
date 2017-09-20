@@ -19,7 +19,7 @@
 #import "CKComponentController.h"
 #import "CKCollectionViewTransactionalDataSource.h"
 #import "CKTransactionalComponentDataSourceConfiguration.h"
-#import "CKTransactionalComponentDataSourceChangeset.h"
+#import "CKDataSourceChangeset.h"
 
 @interface CKTransactionalComponentDataSourceIntegrationTestComponent : CKCompositeComponent
 @end
@@ -94,7 +94,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
   self.dataSource = [self generateDataSource:CKTestConfigDefault];
 
   [self.dataSource applyChangeset:
-   [[[[CKTransactionalComponentDataSourceChangesetBuilder new]
+   [[[[CKDataSourceChangesetBuilder new]
       withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
      withInsertedItems:@{ [NSIndexPath indexPathForItem:0 inSection:0] : @"" }]
     build] mode:CKUpdateModeSynchronous userInfo:nil];
@@ -130,7 +130,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 - (void)testUpdateModelShouldCreateNewComponentAndTriggerControllerCallbacksForRemount
 {
   [self.dataSource applyChangeset:
-   [[[CKTransactionalComponentDataSourceChangesetBuilder new]
+   [[[CKDataSourceChangesetBuilder new]
      withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0] : @""}]
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
@@ -148,13 +148,13 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
   self.dataSource = [self generateDataSource:CKTestConfigAlwaysSendUpdates];
   
   [self.dataSource applyChangeset:
-   [[[[CKTransactionalComponentDataSourceChangesetBuilder new]
+   [[[[CKDataSourceChangesetBuilder new]
       withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
      withInsertedItems:@{ [NSIndexPath indexPathForItem:0 inSection:0] : @"" }]
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
   [self.dataSource applyChangeset:
-   [[[CKTransactionalComponentDataSourceChangesetBuilder new]
+   [[[CKDataSourceChangesetBuilder new]
      withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0] : @""}]
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
@@ -175,7 +175,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 - (void)testComponentControllerReceivesInvalidateEventWhenRemoved
 {
   [self.dataSource applyChangeset:
-   [[[CKTransactionalComponentDataSourceChangesetBuilder new]
+   [[[CKDataSourceChangesetBuilder new]
      withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]]
     build] mode:CKUpdateModeSynchronous userInfo:nil];
   self.dataSource = nil;
@@ -192,7 +192,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
     self.dataSource = [self generateDataSource:CKTestConfigDefault];
     
     [self.dataSource applyChangeset:
-     [[[[CKTransactionalComponentDataSourceChangesetBuilder new]
+     [[[[CKDataSourceChangesetBuilder new]
         withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
        withInsertedItems:@{ [NSIndexPath indexPathForItem:0 inSection:0] : @"" }]
       build] mode:CKUpdateModeSynchronous userInfo:nil];

@@ -64,8 +64,8 @@
                                                             supplementaryViewDataSource:nil
                                                                           configuration:configuration];
   // Insert the initial section
-  CKTransactionalComponentDataSourceChangeset *initialChangeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *initialChangeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
   [_dataSource applyChangeset:initialChangeset mode:CKUpdateModeAsynchronous userInfo:nil];
@@ -80,8 +80,8 @@
   for (NSInteger i = 0; i < [quotes count]; i++) {
     [items setObject:quotes[i] forKey:[NSIndexPath indexPathForRow:position + i inSection:0]];
   }
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedItems:items]
    build];
   [_dataSource applyChangeset:changeset mode:CKUpdateModeAsynchronous userInfo:nil];

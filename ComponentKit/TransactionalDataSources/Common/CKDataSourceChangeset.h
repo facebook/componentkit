@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CKTransactionalComponentDataSourceChangeset<__covariant ModelType> : NSObject
+@interface CKDataSourceChangeset<__covariant ModelType> : NSObject
 
 /**
  Designated initializer. Any parameter may be nil.
@@ -31,7 +31,7 @@
 @end
 
 /** A helper object that allows you to build changesets. */
-@interface CKTransactionalComponentDataSourceChangesetBuilder<__covariant ModelType> : NSObject
+@interface CKDataSourceChangesetBuilder<__covariant ModelType> : NSObject
 
 + (instancetype)transactionalComponentDataSourceChangeset;
 - (instancetype)withUpdatedItems:(NSDictionary<NSIndexPath *, ModelType> *)updatedItems;
@@ -40,6 +40,6 @@
 - (instancetype)withMovedItems:(NSDictionary<NSIndexPath *, NSIndexPath *> *)movedItems;
 - (instancetype)withInsertedSections:(NSIndexSet *)insertedSections;
 - (instancetype)withInsertedItems:(NSDictionary<NSIndexPath *, ModelType> *)insertedItems;
-- (CKTransactionalComponentDataSourceChangeset<ModelType> *)build;
+- (CKDataSourceChangeset<ModelType> *)build;
 
 @end

@@ -19,7 +19,7 @@
 @property (nonatomic, copy, readonly) NSIndexSet *insertedSections;
 @property (nonatomic, copy, readonly) NSSet *insertedIndexPaths;
 
-/** userInfo from the CKTransactionalComponentDataSourceChangeset object that caused this change. */
+/** userInfo from the CKDataSourceChangeset object that caused this change. */
 @property (nonatomic, copy, readonly) NSDictionary *userInfo;
 
 /**

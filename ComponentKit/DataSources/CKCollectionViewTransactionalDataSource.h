@@ -39,7 +39,7 @@
  If a synchronous changeset is applied while asynchronous changesets are still pending, then the pending changesets will be applied synchronously
  before the new changeset is applied.
  */
-- (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
+- (void)applyChangeset:(CKDataSourceChangeset *)changeset
                   mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo;
 

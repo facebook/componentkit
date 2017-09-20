@@ -18,7 +18,7 @@
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKTransactionalComponentDataSource.h>
-#import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
+#import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceItemInternal.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceStateInternal.h>
@@ -62,8 +62,8 @@ CKTransactionalComponentDataSource *CKTransactionalComponentTestDataSource(Class
                                                                               context:nil
                                                                             sizeRange:{}]];
 
-  CKTransactionalComponentDataSourceChangeset *insertion =
-  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *insertion =
+  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];

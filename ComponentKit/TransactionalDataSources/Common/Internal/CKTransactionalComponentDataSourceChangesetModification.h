@@ -12,16 +12,16 @@
 
 #import <ComponentKit/CKTransactionalComponentDataSourceStateModifying.h>
 
-@class CKTransactionalComponentDataSourceChangeset;
+@class CKDataSourceChangeset;
 
 @protocol CKComponentStateListener;
 
 @interface CKTransactionalComponentDataSourceChangesetModification : NSObject <CKTransactionalComponentDataSourceStateModifying>
 
-- (instancetype)initWithChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
+- (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo;
 
-@property (nonatomic, readonly, strong) CKTransactionalComponentDataSourceChangeset *changeset;
+@property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;
 
 @end

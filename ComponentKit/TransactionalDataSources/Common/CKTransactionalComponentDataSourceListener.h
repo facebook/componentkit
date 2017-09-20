@@ -21,7 +21,7 @@
  @param dataSource The sending data source; its state property now returns an updated object.
  @param previousState The state that the data source was previously exposing.
  @param changes The changes that were applied (which may correspond to multiple 
-        CKTransactionalComponentDataSourceChangeset objects).
+        CKDataSourceChangeset objects).
  */
 - (void)transactionalComponentDataSource:(CKTransactionalComponentDataSource *)dataSource
                   didModifyPreviousState:(CKTransactionalComponentDataSourceState *)previousState

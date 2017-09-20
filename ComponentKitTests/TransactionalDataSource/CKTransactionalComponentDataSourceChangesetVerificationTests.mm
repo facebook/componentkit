@@ -13,7 +13,7 @@
 #import <XCTest/XCTest.h>
 
 #import <ComponentKit/CKComponentLayout.h>
-#import <ComponentKit/CKTransactionalComponentDataSourceChangeset.h>
+#import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceChangesetModification.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceItemInternal.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceStateInternal.h>
@@ -32,8 +32,8 @@
   CKTransactionalComponentDataSourceState *state =
   [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
                                                                 sections:@[]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeNone);
 }
@@ -52,8 +52,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeNone);
 }
@@ -63,8 +63,8 @@
   CKTransactionalComponentDataSourceState *state =
   [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
                                                                 sections:@[]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
     withInsertedItems:@{
                        [NSIndexPath indexPathForItem:0 inSection:0]: @"A",
@@ -81,8 +81,8 @@
                                                                 sections:@[
                                                                            @[],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedItems:@{
                         [NSIndexPath indexPathForItem:0 inSection:0]: @"A",
                         [NSIndexPath indexPathForItem:1 inSection:0]: @"B",
@@ -101,8 +101,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedItems:@{
                         [NSIndexPath indexPathForItem:0 inSection:0]: @"A",
                         [NSIndexPath indexPathForItem:1 inSection:0]: @"B",
@@ -121,8 +121,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedItems:@{
                         [NSIndexPath indexPathForItem:1 inSection:0]: @"A",
                         [NSIndexPath indexPathForItem:2 inSection:0]: @"B",
@@ -141,8 +141,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedItems:@{
                         [NSIndexPath indexPathForItem:2 inSection:0]: @"A",
                         [NSIndexPath indexPathForItem:3 inSection:0]: @"B",
@@ -162,8 +162,8 @@
                                                                              itemWithModel(@"E"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedItems:[NSSet setWithArray:@[
                                            [NSIndexPath indexPathForItem:0 inSection:0],
                                            ]]]
@@ -182,8 +182,8 @@
                                                                              itemWithModel(@"E"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedItems:[NSSet setWithArray:@[
                                            [NSIndexPath indexPathForItem:1 inSection:0],
                                            ]]]
@@ -202,8 +202,8 @@
                                                                              itemWithModel(@"E"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedItems:[NSSet setWithArray:@[
                                            [NSIndexPath indexPathForItem:2 inSection:0],
                                            ]]]
@@ -222,8 +222,8 @@
                                                                              itemWithModel(@"E"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedItems:[NSSet setWithArray:@[
                                            [NSIndexPath indexPathForItem:2 inSection:0],
                                            [NSIndexPath indexPathForItem:1 inSection:0],
@@ -238,8 +238,8 @@
   CKTransactionalComponentDataSourceState *state =
   [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
                                                                 sections:@[]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeNone);
@@ -259,8 +259,8 @@
                                                                              itemWithModel(@"F"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeNone);
@@ -280,8 +280,8 @@
                                                                              itemWithModel(@"F"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:1]]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeNone);
@@ -301,8 +301,8 @@
                                                                              itemWithModel(@"F"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:2]]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeNone);
@@ -322,8 +322,8 @@
                                                                              itemWithModel(@"F"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 2)]]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeNone);
@@ -347,8 +347,8 @@
                                                                              itemWithModel(@"H"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeNone);
@@ -372,8 +372,8 @@
                                                                              itemWithModel(@"H"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedSections:[NSIndexSet indexSetWithIndex:1]]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeNone);
@@ -397,8 +397,8 @@
                                                                              itemWithModel(@"H"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedSections:[NSIndexSet indexSetWithIndex:2]]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeNone);
@@ -422,8 +422,8 @@
                                                                              itemWithModel(@"H"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeNone);
@@ -447,8 +447,8 @@
                                                                              itemWithModel(@"H"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 2)]]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeNone);
@@ -464,8 +464,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withUpdatedItems:@{
                        [NSIndexPath indexPathForItem:0 inSection:0]: @"A",
                        }]
@@ -483,8 +483,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withMovedItems:@{
                      [NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:1 inSection:0],
                      }]
@@ -502,8 +502,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withMovedItems:@{
                      [NSIndexPath indexPathForItem:1 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:0],
                      }]
@@ -529,8 +529,8 @@
                                                                              itemWithModel(@"H"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withMovedItems:@{
                      [NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:2 inSection:1],
                      }]
@@ -556,8 +556,8 @@
                                                                              itemWithModel(@"H"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withMovedItems:@{
                      [NSIndexPath indexPathForItem:0 inSection:1]: [NSIndexPath indexPathForItem:2 inSection:0],
                      }]
@@ -578,8 +578,8 @@
                                                                              ],
                                                                             ]];
   // Changeset for transition from [A, B, C, D] to [D, A]
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
      withMovedItems:@{
                       [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0],
                       }]
@@ -603,8 +603,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withUpdatedItems:@{
                        [NSIndexPath indexPathForItem:1 inSection:-1]: @"A",
                        }]
@@ -622,8 +622,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withUpdatedItems:@{
                        [NSIndexPath indexPathForItem:-1 inSection:0]: @"A",
                        }]
@@ -641,8 +641,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedItems:@{
                         [NSIndexPath indexPathForItem:3 inSection:0]: @"A",
                         }]
@@ -660,8 +660,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedItems:@{
                         [NSIndexPath indexPathForItem:2 inSection:0]: @"A",
                         [NSIndexPath indexPathForItem:4 inSection:0]: @"B",
@@ -681,8 +681,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedItems:@{
                         [NSIndexPath indexPathForItem:0 inSection:1]: @"A",
                         }]
@@ -700,8 +700,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedItems:[NSSet setWithArray:@[
                                            [NSIndexPath indexPathForItem:2 inSection:0],
                                            ]]]
@@ -719,8 +719,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedItems:[NSSet setWithArray:@[
                                            [NSIndexPath indexPathForItem:0 inSection:1],
                                            ]]]
@@ -738,8 +738,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:2]]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeInsertSection);
@@ -755,8 +755,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedSections:[NSIndexSet indexSetWithIndex:2]]
    build];
   XCTAssertEqual(CKIsValidChangesetForState(changeset, state, nil), CKInvalidChangesetOperationTypeRemoveSection);
@@ -772,8 +772,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withUpdatedItems:@{
                        [NSIndexPath indexPathForItem:2 inSection:0]: @"A",
                        }]
@@ -791,8 +791,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withUpdatedItems:@{
                        [NSIndexPath indexPathForItem:0 inSection:1]: @"A",
                        }]
@@ -810,8 +810,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withMovedItems:@{
                      [NSIndexPath indexPathForItem:2 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:0],
                      }]
@@ -829,8 +829,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withMovedItems:@{
                      [NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:2 inSection:0],
                      }]
@@ -848,8 +848,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withMovedItems:@{
                      [NSIndexPath indexPathForItem:0 inSection:1]: [NSIndexPath indexPathForItem:0 inSection:0],
                      }]
@@ -867,8 +867,8 @@
                                                                              itemWithModel(@"D"),
                                                                              ],
                                                                            ]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withMovedItems:@{
                      [NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:1],
                      }]
@@ -883,8 +883,8 @@
   CKTransactionalComponentDataSourceState *state =
   [[CKTransactionalComponentDataSourceState alloc] initWithConfiguration:nil
                                                                 sections:@[]];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]]
     withInsertedItems:@{
                         [NSIndexPath indexPathForItem:0 inSection:0]: @"A1",
@@ -906,14 +906,14 @@
     // Insert section 0 and section 1
     [[CKTransactionalComponentDataSourceChangesetModification alloc]
      initWithChangeset:
-     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
        withInsertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]]
       build]
      stateListener:nil
      userInfo:nil],
     ];
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedItems:@{
                         [NSIndexPath indexPathForItem:0 inSection:0]: @"A1",
                         [NSIndexPath indexPathForItem:1 inSection:0]: @"B1",
@@ -934,7 +934,7 @@
     // Insert section 0
     [[CKTransactionalComponentDataSourceChangesetModification alloc]
      initWithChangeset:
-     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
        withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
       build]
      stateListener:nil
@@ -942,7 +942,7 @@
     // Insert two items into section 0
     [[CKTransactionalComponentDataSourceChangesetModification alloc]
      initWithChangeset:
-     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
        withInsertedItems:@{
                            [NSIndexPath indexPathForItem:0 inSection:0]: @"A1",
                            [NSIndexPath indexPathForItem:1 inSection:0]: @"B1",
@@ -953,7 +953,7 @@
     // Insert section 1
     [[CKTransactionalComponentDataSourceChangesetModification alloc]
      initWithChangeset:
-     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
        withInsertedSections:[NSIndexSet indexSetWithIndex:1]]
       build]
      stateListener:nil
@@ -961,7 +961,7 @@
     // Insert two items into section 1
     [[CKTransactionalComponentDataSourceChangesetModification alloc]
      initWithChangeset:
-     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
        withInsertedItems:@{
                            [NSIndexPath indexPathForItem:0 inSection:1]: @"A2",
                            [NSIndexPath indexPathForItem:1 inSection:1]: @"B2",
@@ -971,8 +971,8 @@
      userInfo:nil],
     ];
   // Remove first item from each section
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedItems:[NSSet setWithArray:@[
                                            [NSIndexPath indexPathForItem:0 inSection:0],
                                            [NSIndexPath indexPathForItem:0 inSection:1],
@@ -991,7 +991,7 @@
     // Insert section 0
     [[CKTransactionalComponentDataSourceChangesetModification alloc]
      initWithChangeset:
-     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
        withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
       build]
      stateListener:nil
@@ -999,7 +999,7 @@
     // Insert two items into section 0
     [[CKTransactionalComponentDataSourceChangesetModification alloc]
      initWithChangeset:
-     [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
        withInsertedItems:@{
                            [NSIndexPath indexPathForItem:0 inSection:0]: @"A1",
                            [NSIndexPath indexPathForItem:1 inSection:0]: @"B1",
@@ -1009,8 +1009,8 @@
      userInfo:nil],
     ];
   // Remove first item from section 1
-  CKTransactionalComponentDataSourceChangeset *changeset =
-  [[[CKTransactionalComponentDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  CKDataSourceChangeset *changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withRemovedItems:[NSSet setWithArray:@[
                                            [NSIndexPath indexPathForItem:0 inSection:0],
                                            [NSIndexPath indexPathForItem:0 inSection:1],

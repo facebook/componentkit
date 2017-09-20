@@ -12,7 +12,7 @@
 
 #import "CKTransactionalComponentDataSourceChangesetVerification.h"
 
-#import <ComponentKit/CKTransactionalComponentDataSourceChangesetInternal.h>
+#import <ComponentKit/CKDataSourceChangesetInternal.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceChangesetModification.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceStateInternal.h>
 
@@ -26,7 +26,7 @@ static NSArray<NSNumber *> *updatedSectionCountsWithModification(NSArray<NSNumbe
 
 static NSArray<NSIndexPath *> *sortedIndexPaths(NSArray<NSIndexPath *> *indexPaths);
 
-CKInvalidChangesetOperationType CKIsValidChangesetForState(CKTransactionalComponentDataSourceChangeset *changeset,
+CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset *changeset,
                                                            CKTransactionalComponentDataSourceState *state,
                                                            NSArray<id<CKTransactionalComponentDataSourceStateModifying>> *pendingAsynchronousModifications)
 {
@@ -183,7 +183,7 @@ static NSArray<NSNumber *> *sectionCountsForState(CKTransactionalComponentDataSo
 static NSArray<NSNumber *> *updatedSectionCountsWithModification(NSArray<NSNumber *> *sectionCounts,
                                                                  CKTransactionalComponentDataSourceChangesetModification *changesetModification)
 {
-  CKTransactionalComponentDataSourceChangeset *changeset = changesetModification.changeset;
+  CKDataSourceChangeset *changeset = changesetModification.changeset;
   NSMutableArray *updatedSectionCounts = [sectionCounts mutableCopy];
   // Move items
   [changeset.movedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull fromIndexPath, NSIndexPath * _Nonnull toIndexPath, BOOL * _Nonnull stop) {

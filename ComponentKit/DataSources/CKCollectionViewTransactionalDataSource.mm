@@ -60,7 +60,7 @@ CKTransactionalComponentDataSourceListener
 
 #pragma mark - Changeset application
 
-- (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
+- (void)applyChangeset:(CKDataSourceChangeset *)changeset
                   mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo
 {
