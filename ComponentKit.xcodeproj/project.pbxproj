@@ -294,7 +294,7 @@
 		2DCA4E731D889D1500AAB2B3 /* CKTransactionalComponentDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKTransactionalComponentDataSourceConfigurationInternal.h */; };
 		39B090BF1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */; };
 		400B0E5F1F71C63B006BDFEE /* CKDataSourceChangeset.mm in Sources */ = {isa = PBXBuildFile; fileRef = 400B0E5C1F71C63B006BDFEE /* CKDataSourceChangeset.mm */; };
-		400B0E601F71C63C006BDFEE /* CKDataSourceChangesetInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 400B0E5D1F71C63B006BDFEE /* CKDataSourceChangesetInternal.h */; };
+		400B0E601F71C63C006BDFEE /* CKDataSourceChangesetInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 400B0E5D1F71C63B006BDFEE /* CKDataSourceChangesetInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		400B0E611F71C63C006BDFEE /* CKDataSourceChangeset.h in Headers */ = {isa = PBXBuildFile; fileRef = 400B0E5E1F71C63B006BDFEE /* CKDataSourceChangeset.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		497824751BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 497824741BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm */; };
 		49FA174E1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49FA174D1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm */; };
@@ -2056,6 +2056,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				400B0E601F71C63C006BDFEE /* CKDataSourceChangesetInternal.h in Headers */,
 				400B0E611F71C63C006BDFEE /* CKDataSourceChangeset.h in Headers */,
 				B1E3067B1E8B0EAA004864CF /* CKBuildComponent.h in Headers */,
 				B1E3066D1E89487B004864CF /* CKScopedComponent.h in Headers */,
@@ -2100,7 +2101,6 @@
 				D0B47D3E1CBD948E00BB33CE /* CKTransactionalComponentDataSource.h in Headers */,
 				CDCC9DD41E568C2C0005D52E /* CKContainerWrapper.h in Headers */,
 				D0B47D471CBD948E00BB33CE /* CKTransactionalComponentDataSourceListenerAnnouncer.h in Headers */,
-				400B0E601F71C63C006BDFEE /* CKDataSourceChangesetInternal.h in Headers */,
 				D0B47D441CBD948E00BB33CE /* CKTransactionalComponentDataSourceItem.h in Headers */,
 				D0B47D491CBD948E00BB33CE /* CKTransactionalComponentDataSourceStateInternal.h in Headers */,
 				D0B47D581CBD948E00BB33CE /* CKComponentGestureActionsInternal.h in Headers */,
