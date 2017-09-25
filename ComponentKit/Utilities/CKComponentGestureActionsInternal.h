@@ -18,6 +18,6 @@
 
 /** Exposed only for testing. Do not touch this directly. */
 @interface UIGestureRecognizer (CKComponent)
-- (CKTypedComponentAction<UIGestureRecognizer *>)ck_componentAction;
-- (void)ck_setComponentAction:(const CKTypedComponentAction<UIGestureRecognizer *> &)action;
+- (CKAction<UIGestureRecognizer *>)ck_componentAction;
+- (void)ck_setComponentAction:(const CKAction<UIGestureRecognizer *> &)action;
 @end

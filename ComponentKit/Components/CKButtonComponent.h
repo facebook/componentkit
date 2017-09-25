@@ -68,7 +68,7 @@ struct CKButtonComponentAccessibilityConfiguration {
  */
 @interface CKButtonComponent : CKComponent
 
-+ (instancetype)newWithAction:(const CKTypedComponentAction<UIEvent *>)action
++ (instancetype)newWithAction:(const CKAction<UIEvent *>)action
                       options:(const CKButtonComponentOptions &)options;
 
 @end

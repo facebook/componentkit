@@ -48,7 +48,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   CGSize _intrinsicSize;
 }
 
-+ (instancetype)newWithAction:(const CKTypedComponentAction<UIEvent *>)action
++ (instancetype)newWithAction:(const CKAction<UIEvent *>)action
                       options:(const CKButtonComponentOptions &)options
 {
   static const CKComponentViewAttribute titleFontAttribute = {"CKButtonComponent.titleFont", ^(UIButton *button, id value) {

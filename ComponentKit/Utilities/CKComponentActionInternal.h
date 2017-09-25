@@ -33,36 +33,36 @@ class _CKTypedComponentDebugInitialTarget;
 #pragma mark - Action Base
 
 /** A base-class for typed components that doesn't use templates to avoid template bloat. */
-class CKTypedComponentActionBase {
+class CKActionBase {
   protected:
   
   /**
    We support several different types of action variants. You don't need to use this value anywhere, it's set for you
    by whatever initializer you end up using.
    */
-  enum class CKTypedComponentActionVariant {
+  enum class CKActionVariant {
     RawSelector,
     TargetSelector,
     Responder,
     Block
   };
 
-  CKTypedComponentActionBase() noexcept;
-  CKTypedComponentActionBase(id target, SEL selector) noexcept;
+  CKActionBase() noexcept;
+  CKActionBase(id target, SEL selector) noexcept;
 
-  CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept;
+  CKActionBase(const CKComponentScope &scope, SEL selector) noexcept;
 
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
-  CKTypedComponentActionBase(SEL selector) noexcept;
+  CKActionBase(SEL selector) noexcept;
   
-  CKTypedComponentActionBase(dispatch_block_t block) noexcept;
+  CKActionBase(dispatch_block_t block) noexcept;
 
-  ~CKTypedComponentActionBase() {};
+  ~CKActionBase() {};
 
   id initialTarget(CKComponent *sender) const;
   CKComponentActionSendBehavior defaultBehavior() const;
 
-  bool operator==(const CKTypedComponentActionBase& rhs) const;
+  bool operator==(const CKActionBase& rhs) const;
 
   // Destroying this field calls objc_destroyWeak. Since this is the only field
   // that runs code on destruction, making this field the first field of this
@@ -70,12 +70,12 @@ class CKTypedComponentActionBase {
   __weak id _target;
   std::pair<CKScopedResponderUniqueIdentifier, CKResponderGenerationBlock> _scopeIdentifierAndResponderGenerator;
   dispatch_block_t _block;
-  CKTypedComponentActionVariant _variant;
+  CKActionVariant _variant;
   SEL _selector;
 
 public:
   explicit operator bool() const noexcept;
-  bool isEqual(const CKTypedComponentActionBase &rhs) const noexcept {
+  bool isEqual(const CKActionBase &rhs) const noexcept {
     return *this == rhs;
   }
   SEL selector() const noexcept;
@@ -87,26 +87,26 @@ public:
 
 #pragma mark - Typed Helpers
 
-template <typename... Ts> struct CKTypedComponentActionTypelist { };
+template <typename... Ts> struct CKActionTypelist { };
 
 template <bool... b>
-struct CKTypedComponentActionBoolPack {};
+struct CKActionBoolPack {};
 
 template <typename... TS>
-struct CKTypedComponentActionDenyType : std::true_type {};
+struct CKActionDenyType : std::true_type {};
 
 /** Base case, recursion should stop here. */
-void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list) noexcept;
+void CKActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKActionTypelist<> &list) noexcept;
 
 /**
  Recursion through variadic argument type unpacking. This allows us to build a vector of encoded const char * before
  any actual arguments have been provided. All of this is done at compile-time.
  */
 template<typename T, typename... Ts>
-void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<T, Ts...> &list) noexcept
+void CKActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKActionTypelist<T, Ts...> &list) noexcept
 {
   typeVector.push_back(@encode(T));
-  CKTypedComponentActionTypeVectorBuild(typeVector, CKTypedComponentActionTypelist<Ts...>{});
+  CKActionTypeVectorBuild(typeVector, CKActionTypelist<Ts...>{});
 }
 
 /** Base case, recursion should stop here. */
@@ -130,24 +130,24 @@ void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger inde
 #pragma mark - Debug Helpers
 
 template<typename... T>
-class CKTypedComponentAction;
+class CKAction;
 
 /**
  Get the list of control actions attached to the components view (if it has any), for debug purposes.
 
- @return map of CKTypedComponentAction<> attached to the specifiec component.
+ @return map of CKAction<> attached to the specifiec component.
  */
-std::unordered_map<UIControlEvents, std::vector<CKTypedComponentAction<UIEvent *>>> _CKComponentDebugControlActionsForComponent(CKComponent *const component);
+std::unordered_map<UIControlEvents, std::vector<CKAction<UIEvent *>>> _CKComponentDebugControlActionsForComponent(CKComponent *const component);
 
 /**
  Access the initialTarget of an action, for debug purposes.
  */
 class _CKTypedComponentDebugInitialTarget {
 private:
-  CKTypedComponentActionBase &_action;
+  CKActionBase &_action;
 
 public:
-  _CKTypedComponentDebugInitialTarget(CKTypedComponentActionBase &action) : _action(action) { }
+  _CKTypedComponentDebugInitialTarget(CKActionBase &action) : _action(action) { }
 
   id get(CKComponent *sender) const {
 #if DEBUG

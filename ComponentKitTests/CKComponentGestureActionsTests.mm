@@ -154,7 +154,7 @@
   CKComponentViewAttributeValue attr1 = CKComponentTapGestureAttribute({fake1, @selector(test:)});
 
   CKFakeActionComponent *fake2 = [CKFakeActionComponent new];
-  CKTypedComponentAction<UIGestureRecognizer *> action2 = {fake2, @selector(test:)};
+  CKAction<UIGestureRecognizer *> action2 = {fake2, @selector(test:)};
   CKComponentViewAttributeValue attr2 = CKComponentTapGestureAttribute(action2);
   UIView *view = [UIView new];
 

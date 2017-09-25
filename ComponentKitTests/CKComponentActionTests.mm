@@ -34,7 +34,7 @@
 
 @implementation CKTestScopeActionComponent
 {
-  CKTypedComponentAction<id> _action;
+  CKAction<id> _action;
   void (^_block)(CKComponent *, id);
 }
 
@@ -74,7 +74,7 @@
 
 @implementation CKTestControllerScopeActionComponent
 {
-  CKTypedComponentAction<id> _action;
+  CKAction<id> _action;
   void (^_block)(CKComponent *, id);
 }
 
@@ -204,7 +204,7 @@
   id context = @"context";
   id context2 = @"context2";
 
-  CKTypedComponentAction<id, id> action = { @selector(testAction2:context1:context2:) };
+  CKAction<id, id> action = { @selector(testAction2:context1:context2:) };
   action.send(innerComponent, context, context2);
 
   XCTAssert(actionContext == context && actionContext2 == context2, @"Contexts should match what was passed to CKComponentActionSend");
@@ -231,7 +231,7 @@
 
   int integer = 1337;
 
-  CKTypedComponentAction<int> action = { @selector(testPrimitive:integer:) };
+  CKAction<int> action = { @selector(testPrimitive:integer:) };
   action.send(innerComponent, integer);
 
   XCTAssert(actionInteger == integer, @"Contexts should match what was passed to CKComponentActionSend");
@@ -256,7 +256,7 @@
   UIView *rootView = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
-  CKTypedComponentAction<> action = { @selector(testNoArgumentAction) };
+  CKAction<> action = { @selector(testNoArgumentAction) };
   action.send(innerComponent);
 
   XCTAssert(calledNoArgumentBlock, @"Contexts should match what was passed to CKComponentActionSend");
@@ -281,7 +281,7 @@
   UIView *rootView = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
-  CKTypedComponentAction<id> action = { @selector(testNoArgumentAction) };
+  CKAction<id> action = { @selector(testNoArgumentAction) };
   action.send(innerComponent, @"hello");
 
   XCTAssert(calledNoArgumentBlock, @"Contexts should match what was passed to CKComponentActionSend");
@@ -289,10 +289,10 @@
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
 
-static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKComponent*, int), int value) {
+static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int), int value) {
   int& ref = value;
-  auto action = CKTypedComponentAction<int>::actionFromBlock(callback);
-  auto demoted = CKTypedComponentAction<>::demotedFrom(action, ref);
+  auto action = CKAction<int>::actionFromBlock(callback);
+  auto demoted = CKAction<>::demotedFrom(action, ref);
   return demoted;
 }
 
@@ -317,8 +317,8 @@ static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKCo
   id context = @"hello";
   id context2 = @"morty";
 
-  CKTypedComponentAction<id, id> action = { @selector(testAction2:context1:context2:) };
-  CKTypedComponentAction<> demotedAction = CKTypedComponentAction<>::demotedFrom(action, context, context2);
+  CKAction<id, id> action = { @selector(testAction2:context1:context2:) };
+  CKAction<> demotedAction = CKAction<>::demotedFrom(action, context, context2);
   demotedAction.send(innerComponent);
 
   __block int value;
@@ -353,8 +353,8 @@ static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKCo
   id context = @"hello";
   id context2 = @"morty";
   
-  CKTypedComponentAction<id, id> action = { @selector(testAction2:context1:context2:) };
-  CKTypedComponentAction<id, id, id> promotedAction = CKTypedComponentAction<id, id>::promotedFrom<id>(action);
+  CKAction<id, id> action = { @selector(testAction2:context1:context2:) };
+  CKAction<id, id, id> promotedAction = CKAction<id, id>::promotedFrom<id>(action);
   promotedAction.send(innerComponent, context, context2, @"rick");
   
   XCTAssert(actionContext == context && actionContext2 == context2, @"Contexts should match what was passed to CKComponentActionSend");
@@ -441,7 +441,7 @@ static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKCo
    noArgumentBlock:^{ XCTFail(@"Should not be called."); }
    component:innerComponent];
 
-  CKTypedComponentAction<id> action { outerComponent, @selector(testAction:context:) };
+  CKAction<id> action { outerComponent, @selector(testAction:context:) };
   action.send(innerComponent, CKComponentActionSendBehaviorStartAtSender, @"hello");
 
   XCTAssertTrue(calledBlock, @"Outer component should have received the action, even though the components are not mounted.");
@@ -512,7 +512,7 @@ static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKCo
             }];
   }).component;
 
-  const CKUntypedComponentAction action = CKUntypedComponentAction(CKTypedComponentAction<id>(component, @selector(actionMethod:context:)));
+  const CKUntypedComponentAction action = CKUntypedComponentAction(CKAction<id>(component, @selector(actionMethod:context:)));
   action.send(component);
 
   XCTAssertTrue(calledAction, @"Should have called the action on the test component");
@@ -521,7 +521,7 @@ static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKCo
 - (void)testTargetSelectorActionCallsOnNormalNSObject
 {
   CKTestObjectTarget *target = [CKTestObjectTarget new];
-  CKTypedComponentAction<> action = {target, @selector(someMethod)};
+  CKAction<> action = {target, @selector(someMethod)};
   action.send([CKComponent new]);
 
   XCTAssertTrue(target.calledSomeMethod, @"Should have called the method on target");
@@ -535,7 +535,7 @@ static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKCo
 - (void)testBlockActionFires
 {
   __block BOOL firedAction = NO;
-  CKTypedComponentAction<> action = CKTypedComponentAction<>::actionFromBlock(^(CKComponent *) {
+  CKAction<> action = CKAction<>::actionFromBlock(^(CKComponent *) {
     firedAction = YES;
   });
 
@@ -548,7 +548,7 @@ static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKCo
 {
   __block BOOL equalComponents = NO;
   CKComponent *c = [CKComponent new];
-  CKTypedComponentAction<> action = CKTypedComponentAction<>::actionFromBlock(^(CKComponent *passedComponent) {
+  CKAction<> action = CKAction<>::actionFromBlock(^(CKComponent *passedComponent) {
     equalComponents = (passedComponent == c);
   });
 
@@ -561,7 +561,7 @@ static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKCo
 {
   __block BOOL equalArguments = NO;
   NSObject *arg = [NSObject new];
-  CKTypedComponentAction<NSObject *> action = CKTypedComponentAction<NSObject *>::actionFromBlock(^(CKComponent *c, NSObject *passedArgument) {
+  CKAction<NSObject *> action = CKAction<NSObject *>::actionFromBlock(^(CKComponent *c, NSObject *passedArgument) {
     equalArguments = (passedArgument == arg);
   });
 
@@ -574,20 +574,20 @@ static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKCo
   CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil), {});
   
   CKComponentScope scope([CKTestScopeActionComponent class], @"moose");
-  const CKTypedComponentAction<> action1 = {scope, @selector(triggerAction:)};
+  const CKAction<> action1 = {scope, @selector(triggerAction:)};
   
   CKComponentScope scope2([CKTestScopeActionComponent class], @"cat");
-  const CKTypedComponentAction<> action2 = {scope2, @selector(triggerAction:)};
+  const CKAction<> action2 = {scope2, @selector(triggerAction:)};
 
   XCTAssertNotEqual(action1.identifier(), action2.identifier());
 }
 
 - (void)testThatBlockActionsWithDistinctBlocksHaveUniqueIdentifiers
 {
-  const CKTypedComponentAction<> action1 = CKTypedComponentAction<>::actionFromBlock(^(CKComponent *sender){
+  const CKAction<> action1 = CKAction<>::actionFromBlock(^(CKComponent *sender){
     exit(1);
   });
-  const CKTypedComponentAction<> action2 = CKTypedComponentAction<>::actionFromBlock(^(CKComponent *sender){
+  const CKAction<> action2 = CKAction<>::actionFromBlock(^(CKComponent *sender){
     exit(2);
   });
   XCTAssertNotEqual(action1.identifier(), action2.identifier());
@@ -610,23 +610,23 @@ static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKCo
 {
   NSMutableArray *const target = [NSMutableArray new];
   const SEL selector = @selector(removeLastObject);
-  const CKTypedComponentAction<> action1 = {target, selector};
-  const CKTypedComponentAction<> action2 = {target, selector};
+  const CKAction<> action1 = {target, selector};
+  const CKAction<> action2 = {target, selector};
   XCTAssertTrue(action1 == action2);
 
-  const CKTypedComponentAction<> actionWithUnequalTarget = {[NSMutableArray new], selector};
+  const CKAction<> actionWithUnequalTarget = {[NSMutableArray new], selector};
   XCTAssertFalse(action1 == actionWithUnequalTarget);
 
-  const CKTypedComponentAction<> actionWithUnequalSelector = {target, @selector(removeAllObjects)};
+  const CKAction<> actionWithUnequalSelector = {target, @selector(removeAllObjects)};
   XCTAssertFalse(action1 == actionWithUnequalSelector);
 }
 
 - (void)testBlockActionEquality
 {
   void (^block)(CKComponent *c, NSObject *passedArgument) {};
-  const CKTypedComponentAction<NSObject *> action = CKTypedComponentAction<NSObject *>::actionFromBlock(block);
-  XCTAssertTrue(action == CKTypedComponentAction<NSObject *>::actionFromBlock(block));
-  XCTAssertFalse(action == CKTypedComponentAction<NSObject *>::actionFromBlock(^(CKComponent *, NSObject *__strong) {}));
+  const CKAction<NSObject *> action = CKAction<NSObject *>::actionFromBlock(block);
+  XCTAssertTrue(action == CKAction<NSObject *>::actionFromBlock(block));
+  XCTAssertFalse(action == CKAction<NSObject *>::actionFromBlock(^(CKComponent *, NSObject *__strong) {}));
 }
 
 - (void)testScopedActionEquality
@@ -635,12 +635,12 @@ static CKTypedComponentAction<> createDemotedWithReference(void (^callback)(CKCo
 
   const SEL selector = @selector(triggerAction:);
   CKComponentScope scope([CKTestScopeActionComponent class], @"Marty McFly");
-  const CKTypedComponentAction<> action1 = {scope, selector};
-  const CKTypedComponentAction<> action2 = {scope, selector};
+  const CKAction<> action1 = {scope, selector};
+  const CKAction<> action2 = {scope, selector};
   XCTAssertTrue(action1 == action2);
 
   CKComponentScope scope2([CKTestScopeActionComponent class], @"Biff Tannon");
-  const CKTypedComponentAction<> unequalAction = {scope2, selector};
+  const CKAction<> unequalAction = {scope2, selector};
   XCTAssertFalse(action1 == unequalAction);
 }
 

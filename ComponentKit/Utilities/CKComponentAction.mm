@@ -22,12 +22,12 @@
 #import "CKInternalHelpers.h"
 #import "CKMutex.h"
 
-void CKTypedComponentActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKTypedComponentActionTypelist<> &list) noexcept { }
+void CKActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKActionTypelist<> &list) noexcept { }
 void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) noexcept { }
 
-#pragma mark - CKTypedComponentActionBase
+#pragma mark - CKActionBase
 
-bool CKTypedComponentActionBase::operator==(const CKTypedComponentActionBase& rhs) const
+bool CKActionBase::operator==(const CKActionBase& rhs) const
 {
   return (_variant == rhs._variant
           && CKObjectIsEqual(_target, rhs._target)
@@ -39,33 +39,33 @@ bool CKTypedComponentActionBase::operator==(const CKTypedComponentActionBase& rh
           && _block == rhs._block);
 }
 
-CKComponentActionSendBehavior CKTypedComponentActionBase::defaultBehavior() const
+CKComponentActionSendBehavior CKActionBase::defaultBehavior() const
 {
-  return (_variant == CKTypedComponentActionVariant::RawSelector
+  return (_variant == CKActionVariant::RawSelector
           ? CKComponentActionSendBehaviorStartAtSenderNextResponder
           : CKComponentActionSendBehaviorStartAtSender);
 };
 
-id CKTypedComponentActionBase::initialTarget(CKComponent *sender) const
+id CKActionBase::initialTarget(CKComponent *sender) const
 {
   switch (_variant) {
-    case CKTypedComponentActionVariant::RawSelector:
+    case CKActionVariant::RawSelector:
       return sender;
-    case CKTypedComponentActionVariant::TargetSelector:
+    case CKActionVariant::TargetSelector:
       return _target;
-    case CKTypedComponentActionVariant::Responder:
+    case CKActionVariant::Responder:
       return _scopeIdentifierAndResponderGenerator.second ? _scopeIdentifierAndResponderGenerator.second() : nil;
-    case CKTypedComponentActionVariant::Block:
+    case CKActionVariant::Block:
       CKCFailAssert(@"Should not be asking for target for block action.");
       return nil;
   }
 }
 
-CKTypedComponentActionBase::CKTypedComponentActionBase() noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(nullptr) {}
+CKActionBase::CKActionBase() noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::RawSelector), _selector(nullptr) {}
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(id target, SEL selector) noexcept : _target(target), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKTypedComponentActionVariant::TargetSelector), _selector(selector) {};
+CKActionBase::CKActionBase(id target, SEL selector) noexcept : _target(target), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::TargetSelector), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &scope, SEL selector) noexcept : _target(nil), _block(NULL), _variant(CKTypedComponentActionVariant::Responder), _selector(selector)
+CKActionBase::CKActionBase(const CKComponentScope &scope, SEL selector) noexcept : _target(nil), _block(NULL), _variant(CKActionVariant::Responder), _selector(selector)
 {
   const auto handle = scope.scopeHandle();
   CKCAssert(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
@@ -89,29 +89,29 @@ CKTypedComponentActionBase::CKTypedComponentActionBase(const CKComponentScope &s
   };
 };
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(SEL selector) noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKTypedComponentActionVariant::RawSelector), _selector(selector) {};
+CKActionBase::CKActionBase(SEL selector) noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::RawSelector), _selector(selector) {};
 
-CKTypedComponentActionBase::CKTypedComponentActionBase(dispatch_block_t block) noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(block), _variant(CKTypedComponentActionVariant::Block), _selector(NULL) {};
+CKActionBase::CKActionBase(dispatch_block_t block) noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(block), _variant(CKActionVariant::Block), _selector(NULL) {};
 
-CKTypedComponentActionBase::operator bool() const noexcept { return _selector != NULL || _block != NULL || _scopeIdentifierAndResponderGenerator.second != nil; };
+CKActionBase::operator bool() const noexcept { return _selector != NULL || _block != NULL || _scopeIdentifierAndResponderGenerator.second != nil; };
 
-SEL CKTypedComponentActionBase::selector() const noexcept { return _selector; };
+SEL CKActionBase::selector() const noexcept { return _selector; };
 
-std::string CKTypedComponentActionBase::identifier() const noexcept
+std::string CKActionBase::identifier() const noexcept
 {
   switch (_variant) {
-    case CKTypedComponentActionVariant::RawSelector:
+    case CKActionVariant::RawSelector:
       return std::string(sel_getName(_selector)) + "-Selector";
-    case CKTypedComponentActionVariant::TargetSelector:
+    case CKActionVariant::TargetSelector:
       return std::string(sel_getName(_selector)) + "-TargetSelector-" + std::to_string((long)_target);
-    case CKTypedComponentActionVariant::Responder:
+    case CKActionVariant::Responder:
       return std::string(sel_getName(_selector)) + "-Responder-" + std::to_string(_scopeIdentifierAndResponderGenerator.first);
-    case CKTypedComponentActionVariant::Block:
+    case CKActionVariant::Block:
       return std::string(sel_getName(_selector)) + "-Block-" + std::to_string((long)_block);
   }
 }
 
-dispatch_block_t CKTypedComponentActionBase::block() const noexcept { return _block; };
+dispatch_block_t CKActionBase::block() const noexcept { return _block; };
 
 #pragma mark - Sending
 
@@ -169,12 +169,12 @@ void CKComponentActionSend(const CKUntypedComponentAction &action, CKComponent *
   action.send(sender, behavior);
 }
 
-void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent *sender, id context)
+void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context)
 {
   action.send(sender, action.defaultBehavior(), context);
 }
 
-void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
+void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
 {
   action.send(sender, behavior, context);
 }
@@ -190,7 +190,7 @@ void CKComponentActionSend(const CKTypedComponentAction<id> &action, CKComponent
 @interface CKComponentActionList : NSObject
 {
   @public
-  std::unordered_map<UIControlEvents, std::vector<CKTypedComponentAction<UIEvent *>>> _actions;
+  std::unordered_map<UIControlEvents, std::vector<CKAction<UIEvent *>>> _actions;
   std::unordered_set<UIControlEvents> _registeredForwarders;
 }
 @end
@@ -200,7 +200,7 @@ static void *ck_actionListKey = &ck_actionListKey;
 
 typedef std::unordered_map<UIControlEvents, CKComponentActionControlForwarder *> ForwarderMap;
 
-CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentAction<UIEvent *> action,
+CKComponentViewAttributeValue CKComponentActionAttribute(const CKAction<UIEvent *> action,
                                                          UIControlEvents controlEvents) noexcept
 {
   if (!action) {
@@ -265,7 +265,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentA
   CKComponentActionList *const list = objc_getAssociatedObject(sender, ck_actionListKey);
   CKCAssertNotNil(list, @"Forwarder should always find an action list installed by applicator");
   // Protect against mutation-during-enumeration by copying the list of actions to send:
-  const std::vector<CKTypedComponentAction<UIEvent *>> copiedActions = list->_actions[_controlEvents];
+  const std::vector<CKAction<UIEvent *>> copiedActions = list->_actions[_controlEvents];
   CKComponent *const sendingComponent = sender.ck_component;
   for (const auto &action : copiedActions) {
     // If the action can be handled by the sender itself, send it there instead of looking up the chain.
@@ -277,7 +277,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKTypedComponentA
 
 #pragma mark - Debug Helpers
 
-std::unordered_map<UIControlEvents, std::vector<CKTypedComponentAction<UIEvent *>>> _CKComponentDebugControlActionsForComponent(CKComponent *const component)
+std::unordered_map<UIControlEvents, std::vector<CKAction<UIEvent *>>> _CKComponentDebugControlActionsForComponent(CKComponent *const component)
 {
 #if DEBUG
   CKComponentActionList *const list = objc_getAssociatedObject(component.viewContext.view, ck_actionListKey);
@@ -410,5 +410,5 @@ CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(con
 
 #pragma mark - Template instantiations
 
-template class CKTypedComponentAction<>;
-template class CKTypedComponentAction<id>;
+template class CKAction<>;
+template class CKAction<id>;
