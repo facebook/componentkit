@@ -19,6 +19,7 @@
 #import "CKComponentController.h"
 #import "CKCollectionViewTransactionalDataSource.h"
 #import "CKTransactionalComponentDataSourceConfiguration.h"
+#import "CKTransactionalComponentDataSourceConfigurationInternal.h"
 #import "CKDataSourceChangeset.h"
 
 @interface CKTransactionalComponentDataSourceIntegrationTestComponent : CKCompositeComponent
@@ -113,7 +114,11 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                                              initWithComponentProvider:(id) self
                                                              context:nil
                                                              sizeRange:CKSizeRange({50, 50}, {50, 50})
-                                                             alwaysSendComponentUpdate:(testConfig == CKTestConfigAlwaysSendUpdates)];
+                                                             alwaysSendComponentUpdate:(testConfig == CKTestConfigAlwaysSendUpdates)
+                                                             workThreadOverride:nil
+                                                             componentPredicates:{}
+                                                             componentControllerPredicates:{}
+                                                             ];
 
   return [[CKCollectionViewTransactionalDataSource alloc] initWithCollectionView:self.collectionViewController.collectionView
                                                      supplementaryViewDataSource:nil

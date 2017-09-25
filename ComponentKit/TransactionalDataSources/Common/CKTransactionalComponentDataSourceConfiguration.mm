@@ -28,50 +28,10 @@
   return [self initWithComponentProvider:componentProvider
                                  context:context
                                sizeRange:sizeRange
-               alwaysSendComponentUpdate:NO];
-}
-
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id<NSObject>)context
-                                sizeRange:(const CKSizeRange &)sizeRange
-                alwaysSendComponentUpdate:(BOOL)alwaysSendComponentUpdate
-{
-  return [self initWithComponentProvider:componentProvider
-                                 context:context
-                               sizeRange:sizeRange
-          alwaysSendComponentUpdate:alwaysSendComponentUpdate
+               alwaysSendComponentUpdate:NO
                       workThreadOverride:nil
                      componentPredicates:{}
            componentControllerPredicates:{}];
-}
-
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id<NSObject>)context
-                                sizeRange:(const CKSizeRange &)sizeRange
-                       workThreadOverride:(NSThread *)workThreadOverride
-{
-  return [self initWithComponentProvider:componentProvider
-                                 context:context
-                               sizeRange:sizeRange
-                      workThreadOverride:workThreadOverride
-                     componentPredicates:{}
-           componentControllerPredicates:{}];
-}
-
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id<NSObject>)context
-                                sizeRange:(const CKSizeRange &)sizeRange
-                       workThreadOverride:(NSThread *)workThreadOverride
-                      componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
-            componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
-{
-  return [self initWithComponentProvider:componentProvider
-                                 context:context
-                               sizeRange:sizeRange
-               alwaysSendComponentUpdate:NO
-                      workThreadOverride:workThreadOverride
-                     componentPredicates:componentPredicates
-           componentControllerPredicates:componentControllerPredicates];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
