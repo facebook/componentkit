@@ -22,4 +22,7 @@ xcuserdata/
 *.xcscmblueprint
 .DS_Store
 appledoc
+
+# Carthage
+Carthage/Checkouts
 Carthage/Build
