@@ -25,7 +25,7 @@ struct CKComponentLayoutChild {
 
 ComponentKit includes a library of components that can be composed to declaratively specify a layout.
 
-- `CKStackLayoutComponent` is based on a simplified version of [CSS flexbox](http://www.w3.org/TR/css3-flexbox/). It allows you to stack components vertically or horizontally and specify how they should be flexed and aligned to fit in the available space.
+- `CKFlexboxComponent` is based on a simplified version of [CSS flexbox](http://www.w3.org/TR/css3-flexbox/). It allows you to stack components vertically or horizontally and specify how they should be flexed and aligned to fit in the available space.
 - `CKInsetComponent` applies an inset margin around a component.
 - `CKBackgroundLayoutComponent` lays out a component, stretching another component behind it as a backdrop.
 - `CKOverlayLayoutComponent` lays out a component, stretching another component on top of it as an overlay.
