@@ -22,7 +22,7 @@ Since in ComponentKit there is no duplication between `sizeThatFits:` and `layou
 [CKInsetComponent
  newWithInsets:{.left = 10, .top = 10, .right = 10}
  component:
- [CKStackLayoutComponent
+ [CKFlexboxComponent
   newWithStyle:{.spacing = 5}
   ...
 {% endhighlight %}
