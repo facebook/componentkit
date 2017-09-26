@@ -16,11 +16,11 @@ Let's see some sample code for rendering an article in a news app:
 + (instancetype)newWithArticle:(ArticleModel *)article
 {
   return [super newWithComponent:
-          [CKStackLayoutComponent
+          [CKFlexboxComponent
            newWithView:{}
            size:{}
            style:{
-             .direction = CKStackLayoutDirectionVertical,
+             .direction = CKFlexboxDirectionVertical,
            }
            children:{
              {[HeaderComponent newWithArticle:article]},
