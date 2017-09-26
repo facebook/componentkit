@@ -12,7 +12,7 @@ ComponentKit needs a way to uniquely identify each `ListItem`. Particularly as t
 
 <img src="/static/images/tree-ids.png" width="367" height="124" alt="Component Tree with IDs">
 
-Scopes give ComponentKit the ability to assign any component with a persistent identity: _regardless of how many times a component is created in a component hierarchy it will always acquire the same component scope_. This behavior is required in the following three situations:
+Scopes give ComponentKit the ability to assign any component with a persistent identity: _regardless of how many times a component is created it will always acquire the same scope_. This behavior is required in the following three situations:
 
 1. If a component has [state](state.html) it must also define a scope
 2. If a component has a [component controller](component-controllers.html) it must also define a scope
