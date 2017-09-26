@@ -35,7 +35,7 @@ function ios_ci() {
 }
 
 function tvos_ci() {
-  ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV" $3
+  ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV 1080p" $3
 }
 
 if [ "$MODE" = "ci-componentkit-ios" ]; then
