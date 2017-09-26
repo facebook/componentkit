@@ -74,7 +74,7 @@ static YGConfigRef ckYogaDefaultConfig()
   return defaultConfig;
 }
 
-static YGSize measureCssComponent(YGNodeRef node,
+static YGSize measureYGComponent(YGNodeRef node,
                                   float width,
                                   YGMeasureMode widthMode,
                                   float height,
@@ -229,20 +229,46 @@ static YGWrap ygWrapFromStackStyle(const CKFlexboxComponentStyle &style)
   }
 }
 
+static YGEdge ygSpacingEdgeFromDirection(const CKFlexboxDirection &direction, BOOL reverse = NO)
+{
+  switch (direction) {
+    case CKFlexboxDirectionVertical:
+      return reverse ? YGEdgeBottom : YGEdgeTop;
+    case CKFlexboxDirectionVerticalReverse:
+      return reverse ? YGEdgeTop : YGEdgeBottom;
+    case CKFlexboxDirectionHorizontal:
+      return reverse ? YGEdgeEnd : YGEdgeStart;
+    case CKFlexboxDirectionHorizontalReverse:
+      return reverse ? YGEdgeStart : YGEdgeEnd;
+  }
+}
+
+static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
+{
+  switch (direction) {
+    case CKFlexboxDirectionVertical:
+    case CKFlexboxDirectionVerticalReverse:
+      return NO;
+    case CKFlexboxDirectionHorizontal:
+    case CKFlexboxDirectionHorizontalReverse:
+      return YES;
+  }
+}
+
 /*
  layoutCache is passed by reference so that we are able to allocate it in one thread
  and mutate it within that thread
  Layout cache shouldn't be exposed publicly
  */
-- (YGNodeRef)cssStackLayoutNode:(CKSizeRange)constrainedSize
+- (YGNodeRef)ygStackLayoutNode:(CKSizeRange)constrainedSize
 {
   const YGNodeRef stackNode = YGNodeNewWithConfig(ckYogaDefaultConfig());
-  YGEdge spacingEdge = _style.direction == CKFlexboxDirectionHorizontal ? YGEdgeStart : YGEdgeTop;
+  YGEdge spacingEdge = ygSpacingEdgeFromDirection(_style.direction);
   CGFloat savedSpacing = 0;
   // We need this to resolve CKRelativeDimension with percentage bases
   CGFloat parentWidth = (constrainedSize.min.width == constrainedSize.max.width) ? constrainedSize.min.width : kCKComponentParentDimensionUndefined;
   CGFloat parentHeight = (constrainedSize.min.height == constrainedSize.max.height) ? constrainedSize.min.height : kCKComponentParentDimensionUndefined;
-  CGFloat parentMainDimension = (_style.direction == CKFlexboxDirectionHorizontal) ? parentWidth : parentHeight;
+  CGFloat parentMainDimension = isHorizontalFlexboxDirection(_style.direction) ? parentWidth : parentHeight;
   CGSize parentSize = CGSizeMake(parentWidth, parentHeight);
 
   const auto children = CK::filter(_children, [](const CKFlexboxComponentChild &child){
@@ -270,7 +296,7 @@ static YGWrap ygWrapFromStackStyle(const CKFlexboxComponentStyle &style)
     // We pass the pointer ownership to context to release it later.
     // We want cachedLayout to be alive until we've finished calculations
     YGNodeSetContext(childNode, (__bridge_retained void *)childLayout);
-    YGNodeSetMeasureFunc(childNode, measureCssComponent);
+    YGNodeSetMeasureFunc(childNode, measureYGComponent);
     YGNodeSetBaselineFunc(childNode, computeBaseline);
 
     const CKComponentSize childComponentSize = [childComponent size];
@@ -325,7 +351,7 @@ static YGWrap ygWrapFromStackStyle(const CKFlexboxComponentStyle &style)
     savedSpacing = child.spacingAfter;
     if (next(iterator) == children.end()) {
       // For the space between parent and last child we use only spacingAfter
-      YGNodeStyleSetMargin(childNode, _style.direction == CKFlexboxDirectionHorizontal ? YGEdgeEnd : YGEdgeBottom, savedSpacing);
+      YGNodeStyleSetMargin(childNode, ygSpacingEdgeFromDirection(_style.direction, YES), savedSpacing);
     }
 
     /** The margins will override any spacing we applied earlier */
@@ -468,10 +494,10 @@ static BOOL marginIsSet(CKFlexboxDimension margin)
     YGMeasureMode horizontalReusedMode = YGMeasureModeAtMost;
     if (childCachedLayout.align == CKFlexboxAlignSelfStretch ||
         (childCachedLayout.align == CKFlexboxAlignSelfAuto && _style.alignItems == CKFlexboxAlignItemsStretch)) {
-      if (_style.direction == CKFlexboxDirectionVertical) {
-        horizontalReusedMode = YGMeasureModeExactly;
-      } else {
+      if (isHorizontalFlexboxDirection(_style.direction)) {
         verticalReusedMode = YGMeasureModeExactly;
+      } else {
+        horizontalReusedMode = YGMeasureModeExactly;
       }
     }
 
@@ -508,7 +534,7 @@ static BOOL marginIsSet(CKFlexboxDimension margin)
  */
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
 {
-  const YGNodeRef node = [self cssStackLayoutNode:constrainedSize];
+  const YGNodeRef node = [self ygStackLayoutNode:constrainedSize];
 
   // At the moment Yoga does not optimise minWidth == maxWidth, so we want to do it here
   // ComponentKit and Yoga use different constants for +Inf, so we need to make sure the don't interfere

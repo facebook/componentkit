@@ -312,6 +312,152 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
   CKSnapshotVerifyComponent(spacingBalancedOut, kAnySize, @"spacingBalancedOut");
 }
 
+- (void)testHorizontalReverseSpacing
+{
+  // width 0-INF; height 0-INF
+  static CKSizeRange kAnySize = {{0, 0}, {INFINITY, INFINITY}};
+  
+  CKFlexboxComponent *spacingBefore =
+  [CKFlexboxComponent
+   newWithView:kWhiteBackgroundView
+   size:{}
+   style:{
+     .direction = CKFlexboxDirectionHorizontalReverse,
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,70}],
+       .spacingBefore = 10
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
+       .spacingBefore = 20
+     },
+   }];
+  CKSnapshotVerifyComponent(spacingBefore, kAnySize, @"spacingBefore");
+  
+  CKFlexboxComponent *spacingAfter =
+  [CKFlexboxComponent
+   newWithView:kWhiteBackgroundView
+   size:{}
+   style:{
+     .direction = CKFlexboxDirectionHorizontalReverse,
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,70}],
+       .spacingAfter = 10
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
+       .spacingAfter = 20
+     },
+   }];
+  CKSnapshotVerifyComponent(spacingAfter, kAnySize, @"spacingAfter");
+  
+  CKFlexboxComponent *spacingBalancedOut =
+  [CKFlexboxComponent
+   newWithView:kWhiteBackgroundView
+   size:{}
+   style:{
+     .direction = CKFlexboxDirectionHorizontalReverse,
+     .spacing = 10,
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,70}],
+       .spacingBefore = -10,
+       .spacingAfter = -10
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
+     },
+   }];
+  CKSnapshotVerifyComponent(spacingBalancedOut, kAnySize, @"spacingBalancedOut");
+}
+
+- (void)testVerticalReverseSpacing
+{
+  // width 0-INF; height 0-INF
+  static CKSizeRange kAnySize = {{0, 0}, {INFINITY, INFINITY}};
+  
+  CKFlexboxComponent *spacingBefore =
+  [CKFlexboxComponent
+   newWithView:kWhiteBackgroundView
+   size:{}
+   style:{
+     .direction = CKFlexboxDirectionVerticalReverse,
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,70}],
+       .spacingBefore = 10
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
+       .spacingBefore = 20
+     },
+   }];
+  CKSnapshotVerifyComponent(spacingBefore, kAnySize, @"spacingBefore");
+  
+  CKFlexboxComponent *spacingAfter =
+  [CKFlexboxComponent
+   newWithView:kWhiteBackgroundView
+   size:{}
+   style:{
+     .direction = CKFlexboxDirectionVerticalReverse,
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,70}],
+       .spacingAfter = 10
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
+       .spacingAfter = 20
+     },
+   }];
+  CKSnapshotVerifyComponent(spacingAfter, kAnySize, @"spacingAfter");
+  
+  CKFlexboxComponent *spacingBalancedOut =
+  [CKFlexboxComponent
+   newWithView:kWhiteBackgroundView
+   size:{}
+   style:{
+     .direction = CKFlexboxDirectionVerticalReverse,
+     .spacing = 10,
+   }
+   children:{
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,70}],
+       .spacingBefore = -10,
+       .spacingAfter = -10
+     },
+     {
+       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
+     },
+   }];
+  CKSnapshotVerifyComponent(spacingBalancedOut, kAnySize, @"spacingBalancedOut");
+}
+
 - (void)testJustifiedCenterWithComponentSpacing
 {
   CKFlexboxComponent *c =
