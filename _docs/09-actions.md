@@ -8,11 +8,11 @@ Often child components must communicate back to their parents. For example, a bu
 
 ### What are Component Actions? 
 
-`CKTypedComponentAction<T...>` is an Objective-C++ class that wraps a `SEL` (basically a method name in Objective-C), and a target. `CKTypedComponentAction<T...>` allows you to specify the types of the arguments that are provided to the receiving method.
+`CKAction<T...>` is an Objective-C++ class that wraps a `SEL` (basically a method name in Objective-C), and a target. `CKAction<T...>` allows you to specify the types of the arguments that are provided to the receiving method.
 
 Where possible, you should explicitly define the target of your action using either a component scope, or a target for non-Component targets. 
 
-An action may be sent through the `send` function on `CKTypedComponentAction`, which takes the sender component, and the parameters to be passed to the receiver.
+An action may be sent through the `send` function on `CKAction`, which takes the sender component, and the parameters to be passed to the receiver.
 
 For legacy reasons, we also support using `CKComponentActionSend`. The `CKComponentActionSend` function takes an action, a sender, and an optional opaque context object. It follows the [component responder chain](responder-chain.html) until it finds a component (or component controller) that responds to the given selector, then sends a message with the sender and context as parameters.
 
@@ -24,20 +24,17 @@ For legacy reasons, we also support using `CKComponentActionSend`. The `CKCompon
 
 ### Using Component Actions 
 
-Here's an example of how to handle a component action. (The API for `CKButtonComponent` has been simplified for this example.)
+Here's an example of how to handle a component action.
 
 {% highlight objc %}
-@interface CKButtonComponent : CKCompositeComponent
-+ (instancetype)newWithAction:(const CKTypedComponentAction<UIEvent *> &)action;
-@end
-
 @implementation SampleComponent
 + (instancetype)new
 {
   CKComponentScope scope(self);
   return [super newWithComponent:
           [CKButtonComponent
-           newWithAction:{scope, @selector(someAction:event:)}]];
+           newWithAction:{scope, @selector(someAction:event:)}
+           options:{}]];
 }
 
 - (void)someAction:(CKButtonComponent *)sender event:(UIEvent *)event
@@ -52,7 +49,8 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
   CKComponentScope scope(self);
   return [super newWithComponent:
           [CKButtonComponent
-           newWithAction:{scope, @selector(someAction:)}]];
+           newWithAction:{scope, @selector(someAction:)}
+           options:{}]];
 }
 
 - (void)someAction:(CKButtonComponent *)sender
@@ -67,7 +65,8 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
   CKComponentScope scope(self);
   return [super newWithComponent:
           [CKButtonComponent
-           newWithAction:{scope, @selector(someAction)}]];
+           newWithAction:{scope, @selector(someAction)}
+           options:{}]];
 }
 
 - (void)someAction
@@ -87,7 +86,8 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
   CKComponentScope scope(self);
   return [super newWithComponent:
           [CKButtonComponent
-           newWithAction:{scope, @selector(someAction)}]];
+           newWithAction:{scope, @selector(someAction)}
+           options:{}]];
 }
 @end
 
@@ -108,7 +108,7 @@ Here's an example of how to handle a component action. (The API for `CKButtonCom
 
 <div class="note-important">
   <p>
-    <code>CKTypedComponentAction</code> is a C++ object which can lead to subtle problems when a <code>CKTypedComponentAction</code> reference (e.g. <code>CKTypedComponentAction &</code> or <code>const CKTypedComponentAction &</code>) is captured by a block. The reason? C++ references are not managed by ARC, which can result in crashes that are difficult to debug. The best way to avoid this problem is the pass actions by value, or by explicitly creating a copy for use within the block.
+    <code>CKAction</code> is a C++ object which can lead to subtle problems when a <code>CKAction</code> reference (e.g. <code>CKAction &</code> or <code>const CKAction &</code>) is captured by a block. The reason? C++ references are not managed by ARC, which can result in crashes that are difficult to debug. The best way to avoid this problem is the pass actions by value, or by explicitly creating a copy for use within the block.
   </p>
 </div>
 
@@ -124,8 +124,8 @@ In general, you should avoid using the [component responder chain](responder-cha
 
 ### Automatic Promotion
 
-In order to support a progressive adoption of typed actions, we allow automatic "promotion" of component actions. By promotion, we mean you can provide a component action that takes less arguments to a component that expects more arguments. So, for instance, you can provide a `CKTypedComponentAction<id>(scope, @selector(actionWithSender:firstParam:))` to a component that expects a `CKTypedComponentAction<id, id>`. At runtime, your method will simply not receive the additional parameters that it does not expect.
+In order to support a progressive adoption of typed actions, we allow automatic "promotion" of component actions. By promotion, we mean you can provide a component action that takes less arguments to a component that expects more arguments. So, for instance, you can provide a `CKAction<id>(scope, @selector(actionWithSender:firstParam:))` to a component that expects a `CKAction<id, id>`. At runtime, your method will simply not receive the additional parameters that it does not expect.
 
 ### Explicit Demotion
 
-Legacy callsites also may use "demotion", but it is disabled by default. By demotion, we mean providing a component action that expects *more* parameters than handled. So for instance, this would be like passing `CKTypedComponentAction<id, id, id>` to a component which expects an action of type `CKTypedComponentAction<id>`. In this case, at action-call time we would be getting less parameters than we expected. For this reason, we have forced these conversions to be explicit. You must explicitly convert your action to demote it by calling the demoted copy constructor: `CKTypedComponentAction<id>(CKTypedComponentAction<id, id, id>(scope, @selector(someMethodWithSender:param1:param2:param3:)))`. At runtime the parameters that aren't provided by the action will be filled with zeros (so nil for object types, zerod structs or primitives).
+Legacy callsites also may use "demotion", but it is disabled by default. By demotion, we mean providing a component action that expects *more* parameters than handled. So for instance, this would be like passing `CKAction<id, id, id>` to a component which expects an action of type `CKAction<id>`. In this case, at action-call time we would be getting less parameters than we expected. For this reason, we have forced these conversions to be explicit. You must explicitly convert your action to demote it by calling the demoted copy constructor: `CKAction<id>(CKAction<id, id, id>(scope, @selector(someMethodWithSender:param1:param2:param3:)))`. At runtime the parameters that aren't provided by the action will be filled with zeros (so nil for object types, zerod structs or primitives).
