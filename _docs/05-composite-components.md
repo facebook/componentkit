@@ -17,8 +17,8 @@ For example, imagine you're implementing a button to share an article in a newsr
 {
   return [super newWithComponent:
           [CKButtonComponent
-           newWithTitles:...
-           titleColors:...]];
+           newWithAction:@selector(shareTapped)
+           options:{...}]];
 }
 
 - (void)shareTapped
