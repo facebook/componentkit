@@ -283,7 +283,6 @@
 		2D8270FC1E3F7581008C1A26 /* libComponentKitTestHelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */; };
 		2D8C3D441D64F41E00E6D47A /* ReferenceImages_IOS10_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */; };
 		2D8C3D521D64F43E00E6D47A /* ReferenceImages_IOS10_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */; };
-		2D8C3D541D64F44B00E6D47A /* ReferenceImages_IOS9_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D531D64F44B00E6D47A /* ReferenceImages_IOS9_64 */; };
 		2DA523981DCA8CA0007EF261 /* CKComponentBacktraceDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DA523961DCA8CA0007EF261 /* CKComponentBacktraceDescription.h */; };
 		2DA523991DCA8CA0007EF261 /* CKComponentBacktraceDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DA523961DCA8CA0007EF261 /* CKComponentBacktraceDescription.h */; };
 		2DA5239A1DCA8CA0007EF261 /* CKComponentBacktraceDescription.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DA523971DCA8CA0007EF261 /* CKComponentBacktraceDescription.mm */; };
@@ -302,6 +301,7 @@
 		7F27E2C11F69CC0F00573E14 /* CKLifecycleTestComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F98F58B1F67F2F600436978 /* CKLifecycleTestComponent.mm */; };
 		7F27E2CE1F69E3FC00573E14 /* CKComponentLifecycleTestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA099121F66F36800B81EED /* CKComponentLifecycleTestHelper.h */; };
 		7F27E2CF1F69E3FC00573E14 /* CKComponentLifecycleTestHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FA099131F66F36800B81EED /* CKComponentLifecycleTestHelper.mm */; };
+		7F31BF551F7C3E4A0087E614 /* ReferenceImages_IOS11_64 in Resources */ = {isa = PBXBuildFile; fileRef = 7F31BF541F7C3E4A0087E614 /* ReferenceImages_IOS11_64 */; };
 		7F5A85301F1F903D00238338 /* CKFlexboxComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F6BAF671F1F6E5200600828 /* CKFlexboxComponent.mm */; };
 		7F5A853B1F1F904C00238338 /* CKComponentControllerEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF5435E1F1F6DF700EFEFDD /* CKComponentControllerEvents.mm */; };
 		7F5A853C1F1F905F00238338 /* YGEnums.c in Sources */ = {isa = PBXBuildFile; fileRef = 7F6BAF751F1F71A700600828 /* YGEnums.c */; };
@@ -325,6 +325,7 @@
 		7FA099141F66F36800B81EED /* CKComponentLifecycleTestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA099121F66F36800B81EED /* CKComponentLifecycleTestHelper.h */; };
 		7FA099151F66F36800B81EED /* CKComponentLifecycleTestHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FA099131F66F36800B81EED /* CKComponentLifecycleTestHelper.mm */; };
 		7FC8CD9B1F1F86EC00821766 /* CKFlexboxComponentSnapshotTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8CD9A1F1F86EC00821766 /* CKFlexboxComponentSnapshotTests.mm */; };
+		7FDDE2DC1F7B01710054C7B1 /* ReferenceImages_IOS11_64 in Resources */ = {isa = PBXBuildFile; fileRef = 7FDDE2D11F7B01710054C7B1 /* ReferenceImages_IOS11_64 */; };
 		7FF262A31F7B081700A1C86B /* CKDataSourceChangeset.mm in Sources */ = {isa = PBXBuildFile; fileRef = 400B0E5C1F71C63B006BDFEE /* CKDataSourceChangeset.mm */; };
 		7FF5435F1F1F6DF700EFEFDD /* CKComponentControllerEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF5435D1F1F6DF700EFEFDD /* CKComponentControllerEvents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FF543601F1F6DF700EFEFDD /* CKComponentControllerEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF5435E1F1F6DF700EFEFDD /* CKComponentControllerEvents.mm */; };
@@ -636,7 +637,6 @@
 		D0B47D9E1CBDA9AC00BB33CE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D871CBDA24900BB33CE /* UIKit.framework */; };
 		D0B47D9F1CBDA9B600BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
 		D0B47DA01CBDA9C200BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
-		D0B47DB91CBDACDF00BB33CE /* ReferenceImages_IOS9_64 in Resources */ = {isa = PBXBuildFile; fileRef = D0B47DB31CBDACDE00BB33CE /* ReferenceImages_IOS9_64 */; };
 		EB14A3411D8267DF0004BECF /* CKAutoSizedImageComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKAutoSizedImageComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB14A3421D8267DF0004BECF /* CKAutoSizedImageComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKAutoSizedImageComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB14A3431D8267DF0004BECF /* CKAutoSizedImageComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = EB14A3401D8267DF0004BECF /* CKAutoSizedImageComponent.mm */; };
@@ -814,7 +814,6 @@
 		2D7A98271DB571700064FC6D /* CKInvalidChangesetOperationType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CKInvalidChangesetOperationType.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10_64; sourceTree = "<group>"; };
 		2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10_64; sourceTree = "<group>"; };
-		2D8C3D531D64F44B00E6D47A /* ReferenceImages_IOS9_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS9_64; sourceTree = "<group>"; };
 		2DA523961DCA8CA0007EF261 /* CKComponentBacktraceDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentBacktraceDescription.h; sourceTree = "<group>"; };
 		2DA523971DCA8CA0007EF261 /* CKComponentBacktraceDescription.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentBacktraceDescription.mm; sourceTree = "<group>"; };
 		2DBF1D781D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDetectComponentScopeCollisions.h; sourceTree = "<group>"; };
@@ -826,6 +825,7 @@
 		400B0E5E1F71C63B006BDFEE /* CKDataSourceChangeset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceChangeset.h; sourceTree = "<group>"; };
 		497824741BC570E000F29081 /* CKCollectionViewTransactionalDataSourceTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCollectionViewTransactionalDataSourceTests.mm; sourceTree = "<group>"; };
 		49FA174D1D182C1200EA8126 /* CKTransactionalComponentDataSourceIntegrationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransactionalComponentDataSourceIntegrationTests.mm; sourceTree = "<group>"; };
+		7F31BF541F7C3E4A0087E614 /* ReferenceImages_IOS11_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS11_64; sourceTree = "<group>"; };
 		7F6BAF641F1F6E5200600828 /* CKComponentLayoutBaseline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentLayoutBaseline.h; sourceTree = "<group>"; };
 		7F6BAF651F1F6E5200600828 /* CKComponentLayoutBaseline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKComponentLayoutBaseline.m; sourceTree = "<group>"; };
 		7F6BAF661F1F6E5200600828 /* CKFlexboxComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKFlexboxComponent.h; sourceTree = "<group>"; };
@@ -843,6 +843,7 @@
 		7FA099121F66F36800B81EED /* CKComponentLifecycleTestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentLifecycleTestHelper.h; sourceTree = "<group>"; };
 		7FA099131F66F36800B81EED /* CKComponentLifecycleTestHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentLifecycleTestHelper.mm; sourceTree = "<group>"; };
 		7FC8CD9A1F1F86EC00821766 /* CKFlexboxComponentSnapshotTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKFlexboxComponentSnapshotTests.mm; sourceTree = "<group>"; };
+		7FDDE2D11F7B01710054C7B1 /* ReferenceImages_IOS11_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS11_64; sourceTree = "<group>"; };
 		7FF5435D1F1F6DF700EFEFDD /* CKComponentControllerEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentControllerEvents.h; sourceTree = "<group>"; };
 		7FF5435E1F1F6DF700EFEFDD /* CKComponentControllerEvents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentControllerEvents.mm; sourceTree = "<group>"; };
 		824416B51E44E19300904340 /* CKDetectComponentScopeCollisionsTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDetectComponentScopeCollisionsTests.mm; sourceTree = "<group>"; };
@@ -1145,7 +1146,6 @@
 		D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D0B47D971CBDA97400BB33CE /* CKComponentSnapshotTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentSnapshotTestCase.h; sourceTree = "<group>"; };
 		D0B47D981CBDA97400BB33CE /* CKComponentSnapshotTestCase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentSnapshotTestCase.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		D0B47DB31CBDACDE00BB33CE /* ReferenceImages_IOS9_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS9_64; sourceTree = "<group>"; };
 		EB14A33F1D8267DF0004BECF /* CKAutoSizedImageComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAutoSizedImageComponent.h; sourceTree = "<group>"; };
 		EB14A3401D8267DF0004BECF /* CKAutoSizedImageComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAutoSizedImageComponent.mm; sourceTree = "<group>"; };
 		EB14A34F1D8268580004BECF /* CKImageComponentTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKImageComponentTests.mm; sourceTree = "<group>"; };
@@ -1874,7 +1874,7 @@
 		D0B47DBA1CBDACEA00BB33CE /* ReferenceImages */ = {
 			isa = PBXGroup;
 			children = (
-				D0B47DB31CBDACDE00BB33CE /* ReferenceImages_IOS9_64 */,
+				7FDDE2D11F7B01710054C7B1 /* ReferenceImages_IOS11_64 */,
 				2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */,
 			);
 			name = ReferenceImages;
@@ -1883,7 +1883,7 @@
 		D0B47DC31CBDAD2C00BB33CE /* ReferenceImages */ = {
 			isa = PBXGroup;
 			children = (
-				2D8C3D531D64F44B00E6D47A /* ReferenceImages_IOS9_64 */,
+				7F31BF541F7C3E4A0087E614 /* ReferenceImages_IOS11_64 */,
 				2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */,
 			);
 			name = ReferenceImages;
@@ -2539,7 +2539,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0B47DB91CBDACDF00BB33CE /* ReferenceImages_IOS9_64 in Resources */,
+				7FDDE2DC1F7B01710054C7B1 /* ReferenceImages_IOS11_64 in Resources */,
 				2D8C3D441D64F41E00E6D47A /* ReferenceImages_IOS10_64 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2548,7 +2548,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D8C3D541D64F44B00E6D47A /* ReferenceImages_IOS9_64 in Resources */,
+				7F31BF551F7C3E4A0087E614 /* ReferenceImages_IOS11_64 in Resources */,
 				2D8C3D521D64F43E00E6D47A /* ReferenceImages_IOS10_64 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
