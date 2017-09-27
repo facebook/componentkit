@@ -14,4 +14,11 @@
  Set a key value pair using this in CKComponentLayout.extra for a custom baseline.
  e.g. @{kCKComponentLayoutExtraBaselineKey : 20}
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern NSString *const kCKComponentLayoutExtraBaselineKey;
+#ifdef __cplusplus
+}
+#endif
