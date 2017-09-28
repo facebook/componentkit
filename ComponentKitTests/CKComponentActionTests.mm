@@ -143,14 +143,14 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ actionSender = sender; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   noArgumentBlock:^(CKComponent *sender) { XCTFail(@"Should not be called."); }
    component:innerComponent];
 
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
-  CKComponentActionSend(@selector(testAction:context:), innerComponent);
+  CKComponentActionSend(@selector(testAction:context:), innerComponent, nil);
 
   XCTAssert(actionSender == innerComponent, @"Sender should be inner component");
 
@@ -167,7 +167,7 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ actionContext = context; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   noArgumentBlock:^(CKComponent *sender) { XCTFail(@"Should not be called."); }
    component:innerComponent];
 
   // Must be mounted to send actions:
@@ -194,7 +194,7 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ XCTFail(@"Should not be called."); }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { actionContext = obj1; actionContext2 = obj2; }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   noArgumentBlock:^(CKComponent *sender) { XCTFail(@"Should not be called."); }
    component:innerComponent];
 
   // Must be mounted to send actions:
@@ -222,7 +222,7 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ XCTFail(@"Should not be called."); }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { actionInteger = value; }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   noArgumentBlock:^(CKComponent *sender) { XCTFail(@"Should not be called."); }
    component:innerComponent];
 
   // Must be mounted to send actions:
@@ -249,14 +249,14 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ XCTFail(@"Should not be called."); }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ calledNoArgumentBlock = YES; }
+   noArgumentBlock:^(CKComponent *sender) { calledNoArgumentBlock = YES; }
    component:innerComponent];
 
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
-  CKAction<> action = { @selector(testNoArgumentAction) };
+  CKAction<> action = { @selector(testNoArgumentAction:) };
   action.send(innerComponent);
 
   XCTAssert(calledNoArgumentBlock, @"Contexts should match what was passed to CKComponentActionSend");
@@ -274,14 +274,14 @@
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ XCTFail(@"Should not be called."); }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ calledNoArgumentBlock = YES; }
+   noArgumentBlock:^(CKComponent *sender) { calledNoArgumentBlock = YES; }
    component:innerComponent];
 
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
-  CKAction<id> action = { @selector(testNoArgumentAction) };
+  CKAction<id> action = { @selector(testNoArgumentAction:) };
   action.send(innerComponent, @"hello");
 
   XCTAssert(calledNoArgumentBlock, @"Contexts should match what was passed to CKComponentActionSend");
@@ -307,7 +307,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ XCTFail(@"Should not be called."); }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { actionContext = obj1; actionContext2 = obj2; }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   noArgumentBlock:^(CKComponent *sender) { XCTFail(@"Should not be called."); }
    component:innerComponent];
 
   // Must be mounted to send actions:
@@ -343,7 +343,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ XCTFail(@"Should not be called."); }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { actionContext = obj1; actionContext2 = obj2; }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   noArgumentBlock:^(CKComponent *sender) { XCTFail(@"Should not be called."); }
    component:innerComponent];
   
   // Must be mounted to send actions:
@@ -372,7 +372,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ innerReceivedTestAction = YES; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   noArgumentBlock:^(CKComponent *sender) { XCTFail(@"Should not be called."); }
    component:[CKComponent new]];
 
   CKTestActionComponent *outerComponent =
@@ -380,14 +380,14 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ outerReceivedTestAction = YES; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   noArgumentBlock:^(CKComponent *sender) { XCTFail(@"Should not be called."); }
    component:innerComponent];
 
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
 
-  CKComponentActionSend(@selector(testAction:context:), innerComponent);
+  CKComponentActionSend(@selector(testAction:context:), innerComponent, nullptr);
 
   XCTAssertTrue(outerReceivedTestAction, @"Outer component should have received action sent by inner component");
   XCTAssertFalse(innerReceivedTestAction, @"Inner component should not have received action sent from it");
@@ -405,7 +405,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ innerReceivedTestAction = YES; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   noArgumentBlock:^(CKComponent *sender) { XCTFail(@"Should not be called."); }
    component:[CKComponent new]];
 
   CKTestActionComponent *outerComponent =
@@ -413,7 +413,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ outerReceivedTestAction = YES; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   noArgumentBlock:^(CKComponent *sender) { XCTFail(@"Should not be called."); }
    component:innerComponent];
 
   // Must be mounted to send actions:
@@ -438,7 +438,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
    newWithSingleArgumentBlock:^(CKComponent *sender, id context){ calledBlock = YES; }
    secondArgumentBlock:^(CKComponent *sender, id obj1, id obj2) { XCTFail(@"Should not be called."); }
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
-   noArgumentBlock:^{ XCTFail(@"Should not be called."); }
+   noArgumentBlock:^(CKComponent *sender) { XCTFail(@"Should not be called."); }
    component:innerComponent];
 
   CKAction<id> action { outerComponent, @selector(testAction:context:) };
@@ -496,24 +496,6 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
   }).component;
 
   [component triggerAction:nil];
-
-  XCTAssertTrue(calledAction, @"Should have called the action on the test component");
-}
-
-- (void)testDemotedTargetSelectorActionCallsMethodOnScopedComponent
-{
-  __block BOOL calledAction = NO;
-
-  // We have to use build component here to ensure the scopes are properly configured.
-  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
-    return [CKTestScopeActionComponent
-            newWithBlock:^(CKComponent *sender, id context) {
-              calledAction = YES;
-            }];
-  }).component;
-
-  const CKUntypedComponentAction action = CKUntypedComponentAction(CKAction<id>(component, @selector(actionMethod:context:)));
-  action.send(component);
 
   XCTAssertTrue(calledAction, @"Should have called the action on the test component");
 }
