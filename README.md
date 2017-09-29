@@ -13,12 +13,19 @@ github "facebook/ComponentKit" ~> 0.20
 ```
 
 ### Opening the Xcode projects
+ComponentKit has a few dependencies that need to be installed via [Carthage](https://github.com/Carthage/Carthage). **Before you open any of the Xcode projects in this repo, make sure you run**:
 
-If you want to try out ComponentKit just clone the GitHub repository, clone submodules and open the Xcode project.
-To clone submodules:
 ```
-git submodule update --init
+carthage bootstrap
 ```
+
+If Carthage isn't installed, you easily install it via Homebrew:
+
+```
+brew install carthage
+```
+If you can't use Homebrew, Carthage provides other [installation methods](https://github.com/Carthage/Carthage#installing-carthage).
+
 
 To get started with the example app:
 
