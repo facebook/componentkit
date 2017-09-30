@@ -41,8 +41,6 @@ If you're interested in viewing only the ComponentKit source code in Xcode:
 open ComponentKit.xcodeproj
 ```
 
-There is no need to run any special commands prior to opening either Xcode project.
-
 ### Learn more
 
 * Read the [Getting Started guide](http://www.componentkit.org/docs/getting-started.html)
