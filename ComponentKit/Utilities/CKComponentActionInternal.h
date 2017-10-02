@@ -171,7 +171,7 @@ NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id t
 template<typename... T>
 static void CKComponentActionSendResponderChain(SEL selector, id target, CKComponent *sender, T... args) {
   NSInvocation *invocation = CKComponentActionSendResponderInvocationPrepare(selector, target, sender);
-  CKCAssert(invocation.methodSignature.numberOfArguments <= sizeof...(args) + 3, @"Target invocation contains too many arguments");
+  CKCAssert(invocation.methodSignature.numberOfArguments <= sizeof...(args) + 3, @"Target invocation contains too many arguments: sender: %@ | SEL: %@ | target: %@", sender, NSStringFromSelector(selector), invocation.target);
   // We use a recursive argument unpack to unwrap the variadic arguments in-order on the invocation in a type-safe
   // manner.
   CKConfigureInvocationWithArguments(invocation, 3, args...);
