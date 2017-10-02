@@ -56,8 +56,8 @@
   self.collectionView.delegate = self;
   QuoteContext *context = [[QuoteContext alloc] initWithImageNames:imageNames];
   const CKSizeRange sizeRange = [_sizeRangeProvider sizeRangeForBoundingSize:self.collectionView.bounds.size];
-  CKTransactionalComponentDataSourceConfiguration *configuration =
-  [[CKTransactionalComponentDataSourceConfiguration alloc] initWithComponentProvider:[self class]
+  CKDataSourceConfiguration *configuration =
+  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
                                                                              context:context
                                                                            sizeRange:sizeRange];
   _dataSource = [[CKCollectionViewTransactionalDataSource alloc] initWithCollectionView:self.collectionView

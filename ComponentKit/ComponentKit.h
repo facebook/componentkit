@@ -34,7 +34,7 @@
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKCollectionViewTransactionalDataSource.h>
 #import <ComponentKit/CKDataSourceChangeset.h>
-#import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
+#import <ComponentKit/CKDataSourceConfiguration.h>
 //Hosting views
 #import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
 #import <ComponentKit/CKComponentHostingView.h>

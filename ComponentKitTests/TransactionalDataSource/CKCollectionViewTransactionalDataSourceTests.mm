@@ -13,7 +13,7 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKCollectionViewTransactionalDataSource.h>
-#import <ComponentKit/CKTransactionalComponentDataSourceConfiguration.h>
+#import <ComponentKit/CKDataSourceConfiguration.h>
 #import <ComponentKit/CKSupplementaryViewDataSource.h>
 #import <ComponentKit/CKSizeRange.h>
 
@@ -34,7 +34,7 @@
   self.mockSupplementaryViewDataSource = [OCMockObject mockForProtocol:@protocol(CKSupplementaryViewDataSource)];
   self.mockCollectionView = [OCMockObject niceMockForClass:[UICollectionView class]];
 
-  CKTransactionalComponentDataSourceConfiguration *config = [[CKTransactionalComponentDataSourceConfiguration alloc]
+  CKDataSourceConfiguration *config = [[CKDataSourceConfiguration alloc]
                                                              initWithComponentProvider:nil
                                                              context:nil
                                                              sizeRange:CKSizeRange()];

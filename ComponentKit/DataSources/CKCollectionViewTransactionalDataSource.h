@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKTransactionalComponentDataSource.h>
+#import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKSupplementaryViewDataSource.h>
 
 /**
@@ -30,7 +30,7 @@
  */
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView
            supplementaryViewDataSource:(id<CKSupplementaryViewDataSource>)supplementaryViewDataSource
-                         configuration:(CKTransactionalComponentDataSourceConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
+                         configuration:(CKDataSourceConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 
@@ -58,12 +58,12 @@
  */
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
 
-/** @see `CKTransactionalComponentDataSource` */
+/** @see `CKDataSource` */
 - (void)reloadWithMode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo;
 
-/** @see `CKTransactionalComponentDataSource` */
-- (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
+/** @see `CKDataSource` */
+- (void)updateConfiguration:(CKDataSourceConfiguration *)configuration
                        mode:(CKUpdateMode)mode
                    userInfo:(NSDictionary *)userInfo;
 

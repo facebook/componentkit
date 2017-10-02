@@ -11,11 +11,11 @@
 #import "CKCollectionViewTransactionalDataSource.h"
 
 #import "CKCollectionViewDataSourceCell.h"
-#import "CKTransactionalComponentDataSourceConfiguration.h"
-#import "CKTransactionalComponentDataSourceListener.h"
-#import "CKTransactionalComponentDataSourceItem.h"
-#import "CKTransactionalComponentDataSourceState.h"
-#import "CKTransactionalComponentDataSourceAppliedChanges.h"
+#import "CKDataSourceConfiguration.h"
+#import "CKDataSourceListener.h"
+#import "CKDataSourceItem.h"
+#import "CKDataSourceState.h"
+#import "CKDataSourceAppliedChanges.h"
 #import "CKComponentRootView.h"
 #import "CKComponentLayout.h"
 #import "CKComponentDataSourceAttachController.h"
@@ -24,14 +24,14 @@
 
 @interface CKCollectionViewTransactionalDataSource () <
 UICollectionViewDataSource,
-CKTransactionalComponentDataSourceListener
+CKDataSourceListener
 >
 {
-  CKTransactionalComponentDataSource *_componentDataSource;
+  CKDataSource *_componentDataSource;
   __weak id<CKSupplementaryViewDataSource> _supplementaryViewDataSource;
-  CKTransactionalComponentDataSourceState *_currentState;
+  CKDataSourceState *_currentState;
   CKComponentDataSourceAttachController *_attachController;
-  NSMapTable<UICollectionViewCell *, CKTransactionalComponentDataSourceItem *> *_cellToItemMap;
+  NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *_cellToItemMap;
 }
 @end
 
@@ -40,11 +40,11 @@ CKTransactionalComponentDataSourceListener
 
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView
            supplementaryViewDataSource:(id<CKSupplementaryViewDataSource>)supplementaryViewDataSource
-                         configuration:(CKTransactionalComponentDataSourceConfiguration *)configuration
+                         configuration:(CKDataSourceConfiguration *)configuration
 {
   self = [super init];
   if (self) {
-    _componentDataSource = [[CKTransactionalComponentDataSource alloc] initWithConfiguration:configuration];
+    _componentDataSource = [[CKDataSource alloc] initWithConfiguration:configuration];
     [_componentDataSource addListener:self];
       
     _collectionView = collectionView;
@@ -71,9 +71,9 @@ CKTransactionalComponentDataSourceListener
 
 static void applyChangesToCollectionView(UICollectionView *collectionView,
                                          CKComponentDataSourceAttachController *attachController,
-                                         NSMapTable<UICollectionViewCell *, CKTransactionalComponentDataSourceItem *> *cellToItemMap,
-                                         CKTransactionalComponentDataSourceState *currentState,
-                                         CKTransactionalComponentDataSourceAppliedChanges *changes)
+                                         NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *cellToItemMap,
+                                         CKDataSourceState *currentState,
+                                         CKDataSourceAppliedChanges *changes)
 {
   [changes.updatedIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, BOOL *stop) {
     if (CKCollectionViewDataSourceCell *cell = (CKCollectionViewDataSourceCell *) [collectionView cellForItemAtIndexPath:indexPath]) {
@@ -90,11 +90,11 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
   [collectionView insertItemsAtIndexPaths:[changes.insertedIndexPaths allObjects]];
 }
 
-#pragma mark - CKTransactionalComponentDataSourceListener
+#pragma mark - CKDataSourceListener
 
-- (void)transactionalComponentDataSource:(CKTransactionalComponentDataSource *)dataSource
-                  didModifyPreviousState:(CKTransactionalComponentDataSourceState *)previousState
-                       byApplyingChanges:(CKTransactionalComponentDataSourceAppliedChanges *)changes
+- (void)transactionalComponentDataSource:(CKDataSource *)dataSource
+                  didModifyPreviousState:(CKDataSourceState *)previousState
+                       byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
   const BOOL changesIncludeNonUpdates = (changes.removedIndexPaths.count ||
                                          changes.insertedIndexPaths.count ||
@@ -103,7 +103,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
                                          changes.removedSections.count);
   const BOOL changesIncludeOnlyUpdates = (changes.updatedIndexPaths.count && !changesIncludeNonUpdates);
   
-  CKTransactionalComponentDataSourceState *state = [_componentDataSource state];
+  CKDataSourceState *state = [_componentDataSource state];
   
   if (changesIncludeOnlyUpdates) {
     // We are not able to animate the updates individually, so we pick the
@@ -115,7 +115,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
         break;
     }
     
-    void (^applyUpdatedState)(CKTransactionalComponentDataSourceState *) = ^(CKTransactionalComponentDataSourceState *updatedState) {
+    void (^applyUpdatedState)(CKDataSourceState *) = ^(CKDataSourceState *updatedState) {
       [_collectionView performBatchUpdates:^{
         _currentState = updatedState;
       } completion:^(BOOL finished) {}];
@@ -138,7 +138,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
     // their respective cells if visible.
     CKComponentBoundsAnimationApply(boundsAnimation, ^{
       for (NSIndexPath *indexPath in changes.updatedIndexPaths) {
-        CKTransactionalComponentDataSourceItem *item = [state objectAtIndexPath:indexPath];
+        CKDataSourceItem *item = [state objectAtIndexPath:indexPath];
         CKCollectionViewDataSourceCell *cell = (CKCollectionViewDataSourceCell *)[_collectionView cellForItemAtIndexPath:indexPath];
         if (cell) {
           attachToCell(cell, item, _attachController, _cellToItemMap);
@@ -158,7 +158,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
 }
 
 - (void)_detachComponentLayoutForRemovedItemsAtIndexPaths:(NSSet *)removedIndexPaths
-                                                  inState:(CKTransactionalComponentDataSourceState *)state
+                                                  inState:(CKDataSourceState *)state
 {
   for (NSIndexPath *indexPath in removedIndexPaths) {
     CKComponentScopeRootIdentifier identifier = [[[state objectAtIndexPath:indexPath] scopeRoot] globalIdentifier];
@@ -186,7 +186,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
   [_componentDataSource reloadWithMode:mode userInfo:userInfo];
 }
 
-- (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
+- (void)updateConfiguration:(CKDataSourceConfiguration *)configuration
                        mode:(CKUpdateMode)mode
                    userInfo:(NSDictionary *)userInfo
 {
@@ -232,9 +232,9 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
 }
 
 static void attachToCell(CKCollectionViewDataSourceCell *cell,
-                         CKTransactionalComponentDataSourceItem *item,
+                         CKDataSourceItem *item,
                          CKComponentDataSourceAttachController *attachController,
-                         NSMapTable<UICollectionViewCell *, CKTransactionalComponentDataSourceItem *> *cellToItemMap)
+                         NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *cellToItemMap)
 {
   [attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier withBoundsAnimation:item.boundsAnimation toView:cell.rootView];
   [cellToItemMap setObject:item forKey:cell];
