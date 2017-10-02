@@ -19,7 +19,15 @@ set -eu
 
 MODE=$1
 
+function project_version() {
+  # get contents -> grep for project version line -> cut string with '=' delimeter, take 2nd value -> trim whitespaces.
+  more ComponentKit/ComponentKit.xcconfig | grep "CURRENT_PROJECT_VERSION = [\.0-9]*" | cut -d = -f 2 | xargs echo -n
+}
+
 function ci() {
+  # replace line contains s.version with a new line contains value of `project_version`.
+  sed -i -e "s/s.version = \'[\.0-9]*\'/s.version = \'$(project_version)\'/g" ComponentKit.podspec
+  
   xcodebuild \
     -project $1 \
     -scheme $2 \
