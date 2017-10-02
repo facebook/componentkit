@@ -22,9 +22,9 @@ As a result, the list view infrastructure provided by ComponentKit only spends a
 
 ComponentKit includes a standard data source stack dedicated to render components directly in a `UICollectionView`, and with a bit more effort, in a `UITableView`.
 
-### CKTransactionalComponentDataSource
+### CKDataSource
 
-`CKTransactionalComponentDataSource` is at the core of the list view infrastructure. Instances of this class are agnostic to the `UICollectionView` API. The role of a `CKTransactionalComponentDataSource` is to:
+`CKDataSource` is at the core of the list view infrastructure. Instances of this class are agnostic to the `UICollectionView` API. The role of a `CKDataSource` is to:
 
 1. Take as input changesets containing commands and models.
 *e.g: "Insert at index 0 in section 1 the item representing ModelA".
@@ -33,7 +33,7 @@ ComponentKit includes a standard data source stack dedicated to render component
 
 ### CKCollectionViewTransactionalDataSource
 
-`CKCollectionViewTransactionalDataSource` is a thin wrapper around `CKTransactionalComponentDataSource` that implements the `UICollectionViewDataSource` API.
+`CKCollectionViewTransactionalDataSource` is a thin wrapper around `CKDataSource` that implements the `UICollectionViewDataSource` API.
 
 It can be used to easily bootstrap a `UICollectionView` using components. See how to [display components in a collection view.](datasource-basics.html)
 
@@ -56,6 +56,3 @@ Conceptually, we now have a one directional data flow. Obviously the back and fo
 
 <img src="/static/images/datasource-overview.png" alt="CKCollectionViewTransactionalDataSource overview" width ="518" height="180">
 
-## What about UITableViews ?
-
-To power a `UITableView` with components you can directly use `CKTransactionalComponentDataSource`. [See this code sample.](datasource-dive-deeper.html\#example-use-it-in-your-viewcontroller-to-power-a-uitableview)
