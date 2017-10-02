@@ -39,9 +39,8 @@ namespace CK {
  
  Usage in your component header:
  
- @interface MyComponent : CKComponent
- + (instancetype)newWithAction:(const CKAction<NSString *, int> &)action;
- @end
+     //... inside MyComponent.h interface
+     + (instancetype)newWithAction:(const CKAction<NSString *, int> &)action;
  
  When creating the action:
  
@@ -224,12 +223,12 @@ extern template class CKAction<id>;
  @param action The action to send up the responder chain.
  @param sender The component sending the action. Traversal starts from the component itself, then its next responder.
  @param context An optional context-dependent second parameter to the component action.
- @param behavior @see CKComponentActionSendBehavior
+ @param behavior An enum specifies how to send the action. @see CKComponentActionSendBehavior
  */
-void CKComponentActionSend(const CKUntypedComponentAction &action, CKComponent *sender);
-void CKComponentActionSend(const CKUntypedComponentAction &action, CKComponent *sender, CKComponentActionSendBehavior behavior);
-void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context);
 void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior);
+void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context);
+void CKComponentActionSend(const CKUntypedComponentAction &action, CKComponent *sender, CKComponentActionSendBehavior behavior);
+void CKComponentActionSend(const CKUntypedComponentAction &action, CKComponent *sender);
 
 /**
  Returns a view attribute that configures a component that creates a UIControl to send the given CKComponentAction.

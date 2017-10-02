@@ -60,13 +60,14 @@ struct CKLabelAttributes
  for you.
    
  @see CKTextComponent for advanced text usages like link tapping.
- 
+ */
+@interface CKLabelComponent : CKCompositeComponent
+
+/**
  @param attributes The content and styling information for the text component.
  @param viewAttributes These are passed directly to CKTextComponent and its backing view.
  @param size The component size or {} for the default which is for the layout to take the maximum space available.
  */
-@interface CKLabelComponent : CKCompositeComponent
-
 + (instancetype)newWithLabelAttributes:(const CKLabelAttributes &)attributes
                         viewAttributes:(const CKViewComponentAttributeValueMap &)viewAttributes
                                   size:(const CKComponentSize &)size;

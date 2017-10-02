@@ -26,7 +26,7 @@
 
 /**
  @param collectionView The collectionView is held strongly and its datasource property will be set to the receiver.
- @param supplementaryViewDataSource @see the `supplementaryViewDataSource` property. Will be held weakly, pass nil if you don't need supplementary views.
+ @param supplementaryViewDataSource Will be held weakly, pass nil if you don't need supplementary views. @see the `supplementaryViewDataSource` property.
  */
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView
            supplementaryViewDataSource:(id<CKSupplementaryViewDataSource>)supplementaryViewDataSource

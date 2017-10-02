@@ -36,8 +36,8 @@ typedef NS_OPTIONS(NSUInteger, CKCenterLayoutComponentSizingOptions) {
 @interface CKCenterLayoutComponent : CKComponent
 
 /**
- @param centeringOptions, see CKCenterLayoutComponentCenteringOptions.
- @param sizingOptions, see CKCenterLayoutComponentSizingOptions.
+ @param centeringOptions see CKCenterLayoutComponentCenteringOptions.
+ @param sizingOptions see CKCenterLayoutComponentSizingOptions.
  @param child The child to center.
  @param size The component size or {} for the default which is for the layout to take the maximum space available.
  */

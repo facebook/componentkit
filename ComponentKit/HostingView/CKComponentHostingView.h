@@ -24,8 +24,10 @@
 @property (nonatomic, weak) id<CKComponentHostingViewDelegate> delegate;
 
 /**
- @param componentProvider See @protocol(CKComponentProvider).
- @param sizeRangeProvider See @protocol(CKComponentSizeRangeProviding).
+ @param componentProvider provider conforming to CKComponentProvider protocol.
+ @param sizeRangeProvider sizing range provider conforming to CKComponentSizeRangeProviding.
+ @see CKComponentProvider
+ @see CKComponentSizeRangeProviding
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;

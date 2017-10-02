@@ -42,7 +42,7 @@ struct CKComponentViewClass {
    A variant that allows you to specify two selectors that are sent as a view is hidden/unhidden for future reuse.
    Note that a view can be reused but not hidden so never enters the pool (in which case these selectors won't be sent).
    @param didEnterReusePoolMessage Sent to the view just after it has been hidden for future reuse.
-   @param willLeaveReusePool Sent to the view just before it is revealed after being reused.
+   @param willLeaveReusePoolMessage Sent to the view just before it is revealed after being reused.
    */
   CKComponentViewClass(Class viewClass, SEL didEnterReusePoolMessage, SEL willLeaveReusePoolMessage) noexcept;
 

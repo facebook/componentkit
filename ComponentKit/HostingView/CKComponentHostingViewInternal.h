@@ -18,12 +18,14 @@
 @interface CKComponentHostingView ()
 
 /**
- @param componentProvider See @protocol(CKComponentProvider).
- @param sizeRangeProvider See @protocol(CKComponentSizeRangeProviding).
+ @param componentProvider  provider conforming to CKComponentProvider protocol.
+ @param sizeRangeProvider sizing range provider conforming to CKComponentSizeRangeProviding.
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
  @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
+ @see CKComponentProvider
+ @see CKComponentSizeRangeProviding
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
