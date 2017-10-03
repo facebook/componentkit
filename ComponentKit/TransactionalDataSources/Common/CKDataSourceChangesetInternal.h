@@ -19,7 +19,6 @@
 @property (nonatomic, copy, readonly) NSDictionary *movedItems;
 @property (nonatomic, copy, readonly) NSIndexSet *insertedSections;
 @property (nonatomic, copy, readonly) NSDictionary *insertedItems;
-@property (nonatomic, copy, readonly) NSDictionary *userInfo;
 
 - (BOOL)isEmpty;
 
