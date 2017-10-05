@@ -14,6 +14,7 @@
 
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
+#import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKScopedComponentController.h>
 #import <ComponentKit/CKUpdateMode.h>
 

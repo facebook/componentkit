@@ -37,19 +37,3 @@ typedef BOOL (*CKComponentControllerScopePredicate)(id<CKScopedComponentControll
 typedef BOOL (*CKComponentScopePredicate)(id);
 typedef BOOL (*CKComponentControllerScopePredicate)(id);
 #endif
-
-@protocol CKComponentScopeEnumeratorProvider <NSObject>
-
-/**
- Allows rapid enumeration over the components or controllers that matched a predicate. The predicate should be provided
- in the initializer of the scope root in order to reduce the runtime costs of the enumeration.
-
- There is no guaranteed ordering of arguments that are provided to the enumerators.
- */
-- (void)enumerateComponentsMatchingPredicate:(CKComponentScopePredicate)predicate
-                                       block:(CKComponentScopeEnumerator)block;
-
-- (void)enumerateComponentControllersMatchingPredicate:(CKComponentControllerScopePredicate)predicate
-                                                 block:(CKComponentControllerScopeEnumerator)block;
-
-@end

@@ -12,6 +12,7 @@
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
+#import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 
 #import <unordered_set>
 
