@@ -13,7 +13,7 @@
 #import <queue>
 
 #import "CKAssert.h"
-#import "CKComponentBacktraceDescription.h"
+#import "CKComponentDescriptionHelper.h"
 #import "CKComponentInternal.h"
 
 #pragma clang diagnostic push

@@ -23,9 +23,9 @@
 #import "CKComponent+UIView.h"
 #import "CKComponentAccessibility.h"
 #import "CKComponentAnimation.h"
-#import "CKComponentBacktraceDescription.h"
 #import "CKComponentController.h"
 #import "CKComponentDebugController.h"
+#import "CKComponentDescriptionHelper.h"
 #import "CKComponentLayout.h"
 #import "CKComponentScopeHandle.h"
 #import "CKComponentViewConfiguration.h"
@@ -148,9 +148,10 @@ struct CKComponentMountInfo {
       [v setBounds:{v.bounds.origin, size}];
     } @catch (NSException *exception) {
       NSString *const componentBacktraceDescription =
-      CKComponentBacktraceDescription(generateComponentBacktrace(supercomponent));
+        CKComponentBacktraceDescription(generateComponentBacktrace(supercomponent));
+      NSString *const componentChildrenDescription = CKComponentChildrenDescription(children);
       [NSException raise:exception.name
-                  format:@"%@ raised %@ during mount: %@\n%@", [self class], exception.name, exception.reason, componentBacktraceDescription];
+                  format:@"%@ raised %@ during mount: %@\n backtrace:%@ children:%@", [self class], exception.name, exception.reason, componentBacktraceDescription, componentChildrenDescription];
     }
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};

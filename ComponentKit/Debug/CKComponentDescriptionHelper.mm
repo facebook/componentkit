@@ -8,9 +8,14 @@
  *
  */
 
-#import "CKComponentBacktraceDescription.h"
+#import "CKComponentDescriptionHelper.h"
 
 #import "CKComponent.h"
+
+static NSString *componentDescriptionWClass(CKComponent *component)
+{
+  return [NSString stringWithFormat:@"%@: %@", NSStringFromClass([component class]), [component description]];
+}
 
 NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept
 {
@@ -22,9 +27,22 @@ NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBackt
                                            [description appendString:@"\n"];
                                          }
                                          [description appendString:[@"" stringByPaddingToLength:depth withString:@" " startingAtIndex:0]];
-                                         [description appendString:NSStringFromClass([component class])];
-                                         [description appendString:@": "];
-                                         [description appendString:[component description]];
+                                         [description appendString:componentDescriptionWClass(component)];
                                        }];
+  return description;
+}
+
+NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKComponentLayoutChild>> children) noexcept
+{
+  NSMutableString *const description = [NSMutableString string];
+  for (auto childIter = children->begin(); childIter != children->end(); childIter++) {
+    if (childIter != children->begin()) {
+      [description appendString:@"\n"];
+    }
+    CKComponent *child = childIter->layout.component;
+    if (child) {
+      [description appendString:componentDescriptionWClass(child)];
+    }
+  }
   return description;
 }
