@@ -89,12 +89,6 @@ public:
 
 template <typename... Ts> struct CKActionTypelist { };
 
-template <bool... b>
-struct CKActionBoolPack {};
-
-template <typename... TS>
-struct CKActionDenyType : std::true_type {};
-
 /** Base case, recursion should stop here. */
 void CKActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKActionTypelist<> &list) noexcept;
 
@@ -109,23 +103,7 @@ void CKActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKActi
   CKActionTypeVectorBuild(typeVector, CKActionTypelist<Ts...>{});
 }
 
-/** Base case, recursion should stop here. */
 void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) noexcept;
-
-/**
- Recursion here is through normal variadic argument list unpacking. Unlike above, we have the arguments, so we don't
- require the intermediary struct.
- */
-template <typename T, typename... Ts>
-void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index, T t, Ts... args) noexcept
-{
-  // We have to be able to handle methods that take less than the provided number of arguments, since that will cause
-  // an exception to be thrown.
-  if (index < invocation.methodSignature.numberOfArguments) {
-    [invocation setArgument:&t atIndex:index];
-    CKConfigureInvocationWithArguments(invocation, index + 1, args...);
-  }
-}
 
 #pragma mark - Debug Helpers
 
@@ -166,17 +144,28 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept;
 
 #pragma mark - Sending
 
+struct CKActionInfo {
+  IMP imp;
+  id responder;
+};
+
+CKActionInfo CKActionFind(SEL selector, id target) noexcept;
+
 NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender) noexcept;
 
 template<typename... T>
 static void CKComponentActionSendResponderChain(SEL selector, id target, CKComponent *sender, T... args) {
-  NSInvocation *invocation = CKComponentActionSendResponderInvocationPrepare(selector, target, sender);
-  CKCAssert(invocation.methodSignature.numberOfArguments <= sizeof...(args) + 3, @"Target invocation contains too many arguments: sender: %@ | SEL: %@ | target: %@", sender, NSStringFromSelector(selector), invocation.target);
-  // We use a recursive argument unpack to unwrap the variadic arguments in-order on the invocation in a type-safe
-  // manner.
-  CKConfigureInvocationWithArguments(invocation, 3, args...);
-  // NSInvocation does not by default retain its target or object arguments. We have to manually call this to ensure
-  // that these arguments and target are not deallocated through the scope of the invocation.
-  [invocation retainArguments];
-  [invocation invoke];
+
+  const CKActionInfo info = CKActionFind(selector, target);
+  if (!info.responder) {
+    return;
+  }
+  CKCAssert([info.responder methodSignatureForSelector:selector].numberOfArguments <= sizeof...(args) + 3,
+            @"Target invocation contains too many arguments => sender: %@ | SEL: %@ | target: %@",
+            sender, NSStringFromSelector(selector), [target class]);
+  
+  // ARC assumes all IMPs return an id and will try to retain void,
+  // so have to case the IMP since it returns void.
+  void (*typedFunction)(id, SEL, id, T...) = (void (*)(id, SEL, id, T...))info.imp;
+  typedFunction(info.responder, selector, sender, args...);
 }

@@ -100,14 +100,6 @@ namespace CK {
  */
 template<typename... T>
 class CKAction : public CKActionBase {
-  static_assert(std::is_same<
-                CKActionBoolPack<(std::is_reference<T>::value
-                                                || std::is_pointer<T>::value
-                                                || std::is_trivially_constructible<T>::value
-                                                || std::is_convertible<T, id>::value)...>,
-                CKActionBoolPack<(CKActionDenyType<T>::value)...>
-                >::value, "You must either use a pointer (like an NSObject) or a trivially constructible type. Complex types are not allowed as arguments of component actions.");
-
   /** This constructor is private to forbid direct usage. Use actionFromBlock. */
   CKAction<T...>(void(^block)(CKComponent *, T...)) noexcept : CKActionBase((dispatch_block_t)block) {};
   

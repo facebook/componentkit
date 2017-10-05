@@ -21,4 +21,9 @@
 - (void)testAction2:(CKComponent *)sender context1:(id)context1 context2:(id)context2;
 - (void)testPrimitive:(CKComponent *)sender integer:(int)integer;
 - (void)testNoArgumentAction:(CKComponent *)sender;
+- (void)testCppArgumentAction:(CKComponent *)sender vector:(std::vector<std::string>)vec;
+
++ (instancetype)newWithCppArgumentBlock:(void (^)(CKComponent *sender, std::vector<std::string> vec))block
+                              component:(CKComponent *)component;
+
 @end

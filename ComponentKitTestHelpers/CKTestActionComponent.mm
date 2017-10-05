@@ -16,6 +16,7 @@
   void (^_secondBlock)(CKComponent *, id, id);
   void (^_primitiveArgumentBlock)(CKComponent *, int);
   void (^_noArgumentBlock)(CKComponent *sender);
+  void (^_cppArgumentBlock)(CKComponent *, std::vector<std::string>);
 }
 
 + (instancetype)newWithSingleArgumentBlock:(void (^)(CKComponent *sender, id context))singleArgumentBlock
@@ -30,6 +31,16 @@
     c->_secondBlock = secondArgumentBlock;
     c->_primitiveArgumentBlock = primitiveArgumentBlock;
     c->_noArgumentBlock = noArgumentBlock;
+  }
+  return c;
+}
+
++ (instancetype)newWithCppArgumentBlock:(void (^)(CKComponent *sender, std::vector<std::string> vec))block
+                              component:(CKComponent *)component
+{
+  CKTestActionComponent *c = [super newWithComponent:component];
+  if (c) {
+    c->_cppArgumentBlock = block;
   }
   return c;
 }
@@ -52,6 +63,11 @@
 - (void)testNoArgumentAction:(CKComponent *)sender
 {
   _noArgumentBlock(sender);
+}
+
+- (void)testCppArgumentAction:(CKComponent *)sender vector:(std::vector<std::string>)vec
+{
+  _cppArgumentBlock(sender, vec);
 }
 
 @end

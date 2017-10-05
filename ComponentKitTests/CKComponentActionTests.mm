@@ -239,6 +239,29 @@
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
 
+- (void)testActionWithCppArgs
+{
+  __block std::vector<std::string> actionVec;
+  
+  CKComponent *innerComponent = [CKComponent new];
+  CKTestActionComponent *outerComponent =
+  [CKTestActionComponent
+   newWithCppArgumentBlock:^(CKComponent *sender, std::vector<std::string> vec) { actionVec = vec; }
+   component:innerComponent];
+  
+  // Must be mounted to send actions:
+  UIView *rootView = [UIView new];
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
+  
+  std::vector<std::string> cppThing = {"hummus", "chips", "salad"};
+  CKAction<const std::vector<std::string> &> action = { @selector(testCppArgumentAction:vector:) };
+  action.send(innerComponent, cppThing);
+  
+  XCTAssert(actionVec == cppThing, @"Contexts should match what was passed to CKComponentActionSend");
+  
+  [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
+}
+
 - (void)testSendActionWithNoArguments
 {
   __block BOOL calledNoArgumentBlock = NO;
@@ -509,9 +532,24 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
   XCTAssertTrue(target.calledSomeMethod, @"Should have called the method on target");
 }
 
-- (void)testInvocationIsNilWhenSelectorIsNil
+- (void)testImpIsNilWhenSelectorIsNil
 {
-  XCTAssertNil(CKComponentActionSendResponderInvocationPrepare(nil, nil, nil));
+  XCTAssert(!CKActionFind(nil, nil).imp);
+}
+
+- (void)testImpIsNilWhenTargetIsNil
+{
+  XCTAssert(!CKActionFind(@selector(triggerAction:), nil).imp);
+}
+
+- (void)testResponderIsNilWhenSelectorIsNil
+{
+  XCTAssertNil(CKActionFind(nil, nil).responder);
+}
+
+- (void)testResponderIsNilWhenTargetIsNil
+{
+  XCTAssertNil(CKActionFind(@selector(triggerAction:), nil).responder);
 }
 
 - (void)testBlockActionFires
