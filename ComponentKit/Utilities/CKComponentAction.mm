@@ -155,23 +155,6 @@ CKActionInfo CKActionFind(SEL selector, id target) noexcept
   return {imp, responder};
 }
 
-NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender) noexcept
-{
-  id responder = CKActionFind(selector, target).responder;
-  if (!responder) {
-    return nil;
-  }
-  
-  NSMethodSignature *signature = [responder methodSignatureForSelector:selector];
-  NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-  invocation.selector = selector;
-  invocation.target = responder;
-  if (signature.numberOfArguments >= 3) {
-    [invocation setArgument:&sender atIndex:2];
-  }
-  return invocation;
-}
-
 #pragma mark - Legacy Send Functions
 
 void CKComponentActionSend(const CKUntypedComponentAction &action, CKComponent *sender)

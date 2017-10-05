@@ -151,8 +151,6 @@ struct CKActionInfo {
 
 CKActionInfo CKActionFind(SEL selector, id target) noexcept;
 
-NSInvocation *CKComponentActionSendResponderInvocationPrepare(SEL selector, id target, CKComponent *sender) noexcept;
-
 template<typename... T>
 static void CKComponentActionSendResponderChain(SEL selector, id target, CKComponent *sender, T... args) {
 
