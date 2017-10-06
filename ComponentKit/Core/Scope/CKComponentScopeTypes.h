@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <unordered_map>
+#import <vector>
 
 typedef int32_t CKComponentScopeHandleIdentifier;
 typedef int32_t CKComponentScopeRootIdentifier;
