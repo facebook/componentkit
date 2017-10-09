@@ -12,6 +12,7 @@ Clone the Github repo, and then open the Xcode project.
 $ git clone https://github.com/facebook/componentkit
 $ cd componentkit/Examples/WildeGuess/
 $ open WildeGuess.xcodeproj
+$ carthage install
 {% endhighlight %}
 
 Run the project in the simulator to see a simple app that shows a list of quotes.
