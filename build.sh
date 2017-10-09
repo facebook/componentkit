@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Go to root directory of the script
+pushd $(dirname $0)
+
 if [ -z $1 ]; then
   echo "usage: build.sh <subcommand>"
   echo "available subcommands:"
@@ -84,3 +87,6 @@ if [ "$MODE" = "docs" ]; then
     --output appledoc \
     $HEADERS
 fi
+
+# Go back to the initial directory
+popd
