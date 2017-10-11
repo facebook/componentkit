@@ -160,15 +160,7 @@ public:
 
   /** We support promotion from actions that take no arguments. */
   template <typename... Ts>
-  CKAction<Ts...>(const CKAction<> &action) noexcept : CKActionBase(action) {
-    // At runtime if we provide more arguments to a block on invocation than accepted by the block, the behavior is
-    // undefined. If you hit this assert, it means somewhere in your code you're doing this:
-    // CKAction<BOOL, int> = ^(CKComponent *sender) {
-    // To fix the error, you must handle all arguments:
-    // CKAction<BOOL, int> = ^(CKComponent *sender, BOOL foo, int bar) {
-    // You may also use the `promotedFrom` operator above.
-    CKCAssert(_variant != CKActionVariant::Block, @"Block actions should not take fewer arguments than defined in the declaration of the action, you are depending on undefined behavior and will cause crashes.");
-  };
+  CKAction<Ts...>(const CKAction<> &action) noexcept : CKActionBase(action) {};
 
   /**
    We allow demotion from actions with types to untyped actions, but only when explicit. This means arguments to the
