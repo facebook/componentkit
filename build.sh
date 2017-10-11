@@ -49,13 +49,18 @@ function tvos_ci() {
   ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV 1080p" $3
 }
 
+function carthage_bootstrap() {
+  carthage bootstrap --platform iOS --no-use-binaries --no-build yoga
+  carthage bootstrap --platform iOS ocmock xcconfigs ios-snapshot-test-case
+}
+
+carthage_bootstrap
+
 if [ "$MODE" = "ci-componentkit-ios" ]; then
-  carthage bootstrap --platform iOS --no-use-binaries
   ios_ci ComponentKit.xcodeproj ComponentKit test
 fi
 
 if [ "$MODE" = "ci-componentkit-tvos" ]; then
-  carthage bootstrap --platform tvOS --no-use-binaries
   tvos_ci ComponentKit.xcodeproj ComponentKitAppleTV test
 fi
 
