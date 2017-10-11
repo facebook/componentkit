@@ -18,12 +18,19 @@
 
 @end
 
+@interface CKTestMemoizedComponentState : NSObject
+@property (atomic, readwrite, assign) NSInteger computeCount;
+@end
+
+@implementation CKTestMemoizedComponentState
+@end
+
 @interface CKTestMemoizedComponent : CKComponent
 
 @property (nonatomic, copy) NSString *string;
 @property (nonatomic, assign) NSInteger number;
 
-@property (nonatomic, assign, readonly) NSInteger computeCount;
+@property (nonatomic, strong) CKTestMemoizedComponentState *state;
 
 @end
 
@@ -34,6 +41,8 @@
   auto key = CKMakeTupleMemoizationKey(string, number);
   return
   CKMemoize(key, ^{
+    CKComponentScope scope(self);
+
     CKTestMemoizedComponent *c =
     [self
      newWithView:{{[UIView class]}}
@@ -41,15 +50,21 @@
 
     c->_string = [string copy];
     c->_number = number;
+    c->_state = scope.state();
 
     return c;
   });
 }
 
++ (id)initialState
+{
+  return [CKTestMemoizedComponentState new];
+}
+
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize restrictedToSize:(const CKComponentSize &)size relativeToParentSize:(CGSize)parentSize
 {
   CKComponentLayout l = CKMemoizeLayout(self, constrainedSize, size, parentSize, ^CKComponentLayout{
-    _computeCount++;
+    _state.computeCount = _state.computeCount + 1;
     return [super computeLayoutThatFits:constrainedSize
                        restrictedToSize:size
                    relativeToParentSize:parentSize];
@@ -59,8 +74,7 @@
 
 @end
 
-@implementation CKComponentMemoizerTests {
-}
+@implementation CKComponentMemoizerTests
 
 - (void)testThatMemoizableComponentsAreMemoized
 {
@@ -204,7 +218,7 @@
 
   CKTestMemoizedComponent *testComponent = (CKTestMemoizedComponent *)result1.component;
 
-  XCTAssertEqual(testComponent.computeCount, 1, @"Should only compute once");
+  XCTAssertEqual(testComponent.state.computeCount, 1, @"Should only compute once");
 }
 
 - (void)testComponentMemoizationKeysCompareObjCObjectsWithIsEqual
