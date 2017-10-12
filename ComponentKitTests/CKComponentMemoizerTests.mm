@@ -481,4 +481,61 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   XCTAssert(componentMemoizerTestsNumComponentCreation == 7, @"Should have initialized seven times, again for root and C");
 }
 
+- (void)DISABLEDtestComponentMemoizationHitsDontBreakChildMemoization
+{
+  componentMemoizerTestsNumComponentCreation = 0;
+
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentStateUpdateMap pendingStateUpdates;
+
+  __block NSInteger number = 0;
+  auto build = ^{
+    return [CKTestMemoizedComponent
+            newWithString:[@"ROOT" mutableCopy]
+            number:number
+            childBlock:^{
+              return [CKFlexboxComponent
+                      newWithView:{}
+                      size:{}
+                      style:{}
+                      children:{
+                        {[CKTestMemoizedComponent newWithString:@"A" number:2]},
+                        {[CKTestMemoizedComponent newWithString:@"B" number:3]},
+                        {[CKTestMemoizedComponent newWithString:@"C" number:4]},
+                      }];
+            }];
+  };
+
+  id memoizerState;
+  CKBuildComponentResult result;
+  CKComponentLayout layout;
+  {
+    // Vend components from the current layout to be available in the new state and layout calculations
+    CKComponentMemoizer memoizer(nil);
+    result = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+  XCTAssert(componentMemoizerTestsNumComponentCreation == 4, @"Should have initialized only four times");
+
+  // Nothing has changed so we're all dandy, we should still have all four cached
+  CKBuildComponentResult result2;
+  {
+    CKComponentMemoizer memoizer(memoizerState);
+    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+  XCTAssert(componentMemoizerTestsNumComponentCreation == 4, @"Should have initialized only four times");
+  XCTAssertEqual(result.component, result2.component, @"Components should be equal");
+
+  number = 1;
+  CKBuildComponentResult result3;
+  {
+    CKComponentMemoizer memoizer(memoizerState);
+    result3 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+  XCTAssertNotEqual(result.component, result3.component, @"Components should not be equal");
+  XCTAssert(componentMemoizerTestsNumComponentCreation == 5, @"Have only invalidated the root");
+}
+
 @end
