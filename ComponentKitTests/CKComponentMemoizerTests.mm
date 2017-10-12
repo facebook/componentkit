@@ -2,7 +2,7 @@
 #import <XCTest/XCTest.h>
 
 #import <ComponentKit/CKBuildComponent.h>
-#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentMemoizer.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
@@ -25,7 +25,14 @@
 @implementation CKTestMemoizedComponentState
 @end
 
-@interface CKTestMemoizedComponent : CKComponent
+@interface CKTestMemoizedComponent : CKCompositeComponent
+
++ (instancetype)newWithString:(NSString *)string
+                       number:(NSInteger)number;
+
++ (instancetype)newWithString:(NSString *)string
+                       number:(NSInteger)number
+                        child:(CKComponent *)child;
 
 @property (nonatomic, copy) NSString *string;
 @property (nonatomic, assign) NSInteger number;
@@ -36,7 +43,17 @@
 
 @implementation CKTestMemoizedComponent
 
-+ (instancetype)newWithString:(NSString *)string number:(NSInteger)number
++ (instancetype)newWithString:(NSString *)string
+                       number:(NSInteger)number
+{
+  return [self newWithString:string
+                      number:number
+                       child:[CKComponent newWithView:{} size:{}]];
+}
+
++ (instancetype)newWithString:(NSString *)string
+                       number:(NSInteger)number
+                        child:(CKComponent *)child
 {
   auto key = CKMakeTupleMemoizationKey(string, number);
   return
@@ -44,9 +61,9 @@
     CKComponentScope scope(self);
 
     CKTestMemoizedComponent *c =
-    [self
+    [super
      newWithView:{{[UIView class]}}
-     size:{}];
+     component:child];
 
     c->_string = [string copy];
     c->_number = number;
