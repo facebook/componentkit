@@ -280,6 +280,41 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   XCTAssertEqual(testComponent.state.computeCount, 1, @"Should only compute once");
 }
 
+- (void)testComputeLayoutCalledTwiceWhenNotEqualInputs
+{
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentStateUpdateMap pendingStateUpdates;
+
+  auto build = ^{
+    return [CKTestMemoizedComponent newWithString:@"ABCD" number:123];
+  };
+
+  id memoizerState;
+  CKBuildComponentResult result1;
+  {
+    // Vend components from the current layout to be available in the new state and layout calculations
+    CKComponentMemoizer memoizer(nil);
+    result1 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    CKComponentLayout layout = [result1.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
+
+    memoizerState = memoizer.nextMemoizerState();
+  }
+
+  CKBuildComponentResult result2;
+  {
+    CKComponentMemoizer memoizer(memoizerState);
+    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    CKComponentLayout layout = [result2.component layoutThatFits:{CGSizeMake(100, 100), CGSizeMake(100, 100)}
+                                                      parentSize:CGSizeMake(100, 100)];
+  }
+
+  XCTAssertEqualObjects(result1.component, result2.component, @"Should return the original component the second time");
+
+  CKTestMemoizedComponent *testComponent = (CKTestMemoizedComponent *)result1.component;
+
+  XCTAssertEqual(testComponent.state.computeCount, 2, @"Should compute layout again if constraints change");
+}
+
 - (void)DISABLEDtestComputeLayoutOnlyCalledOnceWhenEqualInputsAndWeSplitCreationAndLayout
 {
   CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
