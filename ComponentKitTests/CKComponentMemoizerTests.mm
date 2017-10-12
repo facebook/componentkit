@@ -120,6 +120,39 @@
   XCTAssertEqualObjects(result.component, result2.component, @"Should return the original component the second time");
 }
 
+- (void)DISABLEDtestThatMemoizableComponentsAreMemoizedEvenWithLayoutCalled
+{
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentStateUpdateMap pendingStateUpdates;
+
+  auto build = ^{
+    return [CKTestMemoizedComponent newWithString:@"ABCD" number:123];
+  };
+
+  id memoizerState;
+  CKBuildComponentResult result;
+  {
+    CKComponentMemoizer memoizer(nil);
+    result = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+
+  CKBuildComponentResult result2;
+  {
+    // Do layout now
+    CKComponentMemoizer memoizer(memoizerState);
+    [result.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
+    memoizerState = memoizer.nextMemoizerState();
+  }
+  {
+    CKComponentMemoizer memoizer(memoizerState);
+    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+
+  XCTAssertEqualObjects(result.component, result2.component, @"Should return the original component the second time");
+}
+
 - (void)testThatMemoizableComponentsAreMemoizedWithMemoizingComponentAsParent
 {
   CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
