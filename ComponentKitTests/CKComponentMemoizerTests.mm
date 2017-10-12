@@ -409,4 +409,76 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   XCTAssertNotEqual(result3.component, result2.component, @"Should return the different component the third time");
 }
 
+- (void)testComponentMemoizationDoesNotLeak
+{
+  componentMemoizerTestsNumComponentCreation = 0;
+
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentStateUpdateMap pendingStateUpdates;
+
+  __block NSInteger number = 0;
+  auto build = ^{
+    kCKMemoizationChildCreationBlock childBlock;
+    if (number % 2 == 0) {
+      childBlock = ^{
+        return [CKFlexboxComponent
+                newWithView:{}
+                size:{}
+                style:{}
+                children:{
+                  {[CKTestMemoizedComponent newWithString:@"A" number:2]},
+                  {[CKTestMemoizedComponent newWithString:@"B" number:3]},
+                  {[CKTestMemoizedComponent newWithString:@"C" number:4]},
+                }];
+      };
+    } else {
+      childBlock = ^{
+        return [CKFlexboxComponent
+                newWithView:{}
+                size:{}
+                style:{}
+                children:{
+                  {[CKTestMemoizedComponent newWithString:@"A" number:2]},
+                  {[CKTestMemoizedComponent newWithString:@"B" number:3]},
+                }];
+      };
+    }
+    return [CKTestMemoizedComponent
+            newWithString:[@"ROOT" mutableCopy]
+            number:number
+            childBlock:childBlock];
+  };
+
+  id memoizerState;
+  CKBuildComponentResult result;
+  CKComponentLayout layout;
+  {
+    // Vend components from the current layout to be available in the new state and layout calculations
+    CKComponentMemoizer memoizer(nil);
+    result = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+  XCTAssert(componentMemoizerTestsNumComponentCreation == 4, @"Should have initialized only four times");
+
+  // This is a block var so it will invalidate the root's caching
+  // After this block we should no longer have "C" cached
+  number = 1;
+  CKBuildComponentResult result2;
+  {
+    CKComponentMemoizer memoizer(memoizerState);
+    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+  XCTAssert(componentMemoizerTestsNumComponentCreation == 5, @"Should have initialized only five times");
+
+  number = 2;
+  CKBuildComponentResult result3;
+  {
+    CKComponentMemoizer memoizer(memoizerState);
+    result3 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+  XCTAssert(componentMemoizerTestsNumComponentCreation == 7, @"Should have initialized seven times, again for root and C");
+}
+
 @end
