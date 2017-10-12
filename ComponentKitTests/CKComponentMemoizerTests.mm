@@ -14,6 +14,10 @@
 
 #import <ComponentKit/CKFlexboxComponent.h>
 
+static NSInteger componentMemoizerTestsNumComponentCreation = 0;
+
+typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
+
 @interface CKComponentMemoizerTests : XCTestCase
 
 @end
@@ -32,7 +36,7 @@
 
 + (instancetype)newWithString:(NSString *)string
                        number:(NSInteger)number
-                        child:(CKComponent *)child;
+                   childBlock:(kCKMemoizationChildCreationBlock)childBlock;
 
 @property (nonatomic, copy) NSString *string;
 @property (nonatomic, assign) NSInteger number;
@@ -48,12 +52,14 @@
 {
   return [self newWithString:string
                       number:number
-                       child:[CKComponent newWithView:{} size:{}]];
+                  childBlock:^{
+                    return [CKComponent newWithView:{} size:{}];
+                  }];
 }
 
 + (instancetype)newWithString:(NSString *)string
                        number:(NSInteger)number
-                        child:(CKComponent *)child
+                   childBlock:(kCKMemoizationChildCreationBlock)childBlock
 {
   auto key = CKMakeTupleMemoizationKey(string, number);
   return
@@ -63,11 +69,14 @@
     CKTestMemoizedComponent *c =
     [super
      newWithView:{{[UIView class]}}
-     component:child];
+     component:childBlock()];
 
-    c->_string = [string copy];
-    c->_number = number;
-    c->_state = scope.state();
+    if (c) {
+      c->_string = [string copy];
+      c->_number = number;
+      c->_state = scope.state();
+      componentMemoizerTestsNumComponentCreation += 1;
+    }
 
     return c;
   });
@@ -341,6 +350,63 @@
   }
 
   XCTAssertEqualObjects(result.component, result2.component, @"Should return the original component the second time");
+}
+
+- (void)DISABLEDtestComponentMemoizationCachesChildComponents
+{
+  componentMemoizerTestsNumComponentCreation = 0;
+
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentStateUpdateMap pendingStateUpdates;
+
+  __block NSInteger number = 0;
+  auto build = ^{
+    return [CKTestMemoizedComponent
+            newWithString:[@"ROOT" mutableCopy]
+            number:number
+            childBlock:^{
+              return [CKFlexboxComponent
+                      newWithView:{}
+                      size:{}
+                      style:{}
+                      children:{
+                        {[CKTestMemoizedComponent newWithString:@"A" number:2]},
+                        {[CKTestMemoizedComponent newWithString:@"B" number:3]},
+                        {[CKTestMemoizedComponent newWithString:@"C" number:4]},
+                      }];
+            }];
+  };
+
+  id memoizerState;
+  CKBuildComponentResult result;
+  CKComponentLayout layout;
+  {
+    // Vend components from the current layout to be available in the new state and layout calculations
+    CKComponentMemoizer memoizer(nil);
+    result = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+  CKBuildComponentResult result2;
+  {
+    CKComponentMemoizer memoizer(memoizerState);
+    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+
+  XCTAssert(componentMemoizerTestsNumComponentCreation == 4, @"Should have initialized only four times");
+  XCTAssertEqualObjects(result.component, result2.component, @"Should return the original component the second time");
+
+  // This is a block var so it will invalidate the root's caching
+  number = 1;
+  CKBuildComponentResult result3;
+  {
+    CKComponentMemoizer memoizer(memoizerState);
+    result3 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+
+  XCTAssert(componentMemoizerTestsNumComponentCreation == 5, @"Should have initialized only one additional time");
+  XCTAssertNotEqual(result3.component, result2.component, @"Should return the different component the third time");
 }
 
 @end
