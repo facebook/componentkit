@@ -30,6 +30,7 @@
                                sizeRange:sizeRange
                alwaysSendComponentUpdate:NO
                       workThreadOverride:nil
+                        forceAutorelease:NO
                      componentPredicates:{}
            componentControllerPredicates:{}];
 }
@@ -39,6 +40,7 @@
                                 sizeRange:(const CKSizeRange &)sizeRange
                 alwaysSendComponentUpdate:(BOOL)alwaysSendComponentUpdate
                        workThreadOverride:(NSThread *)workThreadOverride
+                         forceAutorelease:(BOOL)forceAutorelease
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
 {
@@ -50,6 +52,7 @@
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
     _alwaysSendComponentUpdate = alwaysSendComponentUpdate;
+    _forceAutorelease = forceAutorelease;
   }
   return self;
 }

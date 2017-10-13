@@ -24,6 +24,7 @@
                                   to component controllers even when they aren't in viewport
  @param workThreadOverride The optional thread used by the data source to perform its work instead of the internal
                            dispatch queue; if provided this thread must be executing.
+ @param forceAutorelease If set to YES, CKDataSource will aggressively autorelease unused objects
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
@@ -34,10 +35,12 @@
                                 sizeRange:(const CKSizeRange &)sizeRange
                 alwaysSendComponentUpdate:(BOOL)alwaysSendComponentUpdate
                        workThreadOverride:(NSThread *)workThreadOverride
+                         forceAutorelease:(BOOL)forceAutorelease
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
 
 @property (nonatomic, assign, readonly) BOOL alwaysSendComponentUpdate;
+@property (nonatomic, assign, readonly) BOOL forceAutorelease;
 
 @property (nonatomic, strong, readonly) NSThread *workThreadOverride;
 

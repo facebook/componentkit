@@ -50,6 +50,7 @@
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
 
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
+  BOOL _forceAutorelease;
 
   NSThread *_workThreadOverride;
 }
@@ -66,6 +67,7 @@
     _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
     _pendingAsynchronousModifications = [NSMutableArray array];
     _workThreadOverride = configuration.workThreadOverride;
+    _forceAutorelease = configuration.forceAutorelease;
     [CKComponentDebugController registerReflowListener:self];
   }
   return self;
@@ -226,38 +228,48 @@
   return modifications;
 }
 
-- (void)_synchronouslyApplyChange:(CKDataSourceChange *)change
+- (void)_synchronouslyApplyChange:(CKDataSourceChange *)appliedChange
 {
   CKAssertMainThread();
-  CKDataSourceState *previousState = _state;
-  _state = [change state];
-  
-  for (NSIndexPath *removedIndex in [[change appliedChanges] removedIndexPaths]) {
-    CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
-    CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
-  }
-  
-  std::vector<CKComponent *> updatedComponents;
-  if ([_state.configuration alwaysSendComponentUpdate]) {
-    NSDictionary *finalIndexPathsForUpdatedItems = [[change appliedChanges] finalUpdatedIndexPaths];
-    for (NSIndexPath *updatedIndex in finalIndexPathsForUpdatedItems) {
-      CKDataSourceItem *item = [_state objectAtIndexPath:updatedIndex];
-      getComponentsFromLayout(item.layout, updatedComponents);
+  void (^ applyChangeBlock)(CKDataSourceChange *) = ^(CKDataSourceChange *change) {
+    CKDataSourceState *previousState = _state;
+    _state = [change state];
+    
+    for (NSIndexPath *removedIndex in [[change appliedChanges] removedIndexPaths]) {
+      CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
+      CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
     }
     
-    for (auto updatedComponent: updatedComponents) {
-      [updatedComponent.controller willStartUpdateToComponent:updatedComponent];
+    std::vector<CKComponent *> updatedComponents;
+    if ([_state.configuration alwaysSendComponentUpdate]) {
+      NSDictionary *finalIndexPathsForUpdatedItems = [[change appliedChanges] finalUpdatedIndexPaths];
+      for (NSIndexPath *updatedIndex in finalIndexPathsForUpdatedItems) {
+        CKDataSourceItem *item = [_state objectAtIndexPath:updatedIndex];
+        getComponentsFromLayout(item.layout, updatedComponents);
+      }
+      
+      for (auto updatedComponent: updatedComponents) {
+        [updatedComponent.controller willStartUpdateToComponent:updatedComponent];
+      }
     }
-  }
 
-  [_announcer transactionalComponentDataSource:self
-                        didModifyPreviousState:previousState
-                             byApplyingChanges:[change appliedChanges]];
-  
-  if ([_state.configuration alwaysSendComponentUpdate]) {
-    for (auto updatedComponent: updatedComponents) {
-      [updatedComponent.controller didFinishComponentUpdate];
+    [_announcer transactionalComponentDataSource:self
+                          didModifyPreviousState:previousState
+                               byApplyingChanges:[change appliedChanges]];
+    
+    if ([_state.configuration alwaysSendComponentUpdate]) {
+      for (auto updatedComponent: updatedComponents) {
+        [updatedComponent.controller didFinishComponentUpdate];
+      }
     }
+  };
+  
+  if (_forceAutorelease) {
+    @autoreleasepool {
+      applyChangeBlock(appliedChange);
+    }
+  } else {
+    applyChangeBlock(appliedChange);
   }
 }
 
