@@ -62,7 +62,7 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
   if (it != map.end()) {
     const CKAppliedComponentAnimation &appliedAnim = it->second;
     appliedAnim.animation.cleanup(appliedAnim.context);
-    map.erase(animationID);
+    map.erase(it);
   }
 }
 
