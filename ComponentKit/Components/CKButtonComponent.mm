@@ -135,7 +135,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
                                     valueForState(options.backgroundImages.getMap(), state),
                                     contentEdgeInsets);
 #else
-  // intrinsicSize not available on tvOS (can't use `sizeWithFont`) so set to infinity
+  // `labelFontSize` is unavailable on tvOS
   b->_intrinsicSize = {INFINITY, INFINITY};
 #endif // !TARGET_OS_TV
   return b;
@@ -187,20 +187,16 @@ static T valueForState(const std::unordered_map<UIControlState, T> &m, UIControl
   return nil;
 }
 
-#if !TARGET_OS_TV // sizeWithFont is not available on tvOS
+#if !TARGET_OS_TV // `labelFontSize` is unavailable on tvOS
 static CGSize intrinsicSize(NSString *title, UIFont *titleFont, UIImage *image,
                             UIImage *backgroundImage, UIEdgeInsets contentEdgeInsets)
 {
-  // This computation is based on observing [UIButton -sizeThatFits:], which uses the deprecated method
-  // sizeWithFont in iOS 7 and iOS 8
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-  const CGSize titleSize = [title sizeWithFont:titleFont ?: [UIFont systemFontOfSize:[UIFont buttonFontSize]]];
-#pragma clang diagnostic pop
+  UIFont * const font = titleFont ?: [UIFont systemFontOfSize:[UIFont labelFontSize]];
+  const CGSize titleSize = [title sizeWithAttributes:@{NSFontAttributeName: font}];
   const CGSize imageSize = image.size;
   const CGSize contentSize = {
-    titleSize.width + imageSize.width + contentEdgeInsets.left + contentEdgeInsets.right,
-    MAX(titleSize.height, imageSize.height) + contentEdgeInsets.top + contentEdgeInsets.bottom
+    ceilf(titleSize.width) + imageSize.width + contentEdgeInsets.left + contentEdgeInsets.right,
+    MAX(ceilf(titleSize.height), imageSize.height) + contentEdgeInsets.top + contentEdgeInsets.bottom
   };
   const CGSize backgroundImageSize = backgroundImage.size;
   return {
