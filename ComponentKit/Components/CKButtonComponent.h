@@ -47,6 +47,8 @@ struct CKButtonComponentOptions {
   BOOL selected = NO;
   /// Wether the button is enabled.
   BOOL enabled = YES;
+  /// The maximum number of lines to use for rendering text.
+  NSInteger numberOfLines = 1;
   /// Additional attributes for the underlying UIBUtton
   CKViewComponentAttributeValueMap attributes;
   /// Accessibility context for the button.

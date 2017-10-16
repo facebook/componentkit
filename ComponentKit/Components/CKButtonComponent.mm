@@ -55,6 +55,10 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     button.titleLabel.font = value;
   }};
   
+  static const CKComponentViewAttribute numberOfLinesAttribute = {"CKButtonComponent.numberOfLines", ^(UIButton *button, id value) {
+    button.titleLabel.numberOfLines = [value integerValue];
+  }};
+
   static const CKComponentViewAttribute configurationAttribute = {
     "CKButtonComponent.config",
     ^(UIButton *view, CKButtonComponentConfiguration *config) {
@@ -100,6 +104,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   attributes.insert({
     {configurationAttribute, configurationFromOptions(options)},
     {titleFontAttribute, options.titleFont},
+    {numberOfLinesAttribute, options.numberOfLines},
     {@selector(setSelected:), options.selected},
     {@selector(setEnabled:), options.enabled},
     CKComponentActionAttribute(action, UIControlEventTouchUpInside),
