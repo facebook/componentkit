@@ -115,7 +115,6 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                                              context:nil
                                                              sizeRange:CKSizeRange({50, 50}, {50, 50})
                                                              alwaysSendComponentUpdate:(testConfig == CKTestConfigAlwaysSendUpdates)
-                                                             workThreadOverride:nil
                                                              forceAutorelease:NO
                                                              componentPredicates:{}
                                                              componentControllerPredicates:{}
@@ -152,7 +151,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 - (void)testUpdateModelAlwaysSendUpdateControllerCallbacks
 {
   self.dataSource = [self generateDataSource:CKTestConfigAlwaysSendUpdates];
-  
+
   [self.dataSource applyChangeset:
    [[[[CKDataSourceChangesetBuilder new]
       withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
@@ -196,17 +195,17 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
   NSArray *callbacks = nil;
   @autoreleasepool {
     self.dataSource = [self generateDataSource:CKTestConfigDefault];
-    
+
     [self.dataSource applyChangeset:
      [[[[CKDataSourceChangesetBuilder new]
         withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
        withInsertedItems:@{ [NSIndexPath indexPathForItem:0 inSection:0] : @"" }]
       build] mode:CKUpdateModeSynchronous userInfo:nil];
-    
+
     CKDataSourceIntegrationTestComponentController * controller =
       (CKDataSourceIntegrationTestComponentController*) self.components.lastObject.controller;
     callbacks = controller.callbacks;
-    
+
     // We clean everything to ensure dataSource receives deallocation happens when autorelease pool is destroyed
     self.dataSource = nil;
   }

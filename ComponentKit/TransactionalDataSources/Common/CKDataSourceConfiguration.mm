@@ -29,7 +29,6 @@
                                  context:context
                                sizeRange:sizeRange
                alwaysSendComponentUpdate:NO
-                      workThreadOverride:nil
                         forceAutorelease:NO
                      componentPredicates:{}
            componentControllerPredicates:{}];
@@ -39,7 +38,6 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
                 alwaysSendComponentUpdate:(BOOL)alwaysSendComponentUpdate
-                       workThreadOverride:(NSThread *)workThreadOverride
                          forceAutorelease:(BOOL)forceAutorelease
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
@@ -48,7 +46,6 @@
     _componentProvider = componentProvider;
     _context = context;
     _sizeRange = sizeRange;
-    _workThreadOverride = workThreadOverride;
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
     _alwaysSendComponentUpdate = alwaysSendComponentUpdate;
@@ -80,8 +77,7 @@
     CKDataSourceConfiguration *obj = (CKDataSourceConfiguration *)object;
     return (_componentProvider == obj.componentProvider
             && (_context == obj.context || [_context isEqual:obj.context])
-            && _sizeRange == obj.sizeRange
-            && _workThreadOverride == obj.workThreadOverride);
+            && _sizeRange == obj.sizeRange);
   }
 }
 

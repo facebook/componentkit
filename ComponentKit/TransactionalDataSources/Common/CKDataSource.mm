@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -51,8 +51,6 @@
 
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
   BOOL _forceAutorelease;
-
-  NSThread *_workThreadOverride;
 }
 @end
 
@@ -66,7 +64,6 @@
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
     _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
     _pendingAsynchronousModifications = [NSMutableArray array];
-    _workThreadOverride = configuration.workThreadOverride;
     _forceAutorelease = configuration.forceAutorelease;
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -204,16 +201,9 @@
   CKDataSourceModificationPair *modificationPair =
   [[CKDataSourceModificationPair alloc] initWithModification:_pendingAsynchronousModifications[0]
                                                                              state:_state];
-  if (_workThreadOverride) {
-    [self performSelector:@selector(_applyModificationPair:)
-                 onThread:_workThreadOverride
-               withObject:modificationPair
-            waitUntilDone:NO];
-  } else {
-    dispatch_async(_workQueue, ^{
-      [self _applyModificationPair:modificationPair];
-    });
-  }
+  dispatch_async(_workQueue, ^{
+    [self _applyModificationPair:modificationPair];
+  });
 }
 
 /** Returns the canceled matching modifications, in the order they would have been applied. */
@@ -234,12 +224,12 @@
   void (^ applyChangeBlock)(CKDataSourceChange *) = ^(CKDataSourceChange *change) {
     CKDataSourceState *previousState = _state;
     _state = [change state];
-    
+
     for (NSIndexPath *removedIndex in [[change appliedChanges] removedIndexPaths]) {
       CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
       CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
     }
-    
+
     std::vector<CKComponent *> updatedComponents;
     if ([_state.configuration alwaysSendComponentUpdate]) {
       NSDictionary *finalIndexPathsForUpdatedItems = [[change appliedChanges] finalUpdatedIndexPaths];
@@ -247,7 +237,7 @@
         CKDataSourceItem *item = [_state objectAtIndexPath:updatedIndex];
         getComponentsFromLayout(item.layout, updatedComponents);
       }
-      
+
       for (auto updatedComponent: updatedComponents) {
         [updatedComponent.controller willStartUpdateToComponent:updatedComponent];
       }
@@ -256,14 +246,14 @@
     [_announcer transactionalComponentDataSource:self
                           didModifyPreviousState:previousState
                                byApplyingChanges:[change appliedChanges]];
-    
+
     if ([_state.configuration alwaysSendComponentUpdate]) {
       for (auto updatedComponent: updatedComponents) {
         [updatedComponent.controller didFinishComponentUpdate];
       }
     }
   };
-  
+
   if (_forceAutorelease) {
     @autoreleasepool {
       applyChangeBlock(appliedChange);
