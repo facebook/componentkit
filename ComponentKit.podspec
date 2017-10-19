@@ -9,6 +9,7 @@ Pod::Spec.new do |s|
   s.source = { :git => 'https://github.com/facebook/ComponentKit.git', :tag => s.version.to_s }
   s.ios.deployment_target = '8.1'
   s.requires_arc = true
+
   s.source_files = 'ComponentKit/**/*', 'ComponentTextKit/**/*'
   s.frameworks = 'UIKit', 'CoreText'
   s.library = 'c++'
@@ -16,7 +17,5 @@ Pod::Spec.new do |s|
     'CLANG_CXX_LANGUAGE_STANDARD' => 'gnu++14',
     'CLANG_CXX_LIBRARY' => 'libc++',
   }
-  s.dependency 'OCMock', '~> 3.4'
-  s.dependency 'FBSnapshotTestCase', '~> 2.1.4'
-  s.dependency 'Yoga', '~> 1.6.0' 
+  s.dependency 'Yoga', '~> 1.6.0'
 end
