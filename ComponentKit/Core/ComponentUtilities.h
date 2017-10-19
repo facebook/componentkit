@@ -54,7 +54,7 @@ namespace CK {
   auto filter(const T &iterable, Func &&func) -> std::vector<typename T::value_type>
   {
     std::vector<typename T::value_type> to;
-    for (auto obj : iterable) {
+    for (const auto &obj : iterable) {
       if (func(obj)) {
         to.push_back(obj);
       }
@@ -66,10 +66,10 @@ namespace CK {
   std::vector<T> chain(std::vector<T> a, std::vector<T> b) {
     std::vector<T> newVector;
 
-    for (auto i: a) {
+    for (const auto &i: a) {
       newVector.push_back(i);
     }
-    for (auto i: b) {
+    for (const auto &i: b) {
       newVector.push_back(i);
     }
 
