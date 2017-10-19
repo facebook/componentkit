@@ -62,18 +62,71 @@ namespace CK {
     return to;
   }
 
-  template <class T> typename
-  std::vector<T> chain(std::vector<T> a, std::vector<T> b) {
-    std::vector<T> newVector;
+  namespace detail {
+    template <class ContainerA, class ContainerB>
+    std::vector<typename std::decay<ContainerA>::type::value_type> chainImpl(ContainerA &&a, ContainerB &&b) {
+      std::vector<typename std::decay<ContainerA>::type::value_type> newVector(std::forward<ContainerA>(a));
+      newVector.reserve(newVector.size() + b.size());
 
-    for (const auto &i: a) {
-      newVector.push_back(i);
-    }
-    for (const auto &i: b) {
-      newVector.push_back(i);
-    }
+      for (auto &&i: b) {
+        newVector.push_back(std::move(i));
+      }
 
-    return newVector;
+      return newVector;
+    }
+  } // namespace detail
+
+
+  // std::initializer_list<T> isn't deduced as a template argument, so
+  // we need to provide explicit overloads for it. I didn't want to
+  // expose detail::chainImpl in its full generality either, so I'm
+  // also providing explicit overloads for flavors of vectors. In
+  // short, what follows are overloads for all 9 possible 2-element
+  // pairs drawn from the set {const vector<T> &, vector<T> &&,
+  // initializer_list<T>}.
+  template <class T>
+  std::vector<T> chain(const std::vector<T> &a, const std::vector<T> &b) {
+    return detail::chainImpl(a, b);
+  }
+
+  template <class T>
+  std::vector<T> chain(const std::vector<T> &a, std::vector<T> &&b) {
+    return detail::chainImpl(a, std::move(b));
+  }
+
+  template <class T>
+  std::vector<T> chain(std::vector<T> &&a, const std::vector<T> &b) {
+    return detail::chainImpl(std::move(a), b);
+  }
+
+  template <class T>
+  std::vector<T> chain(std::vector<T> &&a, std::vector<T> &&b) {
+    return detail::chainImpl(std::move(a), std::move(b));
+  }
+
+  template <class T>
+  std::vector<T> chain(std::vector<T> &&a, std::initializer_list<T> b) {
+    return detail::chainImpl(std::move(a), b);
+  }
+
+  template <class T>
+  std::vector<T> chain(const std::vector<T> &a, std::initializer_list<T> b) {
+    return detail::chainImpl(a, b);
+  }
+
+  template <class T>
+  std::vector<T> chain(std::initializer_list<T> a, const std::vector<T> &b) {
+    return detail::chainImpl(a, b);
+  }
+
+  template <class T>
+  std::vector<T> chain(std::initializer_list<T> a, std::vector<T> &&b) {
+    return detail::chainImpl(a, std::move(b));
+  }
+
+  template <class T>
+  std::vector<T> chain(std::initializer_list<T> a, std::initializer_list<T> b) {
+    return detail::chainImpl(a, b);
   }
 
   /**
