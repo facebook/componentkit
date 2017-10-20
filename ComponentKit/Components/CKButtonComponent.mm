@@ -119,7 +119,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   CKComponentAccessibilityContext accessibilityContext(options.accessibilityContext);
   if (!accessibilityContext.accessibilityComponentAction) {
     accessibilityContext.accessibilityComponentAction = options.enabled
-    ? CKUntypedComponentAction::demotedFrom(action, static_cast<UIEvent*>(nil))
+    ? CKAction<>::demotedFrom(action, static_cast<UIEvent*>(nil))
     : nullptr;
   }
   

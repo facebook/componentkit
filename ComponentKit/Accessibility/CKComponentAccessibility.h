@@ -51,7 +51,7 @@ struct CKComponentAccessibilityContext {
   CKComponentAccessibilityTextAttribute accessibilityHint;
   CKComponentAccessibilityTextAttribute accessibilityValue;
   NSNumber *accessibilityTraits;
-  CKUntypedComponentAction accessibilityComponentAction;
+  CKAction<> accessibilityComponentAction;
 
   bool operator==(const CKComponentAccessibilityContext &other) const
   {

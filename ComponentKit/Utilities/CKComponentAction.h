@@ -211,8 +211,8 @@ extern template class CKAction<id>;
  */
 void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior);
 void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context);
-void CKComponentActionSend(const CKUntypedComponentAction &action, CKComponent *sender, CKComponentActionSendBehavior behavior);
-void CKComponentActionSend(const CKUntypedComponentAction &action, CKComponent *sender);
+void CKComponentActionSend(const CKAction<> &action, CKComponent *sender, CKComponentActionSendBehavior behavior);
+void CKComponentActionSend(const CKAction<> &action, CKComponent *sender);
 
 /**
  Returns a view attribute that configures a component that creates a UIControl to send the given CKComponentAction.
@@ -228,6 +228,6 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKAction<UIEvent 
 /**
  Returns a view attribute that configures a view to have custom accessibility actions.
 
- @param actions An ordered list of actions, each with a name and an associated CKUntypedComponentAction
+ @param actions An ordered list of actions, each with a name and an associated CKAction<>
  */
-CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKUntypedComponentAction>> &actions) noexcept;
+CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKAction<>>> &actions) noexcept;

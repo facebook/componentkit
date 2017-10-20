@@ -157,12 +157,12 @@ CKActionInfo CKActionFind(SEL selector, id target) noexcept
 
 #pragma mark - Legacy Send Functions
 
-void CKComponentActionSend(const CKUntypedComponentAction &action, CKComponent *sender)
+void CKComponentActionSend(const CKAction<> &action, CKComponent *sender)
 {
   action.send(sender);
 }
 
-void CKComponentActionSend(const CKUntypedComponentAction &action, CKComponent *sender, CKComponentActionSendBehavior behavior)
+void CKComponentActionSend(const CKAction<> &action, CKComponent *sender, CKComponentActionSendBehavior behavior)
 {
   action.send(sender, behavior);
 }
@@ -356,16 +356,16 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {
 #pragma mark - Accessibility Actions
 
 @interface CKComponentAccessibilityCustomAction : UIAccessibilityCustomAction
-- (instancetype)initWithName:(NSString *)name action:(const CKUntypedComponentAction &)action view:(UIView *)view;
+- (instancetype)initWithName:(NSString *)name action:(const CKAction<> &)action view:(UIView *)view;
 @end
 
 @implementation CKComponentAccessibilityCustomAction
 {
   UIView *_ck_view;
-  CKUntypedComponentAction _ck_action;
+  CKAction<> _ck_action;
 }
 
-- (instancetype)initWithName:(NSString *)name action:(const CKUntypedComponentAction &)action view:(UIView *)view
+- (instancetype)initWithName:(NSString *)name action:(const CKAction<> &)action view:(UIView *)view
 {
   if (self = [super initWithName:name target:self selector:@selector(ck_send)]) {
     _ck_view = view;
@@ -382,7 +382,7 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {
 
 @end
 
-CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKUntypedComponentAction>> &passedActions) noexcept
+CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKAction<>>> &passedActions) noexcept
 {
   auto const actions = passedActions;
   return {
