@@ -6,13 +6,13 @@ permalink: /docs/getting-started.html
 
 Let's get a sample app powered by ComponentKit up and running, then make some tweaks to experiment with how components work.
 
-Clone the Github repo, and then open the Xcode project.
+Clone the Github repo, install carthage frameworks and then open the Xcode project.
 
 {% highlight sh %}
 $ git clone https://github.com/facebook/componentkit
 $ cd componentkit/Examples/WildeGuess/
-$ open WildeGuess.xcodeproj
 $ carthage install
+$ open WildeGuess.xcodeproj
 {% endhighlight %}
 
 Run the project in the simulator to see a simple app that shows a list of quotes.
