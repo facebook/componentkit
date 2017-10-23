@@ -244,6 +244,12 @@ struct CKFlexboxComponentChild {
    Aspect ratio is encoded as a floating point value width/height. e.g. A value of 2 leads to a node
    with a width twice the size of its height while a value of 0.5 gives the opposite effect. **/
   CKFlexboxAspectRatio aspectRatio;
+  /**
+   Size constraints on the child. Percentages are resolved against parent size.
+   If constraint is Auto, will resolve against size of children Component
+   By default all values are Auto
+   **/
+  CKComponentSize sizeConstraints;
   /** This property allows node to force rounding only up.
    Text should never be rounded down as this may cause it to be truncated. **/
   BOOL useTextRounding;

@@ -277,7 +277,6 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
 
   for (auto iterator = children.begin(); iterator != children.end(); iterator++) {
     const CKFlexboxComponentChild child = *iterator;
-    CKComponent *childComponent = child.component;
     const YGNodeRef childNode = YGNodeNewWithConfig(ckYogaDefaultConfig());
 
     // We add object only if there is actual used element
@@ -299,14 +298,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     YGNodeSetMeasureFunc(childNode, measureYGComponent);
     YGNodeSetBaselineFunc(childNode, computeBaseline);
 
-    const CKComponentSize childComponentSize = [childComponent size];
-
-    YGNodeStyleSetWidth(childNode, childComponentSize.width.resolve(YGUndefined, parentWidth));
-    YGNodeStyleSetHeight(childNode, childComponentSize.height.resolve(YGUndefined, parentHeight));
-    YGNodeStyleSetMinWidth(childNode, childComponentSize.minWidth.resolve(YGUndefined, parentWidth));
-    YGNodeStyleSetMinHeight(childNode, childComponentSize.minHeight.resolve(YGUndefined, parentHeight));
-    YGNodeStyleSetMaxWidth(childNode, childComponentSize.maxWidth.resolve(YGUndefined, parentWidth));
-    YGNodeStyleSetMaxHeight(childNode, childComponentSize.maxHeight.resolve(YGUndefined, parentHeight));
+    applySizeAttributes(childNode, child, parentWidth, parentHeight);
 
     YGNodeStyleSetFlexGrow(childNode, child.flexGrow);
     YGNodeStyleSetFlexShrink(childNode, child.flexShrink);
@@ -380,6 +372,95 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
   applyMarginToEdge(stackNode, YGEdgeEnd, _style.margin.end);
 
   return stackNode;
+}
+
+static void applySizeAttributes(YGNodeRef node, CKFlexboxComponentChild child, CGFloat parentWidth, CGFloat parentHeight)
+{
+  const CKComponentSize childSize = child.sizeConstraints;
+
+  switch (childSize.width.type()) {
+    case CKRelativeDimension::Type::PERCENT:
+      YGNodeStyleSetWidthPercent(node, childSize.width.value() * 100);
+      break;
+    case CKRelativeDimension::Type::POINTS:
+      YGNodeStyleSetWidth(node, childSize.width.value());
+      break;
+    case CKRelativeDimension::Type::AUTO:
+      // Fall back to the component's width
+      const CGFloat width = [child.component size].width.resolve(YGUndefined, parentWidth);
+      YGNodeStyleSetWidth(node, width);
+      break;
+  }
+
+  switch (childSize.height.type()) {
+    case CKRelativeDimension::Type::PERCENT:
+      YGNodeStyleSetHeightPercent(node, childSize.height.value() * 100);
+      break;
+    case CKRelativeDimension::Type::POINTS:
+      YGNodeStyleSetHeight(node, childSize.height.value());
+      break;
+    case CKRelativeDimension::Type::AUTO:
+      // Fall back to the component's height
+      const CGFloat height = [child.component size].height.resolve(YGUndefined, parentHeight);
+      YGNodeStyleSetHeight(node, height);
+      break;
+  }
+
+  switch (childSize.minWidth.type()) {
+    case CKRelativeDimension::Type::PERCENT:
+      YGNodeStyleSetMinWidthPercent(node, childSize.minWidth.value() * 100);
+      break;
+    case CKRelativeDimension::Type::POINTS:
+      YGNodeStyleSetMinWidth(node, childSize.minWidth.value());
+      break;
+    case CKRelativeDimension::Type::AUTO:
+      // Fall back to the component's constraint
+      const CGFloat minWidth = [child.component size].minWidth.resolve(YGUndefined, parentWidth);
+      YGNodeStyleSetMinWidth(node, minWidth);
+      break;
+  }
+
+  switch (childSize.maxWidth.type()) {
+    case CKRelativeDimension::Type::PERCENT:
+      YGNodeStyleSetMaxWidthPercent(node, childSize.maxWidth.value() * 100);
+      break;
+    case CKRelativeDimension::Type::POINTS:
+      YGNodeStyleSetMaxWidth(node, childSize.maxWidth.value());
+      break;
+    case CKRelativeDimension::Type::AUTO:
+      // Fall back to the component's constraint
+      const CGFloat maxWidth = [child.component size].maxWidth.resolve(YGUndefined, parentWidth);
+      YGNodeStyleSetMaxWidth(node, maxWidth);
+      break;
+  }
+
+  switch (childSize.minHeight.type()) {
+    case CKRelativeDimension::Type::PERCENT:
+      YGNodeStyleSetMinHeightPercent(node, childSize.minHeight.value() * 100);
+      break;
+    case CKRelativeDimension::Type::POINTS:
+      YGNodeStyleSetMinHeight(node, childSize.minHeight.value());
+      break;
+    case CKRelativeDimension::Type::AUTO:
+      // Fall back to the component's constraint
+      const CGFloat minHeight = [child.component size].minHeight.resolve(YGUndefined, parentHeight);
+      YGNodeStyleSetMinHeight(node, minHeight);
+      break;
+  }
+
+  switch (childSize.maxHeight.type()) {
+    case CKRelativeDimension::Type::PERCENT:
+      YGNodeStyleSetMaxHeightPercent(node, childSize.maxHeight.value() * 100);
+      break;
+    case CKRelativeDimension::Type::POINTS:
+      YGNodeStyleSetMaxHeight(node, childSize.maxHeight.value());
+      break;
+    case CKRelativeDimension::Type::AUTO:
+      // Fall back to the component's constraint
+      const CGFloat maxHeight = [child.component size].maxHeight.resolve(YGUndefined, parentHeight);
+      YGNodeStyleSetMaxHeight(node, maxHeight);
+      break;
+  }
 }
 
 static void applyPaddingToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension value)
