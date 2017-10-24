@@ -160,6 +160,12 @@
                                            mode:mode];
 }
 
+- (void)replaceState:(id)state
+{
+  CKAssertFalse(_resolved);
+  _state = state;
+}
+
 #pragma mark - Component Scope Handle Acquisition
 
 - (BOOL)acquireFromComponent:(id<CKScopedComponent>)component

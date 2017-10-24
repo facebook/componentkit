@@ -144,6 +144,28 @@
   }
 }
 
+- (void)testComponentScopeReplaceStatePropagatesStateToNextComponentScopeState
+{
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root2;
+  {
+    CKThreadLocalComponentScope threadScope(root1, {});
+    {
+      CKComponentScope scope([CKCompositeComponent class], @"macaque", ^{ return @42; });
+      CKComponentScope::replaceState(scope, @100);
+      XCTAssertEqualObjects(scope.state(), @100);
+    }
+    root2 = CKThreadLocalComponentScope::currentScope()->newScopeRoot;
+  }
+  {
+    CKThreadLocalComponentScope threadScope(root2, {});
+    {
+      CKComponentScope scope([CKCompositeComponent class], @"macaque", ^{ return @365; });
+      XCTAssertEqualObjects(scope.state(), @100);
+    }
+  }
+}
+
 - (void)testComponentScopeStateIsAcquiredFromPreviousComponentScopeStateOneLevelDownWithSibling
 {
   CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);

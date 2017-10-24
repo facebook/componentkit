@@ -47,6 +47,11 @@ id CKComponentScope::state(void) const noexcept
   return _scopeHandle.state;
 }
 
+void CKComponentScope::replaceState(const CKComponentScope &scope, id state)
+{
+  [scope._scopeHandle replaceState:state];
+}
+
 CKComponentStateUpdater CKComponentScope::stateUpdater(void) const noexcept
 {
   // We must capture _scopeHandle in a local, since this may be destroyed by the time the block executes.

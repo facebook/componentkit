@@ -48,6 +48,9 @@
            userInfo:(NSDictionary<NSString *, NSString *> *)userInfo
                mode:(CKUpdateMode)mode;
 
+/** Replaces the state for this handle. May only be called *before* resolution. */
+- (void)replaceState:(id)state;
+
 /** Informs the scope handle that it should complete its configuration. This will generate the controller */
 - (void)resolve;
 

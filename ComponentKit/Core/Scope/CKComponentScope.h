@@ -78,6 +78,21 @@ public:
    */
   CKComponentScopeHandle *scopeHandle(void) const noexcept;
 
+  /**
+   Replaces the state for a scope *without* scheduling a state update and triggering another render pass.
+   This can only be called during component construction, not afterwards.
+
+   Use this rarely! Ideally props and state should be logically separate, and updating one should not affect the other.
+   In rare cases, however, they may be inextricably linked. An example: suppose props contains a list of items, and
+   state contains a "selected item identifier." If the selected item is removed from the list in props, you may realize
+   in +new that props and state are out of sync; this function allows you to "fix" state without triggering another
+   separate re-render pass.
+
+   The analogous feature in React is componentWillReceiveProps, which allows you to update state just before render is
+   called during the process of rendering.
+   */
+  static void replaceState(const CKComponentScope &scope, id newState);
+
 private:
   CKComponentScope(const CKComponentScope&) = delete;
   CKComponentScope &operator=(const CKComponentScope&) = delete;
