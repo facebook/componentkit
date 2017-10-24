@@ -116,6 +116,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                                              sizeRange:CKSizeRange({50, 50}, {50, 50})
                                                              alwaysSendComponentUpdate:(testConfig == CKTestConfigAlwaysSendUpdates)
                                                              forceAutorelease:NO
+                                                             pipelinePreparationEnabled:NO
                                                              componentPredicates:{}
                                                              componentControllerPredicates:{}
                                                              ];

@@ -30,6 +30,7 @@
                                sizeRange:sizeRange
                alwaysSendComponentUpdate:NO
                         forceAutorelease:NO
+              pipelinePreparationEnabled:NO
                      componentPredicates:{}
            componentControllerPredicates:{}];
 }
@@ -39,6 +40,7 @@
                                 sizeRange:(const CKSizeRange &)sizeRange
                 alwaysSendComponentUpdate:(BOOL)alwaysSendComponentUpdate
                          forceAutorelease:(BOOL)forceAutorelease
+               pipelinePreparationEnabled:(BOOL)pipelinePreparationEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
 {
@@ -48,6 +50,7 @@
     _sizeRange = sizeRange;
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
+    _pipelinePreparationEnabled = pipelinePreparationEnabled;
     _alwaysSendComponentUpdate = alwaysSendComponentUpdate;
     _forceAutorelease = forceAutorelease;
   }

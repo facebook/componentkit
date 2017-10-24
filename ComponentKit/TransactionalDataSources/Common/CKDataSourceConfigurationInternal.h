@@ -33,11 +33,13 @@
                                 sizeRange:(const CKSizeRange &)sizeRange
                 alwaysSendComponentUpdate:(BOOL)alwaysSendComponentUpdate
                          forceAutorelease:(BOOL)forceAutorelease
+               pipelinePreparationEnabled:(BOOL)pipelinePreparationEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
 
 @property (nonatomic, assign, readonly) BOOL alwaysSendComponentUpdate;
 @property (nonatomic, assign, readonly) BOOL forceAutorelease;
+@property (nonatomic, assign, readonly) BOOL pipelinePreparationEnabled;
 
 - (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
