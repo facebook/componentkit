@@ -131,6 +131,38 @@ struct CKFlexboxPosition {
   CKRelativeDimension right;
 };
 
+/** Allows us to differentiate between an explicitly set border and an undefined border */
+class CKFlexboxBorderDimension {
+public:
+  constexpr CKFlexboxBorderDimension() noexcept : _value(), _isDefined(false) {}
+
+  /** Convenience initializer */
+  CKFlexboxBorderDimension(CGFloat value) noexcept : CKFlexboxBorderDimension(value, true) {}
+
+  CGFloat value() const noexcept {
+    return _value;
+  }
+
+  bool isDefined() const noexcept {
+    return _isDefined;
+  }
+
+private:
+  CKFlexboxBorderDimension(CGFloat value, bool isDefined)
+  : _value(value), _isDefined(isDefined) {}
+  CGFloat _value;
+  bool _isDefined;
+};
+
+struct CKFlexboxBorder {
+  CKFlexboxBorderDimension top;
+  CKFlexboxBorderDimension bottom;
+  CKFlexboxBorderDimension left;
+  CKFlexboxBorderDimension right;
+  CKFlexboxBorderDimension start;
+  CKFlexboxBorderDimension end;
+};
+
 /** Allows us to differentiate between an explicitly set auto-dimension and an undefined dimension */
 class CKFlexboxDimension {
 public:
@@ -205,6 +237,12 @@ struct CKFlexboxComponentStyle {
   CKFlexboxWrap wrap;
   /** Padding applied to the container */
   CKFlexboxSpacing padding;
+  /** 
+    Border applied to the container. This only reserves space for the border - you are responsible for drawing the border.
+    Border behaves nearly identically to padding and is only separate from padding to make it easier 
+    to implement border effects such as color.
+   */
+  CKFlexboxBorder border;
 };
 
 struct CKFlexboxComponentChild {
