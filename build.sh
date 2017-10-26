@@ -13,11 +13,6 @@ if [ -z $1 ]; then
   exit
 fi
 
-BUILDOUTPUTFILTER="tee"
-if type xcpretty > /dev/null 2>&1; then
-  BUILDOUTPUTFILTER="xcpretty"
-fi
-
 set -eu
 
 MODE=$1
@@ -36,9 +31,7 @@ function ci() {
     -scheme $2 \
     -sdk $3 \
     -destination "$4" \
-    $5 \
-    | $BUILDOUTPUTFILTER \
-    && exit ${PIPESTATUS[0]}
+    $5
 }
 
 function ios_ci() {
@@ -46,12 +39,12 @@ function ios_ci() {
 }
 
 function tvos_ci() {
-  ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV 1080p" $3
+# Apple TV 1080p is the target for iOS 10, while Apple TV is the target for iOS 11
+  ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV 1080p" $3 || ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV" $3
 }
 
 function carthage_bootstrap() {
-  carthage bootstrap --platform iOS --no-use-binaries --no-build yoga
-  carthage bootstrap --platform iOS ocmock xcconfigs ios-snapshot-test-case
+  carthage bootstrap --platform iOS --no-use-binaries || true
 }
 
 carthage_bootstrap
