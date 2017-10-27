@@ -582,7 +582,7 @@ static BOOL marginIsSet(CKFlexboxDimension margin)
     childrenLayout[i].position = CGPointMake(childX, childY);
     const CGSize childSize = CGSizeMake(childWidth, childHeight);
     // We cache measurements for the duration of single layout calculation of FlexboxComponent
-    // ComponentKit and Yoga handle caching between calculations
+    // ComponentKit anntcmdg between calculations
 
     // We can reuse caching even if main dimension isn't exact, but we did AtMost measurement previously
     // However we might need to measure anew if child needs to be stretched
