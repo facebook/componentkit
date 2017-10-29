@@ -32,73 +32,90 @@
  updates. We would receive an update from something, which would cause us to update our memoization state after
  computing the memoized hierarchy, then this would trigger another state update.
  */
-@interface CKMemoizingComponentStateWrapper : NSObject
+namespace CK {
+template <typename State>
+class AtomicallyReplaceableState final
+{
+public:
+  void replaceStateUsing(std::function<State(State)> newStateGenerator)
+  {
+    // We have to avoid calling the block while we are locked. Components can be created or laid out on multiple threads
+    // simultaneously, and this state wrapper may be shared between multiple threads simultaneously. If we were to just
+    // lock for the block (even though that would be a little scary, it'd still be hard to deadlock), then we could
+    // easily introduce a priority inversion as the main thread is stuck waiting on a bg thread component creation.
+    State previousState;
+    {
+      std::lock_guard<std::mutex> g(_mutex);
+      previousState = _state;
+      // Un-set it here within the protection of the lock, so any other threads accessing while we execute the block get
+      // a nil memoization state.
+      _state = nil;
+    }
 
-- (void)executeBlockWithMemoizationState:(id (^)(id memoizationState))block;
+    const auto newState = newStateGenerator(previousState);
+
+    {
+      std::lock_guard<std::mutex> g(_mutex);
+      _state = newState;
+    }
+  }
+private:
+  std::mutex _mutex;
+  State _state;
+};
+}
+
+@interface CKMemoizingComponentState : NSObject
+
+- (CK::AtomicallyReplaceableState<CKComponentMemoizerState *>&) componentMemoizerState;
+- (CK::AtomicallyReplaceableState<CKComponentLayoutMemoizerState *>&) layoutMemoizerState;
 
 @end
 
-@implementation CKMemoizingComponentStateWrapper
-{
-  id _memoizationState;
-  std::mutex _mutex;
+@implementation CKMemoizingComponentState {
+  CK::AtomicallyReplaceableState<CKComponentMemoizerState *> _componentMemoizerState;
+  CK::AtomicallyReplaceableState<CKComponentLayoutMemoizerState *> _layoutMemoizerState;
 }
 
-- (void)executeBlockWithMemoizationState:(id (^)(id))block
+- (CK::AtomicallyReplaceableState<CKComponentMemoizerState *>&)componentMemoizerState
 {
-  // We have to avoid calling the block while we are locked. Components can be created or laid out on multiple threads
-  // simultaneously, and this state wrapper may be shared between multiple threads simultaneously. If we were to just
-  // lock for the block (even though that would be a little scary, it'd still be hard to deadlock), then we could
-  // easily introduce a priority inversion as the main thread is stuck waiting on a bg thread component creation.
-  id memoizationState = nil;
-  {
-    std::lock_guard<std::mutex> l(_mutex);
-    memoizationState = _memoizationState;
-    // Un-set it here within the protection of the lock, so any other threads accessing while we execute the block get
-    // a nil memoization state.
-    _memoizationState = nil;
-  }
+  return _componentMemoizerState;
+}
 
-  const id newMemoizationState = block(memoizationState);
-
-  {
-    std::lock_guard<std::mutex> l(_mutex);
-    _memoizationState = newMemoizationState;
-  }
+- (CK::AtomicallyReplaceableState<CKComponentLayoutMemoizerState *>&)layoutMemoizerState
+{
+  return _layoutMemoizerState;
 }
 
 @end
 
 @implementation CKMemoizingComponent
 {
-  CKMemoizingComponentStateWrapper *_wrapper;
+  CKMemoizingComponentState *_state;
   CKComponent *_component;
 }
 
 + (id)initialState
 {
-  return [CKMemoizingComponentStateWrapper new];
+  return [CKMemoizingComponentState new];
 }
 
 + (instancetype)newWithComponentBlock:(CKComponent *(^)())block
 {
   CKComponentScope scope(self);
 
-  CKMemoizingComponentStateWrapper *wrapper = scope.state();
+  CKMemoizingComponentState *const state = scope.state();
 
-  __block CKComponent *result = nil;
-
-  [wrapper executeBlockWithMemoizationState:^id(id memoizationState) {
-    CKComponentMemoizer memoizer(memoizationState);
-
+  CKComponent *result;
+  state.componentMemoizerState.replaceStateUsing([=, &result](auto prevState){
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(prevState);
     result = block();
-
     return memoizer.nextMemoizerState();
-  }];
+  });
 
   CKMemoizingComponent *c = [super newWithView:{} size:{}];
   if (c) {
-    c->_wrapper = wrapper;
+    c->_state = state;
     c->_component = result;
   }
   return c;
@@ -108,12 +125,12 @@
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
-  __block CKComponentLayout l;
-  [_wrapper executeBlockWithMemoizationState:^id(id memoizationState) {
-    CKComponentMemoizer memoizer(memoizationState);
+  CKComponentLayout l;
+  _state.layoutMemoizerState.replaceStateUsing([=, &l](auto prevState){
+    CKComponentMemoizer<CKComponentLayoutMemoizerState> memoizer(prevState);
     l = [_component layoutThatFits:constrainedSize parentSize:parentSize];
     return memoizer.nextMemoizerState();
-  }];
+  });
   return {self, l.size, {{{0,0}, l}}};
 }
 

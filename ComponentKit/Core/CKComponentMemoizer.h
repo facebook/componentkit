@@ -57,6 +57,9 @@ id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void));
  */
 CKComponentLayout CKMemoizeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize, CKComponentLayout (^block)());
 
+@class CKComponentMemoizerState;
+@class CKComponentLayoutMemoizerState;
+
 /**
  You should have a CKMemoizingComponent at the root of your component hierarchy above the component you wish to memoize,
  or the memoization call will fail, and new versions of your components and layouts will be created every time they are
@@ -78,6 +81,7 @@ CKComponentLayout CKMemoizeLayout(CKComponent *component, CKSizeRange constraine
    _memoizerState = memoizer.nextMemoizerState();
  }
  */
+template <typename State>
 struct CKComponentMemoizer {
 
   /**
@@ -85,7 +89,7 @@ struct CKComponentMemoizer {
    Creating a CKComponentMemoizer in a scope will make memoized components available to CKMemoize().
    This object must remain in scope for objects to be vended.
    */
-  CKComponentMemoizer(id previousMemoizerState);
+  CKComponentMemoizer(State *previousMemoizerState);
 
   /**
    Destructor cleans up the intermediate state for the memoizer.
@@ -96,10 +100,10 @@ struct CKComponentMemoizer {
    Store this state across rebuilding components.
    Do not use this object from multiple threads simultaneously
    */
-  id nextMemoizerState();
+  State *nextMemoizerState();
 
 private:
-  id previousMemoizer_;
+  State *previousMemoizer_;
 };
 
 struct CKMemoizationKey

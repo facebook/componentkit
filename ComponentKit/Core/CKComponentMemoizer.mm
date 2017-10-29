@@ -18,6 +18,7 @@
 #include <map>
 
 static NSString *CKComponentMemoizerThreadKey = @"CKComponentMemoizer";
+static NSString *CKComponentLayoutMemoizerThreadKey = @"CKComponentLayoutMemoizer";
 
 // Define hash as just pulling out the precomputed hash field
 namespace std {
@@ -57,22 +58,18 @@ struct CKLayoutMemoizationKey {
 
 
 
-@interface _CKComponentMemoizerImpl : NSObject {
+@interface CKComponentMemoizerState : NSObject {
   @package
-
   // Store into the next state, read from the current
-  _CKComponentMemoizerImpl *_next;
-
+  CKComponentMemoizerState *_next;
   // maps CKMemoizationKey -> any number of CKComponent *
   std::unordered_multimap<CKMemoizationKey, CKComponent *> componentCache_;
-
-  std::unordered_map<CKLayoutMemoizationKey, CKComponentLayout, CKLayoutMemoizationKey::Hash, CKLayoutMemoizationKey::Equals> layoutCache_;
 }
 
 @end
 
 
-@implementation _CKComponentMemoizerImpl
+@implementation CKComponentMemoizerState
 
 - (CKComponent *)dequeueComponentForKey:(CKMemoizationKey)key
 {
@@ -86,10 +83,10 @@ struct CKLayoutMemoizationKey {
   return nil;
 }
 
-- (_CKComponentMemoizerImpl *)next
+- (CKComponentMemoizerState *)next
 {
   if (!_next) {
-    _next = [[_CKComponentMemoizerImpl alloc] init];
+    _next = [[CKComponentMemoizerState alloc] init];
   }
   return _next;
 }
@@ -97,6 +94,42 @@ struct CKLayoutMemoizationKey {
 - (void)enqueueComponent:(CKComponent *)component forKey:(CKMemoizationKey)key
 {
   self.next->componentCache_.insert({key, component});
+}
+
++ (CKComponentMemoizerState *)currentMemoizer
+{
+  return [[NSThread currentThread] threadDictionary][CKComponentMemoizerThreadKey];
+}
+
++ (void)setCurrentMemoizer:(CKComponentMemoizerState *)memoizer
+{
+  if (memoizer) {
+    [[NSThread currentThread] threadDictionary][CKComponentMemoizerThreadKey] = memoizer;
+  } else {
+    [[[NSThread currentThread] threadDictionary] removeObjectForKey:CKComponentMemoizerThreadKey];
+  }
+}
+
+@end
+
+@interface CKComponentLayoutMemoizerState : NSObject {
+  @package
+  // Store into the next state, read from the current
+  CKComponentLayoutMemoizerState *_next;
+  std::unordered_map<CKLayoutMemoizationKey, CKComponentLayout, CKLayoutMemoizationKey::Hash, CKLayoutMemoizationKey::Equals> layoutCache_;
+}
+
+@end
+
+
+@implementation CKComponentLayoutMemoizerState
+
+- (CKComponentLayoutMemoizerState *)next
+{
+  if (!_next) {
+    _next = [[CKComponentLayoutMemoizerState alloc] init];
+  }
+  return _next;
 }
 
 - (CKComponentLayout)cachedLayout:(CKComponent *)component
@@ -117,41 +150,61 @@ struct CKLayoutMemoizationKey {
   }
 }
 
-+ (_CKComponentMemoizerImpl *)currentMemoizer
++ (CKComponentLayoutMemoizerState *)currentMemoizer
 {
-  return [[NSThread currentThread] threadDictionary][CKComponentMemoizerThreadKey];
+  return [[NSThread currentThread] threadDictionary][CKComponentLayoutMemoizerThreadKey];
 }
 
-+ (void)setCurrentMemoizer:(_CKComponentMemoizerImpl *)memoizer
++ (void)setCurrentMemoizer:(CKComponentLayoutMemoizerState *)memoizer
 {
   if (memoizer) {
-    [[NSThread currentThread] threadDictionary][CKComponentMemoizerThreadKey] = memoizer;
+    [[NSThread currentThread] threadDictionary][CKComponentLayoutMemoizerThreadKey] = memoizer;
   } else {
-    [[[NSThread currentThread] threadDictionary] removeObjectForKey:CKComponentMemoizerThreadKey];
+    [[[NSThread currentThread] threadDictionary] removeObjectForKey:CKComponentLayoutMemoizerThreadKey];
   }
 }
 
 @end
 
-CKComponentMemoizer::CKComponentMemoizer(id previousMemoizerState)
+# pragma mark - CKComponentMemoizer
+
+template <typename State>
+CKComponentMemoizer<State>::CKComponentMemoizer(State *previousMemoizerState)
 {
-  _CKComponentMemoizerImpl *impl = previousMemoizerState ?: [[_CKComponentMemoizerImpl alloc] init];
+  State *impl = previousMemoizerState ?: [[State alloc] init];
 
   // Push this memoizer onto the current thread
-  id current = [_CKComponentMemoizerImpl currentMemoizer];
+  const auto current = [State currentMemoizer];
   previousMemoizer_ = current;
-  [_CKComponentMemoizerImpl setCurrentMemoizer:impl];
+  [State setCurrentMemoizer:impl];
 };
 
-CKComponentMemoizer::~CKComponentMemoizer()
+template <typename State>
+CKComponentMemoizer<State>::~CKComponentMemoizer()
 {
   // Pop memoizer
-  [_CKComponentMemoizerImpl setCurrentMemoizer:previousMemoizer_];
+  [State setCurrentMemoizer:previousMemoizer_];
 }
+
+template <typename State>
+State *CKComponentMemoizer<State>::nextMemoizerState()
+{
+  const auto impl = [State currentMemoizer];
+  return impl ? impl->_next : nil;
+}
+
+template CKComponentMemoizer<CKComponentMemoizerState>::CKComponentMemoizer(CKComponentMemoizerState *previousMemoizerState);
+template CKComponentMemoizer<CKComponentLayoutMemoizerState>::CKComponentMemoizer(CKComponentLayoutMemoizerState *previousMemoizerState);
+template CKComponentMemoizer<CKComponentMemoizerState>::~CKComponentMemoizer();
+template CKComponentMemoizer<CKComponentLayoutMemoizerState>::~CKComponentMemoizer();
+template CKComponentMemoizerState *CKComponentMemoizer<CKComponentMemoizerState>::nextMemoizerState();
+template CKComponentLayoutMemoizerState *CKComponentMemoizer<CKComponentLayoutMemoizerState>::nextMemoizerState();
+
+# pragma mark - Public API
 
 id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void))
 {
-  _CKComponentMemoizerImpl *impl = [_CKComponentMemoizerImpl currentMemoizer];
+  CKComponentMemoizerState *impl = [CKComponentMemoizerState currentMemoizer];
   // Attempt to get it from the cache on the current memoizer
   CKComponent *component = [impl dequeueComponentForKey:memoizationKey];
   if (!component && block) {
@@ -165,16 +218,10 @@ id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void))
   return component;
 }
 
-id CKComponentMemoizer::nextMemoizerState()
-{
-  _CKComponentMemoizerImpl *impl = [_CKComponentMemoizerImpl currentMemoizer];
-  return impl ? impl->_next : nil;
-}
-
 CKComponentLayout CKMemoizeLayout(CKComponent *component, CKSizeRange constrainedSize, const CKComponentSize& size, CGSize parentSize, CKComponentLayout (^block)())
 {
   if (component != nil) {
-    _CKComponentMemoizerImpl *impl = [_CKComponentMemoizerImpl currentMemoizer];
+    const auto impl = [CKComponentLayoutMemoizerState currentMemoizer];
     CKCAssertNotNil(impl, @"There is no current memoizer, cannot memoize layout. You probably forgot to add a CKMemoizingComponent in the hierarchy above %@", component);
     if (impl) { // If component wants layout memoization but there isn't a current memoizer, fall down to compute case
       return [impl cachedLayout:component
