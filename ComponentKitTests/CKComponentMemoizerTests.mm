@@ -100,6 +100,24 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 
 @end
 
+@interface TestStateListener: NSObject<CKComponentStateListener>
+@end
+
+@implementation TestStateListener {
+  @package
+  CKComponentStateUpdateMap _pendingStateUpdates;
+}
+
+- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
+                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+                     didReceiveStateUpdate:(id (^)(id))stateUpdate
+                                  userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
+                                      mode:(CKUpdateMode)mode
+{
+  _pendingStateUpdates[globalIdentifier].push_back(stateUpdate);
+}
+@end
+
 @implementation CKComponentMemoizerTests
 
 - (void)testThatMemoizableComponentsAreMemoized
@@ -575,6 +593,30 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   }
   XCTAssertNotEqual(result.component, result3.component, @"Components should not be equal");
   XCTAssert(componentMemoizerTestsNumComponentCreation == 5, @"Have only invalidated the root");
+}
+
+- (void)disabled_testWhenComponentHasPendingStateUpdateItIsRebuiltFromScratch
+{
+  const auto listener = [TestStateListener new];
+  const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(listener);
+  const auto build = ^{ return [CKTestMemoizedComponent newWithString:@"ABCD" number:123]; };
+  CKComponentMemoizerState *memoizerState;
+  CKBuildComponentResult result;
+  {
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
+    result = CKBuildComponent(scopeRoot, {}, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+
+  const auto anyStateUpdate = ^(id oldState){ return oldState; };
+  [result.component updateState:anyStateUpdate mode:CKUpdateModeAsynchronous];
+  CKBuildComponentResult result2;
+  {
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
+    result2 = CKBuildComponent(scopeRoot, listener->_pendingStateUpdates, build);
+  }
+
+  XCTAssertNotEqualObjects(result.component, result2.component, @"Should return a different component the second time");
 }
 
 @end
