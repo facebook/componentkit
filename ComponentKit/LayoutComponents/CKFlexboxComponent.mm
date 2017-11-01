@@ -307,12 +307,12 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     // TODO: t18095186 Remove explicit opt-out when Yoga is going to move to opt-in for text rounding
     YGNodeSetNodeType(childNode, child.useTextRounding ? YGNodeTypeText : YGNodeTypeDefault);
 
-    YGNodeStyleSetPosition(childNode, YGEdgeStart, child.position.start.resolve(YGUndefined, parentMainDimension));
-    YGNodeStyleSetPosition(childNode, YGEdgeEnd, child.position.end.resolve(YGUndefined, parentMainDimension));
-    YGNodeStyleSetPosition(childNode, YGEdgeTop, child.position.top.resolve(YGUndefined, parentHeight));
-    YGNodeStyleSetPosition(childNode, YGEdgeBottom, child.position.bottom.resolve(YGUndefined, parentHeight));
-    YGNodeStyleSetPosition(childNode, YGEdgeLeft, child.position.left.resolve(YGUndefined, parentWidth));
-    YGNodeStyleSetPosition(childNode, YGEdgeRight, child.position.right.resolve(YGUndefined, parentWidth));
+    applyPositionToEdge(childNode, YGEdgeStart, child.position.start);
+    applyPositionToEdge(childNode, YGEdgeEnd, child.position.end);
+    applyPositionToEdge(childNode, YGEdgeTop, child.position.top);
+    applyPositionToEdge(childNode, YGEdgeBottom, child.position.bottom);
+    applyPositionToEdge(childNode, YGEdgeLeft, child.position.left);
+    applyPositionToEdge(childNode, YGEdgeRight, child.position.right);
 
     applyPaddingToEdge(childNode, YGEdgeTop, child.padding.top);
     applyPaddingToEdge(childNode, YGEdgeBottom, child.padding.bottom);
@@ -470,10 +470,27 @@ static void applySizeAttributes(YGNodeRef node, CKFlexboxComponentChild child, C
   }
 }
 
-static void applyPaddingToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension value)
+static void applyPositionToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension value)
 {
   CKRelativeDimension dimension = value.dimension();
 
+  switch (dimension.type()) {
+    case CKRelativeDimension::Type::PERCENT:
+      YGNodeStyleSetPositionPercent(node, edge, dimension.value() * 100);
+      break;
+    case CKRelativeDimension::Type::POINTS:
+      YGNodeStyleSetPosition(node, edge, dimension.value());
+      break;
+    case CKRelativeDimension::Type::AUTO:
+      // no-op
+      break;
+  }
+}
+
+static void applyPaddingToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension value)
+{
+  CKRelativeDimension dimension = value.dimension();
+  
   switch (dimension.type()) {
     case CKRelativeDimension::Type::PERCENT:
       YGNodeStyleSetPaddingPercent(node, edge, dimension.value() * 100);
