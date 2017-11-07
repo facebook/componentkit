@@ -28,7 +28,7 @@ namespace CK {
 /**
  CKAction is a struct that represents a method invocation that can be passed to a child component to
  trigger a method invocation on a target.
- 
+
  We allow a typed specification of the parameters that will be provided as arguments to the component action at runtime
  through the variadic templated arguments. You may specify an arbitrary number of arguments to your component action,
  and you may use either object, or primitive arguments. Only trivially-constructible arguments or pointers can be used
@@ -36,14 +36,14 @@ namespace CK {
  compile time check.
 
  Methods will always be provided the sender as the first argument.
- 
+
  Usage in your component header:
- 
+
      //... inside MyComponent.h interface
      + (instancetype)newWithAction:(const CKAction<NSString *, int> &)action;
- 
+
  When creating the action:
- 
+
  Option 1 - Scope action. Similar to target/selector action in that it skips the responder chain from the sender, and
             directly invokes the selector on the component or controller corresponding with the scope. Promotion is also
             supported for scope-based actions. Scope actions weakly capture the component or controller. Does not
@@ -59,7 +59,7 @@ namespace CK {
                          newWithAction:{scope, @selector(methodWithSender:)}]];
              }
              - (void)methodWithSender:(CKComponent *)sender {}
- 
+
  Option 2 - Target/selector action. Ensures that the target responds to the given selector. Target must directly
             respond to the selector. Targets are captured weakly by the action. Promotion, as in option 2 above is also
             supported for target/selector actions. This constructor is useful for triggering actions on objects outside
@@ -80,7 +80,7 @@ namespace CK {
              [MyComponent newWithAction:{@selector(methodWithSender:)}];
              ...
              - (void)methodWithSender:(CKComponent *)sender {}
- 
+
  When using the action, simply use the send() function with the sender, an optional behavior parameter, and the
  arguments defined in the declaration of the action.
 
@@ -102,7 +102,7 @@ template<typename... T>
 class CKAction : public CKActionBase {
   /** This constructor is private to forbid direct usage. Use actionFromBlock. */
   CKAction<T...>(void(^block)(CKComponent *, T...)) noexcept : CKActionBase((dispatch_block_t)block) {};
-  
+
 public:
   CKAction<T...>() noexcept : CKActionBase() {};
   CKAction<T...>(id target, SEL selector) noexcept : CKActionBase(target, selector)
@@ -126,7 +126,7 @@ public:
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
   CKAction(SEL selector) noexcept : CKActionBase(selector) {};
 
-  /** 
+  /**
    Allows passing a block as an action. It is easy to create retain cycles with this API, always prefer scoped actions
    over this if possible.
    */
