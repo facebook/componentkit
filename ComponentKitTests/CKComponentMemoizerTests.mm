@@ -129,7 +129,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     return [CKTestMemoizedComponent newWithString:@"ABCD" number:123];
   };
 
-  id memoizerState;
+  CKComponentMemoizerState *memoizerState;
   CKBuildComponentResult result;
   {
     // Vend components from the current layout to be available in the new state and layout calculations
@@ -221,20 +221,24 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 
   CKBuildComponentResult result1;
   CKComponentLayout layout1;
-  id memoizerState;
+  CKComponentMemoizerState *componentMemoizerState;
+  CKComponentLayoutMemoizerState *layoutMemoizerState;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
+    CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(nil);
 
     result1 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
     layout1 = [result1.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
-    memoizerState = memoizer.nextMemoizerState();
+    componentMemoizerState = memoizer.nextMemoizerState();
+    layoutMemoizerState = layoutMemoizer.nextMemoizerState();
   }
 
   // Vend components from the current layout to be available in the new state and layout calculations
   CKBuildComponentResult result2;
   CKComponentLayout layout2;
   {
-    CKComponentMemoizer<CKComponentMemoizerState> memoize(memoizerState);
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(componentMemoizerState);
+    CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(layoutMemoizerState);
 
     result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
     layout2 = [result2.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
@@ -310,20 +314,24 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     return [CKTestMemoizedComponent newWithString:@"ABCD" number:123];
   };
 
-  id memoizerState;
+  CKComponentMemoizerState *componentMemoizerState;
+  CKComponentLayoutMemoizerState *layoutMemoizerState;
   CKBuildComponentResult result1;
   {
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
+    CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(nil);
     result1 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
     CKComponentLayout layout = [result1.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
 
-    memoizerState = memoizer.nextMemoizerState();
+    componentMemoizerState = memoizer.nextMemoizerState();
+    layoutMemoizerState = layoutMemoizer.nextMemoizerState();
   }
 
   CKBuildComponentResult result2;
   {
-    CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(componentMemoizerState);
+    CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(layoutMemoizerState);
     result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
     CKComponentLayout layout = [result2.component layoutThatFits:{CGSizeMake(100, 100), CGSizeMake(100, 100)}
                                                       parentSize:CGSizeMake(100, 100)];
@@ -390,7 +398,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     return [CKTestMemoizedComponent newWithString:[@"ABCD" mutableCopy] number:123];
   };
 
-  id memoizerState;
+  CKComponentMemoizerState *memoizerState;
   CKBuildComponentResult result;
   CKComponentLayout layout;
   {
@@ -434,7 +442,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
             }];
   };
 
-  id memoizerState;
+  CKComponentMemoizerState *memoizerState;
   CKBuildComponentResult result;
   CKComponentLayout layout;
   {
@@ -506,7 +514,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
             childBlock:childBlock];
   };
 
-  id memoizerState;
+  CKComponentMemoizerState *memoizerState;
   CKBuildComponentResult result;
   CKComponentLayout layout;
   {
@@ -563,7 +571,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
             }];
   };
 
-  id memoizerState;
+  CKComponentMemoizerState *memoizerState;
   CKBuildComponentResult result;
   CKComponentLayout layout;
   {
