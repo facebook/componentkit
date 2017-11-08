@@ -14,6 +14,7 @@
 #import "CKComponentSubclass.h"
 
 #import <ComponentKit/CKArgumentPrecondition.h>
+#import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKMacros.h>
@@ -33,6 +34,8 @@
 #import "CKMountAnimationGuard.h"
 #import "CKWeakObjectContainer.h"
 #import "ComponentLayoutContext.h"
+#import "CKThreadLocalComponentScope.h"
+#import "CKComponentScopeRoot.h"
 
 CGFloat const kCKComponentParentDimensionUndefined = NAN;
 CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndefined, kCKComponentParentDimensionUndefined};
@@ -347,6 +350,16 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 - (id<NSObject>)scopeFrameToken
 {
   return _scopeHandle ? @(_scopeHandle.globalIdentifier) : nil;
+}
+
+-(id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider
+{
+  CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
+  if (currentScope == nullptr) {
+    return nil;
+  }
+
+  return currentScope->newScopeRoot;
 }
 
 static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component)

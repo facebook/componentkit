@@ -14,6 +14,7 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKScopedComponent.h>
+#import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 
 @interface CKComponent () <CKScopedComponent>
 
@@ -66,5 +67,8 @@
 
 /** The size that was passed into the component; don't touch this. */
 @property (nonatomic, assign, readonly) CKComponentSize size;
+
+/** Used to get the scope root enumerator; during component creation only */
+@property (nonatomic, strong, readonly) id<CKComponentScopeEnumeratorProvider> scopeEnumeratorProvider;
 
 @end
