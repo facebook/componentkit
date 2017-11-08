@@ -23,23 +23,23 @@ namespace CK {
   template <typename T, typename Func>
   auto map(const T &iterable, Func &&func) -> std::vector<decltype(func(std::declval<typename T::value_type>()))>
   {
-    // Some convenience type definitions
+    // Convenience type definition
     typedef decltype(func(std::declval<typename T::value_type>())) value_type;
-    typedef std::vector<value_type> result_type;
-
+    
     // Prepares an output vector of the appropriate size
-    result_type res(iterable.size());
-
+    std::vector<value_type> res;
+    res.reserve(iterable.size());
+    
     // Let std::transform apply `func` to all elements
     // (use perfect forwarding for the function object)
     std::transform(
-                   std::begin(iterable), std::end(iterable), res.begin(),
+                   std::begin(iterable), std::end(iterable), std::back_inserter(res),
                    std::forward<Func>(func)
                    );
-
+    
     return res;
   }
-
+  
   template<typename Func>
   auto map(id<NSFastEnumeration> collection, Func &&func) -> std::vector<decltype(func(std::declval<id>()))>
   {
@@ -49,7 +49,7 @@ namespace CK {
     }
     return to;
   }
-
+  
   template <typename T, typename Func>
   auto filter(const T &iterable, Func &&func) -> std::vector<typename T::value_type>
   {
@@ -61,22 +61,22 @@ namespace CK {
     }
     return to;
   }
-
+  
   namespace detail {
     template <class ContainerA, class ContainerB>
     std::vector<typename std::decay<ContainerA>::type::value_type> chainImpl(ContainerA &&a, ContainerB &&b) {
       std::vector<typename std::decay<ContainerA>::type::value_type> newVector(std::forward<ContainerA>(a));
       newVector.reserve(newVector.size() + b.size());
-
+      
       for (auto &&i: b) {
         newVector.push_back(std::move(i));
       }
-
+      
       return newVector;
     }
   } // namespace detail
-
-
+  
+  
   // std::initializer_list<T> isn't deduced as a template argument, so
   // we need to provide explicit overloads for it. I didn't want to
   // expose detail::chainImpl in its full generality either, so I'm
@@ -88,47 +88,47 @@ namespace CK {
   std::vector<T> chain(const std::vector<T> &a, const std::vector<T> &b) {
     return detail::chainImpl(a, b);
   }
-
+  
   template <class T>
   std::vector<T> chain(const std::vector<T> &a, std::vector<T> &&b) {
     return detail::chainImpl(a, std::move(b));
   }
-
+  
   template <class T>
   std::vector<T> chain(std::vector<T> &&a, const std::vector<T> &b) {
     return detail::chainImpl(std::move(a), b);
   }
-
+  
   template <class T>
   std::vector<T> chain(std::vector<T> &&a, std::vector<T> &&b) {
     return detail::chainImpl(std::move(a), std::move(b));
   }
-
+  
   template <class T>
   std::vector<T> chain(std::vector<T> &&a, std::initializer_list<T> b) {
     return detail::chainImpl(std::move(a), b);
   }
-
+  
   template <class T>
   std::vector<T> chain(const std::vector<T> &a, std::initializer_list<T> b) {
     return detail::chainImpl(a, b);
   }
-
+  
   template <class T>
   std::vector<T> chain(std::initializer_list<T> a, const std::vector<T> &b) {
     return detail::chainImpl(a, b);
   }
-
+  
   template <class T>
   std::vector<T> chain(std::initializer_list<T> a, std::vector<T> &&b) {
     return detail::chainImpl(a, std::move(b));
   }
-
+  
   template <class T>
   std::vector<T> chain(std::initializer_list<T> a, std::initializer_list<T> b) {
     return detail::chainImpl(a, b);
   }
-
+  
   /**
    This function takes a vector and returns a new vector after adding an additional object between every entry in the vector
    Example:
@@ -141,7 +141,7 @@ namespace CK {
     if (a.size() < 2) {
       return a;
     }
-
+    
     std::vector<T> newVector;
     for (int i = 0; i < a.size(); i++) {
       newVector.push_back(a.at(i));

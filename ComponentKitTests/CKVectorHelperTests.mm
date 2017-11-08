@@ -73,6 +73,39 @@
   XCTAssertTrue(CK::chain(CK::chain(a, b), c) == d);
 }
 
+- (void)test_mapEmptyVector
+{
+  std::vector<NSString *> a = {};
+  std::vector<int> b = CK::map(a, ^int(NSString *str) {
+    return str.intValue;
+  });
+  std::vector<int> c = {};
+  XCTAssertTrue(b == c);
+}
+
+- (void)test_mapVectorWithObjects
+{
+  std::vector<NSString *> a = {@"1", @"2", @"3"};
+  std::vector<int> b = CK::map(a, ^int(NSString *str) {
+    return str.intValue;
+  });
+  std::vector<int> c = {1, 2, 3};
+  XCTAssertTrue(b == c);
+}
+
+- (void)test_mapVectorWithStructs
+{
+  struct TestStruct {
+    int i;
+  };
+  std::vector<TestStruct> a = {{.i = 1}, {.i = 2}, {.i = 3}};
+  std::vector<int> b = CK::map(a, ^int(TestStruct s) {
+    return s.i;
+  });
+  std::vector<int> c = {1, 2, 3};
+  XCTAssertTrue(b == c);
+}
+
 @end
 
 @interface CKVectorInterspersingTests : XCTestCase
