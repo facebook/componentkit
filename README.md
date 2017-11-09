@@ -24,6 +24,12 @@ If Carthage isn't installed, you easily install it via Homebrew:
 ```
 brew install carthage
 ```
+
+Then, run the build.sh file to build for iOS simulator, using command:
+```
+bash build.sh ci-componentkit-ios
+```
+
 If you can't use Homebrew, Carthage provides other [installation methods](https://github.com/Carthage/Carthage#installing-carthage).
 
 
