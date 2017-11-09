@@ -20,9 +20,9 @@ namespace CK {
   namespace Component {
     struct MountContext {
       /** Constructs a new mount context for the given view. */
-      static MountContext RootContext(UIView *v) {
+      static MountContext RootContext(UIView *v, const BOOL hasScopeConflict) {
         ViewReuseUtilities::mountingInRootView(v);
-        return MountContext(std::make_shared<ViewManager>(v), {0,0}, {}, NO);
+        return MountContext(std::make_shared<ViewManager>(v), {0,0}, {}, NO, hasScopeConflict);
       }
 
       /** The view manager for the context. Components should be mounted using this view manager. */
@@ -33,21 +33,27 @@ namespace CK {
       UIEdgeInsets layoutGuide;
       /** If YES, then [CATransaction +setDisableActions:] is used to disable animations while mounting. */
       BOOL shouldBlockAnimations;
-
+      /** If YES unexpected state exception will be ignored in CKComponentController's component life cycle */
+      BOOL componentOrAncestorHasScopeConflict;
+      
       MountContext offset(const CGPoint p, const CGSize parentSize, const CGSize childSize) const {
+        return offset(p, parentSize, childSize, componentOrAncestorHasScopeConflict);
+      };
+      
+      MountContext offset(const CGPoint p, const CGSize parentSize, const CGSize childSize, const BOOL hasScopeConflict) const {
         const UIEdgeInsets guide = adjustedGuide(layoutGuide, p, parentSize, childSize);
-        return MountContext(viewManager, position + p, guide, shouldBlockAnimations);
+        return MountContext(viewManager, position + p, guide, shouldBlockAnimations, hasScopeConflict);
       };
 
       MountContext childContextForSubview(UIView *subview, const BOOL didBlockAnimations) const {
         ViewReuseUtilities::mountingInChildContext(subview, viewManager->view);
         const BOOL shouldBlockChildAnimations = shouldBlockAnimations || didBlockAnimations;
-        return MountContext(std::make_shared<ViewManager>(subview), {0,0}, layoutGuide, shouldBlockChildAnimations);
+        return MountContext(std::make_shared<ViewManager>(subview), {0,0}, layoutGuide, shouldBlockChildAnimations, componentOrAncestorHasScopeConflict);
       };
 
     private:
-      MountContext(const std::shared_ptr<ViewManager> &m, const CGPoint p, const UIEdgeInsets l, const BOOL b)
-      : viewManager(m), position(p), layoutGuide(l), shouldBlockAnimations(b) {}
+      MountContext(const std::shared_ptr<ViewManager> &m, const CGPoint p, const UIEdgeInsets l, const BOOL b, const BOOL c)
+      : viewManager(m), position(p), layoutGuide(l), shouldBlockAnimations(b), componentOrAncestorHasScopeConflict(c) {}
 
       static UIEdgeInsets adjustedGuide(const UIEdgeInsets layoutGuide, const CGPoint offset,
                                         const CGSize parentSize, const CGSize childSize) {
