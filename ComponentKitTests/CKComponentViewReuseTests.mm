@@ -323,9 +323,9 @@ static UIView *reuseAwareViewFactory()
 }
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-                                        size:(const CGSize)size
-                                    children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
-                              supercomponent:(CKComponent *)supercomponent
+size:(const CGSize)size
+children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
+supercomponent:(CKComponent *)supercomponent
 {
   const auto result = [super mountInContext:context size:size children:children supercomponent:supercomponent];
   CKInjectingView *injectingView = (CKInjectingView *)result.contextForChildren.viewManager->view;

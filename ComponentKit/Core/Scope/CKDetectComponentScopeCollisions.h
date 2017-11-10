@@ -44,16 +44,6 @@ struct CKComponentCollision {
 };
 
 /**
- Set the value of kCKComponentLayoutOrAncestorHasScopeConflictKey to `YES` in CKComponentLayout.extra to flag a scope conflict
- */
-NSString *const kCKComponentLayoutOrAncestorHasScopeConflictKey = @"kCKComponentLayoutOrAncestorHasScopeConflictKey";
-
-/**
- Helper function to read the `kCKComponentLayoutOrAncestorHasScopeConflictKey` flag.
- */
-BOOL CKComponentLayoutOrAncestorHasScopeConflict(const CKComponentLayout &layout);
-
-/**
  Helper function to detect component scope collisions found in the given component layout.
  @param layout The top-level component layout of the component hierarchy.
  @return struct that contains the component with collision, the lowest common ancestor and the backtrace description

@@ -167,10 +167,7 @@ private:
       }
       break;
     default:
-      if (!component.componentOrAncestorHasScopeConflict) {
-        // Scope collisions cause all sorts of havoc; ignore when that happens.
-        CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
-      }
+      CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
   }
 }
 
@@ -212,10 +209,7 @@ private:
       }
       break;
     default:
-      if (!component.componentOrAncestorHasScopeConflict) {
-        // Scope collisions cause all sorts of havoc; ignore when that happens.
-        CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
-      }
+      CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
   }
 
   [self didFinishComponentUpdate];
@@ -236,10 +230,7 @@ private:
       CKAssert(component != _component, @"Didn't expect the new component to be unmounting during remount");
       break;
     default:
-      if (!component.componentOrAncestorHasScopeConflict) {
-        // Scope collisions cause all sorts of havoc; ignore when that happens.
-        CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
-      }
+      CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
   }
 }
 
@@ -258,10 +249,7 @@ private:
       CKAssert(component != _component, @"Didn't expect the new component to be unmounted while mounted");
       break;
     default:
-      if (!component.componentOrAncestorHasScopeConflict) {
-        // Scope collisions cause all sorts of havoc; ignore when that happens.
-        CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
-      }
+      CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
   }
 }
 

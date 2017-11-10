@@ -64,7 +64,7 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
   // in a DFS fashion which is handy if you want to animate a subpart
   // of the tree
   std::stack<MountItem> stack;
-  stack.push({layout, MountContext::RootContext(view, CKComponentLayoutOrAncestorHasScopeConflict(layout)), supercomponent, NO});
+  stack.push({layout, MountContext::RootContext(view), supercomponent, NO});
   NSMutableSet *mountedComponents = [NSMutableSet set];
 
   layout.component.rootComponentMountedView = view;
@@ -89,8 +89,7 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
         // Ordering of components should correspond to ordering of mount. Push components on backwards so the
         // bottom-most component is mounted first.
         for (auto riter = item.layout.children->rbegin(); riter != item.layout.children->rend(); riter ++) {
-          BOOL hasScopeConflict = CKComponentLayoutOrAncestorHasScopeConflict(item.layout);
-          stack.push({riter->layout, mountResult.contextForChildren.offset(riter->position, item.layout.size, riter->layout.size, hasScopeConflict), item.layout.component, NO});
+          stack.push({riter->layout, mountResult.contextForChildren.offset(riter->position, item.layout.size, riter->layout.size), item.layout.component, NO});
         }
       }
     }
