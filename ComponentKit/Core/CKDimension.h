@@ -75,12 +75,7 @@ public:
 
 private:
   CKRelativeDimension(Type type, CGFloat value)
-    : _type(type), _value(value)
-  {
-    if (type == Type::POINTS) {
-      CKCAssertPositiveReal(@"Points", value);
-    }
-  }
+    : _type(type), _value(value) {}
 
   Type _type;
   CGFloat _value;
