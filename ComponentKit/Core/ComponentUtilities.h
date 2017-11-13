@@ -62,6 +62,18 @@ namespace CK {
     return to;
   }
   
+  template<typename Func>
+  auto filter(id<NSFastEnumeration> collection, Func &&func) -> std::vector<id>
+  {
+    std::vector<id> to;
+    for (id obj in collection) {
+      if (func(obj)) {
+        to.push_back(obj);
+      }
+    }
+    return to;
+  }
+  
   namespace detail {
     template <class ContainerA, class ContainerB>
     std::vector<typename std::decay<ContainerA>::type::value_type> chainImpl(ContainerA &&a, ContainerB &&b) {

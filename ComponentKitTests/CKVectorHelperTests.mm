@@ -73,6 +73,13 @@
   XCTAssertTrue(CK::chain(CK::chain(a, b), c) == d);
 }
 
+@end
+
+@interface CKVectorMapTests : XCTestCase
+@end
+
+@implementation CKVectorMapTests
+
 - (void)test_mapEmptyVector
 {
   std::vector<NSString *> a = {};
@@ -103,6 +110,61 @@
     return s.i;
   });
   std::vector<int> c = {1, 2, 3};
+  XCTAssertTrue(b == c);
+}
+
+@end
+
+@interface CKVectorFilterTests : XCTestCase
+@end
+
+@implementation CKVectorFilterTests
+
+- (void)test_filterEmptyVector
+{
+  std::vector<int> a = {};
+  std::vector<int> b = CK::filter(a, ^BOOL(int var) {
+    return var % 2 == 0;
+  });
+  std::vector<int> c = {};
+  XCTAssertTrue(b == c);
+}
+
+- (void)test_filterVectorWithObjects
+{
+  std::vector<NSString *> a = {@"1", @"2", @"3", @"4"};
+  std::vector<NSString *> b = CK::filter(a, ^BOOL(NSString *str) {
+    return str.intValue % 2 == 0;
+  });
+  std::vector<NSString *> c = {@"2", @"4"};
+  XCTAssertTrue(b == c);
+}
+
+- (void)test_filterVectorWithPrimitives
+{
+  std::vector<int> a = {1, 2, 3, 4};
+  std::vector<int> b = CK::filter(a, ^BOOL(int var) {
+    return var % 2 == 0;
+  });
+  std::vector<int> c = {2, 4};
+  XCTAssertTrue(b == c);
+}
+
+- (void)test_filterVectorWithStructs
+{
+  struct TestStruct {
+    int i;
+    
+    bool operator==(const TestStruct& rhs) const
+    {
+      return i == rhs.i;
+    }
+  };
+  std::vector<TestStruct> a = {{.i = 1}, {.i = 2}, {.i = 3}, {.i = 4}};
+  std::vector<TestStruct> b = CK::filter(a, ^BOOL(TestStruct s) {
+    return s.i % 2 == 0;
+  });
+  std::vector<TestStruct> c = {{.i = 2}, {.i = 4}};
   XCTAssertTrue(b == c);
 }
 
