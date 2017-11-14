@@ -104,11 +104,59 @@ CKComponentCollision CKFindComponentScopeCollision(const CKComponentLayout &layo
   return {};
 }
 
+static CKComponentLayout CKFindLayoutForComponent(CKComponent *component, CKComponentLayout rootLayout)
+{
+  std::queue<const CKComponentLayout> queue;
+  queue.push(rootLayout);
+  while (!queue.empty()) {
+    auto layout = queue.front();
+    queue.pop();
+    if (component == layout.component) {
+      return layout;
+    }
+    if (layout.children) {
+      for (const auto childComponentLayout : *layout.children) {
+        queue.push(childComponentLayout.layout);
+      }
+    }
+  }
+  return {};
+}
+
+static void CKMarkScopeCollision(const CKComponentCollision collision, const CKComponentLayout &rootLayout)
+{
+  if (!collision.hasCollision()) {
+    return;
+  }
+  CKComponentLayout collidingLayout = CKFindLayoutForComponent(collision.lowestCommonAncestor, rootLayout);
+  if (collidingLayout.component != collision.lowestCommonAncestor) {
+    CKCFailAssert(@"Failed to retrieve the layout for the component: <%@: %p>",
+                  [collision.lowestCommonAncestor class],
+                  collision.lowestCommonAncestor);
+  }
+  
+  std::queue<const CKComponentLayout> queue;
+  queue.push(collidingLayout);
+  while (!queue.empty()) {
+    auto componentLayout = queue.front();
+    queue.pop();
+    NSMutableDictionary *extra = componentLayout.extra ? [componentLayout.extra mutableCopy] : [NSMutableDictionary dictionary];
+    extra[kCKComponentLayoutOrAncestorHasScopeConflictKey] = @(YES);
+    componentLayout.extra = extra;
+    if (componentLayout.children) {
+      for (const auto childComponentLayout : *componentLayout.children) {
+        queue.push(childComponentLayout.layout);
+      }
+    }
+  }
+}
+
 void CKDetectComponentScopeCollisions(const CKComponentLayout &layout) {
 #if CK_ASSERTIONS_ENABLED
   const CKComponentCollision collision = CKFindComponentScopeCollision(layout);
   CKComponent *const lowestCommonAncestor = collision.lowestCommonAncestor ?: layout.component;
   if (collision.hasCollision()) {
+    CKMarkScopeCollision(collision, layout);
     CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for %@ can lead to incorrect and unexpected behavior\n"
                   @"Please remove the offending component or provide a unique component scope identifier\nLowest common ancestor: <%@: %p>\nComponent backtrace:\n%@",
                   [collision.component class],
@@ -117,4 +165,9 @@ void CKDetectComponentScopeCollisions(const CKComponentLayout &layout) {
                   collision.backtraceDescription);
   }
 #endif
+}
+
+BOOL CKComponentLayoutOrAncestorHasScopeConflict(const CKComponentLayout &layout)
+{
+  return [[layout.extra objectForKey:kCKComponentLayoutOrAncestorHasScopeConflictKey] boolValue];
 }
