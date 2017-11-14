@@ -95,7 +95,8 @@ static void performSetter(id object, SEL setter, id value)
         // See https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
         // for more information on type encodings
         if (set.argumentType == nullptr || strlen(set.argumentType) != 1) {
-          CKCAssert(NO, @"NSNumber: %@ cannot be used as an argument to a selector requiring '%s'", value, set.argumentType ?: "NULL");
+          CKCAssert(NO, @"NSNumber: %@ cannot be used as an argument to a selector requiring '%s'; selector: %@; class %@",
+                    value, set.argumentType ?: "NULL", NSStringFromSelector(setter), [object class]);
           return;
         }
         NSNumber *numValue = (NSNumber *)value;
