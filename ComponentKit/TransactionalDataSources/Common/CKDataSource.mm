@@ -315,8 +315,6 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
 - (void)_applyModificationPair:(CKDataSourceModificationPair *)modificationPair
 {
-  __block BOOL shouldStopPipeline = NO;
-  
   CKDataSourceChange *change;
   @autoreleasepool {
     change = [modificationPair.modification changeFromState:modificationPair.state];
@@ -343,12 +341,13 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     } else {
       // In pipeline world, as soon as encounter an invalid modification,
       // we optimistically cancel following modification and restart it from main thread
-      shouldStopPipeline = YES;
-      [self _startAsynchronousModificationIfNeeded];
+      if (!shouldApplyChange) {
+        [self _startAsynchronousModificationIfNeeded];
+      }
     }
   });
   
-  if (_pipelinePreparationEnabled && !shouldStopPipeline) {
+  if (_pipelinePreparationEnabled) {
     // After processing the Nth modification, we speculatively find the (N+1)th modification in queue to process
     // without hopping back to main queue to reduce latency
     const auto nextModificationState = [self _nextModificationStateFor:modificationPair.modification];
@@ -370,7 +369,8 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
         // Note that we are not 100% sure here that the next one has not been cancelled due to
         // its predecessors being cancelled, but the sanity check on main thread before application
         // guarantees that we don't apply a cancelled modification
-        [self _applyModificationPair:
+        [self
+         _applyModificationPair:
          [[CKDataSourceModificationPair alloc]
           initWithModification:nextModificationState.second
           state:change.state]];
