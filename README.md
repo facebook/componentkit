@@ -16,7 +16,7 @@ github "facebook/ComponentKit" ~> 0.20
 ComponentKit has a few dependencies that need to be installed via [Carthage](https://github.com/Carthage/Carthage). **Before you open any of the Xcode projects in this repo, make sure you run**:
 
 ```
-carthage bootstrap
+carthage checkout
 ```
 
 If Carthage isn't installed, you easily install it via Homebrew:
