@@ -644,11 +644,6 @@ static BOOL floatIsSet(CGFloat val)
   return {self, constrainedSize.clamp({width, height}), childrenLayout};
 }
 
-/*
- layoutCache is passed by reference so that we are able to allocate it in one thread
- and mutate it within that thread
- Layout cache shouldn't be exposed publicly
- */
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
 {
   const YGNodeRef node = [self ygStackLayoutNode:constrainedSize];
