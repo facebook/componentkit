@@ -321,10 +321,9 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
 
     YGNodeStyleSetPositionType(childNode, (child.position.type == CKFlexboxPositionTypeAbsolute) ? YGPositionTypeAbsolute : YGPositionTypeRelative);
 
-    if ((floatIsSet(_style.spacing) || floatIsSet(child.spacingBefore) || floatIsSet(child.spacingAfter)) &&
-      childHasMarginSet(child)) {
-      CKFailAssert(@"You shouldn't use both margin and spacing! Ignoring spacing and falling back to margin behavior.");
-    }
+    CKAssert(!((floatIsSet(_style.spacing) || floatIsSet(child.spacingBefore) || floatIsSet(child.spacingAfter)) && flexboxSpacingIsSet(child.margin)),
+             @"You shouldn't use both margin and spacing! Ignoring spacing and falling back to margin behavior.");
+    
     // Spacing emulation
     // Stack layout defines spacing in terms of parent Spacing (used only between children) and
     // spacingAfter / spacingBefore for every children
@@ -532,26 +531,26 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
   YGNodeStyleSetBorder(node, edge, value.value());
 }
 
-static BOOL childHasMarginSet(CKFlexboxComponentChild child)
+static BOOL flexboxSpacingIsSet(CKFlexboxSpacing spacing)
 {
   return
-  marginIsSet(child.margin.top) ||
-  marginIsSet(child.margin.bottom) ||
-  marginIsSet(child.margin.start) ||
-  marginIsSet(child.margin.end);
+  dimensionIsSet(spacing.top) ||
+  dimensionIsSet(spacing.bottom) ||
+  dimensionIsSet(spacing.start) ||
+  dimensionIsSet(spacing.end);
 }
 
-static BOOL marginIsSet(CKFlexboxDimension margin)
+static BOOL dimensionIsSet(CKFlexboxDimension dimension)
 {
-  if (margin.isDefined() == false) {
+  if (dimension.isDefined() == false) {
     return false;
   }
 
-  switch(margin.dimension().type()) {
+  switch(dimension.dimension().type()) {
     case CKRelativeDimension::Type::PERCENT:
-      return floatIsSet(margin.dimension().value());
+      return floatIsSet(dimension.dimension().value());
     case CKRelativeDimension::Type::POINTS:
-      return floatIsSet(margin.dimension().value());
+      return floatIsSet(dimension.dimension().value());
     case CKRelativeDimension::Type::AUTO:
       return false;
   }
