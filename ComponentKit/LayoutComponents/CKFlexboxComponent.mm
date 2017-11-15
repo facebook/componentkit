@@ -321,8 +321,8 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
 
     YGNodeStyleSetPositionType(childNode, (child.position.type == CKFlexboxPositionTypeAbsolute) ? YGPositionTypeAbsolute : YGPositionTypeRelative);
 
-    if ((fabs(_style.spacing) > FLT_EPSILON || fabs(child.spacingBefore) > FLT_EPSILON || fabs(child.spacingAfter) > FLT_EPSILON)
-            && childHasMarginSet(child)) {
+    if ((floatIsSet(_style.spacing) || floatIsSet(child.spacingBefore) || floatIsSet(child.spacingAfter)) &&
+      childHasMarginSet(child)) {
       CKFailAssert(@"You shouldn't use both margin and spacing! Ignoring spacing and falling back to margin behavior.");
     }
     // Spacing emulation
@@ -549,12 +549,17 @@ static BOOL marginIsSet(CKFlexboxDimension margin)
 
   switch(margin.dimension().type()) {
     case CKRelativeDimension::Type::PERCENT:
-      return fabs(margin.dimension().value()) > FLT_EPSILON;
+      return floatIsSet(margin.dimension().value());
     case CKRelativeDimension::Type::POINTS:
-      return fabs(margin.dimension().value()) > FLT_EPSILON;
+      return floatIsSet(margin.dimension().value());
     case CKRelativeDimension::Type::AUTO:
       return false;
   }
+}
+
+static BOOL floatIsSet(CGFloat val)
+{
+  return fabs(val) > FLT_EPSILON;
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
