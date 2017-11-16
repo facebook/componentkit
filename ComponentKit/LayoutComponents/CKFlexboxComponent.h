@@ -251,8 +251,17 @@ struct CKFlexboxComponentChild {
   CGFloat spacingBefore;
   /** Additional space to place after the component in the stacking direction. Overriden by any margins in the stacking direction. */
   CGFloat spacingAfter;
-  /** Margin applied to the child. Setting margin in the stacking direction overrides any spacing set on the container or child. */
+  /** Margin applied to the child. Setting margin in the stacking direction overrides any spacing set on the container or child.
+   Margin is applied outside the child - margin doesn't increase your child size.
+   If you want to add space inside the child, use Padding property
+   */
   CKFlexboxSpacing margin;
+  /** Padding applied to the child.
+   IMPORTANT! This padding is applicable only for current Flexbox and will not apply to the child internal layout. You need to apply it there separately if you need.
+   Padding is applied inside the child - padding increases your child size.
+   If you want to add space outside the child, use Margin property.
+   */
+  CKFlexboxSpacing padding;
   /**
    If the sum of childrens' stack dimensions is less than the minimum size, how much should this component grow?
    This value represents the "flex grow factor" and determines how much this component should grow in relation to any
@@ -276,8 +285,6 @@ struct CKFlexboxComponentChild {
    If children have the same zIndex, the one declared first will appear below
    */
   NSInteger zIndex;
-  /** Padding applied to the child */
-  CKFlexboxSpacing padding;
   /** Aspect ratio controls the size of the undefined dimension of a node.
    Aspect ratio is encoded as a floating point value width/height. e.g. A value of 2 leads to a node
    with a width twice the size of its height while a value of 0.5 gives the opposite effect. **/
