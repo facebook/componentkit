@@ -15,6 +15,7 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKComponentScopeFrame.h>
+#import <ComponentKit/CKComponentScopeHandle.h>
 
 class CKThreadLocalComponentScope {
 public:

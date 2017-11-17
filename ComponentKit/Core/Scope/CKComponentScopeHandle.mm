@@ -99,7 +99,7 @@
                        componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot
 {
   id updatedState = _state;
-  const auto pendingUpdatesIt = stateUpdates.find(_globalIdentifier);
+  const auto pendingUpdatesIt = stateUpdates.find(self);
   if (pendingUpdatesIt != stateUpdates.end()) {
     for (auto pendingUpdate: pendingUpdatesIt->second) {
       if (pendingUpdate != nil) {
@@ -153,11 +153,11 @@
     });
     return;
   }
-  [_listener componentScopeHandleWithIdentifier:_globalIdentifier
-                                 rootIdentifier:_rootIdentifier
-                          didReceiveStateUpdate:updateBlock
-                                       userInfo:userInfo
-                                           mode:mode];
+  [_listener componentScopeHandle:self
+                   rootIdentifier:_rootIdentifier
+            didReceiveStateUpdate:updateBlock
+                         userInfo:userInfo
+                             mode:mode];
 }
 
 - (void)replaceState:(id)state

@@ -72,6 +72,24 @@
 
 @end
 
+template<>
+struct std::hash<CKComponentScopeHandle *>
+{
+  size_t operator()(const CKComponentScopeHandle *handle) const
+  {
+    return (size_t)handle.globalIdentifier;
+  }
+};
+
+template<>
+struct std::equal_to<CKComponentScopeHandle *>
+{
+  bool operator()(const CKComponentScopeHandle *lhs, const CKComponentScopeHandle *rhs) const
+  {
+    return lhs.globalIdentifier == rhs.globalIdentifier;
+  }
+};
+
 typedef int32_t CKScopedResponderUniqueIdentifier;
 typedef int CKScopedResponderKey;
 

@@ -14,6 +14,7 @@
 #import <ComponentKit/CKComponentDataSourceAttachController.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentSizeRangeProviding.h>
@@ -106,15 +107,15 @@
   return _state;
 }
 
-- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
-                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                     didReceiveStateUpdate:(id (^)(id))stateUpdate
-                                  userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
-                                      mode:(CKUpdateMode)mode
+- (void)componentScopeHandle:(CKComponentScopeHandle *)handle
+              rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+       didReceiveStateUpdate:(id (^)(id))stateUpdate
+                    userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
+                        mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
 
-  _pendingStateUpdates[globalIdentifier].push_back(stateUpdate);
+  _pendingStateUpdates[handle].push_back(stateUpdate);
   const CKSizeRange constrainedSize = _sizeRangeProvider ? [_sizeRangeProvider sizeRangeForBoundingSize:_state.constrainedSize.max] : _state.constrainedSize;
   [self updateWithState:[self prepareForUpdateWithModel:_state.model
                                         constrainedSize:constrainedSize

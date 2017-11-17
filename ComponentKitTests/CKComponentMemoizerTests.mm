@@ -108,13 +108,13 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKComponentStateUpdateMap _pendingStateUpdates;
 }
 
-- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
-                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                     didReceiveStateUpdate:(id (^)(id))stateUpdate
-                                  userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
-                                      mode:(CKUpdateMode)mode
+- (void)componentScopeHandle:(CKComponentScopeHandle *)handle
+              rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+       didReceiveStateUpdate:(id (^)(id))stateUpdate
+                    userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
+                        mode:(CKUpdateMode)mode
 {
-  _pendingStateUpdates[globalIdentifier].push_back(stateUpdate);
+  _pendingStateUpdates[handle].push_back(stateUpdate);
 }
 @end
 

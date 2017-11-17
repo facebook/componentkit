@@ -16,7 +16,9 @@
 typedef int32_t CKComponentScopeHandleIdentifier;
 typedef int32_t CKComponentScopeRootIdentifier;
 
-typedef std::unordered_map<CKComponentScopeHandleIdentifier, std::vector<id (^)(id)>> CKComponentStateUpdateMap;
+@class CKComponentScopeHandle;
+
+typedef std::unordered_map<CKComponentScopeHandle *, std::vector<id (^)(id)>> CKComponentStateUpdateMap;
 
 @protocol CKScopedComponent;
 @protocol CKScopedComponentController;

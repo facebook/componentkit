@@ -19,6 +19,7 @@
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
+#import "CKComponentScopeHandle.h"
 #import "CKComponentScopeRoot.h"
 
 @implementation CKDataSourceUpdateStateModification
@@ -54,7 +55,7 @@
         const auto stateUpdateMap = stateUpdatesForItem->second;
         const auto stateUpdate = stateUpdateMap.begin();
         if (stateUpdate != stateUpdateMap.end()) {
-          globalIdentifier = stateUpdate->first;
+          globalIdentifier = stateUpdate->first.globalIdentifier;
         }
         [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
         const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], stateUpdatesForItem->second, ^{

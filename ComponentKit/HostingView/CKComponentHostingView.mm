@@ -181,15 +181,15 @@ struct CKComponentHostingViewInputs {
 
 #pragma mark - CKComponentStateListener
 
-- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
-                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                     didReceiveStateUpdate:(id (^)(id))stateUpdate
-                                  userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
-                                      mode:(CKUpdateMode)mode
+- (void)componentScopeHandle:(CKComponentScopeHandle *)handle
+              rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+       didReceiveStateUpdate:(id (^)(id))stateUpdate
+                    userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
+                        mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
 
-  _pendingInputs.stateUpdates[globalIdentifier].push_back(stateUpdate);
+  _pendingInputs.stateUpdates[handle].push_back(stateUpdate);
   [self _setNeedsUpdateWithMode:mode];
 }
 

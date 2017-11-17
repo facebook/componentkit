@@ -27,11 +27,11 @@
 /** Component state announcements will always be made on the main thread. */
 @protocol CKComponentStateListener <NSObject>
 
-- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
-                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                     didReceiveStateUpdate:(id (^)(id))stateUpdate
-                                  userInfo:(NSDictionary<NSString *, NSString *> *)userInfo
-                                      mode:(CKUpdateMode)mode;
+- (void)componentScopeHandle:(CKComponentScopeHandle *)handle
+              rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+       didReceiveStateUpdate:(id (^)(id))stateUpdate
+                    userInfo:(NSDictionary<NSString *, NSString *> *)userInfo
+                        mode:(CKUpdateMode)mode;
 
 @end
 

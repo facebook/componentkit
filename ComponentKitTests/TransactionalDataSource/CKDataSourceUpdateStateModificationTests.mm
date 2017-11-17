@@ -54,13 +54,13 @@
   return [CKStatefulTestComponent new];
 }
 
-- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
-                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                     didReceiveStateUpdate:(id (^)(id))stateUpdate
-                                  userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
-                                      mode:(CKUpdateMode)mode
+- (void)componentScopeHandle:(CKComponentScopeHandle *)handle
+              rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+       didReceiveStateUpdate:(id (^)(id))stateUpdate
+                    userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
+                        mode:(CKUpdateMode)mode
 {
-  _pendingStateUpdates[rootIdentifier][globalIdentifier].push_back(stateUpdate);
+  _pendingStateUpdates[rootIdentifier][handle].push_back(stateUpdate);
 }
 
 - (void)tearDown
@@ -83,7 +83,7 @@
   CKDataSourceChange *change = [updateStateModification changeFromState:originalState];
 
   const auto stateUpdatesForItem = _pendingStateUpdates.find([[item scopeRoot] globalIdentifier]);
-  NSInteger globalIdentifier = (stateUpdatesForItem->second).begin()->first;
+  NSInteger globalIdentifier = (stateUpdatesForItem->second).begin()->first.globalIdentifier;
   CKDataSourceAppliedChanges *expectedAppliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:ip]
                                                                     removedIndexPaths:nil

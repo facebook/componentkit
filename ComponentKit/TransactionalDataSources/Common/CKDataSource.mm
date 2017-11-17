@@ -171,11 +171,11 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
 #pragma mark - State Listener
 
-- (void)componentScopeHandleWithIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
-                            rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                     didReceiveStateUpdate:(id (^)(id))stateUpdate
-                                  userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
-                                      mode:(CKUpdateMode)mode
+- (void)componentScopeHandle:(CKComponentScopeHandle *)handle
+              rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
+       didReceiveStateUpdate:(id (^)(id))stateUpdate
+                    userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
+                        mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
   if (_pendingAsynchronousStateUpdates.empty() && _pendingSynchronousStateUpdates.empty()) {
@@ -185,9 +185,9 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   }
 
   if (mode == CKUpdateModeAsynchronous) {
-    _pendingAsynchronousStateUpdates[rootIdentifier][globalIdentifier].push_back(stateUpdate);
+    _pendingAsynchronousStateUpdates[rootIdentifier][handle].push_back(stateUpdate);
   } else {
-    _pendingSynchronousStateUpdates[rootIdentifier][globalIdentifier].push_back(stateUpdate);
+    _pendingSynchronousStateUpdates[rootIdentifier][handle].push_back(stateUpdate);
   }
 }
 
