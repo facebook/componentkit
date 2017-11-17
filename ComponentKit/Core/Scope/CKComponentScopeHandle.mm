@@ -60,8 +60,9 @@
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                  componentClass:(Class)componentClass
+                  componentClass:(Class<CKScopedComponent>)componentClass
              initialStateCreator:(id (^)(void))initialStateCreator
+                          parent:(CKComponentScopeHandle *)parent
 {
   static int32_t nextGlobalIdentifier = 0;
   return [self initWithListener:listener
@@ -70,7 +71,8 @@
                  componentClass:componentClass
                           state:initialStateCreator ? initialStateCreator() : [componentClass initialState]
                      controller:nil  // Controllers are built on resolution of the handle.
-                scopedResponder:nil];// Scoped responders are created lazily. Once they exist, we use that reference for future handles.
+                scopedResponder:nil  // Scoped responders are created lazily. Once they exist, we use that reference for future handles.
+                         parent:parent];
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -80,6 +82,7 @@
                            state:(id)state
                       controller:(id<CKScopedComponentController>)controller
                  scopedResponder:(CKScopedResponder *)scopedResponder
+                          parent:(CKComponentScopeHandle *)parent
 {
   if (self = [super init]) {
     _listener = listener;
@@ -88,6 +91,7 @@
     _componentClass = componentClass;
     _state = state;
     _controller = controller;
+    _parent = parent;
 
     _scopedResponder = scopedResponder;
     [scopedResponder addHandleToChain:self];
@@ -97,6 +101,7 @@
 
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                        componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot
+                                   parent:(CKComponentScopeHandle *)parent
 {
   id updatedState = _state;
   const auto pendingUpdatesIt = stateUpdates.find(self);
@@ -115,7 +120,8 @@
                                            componentClass:_componentClass
                                                     state:updatedState
                                                controller:_controller
-                                          scopedResponder:_scopedResponder];
+                                          scopedResponder:_scopedResponder
+                                                   parent:parent];
 }
 
 - (instancetype)newHandleToBeReacquiredDueToScopeCollision
@@ -126,7 +132,8 @@
                                            componentClass:_componentClass
                                                     state:_state
                                                controller:_controller
-                                          scopedResponder:_scopedResponder];
+                                          scopedResponder:_scopedResponder
+                                                   parent:_parent];
 }
 
 - (id<CKScopedComponentController>)controller

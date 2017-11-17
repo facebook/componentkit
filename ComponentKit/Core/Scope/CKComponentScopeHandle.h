@@ -34,11 +34,13 @@
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class<CKScopedComponent>)componentClass
-             initialStateCreator:(id (^)(void))initialStateCreator;
+             initialStateCreator:(id (^)(void))initialStateCreator
+                          parent:(CKComponentScopeHandle *)parent;
 
 /** Creates a new instance of the scope handle that incorporates the given state updates. */
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                       componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot;
+                       componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot
+                                   parent:(CKComponentScopeHandle *)parent;
 
 /** Creates a new, but identical, instance of the scope handle that will be reacquired due to a scope collision. */
 - (instancetype)newHandleToBeReacquiredDueToScopeCollision;
@@ -64,6 +66,8 @@
 
 @property (nonatomic, strong, readonly) id state;
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
+
+@property (nonatomic, weak, readonly) CKComponentScopeHandle *parent;
 
 /**
  Provides a responder corresponding with this scope handle. The controller will assert if called before resolution.
