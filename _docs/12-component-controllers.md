@@ -76,7 +76,7 @@ To pass data from a component to its controller, expose a `@property` on the com
     return @(isPlaying);
   } mode:CKUpdateModeAsynchronous];
 }
-- (void)didUpdateComponent:(MySongComponent *)component
+- (void)didUpdateComponent
 {
   // This only fires on a state *change* (i.e. not through the initializer path).
 }
