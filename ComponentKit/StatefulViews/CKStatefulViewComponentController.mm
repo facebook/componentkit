@@ -67,6 +67,12 @@
 
 #pragma mark - Lifecycle
 
+- (void)invalidateController
+{
+  [super invalidateController];
+  [self _relinquishStatefulViewIfPossible];
+}
+
 - (void)didMount
 {
   [super didMount];

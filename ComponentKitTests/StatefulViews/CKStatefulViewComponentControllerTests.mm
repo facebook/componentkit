@@ -11,8 +11,10 @@
 #import <XCTest/XCTest.h>
 
 #import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
+#import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
+#import <ComponentKit/CKComponentControllerEvents.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentSubclass.h>
 
@@ -124,6 +126,28 @@
                                                                                                 constrainedSize:{{100, 100}, {100, 100}}
                                                                                                         context:nil]];
   XCTAssertEqualObjects([[controller statefulView] backgroundColor], [UIColor redColor], @"Stateful view size should be updated to match new color");
+}
+
+- (void)testInvalidatingStatefulViewComponentEventuallyRelinquishesStatefulView
+{
+  CKComponentLifecycleTestHelper *componentLifecycleTestController =
+    [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class] sizeRangeProvider:nil];
+  const CKComponentLifecycleTestHelperState state =
+    [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                constrainedSize:{{0,0}, {100, 100}}
+                                                        context:nil];
+  [componentLifecycleTestController attachToView:[UIView new]];
+  [componentLifecycleTestController updateWithState:state];
+  
+  auto component = (CKTestStatefulViewComponent *)state.componentLayout.component;
+  auto controller = (CKTestStatefulViewComponentController *)[component controller];
+  XCTAssertNotNil([controller statefulView], @"Expected to have a stateful view while mounted");
+  
+  [componentLifecycleTestController detachFromView];
+  CKComponentScopeRootAnnounceControllerInvalidation([componentLifecycleTestController state].scopeRoot);
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return [controller statefulView] == nil;
+  }), @"Expected view to be relinquished");
 }
 
 @end
