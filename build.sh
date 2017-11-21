@@ -31,16 +31,17 @@ function ci() {
     -scheme $2 \
     -sdk $3 \
     -destination "$4" \
-    $5
+    -configuration $5 \
+    $6
 }
 
 function ios_ci() {
-  ci $1 $2 iphonesimulator "platform=iOS Simulator,name=iPhone 5s" $3
+  ci $1 $2 iphonesimulator "platform=iOS Simulator,name=iPhone 5s" Release $3
 }
 
 function tvos_ci() {
 # Apple TV 1080p is the target for iOS 10, while Apple TV is the target for iOS 11
-  ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV 1080p" $3 || ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV" $3
+  ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV 1080p" Release $3 || ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV" Release $3
 }
 
 function carthage_bootstrap() {

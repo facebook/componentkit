@@ -29,7 +29,6 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
   }
   return componentBacktrace;
 }
-#pragma clang diagnostic pop
 
 static CKComponent *completeComponentScopeCollisionPair(CKComponent *collidingComponent,
                                                         id<NSObject> collidingScope,
@@ -171,3 +170,4 @@ BOOL CKComponentLayoutOrAncestorHasScopeConflict(const CKComponentLayout &layout
 {
   return [[layout.extra objectForKey:kCKComponentLayoutOrAncestorHasScopeConflictKey] boolValue];
 }
+#pragma clang diagnostic pop

@@ -531,6 +531,7 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
   YGNodeStyleSetBorder(node, edge, value.value());
 }
 
+#if CK_ASSERTIONS_ENABLED
 static BOOL flexboxSpacingIsSet(CKFlexboxSpacing spacing)
 {
   return
@@ -560,6 +561,7 @@ static BOOL floatIsSet(CGFloat val)
 {
   return fabs(val) > FLT_EPSILON;
 }
+#endif
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
