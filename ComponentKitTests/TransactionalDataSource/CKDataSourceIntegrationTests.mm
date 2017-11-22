@@ -26,6 +26,7 @@
 @end
 
 @implementation CKDataSourceIntegrationTestComponent
+
 + (instancetype)newWithIdentifier:(id)identifier
 {
   CKComponentScope scope(self, identifier);
@@ -78,8 +79,10 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 @interface CKDataSourceIntegrationTests : XCTestCase
 @property (strong) UICollectionViewController *collectionViewController;
 @property (strong) CKCollectionViewTransactionalDataSource *dataSource;
-@property (strong) NSMutableArray <CKComponent *> *components;
+@property (strong) NSMutableArray<CKComponent *> *components;
+@property (strong) NSMutableDictionary<NSString *, CKComponent *> *componentsDictionary;
 @property (strong) CKDataSourceIntegrationTestComponentController *componentController;
+@property (assign) CGSize itemSize;
 @end
 
 @implementation CKDataSourceIntegrationTests
@@ -88,10 +91,16 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 {
   [super setUp];
 
+  self.itemSize = [[UIScreen mainScreen] bounds].size;
+
+  UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
+  flowLayout.itemSize = self.itemSize;
+
   self.collectionViewController = [[UICollectionViewController alloc]
-                                   initWithCollectionViewLayout:[UICollectionViewFlowLayout new]];
+                                   initWithCollectionViewLayout:flowLayout];
 
   self.components = [NSMutableArray new];
+  self.componentsDictionary = [NSMutableDictionary dictionary];
   self.dataSource = [self generateDataSource:CKTestConfigDefault];
 
   [self.dataSource applyChangeset:
@@ -111,15 +120,15 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 - (CKCollectionViewTransactionalDataSource *)generateDataSource:(CKTestConfig)testConfig
 {
   CKDataSourceConfiguration *config = [[CKDataSourceConfiguration alloc]
-                                                             initWithComponentProvider:(id) self
-                                                             context:nil
-                                                             sizeRange:CKSizeRange({50, 50}, {50, 50})
-                                                             alwaysSendComponentUpdate:(testConfig == CKTestConfigAlwaysSendUpdates)
-                                                             forceAutorelease:NO
-                                                             pipelinePreparationEnabled:NO
-                                                             componentPredicates:{}
-                                                             componentControllerPredicates:{}
-                                                             ];
+                                       initWithComponentProvider:(id) self
+                                       context:nil
+                                       sizeRange:CKSizeRange(self.itemSize, self.itemSize)
+                                       alwaysSendComponentUpdate:(testConfig == CKTestConfigAlwaysSendUpdates)
+                                       forceAutorelease:NO
+                                       pipelinePreparationEnabled:NO
+                                       componentPredicates:{}
+                                       componentControllerPredicates:{}
+                                       ];
 
   return [[CKCollectionViewTransactionalDataSource alloc] initWithCollectionView:self.collectionViewController.collectionView
                                                      supplementaryViewDataSource:nil
@@ -128,8 +137,9 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 
 - (CKComponent *)componentForModel:(NSString*)model context:(id<NSObject>)context
 {
-  CKComponent *component = [CKDataSourceIntegrationTestComponent newWithIdentifier:@"TestComponent"];
+  CKComponent *component = [CKDataSourceIntegrationTestComponent newWithIdentifier:model];
   [self.components addObject:component];
+  self.componentsDictionary[model] = component;
   return component;
 }
 
@@ -149,31 +159,56 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                                               ]));
 }
 
-- (void)testUpdateModelAlwaysSendUpdateControllerCallbacks
+- (void)testUpdateModelAlwaysSendUpdateControllerCallbacks_Off
+{
+  self.dataSource = [self generateDataSource:CKTestConfigDefault];
+
+  [self.dataSource applyChangeset:
+   [[[[CKDataSourceChangesetBuilder new]
+      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+     withInsertedItems:@{ [NSIndexPath indexPathForItem:0 inSection:0] : @"0",
+                          [NSIndexPath indexPathForItem:1 inSection:0] : @"1",
+                          [NSIndexPath indexPathForItem:2 inSection:0] : @"2",
+                          }]
+    build] mode:CKUpdateModeSynchronous userInfo:nil];
+
+  [self.dataSource applyChangeset:
+   [[[CKDataSourceChangesetBuilder new]
+     withUpdatedItems:@{[NSIndexPath indexPathForItem:2 inSection:0] : @"2"}]
+    build] mode:CKUpdateModeSynchronous userInfo:nil];
+
+  CKDataSourceIntegrationTestComponentController *controller =
+  (CKDataSourceIntegrationTestComponentController*)self.componentsDictionary[@"2"].controller;
+
+  // We use 'CKTestConfigDefault' and item is out of the view port. It means it shoudn't get any update.
+  XCTAssertEqualObjects(controller.callbacks, (@[]));
+}
+
+- (void)testUpdateModelAlwaysSendUpdateControllerCallbacks_On
 {
   self.dataSource = [self generateDataSource:CKTestConfigAlwaysSendUpdates];
 
   [self.dataSource applyChangeset:
    [[[[CKDataSourceChangesetBuilder new]
       withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
-     withInsertedItems:@{ [NSIndexPath indexPathForItem:0 inSection:0] : @"" }]
+     withInsertedItems:@{ [NSIndexPath indexPathForItem:0 inSection:0] : @"0",
+                          [NSIndexPath indexPathForItem:1 inSection:0] : @"1",
+                          [NSIndexPath indexPathForItem:2 inSection:0] : @"2",
+                          }]
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
   [self.dataSource applyChangeset:
    [[[CKDataSourceChangesetBuilder new]
-     withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0] : @""}]
+     withUpdatedItems:@{[NSIndexPath indexPathForItem:2 inSection:0] : @"2"}]
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
-  CKDataSourceIntegrationTestComponentController * controller =
-    (CKDataSourceIntegrationTestComponentController*) self.components.lastObject.controller;
-  [controller.callbacks count];
+  CKDataSourceIntegrationTestComponentController *controller =
+  (CKDataSourceIntegrationTestComponentController*)self.componentsDictionary[@"2"].controller;
 
   XCTAssertEqualObjects(controller.callbacks, (@[
-                                                               NSStringFromSelector(@selector(willUpdateComponent)),
-                                                               NSStringFromSelector(@selector(willRemount)),
-                                                               NSStringFromSelector(@selector(didRemount)),
-                                                               NSStringFromSelector(@selector(didUpdateComponent))
-                                                               ]));
+                                                 NSStringFromSelector(@selector(willUpdateComponent)),
+                                                 NSStringFromSelector(@selector(didUpdateComponent))
+                                                 ]));
 }
 
 // This test checks that controller receives invalidateController callback when DataSource owning it
