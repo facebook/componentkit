@@ -32,7 +32,8 @@ function ci() {
     -sdk $3 \
     -destination "$4" \
     -configuration $5 \
-    $6
+    $6 \
+    -quiet
 }
 
 function ios_ci() {
