@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKScopedComponentController.h>
+#import <ComponentKit/CKStateUpdateMetadata.h>
 #import <ComponentKit/CKUpdateMode.h>
 
 @class CKComponent;
@@ -47,7 +48,7 @@
 
 /** Enqueues a state update to be applied to the scope with the given mode. */
 - (void)updateState:(id (^)(id))updateBlock
-           userInfo:(NSDictionary<NSString *, NSString *> *)userInfo
+           metadata:(const CKStateUpdateMetadata &)metadata
                mode:(CKUpdateMode)mode;
 
 /** Replaces the state for this handle. May only be called *before* resolution. */

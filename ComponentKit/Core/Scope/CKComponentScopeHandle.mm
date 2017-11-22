@@ -150,20 +150,22 @@
 #pragma mark - State
 
 - (void)updateState:(id (^)(id))updateBlock
-           userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
+           metadata:(const CKStateUpdateMetadata &)metadata
                mode:(CKUpdateMode)mode
 {
   CKAssertNotNil(updateBlock, @"The update block cannot be nil");
   if (![NSThread isMainThread]) {
+    // Passing a const& into a block is scary, make a local copy to be safe.
+    const auto metadataCopy = metadata;
     dispatch_async(dispatch_get_main_queue(), ^{
-      [self updateState:updateBlock userInfo:userInfo mode:mode];
+      [self updateState:updateBlock metadata:metadataCopy mode:mode];
     });
     return;
   }
   [_listener componentScopeHandle:self
                    rootIdentifier:_rootIdentifier
             didReceiveStateUpdate:updateBlock
-                         metadata:{.userInfo = userInfo}
+                         metadata:metadata
                              mode:mode];
 }
 

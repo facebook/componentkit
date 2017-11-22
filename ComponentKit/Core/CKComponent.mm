@@ -341,7 +341,7 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 {
   CKAssertNotNil(_scopeHandle, @"A component without state cannot update its state.");
   CKAssertNotNil(updateBlock, @"Cannot enqueue component state modification with a nil update block.");
-  [_scopeHandle updateState:updateBlock userInfo:nil mode:mode];
+  [_scopeHandle updateState:updateBlock metadata:{} mode:mode];
 }
 
 - (CKComponentController *)controller

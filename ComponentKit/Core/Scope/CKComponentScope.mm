@@ -58,7 +58,7 @@ CKComponentStateUpdater CKComponentScope::stateUpdater(void) const noexcept
   CKComponentScopeHandle *const scopeHandle = _scopeHandle;
   return ^(id (^stateUpdate)(id), NSDictionary<NSString *, id> *userInfo, CKUpdateMode mode) {
     [scopeHandle updateState:stateUpdate
-                    userInfo:userInfo
+                    metadata:{.userInfo = userInfo}
                         mode:mode];
   };
 }
