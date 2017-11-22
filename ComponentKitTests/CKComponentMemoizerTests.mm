@@ -42,6 +42,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 @property (nonatomic, assign) NSInteger number;
 
 @property (nonatomic, strong) CKTestMemoizedComponentState *state;
+@property (nonatomic, strong) CKComponent *child;
 
 @end
 
@@ -61,20 +62,23 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
                        number:(NSInteger)number
                    childBlock:(kCKMemoizationChildCreationBlock)childBlock
 {
-  auto key = CKMakeTupleMemoizationKey(string, number);
+  CKComponentScope scope(self);
+  CKTestMemoizedComponentState *state = scope.state();
+  // Memoization key intentionally excludes state, so we can test that state updates will still recreate component
+  const auto key = CKMakeTupleMemoizationKey(string, number);
   return
   CKMemoize(key, ^{
-    CKComponentScope scope(self);
-
+    const auto child = childBlock();
     CKTestMemoizedComponent *c =
     [super
      newWithView:{{[UIView class]}}
-     component:childBlock()];
+     component:child];
 
     if (c) {
       c->_string = [string copy];
       c->_number = number;
-      c->_state = scope.state();
+      c->_state = state;
+      c->_child = child;
       componentMemoizerTestsNumComponentCreation += 1;
     }
 
@@ -116,6 +120,11 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 {
   _pendingStateUpdates[handle].push_back(stateUpdate);
 }
+@end
+
+@interface ChildrenExposingComponent: CKCompositeComponent
+- (const std::vector<CKComponent *> &)children;
++ (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
 @end
 
 @implementation CKComponentMemoizerTests
@@ -603,7 +612,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   XCTAssert(componentMemoizerTestsNumComponentCreation == 5, @"Have only invalidated the root");
 }
 
-- (void)disabled_testWhenComponentHasPendingStateUpdateItIsRebuiltFromScratch
+- (void)testWhenComponentHasPendingStateUpdateItIsRebuiltFromScratchRegradlessOfMemoizationKey
 {
   const auto listener = [TestStateListener new];
   const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(listener);
@@ -621,10 +630,116 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result2;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
-    result2 = CKBuildComponent(scopeRoot, listener->_pendingStateUpdates, build);
+    result2 = CKBuildComponent(result.scopeRoot, listener->_pendingStateUpdates, build);
   }
 
   XCTAssertNotEqualObjects(result.component, result2.component, @"Should return a different component the second time");
+}
+
+- (void)testWhenSiblingComponentHasPendingStateUpdateComponentIsReused
+{
+  const auto listener = [TestStateListener new];
+  const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(listener);
+  __block CKTestMemoizedComponent *component;
+  __block CKTestMemoizedComponent *siblingComponent;
+  const auto build = ^{
+    return [CKTestMemoizedComponent
+            newWithString:@"Root"
+            number:1
+            childBlock:^{
+              component = [CKTestMemoizedComponent newWithString:@"A" number:2];
+              siblingComponent = [CKTestMemoizedComponent newWithString:@"B" number:3];
+              return [ChildrenExposingComponent
+                      newWithChildren:{
+                        component,
+                        siblingComponent,
+                      }];
+            }];
+  };
+  CKComponentMemoizerState *memoizerState;
+  {
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
+    CKBuildComponent(scopeRoot, {}, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+
+  const auto anyStateUpdate = ^(id oldState){ return oldState; };
+  [siblingComponent updateState:anyStateUpdate mode:CKUpdateModeAsynchronous];
+  const auto originalComponent = component;
+  CKBuildComponentResult result;
+  {
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
+    result = CKBuildComponent(scopeRoot, listener->_pendingStateUpdates, build);
+  }
+
+  const auto container = (ChildrenExposingComponent *)((CKTestMemoizedComponent *)result.component).child;
+  const auto actualComponent = container.children[0];
+  XCTAssertEqualObjects(actualComponent, originalComponent);
+}
+
+- (void)testWhenDescendantHasPendingStateUpdateComponentIsRebuiltFromScratchRegradlessOfMemoizationKey
+{
+  const auto listener = [TestStateListener new];
+  const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(listener);
+  __block CKTestMemoizedComponent *childComponent;
+  const auto build = ^{
+    return [CKTestMemoizedComponent
+            newWithString:@"Root"
+            number:1
+            childBlock:^{
+              childComponent = [CKTestMemoizedComponent newWithString:@"A" number:2];
+              return [ChildrenExposingComponent
+                      newWithChildren:{
+                        childComponent,
+                      }];
+            }];
+  };
+  CKComponentMemoizerState *memoizerState;
+  CKBuildComponentResult result;
+  {
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
+    result = CKBuildComponent(scopeRoot, {}, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+
+  const auto anyStateUpdate = ^(id oldState){ return oldState; };
+  [childComponent updateState:anyStateUpdate mode:CKUpdateModeAsynchronous];
+  CKBuildComponentResult result2;
+  {
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
+    result2 = CKBuildComponent(result.scopeRoot, listener->_pendingStateUpdates, build);
+  }
+
+  XCTAssertNotEqualObjects(result.component, result2.component, @"Should return a different component the second time");
+}
+
+@end
+
+@implementation ChildrenExposingComponent {
+  std::vector<CKComponent *> _children;
+}
+
++ (instancetype)newWithChildren:(std::vector<CKComponent *>)children
+{
+  const auto flexboxChildren = CK::map(children, [](const auto &c){
+    return CKFlexboxComponentChild { c };
+  });
+  auto c = [super
+            newWithComponent:
+            [CKFlexboxComponent
+             newWithView:{}
+             size:{}
+             style:{}
+             children:flexboxChildren]];
+  if (c != nil) {
+    c->_children = children;
+  }
+  return c;
+}
+
+- (const std::vector<CKComponent *> &)children
+{
+  return _children;
 }
 
 @end

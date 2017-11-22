@@ -14,6 +14,7 @@
 #import "CKComponentSubclass.h"
 #import "CKMacros.h"
 #import "CKInternalHelpers.h"
+#import "CKThreadLocalComponentScope.h"
 
 #include <map>
 
@@ -56,7 +57,33 @@ struct CKLayoutMemoizationKey {
   };
 };
 
+namespace CK {
+  namespace Collection {
+    template <typename Collection, typename Predicate>
+    bool contains(const Collection& collection, Predicate &&predicate)
+    {
+      return std::find_if(collection.begin(), collection.end(), predicate) != collection.end();
+    }
+  }
+}
 
+@interface CKComponentScopeHandle (ParentCheck)
+- (bool)isParentOfOrEqualTo:(CKComponentScopeHandle *)other;
+@end
+
+@implementation CKComponentScopeHandle (ParentCheck)
+- (bool)isParentOfOrEqualTo:(CKComponentScopeHandle *)other
+{
+  auto candidate = other;
+  while (candidate != nil) {
+    if (std::equal_to<CKComponentScopeHandle *>()(candidate, self)) {
+      return true;
+    }
+    candidate = candidate.parent;
+  }
+  return false;
+}
+@end
 
 @interface CKComponentMemoizerState : NSObject {
   @package
@@ -71,9 +98,29 @@ struct CKLayoutMemoizationKey {
 
 @implementation CKComponentMemoizerState
 
+static bool currentScopeIsAffectedByPendingStateUpdates()
+{
+  const auto threadLocalScope = CKThreadLocalComponentScope::currentScope();
+  if (threadLocalScope == nullptr) {
+    return false;
+  }
+
+  const auto currentScopeHandle = threadLocalScope->stack.top().frame.handle;
+  const auto updates = threadLocalScope->stateUpdates;
+  const auto currentScopeOrDescendantHasStateUpdate = CK::Collection::contains(updates, [currentScopeHandle](const auto &pair){
+    return [currentScopeHandle isParentOfOrEqualTo:pair.first];
+  });
+
+  return currentScopeOrDescendantHasStateUpdate;
+}
+
 - (CKComponent *)dequeueComponentForKey:(CKMemoizationKey)key
 {
-  auto it = componentCache_.find(key);
+  if (currentScopeIsAffectedByPendingStateUpdates()) {
+    return nil;
+  }
+
+  const auto it = componentCache_.find(key);
   if (it != componentCache_.end()) {
     CKComponent *c = it->second;
     // Remove this component from the cache, since you can't mount a component twice
