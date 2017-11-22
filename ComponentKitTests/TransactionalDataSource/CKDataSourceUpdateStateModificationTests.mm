@@ -57,7 +57,7 @@
 - (void)componentScopeHandle:(CKComponentScopeHandle *)handle
               rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
        didReceiveStateUpdate:(id (^)(id))stateUpdate
-                    userInfo:(NSDictionary<NSString *,NSString *> *)userInfo
+                    metadata:(const CKStateUpdateMetadata)metadata
                         mode:(CKUpdateMode)mode
 {
   _pendingStateUpdates[rootIdentifier][handle].push_back(stateUpdate);

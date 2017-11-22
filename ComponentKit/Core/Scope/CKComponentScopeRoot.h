@@ -16,6 +16,7 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKScopedComponentController.h>
+#import <ComponentKit/CKStateUpdateMetadata.h>
 #import <ComponentKit/CKUpdateMode.h>
 
 @protocol CKScopedComponent;
@@ -30,7 +31,7 @@
 - (void)componentScopeHandle:(CKComponentScopeHandle *)handle
               rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
        didReceiveStateUpdate:(id (^)(id))stateUpdate
-                    userInfo:(NSDictionary<NSString *, NSString *> *)userInfo
+                    metadata:(const CKStateUpdateMetadata)metadata
                         mode:(CKUpdateMode)mode;
 
 @end

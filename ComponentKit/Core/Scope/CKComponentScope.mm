@@ -56,7 +56,7 @@ CKComponentStateUpdater CKComponentScope::stateUpdater(void) const noexcept
 {
   // We must capture _scopeHandle in a local, since this may be destroyed by the time the block executes.
   CKComponentScopeHandle *const scopeHandle = _scopeHandle;
-  return ^(id (^stateUpdate)(id), NSDictionary<NSString *, NSString *> *userInfo, CKUpdateMode mode) {
+  return ^(id (^stateUpdate)(id), NSDictionary<NSString *, id> *userInfo, CKUpdateMode mode) {
     [scopeHandle updateState:stateUpdate
                     userInfo:userInfo
                         mode:mode];

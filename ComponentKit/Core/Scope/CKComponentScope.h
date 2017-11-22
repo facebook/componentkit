@@ -20,7 +20,7 @@ class CKThreadLocalComponentScope;
 @class CKComponentKeyStorage;
 
 typedef void (^CKComponentStateUpdater)(id (^updateBlock)(id),
-                                        NSDictionary<NSString *, NSString *> * userInfo,
+                                        NSDictionary<NSString *, id> * userInfo,
                                         CKUpdateMode mode);
 
 /**

@@ -163,7 +163,7 @@
   [_listener componentScopeHandle:self
                    rootIdentifier:_rootIdentifier
             didReceiveStateUpdate:updateBlock
-                         userInfo:userInfo
+                         metadata:{.userInfo = userInfo}
                              mode:mode];
 }
 
