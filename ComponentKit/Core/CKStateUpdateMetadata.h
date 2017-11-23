@@ -25,11 +25,13 @@ struct StringEquality {
 };
 
 typedef id(*CKUserInfoMergeFunc)(id, id);
+using CKUserInfoMergeMap = std::unordered_map<NSString *, CKUserInfoMergeFunc, StringHasher, StringEquality>;
+
 struct CKStateUpdateMetadata {
   // Info provided by the user that will be associated with the state update.
   NSDictionary<NSString *, id> *userInfo;
 
   // In the event that two updates for the same component are processed at once,
   // this map allows you to describe how the map should merge values for the same key.
-  std::unordered_map<NSString *, CKUserInfoMergeFunc, StringHasher, StringEquality> userInfoMergeMap;
+  CKUserInfoMergeMap userInfoMergeMap;
 };
