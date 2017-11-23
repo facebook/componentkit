@@ -156,6 +156,50 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   XCTAssertEqualObjects(result.component, result2.component, @"Should return the original component the second time");
 }
 
+- (void)disabled_testMemoizationHitsCarryOverComponentState
+{
+  const auto listener = [TestStateListener new];
+  const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(listener);
+  __block CKTestMemoizedComponent *childComponent;
+  const auto build = ^{
+    return [CKTestMemoizedComponent
+            newWithString:@"Root"
+            number:1
+            childBlock:^{
+              childComponent = [CKTestMemoizedComponent newWithString:@"A" number:2];
+              return [ChildrenExposingComponent
+                      newWithChildren:{
+                        childComponent,
+                      }];
+            }];
+  };
+  CKComponentMemoizerState *memoizerState;
+  CKBuildComponentResult result;
+  {
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
+    result = CKBuildComponent(scopeRoot, {}, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+  // Mutate state directly instead of going through updateState:mode: for conciseness
+  childComponent.state.computeCount = 1;
+  CKBuildComponentResult result2;
+  {
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
+    result2 = CKBuildComponent(result.scopeRoot, {}, build);
+    XCTAssertEqualObjects(result2.component, result.component);
+    // Scope (and therefore state) are lost for child component at this point because of the memoization hit
+    // for the root component
+  }
+
+  {
+    // Don't carry over memoizer state to force rebuilding the whole component tree
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
+    CKBuildComponent(result2.scopeRoot, {}, build);
+  }
+
+  XCTAssertEqual(childComponent.state.computeCount, 1);
+}
+
 - (void)testThatMemoizableComponentsAreMemoizedEvenWithLayoutCalled
 {
   CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
