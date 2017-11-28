@@ -62,7 +62,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
                        number:(NSInteger)number
                    childBlock:(kCKMemoizationChildCreationBlock)childBlock
 {
-  CKComponentScope scope(self);
+  CKComponentScope scope(self, @(number));
   CKTestMemoizedComponentState *state = scope.state();
   // Memoization key intentionally excludes state, so we can test that state updates will still recreate component
   const auto key = CKMakeTupleMemoizationKey(string, number);
@@ -125,6 +125,11 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 @interface ChildrenExposingComponent: CKCompositeComponent
 - (const std::vector<CKComponent *> &)children;
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
+@end
+
+@interface StatelessMemoizedComponent: CKCompositeComponent
+@property (nonatomic, copy, readonly) NSString *string;
++ (instancetype)newWithString:(NSString *)string;
 @end
 
 @implementation CKComponentMemoizerTests
@@ -700,23 +705,24 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
                       }];
             }];
   };
+  CKBuildComponentResult result1;
   CKComponentMemoizerState *memoizerState;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    CKBuildComponent(scopeRoot, {}, build);
+    result1 = CKBuildComponent(scopeRoot, {}, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
   const auto anyStateUpdate = ^(id oldState){ return oldState; };
   [siblingComponent updateState:anyStateUpdate mode:CKUpdateModeAsynchronous];
   const auto originalComponent = component;
-  CKBuildComponentResult result;
+  CKBuildComponentResult result2;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
-    result = CKBuildComponent(scopeRoot, listener->_pendingStateUpdates, build);
+    result2 = CKBuildComponent(result1.scopeRoot, listener->_pendingStateUpdates, build);
   }
 
-  const auto container = (ChildrenExposingComponent *)((CKTestMemoizedComponent *)result.component).child;
+  const auto container = (ChildrenExposingComponent *)((CKTestMemoizedComponent *)result2.component).child;
   const auto actualComponent = container.children[0];
   XCTAssertEqualObjects(actualComponent, originalComponent);
 }
@@ -757,6 +763,48 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   XCTAssertNotEqualObjects(result.component, result2.component, @"Should return a different component the second time");
 }
 
+- (void)testWhenSiblingComponentHasPendingStateUpdateStatelessComponentIsNotReused
+{
+  const auto listener = [TestStateListener new];
+  const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(listener);
+  __block StatelessMemoizedComponent *statelessComponent;
+  __block CKTestMemoizedComponent *siblingComponent;
+  const auto build = ^{
+    return [CKTestMemoizedComponent
+            newWithString:@"Root"
+            number:1
+            childBlock:^{
+              statelessComponent = [StatelessMemoizedComponent newWithString:@"A"];
+              siblingComponent = [CKTestMemoizedComponent newWithString:@"B" number:3];
+              return [ChildrenExposingComponent
+                      newWithChildren:{
+                        statelessComponent,
+                        siblingComponent,
+                      }];
+            }];
+  };
+  CKBuildComponentResult result1;
+  CKComponentMemoizerState *memoizerState;
+  {
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
+    result1 = CKBuildComponent(scopeRoot, {}, build);
+    memoizerState = memoizer.nextMemoizerState();
+  }
+
+  const auto anyStateUpdate = ^(id oldState){ return oldState; };
+  [siblingComponent updateState:anyStateUpdate mode:CKUpdateModeAsynchronous];
+  const auto originalStatelessComponent = statelessComponent;
+  CKBuildComponentResult result2;
+  {
+    CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
+    result2 = CKBuildComponent(result1.scopeRoot, listener->_pendingStateUpdates, build);
+  }
+
+  const auto container = (ChildrenExposingComponent *)((CKTestMemoizedComponent *)result2.component).child;
+  const auto actualStatelessComponent = container.children[0];
+  XCTAssertNotEqualObjects(actualStatelessComponent, originalStatelessComponent);
+}
+
 @end
 
 @implementation ChildrenExposingComponent {
@@ -787,3 +835,22 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 }
 
 @end
+
+@implementation StatelessMemoizedComponent
++ (instancetype)newWithString:(NSString *)string
+{
+  const auto key = CKMakeTupleMemoizationKey(string);
+  return CKMemoize(key, ^{
+    const auto c =
+    [StatelessMemoizedComponent
+     newWithComponent:[CKComponent
+                       newWithView:{}
+                       size:{}]];
+    if (c != nil) {
+      c->_string = string;
+    }
+    return c;
+  });
+}
+@end
+

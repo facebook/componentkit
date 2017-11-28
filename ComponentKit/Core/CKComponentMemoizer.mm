@@ -116,13 +116,13 @@ static bool currentScopeIsAffectedByPendingStateUpdates()
 
 - (CKComponent *)dequeueComponentForKey:(CKMemoizationKey)key
 {
-  if (currentScopeIsAffectedByPendingStateUpdates()) {
-    return nil;
-  }
-
   const auto it = componentCache_.find(key);
   if (it != componentCache_.end()) {
     CKComponent *c = it->second;
+    const auto componentHasScope = (c.scopeFrameToken != nil);
+    if (!componentHasScope || currentScopeIsAffectedByPendingStateUpdates()) {
+      return nil;
+    }
     // Remove this component from the cache, since you can't mount a component twice
     componentCache_.erase(it);
     return c;
