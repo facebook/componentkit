@@ -122,12 +122,12 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 }
 @end
 
-@interface ChildrenExposingComponent: CKCompositeComponent
+@interface CKTestChildrenExposingComponent: CKCompositeComponent
 - (const std::vector<CKComponent *> &)children;
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
 @end
 
-@interface StatelessMemoizedComponent: CKCompositeComponent
+@interface CKTestStatelessMemoizedComponent: CKCompositeComponent
 @property (nonatomic, copy, readonly) NSString *string;
 + (instancetype)newWithString:(NSString *)string;
 @end
@@ -136,7 +136,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 
 - (void)testThatMemoizableComponentsAreMemoized
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
@@ -148,14 +147,14 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   {
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
   CKBuildComponentResult result2;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
-    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result2 = CKBuildComponent(result.scopeRoot, pendingStateUpdates, build);
   }
 
   XCTAssertEqualObjects(result.component, result2.component, @"Should return the original component the second time");
@@ -164,7 +163,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 - (void)testMemoizationHitsCarryOverComponentState
 {
   const auto listener = [TestStateListener new];
-  const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(listener);
   __block CKTestMemoizedComponent *childComponent;
   const auto build = ^{
     return [CKTestMemoizedComponent
@@ -172,7 +170,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
             number:1
             childBlock:^{
               childComponent = [CKTestMemoizedComponent newWithString:@"A" number:2];
-              return [ChildrenExposingComponent
+              return [CKTestChildrenExposingComponent
                       newWithChildren:{
                         childComponent,
                       }];
@@ -182,7 +180,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(scopeRoot, {}, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, build);
     memoizerState = memoizer.nextMemoizerState();
   }
   // Mutate state directly instead of going through updateState:mode: for conciseness
@@ -205,7 +203,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 
 - (void)testThatMemoizableComponentsAreMemoizedEvenWithLayoutCalled
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
@@ -216,7 +213,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -229,7 +226,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result2;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
-    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result2 = CKBuildComponent(result.scopeRoot, pendingStateUpdates, build);
   }
 
   XCTAssertEqualObjects(result.component, result2.component, @"Should return the original component the second time");
@@ -237,7 +234,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 
 - (void)testThatMemoizableComponentsAreMemoizedWithMemoizingComponentAsParent
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   __block CKComponent *lastCreatedComponent = nil;
@@ -253,13 +249,12 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
               return newResult;
             }];
   };
-  CKBuildComponentResult result = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+  CKBuildComponentResult result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
   CKBuildComponent(result.scopeRoot, pendingStateUpdates, build);
 }
 
 - (void)testThatWhenMultipleComponentsAreMutuallyMemoizableTheyAreStillDistict
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
@@ -283,7 +278,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
     CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(nil);
 
-    result1 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
     layout1 = [result1.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
     componentMemoizerState = memoizer.nextMemoizerState();
     layoutMemoizerState = layoutMemoizer.nextMemoizerState();
@@ -296,7 +291,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(componentMemoizerState);
     CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(layoutMemoizerState);
 
-    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result2 = CKBuildComponent(result1.scopeRoot, pendingStateUpdates, build);
     layout2 = [result2.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
   }
 
@@ -325,7 +320,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 
 - (void)testComputeLayoutOnlyCalledOnceWhenEqualInputs
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
@@ -339,7 +333,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> componentMemoizer(nil);
     CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(nil);
-    result1 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
     CKComponentLayout layout = [result1.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
 
     componentMemoizerState = componentMemoizer.nextMemoizerState();
@@ -350,7 +344,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(componentMemoizerState);
     CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(layoutMemoizerState);
-    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result2 = CKBuildComponent(result1.scopeRoot, pendingStateUpdates, build);
     CKComponentLayout layout = [result2.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
   }
 
@@ -363,7 +357,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 
 - (void)testComputeLayoutCalledTwiceWhenNotEqualInputs
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
@@ -377,7 +370,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
     CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(nil);
-    result1 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
     CKComponentLayout layout = [result1.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
 
     componentMemoizerState = memoizer.nextMemoizerState();
@@ -388,7 +381,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(componentMemoizerState);
     CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(layoutMemoizerState);
-    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result2 = CKBuildComponent(result1.scopeRoot, pendingStateUpdates, build);
     CKComponentLayout layout = [result2.component layoutThatFits:{CGSizeMake(100, 100), CGSizeMake(100, 100)}
                                                       parentSize:CGSizeMake(100, 100)];
   }
@@ -402,7 +395,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 
 - (void)testComputeLayoutOnlyCalledOnceWhenEqualInputsAndWeSplitCreationAndLayout
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   auto build = ^{
@@ -413,7 +405,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result1;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result1 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -427,7 +419,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result2;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
-    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result2 = CKBuildComponent(result1.scopeRoot, pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -446,7 +438,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 
 - (void)testComponentMemoizationKeysCompareObjCObjectsWithIsEqual
 {
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   // Make two objects here that are mutable copies
@@ -460,14 +451,14 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   {
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
   CKBuildComponentResult result2;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
-    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result2 = CKBuildComponent(result.scopeRoot, pendingStateUpdates, build);
   }
 
   XCTAssertEqualObjects(result.component, result2.component, @"Should return the original component the second time");
@@ -477,7 +468,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 {
   componentMemoizerTestsNumComponentCreation = 0;
 
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   __block NSInteger number = 0;
@@ -504,13 +494,13 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   {
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
   CKBuildComponentResult result2;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
-    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result2 = CKBuildComponent(result.scopeRoot, pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -522,7 +512,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result3;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
-    result3 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result3 = CKBuildComponent(result2.scopeRoot, pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -534,7 +524,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 {
   componentMemoizerTestsNumComponentCreation = 0;
 
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   __block NSInteger number = 0;
@@ -576,7 +565,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   {
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
   XCTAssert(componentMemoizerTestsNumComponentCreation == 4, @"Should have initialized only four times");
@@ -587,7 +576,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result2;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
-    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result2 = CKBuildComponent(result.scopeRoot, pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
   XCTAssert(componentMemoizerTestsNumComponentCreation == 5, @"Should have initialized only five times");
@@ -596,7 +585,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result3;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
-    result3 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result3 = CKBuildComponent(result2.scopeRoot, pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
   XCTAssert(componentMemoizerTestsNumComponentCreation == 7, @"Should have initialized seven times, again for root and C");
@@ -606,7 +595,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 {
   componentMemoizerTestsNumComponentCreation = 0;
 
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil);
   CKComponentStateUpdateMap pendingStateUpdates;
 
   __block NSInteger number = 0;
@@ -633,7 +621,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   {
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
   XCTAssert(componentMemoizerTestsNumComponentCreation == 4, @"Should have initialized only four times");
@@ -642,7 +630,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result2;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
-    result2 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result2 = CKBuildComponent(result.scopeRoot, pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
   XCTAssert(componentMemoizerTestsNumComponentCreation == 4, @"Should have initialized only four times");
@@ -652,7 +640,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result3;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
-    result3 = CKBuildComponent(scopeRoot, pendingStateUpdates, build);
+    result3 = CKBuildComponent(result2.scopeRoot, pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
   XCTAssertNotEqual(result.component, result3.component, @"Components should not be equal");
@@ -662,13 +650,12 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 - (void)testWhenComponentHasPendingStateUpdateItIsRebuiltFromScratchRegradlessOfMemoizationKey
 {
   const auto listener = [TestStateListener new];
-  const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(listener);
   const auto build = ^{ return [CKTestMemoizedComponent newWithString:@"ABCD" number:123]; };
   CKComponentMemoizerState *memoizerState;
   CKBuildComponentResult result;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(scopeRoot, {}, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -686,7 +673,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 - (void)testWhenSiblingComponentHasPendingStateUpdateComponentIsReused
 {
   const auto listener = [TestStateListener new];
-  const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(listener);
   __block CKTestMemoizedComponent *component;
   __block CKTestMemoizedComponent *siblingComponent;
   const auto build = ^{
@@ -696,7 +682,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
             childBlock:^{
               component = [CKTestMemoizedComponent newWithString:@"A" number:2];
               siblingComponent = [CKTestMemoizedComponent newWithString:@"B" number:3];
-              return [ChildrenExposingComponent
+              return [CKTestChildrenExposingComponent
                       newWithChildren:{
                         component,
                         siblingComponent,
@@ -707,7 +693,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKComponentMemoizerState *memoizerState;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result1 = CKBuildComponent(scopeRoot, {}, build);
+    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -720,7 +706,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     result2 = CKBuildComponent(result1.scopeRoot, listener->_pendingStateUpdates, build);
   }
 
-  const auto container = (ChildrenExposingComponent *)((CKTestMemoizedComponent *)result2.component).child;
+  const auto container = (CKTestChildrenExposingComponent *)((CKTestMemoizedComponent *)result2.component).child;
   const auto actualComponent = container.children[0];
   XCTAssertEqualObjects(actualComponent, originalComponent);
 }
@@ -728,7 +714,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 - (void)testWhenDescendantHasPendingStateUpdateComponentIsRebuiltFromScratchRegradlessOfMemoizationKey
 {
   const auto listener = [TestStateListener new];
-  const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(listener);
   __block CKTestMemoizedComponent *childComponent;
   const auto build = ^{
     return [CKTestMemoizedComponent
@@ -736,7 +721,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
             number:1
             childBlock:^{
               childComponent = [CKTestMemoizedComponent newWithString:@"A" number:2];
-              return [ChildrenExposingComponent
+              return [CKTestChildrenExposingComponent
                       newWithChildren:{
                         childComponent,
                       }];
@@ -746,7 +731,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(scopeRoot, {}, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -764,17 +749,16 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 - (void)testWhenSiblingComponentHasPendingStateUpdateStatelessComponentIsNotReused
 {
   const auto listener = [TestStateListener new];
-  const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(listener);
-  __block StatelessMemoizedComponent *statelessComponent;
+  __block CKTestStatelessMemoizedComponent *statelessComponent;
   __block CKTestMemoizedComponent *siblingComponent;
   const auto build = ^{
     return [CKTestMemoizedComponent
             newWithString:@"Root"
             number:1
             childBlock:^{
-              statelessComponent = [StatelessMemoizedComponent newWithString:@"A"];
+              statelessComponent = [CKTestStatelessMemoizedComponent newWithString:@"A"];
               siblingComponent = [CKTestMemoizedComponent newWithString:@"B" number:3];
-              return [ChildrenExposingComponent
+              return [CKTestChildrenExposingComponent
                       newWithChildren:{
                         statelessComponent,
                         siblingComponent,
@@ -785,7 +769,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKComponentMemoizerState *memoizerState;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result1 = CKBuildComponent(scopeRoot, {}, build);
+    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -798,14 +782,14 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     result2 = CKBuildComponent(result1.scopeRoot, listener->_pendingStateUpdates, build);
   }
 
-  const auto container = (ChildrenExposingComponent *)((CKTestMemoizedComponent *)result2.component).child;
+  const auto container = (CKTestChildrenExposingComponent *)((CKTestMemoizedComponent *)result2.component).child;
   const auto actualStatelessComponent = container.children[0];
   XCTAssertNotEqualObjects(actualStatelessComponent, originalStatelessComponent);
 }
 
 @end
 
-@implementation ChildrenExposingComponent {
+@implementation CKTestChildrenExposingComponent {
   std::vector<CKComponent *> _children;
 }
 
@@ -834,13 +818,13 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
 
 @end
 
-@implementation StatelessMemoizedComponent
+@implementation CKTestStatelessMemoizedComponent
 + (instancetype)newWithString:(NSString *)string
 {
   const auto key = CKMakeTupleMemoizationKey(string);
   return CKMemoize(key, ^{
     const auto c =
-    [StatelessMemoizedComponent
+    [CKTestStatelessMemoizedComponent
      newWithComponent:[CKComponent
                        newWithView:{}
                        size:{}]];
