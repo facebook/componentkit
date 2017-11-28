@@ -35,6 +35,7 @@ struct CKComponentScopeFramePair {
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
 - (instancetype)initWithHandle:(CKComponentScopeHandle *)handle;
+- (void)copyChildrenFrom:(CKComponentScopeFrame *)other;
 
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
 

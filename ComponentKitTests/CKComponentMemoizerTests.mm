@@ -161,7 +161,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   XCTAssertEqualObjects(result.component, result2.component, @"Should return the original component the second time");
 }
 
-- (void)disabled_testMemoizationHitsCarryOverComponentState
+- (void)testMemoizationHitsCarryOverComponentState
 {
   const auto listener = [TestStateListener new];
   const auto scopeRoot = CKComponentScopeRootWithDefaultPredicates(listener);
@@ -192,8 +192,6 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(memoizerState);
     result2 = CKBuildComponent(result.scopeRoot, {}, build);
     XCTAssertEqualObjects(result2.component, result.component);
-    // Scope (and therefore state) are lost for child component at this point because of the memoization hit
-    // for the root component
   }
 
   {

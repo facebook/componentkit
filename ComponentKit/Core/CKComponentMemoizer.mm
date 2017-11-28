@@ -125,6 +125,11 @@ static bool currentScopeIsAffectedByPendingStateUpdates()
     }
     // Remove this component from the cache, since you can't mount a component twice
     componentCache_.erase(it);
+    const auto threadLocalScope = CKThreadLocalComponentScope::currentScope();
+    if (threadLocalScope != nullptr) {
+      const auto currentFramePair = threadLocalScope->stack.top();
+      [currentFramePair.frame copyChildrenFrom:currentFramePair.equivalentPreviousFrame];
+    }
     return c;
   }
   return nil;

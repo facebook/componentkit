@@ -194,4 +194,12 @@ namespace std {
   return self;
 }
 
+- (void)copyChildrenFrom:(CKComponentScopeFrame *)other
+{
+  if (other == nil) {
+    return;
+  }
+  _children = other->_children;
+}
+
 @end
