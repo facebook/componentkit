@@ -67,7 +67,7 @@
 
 @property (nonatomic, strong, readonly) id state;
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
-
+@property (nonatomic, readonly, weak) id<CKScopedComponent> acquiredComponent;
 @property (nonatomic, weak, readonly) CKComponentScopeHandle *parent;
 
 /**

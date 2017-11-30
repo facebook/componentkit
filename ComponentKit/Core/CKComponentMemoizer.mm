@@ -11,6 +11,7 @@
 #import "CKComponentMemoizer.h"
 
 #import "CKComponentInternal.h"
+#import "CKComponentScopeFrameInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKMacros.h"
 #import "CKInternalHelpers.h"
@@ -129,10 +130,23 @@ static bool currentScopeIsAffectedByPendingStateUpdates()
     if (threadLocalScope != nullptr) {
       const auto currentFramePair = threadLocalScope->stack.top();
       [currentFramePair.frame copyChildrenFrom:currentFramePair.equivalentPreviousFrame];
+      // Use previous scope tree to gather children of the vended component and move them to
+      // the next memoizer state
+      [self copyChildComponentsToNextMemoizerStateFrom:currentFramePair.equivalentPreviousFrame];
     }
     return c;
   }
   return nil;
+}
+
+- (void)copyChildComponentsToNextMemoizerStateFrom:(CKComponentScopeFrame *)frame
+{
+  const auto implicitlyMemoizedChildren = [frame allAcquiredComponentsInDescendants];
+  for (const auto &pair : componentCache_) {
+    if (CK::Collection::contains(implicitlyMemoizedChildren, [pair](const auto &c){ return c == pair.second; })) {
+      [self enqueueComponent:pair.second forKey:pair.first];
+    }
+  }
 }
 
 - (CKComponentMemoizerState *)next

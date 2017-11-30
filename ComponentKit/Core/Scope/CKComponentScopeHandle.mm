@@ -25,10 +25,6 @@
 - (void)addHandleToChain:(CKComponentScopeHandle *)component;
 @end
 
-@interface CKComponentScopeHandle ()
-@property (nonatomic, readonly, weak) id<CKScopedComponent> acquiredComponent;
-@end
-
 @implementation CKComponentScopeHandle
 {
   id<CKComponentStateListener> __weak _listener;
