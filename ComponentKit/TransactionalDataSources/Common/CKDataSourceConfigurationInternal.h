@@ -22,7 +22,6 @@
  @param sizeRange Used for the root layout.
  @param alwaysSendComponentUpdate If set to YES, CKDataSource with this config will send component update events
                                   to component controllers even when they aren't in viewport
- @param forceAutorelease If set to YES, CKDataSource will aggressively autorelease unused objects
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
@@ -32,13 +31,11 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
                 alwaysSendComponentUpdate:(BOOL)alwaysSendComponentUpdate
-                         forceAutorelease:(BOOL)forceAutorelease
                pipelinePreparationEnabled:(BOOL)pipelinePreparationEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
 
 @property (nonatomic, assign, readonly) BOOL alwaysSendComponentUpdate;
-@property (nonatomic, assign, readonly) BOOL forceAutorelease;
 @property (nonatomic, assign, readonly) BOOL pipelinePreparationEnabled;
 
 - (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;

@@ -29,7 +29,6 @@
                                  context:context
                                sizeRange:sizeRange
                alwaysSendComponentUpdate:NO
-                        forceAutorelease:NO
               pipelinePreparationEnabled:NO
                      componentPredicates:{}
            componentControllerPredicates:{}];
@@ -39,7 +38,6 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
                 alwaysSendComponentUpdate:(BOOL)alwaysSendComponentUpdate
-                         forceAutorelease:(BOOL)forceAutorelease
                pipelinePreparationEnabled:(BOOL)pipelinePreparationEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
@@ -52,7 +50,6 @@
     _componentControllerPredicates = componentControllerPredicates;
     _pipelinePreparationEnabled = pipelinePreparationEnabled;
     _alwaysSendComponentUpdate = alwaysSendComponentUpdate;
-    _forceAutorelease = forceAutorelease;
   }
   return self;
 }

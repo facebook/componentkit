@@ -58,7 +58,6 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
   CK::Mutex _pendingAsynchronousModificationsMutex;
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
-  BOOL _forceAutorelease;
   BOOL _pipelinePreparationEnabled;
 }
 @end
@@ -73,7 +72,6 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
     _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
     _pendingAsynchronousModifications = [NSMutableArray array];
-    _forceAutorelease = configuration.forceAutorelease;
     [CKComponentDebugController registerReflowListener:self];
     
     _pipelinePreparationEnabled = configuration.pipelinePreparationEnabled;
@@ -251,48 +249,38 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   return modifications;
 }
 
-- (void)_synchronouslyApplyChange:(CKDataSourceChange *)appliedChange
+- (void)_synchronouslyApplyChange:(CKDataSourceChange *)change
 {
   CKAssertMainThread();
-  void (^ applyChangeBlock)(CKDataSourceChange *) = ^(CKDataSourceChange *change) {
-    CKDataSourceState *previousState = _state;
-    _state = [change state];
+  CKDataSourceState *previousState = _state;
+  _state = [change state];
 
-    for (NSIndexPath *removedIndex in [[change appliedChanges] removedIndexPaths]) {
-      CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
-      CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
+  for (NSIndexPath *removedIndex in [[change appliedChanges] removedIndexPaths]) {
+    CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
+    CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
+  }
+
+  std::vector<CKComponent *> updatedComponents;
+  if ([_state.configuration alwaysSendComponentUpdate]) {
+    NSDictionary *finalIndexPathsForUpdatedItems = [[change appliedChanges] finalUpdatedIndexPaths];
+    for (NSIndexPath *updatedIndex in finalIndexPathsForUpdatedItems) {
+      CKDataSourceItem *item = [_state objectAtIndexPath:updatedIndex];
+      getComponentsFromLayout(item.layout, updatedComponents);
     }
 
-    std::vector<CKComponent *> updatedComponents;
-    if ([_state.configuration alwaysSendComponentUpdate]) {
-      NSDictionary *finalIndexPathsForUpdatedItems = [[change appliedChanges] finalUpdatedIndexPaths];
-      for (NSIndexPath *updatedIndex in finalIndexPathsForUpdatedItems) {
-        CKDataSourceItem *item = [_state objectAtIndexPath:updatedIndex];
-        getComponentsFromLayout(item.layout, updatedComponents);
-      }
-
-      for (auto updatedComponent: updatedComponents) {
-        [updatedComponent.controller willStartUpdateToComponent:updatedComponent];
-      }
+    for (auto updatedComponent: updatedComponents) {
+      [updatedComponent.controller willStartUpdateToComponent:updatedComponent];
     }
+  }
 
-    [_announcer transactionalComponentDataSource:self
-                          didModifyPreviousState:previousState
-                               byApplyingChanges:[change appliedChanges]];
+  [_announcer transactionalComponentDataSource:self
+                        didModifyPreviousState:previousState
+                             byApplyingChanges:[change appliedChanges]];
 
-    if ([_state.configuration alwaysSendComponentUpdate]) {
-      for (auto updatedComponent: updatedComponents) {
-        [updatedComponent.controller didFinishComponentUpdate];
-      }
+  if ([_state.configuration alwaysSendComponentUpdate]) {
+    for (auto updatedComponent: updatedComponents) {
+      [updatedComponent.controller didFinishComponentUpdate];
     }
-  };
-
-  if (_forceAutorelease) {
-    @autoreleasepool {
-      applyChangeBlock(appliedChange);
-    }
-  } else {
-    applyChangeBlock(appliedChange);
   }
 }
 
