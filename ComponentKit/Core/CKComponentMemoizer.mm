@@ -277,7 +277,8 @@ id CKMemoize(CKMemoizationKey memoizationKey, id (^block)(void))
     component = block();
   }
   CKCAssertNotNil(impl, @"There is no current memoizer, cannot memoize component generation. You probably forgot to add a CKMemoizingComponent in the hierarchy above %@", component);
-  if (component) {
+  const auto componentHasScope = (component.scopeFrameToken != nil);
+  if (component && componentHasScope) {
     // Add it to the cache
     [impl enqueueComponent:component forKey:memoizationKey];
   }
