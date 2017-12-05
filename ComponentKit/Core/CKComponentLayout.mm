@@ -19,7 +19,6 @@
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKDetectComponentScopeCollisions.h"
-#import "CKDataSourceItemInternal.h"
 
 using namespace CK::Component;
 
