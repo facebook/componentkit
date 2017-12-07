@@ -13,6 +13,9 @@
 #import <array>
 
 #import <ComponentKit/CKAssert.h>
+#if !TARGET_OS_TV
+#import "yoga/Yoga.h"
+#endif
 
 #import "CKInternalHelpers.h"
 #import "CKComponentSubclass.h"
