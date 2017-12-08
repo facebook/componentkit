@@ -194,6 +194,10 @@ public:
   friend void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context);
 };
 
+BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector,
+                                              NSMethodSignature *signature,
+                                              const std::vector<const char *> &typeEncodings);
+
 typedef CKAction<> CKUntypedComponentAction;
 
 /** Explicit instantiation of our most commonly-used templates to avoid bloat in callsites. */

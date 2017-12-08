@@ -288,30 +288,72 @@ std::unordered_map<UIControlEvents, std::vector<CKAction<UIEvent *>>> _CKCompone
 #endif
 }
 
-#if DEBUG
-static void checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSignature *signature, const std::vector<const char *> &typeEncodings)
+BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSignature *signature, const std::vector<const char *> &typeEncodings)
 {
   if (selector == NULL) {
-    return;
+    return NO;
+  }
+  
+  if (typeEncodings.size() + 3 < signature.numberOfArguments) {
+    CKCFailAssert(@"Expected action method %@ to take less than %llu arguments, but it supports %llu", NSStringFromSelector(selector), (unsigned long long)typeEncodings.size(), (unsigned long long)signature.numberOfArguments - 3);
+    return NO;
   }
 
-  CKCAssert(typeEncodings.size() + 3 >= signature.numberOfArguments, @"Expected action method %@ to take less than %llu arguments, but it suppoorts %llu", NSStringFromSelector(selector), (unsigned long long)typeEncodings.size(), (unsigned long long)signature.numberOfArguments - 3);
-
-  CKCAssert(signature.methodReturnLength == 0, @"Component action methods should not have any return value. Any objects returned from this method will be leaked.");
+  if (signature.methodReturnLength != 0) {
+    CKCFailAssert(@"Component action methods should not have any return value. Any objects returned from this method will be leaked.");
+    return NO;
+  }
 
   for (int i = 0; i + 3 < signature.numberOfArguments && i < typeEncodings.size(); i++) {
     const char *methodEncoding = [signature getArgumentTypeAtIndex:i + 3];
     const char *typeEncoding = typeEncodings[i];
 
-    CKCAssert(methodEncoding == NULL || typeEncoding == NULL || strcmp(methodEncoding, typeEncoding) == 0, @"Implementation of %@ does not match expected types.\nExpected type %s, got %s", NSStringFromSelector(selector), typeEncoding, methodEncoding);
+    // Type Encoding: https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
+
+    // ref types get '^' prefixed to them. Since C++ would implicitly
+    // use pass-by-ref or pass-by-value based the called function, we
+    // treat a mismatch between ref & copy as valid.
+    if (*methodEncoding == '^') {
+      methodEncoding++;
+    }
+    if (*typeEncoding == '^') {
+      typeEncoding++;
+    }
+
+    BOOL doEncodingsMatch = NO;
+    if (methodEncoding == NULL || typeEncoding == NULL) {
+      // nothing to compare
+      doEncodingsMatch = YES;
+    } else if (*methodEncoding == '{' && *typeEncoding == '{') {
+      // types are structures. Due to an issue with c++ types not always being
+      // encoded the same even thought they are basically the same, we only
+      // compare the structure name. (see T23131874)
+      const char *nameEnd = strchr(methodEncoding, '=');
+      const size_t nameSize = nameEnd - methodEncoding;
+      doEncodingsMatch =
+      (nameEnd
+       && strlen(typeEncoding) >= nameSize
+       && strncmp(methodEncoding, typeEncoding, nameSize) == 0);
+    } else {
+      doEncodingsMatch = strcmp(methodEncoding, typeEncoding) == 0;
+    }
+
+    if (!doEncodingsMatch) {
+      CKCFailAssert(@"Implementation of %@ does not match expected types.\nExpected type %s, got %s", NSStringFromSelector(selector), typeEncoding, methodEncoding);
+      return NO;
+    }
   }
-    
+
   if (signature.numberOfArguments >= 3) {
     const char *methodEncoding = [signature getArgumentTypeAtIndex:2];
-    CKCAssert(methodEncoding == NULL || strcmp(methodEncoding, "@") == 0, @"Implementation of %@ does not match expected types.\nExpected type @, got %s for first parameter", NSStringFromSelector(selector), methodEncoding);
+    if (methodEncoding != NULL && strcmp(methodEncoding, "@") != 0) {
+      CKCFailAssert(@"Sender of %@ is not an object.\nGot %s instead. Please add the component as the first argument when sending an action", NSStringFromSelector(selector), methodEncoding);
+      return NO;
+    }
   }
+  
+  return YES;
 }
-#endif
 
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
 {

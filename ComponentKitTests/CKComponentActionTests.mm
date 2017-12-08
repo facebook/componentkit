@@ -613,6 +613,88 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
   XCTAssertNotEqual(action1.identifier(), action2.identifier());
 }
 
+#pragma mark - Action Params Validation
+
+- (BOOL)checkSelector:(SEL)sel typeEncodings:(const std::vector<const char *> &)typeEncodings {
+  NSMethodSignature *signature = [[self class] instanceMethodSignatureForSelector:sel];
+  return checkMethodSignatureAgainstTypeEncodings(sel, signature, typeEncodings);
+}
+
+- (void)testActionNoParamValidation
+{
+  const SEL selector = @selector(triggerActionWithComponent:);
+  std::vector<const char *> encodings;
+  CKActionTypeVectorBuild(encodings, CKActionTypelist<>{});
+  XCTAssertTrue(([self checkSelector:selector typeEncodings:encodings]));
+}
+
+- (void)triggerActionWithComponent:(id)sender {}
+
+- (void)testActionPrimitiveParamValidation
+{
+  const SEL selector = @selector(triggerActionWithComponent:value:);
+  std::vector<const char *> encodings;
+  CKActionTypeVectorBuild(encodings, CKActionTypelist<int>{});
+  XCTAssertTrue(([self checkSelector:selector typeEncodings:encodings]));
+}
+
+- (void)triggerActionWithComponent:(id)sender value:(int)val {}
+
+- (void)testActionObjectAndPrimitiveParamValidation
+{
+  const SEL selector = @selector(triggerActionWithComponent:value:value:);
+  std::vector<const char *> encodings;
+  CKActionTypeVectorBuild(encodings, CKActionTypelist<NSString *, char>{});
+  XCTAssertTrue(([self checkSelector:selector typeEncodings:encodings]));
+}
+
+- (void)triggerActionWithComponent:(id)sender value:(NSString *)obj value:(char)val {}
+
+- (void)testActionCppParamsValidation
+{
+  const SEL selector = @selector(triggerActionWithComponent:vector:constVector:constValVector:vectorRef:vectorRval:);
+  std::vector<const char *> encodings;
+  CKActionTypeVectorBuild(encodings,
+                          CKActionTypelist<
+                          std::vector<int>,
+                          const std::vector<int>,
+                          std::vector<const int>,
+                          std::vector<int> &,
+                          std::vector<int> &&
+                          >{});
+  XCTAssertTrue(([self checkSelector:selector typeEncodings:encodings]));
+}
+
+- (void)triggerActionWithComponent:(id)sender
+                            vector:(std::vector<int>)val
+                       constVector:(const std::vector<int>)conVal
+                    constValVector:(std::vector<const int>)conValVec
+                         vectorRef:(std::vector<int> &)vecRef
+                        vectorRval:(std::vector<int> &&)vecRval {}
+
+- (void)testActionParamsFailedValidation
+{
+  const SEL selector = @selector(triggerActionWithComponent:vector:object:primitive:);
+  std::vector<const char *> encodings;
+
+  // wrong c++ type
+  CKActionTypeVectorBuild(encodings, CKActionTypelist<std::vector<NSURL *>, NSObject *, BOOL>{});
+  XCTAssertFalse(([self checkSelector:selector typeEncodings:encodings]));
+
+  // wrong object
+  CKActionTypeVectorBuild(encodings, CKActionTypelist<std::vector<int>, NSInteger, BOOL>{});
+  XCTAssertFalse(([self checkSelector:selector typeEncodings:encodings]));
+
+  // wrong primitive
+  CKActionTypeVectorBuild(encodings, CKActionTypelist<std::vector<int>, NSObject *, char >{});
+  XCTAssertFalse(([self checkSelector:selector typeEncodings:encodings]));
+}
+
+- (void)triggerActionWithComponent:(id)sender
+                            vector:(std::vector<int>)val
+                            object:(NSObject *)conVal
+                         primitive:(BOOL)prim {}
+
 #pragma mark - Equality.
 
 - (void)testRawSelectorEquality
