@@ -322,7 +322,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     YGNodeStyleSetPositionType(childNode, (child.position.type == CKFlexboxPositionTypeAbsolute) ? YGPositionTypeAbsolute : YGPositionTypeRelative);
 
     CKAssert(!((floatIsSet(_style.spacing) || floatIsSet(child.spacingBefore) || floatIsSet(child.spacingAfter)) && flexboxSpacingIsSet(child.margin)),
-             @"You shouldn't use both margin and spacing! Ignoring spacing and falling back to margin behavior.");
+             @"You shouldn't use both margin and spacing! Ignoring spacing and falling back to margin behavior for %@", child.component);
     
     // Spacing emulation
     // Stack layout defines spacing in terms of parent Spacing (used only between children) and
