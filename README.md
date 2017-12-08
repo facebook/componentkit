@@ -9,7 +9,7 @@ ComponentKit is a view framework for iOS that is heavily inspired by React. It t
 ComponentKit is available to install via [Carthage](https://github.com/Carthage/Carthage). To get started add the following to your [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#cartfile):
 
 ```
-github "facebook/ComponentKit" ~> 0.20
+github "facebook/ComponentKit" ~> 0.21
 ```
 
 ### Opening the Xcode projects
