@@ -13,9 +13,6 @@
 #import <array>
 
 #import <ComponentKit/CKAssert.h>
-#if !TARGET_OS_TV
-#import "yoga/Yoga.h"
-#endif
 
 #import "CKInternalHelpers.h"
 #import "CKComponentSubclass.h"
@@ -203,8 +200,8 @@ static CGSize intrinsicSize(NSString *title, UIFont *titleFont, UIImage *image,
   const CGSize titleSize = [title sizeWithAttributes:@{NSFontAttributeName: font}];
   const CGSize imageSize = image.size;
   const CGSize contentSize = {
-    ceilf(titleSize.width) + imageSize.width + contentEdgeInsets.left + contentEdgeInsets.right,
-    MAX(ceilf(titleSize.height), imageSize.height) + contentEdgeInsets.top + contentEdgeInsets.bottom
+      CKRoundValueToPixelGrid(ceilf(titleSize.width) + imageSize.width + contentEdgeInsets.left + contentEdgeInsets.right, YES, NO),
+      CKRoundValueToPixelGrid(MAX(ceilf(titleSize.height), imageSize.height) + contentEdgeInsets.top + contentEdgeInsets.bottom, YES, NO)
   };
   const CGSize backgroundImageSize = backgroundImage.size;
   return {
