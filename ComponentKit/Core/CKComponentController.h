@@ -11,10 +11,11 @@
 #import <vector>
 
 #import <UIKit/UIKit.h>
+#import <ComponentKit/CKComponentControllerProtocol.h>
 
 @class CKComponent;
 
-@interface CKComponentController<__covariant ComponentType:CKComponent *> : NSObject
+@interface CKComponentController<__covariant ComponentType:CKComponent *> : NSObject <CKComponentControllerProtocol>
 
 /** The controller's component is not mounted, but is about to be. */
 - (void)willMount NS_REQUIRES_SUPER;

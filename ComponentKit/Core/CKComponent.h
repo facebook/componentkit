@@ -14,6 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentSize.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>
 
@@ -23,7 +24,7 @@ struct CKComponentViewContext {
 };
 
 /** A component is an immutable object that specifies how to configure a view, loosely inspired by React. */
-@interface CKComponent<__covariant CKComponentStateType:id> : NSObject
+@interface CKComponent<__covariant CKComponentStateType:id> : NSObject <CKComponentProtocol>
 
 /**
  @param view A struct describing the view for this component. Pass {} to specify that no view should be created.
