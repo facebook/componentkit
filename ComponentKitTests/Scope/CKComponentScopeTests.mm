@@ -17,32 +17,32 @@
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
-#import <ComponentKit/CKScopedComponent.h>
-#import <ComponentKit/CKScopedComponentController.h>
+#import <ComponentKit/CKComponentProtocol.h>
+#import <ComponentKit/CKComponentControllerProtocol.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 
 @protocol TestScopedProtocol <NSObject>
 @end
 
-@interface TestComponentWithScopedProtocol : NSObject <CKScopedComponent, TestScopedProtocol>
+@interface TestComponentWithScopedProtocol : NSObject <CKComponentProtocol, TestScopedProtocol>
 @end
 @implementation TestComponentWithScopedProtocol
 + (id)initialState { return nil; }
-+ (Class<CKScopedComponentController>)controllerClass { return nil; };
++ (Class<CKComponentControllerProtocol>)controllerClass { return nil; };
 @end
 
-@interface TestComponentWithoutScopedProtocol : NSObject <CKScopedComponent>
+@interface TestComponentWithoutScopedProtocol : NSObject <CKComponentProtocol>
 @end
 @implementation TestComponentWithoutScopedProtocol
 + (id)initialState { return nil; }
-+ (Class<CKScopedComponentController>)controllerClass { return nil; };
++ (Class<CKComponentControllerProtocol>)controllerClass { return nil; };
 @end
 
-@interface TestComponentControllerWithScopedProtocol : NSObject <CKScopedComponentController, TestScopedProtocol>
+@interface TestComponentControllerWithScopedProtocol : NSObject <CKComponentControllerProtocol, TestScopedProtocol>
 @end
 @implementation TestComponentControllerWithScopedProtocol
-- (instancetype)initWithComponent:(id<CKScopedComponent>)component
+- (instancetype)initWithComponent:(id<CKComponentProtocol>)component
 {
   return [super init];
 }
@@ -399,7 +399,7 @@
   }
 }
 
-static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
+static BOOL testComponentProtocolPredicate(id<CKComponentProtocol> component)
 {
   return [component conformsToProtocol:@protocol(TestScopedProtocol)];
 }
@@ -418,7 +418,7 @@ static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
   __block BOOL foundComponent = NO;
   [root
    enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate
-   block:^(id<CKScopedComponent> component) {
+   block:^(id<CKComponentProtocol> component) {
      if (c == component) {
        foundComponent = YES;
      }
@@ -439,7 +439,7 @@ static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
   __block BOOL foundComponent = NO;
   [root
    enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate
-   block:^(id<CKScopedComponent> component) {
+   block:^(id<CKComponentProtocol> component) {
      if (c == component) {
        foundComponent = YES;
      }
@@ -463,7 +463,7 @@ static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
   __block NSInteger numberOfComponents = 0;
   [root
    enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate
-   block:^(id<CKScopedComponent> component) {
+   block:^(id<CKComponentProtocol> component) {
      ++numberOfComponents;
    }];
   
@@ -482,7 +482,7 @@ static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
   __block NSInteger numberOfComponents = 0;
   [root
    enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate
-   block:^(id<CKScopedComponent> component) {
+   block:^(id<CKComponentProtocol> component) {
      ++numberOfComponents;
    }];
 
@@ -506,7 +506,7 @@ static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
   __block BOOL foundC2 = NO;
   [root
    enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate
-   block:^(id<CKScopedComponent> component) {
+   block:^(id<CKComponentProtocol> component) {
      if (c1 == component) {
        foundC1 = YES;
      }
@@ -532,7 +532,7 @@ static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
   __block BOOL foundC2 = NO;
   [root
    enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate
-   block:^(id<CKScopedComponent> component) {
+   block:^(id<CKComponentProtocol> component) {
      if (c1 == component) {
        foundC1 = YES;
      }
@@ -557,7 +557,7 @@ static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
 
   [root
    enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate
-   block:^(id<CKScopedComponent> component) {
+   block:^(id<CKComponentProtocol> component) {
      XCTFail(@"Should not have found any components");
    }];
 }
@@ -572,12 +572,12 @@ static BOOL testComponentProtocolPredicate(id<CKScopedComponent> component)
 
   [root
    enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate
-   block:^(id<CKScopedComponent> component) {
+   block:^(id<CKComponentProtocol> component) {
      XCTFail(@"Should not have found any components");
    }];
 }
 
-static BOOL testComponentControllerProtocolPredicate(id<CKScopedComponentController> component)
+static BOOL testComponentControllerProtocolPredicate(id<CKComponentControllerProtocol> component)
 {
   return [component conformsToProtocol:@protocol(TestScopedProtocol)];
 }
@@ -596,7 +596,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKScopedComponentControl
   __block BOOL foundController = NO;
   [root
    enumerateComponentControllersMatchingPredicate:&testComponentControllerProtocolPredicate
-   block:^(id<CKScopedComponentController> componentController) {
+   block:^(id<CKComponentControllerProtocol> componentController) {
      if (c == componentController) {
        foundController = YES;
      }
@@ -616,7 +616,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKScopedComponentControl
   __block BOOL foundController = NO;
   [root
    enumerateComponentControllersMatchingPredicate:&testComponentControllerProtocolPredicate
-   block:^(id<CKScopedComponentController> componentController) {
+   block:^(id<CKComponentControllerProtocol> componentController) {
      if (c == componentController) {
        foundController = YES;
      }
@@ -640,7 +640,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKScopedComponentControl
   __block NSInteger numberOfComponentControllers = 0;
   [root
    enumerateComponentControllersMatchingPredicate:&testComponentControllerProtocolPredicate
-   block:^(id<CKScopedComponentController> componentController) {
+   block:^(id<CKComponentControllerProtocol> componentController) {
      ++numberOfComponentControllers;
    }];
   
@@ -659,7 +659,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKScopedComponentControl
   __block NSInteger numberOfComponentControllers = 0;
   [root
    enumerateComponentControllersMatchingPredicate:&testComponentControllerProtocolPredicate
-   block:^(id<CKScopedComponentController> componentController) {
+   block:^(id<CKComponentControllerProtocol> componentController) {
      ++numberOfComponentControllers;
    }];
 
@@ -683,7 +683,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKScopedComponentControl
   __block BOOL foundC2 = NO;
   [root
    enumerateComponentControllersMatchingPredicate:&testComponentControllerProtocolPredicate
-   block:^(id<CKScopedComponentController> componentController) {
+   block:^(id<CKComponentControllerProtocol> componentController) {
      if (c1 == componentController) {
        foundC1 = YES;
      }
@@ -709,7 +709,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKScopedComponentControl
   __block BOOL foundC2 = NO;
   [root
    enumerateComponentControllersMatchingPredicate:&testComponentControllerProtocolPredicate
-   block:^(id<CKScopedComponentController> componentController) {
+   block:^(id<CKComponentControllerProtocol> componentController) {
      if (c1 == componentController) {
        foundC1 = YES;
      }

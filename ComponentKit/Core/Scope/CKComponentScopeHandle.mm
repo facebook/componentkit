@@ -17,8 +17,8 @@
 #import "CKComponentInternal.h"
 #import "CKInternalHelpers.h"
 #import "CKMutex.h"
-#import "CKScopedComponent.h"
-#import "CKScopedComponentController.h"
+#import "CKComponentProtocol.h"
+#import "CKComponentControllerProtocol.h"
 #import "CKThreadLocalComponentScope.h"
 
 @interface CKScopedResponder ()
@@ -28,14 +28,14 @@
 @implementation CKComponentScopeHandle
 {
   id<CKComponentStateListener> __weak _listener;
-  id<CKScopedComponentController> _controller;
+  id<CKComponentControllerProtocol> _controller;
   CKComponentScopeRootIdentifier _rootIdentifier;
   BOOL _acquired;
   BOOL _resolved;
   CKScopedResponder *_scopedResponder;
 }
 
-+ (CKComponentScopeHandle *)handleForComponent:(id<CKScopedComponent>)component
++ (CKComponentScopeHandle *)handleForComponent:(id<CKComponentProtocol>)component
 {
   CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
   if (currentScope == nullptr) {
@@ -56,7 +56,7 @@
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                  componentClass:(Class<CKScopedComponent>)componentClass
+                  componentClass:(Class<CKComponentProtocol>)componentClass
              initialStateCreator:(id (^)(void))initialStateCreator
                           parent:(CKComponentScopeHandle *)parent
 {
@@ -76,7 +76,7 @@
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class)componentClass
                            state:(id)state
-                      controller:(id<CKScopedComponentController>)controller
+                      controller:(id<CKComponentControllerProtocol>)controller
                  scopedResponder:(CKScopedResponder *)scopedResponder
                           parent:(CKComponentScopeHandle *)parent
 {
@@ -132,7 +132,7 @@
                                                    parent:_parent];
 }
 
-- (id<CKScopedComponentController>)controller
+- (id<CKComponentControllerProtocol>)controller
 {
   CKAssert(_resolved, @"Requesting controller from scope handle before resolution. The controller will be nil.");
   return _controller;
@@ -173,7 +173,7 @@
 
 #pragma mark - Component Scope Handle Acquisition
 
-- (BOOL)acquireFromComponent:(id<CKScopedComponent>)component
+- (BOOL)acquireFromComponent:(id<CKComponentProtocol>)component
 {
   if (!_acquired && [component isMemberOfClass:_componentClass]) {
     _acquired = YES;
@@ -193,7 +193,7 @@
     CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
     CKAssert(currentScope != nullptr, @"Current scope should never be null here. Thread-local stack is corrupted.");
 
-    const Class<CKScopedComponentController> controllerClass = [_acquiredComponent.class controllerClass];
+    const Class<CKComponentControllerProtocol> controllerClass = [_acquiredComponent.class controllerClass];
     if (controllerClass) {
       // The compiler is not happy when I don't explicitly cast as (Class)
       // See: http://stackoverflow.com/questions/21699755/create-an-instance-from-a-class-that-conforms-to-a-protocol
@@ -275,7 +275,7 @@
 
   for (int i = key; i < numberOfHandles; i++) {
       const auto handle = _handles[i];
-      const id<CKScopedComponent> responder = handle.acquiredComponent;
+      const id<CKComponentProtocol> responder = handle.acquiredComponent;
       if (responder != nil) {
         return responder;
       }

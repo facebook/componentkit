@@ -15,12 +15,12 @@
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
-#import <ComponentKit/CKScopedComponentController.h>
+#import <ComponentKit/CKComponentControllerProtocol.h>
 #import <ComponentKit/CKStateUpdateMetadata.h>
 #import <ComponentKit/CKUpdateMode.h>
 
-@protocol CKScopedComponent;
-@protocol CKScopedComponentController;
+@protocol CKComponentProtocol;
+@protocol CKComponentControllerProtocol;
 
 @class CKComponentScopeFrame;
 @class CKComponentScopeRoot;
@@ -55,8 +55,8 @@
 - (instancetype)newRoot;
 
 /** Must be called when initializing a component or controller. */
-- (void)registerComponentController:(id<CKScopedComponentController>)componentController;
-- (void)registerComponent:(id<CKScopedComponent>)component;
+- (void)registerComponentController:(id<CKComponentControllerProtocol>)componentController;
+- (void)registerComponent:(id<CKComponentProtocol>)component;
 
 @property (nonatomic, weak, readonly) id<CKComponentStateListener> listener;
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier globalIdentifier;

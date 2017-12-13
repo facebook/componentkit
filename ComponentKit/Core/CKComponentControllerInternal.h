@@ -11,9 +11,9 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKComponentController.h>
-#import <ComponentKit/CKScopedComponentController.h>
+#import <ComponentKit/CKComponentControllerProtocol.h>
 
-@interface CKComponentController () <CKScopedComponentController>
+@interface CKComponentController () <CKComponentControllerProtocol>
 
 - (void)componentWillMount:(CKComponent *)component;
 - (void)componentDidMount:(CKComponent *)component;

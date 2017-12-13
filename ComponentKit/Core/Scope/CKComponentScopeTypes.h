@@ -20,22 +20,22 @@ typedef int32_t CKComponentScopeRootIdentifier;
 
 typedef std::unordered_map<CKComponentScopeHandle *, std::vector<id (^)(id)>> CKComponentStateUpdateMap;
 
-@protocol CKScopedComponent;
-@protocol CKScopedComponentController;
+@protocol CKComponentProtocol;
+@protocol CKComponentControllerProtocol;
 
 /**
  Enumerator blocks allow a consumer to enumerate over all of the components or controllers that matched a predicate.
  */
-typedef void (^CKComponentScopeEnumerator)(id<CKScopedComponent>);
-typedef void (^CKComponentControllerScopeEnumerator)(id<CKScopedComponentController>);
+typedef void (^CKComponentScopeEnumerator)(id<CKComponentProtocol>);
+typedef void (^CKComponentControllerScopeEnumerator)(id<CKComponentControllerProtocol>);
 
 /**
  Scope predicates are a tool used by the framework to register components and controllers on initialization that have
  specific characteristics. These predicates allow rapid enumeration over matching components and controllers.
  */
 #if !defined(NO_PROTOCOLS_IN_OBJCPP)
-typedef BOOL (*CKComponentScopePredicate)(id<CKScopedComponent>);
-typedef BOOL (*CKComponentControllerScopePredicate)(id<CKScopedComponentController>);
+typedef BOOL (*CKComponentScopePredicate)(id<CKComponentProtocol>);
+typedef BOOL (*CKComponentControllerScopePredicate)(id<CKComponentControllerProtocol>);
 #else
 typedef BOOL (*CKComponentScopePredicate)(id);
 typedef BOOL (*CKComponentControllerScopePredicate)(id);

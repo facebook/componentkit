@@ -15,7 +15,7 @@
 #import "CKInternalHelpers.h"
 
 #if !defined(NO_PROTOCOLS_IN_OBJCPP)
-BOOL CKComponentBoundsAnimationPredicate(id<CKScopedComponent> component)
+BOOL CKComponentBoundsAnimationPredicate(id<CKComponentProtocol> component)
 #else
 BOOL CKComponentBoundsAnimationPredicate(id component)
 #endif
@@ -28,7 +28,7 @@ CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKCom
   NSMapTable *const scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
   [previousRoot
    enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
-   block:^(id<CKScopedComponent> component) {
+   block:^(id<CKComponentProtocol> component) {
      CKComponent *oldComponent = (CKComponent *)component;
      id scopeFrameToken = [oldComponent scopeFrameToken];
      if (scopeFrameToken) {
@@ -39,7 +39,7 @@ CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKCom
   __block CKComponentBoundsAnimation boundsAnimation {};
   [newRoot
    enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
-   block:^(id<CKScopedComponent> component) {
+   block:^(id<CKComponentProtocol> component) {
      CKComponent *newComponent = (CKComponent *)component;
      id scopeFrameToken = [newComponent scopeFrameToken];
      if (scopeFrameToken) {

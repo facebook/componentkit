@@ -18,7 +18,7 @@
  require animating.
  */
 #if !defined(NO_PROTOCOLS_IN_OBJCPP)
-BOOL CKComponentBoundsAnimationPredicate(id<CKScopedComponent> component);
+BOOL CKComponentBoundsAnimationPredicate(id<CKComponentProtocol> component);
 #else
 BOOL CKComponentBoundsAnimationPredicate(id component);
 #endif

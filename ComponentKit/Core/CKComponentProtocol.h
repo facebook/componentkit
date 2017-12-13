@@ -10,12 +10,12 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol CKScopedComponentController;
+@protocol CKComponentControllerProtocol;
 
-@protocol CKScopedComponent <NSObject>
+@protocol CKComponentProtocol <NSObject>
 
 + (id)initialState;
 
-+ (Class<CKScopedComponentController>)controllerClass;
++ (Class<CKComponentControllerProtocol>)controllerClass;
 
 @end

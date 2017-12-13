@@ -299,9 +299,9 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return ck_objc_getAssociatedWeakObject(self, kRootComponentMountedViewKey);
 }
 
-#pragma mark - CKScopedComponent
+#pragma mark - CKComponentProtocol
 
-+ (Class<CKScopedComponentController>)controllerClass
++ (Class<CKComponentControllerProtocol>)controllerClass
 {
   const Class componentClass = self;
 

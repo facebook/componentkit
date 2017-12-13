@@ -13,10 +13,10 @@
 #import <ComponentKit/ComponentMountContext.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
-#import <ComponentKit/CKScopedComponent.h>
+#import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 
-@interface CKComponent () <CKScopedComponent>
+@interface CKComponent () <CKComponentProtocol>
 
 /**
  Mounts the component in the given context:

@@ -64,7 +64,7 @@ namespace std {
 
 + (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
                                       newRoot:(CKComponentScopeRoot *)newRoot
-                               componentClass:(Class<CKScopedComponent>)componentClass
+                               componentClass:(Class<CKComponentProtocol>)componentClass
                                    identifier:(id)identifier
                                          keys:(const std::vector<id<NSObject>> &)keys
                           initialStateCreator:(id (^)())initialStateCreator

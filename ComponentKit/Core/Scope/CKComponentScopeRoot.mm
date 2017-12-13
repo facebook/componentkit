@@ -12,14 +12,14 @@
 
 #import <libkern/OSAtomic.h>
 
-#import "CKScopedComponent.h"
-#import "CKScopedComponentController.h"
+#import "CKComponentProtocol.h"
+#import "CKComponentControllerProtocol.h"
 #import "CKInternalHelpers.h"
 #import "CKThreadLocalComponentScope.h"
 
 #if !defined(NO_PROTOCOLS_IN_OBJCPP)
-typedef std::unordered_map<CKComponentScopePredicate, NSHashTable<id<CKScopedComponent>> *> _CKRegisteredComponentsMap;
-typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id<CKScopedComponentController>> *> _CKRegisteredComponentControllerMap;
+typedef std::unordered_map<CKComponentScopePredicate, NSHashTable<id<CKComponentProtocol>> *> _CKRegisteredComponentsMap;
+typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id<CKComponentControllerProtocol>> *> _CKRegisteredComponentControllerMap;
 #else
 typedef std::unordered_map<CKComponentScopePredicate, NSHashTable<id> *> _CKRegisteredComponentsMap;
 typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> *> _CKRegisteredComponentControllerMap;
@@ -68,7 +68,7 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> 
   return self;
 }
 
-- (void)registerComponent:(id<CKScopedComponent>)component
+- (void)registerComponent:(id<CKComponentProtocol>)component
 {
   if (!component) {
     // Handle this gracefully so we don't have a bunch of nils being passed to predicates.
@@ -86,7 +86,7 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> 
   }
 }
 
-- (void)registerComponentController:(id<CKScopedComponentController>)componentController
+- (void)registerComponentController:(id<CKComponentControllerProtocol>)componentController
 {
   if (!componentController) {
     // As above, handle a nil component controller gracefully instead of passing through to predicate.
@@ -115,7 +115,7 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> 
   
   const auto foundIter = _registeredComponents.find(predicate);
   if (foundIter != _registeredComponents.end()) {
-    for (id<CKScopedComponent> component in foundIter->second) {
+    for (id<CKComponentProtocol> component in foundIter->second) {
       block(component);
     }
   }
@@ -132,7 +132,7 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> 
 
   const auto foundIter = _registeredComponentControllers.find(predicate);
   if (foundIter != _registeredComponentControllers.end()) {
-    for (id<CKScopedComponentController> componentController in foundIter->second) {
+    for (id<CKComponentControllerProtocol> componentController in foundIter->second) {
       block(componentController);
     }
   }

@@ -21,9 +21,9 @@
  You should never use these predicates directly. They are built to work with CKComponentScopeRoot.
  */
 #if !defined(NO_PROTOCOLS_IN_OBJCPP)
-BOOL CKComponentControllerAppearanceEventPredicate(id<CKScopedComponentController> controller);
-BOOL CKComponentControllerDisappearanceEventPredicate(id<CKScopedComponentController> controller);
-BOOL CKComponentControllerInvalidateEventPredicate(id<CKScopedComponentController> controller);
+BOOL CKComponentControllerAppearanceEventPredicate(id<CKComponentControllerProtocol> controller);
+BOOL CKComponentControllerDisappearanceEventPredicate(id<CKComponentControllerProtocol> controller);
+BOOL CKComponentControllerInvalidateEventPredicate(id<CKComponentControllerProtocol> controller);
 #else
 BOOL CKComponentControllerAppearanceEventPredicate(id controller);
 BOOL CKComponentControllerDisappearanceEventPredicate(id controller);

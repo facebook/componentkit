@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
-#import <ComponentKit/CKScopedComponentController.h>
+#import <ComponentKit/CKComponentControllerProtocol.h>
 #import <ComponentKit/CKStateUpdateMetadata.h>
 #import <ComponentKit/CKUpdateMode.h>
 
@@ -20,21 +20,21 @@
 @class CKScopedResponder;
 
 @protocol CKComponentStateListener;
-@protocol CKScopedComponent;
+@protocol CKComponentProtocol;
 
-@interface CKComponentScopeHandle<__covariant ControllerType:id<CKScopedComponentController>> : NSObject
+@interface CKComponentScopeHandle<__covariant ControllerType:id<CKComponentControllerProtocol>> : NSObject
 
 /**
  This method looks to see if the currently defined scope matches that of the given component; if so it returns the
  handle corresponding to the current scope. Otherwise it returns nil.
  This is only meant to be called when constructing a component and as part of the implementation itself.
  */
-+ (instancetype)handleForComponent:(id<CKScopedComponent>)component;
++ (instancetype)handleForComponent:(id<CKComponentProtocol>)component;
 
 /** Creates a conceptually brand new scope handle */
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                  componentClass:(Class<CKScopedComponent>)componentClass
+                  componentClass:(Class<CKComponentProtocol>)componentClass
              initialStateCreator:(id (^)(void))initialStateCreator
                           parent:(CKComponentScopeHandle *)parent;
 
@@ -63,11 +63,11 @@
  */
 @property (nonatomic, strong, readonly) ControllerType controller;
 
-@property (nonatomic, assign, readonly) Class<CKScopedComponent> componentClass;
+@property (nonatomic, assign, readonly) Class<CKComponentProtocol> componentClass;
 
 @property (nonatomic, strong, readonly) id state;
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
-@property (nonatomic, readonly, weak) id<CKScopedComponent> acquiredComponent;
+@property (nonatomic, readonly, weak) id<CKComponentProtocol> acquiredComponent;
 @property (nonatomic, weak, readonly) CKComponentScopeHandle *parent;
 
 /**
