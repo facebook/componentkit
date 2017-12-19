@@ -323,7 +323,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
 
     CKAssert(!((floatIsSet(_style.spacing) || floatIsSet(child.spacingBefore) || floatIsSet(child.spacingAfter)) && flexboxSpacingIsSet(child.margin)),
              @"You shouldn't use both margin and spacing! Ignoring spacing and falling back to margin behavior for %@", child.component);
-    
+
     // Spacing emulation
     // Stack layout defines spacing in terms of parent Spacing (used only between children) and
     // spacingAfter / spacingBefore for every children
@@ -489,7 +489,7 @@ static void applyPositionToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension 
 static void applyPaddingToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension value)
 {
   CKRelativeDimension dimension = value.dimension();
-  
+
   switch (dimension.type()) {
     case CKRelativeDimension::Type::PERCENT:
       YGNodeStyleSetPaddingPercent(node, edge, dimension.value() * 100);
