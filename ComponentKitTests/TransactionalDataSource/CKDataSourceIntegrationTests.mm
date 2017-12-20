@@ -48,7 +48,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 - (instancetype)initWithComponent:(CKComponent *)component
 {
   if ((self = [super initWithComponent:component])) {
-    self.callbacks = [NSMutableArray array];
+    _callbacks = [NSMutableArray array];
   }
   return self;
 }
