@@ -55,7 +55,7 @@ In the previous example the C++ would fail to compile if we inserted a child of 
 
 ## Efficiency
 
-Being fully declarative and immutable means you use a *lot* of objects. C++ objects are far more efficient to create because they can be stack-allocated, [emplaced](http://stackoverflow.com/questions/4303513/push-back-vs-emplace-back | emplaced), [moved](http://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html), etc.
+Being fully declarative and immutable means you use a *lot* of objects. C++ objects are far more efficient to create because they can be stack-allocated, [emplaced](http://stackoverflow.com/questions/4303513/push-back-vs-emplace-back), [moved](http://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html), etc.
 
 ## Nil Safety
 
