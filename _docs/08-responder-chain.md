@@ -20,7 +20,7 @@ Note that a component is not a subclass of `UIResponder` and it cannot become th
 
 # Tap Handling 
 
-The easiest way to handle taps on `UIControl` views is to use `CKComponentActionAttribute`. It returns a component attribute that triggers a [component action](component-actions.html) when any given `UIControlEvent` occurs. For example:
+The easiest way to handle taps on `UIControl` views is to use `CKComponentActionAttribute`. It returns a component attribute that triggers a [component action](actions.html) when any given `UIControlEvent` occurs. For example:
 
 {% highlight objc %}
 @implementation SomeComponent
