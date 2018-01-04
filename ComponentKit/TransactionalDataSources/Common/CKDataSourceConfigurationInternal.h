@@ -20,8 +20,6 @@
  @param componentProvider See @protocol(CKComponentProvider)
  @param context Passed to methods exposed by @protocol(CKComponentProvider).
  @param sizeRange Used for the root layout.
- @param alwaysSendComponentUpdate If set to YES, CKDataSource with this config will send component update events
-                                  to component controllers even when they aren't in viewport
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
@@ -30,12 +28,10 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-                alwaysSendComponentUpdate:(BOOL)alwaysSendComponentUpdate
                pipelinePreparationEnabled:(BOOL)pipelinePreparationEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
 
-@property (nonatomic, assign, readonly) BOOL alwaysSendComponentUpdate;
 @property (nonatomic, assign, readonly) BOOL pipelinePreparationEnabled;
 
 - (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;

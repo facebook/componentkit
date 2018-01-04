@@ -260,28 +260,9 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
   }
 
-  std::vector<CKComponent *> updatedComponents;
-  if ([_state.configuration alwaysSendComponentUpdate]) {
-    NSDictionary *finalIndexPathsForUpdatedItems = [[change appliedChanges] finalUpdatedIndexPaths];
-    for (NSIndexPath *updatedIndex in finalIndexPathsForUpdatedItems) {
-      CKDataSourceItem *item = [_state objectAtIndexPath:updatedIndex];
-      getComponentsFromLayout(item.layout, updatedComponents);
-    }
-
-    for (auto updatedComponent: updatedComponents) {
-      [updatedComponent.controller willStartUpdateToComponent:updatedComponent];
-    }
-  }
-
   [_announcer transactionalComponentDataSource:self
                         didModifyPreviousState:previousState
                              byApplyingChanges:[change appliedChanges]];
-
-  if ([_state.configuration alwaysSendComponentUpdate]) {
-    for (auto updatedComponent: updatedComponents) {
-      [updatedComponent.controller didFinishComponentUpdate];
-    }
-  }
 }
 
 - (void)_processStateUpdates
@@ -382,16 +363,6 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   } else {
     // No more modifications to process
     return {NextPipelineStateEmpty, nil};
-  }
-}
-
-static void getComponentsFromLayout(CKComponentLayout layout, std::vector<CKComponent *> &updatedComponents)
-{
-  updatedComponents.push_back(layout.component);
-  if (layout.children) {
-    for (const auto child : *layout.children) {
-      getComponentsFromLayout(child.layout, updatedComponents);
-    }
   }
 }
 

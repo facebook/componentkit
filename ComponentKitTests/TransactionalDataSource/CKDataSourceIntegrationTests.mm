@@ -42,7 +42,6 @@
 
 typedef NS_ENUM(NSUInteger, CKTestConfig) {
   CKTestConfigDefault,
-  CKTestConfigAlwaysSendUpdates,
 };
 
 - (instancetype)initWithComponent:(CKComponent *)component
@@ -123,7 +122,6 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                        initWithComponentProvider:(id) self
                                        context:nil
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
-                                       alwaysSendComponentUpdate:(testConfig == CKTestConfigAlwaysSendUpdates)
                                        pipelinePreparationEnabled:NO
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
@@ -181,33 +179,6 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 
   // We use 'CKTestConfigDefault' and item is out of the view port. It means it shoudn't get any update.
   XCTAssertEqualObjects(controller.callbacks, (@[]));
-}
-
-- (void)testUpdateModelAlwaysSendUpdateControllerCallbacks_On
-{
-  self.dataSource = [self generateDataSource:CKTestConfigAlwaysSendUpdates];
-
-  [self.dataSource applyChangeset:
-   [[[[CKDataSourceChangesetBuilder new]
-      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
-     withInsertedItems:@{ [NSIndexPath indexPathForItem:0 inSection:0] : @"0",
-                          [NSIndexPath indexPathForItem:1 inSection:0] : @"1",
-                          [NSIndexPath indexPathForItem:2 inSection:0] : @"2",
-                          }]
-    build] mode:CKUpdateModeSynchronous userInfo:nil];
-
-  [self.dataSource applyChangeset:
-   [[[CKDataSourceChangesetBuilder new]
-     withUpdatedItems:@{[NSIndexPath indexPathForItem:2 inSection:0] : @"2"}]
-    build] mode:CKUpdateModeSynchronous userInfo:nil];
-
-  CKDataSourceIntegrationTestComponentController *controller =
-  (CKDataSourceIntegrationTestComponentController*)self.componentsDictionary[@"2"].controller;
-
-  XCTAssertEqualObjects(controller.callbacks, (@[
-                                                 NSStringFromSelector(@selector(willUpdateComponent)),
-                                                 NSStringFromSelector(@selector(didUpdateComponent))
-                                                 ]));
 }
 
 // This test checks that controller receives invalidateController callback when DataSource owning it
