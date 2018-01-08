@@ -620,19 +620,20 @@ static BOOL floatIsSet(CGFloat val)
       }
     }
 
-    if (YGNodeCanUseCachedMeasurement(horizontalReusedMode, childWidth, verticalReusedMode, childHeight,
-                                      childCachedLayout.widthMode, childCachedLayout.width,
-                                      childCachedLayout.heightMode, childCachedLayout.height,
-                                      childCachedLayout.componentLayout.size.width,
-                                      childCachedLayout.componentLayout.size.height, 0, 0,
-                                      ckYogaDefaultConfig()) ||
-        YGNodeCanUseCachedMeasurement(YGMeasureModeExactly, childWidth, YGMeasureModeExactly, childHeight,
-                                      childCachedLayout.widthMode, childCachedLayout.width,
-                                      childCachedLayout.heightMode, childCachedLayout.height,
-                                      childCachedLayout.componentLayout.size.width, childCachedLayout.componentLayout.size.height, 0, 0,
-                                      ckYogaDefaultConfig()) ||
-        childSize.width == 0 ||
-        childSize.height == 0) {
+    if (!_style.disableCachingToWorkAroundBug &&
+        (YGNodeCanUseCachedMeasurement(horizontalReusedMode, childWidth, verticalReusedMode, childHeight,
+                                       childCachedLayout.widthMode, childCachedLayout.width,
+                                       childCachedLayout.heightMode, childCachedLayout.height,
+                                       childCachedLayout.componentLayout.size.width,
+                                       childCachedLayout.componentLayout.size.height, 0, 0,
+                                       ckYogaDefaultConfig()) ||
+         YGNodeCanUseCachedMeasurement(YGMeasureModeExactly, childWidth, YGMeasureModeExactly, childHeight,
+                                       childCachedLayout.widthMode, childCachedLayout.width,
+                                       childCachedLayout.heightMode, childCachedLayout.height,
+                                       childCachedLayout.componentLayout.size.width, childCachedLayout.componentLayout.size.height, 0, 0,
+                                       ckYogaDefaultConfig()) ||
+         childSize.width == 0 ||
+         childSize.height == 0)) {
       childrenLayout[i].layout = childCachedLayout.componentLayout;
     } else {
       childrenLayout[i].layout = CKComputeComponentLayout(childCachedLayout.component, {childSize, childSize}, size);

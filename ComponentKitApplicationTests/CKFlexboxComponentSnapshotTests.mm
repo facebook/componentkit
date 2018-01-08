@@ -11,6 +11,7 @@
 #import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
 #import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKit/CKInsetComponent.h>
 #import <ComponentKit/CKRatioLayoutComponent.h>
@@ -316,7 +317,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 {
   // width 0-INF; height 0-INF
   static CKSizeRange kAnySize = {{0, 0}, {INFINITY, INFINITY}};
-  
+
   CKFlexboxComponent *spacingBefore =
   [CKFlexboxComponent
    newWithView:kWhiteBackgroundView
@@ -338,7 +339,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      },
    }];
   CKSnapshotVerifyComponent(spacingBefore, kAnySize, @"spacingBefore");
-  
+
   CKFlexboxComponent *spacingAfter =
   [CKFlexboxComponent
    newWithView:kWhiteBackgroundView
@@ -360,7 +361,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      },
    }];
   CKSnapshotVerifyComponent(spacingAfter, kAnySize, @"spacingAfter");
-  
+
   CKFlexboxComponent *spacingBalancedOut =
   [CKFlexboxComponent
    newWithView:kWhiteBackgroundView
@@ -389,7 +390,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 {
   // width 0-INF; height 0-INF
   static CKSizeRange kAnySize = {{0, 0}, {INFINITY, INFINITY}};
-  
+
   CKFlexboxComponent *spacingBefore =
   [CKFlexboxComponent
    newWithView:kWhiteBackgroundView
@@ -411,7 +412,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      },
    }];
   CKSnapshotVerifyComponent(spacingBefore, kAnySize, @"spacingBefore");
-  
+
   CKFlexboxComponent *spacingAfter =
   [CKFlexboxComponent
    newWithView:kWhiteBackgroundView
@@ -433,7 +434,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      },
    }];
   CKSnapshotVerifyComponent(spacingAfter, kAnySize, @"spacingAfter");
-  
+
   CKFlexboxComponent *spacingBalancedOut =
   [CKFlexboxComponent
    newWithView:kWhiteBackgroundView
@@ -2286,6 +2287,52 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      }
    }];
   static CKSizeRange kSize = {{0, 0}, {300, INFINITY}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
+- (void)testSimultaneousFlexGrowAndAlignStretch
+{
+  CKFlexboxComponent *c =
+  [CKFlexboxComponent
+   newWithView:kWhiteBackgroundView
+   size:{.height = 100}
+   style:{
+     .direction = CKFlexboxDirectionHorizontal,
+     // This should make each child stretch to the full height of 100pts:
+     .alignItems = CKFlexboxAlignItemsStretch,
+     // This test is demonstrating a bug that requires the following option as a workaround.
+     // Ideally we fix the bug and remove the option entirely, but the test still passes.
+     .disableCachingToWorkAroundBug = YES,
+   }
+   children:{
+     {
+       // CKCompositeComponent is used just to verify that CKFlexboxComponent is actually
+       // laying out each child at the correct size, not just setting CKComponentLayout.size.
+       [CKCompositeComponent
+        newWithComponent:
+        [CKComponent
+         newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}}
+         size:{}]],
+       .flexGrow = 1,
+     },
+     {
+       [CKCompositeComponent
+        newWithComponent:
+        [CKComponent
+         newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}}
+         size:{}]],
+       .flexGrow = 1,
+     },
+     {
+       [CKCompositeComponent
+        newWithComponent:
+        [CKComponent
+         newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}}
+         size:{}]],
+       .flexGrow = 1,
+     },
+   }];
+  static CKSizeRange kSize = {{400, 0}, {400, INFINITY}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 

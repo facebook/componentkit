@@ -167,21 +167,21 @@ struct CKFlexboxBorder {
 class CKFlexboxDimension {
 public:
   constexpr CKFlexboxDimension() noexcept : _relativeDimension(CKRelativeDimension()), _isDefined(false) {}
-  
+
   /** Convenience initializer for points */
   CKFlexboxDimension(CGFloat points) noexcept : CKFlexboxDimension(CKRelativeDimension(points), true) {}
-  
+
   /** Convenience initializer for a dimension object */
   CKFlexboxDimension(CKRelativeDimension dimension) noexcept : CKFlexboxDimension(dimension, true) {}
-  
+
   CKRelativeDimension dimension() const noexcept {
     return _relativeDimension;
   }
-  
+
   bool isDefined() const noexcept {
     return _isDefined;
   }
-  
+
 private:
   CKFlexboxDimension(CKRelativeDimension dimension, bool isDefined)
   : _relativeDimension(dimension), _isDefined(isDefined) {}
@@ -201,18 +201,18 @@ struct CKFlexboxSpacing {
 class CKFlexboxAspectRatio {
 public:
   constexpr CKFlexboxAspectRatio() noexcept : _aspectRatio(), _isDefined(false) {}
-  
+
   /** Convenience initializer for an aspect ratio */
   CKFlexboxAspectRatio(CGFloat aspectRatio) noexcept : CKFlexboxAspectRatio(aspectRatio, true) {}
-  
+
   CGFloat aspectRatio() const noexcept {
     return _aspectRatio;
   }
-  
+
   bool isDefined() const noexcept {
     return _isDefined;
   }
-  
+
 private:
   CKFlexboxAspectRatio(CGFloat aspectRatio, bool isDefined)
   : _aspectRatio(aspectRatio < 0 ? fabs(aspectRatio) : aspectRatio), _isDefined(isDefined) {}
@@ -237,12 +237,18 @@ struct CKFlexboxComponentStyle {
   CKFlexboxWrap wrap;
   /** Padding applied to the container */
   CKFlexboxSpacing padding;
-  /** 
+  /**
     Border applied to the container. This only reserves space for the border - you are responsible for drawing the border.
-    Border behaves nearly identically to padding and is only separate from padding to make it easier 
+    Border behaves nearly identically to padding and is only separate from padding to make it easier
     to implement border effects such as color.
    */
   CKFlexboxBorder border;
+  /**
+   There is an obscure bug with this component's internal caching: see testSimultaneousFlexGrowAndAlignStretch.
+   Fixing the bug is nontrivial. Disabling the cache always would regress performance.
+   Use this option to disable the cache on a case-by-case basis if you care more about correctness than performance.
+   */
+  BOOL disableCachingToWorkAroundBug;
 };
 
 struct CKFlexboxComponentChild {
@@ -295,8 +301,10 @@ struct CKFlexboxComponentChild {
    By default all values are Auto
    **/
   CKComponentSize sizeConstraints;
-  /** This property allows node to force rounding only up.
-   Text should never be rounded down as this may cause it to be truncated. **/
+  /**
+   This property allows node to force rounding only up.
+   Text should never be rounded down as this may cause it to be truncated.
+   */
   BOOL useTextRounding;
 };
 
@@ -310,7 +318,7 @@ extern const struct CKStackComponentLayoutExtraKeys {
 
 /**
  A simple layout component that stacks a list of children vertically or horizontally.
- 
+
  - All children are initially laid out with the an infinite available size in the stacking direction.
  - In the other direction, this component's constraint is passed.
  - The children's sizes are summed in the stacking direction.
@@ -318,7 +326,7 @@ extern const struct CKStackComponentLayoutExtraKeys {
  - If it is greater than this component's maximum size in the stacking direction, children with flexShrink are flexed.
  - If, even after flexing, the sum is still greater than this component's maximum size in the stacking direction,
  justifyContent determines how children are laid out.
- 
+
  For example:
  - Suppose stacking direction is Vertical, min-width=100, max-width=300, min-height=200, max-height=500.
  - All children are laid out with min-width=100, max-width=300, min-height=0, max-height=INFINITY.
