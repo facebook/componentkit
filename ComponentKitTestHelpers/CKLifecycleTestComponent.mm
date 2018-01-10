@@ -14,6 +14,11 @@
 
 @implementation CKLifecycleTestComponent
 
++ (Class<CKComponentControllerProtocol>)controllerClass
+{
+  return [CKLifecycleTestComponentController class];
+}
+
 static BOOL _shouldEarlyReturnNew = NO;
 
 + (void)setShouldEarlyReturnNew:(BOOL)shouldEarlyReturnNew
