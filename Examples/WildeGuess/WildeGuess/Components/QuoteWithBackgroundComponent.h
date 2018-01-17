@@ -11,7 +11,7 @@
 
 #import <ComponentKit/ComponentKit.h>
 
-@interface QuoteWithBackgroundComponent : CKCompositeComponent
+@interface QuoteWithBackgroundComponent : CKSingleChildComponent
 
 + (instancetype)newWithBackgroundImage:(UIImage *)backgroundImage
                         quoteComponent:(CKComponent *)quoteComponent;

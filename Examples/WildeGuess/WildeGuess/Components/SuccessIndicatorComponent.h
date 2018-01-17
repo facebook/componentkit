@@ -12,7 +12,7 @@
 #import <ComponentKit/ComponentKit.h>
 
 /** A component indicating whether a quote belongs to Oscar Wilde. */
-@interface SuccessIndicatorComponent : CKCompositeComponent
+@interface SuccessIndicatorComponent : CKSingleChildComponent
 
 + (instancetype)newWithIndicatesSuccess:(BOOL)indicatesSuccess
                             successText:(NSString *)successText

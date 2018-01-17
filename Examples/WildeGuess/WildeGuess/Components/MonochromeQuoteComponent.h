@@ -17,7 +17,7 @@
  A monochrome quote component creates a left-aligned transucent white box on which it places a small bookmark-like gray
  box and the quote, horizontally stacked. This is placed on top of a monochrome background.
  */
-@interface MonochromeQuoteComponent : CKCompositeComponent
+@interface MonochromeQuoteComponent : CKSingleChildComponent
 
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context;
 

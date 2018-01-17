@@ -15,32 +15,44 @@
 #import "QuoteContext.h"
 
 @implementation WarmQuoteComponent
+{
+  NSString *_text;
+  QuoteContext *_context;
+}
 
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context
 {
-  return [super newWithComponent:
-          [QuoteWithBackgroundComponent
-           newWithBackgroundImage:[context imageNamed:@"Powell"]
-           quoteComponent:
-           [CKRatioLayoutComponent
-            newWithRatio:1.3
-            size:{}
-            component:
-            [CKInsetComponent
-             // Left and right inset of 30pts; centered vertically:
-             newWithInsets:{.left = 30, .right = 30, .top = INFINITY, .bottom = INFINITY}
-             component:
-             [CKLabelComponent
-              newWithLabelAttributes:{
-                .string = text,
-                .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
-              }
-              viewAttributes:{
-                {@selector(setBackgroundColor:), [UIColor clearColor]},
-                {@selector(setUserInteractionEnabled:), @NO},
-              }
-              size:{ }]]]]];
+  auto const c = [super new];
+  if (c) {
+    c->_text = text;
+    c->_context = context;
+  }
+  return c;
+}
 
+- (CKComponent *)render:(id)state
+{
+  return [QuoteWithBackgroundComponent
+          newWithBackgroundImage:[_context imageNamed:@"Powell"]
+          quoteComponent:
+          [CKRatioLayoutComponent
+           newWithRatio:1.3
+           size:{}
+           component:
+           [CKInsetComponent
+            // Left and right inset of 30pts; centered vertically:
+            newWithInsets:{.left = 30, .right = 30, .top = INFINITY, .bottom = INFINITY}
+            component:
+            [CKLabelComponent
+             newWithLabelAttributes:{
+               .string = _text,
+               .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
+             }
+             viewAttributes:{
+               {@selector(setBackgroundColor:), [UIColor clearColor]},
+               {@selector(setUserInteractionEnabled:), @NO},
+             }
+             size:{ }]]]];
 }
 
 @end

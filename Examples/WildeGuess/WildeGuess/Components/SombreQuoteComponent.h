@@ -16,7 +16,7 @@
 /**
  A sombre quote component sandwiches a quote between two thick lines and puts them on top of a somwhat sombre background.
  */
-@interface SombreQuoteComponent : CKCompositeComponent
+@interface SombreQuoteComponent : CKSingleChildComponent
 
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context;
 

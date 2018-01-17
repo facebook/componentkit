@@ -17,7 +17,7 @@
 /**
  A QuoteComponent formats a quote based on the quote style.
  */
-@interface QuoteComponent : CKCompositeComponent
+@interface QuoteComponent : CKSingleChildComponent
 
 + (instancetype)newWithQuote:(Quote *)quote context:(QuoteContext *)context;
 

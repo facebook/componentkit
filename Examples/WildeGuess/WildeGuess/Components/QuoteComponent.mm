@@ -19,10 +19,24 @@
 #import "WarmQuoteComponent.h"
 
 @implementation QuoteComponent
+{
+  Quote *_quote;
+  QuoteContext *_context;
+}
 
 + (instancetype)newWithQuote:(Quote *)quote context:(QuoteContext *)context
 {
-  return [super newWithComponent:quoteComponent(quote, context)];
+  auto const c = [super new];
+  if (c) {
+    c->_quote = quote;
+    c->_context = context;
+  }
+  return c;
+}
+
+- (CKComponent *)render:(id)state
+{
+  return quoteComponent(_quote, _context);
 }
 
 static CKComponent *quoteComponent(Quote *quote, QuoteContext *context)

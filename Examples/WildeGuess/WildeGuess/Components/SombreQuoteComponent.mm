@@ -15,35 +15,48 @@
 #import "QuoteContext.h"
 
 @implementation SombreQuoteComponent
+{
+  NSString *_text;
+  QuoteContext *_context;
+}
 
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context
 {
-  return [super newWithComponent:
-          [QuoteWithBackgroundComponent
-           newWithBackgroundImage:[context imageNamed:@"MarketStreet"]
-           quoteComponent:
-           [CKInsetComponent
-            newWithInsets:{.top = 40, .left = 30, .bottom = 40, .right = 30}
-            component:
-            [CKFlexboxComponent
-             newWithView:{}
-             size:{}
-             style:{.spacing = 50}
-             children:{
-               {lineComponent()},
-               {[CKLabelComponent
-                 newWithLabelAttributes:{
-                   .string = [text uppercaseString],
-                   .color = [UIColor whiteColor],
-                   .font = [UIFont fontWithName:@"Avenir-Black" size:25]
-                 }
-                 viewAttributes:{
-                   {@selector(setBackgroundColor:), [UIColor clearColor]},
-                   {@selector(setUserInteractionEnabled:), @NO},
-                 }
-                 size:{ }]},
-               {lineComponent()},
-             }]]]];;
+  auto const c = [super new];
+  if (c) {
+    c->_text = text;
+    c->_context = context;
+  }
+  return c;
+}
+
+- (CKComponent *)render:(id)state
+{
+  return [QuoteWithBackgroundComponent
+          newWithBackgroundImage:[_context imageNamed:@"MarketStreet"]
+          quoteComponent:
+          [CKInsetComponent
+           newWithInsets:{.top = 40, .left = 30, .bottom = 40, .right = 30}
+           component:
+           [CKFlexboxComponent
+            newWithView:{}
+            size:{}
+            style:{.spacing = 50}
+            children:{
+              {lineComponent()},
+              {[CKLabelComponent
+                newWithLabelAttributes:{
+                  .string = [_text uppercaseString],
+                  .color = [UIColor whiteColor],
+                  .font = [UIFont fontWithName:@"Avenir-Black" size:25]
+                }
+                viewAttributes:{
+                  {@selector(setBackgroundColor:), [UIColor clearColor]},
+                  {@selector(setUserInteractionEnabled:), @NO},
+                }
+                size:{ }]},
+              {lineComponent()},
+            }]]];
 }
 
 static CKComponent *lineComponent()
