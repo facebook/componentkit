@@ -28,11 +28,8 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-               pipelinePreparationEnabled:(BOOL)pipelinePreparationEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
-
-@property (nonatomic, assign, readonly) BOOL pipelinePreparationEnabled;
 
 - (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;

@@ -28,7 +28,6 @@
   return [self initWithComponentProvider:componentProvider
                                  context:context
                                sizeRange:sizeRange
-              pipelinePreparationEnabled:NO
                      componentPredicates:{}
            componentControllerPredicates:{}];
 }
@@ -36,7 +35,6 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-               pipelinePreparationEnabled:(BOOL)pipelinePreparationEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
 {
@@ -46,7 +44,6 @@
     _sizeRange = sizeRange;
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
-    _pipelinePreparationEnabled = pipelinePreparationEnabled;
   }
   return self;
 }
