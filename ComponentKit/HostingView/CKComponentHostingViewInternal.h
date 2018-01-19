@@ -13,10 +13,11 @@
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
+#import <ComponentKit/CKInspectableView.h>
 
 #import <unordered_set>
 
-@interface CKComponentHostingView ()
+@interface CKComponentHostingView () <CKInspectableView>
 
 /**
  @param componentProvider  provider conforming to CKComponentProvider protocol.
@@ -34,9 +35,6 @@
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
 
 @property (nonatomic, strong, readonly) UIView *containerView;
-
-/** Returns the layout that's currently mounted. Main thread only. */
-- (const CKComponentLayout &)mountedLayout;
 
 /** Returns the current scope enumerator provider. Main thread only. */
 - (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider;

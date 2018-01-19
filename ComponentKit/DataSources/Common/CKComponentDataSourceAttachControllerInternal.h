@@ -10,6 +10,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKComponentDataSourceAttachController.h>
+#import <ComponentKit/CKComponentScopeTypes.h>
+
 /** This is exposed for unit tests. */
 @interface CKComponentDataSourceAttachState : NSObject
 

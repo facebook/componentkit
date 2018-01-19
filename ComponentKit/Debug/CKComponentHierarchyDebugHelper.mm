@@ -64,7 +64,7 @@ static NSString *ancestorComponentHierarchyDescriptionForView(UIView *view, BOOL
   NSString *ancestorDescription;
   if (view.ck_component) {
     CKComponentRootView *rootView = rootViewForView(view);
-    const CKComponentLayout &rootLayout = *rootLayoutFromRootView(rootView);
+    const CKComponentLayout rootLayout = rootLayoutFromRootView(rootView);
     NSString *viewAncestorDescription;
     NSString *prefix;
     if (showViews) {
@@ -172,7 +172,7 @@ static NSString *componentHierarchyDescriptionForView(UIView *view, BOOL showVie
   if (view.ck_component) {
     CKComponentRootView *rootView = rootViewForView(view);
     CKComponent *component = view.ck_component;
-    const CKComponentLayout &rootLayout = *rootLayoutFromRootView(rootView);
+    const CKComponentLayout rootLayout = rootLayoutFromRootView(rootView);
     const CKComponentLayout &layout = *findLayoutForComponent(component, rootLayout);
     if (showViews) {
       description = recursiveDescriptionForLayout(layout, CGPointZero, @"", showViews);
@@ -206,15 +206,15 @@ static NSMutableString *recursiveDescriptionForView(UIView *view, NSString *pref
 {
   if ([view isKindOfClass:[CKComponentRootView class]]) {
     CKComponentRootView *rootView = (CKComponentRootView *)view;
-    const CKComponentLayout *rootLayout = rootLayoutFromRootView(rootView);
-    if (rootLayout) {
+    const CKComponentLayout rootLayout = rootLayoutFromRootView(rootView);
+    if (rootLayout.component) {
       NSMutableString *description = [NSMutableString string];
       if (!showViews) {
         [description appendString:@"For View: "];
       }
       // We always get the description of the CKComponentRootView (even if showViews is NO).
       [description appendString:computeDescription(nil, rootView, CGSizeZero, CGPointZero, prefix, YES)];
-      [description appendString:recursiveDescriptionForLayout(*rootLayout,
+      [description appendString:recursiveDescriptionForLayout(rootLayout,
                                                               CGPointZero,
                                                               [prefix stringByAppendingString:indentString],
                                                               showViews)];
@@ -244,18 +244,16 @@ static CKComponentRootView *rootViewForView(UIView *view)
   return (CKComponentRootView *)view;
 }
 
-static const CKComponentLayout *rootLayoutFromRootView(CKComponentRootView *rootView)
+static CKComponentLayout rootLayoutFromRootView(CKComponentRootView *rootView)
 {
-  const CKComponentLayout *rootLayout;
   if (rootView.ck_attachState) {
-    rootLayout = &[rootView.ck_attachState layout];
+    return [rootView.ck_attachState layout];
   } else if ([rootView.superview isKindOfClass:[CKComponentHostingView class]]) {
     CKComponentHostingView *hostingView = (CKComponentHostingView *)rootView.superview;
-    rootLayout = &hostingView.mountedLayout;
+    return hostingView.mountedLayout;
   } else {
-    rootLayout = nil;
+    return {};
   }
-  return rootLayout;
 }
 
 static const CKComponentLayout *findLayoutForComponent(CKComponent *component, const CKComponentLayout &layout)

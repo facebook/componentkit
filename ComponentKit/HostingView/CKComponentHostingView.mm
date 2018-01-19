@@ -157,7 +157,7 @@ struct CKComponentHostingViewInputs {
   [self _setNeedsUpdateWithMode:mode];
 }
 
-- (const CKComponentLayout &)mountedLayout
+- (CKComponentLayout)mountedLayout
 {
   return _mountedLayout;
 }

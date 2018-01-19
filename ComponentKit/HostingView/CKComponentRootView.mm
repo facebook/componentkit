@@ -12,6 +12,7 @@
 #import "CKComponentRootViewInternal.h"
 
 #import "CKAssert.h"
+#import "CKComponentDataSourceAttachControllerInternal.h"
 
 @implementation CKComponentRootView
 
@@ -42,6 +43,14 @@ static NSMutableArray *hitTestHooks;
     }
   }
   return superHitView;
+}
+
+- (CKComponentLayout)mountedLayout
+{
+  // It's weird to reach into ck_attachState here. ck_attachState should probably be refactored
+  // to simply be a concrete method on this class, instead of a category.
+  CKComponentDataSourceAttachState *const attachState = self.ck_attachState;
+  return attachState ? attachState.layout : CKComponentLayout();
 }
 
 @end
