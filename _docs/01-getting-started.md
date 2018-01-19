@@ -10,8 +10,8 @@ Clone the Github repo, install carthage frameworks and then open the Xcode proje
 
 {% highlight sh %}
 $ git clone https://github.com/facebook/componentkit
+$ carthage checkout
 $ cd componentkit/Examples/WildeGuess/
-$ carthage install
 $ open WildeGuess.xcodeproj
 {% endhighlight %}
 
