@@ -16,6 +16,7 @@
 #import <UIKit/UIKit.h>
 
 #import "ComponentUtilities.h"
+#import "CKAnalyticsListener.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKDetectComponentScopeCollisions.h"
@@ -51,7 +52,8 @@ std::shared_ptr<const std::vector<CKComponentLayoutChild>> CKComponentLayout::em
 NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
                               UIView *view,
                               NSSet *previouslyMountedComponents,
-                              CKComponent *supercomponent)
+                              CKComponent *supercomponent,
+                              id<CKAnalyticsListener> analyticsListener)
 {
   struct MountItem {
     const CKComponentLayout &layout;
@@ -59,6 +61,8 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
     CKComponent *supercomponent;
     BOOL visited;
   };
+
+  [analyticsListener willMountComponentTreeWithRootComponent:layout.component];
   // Using a stack to mount ensures that the components are mounted
   // in a DFS fashion which is handy if you want to animate a subpart
   // of the tree
@@ -101,14 +105,19 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
     [componentsToUnmount minusSet:mountedComponents];
     CKUnmountComponents(componentsToUnmount);
   }
+  [analyticsListener didMountComponentTreeWithRootComponent:layout.component];
 
   return mountedComponents;
 }
 
-CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent, const CKSizeRange &sizeRange)
+CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
+                                               const CKSizeRange &sizeRange,
+                                               id<CKAnalyticsListener> analyticsListener)
 {
+  [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent];
   const CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectComponentScopeCollisions(layout);
+  [analyticsListener didLayoutComponentTreeWithRootComponent:rootComponent];
   return layout;
 }
 

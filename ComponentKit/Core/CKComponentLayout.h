@@ -19,6 +19,8 @@
 @class CKComponent;
 @class CKComponentScopeRoot;
 
+@protocol CKAnalyticsListener;
+
 struct CKComponentLayoutChild;
 
 /** Deletes the target off the main thread; important since component layouts are large recursive structures. */
@@ -62,18 +64,23 @@ struct CKComponentLayoutChild {
         CKMountComponentLayout; any components that are not present in the new layout will be unmounted.
  @param supercomponent Usually pass nil; if you are mounting a subtree of a layout, pass the parent component so the
         component responder chain can be connected correctly.
+ @param analyticsListener analytics listener used to log mount time
  */
 NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
                               UIView *view,
                               NSSet *previouslyMountedComponents,
-                              CKComponent *supercomponent);
+                              CKComponent *supercomponent,
+                              id<CKAnalyticsListener> analyticsListener = nil);
 
 /**
  Safely computes the layout of the given root component by guarding against nil components.
  @param rootComponent The root component to compute the layout for.
  @param sizeRange The size range to compute the component layout within.
+ @param analyticsListener analytics listener used to log layout time.
  */
-CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent, const CKSizeRange &sizeRange);
+CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
+                                               const CKSizeRange &sizeRange,
+                                               id<CKAnalyticsListener> analyticsListener = nil);
 
 /**
  Safely computes the layout of the given component by guarding against nil components.

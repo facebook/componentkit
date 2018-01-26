@@ -10,6 +10,7 @@
 
 #import "CKBuildComponent.h"
 
+#import "CKAnalyticsListener.h"
 #import "CKComponentBoundsAnimation.h"
 #import "CKComponentBoundsAnimationPredicates.h"
 #import "CKComponentInternal.h"
@@ -22,13 +23,17 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         CKComponent *(^componentFactory)(void))
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
+  const auto analyticsListener = [previousRoot analyticsListener];
+  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot];
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   // Order of operations matters, so first store into locals and then return a struct.
   CKComponent *const component = componentFactory();
+  CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;
+  [analyticsListener didBuildComponentTreeWithScopeRoot:newScopeRoot component:component];
   return {
     .component = component,
-    .scopeRoot = threadScope.newScopeRoot,
-    .boundsAnimation = CKComponentBoundsAnimationFromPreviousScopeRoot(threadScope.newScopeRoot, previousRoot)
+    .scopeRoot = newScopeRoot,
+    .boundsAnimation = CKComponentBoundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot)
   };
 }
 
