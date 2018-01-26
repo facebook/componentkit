@@ -12,6 +12,7 @@
 
 #import <unordered_set>
 
+#import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
@@ -42,12 +43,14 @@
  Creates a conceptually brand new scope root. Prefer to use CKComponentScopeRootWithDefaultPredicates instead of this.
  
  @param listener A listener for state updates that flow through the scope root.
+ @param analyticsListener A listener for analytics events for the components of this scope root.
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
  @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
  */
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
+               analyticsListener:(id<CKAnalyticsListener>)analyticsListener
              componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
    componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
 
@@ -59,6 +62,7 @@
 - (void)registerComponent:(id<CKComponentProtocol>)component;
 
 @property (nonatomic, weak, readonly) id<CKComponentStateListener> listener;
+@property (nonatomic, weak, readonly) id<CKAnalyticsListener> analyticsListener;
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier globalIdentifier;
 @property (nonatomic, strong, readonly) CKComponentScopeFrame *rootFrame;
 

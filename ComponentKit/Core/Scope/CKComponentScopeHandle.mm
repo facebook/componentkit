@@ -56,7 +56,7 @@
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                  componentClass:(Class<CKComponentProtocol>)componentClass
+                  componentClass:(Class)componentClass
              initialStateCreator:(id (^)(void))initialStateCreator
                           parent:(CKComponentScopeHandle *)parent
 {
@@ -74,7 +74,7 @@
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                 globalIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                  componentClass:(Class)componentClass
+                  componentClass:(Class<CKComponentProtocol>)componentClass
                            state:(id)state
                       controller:(id<CKComponentControllerProtocol>)controller
                  scopedResponder:(CKScopedResponder *)scopedResponder
@@ -88,7 +88,7 @@
     _state = state;
     _controller = controller;
     _parent = parent;
-
+    
     _scopedResponder = scopedResponder;
     [scopedResponder addHandleToChain:self];
   }

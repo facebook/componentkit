@@ -16,6 +16,7 @@
 
 @protocol CKComponentHostingViewDelegate;
 @protocol CKComponentSizeRangeProviding;
+@protocol CKAnalyticsListener;
 
 /** A view that renders a single component. */
 @interface CKComponentHostingView : UIView
@@ -31,6 +32,17 @@
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
+
+/**
+ @param componentProvider provider conforming to CKComponentProvider protocol.
+ @param sizeRangeProvider sizing range provider conforming to CKComponentSizeRangeProviding.
+ @param analyticsListener listener conforming to AnalyticsListener will be used to get component lifecycle callbacks for logging
+ @see CKComponentProvider
+ @see CKComponentSizeRangeProviding
+ */
+- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
+                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
 
 /** Updates the model used to render the component. */
 - (void)updateModel:(id<NSObject>)model mode:(CKUpdateMode)mode;

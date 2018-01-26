@@ -410,6 +410,7 @@ static BOOL testComponentProtocolPredicate(id<CKComponentProtocol> component)
 {
   CKComponentScopeRoot *root = [CKComponentScopeRoot
                                 rootWithListener:nil
+                                analyticsListener:nil
                                 componentPredicates:{&testComponentProtocolPredicate}
                                 componentControllerPredicates:{}];
   CKThreadLocalComponentScope threadScope(root, {});
@@ -431,7 +432,7 @@ static BOOL testComponentProtocolPredicate(id<CKComponentProtocol> component)
 
 - (void)testComponentScopeRootFactoryRegisteringProtocolComponentFindsThatComponentWhenEnumerating
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, {&testComponentProtocolPredicate}, {});
+  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, nil, {&testComponentProtocolPredicate}, {});
 
   CKThreadLocalComponentScope threadScope(root, {});
 
@@ -454,6 +455,7 @@ static BOOL testComponentProtocolPredicate(id<CKComponentProtocol> component)
 {
   CKComponentScopeRoot *root = [CKComponentScopeRoot
                                 rootWithListener:nil
+                                analyticsListener:nil
                                 componentPredicates:{&testComponentProtocolPredicate}
                                 componentControllerPredicates:{}];
   CKThreadLocalComponentScope threadScope(root, {});
@@ -474,7 +476,7 @@ static BOOL testComponentProtocolPredicate(id<CKComponentProtocol> component)
 
 - (void)testComponentScopeRootFactoryRegisteringDuplicateProtocolComponent
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, {&testComponentProtocolPredicate}, {});
+  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, nil, {&testComponentProtocolPredicate}, {});
   CKThreadLocalComponentScope threadScope(root, {});
 
   TestComponentWithScopedProtocol *c = [TestComponentWithScopedProtocol new];
@@ -495,6 +497,7 @@ static BOOL testComponentProtocolPredicate(id<CKComponentProtocol> component)
 {
   CKComponentScopeRoot *root = [CKComponentScopeRoot
                                 rootWithListener:nil
+                                analyticsListener:nil
                                 componentPredicates:{&testComponentProtocolPredicate}
                                 componentControllerPredicates:{}];
   CKThreadLocalComponentScope threadScope(root, {});
@@ -522,7 +525,7 @@ static BOOL testComponentProtocolPredicate(id<CKComponentProtocol> component)
 
 - (void)testComponentScopeRootFactoryRegisteringMultipleProtocolComponentFindsBothComponentsWhenEnumerating
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, {&testComponentProtocolPredicate}, {});
+  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, nil, {&testComponentProtocolPredicate}, {});
   CKThreadLocalComponentScope threadScope(root, {});
 
   TestComponentWithScopedProtocol *c1 = [TestComponentWithScopedProtocol new];
@@ -550,6 +553,7 @@ static BOOL testComponentProtocolPredicate(id<CKComponentProtocol> component)
 {
   CKComponentScopeRoot *root = [CKComponentScopeRoot
                                 rootWithListener:nil
+                                analyticsListener:nil
                                 componentPredicates:{&testComponentProtocolPredicate}
                                 componentControllerPredicates:{}];
   CKThreadLocalComponentScope threadScope(root, {});
@@ -566,7 +570,7 @@ static BOOL testComponentProtocolPredicate(id<CKComponentProtocol> component)
 
 - (void)testComponentScopeRootFactoryRegisteringNonProtocolComponentFindsNoComponentsWhenEnumerating
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, {&testComponentProtocolPredicate}, {});
+  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, nil, {&testComponentProtocolPredicate}, {});
   CKThreadLocalComponentScope threadScope(root, {});
 
   TestComponentWithoutScopedProtocol *c = [TestComponentWithoutScopedProtocol new];
@@ -588,6 +592,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKComponentControllerPro
 {
   CKComponentScopeRoot *root = [CKComponentScopeRoot
                                 rootWithListener:nil
+                                analyticsListener:nil
                                 componentPredicates:{}
                                 componentControllerPredicates:{&testComponentControllerProtocolPredicate}];
   CKThreadLocalComponentScope threadScope(root, {});
@@ -609,7 +614,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKComponentControllerPro
 
 - (void)testComponentScopeRootFactoryRegisteringProtocolComponentControllerFindsThatControllerWhenEnumerating
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, {}, {&testComponentControllerProtocolPredicate});
+  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, nil, {}, {&testComponentControllerProtocolPredicate});
   CKThreadLocalComponentScope threadScope(root, {});
 
   TestComponentControllerWithScopedProtocol *c = [TestComponentControllerWithScopedProtocol new];
@@ -631,6 +636,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKComponentControllerPro
 {
   CKComponentScopeRoot *root = [CKComponentScopeRoot
                                 rootWithListener:nil
+                                analyticsListener:nil
                                 componentPredicates:{}
                                 componentControllerPredicates:{&testComponentControllerProtocolPredicate}];
   CKThreadLocalComponentScope threadScope(root, {});
@@ -651,7 +657,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKComponentControllerPro
 
 - (void)testComponentScopeRootFactoryRegisteringDuplicateProtocolComponentController
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, {}, {&testComponentControllerProtocolPredicate});
+  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, nil, {}, {&testComponentControllerProtocolPredicate});
   CKThreadLocalComponentScope threadScope(root, {});
 
   TestComponentControllerWithScopedProtocol *c = [TestComponentControllerWithScopedProtocol new];
@@ -672,6 +678,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKComponentControllerPro
 {
   CKComponentScopeRoot *root = [CKComponentScopeRoot
                                 rootWithListener:nil
+                                analyticsListener:nil
                                 componentPredicates:{}
                                 componentControllerPredicates:{&testComponentControllerProtocolPredicate}];
   CKThreadLocalComponentScope threadScope(root, {});
@@ -699,7 +706,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKComponentControllerPro
 
 - (void)testComponentScopeRootFactoryRegisteringMultipleProtocolComponentControllersFindsBothControllersWhenEnumerating
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, {}, {&testComponentControllerProtocolPredicate});
+  CKComponentScopeRoot *root = CKComponentScopeRootWithPredicates(nil, nil, {}, {&testComponentControllerProtocolPredicate});
   CKThreadLocalComponentScope threadScope(root, {});
 
   TestComponentControllerWithScopedProtocol *c1 = [TestComponentControllerWithScopedProtocol new];

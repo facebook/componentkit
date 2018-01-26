@@ -110,6 +110,7 @@
   [[_changeset insertedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
     const CKBuildComponentResult result =
     CKBuildComponent(CKComponentScopeRootWithPredicates(_stateListener,
+                                                        nil,
                                                         configuration.componentPredicates,
                                                         configuration.componentControllerPredicates), {}, ^{
       return [componentProvider componentForModel:model context:context];

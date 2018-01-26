@@ -15,6 +15,7 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 
 @protocol CKComponentStateListener;
+@protocol CKAnalyticsListener;
 
 @class CKComponentScopeRoot;
 
@@ -23,6 +24,11 @@
  to work. You should use this function to create scope roots unless you really know what you're doing.
  */
 CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener);
+/**
+ Initializes a CKComponentScopeRoot with the normal, infrastructure-provided predicates necessary for the framework
+ to work. You should use this function to create scope roots unless you really know what you're doing.
+ */
+CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener, id<CKAnalyticsListener> analyticsListener);
 
 /**
  Initializes a CKComponentScopeRoot with your provided predicates in addition to the normal, infrastructure-provided
@@ -33,5 +39,6 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
  @param componentControllerPredicates Same as componentPredicates above, but for component controllers. 
  */
 CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> listener,
+                                                         id<CKAnalyticsListener> analyticsListener,
                                                          const std::unordered_set<CKComponentScopePredicate> &componentPredicates,
                                                          const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates);

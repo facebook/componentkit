@@ -35,11 +35,13 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> 
 }
 
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
+               analyticsListener:(id<CKAnalyticsListener>)analyticsListener
              componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
    componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
 {
   static int32_t nextGlobalIdentifier = 0;
   return [[CKComponentScopeRoot alloc] initWithListener:listener
+                                      analyticsListener:analyticsListener
                                        globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)
                                     componentPredicates:componentPredicates
                           componentControllerPredicates:componentControllerPredicates];
@@ -48,18 +50,21 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> 
 - (instancetype)newRoot
 {
   return [[CKComponentScopeRoot alloc] initWithListener:_listener
+                                      analyticsListener:_analyticsListener
                                        globalIdentifier:_globalIdentifier
                                     componentPredicates:_componentPredicates
                           componentControllerPredicates:_componentControllerPredicates];
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
+               analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                 globalIdentifier:(CKComponentScopeRootIdentifier)globalIdentifier
              componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
    componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
 {
   if (self = [super init]) {
     _listener = listener;
+    _analyticsListener = analyticsListener;
     _globalIdentifier = globalIdentifier;
     _rootFrame = [[CKComponentScopeFrame alloc] initWithHandle:nil];
     _componentPredicates = componentPredicates;

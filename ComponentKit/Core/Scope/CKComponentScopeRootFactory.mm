@@ -15,8 +15,14 @@
 
 CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener)
 {
+  return CKComponentScopeRootWithDefaultPredicates(listener, nil);
+}
+
+CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener, id<CKAnalyticsListener> analyticsListener)
+{
   return [CKComponentScopeRoot
           rootWithListener:listener
+          analyticsListener:analyticsListener
           componentPredicates:{
             &CKComponentBoundsAnimationPredicate
           }
@@ -28,6 +34,7 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
 }
 
 CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> listener,
+                                                         id<CKAnalyticsListener> analyticsListener,
                                                          const std::unordered_set<CKComponentScopePredicate> &componentPredicates,
                                                          const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates)
 {
@@ -46,6 +53,7 @@ CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateList
 
   return [CKComponentScopeRoot
           rootWithListener:listener
+          analyticsListener:analyticsListener
           componentPredicates:componentPredicatesUnion
           componentControllerPredicates:componentControllerPredicatesUnion];
 }

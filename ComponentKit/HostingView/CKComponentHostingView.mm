@@ -74,7 +74,19 @@ struct CKComponentHostingViewInputs {
   return [self initWithComponentProvider:componentProvider
                        sizeRangeProvider:sizeRangeProvider
                      componentPredicates:{}
-           componentControllerPredicates:{}];
+           componentControllerPredicates:{}
+                       analyticsListener:nil];
+}
+
+- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
+                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+{
+  return [self initWithComponentProvider:componentProvider
+                       sizeRangeProvider:sizeRangeProvider
+                     componentPredicates:{}
+           componentControllerPredicates:{}
+                       analyticsListener:analyticsListener];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -82,11 +94,24 @@ struct CKComponentHostingViewInputs {
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
 {
+  return [self initWithComponentProvider:componentProvider
+                       sizeRangeProvider:sizeRangeProvider
+                     componentPredicates:componentPredicates
+           componentControllerPredicates:componentControllerPredicates
+                       analyticsListener:nil];
+}
+
+- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
+                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                      componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
+            componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+{
   if (self = [super initWithFrame:CGRectZero]) {
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
 
-    _pendingInputs = {.scopeRoot = CKComponentScopeRootWithPredicates(self, componentPredicates, componentControllerPredicates)};
+    _pendingInputs = {.scopeRoot = CKComponentScopeRootWithPredicates(self, analyticsListener, componentPredicates, componentControllerPredicates)};
 
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
