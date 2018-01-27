@@ -65,7 +65,7 @@
     const CKBuildComponentResult result = CKBuildComponent([oldItem scopeRoot], {}, ^{
       return [componentProvider componentForModel:model context:context];
     });
-    const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange);
+    const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
 
     [section replaceObjectAtIndex:indexPath.item withObject:
      [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation]];
@@ -115,7 +115,7 @@
                                                         configuration.componentControllerPredicates), {}, ^{
       return [componentProvider componentForModel:model context:context];
     });
-    const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange);
+    const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
     insertedItemsBySection[indexPath.section][indexPath.item] =
     [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation];
   }];

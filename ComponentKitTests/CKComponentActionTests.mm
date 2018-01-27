@@ -475,7 +475,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
   __block BOOL calledAction = NO;
 
   // We have to use build component here to ensure the scopes are properly configured.
-  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
+  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     return [CKTestScopeActionComponent
             newWithBlock:^(CKComponent *sender, id context) {
               calledAction = YES;
@@ -492,7 +492,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
   __block id actionContext = nil;
 
   // We have to use build component here to ensure the scopes are properly configured.
-  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
+  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     return [CKTestScopeActionComponent
             newWithBlock:^(CKComponent *sender, id context) {
               actionContext = context;
@@ -511,7 +511,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
   __block BOOL calledAction = NO;
 
   // We have to use build component here to ensure the scopes are properly configured.
-  CKTestControllerScopeActionComponent *component = (CKTestControllerScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
+  CKTestControllerScopeActionComponent *component = (CKTestControllerScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     return [CKTestControllerScopeActionComponent
             newWithBlock:^(CKComponent *sender, id context) {
               calledAction = YES;
@@ -591,7 +591,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
 
 - (void)testThatScopeActionWithSameSelectorHaveUniqueIdentifiers
 {
-  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil), {});
+  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
   
   CKComponentScope scope([CKTestScopeActionComponent class], @"moose");
   const CKAction<> action1 = {scope, @selector(triggerAction:)};
@@ -733,7 +733,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
 
 - (void)testScopedActionEquality
 {
-  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil), {});
+  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
 
   const SEL selector = @selector(triggerAction:);
   CKComponentScope scope([CKTestScopeActionComponent class], @"Marty McFly");

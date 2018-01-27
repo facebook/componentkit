@@ -13,11 +13,6 @@
 #import "CKComponentControllerEvents.h"
 #import "CKComponentBoundsAnimationPredicates.h"
 
-CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener)
-{
-  return CKComponentScopeRootWithDefaultPredicates(listener, nil);
-}
-
 CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener, id<CKAnalyticsListener> analyticsListener)
 {
   return [CKComponentScopeRoot

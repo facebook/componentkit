@@ -56,7 +56,7 @@
 
       CKDataSourceItem *newItem;
       if (onlySizeRangeChanged) {
-        const CKComponentLayout layout = CKComputeRootComponentLayout(item.layout.component, sizeRange);
+        const CKComponentLayout layout = CKComputeRootComponentLayout(item.layout.component, sizeRange, [item scopeRoot].analyticsListener);
         newItem = [[CKDataSourceItem alloc] initWithLayout:layout
                                                                            model:[item model]
                                                                        scopeRoot:[item scopeRoot]
@@ -65,7 +65,7 @@
         const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
           return [componentProvider componentForModel:[item model] context:context];
         });
-        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange);
+        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
         newItem = [[CKDataSourceItem alloc] initWithLayout:layout
                                                                            model:[item model]
                                                                        scopeRoot:result.scopeRoot

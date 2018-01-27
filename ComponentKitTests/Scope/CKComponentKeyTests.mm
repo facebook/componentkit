@@ -30,7 +30,7 @@
 
 - (void)testComponentScopeStateIsDistinguishedByKey
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKComponentScopeRoot *root2;
   {
     CKThreadLocalComponentScope threadScope(root1, {});
@@ -52,7 +52,7 @@
 
 - (void)testComponentScopeStateIsRecoveredWithKeysThatAreEqualButNotPointerIdentical
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKComponentScopeRoot *root2;
   {
     CKThreadLocalComponentScope threadScope(root1, {});

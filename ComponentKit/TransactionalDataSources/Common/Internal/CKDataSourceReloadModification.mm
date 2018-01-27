@@ -50,7 +50,7 @@
       const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
         return [componentProvider componentForModel:[item model] context:context];
       });
-      const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange);
+      const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
       [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:layout
                                                                                    model:[item model]
                                                                                scopeRoot:result.scopeRoot

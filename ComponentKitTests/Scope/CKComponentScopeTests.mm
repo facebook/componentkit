@@ -64,20 +64,20 @@
 
 - (void)testThreadLocalComponentScopeIsNotEmptyWhenTheScopeExists
 {
-  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil), {});
+  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
   XCTAssertTrue(CKThreadLocalComponentScope::currentScope() != nullptr);
 }
 
 - (void)testThreadLocalComponentScopeStoresTheProvidedFrameAsTheEquivalentPreviousFrame
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKThreadLocalComponentScope threadScope(root, {});
   XCTAssertEqualObjects(CKThreadLocalComponentScope::currentScope()->stack.top().equivalentPreviousFrame, root.rootFrame);
 }
 
 - (void)testThreadLocalComponentScopePushesChildComponentScope
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKThreadLocalComponentScope threadScope(root, {});
   CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
   CKComponentScope scope([CKCompositeComponent class]);
@@ -88,11 +88,11 @@
 - (void)testThreadLocalComponentScopeCanBeNested
 {
   {
-    CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
+    CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
     CKThreadLocalComponentScope threadScope(root, {});
 
     {
-      CKComponentScopeRoot *root2 = CKComponentScopeRootWithDefaultPredicates(nil);
+      CKComponentScopeRoot *root2 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
       CKThreadLocalComponentScope threadScope2(root2, {});
       XCTAssertEqual(CKThreadLocalComponentScope::currentScope(), &threadScope2);
     }
@@ -107,7 +107,7 @@
 
 - (void)testComponentScopeFrameIsPoppedWhenComponentScopeCloses
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKThreadLocalComponentScope threadScope(root, {});
   CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
   {
@@ -121,7 +121,7 @@
 
 - (void)testComponentScopeStateIsAcquiredFromPreviousComponentScopeStateOneLevelDown
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKComponentScopeRoot *root2;
   {
     CKThreadLocalComponentScope threadScope(root1, {});
@@ -148,7 +148,7 @@
 
 - (void)testComponentScopeReplaceStatePropagatesStateToNextComponentScopeState
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKComponentScopeRoot *root2;
   {
     CKThreadLocalComponentScope threadScope(root1, {});
@@ -170,7 +170,7 @@
 
 - (void)testComponentScopeStateIsAcquiredFromPreviousComponentScopeStateOneLevelDownWithSibling
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKComponentScopeRoot *root2;
   {
     CKThreadLocalComponentScope threadScope(root1, {});
@@ -203,7 +203,7 @@
 
 - (void)testComponentScopeStateIsAcquiredFromPreviousComponentScopeStateOneLevelDownWithSiblingThatDoesNotAcquire
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKComponentScopeRoot *root2;
   {
     CKThreadLocalComponentScope threadScope(root1, {});
@@ -237,7 +237,7 @@
 
 - (void)testBrandNewChildScopeHandleGetsReferenceToParent
 {
-  const auto root1 = CKComponentScopeRootWithDefaultPredicates(nil);
+  const auto root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   {
     CKThreadLocalComponentScope threadScope(root1, {});
     {
@@ -254,7 +254,7 @@
 
 - (void)testNewGenerationOfScopeHandleGetsReferenceToNewParent
 {
-  const auto root1 = CKComponentScopeRootWithDefaultPredicates(nil);
+  const auto root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKComponentScopeRoot *root2;
   {
     CKThreadLocalComponentScope threadScope(root1, {});
@@ -284,7 +284,7 @@
 
 - (void)testComponentScopeHandleGlobalIdentifierIsAcquiredFromPreviousComponentScopeOneLevelDown
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKComponentScopeRoot *root2;
   int32_t globalIdentifier;
   {
@@ -306,7 +306,7 @@
 
 - (void)testComponentScopeHandleGlobalIdentifierIsNotTheSameBetweenSiblings
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   {
     CKThreadLocalComponentScope threadScope(root, {});
     int32_t globalIdentifier;
@@ -323,7 +323,7 @@
 
 - (void)testComponentScopeHandleGlobalIdentifierIsTheSameBetweenSiblingsWithComponentScopeCollision
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   {
     CKThreadLocalComponentScope threadScope(root, {});
     int32_t globalIdentifier;
@@ -340,7 +340,7 @@
 
 - (void)testComponentScopeHandleGlobalIdentifierIsTheSameBetweenDescendantsWithComponentScopeCollision
 {
-  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   {
     CKThreadLocalComponentScope threadScope(root, {});
     int32_t globalIdentifier;
@@ -363,7 +363,7 @@
 
 - (void)testComponentScopeHandleGlobalIdentifierIsTheSameBetweenDescendantsWithComponentScopeCollisionAcrossComponentScopeRoots
 {
-  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil);
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKComponentScopeRoot *root2;
   int32_t globalIdentifier;
   {

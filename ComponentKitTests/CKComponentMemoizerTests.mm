@@ -147,7 +147,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   {
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -180,7 +180,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener, nil), {}, build);
     memoizerState = memoizer.nextMemoizerState();
   }
   // Mutate state directly instead of going through updateState:mode: for conciseness
@@ -213,7 +213,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -249,7 +249,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
               return newResult;
             }];
   };
-  CKBuildComponentResult result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
+  CKBuildComponentResult result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), pendingStateUpdates, build);
   CKBuildComponent(result.scopeRoot, pendingStateUpdates, build);
 }
 
@@ -278,7 +278,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
     CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(nil);
 
-    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
+    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), pendingStateUpdates, build);
     layout1 = [result1.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
     componentMemoizerState = memoizer.nextMemoizerState();
     layoutMemoizerState = layoutMemoizer.nextMemoizerState();
@@ -333,7 +333,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> componentMemoizer(nil);
     CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(nil);
-    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
+    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), pendingStateUpdates, build);
     CKComponentLayout layout = [result1.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
 
     componentMemoizerState = componentMemoizer.nextMemoizerState();
@@ -370,7 +370,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
     CKComponentMemoizer<CKComponentLayoutMemoizerState> layoutMemoizer(nil);
-    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
+    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), pendingStateUpdates, build);
     CKComponentLayout layout = [result1.component layoutThatFits:{CGSizeZero, CGSizeZero} parentSize:CGSizeZero];
 
     componentMemoizerState = memoizer.nextMemoizerState();
@@ -405,7 +405,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result1;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
+    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -451,7 +451,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   {
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -509,7 +509,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   {
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
   XCTAssert(componentMemoizerTestsNumComponentCreation == 4, @"Should have initialized only four times");
@@ -565,7 +565,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   {
     // Vend components from the current layout to be available in the new state and layout calculations
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), pendingStateUpdates, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), pendingStateUpdates, build);
     memoizerState = memoizer.nextMemoizerState();
   }
   XCTAssert(componentMemoizerTestsNumComponentCreation == 4, @"Should have initialized only four times");
@@ -599,7 +599,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener, nil), {}, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -637,7 +637,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKComponentMemoizerState *memoizerState;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, build);
+    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener, nil), {}, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -675,7 +675,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKBuildComponentResult result;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, build);
+    result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener, nil), {}, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 
@@ -713,7 +713,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
   CKComponentMemoizerState *memoizerState;
   {
     CKComponentMemoizer<CKComponentMemoizerState> memoizer(nil);
-    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, build);
+    result1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener, nil), {}, build);
     memoizerState = memoizer.nextMemoizerState();
   }
 

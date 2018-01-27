@@ -57,7 +57,7 @@
   CKComponent *(^block)(void) = ^{
     return [CKBoundsAnimationComponent newWithIdentifier:@0];
   };
-  const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, block);
+  const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, block);
   const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, block);
   XCTAssertEqual(secondResult.boundsAnimation.duration, 0.5);
 }
@@ -69,7 +69,7 @@
   };
   UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
 
-  const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, block);
+  const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, block);
   const CKComponentLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
   NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container, nil, nil);
 
@@ -87,7 +87,7 @@
 {
   UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
 
-  const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
+  const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     return [CKFlexboxComponent
             newWithView:{}
             size:{}
@@ -123,7 +123,7 @@
 {
   UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
 
-  const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
+  const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     return [CKBoundsAnimationComponent newWithIdentifier:@0];
   });
   const CKComponentLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
@@ -145,7 +145,7 @@
 {
   UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
 
-  const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil), {}, ^{
+  const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     CKComponentScope scope([CKFlexboxComponent class], @"foo");
     return [CKFlexboxComponent
             newWithView:{[CKBoundsAnimationRecordingView class]}

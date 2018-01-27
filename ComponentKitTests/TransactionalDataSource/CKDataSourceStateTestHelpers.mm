@@ -25,7 +25,7 @@
 
 static CKDataSourceItem *item(CKDataSourceConfiguration *configuration, id<CKComponentStateListener> listener, id model)
 {
-  const CKBuildComponentResult result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener), {}, ^CKComponent *{
+  const CKBuildComponentResult result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener, nil), {}, ^CKComponent *{
     return [configuration.componentProvider componentForModel:model context:configuration.context];
   });
   const CKComponentLayout layout = [result.component layoutThatFits:configuration.sizeRange parentSize:configuration.sizeRange.max];
