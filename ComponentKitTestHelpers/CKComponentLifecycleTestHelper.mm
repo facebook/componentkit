@@ -91,7 +91,8 @@
   [_componentDataSourceAttachController attachComponentLayout:_state.componentLayout
                                           withScopeIdentifier:_state.scopeRoot.globalIdentifier
                                           withBoundsAnimation:_state.boundsAnimation
-                                                       toView:view];
+                                                       toView:view
+                                            analyticsListener:nil];
 }
 
 - (void)detachFromView

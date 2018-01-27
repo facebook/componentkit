@@ -14,6 +14,8 @@
 
 #import <unordered_set>
 
+@protocol CKAnalyticsListener;
+
 @interface CKDataSourceConfiguration ()
 
 /**
@@ -29,7 +31,10 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
-            componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
+            componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
+
+@property (nonatomic, readonly, strong) id<CKAnalyticsListener> analyticsListener;
 
 - (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;

@@ -52,9 +52,9 @@
       });
       const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
       [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:layout
-                                                                                   model:[item model]
-                                                                               scopeRoot:result.scopeRoot
-                                                                         boundsAnimation:result.boundsAnimation]];
+                                                             model:[item model]
+                                                         scopeRoot:result.scopeRoot
+                                                   boundsAnimation:result.boundsAnimation]];
     }];
     [newSections addObject:newItems];
   }];

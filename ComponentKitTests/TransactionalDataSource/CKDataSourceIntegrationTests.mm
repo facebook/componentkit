@@ -124,6 +124,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
+                                       analyticsListener:nil
                                        ];
 
   return [[CKCollectionViewTransactionalDataSource alloc] initWithCollectionView:self.collectionViewController.collectionView

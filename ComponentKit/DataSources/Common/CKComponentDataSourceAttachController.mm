@@ -54,6 +54,7 @@
           withScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
           withBoundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation
                        toView:(UIView *)view
+            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
 {
   CKAssertMainThread();
   CKAssertNotNil(view, @"Impossible to attach a component layout to a nil view");
@@ -66,7 +67,7 @@
     [self _detachComponentLayoutFromView:view];
   }
   // Mount the component tree on the view
-  CKComponentDataSourceAttachState *attachState = mountComponentLayoutInView(layout, view, scopeIdentifier, boundsAnimation);
+  CKComponentDataSourceAttachState *attachState = mountComponentLayoutInView(layout, view, scopeIdentifier, boundsAnimation, analyticsListener);
   // Mark the view as attached and associates it to the right attach state
   _scopeIdentifierToAttachedViewMap[@(scopeIdentifier)] = view;
   view.ck_attachState = attachState;
@@ -101,13 +102,14 @@
 static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComponentLayout &layout,
                                                                     UIView *view,
                                                                     CKComponentScopeRootIdentifier scopeIdentifier,
-                                                                    const CKComponentBoundsAnimation &boundsAnimation)
+                                                                    const CKComponentBoundsAnimation &boundsAnimation,
+                                                                    id<CKAnalyticsListener> analyticsListener)
 {
   CKCAssertNotNil(view, @"Impossible to mount a component layout on a nil view");
   NSSet *currentlyMountedComponents = view.ck_attachState.mountedComponents;
   __block NSSet *newMountedComponents = nil;
   CKComponentBoundsAnimationApply(boundsAnimation, ^{
-    newMountedComponents = CKMountComponentLayout(layout, view, currentlyMountedComponents, nil);
+    newMountedComponents = CKMountComponentLayout(layout, view, currentlyMountedComponents, nil, analyticsListener);
   }, nil);
   return [[CKComponentDataSourceAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents layout:layout];
 }

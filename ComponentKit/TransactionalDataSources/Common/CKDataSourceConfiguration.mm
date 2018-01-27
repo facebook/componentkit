@@ -29,7 +29,8 @@
                                  context:context
                                sizeRange:sizeRange
                      componentPredicates:{}
-           componentControllerPredicates:{}];
+           componentControllerPredicates:{}
+                       analyticsListener:nil];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -37,6 +38,7 @@
                                 sizeRange:(const CKSizeRange &)sizeRange
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener
 {
   if (self = [super init]) {
     _componentProvider = componentProvider;
@@ -44,6 +46,7 @@
     _sizeRange = sizeRange;
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
+    _analyticsListener = analyticsListener;
   }
   return self;
 }
