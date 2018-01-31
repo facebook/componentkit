@@ -26,17 +26,29 @@
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
  @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
+ @param analyticsListener listener conforming to AnalyticsListener will be used to get component lifecycle callbacks for logging
  @see CKComponentProvider
  @see CKComponentSizeRangeProviding
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
-            componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
+            componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
 
 @property (nonatomic, strong, readonly) UIView *containerView;
 
 /** Returns the current scope enumerator provider. Main thread only. */
 - (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider;
+
+/**
+ Function for setting default analytics listener that will be used if CKComponentHostingView doesn't have one
+
+ @param defaultListener Analytics listener to be used if CKComponentHostingView don't inject one
+
+ @warning This method is affined to the main thread and should only be called from it
+ */
+
++ (void)setDefaultAnalyticsListener:(id<CKAnalyticsListener>)defaultListener;
 
 @end

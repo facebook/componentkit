@@ -25,6 +25,7 @@
 @property (nonatomic, weak) id<CKComponentHostingViewDelegate> delegate;
 
 /**
+ Convenience initializer that uses default analytics listener
  @param componentProvider provider conforming to CKComponentProvider protocol.
  @param sizeRangeProvider sizing range provider conforming to CKComponentSizeRangeProviding.
  @see CKComponentProvider

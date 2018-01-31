@@ -61,6 +61,16 @@ struct CKComponentHostingViewInputs {
 
 @implementation CKComponentHostingView
 
+static id<CKAnalyticsListener> sDefaultAnalyticsListener;
+
+// Default analytics listener is only set/read from main queue to avoid dealing with concurrency
+// This should happen very rarely, ideally once per app run, so using main for that is ok
++ (void)setDefaultAnalyticsListener:(id<CKAnalyticsListener>) defaultListener
+{
+  CKAssertMainThread();
+  sDefaultAnalyticsListener = defaultListener;
+}
+
 #pragma mark - Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -93,25 +103,14 @@ struct CKComponentHostingViewInputs {
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
-{
-  return [self initWithComponentProvider:componentProvider
-                       sizeRangeProvider:sizeRangeProvider
-                     componentPredicates:componentPredicates
-           componentControllerPredicates:componentControllerPredicates
-                       analyticsListener:nil];
-}
-
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                      componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
-            componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
 {
   if (self = [super initWithFrame:CGRectZero]) {
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
 
-    _pendingInputs = {.scopeRoot = CKComponentScopeRootWithPredicates(self, analyticsListener, componentPredicates, componentControllerPredicates)};
+    _pendingInputs = {.scopeRoot =
+      CKComponentScopeRootWithPredicates(self, analyticsListener ?: sDefaultAnalyticsListener, componentPredicates, componentControllerPredicates)};
 
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
