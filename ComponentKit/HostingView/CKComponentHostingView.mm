@@ -68,6 +68,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 + (void)setDefaultAnalyticsListener:(id<CKAnalyticsListener>) defaultListener
 {
   CKAssertMainThread();
+  CKAssertNil(sDefaultAnalyticsListener, @"Default analytics listener already exists - you shouldn't set it more then once!");
   sDefaultAnalyticsListener = defaultListener;
 }
 

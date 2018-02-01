@@ -46,7 +46,10 @@
 
  @param defaultListener Analytics listener to be used if CKComponentHostingView don't inject one
 
- @warning This method is affined to the main thread and should only be called from it
+ @warning This method is affined to the main thread and should only be called from it.
+          You shouldn't set analytics listener more then once - this will cause a confusion on which one is used.
+          If you want to pass a custom analytics listener to a particular hosting view, please use
+           initWithComponentProvider:sizeRangeProvider:analyticsListener: to create it
  */
 
 + (void)setDefaultAnalyticsListener:(id<CKAnalyticsListener>)defaultListener;
