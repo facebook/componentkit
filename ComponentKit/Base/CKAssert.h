@@ -42,3 +42,25 @@
 
 #define CKFatal(description, ...) CKAssert(NO, (description), ##__VA_ARGS__)
 #define CKCFatal(description, ...) CKCAssert(NO, (description), ##__VA_ARGS__)
+
+#define CKWarnWithCategory(condition, category, description, ...) \
+do { \
+  if (!(condition)) { \
+    NSMutableString *__ckWarning_loggingString = [NSMutableString stringWithFormat:@"[%@] Warning: ",(category)]; \
+    [__ckWarning_loggingString appendFormat:(description), ##__VA_ARGS__]; \
+    NSLog(@"%@",__ckWarning_loggingString); \
+  } \
+} while(0)
+
+#define CKCWarnWithCategory(condition, category, description, ...) \
+do { \
+  if (!(condition)) { \
+    NSMutableString *__ckWarning_loggingString = [NSMutableString stringWithFormat:@"[%@] Warning: ",(category)]; \
+    [__ckWarning_loggingString appendFormat:(description), ##__VA_ARGS__]; \
+    NSLog(@"%@",__ckWarning_loggingString); \
+  } \
+} while(0)
+
+#define CKWarn(condition, description, ...) if (!(condition)) { NSLog((description), ##__VA_ARGS__); }
+
+#define CKCWarn(condition, description, ...) if (!(condition)) { NSLog((description), ##__VA_ARGS__); }
