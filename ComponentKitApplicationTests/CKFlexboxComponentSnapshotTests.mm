@@ -2292,6 +2292,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 
 - (void)testSimultaneousFlexGrowAndAlignStretch
 {
+  CKComponentContext<CKFlexboxComponentContext> ctx([CKFlexboxComponentContext newWithReuseOnlyExactSizeSpecs:YES]);
   CKFlexboxComponent *c =
   [CKFlexboxComponent
    newWithView:kWhiteBackgroundView
@@ -2302,7 +2303,6 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      .alignItems = CKFlexboxAlignItemsStretch,
      // This test is demonstrating a bug that requires the following option as a workaround.
      // Ideally we fix the bug and remove the option entirely, but the test still passes.
-     .disableCachingToWorkAroundBug = YES,
    }
    children:{
      {

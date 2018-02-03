@@ -316,6 +316,11 @@ extern const struct CKStackComponentLayoutExtraKeys {
   NSString * const hadOverflow;
 } CKStackComponentLayoutExtraKeys;
 
+/** Solely for experiments affecting all flexbox instances */
+@interface CKFlexboxComponentContext: NSObject
++ (instancetype)newWithReuseOnlyExactSizeSpecs:(BOOL)reuseOnlyExactSizeSpecs;
+@end
+
 /**
  A simple layout component that stacks a list of children vertically or horizontally.
 
