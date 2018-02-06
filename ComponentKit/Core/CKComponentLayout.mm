@@ -11,6 +11,7 @@
 #import "CKComponentLayout.h"
 
 #import <stack>
+#import <unordered_map>
 
 #import <CoreGraphics/CoreGraphics.h>
 #import <UIKit/UIKit.h>
@@ -20,13 +21,18 @@
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKDetectComponentScopeCollisions.h"
+#import "CKComponentLayoutCache.h"
 
 using namespace CK::Component;
+
+static NSString *const kComponentCacheKey = @"componentCacheKey";
 
 static void _deleteComponentLayoutChild(void *target) noexcept
 {
   delete (std::vector<CKComponentLayoutChild> *)target;
 }
+
+static void CKBuildScopedComponentLayoutCache(CKComponentLayout &layout);
 
 void CKOffMainThreadDeleter::operator()(std::vector<CKComponentLayoutChild> *target) noexcept
 {
@@ -112,11 +118,15 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
 
 CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                const CKSizeRange &sizeRange,
-                                               id<CKAnalyticsListener> analyticsListener)
-{
+                                               id<CKAnalyticsListener> analyticsListener,
+                                               BOOL buildComponentLayoutCache)
+                                             {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent];
-  const CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
+  CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectComponentScopeCollisions(layout);
+  if (buildComponentLayoutCache) {
+    CKBuildScopedComponentLayoutCache(layout);
+  }
   [analyticsListener didLayoutComponentTreeWithRootComponent:rootComponent];
   return layout;
 }
@@ -133,4 +143,29 @@ void CKUnmountComponents(NSSet *componentsToUnmount)
   for (CKComponent *component in componentsToUnmount) {
     [component unmount];
   }
+}
+
+static void CKBuildScopedComponentLayoutCache(CKComponentLayout &layout)
+{
+  // Build the cache.
+  CKComponentLayoutCache *cache = [CKComponentLayoutCache newWithLayout:layout];
+
+  // Store it in the root node.
+  NSDictionary *extra = layout.extra;
+  if (extra) {
+    NSMutableDictionary *extraWithCache = [NSMutableDictionary dictionaryWithDictionary:extra];
+    extraWithCache[kComponentCacheKey] = cache;
+    layout.extra = extraWithCache;
+  } else {
+    layout.extra = @{kComponentCacheKey : cache};
+  }
+}
+
+CKComponentLayout CKComponentLayout::cachedLayoutForScopedComponent(CKComponent *scopedComponent) const
+{
+  CKComponentLayoutCache *cache = extra[kComponentCacheKey];
+  if (cache) {
+    return [cache layoutForComponent:scopedComponent];
+  }
+  return {};
 }

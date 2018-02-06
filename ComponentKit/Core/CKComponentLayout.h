@@ -47,6 +47,14 @@ struct CKComponentLayout {
 
   CKComponentLayout() noexcept
   : component(nil), size({0, 0}), children(emptyChildren()), extra(nil) {};
+
+  /**
+   This method returns a CKComponentLayout from the cache.
+   It only works in case that the layout was built with 'buildComponentLayoutCache' equals to YES.
+   @param component The component to look for the layout with.
+   */
+  CKComponentLayout cachedLayoutForScopedComponent(CKComponent *scopedComponent) const;
+
 private:
   static std::shared_ptr<const std::vector<CKComponentLayoutChild>> emptyChildren() noexcept;
 };
@@ -77,10 +85,13 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
  @param rootComponent The root component to compute the layout for.
  @param sizeRange The size range to compute the component layout within.
  @param analyticsListener analytics listener used to log layout time.
+ @param buildComponentLayoutCache specify whether the root layout should constract component cache from every comopnent in the tree
+        to its layout. Only components that has component controller will be cached.
  */
 CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                const CKSizeRange &sizeRange,
-                                               id<CKAnalyticsListener> analyticsListener = nil);
+                                               id<CKAnalyticsListener> analyticsListener = nil,
+                                               BOOL buildComponentLayoutCache = NO);
 
 /**
  Safely computes the layout of the given component by guarding against nil components.

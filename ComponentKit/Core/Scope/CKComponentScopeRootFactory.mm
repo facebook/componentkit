@@ -13,10 +13,10 @@
 #import "CKComponentControllerEvents.h"
 #import "CKComponentBoundsAnimationPredicates.h"
 
-CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener, id<CKAnalyticsListener> analyticsListener)
+CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> stateListener, id<CKAnalyticsListener> analyticsListener)
 {
   return [CKComponentScopeRoot
-          rootWithListener:listener
+          rootWithListener:stateListener
           analyticsListener:analyticsListener
           componentPredicates:{
             &CKComponentBoundsAnimationPredicate
@@ -28,7 +28,7 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
           }];
 }
 
-CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> listener,
+CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> stateListener,
                                                          id<CKAnalyticsListener> analyticsListener,
                                                          const std::unordered_set<CKComponentScopePredicate> &componentPredicates,
                                                          const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates)
@@ -47,7 +47,7 @@ CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateList
   componentControllerPredicatesUnion.insert(componentControllerPredicates.begin(), componentControllerPredicates.end());
 
   return [CKComponentScopeRoot
-          rootWithListener:listener
+          rootWithListener:stateListener
           analyticsListener:analyticsListener
           componentPredicates:componentPredicatesUnion
           componentControllerPredicates:componentControllerPredicatesUnion];
