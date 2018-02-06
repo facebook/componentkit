@@ -28,6 +28,7 @@
   return [self initWithComponentProvider:componentProvider
                                  context:context
                                sizeRange:sizeRange
+             componentLayoutCacheEnabled:NO
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil];
@@ -36,6 +37,7 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
+              componentLayoutCacheEnabled:(BOOL)componentLayoutCacheEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -47,6 +49,7 @@
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
+    _componentLayoutCacheEnabled = componentLayoutCacheEnabled;
   }
   return self;
 }

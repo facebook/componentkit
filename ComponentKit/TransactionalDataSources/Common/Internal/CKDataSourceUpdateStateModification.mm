@@ -11,6 +11,7 @@
 #import "CKDataSourceUpdateStateModification.h"
 
 #import "CKDataSourceConfiguration.h"
+#import "CKDataSourceConfigurationInternal.h"
 #import "CKDataSourceStateInternal.h"
 #import "CKDataSourceChange.h"
 #import "CKDataSourceItemInternal.h"
@@ -61,7 +62,7 @@
         const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], stateUpdatesForItem->second, ^{
           return [componentProvider componentForModel:[item model] context:context];
         });
-        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
+        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, configuration.componentLayoutCacheEnabled);
         [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:layout
                                                                                      model:[item model]
                                                                                  scopeRoot:result.scopeRoot

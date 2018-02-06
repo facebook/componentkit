@@ -30,11 +30,14 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
+              componentLayoutCacheEnabled:(BOOL)componentLayoutCacheEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
 
 @property (nonatomic, readonly, strong) id<CKAnalyticsListener> analyticsListener;
+
+@property (nonatomic, assign, readonly) BOOL componentLayoutCacheEnabled;
 
 - (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;

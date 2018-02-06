@@ -122,6 +122,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                        initWithComponentProvider:(id) self
                                        context:nil
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
+                                       componentLayoutCacheEnabled:NO
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
                                        analyticsListener:nil
