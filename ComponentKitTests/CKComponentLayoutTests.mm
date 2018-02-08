@@ -139,7 +139,13 @@
   }
 
   // Make sure all the children have been released.
-  XCTAssertEqual([weakChildren allObjects].count , 0);
+  NSUInteger weakChildrenCounter = 0;
+  for (id child in weakChildren) {
+    if (child) {
+      weakChildrenCounter++;
+    }
+  }
+  XCTAssertEqual(weakChildrenCounter , 0);
 }
 
 #pragma mark - Helpers
