@@ -20,6 +20,18 @@ namespace CK {
   // Takes an iterable, applies a function to every element,
   // and returns a vector of the results
   //
+  template<typename Func>
+  auto mapWithIndex(id<NSFastEnumeration> collection, Func &&func) -> std::vector<decltype(func(std::declval<id>(), std::declval<NSUInteger>()))>
+  {
+    std::vector<decltype(func(std::declval<id>(), std::declval<NSUInteger>()))> to;
+    NSUInteger index = 0;
+    for (id obj in collection) {
+      to.push_back(func(obj, index));
+      index++;
+    }
+    return to;
+  }
+
   template <typename T, typename Func>
   auto map(const T &iterable, Func &&func) -> std::vector<decltype(func(std::declval<typename T::value_type>()))>
   {
@@ -43,13 +55,12 @@ namespace CK {
   template<typename Func>
   auto map(id<NSFastEnumeration> collection, Func &&func) -> std::vector<decltype(func(std::declval<id>()))>
   {
-    std::vector<decltype(func(std::declval<id>()))> to;
-    for (id obj in collection) {
-      to.push_back(func(obj));
-    }
-    return to;
+    return CK::mapWithIndex(collection, ^decltype(func(std::declval<id>()))(id obj,
+                                                                            NSUInteger idx) {
+      return func(obj);
+    });
   }
-  
+
   template <typename T, typename Func>
   auto filter(const T &iterable, Func &&func) -> std::vector<typename T::value_type>
   {

@@ -100,6 +100,19 @@
   XCTAssertTrue(b == c);
 }
 
+- (void)test_mapWithIndexVectorWithObjects
+{
+  NSArray<NSString *> *a = @[@"1", @"2", @"3"];
+  __block NSUInteger idx = 0;
+  std::vector<int> b = CK::mapWithIndex(a, ^int(NSString *str, NSUInteger index) {
+    XCTAssertTrue(idx == index);
+    idx++;
+    return str.intValue;
+  });
+  std::vector<int> c = {1, 2, 3};
+  XCTAssertTrue(b == c);
+}
+
 - (void)test_mapVectorWithStructs
 {
   struct TestStruct {
