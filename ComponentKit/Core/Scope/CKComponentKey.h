@@ -12,8 +12,6 @@
 
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 
-@class CKComponentKeyStorage;
-
 /**
  Allows a parent to assign a "key" to child components to distinguish them, preventing a CKComponentScope collision.
  This is analogous to the concept of "key" in React.

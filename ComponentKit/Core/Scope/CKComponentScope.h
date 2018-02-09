@@ -17,7 +17,6 @@
 
 class CKThreadLocalComponentScope;
 @class CKComponentScopeHandle;
-@class CKComponentKeyStorage;
 
 typedef void (^CKComponentStateUpdater)(id (^updateBlock)(id),
                                         NSDictionary<NSString *, id> * userInfo,
@@ -98,5 +97,4 @@ private:
   CKComponentScope &operator=(const CKComponentScope&) = delete;
   CKThreadLocalComponentScope *_threadLocalScope;
   CKComponentScopeHandle *_scopeHandle;
-  std::unique_ptr<CKComponentContext<CKComponentKeyStorage>> _clearKeys;
 };

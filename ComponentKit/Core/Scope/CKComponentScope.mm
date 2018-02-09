@@ -17,7 +17,6 @@
 CKComponentScope::~CKComponentScope()
 {
   if (_threadLocalScope != nullptr) {
-    _clearKeys.reset(nullptr); // restore keys that were reset in constructor
     [_scopeHandle resolve];
     _threadLocalScope->stack.pop();
     CKCAssert(_threadLocalScope->keys.top().empty(), @"Expected keys to be cleared by destructor time");
