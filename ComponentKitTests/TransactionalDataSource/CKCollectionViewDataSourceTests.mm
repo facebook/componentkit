@@ -12,21 +12,21 @@
 #import <OCMock/OCMock.h>
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKCollectionViewTransactionalDataSource.h>
+#import <ComponentKit/CKCollectionViewDataSource.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
 #import <ComponentKit/CKSupplementaryViewDataSource.h>
 #import <ComponentKit/CKSizeRange.h>
 
-@interface CKCollectionViewTransactionalDataSource () <UICollectionViewDataSource>
+@interface CKCollectionViewDataSource () <UICollectionViewDataSource>
 @end
 
-@interface CKCollectionViewTransactionalDataSourceTests : XCTestCase
-@property (strong) CKCollectionViewTransactionalDataSource *dataSource;
+@interface CKCollectionViewDataSourceTests : XCTestCase
+@property (strong) CKCollectionViewDataSource *dataSource;
 @property (strong) id mockCollectionView;
 @property (strong) id mockSupplementaryViewDataSource;
 @end
 
-@implementation CKCollectionViewTransactionalDataSourceTests
+@implementation CKCollectionViewDataSourceTests
 
 - (void)setUp {
   [super setUp];
@@ -39,7 +39,7 @@
                                                              context:nil
                                                              sizeRange:CKSizeRange()];
 
-  self.dataSource = [[CKCollectionViewTransactionalDataSource alloc]
+  self.dataSource = [[CKCollectionViewDataSource alloc]
                      initWithCollectionView:self.mockCollectionView
                      supplementaryViewDataSource:self.mockSupplementaryViewDataSource
                      configuration:config];

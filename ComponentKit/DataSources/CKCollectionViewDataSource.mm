@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKCollectionViewTransactionalDataSource.h"
+#import "CKCollectionViewDataSource.h"
 
 #import "CKCollectionViewDataSourceCell.h"
 #import "CKDataSourceConfiguration.h"
@@ -22,7 +22,7 @@
 #import "CKComponentBoundsAnimation+UICollectionView.h"
 #import "CKComponentControllerEvents.h"
 
-@interface CKCollectionViewTransactionalDataSource () <
+@interface CKCollectionViewDataSource () <
 UICollectionViewDataSource,
 CKDataSourceListener
 >
@@ -35,7 +35,7 @@ CKDataSourceListener
 }
 @end
 
-@implementation CKCollectionViewTransactionalDataSource
+@implementation CKCollectionViewDataSource
 @synthesize supplementaryViewDataSource = _supplementaryViewDataSource;
 
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView
@@ -46,11 +46,11 @@ CKDataSourceListener
   if (self) {
     _componentDataSource = [[CKDataSource alloc] initWithConfiguration:configuration];
     [_componentDataSource addListener:self];
-      
+
     _collectionView = collectionView;
     _collectionView.dataSource = self;
     [_collectionView registerClass:[CKCollectionViewDataSourceCell class] forCellWithReuseIdentifier:kReuseIdentifier];
-    
+
     _attachController = [[CKComponentDataSourceAttachController alloc] init];
     _supplementaryViewDataSource = supplementaryViewDataSource;
     _cellToItemMap = [NSMapTable weakToStrongObjectsMapTable];
@@ -102,9 +102,9 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
                                          changes.insertedSections.count ||
                                          changes.removedSections.count);
   const BOOL changesIncludeOnlyUpdates = (changes.updatedIndexPaths.count && !changesIncludeNonUpdates);
-  
+
   CKDataSourceState *state = [_componentDataSource state];
-  
+
   if (changesIncludeOnlyUpdates) {
     // We are not able to animate the updates individually, so we pick the
     // first bounds animation with a non-zero duration.
@@ -114,7 +114,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
       if (boundsAnimation.duration)
         break;
     }
-    
+
     void (^applyUpdatedState)(CKDataSourceState *) = ^(CKDataSourceState *updatedState) {
       [_collectionView performBatchUpdates:^{
         _currentState = updatedState;
@@ -133,7 +133,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
     } else {
       applyUpdatedState(state);
     }
-    
+
     // Within an animation block we directly attach the updated items to
     // their respective cells if visible.
     CKComponentBoundsAnimationApply(boundsAnimation, ^{

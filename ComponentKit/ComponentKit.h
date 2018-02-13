@@ -32,7 +32,7 @@
 #import <ComponentKit/CKComponentScope.h>
 //Data sources
 #import <ComponentKit/CKComponentProvider.h>
-#import <ComponentKit/CKCollectionViewTransactionalDataSource.h>
+#import <ComponentKit/CKCollectionViewDataSource.h>
 #import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
 //Hosting views

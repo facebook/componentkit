@@ -22,7 +22,7 @@
  then the `UICollectionView` *ask* the datasource for the data. Here the model is  more Reactive, from an external prospective, the datasource is *told* what
  changes to apply and then *tell* the collection view to apply the corresponding changes.
  */
-@interface CKCollectionViewTransactionalDataSource : NSObject
+@interface CKCollectionViewDataSource : NSObject
 
 /**
  @param collectionView The collectionView is held strongly and its datasource property will be set to the receiver.

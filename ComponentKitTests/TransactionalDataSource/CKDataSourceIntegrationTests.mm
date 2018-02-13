@@ -17,7 +17,7 @@
 #import "CKComponentSubclass.h"
 #import "CKCompositeComponent.h"
 #import "CKComponentController.h"
-#import "CKCollectionViewTransactionalDataSource.h"
+#import "CKCollectionViewDataSource.h"
 #import "CKDataSourceConfiguration.h"
 #import "CKDataSourceConfigurationInternal.h"
 #import "CKDataSourceChangeset.h"
@@ -77,7 +77,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 
 @interface CKDataSourceIntegrationTests : XCTestCase
 @property (strong) UICollectionViewController *collectionViewController;
-@property (strong) CKCollectionViewTransactionalDataSource *dataSource;
+@property (strong) CKCollectionViewDataSource *dataSource;
 @property (strong) NSMutableArray<CKComponent *> *components;
 @property (strong) NSMutableDictionary<NSString *, CKComponent *> *componentsDictionary;
 @property (strong) CKDataSourceIntegrationTestComponentController *componentController;
@@ -116,7 +116,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
   (CKDataSourceIntegrationTestComponentController*) self.components.lastObject.controller;
 }
 
-- (CKCollectionViewTransactionalDataSource *)generateDataSource:(CKTestConfig)testConfig
+- (CKCollectionViewDataSource *)generateDataSource:(CKTestConfig)testConfig
 {
   CKDataSourceConfiguration *config = [[CKDataSourceConfiguration alloc]
                                        initWithComponentProvider:(id) self
@@ -128,7 +128,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                        analyticsListener:nil
                                        ];
 
-  return [[CKCollectionViewTransactionalDataSource alloc] initWithCollectionView:self.collectionViewController.collectionView
+  return [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionViewController.collectionView
                                                      supplementaryViewDataSource:nil
                                                                    configuration:config];
 }

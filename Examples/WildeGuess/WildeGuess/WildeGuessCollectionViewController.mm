@@ -24,7 +24,7 @@
 
 @implementation WildeGuessCollectionViewController
 {
-  CKCollectionViewTransactionalDataSource *_dataSource;
+  CKCollectionViewDataSource *_dataSource;
   QuoteModelController *_quoteModelController;
   CKComponentFlexibleSizeRangeProvider *_sizeRangeProvider;
 }
@@ -60,7 +60,7 @@
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
                                                                              context:context
                                                                            sizeRange:sizeRange];
-  _dataSource = [[CKCollectionViewTransactionalDataSource alloc] initWithCollectionView:self.collectionView
+  _dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
                                                             supplementaryViewDataSource:nil
                                                                           configuration:configuration];
   // Insert the initial section
