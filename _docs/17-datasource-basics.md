@@ -55,11 +55,21 @@ Ok, so now we have our view controller as the component provider, let's create o
 	- (void)viewDidLoad {
 	[super viewDidLoad];
 	...
-	self.dataSource = _dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
-                                                                       supplementaryViewDataSource:nil
-                                                                                 componentProvider:[self class]
-                                                                                           context:context
-                                                                         cellConfigurationFunction:nil];
+	
+	// Range provider
+	_sizeRangeProvider = [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleHeight];
+	const CKSizeRange sizeRange = [_sizeRangeProvider sizeRangeForBoundingSize:self.collectionView.bounds.size];
+	
+	// Data source configuration
+    CKDataSourceConfiguration *configuration =
+    [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
+                                                         context:context
+                                                       sizeRange:sizeRange];
+	// Data source                       
+    _dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
+                                                 supplementaryViewDataSource:nil
+                                                               configuration:configuration];
+                                                                          
 {% endhighlight %}
 
 
@@ -77,15 +87,13 @@ Let's add a section at index 0 with two items at indexes 0 and 1.
 	- (void)viewDidAppear:(BOOL)animated {
 		[super viewDidAppear:animated];
 		...
-		CKArrayControllerSections sections;
-		CKArrayControllerInputItems items;
-		// Don't forget the insertion of section 0
-		sections.insert(0);
-		items.insert({0,0}, firstModel);
-		// You can also use NSIndexPath
-		NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
-		items.insert(indexPath, secondModel);
-		[self.dataSource enqueueChangeset:{sections, items} constrainedSize:{{0,0}, {50, 50}}];
+		CKDataSourceChangeset *initialChangeset =
+  		[[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     	  withInsertedSections:[NSIndexSet indexSetWithIndex:0]] // Don't forget the insertion of section 0
+   		  withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0] : firstModel,
+                        	  [NSIndexPath indexPathForItem:1 inSection:0] : secondModel}]
+   		 build];
+   		 [self.dataSource applyChangeset:initialChangeset mode:CKUpdateModeAsynchronous userInfo:nil];
 	}
 {% endraw %}
 {% endhighlight %}
@@ -95,11 +103,11 @@ Later on (for instance when updated data is received from the server), we can up
 {% highlight objc %}
 {% raw  %}
 	...
-	CKArrayControllerInputItems items;
-	items.update({0,0}, updatedFirstModel);
-	[self.dataSource enqueueChangeset:{items} constrainedSize:{{50,0}, {50, INF}}];
-	//This works as well thanks to C++ implicit conversion
-	//[self.dataSource enqueueChangeset:items constrainedSize:{{50,0}, {50, INF}}];
+	CKDataSourceChangeset *updateChangeset =
+  	[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  	  withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0] : updatedFirstModel}]
+   	build];
+	[self.dataSource applyChangeset:updateChangeset mode:CKUpdateModeAsynchronous userInfo:nil];
 	...
 {% endraw %}
 {% endhighlight %}
