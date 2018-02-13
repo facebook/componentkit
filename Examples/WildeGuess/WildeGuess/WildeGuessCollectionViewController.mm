@@ -55,14 +55,18 @@
   self.collectionView.backgroundColor = [UIColor whiteColor];
   self.collectionView.delegate = self;
   QuoteContext *context = [[QuoteContext alloc] initWithImageNames:imageNames];
+
+  // Size configuration
   const CKSizeRange sizeRange = [_sizeRangeProvider sizeRangeForBoundingSize:self.collectionView.bounds.size];
   CKDataSourceConfiguration *configuration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                                             context:context
-                                                                           sizeRange:sizeRange];
+                                                       context:context
+                                                     sizeRange:sizeRange];
+
+  // Create the data source
   _dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
-                                                            supplementaryViewDataSource:nil
-                                                                          configuration:configuration];
+                                               supplementaryViewDataSource:nil
+                                                             configuration:configuration];
   // Insert the initial section
   CKDataSourceChangeset *initialChangeset =
   [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]

@@ -35,9 +35,9 @@
   self.mockCollectionView = [OCMockObject niceMockForClass:[UICollectionView class]];
 
   CKDataSourceConfiguration *config = [[CKDataSourceConfiguration alloc]
-                                                             initWithComponentProvider:nil
-                                                             context:nil
-                                                             sizeRange:CKSizeRange()];
+                                       initWithComponentProvider:nil
+                                       context:nil
+                                       sizeRange:CKSizeRange()];
 
   self.dataSource = [[CKCollectionViewDataSource alloc]
                      initWithCollectionView:self.mockCollectionView

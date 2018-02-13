@@ -28,12 +28,12 @@
 {
   CKDataSourceConfiguration *firstConfiguration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceConfigurationTests class]
-                                                                             context:@"context"
-                                                                           sizeRange:CKSizeRange()];
+                                                       context:@"context"
+                                                     sizeRange:CKSizeRange()];
   CKDataSourceConfiguration *secondConfiguration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceConfigurationTests class]
-                                                                             context:@"context"
-                                                                           sizeRange:CKSizeRange()];
+                                                       context:@"context"
+                                                     sizeRange:CKSizeRange()];
   XCTAssertEqualObjects(firstConfiguration, secondConfiguration);
 }
 
@@ -41,12 +41,12 @@
 {
   CKDataSourceConfiguration *firstConfiguration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceConfigurationTests class]
-                                                                             context:@"context"
-                                                                           sizeRange:CKSizeRange()];
+                                                       context:@"context"
+                                                     sizeRange:CKSizeRange()];
   CKDataSourceConfiguration *secondConfiguration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceConfigurationTests class]
-                                                                             context:@"context2"
-                                                                           sizeRange:CKSizeRange()];
+                                                       context:@"context2"
+                                                     sizeRange:CKSizeRange()];
   XCTAssertNotEqualObjects(firstConfiguration, secondConfiguration);
 }
 
