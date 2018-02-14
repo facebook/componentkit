@@ -61,14 +61,14 @@ Ok, so now we have our view controller as the component provider, let's create o
 	const CKSizeRange sizeRange = [_sizeRangeProvider sizeRangeForBoundingSize:self.collectionView.bounds.size];
 	
 	// Data source configuration
-    CKDataSourceConfiguration *configuration =
-    [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                         context:context
-                                                       sizeRange:sizeRange];
+    	CKDataSourceConfiguration *configuration =
+    	[[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
+                                                             context:context
+                                                          sizeRange:sizeRange];
 	// Data source                       
-    _dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
-                                                 supplementaryViewDataSource:nil
-                                                               configuration:configuration];
+    	_dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
+                                                     supplementaryViewDataSource:nil
+                                                               	   configuration:configuration];
                                                                           
 {% endhighlight %}
 
@@ -89,9 +89,9 @@ Let's add a section at index 0 with two items at indexes 0 and 1.
 		...
 		CKDataSourceChangeset *initialChangeset =
   		[[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
-     	  withInsertedSections:[NSIndexSet indexSetWithIndex:0]] // Don't forget the insertion of section 0
+     	  	  withInsertedSections:[NSIndexSet indexSetWithIndex:0]] // Don't forget the insertion of section 0
    		  withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0] : firstModel,
-                        	  [NSIndexPath indexPathForItem:1 inSection:0] : secondModel}]
+                        	      [NSIndexPath indexPathForItem:1 inSection:0] : secondModel}]
    		 build];
    		 [self.dataSource applyChangeset:initialChangeset mode:CKUpdateModeAsynchronous userInfo:nil];
 	}
