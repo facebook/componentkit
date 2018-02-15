@@ -135,10 +135,12 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   const UIControlState state = (options.selected ? UIControlStateSelected : UIControlStateNormal)
   | (options.enabled ? UIControlStateNormal : UIControlStateDisabled);
   b->_intrinsicSize = intrinsicSize(valueForState(options.titles.getMap(), state),
+                                    options.numberOfLines,
                                     options.titleFont,
                                     valueForState(options.images.getMap(), state),
                                     valueForState(options.backgroundImages.getMap(), state),
                                     contentEdgeInsets);
+
 #else
   // `labelFontSize` is unavailable on tvOS
   b->_intrinsicSize = {INFINITY, INFINITY};
@@ -193,15 +195,22 @@ static T valueForState(const std::unordered_map<UIControlState, T> &m, UIControl
 }
 
 #if !TARGET_OS_TV // `labelFontSize` is unavailable on tvOS
-static CGSize intrinsicSize(NSString *title, UIFont *titleFont, UIImage *image,
+static CGSize intrinsicSize(NSString *title, NSInteger numberOfLines, UIFont *titleFont, UIImage *image,
                             UIImage *backgroundImage, UIEdgeInsets contentEdgeInsets)
 {
-  UIFont * const font = titleFont ?: [UIFont systemFontOfSize:[UIFont labelFontSize]];
+  UIFont *const font = titleFont ?: [UIFont systemFontOfSize:[UIFont labelFontSize]];
   const CGSize titleSize = [title sizeWithAttributes:@{NSFontAttributeName: font}];
+  
+  CKCAssert(numberOfLines > 0, @"Setting numberOfLines to 0 or less can create unpredictible behaviour between displaying the label and the buttons size. UIButton's titleLabel property isn't bound to the bounds of it's housing UIButton, which can lead to the text displaying incorrectly.");
+  
+  const CGFloat labelHeight = (numberOfLines > 1)
+                            ? ceilf(font.lineHeight) * CGFloat(numberOfLines)
+                            : ceilf(titleSize.height);
+  
   const CGSize imageSize = image.size;
   const CGSize contentSize = {
-      CKRoundValueToPixelGrid(ceilf(titleSize.width) + imageSize.width + contentEdgeInsets.left + contentEdgeInsets.right, YES, NO),
-      CKRoundValueToPixelGrid(MAX(ceilf(titleSize.height), imageSize.height) + contentEdgeInsets.top + contentEdgeInsets.bottom, YES, NO)
+    CKRoundValueToPixelGrid(ceilf(titleSize.width) + imageSize.width + contentEdgeInsets.left + contentEdgeInsets.right, YES, NO),
+    CKRoundValueToPixelGrid(MAX(labelHeight, imageSize.height) + contentEdgeInsets.top + contentEdgeInsets.bottom, YES, NO)
   };
   const CGSize backgroundImageSize = backgroundImage.size;
   return {
