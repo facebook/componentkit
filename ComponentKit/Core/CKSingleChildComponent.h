@@ -8,14 +8,17 @@
  *
  */
 
-#import <ComponentKit/CKGroupComponent.h>
+
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentOwner.h>
+
+@interface CKSingleChildComponent : CKComponent <CKComponentOwner>
 
 /**
- This component lays out a single component and then overlays a component on top of it streched to its size
- */
-@interface CKOverlayLayoutComponent : CKGroupComponent
+ Returns a child component that needs to be rendered from this component.
 
-+ (instancetype)newWithComponent:(CKComponent *)component
-                         overlay:(CKComponent *)overlay;
+ @param state The current state of the component.
+ */
+- (CKComponent *)render:(id)state;
 
 @end

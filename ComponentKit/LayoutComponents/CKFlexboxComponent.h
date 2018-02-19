@@ -20,7 +20,7 @@
 
 #import <vector>
 
-#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKGroupComponent.h>
 #import <ComponentKit/CKContainerWrapper.h>
 
 typedef NS_ENUM(NSUInteger, CKFlexboxDirection) {
@@ -341,7 +341,7 @@ extern const struct CKStackComponentLayoutExtraKeys {
  - If the sum of the childrens' heights is greater than 500 even after flexShrink-able components are flexed,
  justifyContent determines how children are laid out.
  */
-@interface CKFlexboxComponent : CKComponent
+@interface CKFlexboxComponent : CKGroupComponent
 
 /**
  @param view A view configuration, or {} for no view.

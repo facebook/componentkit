@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKSingleChildComponent.h>
 
 /**
  A component that wraps another component, applying insets around it.
@@ -29,7 +29,7 @@
  An infinite inset is resolved as an inset equal to all remaining space after applying the other insets and child size.
  @example An CKInsetComponent with an infinite left inset and 10px for all other edges will position it's child 10px from the right edge.
  */
-@interface CKInsetComponent : CKComponent
+@interface CKInsetComponent : CKSingleChildComponent
 
 /** Convenience that calls +newWithView:insets:component: with {} for view. */
 + (instancetype)newWithInsets:(UIEdgeInsets)insets component:(CKComponent *)child;

@@ -8,12 +8,12 @@
  *
  */
 
-#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKGroupComponent.h>
 
 /**
  Lays out a single child component, then lays out a background component behind it stretched to its size.
  */
-@interface CKBackgroundLayoutComponent : CKComponent
+@interface CKBackgroundLayoutComponent : CKGroupComponent
 
 /**
  @param component A child that is laid out to determine the size of this component. If this is nil, then this method
