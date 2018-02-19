@@ -18,7 +18,7 @@
  An InteractiveQuoteComponent renders a Quote, adding the ability to tap to see whether the
  quote is actually by Oscar Wilde or not.
  */
-@interface InteractiveQuoteComponent : CKCompositeComponent
+@interface InteractiveQuoteComponent : CKSingleChildComponent
 
 + (instancetype)newWithQuote:(Quote *)quote context:(QuoteContext *)context;
 

@@ -12,25 +12,37 @@
 #import "QuoteWithBackgroundComponent.h"
 
 @implementation QuoteWithBackgroundComponent
+{
+  UIImage *_backgroundImage;
+  CKComponent *_quoteComponent;
+}
 
 + (instancetype)newWithBackgroundImage:(UIImage *)backgroundImage
                         quoteComponent:(CKComponent *)quoteComponent
-
 {
-  return [super newWithComponent:
-          [CKBackgroundLayoutComponent
-           newWithComponent:quoteComponent
-           background:
-           [CKComponent
-            newWithView:{
-              [UIImageView class],
-              {
-                {@selector(setImage:), backgroundImage},
-                {@selector(setContentMode:), @(UIViewContentModeScaleAspectFill)},
-                {@selector(setClipsToBounds:), @YES},
-              }
-            }
-            size:{}]]];
+  auto const c = [super new];
+  if (c) {
+    c->_backgroundImage = backgroundImage;
+    c->_quoteComponent = quoteComponent;
+  }
+  return c;
+}
+
+- (CKComponent *)render:(id)state
+{
+  return [CKBackgroundLayoutComponent
+          newWithComponent:_quoteComponent
+          background:
+          [CKComponent
+           newWithView:{
+             [UIImageView class],
+             {
+               {@selector(setImage:), _backgroundImage},
+               {@selector(setContentMode:), @(UIViewContentModeScaleAspectFill)},
+               {@selector(setClipsToBounds:), @YES},
+             }
+           }
+           size:{}]];
 }
 
 @end

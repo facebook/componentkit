@@ -15,6 +15,9 @@
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 
+@class CKComponentScopeRoot;
+@class CKTreeNode;
+
 @interface CKComponent ()
 
 /**
@@ -41,6 +44,14 @@
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent NS_REQUIRES_SUPER;
+
+/**
+ For internal use only; don't use this initializer.
+
+ This initializer will not try to acquire the scope handle from the thread local store.
+ */
++ (instancetype)newWithViewWithoutScopeHandle:(const CKComponentViewConfiguration &)view
+                                         size:(const CKComponentSize &)size;
 
 /**
  Unmounts the component:
@@ -72,5 +83,22 @@
 
 /** Indicates that a scope conflict has been found and either this component or an ancestor is involved in the conflict */
 @property (nonatomic, readonly) BOOL componentOrAncestorHasScopeConflict;
+
+/** For internal use only; don't touch this. */
+@property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
+
+/** For internal use only; don't touch this. */
+- (void)aquireScopeHandle:(CKComponentScopeHandle *)scopeHandle;
+
+/**
+ For internal use only; don't touch this.
+
+ This method translates the component render method into a 'CKBaseTreeNode'; a component tree.
+ It's being called by the infra during the component tree creation.
+ */
+- (void)buildComponentTree:(CKTreeNode *)owner
+             previousOwner:(CKTreeNode *)previousOwner
+                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
+              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
 @end

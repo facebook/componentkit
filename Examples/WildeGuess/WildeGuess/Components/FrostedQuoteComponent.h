@@ -16,7 +16,7 @@
 /**
  A frosted quote component vertically stacks a quote and a " symbol and places it on a background.
  */
-@interface FrostedQuoteComponent : CKCompositeComponent
+@interface FrostedQuoteComponent : CKSingleChildComponent
 
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context;
 

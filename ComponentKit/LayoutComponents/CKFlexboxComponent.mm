@@ -17,6 +17,8 @@
 #import "CKInternalHelpers.h"
 #import "CKComponentLayout.h"
 #import "CKComponentLayoutBaseline.h"
+#import "CKThreadLocalComponentScope.h"
+#import "ComponentUtilities.h"
 
 const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
   .hadOverflow = @"hadOverflow"
@@ -77,6 +79,13 @@ template class std::vector<CKFlexboxComponentChild>;
     component->_reuseOnlyExactSizeSpecs = CKComponentContext<CKFlexboxComponentContext>::get().reuseOnlyExactSizeSpecs;
   }
   return component;
+}
+
+- (std::vector<CKComponent *>)renderGroup:(id)state
+{
+  return  CK::map(_children, [](CKFlexboxComponentChild child) {
+    return child.component;
+  });
 }
 
 static YGConfigRef ckYogaDefaultConfig()

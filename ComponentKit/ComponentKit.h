@@ -19,6 +19,8 @@
 #import <ComponentKit/CKMemoizingComponent.h>
 //Core
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKSingleChildComponent.h>
+#import <ComponentKit/CKGroupComponent.h>
 #import <ComponentKit/CKComponentAnimation.h>
 #import <ComponentKit/CKComponentAnimationHooks.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>

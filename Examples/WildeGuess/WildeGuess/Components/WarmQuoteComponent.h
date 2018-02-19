@@ -17,7 +17,7 @@
  A warm quote component is a fixed-ratio component that centers the quote within its height. It has a nice warm
  background on which it places the quote.
  */
-@interface WarmQuoteComponent : CKCompositeComponent
+@interface WarmQuoteComponent : CKSingleChildComponent
 
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context;
 

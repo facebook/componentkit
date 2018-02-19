@@ -22,49 +22,53 @@ static NSString *const oscarWilde = @"Oscar Wilde";
 
 @implementation InteractiveQuoteComponent
 {
-  CKComponent *_overlay;
+  Quote *_quote;
+  QuoteContext *_context;
 }
 
 + (instancetype)newWithQuote:(Quote *)quote
                      context:(QuoteContext *)context
 {
-  CKComponentScope scope(self);
-  const BOOL revealAnswer = [scope.state() boolValue];
+  InteractiveQuoteComponent *c = [super newWithView:{} size:{}];
+  if (c) {
+    c->_quote = quote;
+    c->_context = context;
+  }
+  return c;
+}
+
+- (CKComponent *)render:(id)state
+{
+  auto const revealAnswer = [state boolValue];
 
   CKComponent *overlay =
   revealAnswer
   ? [SuccessIndicatorComponent
-     newWithIndicatesSuccess:[quote.author isEqualToString:oscarWilde]
+     newWithIndicatesSuccess:[_quote.author isEqualToString:oscarWilde]
      successText:[NSString stringWithFormat:@"This quote is by %@", oscarWilde]
      failureText:[NSString stringWithFormat:@"This quote isn't by %@", oscarWilde]]
   : nil;
 
-  InteractiveQuoteComponent *c =
-  [super newWithComponent:
-   [CKFlexboxComponent
-    newWithView:{
-      [UIView class],
-      {CKComponentTapGestureAttribute(@selector(didTap))}
-    }
-    size:{}
-    style:{
-      .alignItems = CKFlexboxAlignItemsStretch
-    }
-    children:{
-      {[CKOverlayLayoutComponent
-        newWithComponent:[QuoteComponent newWithQuote:quote context:context]
-        overlay:overlay]},
-      {[CKComponent
-        newWithView:{
-          [UIView class],
-          {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}
-        }
-        size:{.height = 1/[UIScreen mainScreen].scale}]}
-    }]];
-  if (c) {
-    c->_overlay = overlay;
-  }
-  return c;
+  return [CKFlexboxComponent
+          newWithView:{
+            [UIView class],
+            {CKComponentTapGestureAttribute(@selector(didTap))}
+          }
+          size:{}
+          style:{
+            .alignItems = CKFlexboxAlignItemsStretch
+          }
+          children:{
+            {[CKOverlayLayoutComponent
+              newWithComponent:[QuoteComponent newWithQuote:_quote context:_context]
+              overlay:overlay]},
+            {[CKComponent
+              newWithView:{
+                [UIView class],
+                {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}
+              }
+              size:{.height = 1/[UIScreen mainScreen].scale}]}
+          }];
 }
 
 + (id)initialState
@@ -77,24 +81,6 @@ static NSString *const oscarWilde = @"Oscar Wilde";
   [self updateState:^(NSNumber *oldState){
     return [oldState boolValue] ? @NO : @YES;
   } mode:CKUpdateModeSynchronous];
-}
-
-- (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(InteractiveQuoteComponent *)previousComponent
-{
-  if (previousComponent->_overlay == nil && _overlay != nil) {
-    return {{_overlay, scaleToAppear()}}; // Scale the overlay in when it appears.
-  } else {
-    return {};
-  }
-}
-
-static CAAnimation *scaleToAppear()
-{
-  CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform"];
-  scale.fromValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.0, 0.0, 0.0)];
-  scale.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-  scale.duration = 0.2;
-  return scale;
 }
 
 @end

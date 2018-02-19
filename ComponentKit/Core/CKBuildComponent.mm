@@ -17,6 +17,7 @@
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"
 #import "CKThreadLocalComponentScope.h"
+#import "CKTreeNode.h"
 
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
@@ -28,6 +29,12 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   // Order of operations matters, so first store into locals and then return a struct.
   CKComponent *const component = componentFactory();
+  // Build the component tree from the render function.
+  [component buildComponentTree:threadScope.newScopeRoot.rootNode
+                  previousOwner:previousRoot.rootNode
+                      scopeRoot:threadScope.newScopeRoot
+                   stateUpdates:stateUpdates];
+
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;
   [analyticsListener didBuildComponentTreeWithScopeRoot:newScopeRoot component:component];
   return {

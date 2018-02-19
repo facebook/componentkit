@@ -12,20 +12,33 @@
 #import "SuccessIndicatorComponent.h"
 
 @implementation SuccessIndicatorComponent
+{
+  BOOL _indicatesSuccess;
+  NSString *_successText;
+  NSString *_failureText;
+}
 
 + (instancetype)newWithIndicatesSuccess:(BOOL)indicatesSuccess
                             successText:(NSString *)successText
                             failureText:(NSString *)failureText
 {
+  auto const c = [super newWithView:{[UIView class]} size:{}]; // Need a view so supercomponent can animate this component.
+  if (c) {
+    c->_indicatesSuccess = indicatesSuccess;
+    c->_successText = successText;
+    c->_failureText = failureText;
+  }
+  return c;
+}
+
+- (CKComponent *)render:(id)state
+{
   UIColor *color =
-  indicatesSuccess
+  _indicatesSuccess
   ? [UIColor colorWithRed:0.1 green:0.4 blue:0.1 alpha:0.9]
   : [UIColor colorWithRed:0.7 green:0.1 blue:0.1 alpha:0.9];
 
-  return [super
-          newWithView:{[UIView class]} // Need a view so supercomponent can animate this component.
-          component:
-          [CKInsetComponent
+  return [CKInsetComponent
            newWithInsets:{.left = 20, .right = 20}
            component:
            [CKCenterLayoutComponent
@@ -45,21 +58,21 @@
                }
                children:{
                  {[CKLabelComponent
-                    newWithLabelAttributes:{
-                      .string = (indicatesSuccess ? @"Yes" : @"No"),
-                      .color = [UIColor whiteColor],
-                      .font = [UIFont fontWithName:@"Cochin-Bold" size:45.0],
-                      .alignment = NSTextAlignmentCenter
-                    }
-                    viewAttributes:{
-                      {@selector(setBackgroundColor:), [UIColor clearColor]},
-                      {@selector(setUserInteractionEnabled:), @NO},
-                    }
-                    size:{ }]
+                   newWithLabelAttributes:{
+                     .string = (_indicatesSuccess ? @"Yes" : @"No"),
+                     .color = [UIColor whiteColor],
+                     .font = [UIFont fontWithName:@"Cochin-Bold" size:45.0],
+                     .alignment = NSTextAlignmentCenter
+                   }
+                   viewAttributes:{
+                     {@selector(setBackgroundColor:), [UIColor clearColor]},
+                     {@selector(setUserInteractionEnabled:), @NO},
+                   }
+                   size:{ }]
                  },
                  {[CKLabelComponent
                    newWithLabelAttributes:{
-                     .string = (indicatesSuccess ? successText : failureText),
+                     .string = (_indicatesSuccess ? _successText : _failureText),
                      .color = [UIColor whiteColor],
                      .font = [UIFont fontWithName:@"Cochin" size:20.0],
                      .alignment = NSTextAlignmentCenter
@@ -82,8 +95,21 @@
                 }
               }
               size:{}]]
-            size:{}]]];
+            size:{}]];
+}
 
+- (std::vector<CKComponentAnimation>)animationsOnInitialMount
+{
+  return {{self, scaleToAppear()}};
+}
+
+static CAAnimation *scaleToAppear()
+{
+  CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform"];
+  scale.fromValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.0, 0.0, 0.0)];
+  scale.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+  scale.duration = 0.2;
+  return scale;
 }
 
 @end
