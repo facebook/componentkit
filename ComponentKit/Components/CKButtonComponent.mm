@@ -201,7 +201,7 @@ static CGSize intrinsicSize(NSString *title, NSInteger numberOfLines, UIFont *ti
   UIFont *const font = titleFont ?: [UIFont systemFontOfSize:[UIFont labelFontSize]];
   const CGSize titleSize = [title sizeWithAttributes:@{NSFontAttributeName: font}];
   
-  CKCAssert(numberOfLines > 0, @"Setting numberOfLines to 0 or less can create unpredictible behaviour between displaying the label and the buttons size. UIButton's titleLabel property isn't bound to the bounds of it's housing UIButton, which can lead to the text displaying incorrectly.");
+  CKCWarn(numberOfLines > 0, @"Setting numberOfLines to 0 or less can create unpredictible behaviour between displaying the label and the buttons size. UIButton's titleLabel property isn't bound to the bounds of it's housing UIButton, which can lead to the text displaying incorrectly.");
   
   const CGFloat labelHeight = (numberOfLines > 1)
                             ? ceilf(font.lineHeight) * CGFloat(numberOfLines)
