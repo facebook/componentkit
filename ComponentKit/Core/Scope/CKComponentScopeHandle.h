@@ -35,7 +35,7 @@
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class<CKComponentProtocol>)componentClass
-             initialStateCreator:(id (^)(void))initialStateCreator
+                    initialState:(id)initialState
                           parent:(CKComponentScopeHandle *)parent;
 
 /** Creates a new instance of the scope handle that incorporates the given state updates. */
@@ -56,6 +56,9 @@
 
 /** Informs the scope handle that it should complete its configuration. This will generate the controller */
 - (void)resolve;
+
+/** Aquire component, assert if the scope handle is wrong */
+- (void)forceAcquireFromComponent:(id<CKComponentProtocol>)component;
 
 /**
  Should not be called until after handleForComponent:. The controller will assert (if assertions are compiled), and

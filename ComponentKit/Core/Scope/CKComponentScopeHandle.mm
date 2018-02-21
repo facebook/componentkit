@@ -57,7 +57,7 @@
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class)componentClass
-             initialStateCreator:(id (^)(void))initialStateCreator
+                    initialState:(id)initialState
                           parent:(CKComponentScopeHandle *)parent
 {
   static int32_t nextGlobalIdentifier = 0;
@@ -65,7 +65,7 @@
                globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)
                  rootIdentifier:rootIdentifier
                  componentClass:componentClass
-                          state:initialStateCreator ? initialStateCreator() : [componentClass initialState]
+                          state:initialState
                      controller:nil  // Controllers are built on resolution of the handle.
                 scopedResponder:nil  // Scoped responders are created lazily. Once they exist, we use that reference for future handles.
                          parent:parent];
@@ -183,6 +183,15 @@
     return NO;
   }
 }
+
+- (void)forceAcquireFromComponent:(id<CKComponentProtocol>)component
+{
+  CKAssert([component isMemberOfClass:_componentClass], @"%@ has to be a member of %@ class", component, _componentClass);
+  CKAssert(!_acquired, @"scope handle cannot be acquired twice");
+  _acquired = YES;
+  _acquiredComponent = component;
+}
+
 
 - (void)resolve
 {

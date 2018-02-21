@@ -178,7 +178,7 @@ namespace std {
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                       rootIdentifier:newRoot.globalIdentifier
                                       componentClass:componentClass
-                                 initialStateCreator:initialStateCreator
+                                        initialState:(initialStateCreator ? initialStateCreator() : [componentClass initialState])
                                               parent:pair.frame.handle];
 
   CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
