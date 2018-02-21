@@ -39,11 +39,13 @@ typedef std::unordered_map<CKComponentKey, CKBaseTreeNode *, CKTreeNodeHasher, C
   std::unordered_map<Class, NSUInteger> _classTypeIdentifier;
 }
 
-- (std::vector<CKComponent *>)children
+- (std::vector<CKBaseTreeNode *>)children
 {
-  return CK::map(_children, [](const auto &n) {
-    return n.second.component;
-  });
+  std::vector<CKBaseTreeNode *> children;
+  for (auto const &child : _children) {
+    children.push_back(child.second);
+  }
+  return children;
 }
 
 - (CKBaseTreeNode *)childForComponentKey:(const CKComponentKey &)key

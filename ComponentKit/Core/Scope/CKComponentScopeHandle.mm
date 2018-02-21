@@ -20,6 +20,7 @@
 #import "CKComponentProtocol.h"
 #import "CKComponentControllerProtocol.h"
 #import "CKThreadLocalComponentScope.h"
+#import "CKComponentOwner.h"
 
 @interface CKScopedResponder ()
 - (void)addHandleToChain:(CKComponentScopeHandle *)component;
@@ -47,7 +48,9 @@
     [currentScope->newScopeRoot registerComponent:component];
     return handle;
   }
-  CKCAssertNil([component.class controllerClass], @"%@ has a controller but no scope! "
+  CKCAssertNil([component.class controllerClass] &&
+               ![component conformsToProtocol:@protocol(CKComponentOwner)]
+                , @"%@ has a controller but no scope! "
                "Make sure you construct your scope(self) before constructing the component or CKComponentTestRootScope "
                "at the start of the test.", [component class]);
 

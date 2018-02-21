@@ -36,6 +36,7 @@
 #import "ComponentLayoutContext.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKComponentScopeRoot.h"
+#import "CKBaseTreeNode.h"
 
 CGFloat const kCKComponentParentDimensionUndefined = NAN;
 CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndefined, kCKComponentParentDimensionUndefined};
@@ -72,6 +73,11 @@ struct CKComponentMountInfo {
   return [[self alloc] initWithView:view size:size];
 }
 
++ (instancetype)newWithViewWithoutAcquiringScopeHandle:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
+{
+  return [[self alloc] initWithViewWithoutAcquiringScopeHandle:view size:size];
+}
+
 + (instancetype)new
 {
   return [self newWithView:{} size:{}];
@@ -92,6 +98,17 @@ struct CKComponentMountInfo {
   }
   return self;
 }
+
+- (instancetype)initWithViewWithoutAcquiringScopeHandle:(const CKComponentViewConfiguration &)view
+                                                   size:(const CKComponentSize &)size
+{
+  if (self = [super init]) {
+    _viewConfiguration = view;
+    _size = size;
+  }
+  return self;
+}
+
 
 - (void)dealloc
 {
@@ -115,6 +132,22 @@ struct CKComponentMountInfo {
 {
   CKAssertMainThread();
   return _mountInfo ? _mountInfo->viewContext : CKComponentViewContext();
+}
+
+#pragma mark - ComponentTree
+
+- (void)buildComponentTree:(CKTreeNode *)owner
+             previousOwner:(CKTreeNode *)previousOwner
+                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
+              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+{
+  // In this case this is a leaf component, which means we don't need to continue the recursion as it has no children.
+  __unused auto const node = [[CKBaseTreeNode alloc]
+                              initWithComponent:self
+                              owner:owner
+                              previousOwner:previousOwner
+                              scopeRoot:scopeRoot
+                              stateUpdates:stateUpdates];
 }
 
 #pragma mark - Mounting and Unmounting

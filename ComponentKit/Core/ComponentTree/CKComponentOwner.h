@@ -28,7 +28,7 @@
 
  Default values:
  CKSingleChildComponent returns YES
- CKGroupComponent returns NO
+ CKMultiChildComponent returns NO
  */
 - (BOOL)isOwnerComponent;
 

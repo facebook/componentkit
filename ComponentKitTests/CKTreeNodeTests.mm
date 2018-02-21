@@ -11,6 +11,7 @@
 #import <XCTest/XCTest.h>
 
 #import "CKComponent.h"
+#import "CKComponentInternal.h"
 #import "CKButtonComponent.h"
 #import "CKBaseTreeNode.h"
 #import "CKTreeNode.h"

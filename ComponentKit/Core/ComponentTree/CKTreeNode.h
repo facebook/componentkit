@@ -20,7 +20,7 @@
 
 @interface CKTreeNode : CKBaseTreeNode
 
-- (std::vector<CKComponent *>)children;
+- (std::vector<CKBaseTreeNode *>)children;
 
 /** Returns a component tree node according to its component key */
 - (CKBaseTreeNode *)childForComponentKey:(const CKComponentKey &)key;
