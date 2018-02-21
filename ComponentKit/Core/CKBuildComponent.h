@@ -35,7 +35,9 @@ struct CKBuildComponentResult {
  @param previousRoot The previous scope root that was associated with the cell. May be nil if no prior root is available
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
+ @param buildComponentTree Defines whether the method should constract a component tree (CKTreeNode) from the root component.
  */
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
-                                        CKComponent *(^componentFactory)(void));
+                                        CKComponent *(^componentFactory)(void),
+                                        BOOL buildComponentTree = NO);
