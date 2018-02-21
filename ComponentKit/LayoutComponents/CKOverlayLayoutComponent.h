@@ -8,12 +8,12 @@
  *
  */
 
-#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKMultiChildComponent.h>
 
 /**
  This component lays out a single component and then overlays a component on top of it streched to its size
  */
-@interface CKOverlayLayoutComponent : CKComponent
+@interface CKOverlayLayoutComponent : CKMultiChildComponent
 
 + (instancetype)newWithComponent:(CKComponent *)component
                          overlay:(CKComponent *)overlay;

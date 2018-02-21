@@ -40,6 +40,11 @@
   CK_NOT_DESIGNATED_INITIALIZER();
 }
 
+- (std::vector<CKComponent *>)renderChildren:(id)state
+{
+  return {_component, _background};
+}
+
 /**
  First layout the contents, then fit the background image.
  */

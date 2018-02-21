@@ -34,6 +34,13 @@
   return [self newWithView:{} size:{} children:std::move(children)];
 }
 
+- (std::vector<CKComponent *>)renderChildren:(id)state
+{
+  return  CK::map(_children, [](CKStaticLayoutComponentChild child) {
+    return child.component;
+  });
+}
+
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   CGSize size = {

@@ -20,8 +20,8 @@
 
 #import <vector>
 
-#import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKContainerWrapper.h>
+#import <ComponentKit/CKMultiChildComponent.h>
 
 typedef NS_ENUM(NSUInteger, CKFlexboxDirection) {
   CKFlexboxDirectionVertical,
@@ -330,7 +330,7 @@ extern const struct CKStackComponentLayoutExtraKeys {
  layout configurations and can generate CKFlexboxComponent code for you
 
  */
-@interface CKFlexboxComponent : CKComponent
+@interface CKFlexboxComponent : CKMultiChildComponent
 
 /**
  @param view A view configuration, or {} for no view.
