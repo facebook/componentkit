@@ -322,24 +322,13 @@ extern const struct CKStackComponentLayoutExtraKeys {
 @end
 
 /**
- A simple layout component that stacks a list of children vertically or horizontally.
+ A layout component that create a list of children vertically or horizontally according to Flexbox.
 
- - All children are initially laid out with the an infinite available size in the stacking direction.
- - In the other direction, this component's constraint is passed.
- - The children's sizes are summed in the stacking direction.
- - If this sum is less than this component's minimum size in stacking direction, children with flexGrow are flexed.
- - If it is greater than this component's maximum size in the stacking direction, children with flexShrink are flexed.
- - If, even after flexing, the sum is still greater than this component's maximum size in the stacking direction,
- justifyContent determines how children are laid out.
+ This component layout is powered by Yoga layout engine (https://github.com/facebook/yoga).
+ You can find more details about Yoga properties and implementation here (https://yogalayout.com/docs/)
+ Yoga playground (https://yogalayout.com/playground) allows you to experiment with different
+ layout configurations and can generate CKFlexboxComponent code for you
 
- For example:
- - Suppose stacking direction is Vertical, min-width=100, max-width=300, min-height=200, max-height=500.
- - All children are laid out with min-width=100, max-width=300, min-height=0, max-height=INFINITY.
- - If the sum of the childrens' heights is less than 200, components with flexGrow are flexed larger.
- - If the sum of the childrens' heights is greater than 500, components with flexShrink are flexed smaller.
- Each component is shrunk by `((sum of heights) - 500)/(number of components)`.
- - If the sum of the childrens' heights is greater than 500 even after flexShrink-able components are flexed,
- justifyContent determines how children are laid out.
  */
 @interface CKFlexboxComponent : CKComponent
 
