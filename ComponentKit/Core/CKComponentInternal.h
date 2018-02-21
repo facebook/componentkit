@@ -15,6 +15,9 @@
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 
+@class CKComponentScopeRoot;
+@class CKTreeNode;
+
 @interface CKComponent ()
 
 /**
@@ -72,5 +75,11 @@
 
 /** Indicates that a scope conflict has been found and either this component or an ancestor is involved in the conflict */
 @property (nonatomic, readonly) BOOL componentOrAncestorHasScopeConflict;
+
+/** For internal use only; don't touch this. */
+@property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
+
+/** For internal use only; don't touch this. */
+- (void)acquireScopeHandle:(CKComponentScopeHandle *)scopeHandle;
 
 @end

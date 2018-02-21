@@ -99,6 +99,13 @@ struct CKComponentMountInfo {
   CKAssert(_mountInfo == nullptr, @"%@ must be unmounted before dealloc", [self class]);
 }
 
+- (void)acquireScopeHandle:(CKComponentScopeHandle *)scopeHandle
+{
+  CKAssert(_scopeHandle == nil, @"Component(%@) already has '_scopeHandle'.", self);
+  [scopeHandle forceAcquireFromComponent:self];
+  _scopeHandle = scopeHandle;
+}
+
 - (const CKComponentViewConfiguration &)viewConfiguration
 {
   return _viewConfiguration;

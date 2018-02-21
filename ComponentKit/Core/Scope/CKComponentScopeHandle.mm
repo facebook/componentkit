@@ -88,7 +88,7 @@
     _state = state;
     _controller = controller;
     _parent = parent;
-    
+
     _scopedResponder = scopedResponder;
     [scopedResponder addHandleToChain:self];
   }
@@ -192,7 +192,6 @@
   _acquiredComponent = component;
 }
 
-
 - (void)resolve
 {
   CKAssertFalse(_resolved);
@@ -238,7 +237,7 @@
     static CKScopedResponderUniqueIdentifier nextIdentifier = 0;
     _uniqueIdentifier = OSAtomicIncrement32(&nextIdentifier);
   }
-  
+
   return self;
 }
 
@@ -247,7 +246,7 @@
   if (!handle) {
     return;
   }
-  
+
   std::lock_guard<std::mutex> l(_mutex);
   _handles.push_back(handle);
 }
@@ -289,7 +288,7 @@
         return responder;
       }
   }
-  
+
   return nil;
 }
 

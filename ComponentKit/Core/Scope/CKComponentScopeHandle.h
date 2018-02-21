@@ -57,7 +57,7 @@
 /** Informs the scope handle that it should complete its configuration. This will generate the controller */
 - (void)resolve;
 
-/** Aquire component, assert if the scope handle is wrong */
+/** Acquire component, assert if the scope handle is wrong */
 - (void)forceAcquireFromComponent:(id<CKComponentProtocol>)component;
 
 /**
