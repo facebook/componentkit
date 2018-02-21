@@ -24,7 +24,7 @@ typedef std::tuple<Class, NSUInteger> CKComponentKey;
 
  Each component has a corresponding CKBaseTreeNode; this node holds the state of the component and its children nodes.
 
- CKBaseTreeNodeis the base class of a tree node. It will be atatched to leaf components only (CKComponent).
+ CKBaseTreeNodeis the base class of a tree node. It will be attached to leaf components only (CKComponent).
  */
 @interface CKBaseTreeNode: NSObject
 
