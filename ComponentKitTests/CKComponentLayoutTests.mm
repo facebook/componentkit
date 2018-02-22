@@ -16,6 +16,7 @@
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKFlexboxComponent.h>
+#import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
 @interface CKComponentLayoutTestComponent : CKComponent
 @end
@@ -139,13 +140,15 @@
   }
 
   // Make sure all the children have been released.
-  NSUInteger weakChildrenCounter = 0;
-  for (id child in weakChildren) {
-    if (child) {
-      weakChildrenCounter++;
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    NSUInteger weakChildrenCounter = 0;
+    for (id child in weakChildren) {
+      if (child) {
+        weakChildrenCounter++;
+      }
     }
-  }
-  XCTAssertEqual(weakChildrenCounter , 0);
+    return weakChildrenCounter == 0;
+  }));
 }
 
 #pragma mark - Helpers
