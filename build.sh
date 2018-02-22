@@ -33,7 +33,7 @@ function ci() {
     -destination "$4" \
     -configuration $5 \
     $6 \
-    -quiet
+    -json
 }
 
 function ios_ci() {
@@ -41,8 +41,7 @@ function ios_ci() {
 }
 
 function tvos_ci() {
-# Apple TV 1080p is the target for iOS 10, while Apple TV is the target for iOS 11
-  ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV 1080p" Release $3 || ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV" Release $3
+  ci $1 $2 appletvsimulator "platform=tvOS Simulator,name=Apple TV" Release $3
 }
 
 function carthage_bootstrap() {
