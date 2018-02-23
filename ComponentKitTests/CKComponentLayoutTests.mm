@@ -124,33 +124,6 @@
   }
 }
 
-- (void)testWhenLayoutIsBeingDeallocated_LayoutCacheIsBeingDeallocatedToo
-{
-  __block __weak CKComponent *rootComponent;
-  __block __weak CKComponent *childComponent;
-
-  @autoreleasepool {
-    __block CKFlexboxComponent *c;
-
-    CKBuildComponentResult results = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
-      NSArray<CKComponent *> *children = createChildrenArray(YES);
-      c = flexboxComponentWithScopedChildren(children);
-      rootComponent = c;
-      childComponent = [children firstObject];
-      children = nil;
-      return c;
-    });
-
-    const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil, YES);
-    c = nil;
-  }
-
-  // Make sure the root and the first child have been deallocated.
-  // The first child represents the all children as they are all at the same level at the tree.
-  XCTAssertNil(rootComponent);
-  XCTAssertNil(childComponent);
-}
-
 #pragma mark - Helpers
 
 static CKFlexboxComponent* flexboxComponentWithScopedChildren(NSArray<CKComponent *> *children) {
