@@ -18,20 +18,26 @@
 #import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
+@interface CKComponentLayoutTestComponentController : CKComponentController
+@end
+
 @interface CKComponentLayoutTestComponent : CKComponent
 @end
 @implementation CKComponentLayoutTestComponent
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
+                       size:(const CKComponentSize &)size
 {
   // Just a hack for the test as we don't really care about this scope id in this case.
   static int counter = 0;
   CKComponentScope scope (self, @(counter++));
   return [super newWithView:view size:size];
 }
++ (Class<CKComponentControllerProtocol>)controllerClass
+{
+  return [CKComponentLayoutTestComponentController class];
+}
 @end
 
-@interface CKComponentLayoutTestComponentController : CKComponentController
-@end
 @implementation CKComponentLayoutTestComponentController
 @end
 
@@ -105,7 +111,7 @@
     c = flexboxComponentWithScopedChildren(children);
     return c;
   });
-  
+
   const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil, YES);
 
   // Make sure we do build the components cache in case that `buildComponentLayoutCache` is set to `YES`.
@@ -120,35 +126,29 @@
 
 - (void)testWhenLayoutIsBeingDeallocated_LayoutCacheIsBeingDeallocatedToo
 {
-  NSPointerArray *weakChildren = [NSPointerArray weakObjectsPointerArray];
+  __block __weak CKComponent *rootComponent;
+  __block __weak CKComponent *childComponent;
 
   @autoreleasepool {
-    __block NSArray<CKComponent *> *children;
     __block CKFlexboxComponent *c;
 
     CKBuildComponentResult results = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
-      children = createChildrenArray(YES);
+      NSArray<CKComponent *> *children = createChildrenArray(YES);
       c = flexboxComponentWithScopedChildren(children);
+      rootComponent = c;
+      childComponent = [children firstObject];
+      children = nil;
       return c;
     });
 
     const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil, YES);
-
-    for (CKComponent *child in children) {
-      [weakChildren addPointer:(void *)child];
-    }
+    c = nil;
   }
 
-  // Make sure all the children have been released.
-  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    NSUInteger weakChildrenCounter = 0;
-    for (id child in weakChildren) {
-      if (child) {
-        weakChildrenCounter++;
-      }
-    }
-    return weakChildrenCounter == 0;
-  }));
+  // Make sure the root and the first child have been deallocated.
+  // The first child represents the all children as they are all at the same level at the tree.
+  XCTAssertNil(rootComponent);
+  XCTAssertNil(childComponent);
 }
 
 #pragma mark - Helpers
@@ -161,14 +161,16 @@ static CKFlexboxComponent* flexboxComponentWithScopedChildren(NSArray<CKComponen
 }
 
 static NSArray<CKComponent *>* createChildrenArray(BOOL scoped) {
-  Class componentClass = scoped ? [CKComponentLayoutTestComponent class] : [CKComponent class];
-  return @[
-    [componentClass newWithView:{} size:{}],
-    [componentClass newWithView:{} size:{}],
-    [componentClass newWithView:{} size:{}],
-    [componentClass newWithView:{} size:{}],
-    [componentClass newWithView:{} size:{}],
-  ];
+  NSMutableArray<CKComponent *> *components = [NSMutableArray array];
+  for (NSUInteger i=0; i<5; i++) {
+    if (scoped) {
+      [components addObject:[CKComponentLayoutTestComponent newWithView:{} size:{}]];
+    } else {
+      [components addObject:[CKComponent newWithView:{} size:{}]];
+    }
+  }
+  return components;
 }
 
 @end
+
