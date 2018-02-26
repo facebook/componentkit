@@ -23,20 +23,20 @@
 {
   CKDataSourceAppliedChanges *firstAppliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                    removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                      removedSections:[NSIndexSet indexSetWithIndex:2]
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:4 inSection:0] }
-                                                                     insertedSections:[NSIndexSet indexSetWithIndex:1]
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:5 inSection:0]]
-                                                                             userInfo:@{ @"key" : @"value"}];
+                                              removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
+                                                removedSections:[NSIndexSet indexSetWithIndex:2]
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:4 inSection:0] }
+                                               insertedSections:[NSIndexSet indexSetWithIndex:1]
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:5 inSection:0]]
+                                                       userInfo:@{ @"key" : @"value"}];
   CKDataSourceAppliedChanges *secondAppliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                    removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                      removedSections:[NSIndexSet indexSetWithIndex:2]
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:4 inSection:0] }
-                                                                     insertedSections:[NSIndexSet indexSetWithIndex:1]
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:5 inSection:0]]
-                                                                             userInfo:@{ @"key" : @"value"}];
+                                              removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
+                                                removedSections:[NSIndexSet indexSetWithIndex:2]
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:4 inSection:0] }
+                                               insertedSections:[NSIndexSet indexSetWithIndex:1]
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:5 inSection:0]]
+                                                       userInfo:@{ @"key" : @"value"}];
   XCTAssertEqualObjects(firstAppliedChanges, secondAppliedChanges);
 }
 
@@ -44,20 +44,20 @@
 {
   CKDataSourceAppliedChanges *firstAppliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                    removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                      removedSections:[NSIndexSet indexSetWithIndex:2]
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:4 inSection:0] }
-                                                                     insertedSections:[NSIndexSet indexSetWithIndex:1]
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:5 inSection:0]]
-                                                                             userInfo:@{ @"key" : @"value"}];
+                                              removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
+                                                removedSections:[NSIndexSet indexSetWithIndex:2]
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:4 inSection:0] }
+                                               insertedSections:[NSIndexSet indexSetWithIndex:1]
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:5 inSection:0]]
+                                                       userInfo:@{ @"key" : @"value"}];
   CKDataSourceAppliedChanges *secondAppliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                    removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                      removedSections:[NSIndexSet indexSetWithIndex:2]
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:4 inSection:0] }
-                                                                     insertedSections:[NSIndexSet indexSetWithIndex:1]
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:5 inSection:0]]
-                                                                             userInfo:@{ @"key2" : @"value2"}];
+                                              removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
+                                                removedSections:[NSIndexSet indexSetWithIndex:2]
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:4 inSection:0] }
+                                               insertedSections:[NSIndexSet indexSetWithIndex:1]
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:5 inSection:0]]
+                                                       userInfo:@{ @"key2" : @"value2"}];
   XCTAssertNotEqualObjects(firstAppliedChanges, secondAppliedChanges);
 }
 
@@ -67,12 +67,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:nil
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   
   XCTAssertEqual([[changes finalUpdatedIndexPaths] count], 0);
 }
@@ -83,12 +83,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
+                                                       userInfo:nil];
   
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
@@ -99,12 +99,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:1 inSection:0]);
@@ -114,12 +114,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:[NSIndexSet indexSetWithIndex:1]
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:[NSIndexSet indexSetWithIndex:1]
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:1 inSection:0]);
@@ -129,12 +129,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:1 inSection:0]);
@@ -144,12 +144,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:1 inSection:0]);
@@ -159,12 +159,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:[NSIndexSet indexSetWithIndex:1]
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:[NSIndexSet indexSetWithIndex:1]
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:1 inSection:0]);
@@ -174,12 +174,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:2 inSection:0]);
@@ -189,12 +189,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:0 inSection:0] : [NSIndexPath indexPathForItem:1 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:0 inSection:0] : [NSIndexPath indexPathForItem:1 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:2 inSection:0]);
@@ -205,12 +205,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:4 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:4 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:2 inSection:0]);
@@ -220,12 +220,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:1 inSection:1] : [NSIndexPath indexPathForItem:4 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:1 inSection:1] : [NSIndexPath indexPathForItem:4 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:2 inSection:0]);
@@ -235,12 +235,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:1 inSection:1] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:1 inSection:1] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:2 inSection:0]);
@@ -253,12 +253,12 @@
   
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:moves
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:moves
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:2 inSection:0]);
@@ -271,12 +271,12 @@
   
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:moves
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:moves
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:2 inSection:0]);
@@ -286,12 +286,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:3 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:0 inSection:0] : [NSIndexPath indexPathForItem:6 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:0 inSection:0] : [NSIndexPath indexPathForItem:6 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:3 inSection:0]], [NSIndexPath indexPathForItem:3 inSection:0]);
@@ -301,12 +301,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:3 inSection:0]]
-                                                                    removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:6 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:6 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:3 inSection:0]], [NSIndexPath indexPathForItem:3 inSection:0]);
@@ -318,12 +318,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:2 inSection:0]);
@@ -335,12 +335,12 @@
                                             [NSIndexPath indexPathForItem:1 inSection:0]]];
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:insertions
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:insertions
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:3 inSection:0]);
@@ -355,12 +355,12 @@
                                             [NSIndexPath indexPathForItem:0 inSection:0]]];
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:insertions
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:insertions
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   // NOTE: the indexpath's row is only increased by 1 because changesets deduplicate identical inserts
@@ -371,12 +371,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:[NSIndexSet indexSetWithIndex:0]
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:[NSIndexSet indexSetWithIndex:0]
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:1 inSection:1]);
@@ -386,12 +386,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:1]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:1]], [NSIndexPath indexPathForItem:1 inSection:3]);
@@ -401,12 +401,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:0 inSection:0]);
@@ -419,12 +419,12 @@
   
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:removedIndexPaths
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:removedIndexPaths
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:0 inSection:0]);
@@ -434,12 +434,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:1]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:[NSIndexSet indexSetWithIndex:0]
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:[NSIndexSet indexSetWithIndex:0]
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:1]], [NSIndexPath indexPathForItem:1 inSection:0]);
@@ -449,12 +449,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:2]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:2]], [NSIndexPath indexPathForItem:1 inSection:0]);
@@ -470,12 +470,12 @@
   
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:removedIndexPaths
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:removedIndexPaths
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:1 inSection:0]);
@@ -485,12 +485,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:0 inSection:0] : [NSIndexPath indexPathForItem:2 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:0 inSection:0] : [NSIndexPath indexPathForItem:2 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:0 inSection:0]);
@@ -500,12 +500,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:2 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:2 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:2 inSection:0]);
@@ -515,12 +515,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:2 inSection:1] : [NSIndexPath indexPathForItem:0 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:2 inSection:1] : [NSIndexPath indexPathForItem:0 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:2 inSection:0]);
@@ -530,12 +530,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:0 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:1] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:0 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:1] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:0 inSection:0]);
@@ -548,12 +548,12 @@
   
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:moves
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:moves
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:0 inSection:0]);
@@ -566,12 +566,12 @@
   
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:moves
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:moves
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:4 inSection:0]);
@@ -584,12 +584,12 @@
   
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:moves
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:moves
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:4 inSection:0]);
@@ -602,12 +602,12 @@
   
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:moves
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:moves
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:0 inSection:0]);
@@ -619,12 +619,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:5 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:5 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:4 inSection:0]);
@@ -635,12 +635,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:[NSIndexSet indexSetWithIndex:0]
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:[NSIndexSet indexSetWithIndex:0]
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:0 inSection:0]], [NSIndexPath indexPathForItem:0 inSection:1]);
@@ -650,12 +650,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
-                                                                    removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:[NSIndexSet indexSetWithIndex:0]
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:[NSIndexSet indexSetWithIndex:0]
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:0]], [NSIndexPath indexPathForItem:0 inSection:1]);
@@ -665,12 +665,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:[NSIndexSet indexSetWithIndex:0]
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:[NSIndexSet indexSetWithIndex:0]
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:0 inSection:1]], [NSIndexPath indexPathForItem:0 inSection:0]);
@@ -680,12 +680,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:1]]
-                                                                    removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]
-                                                                      removedSections:[NSIndexSet indexSetWithIndex:0]
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]
+                                                removedSections:[NSIndexSet indexSetWithIndex:0]
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:1 inSection:1]], [NSIndexPath indexPathForItem:0 inSection:0]);
@@ -696,12 +696,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:3 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:4 inSection:0] : [NSIndexPath indexPathForItem:1 inSection:1] }
-                                                                     insertedSections:[NSIndexSet indexSetWithIndex:0]
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:4 inSection:0] : [NSIndexPath indexPathForItem:1 inSection:1] }
+                                               insertedSections:[NSIndexSet indexSetWithIndex:0]
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:3 inSection:0]], [NSIndexPath indexPathForItem:4 inSection:1]);
@@ -711,12 +711,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:5 inSection:1]]
-                                                                    removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:1]]
-                                                                      removedSections:[NSIndexSet indexSetWithIndex:0]
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:1]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:1]]
+                                                removedSections:[NSIndexSet indexSetWithIndex:0]
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:1]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:5 inSection:1]], [NSIndexPath indexPathForItem:4 inSection:0]);
@@ -726,12 +726,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:[NSIndexSet indexSetWithIndex:1]
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:2]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:[NSIndexSet indexSetWithIndex:1]
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:2]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:0 inSection:1]], [NSIndexPath indexPathForItem:1 inSection:2]);
@@ -742,12 +742,12 @@
   // [0, 1, 2] -> [2', 1', 0']
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObjects:[NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:1 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0], nil]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:2 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:1 inSection:0] : [NSIndexPath indexPathForItem:1 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:2 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:1 inSection:0] : [NSIndexPath indexPathForItem:1 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqualObjects(updateMapping,
                         (@{
@@ -762,12 +762,12 @@
   // [1, 2, 3] -> [0, 1', 4, 3', 2']
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObjects:[NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:1 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0], nil]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:2 inSection:0] : [NSIndexPath indexPathForItem:3 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:[NSSet setWithObjects:[NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0], nil]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:2 inSection:0] : [NSIndexPath indexPathForItem:3 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:[NSSet setWithObjects:[NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0], nil]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqualObjects(updateMapping,
                         (@{
@@ -783,12 +783,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:2 inSection:0] : [NSIndexPath indexPathForItem:5 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:2 inSection:0] : [NSIndexPath indexPathForItem:5 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:5 inSection:0]);
@@ -798,12 +798,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:2 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:@{ [NSIndexPath indexPathForItem:2 inSection:0] : [NSIndexPath indexPathForItem:5 inSection:0] }
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:4 inSection:0]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:@{ [NSIndexPath indexPathForItem:2 inSection:0] : [NSIndexPath indexPathForItem:5 inSection:0] }
+                                               insertedSections:nil
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:4 inSection:0]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:2 inSection:0]], [NSIndexPath indexPathForItem:5 inSection:0]);
@@ -813,12 +813,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:0 inSection:0]], [NSIndexPath indexPathForItem:0 inSection:3]);
@@ -828,12 +828,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:[NSSet setWithArray:@[[NSIndexPath indexPathForRow:0 inSection:0], [NSIndexPath indexPathForRow:1 inSection:0], [NSIndexPath indexPathForRow:2 inSection:0]]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:[NSSet setWithArray:@[[NSIndexPath indexPathForRow:0 inSection:0], [NSIndexPath indexPathForRow:1 inSection:0], [NSIndexPath indexPathForRow:2 inSection:0]]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:0 inSection:0]], [NSIndexPath indexPathForItem:3 inSection:0]);
@@ -843,12 +843,12 @@
 {
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]
-                                                                   insertedIndexPaths:[NSSet setWithArray:@[[NSIndexPath indexPathForRow:0 inSection:3], [NSIndexPath indexPathForRow:1 inSection:3], [NSIndexPath indexPathForRow:2 inSection:3]]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]
+                                             insertedIndexPaths:[NSSet setWithArray:@[[NSIndexPath indexPathForRow:0 inSection:3], [NSIndexPath indexPathForRow:1 inSection:3], [NSIndexPath indexPathForRow:2 inSection:3]]]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], 1);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:0 inSection:0]], [NSIndexPath indexPathForItem:3 inSection:3]);
@@ -868,12 +868,12 @@
                                   [NSIndexPath indexPathForItem:0 inSection:5]];
   CKDataSourceAppliedChanges *changes =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithArray:updatedIndexPaths]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:insertedSections
-                                                                   insertedIndexPaths:[NSSet setWithArray:insertedIndexPaths]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:insertedSections
+                                             insertedIndexPaths:[NSSet setWithArray:insertedIndexPaths]
+                                                       userInfo:nil];
   NSDictionary *updateMapping = [changes finalUpdatedIndexPaths];
   XCTAssertEqual([updateMapping count], [updatedIndexPaths count]);
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:0 inSection:0]], [NSIndexPath indexPathForItem:0 inSection:4]);

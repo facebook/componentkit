@@ -50,7 +50,7 @@
       [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
       const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
         return [componentProvider componentForModel:[item model] context:context];
-      });
+      }, configuration.buildComponentTreeEnabled);
       const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, configuration.componentLayoutCacheEnabled);
       [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:layout
                                                              model:[item model]
@@ -62,16 +62,16 @@
 
   CKDataSourceState *newState =
   [[CKDataSourceState alloc] initWithConfiguration:configuration
-                                                                sections:newSections];
+                                          sections:newSections];
 
   CKDataSourceAppliedChanges *appliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:updatedIndexPaths
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:_userInfo];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:_userInfo];
 
   return [[CKDataSourceChange alloc] initWithState:newState
                                                           appliedChanges:appliedChanges];

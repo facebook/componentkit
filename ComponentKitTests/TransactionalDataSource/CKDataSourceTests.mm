@@ -52,8 +52,8 @@ struct CKDataSourceAnnouncedUpdate {
   CKDataSource *ds =
   [[CKDataSource alloc] initWithConfiguration:
    [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                                              context:nil
-                                                                            sizeRange:{}]];
+                                                        context:nil
+                                                      sizeRange:{}]];
   XCTAssertEqual([[ds state] numberOfSections], (NSUInteger)0);
 }
 
@@ -62,8 +62,8 @@ struct CKDataSourceAnnouncedUpdate {
   CKDataSource *ds =
   [[CKDataSource alloc] initWithConfiguration:
    [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                                              context:nil
-                                                                            sizeRange:{}]];
+                                                        context:nil
+                                                      sizeRange:{}]];
   [ds addListener:self];
 
   CKDataSourceChangeset *insertion =
@@ -75,12 +75,12 @@ struct CKDataSourceAnnouncedUpdate {
 
   CKDataSourceAppliedChanges *expectedAppliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:nil
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:[NSIndexSet indexSetWithIndex:0]
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:[NSIndexSet indexSetWithIndex:0]
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+                                                       userInfo:nil];
 
   XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
 }
@@ -90,8 +90,8 @@ struct CKDataSourceAnnouncedUpdate {
   CKDataSource *ds =
   [[CKDataSource alloc] initWithConfiguration:
    [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                                              context:nil
-                                                                            sizeRange:{}]];
+                                                        context:nil
+                                                      sizeRange:{}]];
   [ds addListener:self];
 
   CKDataSourceChangeset *insertion =
@@ -103,12 +103,12 @@ struct CKDataSourceAnnouncedUpdate {
 
   CKDataSourceAppliedChanges *expectedAppliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:nil
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:[NSIndexSet indexSetWithIndex:0]
-                                                                   insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:[NSIndexSet indexSetWithIndex:0]
+                                             insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+                                                       userInfo:nil];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
     return _announcedChanges.size() == 1 && [_announcedChanges[0].appliedChanges isEqual:expectedAppliedChanges];
@@ -122,20 +122,20 @@ struct CKDataSourceAnnouncedUpdate {
 
   CKDataSourceConfiguration *config =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                                             context:@"new context"
-                                                                           sizeRange:{}];
+                                                       context:@"new context"
+                                                     sizeRange:{}];
   [ds updateConfiguration:config
                      mode:CKUpdateModeSynchronous
                  userInfo:nil];
 
   CKDataSourceAppliedChanges *expectedAppliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
 
   XCTAssertEqual([[ds state] configuration], config);
   XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
@@ -149,12 +149,12 @@ struct CKDataSourceAnnouncedUpdate {
 
   CKDataSourceAppliedChanges *expectedAppliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
   XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
 }
 
@@ -172,20 +172,20 @@ struct CKDataSourceAnnouncedUpdate {
 
   CKDataSourceAppliedChanges *expectedAppliedChangesForSyncReload =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:@{@"id": @2}];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:@{@"id": @2}];
   CKDataSourceAppliedChanges *expectedAppliedChangesForSecondAsyncReload =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:@{@"id": @3}];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:@{@"id": @3}];
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _announcedChanges.size() == 2
     && [_announcedChanges[0].appliedChanges isEqual:expectedAppliedChangesForSyncReload]

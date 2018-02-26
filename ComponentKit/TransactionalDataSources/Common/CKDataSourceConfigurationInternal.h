@@ -31,6 +31,7 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
               componentLayoutCacheEnabled:(BOOL)componentLayoutCacheEnabled
+                buildComponentTreeEnabled:(BOOL)buildComponentTreeEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
@@ -38,6 +39,7 @@
 @property (nonatomic, readonly, strong) id<CKAnalyticsListener> analyticsListener;
 
 @property (nonatomic, assign, readonly) BOOL componentLayoutCacheEnabled;
+@property (nonatomic, assign, readonly) BOOL buildComponentTreeEnabled;
 
 - (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;

@@ -62,12 +62,12 @@ static u_int32_t globalState = 0;
 
   CKDataSourceAppliedChanges *expectedAppliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:CKTestIndexPaths(5, 5)
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:nil];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:nil];
 
   XCTAssertEqualObjects([change appliedChanges], expectedAppliedChanges);
 }

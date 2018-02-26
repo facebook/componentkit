@@ -59,13 +59,13 @@
       if (onlySizeRangeChanged) {
         const CKComponentLayout layout = CKComputeRootComponentLayout(item.layout.component, sizeRange, [item scopeRoot].analyticsListener, _configuration.componentLayoutCacheEnabled);
         newItem = [[CKDataSourceItem alloc] initWithLayout:layout
-                                                                           model:[item model]
-                                                                       scopeRoot:[item scopeRoot]
-                                                                 boundsAnimation:[item boundsAnimation]];
+                                                     model:[item model]
+                                                 scopeRoot:[item scopeRoot]
+                                           boundsAnimation:[item boundsAnimation]];
       } else {
         const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
           return [componentProvider componentForModel:[item model] context:context];
-        });
+        }, _configuration.buildComponentTreeEnabled);
         const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, _configuration.componentLayoutCacheEnabled);
         newItem = [[CKDataSourceItem alloc] initWithLayout:layout
                                                                            model:[item model]
@@ -80,16 +80,16 @@
 
   CKDataSourceState *newState =
   [[CKDataSourceState alloc] initWithConfiguration:_configuration
-                                                                sections:newSections];
+                                          sections:newSections];
 
   CKDataSourceAppliedChanges *appliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:updatedIndexPaths
-                                                                    removedIndexPaths:nil
-                                                                      removedSections:nil
-                                                                      movedIndexPaths:nil
-                                                                     insertedSections:nil
-                                                                   insertedIndexPaths:nil
-                                                                             userInfo:_userInfo];
+                                              removedIndexPaths:nil
+                                                removedSections:nil
+                                                movedIndexPaths:nil
+                                               insertedSections:nil
+                                             insertedIndexPaths:nil
+                                                       userInfo:_userInfo];
 
   return [[CKDataSourceChange alloc] initWithState:newState
                                                           appliedChanges:appliedChanges];

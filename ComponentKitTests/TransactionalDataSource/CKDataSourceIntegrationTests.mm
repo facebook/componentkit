@@ -119,14 +119,14 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 - (CKCollectionViewDataSource *)generateDataSource:(CKTestConfig)testConfig
 {
   CKDataSourceConfiguration *config = [[CKDataSourceConfiguration alloc]
-                                       initWithComponentProvider:(id) self
+                                       initWithComponentProvider:(id)self
                                        context:nil
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
                                        componentLayoutCacheEnabled:NO
+                                       buildComponentTreeEnabled:NO
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
-                                       analyticsListener:nil
-                                       ];
+                                       analyticsListener:nil];
 
   return [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionViewController.collectionView
                                                      supplementaryViewDataSource:nil

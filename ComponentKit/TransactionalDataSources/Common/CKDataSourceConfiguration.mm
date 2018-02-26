@@ -29,6 +29,7 @@
                                  context:context
                                sizeRange:sizeRange
              componentLayoutCacheEnabled:NO
+               buildComponentTreeEnabled:NO
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil];
@@ -38,6 +39,7 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
               componentLayoutCacheEnabled:(BOOL)componentLayoutCacheEnabled
+                buildComponentTreeEnabled:(BOOL)buildComponentTreeEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -50,6 +52,7 @@
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
     _componentLayoutCacheEnabled = componentLayoutCacheEnabled;
+    _buildComponentTreeEnabled = buildComponentTreeEnabled;
   }
   return self;
 }
