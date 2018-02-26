@@ -363,7 +363,7 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
          CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnInitialMount)))) {
           c = [CKComponentController class];
         }
-    CKWarnWithCategory((c == nil || c == [CKComponentController class]), NSStringFromClass([self class]), @"Should override + (Class<CKComponentControllerProtocol>)controllerClass to return its controllerClass");
+    CKAssertWithCategory((c == nil || c == [CKComponentController class]), NSStringFromClass([self class]), @"Should override + (Class<CKComponentControllerProtocol>)controllerClass to return its controllerClass");
     cache->insert({componentClass, c});
     return c;
   }
