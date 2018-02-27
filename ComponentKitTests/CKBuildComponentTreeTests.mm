@@ -24,9 +24,8 @@
 + (instancetype)newWithComponent:(CKComponent *)component;
 @end
 
-/** Same as 'CKComponentTreeTestComponent_SingleChild', but allows to override the CKComponentOwner protocol */
-@interface CKComponentTreeTestComponentWithOwner_SingleChild : CKComponentTreeTestComponent_SingleChild
-+ (instancetype)newWithComponent:(CKComponent *)component isOwnerComponent:(BOOL)isOwnerComponent;
+/** Same as 'CKComponentTreeTestComponent_SingleChild', but overrides the CKRenderComponent and returns: isOwnerComponent = NO */
+@interface CKComponentTreeTestComponent_NonOwner_SingleChild : CKComponentTreeTestComponent_SingleChild
 @end
 
 /** An helper class that inherits from 'CKMultiChildComponent'; render the component froms the initializer */
@@ -34,9 +33,8 @@
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
 @end
 
-/** Same as 'CKComponentTreeTestComponent_MultiChild', but allows to override the CKComponentOwner protocol */
-@interface CKComponentTreeTestComponentWithOwner_MultiChild : CKComponentTreeTestComponent_MultiChild
-+ (instancetype)newWithChildren:(std::vector<CKComponent *>)children isOwnerComponent:(BOOL)isOwnerComponent;
+/** Same as 'CKComponentTreeTestComponent_MultiChild', but overrides the CKRenderComponent and returns: isOwnerComponent = YES */
+@interface CKComponentTreeTestComponent_Owner_MultiChild : CKComponentTreeTestComponent_MultiChild
 @end
 
 #pragma mark - Tests
@@ -100,7 +98,7 @@
 {
   CKTreeNode *root = [[CKTreeNode alloc] init];
   CKComponent *c = [CKComponent newWithView:{} size:{}];
-  CKSingleChildComponent *singleChildNoOwnerComponent = [CKComponentTreeTestComponentWithOwner_SingleChild newWithComponent:c isOwnerComponent:NO];
+  CKSingleChildComponent *singleChildNoOwnerComponent = [CKComponentTreeTestComponent_NonOwner_SingleChild newWithComponent:c];
   [singleChildNoOwnerComponent buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{}];
 
   // As singleChildNoOwnerComponent is not an owner, the root should have 2 children.
@@ -110,7 +108,7 @@
   // Simulate a second tree creation.
   CKTreeNode *root2 = [[CKTreeNode alloc] init];
   CKComponent *c2 = [CKComponent newWithView:{} size:{}];
-  CKSingleChildComponent *singleChildNoOwnerComponent2 = [CKComponentTreeTestComponentWithOwner_SingleChild newWithComponent:c2 isOwnerComponent:NO];
+  CKSingleChildComponent *singleChildNoOwnerComponent2 = [CKComponentTreeTestComponent_NonOwner_SingleChild newWithComponent:c2];
   [singleChildNoOwnerComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{}];
   XCTAssertTrue(areTreesEqual(root, root2));
 }
@@ -142,7 +140,7 @@
   CKTreeNode *root = [[CKTreeNode alloc] init];
   CKComponent *c10 = [CKComponent newWithView:{} size:{}];
   CKComponent *c11 = [CKComponent newWithView:{} size:{}];
-  CKMultiChildComponent *groupComponent = [CKComponentTreeTestComponentWithOwner_MultiChild newWithChildren:{c10, c11} isOwnerComponent:YES];
+  CKMultiChildComponent *groupComponent = [CKComponentTreeTestComponent_Owner_MultiChild newWithChildren:{c10, c11}];
   [groupComponent buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{}];
 
   XCTAssertEqual(root.children.size(), 1);
@@ -163,7 +161,7 @@
   CKTreeNode *root2 = [[CKTreeNode alloc] init];
   CKComponent *c20 = [CKComponent newWithView:{} size:{}];
   CKComponent *c21 = [CKComponent newWithView:{} size:{}];
-  CKMultiChildComponent *groupComponent2 = [CKComponentTreeTestComponentWithOwner_MultiChild newWithChildren:{c20, c21} isOwnerComponent:YES];
+  CKMultiChildComponent *groupComponent2 = [CKComponentTreeTestComponent_Owner_MultiChild newWithChildren:{c20, c21}];
   [groupComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{}];
   XCTAssertTrue(areTreesEqual(root, root2));
 }
@@ -229,22 +227,10 @@ static void treeChildrenIdentifiers(CKTreeNode *node, NSMutableSet<NSString *> *
 }
 @end
 
-@implementation CKComponentTreeTestComponentWithOwner_SingleChild
+@implementation CKComponentTreeTestComponent_NonOwner_SingleChild
++ (BOOL)isOwnerComponent
 {
-  BOOL _isOwnerComponent;
-}
-+ (instancetype)newWithComponent:(CKComponent *)component
-                isOwnerComponent:(BOOL)isOwnerComponent
-{
-  auto const c = [super newWithComponent:component];
-  if (c) {
-    c->_isOwnerComponent = isOwnerComponent;
-  }
-  return c;
-}
-- (BOOL)isOwnerComponent
-{
-  return _isOwnerComponent;
+  return NO;
 }
 @end
 
@@ -266,21 +252,9 @@ static void treeChildrenIdentifiers(CKTreeNode *node, NSMutableSet<NSString *> *
 }
 @end
 
-@implementation CKComponentTreeTestComponentWithOwner_MultiChild
+@implementation CKComponentTreeTestComponent_Owner_MultiChild
++ (BOOL)isOwnerComponent
 {
-  BOOL _isOwnerComponent;
-}
-+ (instancetype)newWithChildren:(std::vector<CKComponent *>)children
-               isOwnerComponent:(BOOL)isOwnerComponent
-{
-  auto const c = [super newWithChildren:children];
-  if (c) {
-    c->_isOwnerComponent = isOwnerComponent;
-  }
-  return c;
-}
-- (BOOL)isOwnerComponent
-{
-  return _isOwnerComponent;
+  return YES;
 }
 @end

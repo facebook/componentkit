@@ -10,9 +10,9 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
-#import <ComponentKit/CKComponentOwner.h>
+#import <ComponentKit/CKRenderComponent.h>
 
-@interface CKMultiChildComponent : CKComponent <CKComponentOwner>
+@interface CKMultiChildComponent : CKComponent <CKRenderComponent>
 
 /*
  Returns a vector of 'CKComponent' children that will be render to the screen.

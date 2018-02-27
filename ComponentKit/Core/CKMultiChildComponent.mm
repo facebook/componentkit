@@ -34,7 +34,7 @@
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  auto const isOwnerComponent = [self isOwnerComponent];
+  auto const isOwnerComponent = [[self class] isOwnerComponent];
   const Class nodeClass = isOwnerComponent ? [CKTreeNode class] : [CKBaseTreeNode class];
   CKBaseTreeNode *const node = [[nodeClass alloc]
                                 initWithComponent:self
@@ -57,9 +57,9 @@
   }
 }
 
-#pragma mark - CKComponentTreeOwner
+#pragma mark - CKRenderComponent
 
-- (BOOL)isOwnerComponent
++ (BOOL)isOwnerComponent
 {
   return NO;
 }

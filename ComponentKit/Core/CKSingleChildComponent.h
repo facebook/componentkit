@@ -10,9 +10,9 @@
 
 
 #import <ComponentKit/CKComponent.h>
-#import <ComponentKit/CKComponentOwner.h>
+#import <ComponentKit/CKRenderComponent.h>
 
-@interface CKSingleChildComponent : CKComponent <CKComponentOwner>
+@interface CKSingleChildComponent : CKComponent <CKRenderComponent>
 
 /**
  Returns a child component that needs to be rendered from this component.
