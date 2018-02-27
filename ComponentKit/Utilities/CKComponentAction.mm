@@ -13,7 +13,6 @@
 #import <unordered_map>
 #import <vector>
 #import <array>
-#import <objc/runtime.h>
 
 #import "CKAssert.h"
 #import "CKComponent+UIView.h"
@@ -288,24 +287,30 @@ std::unordered_map<UIControlEvents, std::vector<CKAction<UIEvent *>>> _CKCompone
 #endif
 }
 
-BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSignature *signature, const std::vector<const char *> &typeEncodings)
+BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, Method method, const std::vector<const char *> &typeEncodings)
 {
   if (selector == NULL) {
     return NO;
   }
   
-  if (typeEncodings.size() + 3 < signature.numberOfArguments) {
-    CKCFailAssert(@"Expected action method %@ to take less than %llu arguments, but it supports %llu", NSStringFromSelector(selector), (unsigned long long)typeEncodings.size(), (unsigned long long)signature.numberOfArguments - 3);
+  if (typeEncodings.size() + 3 < method_getNumberOfArguments(method)) {
+    CKCFailAssert(@"Expected action method %@ to take less than %llu arguments, but it supports %llu", NSStringFromSelector(selector), (unsigned long long)typeEncodings.size(), (unsigned long long)method_getNumberOfArguments(method) - 3);
     return NO;
   }
 
-  if (signature.methodReturnLength != 0) {
+  char *return_type = method_copyReturnType(method);
+  const bool has_return_type = strcmp(return_type, "v") != 0; // "v" is void
+  free(return_type);
+
+  if (has_return_type) {
     CKCFailAssert(@"Component action methods should not have any return value. Any objects returned from this method will be leaked.");
     return NO;
   }
 
-  for (int i = 0; i + 3 < signature.numberOfArguments && i < typeEncodings.size(); i++) {
-    const char *methodEncoding = [signature getArgumentTypeAtIndex:i + 3];
+  // Skipping self, _cmd, and sender (the component).
+  for (int i = 0; i + 3 < method_getNumberOfArguments(method) && i < typeEncodings.size(); i++) {
+    char *cp_argType = method_copyArgumentType(method, i + 3); // freed later - DON'T early exit!
+    char *methodEncoding = cp_argType; // a pointer we can move around
     const char *typeEncoding = typeEncodings[i];
 
     // Type Encoding: https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
@@ -338,16 +343,24 @@ BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSignature *s
       doEncodingsMatch = strcmp(methodEncoding, typeEncoding) == 0;
     }
 
+    NSString *safe_methodEncoding = [NSString stringWithFormat:@"%s", methodEncoding];
+    free(cp_argType);
+
     if (!doEncodingsMatch) {
-      CKCFailAssert(@"Implementation of %@ does not match expected types.\nExpected type %s, got %s", NSStringFromSelector(selector), typeEncoding, methodEncoding);
+      CKCFailAssert(@"Implementation of %@ does not match expected types.\nExpected type %s, got %@", NSStringFromSelector(selector), typeEncoding, safe_methodEncoding);
       return NO;
     }
+
+    safe_methodEncoding = nil; // avoids -Wunused-variable
   }
 
-  if (signature.numberOfArguments >= 3) {
-    const char *methodEncoding = [signature getArgumentTypeAtIndex:2];
-    if (methodEncoding != NULL && strcmp(methodEncoding, "@") != 0) {
-      CKCFailAssert(@"Sender of %@ is not an object.\nGot %s instead. Please add the component as the first argument when sending an action", NSStringFromSelector(selector), methodEncoding);
+  if (method_getNumberOfArguments(method) >= 3) {
+    char *const unasfe_methodEncoding = method_copyArgumentType(method, 2);
+    NSString *methodEncoding = [NSString stringWithFormat:@"%s", unasfe_methodEncoding ?: ""];
+    free(unasfe_methodEncoding);
+
+    if (methodEncoding != nil && [methodEncoding isEqualToString:@"@"] == NO) {
+      CKCFailAssert(@"Sender of %@ is not an object.\nGot %@ instead. Please add the component as the first argument when sending an action", NSStringFromSelector(selector), methodEncoding);
       return NO;
     }
   }
@@ -355,9 +368,9 @@ BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, NSMethodSignature *s
   return YES;
 }
 
+#if DEBUG
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
 {
-#if DEBUG
   CKComponentScopeHandle *const scopeHandle = scope.scopeHandle();
 
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
@@ -366,27 +379,31 @@ void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SE
   const Class klass = scopeHandle.componentClass;
   // We allow component actions to be implemented either in the component, or its controller.
   const Class controllerKlass = [klass controllerClass];
-  CKCAssert(selector == NULL || [klass instancesRespondToSelector:selector] || [controllerKlass instancesRespondToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", klass, NSStringFromSelector(selector));
 
-  NSMethodSignature *signature = [klass instanceMethodSignatureForSelector:selector] ?: [controllerKlass instanceMethodSignatureForSelector:selector];
+  if (selector == NULL) {
+    return;
+  }
+  CKCAssert([klass instancesRespondToSelector:selector] || [controllerKlass instancesRespondToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", klass, NSStringFromSelector(selector));
 
-  checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
-#endif
+  // Type encoding with NSMethodSignatue isn't working well for C++, so we use class_getInstanceMethod()
+  Method method = class_getInstanceMethod(klass, selector) ?: class_getInstanceMethod(controllerKlass, selector);
+  checkMethodSignatureAgainstTypeEncodings(selector, method, typeEncodings);
 }
 
 void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
 {
-#if DEBUG
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
-  CKCAssert(selector == NULL || [target respondsToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", [target class], NSStringFromSelector(selector));
+  if (selector == NULL) {
+    return;
+  }
+  CKCAssert([target respondsToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", [target class], NSStringFromSelector(selector));
 
-  NSMethodSignature *signature = [target methodSignatureForSelector:selector];
-
-  checkMethodSignatureAgainstTypeEncodings(selector, signature, typeEncodings);
-#endif
+  Method method = class_getInstanceMethod([target class], selector);
+  checkMethodSignatureAgainstTypeEncodings(selector, method, typeEncodings);
 }
+#endif
 
 // This method returns a friendly-print of a responder chain. Used for debug purposes.
 NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {

@@ -616,8 +616,8 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
 #pragma mark - Action Params Validation
 
 - (BOOL)checkSelector:(SEL)sel typeEncodings:(const std::vector<const char *> &)typeEncodings {
-  NSMethodSignature *signature = [[self class] instanceMethodSignatureForSelector:sel];
-  return checkMethodSignatureAgainstTypeEncodings(sel, signature, typeEncodings);
+  Method method = class_getInstanceMethod([self class], sel);
+  return checkMethodSignatureAgainstTypeEncodings(sel, method, typeEncodings);
 }
 
 - (void)testActionNoParamValidation

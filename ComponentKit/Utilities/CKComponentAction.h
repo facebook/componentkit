@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKComponentViewAttribute.h>
 #import <ComponentKit/CKComponentActionInternal.h>
+#import <objc/runtime.h>
 
 @class CKComponent;
 
@@ -195,7 +196,7 @@ public:
 };
 
 BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector,
-                                              NSMethodSignature *signature,
+                                              Method method,
                                               const std::vector<const char *> &typeEncodings);
 
 typedef CKAction<> CKUntypedComponentAction;

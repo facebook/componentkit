@@ -136,9 +136,10 @@ public:
   }
 };
 
+#if DEBUG
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
-
 void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
+#endif
 
 NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept;
 
