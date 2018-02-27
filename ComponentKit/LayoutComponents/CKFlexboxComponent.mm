@@ -159,7 +159,30 @@ static float computeBaseline(YGNodeRef node, const float width, const float heig
   return height;
 }
 
-static YGFlexDirection ygDirectionFromStackStyle(const CKFlexboxComponentStyle &style)
+static YGDirection ygApplicationDirection()
+{
+  static YGDirection applicationDirection;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    const NSWritingDirection direction = [NSParagraphStyle defaultWritingDirectionForLanguage:nil];
+    applicationDirection = (direction == NSWritingDirectionRightToLeft) ? YGDirectionRTL : YGDirectionLTR;
+  });
+  return applicationDirection;
+}
+
+static YGDirection ygDirectionFromStackStyle(const CKFlexboxComponentStyle &style)
+{
+  switch (style.layoutDirection) {
+    case CKLayoutDirectionApplicationDirection:
+      return ygApplicationDirection();
+    case CKLayoutDirectionLTR:
+      return YGDirectionLTR;
+    case CKLayoutDirectionRTL:
+      return YGDirectionRTL;
+  }
+}
+
+static YGFlexDirection ygFlexDirectionFromStackStyle(const CKFlexboxComponentStyle &style)
 {
   switch (style.direction) {
     case CKFlexboxDirectionHorizontal:
@@ -376,7 +399,8 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     applyMarginToEdge(childNode, YGEdgeEnd, child.margin.end);
   }
 
-  YGNodeStyleSetFlexDirection(stackNode, ygDirectionFromStackStyle(_style));
+  YGNodeStyleSetDirection(stackNode, ygDirectionFromStackStyle(_style));
+  YGNodeStyleSetFlexDirection(stackNode, ygFlexDirectionFromStackStyle(_style));
   YGNodeStyleSetJustifyContent(stackNode, ygJustifyFromStackStyle(_style));
   YGNodeStyleSetAlignItems(stackNode, ygAlignItemsFromStackStyle(_style));
   YGNodeStyleSetAlignContent(stackNode, ygAlignContentFromStackStyle(_style));

@@ -30,6 +30,13 @@ typedef NS_ENUM(NSUInteger, CKFlexboxDirection) {
   CKFlexboxDirectionHorizontalReverse,
 };
 
+/** Layout direction is used to support RTL */
+typedef NS_ENUM(NSUInteger, CKLayoutDirection) {
+  CKLayoutDirectionApplicationDirection,
+  CKLayoutDirectionLTR,
+  CKLayoutDirectionRTL,
+};
+
 /** If no children are flexible, how should this component justify its children in the available space? */
 typedef NS_ENUM(NSUInteger, CKFlexboxJustifyContent) {
   /**
@@ -249,6 +256,11 @@ struct CKFlexboxComponentStyle {
    Use this option to disable the cache on a case-by-case basis if you care more about correctness than performance.
    */
   BOOL disableCachingToWorkAroundBug;
+  /**
+   Use to support RTL layouts.
+   The default is to follow the application's layout direction, but you can force a LTR or RTL layout by changing this.
+   */
+  CKLayoutDirection layoutDirection = CKLayoutDirectionApplicationDirection;
 };
 
 struct CKFlexboxComponentChild {
