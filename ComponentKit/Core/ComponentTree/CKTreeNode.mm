@@ -12,55 +12,88 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKInternalHelpers.h>
 
 #include <tuple>
 
 #import "CKMutex.h"
+#import "CKThreadLocalComponentScope.h"
 
-struct CKTreeNodeComparator {
-  bool operator() (const CKComponentKey &lhs, const CKComponentKey &rhs) const
-  {
-    return std::get<0>(lhs) == std::get<0>(rhs) && std::get<1>(lhs) == std::get<1>(rhs);
-  }
-};
-
-struct CKTreeNodeHasher {
-  std::size_t operator() (const CKComponentKey &n) const
-  {
-    return [std::get<0>(n) hash] ^ std::get<1>(n);
-  }
-};
-
-typedef std::unordered_map<CKComponentKey, CKBaseTreeNode *, CKTreeNodeHasher, CKTreeNodeComparator> CKScopeNodeMap;
+@interface CKTreeNode ()
+@property (nonatomic, strong, readwrite) CKComponent *component;
+@property (nonatomic, strong, readwrite) CKComponentScopeHandle *handle;
+@property (nonatomic, assign, readwrite) CKTreeNodeIdentifier nodeIdentifier;
+@end
 
 @implementation CKTreeNode
 {
-  CKScopeNodeMap _children;
-  std::unordered_map<Class, NSUInteger> _classTypeIdentifier;
+  CKComponentKey _componentKey;
 }
 
-- (std::vector<CKBaseTreeNode *>)children
+- (instancetype)initWithComponent:(CKComponent *)component
+                            owner:(id<CKOwnerTreeNodeProtocol>)owner
+                    previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
+                        scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                     stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  std::vector<CKBaseTreeNode *> children;
-  for (auto const &child : _children) {
-    children.push_back(child.second);
+
+  static int32_t nextGlobalIdentifier = 0;
+
+  if (self = [super init]) {
+
+    _component = component;
+
+    Class componentClass = [component class];
+    _componentKey = [owner createComponentKeyForChildWithClass:componentClass];
+    CKTreeNode *previousNode = [previousOwner childForComponentKey:_componentKey];
+
+    if (previousNode) {
+      _nodeIdentifier = previousNode.nodeIdentifier;
+    } else {
+      _nodeIdentifier = OSAtomicIncrement32(&nextGlobalIdentifier);
+    }
+
+    if (component.scopeHandle) {
+      _handle = component.scopeHandle;
+    } else {
+      // In case we already had a component tree before.
+      if (previousNode) {
+        _handle = [previousNode.handle newHandleWithStateUpdates:stateUpdates
+                                              componentScopeRoot:scopeRoot
+                                                          parent:owner.handle];
+      } else {
+        // We need a scope handle only if there is a controller or a state.
+        id initialState = [componentClass initialState];
+        if (initialState || [componentClass controllerClass]) {
+        _handle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
+                                                    rootIdentifier:scopeRoot.globalIdentifier
+                                                    componentClass:componentClass
+                                                      initialState:initialState
+                                                            parent:owner.handle];
+        }
+      }
+
+      if (_handle) {
+        [component acquireScopeHandle:_handle];
+        [_handle resolve];
+      }
+    }
+
+    // Set the link between the parent and the child.
+    [owner setChild:self forComponentKey:_componentKey];
+    
   }
-  return children;
+  return self;
 }
 
-- (CKBaseTreeNode *)childForComponentKey:(const CKComponentKey &)key
+- (id)state
 {
-  return _children[key];
+  return _handle.state;
 }
 
-- (CKComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
+- (const CKComponentKey &)componentKey
 {
-  return std::make_tuple(componentClass, _classTypeIdentifier[componentClass]++);
-}
-
-- (void)setChild:(CKBaseTreeNode*)child forComponentKey:(const CKComponentKey &)componentKey
-{
-  _children[componentKey] = child;
+  return _componentKey;
 }
 
 @end

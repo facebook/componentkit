@@ -22,8 +22,8 @@
  This method defines how a component behaves when the component tree is being constructed with
  'buildComponentTree:previousOwner:scopeRoot:stateUpdates'.
 
- Each component has a corresponding CKBaseTreeNode; this node holds the component's state and its children nodes.
- If a component is an owner component, its children nodes (CKBaseTreeNode) will be attached to its corresponding node.
+ Each component has a corresponding CKTreeNode; this node holds the component's state and its children nodes.
+ If a component is an owner component, its children nodes (CKTreeNode) will be attached to its corresponding node.
  Otherwise, they will be attached to the component's owner.
 
  Return yes in case your component is the owner of its children components.

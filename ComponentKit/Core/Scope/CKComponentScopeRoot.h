@@ -25,7 +25,7 @@
 
 @class CKComponentScopeFrame;
 @class CKComponentScopeRoot;
-@class CKTreeNode;
+@class CKOwnerTreeNode;
 
 /** Component state announcements will always be made on the main thread. */
 @protocol CKComponentStateListener <NSObject>
@@ -66,6 +66,6 @@
 @property (nonatomic, weak, readonly) id<CKAnalyticsListener> analyticsListener;
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier globalIdentifier;
 @property (nonatomic, strong, readonly) CKComponentScopeFrame *rootFrame;
-@property (nonatomic, strong, readonly) CKTreeNode *rootNode;
+@property (nonatomic, strong, readonly) CKOwnerTreeNode *rootNode;
 
 @end

@@ -36,7 +36,7 @@
 #import "ComponentLayoutContext.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKComponentScopeRoot.h"
-#import "CKBaseTreeNode.h"
+#import "CKTreeNode.h"
 
 CGFloat const kCKComponentParentDimensionUndefined = NAN;
 CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndefined, kCKComponentParentDimensionUndefined};
@@ -136,13 +136,13 @@ struct CKComponentMountInfo {
 
 #pragma mark - ComponentTree
 
-- (void)buildComponentTree:(CKTreeNode *)owner
-             previousOwner:(CKTreeNode *)previousOwner
+- (void)buildComponentTree:(id<CKOwnerTreeNodeProtocol>)owner
+             previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
   // In this case this is a leaf component, which means we don't need to continue the recursion as it has no children.
-  __unused auto const node = [[CKBaseTreeNode alloc]
+  __unused auto const node = [[CKTreeNode alloc]
                               initWithComponent:self
                               owner:owner
                               previousOwner:previousOwner

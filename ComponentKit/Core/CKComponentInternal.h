@@ -16,7 +16,7 @@
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 
 @class CKComponentScopeRoot;
-@class CKTreeNode;
+@protocol CKOwnerTreeNodeProtocol;
 
 @interface CKComponent ()
 
@@ -93,11 +93,11 @@
 /**
  For internal use only; don't touch this.
 
- This method translates the component render method into a 'CKBaseTreeNode'; a component tree.
+ This method translates the component render method into a 'CKTreeNode'; a component tree.
  It's being called by the infra during the component tree creation.
  */
-- (void)buildComponentTree:(CKTreeNode *)owner
-             previousOwner:(CKTreeNode *)previousOwner
+- (void)buildComponentTree:(id<CKOwnerTreeNodeProtocol>)owner
+             previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 

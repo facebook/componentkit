@@ -8,27 +8,28 @@
  *
  */
 
-#import "CKBaseTreeNode.h"
+#import <Foundation/Foundation.h>
 
-#include <vector>
+#import <ComponentKit/CKComponentScopeTypes.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentScopeHandle.h>
+#import <ComponentKit/CKTreeNodeProtocol.h>
+
 
 /**
- This object represents a node with multiple children in the component tree.
+ This object represents a node in the component tree.
 
- Each component that is an owner component will have a corresponding CKOwnerTreeNode.
+ Each component has a corresponding CKTreeNode; this node holds the component's state.
+
+ CKTreeNode is the base class of a tree node. It will be attached to non-owner components
+
+ For more information about an owner component see: CKRenderComponent.h
  */
+@interface CKTreeNode: NSObject <CKTreeNodeProtocol>
 
-@interface CKTreeNode : CKBaseTreeNode
-
-- (std::vector<CKBaseTreeNode *>)children;
-
-/** Returns a component tree node according to its component key */
-- (CKBaseTreeNode *)childForComponentKey:(const CKComponentKey &)key;
-
-/** Creates a component key for a child node according to its component class; this method is being called once during the component tree creation */
-- (CKComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass;
-
-/** Save a child node in the parent node according to its component key; this method is being called once during the component tree creation */
-- (void)setChild:(CKBaseTreeNode *)child forComponentKey:(const CKComponentKey &)componentKey;
-
+- (instancetype)initWithComponent:(CKComponent *)component
+                            owner:(id<CKOwnerTreeNodeProtocol>)owner
+                    previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
+                        scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                     stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 @end

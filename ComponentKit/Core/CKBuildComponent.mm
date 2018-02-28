@@ -17,7 +17,7 @@
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"
 #import "CKThreadLocalComponentScope.h"
-#import "CKTreeNode.h"
+#import "CKOwnerTreeNode.h"
 
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,

@@ -15,8 +15,8 @@
 #import "CKMultiChildComponent.h"
 #import "CKComponentInternal.h"
 #import "CKButtonComponent.h"
-#import "CKBaseTreeNode.h"
 #import "CKTreeNode.h"
+#import "CKOwnerTreeNode.h"
 #import "CKThreadLocalComponentScope.h"
 
 /** An helper class that inherits from 'CKSingleChildComponent'; render the component from the initializer */
@@ -48,7 +48,7 @@
 
 - (void)test_buildComponentTree_onCKComponent
 {
-  CKTreeNode *root = [[CKTreeNode alloc] init];
+  CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
   CKComponent *c = [CKComponent newWithView:{} size:{}];
   [c buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{}];
 
@@ -56,7 +56,7 @@
   XCTAssertEqual(root.children[0].component, c);
 
   // Simulate a second tree creation.
-  CKTreeNode *root2 = [[CKTreeNode alloc] init];
+  CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
   CKComponent *c2 = [CKComponent newWithView:{} size:{}];
   [c2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{}];
   XCTAssertTrue(areTreesEqual(root, root2));
@@ -66,28 +66,28 @@
 
 - (void)test_buildComponentTree_onCKSingleChildComponent
 {
-  CKTreeNode *root = [[CKTreeNode alloc] init];
+  CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
   CKComponent *c = [CKComponent newWithView:{} size:{}];
   CKSingleChildComponent *singleChildComponent = [CKComponentTreeTestComponent_SingleChild newWithComponent:c];
   [singleChildComponent buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{}];
 
   // Make sure the root has only one child.
   XCTAssertEqual(root.children.size(), 1);
-  CKBaseTreeNode *singleChildNode = root.children[0];
+  CKTreeNode *singleChildNode = root.children[0];
   verifyChildToParentConnection(root, singleChildNode, singleChildComponent);
 
   // Check the next level of the tree
-  if ([singleChildNode isKindOfClass:[CKTreeNode class]]) {
-    CKTreeNode *parentNode = (CKTreeNode *)singleChildNode;
+  if ([singleChildNode isKindOfClass:[CKOwnerTreeNode class]]) {
+    CKOwnerTreeNode *parentNode = (CKOwnerTreeNode *)singleChildNode;
     XCTAssertEqual(parentNode.children.size(), 1);
-    CKBaseTreeNode *componentNode = parentNode.children[0];
+    CKTreeNode *componentNode = parentNode.children[0];
     verifyChildToParentConnection(parentNode, componentNode, c);
   } else {
-    XCTFail(@"singleChildNode has to be CKTreeNode as it has children.");
+    XCTFail(@"singleChildNode has to be CKOwnerTreeNode as it has children.");
   }
 
   // Simulate a second tree creation.
-  CKTreeNode *root2 = [[CKTreeNode alloc] init];
+  CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
   CKComponent *c2 = [CKComponent newWithView:{} size:{}];
   CKSingleChildComponent *singleChildComponent2 = [CKComponentTreeTestComponent_SingleChild newWithComponent:c2];
   [singleChildComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{}];
@@ -96,7 +96,7 @@
 
 - (void)test_buildComponentTree_onCKSingleChildComponent_overrideNonOwnerComponent
 {
-  CKTreeNode *root = [[CKTreeNode alloc] init];
+  CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
   CKComponent *c = [CKComponent newWithView:{} size:{}];
   CKSingleChildComponent *singleChildNoOwnerComponent = [CKComponentTreeTestComponent_NonOwner_SingleChild newWithComponent:c];
   [singleChildNoOwnerComponent buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{}];
@@ -106,7 +106,7 @@
   XCTAssertTrue(verifyComponentsInNode(root, @[singleChildNoOwnerComponent, c]));
 
   // Simulate a second tree creation.
-  CKTreeNode *root2 = [[CKTreeNode alloc] init];
+  CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
   CKComponent *c2 = [CKComponent newWithView:{} size:{}];
   CKSingleChildComponent *singleChildNoOwnerComponent2 = [CKComponentTreeTestComponent_NonOwner_SingleChild newWithComponent:c2];
   [singleChildNoOwnerComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{}];
@@ -117,7 +117,7 @@
 
 - (void)test_buildComponentTree_onCKMultiChildComponent
 {
-  CKTreeNode *root = [[CKTreeNode alloc] init];
+  CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
   CKComponent *c10 = [CKComponent newWithView:{} size:{}];
   CKComponent *c11 = [CKComponent newWithView:{} size:{}];
   CKMultiChildComponent *groupComponent = [CKComponentTreeTestComponent_MultiChild newWithChildren:{c10, c11}];
@@ -127,7 +127,7 @@
   XCTAssertTrue(verifyComponentsInNode(root, @[groupComponent, c10, c11]));
 
   // Simulate a second tree creation.
-  CKTreeNode *root2 = [[CKTreeNode alloc] init];
+  CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
   CKComponent *c20 = [CKComponent newWithView:{} size:{}];
   CKComponent *c21 = [CKComponent newWithView:{} size:{}];
   CKMultiChildComponent *groupComponent2 = [CKComponentTreeTestComponent_MultiChild newWithChildren:{c20, c21}];
@@ -137,7 +137,7 @@
 
 - (void)test_buildComponentTree_onCKMultiChildComponent_MakeGroupAnOwnerComponent
 {
-  CKTreeNode *root = [[CKTreeNode alloc] init];
+  CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
   CKComponent *c10 = [CKComponent newWithView:{} size:{}];
   CKComponent *c11 = [CKComponent newWithView:{} size:{}];
   CKMultiChildComponent *groupComponent = [CKComponentTreeTestComponent_Owner_MultiChild newWithChildren:{c10, c11}];
@@ -147,18 +147,18 @@
   XCTAssertTrue(verifyComponentsInNode(root, @[groupComponent]));
 
   // Verify that the child component has 2 children nodes.
-  CKBaseTreeNode *childNode = root.children[0];
+  CKTreeNode *childNode = root.children[0];
   // Check the next level of the tree
-  if ([childNode isKindOfClass:[CKTreeNode class]]) {
-    CKTreeNode *parentNode = (CKTreeNode *)childNode;
+  if ([childNode isKindOfClass:[CKOwnerTreeNode class]]) {
+    CKOwnerTreeNode *parentNode = (CKOwnerTreeNode *)childNode;
     XCTAssertEqual(parentNode.children.size(), 2);
     XCTAssertTrue(verifyComponentsInNode(parentNode, @[c10, c11]));
   } else {
-    XCTFail(@"childNode has to be CKTreeNode as it has children.");
+    XCTFail(@"childNode has to be CKOwnerTreeNode as it has children.");
   }
 
   // Simulate a second tree creation.
-  CKTreeNode *root2 = [[CKTreeNode alloc] init];
+  CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
   CKComponent *c20 = [CKComponent newWithView:{} size:{}];
   CKComponent *c21 = [CKComponent newWithView:{} size:{}];
   CKMultiChildComponent *groupComponent2 = [CKComponentTreeTestComponent_Owner_MultiChild newWithChildren:{c20, c21}];
@@ -168,14 +168,14 @@
 
 #pragma mark - Helpers
 
-static BOOL verifyChildToParentConnection(CKTreeNode * parentNode, CKBaseTreeNode *childNode, CKComponent *c) {
+static BOOL verifyChildToParentConnection(CKOwnerTreeNode * parentNode, CKTreeNode *childNode, CKComponent *c) {
   auto const componentKey = [childNode componentKey];
   auto const childComponent = [parentNode childForComponentKey:componentKey].component;
   return [childComponent isEqual:c];
 }
 
 /** Compare the components array to the components in the children nodes of 'parentNode' */
-static BOOL verifyComponentsInNode(CKTreeNode *parentNode, NSArray<CKComponent *> *components) {
+static BOOL verifyComponentsInNode(CKOwnerTreeNode *parentNode, NSArray<CKComponent *> *components) {
   // Verify that the root holds two components has its direct children
   NSMutableSet<CKComponent *> *componentsFromTheTree = [NSMutableSet set];
   for (auto const node : parentNode.children) {
@@ -186,7 +186,7 @@ static BOOL verifyComponentsInNode(CKTreeNode *parentNode, NSArray<CKComponent *
 }
 
 /** Compare the children of the trees recursively; returns true if the two trees are equal */
-static BOOL areTreesEqual(CKTreeNode *lhs, CKTreeNode *rhs) {
+static BOOL areTreesEqual(CKOwnerTreeNode *lhs, CKOwnerTreeNode *rhs) {
   NSMutableSet<NSString *> *lhsChildrenIdentifiers = [NSMutableSet set];
   treeChildrenIdentifiers(lhs, lhsChildrenIdentifiers, 0);
   NSMutableSet<NSString *> *rhsChildrenIdentifiers = [NSMutableSet set];
@@ -195,12 +195,12 @@ static BOOL areTreesEqual(CKTreeNode *lhs, CKTreeNode *rhs) {
 }
 
 /** Iterate recursively over the tree and add its node identifiers to the set */
-static void treeChildrenIdentifiers(CKTreeNode *node, NSMutableSet<NSString *> *identifiers, int level) {
+static void treeChildrenIdentifiers(CKOwnerTreeNode *node, NSMutableSet<NSString *> *identifiers, int level) {
   for (auto const childNode : node.children) {
     // We add the child identifier + its level in the tree.
     [identifiers addObject:[NSString stringWithFormat:@"%d-%d",childNode.nodeIdentifier, level]];
-    if ([childNode isKindOfClass:[CKTreeNode class]]) {
-      treeChildrenIdentifiers((CKTreeNode *)childNode, identifiers, level+1);
+    if ([childNode isKindOfClass:[CKOwnerTreeNode class]]) {
+      treeChildrenIdentifiers((CKOwnerTreeNode *)childNode, identifiers, level+1);
     }
   }
 }
