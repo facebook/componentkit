@@ -73,9 +73,11 @@ struct CKComponentMountInfo {
   return [[self alloc] initWithView:view size:size];
 }
 
-+ (instancetype)newRenderComponentWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
++ (instancetype)newRenderComponentWithView:(const CKComponentViewConfiguration &)view
+                                      size:(const CKComponentSize &)size
+                         isLayoutComponent:(BOOL)isLayoutComponent
 {
-  return [[self alloc] initRenderComponentWithView:view size:size];
+  return [[self alloc] initRenderComponentWithView:view size:size isLayoutComponent:isLayoutComponent];
 }
 
 + (instancetype)new
@@ -101,16 +103,21 @@ struct CKComponentMountInfo {
 
 - (instancetype)initRenderComponentWithView:(const CKComponentViewConfiguration &)view
                                        size:(const CKComponentSize &)size
+                          isLayoutComponent:(BOOL)isLayoutComponent
 {
   if (self = [super init]) {
     _viewConfiguration = view;
     _size = size;
 
-    // Mark the fact that we have a render component in the tree.
-    // We will build a component tree (CKTreeNode) only in case that we have a render component.
-    CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
-    if (currentScope != nullptr) {
-      currentScope->newScopeRoot.hasRenderComponentInTree = YES;
+    // Mark render component in the scope root, but only in case that it's not a layout component.
+    // We converted layout components (such as CKFlexboxComponent, CKInsetComponent etc.) to be a CKRenderComponent
+    // in order to support mix and match of CKCompositeComponents/CKComponent and CKRenderComponent components.
+    // We will build a component tree (CKTreeNode) only in case that we have a render component in the tree.
+    if (!isLayoutComponent) {
+      CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
+      if (currentScope != nullptr) {
+        currentScope->newScopeRoot.hasRenderComponentInTree = YES;
+      }
     }
   }
   return self;

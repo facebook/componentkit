@@ -71,7 +71,7 @@ template class std::vector<CKFlexboxComponentChild>;
                       style:(const CKFlexboxComponentStyle &)style
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
 {
-  CKFlexboxComponent * const component = [super newWithView:view size:size];
+  CKFlexboxComponent * const component = [super newRenderComponentWithView:view size:size isLayoutComponent:YES];
   if (component) {
     component->_style = style;
     component->_children = children.take();

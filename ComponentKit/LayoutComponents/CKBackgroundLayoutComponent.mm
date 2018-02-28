@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKComponentInternal.h>
 
 #import "CKComponentSubclass.h"
 
@@ -27,7 +28,7 @@
   if (component == nil) {
     return nil;
   }
-  CKBackgroundLayoutComponent *c = [super newWithView:{} size:{}];
+  CKBackgroundLayoutComponent *c = [super newRenderComponentWithView:{} size:{} isLayoutComponent:YES];
   if (c) {
     c->_component = component;
     c->_background = background;
