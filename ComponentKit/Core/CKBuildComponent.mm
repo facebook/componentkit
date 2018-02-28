@@ -31,7 +31,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   // Order of operations matters, so first store into locals and then return a struct.
   CKComponent *const component = componentFactory();
 
-  if (buildComponentTree) {
+  if (buildComponentTree && threadScope.newScopeRoot.hasRenderComponentInTree) {
     // Build the component tree from the render function.
     [component buildComponentTree:threadScope.newScopeRoot.rootNode
                     previousOwner:previousRoot.rootNode

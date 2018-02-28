@@ -73,9 +73,9 @@ struct CKComponentMountInfo {
   return [[self alloc] initWithView:view size:size];
 }
 
-+ (instancetype)newWithViewWithoutAcquiringScopeHandle:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
++ (instancetype)newRenderComponentWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
 {
-  return [[self alloc] initWithViewWithoutAcquiringScopeHandle:view size:size];
+  return [[self alloc] initRenderComponentWithView:view size:size];
 }
 
 + (instancetype)new
@@ -99,12 +99,19 @@ struct CKComponentMountInfo {
   return self;
 }
 
-- (instancetype)initWithViewWithoutAcquiringScopeHandle:(const CKComponentViewConfiguration &)view
-                                                   size:(const CKComponentSize &)size
+- (instancetype)initRenderComponentWithView:(const CKComponentViewConfiguration &)view
+                                       size:(const CKComponentSize &)size
 {
   if (self = [super init]) {
     _viewConfiguration = view;
     _size = size;
+
+    // Mark the fact that we have a render component in the tree.
+    // We will build a component tree (CKTreeNode) only in case that we have a render component.
+    CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
+    if (currentScope != nullptr) {
+      currentScope->newScopeRoot.hasRenderComponentInTree = YES;
+    }
   }
   return self;
 }

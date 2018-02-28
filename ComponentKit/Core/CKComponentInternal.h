@@ -49,9 +49,10 @@
  For internal use only; don't use this initializer.
 
  This initializer will not try to acquire the scope handle from the thread local store.
+ In addition, it will mark in the scope root that there is a CKRenderComponent in the tree.
  */
-+ (instancetype)newWithViewWithoutAcquiringScopeHandle:(const CKComponentViewConfiguration &)view
-                                                  size:(const CKComponentSize &)size;
++ (instancetype)newRenderComponentWithView:(const CKComponentViewConfiguration &)view
+                                      size:(const CKComponentSize &)size;
 
 /**
  Unmounts the component:

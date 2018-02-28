@@ -21,12 +21,15 @@
   CKComponent *_childComponent;
 }
 
++ (instancetype)new
+{
+  return [super newRenderComponentWithView:{} size:{}];
+}
+
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
 {
-  // As we are going to retrieve the state from the `CKTreeNode`
-  // We don't need to acuire the scope handle from 'CKThreadLocalComponentScope::currentScope'.
-  return [super newWithViewWithoutAcquiringScopeHandle:view size:size];
+  return [super newRenderComponentWithView:view size:size];
 }
 
 - (CKComponent *)render:(id)state
