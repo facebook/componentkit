@@ -299,6 +299,9 @@ BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, Method method, const
   }
 
   char *return_type = method_copyReturnType(method);
+  if (return_type == NULL) {
+    return NO;
+  }
   const bool has_return_type = strcmp(return_type, "v") != 0; // "v" is void
   free(return_type);
 
