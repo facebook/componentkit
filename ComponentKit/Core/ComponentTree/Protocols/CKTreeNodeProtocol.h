@@ -33,6 +33,9 @@ typedef std::tuple<Class, NSUInteger> CKComponentKey;
 /** Returns the componeny key according to its current owner */
 - (const CKComponentKey &)componentKey;
 
+/** Returns the initial state of the component */
+- (id)initialStateWithComponent:(CKComponent *)component;
+
 @end
 
 /**

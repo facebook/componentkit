@@ -13,6 +13,7 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKRenderComponent.h>
 
 #include <tuple>
 
@@ -62,14 +63,14 @@
                                               componentScopeRoot:scopeRoot
                                                           parent:owner.handle];
       } else {
-        // We need a scope handle only if there is a controller or a state.
-        id initialState = [componentClass initialState];
-        if (initialState || [componentClass controllerClass]) {
-        _handle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
-                                                    rootIdentifier:scopeRoot.globalIdentifier
-                                                    componentClass:componentClass
-                                                      initialState:initialState
-                                                            parent:owner.handle];
+        // We need a scope handle only if the component has a controller or an initial state.
+        id initialState = [self initialStateWithComponent:component];
+        if (initialState != [CKTreeNodeEmptyState emptyState] || [componentClass controllerClass]) {
+          _handle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
+                                                      rootIdentifier:scopeRoot.globalIdentifier
+                                                      componentClass:componentClass
+                                                        initialState:initialState
+                                                              parent:owner.handle];
         }
       }
 
@@ -96,4 +97,26 @@
   return _componentKey;
 }
 
+- (id)initialStateWithComponent:(CKComponent *)component
+{
+  // For CKComponent, we bridge a `nil` initial state to `CKTreeNodeEmptyState`.
+  // The base initializer will create a scope handle for the component only if the initial state is different than `CKTreeNodeEmptyState`.
+  return [[component class] initialState] ?: [CKTreeNodeEmptyState emptyState];
+}
+
+@end
+
+/**
+ Implement a singletone empty state here.
+ */
+@implementation CKTreeNodeEmptyState
++ (id)emptyState
+{
+  static dispatch_once_t onceToken;
+  static CKTreeNodeEmptyState *emptyState;
+  dispatch_once(&onceToken, ^{
+    emptyState = [CKTreeNodeEmptyState new];
+  });
+  return emptyState;
+}
 @end

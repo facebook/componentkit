@@ -9,14 +9,14 @@
  */
 
 #import "CKRenderTreeNode.h"
-#import "CKTreeNodeProtocol.h"
 
-/**
- This object represents an owner node (has children) in the component tree.
+#import "CKRenderComponent.h"
 
- Each component that is an owner component will have a corresponding CKOwnerTreeNode.
- */
+@implementation CKRenderTreeNode
 
-@interface CKOwnerTreeNode : CKRenderTreeNode <CKOwnerTreeNodeProtocol>
+- (id)initialStateWithComponent:(id<CKRenderComponent>)component
+{
+  return [[component class] initialStateWithComponent:component];
+}
 
 @end

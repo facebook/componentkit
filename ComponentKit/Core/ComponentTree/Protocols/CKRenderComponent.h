@@ -39,4 +39,11 @@
  */
 + (BOOL)isOwnerComponent;
 
+/*
+ Override this method inorder to provide an initialState which depends on the component's props.
+ Otherwise, override `+(id)initialState` instead.
+ */
++ (id)initialStateWithComponent:(id<CKRenderComponent>)component;
+
+
 @end

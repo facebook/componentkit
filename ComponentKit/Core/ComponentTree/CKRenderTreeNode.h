@@ -8,15 +8,14 @@
  *
  */
 
-#import "CKRenderTreeNode.h"
-#import "CKTreeNodeProtocol.h"
+#import "CKTreeNode.h"
 
 /**
- This object represents an owner node (has children) in the component tree.
+ This object represents a render component node in the component tree.
+ It will be attached to render components only (id<CKRenderComponent>).
 
- Each component that is an owner component will have a corresponding CKOwnerTreeNode.
+ For more information about an render components see: CKRenderComponent.h
  */
-
-@interface CKOwnerTreeNode : CKRenderTreeNode <CKOwnerTreeNodeProtocol>
+@interface CKRenderTreeNode: CKTreeNode
 
 @end

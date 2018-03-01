@@ -21,9 +21,7 @@
 
  Each component has a corresponding CKTreeNode; this node holds the component's state.
 
- CKTreeNode is the base class of a tree node. It will be attached to non-owner components
-
- For more information about an owner component see: CKRenderComponent.h
+ CKTreeNode is the base class of a tree node. It will be attached non-render components (CKComponent & CKCompositeComponent).
  */
 @interface CKTreeNode: NSObject <CKTreeNodeProtocol>
 
@@ -32,4 +30,16 @@
                     previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
+
+@end
+
+/**
+ Default empty state for CKRenderComponent components.
+
+ If a CKRenderComponent returns any state other than `CKTreeNodeEmptyState` (including nil)
+ - the infra will create it a scope handle and will support a state update.
+ Othwerwise, the component will be stateless.
+ */
+@interface CKTreeNodeEmptyState : NSObject
++ (id)emptyState;
 @end

@@ -38,7 +38,7 @@
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
   auto const isOwnerComponent = [[self class] isOwnerComponent];
-  const Class nodeClass = isOwnerComponent ? [CKOwnerTreeNode class] : [CKTreeNode class];
+  const Class nodeClass = isOwnerComponent ? [CKOwnerTreeNode class] : [CKRenderTreeNode class];
   CKTreeNode *const node = [[nodeClass alloc]
                             initWithComponent:self
                             owner:owner
@@ -65,6 +65,16 @@
 + (BOOL)isOwnerComponent
 {
   return NO;
+}
+
++ (id)initialStateWithComponent:(id<CKRenderComponent>)component
+{
+  return [self initialState];
+}
+
++ (id)initialState
+{
+  return [CKTreeNodeEmptyState emptyState];
 }
 
 @end
