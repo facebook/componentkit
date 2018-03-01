@@ -129,7 +129,14 @@ static YGSize measureYGComponent(YGNodeRef node,
     cachedLayout.widthMode = widthMode;
     cachedLayout.heightMode = heightMode;
   }
-  return {static_cast<float>(cachedLayout.componentLayout.size.width), static_cast<float>(cachedLayout.componentLayout.size.height)};
+
+  const float componentLayoutWidth = static_cast<float>(cachedLayout.componentLayout.size.width);
+  const float componentLayoutHeight = static_cast<float>(cachedLayout.componentLayout.size.height);
+
+  const float measuredWidth = (componentLayoutWidth == INFINITY || isnan(componentLayoutWidth)) ? YGUndefined : componentLayoutWidth;
+  const float measuredHeight = (componentLayoutHeight == INFINITY || isnan(componentLayoutHeight)) ? YGUndefined : componentLayoutHeight;
+
+  return {measuredWidth, measuredHeight};
 }
 
 static float computeBaseline(YGNodeRef node, const float width, const float height)

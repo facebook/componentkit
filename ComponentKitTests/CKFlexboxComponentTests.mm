@@ -46,15 +46,15 @@
 
   childNode = YGNodeGetChild(node, 1);
   XCTAssertEqual(YGNodeStyleGetWidth(childNode).value, 50);
-  XCTAssertTrue(isnan(YGNodeStyleGetHeight(childNode).value));
+  XCTAssertTrue(YGFloatIsUndefined(YGNodeStyleGetHeight(childNode).value));
 
   childNode = YGNodeGetChild(node, 2);
-  XCTAssertTrue(isnan(YGNodeStyleGetWidth(childNode).value));
+  XCTAssertTrue(YGFloatIsUndefined(YGNodeStyleGetWidth(childNode).value));
   XCTAssertEqual(YGNodeStyleGetHeight(childNode).value, 50);
 
   childNode = YGNodeGetChild(node, 3);
-  XCTAssertTrue(isnan(YGNodeStyleGetWidth(childNode).value));
-  XCTAssertTrue(isnan(YGNodeStyleGetHeight(childNode).value));
+  XCTAssertTrue(YGFloatIsUndefined(YGNodeStyleGetWidth(childNode).value));
+  XCTAssertTrue(YGFloatIsUndefined(YGNodeStyleGetHeight(childNode).value));
 }
 
 - (void)testDirectionTranslation
@@ -196,9 +196,9 @@
   YGNodeRef node = [component ygNode:{{0, 300}, {0, 300}}];
 
   YGNodeRef childNode = YGNodeGetChild(node, 0);
-  XCTAssertTrue(isnan(YGNodeStyleGetFlexBasis(childNode).value));
+  XCTAssertTrue(YGFloatIsUndefined(YGNodeStyleGetFlexBasis(childNode).value));
   childNode = YGNodeGetChild(node, 1);
-  XCTAssertTrue(isnan(YGNodeStyleGetFlexBasis(childNode).value));
+  XCTAssertTrue(YGFloatIsUndefined(YGNodeStyleGetFlexBasis(childNode).value));
   childNode = YGNodeGetChild(node, 2);
   XCTAssertEqual(YGNodeStyleGetFlexBasis(childNode).value, 100);
   childNode = YGNodeGetChild(node, 3);
