@@ -12,6 +12,7 @@
 
 #import <UIKit/UIKit.h>
 #import <ComponentKit/CKComponentControllerProtocol.h>
+#import <ComponentKit/CKComponentLayout.h>
 
 @class CKComponent;
 
@@ -58,8 +59,14 @@
 /** Corresponds to -didEndDisplayingCell:for{Row|Item}AtIndexPath:. Not invoked for CKComponentHostingViews. */
 - (void)componentTreeDidDisappear NS_REQUIRES_SUPER;
 
-/** Is called on main thread prior to controller deallocation **/
+/** Called on the main thread prior to controller deallocation **/
 - (void)invalidateController NS_REQUIRES_SUPER;
+
+/**
+ Called on the main thread when a new component has been created and its layout has been calculated.
+ This layout will be used during the next mount (unless another state update will be triggered).
+ */
+- (void)didPrepareLayout:(const CKComponentLayout &)layout forComponent:(CKComponent *)component;
 
 /** The current version of the component. */
 @property (nonatomic, weak, readonly) ComponentType component;

@@ -12,7 +12,7 @@
 
 #import "CKAnalyticsListener.h"
 #import "CKComponentBoundsAnimation.h"
-#import "CKComponentBoundsAnimationPredicates.h"
+#import "CKComponentEvents.h"
 #import "CKComponentInternal.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"

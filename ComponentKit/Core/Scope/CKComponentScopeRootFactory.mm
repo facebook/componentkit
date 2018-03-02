@@ -11,7 +11,7 @@
 #import "CKComponentScopeRootFactory.h"
 
 #import "CKComponentControllerEvents.h"
-#import "CKComponentBoundsAnimationPredicates.h"
+#import "CKComponentEvents.h"
 
 CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> stateListener, id<CKAnalyticsListener> analyticsListener)
 {
@@ -31,11 +31,16 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
 CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> stateListener,
                                                          id<CKAnalyticsListener> analyticsListener,
                                                          const std::unordered_set<CKComponentScopePredicate> &componentPredicates,
-                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates)
+                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates,
+                                                         BOOL addDidPrepareLayoutPredicate)
 {
   std::unordered_set<CKComponentScopePredicate> componentPredicatesUnion = {
     &CKComponentBoundsAnimationPredicate
   };
+
+  if (addDidPrepareLayoutPredicate) {
+    componentPredicatesUnion.insert(&CKComponentDidPrepareLayoutForComponentToControllerPredicate);
+  }
 
   std::unordered_set<CKComponentControllerScopePredicate> componentControllerPredicatesUnion = {
     &CKComponentControllerAppearanceEventPredicate,

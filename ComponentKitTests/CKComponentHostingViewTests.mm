@@ -24,11 +24,15 @@
 @interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate>
 @end
 
-static CKComponentHostingView *hostingView()
+static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO)
 {
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
   CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
-                                                                         sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
+                                                                         sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
+                                                                       componentPredicates:{}
+                                                             componentControllerPredicates:{}
+                                                                         analyticsListener:nil
+                                                                   didPrepareLayoutEnabled:didPrepareLayoutEnabled];
   view.bounds = CGRectMake(0, 0, 100, 100);
   [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
@@ -136,6 +140,17 @@ static CKComponentHostingView *hostingView()
   }
   XCTAssertTrue(testComponent.controller.calledInvalidateController,
                 @"Expected component controller to get invalidation event");
+}
+
+- (void)testComponentControllerReceivesDidPrepareLayoutForComponent
+{
+  CKLifecycleTestComponent *testComponent = nil;
+  const BOOL didPrepareLayoutEnabled = YES;
+  CKComponentHostingView *view = hostingView(didPrepareLayoutEnabled);
+  [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
+  testComponent = (CKLifecycleTestComponent *)view.mountedLayout.component;
+  XCTAssertTrue(testComponent.controller.calledDidPrepareLayoutForComponent,
+                @"Expected component controller to get did attach component");
 }
 
 #pragma mark - CKComponentHostingViewDelegate

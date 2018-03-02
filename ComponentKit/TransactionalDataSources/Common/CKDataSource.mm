@@ -13,6 +13,7 @@
 
 #import "CKAssert.h"
 #import "CKComponentControllerEvents.h"
+#import "CKComponentEvents.h"
 #import "CKComponentControllerInternal.h"
 #import "CKComponentDebugController.h"
 #import "CKComponentScopeRoot.h"
@@ -221,7 +222,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 - (NSArray *)_cancelEnqueuedModificationsOfType:(Class)modificationType
 {
   CKAssertMainThread();
-  
+
   NSIndexSet *indexes = [_pendingAsynchronousModifications indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
     return [obj isKindOfClass:modificationType];
   }];
@@ -237,6 +238,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   CKDataSourceState *previousState = _state;
   _state = [change state];
 
+  // Announce 'invalidateController'.
   for (NSIndexPath *removedIndex in [[change appliedChanges] removedIndexPaths]) {
     CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
     CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
@@ -245,6 +247,13 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   [_announcer transactionalComponentDataSource:self
                         didModifyPreviousState:previousState
                              byApplyingChanges:[change appliedChanges]];
+
+  // Announce 'didPrepareLayoutForComponent:'.
+  if (_state.configuration.didPrepareLayoutEnabled) {
+    auto const appliedChanges = [change appliedChanges];
+    sendDidPrepareLayoutForComponentWithIndexPaths([[appliedChanges finalUpdatedIndexPaths] allValues], _state);
+    sendDidPrepareLayoutForComponentWithIndexPaths([appliedChanges insertedIndexPaths], _state);
+  }
 }
 
 - (void)_processStateUpdates
@@ -270,7 +279,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   @autoreleasepool {
     change = [modificationPair.modification changeFromState:modificationPair.state];
   }
-  
+
   dispatch_async(dispatch_get_main_queue(), ^{
     // If the first object in _pendingAsynchronousModifications is not still the modification,
     // it may have been canceled; don't apply it.
@@ -278,7 +287,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
       [_pendingAsynchronousModifications removeObjectAtIndex:0];
       [self _synchronouslyApplyChange:change];
     }
-    
+
     [self _startAsynchronousModificationIfNeeded];
   });
 }
@@ -314,6 +323,15 @@ static NSString *readableStringForArray(NSArray *array)
   return mutableString;
 }
 #endif
+
+static void sendDidPrepareLayoutForComponentWithIndexPaths(id<NSFastEnumeration> indexPaths,
+                                                           CKDataSourceState*state)
+{
+  for (NSIndexPath *indexPath in indexPaths) {
+    CKDataSourceItem *item = [state objectAtIndexPath:indexPath];
+    CKComponentSendDidPrepareLayoutForComponent(item.scopeRoot, item.layout);
+  }
+}
 
 @end
 

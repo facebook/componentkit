@@ -16,6 +16,7 @@
 
 #import "CKBuildComponent.h"
 #import "CKComponentAnimation.h"
+#import "CKComponentController.h"
 #import "CKComponentDebugController.h"
 #import "CKComponentHostingViewDelegate.h"
 #import "CKComponentLayout.h"
@@ -25,6 +26,7 @@
 #import "CKComponentSizeRangeProviding.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentControllerEvents.h"
+#import "CKComponentEvents.h"
 
 struct CKComponentHostingViewInputs {
   CKComponentScopeRoot *scopeRoot;
@@ -56,6 +58,7 @@ struct CKComponentHostingViewInputs {
   BOOL _scheduledAsynchronousComponentUpdate;
   BOOL _isSynchronouslyUpdatingComponent;
   BOOL _isMountingComponent;
+  BOOL _didPrepareLayoutEnabled;
 }
 @end
 
@@ -86,7 +89,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                        sizeRangeProvider:sizeRangeProvider
                      componentPredicates:{}
            componentControllerPredicates:{}
-                       analyticsListener:nil];
+                       analyticsListener:nil
+                 didPrepareLayoutEnabled:NO];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -97,7 +101,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                        sizeRangeProvider:sizeRangeProvider
                      componentPredicates:{}
            componentControllerPredicates:{}
-                       analyticsListener:analyticsListener];
+                       analyticsListener:analyticsListener
+                 didPrepareLayoutEnabled:NO];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -105,19 +110,21 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                  didPrepareLayoutEnabled:(BOOL)didPrepareLayoutEnabled
 {
   if (self = [super initWithFrame:CGRectZero]) {
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
 
     _pendingInputs = {.scopeRoot =
-      CKComponentScopeRootWithPredicates(self, analyticsListener ?: sDefaultAnalyticsListener, componentPredicates, componentControllerPredicates)};
+      CKComponentScopeRootWithPredicates(self, analyticsListener ?: sDefaultAnalyticsListener, componentPredicates, componentControllerPredicates, didPrepareLayoutEnabled)};
 
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
 
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
+    _didPrepareLayoutEnabled = didPrepareLayoutEnabled;
 
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -149,7 +156,9 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     const CGSize size = self.bounds.size;
     if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
       _mountedLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener);
+      [self _sendDidPrepareLayoutIfNeeded];
     }
+
     CKComponentBoundsAnimationApply(_boundsAnimation, ^{
       _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil, _pendingInputs.scopeRoot.analyticsListener) copy];
     }, nil);
@@ -321,6 +330,13 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     return [_componentProvider componentForModel:_pendingInputs.model context:_pendingInputs.context];
   })];
   _isSynchronouslyUpdatingComponent = NO;
+}
+
+- (void)_sendDidPrepareLayoutIfNeeded
+{
+  if (_didPrepareLayoutEnabled) {
+    CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedLayout);
+  }
 }
 
 @end

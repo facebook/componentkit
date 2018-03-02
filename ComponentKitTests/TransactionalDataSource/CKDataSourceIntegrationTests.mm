@@ -22,7 +22,13 @@
 #import "CKDataSourceConfigurationInternal.h"
 #import "CKDataSourceChangeset.h"
 
+static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPrepareLayoutForComponent";
+
 @interface CKDataSourceIntegrationTestComponent : CKCompositeComponent
+@end
+
+@interface CKDataSourceIntegrationTestComponentController : CKComponentController
+@property (strong) NSMutableArray *callbacks;
 @end
 
 @implementation CKDataSourceIntegrationTestComponent
@@ -32,16 +38,19 @@
   CKComponentScope scope(self, identifier);
   return [self newWithComponent:[CKComponent new]];
 }
-@end
 
-@interface CKDataSourceIntegrationTestComponentController : CKComponentController
-@property (strong) NSMutableArray *callbacks;
++ (Class<CKComponentControllerProtocol>)controllerClass
+{
+  return [CKDataSourceIntegrationTestComponentController class];
+}
+
 @end
 
 @implementation CKDataSourceIntegrationTestComponentController
 
 typedef NS_ENUM(NSUInteger, CKTestConfig) {
   CKTestConfigDefault,
+  CKTestConfigComponentLayoutCacheEnabled,
 };
 
 - (instancetype)initWithComponent:(CKComponent *)component
@@ -74,6 +83,47 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
   [self.callbacks addObject:NSStringFromSelector(_cmd)];
 }
 @end
+
+/**
+ We will use this component in order to override the 'didPrepareLayoutForComponent'.
+ */
+
+@interface CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponentController : CKDataSourceIntegrationTestComponentController
+@property (nonatomic, strong) NSMutableArray<NSString *> *layoutComponentsFromCallbacks;
+@property (nonatomic, strong) NSMutableArray<NSString *> *componentsFromCallbacks;
+@end
+
+@interface CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponent : CKDataSourceIntegrationTestComponent
+@end
+@implementation CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponent
++ (Class<CKComponentControllerProtocol>)controllerClass
+{
+  return [CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponentController class];
+}
+@end
+
+@implementation CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponentController
+
+- (instancetype)initWithComponent:(CKComponent *)component
+{
+  if (self = [super initWithComponent:component]) {
+    _layoutComponentsFromCallbacks = [NSMutableArray array];
+    _componentsFromCallbacks = [NSMutableArray array];
+  }
+  return self;
+}
+
+- (void)didPrepareLayout:(const CKComponentLayout &)layout forComponent:(CKComponent *)component
+{
+  [self.callbacks addObject:NSStringFromSelector(_cmd)];
+  [self.layoutComponentsFromCallbacks addObject:[NSString stringWithFormat:@"%p",layout.component]];
+  [self.componentsFromCallbacks addObject:[NSString stringWithFormat:@"%p",component]];
+}
+@end
+
+/**
+ Tests start here.
+ */
 
 @interface CKDataSourceIntegrationTests : XCTestCase
 @property (strong) UICollectionViewController *collectionViewController;
@@ -122,8 +172,9 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                        initWithComponentProvider:(id)self
                                        context:nil
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
-                                       componentLayoutCacheEnabled:NO
+                                       componentLayoutCacheEnabled:testConfig == CKTestConfigComponentLayoutCacheEnabled
                                        buildComponentTreeEnabled:NO
+                                       didPrepareLayoutEnabled:testConfig == CKTestConfigComponentLayoutCacheEnabled
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
                                        analyticsListener:nil];
@@ -135,7 +186,12 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 
 - (CKComponent *)componentForModel:(NSString*)model context:(id<NSObject>)context
 {
-  CKComponent *component = [CKDataSourceIntegrationTestComponent newWithIdentifier:model];
+  Class klass =
+  [model isEqualToString:kOverrideDidPrepareLayoutForComponent]
+  ? [CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponent class]
+  : [CKDataSourceIntegrationTestComponent class];
+
+  CKComponent *component = [klass newWithIdentifier:model];
   [self.components addObject:component];
   self.componentsDictionary[model] = component;
   return component;
@@ -180,6 +236,91 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 
   // We use 'CKTestConfigDefault' and item is out of the view port. It means it shoudn't get any update.
   XCTAssertEqualObjects(controller.callbacks, (@[]));
+}
+
+- (void)testUpdateModelAlwaysSendUpdateControllerCallbacks_didPrepareLayoutForComponent_off
+{
+  self.dataSource = [self generateDataSource:CKTestConfigDefault];
+
+  [self.dataSource applyChangeset:
+   [[[[CKDataSourceChangesetBuilder new]
+      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+     withInsertedItems:@{ [NSIndexPath indexPathForItem:0 inSection:0] : @"0",
+                          [NSIndexPath indexPathForItem:1 inSection:0] : @"1",
+                          [NSIndexPath indexPathForItem:2 inSection:0] : @"2",
+                          }]
+    build] mode:CKUpdateModeSynchronous userInfo:nil];
+
+  CKDataSourceIntegrationTestComponentController *controller =
+  (CKDataSourceIntegrationTestComponentController*)self.componentsDictionary[@"2"].controller;
+
+  XCTAssertEqualObjects(controller.callbacks, (@[]));
+
+  [self.dataSource applyChangeset:
+   [[[CKDataSourceChangesetBuilder new]
+     withUpdatedItems:@{[NSIndexPath indexPathForItem:2 inSection:0] : @"2"}]
+    build] mode:CKUpdateModeSynchronous userInfo:nil];
+
+  controller =
+  (CKDataSourceIntegrationTestComponentController*)self.componentsDictionary[@"2"].controller;
+
+  XCTAssertEqualObjects(controller.callbacks, (@[]));
+
+  [self.dataSource applyChangeset:
+   [[[CKDataSourceChangesetBuilder new]
+     withMovedItems:(@{[NSIndexPath indexPathForItem:1 inSection:0] :
+                         [NSIndexPath indexPathForItem:2 inSection:0]})]
+    build] mode:CKUpdateModeSynchronous userInfo:nil];
+
+  controller = (CKDataSourceIntegrationTestComponentController*)self.components.lastObject.controller;
+
+
+  XCTAssertEqualObjects(controller.callbacks, (@[]));
+}
+
+- (void)testUpdateModelAlwaysSendUpdateControllerCallbacks_didPrepareLayoutForComponent_on
+{
+  self.dataSource = [self generateDataSource:CKTestConfigComponentLayoutCacheEnabled];
+
+  // Test 'didPrepareLayoutForComponent:' during insert.
+  [self.dataSource applyChangeset:
+   [[[[CKDataSourceChangesetBuilder new]
+      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
+     withInsertedItems:@{ [NSIndexPath indexPathForItem:0 inSection:0] : @"0",
+                          [NSIndexPath indexPathForItem:1 inSection:0] : @"1",
+                          [NSIndexPath indexPathForItem:2 inSection:0] : kOverrideDidPrepareLayoutForComponent,
+                          }]
+    build] mode:CKUpdateModeSynchronous userInfo:nil];
+
+  CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponentController *controller =
+  (CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponentController*)self.componentsDictionary[kOverrideDidPrepareLayoutForComponent].controller;
+
+  XCTAssertEqualObjects(controller.callbacks, (@[
+                                                 NSStringFromSelector(@selector(didPrepareLayout:forComponent:))
+                                                 ]));
+
+  // Test 'didPrepareLayoutForComponent:' during update.
+  [self.dataSource applyChangeset:
+   [[[[CKDataSourceChangesetBuilder new]
+      withInsertedItems:
+      @{ [NSIndexPath indexPathForItem:0 inSection:0] : @"0.1"}]
+     withUpdatedItems:
+     @{ [NSIndexPath indexPathForItem:2 inSection:0] : kOverrideDidPrepareLayoutForComponent }]
+    build] mode:CKUpdateModeSynchronous userInfo:nil];
+
+  controller = (CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponentController*)self.componentsDictionary[kOverrideDidPrepareLayoutForComponent].controller;
+
+  XCTAssertEqualObjects(controller.callbacks, (@[
+                                                 NSStringFromSelector(@selector(didPrepareLayout:forComponent:)),
+                                                 NSStringFromSelector(@selector(didPrepareLayout:forComponent:))
+                                                 ]));
+
+  // Make sure that we can the correct layout in the "didPrepareLayout:forComponent:" by comparing the address of the component and layout.component.
+  for (NSUInteger i=0; i<controller.layoutComponentsFromCallbacks.count; i++) {
+    NSString *componentLayoutAddress = controller.layoutComponentsFromCallbacks[i];
+    NSString *componentAddress = controller.componentsFromCallbacks[i];
+    XCTAssertEqualObjects(componentLayoutAddress, componentAddress);
+  }
 }
 
 // This test checks that controller receives invalidateController callback when DataSource owning it

@@ -8,11 +8,13 @@
  *
  */
 
-#import "CKComponentBoundsAnimationPredicates.h"
+#import "CKComponentEvents.h"
 
 #import "CKComponentInternal.h"
+#import "CKComponentControllerInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKInternalHelpers.h"
+#import "CKComponentProtocol.h"
 
 #if !defined(NO_PROTOCOLS_IN_OBJCPP)
 BOOL CKComponentBoundsAnimationPredicate(id<CKComponentProtocol> component)
@@ -21,6 +23,25 @@ BOOL CKComponentBoundsAnimationPredicate(id component)
 #endif
 {
   return CKSubclassOverridesSelector([CKComponent class], [component class], @selector(boundsAnimationFromPreviousComponent:));
+}
+
+/** Filter components that their controllers override the 'didPrepareLayout:ForComponent:' method. */
+#if !defined(NO_PROTOCOLS_IN_OBJCPP)
+BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id<CKComponentProtocol> component)
+#else
+BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id component)
+#endif
+{
+#if !defined(NO_PROTOCOLS_IN_OBJCPP)
+  const Class<CKComponentControllerProtocol> controllerClass = [[component class] controllerClass];
+#else
+  const Class controllerClass = [[component class] controllerClass];
+#endif
+  return
+  controllerClass
+  && CKSubclassOverridesSelector([CKComponentController class],
+                                 controllerClass,
+                                 @selector(didPrepareLayout:forComponent:));
 }
 
 CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKComponentScopeRoot *newRoot, CKComponentScopeRoot *previousRoot)
@@ -53,4 +74,14 @@ CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKCom
      }
    }];
   return boundsAnimation;
+}
+
+void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot, const CKComponentLayout layout) {
+  // Iterate over the components that their controllers override the 'didPrepareLayoutForComponent' method.
+  [scopeRoot enumerateComponentsMatchingPredicate:&CKComponentDidPrepareLayoutForComponentToControllerPredicate
+                                            block:^(id<CKComponentProtocol> c) {
+                                              CKComponent *component = (CKComponent *)c;
+                                              const CKComponentLayout componentLayout = layout.cachedLayoutForScopedComponent(c);
+                                              [component.controller didPrepareLayout:componentLayout forComponent:component];
+                                            }];
 }

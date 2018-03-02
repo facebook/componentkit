@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentLayout.h>
 
 /**
  A predicate that identifies if a component implements bounds animations. This predicate is passed to the scope root
@@ -24,6 +25,20 @@ BOOL CKComponentBoundsAnimationPredicate(id component);
 #endif
 
 /**
+ A predicate that identifies a component that it's controller overrides the 'didPrepareLayout:forComponent:' method.
+ */
+#if !defined(NO_PROTOCOLS_IN_OBJCPP)
+BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id<CKComponentProtocol> component);
+#else
+BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id component);
+#endif
+
+/**
  Computes and returns the bounds animations for the transition from a prior generation's scope root.
  */
 CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKComponentScopeRoot *newRoot, CKComponentScopeRoot *previousRoot);
+
+/**
+ Iterates over the components that their controller overrides 'didPrepareLayout:ForComponent:' and send the callback.
+ */
+void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot, const CKComponentLayout layout);

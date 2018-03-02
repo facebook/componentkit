@@ -145,6 +145,12 @@ static BOOL _shouldEarlyReturnNew = NO;
   _calledInvalidateController = YES;
 }
 
+- (void)didPrepareLayout:(const CKComponentLayout &)layout forComponent:(CKComponent *)component
+{
+  CKAssertMainThread();
+  _calledDidPrepareLayoutForComponent = YES;
+}
+
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
   return YES;

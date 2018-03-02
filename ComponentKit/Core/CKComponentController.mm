@@ -120,6 +120,7 @@ private:
 - (void)componentTreeWillAppear {}
 - (void)componentTreeDidDisappear {}
 - (void)invalidateController {}
+- (void)didPrepareLayout:(const CKComponentLayout &)layout forComponent:(CKComponent *)component {}
 
 #pragma mark - Hooks
 

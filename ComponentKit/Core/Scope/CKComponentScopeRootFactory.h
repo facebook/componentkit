@@ -31,9 +31,11 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
- @param componentControllerPredicates Same as componentPredicates above, but for component controllers. 
+ @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
+ @param addDidPrepareLayoutPredicate Adds a predicate to filter component controllers that implement the `didPrepareLayout:withComponent:` method.
  */
 CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> listener,
                                                          id<CKAnalyticsListener> analyticsListener,
                                                          const std::unordered_set<CKComponentScopePredicate> &componentPredicates,
-                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates);
+                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates,
+                                                         BOOL addDidPrepareLayoutPredicate = NO);

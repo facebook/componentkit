@@ -70,8 +70,8 @@
 
   CKDataSourceConfiguration *newConfiguration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                                             context:@"some updated context"
-                                                                           sizeRange:{{100, 100}, {100, 100}}];
+                                                       context:@"some updated context"
+                                                     sizeRange:{{100, 100}, {100, 100}}];
 
   CKDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
@@ -133,8 +133,8 @@
   CKDataSourceConfiguration *oldConfiguration = [originalState configuration];
   CKDataSourceConfiguration *newConfiguration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[oldConfiguration componentProvider]
-                                                                             context:@"some new context"
-                                                                           sizeRange:[oldConfiguration sizeRange]];
+                                                       context:@"some new context"
+                                                     sizeRange:[oldConfiguration sizeRange]];
   CKDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
   CKDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];
@@ -149,8 +149,8 @@
   CKDataSourceConfiguration *oldConfiguration = [originalState configuration];
   CKDataSourceConfiguration *newConfiguration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[oldConfiguration componentProvider]
-                                                                             context:[oldConfiguration context]
-                                                                           sizeRange:{{50, 50}, {50, 50}}];
+                                                       context:[oldConfiguration context]
+                                                     sizeRange:{{50, 50}, {50, 50}}];
   CKDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
   CKDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];

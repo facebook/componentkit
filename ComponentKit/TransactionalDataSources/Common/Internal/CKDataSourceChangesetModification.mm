@@ -20,7 +20,7 @@
 #import "CKDataSourceAppliedChanges.h"
 #import "CKBuildComponent.h"
 #import "CKComponentControllerEvents.h"
-#import "CKComponentBoundsAnimationPredicates.h"
+#import "CKComponentEvents.h"
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
@@ -112,7 +112,8 @@
     CKBuildComponent(CKComponentScopeRootWithPredicates(_stateListener,
                                                         configuration.analyticsListener,
                                                         configuration.componentPredicates,
-                                                        configuration.componentControllerPredicates), {}, ^{
+                                                        configuration.componentControllerPredicates,
+                                                        configuration.didPrepareLayoutEnabled), {}, ^{
       return [componentProvider componentForModel:model context:context];
     }, configuration.buildComponentTreeEnabled);
     const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, configuration.componentLayoutCacheEnabled);

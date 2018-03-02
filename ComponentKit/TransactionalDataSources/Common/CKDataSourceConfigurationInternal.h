@@ -32,6 +32,7 @@
                                 sizeRange:(const CKSizeRange &)sizeRange
               componentLayoutCacheEnabled:(BOOL)componentLayoutCacheEnabled
                 buildComponentTreeEnabled:(BOOL)buildComponentTreeEnabled
+                  didPrepareLayoutEnabled:(BOOL)didPrepareLayout
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
@@ -40,6 +41,7 @@
 
 @property (nonatomic, assign, readonly) BOOL componentLayoutCacheEnabled;
 @property (nonatomic, assign, readonly) BOOL buildComponentTreeEnabled;
+@property (nonatomic, assign, readonly) BOOL didPrepareLayoutEnabled;
 
 - (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;

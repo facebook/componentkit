@@ -39,8 +39,8 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
 {
   CKDataSourceConfiguration *configuration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:provider
-                                                                             context:@"context"
-                                                                           sizeRange:{{100, 100}, {100, 100}}];
+                                                       context:@"context"
+                                                     sizeRange:{{100, 100}, {100, 100}}];
 
   NSMutableArray *sections = [NSMutableArray array];
   for (NSUInteger sectionIndex = 0; sectionIndex < numberOfSections; sectionIndex++) {

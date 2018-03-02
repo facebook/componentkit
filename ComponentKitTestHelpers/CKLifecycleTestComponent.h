@@ -41,6 +41,7 @@ struct CKLifecycleMethodCounts {
 @property (nonatomic, assign) BOOL calledComponentTreeDidDisappear;
 @property (nonatomic, assign) BOOL calledDidUpdateComponent;
 @property (nonatomic, assign) BOOL calledInvalidateController;
+@property (nonatomic, assign) BOOL calledDidPrepareLayoutForComponent;
 @property (nonatomic, assign) CKLifecycleMethodCounts counts;
 @end
 

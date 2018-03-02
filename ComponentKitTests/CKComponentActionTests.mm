@@ -72,6 +72,9 @@
 
 @end
 
+@interface CKTestControllerScopeActionComponentController : CKComponentController<CKTestControllerScopeActionComponent *>
+@end
+
 @implementation CKTestControllerScopeActionComponent
 {
   CKAction<id> _action;
@@ -88,6 +91,11 @@
     c->_block = block;
   }
   return c;
+}
+
++ (Class<CKComponentControllerProtocol>)controllerClass
+{
+  return [CKTestControllerScopeActionComponentController class];
 }
 
 - (void (^)(CKComponent *, id))block
@@ -116,9 +124,6 @@
   _calledSomeMethod = YES;
 }
 
-@end
-
-@interface CKTestControllerScopeActionComponentController : CKComponentController<CKTestControllerScopeActionComponent *>
 @end
 
 @implementation CKTestControllerScopeActionComponentController
