@@ -87,6 +87,10 @@ template class std::vector<CKFlexboxComponentChild>;
   });
 }
 
+static float sanitizeFloat(const float& value) {
+  return isnan(value) || isinf(value) ? YGUndefined : value;
+}
+
 static YGConfigRef ckYogaDefaultConfig()
 {
   static YGConfigRef defaultConfig;
@@ -104,28 +108,31 @@ static YGSize measureYGComponent(YGNodeRef node,
                                   float height,
                                   YGMeasureMode heightMode)
 {
+  float constrainedWidth = sanitizeFloat(width);
+  float constrainedHeight = sanitizeFloat(height);
+
   CKFlexboxChildCachedLayout *cachedLayout = (__bridge CKFlexboxChildCachedLayout *)YGNodeGetContext(node);
   const CGSize minSize = {
-    .width = (widthMode == YGMeasureModeExactly) ? width : 0,
-    .height = (heightMode == YGMeasureModeExactly) ? height : 0
+    .width = (widthMode == YGMeasureModeExactly) ? constrainedWidth : 0,
+    .height = (heightMode == YGMeasureModeExactly) ? constrainedHeight : 0
   };
   const CGSize maxSize = {
-    .width = (widthMode == YGMeasureModeExactly || widthMode == YGMeasureModeAtMost) ? width : INFINITY,
-    .height = (heightMode == YGMeasureModeExactly || heightMode == YGMeasureModeAtMost) ? height : INFINITY
+    .width = (widthMode == YGMeasureModeExactly || widthMode == YGMeasureModeAtMost) ? constrainedWidth : YGUndefined,
+    .height = (heightMode == YGMeasureModeExactly || heightMode == YGMeasureModeAtMost) ? constrainedHeight : YGUndefined
   };
   // We cache measurements for the duration of single layout calculation of FlexboxComponent
   // ComponentKit and Yoga handle caching between calculations
   // We don't have any guarantees about when and how this will be called,
   // so we just cache the results to try to reuse them during final layout
-  if (!YGNodeCanUseCachedMeasurement(widthMode, width, heightMode, height,
+  if (!YGNodeCanUseCachedMeasurement(widthMode, constrainedWidth, heightMode, constrainedHeight,
                                      cachedLayout.widthMode, cachedLayout.width, cachedLayout.heightMode, cachedLayout.height,
                                      cachedLayout.componentLayout.size.width, cachedLayout.componentLayout.size.height, 0, 0,
                                      ckYogaDefaultConfig())) {
     CKComponent *component = cachedLayout.component;
     CKComponentLayout componentLayout = CKComputeComponentLayout(component, CKSizeRange(minSize, maxSize), cachedLayout.parentSize);
     cachedLayout.componentLayout = componentLayout;
-    cachedLayout.width = width;
-    cachedLayout.height = height;
+    cachedLayout.width = constrainedWidth;
+    cachedLayout.height = constrainedHeight;
     cachedLayout.widthMode = widthMode;
     cachedLayout.heightMode = heightMode;
   }
@@ -133,27 +140,29 @@ static YGSize measureYGComponent(YGNodeRef node,
   const float componentLayoutWidth = static_cast<float>(cachedLayout.componentLayout.size.width);
   const float componentLayoutHeight = static_cast<float>(cachedLayout.componentLayout.size.height);
 
-  const float measuredWidth = (componentLayoutWidth == INFINITY || isnan(componentLayoutWidth)) ? YGUndefined : componentLayoutWidth;
-  const float measuredHeight = (componentLayoutHeight == INFINITY || isnan(componentLayoutHeight)) ? YGUndefined : componentLayoutHeight;
-
+  const float measuredWidth = sanitizeFloat(componentLayoutWidth);
+  const float measuredHeight = sanitizeFloat(componentLayoutHeight);
   return {measuredWidth, measuredHeight};
 }
 
 static float computeBaseline(YGNodeRef node, const float width, const float height)
 {
+  float constrainedWidth = sanitizeFloat(width);
+  float constrainedHeight = sanitizeFloat(height);
+
   CKFlexboxChildCachedLayout *cachedLayout = (__bridge CKFlexboxChildCachedLayout *)YGNodeGetContext(node);
 
-  if (!YGNodeCanUseCachedMeasurement(YGMeasureModeExactly, width, YGMeasureModeExactly, height,
+  if (!YGNodeCanUseCachedMeasurement(YGMeasureModeExactly, constrainedWidth, YGMeasureModeExactly, constrainedHeight,
                                     cachedLayout.widthMode, cachedLayout.width,
                                     cachedLayout.heightMode, cachedLayout.height,
                                     cachedLayout.componentLayout.size.width, cachedLayout.componentLayout.size.height, 0, 0,
                                     ckYogaDefaultConfig())) {
     CKComponent *component = cachedLayout.component;
-    CGSize fixedSize = {width, height};
+    CGSize fixedSize = {constrainedWidth, constrainedHeight};
     CKComponentLayout componentLayout = CKComputeComponentLayout(component, CKSizeRange(fixedSize, fixedSize), cachedLayout.parentSize);
     cachedLayout.componentLayout = componentLayout;
-    cachedLayout.width = width;
-    cachedLayout.height = height;
+    cachedLayout.width = constrainedWidth;
+    cachedLayout.height = constrainedHeight;
     cachedLayout.widthMode = YGMeasureModeExactly;
     cachedLayout.heightMode = YGMeasureModeExactly;
   }
@@ -163,7 +172,7 @@ static float computeBaseline(YGNodeRef node, const float width, const float heig
     return [[cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey] floatValue];
   }
 
-  return height;
+  return constrainedHeight;
 }
 
 static YGDirection ygApplicationDirection()
@@ -320,8 +329,8 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
   YGEdge spacingEdge = ygSpacingEdgeFromDirection(_style.direction);
   CGFloat savedSpacing = 0;
   // We need this to resolve CKRelativeDimension with percentage bases
-  CGFloat parentWidth = (constrainedSize.min.width == constrainedSize.max.width) ? constrainedSize.min.width : kCKComponentParentDimensionUndefined;
-  CGFloat parentHeight = (constrainedSize.min.height == constrainedSize.max.height) ? constrainedSize.min.height : kCKComponentParentDimensionUndefined;
+  CGFloat parentWidth = (constrainedSize.min.width == constrainedSize.max.width) && !isnan(constrainedSize.min.width) && !isinf(constrainedSize.min.width) ? constrainedSize.min.width : YGUndefined;
+  CGFloat parentHeight = (constrainedSize.min.height == constrainedSize.max.height) && !isnan(constrainedSize.min.height) && !isinf(constrainedSize.min.height) ? constrainedSize.min.height : YGUndefined;
   CGFloat parentMainDimension = isHorizontalFlexboxDirection(_style.direction) ? parentWidth : parentHeight;
   CGSize parentSize = CGSizeMake(parentWidth, parentHeight);
 
@@ -386,17 +395,17 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     // We only use End Margin for the last child to emulate space between it and parent
     if (iterator != children.begin()) {
       // Children in the middle have margin = spacingBefore + spacingAfter of previous + spacing of parent
-      YGNodeStyleSetMargin(childNode, spacingEdge, child.spacingBefore + _style.spacing + savedSpacing);
+      YGNodeStyleSetMargin(childNode, spacingEdge, sanitizeFloat(child.spacingBefore + _style.spacing + savedSpacing));
     } else {
       // For the space between parent and first child we just use spacingBefore
-      YGNodeStyleSetMargin(childNode, spacingEdge, child.spacingBefore);
+      YGNodeStyleSetMargin(childNode, spacingEdge, sanitizeFloat(child.spacingBefore));
     }
     YGNodeInsertChild(stackNode, childNode, YGNodeGetChildCount(stackNode));
 
     savedSpacing = child.spacingAfter;
     if (next(iterator) == children.end()) {
       // For the space between parent and last child we use only spacingAfter
-      YGNodeStyleSetMargin(childNode, ygSpacingEdgeFromDirection(_style.direction, YES), savedSpacing);
+      YGNodeStyleSetMargin(childNode, ygSpacingEdgeFromDirection(_style.direction, YES), sanitizeFloat(savedSpacing));
     }
 
     /** The margins will override any spacing we applied earlier */
@@ -441,85 +450,85 @@ static void applySizeAttributes(YGNodeRef node, CKFlexboxComponentChild child, C
 
   switch (childSize.width.type()) {
     case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetWidthPercent(node, childSize.width.value() * 100);
+      YGNodeStyleSetWidthPercent(node, sanitizeFloat(childSize.width.value() * 100));
       break;
     case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetWidth(node, childSize.width.value());
+      YGNodeStyleSetWidth(node, sanitizeFloat(childSize.width.value()));
       break;
     case CKRelativeDimension::Type::AUTO:
       // Fall back to the component's width
       const CGFloat width = [child.component size].width.resolve(YGUndefined, parentWidth);
-      YGNodeStyleSetWidth(node, width);
+      YGNodeStyleSetWidth(node, sanitizeFloat(width));
       break;
   }
 
   switch (childSize.height.type()) {
     case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetHeightPercent(node, childSize.height.value() * 100);
+      YGNodeStyleSetHeightPercent(node, sanitizeFloat(childSize.height.value() * 100));
       break;
     case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetHeight(node, childSize.height.value());
+      YGNodeStyleSetHeight(node, sanitizeFloat(childSize.height.value()));
       break;
     case CKRelativeDimension::Type::AUTO:
       // Fall back to the component's height
       const CGFloat height = [child.component size].height.resolve(YGUndefined, parentHeight);
-      YGNodeStyleSetHeight(node, height);
+      YGNodeStyleSetHeight(node, sanitizeFloat(height));
       break;
   }
 
   switch (childSize.minWidth.type()) {
     case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetMinWidthPercent(node, childSize.minWidth.value() * 100);
+      YGNodeStyleSetMinWidthPercent(node, sanitizeFloat(childSize.minWidth.value() * 100));
       break;
     case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetMinWidth(node, childSize.minWidth.value());
+      YGNodeStyleSetMinWidth(node, sanitizeFloat(childSize.minWidth.value()));
       break;
     case CKRelativeDimension::Type::AUTO:
       // Fall back to the component's constraint
       const CGFloat minWidth = [child.component size].minWidth.resolve(YGUndefined, parentWidth);
-      YGNodeStyleSetMinWidth(node, minWidth);
+      YGNodeStyleSetMinWidth(node, sanitizeFloat(minWidth));
       break;
   }
 
   switch (childSize.maxWidth.type()) {
     case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetMaxWidthPercent(node, childSize.maxWidth.value() * 100);
+      YGNodeStyleSetMaxWidthPercent(node, sanitizeFloat(childSize.maxWidth.value() * 100));
       break;
     case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetMaxWidth(node, childSize.maxWidth.value());
+      YGNodeStyleSetMaxWidth(node, sanitizeFloat(childSize.maxWidth.value()));
       break;
     case CKRelativeDimension::Type::AUTO:
       // Fall back to the component's constraint
       const CGFloat maxWidth = [child.component size].maxWidth.resolve(YGUndefined, parentWidth);
-      YGNodeStyleSetMaxWidth(node, maxWidth);
+      YGNodeStyleSetMaxWidth(node, sanitizeFloat(maxWidth));
       break;
   }
 
   switch (childSize.minHeight.type()) {
     case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetMinHeightPercent(node, childSize.minHeight.value() * 100);
+      YGNodeStyleSetMinHeightPercent(node, sanitizeFloat(childSize.minHeight.value() * 100));
       break;
     case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetMinHeight(node, childSize.minHeight.value());
+      YGNodeStyleSetMinHeight(node, sanitizeFloat(childSize.minHeight.value()));
       break;
     case CKRelativeDimension::Type::AUTO:
       // Fall back to the component's constraint
       const CGFloat minHeight = [child.component size].minHeight.resolve(YGUndefined, parentHeight);
-      YGNodeStyleSetMinHeight(node, minHeight);
+      YGNodeStyleSetMinHeight(node, sanitizeFloat(minHeight));
       break;
   }
 
   switch (childSize.maxHeight.type()) {
     case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetMaxHeightPercent(node, childSize.maxHeight.value() * 100);
+      YGNodeStyleSetMaxHeightPercent(node, sanitizeFloat(childSize.maxHeight.value() * 100));
       break;
     case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetMaxHeight(node, childSize.maxHeight.value());
+      YGNodeStyleSetMaxHeight(node, sanitizeFloat(childSize.maxHeight.value()));
       break;
     case CKRelativeDimension::Type::AUTO:
       // Fall back to the component's constraint
       const CGFloat maxHeight = [child.component size].maxHeight.resolve(YGUndefined, parentHeight);
-      YGNodeStyleSetMaxHeight(node, maxHeight);
+      YGNodeStyleSetMaxHeight(node, sanitizeFloat(maxHeight));
       break;
   }
 }
@@ -530,10 +539,10 @@ static void applyPositionToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension 
 
   switch (dimension.type()) {
     case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetPositionPercent(node, edge, dimension.value() * 100);
+      YGNodeStyleSetPositionPercent(node, edge, sanitizeFloat(dimension.value() * 100));
       break;
     case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetPosition(node, edge, dimension.value());
+      YGNodeStyleSetPosition(node, edge, sanitizeFloat(dimension.value()));
       break;
     case CKRelativeDimension::Type::AUTO:
       // no-op
@@ -544,13 +553,12 @@ static void applyPositionToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension 
 static void applyPaddingToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension value)
 {
   CKRelativeDimension dimension = value.dimension();
-
   switch (dimension.type()) {
     case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetPaddingPercent(node, edge, dimension.value() * 100);
+      YGNodeStyleSetPaddingPercent(node, edge, sanitizeFloat(dimension.value() * 100));
       break;
     case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetPadding(node, edge, dimension.value());
+      YGNodeStyleSetPadding(node, edge, sanitizeFloat(dimension.value()));
       break;
     case CKRelativeDimension::Type::AUTO:
       // no-op
@@ -567,10 +575,10 @@ static void applyMarginToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension va
   CKRelativeDimension relativeDimension = value.dimension();
   switch (relativeDimension.type()) {
     case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetMarginPercent(node, edge, relativeDimension.value() * 100);
+      YGNodeStyleSetMarginPercent(node, edge, sanitizeFloat(relativeDimension.value() * 100));
       break;
     case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetMargin(node, edge, relativeDimension.value());
+      YGNodeStyleSetMargin(node, edge, sanitizeFloat(relativeDimension.value()));
       break;
     case CKRelativeDimension::Type::AUTO:
       YGNodeStyleSetMarginAuto(node, edge);
@@ -583,7 +591,7 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
   if (value.isDefined() == false) {
     return;
   }
-  YGNodeStyleSetBorder(node, edge, value.value());
+  YGNodeStyleSetBorder(node, edge, sanitizeFloat(value.value()));
 }
 
 #if CK_ASSERTIONS_ENABLED
@@ -724,24 +732,24 @@ static BOOL floatIsSet(CGFloat val)
   // At the moment Yoga does not optimise minWidth == maxWidth, so we want to do it here
   // ComponentKit and Yoga use different constants for +Inf, so we need to make sure the don't interfere
   if (constrainedSize.min.width == constrainedSize.max.width) {
-    YGNodeStyleSetWidth(node, constrainedSize.min.width);
+    YGNodeStyleSetWidth(node, sanitizeFloat(constrainedSize.min.width));
   } else {
     YGNodeStyleSetMinWidth(node, constrainedSize.min.width);
     if (constrainedSize.max.width == INFINITY) {
       YGNodeStyleSetMaxWidth(node, YGUndefined);
     } else {
-      YGNodeStyleSetMaxWidth(node, constrainedSize.max.width);
+      YGNodeStyleSetMaxWidth(node, sanitizeFloat(constrainedSize.max.width));
     }
   }
 
   if (constrainedSize.min.height == constrainedSize.max.height) {
-    YGNodeStyleSetHeight(node, constrainedSize.min.height);
+    YGNodeStyleSetHeight(node, sanitizeFloat(constrainedSize.min.height));
   } else {
     YGNodeStyleSetMinHeight(node, constrainedSize.min.height);
     if (constrainedSize.max.height == INFINITY) {
       YGNodeStyleSetMaxHeight(node, YGUndefined);
     } else {
-      YGNodeStyleSetMaxHeight(node, constrainedSize.max.height);
+      YGNodeStyleSetMaxHeight(node, sanitizeFloat(constrainedSize.max.height));
     }
   }
   return node;
