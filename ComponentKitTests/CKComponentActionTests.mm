@@ -24,6 +24,19 @@
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 
+@interface CKComponentActionTestAssertionHandler : NSAssertionHandler
+@end
+
+@implementation CKComponentActionTestAssertionHandler
+
+- (void)handleFailureInFunction:(NSString *)functionName
+                           file:(NSString *)fileName
+                     lineNumber:(NSInteger)line
+                    description:(NSString *)format, ...
+{}
+
+@end
+
 @interface CKTestScopeActionComponent : CKComponent
 
 + (instancetype)newWithBlock:(void(^)(CKComponent *sender, id context))block;
@@ -679,6 +692,10 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
 
 - (void)testActionParamsFailedValidation
 {
+  // We need to set an assertion handler as `checkMethodSignatureAgainstTypeEncodings` throws `CKCFailAssert` in case it fails.
+  auto const assertionHandler = [CKComponentActionTestAssertionHandler new];
+  [[[NSThread currentThread] threadDictionary] setValue:assertionHandler forKey:NSAssertionHandlerKey];
+
   const SEL selector = @selector(triggerActionWithComponent:vector:object:primitive:);
   std::vector<const char *> encodings;
 
