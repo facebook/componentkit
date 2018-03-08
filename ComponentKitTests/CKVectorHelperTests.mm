@@ -113,6 +113,43 @@
   XCTAssertTrue(b == c);
 }
 
+- (void)test_mapWithIndexVectorWithStructs
+{
+  struct InputStruct {
+    NSString *string;
+    NSInteger integer;
+  };
+  struct OutputStruct {
+    NSUInteger index;
+    NSInteger integer;
+    NSString *string;
+  };
+  std::vector<InputStruct> ts = {
+    {.string = @"a", .integer = 10},
+    {.string = @"b", .integer = 20},
+    {.string = @"c", .integer = -30}
+  };
+  std::vector<OutputStruct> rs = {
+    {.string = @"a", .integer = 10, .index = 0},
+    {.string = @"b", .integer = 20, .index = 1},
+    {.string = @"c", .integer = -30, .index = 2}
+  };
+  std::vector<OutputStruct> result = CK::mapWithIndex(ts, ^OutputStruct(InputStruct input, NSUInteger index) {
+    return {
+      .index = index,
+      .integer = input.integer,
+      .string = input.string,
+    };
+  });
+  auto outputStructsEqual = [](OutputStruct &lhs, OutputStruct& rhs) {
+    return [lhs.string isEqualToString:rhs.string] && lhs.integer == rhs.integer && lhs.index == rhs.index;
+  };
+  XCTAssertTrue(result.size() == rs.size());
+  for (int i = 0; i < rs.size(); i++) {
+    XCTAssertTrue(outputStructsEqual(rs.at(i), result.at(i)));
+  }
+}
+
 - (void)test_mapVectorWithStructs
 {
   struct TestStruct {

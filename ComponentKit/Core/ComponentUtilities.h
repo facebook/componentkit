@@ -33,6 +33,22 @@ namespace CK {
   }
 
   template <typename T, typename Func>
+  auto mapWithIndex(const T &iterable, Func &&func) -> std::vector<decltype(func(std::declval<typename T::value_type>(), std::declval<NSUInteger>()))>
+  {
+    typedef decltype(func(std::declval<typename T::value_type>(), std::declval<NSUInteger>())) value_type;
+
+    std::vector<value_type> res;
+    res.reserve(iterable.size());
+    NSUInteger index = 0;
+
+    for (auto it = iterable.begin(); it != iterable.end(); ++it, ++index) {
+      res.push_back(func(*it, index));
+    }
+
+    return res;
+  }
+
+  template <typename T, typename Func>
   auto map(const T &iterable, Func &&func) -> std::vector<decltype(func(std::declval<typename T::value_type>()))>
   {
     // Convenience type definition
