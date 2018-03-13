@@ -22,10 +22,7 @@
 #import "CKComponentBoundsAnimation+UICollectionView.h"
 #import "CKComponentControllerEvents.h"
 
-@interface CKCollectionViewDataSource () <
-UICollectionViewDataSource,
-CKDataSourceListener
->
+@interface CKCollectionViewDataSource () <UICollectionViewDataSource, CKDataSourceListener>
 {
   CKDataSource *_componentDataSource;
   __weak id<CKSupplementaryViewDataSource> _supplementaryViewDataSource;
@@ -92,9 +89,9 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
 
 #pragma mark - CKDataSourceListener
 
-- (void)transactionalComponentDataSource:(CKDataSource *)dataSource
-                  didModifyPreviousState:(CKDataSourceState *)previousState
-                       byApplyingChanges:(CKDataSourceAppliedChanges *)changes
+- (void)componentDataSource:(CKDataSource *)dataSource
+     didModifyPreviousState:(CKDataSourceState *)previousState
+          byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
   const BOOL changesIncludeNonUpdates = (changes.removedIndexPaths.count ||
                                          changes.insertedIndexPaths.count ||

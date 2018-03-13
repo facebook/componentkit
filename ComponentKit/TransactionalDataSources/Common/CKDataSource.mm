@@ -244,9 +244,9 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
   }
 
-  [_announcer transactionalComponentDataSource:self
-                        didModifyPreviousState:previousState
-                             byApplyingChanges:[change appliedChanges]];
+  [_announcer componentDataSource:self
+           didModifyPreviousState:previousState
+                byApplyingChanges:[change appliedChanges]];
 
   // Announce 'didPrepareLayoutForComponent:'.
   if (_state.configuration.didPrepareLayoutEnabled) {

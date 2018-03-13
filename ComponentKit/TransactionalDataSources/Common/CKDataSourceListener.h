@@ -23,8 +23,8 @@
  @param changes The changes that were applied (which may correspond to multiple 
         CKDataSourceChangeset objects).
  */
-- (void)transactionalComponentDataSource:(CKDataSource *)dataSource
-                  didModifyPreviousState:(CKDataSourceState *)previousState
-                       byApplyingChanges:(CKDataSourceAppliedChanges *)changes;
+- (void)componentDataSource:(CKDataSource *)dataSource
+     didModifyPreviousState:(CKDataSourceState *)previousState
+          byApplyingChanges:(CKDataSourceAppliedChanges *)changes;
 
 @end

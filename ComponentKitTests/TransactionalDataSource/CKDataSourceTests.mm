@@ -195,9 +195,9 @@ struct CKDataSourceAnnouncedUpdate {
 
 #pragma mark - Listener
 
-- (void)transactionalComponentDataSource:(CKDataSource *)dataSource
-                  didModifyPreviousState:(CKDataSourceState *)previousState
-                       byApplyingChanges:(CKDataSourceAppliedChanges *)changes
+- (void)componentDataSource:(CKDataSource *)dataSource
+     didModifyPreviousState:(CKDataSourceState *)previousState
+          byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
   _announcedChanges.push_back({previousState, changes});
 }

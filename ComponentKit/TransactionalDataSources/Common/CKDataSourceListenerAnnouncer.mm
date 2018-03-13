@@ -24,9 +24,9 @@
   CK::Component::AnnouncerHelper::removeListener(self, _cmd, listener);
 }
 
-- (void)transactionalComponentDataSource:(CKDataSource *)dataSource
-                  didModifyPreviousState:(CKDataSourceState *)previousState
-                       byApplyingChanges:(CKDataSourceAppliedChanges *)changes
+- (void)componentDataSource:(CKDataSource *)dataSource
+     didModifyPreviousState:(CKDataSourceState *)previousState
+          byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
   CK::Component::AnnouncerHelper::call(self, _cmd, dataSource, previousState, changes);
 }
