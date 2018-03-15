@@ -16,4 +16,7 @@
 /** Protocol adopted by an object that can modify the data source state. */
 @protocol CKDataSourceStateModifying <NSObject>
 - (CKDataSourceChange *)changeFromState:(CKDataSourceState *)state;
+
+// This method allows to extract an additional information relevant to modification
+- (NSDictionary *)userInfo;
 @end

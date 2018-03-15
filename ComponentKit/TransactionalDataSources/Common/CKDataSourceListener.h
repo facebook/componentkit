@@ -28,3 +28,27 @@
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes;
 
 @end
+
+@protocol CKDataSourceAsyncListener <CKDataSourceListener>
+
+/**
+ Announced on the background thread when the data source will generate new state.
+ This event only announced is the modification was schedule asynchronously
+ @param dataSource The sending data source
+ @param userInfo Additional information that was passed with modification
+ */
+- (void)componentDataSourceWillGenerateNewState:(CKDataSource *)dataSource
+                                       userInfo:(NSDictionary *)userInfo;
+
+/**
+ Announced on the background thread when the data source has just generated new state.
+ This event only announced is the modification was schedule asynchronously
+ @param dataSource The sending data source; its state property still contains old state
+ @param newState The state that the data source has just generated and will schedule for applying.
+ @param changes The changes that ar going to be applied.
+ */
+- (void)componentDataSource:(CKDataSource *)dataSource
+        didGenerateNewState:(CKDataSourceState *)newState
+                    changes:(CKDataSourceAppliedChanges *)changes;
+
+@end

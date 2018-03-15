@@ -149,6 +149,11 @@
                                                           appliedChanges:appliedChanges];
 }
 
+- (NSDictionary *)userInfo
+{
+  return _userInfo;
+}
+
 - (NSString *)description
 {
   return [_changeset description];

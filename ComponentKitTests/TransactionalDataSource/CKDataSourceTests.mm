@@ -23,7 +23,7 @@
 
 #import "CKDataSourceStateTestHelpers.h"
 
-@interface CKDataSourceTests : XCTestCase <CKComponentProvider, CKDataSourceListener>
+@interface CKDataSourceTests : XCTestCase <CKComponentProvider, CKDataSourceAsyncListener>
 @end
 
 struct CKDataSourceAnnouncedUpdate {
@@ -34,6 +34,8 @@ struct CKDataSourceAnnouncedUpdate {
 @implementation CKDataSourceTests
 {
   std::vector<CKDataSourceAnnouncedUpdate> _announcedChanges;
+  NSInteger _willGenerateChangeCounter;
+  NSInteger _didGenerateChangeCounter;
 }
 
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
@@ -44,6 +46,8 @@ struct CKDataSourceAnnouncedUpdate {
 - (void)tearDown
 {
   _announcedChanges.clear();
+  _willGenerateChangeCounter = 0;
+  _didGenerateChangeCounter = 0;
   [super tearDown];
 }
 
@@ -83,6 +87,8 @@ struct CKDataSourceAnnouncedUpdate {
                                                        userInfo:nil];
 
   XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
+  XCTAssertEqual(_willGenerateChangeCounter, 0);
+  XCTAssertEqual(_didGenerateChangeCounter, 0);
 }
 
 - (void)testAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronously
@@ -113,6 +119,8 @@ struct CKDataSourceAnnouncedUpdate {
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
     return _announcedChanges.size() == 1 && [_announcedChanges[0].appliedChanges isEqual:expectedAppliedChanges];
   }));
+  XCTAssertEqual(_willGenerateChangeCounter, 1);
+  XCTAssertEqual(_didGenerateChangeCounter, 1);
 }
 
 - (void)testUpdatingConfigurationAnnouncesUpdate
@@ -139,6 +147,8 @@ struct CKDataSourceAnnouncedUpdate {
 
   XCTAssertEqual([[ds state] configuration], config);
   XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
+  XCTAssertEqual(_willGenerateChangeCounter, 0);
+  XCTAssertEqual(_didGenerateChangeCounter, 0);
 }
 
 - (void)testReloadingAnnouncesUpdate
@@ -156,6 +166,8 @@ struct CKDataSourceAnnouncedUpdate {
                                              insertedIndexPaths:nil
                                                        userInfo:nil];
   XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
+  XCTAssertEqual(_willGenerateChangeCounter, 0);
+  XCTAssertEqual(_didGenerateChangeCounter, 0);
 }
 
 - (void)testSynchronousReloadCancelsPreviousAsynchronousReload
@@ -200,6 +212,16 @@ struct CKDataSourceAnnouncedUpdate {
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
   _announcedChanges.push_back({previousState, changes});
+}
+
+- (void)componentDataSourceWillGenerateNewState:(CKDataSource *)dataSource userInfo:(NSDictionary *)userInfo
+{
+  _willGenerateChangeCounter++;
+}
+
+- (void)componentDataSource:(CKDataSource *)dataSource didGenerateNewState:(CKDataSourceState *)newState changes:(CKDataSourceAppliedChanges *)changes
+{
+  _didGenerateChangeCounter++;
 }
 
 @end

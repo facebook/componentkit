@@ -13,7 +13,7 @@
 #import <ComponentKit/CKComponentAnnouncerBase.h>
 #import <ComponentKit/CKDataSourceListener.h>
 
-@interface CKDataSourceListenerAnnouncer : CKComponentAnnouncerBase <CKDataSourceListener>
+@interface CKDataSourceListenerAnnouncer : CKComponentAnnouncerBase <CKDataSourceAsyncListener>
 
 - (void)addListener:(id<CKDataSourceListener>)listener;
 - (void)removeListener:(id<CKDataSourceListener>)listener;

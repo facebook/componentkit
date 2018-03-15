@@ -89,4 +89,9 @@
                                                           appliedChanges:appliedChanges];
 }
 
+- (NSDictionary *)userInfo
+{
+  return nil;
+}
+
 @end

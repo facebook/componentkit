@@ -275,10 +275,14 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
 - (void)_applyModificationPair:(CKDataSourceModificationPair *)modificationPair
 {
+  [_announcer componentDataSourceWillGenerateNewState:self userInfo:modificationPair.modification.userInfo];
   CKDataSourceChange *change;
   @autoreleasepool {
     change = [modificationPair.modification changeFromState:modificationPair.state];
   }
+  [_announcer componentDataSource:self
+              didGenerateNewState:[change state]
+                          changes:[change appliedChanges]];
 
   dispatch_async(dispatch_get_main_queue(), ^{
     // If the first object in _pendingAsynchronousModifications is not still the modification,

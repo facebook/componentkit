@@ -31,4 +31,17 @@
   CK::Component::AnnouncerHelper::call(self, _cmd, dataSource, previousState, changes);
 }
 
+- (void)componentDataSourceWillGenerateNewState:(CKDataSource *)dataSource
+                                       userInfo:(NSDictionary *)userInfo
+{
+  CK::Component::AnnouncerHelper::callOptional(self, _cmd, dataSource, userInfo);
+}
+
+- (void)componentDataSource:(CKDataSource *)dataSource
+        didGenerateNewState:(CKDataSourceState *)newState
+                    changes:(CKDataSourceAppliedChanges *)changes
+{
+  CK::Component::AnnouncerHelper::callOptional(self, _cmd, dataSource, newState, changes);
+}
+
 @end

@@ -95,4 +95,9 @@
                                                           appliedChanges:appliedChanges];
 }
 
+- (NSDictionary *)userInfo
+{
+  return _userInfo;
+}
+
 @end
