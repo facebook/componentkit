@@ -106,9 +106,9 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
       // We need to keep FIFO ordering of changesets, so cancel & synchronously apply any queued async modifications.
       NSArray *enqueuedChangesets = [self _cancelEnqueuedModificationsOfType:[modification class]];
       for (id<CKDataSourceStateModifying> pendingChangesetModification in enqueuedChangesets) {
-        [self _synchronouslyApplyChange:[pendingChangesetModification changeFromState:_state]];
+        [self _synchronouslyApplyModification:pendingChangesetModification];
       }
-      [self _synchronouslyApplyChange:[modification changeFromState:_state]];
+      [self _synchronouslyApplyModification:modification];
       break;
   }
 }
@@ -127,7 +127,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     case CKUpdateModeSynchronous:
       // Cancel all enqueued asynchronous configuration updates or they'll complete later and overwrite this one.
       [self _cancelEnqueuedModificationsOfType:[modification class]];
-      [self _synchronouslyApplyChange:[modification changeFromState:_state]];
+      [self _synchronouslyApplyModification:modification];
       break;
   }
 }
@@ -145,7 +145,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     case CKUpdateModeSynchronous:
       // Cancel previously enqueued reloads; we're reloading right now, so no need to subsequently reload again.
       [self _cancelEnqueuedModificationsOfType:[modification class]];
-      [self _synchronouslyApplyChange:[modification changeFromState:_state]];
+      [self _synchronouslyApplyModification:modification];
       break;
   }
 }
@@ -232,6 +232,12 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   return modifications;
 }
 
+- (void)_synchronouslyApplyModification:(id<CKDataSourceStateModifying>)modification
+{
+  [_announcer componentDataSource:self willSyncApplyModificationWithUserInfo:[modification userInfo]];
+  [self _synchronouslyApplyChange:[modification changeFromState:_state]];
+}
+
 - (void)_synchronouslyApplyChange:(CKDataSourceChange *)change
 {
   CKAssertMainThread();
@@ -269,7 +275,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     CKDataSourceUpdateStateModification *sm =
     [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingSynchronousStateUpdates];
     _pendingSynchronousStateUpdates.clear();
-    [self _synchronouslyApplyChange:[sm changeFromState:_state]];
+    [self _synchronouslyApplyModification:sm];
   }
 }
 

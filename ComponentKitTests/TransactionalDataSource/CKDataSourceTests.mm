@@ -36,6 +36,7 @@ struct CKDataSourceAnnouncedUpdate {
   std::vector<CKDataSourceAnnouncedUpdate> _announcedChanges;
   NSInteger _willGenerateChangeCounter;
   NSInteger _didGenerateChangeCounter;
+  NSInteger _syncModificationStartCounter;
 }
 
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
@@ -48,6 +49,7 @@ struct CKDataSourceAnnouncedUpdate {
   _announcedChanges.clear();
   _willGenerateChangeCounter = 0;
   _didGenerateChangeCounter = 0;
+  _syncModificationStartCounter = 0;
   [super tearDown];
 }
 
@@ -87,6 +89,7 @@ struct CKDataSourceAnnouncedUpdate {
                                                        userInfo:nil];
 
   XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
+  XCTAssertEqual(_syncModificationStartCounter, 1);
   XCTAssertEqual(_willGenerateChangeCounter, 0);
   XCTAssertEqual(_didGenerateChangeCounter, 0);
 }
@@ -119,6 +122,7 @@ struct CKDataSourceAnnouncedUpdate {
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
     return _announcedChanges.size() == 1 && [_announcedChanges[0].appliedChanges isEqual:expectedAppliedChanges];
   }));
+  XCTAssertEqual(_syncModificationStartCounter, 0);
   XCTAssertEqual(_willGenerateChangeCounter, 1);
   XCTAssertEqual(_didGenerateChangeCounter, 1);
 }
@@ -147,6 +151,7 @@ struct CKDataSourceAnnouncedUpdate {
 
   XCTAssertEqual([[ds state] configuration], config);
   XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
+  XCTAssertEqual(_syncModificationStartCounter, 1);
   XCTAssertEqual(_willGenerateChangeCounter, 0);
   XCTAssertEqual(_didGenerateChangeCounter, 0);
 }
@@ -166,6 +171,7 @@ struct CKDataSourceAnnouncedUpdate {
                                              insertedIndexPaths:nil
                                                        userInfo:nil];
   XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
+  XCTAssertEqual(_syncModificationStartCounter, 1);
   XCTAssertEqual(_willGenerateChangeCounter, 0);
   XCTAssertEqual(_didGenerateChangeCounter, 0);
 }
@@ -203,6 +209,7 @@ struct CKDataSourceAnnouncedUpdate {
     && [_announcedChanges[0].appliedChanges isEqual:expectedAppliedChangesForSyncReload]
     && [_announcedChanges[1].appliedChanges isEqual:expectedAppliedChangesForSecondAsyncReload];
   }));
+  XCTAssertEqual(_syncModificationStartCounter, 1);
 }
 
 #pragma mark - Listener
@@ -212,6 +219,11 @@ struct CKDataSourceAnnouncedUpdate {
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
   _announcedChanges.push_back({previousState, changes});
+}
+
+- (void)componentDataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo
+{
+  _syncModificationStartCounter++;
 }
 
 - (void)componentDataSourceWillGenerateNewState:(CKDataSource *)dataSource userInfo:(NSDictionary *)userInfo

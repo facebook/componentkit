@@ -31,6 +31,11 @@
   CK::Component::AnnouncerHelper::call(self, _cmd, dataSource, previousState, changes);
 }
 
+- (void)componentDataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo
+{
+  CK::Component::AnnouncerHelper::callOptional(self, _cmd, dataSource, userInfo);
+}
+
 - (void)componentDataSourceWillGenerateNewState:(CKDataSource *)dataSource
                                        userInfo:(NSDictionary *)userInfo
 {

@@ -32,6 +32,17 @@
 @protocol CKDataSourceAsyncListener <CKDataSourceListener>
 
 /**
+ Announced on the main thread when the data source will synchronously start modification application.
+ If the modification was scheduled asynchronously and had already started processing on workQueue,
+ you will receive *both* will/didGenerateNewState and willSyncApplyModificationWithUserInfo, however
+ the work done on workQueue will be ignored
+ @param dataSource The sending data source
+ @param userInfo Additional information that was passed with modification
+ */
+
+- (void)componentDataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo;
+
+/**
  Announced on the background thread when the data source will generate new state.
  This event only announced is the modification was schedule asynchronously
  @param dataSource The sending data source
