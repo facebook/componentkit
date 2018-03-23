@@ -12,6 +12,7 @@
 
 #import "ComponentUtilities.h"
 #import "CKComponentSubclass.h"
+#import <ComponentKit/CKComponentInternal.h>
 
 @implementation CKStaticLayoutComponent
 {
@@ -22,7 +23,7 @@
                        size:(const CKComponentSize &)size
                    children:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
 {
-  CKStaticLayoutComponent *c = [super newWithView:view size:size];
+  CKStaticLayoutComponent *c = [super newRenderComponentWithView:view size:size isLayoutComponent:YES];
   if (c) {
     c->_children = children.take();
   }
