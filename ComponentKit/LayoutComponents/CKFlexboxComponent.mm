@@ -66,6 +66,16 @@ template class std::vector<CKFlexboxComponentChild>;
   BOOL _reuseOnlyExactSizeSpecs;
 }
 
++ (instancetype)new
+{
+  return [super newRenderComponentWithView:{} size:{} isLayoutComponent:YES];
+}
+
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
+{
+  return [super newRenderComponentWithView:view size:size isLayoutComponent:YES];
+}
+
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
                       style:(const CKFlexboxComponentStyle &)style
