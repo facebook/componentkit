@@ -30,6 +30,7 @@
                                sizeRange:sizeRange
              componentLayoutCacheEnabled:NO
                buildComponentTreeEnabled:NO
+         alwaysBuildComponentTreeEnabled:NO
                  didPrepareLayoutEnabled:NO
                      componentPredicates:{}
            componentControllerPredicates:{}
@@ -41,6 +42,7 @@
                                 sizeRange:(const CKSizeRange &)sizeRange
               componentLayoutCacheEnabled:(BOOL)componentLayoutCacheEnabled
                 buildComponentTreeEnabled:(BOOL)buildComponentTreeEnabled
+          alwaysBuildComponentTreeEnabled:(BOOL)alwaysBuildComponentTreeEnabled
                   didPrepareLayoutEnabled:(BOOL)didPrepareLayoutEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
@@ -55,6 +57,7 @@
     _analyticsListener = analyticsListener;
     _componentLayoutCacheEnabled = componentLayoutCacheEnabled;
     _buildComponentTreeEnabled = buildComponentTreeEnabled;
+    _alwaysBuildComponentTreeEnabled = alwaysBuildComponentTreeEnabled;
     _didPrepareLayoutEnabled = didPrepareLayoutEnabled;
   }
   return self;

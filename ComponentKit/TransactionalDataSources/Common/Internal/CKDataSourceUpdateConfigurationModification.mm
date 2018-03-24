@@ -65,7 +65,7 @@
       } else {
         const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
           return [componentProvider componentForModel:[item model] context:context];
-        }, _configuration.buildComponentTreeEnabled);
+        }, _configuration.buildComponentTreeEnabled, _configuration.alwaysBuildComponentTreeEnabled);
         const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, _configuration.componentLayoutCacheEnabled);
         newItem = [[CKDataSourceItem alloc] initWithLayout:layout
                                                                            model:[item model]

@@ -22,7 +22,8 @@
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        BOOL buildComponentTree)
+                                        BOOL buildComponentTree,
+                                        BOOL alwaysBuildComponentTree)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   const auto analyticsListener = [previousRoot analyticsListener];
@@ -31,7 +32,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   // Order of operations matters, so first store into locals and then return a struct.
   CKComponent *const component = componentFactory();
 
-  if (buildComponentTree && threadScope.newScopeRoot.hasRenderComponentInTree) {
+  if ((buildComponentTree && threadScope.newScopeRoot.hasRenderComponentInTree) || alwaysBuildComponentTree) {
     // Build the component tree from the render function.
     [component buildComponentTree:threadScope.newScopeRoot.rootNode
                     previousOwner:previousRoot.rootNode

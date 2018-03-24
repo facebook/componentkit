@@ -61,7 +61,7 @@
         [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
         const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], stateUpdatesForItem->second, ^{
           return [componentProvider componentForModel:[item model] context:context];
-        }, configuration.buildComponentTreeEnabled);
+        }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
         const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, configuration.componentLayoutCacheEnabled);
         [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:layout
                                                                                      model:[item model]
