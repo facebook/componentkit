@@ -10,6 +10,8 @@
 
 #import <unordered_map>
 
+#import <UIKit/UIKit.h>
+
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAction.h>
 #import <ComponentKit/CKContainerWrapper.h>
@@ -55,6 +57,12 @@ struct CKButtonComponentOptions {
   CKComponentAccessibilityContext accessibilityContext;
   /// Size restrictions for the button.
   CKComponentSize size;
+  /// The inset or outset margins for the rectangle around the button's content.
+  UIEdgeInsets contentEdgeInsets = UIEdgeInsetsZero;
+  /// The inset or outset margins for the rectangle around the button's title text.
+  UIEdgeInsets titleEdgeInsets = UIEdgeInsetsZero;
+  /// The inset or outset margins for the rectangle around the button's image.
+  UIEdgeInsets imageEdgeInsets = UIEdgeInsetsZero;
 };
 
 struct CKButtonComponentAccessibilityConfiguration {

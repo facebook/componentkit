@@ -8,6 +8,9 @@
  *
  */
 
+#import <UIKit/UIKit.h>
+#import <XCTest/XCTest.h>
+
 #import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
 #import <ComponentKit/CKButtonComponent.h>
@@ -59,12 +62,38 @@ static UIImage *fakeImage()
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
+- (void)testButtonWithTitleAndTitleEdgeInsets
+{
+  CKButtonComponent *b = [CKButtonComponent
+                          newWithAction:{}
+                          options:{
+                            .titles = @"Hello World",
+                            .titleEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
+                          }
+                         ];
+  CKSizeRange size;
+  CKSnapshotVerifyComponent(b, size, nil);
+}
+
 - (void)testButtonWithImage
 {
   CKButtonComponent *b = [CKButtonComponent
                           newWithAction:{}
                           options:{
                             .images = fakeImage(),
+                          }
+                         ];
+  CKSizeRange size;
+  CKSnapshotVerifyComponent(b, size, nil);
+}
+
+- (void)testButtonWithImageAndImageEdgeInsets
+{
+  CKButtonComponent *b = [CKButtonComponent
+                          newWithAction:{}
+                          options:{
+                            .images = fakeImage(),
+                            .imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
                           }
                          ];
   CKSizeRange size;
@@ -84,15 +113,73 @@ static UIImage *fakeImage()
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
-- (void)testButtonWithTitleAndImageAndContentEdgeInsets
+- (void)testButtonWithTitleAndImageWithImageEdgeInsets
 {
-  NSValue *insets = [NSValue valueWithUIEdgeInsets:UIEdgeInsetsMake(10, 10, 10, 10)];
   CKButtonComponent *b = [CKButtonComponent
                           newWithAction:{}
                           options:{
                             .titles = @"Hello World",
                             .images = fakeImage(),
-                            .attributes = {{@selector(setContentEdgeInsets:), insets}},
+                            .imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
+                          }
+                         ];
+  CKSizeRange size;
+  CKSnapshotVerifyComponent(b, size, nil);
+}
+
+- (void)testButtonWithTitleAndImageWithTitleEdgeInsets
+{
+  CKButtonComponent *b = [CKButtonComponent
+                          newWithAction:{}
+                          options:{
+                            .titles = @"Hello World",
+                            .images = fakeImage(),
+                            .titleEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
+                          }
+                         ];
+  CKSizeRange size;
+  CKSnapshotVerifyComponent(b, size, nil);
+}
+
+- (void)testButtonWithTitleAndImageWithTitleEdgeInsetsAndImageEdgeInsets
+{
+  CKButtonComponent *b = [CKButtonComponent
+                          newWithAction:{}
+                          options:{
+                            .titles = @"Hello World",
+                            .images = fakeImage(),
+                            .titleEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
+                            .imageEdgeInsets = UIEdgeInsetsMake(20, 20, 20, 20),
+                          }
+                         ];
+  CKSizeRange size;
+  CKSnapshotVerifyComponent(b, size, nil);
+}
+
+- (void)testButtonWithTitleAndImageAndContentEdgeInsets
+{
+  CKButtonComponent *b = [CKButtonComponent
+                          newWithAction:{}
+                          options:{
+                            .titles = @"Hello World",
+                            .images = fakeImage(),
+                            .contentEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
+                          }
+                         ];
+  CKSizeRange size;
+  CKSnapshotVerifyComponent(b, size, nil);
+}
+
+- (void)testButtonWithTitleAndImageAndContentEdgeInsetsAndTitleEdgeInsetsAndImageEdgeInsets
+{
+  CKButtonComponent *b = [CKButtonComponent
+                          newWithAction:{}
+                          options:{
+                            .titles = @"Hello World",
+                            .images = fakeImage(),
+                            .contentEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
+                            .titleEdgeInsets = UIEdgeInsetsMake(20, 20, 20, 20),
+                            .imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
                           }
                          ];
   CKSizeRange size;
@@ -173,4 +260,24 @@ static UIImage *fakeImage()
   CKSnapshotVerifyComponent(selhi, size, @"selected_highlighted");
 }
 
+- (void)testUIButtonEdgeInsetsDefaultValues
+{
+  UIButton const *button = [UIButton buttonWithType:UIButtonTypeSystem];
+  button.frame = CGRectMake(0, 0, 100, 100);
+  [button setImage:fakeImage() forState:UIControlStateNormal];
+  [button setTitle:@"Title label" forState:UIControlStateNormal];
+  const CKButtonComponentOptions options = CKButtonComponentOptions();
+
+  XCTAssertTrue([NSStringFromUIEdgeInsets(button.contentEdgeInsets)
+  isEqualToString:NSStringFromUIEdgeInsets(options.contentEdgeInsets)],
+                  @"iOS has changed the default value of contentEdgeInsets");
+
+  XCTAssertTrue([NSStringFromUIEdgeInsets(button.titleEdgeInsets)
+  isEqualToString:NSStringFromUIEdgeInsets(options.titleEdgeInsets)],
+                  @"iOS has changed the default value of titleEdgeInsets");
+
+  XCTAssertTrue([NSStringFromUIEdgeInsets(button.imageEdgeInsets)
+  isEqualToString:NSStringFromUIEdgeInsets(options.imageEdgeInsets)],
+                  @"iOS has changed the default value of imageEdgeInsets");
+}
 @end
