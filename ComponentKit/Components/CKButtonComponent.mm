@@ -100,6 +100,24 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     }
   };
 
+  UIEdgeInsets contentEdgeInsets = options.contentEdgeInsets;
+  const auto attributesContentEdgeInsets = options.attributes.find(@selector(setContentEdgeInsets:));
+  if (attributesContentEdgeInsets != options.attributes.end()) {
+    contentEdgeInsets = [attributesContentEdgeInsets->second UIEdgeInsetsValue];
+  }
+
+  UIEdgeInsets titleEdgeInsets = options.titleEdgeInsets;
+  const auto attributesTitleEdgeInsets = options.attributes.find(@selector(setTitleEdgeInsets:));
+  if (attributesTitleEdgeInsets != options.attributes.end()) {
+    titleEdgeInsets = [attributesTitleEdgeInsets->second UIEdgeInsetsValue];
+  }
+
+  UIEdgeInsets imageEdgeInsets = options.imageEdgeInsets;
+  const auto attributesImageEdgeInsets = options.attributes.find(@selector(setImageEdgeInsets:));
+  if (attributesImageEdgeInsets != options.attributes.end()) {
+    imageEdgeInsets = [attributesImageEdgeInsets->second UIEdgeInsetsValue];
+  }
+
   CKViewComponentAttributeValueMap attributes(options.attributes);
   attributes.insert({
     {configurationAttribute, configurationFromOptions(options)},
@@ -107,9 +125,9 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     {numberOfLinesAttribute, options.numberOfLines},
     {@selector(setSelected:), options.selected},
     {@selector(setEnabled:), options.enabled},
-    {@selector(setContentEdgeInsets:), options.contentEdgeInsets},
-    {@selector(setTitleEdgeInsets:), options.titleEdgeInsets},
-    {@selector(setImageEdgeInsets:), options.imageEdgeInsets},
+    {@selector(setContentEdgeInsets:), contentEdgeInsets},
+    {@selector(setTitleEdgeInsets:), titleEdgeInsets},
+    {@selector(setImageEdgeInsets:), imageEdgeInsets},
     CKComponentActionAttribute(action, UIControlEventTouchUpInside),
   });
 
