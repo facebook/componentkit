@@ -154,9 +154,9 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
                                     options.titleFont,
                                     valueForState(options.images.getMap(), state),
                                     valueForState(options.backgroundImages.getMap(), state),
-                                    options.contentEdgeInsets,
-                                    options.titleEdgeInsets,
-                                    options.imageEdgeInsets);
+                                    contentEdgeInsets,
+                                    titleEdgeInsets,
+                                    imageEdgeInsets);
 
 #else
   // `labelFontSize` is unavailable on tvOS
