@@ -334,6 +334,8 @@ extern const struct CKStackComponentLayoutExtraKeys {
 @end
 
 /**
+ @uidocs_import ios_component_kit
+
  A layout component that create a list of children vertically or horizontally according to Flexbox.
 
  This component layout is powered by Yoga layout engine (https://github.com/facebook/yoga).

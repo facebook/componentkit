@@ -71,6 +71,8 @@ struct CKButtonComponentAccessibilityConfiguration {
 };
 
 /**
+ @uidocs_import ios_component_kit
+
  A component that creates a UIButton.
 
  This component chooses the smallest size within its SizeRange that will fit its content. If its max size is smaller

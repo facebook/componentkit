@@ -13,6 +13,8 @@
 #import <ComponentKit/CKSingleChildComponent.h>
 
 /**
+ @uidocs_import ios_component_kit
+
  A component that wraps another component, applying insets around it.
 
  If the child component has a size specified as a percentage, the percentage is resolved against this component's parent

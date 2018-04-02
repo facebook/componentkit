@@ -11,6 +11,8 @@
 #import <ComponentKit/CKMultiChildComponent.h>
 
 /**
+ @uidocs_import ios_component_kit
+
  Lays out a single child component, then lays out a background component behind it stretched to its size.
  */
 @interface CKBackgroundLayoutComponent : CKMultiChildComponent

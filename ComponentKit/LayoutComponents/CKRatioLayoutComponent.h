@@ -13,6 +13,8 @@
 #import <ComponentKit/CKComponent.h>
 
 /**
+ @uidocs_import ios_component_kit
+
  Ratio layout component
  For when the content should respect a certain inherent ratio but can be scaled (think photos or videos)
  The ratio passed is the ratio of height / width you expect

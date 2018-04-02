@@ -11,6 +11,8 @@
 #import <ComponentKit/CKMultiChildComponent.h>
 
 /**
+ @uidocs_import ios_component_kit
+
  This component lays out a single component and then overlays a component on top of it streched to its size
  */
 @interface CKOverlayLayoutComponent : CKMultiChildComponent
