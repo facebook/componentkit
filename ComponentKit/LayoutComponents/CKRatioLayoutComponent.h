@@ -13,7 +13,7 @@
 #import <ComponentKit/CKComponent.h>
 
 /**
- @uidocs_import ios_component_kit
+ @uidocs https://fburl.com/CKRatioLayoutComponent:b4d0
 
  Ratio layout component
  For when the content should respect a certain inherent ratio but can be scaled (think photos or videos)

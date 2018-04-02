@@ -334,7 +334,7 @@ extern const struct CKStackComponentLayoutExtraKeys {
 @end
 
 /**
- @uidocs_import ios_component_kit
+ @uidocs https://fburl.com/CKFlexboxComponent:ca56
 
  A layout component that create a list of children vertically or horizontally according to Flexbox.
 

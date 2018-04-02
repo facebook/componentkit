@@ -11,7 +11,7 @@
 #import <ComponentKit/CKMultiChildComponent.h>
 
 /**
- @uidocs_import ios_component_kit
+ @uidocs https://fburl.com/CKBackgroundLayoutComponent:bf91
 
  Lays out a single child component, then lays out a background component behind it stretched to its size.
  */

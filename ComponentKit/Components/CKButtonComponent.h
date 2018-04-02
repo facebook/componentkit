@@ -71,7 +71,7 @@ struct CKButtonComponentAccessibilityConfiguration {
 };
 
 /**
- @uidocs_import ios_component_kit
+ @uidocs https://fburl.com/CKButtonComponent:05b0
 
  A component that creates a UIButton.
 
