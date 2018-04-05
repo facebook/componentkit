@@ -31,6 +31,7 @@
              componentLayoutCacheEnabled:NO
                buildComponentTreeEnabled:NO
          alwaysBuildComponentTreeEnabled:NO
+                     unifyBuildAndLayout:NO
                  didPrepareLayoutEnabled:NO
                      componentPredicates:{}
            componentControllerPredicates:{}
@@ -43,6 +44,7 @@
               componentLayoutCacheEnabled:(BOOL)componentLayoutCacheEnabled
                 buildComponentTreeEnabled:(BOOL)buildComponentTreeEnabled
           alwaysBuildComponentTreeEnabled:(BOOL)alwaysBuildComponentTreeEnabled
+                      unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
                   didPrepareLayoutEnabled:(BOOL)didPrepareLayoutEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
@@ -58,6 +60,7 @@
     _componentLayoutCacheEnabled = componentLayoutCacheEnabled;
     _buildComponentTreeEnabled = buildComponentTreeEnabled;
     _alwaysBuildComponentTreeEnabled = alwaysBuildComponentTreeEnabled;
+    _unifyBuildAndLayout = unifyBuildAndLayout;
     _didPrepareLayoutEnabled = didPrepareLayoutEnabled;
   }
   return self;

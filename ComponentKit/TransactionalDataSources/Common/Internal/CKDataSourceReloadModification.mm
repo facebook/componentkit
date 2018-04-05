@@ -48,15 +48,29 @@
     NSMutableArray *newItems = [NSMutableArray array];
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
       [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
-      const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
-        return [componentProvider componentForModel:[item model] context:context];
-      }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
-      const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, configuration.componentLayoutCacheEnabled);
-      [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:layout
-                                                             model:[item model]
-                                                         scopeRoot:result.scopeRoot
-                                                   boundsAnimation:result.boundsAnimation]];
-    }];
+      if (!configuration.unifyBuildAndLayout) {
+        const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
+          return [componentProvider componentForModel:[item model] context:context];
+        }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
+        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, configuration.componentLayoutCacheEnabled);
+        [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:layout
+                                                               model:[item model]
+                                                           scopeRoot:result.scopeRoot
+                                                     boundsAnimation:result.boundsAnimation]];
+      } else {
+        CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent([item scopeRoot],
+                                                         {},
+                                                         sizeRange,
+                                                         configuration.componentLayoutCacheEnabled,
+                                                         ^{
+                                                           return [componentProvider componentForModel:[item model] context:context];
+                                                         });
+        [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:result.computedLayout
+                                                               model:[item model]
+                                                           scopeRoot:result.buildComponentResult.scopeRoot
+                                                     boundsAnimation:result.buildComponentResult.boundsAnimation]];
+    }
+     }];
     [newSections addObject:newItems];
   }];
 
@@ -74,7 +88,7 @@
                                                        userInfo:_userInfo];
 
   return [[CKDataSourceChange alloc] initWithState:newState
-                                                          appliedChanges:appliedChanges];
+                                    appliedChanges:appliedChanges];
 }
 
 - (NSDictionary *)userInfo

@@ -175,6 +175,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                        componentLayoutCacheEnabled:testConfig == CKTestConfigComponentLayoutCacheEnabled
                                        buildComponentTreeEnabled:NO
                                        alwaysBuildComponentTreeEnabled:NO
+                                       unifyBuildAndLayout:NO
                                        didPrepareLayoutEnabled:testConfig == CKTestConfigComponentLayoutCacheEnabled
                                        componentPredicates:{}
                                        componentControllerPredicates:{}

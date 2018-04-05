@@ -62,13 +62,26 @@
     NSMutableArray *section = newSections[indexPath.section];
     CKDataSourceItem *oldItem = section[indexPath.item];
 
-    const CKBuildComponentResult result = CKBuildComponent([oldItem scopeRoot], {}, ^{
+    if (!configuration.unifyBuildAndLayout) {
+      const CKBuildComponentResult result = CKBuildComponent([oldItem scopeRoot], {}, ^{
       return [componentProvider componentForModel:model context:context];
     }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
     const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, configuration.componentLayoutCacheEnabled);
 
     [section replaceObjectAtIndex:indexPath.item withObject:
      [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation]];
+    } else {
+      CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent([oldItem scopeRoot],
+                                                       {},
+                                                       sizeRange,
+                                                       configuration.componentLayoutCacheEnabled,
+                                                       ^{
+                                                         return [componentProvider componentForModel:model context:context];
+                                                       });
+
+      [section replaceObjectAtIndex:indexPath.item withObject:
+       [[CKDataSourceItem alloc] initWithLayout:result.computedLayout model:model scopeRoot:result.buildComponentResult.scopeRoot boundsAnimation:result.buildComponentResult.boundsAnimation]];
+    }
   }];
 
   __block std::unordered_map<NSUInteger, std::map<NSUInteger, CKDataSourceItem *>> insertedItemsBySection;
@@ -108,17 +121,34 @@
 
   // Insert items
   [[_changeset insertedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
-    const CKBuildComponentResult result =
-    CKBuildComponent(CKComponentScopeRootWithPredicates(_stateListener,
-                                                        configuration.analyticsListener,
-                                                        configuration.componentPredicates,
-                                                        configuration.componentControllerPredicates,
-                                                        configuration.didPrepareLayoutEnabled), {}, ^{
-      return [componentProvider componentForModel:model context:context];
-    }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
-    const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, configuration.componentLayoutCacheEnabled);
-    insertedItemsBySection[indexPath.section][indexPath.item] =
-    [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation];
+
+    if (!configuration.unifyBuildAndLayout) {
+      const CKBuildComponentResult result =
+        CKBuildComponent(CKComponentScopeRootWithPredicates(_stateListener,
+                                                            configuration.analyticsListener,
+                                                            configuration.componentPredicates,
+                                                            configuration.componentControllerPredicates,
+                                                            configuration.didPrepareLayoutEnabled), {}, ^{
+          return [componentProvider componentForModel:model context:context];
+        }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
+        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, configuration.componentLayoutCacheEnabled);
+        insertedItemsBySection[indexPath.section][indexPath.item] =
+        [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation];
+    } else {
+      CKBuildAndLayoutComponentResult result =
+      CKBuildAndLayoutComponent(CKComponentScopeRootWithPredicates(_stateListener,
+                                                          configuration.analyticsListener,
+                                                          configuration.componentPredicates,
+                                                          configuration.componentControllerPredicates,
+                                                          configuration.didPrepareLayoutEnabled),
+                       {},
+                       sizeRange,
+                       configuration.componentLayoutCacheEnabled,
+                       ^{ return [componentProvider componentForModel:model context:context];});
+
+      insertedItemsBySection[indexPath.section][indexPath.item] =
+      [[CKDataSourceItem alloc] initWithLayout:result.computedLayout model:model scopeRoot:result.buildComponentResult.scopeRoot boundsAnimation:result.buildComponentResult.boundsAnimation];
+    }
   }];
 
   for (const auto &sectionIt : insertedItemsBySection) {
@@ -134,19 +164,19 @@
 
   CKDataSourceState *newState =
   [[CKDataSourceState alloc] initWithConfiguration:configuration
-                                                                sections:newSections];
+                                          sections:newSections];
 
   CKDataSourceAppliedChanges *appliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithArray:[[_changeset updatedItems] allKeys]]
-                                                                    removedIndexPaths:[_changeset removedItems]
-                                                                      removedSections:[_changeset removedSections]
-                                                                      movedIndexPaths:[_changeset movedItems]
-                                                                     insertedSections:[_changeset insertedSections]
-                                                                   insertedIndexPaths:[NSSet setWithArray:[[_changeset insertedItems] allKeys]]
-                                                                             userInfo:_userInfo];
+                                              removedIndexPaths:[_changeset removedItems]
+                                                removedSections:[_changeset removedSections]
+                                                movedIndexPaths:[_changeset movedItems]
+                                               insertedSections:[_changeset insertedSections]
+                                             insertedIndexPaths:[NSSet setWithArray:[[_changeset insertedItems] allKeys]]
+                                                       userInfo:_userInfo];
 
   return [[CKDataSourceChange alloc] initWithState:newState
-                                                          appliedChanges:appliedChanges];
+                                    appliedChanges:appliedChanges];
 }
 
 - (NSDictionary *)userInfo
