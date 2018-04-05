@@ -16,20 +16,21 @@
 #import "CKComponentInternal.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"
-#import "CKThreadLocalComponentScope.h"
 #import "CKOwnerTreeNode.h"
+#import "CKThreadLocalComponentScope.h"
 
-CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
-                                        const CKComponentStateUpdateMap &stateUpdates,
-                                        CKComponent *(^componentFactory)(void),
-                                        BOOL buildComponentTree,
-                                        BOOL alwaysBuildComponentTree)
+
+static CKBuildComponentResult _CKBuildComponent(CKComponentScopeRoot *previousRoot,
+                                                const CKComponentStateUpdateMap &stateUpdates,
+                                                BOOL buildComponentTree,
+                                                BOOL alwaysBuildComponentTree,
+                                                CKThreadLocalComponentScope& threadScope,
+                                                CKComponent *(^componentFactory)(void))
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   const auto analyticsListener = [previousRoot analyticsListener];
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot];
-  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
-  // Order of operations matters, so first store into locals and then return a struct.
+
   CKComponent *const component = componentFactory();
 
   if ((buildComponentTree && threadScope.newScopeRoot.hasRenderComponentInTree) || alwaysBuildComponentTree) {
@@ -45,7 +46,28 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   return {
     .component = component,
     .scopeRoot = newScopeRoot,
-    .boundsAnimation = CKComponentBoundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot)
+    .boundsAnimation = CKComponentBoundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot),
   };
 }
 
+
+CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
+                                        const CKComponentStateUpdateMap &stateUpdates,
+                                        CKComponent *(^componentFactory)(void),
+                                        BOOL buildComponentTree,
+                                        BOOL alwaysBuildComponentTree)
+{
+  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
+  return _CKBuildComponent(previousRoot, stateUpdates, buildComponentTree, alwaysBuildComponentTree, threadScope, componentFactory);
+}
+
+CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *previousRoot,
+                                        const CKComponentStateUpdateMap &stateUpdates,
+                                        const CKSizeRange &sizeRange,
+                                        BOOL buildComponentLayoutCache,
+                                        CKComponent *(^componentFactory)(void)) {
+  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
+  const CKBuildComponentResult builcComponentResult = _CKBuildComponent(previousRoot, stateUpdates, YES, NO, threadScope, componentFactory);
+  const CKComponentLayout computedLayout = CKComputeRootComponentLayout(builcComponentResult.component, sizeRange, builcComponentResult.scopeRoot.analyticsListener, buildComponentLayoutCache);
+  return {builcComponentResult, computedLayout};
+}

@@ -68,7 +68,7 @@
   CKAssert(size == CKComponentSize(),
            @"CKSingleChildComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@)", size.description(), _childComponent);
-
+  
   auto const l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];
   return {self, l.size, {{{0,0}, l}}};
 }

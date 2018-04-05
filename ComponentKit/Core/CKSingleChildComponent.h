@@ -12,6 +12,10 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKRenderComponent.h>
 
+/*
+@warning Overriding -layoutThatFits:parentSize: or -computeLayoutThatFits: is **not allowed** for any subclass.
+*/
+
 @interface CKSingleChildComponent : CKComponent <CKRenderComponent>
 
 /**
