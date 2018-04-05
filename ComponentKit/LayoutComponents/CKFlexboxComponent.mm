@@ -66,22 +66,12 @@ template class std::vector<CKFlexboxComponentChild>;
   BOOL _reuseOnlyExactSizeSpecs;
 }
 
-+ (instancetype)new
-{
-  return [super newRenderComponentWithView:{} size:{} isLayoutComponent:YES];
-}
-
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
-{
-  return [super newRenderComponentWithView:view size:size isLayoutComponent:YES];
-}
-
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
                       style:(const CKFlexboxComponentStyle &)style
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
 {
-  CKFlexboxComponent * const component = [super newRenderComponentWithView:view size:size isLayoutComponent:YES];
+  CKFlexboxComponent * const component = [super newWithView:view size:size];
   if (component) {
     component->_style = style;
     component->_children = children.take();
@@ -90,11 +80,16 @@ template class std::vector<CKFlexboxComponentChild>;
   return component;
 }
 
-- (std::vector<CKComponent *>)renderChildren:(id)state
+- (void)buildComponentTree:(id<CKOwnerTreeNodeProtocol>)owner
+             previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
+                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
+              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  return  CK::map(_children, [](CKFlexboxComponentChild child) {
-    return child.component;
-  });
+  [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates];
+
+  for (auto const &child : _children) {
+    [child.component buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates];
+  }
 }
 
 static float convertFloatToYogaRepresentation(const float& value) {

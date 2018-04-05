@@ -28,7 +28,7 @@
   if (component == nil) {
     return nil;
   }
-  CKOverlayLayoutComponent *c = [super newRenderComponentWithView:{} size:{} isLayoutComponent:YES];
+  CKOverlayLayoutComponent *c = [super newWithView:{} size:{}];
   if (c) {
     c->_overlay = overlay;
     c->_component = component;
@@ -41,9 +41,14 @@
   CK_NOT_DESIGNATED_INITIALIZER();
 }
 
-- (std::vector<CKComponent *>)renderChildren:(id)state
+- (void)buildComponentTree:(id<CKOwnerTreeNodeProtocol>)owner
+             previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
+                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
+              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  return {_component, _overlay};
+  [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates];
+  [_component buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates];
+  [_overlay buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates];
 }
 
 /**

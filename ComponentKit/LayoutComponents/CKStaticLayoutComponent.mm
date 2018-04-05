@@ -23,7 +23,7 @@
                        size:(const CKComponentSize &)size
                    children:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
 {
-  CKStaticLayoutComponent *c = [super newRenderComponentWithView:view size:size isLayoutComponent:YES];
+  CKStaticLayoutComponent *c = [super newWithView:view size:size];
   if (c) {
     c->_children = children.take();
   }
@@ -35,11 +35,16 @@
   return [self newWithView:{} size:{} children:std::move(children)];
 }
 
-- (std::vector<CKComponent *>)renderChildren:(id)state
+- (void)buildComponentTree:(id<CKOwnerTreeNodeProtocol>)owner
+             previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
+                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
+              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  return  CK::map(_children, [](CKStaticLayoutComponentChild child) {
-    return child.component;
-  });
+  [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates];
+
+  for (auto const &child : _children) {
+    [child.component buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates];
+  }
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize

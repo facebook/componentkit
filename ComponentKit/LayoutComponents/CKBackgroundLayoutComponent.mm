@@ -28,7 +28,7 @@
   if (component == nil) {
     return nil;
   }
-  CKBackgroundLayoutComponent *c = [super newRenderComponentWithView:{} size:{} isLayoutComponent:YES];
+  CKBackgroundLayoutComponent *c = [super newWithView:{} size:{}];
   if (c) {
     c->_component = component;
     c->_background = background;
@@ -41,9 +41,14 @@
   CK_NOT_DESIGNATED_INITIALIZER();
 }
 
-- (std::vector<CKComponent *>)renderChildren:(id)state
+- (void)buildComponentTree:(id<CKOwnerTreeNodeProtocol>)owner
+             previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
+                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
+              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  return {_component, _background};
+  [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates];
+  [_component buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates];
+  [_background buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates];
 }
 
 /**

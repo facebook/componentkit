@@ -8,14 +8,14 @@
  *
  */
 
-#import <ComponentKit/CKMultiChildComponent.h>
+#import <ComponentKit/CKComponent.h>
 
 /**
  @uidocs https://fburl.com/CKOverlayLayoutComponent:4ad6
 
  This component lays out a single component and then overlays a component on top of it streched to its size
  */
-@interface CKOverlayLayoutComponent : CKMultiChildComponent
+@interface CKOverlayLayoutComponent : CKComponent
 
 + (instancetype)newWithComponent:(CKComponent *)component
                          overlay:(CKComponent *)overlay;

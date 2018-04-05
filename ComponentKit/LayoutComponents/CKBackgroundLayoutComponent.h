@@ -8,14 +8,14 @@
  *
  */
 
-#import <ComponentKit/CKMultiChildComponent.h>
+#import <ComponentKit/CKComponent.h>
 
 /**
  @uidocs https://fburl.com/CKBackgroundLayoutComponent:bf91
 
  Lays out a single child component, then lays out a background component behind it stretched to its size.
  */
-@interface CKBackgroundLayoutComponent : CKMultiChildComponent
+@interface CKBackgroundLayoutComponent : CKComponent
 
 /**
  @param component A child that is laid out to determine the size of this component. If this is nil, then this method
