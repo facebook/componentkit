@@ -70,16 +70,11 @@
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  __unused auto const node = [[CKTreeNode alloc]
-                              initWithComponent:self
-                              owner:owner
-                              previousOwner:previousOwner
-                              scopeRoot:scopeRoot
-                              stateUpdates:stateUpdates];
+  [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates];
 
   if (_component) {
     [_component buildComponentTree:owner
-                     previousOwner:previousOwner // We pass here the previous parent, as we would CKCompositeComponent it's not an owner component.
+                     previousOwner:previousOwner
                          scopeRoot:scopeRoot
                       stateUpdates:stateUpdates];
   }
