@@ -12,7 +12,7 @@
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
 
-@interface CKMultiChildComponent : CKComponent <CKRenderComponentProtocol>
+@interface CKRenderWithChildrenComponent : CKComponent <CKRenderComponentProtocol>
 
 /*
  Returns a vector of 'CKComponent' children that will be render to the screen.

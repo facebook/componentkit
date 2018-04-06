@@ -30,8 +30,8 @@
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKComponentScope.h>
-#import <ComponentKit/CKMultiChildComponent.h>
 #import <ComponentKit/CKRenderComponent.h>
+#import <ComponentKit/CKRenderWithChildrenComponent.h>
 //Data sources
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKCollectionViewDataSource.h>

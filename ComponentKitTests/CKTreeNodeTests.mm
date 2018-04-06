@@ -11,7 +11,7 @@
 #import <XCTest/XCTest.h>
 
 #import "CKComponent.h"
-#import "CKMultiChildComponent.h"
+#import "CKRenderWithChildrenComponent.h"
 #import "CKRenderComponent.h"
 #import "CKComponentInternal.h"
 #import "CKButtonComponent.h"
@@ -22,13 +22,13 @@
 @interface CKTreeNodeTest_Component_WithState : CKComponent
 @end
 
-@interface CKTreeNodeTest_MultiChildComponent_WithState : CKMultiChildComponent
+@interface CKTreeNodeTest_RenderWithChildrenComponent_WithState : CKRenderWithChildrenComponent
 @end
 
 @interface CKTreeNodeTest_RenderComponent_WithState : CKRenderComponent
 @end
 
-@interface CKTreeNodeTest_MultiChildComponent_WithStateFromProps : CKMultiChildComponent
+@interface CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps : CKRenderWithChildrenComponent
 + (instancetype)newWithProp:(id)prop;
 @end
 
@@ -36,7 +36,7 @@
 + (instancetype)newWithProp:(id)prop;
 @end
 
-@interface CKTreeNodeTest_MultiChildComponent_WithNilState : CKMultiChildComponent
+@interface CKTreeNodeTest_RenderWithChildrenComponent_WithNilState : CKRenderWithChildrenComponent
 @end
 
 @interface CKTreeNodeTest_RenderComponent_WithNilState : CKRenderComponent
@@ -185,9 +185,9 @@
   [self _test_nonNil_initialState_withComponent:c andNodeClass:[CKRenderTreeNode class]];
 }
 
-- (void)test_nonNil_initialState_onCKRenderTreeNode_withCKMultiChildComponent
+- (void)test_nonNil_initialState_onCKRenderTreeNode_withCKRenderWithChildrenComponent
 {
-  auto const c = [CKTreeNodeTest_MultiChildComponent_WithState new];
+  auto const c = [CKTreeNodeTest_RenderWithChildrenComponent_WithState new];
   [self _test_nonNil_initialState_withComponent:c andNodeClass:[CKRenderTreeNode class]];
 }
 
@@ -197,16 +197,16 @@
   [self _test_emptyInitialState_withComponent:c andNodeClass:[CKRenderTreeNode class]];
 }
 
-- (void)test_emptyInitialState_onCKRenderTreeNode_withCKMultiChildComponent
+- (void)test_emptyInitialState_onCKRenderTreeNode_withCKRenderWithChildrenComponent
 {
-  auto const c = [CKMultiChildComponent new];
+  auto const c = [CKRenderWithChildrenComponent new];
   [self _test_emptyInitialState_withComponent:c andNodeClass:[CKRenderTreeNode class]];
 }
 
-- (void)test_initialStateFromPtops_onCKRenderTreeNode_withCKMultiChildComponent
+- (void)test_initialStateFromPtops_onCKRenderTreeNode_withCKRenderWithChildrenComponent
 {
   id prop = @1;
-  auto const c = [CKTreeNodeTest_MultiChildComponent_WithStateFromProps newWithProp:prop];
+  auto const c = [CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps newWithProp:prop];
   [self _test_initialState_withComponent:c initialState:prop andNodeClass:[CKRenderTreeNode class]];
 }
 
@@ -217,15 +217,15 @@
   [self _test_initialState_withComponent:c initialState:prop andNodeClass:[CKRenderTreeNode class]];
 }
 
-- (void)test_nilInitialState_onCKRenderTreeNode_withCKMultiChildComponent
+- (void)test_nilInitialState_onCKRenderTreeNode_withCKRenderWithChildrenComponent
 {
-  // Make sure CKMultiChildComponent supports nil initial state from prop.
+  // Make sure CKRenderWithChildrenComponent supports nil initial state from prop.
   id prop = nil;
-  auto const c = [CKTreeNodeTest_MultiChildComponent_WithStateFromProps newWithProp:prop];
+  auto const c = [CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps newWithProp:prop];
   [self _test_initialState_withComponent:c initialState:prop andNodeClass:[CKRenderTreeNode class]];
 
-  // Make sure CKMultiChildComponent supports nil initial.
-  auto const c2 = [CKTreeNodeTest_MultiChildComponent_WithNilState new];
+  // Make sure CKRenderWithChildrenComponent supports nil initial.
+  auto const c2 = [CKTreeNodeTest_RenderWithChildrenComponent_WithNilState new];
   [self _test_initialState_withComponent:c2 initialState:nil andNodeClass:[CKRenderTreeNode class]];
 }
 
@@ -236,7 +236,7 @@
   auto const c = [CKTreeNodeTest_RenderComponent_WithStateFromProps newWithProp:prop];
   [self _test_initialState_withComponent:c initialState:nil andNodeClass:[CKRenderTreeNode class]];
 
-  // Make sure CKMultiChildComponent supports nil initial.
+  // Make sure CKRenderWithChildrenComponent supports nil initial.
   auto const c2 = [CKTreeNodeTest_RenderComponent_WithNilState new];
   [self _test_initialState_withComponent:c2 initialState:nil andNodeClass:[CKRenderTreeNode class]];
 }
@@ -343,7 +343,7 @@ static void treeChildrenIdentifiers(CKOwnerTreeNode *node, NSMutableSet<NSString
 }
 @end
 
-@implementation CKTreeNodeTest_MultiChildComponent_WithState
+@implementation CKTreeNodeTest_RenderWithChildrenComponent_WithState
 + (id)initialState
 {
   return @1;
@@ -357,7 +357,7 @@ static void treeChildrenIdentifiers(CKOwnerTreeNode *node, NSMutableSet<NSString
 }
 @end
 
-@implementation CKTreeNodeTest_MultiChildComponent_WithStateFromProps
+@implementation CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps
 {
   id _prop;
 }
@@ -371,7 +371,7 @@ static void treeChildrenIdentifiers(CKOwnerTreeNode *node, NSMutableSet<NSString
   return c;
 }
 
-+ (id)initialStateWithComponent:(CKTreeNodeTest_MultiChildComponent_WithStateFromProps *)c
++ (id)initialStateWithComponent:(CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps *)c
 {
   return c->_prop;
 }
@@ -397,7 +397,7 @@ static void treeChildrenIdentifiers(CKOwnerTreeNode *node, NSMutableSet<NSString
 }
 @end
 
-@implementation CKTreeNodeTest_MultiChildComponent_WithNilState : CKMultiChildComponent
+@implementation CKTreeNodeTest_RenderWithChildrenComponent_WithNilState : CKRenderWithChildrenComponent
 + (id)initialState
 {
   return nil;

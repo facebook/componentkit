@@ -12,7 +12,7 @@
 
 #import "CKComponent.h"
 #import "CKRenderComponent.h"
-#import "CKMultiChildComponent.h"
+#import "CKRenderWithChildrenComponent.h"
 #import "CKComponentInternal.h"
 #import "CKButtonComponent.h"
 #import "CKTreeNode.h"
@@ -28,8 +28,8 @@
 @interface CKComponentTreeTestComponent_NonOwner_SingleChild : CKComponentTreeTestComponent_SingleChild
 @end
 
-/** An helper class that inherits from 'CKMultiChildComponent'; render the component froms the initializer */
-@interface CKComponentTreeTestComponent_MultiChild : CKMultiChildComponent
+/** An helper class that inherits from 'CKRenderWithChildrenComponent'; render the component froms the initializer */
+@interface CKComponentTreeTestComponent_MultiChild : CKRenderWithChildrenComponent
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
 @end
 
@@ -113,14 +113,14 @@
   XCTAssertTrue(areTreesEqual(root, root2));
 }
 
-#pragma mark - CKMultiChildComponent
+#pragma mark - CKRenderWithChildrenComponent
 
-- (void)test_buildComponentTree_onCKMultiChildComponent
+- (void)test_buildComponentTree_onCKRenderWithChildrenComponent
 {
   CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
   CKComponent *c10 = [CKComponent newWithView:{} size:{}];
   CKComponent *c11 = [CKComponent newWithView:{} size:{}];
-  CKMultiChildComponent *groupComponent = [CKComponentTreeTestComponent_MultiChild newWithChildren:{c10, c11}];
+  CKRenderWithChildrenComponent *groupComponent = [CKComponentTreeTestComponent_MultiChild newWithChildren:{c10, c11}];
   [groupComponent buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{}];
 
   XCTAssertEqual(root.children.size(), 3);
@@ -130,17 +130,17 @@
   CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
   CKComponent *c20 = [CKComponent newWithView:{} size:{}];
   CKComponent *c21 = [CKComponent newWithView:{} size:{}];
-  CKMultiChildComponent *groupComponent2 = [CKComponentTreeTestComponent_MultiChild newWithChildren:{c20, c21}];
+  CKRenderWithChildrenComponent *groupComponent2 = [CKComponentTreeTestComponent_MultiChild newWithChildren:{c20, c21}];
   [groupComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{}];
   XCTAssertTrue(areTreesEqual(root, root2));
 }
 
-- (void)test_buildComponentTree_onCKMultiChildComponent_MakeGroupAnOwnerComponent
+- (void)test_buildComponentTree_onCKRenderWithChildrenComponent_MakeGroupAnOwnerComponent
 {
   CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
   CKComponent *c10 = [CKComponent newWithView:{} size:{}];
   CKComponent *c11 = [CKComponent newWithView:{} size:{}];
-  CKMultiChildComponent *groupComponent = [CKComponentTreeTestComponent_Owner_MultiChild newWithChildren:{c10, c11}];
+  CKRenderWithChildrenComponent *groupComponent = [CKComponentTreeTestComponent_Owner_MultiChild newWithChildren:{c10, c11}];
   [groupComponent buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{}];
 
   XCTAssertEqual(root.children.size(), 1);
@@ -161,7 +161,7 @@
   CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
   CKComponent *c20 = [CKComponent newWithView:{} size:{}];
   CKComponent *c21 = [CKComponent newWithView:{} size:{}];
-  CKMultiChildComponent *groupComponent2 = [CKComponentTreeTestComponent_Owner_MultiChild newWithChildren:{c20, c21}];
+  CKRenderWithChildrenComponent *groupComponent2 = [CKComponentTreeTestComponent_Owner_MultiChild newWithChildren:{c20, c21}];
   [groupComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{}];
   XCTAssertTrue(areTreesEqual(root, root2));
 }

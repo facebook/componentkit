@@ -11,10 +11,10 @@
 #import <ComponentKit/CKComponentProtocol.h>
 
 /**
- This protocol is being implemented by the components that has a render method: `CKRenderComponent` and `CKMultiChildComponent`.
+ This protocol is being implemented by the components that has a render method: `CKRenderComponent` and `CKRenderWithChildrenComponent`.
 
  Please DO NOT implement a new component that conforms to this protocol;
- your component should subclass either from `CKRenderComponent` or `CKMultiChildComponent`.
+ your component should subclass either from `CKRenderComponent` or `CKRenderWithChildrenComponent`.
  */
 @protocol CKRenderComponentProtocol <CKComponentProtocol>
 
@@ -35,7 +35,7 @@
 
  Default values:
  CKRenderComponent returns YES
- CKMultiChildComponent returns NO
+ CKRenderWithChildrenComponent returns NO
  */
 + (BOOL)isOwnerComponent;
 

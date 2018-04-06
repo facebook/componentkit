@@ -8,13 +8,13 @@
  *
  */
 
-#import "CKMultiChildComponent.h"
+#import "CKRenderWithChildrenComponent.h"
 
 #import "CKBuildComponent.h"
 #import "CKOwnerTreeNode.h"
 #import "CKComponentInternal.h"
 
-@implementation CKMultiChildComponent
+@implementation CKRenderWithChildrenComponent
 
 + (instancetype)new
 {
