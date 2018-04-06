@@ -307,13 +307,13 @@ static void verifyChangeset(CKDataSourceChangeset *changeset,
                             NSArray<id<CKDataSourceStateModifying>> *pendingAsynchronousModifications)
 {
 #if CK_ASSERTIONS_ENABLED
-  const CKInvalidChangesetOperationType invalidChangesetOperationType = CKIsValidChangesetForState(changeset,
-                                                                                                   state,
-                                                                                                   pendingAsynchronousModifications);
-  if (invalidChangesetOperationType != CKInvalidChangesetOperationTypeNone) {
-    NSString *const humanReadableInvalidChangesetOperationType = CKHumanReadableInvalidChangesetOperationType(invalidChangesetOperationType);
+  const CKInvalidChangesetInfo invalidChangesetInfo = CKIsValidChangesetForState(changeset,
+                                                                                 state,
+                                                                                 pendingAsynchronousModifications);
+  if (invalidChangesetInfo.operationType != CKInvalidChangesetOperationTypeNone) {
+    NSString *const humanReadableInvalidChangesetOperationType = CKHumanReadableInvalidChangesetOperationType(invalidChangesetInfo.operationType);
     NSString *const humanReadablePendingAsynchronousModifications = readableStringForArray(pendingAsynchronousModifications);
-    CKCFatal(@"Invalid changeset: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@", humanReadableInvalidChangesetOperationType, changeset, state, humanReadablePendingAsynchronousModifications);
+    CKCFatal(@"Invalid changeset: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@\n*** Invalid section:\n%ld\n*** Invalid item:\n%ld", humanReadableInvalidChangesetOperationType, changeset, state, humanReadablePendingAsynchronousModifications, (long)invalidChangesetInfo.section, (long)invalidChangesetInfo.item);
   }
 #endif
 }

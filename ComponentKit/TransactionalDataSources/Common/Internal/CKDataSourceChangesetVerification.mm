@@ -26,9 +26,9 @@ static NSArray<NSNumber *> *updatedSectionCountsWithModification(NSArray<NSNumbe
 
 static NSArray<NSIndexPath *> *sortedIndexPaths(NSArray<NSIndexPath *> *indexPaths);
 
-CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset *changeset,
-                                                           CKDataSourceState *state,
-                                                           NSArray<id<CKDataSourceStateModifying>> *pendingAsynchronousModifications)
+CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changeset,
+                                                  CKDataSourceState *state,
+                                                  NSArray<id<CKDataSourceStateModifying>> *pendingAsynchronousModifications)
 {
   /*
    "Fold" any pending asynchronous modifications into the supplied state and compute the number of items in each section.
@@ -37,6 +37,8 @@ CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset
   NSMutableArray<NSNumber *> *sectionCounts = [sectionCountsWithModificationsFoldedIntoState(state, pendingAsynchronousModifications) mutableCopy];
   NSArray *originalSectionCounts = [sectionCounts copy];
   __block BOOL invalidChangeFound = NO;
+  __block NSInteger invalidSection = -1;
+  __block NSInteger invalidItem = -1;
   // Updated items
   [changeset.updatedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull fromIndexPath, id _Nonnull model, BOOL * _Nonnull stop) {
     const NSInteger section = fromIndexPath.section;
@@ -46,11 +48,13 @@ CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset
         || section < 0
         || item < 0) {
       invalidChangeFound = YES;
+      invalidSection = section;
+      invalidItem = item;
       *stop = YES;
     }
   }];
   if (invalidChangeFound) {
-    return CKInvalidChangesetOperationTypeUpdate;
+    return { CKInvalidChangesetOperationTypeUpdate, invalidSection, invalidItem };
   }
   /*
    Removed items
@@ -65,6 +69,8 @@ CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset
         || section < 0
         || item >= [originalSectionCounts[section] integerValue]) {
       invalidChangeFound = YES;
+      invalidSection = section;
+      invalidItem = item;
       *stop = YES;
     } else {
       if (!itemsToRemove[@(section)]) {
@@ -74,7 +80,7 @@ CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset
     }
   }];
   if (invalidChangeFound) {
-    return CKInvalidChangesetOperationTypeRemoveRow;
+    return { CKInvalidChangesetOperationTypeRemoveRow, invalidSection, invalidItem };
   } else {
     [itemsToRemove enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull section, NSMutableIndexSet * _Nonnull indexSet, BOOL * _Nonnull stop) {
       sectionCounts[[section integerValue]] = @([sectionCounts[[section integerValue]] integerValue] - [indexSet count]);
@@ -89,13 +95,14 @@ CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset
   [changeset.removedSections enumerateIndexesUsingBlock:^(NSUInteger fromSection, BOOL * _Nonnull stop) {
     if (fromSection >= originalSectionCounts.count) {
       invalidChangeFound = YES;
+      invalidSection = fromSection;
       *stop = YES;
     } else {
       [sectionsToRemove addIndex:fromSection];
     }
   }];
   if (invalidChangeFound) {
-    return CKInvalidChangesetOperationTypeRemoveSection;
+    return { CKInvalidChangesetOperationTypeRemoveSection, invalidSection, invalidItem };
   } else {
     [sectionCounts removeObjectsAtIndexes:sectionsToRemove];
   }
@@ -107,13 +114,14 @@ CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset
   [changeset.insertedSections enumerateIndexesUsingBlock:^(NSUInteger toSection, BOOL * _Nonnull stop) {
     if (toSection > sectionCounts.count) {
       invalidChangeFound = YES;
+      invalidSection = toSection;
       *stop = YES;
     } else {
       [sectionCounts insertObject:@0 atIndex:toSection];
     }
   }];
   if (invalidChangeFound) {
-    return CKInvalidChangesetOperationTypeInsertSection;
+    return { CKInvalidChangesetOperationTypeInsertSection, invalidSection, invalidItem };
   }
   /*
    Inserted items
@@ -127,13 +135,15 @@ CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset
         || section < 0
         || item > [sectionCounts[section] integerValue]) {
       invalidChangeFound = YES;
+      invalidSection = section;
+      invalidItem = item;
       *stop = YES;
     } else {
       sectionCounts[section] = @([sectionCounts[section] integerValue] + 1);
     }
   }];
   if (invalidChangeFound) {
-    return CKInvalidChangesetOperationTypeInsertRow;
+    return { CKInvalidChangesetOperationTypeInsertRow, invalidSection, invalidItem };
   }
   // Moved items
   [changeset.movedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull fromIndexPath, NSIndexPath * _Nonnull toIndexPath, BOOL * _Nonnull stop) {
@@ -141,6 +151,7 @@ CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset
     const BOOL toIndexPathSectionInvalid = toIndexPath.section >= sectionCounts.count;
     if (fromIndexPathSectionInvalid || toIndexPathSectionInvalid) {
       invalidChangeFound = YES;
+      invalidSection = fromIndexPathSectionInvalid ? fromIndexPath.section : toIndexPath.section;
       *stop = YES;
     } else {
       const BOOL fromIndexPathItemInvalid = fromIndexPath.item >= [originalSectionCounts[fromIndexPath.section] integerValue];
@@ -148,6 +159,8 @@ CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset
                                            ? toIndexPath.item >= [sectionCounts[toIndexPath.section] integerValue]
                                            : toIndexPath.item > [sectionCounts[toIndexPath.section] integerValue]);
       if (fromIndexPathItemInvalid || toIndexPathItemInvalid) {
+        invalidSection = fromIndexPathItemInvalid ? fromIndexPath.section : toIndexPath.section;
+        invalidItem = fromIndexPathItemInvalid ? fromIndexPath.row : toIndexPath.row;
         invalidChangeFound = YES;
         *stop = YES;
       } else {
@@ -156,7 +169,11 @@ CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset
       }
     }
   }];
-  return invalidChangeFound ? CKInvalidChangesetOperationTypeMoveRow : CKInvalidChangesetOperationTypeNone;
+  return {
+    invalidChangeFound ? CKInvalidChangesetOperationTypeMoveRow : CKInvalidChangesetOperationTypeNone,
+    invalidSection,
+    invalidItem
+  };
 }
 
 static NSArray<NSNumber *> *sectionCountsWithModificationsFoldedIntoState(CKDataSourceState *state,

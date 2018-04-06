@@ -17,6 +17,12 @@
 
 @protocol CKDataSourceStateModifying;
 
-CKInvalidChangesetOperationType CKIsValidChangesetForState(CKDataSourceChangeset *changeset,
-                                                           CKDataSourceState *state,
-                                                           NSArray<id<CKDataSourceStateModifying>> *pendingAsynchronousModifications);
+struct CKInvalidChangesetInfo {
+    CKInvalidChangesetOperationType operationType;
+    NSInteger section;
+    NSInteger item;
+};
+
+CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changeset,
+                                                  CKDataSourceState *state,
+                                                  NSArray<id<CKDataSourceStateModifying>> *pendingAsynchronousModifications);
