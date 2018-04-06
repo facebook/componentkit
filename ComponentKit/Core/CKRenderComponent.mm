@@ -9,14 +9,14 @@
  */
 
 
-#import "CKSingleChildComponent.h"
+#import "CKRenderComponent.h"
 
 #import "CKBuildComponent.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKOwnerTreeNode.h"
 
-@implementation CKSingleChildComponent
+@implementation CKRenderComponent
 {
   CKComponent *_childComponent;
 }
@@ -66,7 +66,7 @@
                       relativeToParentSize:(CGSize)parentSize
 {
   CKAssert(size == CKComponentSize(),
-           @"CKSingleChildComponent only passes size {} to the super class initializer, but received size %@ "
+           @"CKRenderComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@)", size.description(), _childComponent);
   
   auto const l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];

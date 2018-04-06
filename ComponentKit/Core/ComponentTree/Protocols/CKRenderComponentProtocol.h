@@ -11,10 +11,10 @@
 #import <ComponentKit/CKComponentProtocol.h>
 
 /**
- This protocol is being implemented by the components that has a render method: `CKSingleChildComponent` and `CKMultiChildComponent`.
+ This protocol is being implemented by the components that has a render method: `CKRenderComponent` and `CKMultiChildComponent`.
 
  Please DO NOT implement a new component that conforms to this protocol;
- your component should subclass either from `CKSingleChildComponent` or `CKMultiChildComponent`.
+ your component should subclass either from `CKRenderComponent` or `CKMultiChildComponent`.
  */
 @protocol CKRenderComponentProtocol <CKComponentProtocol>
 
@@ -30,11 +30,11 @@
  Owner means that the component creates its children directly in its render method.
 
  For example:
- CKSingleChildComponent is an owner component.
+ CKRenderComponent is an owner component.
  CKFlexboxComponent isn't; it receives its children as props in its constructor.
 
  Default values:
- CKSingleChildComponent returns YES
+ CKRenderComponent returns YES
  CKMultiChildComponent returns NO
  */
 + (BOOL)isOwnerComponent;

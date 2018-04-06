@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKSingleChildComponent.h>
+#import <ComponentKit/CKRenderComponent.h>
 
 /**
  @uidocs https://fburl.com/CKInsetComponent:ac83
@@ -31,7 +31,7 @@
  An infinite inset is resolved as an inset equal to all remaining space after applying the other insets and child size.
  @example An CKInsetComponent with an infinite left inset and 10px for all other edges will position it's child 10px from the right edge.
  */
-@interface CKInsetComponent : CKSingleChildComponent
+@interface CKInsetComponent : CKRenderComponent
 
 /** Convenience that calls +newWithView:insets:component: with {} for view. */
 + (instancetype)newWithInsets:(UIEdgeInsets)insets component:(CKComponent *)child;

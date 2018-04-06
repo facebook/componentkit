@@ -11,7 +11,7 @@
 #import <XCTest/XCTest.h>
 
 #import "CKComponent.h"
-#import "CKSingleChildComponent.h"
+#import "CKRenderComponent.h"
 #import "CKMultiChildComponent.h"
 #import "CKComponentInternal.h"
 #import "CKButtonComponent.h"
@@ -19,8 +19,8 @@
 #import "CKOwnerTreeNode.h"
 #import "CKThreadLocalComponentScope.h"
 
-/** An helper class that inherits from 'CKSingleChildComponent'; render the component from the initializer */
-@interface CKComponentTreeTestComponent_SingleChild : CKSingleChildComponent
+/** An helper class that inherits from 'CKRenderComponent'; render the component from the initializer */
+@interface CKComponentTreeTestComponent_SingleChild : CKRenderComponent
 + (instancetype)newWithComponent:(CKComponent *)component;
 @end
 
@@ -62,13 +62,13 @@
   XCTAssertTrue(areTreesEqual(root, root2));
 }
 
-#pragma mark - CKSingleChildComponent
+#pragma mark - CKRenderComponent
 
-- (void)test_buildComponentTree_onCKSingleChildComponent
+- (void)test_buildComponentTree_onCKRenderComponent
 {
   CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
   CKComponent *c = [CKComponent newWithView:{} size:{}];
-  CKSingleChildComponent *singleChildComponent = [CKComponentTreeTestComponent_SingleChild newWithComponent:c];
+  CKRenderComponent *singleChildComponent = [CKComponentTreeTestComponent_SingleChild newWithComponent:c];
   [singleChildComponent buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{}];
 
   // Make sure the root has only one child.
@@ -89,16 +89,16 @@
   // Simulate a second tree creation.
   CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
   CKComponent *c2 = [CKComponent newWithView:{} size:{}];
-  CKSingleChildComponent *singleChildComponent2 = [CKComponentTreeTestComponent_SingleChild newWithComponent:c2];
+  CKRenderComponent *singleChildComponent2 = [CKComponentTreeTestComponent_SingleChild newWithComponent:c2];
   [singleChildComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{}];
   XCTAssertTrue(areTreesEqual(root, root2));
 }
 
-- (void)test_buildComponentTree_onCKSingleChildComponent_overrideNonOwnerComponent
+- (void)test_buildComponentTree_onCKRenderComponent_overrideNonOwnerComponent
 {
   CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
   CKComponent *c = [CKComponent newWithView:{} size:{}];
-  CKSingleChildComponent *singleChildNoOwnerComponent = [CKComponentTreeTestComponent_NonOwner_SingleChild newWithComponent:c];
+  CKRenderComponent *singleChildNoOwnerComponent = [CKComponentTreeTestComponent_NonOwner_SingleChild newWithComponent:c];
   [singleChildNoOwnerComponent buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{}];
 
   // As singleChildNoOwnerComponent is not an owner, the root should have 2 children.
@@ -108,7 +108,7 @@
   // Simulate a second tree creation.
   CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
   CKComponent *c2 = [CKComponent newWithView:{} size:{}];
-  CKSingleChildComponent *singleChildNoOwnerComponent2 = [CKComponentTreeTestComponent_NonOwner_SingleChild newWithComponent:c2];
+  CKRenderComponent *singleChildNoOwnerComponent2 = [CKComponentTreeTestComponent_NonOwner_SingleChild newWithComponent:c2];
   [singleChildNoOwnerComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{}];
   XCTAssertTrue(areTreesEqual(root, root2));
 }
