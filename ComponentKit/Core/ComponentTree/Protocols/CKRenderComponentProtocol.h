@@ -16,7 +16,7 @@
  Please DO NOT implement a new component that conforms to this protocol;
  your component should subclass either from `CKSingleChildComponent` or `CKMultiChildComponent`.
  */
-@protocol CKRenderComponent <CKComponentProtocol>
+@protocol CKRenderComponentProtocol <CKComponentProtocol>
 
 /*
  This method defines how a component behaves when the component tree is being constructed with
@@ -43,6 +43,6 @@
  Override this method in order to provide an initialState which depends on the component's props.
  Otherwise, override `+(id)initialState` instead.
  */
-+ (id)initialStateWithComponent:(id<CKRenderComponent>)component;
++ (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component;
 
 @end

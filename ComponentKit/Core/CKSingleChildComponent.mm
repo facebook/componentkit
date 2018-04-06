@@ -73,14 +73,14 @@
   return {self, l.size, {{{0,0}, l}}};
 }
 
-#pragma mark - CKRenderComponent
+#pragma mark - CKRenderComponentProtocol
 
 + (BOOL)isOwnerComponent
 {
   return YES;
 }
 
-+ (id)initialStateWithComponent:(id<CKRenderComponent>)component
++ (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component
 {
   return [self initialState];
 }

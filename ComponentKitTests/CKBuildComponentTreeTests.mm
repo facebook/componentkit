@@ -24,7 +24,7 @@
 + (instancetype)newWithComponent:(CKComponent *)component;
 @end
 
-/** Same as 'CKComponentTreeTestComponent_SingleChild', but overrides the CKRenderComponent and returns: isOwnerComponent = NO */
+/** Same as 'CKComponentTreeTestComponent_SingleChild', but overrides the CKRenderComponentProtocol and returns: isOwnerComponent = NO */
 @interface CKComponentTreeTestComponent_NonOwner_SingleChild : CKComponentTreeTestComponent_SingleChild
 @end
 
@@ -33,7 +33,7 @@
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
 @end
 
-/** Same as 'CKComponentTreeTestComponent_MultiChild', but overrides the CKRenderComponent and returns: isOwnerComponent = YES */
+/** Same as 'CKComponentTreeTestComponent_MultiChild', but overrides the CKRenderComponentProtocol and returns: isOwnerComponent = YES */
 @interface CKComponentTreeTestComponent_Owner_MultiChild : CKComponentTreeTestComponent_MultiChild
 @end
 

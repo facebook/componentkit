@@ -13,7 +13,7 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKInternalHelpers.h>
-#import <ComponentKit/CKRenderComponent.h>
+#import <ComponentKit/CKRenderComponentProtocol.h>
 
 #include <tuple>
 

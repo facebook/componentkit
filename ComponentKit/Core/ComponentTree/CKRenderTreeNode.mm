@@ -10,11 +10,11 @@
 
 #import "CKRenderTreeNode.h"
 
-#import "CKRenderComponent.h"
+#import "CKRenderComponentProtocol.h"
 
 @implementation CKRenderTreeNode
 
-- (id)initialStateWithComponent:(id<CKRenderComponent>)component
+- (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component
 {
   return [[component class] initialStateWithComponent:component];
 }

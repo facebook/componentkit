@@ -34,9 +34,9 @@
 @end
 
 /**
- Default empty state for CKRenderComponent components.
+ Default empty state for CKRenderComponentProtocol components.
 
- If a CKRenderComponent returns any state other than `CKTreeNodeEmptyState` (including nil)
+ If a CKRenderComponentProtocol returns any state other than `CKTreeNodeEmptyState` (including nil)
  - the infra will create it a scope handle and will support a state update.
  Othwerwise, the component will be stateless.
  */

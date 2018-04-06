@@ -12,9 +12,9 @@
 
 /**
  This object represents a render component node in the component tree.
- It will be attached to render components only (id<CKRenderComponent>).
+ It will be attached to render components only (id<CKRenderComponentProtocol>).
 
- For more information about an render components see: CKRenderComponent.h
+ For more information about an render components see: CKRenderComponentProtocol.h
  */
 @interface CKRenderTreeNode: CKTreeNode
 

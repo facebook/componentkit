@@ -110,8 +110,8 @@ struct CKComponentMountInfo {
     _size = size;
 
     // Mark render component in the scope root, but only in case that it's not a layout component.
-    // We converted layout components (such as CKFlexboxComponent, CKInsetComponent etc.) to be a CKRenderComponent
-    // in order to support mix and match of CKCompositeComponents/CKComponent and CKRenderComponent components.
+    // We converted layout components (such as CKFlexboxComponent, CKInsetComponent etc.) to be a CKRenderComponentProtocol
+    // in order to support mix and match of CKCompositeComponents/CKComponent and CKRenderComponentProtocol components.
     // We will build a component tree (CKTreeNode) only in case that we have a render component in the tree.
     if (!isLayoutComponent) {
       CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();

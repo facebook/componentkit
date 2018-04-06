@@ -60,14 +60,14 @@
   }
 }
 
-#pragma mark - CKRenderComponent
+#pragma mark - CKRenderComponentProtocol
 
 + (BOOL)isOwnerComponent
 {
   return NO;
 }
 
-+ (id)initialStateWithComponent:(id<CKRenderComponent>)component
++ (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component
 {
   return [self initialState];
 }
