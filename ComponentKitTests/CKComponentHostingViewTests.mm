@@ -24,7 +24,7 @@
 @interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate>
 @end
 
-static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO)
+static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO, BOOL unifyBuildAndLayout = NO)
 {
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
   CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
@@ -32,7 +32,8 @@ static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO)
                                                                        componentPredicates:{}
                                                              componentControllerPredicates:{}
                                                                          analyticsListener:nil
-                                                                   didPrepareLayoutEnabled:didPrepareLayoutEnabled];
+                                                                   didPrepareLayoutEnabled:didPrepareLayoutEnabled
+                                                                       unifyBuildAndLayout:unifyBuildAndLayout];
   view.bounds = CGRectMake(0, 0, 100, 100);
   [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
@@ -151,6 +152,82 @@ static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO)
   testComponent = (CKLifecycleTestComponent *)view.mountedLayout.component;
   XCTAssertTrue(testComponent.controller.calledDidPrepareLayoutForComponent,
                 @"Expected component controller to get did attach component");
+}
+
+- (void)testUpdatingHostingViewBoundsResizesComponentView_WithUnifiedBuildAndLayout
+{
+  CKComponentHostingView *view = hostingView(NO, YES);
+  view.bounds = CGRectMake(0, 0, 200, 200);
+  [view layoutIfNeeded];
+
+  UIView *componentView = [view.containerView.subviews firstObject];
+  XCTAssertEqualObjects(componentView.backgroundColor, [UIColor orangeColor], @"Expected to find orange component view");
+  XCTAssertTrue(CGRectEqualToRect(componentView.bounds, CGRectMake(0, 0, 200, 200)));
+}
+
+- (void)testImmediatelyUpdatesViewOnSynchronousModelChange_WithUnifiedBuildAndLayout
+{
+  CKComponentHostingView *view = hostingView(NO, YES);
+  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
+               mode:CKUpdateModeSynchronous];
+  [view layoutIfNeeded];
+
+  UIView *componentView = [view.containerView.subviews firstObject];
+  XCTAssertEqualObjects(componentView.backgroundColor, [UIColor redColor], @"Expected component view to become red");
+}
+
+- (void)testEventuallyUpdatesViewOnAsynchronousModelChange_WithUnifiedBuildAndLayout
+{
+  CKComponentHostingView *view = hostingView(NO, YES);
+  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
+               mode:CKUpdateModeAsynchronous];
+  [view layoutIfNeeded];
+
+  UIView *componentView = [view.containerView.subviews firstObject];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^{
+    [view layoutIfNeeded];
+    return [componentView.backgroundColor isEqual:[UIColor redColor]];
+  }));
+}
+
+- (void)testInformsDelegateSizeIsInvalidatedOnModelChange_WithUnifiedBuildAndLayout
+{
+  CKComponentHostingView *view = hostingView(NO, YES);
+  view.delegate = self;
+  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(75, 75))]
+               mode:CKUpdateModeSynchronous];
+  XCTAssertTrue(_calledSizeDidInvalidate);
+}
+
+- (void)testInformsDelegateSizeIsInvalidatedOnContextChange_WithUnifiedBuildAndLayout
+{
+  CKComponentHostingView *view = hostingView(NO, YES);
+  view.delegate = self;
+  [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
+  XCTAssertTrue(_calledSizeDidInvalidate);
+}
+
+- (void)testUpdateWithEmptyBoundsMountLayout_WithUnifiedBuildAndLayout
+{
+  CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
+  CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[self class]
+                                                                         sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
+  [view updateModel:model mode:CKUpdateModeSynchronous];
+  [view layoutIfNeeded];
+
+  XCTAssertEqual([view.containerView.subviews count], 1u, @"Expect the component is mounted with empty bounds");
+}
+
+- (void)testComponentControllerReceivesInvalidateEventDuringDeallocation_WithUnifiedBuildAndLayout
+{
+  CKLifecycleTestComponent *testComponent = nil;
+  @autoreleasepool {
+    CKComponentHostingView *view = hostingView(NO, YES);
+    [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
+    testComponent = (CKLifecycleTestComponent *)view.mountedLayout.component;
+  }
+  XCTAssertTrue(testComponent.controller.calledInvalidateController,
+                @"Expected component controller to get invalidation event");
 }
 
 #pragma mark - CKComponentHostingViewDelegate

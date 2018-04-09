@@ -18,6 +18,11 @@
 @end
 
 @implementation CKTestStatefulViewComponent
+
++(Class<CKComponentControllerProtocol>)controllerClass {
+  return [CKTestStatefulViewComponentController class];
+}
+
 + (instancetype)newWithColor:(UIColor *)color
 {
   CKComponentScope scope(self);

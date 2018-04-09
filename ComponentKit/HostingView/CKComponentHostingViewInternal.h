@@ -27,6 +27,7 @@
                             match the predicate for rapid enumeration later.
  @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
  @param analyticsListener listener conforming to AnalyticsListener will be used to get component lifecycle callbacks for logging
+ @param unifyBuildAndLayout  Build and layout components in a unified pass. It's meant to be used only if buildComponentTreeEnabled == YES; please DO NOT use it yet, it's in a testing stage. Default NO.
  @see CKComponentProvider
  @see CKComponentSizeRangeProviding
  */
@@ -35,7 +36,8 @@
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                  didPrepareLayoutEnabled:(BOOL)didPrepareLayoutEnabled;
+                  didPrepareLayoutEnabled:(BOOL)didPrepareLayoutEnabled
+                      unifyBuildAndLayout:(BOOL)unifyBuildAndLayout;
 
 @property (nonatomic, strong, readonly) UIView *containerView;
 

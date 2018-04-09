@@ -47,7 +47,7 @@ struct CKComponentHostingViewInputs {
   CKComponentHostingViewInputs _pendingInputs;
 
   CKComponentBoundsAnimation _boundsAnimation;
-    
+
   CKComponent *_component;
   BOOL _componentNeedsUpdate;
   CKUpdateMode _requestedUpdateMode;
@@ -56,9 +56,11 @@ struct CKComponentHostingViewInputs {
   NSSet *_mountedComponents;
 
   BOOL _scheduledAsynchronousComponentUpdate;
+  BOOL _scheduledAsynchronousBuildAndLayoutUpdate;
   BOOL _isSynchronouslyUpdatingComponent;
   BOOL _isMountingComponent;
   BOOL _didPrepareLayoutEnabled;
+  BOOL _unifyBuildAndLayout;
 }
 @end
 
@@ -90,7 +92,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil
-                 didPrepareLayoutEnabled:NO];
+                 didPrepareLayoutEnabled:NO
+                     unifyBuildAndLayout:NO];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -102,7 +105,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:analyticsListener
-                 didPrepareLayoutEnabled:NO];
+                 didPrepareLayoutEnabled:NO
+                     unifyBuildAndLayout:NO];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -111,6 +115,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                   didPrepareLayoutEnabled:(BOOL)didPrepareLayoutEnabled
+                      unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
 {
   if (self = [super initWithFrame:CGRectZero]) {
     _componentProvider = componentProvider;
@@ -125,6 +130,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
     _didPrepareLayoutEnabled = didPrepareLayoutEnabled;
+    _unifyBuildAndLayout = unifyBuildAndLayout;
 
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -151,12 +157,16 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   if (!_isMountingComponent) {
     _isMountingComponent = YES;
     _containerView.frame = self.bounds;
-
-    [self _synchronouslyUpdateComponentIfNeeded];
     const CGSize size = self.bounds.size;
-    if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
-      _mountedLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener);
-      [self _sendDidPrepareLayoutIfNeeded];
+
+    if (!_unifyBuildAndLayout) {
+      [self _synchronouslyUpdateComponentIfNeeded];
+      if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
+        _mountedLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener);
+        [self _sendDidPrepareLayoutIfNeeded];
+      }
+    } else {
+      [self _synchronouslyBuildAndLayoutComponentIfNeeded:{size,size} forceUpdate:(_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size))];
     }
 
     CKComponentBoundsAnimationApply(_boundsAnimation, ^{
@@ -170,9 +180,14 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 - (CGSize)sizeThatFits:(CGSize)size
 {
   CKAssertMainThread();
-  [self _synchronouslyUpdateComponentIfNeeded];
-  const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-  return CKComputeRootComponentLayout(_component, constrainedSize, _pendingInputs.scopeRoot.analyticsListener).size;
+  if (!_unifyBuildAndLayout) {
+    [self _synchronouslyUpdateComponentIfNeeded];
+    const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
+    return CKComputeRootComponentLayout(_component, constrainedSize, _pendingInputs.scopeRoot.analyticsListener).size;
+  } else {
+    const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
+    return [self _synchronouslyCalculateLayoutSize:constrainedSize];
+  }
 }
 
 #pragma mark - Accessors
@@ -247,7 +262,11 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
   switch (mode) {
     case CKUpdateModeAsynchronous:
-      [self _asynchronouslyUpdateComponentIfNeeded];
+      if (_unifyBuildAndLayout) {
+        [self _asynchronouslyBuildAndLayoutComponentIfNeeded];
+      } else {
+        [self _asynchronouslyUpdateComponentIfNeeded];
+      }
       break;
     case CKUpdateModeSynchronous:
       [self setNeedsLayout];
@@ -280,10 +299,10 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   const auto inputs = std::make_shared<const CKComponentHostingViewInputs>(_pendingInputs);
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     const auto result = std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
-      inputs->scopeRoot,
-      inputs->stateUpdates,
-      ^{ return [_componentProvider componentForModel:inputs->model context:inputs->context]; }
-    ));
+                                                                                        inputs->scopeRoot,
+                                                                                        inputs->stateUpdates,
+                                                                                        ^{ return [_componentProvider componentForModel:inputs->model context:inputs->context]; }
+                                                                                        ));
     dispatch_async(dispatch_get_main_queue(), ^{
       if (!_componentNeedsUpdate) {
         // A synchronous update snuck in and took care of it for us.
@@ -332,11 +351,93 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   _isSynchronouslyUpdatingComponent = NO;
 }
 
+
 - (void)_sendDidPrepareLayoutIfNeeded
 {
   if (_didPrepareLayoutEnabled) {
     CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedLayout);
   }
 }
+
+#pragma mark - Unified Build And Layout methods
+
+- (CKBuildAndLayoutComponentResult)_buildAndLayoutComponentIfNeeded:(const CKSizeRange &)sizeRange pendingInputs:(const CKComponentHostingViewInputs &)pendingInputs{
+  id<NSObject> model = pendingInputs.model;
+  id<NSObject> context = pendingInputs.context;
+  CKBuildAndLayoutComponentResult results = CKBuildAndLayoutComponent(pendingInputs.scopeRoot,
+                                                                      pendingInputs.stateUpdates,
+                                                                      sizeRange,
+                                                                      NO,
+                                                                      ^{
+                                                                        return [_componentProvider componentForModel:model context:context];
+                                                                      });
+  return results;
+}
+
+- (CGSize)_synchronouslyCalculateLayoutSize:(const CKSizeRange &)sizeRange {
+  CKBuildAndLayoutComponentResult results = [self _buildAndLayoutComponentIfNeeded:sizeRange pendingInputs:_pendingInputs];
+  return results.computedLayout.size;
+}
+
+- (void)_asynchronouslyBuildAndLayoutComponentIfNeeded
+{
+  if (_scheduledAsynchronousBuildAndLayoutUpdate) {
+    return;
+  }
+  _scheduledAsynchronousBuildAndLayoutUpdate = YES;
+
+  // Wait until the end of the run loop so that if multiple async updates are triggered we don't thrash.
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self _scheduleAsynchronousBuildAndLayout];
+  });
+}
+
+- (void)_scheduleAsynchronousBuildAndLayout
+{
+  if (_requestedUpdateMode != CKUpdateModeAsynchronous) {
+    // A synchronous build and layout was either scheduled or completed, so we can skip the async update.
+    _scheduledAsynchronousBuildAndLayoutUpdate = NO;
+    return;
+  }
+  const auto inputs = std::make_shared<const CKComponentHostingViewInputs>(_pendingInputs);
+  const CKSizeRange constrainedSize = {self.bounds.size,self.bounds.size};
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    CKBuildAndLayoutComponentResult results = [self _buildAndLayoutComponentIfNeeded:constrainedSize pendingInputs:*inputs];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      // If the inputs haven't changed, apply the result; otherwise, retry.
+      if (_pendingInputs == *inputs) {
+        _mountedLayout = results.computedLayout;
+        [self _applyResult:results.buildComponentResult];
+        _scheduledAsynchronousBuildAndLayoutUpdate = NO;
+        [self setNeedsLayout];
+        [_delegate componentHostingViewDidInvalidateSize:self];
+      } else {
+        [self _scheduleAsynchronousUpdate];
+      }
+    });
+  });
+}
+
+- (void)_synchronouslyBuildAndLayoutComponentIfNeeded:(const CKSizeRange &)sizeRange forceUpdate:(BOOL)forceUpdate
+{
+  if (!forceUpdate && (_componentNeedsUpdate == NO || _requestedUpdateMode == CKUpdateModeAsynchronous)) {
+    return;
+  }
+
+  if (_isSynchronouslyUpdatingComponent) {
+    CKFailAssert(@"CKComponentHostingView is not re-entrant. This is called by -layoutSubviews, so ensure "
+                 "that there is nothing that is triggering a nested call to -layoutSubviews.");
+    return;
+  }
+
+  _isSynchronouslyUpdatingComponent = YES;
+  CKBuildAndLayoutComponentResult results = [self _buildAndLayoutComponentIfNeeded:sizeRange pendingInputs:_pendingInputs];
+  _mountedLayout = results.computedLayout;
+  [self _applyResult:results.buildComponentResult];
+  [self _sendDidPrepareLayoutIfNeeded];
+  _isSynchronouslyUpdatingComponent = NO;
+}
+
+
 
 @end
