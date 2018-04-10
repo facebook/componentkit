@@ -29,7 +29,7 @@ struct CKStaticLayoutComponentChild {
 };
 
 /**
- @uidocs_import ios_component_kit
+ @uidocs https://fburl.com/CKStaticLayoutComponent:0a97
 
  A component that positions children at fixed positions.
 
