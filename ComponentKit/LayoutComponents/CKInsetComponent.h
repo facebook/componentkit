@@ -13,14 +13,15 @@
 #import <ComponentKit/CKRenderComponent.h>
 
 /**
- @uidocs https://fburl.com/CKInsetComponent:ac83
+ @uidocs_import ios_component_kit
 
  A component that wraps another component, applying insets around it.
 
  If the child component has a size specified as a percentage, the percentage is resolved against this component's parent
  size **after** applying insets.
 
- @example CKOuterComponent contains an CKInsetComponent with an CKInnerComponent. Suppose that:
+ @note
+ CKOuterComponent contains an CKInsetComponent with an CKInnerComponent. Suppose that:
  - CKOuterComponent is 200pt wide.
  - CKInnerComponent specifies its width as 100%.
  - The CKInsetComponent has insets of 10pt on every side.
@@ -29,7 +30,8 @@
  If you're familiar with CSS: CKInsetComponent's child behaves similarly to "box-sizing: border-box".
 
  An infinite inset is resolved as an inset equal to all remaining space after applying the other insets and child size.
- @example An CKInsetComponent with an infinite left inset and 10px for all other edges will position it's child 10px from the right edge.
+ @note
+ An CKInsetComponent with an infinite left inset and 10px for all other edges will position it's child 10px from the right edge.
  */
 @interface CKInsetComponent : CKRenderComponent
 
