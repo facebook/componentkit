@@ -28,7 +28,7 @@ struct CKStaticLayoutComponentChild {
   CKRelativeSizeRange size;
 };
 
-/*
+/**
  @uidocs_import ios_component_kit
 
  A component that positions children at fixed positions.
