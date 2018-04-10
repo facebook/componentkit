@@ -126,7 +126,6 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
  */
 
 @interface CKDataSourceIntegrationTests : XCTestCase
-@property (strong) UICollectionViewController *collectionViewController;
 @property (strong) CKCollectionViewDataSource *dataSource;
 @property (strong) NSMutableArray<CKComponent *> *components;
 @property (strong) NSMutableDictionary<NSString *, CKComponent *> *componentsDictionary;
@@ -141,12 +140,6 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
   [super setUp];
 
   self.itemSize = [[UIScreen mainScreen] bounds].size;
-
-  UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
-  flowLayout.itemSize = self.itemSize;
-
-  self.collectionViewController = [[UICollectionViewController alloc]
-                                   initWithCollectionViewLayout:flowLayout];
 
   self.components = [NSMutableArray new];
   self.componentsDictionary = [NSMutableDictionary dictionary];
@@ -168,6 +161,12 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 
 - (CKCollectionViewDataSource *)generateDataSource:(CKTestConfig)testConfig
 {
+  UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
+  flowLayout.itemSize = self.itemSize;
+  
+  UICollectionViewController *collectionViewController = [[UICollectionViewController alloc]
+                                   initWithCollectionViewLayout:flowLayout];
+  
   CKDataSourceConfiguration *config = [[CKDataSourceConfiguration alloc]
                                        initWithComponentProvider:(id)self
                                        context:nil
@@ -180,8 +179,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
                                        analyticsListener:nil];
-
-  return [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionViewController.collectionView
+  return [[CKCollectionViewDataSource alloc] initWithCollectionView:collectionViewController.collectionView
                                                      supplementaryViewDataSource:nil
                                                                    configuration:config];
 }
