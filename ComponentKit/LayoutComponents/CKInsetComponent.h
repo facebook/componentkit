@@ -13,7 +13,7 @@
 #import <ComponentKit/CKRenderComponent.h>
 
 /**
- @uidocs_import ios_component_kit
+ @uidocs https://fburl.com/CKInsetComponent:ac83
 
  A component that wraps another component, applying insets around it.
 
