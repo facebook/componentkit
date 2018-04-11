@@ -21,7 +21,7 @@
 @class CKComponent;
 
 typedef id (^CKResponderGenerationBlock)(void);
-typedef NS_ENUM(NSUInteger, CKComponentActionSendBehavior) {
+typedef NS_ENUM(NSInteger, CKComponentActionSendBehavior) {
   /** Starts searching at the sender's next responder. Usually this is what you want to prevent infinite loops. */
   CKComponentActionSendBehaviorStartAtSenderNextResponder,
   /** If the sender itself responds to the action, invoke the action on the sender. */

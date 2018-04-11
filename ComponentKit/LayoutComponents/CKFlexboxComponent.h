@@ -8,22 +8,12 @@
  *
  */
 
-/*
- *  Copyright (c) 2014-present, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
 #import <vector>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKContainerWrapper.h>
 
-typedef NS_ENUM(NSUInteger, CKFlexboxDirection) {
+typedef NS_ENUM(NSInteger, CKFlexboxDirection) {
   CKFlexboxDirectionVertical,
   CKFlexboxDirectionHorizontal,
   CKFlexboxDirectionVerticalReverse,
@@ -31,14 +21,14 @@ typedef NS_ENUM(NSUInteger, CKFlexboxDirection) {
 };
 
 /** Layout direction is used to support RTL */
-typedef NS_ENUM(NSUInteger, CKLayoutDirection) {
+typedef NS_ENUM(NSInteger, CKLayoutDirection) {
   CKLayoutDirectionApplicationDirection,
   CKLayoutDirectionLTR,
   CKLayoutDirectionRTL,
 };
 
 /** If no children are flexible, how should this component justify its children in the available space? */
-typedef NS_ENUM(NSUInteger, CKFlexboxJustifyContent) {
+typedef NS_ENUM(NSInteger, CKFlexboxJustifyContent) {
   /**
    On overflow, children overflow out of this component's bounds on the right/bottom side.
    On underflow, children are left/top-aligned within this component's bounds.
@@ -64,7 +54,7 @@ typedef NS_ENUM(NSUInteger, CKFlexboxJustifyContent) {
   CKFlexboxJustifyContentSpaceAround,
 };
 
-typedef NS_ENUM(NSUInteger, CKFlexboxAlignItems) {
+typedef NS_ENUM(NSInteger, CKFlexboxAlignItems) {
   /** Align children to start of cross axis */
   CKFlexboxAlignItemsStart,
   /** Align children with end of cross axis */
@@ -77,7 +67,7 @@ typedef NS_ENUM(NSUInteger, CKFlexboxAlignItems) {
   CKFlexboxAlignItemsStretch,
 };
 
-typedef NS_ENUM(NSUInteger, CKFlexboxAlignContent) {
+typedef NS_ENUM(NSInteger, CKFlexboxAlignContent) {
   /** Align lines to start of container */
   CKFlexboxAlignContentStart,
   /** Align lines to end of container */
@@ -96,7 +86,7 @@ typedef NS_ENUM(NSUInteger, CKFlexboxAlignContent) {
  Each child may override their parent stack's cross axis alignment.
  @see CKFlexboxAlignItems
  */
-typedef NS_ENUM(NSUInteger, CKFlexboxAlignSelf) {
+typedef NS_ENUM(NSInteger, CKFlexboxAlignSelf) {
   /** Inherit alignment value from containing stack. */
   CKFlexboxAlignSelfAuto,
   CKFlexboxAlignSelfStart,
@@ -106,7 +96,7 @@ typedef NS_ENUM(NSUInteger, CKFlexboxAlignSelf) {
   CKFlexboxAlignSelfStretch,
 };
 
-typedef NS_ENUM(NSUInteger, CKFlexboxWrap) {
+typedef NS_ENUM(NSInteger, CKFlexboxWrap) {
   /** Children are not wrapped */
   CKFlexboxWrapNoWrap,
   /** Children are wrapped if necessary */
@@ -115,7 +105,7 @@ typedef NS_ENUM(NSUInteger, CKFlexboxWrap) {
   CKFlexboxWrapWrapReverse,
 };
 
-typedef NS_ENUM(NSUInteger, CKFlexboxPositionType) {
+typedef NS_ENUM(NSInteger, CKFlexboxPositionType) {
   /** Specifies the type of position children are stacked in */
   CKFlexboxPositionTypeRelative,
   /** With the absolute position, child is positioned relative to parent */

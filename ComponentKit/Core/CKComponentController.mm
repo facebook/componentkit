@@ -26,7 +26,7 @@ struct CKAppliedComponentAnimation {
   id context; // The context returned by the animation's didRemount block.
 };
 
-typedef NS_ENUM(NSUInteger, CKComponentControllerState) {
+typedef NS_ENUM(NSInteger, CKComponentControllerState) {
   CKComponentControllerStateUnmounted = 0,
   CKComponentControllerStateMounting,
   CKComponentControllerStateMounted,

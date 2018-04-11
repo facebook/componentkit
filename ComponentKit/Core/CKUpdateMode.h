@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 
 /** The update mode is used to inform ComponentKit how to apply changes. */
-typedef NS_ENUM(NSUInteger, CKUpdateMode) {
+typedef NS_ENUM(NSInteger, CKUpdateMode) {
   /** Apply the update off the main thread. */
   CKUpdateModeAsynchronous,
   /**

@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSUInteger, CKComponentBoundsAnimationMode) {
+typedef NS_ENUM(NSInteger, CKComponentBoundsAnimationMode) {
   /** Wraps changes in a UIView animation block */
   CKComponentBoundsAnimationModeDefault = 0,
   /** Wraps changes in a UIView spring animation block */
