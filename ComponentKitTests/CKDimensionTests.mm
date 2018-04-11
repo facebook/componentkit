@@ -10,6 +10,8 @@
 
 #import <XCTest/XCTest.h>
 
+#import <limits>
+
 #import <ComponentKit/CKDimension.h>
 
 
@@ -81,6 +83,21 @@
   CKSizeRange result = range.intersect(other);
   CKSizeRange expected = {{10,10}, {10,10}};
   XCTAssertTrue(result == expected, @"Expected %@ but got %@", expected.description(), result.description());
+}
+
+@end
+
+@interface CKRelativeDimensionTests: XCTestCase
+@end
+
+@implementation CKRelativeDimensionTests
+
+- (void)test_ResolvingPercentageAgainstInfinity_ReturnsAutoSize
+{
+  const auto percentDimension = CKRelativeDimension::Percent(1);
+  const auto autoSize = 42;
+
+  XCTAssertEqual(percentDimension.resolve(autoSize, std::numeric_limits<CGFloat>::infinity()), autoSize);
 }
 
 @end

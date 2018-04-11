@@ -31,7 +31,7 @@
  "Points" - Just a number. It will always resolve to exactly this amount.
 
  "Percent" - Multiplied to a provided parent amount to resolve a final amount.
- If the parent amount is undefined (NaN), it acts as if Auto size was specified instead.
+ If the parent amount is undefined (NaN) or infinite, it acts as if Auto size was specified instead.
 
  A number of convenience constructors have been provided to make using RelativeDimension straight-forward.
 

@@ -54,7 +54,7 @@ CGFloat CKRelativeDimension::resolve(CGFloat autoSize, CGFloat parent) const noe
     case Type::POINTS:
       return _value;
     case Type::PERCENT:
-      return isnan(parent) ? autoSize : round(_value * parent);
+      return isnan(parent) || isinf(parent) ? autoSize : round(_value * parent);
   }
 }
 
