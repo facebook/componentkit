@@ -31,7 +31,6 @@
                buildComponentTreeEnabled:NO
          alwaysBuildComponentTreeEnabled:NO
                      unifyBuildAndLayout:NO
-                 didPrepareLayoutEnabled:NO
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil];
@@ -43,7 +42,6 @@
                 buildComponentTreeEnabled:(BOOL)buildComponentTreeEnabled
           alwaysBuildComponentTreeEnabled:(BOOL)alwaysBuildComponentTreeEnabled
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
-                  didPrepareLayoutEnabled:(BOOL)didPrepareLayoutEnabled
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -58,7 +56,6 @@
     _buildComponentTreeEnabled = buildComponentTreeEnabled;
     _alwaysBuildComponentTreeEnabled = alwaysBuildComponentTreeEnabled;
     _unifyBuildAndLayout = unifyBuildAndLayout;
-    _didPrepareLayoutEnabled = didPrepareLayoutEnabled;
   }
   return self;
 }

@@ -24,7 +24,7 @@
 @interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate>
 @end
 
-static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO, BOOL unifyBuildAndLayout = NO)
+static CKComponentHostingView *hostingView(BOOL unifyBuildAndLayout = NO)
 {
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
   CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
@@ -32,7 +32,6 @@ static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO, BO
                                                                        componentPredicates:{}
                                                              componentControllerPredicates:{}
                                                                          analyticsListener:nil
-                                                                   didPrepareLayoutEnabled:didPrepareLayoutEnabled
                                                                        unifyBuildAndLayout:unifyBuildAndLayout];
   view.bounds = CGRectMake(0, 0, 100, 100);
   [view updateModel:model mode:CKUpdateModeSynchronous];
@@ -146,8 +145,7 @@ static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO, BO
 - (void)testComponentControllerReceivesDidPrepareLayoutForComponent
 {
   CKLifecycleTestComponent *testComponent = nil;
-  const BOOL didPrepareLayoutEnabled = YES;
-  CKComponentHostingView *view = hostingView(didPrepareLayoutEnabled);
+  CKComponentHostingView *view = hostingView();
   [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
   testComponent = (CKLifecycleTestComponent *)view.mountedLayout.component;
   XCTAssertTrue(testComponent.controller.calledDidPrepareLayoutForComponent,
@@ -156,7 +154,7 @@ static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO, BO
 
 - (void)testUpdatingHostingViewBoundsResizesComponentView_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView(NO, YES);
+  CKComponentHostingView *view = hostingView(YES);
   view.bounds = CGRectMake(0, 0, 200, 200);
   [view layoutIfNeeded];
 
@@ -167,7 +165,7 @@ static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO, BO
 
 - (void)testImmediatelyUpdatesViewOnSynchronousModelChange_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView(NO, YES);
+  CKComponentHostingView *view = hostingView(YES);
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
                mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
@@ -178,7 +176,7 @@ static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO, BO
 
 - (void)testEventuallyUpdatesViewOnAsynchronousModelChange_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView(NO, YES);
+  CKComponentHostingView *view = hostingView(YES);
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
                mode:CKUpdateModeAsynchronous];
   [view layoutIfNeeded];
@@ -192,7 +190,7 @@ static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO, BO
 
 - (void)testInformsDelegateSizeIsInvalidatedOnModelChange_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView(NO, YES);
+  CKComponentHostingView *view = hostingView(YES);
   view.delegate = self;
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(75, 75))]
                mode:CKUpdateModeSynchronous];
@@ -201,7 +199,7 @@ static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO, BO
 
 - (void)testInformsDelegateSizeIsInvalidatedOnContextChange_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView(NO, YES);
+  CKComponentHostingView *view = hostingView(YES);
   view.delegate = self;
   [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
   XCTAssertTrue(_calledSizeDidInvalidate);
@@ -222,7 +220,7 @@ static CKComponentHostingView *hostingView(BOOL didPrepareLayoutEnabled = NO, BO
 {
   CKLifecycleTestComponent *testComponent = nil;
   @autoreleasepool {
-    CKComponentHostingView *view = hostingView(NO, YES);
+    CKComponentHostingView *view = hostingView(YES);
     [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
     testComponent = (CKLifecycleTestComponent *)view.mountedLayout.component;
   }

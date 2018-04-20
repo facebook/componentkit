@@ -48,11 +48,6 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
 
 @implementation CKDataSourceIntegrationTestComponentController
 
-typedef NS_ENUM(NSUInteger, CKTestConfig) {
-  CKTestConfigDefault,
-  CKTestConfigComponentLayoutCacheEnabled,
-};
-
 - (instancetype)initWithComponent:(CKComponent *)component
 {
   if ((self = [super initWithComponent:component])) {
@@ -143,7 +138,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 
   self.components = [NSMutableArray new];
   self.componentsDictionary = [NSMutableDictionary dictionary];
-  self.dataSource = [self generateDataSource:CKTestConfigDefault];
+  self.dataSource = [self generateDataSource];
 
   [self.dataSource applyChangeset:
    [[[[CKDataSourceChangesetBuilder new]
@@ -159,7 +154,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
   (CKDataSourceIntegrationTestComponentController*) self.components.lastObject.controller;
 }
 
-- (CKCollectionViewDataSource *)generateDataSource:(CKTestConfig)testConfig
+- (CKCollectionViewDataSource *)generateDataSource
 {
   UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
   flowLayout.itemSize = self.itemSize;
@@ -174,7 +169,6 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                        buildComponentTreeEnabled:NO
                                        alwaysBuildComponentTreeEnabled:NO
                                        unifyBuildAndLayout:NO
-                                       didPrepareLayoutEnabled:testConfig == CKTestConfigComponentLayoutCacheEnabled
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
                                        analyticsListener:nil];
@@ -214,7 +208,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 
 - (void)testUpdateModelAlwaysSendUpdateControllerCallbacks_Off
 {
-  self.dataSource = [self generateDataSource:CKTestConfigDefault];
+  self.dataSource = [self generateDataSource];
 
   [self.dataSource applyChangeset:
    [[[[CKDataSourceChangesetBuilder new]
@@ -239,7 +233,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 
 - (void)testUpdateModelAlwaysSendUpdateControllerCallbacks_didPrepareLayoutForComponent_off
 {
-  self.dataSource = [self generateDataSource:CKTestConfigDefault];
+  self.dataSource = [self generateDataSource];
 
   [self.dataSource applyChangeset:
    [[[[CKDataSourceChangesetBuilder new]
@@ -279,7 +273,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 
 - (void)testUpdateModelAlwaysSendUpdateControllerCallbacks_didPrepareLayoutForComponent_on
 {
-  self.dataSource = [self generateDataSource:CKTestConfigComponentLayoutCacheEnabled];
+  self.dataSource = [self generateDataSource];
 
   // Test 'didPrepareLayoutForComponent:' during insert.
   [self.dataSource applyChangeset:
@@ -341,7 +335,7 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
 {
   NSArray *callbacks = nil;
   @autoreleasepool {
-    self.dataSource = [self generateDataSource:CKTestConfigDefault];
+    self.dataSource = [self generateDataSource];
 
     [self.dataSource applyChangeset:
      [[[[CKDataSourceChangesetBuilder new]

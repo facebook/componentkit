@@ -59,7 +59,6 @@ struct CKComponentHostingViewInputs {
   BOOL _scheduledAsynchronousBuildAndLayoutUpdate;
   BOOL _isSynchronouslyUpdatingComponent;
   BOOL _isMountingComponent;
-  BOOL _didPrepareLayoutEnabled;
   BOOL _unifyBuildAndLayout;
 }
 @end
@@ -92,7 +91,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil
-                 didPrepareLayoutEnabled:NO
                      unifyBuildAndLayout:NO];
 }
 
@@ -105,7 +103,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:analyticsListener
-                 didPrepareLayoutEnabled:NO
                      unifyBuildAndLayout:NO];
 }
 
@@ -114,7 +111,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                  didPrepareLayoutEnabled:(BOOL)didPrepareLayoutEnabled
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
 {
   if (self = [super initWithFrame:CGRectZero]) {
@@ -122,14 +118,13 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _sizeRangeProvider = sizeRangeProvider;
 
     _pendingInputs = {.scopeRoot =
-      CKComponentScopeRootWithPredicates(self, analyticsListener ?: sDefaultAnalyticsListener, componentPredicates, componentControllerPredicates, didPrepareLayoutEnabled)};
+      CKComponentScopeRootWithPredicates(self, analyticsListener ?: sDefaultAnalyticsListener, componentPredicates, componentControllerPredicates)};
 
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
     [self addSubview:_containerView];
 
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
-    _didPrepareLayoutEnabled = didPrepareLayoutEnabled;
     _unifyBuildAndLayout = unifyBuildAndLayout;
 
     [CKComponentDebugController registerReflowListener:self];
@@ -354,9 +349,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
 - (void)_sendDidPrepareLayoutIfNeeded
 {
-  if (_didPrepareLayoutEnabled) {
-    CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedLayout);
-  }
+  CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedLayout);
 }
 
 #pragma mark - Unified Build And Layout methods

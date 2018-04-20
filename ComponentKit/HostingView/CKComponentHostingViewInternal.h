@@ -36,7 +36,6 @@
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                  didPrepareLayoutEnabled:(BOOL)didPrepareLayoutEnabled
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout;
 
 @property (nonatomic, strong, readonly) UIView *containerView;

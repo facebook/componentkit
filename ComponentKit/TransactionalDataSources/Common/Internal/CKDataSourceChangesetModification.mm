@@ -126,8 +126,7 @@
         CKBuildComponent(CKComponentScopeRootWithPredicates(_stateListener,
                                                             configuration.analyticsListener,
                                                             configuration.componentPredicates,
-                                                            configuration.componentControllerPredicates,
-                                                            configuration.didPrepareLayoutEnabled), {}, ^{
+                                                            configuration.componentControllerPredicates), {}, ^{
           return [componentProvider componentForModel:model context:context];
         }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
         const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
@@ -138,8 +137,7 @@
       CKBuildAndLayoutComponent(CKComponentScopeRootWithPredicates(_stateListener,
                                                           configuration.analyticsListener,
                                                           configuration.componentPredicates,
-                                                          configuration.componentControllerPredicates,
-                                                          configuration.didPrepareLayoutEnabled),
+                                                          configuration.componentControllerPredicates),
                        {},
                        sizeRange,
                        ^{ return [componentProvider componentForModel:model context:context];});

@@ -19,7 +19,8 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
           rootWithListener:stateListener
           analyticsListener:analyticsListener
           componentPredicates:{
-            &CKComponentBoundsAnimationPredicate
+            &CKComponentBoundsAnimationPredicate,
+            &CKComponentDidPrepareLayoutForComponentToControllerPredicate
           }
           componentControllerPredicates:{
             &CKComponentControllerAppearanceEventPredicate,
@@ -31,16 +32,12 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
 CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> stateListener,
                                                          id<CKAnalyticsListener> analyticsListener,
                                                          const std::unordered_set<CKComponentScopePredicate> &componentPredicates,
-                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates,
-                                                         BOOL addDidPrepareLayoutPredicate)
+                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates)
 {
   std::unordered_set<CKComponentScopePredicate> componentPredicatesUnion = {
-    &CKComponentBoundsAnimationPredicate
+    &CKComponentBoundsAnimationPredicate,
+    &CKComponentDidPrepareLayoutForComponentToControllerPredicate
   };
-
-  if (addDidPrepareLayoutPredicate) {
-    componentPredicatesUnion.insert(&CKComponentDidPrepareLayoutForComponentToControllerPredicate);
-  }
 
   std::unordered_set<CKComponentControllerScopePredicate> componentControllerPredicatesUnion = {
     &CKComponentControllerAppearanceEventPredicate,

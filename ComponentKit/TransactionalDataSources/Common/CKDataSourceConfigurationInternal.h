@@ -33,7 +33,6 @@
                 buildComponentTreeEnabled:(BOOL)buildComponentTreeEnabled
           alwaysBuildComponentTreeEnabled:(BOOL)alwaysBuildComponentTreeEnabled
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
-                  didPrepareLayoutEnabled:(BOOL)didPrepareLayout
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
@@ -43,7 +42,6 @@
 @property (nonatomic, assign, readonly) BOOL buildComponentTreeEnabled;
 @property (nonatomic, assign, readonly) BOOL alwaysBuildComponentTreeEnabled;
 @property (nonatomic, assign, readonly) BOOL unifyBuildAndLayout;
-@property (nonatomic, assign, readonly) BOOL didPrepareLayoutEnabled;
 
 - (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;

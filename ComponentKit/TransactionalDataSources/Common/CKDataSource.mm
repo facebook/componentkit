@@ -255,11 +255,9 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
                 byApplyingChanges:[change appliedChanges]];
 
   // Announce 'didPrepareLayoutForComponent:'.
-  if (_state.configuration.didPrepareLayoutEnabled) {
-    auto const appliedChanges = [change appliedChanges];
-    sendDidPrepareLayoutForComponentWithIndexPaths([[appliedChanges finalUpdatedIndexPaths] allValues], _state);
-    sendDidPrepareLayoutForComponentWithIndexPaths([appliedChanges insertedIndexPaths], _state);
-  }
+  auto const appliedChanges = [change appliedChanges];
+  sendDidPrepareLayoutForComponentWithIndexPaths([[appliedChanges finalUpdatedIndexPaths] allValues], _state);
+  sendDidPrepareLayoutForComponentWithIndexPaths([appliedChanges insertedIndexPaths], _state);
 }
 
 - (void)_processStateUpdates
