@@ -367,7 +367,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   CKBuildAndLayoutComponentResult results = CKBuildAndLayoutComponent(pendingInputs.scopeRoot,
                                                                       pendingInputs.stateUpdates,
                                                                       sizeRange,
-                                                                      NO,
                                                                       ^{
                                                                         return [_componentProvider componentForModel:model context:context];
                                                                       });

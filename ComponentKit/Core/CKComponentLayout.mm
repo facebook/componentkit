@@ -118,15 +118,12 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
 
 CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                const CKSizeRange &sizeRange,
-                                               id<CKAnalyticsListener> analyticsListener,
-                                               BOOL buildComponentLayoutCache)
+                                               id<CKAnalyticsListener> analyticsListener)
                                              {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent];
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectComponentScopeCollisions(layout);
-  if (buildComponentLayoutCache) {
-    CKBuildScopedComponentLayoutCache(layout);
-  }
+  CKBuildScopedComponentLayoutCache(layout);
   [analyticsListener didLayoutComponentTreeWithRootComponent:rootComponent];
   return layout;
 }

@@ -28,7 +28,6 @@
   return [self initWithComponentProvider:componentProvider
                                  context:context
                                sizeRange:sizeRange
-             componentLayoutCacheEnabled:NO
                buildComponentTreeEnabled:NO
          alwaysBuildComponentTreeEnabled:NO
                      unifyBuildAndLayout:NO
@@ -41,7 +40,6 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-              componentLayoutCacheEnabled:(BOOL)componentLayoutCacheEnabled
                 buildComponentTreeEnabled:(BOOL)buildComponentTreeEnabled
           alwaysBuildComponentTreeEnabled:(BOOL)alwaysBuildComponentTreeEnabled
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
@@ -57,7 +55,6 @@
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
-    _componentLayoutCacheEnabled = componentLayoutCacheEnabled;
     _buildComponentTreeEnabled = buildComponentTreeEnabled;
     _alwaysBuildComponentTreeEnabled = alwaysBuildComponentTreeEnabled;
     _unifyBuildAndLayout = unifyBuildAndLayout;

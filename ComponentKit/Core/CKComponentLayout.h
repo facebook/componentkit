@@ -85,13 +85,10 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
  @param rootComponent The root component to compute the layout for.
  @param sizeRange The size range to compute the component layout within.
  @param analyticsListener analytics listener used to log layout time.
- @param buildComponentLayoutCache specify whether the root layout should constract component cache from every comopnent in the tree
-        to its layout. Only components that has component controller will be cached.
  */
 CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                const CKSizeRange &sizeRange,
-                                               id<CKAnalyticsListener> analyticsListener = nil,
-                                               BOOL buildComponentLayoutCache = NO);
+                                               id<CKAnalyticsListener> analyticsListener = nil);
 
 /**
  Safely computes the layout of the given component by guarding against nil components.

@@ -30,7 +30,6 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-              componentLayoutCacheEnabled:(BOOL)componentLayoutCacheEnabled
                 buildComponentTreeEnabled:(BOOL)buildComponentTreeEnabled
           alwaysBuildComponentTreeEnabled:(BOOL)alwaysBuildComponentTreeEnabled
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
@@ -41,7 +40,6 @@
 
 @property (nonatomic, readonly, strong) id<CKAnalyticsListener> analyticsListener;
 
-@property (nonatomic, assign, readonly) BOOL componentLayoutCacheEnabled;
 @property (nonatomic, assign, readonly) BOOL buildComponentTreeEnabled;
 @property (nonatomic, assign, readonly) BOOL alwaysBuildComponentTreeEnabled;
 @property (nonatomic, assign, readonly) BOOL unifyBuildAndLayout;

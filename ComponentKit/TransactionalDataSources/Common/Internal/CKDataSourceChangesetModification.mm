@@ -66,7 +66,7 @@
       const CKBuildComponentResult result = CKBuildComponent([oldItem scopeRoot], {}, ^{
       return [componentProvider componentForModel:model context:context];
     }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
-    const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, configuration.componentLayoutCacheEnabled);
+    const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
 
     [section replaceObjectAtIndex:indexPath.item withObject:
      [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation]];
@@ -74,7 +74,6 @@
       CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent([oldItem scopeRoot],
                                                        {},
                                                        sizeRange,
-                                                       configuration.componentLayoutCacheEnabled,
                                                        ^{
                                                          return [componentProvider componentForModel:model context:context];
                                                        });
@@ -131,7 +130,7 @@
                                                             configuration.didPrepareLayoutEnabled), {}, ^{
           return [componentProvider componentForModel:model context:context];
         }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
-        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, configuration.componentLayoutCacheEnabled);
+        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
         insertedItemsBySection[indexPath.section][indexPath.item] =
         [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation];
     } else {
@@ -143,7 +142,6 @@
                                                           configuration.didPrepareLayoutEnabled),
                        {},
                        sizeRange,
-                       configuration.componentLayoutCacheEnabled,
                        ^{ return [componentProvider componentForModel:model context:context];});
 
       insertedItemsBySection[indexPath.section][indexPath.item] =

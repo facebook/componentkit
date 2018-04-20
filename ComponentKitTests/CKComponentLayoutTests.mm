@@ -47,39 +47,6 @@
 
 @implementation CKComponentLayoutTests
 
-- (void)testComputeRootLayout_NoCache_NoScope
-{
-  __block NSArray<CKComponent *> *children;
-  __block CKFlexboxComponent *c;
-  CKBuildComponentResult results = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
-    children = createChildrenArray(NO);
-    c = flexboxComponentWithScopedChildren(children);
-    return c;
-  });
-
-  const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}});
-
-  // Make sure we don't build any cache unless we explicty pass in the `buildComponentLayoutCache` parameter.
-  XCTAssertNil(layout.extra);
-}
-
-- (void)testComputeRootLayout_NoCache_WithScope
-{
-  __block NSArray<CKComponent *> *children;
-  __block CKFlexboxComponent *c;
-
-  CKBuildComponentResult results = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
-    children = createChildrenArray(YES);
-    c = flexboxComponentWithScopedChildren(children);
-    return c;
-  });
-
-  const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}});
-
-  // Make sure we don't build any cache unless we explicty pass in the `buildComponentLayoutCache` parameter.
-  XCTAssertNil(layout.extra);
-}
-
 - (void)testComputeRootLayout_WithCache_NoScope
 {
   __block NSArray<CKComponent *> *children;
@@ -90,7 +57,7 @@
     return c;
   });
 
-  const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil, YES);
+  const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil);
 
   // Make sure we do build the components cache in case that `buildComponentLayoutCache` is set to `YES`.
   XCTAssertNotNil(layout.extra);
@@ -112,7 +79,7 @@
     return c;
   });
 
-  const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil, YES);
+  const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil);
 
   // Make sure we do build the components cache in case that `buildComponentLayoutCache` is set to `YES`.
   XCTAssertNotNil(layout.extra);

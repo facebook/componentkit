@@ -68,8 +68,6 @@ struct CKBuildAndLayoutComponentResult {
  @param previousRoot The previous scope root that was associated with the cell. May be nil if no prior root is available
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param sizeRange The size range to compute the component layout within.
- @param buildComponentLayoutCache specify whether the root layout should constract component cache from every comopnent in the tree
- to its layout. Only components that has component controller will be cached.
  @param componentFactory A block that constructs your component. Must not be nil.
 
  THIS IS EXPERIMENTAL, LINKED WITH THE DEFERRED CHILD COMPONENT CREATION (-render:() RFC) - DO NOT USE DIRECTLY
@@ -79,6 +77,5 @@ struct CKBuildAndLayoutComponentResult {
 CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *previousRoot,
                                          const CKComponentStateUpdateMap &stateUpdates,
                                          const CKSizeRange &sizeRange,
-                                         BOOL buildComponentLayoutCache,
                                          CKComponent *(^componentFactory)(void));
 

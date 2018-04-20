@@ -64,10 +64,9 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         const CKSizeRange &sizeRange,
-                                        BOOL buildComponentLayoutCache,
                                         CKComponent *(^componentFactory)(void)) {
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   const CKBuildComponentResult builcComponentResult = _CKBuildComponent(previousRoot, stateUpdates, YES, NO, threadScope, componentFactory);
-  const CKComponentLayout computedLayout = CKComputeRootComponentLayout(builcComponentResult.component, sizeRange, builcComponentResult.scopeRoot.analyticsListener, buildComponentLayoutCache);
+  const CKComponentLayout computedLayout = CKComputeRootComponentLayout(builcComponentResult.component, sizeRange, builcComponentResult.scopeRoot.analyticsListener);
   return {builcComponentResult, computedLayout};
 }

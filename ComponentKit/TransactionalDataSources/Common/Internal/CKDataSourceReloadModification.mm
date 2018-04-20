@@ -52,7 +52,7 @@
         const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
           return [componentProvider componentForModel:[item model] context:context];
         }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
-        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, configuration.componentLayoutCacheEnabled);
+        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
         [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:layout
                                                                model:[item model]
                                                            scopeRoot:result.scopeRoot
@@ -61,7 +61,6 @@
         CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent([item scopeRoot],
                                                          {},
                                                          sizeRange,
-                                                         configuration.componentLayoutCacheEnabled,
                                                          ^{
                                                            return [componentProvider componentForModel:[item model] context:context];
                                                          });

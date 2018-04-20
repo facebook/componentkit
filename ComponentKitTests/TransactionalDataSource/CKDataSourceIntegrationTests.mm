@@ -171,7 +171,6 @@ typedef NS_ENUM(NSUInteger, CKTestConfig) {
                                        initWithComponentProvider:(id)self
                                        context:nil
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
-                                       componentLayoutCacheEnabled:testConfig == CKTestConfigComponentLayoutCacheEnabled
                                        buildComponentTreeEnabled:NO
                                        alwaysBuildComponentTreeEnabled:NO
                                        unifyBuildAndLayout:NO

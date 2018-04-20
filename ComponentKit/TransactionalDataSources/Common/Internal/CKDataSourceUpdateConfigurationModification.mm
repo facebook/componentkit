@@ -57,7 +57,7 @@
       CKDataSourceItem *newItem;
       if (!_configuration.unifyBuildAndLayout) {
         if (onlySizeRangeChanged) {
-          const CKComponentLayout layout = CKComputeRootComponentLayout(item.layout.component, sizeRange, [item scopeRoot].analyticsListener, _configuration.componentLayoutCacheEnabled);
+          const CKComponentLayout layout = CKComputeRootComponentLayout(item.layout.component, sizeRange, [item scopeRoot].analyticsListener);
           newItem = [[CKDataSourceItem alloc] initWithLayout:layout
                                                        model:[item model]
                                                    scopeRoot:[item scopeRoot]
@@ -66,7 +66,7 @@
                   const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
           return [componentProvider componentForModel:[item model] context:context];
         }, _configuration.buildComponentTreeEnabled, _configuration.alwaysBuildComponentTreeEnabled);
-        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener, _configuration.componentLayoutCacheEnabled);
+        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
         newItem = [[CKDataSourceItem alloc] initWithLayout:layout
                                                                            model:[item model]
                                                                        scopeRoot:result.scopeRoot
@@ -76,7 +76,6 @@
         CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent([item scopeRoot],
                                                          {},
                                                          sizeRange,
-                                                         _configuration.componentLayoutCacheEnabled,
                                                          ^{
                                                            return [componentProvider componentForModel:[item model] context:context];
                                                          });
