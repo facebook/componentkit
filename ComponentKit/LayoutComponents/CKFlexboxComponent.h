@@ -241,12 +241,6 @@ struct CKFlexboxComponentStyle {
    */
   CKFlexboxBorder border;
   /**
-   There is an obscure bug with this component's internal caching: see testSimultaneousFlexGrowAndAlignStretch.
-   Fixing the bug is nontrivial. Disabling the cache always would regress performance.
-   Use this option to disable the cache on a case-by-case basis if you care more about correctness than performance.
-   */
-  BOOL disableCachingToWorkAroundBug;
-  /**
    Use to support RTL layouts.
    The default is to follow the application's layout direction, but you can force a LTR or RTL layout by changing this.
    */
@@ -317,11 +311,6 @@ extern const struct CKStackComponentLayoutExtraKeys {
   /// NSNumber containing a BOOL which specifies whether a violation of constraints has occurred during layout. The absence of this key indicates that no violation of constraints occurred.
   NSString * const hadOverflow;
 } CKStackComponentLayoutExtraKeys;
-
-/** Solely for experiments affecting all flexbox instances */
-@interface CKFlexboxComponentContext: NSObject
-+ (instancetype)newWithReuseOnlyExactSizeSpecs:(BOOL)reuseOnlyExactSizeSpecs;
-@end
 
 /**
  @uidocs https://fburl.com/CKFlexboxComponent:ca56

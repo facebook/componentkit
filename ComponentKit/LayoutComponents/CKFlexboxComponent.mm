@@ -46,24 +46,9 @@ template class std::vector<CKFlexboxComponentChild>;
 
 @end
 
-@interface CKFlexboxComponentContext ()
-@property(nonatomic, assign, readonly) BOOL reuseOnlyExactSizeSpecs;
-@end
-@implementation CKFlexboxComponentContext
-+ (instancetype)newWithReuseOnlyExactSizeSpecs:(BOOL)reuseOnlyExactSizeSpecs
-{
-  CKFlexboxComponentContext * const c = [super new];
-  if (c != nil) {
-    c->_reuseOnlyExactSizeSpecs = reuseOnlyExactSizeSpecs;
-  }
-  return c;
-}
-@end
-
 @implementation CKFlexboxComponent {
   CKFlexboxComponentStyle _style;
   std::vector<CKFlexboxComponentChild> _children;
-  BOOL _reuseOnlyExactSizeSpecs;
 }
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
@@ -75,7 +60,6 @@ template class std::vector<CKFlexboxComponentChild>;
   if (component) {
     component->_style = style;
     component->_children = children.take();
-    component->_reuseOnlyExactSizeSpecs = CKComponentContext<CKFlexboxComponentContext>::get().reuseOnlyExactSizeSpecs;
   }
   return component;
 }
@@ -706,10 +690,7 @@ static BOOL floatIsSet(CGFloat val)
     // We cache measurements for the duration of single layout calculation of FlexboxComponent
     // ComponentKit and Yoga handle caching between calculations
 
-    const auto canReuseCachedLayout = _reuseOnlyExactSizeSpecs ?
-      [self canReuseCachedLayout:childCachedLayout forChildWithExactSize:childSize] :
-      [self canReuseCachedLayout:childCachedLayout forChildWithSize:childSize];
-    if (canReuseCachedLayout) {
+    if ([self canReuseCachedLayout:childCachedLayout forChildWithExactSize:childSize]) {
       childrenLayout[i].layout = childCachedLayout.componentLayout;
     } else {
       childrenLayout[i].layout = CKComputeComponentLayout(childCachedLayout.component, {childSize, childSize}, size);
@@ -721,27 +702,6 @@ static BOOL floatIsSet(CGFloat val)
 
   // width/height should already be within constrainedSize, but we're just clamping to correct for roundoff error
   return {self, constrainedSize.clamp({width, height}), childrenLayout};
-}
-
-- (BOOL)canReuseCachedLayout:(const CKFlexboxChildCachedLayout * const)childCachedLayout
-            forChildWithSize:(const CGSize)childSize
-{
-  // We can reuse caching even if main dimension isn't exact, but we did AtMost measurement previously
-  // However we might need to measure anew if child needs to be stretched
-  auto verticalReusedMode = YGMeasureModeAtMost;
-  auto horizontalReusedMode = YGMeasureModeAtMost;
-  if (childCachedLayout.align == CKFlexboxAlignSelfStretch ||
-      (childCachedLayout.align == CKFlexboxAlignSelfAuto && _style.alignItems == CKFlexboxAlignItemsStretch)) {
-    if (isHorizontalFlexboxDirection(_style.direction)) {
-      verticalReusedMode = YGMeasureModeExactly;
-    } else {
-      horizontalReusedMode = YGMeasureModeExactly;
-    }
-  }
-
-  return !_style.disableCachingToWorkAroundBug &&
-    (CKYogaNodeCanUseCachedMeasurement(horizontalReusedMode, static_cast<float>(childSize.width), verticalReusedMode, static_cast<float>(childSize.height), childCachedLayout.widthMode, childCachedLayout.width, childCachedLayout.heightMode, childCachedLayout.height, static_cast<float>(childCachedLayout.componentLayout.size.width), static_cast<float>(childCachedLayout.componentLayout.size.height), 0, 0, ckYogaDefaultConfig()) ||
-    [self canReuseCachedLayout:childCachedLayout forChildWithExactSize:childSize]);
 }
 
 - (BOOL)canReuseCachedLayout:(const CKFlexboxChildCachedLayout * const)childCachedLayout

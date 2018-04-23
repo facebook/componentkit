@@ -2292,7 +2292,6 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 
 - (void)testSimultaneousFlexGrowAndAlignStretch
 {
-  CKComponentContext<CKFlexboxComponentContext> ctx([CKFlexboxComponentContext newWithReuseOnlyExactSizeSpecs:YES]);
   CKFlexboxComponent *c =
   [CKFlexboxComponent
    newWithView:kWhiteBackgroundView
@@ -2301,8 +2300,6 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      .direction = CKFlexboxDirectionHorizontal,
      // This should make each child stretch to the full height of 100pts:
      .alignItems = CKFlexboxAlignItemsStretch,
-     // This test is demonstrating a bug that requires the following option as a workaround.
-     // Ideally we fix the bug and remove the option entirely, but the test still passes.
    }
    children:{
      {
