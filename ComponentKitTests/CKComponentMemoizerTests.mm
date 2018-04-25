@@ -271,7 +271,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
     return [CKFlexboxComponent
             newWithView:{}
             size:{}
-            style:{}
+            style:{.alignItems = CKFlexboxAlignItemsStart}
             children:{
               {[CKTestMemoizedComponent newWithString:@"ABCD" number:123]},
               {[CKTestMemoizedComponent newWithString:@"D" number:0]},
@@ -488,7 +488,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
         return [CKFlexboxComponent
                 newWithView:{}
                 size:{}
-                style:{}
+                style:{.alignItems = CKFlexboxAlignItemsStart}
                 children:{
                   {[CKTestMemoizedComponent newWithString:@"A" number:2]},
                   {[CKTestMemoizedComponent newWithString:@"B" number:3]},
@@ -500,7 +500,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
         return [CKFlexboxComponent
                 newWithView:{}
                 size:{}
-                style:{}
+                style:{.alignItems = CKFlexboxAlignItemsStart}
                 children:{
                   {[CKTestMemoizedComponent newWithString:@"A" number:2]},
                   {[CKTestMemoizedComponent newWithString:@"B" number:3]},
@@ -560,7 +560,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
               return [CKFlexboxComponent
                       newWithView:{}
                       size:{}
-                      style:{}
+                      style:{.alignItems = CKFlexboxAlignItemsStart}
                       children:{
                         {[CKTestMemoizedComponent newWithString:@"A" number:2]},
                         {[CKTestMemoizedComponent newWithString:@"B" number:3]},
@@ -757,7 +757,7 @@ typedef CKComponent *(^kCKMemoizationChildCreationBlock)();
             [CKFlexboxComponent
              newWithView:{}
              size:{}
-             style:{}
+             style:{.alignItems = CKFlexboxAlignItemsStart}
              children:flexboxChildren]];
   if (c != nil) {
     c->_children = children;

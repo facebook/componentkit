@@ -29,7 +29,7 @@
             [CKFlexboxComponent
              newWithView:{}
              size:{}
-             style:{}
+             style:{.alignItems = CKFlexboxAlignItemsStart}
              children:{
                {
                  [CKLabelComponent

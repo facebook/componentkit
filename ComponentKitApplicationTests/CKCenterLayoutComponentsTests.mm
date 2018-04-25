@@ -102,7 +102,7 @@ static NSString *suffixForCenteringOptions(CKCenterLayoutComponentCenteringOptio
     [CKFlexboxComponent
      newWithView:{}
      size:{}
-     style:{}
+     style:{.alignItems = CKFlexboxAlignItemsStart}
      children:{
        {
          [CKComponent
