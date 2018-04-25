@@ -12,6 +12,11 @@
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
 
+/*
+ *  CKRenderWithSizeSpecComponent, and all its subclass, have to be owner components, in order to prevent a bug that can happen in case of double measurement.
+ *  It will asserts if a subclass returns NO from +(BOOL)isOwnerComponent
+ */
+
 @interface CKRenderWithSizeSpecComponent : CKComponent <CKRenderComponentProtocol>
 
 /*

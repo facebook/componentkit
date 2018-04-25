@@ -63,4 +63,9 @@ typedef std::unordered_map<CKComponentKey, CKTreeNode *, CKTreeNodeHasher, CKTre
   _children[componentKey] = child;
 }
 
+- (void)reset {
+  _classTypeIdentifier.clear();
+  _children.clear();
+}
+
 @end

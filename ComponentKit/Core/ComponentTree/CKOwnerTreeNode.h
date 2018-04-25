@@ -19,4 +19,6 @@
 
 @interface CKOwnerTreeNode : CKRenderTreeNode <CKOwnerTreeNodeProtocol>
 
+- (void)reset;
+
 @end

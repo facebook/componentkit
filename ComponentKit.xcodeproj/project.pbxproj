@@ -338,7 +338,7 @@
 		497824751BC570E000F29081 /* CKCollectionViewDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 497824741BC570E000F29081 /* CKCollectionViewDataSourceTests.mm */; };
 		49FA174E1D182C1200EA8126 /* CKDataSourceIntegrationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49FA174D1D182C1200EA8126 /* CKDataSourceIntegrationTests.mm */; };
 		51993B94207B67EF00DF0490 /* CKRenderWithSizeSpecComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 51993B8E207B67EE00DF0490 /* CKRenderWithSizeSpecComponent.mm */; };
-		51993B95207B67EF00DF0490 /* CKRenderWithSizeSpecComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 51993B93207B67EF00DF0490 /* CKRenderWithSizeSpecComponent.h */; };
+		51993B95207B67EF00DF0490 /* CKRenderWithSizeSpecComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 51993B93207B67EF00DF0490 /* CKRenderWithSizeSpecComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		51D6B2BD207BD075000EFA6B /* CKRenderWithSizeSpecComponentTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 51D6B2B8207BD075000EFA6B /* CKRenderWithSizeSpecComponentTests.mm */; };
 		51EDD905207E79C400892C35 /* CKBuildAndLayoutComponentTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 51EDD904207E79C400892C35 /* CKBuildAndLayoutComponentTests.mm */; };
 		534BB670204EB2DA001DC02C /* YGNodePrint.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB65F204EB2D9001DC02C /* YGNodePrint.h */; };

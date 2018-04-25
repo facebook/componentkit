@@ -15,19 +15,17 @@
 #import "CKComponentInternal.h"
 
 struct CKRenderWithSizeSpecComponentParameters {
-  id<CKOwnerTreeNodeProtocol> ownerForChild;
   id<CKOwnerTreeNodeProtocol> previousOwnerForChild;
   const CKComponentStateUpdateMap* stateUpdates;
   CKComponentScopeRoot *scopeRoot;
 
-  CKRenderWithSizeSpecComponentParameters(id<CKOwnerTreeNodeProtocol> o,
-                                          id<CKOwnerTreeNodeProtocol> pO,
+  CKRenderWithSizeSpecComponentParameters(id<CKOwnerTreeNodeProtocol> pO,
                                           const CKComponentStateUpdateMap* sU,
-                                          CKComponentScopeRoot *sR) : ownerForChild(o), previousOwnerForChild(pO), stateUpdates(sU), scopeRoot(sR) {};
+                                          CKComponentScopeRoot *sR) : previousOwnerForChild(pO), stateUpdates(sU), scopeRoot(sR) {};
 };
 
 @implementation CKRenderWithSizeSpecComponent {
-  __weak CKTreeNode *_node;
+  __weak CKOwnerTreeNode *_node;
   std::unique_ptr<CKRenderWithSizeSpecComponentParameters> _parameters;
 #if CK_ASSERTIONS_ENABLED
   NSMutableSet *_renderedChildrenSet;
@@ -62,7 +60,7 @@ struct CKRenderWithSizeSpecComponentParameters {
                   constrainedSize:(CKSizeRange)constrainedSize
              relativeToParentSize:(CGSize)parentSize {
   CKAssert(_parameters.get() != nullptr, @"measureChild called outside layout calculations");
-  [child buildComponentTree:_parameters->ownerForChild
+  [child buildComponentTree:_node
               previousOwner:_parameters->previousOwnerForChild
                   scopeRoot:_parameters->scopeRoot
                stateUpdates:*(_parameters->stateUpdates)];
@@ -78,11 +76,11 @@ struct CKRenderWithSizeSpecComponentParameters {
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
+  [_node reset];
   auto const layout = [self render:_node.state constrainedSize:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
 #if CK_ASSERTIONS_ENABLED
   checkIfAllChildrenComponentHaveBeenAddedToComponentTree(layout,_renderedChildrenSet);
 #endif
-  _parameters = nullptr;
 
   return layout;
 }
@@ -108,28 +106,31 @@ struct CKRenderWithSizeSpecComponentParameters {
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  auto const isOwnerComponent = [[self class] isOwnerComponent];
-  const Class nodeClass = isOwnerComponent ? [CKOwnerTreeNode class] : [CKRenderTreeNode class];
-  CKTreeNode *const node = [[nodeClass alloc]
-                       initWithComponent:self
-                       owner:owner
-                       previousOwner:previousOwner
-                       scopeRoot:scopeRoot
-                       stateUpdates:stateUpdates];
-  _node = node;
+  CKAssertTrue([[self class] isOwnerComponent]);
+  if (!_node) {
+    CKOwnerTreeNode *const node = [[CKOwnerTreeNode alloc]
+                                   initWithComponent:self
+                                   owner:owner
+                                   previousOwner:previousOwner
+                                   scopeRoot:scopeRoot
+                                   stateUpdates:stateUpdates];
+    _node = node;
 
-  _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>(
-                                                                          (isOwnerComponent ? (id<CKOwnerTreeNodeProtocol>)_node : owner),
-                                                                          (isOwnerComponent ? (id<CKOwnerTreeNodeProtocol>)[previousOwner childForComponentKey:[_node componentKey]] : previousOwner),
-                                                                          &stateUpdates,
-                                                                          scopeRoot);
+    _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>((id<CKOwnerTreeNodeProtocol>)[previousOwner childForComponentKey:[_node componentKey]],
+                                                                            &stateUpdates,
+                                                                            scopeRoot);
+  }
+}
+
+- (void)dealloc {
+  _parameters = nullptr;
 }
 
 #pragma mark - CKRenderComponent
 
 + (BOOL)isOwnerComponent
 {
-  return NO;
+  return YES;
 }
 
 + (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component

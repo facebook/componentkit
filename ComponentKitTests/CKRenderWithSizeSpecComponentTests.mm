@@ -21,12 +21,6 @@
 
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 
-// RenderWithSizeSpecComponent that gets a child from the constructor, and is **NOT** an ownerComponent
-@interface TestNonOwnerRenderWithSizeSpecComponent_ChildFromOutside : CKRenderWithSizeSpecComponent
-+ (TestNonOwnerRenderWithSizeSpecComponent_ChildFromOutside *)newWithChild:(CKComponent *)child;
-@end
-
-
 // RenderWithSizeSpecComponent that gets a child from the constructor, and is an ownerComponent
 @interface TestOwnerRenderWithSizeSpecComponent_ChildFromOutside : CKRenderWithSizeSpecComponent
 + (TestOwnerRenderWithSizeSpecComponent_ChildFromOutside *)newWithChild:(CKComponent *)child;
@@ -104,56 +98,6 @@
 
 }
 
-- (void)test_ChildNode_IsAttached_To_OwnerNode {
-
-  // The 'resolve' method in CKComponentScopeHandle requires a CKThreadLocalComponentScope.
-  // We should get rid of this assert once we move to the render method only.
-  CKThreadLocalComponentScope threadScope(nil, {});
-  CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
-  TestRenderChildComponentRetainingParameters *child = [TestRenderChildComponentRetainingParameters new];
-  CKOwnerTreeNode *previousRoot = [[CKOwnerTreeNode alloc] init];
-  CKComponentScopeRoot *scopeRoot = [CKComponentScopeRoot new];
-  id (^stateUpdateBlock)(id) = ^(id){
-    return (id)@"Test";
-  };
-  CKComponentScopeHandle *testScopeHandle = root.handle;
-  std::unordered_map<CKComponentScopeHandle *, std::vector<id (^)(id)>> testUpdateMap({
-    { testScopeHandle, {stateUpdateBlock} }
-  });
-
-  TestNonOwnerRenderWithSizeSpecComponent_ChildFromOutside *c = [TestNonOwnerRenderWithSizeSpecComponent_ChildFromOutside newWithChild:child];
-  [c buildComponentTree:root previousOwner:previousRoot scopeRoot:scopeRoot stateUpdates:testUpdateMap];
-
-  // Make sure the root has only one child.
-  const auto singleChildNode = root.children[0];
-  XCTAssertEqual(singleChildNode.component, c);
-  XCTAssertEqual(root.children.size(), 1);
-
-  CKComponentLayout componentLayout = [c render:nil
-                                constrainedSize:CKSizeRange(CGSizeMake(200, 200), CGSizeMake(200, 200))
-                               restrictedToSize:CKComponentSize::fromCGSize(CGSizeMake(200, 200))
-                           relativeToParentSize:CGSizeMake(200, 200)];
-
-  //It should only contain one child layout
-  XCTAssertEqual(componentLayout.children->size(), 1);
-  CKComponentLayout firstLayout = componentLayout.children->at(0).layout;
-  XCTAssertEqual(child, firstLayout.component);
-
-  // Make sure the root has now 2 children.
-  XCTAssertEqual(singleChildNode.component, c);
-  XCTAssertEqual(root.children.size(), 2);
-  for (auto childNode : root.children) {
-    //Make sure the only 2 components are the renderWithSizeSpec subclass (it's not an owner) or the child component
-    XCTAssertTrue((childNode.component == c) || (childNode.component == child));
-  }
-
-  //Make sure that the parameters that we pass to the child component from measureChild: are correct
-  XCTAssertEqual(child.owner, root);
-  XCTAssertEqual(child.previousOwner, previousRoot);
-  XCTAssertEqual(*child.stateUpdates, testUpdateMap);
-  XCTAssertEqual(child.scopeRoot, scopeRoot);
-}
-
 @end
 
 @implementation TestRenderChildComponentRetainingParameters
@@ -199,32 +143,6 @@
 }
 
 + (TestOwnerRenderWithSizeSpecComponent_ChildFromOutside *)newWithChild:(CKComponent *)child {
-  const auto c = [super new];
-  if (c) {
-    c->_child =child;
-  }
-  return c;
-}
-
-- (CKComponentLayout)render:(id)state constrainedSize:(CKSizeRange)constrainedSize restrictedToSize:(const CKComponentSize &)size relativeToParentSize:(CGSize)parentSize {
-  CKComponentLayout cLayout = [self measureChild:_child constrainedSize:constrainedSize relativeToParentSize:parentSize];
-  return {
-    self,
-    cLayout.size,
-    {
-      {{0,0}, cLayout}
-    }
-  };
-}
-
-@end
-
-
-@implementation TestNonOwnerRenderWithSizeSpecComponent_ChildFromOutside {
-  CKComponent * _child;
-}
-
-+ (TestNonOwnerRenderWithSizeSpecComponent_ChildFromOutside *)newWithChild:(CKComponent *)child {
   const auto c = [super new];
   if (c) {
     c->_child =child;
