@@ -39,6 +39,7 @@
    newWithView:{}
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{

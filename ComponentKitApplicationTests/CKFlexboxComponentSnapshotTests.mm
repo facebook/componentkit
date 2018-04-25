@@ -99,7 +99,10 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
   [CKFlexboxComponent
    newWithView:kWhiteBackgroundView
    size:{}
-   style:{.direction = CKFlexboxDirectionHorizontal}
+   style:{
+     .alignItems = CKFlexboxAlignItemsStart,
+     .direction = CKFlexboxDirectionHorizontal
+   }
    children:{
      // After flexShrink-able children are all clamped to zero, the sum of their widths is 100px.
      {
@@ -128,6 +131,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal,
    }
    children:{
@@ -641,6 +645,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal,
    }
    children:{
@@ -1207,6 +1212,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal,
    }
    children:{
@@ -1631,6 +1637,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -1660,6 +1667,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -1749,6 +1757,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -1783,6 +1792,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -1945,6 +1955,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -1974,6 +1985,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -2063,6 +2075,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -2097,6 +2110,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -2201,6 +2215,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -2231,6 +2246,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -2413,6 +2429,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -2440,6 +2457,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -2467,6 +2485,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -2494,6 +2513,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -2521,6 +2541,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{
@@ -2548,6 +2569,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    newWithView:kWhiteBackgroundView
    size:{}
    style:{
+     .alignItems = CKFlexboxAlignItemsStart,
      .direction = CKFlexboxDirectionHorizontal
    }
    children:{

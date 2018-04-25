@@ -28,7 +28,10 @@
             [CKFlexboxComponent
              newWithView:{}
              size:{}
-             style:{.spacing = 50}
+             style:{
+               .alignItems = CKFlexboxAlignItemsStart,
+               .spacing = 50
+             }
              children:{
                {lineComponent()},
                {[CKLabelComponent
