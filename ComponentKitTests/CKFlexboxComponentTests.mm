@@ -27,7 +27,7 @@
 
 - (void)testSizeTranslation
 {
-  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{}
+  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart}
    children:{
      { [CKComponent newWithView:{[UIView class]} size:{50,50}] },
      { [CKComponent newWithView:{[UIView class]} size:{.width = 50}] },
@@ -59,7 +59,7 @@
 
 - (void)testDirectionTranslation
 {
-  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{} children:{}];
+  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart} children:{}];
   YGNodeRef node = [component ygNode:{{0, 0}, {0, 0}}];
   XCTAssertEqual(YGNodeStyleGetFlexDirection(node), YGFlexDirectionColumn);
 
@@ -78,7 +78,7 @@
 
 - (void)testJustifyTranslation
 {
-  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{} children:{}];
+  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart} children:{}];
   YGNodeRef node = [component ygNode:{{0, 0}, {0, 0}}];
   XCTAssertEqual(YGNodeStyleGetJustifyContent(node), YGJustifyFlexStart);
 
@@ -103,7 +103,7 @@
 
 - (void)testAlignItemsTranslation
 {
-  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{} children:{}];
+  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart} children:{}];
   YGNodeRef node = [component ygNode:{{0, 0}, {0, 0}}];
   XCTAssertEqual(YGNodeStyleGetAlignItems(node), YGAlignFlexStart);
 
@@ -134,7 +134,7 @@
 
 - (void)testAlignChildTranslation
 {
-  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{}
+  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart}
     children:{
       { [CKComponent newWithView:{[UIView class]} size:{}] },
       { [CKComponent newWithView:{[UIView class]} size:{}], .alignSelf = CKFlexboxAlignSelfAuto },
@@ -161,7 +161,7 @@
 
 - (void)testFlexGrowShrinkTranslation
 {
-  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{}
+  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart}
    children:{
      { [CKComponent newWithView:{[UIView class]} size:{}] },
      { [CKComponent newWithView:{[UIView class]} size:{}], .flexGrow = 1, .flexShrink = 0.5 },
@@ -186,7 +186,8 @@
 
 - (void)testFlexBasisTranslation
 {
-  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{}
+  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{}
+    style:{.alignItems = CKFlexboxAlignItemsStart}
     children:{
       { [CKComponent newWithView:{[UIView class]} size:{}] },
       { [CKComponent newWithView:{[UIView class]} size:{}], .flexBasis = CKRelativeDimension::Auto(),},

@@ -95,7 +95,7 @@
 
 static CKFlexboxComponent* flexboxComponentWithScopedChildren(NSArray<CKComponent *> *children) {
 
-  CKFlexboxComponent *c = [CKFlexboxComponent newWithView:{} size:{} style:{}
+  CKFlexboxComponent *c = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart}
                                                  children:CK::map(children, [](CKComponent *child) -> CKFlexboxComponentChild { return {child}; })];
   return c;
 }
@@ -113,4 +113,3 @@ static NSArray<CKComponent *>* createChildrenArray(BOOL scoped) {
 }
 
 @end
-
