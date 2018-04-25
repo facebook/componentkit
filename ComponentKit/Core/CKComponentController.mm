@@ -170,7 +170,7 @@ private:
     default:
       if (!component.componentOrAncestorHasScopeConflict) {
         // Scope collisions cause all sorts of havoc; ignore when that happens.
-        CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
+        CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
       }
   }
 }
@@ -215,7 +215,7 @@ private:
     default:
       if (!component.componentOrAncestorHasScopeConflict) {
         // Scope collisions cause all sorts of havoc; ignore when that happens.
-        CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
+        CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
       }
   }
 
@@ -239,7 +239,7 @@ private:
     default:
       if (!component.componentOrAncestorHasScopeConflict) {
         // Scope collisions cause all sorts of havoc; ignore when that happens.
-        CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
+        CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
       }
   }
 }
@@ -261,7 +261,7 @@ private:
     default:
       if (!component.componentOrAncestorHasScopeConflict) {
         // Scope collisions cause all sorts of havoc; ignore when that happens.
-        CKFailAssert(@"Unexpected state '%@' in %@ (%@)", componentStateName(_state), [self class], _component);
+        CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
       }
   }
 }
