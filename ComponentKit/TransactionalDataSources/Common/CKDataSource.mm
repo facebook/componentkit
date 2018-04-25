@@ -77,9 +77,22 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
 - (void)dealloc
 {
-  [_state enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSIndexPath *, BOOL *stop) {
-    CKComponentScopeRootAnnounceControllerInvalidation([item scopeRoot]);
-  }];
+  // We want to ensure that controller invalidation is called on the main thread
+  // The chain of ownership is following: CKDataSourceState -> array of CKDataSourceItem-> ScopeRoot -> controllers.
+  // We delay desctruction of DataSourceState to guarantee that controllers are alive.
+  CKDataSourceState *state = _state;
+  void (^completion)() = ^() {
+    [state enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSIndexPath *, BOOL *stop) {
+      CKComponentScopeRootAnnounceControllerInvalidation([item scopeRoot]);
+    }];
+  };
+  if ([NSThread isMainThread]) {
+    completion();
+  } else {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      completion();
+    });
+  }
 }
 
 - (CKDataSourceState *)state
