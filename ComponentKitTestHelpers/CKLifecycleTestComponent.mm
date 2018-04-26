@@ -140,7 +140,9 @@ static BOOL _shouldEarlyReturnNew = NO;
 
 - (void)invalidateController
 {
-  CKAssertMainThread();
+  if (![NSThread isMainThread]) {
+    CKFatal(@"InvalidateController should only be called on main thread");
+  }
   [super invalidateController];
   _calledInvalidateController = YES;
 }

@@ -89,9 +89,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   if ([NSThread isMainThread]) {
     completion();
   } else {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      completion();
-    });
+    dispatch_async(dispatch_get_main_queue(), completion);
   }
 }
 

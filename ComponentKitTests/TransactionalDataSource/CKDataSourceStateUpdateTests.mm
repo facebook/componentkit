@@ -35,7 +35,7 @@
 
 - (void)testSynchronousStateUpdateResultsInUpdatedComponent
 {
-  CKDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
+  CKDataSource *ds = CKComponentTestDataSource([self class]);
   CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
   [[item layout].component updateState:^(id oldState){return @"new state";} mode:CKUpdateModeSynchronous];
 
@@ -48,7 +48,7 @@
 
 - (void)testMultipleSynchronousStateUpdatesAreCoalesced
 {
-  CKDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
+  CKDataSource *ds = CKComponentTestDataSource([self class]);
   CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
   NSNumber *originalState = ((CKStateExposingComponent *)[item layout].component).state;
   [[item layout].component updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
@@ -63,7 +63,7 @@
 
 - (void)testAsynchronousStateUpdateResultsInUpdatedComponent
 {
-  CKDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
+  CKDataSource *ds = CKComponentTestDataSource([self class]);
   CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
   [[item layout].component updateState:^(id oldState){return @"new state";} mode:CKUpdateModeAsynchronous];
 
@@ -75,7 +75,7 @@
 
 - (void)testStateUpdatesAreProcessedInTheOrderTheyWereEnqueued
 {
-  CKDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
+  CKDataSource *ds = CKComponentTestDataSource([self class]);
   CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
 
   CKComponent *const component = item.layout.component;

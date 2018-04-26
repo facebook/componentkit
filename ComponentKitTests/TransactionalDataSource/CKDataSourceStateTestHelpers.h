@@ -21,6 +21,6 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
                                                                                      NSUInteger numberOfItemsPerSection);
 
 /** Returns a data source with one item and one section. */
-CKDataSource *CKTransactionalComponentTestDataSource(Class<CKComponentProvider> provider);
+CKDataSource *CKComponentTestDataSource(Class<CKComponentProvider> provider);
 
 NSSet *CKTestIndexPaths(NSUInteger numberOfSections, NSUInteger numberOfItemsPerSection);

@@ -54,7 +54,7 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
   return [[CKDataSourceState alloc] initWithConfiguration:configuration sections:sections];
 }
 
-CKDataSource *CKTransactionalComponentTestDataSource(Class<CKComponentProvider> provider)
+CKDataSource *CKComponentTestDataSource(Class<CKComponentProvider> provider)
 {
   CKDataSource *ds =
   [[CKDataSource alloc] initWithConfiguration:

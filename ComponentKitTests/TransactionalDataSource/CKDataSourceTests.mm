@@ -10,14 +10,17 @@
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceAppliedChanges.h>
 #import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
+#import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceListener.h>
 #import <ComponentKit/CKDataSourceState.h>
 
@@ -41,7 +44,7 @@ struct CKDataSourceAnnouncedUpdate {
 
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
 {
-  return [CKComponent new];
+  return [CKLifecycleTestComponent new];
 }
 
 - (void)tearDown
@@ -129,7 +132,7 @@ struct CKDataSourceAnnouncedUpdate {
 
 - (void)testUpdatingConfigurationAnnouncesUpdate
 {
-  CKDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
+  CKDataSource *ds = CKComponentTestDataSource([self class]);
   [ds addListener:self];
 
   CKDataSourceConfiguration *config =
@@ -158,7 +161,7 @@ struct CKDataSourceAnnouncedUpdate {
 
 - (void)testReloadingAnnouncesUpdate
 {
-  CKDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
+  CKDataSource *ds = CKComponentTestDataSource([self class]);
   [ds addListener:self];
   [ds reloadWithMode:CKUpdateModeSynchronous userInfo:nil];
 
@@ -178,7 +181,7 @@ struct CKDataSourceAnnouncedUpdate {
 
 - (void)testSynchronousReloadCancelsPreviousAsynchronousReload
 {
-  CKDataSource *ds = CKTransactionalComponentTestDataSource([self class]);
+  CKDataSource *ds = CKComponentTestDataSource([self class]);
   [ds addListener:self];
 
   // The initial asynchronous reload should be canceled by the immediately subsequent synchronous reload.
@@ -211,6 +214,25 @@ struct CKDataSourceAnnouncedUpdate {
   }));
   XCTAssertEqual(_syncModificationStartCounter, 1);
 }
+
+- (void)testDeallocatingDataSourceTriggersInvalidateOnMainThread
+{
+  CKLifecycleTestComponentController *controller = nil;
+  @autoreleasepool {
+    // We dispatch empty operation on Data Source to background so that
+    // DataSource deallocation is also triggered on background.
+    // CKLifecycleTestComponent will assert if it receives an invalidation not on the main thread,
+    CKDataSource *dataSource = CKComponentTestDataSource([self class]);
+    controller = (CKLifecycleTestComponentController *)[[dataSource.state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] layout].component.controller;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      [dataSource hash];
+    });
+  }
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
+    return controller.calledInvalidateController;
+  }));
+}
+
 
 #pragma mark - Listener
 
