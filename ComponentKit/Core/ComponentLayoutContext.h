@@ -57,11 +57,6 @@ namespace CK {
        */
       static NSString *currentStackDescription();
 
-      /**
-       Returns a name of the root component class, i.e. component that is at the root of the component tree.
-       */
-      static NSString *currentRootComponentClassName();
-
       LayoutContext(const LayoutContext&) = delete;
       LayoutContext &operator=(const LayoutContext&) = delete;
     };

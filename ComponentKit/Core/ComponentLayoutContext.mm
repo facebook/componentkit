@@ -82,8 +82,3 @@ NSString *LayoutContext::currentStackDescription()
   }
   return s;
 }
-
-NSString *LayoutContext::currentRootComponentClassName()
-{
-  return componentStack().empty() ? @"" : NSStringFromClass([componentStack()[0]->component class]);
-}
