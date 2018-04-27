@@ -27,7 +27,10 @@
 
 - (void)testSizeTranslation
 {
-  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart}
+  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{}
+   style:{
+     .alignItems = CKFlexboxAlignItemsStart
+   }
    children:{
      { [CKComponent newWithView:{[UIView class]} size:{50,50}] },
      { [CKComponent newWithView:{[UIView class]} size:{.width = 50}] },
@@ -64,12 +67,14 @@
   XCTAssertEqual(YGNodeStyleGetFlexDirection(node), YGFlexDirectionColumn);
 
   component = [CKFlexboxComponent newWithView:{} size:{} style:{
+    .alignItems = CKFlexboxAlignItemsStart,
     .direction = CKFlexboxDirectionVertical
   } children:{}];
   node = [component ygNode:{{0, 0}, {0, 0}}];
   XCTAssertEqual(YGNodeStyleGetFlexDirection(node), YGFlexDirectionColumn);
 
   component = [CKFlexboxComponent newWithView:{} size:{} style:{
+    .alignItems = CKFlexboxAlignItemsStart,
     .direction = CKFlexboxDirectionHorizontal
   } children:{}];
   node = [component ygNode:{{0, 0}, {0, 0}}];
@@ -83,18 +88,21 @@
   XCTAssertEqual(YGNodeStyleGetJustifyContent(node), YGJustifyFlexStart);
 
   component = [CKFlexboxComponent newWithView:{} size:{} style:{
+    .alignItems = CKFlexboxAlignItemsStart,
     .justifyContent = CKFlexboxJustifyContentStart
   } children:{}];
   node = [component ygNode:{{0, 0}, {0, 0}}];
   XCTAssertEqual(YGNodeStyleGetJustifyContent(node), YGJustifyFlexStart);
 
   component = [CKFlexboxComponent newWithView:{} size:{} style:{
+    .alignItems = CKFlexboxAlignItemsStart,
     .justifyContent = CKFlexboxJustifyContentCenter
   } children:{}];
   node = [component ygNode:{{0, 0}, {0, 0}}];
   XCTAssertEqual(YGNodeStyleGetJustifyContent(node), YGJustifyCenter);
 
   component = [CKFlexboxComponent newWithView:{} size:{} style:{
+    .alignItems = CKFlexboxAlignItemsStart,
     .justifyContent = CKFlexboxJustifyContentEnd
   } children:{}];
   node = [component ygNode:{{0, 0}, {0, 0}}];
@@ -208,7 +216,11 @@
 
 - (void)testSpacingTranslation
 {
-  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{.spacing = 5}
+  CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{}
+    style:{
+      .alignItems = CKFlexboxAlignItemsStart,
+      .spacing = 5
+    }
     children:{
       { [CKComponent newWithView:{[UIView class]} size:{}], .spacingBefore = 15},
       { [CKComponent newWithView:{[UIView class]} size:{}], .spacingAfter = 5},
