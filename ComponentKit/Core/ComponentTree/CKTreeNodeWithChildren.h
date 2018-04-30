@@ -8,15 +8,17 @@
  *
  */
 
-#import "CKTreeNodeWithChildren.h"
+#import "CKTreeNode.h"
 #import "CKTreeNodeProtocol.h"
 
 /**
  This object represents an owner node (has children) in the component tree.
 
- Each owner component will have a corresponding CKRenderTreeNodeWithChildren.
+ Each component with multiple children will have a corresponding CKTreeNodeWithChildren.
  */
 
-@interface CKRenderTreeNodeWithChildren : CKTreeNodeWithChildren
+@interface CKTreeNodeWithChildren : CKTreeNode <CKTreeNodeWithChildrenProtocol>
+
+- (void)reset;
 
 @end

@@ -9,40 +9,14 @@
  */
 
 #import "CKRenderTreeNodeWithChild.h"
-
-#import <ComponentKit/CKComponent.h>
-#import <ComponentKit/CKComponentInternal.h>
-
-#include <tuple>
+#import "CKRenderComponentProtocol.h"
 
 @implementation CKRenderTreeNodeWithChild
-{
-  CKTreeNode *_child;
-}
 
-- (std::vector<id<CKTreeNodeProtocol>>)children
+- (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component
 {
-  return {_child};
-}
-
-- (CKTreeNode *)childForComponentKey:(const CKComponentKey &)key
-{
-  CKAssert(std::get<0>(key) == [_child.component class], @"CKComponentKey(%@, %ld) contains incorrect class(%@) type.",
-           std::get<0>(key),
-           (unsigned long)std::get<1>(key),
-           [_child.component class]);
-  return _child;
-}
-
-- (CKComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
-{
-  return std::make_tuple(componentClass, 0);
-}
-
-- (void)setChild:(CKTreeNode *)child forComponentKey:(const CKComponentKey &)componentKey
-{
-  CKAssert(_child == nil, @"_child shouldn't set more than once.");
-  _child = child;
+  return [[component class] initialStateWithComponent:component];
 }
 
 @end
+

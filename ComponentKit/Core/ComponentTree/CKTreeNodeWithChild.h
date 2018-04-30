@@ -8,15 +8,15 @@
  *
  */
 
-#import "CKRenderTreeNodeWithChildren.h"
-#import "CKRenderComponentProtocol.h"
+#import "CKTreeNode.h"
+#import "CKTreeNodeProtocol.h"
 
-@implementation CKRenderTreeNodeWithChildren
+/**
+ This object represents a node with a single child in the component tree.
 
-- (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component
-{
-  return [[component class] initialStateWithComponent:component];
-}
+ Each parent component with a single child will have CKTreeNodeWithChild.
+ */
+
+@interface CKTreeNodeWithChild : CKTreeNode <CKTreeNodeWithChildrenProtocol>
 
 @end
-

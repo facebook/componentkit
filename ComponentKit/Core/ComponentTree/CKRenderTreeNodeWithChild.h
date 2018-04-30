@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKRenderTreeNode.h"
+#import "CKTreeNodeWithChild.h"
 #import "CKTreeNodeProtocol.h"
 
 /**
@@ -17,6 +17,6 @@
  Each CKRenderComponent will have a corresponding CKRenderTreeNodeWithChild (when we use parent based component key).
  */
 
-@interface CKRenderTreeNodeWithChild : CKRenderTreeNode <CKTreeNodeWithChildrenProtocol>
+@interface CKRenderTreeNodeWithChild : CKTreeNodeWithChild
 
 @end
