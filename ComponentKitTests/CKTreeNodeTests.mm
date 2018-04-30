@@ -16,7 +16,7 @@
 #import "CKComponentInternal.h"
 #import "CKButtonComponent.h"
 #import "CKTreeNode.h"
-#import "CKOwnerTreeNode.h"
+#import "CKRenderTreeNodeWithChildren.h"
 #import "CKThreadLocalComponentScope.h"
 
 @interface CKTreeNodeTest_Component_WithState : CKComponent
@@ -47,11 +47,11 @@
 
 @implementation CKTreeNodeTests
 
-#pragma mark - CKOwnerTreeNode
+#pragma mark - CKRenderTreeNodeWithChildren
 
-- (void)test_childForComponentKey_onCKOwnerTreeNode_withSingleChild {
+- (void)test_childForComponentKey_onCKRenderTreeNodeWithChildren_withSingleChild {
   // Simulate first component tree creation
-  CKOwnerTreeNode *root1 = [[CKOwnerTreeNode alloc] init];
+  CKRenderTreeNodeWithChildren *root1 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component1 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
                                                             owner:root1
@@ -60,7 +60,7 @@
                                                      stateUpdates:{}];
 
   // Simulate a component tree creation due to a state update
-  CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
+  CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component2 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
                                                             owner:root2
@@ -72,9 +72,9 @@
   XCTAssertTrue(verifyChildToParentConnection(root2, childNode2, component2));
 }
 
-- (void)test_nodeIdentifier_onCKOwnerTreeNode_betweenGenerations_withSingleChild {
+- (void)test_nodeIdentifier_onCKRenderTreeNodeWithChildren_betweenGenerations_withSingleChild {
   // Simulate first component tree creation
-  CKOwnerTreeNode *root1 = [[CKOwnerTreeNode alloc] init];
+  CKRenderTreeNodeWithChildren *root1 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component1 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
                                                             owner:root1
@@ -83,7 +83,7 @@
                                                      stateUpdates:{}];
 
   // Simulate a component tree creation due to a state update
-  CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
+  CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component2 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
                                                             owner:root2
@@ -95,8 +95,8 @@
 }
 
 
-- (void)test_childForComponentKey_onCKOwnerTreeNode_withMultipleChildren {
-  CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
+- (void)test_childForComponentKey_onCKRenderTreeNodeWithChildren_withMultipleChildren {
+  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
 
   // Create 4 children components
   NSArray<CKComponent *> *components = @[[CKComponent newWithView:{} size:{}],
@@ -115,7 +115,7 @@
   }
 
   // Create 4 children components
-  CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
+  CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
   NSArray<CKComponent *> *components2 = @[[CKComponent newWithView:{} size:{}],
                                           [CKComponent newWithView:{} size:{}],
                                           [CKButtonComponent newWithView:{} size:{}],
@@ -136,7 +136,7 @@
   CKThreadLocalComponentScope threadScope(nil, {});
 
   // Simulate first component tree creation
-  CKOwnerTreeNode *root1 = [[CKOwnerTreeNode alloc] init];
+  CKRenderTreeNodeWithChildren *root1 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component1 = [CKTreeNodeTest_Component_WithState newWithView:{} size:{}];
   CKTreeNode *childNode = [[CKTreeNode alloc] initWithComponent:component1
                                                            owner:root1
@@ -148,7 +148,7 @@
   XCTAssertTrue([childNode.state isEqualToNumber:[[component1 class] initialState]]);
 
   // Simulate a component tree creation due to a state update
-  CKOwnerTreeNode *root2 = [[CKOwnerTreeNode alloc] init];
+  CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component2 = [CKTreeNodeTest_Component_WithState newWithView:{} size:{}];
 
   // Simulate a state update
@@ -247,7 +247,7 @@
 {
   CKThreadLocalComponentScope threadScope(nil, {});
 
-  CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
+  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
   CKTreeNode *node = [[(Class)nodeClass alloc]
                       initWithComponent:c
                       owner:root
@@ -263,7 +263,7 @@
 {
   CKThreadLocalComponentScope threadScope(nil, {});
 
-  CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
+  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
   CKTreeNode *node = [[(Class)nodeClass alloc]
                       initWithComponent:c
                       owner:root
@@ -279,7 +279,7 @@
 {
   CKThreadLocalComponentScope threadScope(nil, {});
 
-  CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
+  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
   CKTreeNode *node = [[(Class)nodeClass alloc]
                       initWithComponent:c
                       owner:root
@@ -291,14 +291,14 @@
   XCTAssertNotNil(node.handle);
 }
 
-static BOOL verifyChildToParentConnection(CKOwnerTreeNode * parentNode, CKTreeNode *childNode, CKComponent *c) {
+static BOOL verifyChildToParentConnection(CKRenderTreeNodeWithChildren * parentNode, CKTreeNode *childNode, CKComponent *c) {
   auto const componentKey = [childNode componentKey];
   auto const childComponent = [parentNode childForComponentKey:componentKey].component;
   return [childComponent isEqual:c];
 }
 
-static NSMutableArray<CKTreeNode*> *createsNodesForComponentsWithOwner(CKOwnerTreeNode *owner,
-                                                                       CKOwnerTreeNode *previousOwner,
+static NSMutableArray<CKTreeNode*> *createsNodesForComponentsWithOwner(CKRenderTreeNodeWithChildren *owner,
+                                                                       CKRenderTreeNodeWithChildren *previousOwner,
                                                                        NSArray<CKComponent *> *components) {
   NSMutableArray<CKTreeNode*> *nodes = [NSMutableArray array];
   for (CKComponent *component in components) {
@@ -313,7 +313,7 @@ static NSMutableArray<CKTreeNode*> *createsNodesForComponentsWithOwner(CKOwnerTr
 }
 
 /** Compare the children of the trees recursively; returns true if the two trees are equal */
-static BOOL areTreesEqual(CKOwnerTreeNode *lhs, CKOwnerTreeNode *rhs) {
+static BOOL areTreesEqual(CKRenderTreeNodeWithChildren *lhs, CKRenderTreeNodeWithChildren *rhs) {
   NSMutableSet<NSString *> *lhsChildrenIdentifiers = [NSMutableSet set];
   treeChildrenIdentifiers(lhs, lhsChildrenIdentifiers, 0);
   NSMutableSet<NSString *> *rhsChildrenIdentifiers = [NSMutableSet set];
@@ -322,12 +322,12 @@ static BOOL areTreesEqual(CKOwnerTreeNode *lhs, CKOwnerTreeNode *rhs) {
 }
 
 /** Iterate recursively over the tree and add its node identifiers to the set */
-static void treeChildrenIdentifiers(CKOwnerTreeNode *node, NSMutableSet<NSString *> *identifiers, int level) {
+static void treeChildrenIdentifiers(CKRenderTreeNodeWithChildren *node, NSMutableSet<NSString *> *identifiers, int level) {
   for (auto const childNode : node.children) {
     // We add the child identifier + its level in the tree.
     [identifiers addObject:[NSString stringWithFormat:@"%d-%d",childNode.nodeIdentifier, level]];
-    if ([childNode isKindOfClass:[CKOwnerTreeNode class]]) {
-      treeChildrenIdentifiers((CKOwnerTreeNode *)childNode, identifiers, level+1);
+    if ([childNode isKindOfClass:[CKRenderTreeNodeWithChildren class]]) {
+      treeChildrenIdentifiers((CKRenderTreeNodeWithChildren *)childNode, identifiers, level+1);
     }
   }
 }

@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKOwnerTreeNode.h"
+#import "CKRenderTreeNodeWithChildren.h"
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
@@ -33,7 +33,7 @@ struct CKTreeNodeHasher {
 
 typedef std::unordered_map<CKComponentKey, CKTreeNode *, CKTreeNodeHasher, CKTreeNodeComparator> CKScopeNodeMap;
 
-@implementation CKOwnerTreeNode
+@implementation CKRenderTreeNodeWithChildren
 {
   CKScopeNodeMap _children;
   std::unordered_map<Class, NSUInteger> _classTypeIdentifier;

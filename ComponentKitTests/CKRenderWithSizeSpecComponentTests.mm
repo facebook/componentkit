@@ -15,7 +15,7 @@
 #import "CKBuildComponent.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
-#import "CKOwnerTreeNode.h"
+#import "CKRenderTreeNodeWithChildren.h"
 #import "CKComponentScopeHandle.h"
 #import "CKThreadLocalComponentScope.h"
 
@@ -27,8 +27,8 @@
 @end
 
 @interface TestRenderChildComponentRetainingParameters : CKRenderComponent
-@property (weak) id<CKOwnerTreeNodeProtocol> owner;
-@property (weak)id<CKOwnerTreeNodeProtocol> previousOwner;
+@property (weak) id<CKTreeNodeWithChildrenProtocol> owner;
+@property (weak)id<CKTreeNodeWithChildrenProtocol> previousOwner;
 @property const CKComponentStateUpdateMap* stateUpdates;
 @property (weak)CKComponentScopeRoot *scopeRoot;
 @end
@@ -43,9 +43,9 @@
   // The 'resolve' method in CKComponentScopeHandle requires a CKThreadLocalComponentScope.
   // We should get rid of this assert once we move to the render method only.
   CKThreadLocalComponentScope threadScope(nil, {});
-  CKOwnerTreeNode *root = [[CKOwnerTreeNode alloc] init];
+  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
   TestRenderChildComponentRetainingParameters *child = [TestRenderChildComponentRetainingParameters new];
-  CKOwnerTreeNode *previousRoot = [[CKOwnerTreeNode alloc] init];
+  CKRenderTreeNodeWithChildren *previousRoot = [[CKRenderTreeNodeWithChildren alloc] init];
   CKComponentScopeRoot *scopeRoot = [CKComponentScopeRoot new];
   id (^stateUpdateBlock)(id) = ^(id){
     return (id)@"Test";
@@ -58,7 +58,7 @@
   TestOwnerRenderWithSizeSpecComponent_ChildFromOutside *c = [TestOwnerRenderWithSizeSpecComponent_ChildFromOutside newWithChild:child];
 
   CKComponentKey previuosOwnerKey = [previousRoot createComponentKeyForChildWithClass:[c class]];
-  CKOwnerTreeNode *previuosOwner = [CKOwnerTreeNode new];
+  CKRenderTreeNodeWithChildren *previuosOwner = [CKRenderTreeNodeWithChildren new];
   [previousRoot setChild:previuosOwner forComponentKey:previuosOwnerKey];
 
   [c buildComponentTree:root previousOwner:previousRoot scopeRoot:scopeRoot stateUpdates:testUpdateMap forceParent:NO];
@@ -69,8 +69,8 @@
   XCTAssertEqual(root.children.size(), 1);
 
   // Check the next level of the tree
-  XCTAssertTrue([singleChildNode isKindOfClass:[CKOwnerTreeNode class]]);
-  CKOwnerTreeNode *parentNode = (CKOwnerTreeNode *)singleChildNode;
+  XCTAssertTrue([singleChildNode isKindOfClass:[CKRenderTreeNodeWithChildren class]]);
+  CKRenderTreeNodeWithChildren *parentNode = (CKRenderTreeNodeWithChildren *)singleChildNode;
 
   //Check that there are no children attached before we call -measureChild
   XCTAssertEqual(parentNode.children.size(), 0);
@@ -120,8 +120,8 @@
   }];
 }
 
-- (void)buildComponentTree:(id<CKOwnerTreeNodeProtocol>)owner
-             previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)owner
+             previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                forceParent:(BOOL)forceParent

@@ -35,8 +35,8 @@
   return [self newWithView:{} size:{} children:std::move(children)];
 }
 
-- (void)buildComponentTree:(id<CKOwnerTreeNodeProtocol>)owner
-             previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)owner
+             previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                forceParent:(BOOL)forceParent

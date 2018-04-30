@@ -273,12 +273,12 @@
 		2319E3CF20481BDD00C71E2D /* CKRenderTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2319E3CD20481BDD00C71E2D /* CKRenderTreeNode.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2319E3D02048269A00C71E2D /* CKRenderTreeNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2319E3C220481BDD00C71E2D /* CKRenderTreeNode.mm */; };
 		2319E3D12048269F00C71E2D /* CKRenderTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2319E3CD20481BDD00C71E2D /* CKRenderTreeNode.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		23309A9F2045C5ED00833BDB /* CKOwnerTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 23309A9D2045C5ED00833BDB /* CKOwnerTreeNode.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		23309AA02045C5ED00833BDB /* CKOwnerTreeNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23309A9E2045C5ED00833BDB /* CKOwnerTreeNode.mm */; };
+		23309A9F2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h in Headers */ = {isa = PBXBuildFile; fileRef = 23309A9D2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		23309AA02045C5ED00833BDB /* CKRenderTreeNodeWithChildren.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23309A9E2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.mm */; };
 		23309AA42045C5F300833BDB /* CKRenderComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 23309AA22045C5F300833BDB /* CKRenderComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23309AA52045C5F300833BDB /* CKTreeNodeProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 23309AA32045C5F300833BDB /* CKTreeNodeProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		23309AA62045C5F800833BDB /* CKOwnerTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 23309A9D2045C5ED00833BDB /* CKOwnerTreeNode.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		23309AA72045C5FF00833BDB /* CKOwnerTreeNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23309A9E2045C5ED00833BDB /* CKOwnerTreeNode.mm */; };
+		23309AA62045C5F800833BDB /* CKRenderTreeNodeWithChildren.h in Headers */ = {isa = PBXBuildFile; fileRef = 23309A9D2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		23309AA72045C5FF00833BDB /* CKRenderTreeNodeWithChildren.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23309A9E2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.mm */; };
 		23309AA82045C60B00833BDB /* CKRenderComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 23309AA22045C5F300833BDB /* CKRenderComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23309AA92045C61000833BDB /* CKTreeNodeProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 23309AA32045C5F300833BDB /* CKTreeNodeProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23629B28203B5495007F765D /* CKRenderComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23FEC5C4203B38800068E09D /* CKRenderComponent.mm */; };
@@ -880,8 +880,8 @@
 		230ADF6F1FC5FBDA001570A3 /* CKComponentEvents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentEvents.mm; sourceTree = "<group>"; };
 		2319E3C220481BDD00C71E2D /* CKRenderTreeNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRenderTreeNode.mm; sourceTree = "<group>"; };
 		2319E3CD20481BDD00C71E2D /* CKRenderTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderTreeNode.h; sourceTree = "<group>"; };
-		23309A9D2045C5ED00833BDB /* CKOwnerTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKOwnerTreeNode.h; sourceTree = "<group>"; };
-		23309A9E2045C5ED00833BDB /* CKOwnerTreeNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKOwnerTreeNode.mm; sourceTree = "<group>"; };
+		23309A9D2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderTreeNodeWithChildren.h; sourceTree = "<group>"; };
+		23309A9E2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRenderTreeNodeWithChildren.mm; sourceTree = "<group>"; };
 		23309AA22045C5F300833BDB /* CKRenderComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderComponentProtocol.h; sourceTree = "<group>"; };
 		23309AA32045C5F300833BDB /* CKTreeNodeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTreeNodeProtocol.h; sourceTree = "<group>"; };
 		23629B3F203C2D65007F765D /* CKBuildComponentTreeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKBuildComponentTreeTests.mm; sourceTree = "<group>"; };
@@ -1375,8 +1375,8 @@
 				23309AA12045C5F300833BDB /* Protocols */,
 				2319E3CD20481BDD00C71E2D /* CKRenderTreeNode.h */,
 				2319E3C220481BDD00C71E2D /* CKRenderTreeNode.mm */,
-				23309A9D2045C5ED00833BDB /* CKOwnerTreeNode.h */,
-				23309A9E2045C5ED00833BDB /* CKOwnerTreeNode.mm */,
+				23309A9D2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h */,
+				23309A9E2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.mm */,
 				23FEC590203B30DA0068E09D /* CKTreeNode.h */,
 				23FEC592203B30DA0068E09D /* CKTreeNode.mm */,
 			);
@@ -2084,7 +2084,7 @@
 				2D7A98291DB571700064FC6D /* CKInvalidChangesetOperationType.h in Headers */,
 				03B8B4D21D2A346F00EDFF59 /* CKComponentRootView.h in Headers */,
 				03B8B4D31D2A346F00EDFF59 /* CKCollectionViewDataSource.h in Headers */,
-				23309AA62045C5F800833BDB /* CKOwnerTreeNode.h in Headers */,
+				23309AA62045C5F800833BDB /* CKRenderTreeNodeWithChildren.h in Headers */,
 				03B8B4D41D2A346F00EDFF59 /* CKWeakObjectContainer.h in Headers */,
 				03B8B4D51D2A346F00EDFF59 /* CKDataSourceInternal.h in Headers */,
 				03B8B4D61D2A346F00EDFF59 /* CKDataSourceUpdateStateModification.h in Headers */,
@@ -2373,7 +2373,7 @@
 				D0B47D0D1CBD948E00BB33CE /* CKComponentScopeRoot.h in Headers */,
 				2DBF1D7A1D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h in Headers */,
 				2DCA4E721D889D0300AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */,
-				23309A9F2045C5ED00833BDB /* CKOwnerTreeNode.h in Headers */,
+				23309A9F2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h in Headers */,
 				D0B47CE81CBD948E00BB33CE /* CKAssert.h in Headers */,
 				D0B47D6C1CBD948E00BB33CE /* CKTextKitRenderer.h in Headers */,
 				40AB33C81FC39196005D3CE9 /* CKStateUpdateMetadata.h in Headers */,
@@ -2867,7 +2867,7 @@
 				03B8B4A71D2A346F00EDFF59 /* CKDataSourceItem.mm in Sources */,
 				03B8B4A81D2A346F00EDFF59 /* CKDataSourceListenerAnnouncer.mm in Sources */,
 				03B8B4A91D2A346F00EDFF59 /* CKDataSourceState.mm in Sources */,
-				23309AA72045C5FF00833BDB /* CKOwnerTreeNode.mm in Sources */,
+				23309AA72045C5FF00833BDB /* CKRenderTreeNodeWithChildren.mm in Sources */,
 				03B8B4AA1D2A346F00EDFF59 /* CKDataSourceChange.m in Sources */,
 				03B8B4AB1D2A346F00EDFF59 /* CKDataSourceChangesetModification.mm in Sources */,
 				2D640D5E1DB7FD7800271CB4 /* CKInvalidChangesetOperationType.mm in Sources */,
@@ -3159,7 +3159,7 @@
 				D0B47CD01CBD943400BB33CE /* CKWeakObjectContainer.m in Sources */,
 				2D7A98181DB56BD10064FC6D /* CKDataSourceChangesetVerification.mm in Sources */,
 				D0B47CD11CBD943400BB33CE /* CKLabelComponent.mm in Sources */,
-				23309AA02045C5ED00833BDB /* CKOwnerTreeNode.mm in Sources */,
+				23309AA02045C5ED00833BDB /* CKRenderTreeNodeWithChildren.mm in Sources */,
 				D0B47CD21CBD943400BB33CE /* CKTextComponent.mm in Sources */,
 				534BB67C204EB2DA001DC02C /* Yoga.cpp in Sources */,
 				2319E3CE20481BDD00C71E2D /* CKRenderTreeNode.mm in Sources */,

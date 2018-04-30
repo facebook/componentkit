@@ -11,23 +11,23 @@
 #import "CKRenderWithSizeSpecComponent.h"
 
 #import "CKBuildComponent.h"
-#import "CKOwnerTreeNode.h"
+#import "CKRenderTreeNodeWithChildren.h"
 #import "CKComponentInternal.h"
 
 struct CKRenderWithSizeSpecComponentParameters {
-  id<CKOwnerTreeNodeProtocol> previousOwnerForChild;
+  id<CKTreeNodeWithChildrenProtocol> previousOwnerForChild;
   const CKComponentStateUpdateMap* stateUpdates;
   CKComponentScopeRoot *scopeRoot;
   BOOL forceParent;
 
-  CKRenderWithSizeSpecComponentParameters(id<CKOwnerTreeNodeProtocol> pO,
+  CKRenderWithSizeSpecComponentParameters(id<CKTreeNodeWithChildrenProtocol> pO,
                                           const CKComponentStateUpdateMap* sU,
                                           CKComponentScopeRoot *sR,
                                           BOOL fp) : previousOwnerForChild(pO), stateUpdates(sU), scopeRoot(sR), forceParent(fp) {};
 };
 
 @implementation CKRenderWithSizeSpecComponent {
-  __weak CKOwnerTreeNode *_node;
+  __weak CKRenderTreeNodeWithChildren *_node;
   std::unique_ptr<CKRenderWithSizeSpecComponentParameters> _parameters;
 #if CK_ASSERTIONS_ENABLED
   NSMutableSet *_renderedChildrenSet;
@@ -104,15 +104,15 @@ struct CKRenderWithSizeSpecComponentParameters {
   return {};
 }
 
-- (void)buildComponentTree:(id<CKOwnerTreeNodeProtocol>)owner
-             previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)owner
+             previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                forceParent:(BOOL)forceParent
 {
   CKAssertTrue([[self class] isOwnerComponent]);
   if (!_node) {
-    CKOwnerTreeNode *const node = [[CKOwnerTreeNode alloc]
+    CKRenderTreeNodeWithChildren *const node = [[CKRenderTreeNodeWithChildren alloc]
                                    initWithComponent:self
                                    owner:owner
                                    previousOwner:previousOwner
@@ -120,7 +120,7 @@ struct CKRenderWithSizeSpecComponentParameters {
                                    stateUpdates:stateUpdates];
     _node = node;
 
-    _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>((id<CKOwnerTreeNodeProtocol>)[previousOwner childForComponentKey:[_node componentKey]],
+    _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>((id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[_node componentKey]],
                                                                             &stateUpdates,
                                                                             scopeRoot,
                                                                             forceParent);

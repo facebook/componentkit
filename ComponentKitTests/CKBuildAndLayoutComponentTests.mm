@@ -15,7 +15,7 @@
 #import "CKBuildComponent.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
-#import "CKOwnerTreeNode.h"
+#import "CKRenderTreeNodeWithChildren.h"
 #import "CKComponentScopeHandle.h"
 #import "CKThreadLocalComponentScope.h"
 

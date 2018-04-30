@@ -14,10 +14,10 @@
 /**
  This object represents an owner node (has children) in the component tree.
 
- Each component that is an owner component will have a corresponding CKOwnerTreeNode.
+ Each owner component will have a corresponding CKRenderTreeNodeWithChildren.
  */
 
-@interface CKOwnerTreeNode : CKRenderTreeNode <CKOwnerTreeNodeProtocol>
+@interface CKRenderTreeNodeWithChildren : CKRenderTreeNode <CKTreeNodeWithChildrenProtocol>
 
 - (void)reset;
 

@@ -26,8 +26,8 @@
 @interface CKTreeNode: NSObject <CKTreeNodeProtocol>
 
 - (instancetype)initWithComponent:(CKComponent *)component
-                            owner:(id<CKOwnerTreeNodeProtocol>)owner
-                    previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
+                            owner:(id<CKTreeNodeWithChildrenProtocol>)owner
+                    previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 

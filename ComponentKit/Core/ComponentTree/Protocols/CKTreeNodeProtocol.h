@@ -41,10 +41,10 @@ typedef std::tuple<Class, NSUInteger> CKComponentKey;
 /**
  This protocol represents a node with multiple children in the component tree.
 
- Each component that is an owner component will have a corresponding CKOwnerTreeNodeProtocol.
+ Each component that is an owner component will have a corresponding CKTreeNodeWithChildrenProtocol.
  */
 
-@protocol CKOwnerTreeNodeProtocol <CKTreeNodeProtocol>
+@protocol CKTreeNodeWithChildrenProtocol <CKTreeNodeProtocol>
 
 - (std::vector<id<CKTreeNodeProtocol>>)children;
 

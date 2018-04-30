@@ -16,7 +16,7 @@
 #import "CKComponentControllerProtocol.h"
 #import "CKInternalHelpers.h"
 #import "CKThreadLocalComponentScope.h"
-#import "CKOwnerTreeNode.h"
+#import "CKRenderTreeNodeWithChildren.h"
 
 #if !defined(NO_PROTOCOLS_IN_OBJCPP)
 typedef std::unordered_map<CKComponentScopePredicate, NSHashTable<id<CKComponentProtocol>> *> _CKRegisteredComponentsMap;
@@ -68,7 +68,7 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> 
     _analyticsListener = analyticsListener;
     _globalIdentifier = globalIdentifier;
     _rootFrame = [[CKComponentScopeFrame alloc] initWithHandle:nil];
-    _rootNode = [[CKOwnerTreeNode alloc] init];
+    _rootNode = [[CKRenderTreeNodeWithChildren alloc] init];
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
   }

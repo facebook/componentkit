@@ -11,7 +11,7 @@
 #import "CKRenderWithChildrenComponent.h"
 
 #import "CKBuildComponent.h"
-#import "CKOwnerTreeNode.h"
+#import "CKRenderTreeNodeWithChildren.h"
 #import "CKComponentInternal.h"
 
 @implementation CKRenderWithChildrenComponent
@@ -32,14 +32,14 @@
   return {};
 }
 
-- (void)buildComponentTree:(id<CKOwnerTreeNodeProtocol>)owner
-             previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)owner
+             previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                forceParent:(BOOL)forceParent
 {
   auto const isOwnerComponent = [[self class] isOwnerComponent];
-  const Class nodeClass = isOwnerComponent ? [CKOwnerTreeNode class] : [CKRenderTreeNode class];
+  const Class nodeClass = isOwnerComponent ? [CKRenderTreeNodeWithChildren class] : [CKRenderTreeNode class];
   CKTreeNode *const node = [[nodeClass alloc]
                             initWithComponent:self
                             owner:owner
@@ -47,8 +47,8 @@
                             scopeRoot:scopeRoot
                             stateUpdates:stateUpdates];
   
-  const id<CKOwnerTreeNodeProtocol> ownerForChild = (isOwnerComponent ? (id<CKOwnerTreeNodeProtocol>)node : owner);
-  const id<CKOwnerTreeNodeProtocol> previousOwnerForChild = (isOwnerComponent ? (id<CKOwnerTreeNodeProtocol>)[previousOwner childForComponentKey:[node componentKey]] : previousOwner);
+  const id<CKTreeNodeWithChildrenProtocol> ownerForChild = (isOwnerComponent ? (id<CKTreeNodeWithChildrenProtocol>)node : owner);
+  const id<CKTreeNodeWithChildrenProtocol> previousOwnerForChild = (isOwnerComponent ? (id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]] : previousOwner);
 
   auto const children = [self renderChildren:node.state];
   for (auto const child : children) {

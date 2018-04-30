@@ -25,7 +25,7 @@
 
 @class CKComponentScopeFrame;
 @class CKComponentScopeRoot;
-@class CKOwnerTreeNode;
+@class CKRenderTreeNodeWithChildren;
 
 /** Component state announcements will always be made on the main thread. */
 @protocol CKComponentStateListener <NSObject>
@@ -68,7 +68,7 @@
 @property (nonatomic, strong, readonly) CKComponentScopeFrame *rootFrame;
 
 /** Render Support */
-@property (nonatomic, strong, readonly) CKOwnerTreeNode *rootNode;
+@property (nonatomic, strong, readonly) CKRenderTreeNodeWithChildren *rootNode;
 @property (nonatomic, assign) BOOL hasRenderComponentInTree;
 
 @end
