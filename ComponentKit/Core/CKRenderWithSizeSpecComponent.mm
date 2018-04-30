@@ -112,12 +112,12 @@ struct CKRenderWithSizeSpecComponentParameters {
 {
   CKAssertTrue([[self class] isOwnerComponent]);
   if (!_node) {
-    CKRenderTreeNodeWithChildren *const node = [[CKRenderTreeNodeWithChildren alloc]
-                                   initWithComponent:self
-                                   owner:owner
-                                   previousOwner:previousOwner
-                                   scopeRoot:scopeRoot
-                                   stateUpdates:stateUpdates];
+    auto const node = [[CKRenderTreeNodeWithChildren alloc]
+                       initWithComponent:self
+                       owner:owner
+                       previousOwner:previousOwner
+                       scopeRoot:scopeRoot
+                       stateUpdates:stateUpdates];
     _node = node;
 
     _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>((id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[_node componentKey]],
@@ -162,4 +162,3 @@ static void checkIfAllChildrenComponentHaveBeenAddedToComponentTree(const CKComp
 #endif
 
 @end
-

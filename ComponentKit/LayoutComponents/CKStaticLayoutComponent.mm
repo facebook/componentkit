@@ -12,6 +12,7 @@
 
 #import "ComponentUtilities.h"
 #import "CKComponentSubclass.h"
+#import "CKRenderTreeNodeWithChildren.h"
 #import <ComponentKit/CKComponentInternal.h>
 
 @implementation CKStaticLayoutComponent
@@ -41,10 +42,23 @@
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                forceParent:(BOOL)forceParent
 {
-  [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates forceParent:forceParent];
+  if (forceParent) {
+    auto const node = [[CKTreeNodeWithChildren alloc]
+                       initWithComponent:self
+                       owner:owner
+                       previousOwner:previousOwner
+                       scopeRoot:scopeRoot
+                       stateUpdates:stateUpdates];
 
-  for (auto const &child : _children) {
-    [child.component buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates forceParent:forceParent];
+    auto const previousOwnerForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]];
+    for (auto const &child : _children) {
+      [child.component buildComponentTree:node previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates forceParent:forceParent];
+    }
+  } else {
+    [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates forceParent:forceParent];
+    for (auto const &child : _children) {
+      [child.component buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates forceParent:forceParent];
+    }
   }
 }
 

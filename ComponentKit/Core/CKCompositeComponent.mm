@@ -17,6 +17,7 @@
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKTreeNode.h"
+#import "CKRenderTreeNodeWithChild.h"
 
 @interface CKCompositeComponent ()
 {
@@ -71,14 +72,31 @@
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                forceParent:(BOOL)forceParent
 {
-  [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates forceParent:forceParent];
+  if (forceParent) {
+    auto const node = [[CKTreeNodeWithChild alloc]
+                       initWithComponent:self
+                       owner:owner
+                       previousOwner:previousOwner
+                       scopeRoot:scopeRoot
+                       stateUpdates:stateUpdates];
 
-  if (_component) {
-    [_component buildComponentTree:owner
-                     previousOwner:previousOwner
-                         scopeRoot:scopeRoot
-                      stateUpdates:stateUpdates
-                       forceParent:forceParent];
+    if (_component) {
+      [_component buildComponentTree:node
+                       previousOwner:(id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]]
+                           scopeRoot:scopeRoot
+                        stateUpdates:stateUpdates
+                         forceParent:forceParent];
+    }
+  } else {
+    [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates forceParent:forceParent];
+
+    if (_component) {
+      [_component buildComponentTree:owner
+                       previousOwner:previousOwner
+                           scopeRoot:scopeRoot
+                        stateUpdates:stateUpdates
+                         forceParent:forceParent];
+    }
   }
 }
 
