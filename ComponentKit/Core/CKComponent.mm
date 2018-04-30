@@ -154,6 +154,7 @@ struct CKComponentMountInfo {
              previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+               forceParent:(BOOL)forceParent
 {
   // In this case this is a leaf component, which means we don't need to continue the recursion as it has no children.
   __unused auto const node = [[CKTreeNode alloc]

@@ -38,7 +38,8 @@ static CKBuildComponentResult _CKBuildComponent(CKComponentScopeRoot *previousRo
     [component buildComponentTree:threadScope.newScopeRoot.rootNode
                     previousOwner:previousRoot.rootNode
                         scopeRoot:threadScope.newScopeRoot
-                     stateUpdates:stateUpdates];
+                     stateUpdates:stateUpdates
+                      forceParent:NO];
   }
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;

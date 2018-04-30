@@ -104,6 +104,7 @@
 - (void)buildComponentTree:(id<CKOwnerTreeNodeProtocol>)owner
              previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
-              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
+              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+               forceParent:(BOOL)forceParent;
 
 @end

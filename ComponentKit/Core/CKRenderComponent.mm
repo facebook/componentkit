@@ -41,6 +41,7 @@
              previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+               forceParent:(BOOL)forceParent
 {
   auto const isOwnerComponent = [[self class] isOwnerComponent];
   const Class nodeClass = isOwnerComponent ? [CKOwnerTreeNode class] : [CKRenderTreeNode class];
@@ -57,7 +58,8 @@
     [child buildComponentTree:(isOwnerComponent ? (id<CKOwnerTreeNodeProtocol>)node : owner)
                 previousOwner:(isOwnerComponent ? (id<CKOwnerTreeNodeProtocol>)[previousOwner childForComponentKey:[node componentKey]] : previousOwner)
                     scopeRoot:scopeRoot
-                 stateUpdates:stateUpdates];
+                 stateUpdates:stateUpdates
+                  forceParent:forceParent];
   }
 }
 

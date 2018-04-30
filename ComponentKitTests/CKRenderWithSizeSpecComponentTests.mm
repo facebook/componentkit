@@ -61,7 +61,7 @@
   CKOwnerTreeNode *previuosOwner = [CKOwnerTreeNode new];
   [previousRoot setChild:previuosOwner forComponentKey:previuosOwnerKey];
 
-  [c buildComponentTree:root previousOwner:previousRoot scopeRoot:scopeRoot stateUpdates:testUpdateMap];
+  [c buildComponentTree:root previousOwner:previousRoot scopeRoot:scopeRoot stateUpdates:testUpdateMap forceParent:NO];
 
   // Make sure the root has only one child.
   const auto singleChildNode = root.children[0];
@@ -123,12 +123,14 @@
 - (void)buildComponentTree:(id<CKOwnerTreeNodeProtocol>)owner
              previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
-              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates {
+              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+               forceParent:(BOOL)forceParent
+{
   _owner = owner;
   _previousOwner = previousOwner;
   _stateUpdates = &stateUpdates;
   _scopeRoot = scopeRoot;
-  [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates];
+  [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates forceParent:forceParent];
 }
 
 @end

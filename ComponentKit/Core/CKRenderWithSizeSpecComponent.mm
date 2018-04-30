@@ -18,10 +18,12 @@ struct CKRenderWithSizeSpecComponentParameters {
   id<CKOwnerTreeNodeProtocol> previousOwnerForChild;
   const CKComponentStateUpdateMap* stateUpdates;
   CKComponentScopeRoot *scopeRoot;
+  BOOL forceParent;
 
   CKRenderWithSizeSpecComponentParameters(id<CKOwnerTreeNodeProtocol> pO,
                                           const CKComponentStateUpdateMap* sU,
-                                          CKComponentScopeRoot *sR) : previousOwnerForChild(pO), stateUpdates(sU), scopeRoot(sR) {};
+                                          CKComponentScopeRoot *sR,
+                                          BOOL fp) : previousOwnerForChild(pO), stateUpdates(sU), scopeRoot(sR), forceParent(fp) {};
 };
 
 @implementation CKRenderWithSizeSpecComponent {
@@ -63,7 +65,8 @@ struct CKRenderWithSizeSpecComponentParameters {
   [child buildComponentTree:_node
               previousOwner:_parameters->previousOwnerForChild
                   scopeRoot:_parameters->scopeRoot
-               stateUpdates:*(_parameters->stateUpdates)];
+               stateUpdates:*(_parameters->stateUpdates)
+                forceParent:_parameters->forceParent];
 #if CK_ASSERTIONS_ENABLED
   [_renderedChildrenSet addObject:child];
 #endif
@@ -105,6 +108,7 @@ struct CKRenderWithSizeSpecComponentParameters {
              previousOwner:(id<CKOwnerTreeNodeProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+               forceParent:(BOOL)forceParent
 {
   CKAssertTrue([[self class] isOwnerComponent]);
   if (!_node) {
@@ -118,7 +122,8 @@ struct CKRenderWithSizeSpecComponentParameters {
 
     _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>((id<CKOwnerTreeNodeProtocol>)[previousOwner childForComponentKey:[_node componentKey]],
                                                                             &stateUpdates,
-                                                                            scopeRoot);
+                                                                            scopeRoot,
+                                                                            forceParent);
   }
 }
 
