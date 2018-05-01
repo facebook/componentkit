@@ -85,4 +85,19 @@
   XCTAssertEqual(r.max.width, 200.0f, @"Expected max-size to be width");
 }
 
+- (void)testWhenResolvedExactSizeIsNanOrInfinity
+{
+  CKComponentSize s = {
+    .minWidth = 100, .minHeight = 100,
+    .maxWidth = 300, .maxHeight = 300,
+    .width = INFINITY, .height = INFINITY
+  };
+  
+  CKSizeRange r = s.resolve({800, 300});
+  XCTAssertEqual(r.min.width, 100.0f, @"Expected min width to be passed through");
+  XCTAssertEqual(r.min.height, 100.0f, @"Expected min height to be passed through");
+  XCTAssertEqual(r.max.width, 300.0f, @"Expected max width to be passed through");
+  XCTAssertEqual(r.max.height, 300.0f, @"Expected max height to be passed through");
+}
+
 @end

@@ -34,7 +34,7 @@ static inline void CKCSConstrain(CGFloat minVal, CGFloat exactVal, CGFloat maxVa
         *outMax = minVal;
         return;
     }
-    if (isnan(exactVal)) {
+    if (isnan(exactVal) || isinf(exactVal)) {
         // no exact value, so leave as a min/max range
         return;
     }
