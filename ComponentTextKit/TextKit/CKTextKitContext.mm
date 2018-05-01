@@ -30,8 +30,8 @@
 {
   if (self = [super init]) {
     // Concurrently initialising TextKit components crashes (rdar://18448377) so we use a global lock.
-    static std::mutex __static_mutex;
-    std::lock_guard<std::mutex> l(__static_mutex);
+    static std::mutex *__static_mutex = new std::mutex;
+    std::lock_guard<std::mutex> l(*__static_mutex);
     // Create the TextKit component stack with our default configuration.
     _textStorage = (attributedString ? [[NSTextStorage alloc] initWithAttributedString:attributedString] : [[NSTextStorage alloc] init]);
     _layoutManager = layoutManagerFactory ? layoutManagerFactory() : [[NSLayoutManager alloc] init];
