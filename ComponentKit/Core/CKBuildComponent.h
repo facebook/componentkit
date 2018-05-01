@@ -38,12 +38,14 @@ struct CKBuildComponentResult {
  @param componentFactory A block that constructs your component. Must not be nil.
  @param buildComponentTree Defines whether the method should constract a component tree (CKTreeNode) from the root component when it has a render component in the tree.
  @param alwaysBuildComponentTree Defines whether the method should ALWAYS constract a component tree from the root component (CKTreeNode) or not.
+ @param forceParent Defines whether the component tree (CKTreeNode) should ALWAYS use parent based nodes.
  */
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
                                         BOOL buildComponentTree = NO,
-                                        BOOL alwaysBuildComponentTree = NO);
+                                        BOOL alwaysBuildComponentTree = NO,
+                                        BOOL forceParent = NO);
 
 /**
  The results of a build and layout operation.
@@ -69,13 +71,15 @@ struct CKBuildAndLayoutComponentResult {
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param sizeRange The size range to compute the component layout within.
  @param componentFactory A block that constructs your component. Must not be nil.
+ @param forceParent Defines whether the component tree (CKTreeNode) should ALWAYS use parent based nodes.
 
  THIS IS EXPERIMENTAL, LINKED WITH THE DEFERRED CHILD COMPONENT CREATION (-render:() RFC) - DO NOT USE DIRECTLY
  */
 
 
 CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *previousRoot,
-                                         const CKComponentStateUpdateMap &stateUpdates,
-                                         const CKSizeRange &sizeRange,
-                                         CKComponent *(^componentFactory)(void));
+                                                          const CKComponentStateUpdateMap &stateUpdates,
+                                                          const CKSizeRange &sizeRange,
+                                                          CKComponent *(^componentFactory)(void),
+                                                          BOOL forceParent = NO);
 

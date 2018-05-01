@@ -166,9 +166,10 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        initWithComponentProvider:(id)self
                                        context:nil
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
-                                       buildComponentTreeEnabled:NO
-                                       alwaysBuildComponentTreeEnabled:NO
+                                       buildComponentTree:NO
+                                       alwaysBuildComponentTree:NO
                                        unifyBuildAndLayout:NO
+                                       forceParent:NO
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
                                        analyticsListener:nil];

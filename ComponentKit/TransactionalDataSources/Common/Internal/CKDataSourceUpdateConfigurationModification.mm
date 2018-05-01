@@ -63,22 +63,23 @@
                                                    scopeRoot:[item scopeRoot]
                                              boundsAnimation:[item boundsAnimation]];
         } else {
-                  const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
-          return [componentProvider componentForModel:[item model] context:context];
-        }, _configuration.buildComponentTreeEnabled, _configuration.alwaysBuildComponentTreeEnabled);
-        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
-        newItem = [[CKDataSourceItem alloc] initWithLayout:layout
-                                                                           model:[item model]
-                                                                       scopeRoot:result.scopeRoot
-                                                                 boundsAnimation:result.boundsAnimation];
+          const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
+            return [componentProvider componentForModel:[item model] context:context];
+          }, _configuration.buildComponentTree, _configuration.alwaysBuildComponentTree, _configuration.forceParent);
+          const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
+          newItem = [[CKDataSourceItem alloc] initWithLayout:layout
+                                                       model:[item model]
+                                                   scopeRoot:result.scopeRoot
+                                             boundsAnimation:result.boundsAnimation];
         }
       } else {
         CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent([item scopeRoot],
-                                                         {},
-                                                         sizeRange,
-                                                         ^{
-                                                           return [componentProvider componentForModel:[item model] context:context];
-                                                         });
+                                                                           {},
+                                                                           sizeRange,
+                                                                           ^{
+                                                                             return [componentProvider componentForModel:[item model] context:context];
+                                                                           },
+                                                                           _configuration.forceParent);
 
         newItem = [[CKDataSourceItem alloc] initWithLayout:result.computedLayout
                                                      model:[item model]

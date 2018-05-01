@@ -28,9 +28,10 @@
   return [self initWithComponentProvider:componentProvider
                                  context:context
                                sizeRange:sizeRange
-               buildComponentTreeEnabled:NO
-         alwaysBuildComponentTreeEnabled:NO
+                      buildComponentTree:NO
+                alwaysBuildComponentTree:NO
                      unifyBuildAndLayout:NO
+                             forceParent:NO
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil];
@@ -39,9 +40,10 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-                buildComponentTreeEnabled:(BOOL)buildComponentTreeEnabled
-          alwaysBuildComponentTreeEnabled:(BOOL)alwaysBuildComponentTreeEnabled
+                       buildComponentTree:(BOOL)buildComponentTree
+                 alwaysBuildComponentTree:(BOOL)alwaysBuildComponentTree
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
+                              forceParent:(BOOL)forceParent
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -53,9 +55,10 @@
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
-    _buildComponentTreeEnabled = buildComponentTreeEnabled;
-    _alwaysBuildComponentTreeEnabled = alwaysBuildComponentTreeEnabled;
+    _buildComponentTree = buildComponentTree;
+    _alwaysBuildComponentTree = alwaysBuildComponentTree;
     _unifyBuildAndLayout = unifyBuildAndLayout;
+    _forceParent = forceParent;
   }
   return self;
 }

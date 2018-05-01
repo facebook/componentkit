@@ -27,7 +27,7 @@
                             match the predicate for rapid enumeration later.
  @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
  @param analyticsListener listener conforming to AnalyticsListener will be used to get component lifecycle callbacks for logging
- @param unifyBuildAndLayout  Build and layout components in a unified pass. It's meant to be used only if buildComponentTreeEnabled == YES; please DO NOT use it yet, it's in a testing stage. Default NO.
+ @param unifyBuildAndLayout  Build and layout components in a unified pass. It's meant to be used only if buildComponentTree == YES; please DO NOT use it yet, it's in a testing stage. Default NO.
  @see CKComponentProvider
  @see CKComponentSizeRangeProviding
  */

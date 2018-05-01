@@ -65,18 +65,19 @@
     if (!configuration.unifyBuildAndLayout) {
       const CKBuildComponentResult result = CKBuildComponent([oldItem scopeRoot], {}, ^{
       return [componentProvider componentForModel:model context:context];
-    }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
+    }, configuration.buildComponentTree, configuration.alwaysBuildComponentTree, configuration.forceParent);
     const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
 
     [section replaceObjectAtIndex:indexPath.item withObject:
      [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation]];
     } else {
       CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent([oldItem scopeRoot],
-                                                       {},
-                                                       sizeRange,
-                                                       ^{
-                                                         return [componentProvider componentForModel:model context:context];
-                                                       });
+                                                                         {},
+                                                                         sizeRange,
+                                                                         ^{
+                                                                           return [componentProvider componentForModel:model context:context];
+                                                                         },
+                                                                         configuration.forceParent);
 
       [section replaceObjectAtIndex:indexPath.item withObject:
        [[CKDataSourceItem alloc] initWithLayout:result.computedLayout model:model scopeRoot:result.buildComponentResult.scopeRoot boundsAnimation:result.buildComponentResult.boundsAnimation]];
@@ -128,7 +129,7 @@
                                                             configuration.componentPredicates,
                                                             configuration.componentControllerPredicates), {}, ^{
           return [componentProvider componentForModel:model context:context];
-        }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
+        }, configuration.buildComponentTree, configuration.alwaysBuildComponentTree, configuration.forceParent);
         const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
         insertedItemsBySection[indexPath.section][indexPath.item] =
         [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation];
@@ -136,11 +137,12 @@
       CKBuildAndLayoutComponentResult result =
       CKBuildAndLayoutComponent(CKComponentScopeRootWithPredicates(_stateListener,
                                                           configuration.analyticsListener,
-                                                          configuration.componentPredicates,
-                                                          configuration.componentControllerPredicates),
-                       {},
-                       sizeRange,
-                       ^{ return [componentProvider componentForModel:model context:context];});
+                                                                   configuration.componentPredicates,
+                                                                   configuration.componentControllerPredicates),
+                                {},
+                                sizeRange,
+                                ^{ return [componentProvider componentForModel:model context:context];},
+                                configuration.forceParent);
 
       insertedItemsBySection[indexPath.section][indexPath.item] =
       [[CKDataSourceItem alloc] initWithLayout:result.computedLayout model:model scopeRoot:result.buildComponentResult.scopeRoot boundsAnimation:result.buildComponentResult.boundsAnimation];

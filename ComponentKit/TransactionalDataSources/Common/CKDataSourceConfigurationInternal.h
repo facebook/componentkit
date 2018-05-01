@@ -30,18 +30,20 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-                buildComponentTreeEnabled:(BOOL)buildComponentTreeEnabled
-          alwaysBuildComponentTreeEnabled:(BOOL)alwaysBuildComponentTreeEnabled
+                       buildComponentTree:(BOOL)buildComponentTree
+                 alwaysBuildComponentTree:(BOOL)alwaysBuildComponentTree
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
+                              forceParent:(BOOL)forceParent
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
 
 @property (nonatomic, readonly, strong) id<CKAnalyticsListener> analyticsListener;
 
-@property (nonatomic, assign, readonly) BOOL buildComponentTreeEnabled;
-@property (nonatomic, assign, readonly) BOOL alwaysBuildComponentTreeEnabled;
+@property (nonatomic, assign, readonly) BOOL buildComponentTree;
+@property (nonatomic, assign, readonly) BOOL alwaysBuildComponentTree;
 @property (nonatomic, assign, readonly) BOOL unifyBuildAndLayout;
+@property (nonatomic, assign, readonly) BOOL forceParent;
 
 - (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;

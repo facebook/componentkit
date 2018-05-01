@@ -62,7 +62,7 @@
         if (!configuration.unifyBuildAndLayout) {
           const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], stateUpdatesForItem->second, ^{
             return [componentProvider componentForModel:[item model] context:context];
-          }, configuration.buildComponentTreeEnabled, configuration.alwaysBuildComponentTreeEnabled);
+          }, configuration.buildComponentTree, configuration.alwaysBuildComponentTree, configuration.forceParent);
           const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
           [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:layout
                                                                  model:[item model]
@@ -70,11 +70,12 @@
                                                        boundsAnimation:result.boundsAnimation]];
         } else {
           CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent([item scopeRoot],
-                                                           stateUpdatesForItem->second,
-                                                           sizeRange,
-                                                           ^{
-                                                             return [componentProvider componentForModel:[item model] context:context];
-                                                           });
+                                                                             stateUpdatesForItem->second,
+                                                                             sizeRange,
+                                                                             ^{
+                                                                               return [componentProvider componentForModel:[item model] context:context];
+                                                                             },
+                                                                             configuration.forceParent);
           [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:result.computedLayout
                                                                  model:[item model]
                                                              scopeRoot:result.buildComponentResult.scopeRoot
