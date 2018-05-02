@@ -93,6 +93,147 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
   CKSnapshotVerifyComponent([self _layoutWithJustify:CKFlexboxJustifyContentStart flexFactor:1], kSize, @"flex");
 }
 
+- (void)testCorrectnessOfDeeplyNestedFlexboxHierarchies
+{
+  CKComponent *(^component)(UIColor *, const CKComponentSize &) = ^CKComponent *(UIColor *color, const CKComponentSize &size) {
+    return [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), color}}} size:size];
+  };
+  CKFlexboxComponentChild(^leaf)(UIColor *, const CKComponentSize &) = ^CKFlexboxComponentChild (UIColor *color, const CKComponentSize &size) {
+    return {
+      .component = component(color, size),
+      .position = {
+        .type = CKFlexboxPositionTypeRelative,
+      },
+    };
+  };
+  
+  CKFlexboxComponent *c =
+  [CKFlexboxComponent
+   newWithView:{}
+   size:{500,500}
+   style:{
+     .direction = CKFlexboxDirectionHorizontal,
+     .alignItems = CKFlexboxAlignItemsStart,
+     .padding = {
+       .top = 10,
+       .start = 10,
+       .end = 10,
+       .bottom = 10,
+     },
+   }
+   children:{
+     {
+       .component =
+       [CKFlexboxComponent
+        newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}}
+        size:{NAN,NAN}
+        style:{
+          .direction = CKFlexboxDirectionHorizontal,
+          .alignItems = CKFlexboxAlignItemsStretch,
+          .margin = {
+            .top = 10,
+            .start = 10,
+            .end = 10,
+            .bottom = 10,
+          },
+        }
+        children:{
+          {
+            .component =
+            [CKFlexboxComponent
+             newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor brownColor]}}}
+             size:{100,NAN}
+             style:{
+               .margin = {
+                 .top = 5,
+                 .bottom = 5,
+               },
+               .border = {
+                 .top = 5,
+                 .start = 5,
+                 .end = 5,
+                 .bottom = 5,
+               },
+             }
+             children:{
+               leaf([UIColor redColor], {100,100}),
+               leaf([UIColor greenColor], {100,100}),
+               leaf([UIColor blueColor], {100,100}),
+               leaf([UIColor redColor], {100,100}),
+             }]
+          },
+          leaf([UIColor grayColor], {100,NAN}),
+        }],
+       .alignSelf = CKFlexboxAlignSelfStretch,
+     },
+     {
+       .component =
+       [CKFlexboxComponent
+        newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}}
+        size:{100,NAN}
+        style:{
+          .alignItems = CKFlexboxAlignItemsStretch,
+          .padding = {
+            .top = 10,
+            .start = 10,
+            .end = 10,
+            .bottom = 10,
+          },
+        }
+        children:{
+          {
+            .component =
+            [CKFlexboxComponent
+             newWithView:{}
+             size:{NAN,100}
+             style:{
+               .direction = CKFlexboxDirectionHorizontal,
+               .alignItems = CKFlexboxAlignItemsStretch,
+             }
+             children:{
+               {
+                 .component = component([UIColor redColor], {NAN,NAN}),
+                 .flexGrow = 0.2f,
+                 .flexShrink = 1.0f,
+                 .position = {
+                   .type = CKFlexboxPositionTypeRelative,
+                 },
+               },
+               {
+                 .component = component([UIColor blueColor], {NAN,NAN}),
+                 .flexGrow = 0.2f,
+                 .flexShrink = 1.0f,
+                 .position = {
+                   .type = CKFlexboxPositionTypeRelative,
+                 },
+               },
+               {
+                 .component = component([UIColor greenColor], {NAN,NAN}),
+                 .flexGrow = 1.0f,
+                 .flexShrink = 1.0f,
+                 .position = {
+                   .type = CKFlexboxPositionTypeRelative,
+                 },
+               },
+             }]
+          },
+          leaf([UIColor yellowColor], {NAN,50}),
+          leaf([UIColor magentaColor], {NAN,50}),
+          leaf([UIColor redColor], {NAN,50}),
+          leaf([UIColor blueColor], {NAN,50}),
+          leaf([UIColor greenColor], {NAN,50}),
+        }],
+       .flexGrow = 1.0f,
+       .flexShrink = 1.0f,
+       .alignSelf = CKFlexboxAlignSelfStretch,
+     },
+     leaf([UIColor grayColor], {100,100}),
+   }];
+  
+  static CKSizeRange kSize = {{500, 500}, {500, 500}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
 - (void)testOverflowBehaviorsWhenAllFlexShrinkComponentsHaveBeenClampedToZeroButViolationStillExists
 {
   CKFlexboxComponent *c =
