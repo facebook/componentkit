@@ -26,6 +26,7 @@
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentScopeRootFactory.h"
+#import "CKDataSourceModificationHelper.h"
 
 @implementation CKDataSourceChangesetModification
 {
@@ -48,7 +49,6 @@
 - (CKDataSourceChange *)changeFromState:(CKDataSourceState *)oldState
 {
   CKDataSourceConfiguration *configuration = [oldState configuration];
-  Class<CKComponentProvider> componentProvider = [configuration componentProvider];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
 
@@ -61,27 +61,8 @@
   [[_changeset updatedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
     NSMutableArray *section = newSections[indexPath.section];
     CKDataSourceItem *oldItem = section[indexPath.item];
-
-    if (!configuration.unifyBuildAndLayout) {
-      const CKBuildComponentResult result = CKBuildComponent([oldItem scopeRoot], {}, ^{
-      return [componentProvider componentForModel:model context:context];
-    }, configuration.buildComponentTree, configuration.alwaysBuildComponentTree, configuration.forceParent);
-    const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
-
-    [section replaceObjectAtIndex:indexPath.item withObject:
-     [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation]];
-    } else {
-      CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent([oldItem scopeRoot],
-                                                                         {},
-                                                                         sizeRange,
-                                                                         ^{
-                                                                           return [componentProvider componentForModel:model context:context];
-                                                                         },
-                                                                         configuration.forceParent);
-
-      [section replaceObjectAtIndex:indexPath.item withObject:
-       [[CKDataSourceItem alloc] initWithLayout:result.computedLayout model:model scopeRoot:result.buildComponentResult.scopeRoot boundsAnimation:result.buildComponentResult.boundsAnimation]];
-    }
+    CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
+    [section replaceObjectAtIndex:indexPath.item withObject:item];
   }];
 
   __block std::unordered_map<NSUInteger, std::map<NSUInteger, CKDataSourceItem *>> insertedItemsBySection;
@@ -121,32 +102,15 @@
 
   // Insert items
   [[_changeset insertedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
-
-    if (!configuration.unifyBuildAndLayout) {
-      const CKBuildComponentResult result =
-        CKBuildComponent(CKComponentScopeRootWithPredicates(_stateListener,
-                                                            configuration.analyticsListener,
-                                                            configuration.componentPredicates,
-                                                            configuration.componentControllerPredicates), {}, ^{
-          return [componentProvider componentForModel:model context:context];
-        }, configuration.buildComponentTree, configuration.alwaysBuildComponentTree, configuration.forceParent);
-        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
-        insertedItemsBySection[indexPath.section][indexPath.item] =
-        [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation];
-    } else {
-      CKBuildAndLayoutComponentResult result =
-      CKBuildAndLayoutComponent(CKComponentScopeRootWithPredicates(_stateListener,
-                                                          configuration.analyticsListener,
-                                                                   configuration.componentPredicates,
-                                                                   configuration.componentControllerPredicates),
-                                {},
-                                sizeRange,
-                                ^{ return [componentProvider componentForModel:model context:context];},
-                                configuration.forceParent);
-
-      insertedItemsBySection[indexPath.section][indexPath.item] =
-      [[CKDataSourceItem alloc] initWithLayout:result.computedLayout model:model scopeRoot:result.buildComponentResult.scopeRoot boundsAnimation:result.buildComponentResult.boundsAnimation];
-    }
+    CKDataSourceItem *const item = CKBuildDataSourceItem(CKComponentScopeRootWithPredicates(_stateListener,
+                                                                                            configuration.analyticsListener,
+                                                                                            configuration.componentPredicates,
+                                                                                            configuration.componentControllerPredicates), {},
+                                                         sizeRange,
+                                                         configuration,
+                                                         model,
+                                                         context);
+    insertedItemsBySection[indexPath.section][indexPath.item] = item;
   }];
 
   for (const auto &sectionIt : insertedItemsBySection) {

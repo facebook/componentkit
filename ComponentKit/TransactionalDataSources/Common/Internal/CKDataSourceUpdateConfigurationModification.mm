@@ -21,6 +21,7 @@
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeRoot.h"
+#import "CKDataSourceModificationHelper.h"
 
 @implementation CKDataSourceUpdateConfigurationModification
 {
@@ -40,7 +41,6 @@
 
 - (CKDataSourceChange *)changeFromState:(CKDataSourceState *)oldState
 {
-  Class<CKComponentProvider> componentProvider = [_configuration componentProvider];
   id<NSObject> context = [_configuration context];
   const CKSizeRange sizeRange = [_configuration sizeRange];
 
@@ -55,38 +55,15 @@
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
       [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
       CKDataSourceItem *newItem;
-      if (!_configuration.unifyBuildAndLayout) {
-        if (onlySizeRangeChanged) {
-          const CKComponentLayout layout = CKComputeRootComponentLayout(item.layout.component, sizeRange, [item scopeRoot].analyticsListener);
-          newItem = [[CKDataSourceItem alloc] initWithLayout:layout
-                                                       model:[item model]
-                                                   scopeRoot:[item scopeRoot]
-                                             boundsAnimation:[item boundsAnimation]];
-        } else {
-          const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
-            return [componentProvider componentForModel:[item model] context:context];
-          }, _configuration.buildComponentTree, _configuration.alwaysBuildComponentTree, _configuration.forceParent);
-          const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
-          newItem = [[CKDataSourceItem alloc] initWithLayout:layout
-                                                       model:[item model]
-                                                   scopeRoot:result.scopeRoot
-                                             boundsAnimation:result.boundsAnimation];
-        }
-      } else {
-        CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent([item scopeRoot],
-                                                                           {},
-                                                                           sizeRange,
-                                                                           ^{
-                                                                             return [componentProvider componentForModel:[item model] context:context];
-                                                                           },
-                                                                           _configuration.forceParent);
-
-        newItem = [[CKDataSourceItem alloc] initWithLayout:result.computedLayout
+      if (onlySizeRangeChanged && !_configuration.unifyBuildAndLayout) {
+        const CKComponentLayout layout = CKComputeRootComponentLayout(item.layout.component, sizeRange, [item scopeRoot].analyticsListener);
+        newItem = [[CKDataSourceItem alloc] initWithLayout:layout
                                                      model:[item model]
-                                                 scopeRoot:result.buildComponentResult.scopeRoot
-                                           boundsAnimation:result.buildComponentResult.boundsAnimation];
+                                                 scopeRoot:[item scopeRoot]
+                                           boundsAnimation:[item boundsAnimation]];
+      } else {
+        newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, _configuration, [item model], context);
       }
-
       [newItems addObject:newItem];
     }];
     [newSections addObject:newItems];

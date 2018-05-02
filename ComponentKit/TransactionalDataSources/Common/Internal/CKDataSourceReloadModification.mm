@@ -21,6 +21,7 @@
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeRoot.h"
+#import "CKDataSourceModificationHelper.h"
 
 @implementation CKDataSourceReloadModification
 {
@@ -38,7 +39,6 @@
 - (CKDataSourceChange *)changeFromState:(CKDataSourceState *)oldState
 {
   CKDataSourceConfiguration *configuration = [oldState configuration];
-  Class<CKComponentProvider> componentProvider = [configuration componentProvider];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
 
@@ -48,28 +48,8 @@
     NSMutableArray *newItems = [NSMutableArray array];
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
       [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
-      if (!configuration.unifyBuildAndLayout) {
-        const CKBuildComponentResult result = CKBuildComponent([item scopeRoot], {}, ^{
-          return [componentProvider componentForModel:[item model] context:context];
-        }, configuration.buildComponentTree, configuration.alwaysBuildComponentTree, configuration.forceParent);
-        const CKComponentLayout layout = CKComputeRootComponentLayout(result.component, sizeRange, result.scopeRoot.analyticsListener);
-        [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:layout
-                                                               model:[item model]
-                                                           scopeRoot:result.scopeRoot
-                                                     boundsAnimation:result.boundsAnimation]];
-      } else {
-        CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent([item scopeRoot],
-                                                                           {},
-                                                                           sizeRange,
-                                                                           ^{
-                                                                             return [componentProvider componentForModel:[item model] context:context];
-                                                                           },
-                                                                           configuration.forceParent);
-        [newItems addObject:[[CKDataSourceItem alloc] initWithLayout:result.computedLayout
-                                                               model:[item model]
-                                                           scopeRoot:result.buildComponentResult.scopeRoot
-                                                     boundsAnimation:result.buildComponentResult.boundsAnimation]];
-    }
+      CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, [item model], context);
+      [newItems addObject:newItem];
      }];
     [newSections addObject:newItems];
   }];
