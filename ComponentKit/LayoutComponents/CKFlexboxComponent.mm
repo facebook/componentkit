@@ -260,6 +260,8 @@ static YGJustify ygJustifyFromStackStyle(const CKFlexboxComponentStyle &style)
       return YGJustifySpaceBetween;
     case CKFlexboxJustifyContentSpaceAround:
       return YGJustifySpaceAround;
+    case CKFlexboxJustifyContentSpaceEvenly:
+      return YGJustifySpaceEvenly;
   }
 }
 

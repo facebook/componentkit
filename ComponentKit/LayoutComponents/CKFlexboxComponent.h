@@ -49,9 +49,15 @@ typedef NS_ENUM(NSInteger, CKFlexboxJustifyContent) {
    */
   CKFlexboxJustifyContentSpaceBetween,
   /**
-   Items are positioned with space before, between, and after the line.
+   Items are positioned with space before, between, and after the lines.
+   The space before and after the lines are half the size of the space between the lines.
    */
   CKFlexboxJustifyContentSpaceAround,
+  /**
+   Items are positioned with space before, between, and after the lines.
+   The space before, between, and after the lines are all of equal size.
+   */
+  CKFlexboxJustifyContentSpaceEvenly,
 };
 
 typedef NS_ENUM(NSInteger, CKFlexboxAlignItems) {
