@@ -32,6 +32,10 @@
                 alwaysBuildComponentTree:NO
                      unifyBuildAndLayout:NO
                              forceParent:NO
+            parallelInsertBuildAndLayout:NO
+   parallelInsertBuildAndLayoutThreshold:0
+            parallelUpdateBuildAndLayout:NO
+   parallelUpdateBuildAndLayoutThreshold:0
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil];
@@ -44,6 +48,10 @@
                  alwaysBuildComponentTree:(BOOL)alwaysBuildComponentTree
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
                               forceParent:(BOOL)forceParent
+             parallelInsertBuildAndLayout:(BOOL)parallelInsertBuildAndLayout
+    parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
+             parallelUpdateBuildAndLayout:(BOOL)parallelUpdateBuildAndLayout
+    parallelUpdateBuildAndLayoutThreshold:(NSUInteger)parallelUpdateBuildAndLayoutThreshold
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -59,6 +67,10 @@
     _alwaysBuildComponentTree = alwaysBuildComponentTree;
     _unifyBuildAndLayout = unifyBuildAndLayout;
     _forceParent = forceParent;
+    _parallelInsertBuildAndLayout = parallelInsertBuildAndLayout;
+    _parallelInsertBuildAndLayoutThreshold = parallelInsertBuildAndLayoutThreshold;
+    _parallelUpdateBuildAndLayout = parallelUpdateBuildAndLayout;
+    _parallelUpdateBuildAndLayoutThreshold = parallelUpdateBuildAndLayoutThreshold;
   }
   return self;
 }

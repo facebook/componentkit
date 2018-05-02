@@ -170,6 +170,10 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        alwaysBuildComponentTree:NO
                                        unifyBuildAndLayout:NO
                                        forceParent:NO
+                                       parallelInsertBuildAndLayout:NO
+                                       parallelInsertBuildAndLayoutThreshold:0
+                                       parallelUpdateBuildAndLayout:NO
+                                       parallelUpdateBuildAndLayoutThreshold:0
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
                                        analyticsListener:nil];

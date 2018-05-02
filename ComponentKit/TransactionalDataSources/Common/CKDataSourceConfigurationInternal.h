@@ -34,6 +34,10 @@
                  alwaysBuildComponentTree:(BOOL)alwaysBuildComponentTree
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
                               forceParent:(BOOL)forceParent
+             parallelInsertBuildAndLayout:(BOOL)parallelInsertBuildAndLayout
+    parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
+             parallelUpdateBuildAndLayout:(BOOL)parallelUpdateBuildAndLayout
+    parallelUpdateBuildAndLayoutThreshold:(NSUInteger)parallelUpdateBuildAndLayoutThreshold
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
@@ -44,6 +48,10 @@
 @property (nonatomic, assign, readonly) BOOL alwaysBuildComponentTree;
 @property (nonatomic, assign, readonly) BOOL unifyBuildAndLayout;
 @property (nonatomic, assign, readonly) BOOL forceParent;
+@property (nonatomic, assign, readonly) BOOL parallelInsertBuildAndLayout;
+@property (nonatomic, assign, readonly) NSUInteger parallelInsertBuildAndLayoutThreshold;
+@property (nonatomic, assign, readonly) BOOL parallelUpdateBuildAndLayout;
+@property (nonatomic, assign, readonly) NSUInteger parallelUpdateBuildAndLayoutThreshold;
 
 - (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
