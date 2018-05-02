@@ -22,6 +22,11 @@
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo;
 
+- (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
+                    stateListener:(id<CKComponentStateListener>)stateListener
+                         userInfo:(NSDictionary *)userInfo
+                            queue:(dispatch_queue_t)queue;
+
 @property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;
 
 @end

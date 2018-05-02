@@ -11,6 +11,7 @@
 #import "CKDataSourceChangesetModification.h"
 
 #import <map>
+#import <mutex>
 
 #import "CKDataSourceConfigurationInternal.h"
 #import "CKDataSourceStateInternal.h"
@@ -32,16 +33,30 @@
 {
   id<CKComponentStateListener> _stateListener;
   NSDictionary *_userInfo;
+  dispatch_queue_t _queue;
+  std::mutex _mutex;
 }
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
 {
+  return [self initWithChangeset:changeset
+                   stateListener:stateListener
+                        userInfo:userInfo
+                           queue:nil];
+}
+
+- (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
+                    stateListener:(id<CKComponentStateListener>)stateListener
+                         userInfo:(NSDictionary *)userInfo
+                            queue:(dispatch_queue_t)queue
+{
   if (self = [super init]) {
     _changeset = changeset;
     _stateListener = stateListener;
     _userInfo = [userInfo copy];
+    _queue = queue;
   }
   return self;
 }
@@ -58,12 +73,28 @@
   }];
 
   // Update items
-  [[_changeset updatedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
-    NSMutableArray *section = newSections[indexPath.section];
-    CKDataSourceItem *oldItem = section[indexPath.item];
-    CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
-    [section replaceObjectAtIndex:indexPath.item withObject:item];
-  }];
+  if (configuration.parallelUpdateBuildAndLayout &&
+      [_changeset updatedItems].count >= configuration.parallelUpdateBuildAndLayoutThreshold &&
+      _queue) {
+    dispatch_group_t group = dispatch_group_create();
+    [[_changeset updatedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
+      NSMutableArray *const section = newSections[indexPath.section];
+      CKDataSourceItem *const oldItem = section[indexPath.item];
+      dispatch_group_async(group, _queue, ^{
+        CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
+        std::lock_guard<std::mutex> l(_mutex);
+        [section replaceObjectAtIndex:indexPath.item withObject:item];
+      });
+    }];
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+  } else {
+    [[_changeset updatedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
+      NSMutableArray *const section = newSections[indexPath.section];
+      CKDataSourceItem *const oldItem = section[indexPath.item];
+      CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
+      [section replaceObjectAtIndex:indexPath.item withObject:item];
+    }];
+  }
 
   __block std::unordered_map<NSUInteger, std::map<NSUInteger, CKDataSourceItem *>> insertedItemsBySection;
   __block std::unordered_map<NSUInteger, NSMutableIndexSet *> removedItemsBySection;
@@ -101,17 +132,38 @@
   [newSections insertObjects:emptyMutableArrays([[_changeset insertedSections] count]) atIndexes:[_changeset insertedSections]];
 
   // Insert items
-  [[_changeset insertedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
-    CKDataSourceItem *const item = CKBuildDataSourceItem(CKComponentScopeRootWithPredicates(_stateListener,
-                                                                                            configuration.analyticsListener,
-                                                                                            configuration.componentPredicates,
-                                                                                            configuration.componentControllerPredicates), {},
-                                                         sizeRange,
-                                                         configuration,
-                                                         model,
-                                                         context);
-    insertedItemsBySection[indexPath.section][indexPath.item] = item;
-  }];
+  if (configuration.parallelInsertBuildAndLayout &&
+      [_changeset insertedItems].count >= configuration.parallelInsertBuildAndLayoutThreshold &&
+      _queue) {
+    dispatch_group_t group = dispatch_group_create();
+    [[_changeset insertedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
+      dispatch_group_async(group, _queue, ^{
+        CKDataSourceItem *const item = CKBuildDataSourceItem(CKComponentScopeRootWithPredicates(_stateListener,
+                                                                                                configuration.analyticsListener,
+                                                                                                configuration.componentPredicates,
+                                                                                                configuration.componentControllerPredicates), {},
+                                                             sizeRange,
+                                                             configuration,
+                                                             model,
+                                                             context);
+        std::lock_guard<std::mutex> l(_mutex);
+        insertedItemsBySection[indexPath.section][indexPath.item] = item;
+      });
+    }];
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+  } else {
+    [[_changeset insertedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
+      CKDataSourceItem *const item = CKBuildDataSourceItem(CKComponentScopeRootWithPredicates(_stateListener,
+                                                                                              configuration.analyticsListener,
+                                                                                              configuration.componentPredicates,
+                                                                                              configuration.componentControllerPredicates), {},
+                                                           sizeRange,
+                                                           configuration,
+                                                           model,
+                                                           context);
+      insertedItemsBySection[indexPath.section][indexPath.item] = item;
+    }];
+  }
 
   for (const auto &sectionIt : insertedItemsBySection) {
     NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];

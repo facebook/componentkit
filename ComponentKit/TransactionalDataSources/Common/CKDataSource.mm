@@ -57,6 +57,8 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
 
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
+  
+  dispatch_queue_t _concurrentQueue;
 }
 @end
 
@@ -71,6 +73,10 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
     _pendingAsynchronousModifications = [NSMutableArray array];
     [CKComponentDebugController registerReflowListener:self];
+    if (configuration.parallelInsertBuildAndLayout ||
+        configuration.parallelUpdateBuildAndLayout) {
+      _concurrentQueue = dispatch_queue_create("org.componentkit.CKDataSource.concurrent", DISPATCH_QUEUE_CONCURRENT);
+    }
   }
   return self;
 }
@@ -108,7 +114,10 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   verifyChangeset(changeset, _state, _pendingAsynchronousModifications);
 
   id<CKDataSourceStateModifying> modification =
-  [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset stateListener:self userInfo:userInfo];
+  [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
+                                                 stateListener:self
+                                                      userInfo:userInfo
+                                                         queue:_concurrentQueue];
   switch (mode) {
     case CKUpdateModeAsynchronous:
       [self _enqueueModification:modification];
