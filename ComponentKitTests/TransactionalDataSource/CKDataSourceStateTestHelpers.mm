@@ -19,7 +19,7 @@
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceChangeset.h>
-#import <ComponentKit/CKDataSourceConfiguration.h>
+#import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceItemInternal.h>
 #import <ComponentKit/CKDataSourceStateInternal.h>
 
@@ -33,14 +33,27 @@ static CKDataSourceItem *item(CKDataSourceConfiguration *configuration, id<CKCom
 }
 
 CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
-                                                                                     id<CKComponentStateListener> listener,
-                                                                                     NSUInteger numberOfSections,
-                                                                                     NSUInteger numberOfItemsPerSection)
+                                         id<CKComponentStateListener> listener,
+                                         NSUInteger numberOfSections,
+                                         NSUInteger numberOfItemsPerSection,
+                                         BOOL parallelBuildAndLayout)
 {
   CKDataSourceConfiguration *configuration =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:provider
-                                                       context:@"context"
-                                                     sizeRange:{{100, 100}, {100, 100}}];
+  [[CKDataSourceConfiguration alloc]
+   initWithComponentProvider:provider
+   context:@"context"
+   sizeRange:{{100, 100}, {100, 100}}
+   buildComponentTree:NO
+   alwaysBuildComponentTree:NO
+   unifyBuildAndLayout:NO
+   forceParent:NO
+   parallelInsertBuildAndLayout:parallelBuildAndLayout
+   parallelInsertBuildAndLayoutThreshold:0
+   parallelUpdateBuildAndLayout:parallelBuildAndLayout
+   parallelUpdateBuildAndLayoutThreshold:0
+   componentPredicates:{}
+   componentControllerPredicates:{}
+   analyticsListener:nil];
 
   NSMutableArray *sections = [NSMutableArray array];
   for (NSUInteger sectionIndex = 0; sectionIndex < numberOfSections; sectionIndex++) {

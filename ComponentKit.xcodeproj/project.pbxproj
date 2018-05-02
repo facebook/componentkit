@@ -337,7 +337,7 @@
 		2D8C3D521D64F43E00E6D47A /* ReferenceImages_IOS10_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */; };
 		2DBF1D7A1D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2DBF1D7B1D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm */; };
-		2DCA4E721D889D0300AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */; };
+		2DCA4E721D889D0300AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2DCA4E731D889D1500AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */; };
 		39B090BF1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */; };
 		400B0E5F1F71C63B006BDFEE /* CKDataSourceChangeset.mm in Sources */ = {isa = PBXBuildFile; fileRef = 400B0E5C1F71C63B006BDFEE /* CKDataSourceChangeset.mm */; };
@@ -2364,6 +2364,7 @@
 				D0B47CF01CBD948E00BB33CE /* CKComponentAnimation.h in Headers */,
 				D0B47D311CBD948E00BB33CE /* CKBackgroundLayoutComponent.h in Headers */,
 				D0B47D4B1CBD948E00BB33CE /* CKDataSourceChangesetModification.h in Headers */,
+				2DCA4E721D889D0300AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */,
 				A2E5BDC21EB9303D00444CD9 /* CKComponentKey.h in Headers */,
 				D0B47D0C1CBD948E00BB33CE /* CKComponentScopeHandle.h in Headers */,
 				D0B47D021CBD948E00BB33CE /* CKDimension.h in Headers */,
@@ -2412,7 +2413,6 @@
 				238695681FE0571D00D4DAE2 /* CKComponentControllerProtocol.h in Headers */,
 				D0B47D0D1CBD948E00BB33CE /* CKComponentScopeRoot.h in Headers */,
 				2DBF1D7A1D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h in Headers */,
-				2DCA4E721D889D0300AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */,
 				23309A9F2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h in Headers */,
 				D0B47CE81CBD948E00BB33CE /* CKAssert.h in Headers */,
 				D0B47D6C1CBD948E00BB33CE /* CKTextKitRenderer.h in Headers */,

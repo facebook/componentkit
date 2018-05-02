@@ -16,9 +16,10 @@
 @protocol CKComponentStateListener;
 
 CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
-                                                                                     id<CKComponentStateListener> listener,
-                                                                                     NSUInteger numberOfSections,
-                                                                                     NSUInteger numberOfItemsPerSection);
+                                         id<CKComponentStateListener> listener,
+                                         NSUInteger numberOfSections,
+                                         NSUInteger numberOfItemsPerSection,
+                                         BOOL parallelBuildAndLayout = NO);
 
 /** Returns a data source with one item and one section. */
 CKDataSource *CKComponentTestDataSource(Class<CKComponentProvider> provider);
