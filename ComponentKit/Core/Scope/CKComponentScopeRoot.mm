@@ -14,6 +14,7 @@
 
 #import "CKComponentProtocol.h"
 #import "CKComponentControllerProtocol.h"
+#import "CKComponentScopeFrameInternal.h"
 #import "CKInternalHelpers.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKRenderTreeNodeWithChildren.h"
@@ -30,7 +31,7 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> 
 {
   std::unordered_set<CKComponentScopePredicate> _componentPredicates;
   std::unordered_set<CKComponentControllerScopePredicate> _componentControllerPredicates;
-  
+
   _CKRegisteredComponentsMap _registeredComponents;
   _CKRegisteredComponentControllerMap _registeredComponentControllers;
 }
@@ -119,7 +120,7 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> 
     return;
   }
   CKAssert(_componentPredicates.find(predicate) != _componentPredicates.end(), @"Scope root must be initialized with predicate to enumerate.");
-  
+
   const auto foundIter = _registeredComponents.find(predicate);
   if (foundIter != _registeredComponents.end()) {
     for (id<CKComponentProtocol> component in foundIter->second) {
@@ -144,5 +145,12 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> 
     }
   }
 }
+
+#if DEBUG
+- (NSString *)debugDescription
+{
+  return [[_rootFrame debugDescriptionComponents] componentsJoinedByString:@"\n"];
+}
+#endif
 
 @end

@@ -42,7 +42,7 @@
 
 /**
  Creates a conceptually brand new scope root. Prefer to use CKComponentScopeRootWithDefaultPredicates instead of this.
- 
+
  @param listener A listener for state updates that flow through the scope root.
  @param analyticsListener A listener for analytics events for the components of this scope root.
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
@@ -70,5 +70,10 @@
 /** Render Support */
 @property (nonatomic, strong, readonly) CKRenderTreeNodeWithChildren *rootNode;
 @property (nonatomic, assign) BOOL hasRenderComponentInTree;
+
+#if DEBUG
+/** Returns a multi-line string describing all the components in this root. */
+- (NSString *)debugDescription;
+#endif
 
 @end

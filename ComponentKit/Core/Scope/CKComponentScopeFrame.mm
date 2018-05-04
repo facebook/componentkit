@@ -220,4 +220,31 @@ namespace std {
   }
 }
 
+#if DEBUG
+- (NSArray<NSString *> *)debugDescriptionComponents
+{
+  NSMutableArray<NSString *> *childrenDebugDescriptions = [NSMutableArray new];
+  for (auto child : _children) {
+    [childrenDebugDescriptions addObject:
+     [NSString stringWithFormat:@"- %@%@%@",
+      NSStringFromClass(child.first.componentClass),
+      child.first.identifier ? [NSString stringWithFormat:@":%@", child.first.identifier] : @"",
+      child.first.keys.empty() ? @"" : formatKeys(child.first.keys)]];
+    for (NSString *s in [child.second debugDescriptionComponents]) {
+      [childrenDebugDescriptions addObject:[@"  " stringByAppendingString:s]];
+    }
+  }
+  return childrenDebugDescriptions;
+}
+
+static NSString *formatKeys(const std::vector<id<NSObject>> &keys)
+{
+  NSMutableArray<NSString *> *a = [NSMutableArray new];
+  for (auto key : keys) {
+    [a addObject:[key description] ?: @"(null)"];
+  }
+  return [a componentsJoinedByString:@", "];
+}
+#endif
+
 @end

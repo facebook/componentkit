@@ -18,4 +18,8 @@
 
 - (std::vector<CKComponent *>)allAcquiredComponentsInDescendants;
 
+#if DEBUG
+- (NSArray<NSString *> *)debugDescriptionComponents;
+#endif
+
 @end
