@@ -240,4 +240,10 @@
   XCTAssertEqual(YGNodeStyleGetMargin(childNode, YGEdgeBottom).value, 10);
 }
 
+- (void)testCorrectnesOfDefaultStyleValues
+{
+  CKFlexboxComponentStyle style = {};
+  XCTAssertEqual(style.alignItems, CKFlexboxAlignItemsStretch);
+}
+
 @end

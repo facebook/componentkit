@@ -61,6 +61,8 @@ typedef NS_ENUM(NSInteger, CKFlexboxJustifyContent) {
 };
 
 typedef NS_ENUM(NSInteger, CKFlexboxAlignItems) {
+  /** Expand children to fill cross axis */
+  CKFlexboxAlignItemsStretch,
   /** Align children to start of cross axis */
   CKFlexboxAlignItemsStart,
   /** Align children with end of cross axis */
@@ -69,8 +71,6 @@ typedef NS_ENUM(NSInteger, CKFlexboxAlignItems) {
   CKFlexboxAlignItemsCenter,
   /** Align children such that their baselines align */
   CKFlexboxAlignItemsBaseline,
-  /** Expand children to fill cross axis */
-  CKFlexboxAlignItemsStretch,
 };
 
 typedef NS_ENUM(NSInteger, CKFlexboxAlignContent) {
