@@ -144,6 +144,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
              newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor brownColor]}}}
              size:{100,NAN}
              style:{
+               .alignItems = CKFlexboxAlignItemsStart,
                .margin = {
                  .top = 5,
                  .bottom = 5,
