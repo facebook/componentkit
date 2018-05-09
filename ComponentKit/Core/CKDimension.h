@@ -17,9 +17,10 @@
 #import <ComponentKit/ComponentLayoutContext.h>  // Used by CKCAssertPositiveReal.
 
 #define CKCAssertPositiveReal(description, num) \
-  CKCAssert(num >= 0 && num < CGFLOAT_MAX, @"%@ must be a real positive integer.\n%@", description, CK::Component::LayoutContext::currentStackDescription())
+  CKCAssertWithCategory(num >= 0 && num < CGFLOAT_MAX, CK::Component::LayoutContext::currentRootComponentClassName(), @"%@ (%f) must be a real positive integer.\n%@", description, num, CK::Component::LayoutContext::currentStackDescription())
+
 #define CKCAssertInfOrPositiveReal(description, num) \
-  CKCAssert(isinf(num) || (num >= 0 && num < CGFLOAT_MAX), @"%@ must be infinite or a real positive integer.\n%@", description, CK::Component::LayoutContext::currentStackDescription())
+  CKCAssertWithCategory(isinf(num) || (num >= 0 && num < CGFLOAT_MAX), CK::Component::LayoutContext::currentRootComponentClassName(), @"%@ (%f) must be infinite or a real positive integer.\n%@", description, num, CK::Component::LayoutContext::currentStackDescription())
 
 /**
  A dimension relative to constraints to be provided in the future.

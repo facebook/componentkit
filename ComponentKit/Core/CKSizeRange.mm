@@ -22,10 +22,12 @@ CKSizeRange::CKSizeRange(const CGSize &_min, const CGSize &_max) : min(_min), ma
   CKCAssertPositiveReal(@"Range min height", min.height);
   CKCAssertInfOrPositiveReal(@"Range max width", max.width);
   CKCAssertInfOrPositiveReal(@"Range max height", max.height);
-  CKCAssert(min.width <= max.width,
-            @"Range min width (%f) must not be larger than max width (%f).", min.width, max.width);
-  CKCAssert(min.height <= max.height,
-            @"Range min height (%f) must not be larger than max height (%f).", min.height, max.height);
+  CKCAssertWithCategory(min.width <= max.width,
+                        CK::Component::LayoutContext::currentRootComponentClassName(),
+                        @"Range min width (%f) must not be larger than max width (%f).", min.width, max.width);
+  CKCAssertWithCategory(min.height <= max.height,
+                        CK::Component::LayoutContext::currentRootComponentClassName(),
+                        @"Range min height (%f) must not be larger than max height (%f).", min.height, max.height);
 }
 
 CGSize CKSizeRange::clamp(const CGSize &size) const
