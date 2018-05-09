@@ -16,6 +16,12 @@
 
 @interface CKFlexboxComponent (Test)
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize;
+
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
+                       size:(const CKComponentSize &)size
+                      style:(const CKFlexboxComponentStyle &)style
+                   children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
+          usesDeepYogaTrees:(BOOL)usesDeepYogaTrees;
 @end
 
 @interface CKFlexboxComponentTests : XCTestCase

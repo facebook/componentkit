@@ -54,6 +54,14 @@
 
 @end
 
+@interface CKFlexboxComponent (Test)
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
+                       size:(const CKComponentSize &)size
+                      style:(const CKFlexboxComponentStyle &)style
+                   children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
+          usesDeepYogaTrees:(BOOL)usesDeepYogaTrees;
+@end
+
 static CKComponentViewConfiguration kWhiteBackgroundView = {
   [UIView class], {{@selector(setBackgroundColor:), [UIColor whiteColor]}}
 };

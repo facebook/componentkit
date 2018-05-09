@@ -47,9 +47,48 @@ template class std::vector<CKFlexboxComponentChild>;
 
 @end
 
+static YGConfigRef ckYogaDefaultConfig()
+{
+  static YGConfigRef defaultConfig;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    defaultConfig = YGConfigNew();
+    YGConfigSetPointScaleFactor(defaultConfig, [UIScreen mainScreen].scale);
+  });
+  return defaultConfig;
+}
+
+@interface CKComponent (CKYogaBasedComponent)
+
+- (BOOL)isYogaBasedLayout;
+- (YGNodeRef)ygNode:(CKSizeRange)constrainedSize;
+- (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize;
+
+@end
+
+@implementation CKComponent (CKYogaBasedComponent)
+
+- (BOOL)isYogaBasedLayout
+{
+  return NO;
+}
+
+- (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
+{
+  return YGNodeNewWithConfig(ckYogaDefaultConfig());
+}
+
+- (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
+{
+  return {};
+}
+
+@end
+
 @implementation CKFlexboxComponent {
   CKFlexboxComponentStyle _style;
   std::vector<CKFlexboxComponentChild> _children;
+  BOOL _usesDeepYogaTrees;
 }
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
@@ -57,10 +96,20 @@ template class std::vector<CKFlexboxComponentChild>;
                       style:(const CKFlexboxComponentStyle &)style
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
 {
+  return [self newWithView:view size:size style:style children:std::move(children) usesDeepYogaTrees:NO];
+}
+
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
+                       size:(const CKComponentSize &)size
+                      style:(const CKFlexboxComponentStyle &)style
+                   children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
+          usesDeepYogaTrees:(BOOL)usesDeepYogaTrees
+{
   CKFlexboxComponent * const component = [super newWithView:view size:size];
   if (component) {
     component->_style = style;
     component->_children = children.take();
+    component->_usesDeepYogaTrees = usesDeepYogaTrees;
   }
   return component;
 }
@@ -138,17 +187,6 @@ static bool CKYogaNodeCanUseCachedMeasurement(const YGMeasureMode widthMode,
                                    const float marginColumn,
                                    const YGConfigRef config) {
   return YGNodeCanUseCachedMeasurement(widthMode, convertFloatToYogaRepresentation(width), heightMode, convertFloatToYogaRepresentation(height), lastWidthMode, convertFloatToYogaRepresentation(lastWidth), lastHeightMode, convertFloatToYogaRepresentation(lastHeight), convertFloatToYogaRepresentation(lastComputedWidth), convertFloatToYogaRepresentation(lastComputedHeight), convertFloatToYogaRepresentation(marginRow), convertFloatToYogaRepresentation(marginColumn), config);
-}
-
-static YGConfigRef ckYogaDefaultConfig()
-{
-  static YGConfigRef defaultConfig;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    defaultConfig = YGConfigNew();
-    YGConfigSetPointScaleFactor(defaultConfig, [UIScreen mainScreen].scale);
-  });
-  return defaultConfig;
 }
 
 static YGSize measureYGComponent(YGNodeRef node,
@@ -377,7 +415,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
 
   for (auto iterator = children.begin(); iterator != children.end(); iterator++) {
     const CKFlexboxComponentChild child = *iterator;
-    const YGNodeRef childNode = YGNodeNewWithConfig(ckYogaDefaultConfig());
+    const YGNodeRef childNode = _usesDeepYogaTrees ? [child.component ygNode:constrainedSize] : YGNodeNewWithConfig(ckYogaDefaultConfig());
 
     // We add object only if there is actual used element
     CKFlexboxChildCachedLayout *childLayout = [CKFlexboxChildCachedLayout new];
@@ -395,7 +433,9 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     // We pass the pointer ownership to context to release it later.
     // We want cachedLayout to be alive until we've finished calculations
     YGNodeSetContext(childNode, (__bridge_retained void *)childLayout);
-    YGNodeSetMeasureFunc(childNode, measureYGComponent);
+    if (YGNodeGetChildCount(childNode) == 0) {
+      YGNodeSetMeasureFunc(childNode, measureYGComponent);
+    }
     YGNodeSetBaselineFunc(childNode, computeBaseline);
 
     applySizeAttributes(childNode, child, parentWidth, parentHeight);
@@ -424,6 +464,16 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     CKAssert(!((floatIsSet(_style.spacing) || floatIsSet(child.spacingBefore) || floatIsSet(child.spacingAfter)) && flexboxSpacingIsSet(child.margin)),
              @"You shouldn't use both margin and spacing! Ignoring spacing and falling back to margin behavior for %@", child.component);
 
+    // TODO: In odrer to keep the the logic consistent, we are resetting all
+    // the margins that were potentially set from the child's style in
+    // recursion. We will have to decide on the convention afterwards.
+    if (_usesDeepYogaTrees) {
+      applyMarginToEdge(childNode, YGEdgeTop, convertFloatToYogaRepresentation(0));
+      applyMarginToEdge(childNode, YGEdgeBottom, convertFloatToYogaRepresentation(0));
+      applyMarginToEdge(childNode, YGEdgeStart, convertFloatToYogaRepresentation(0));
+      applyMarginToEdge(childNode, YGEdgeEnd, convertFloatToYogaRepresentation(0));
+    }
+    
     // Spacing emulation
     // Stack layout defines spacing in terms of parent Spacing (used only between children) and
     // spacingAfter / spacingBefore for every children
@@ -674,6 +724,11 @@ static BOOL floatIsSet(CGFloat val)
 
   YGNodeCalculateLayout(layoutNode, YGUndefined, YGUndefined, YGDirectionLTR);
 
+  return [self layoutFromYgNode:layoutNode thatFits:constrainedSize];
+}
+
+- (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
+{
   // Before we finalize layout we want to sort children according to their z-order
   // We want children with higher z-order to be closer to the end of list
   // They should be mounted later and thus shown on top of children with lower z-order  const NSInteger childCount = YGNodeGetChildCount(layoutNode);
@@ -708,7 +763,15 @@ static BOOL floatIsSet(CGFloat val)
     // We cache measurements for the duration of single layout calculation of FlexboxComponent
     // ComponentKit and Yoga handle caching between calculations
 
-    if ([self canReuseCachedLayout:childCachedLayout forChildWithExactSize:childSize]) {
+    if (_usesDeepYogaTrees && [childCachedLayout.component isYogaBasedLayout]) {
+      // If the child component isYogaBasedLayout we don't call layoutThatFits:parentSize:
+      // because it will create another Yoga tree. Instead, we call layoutFromYgNode:thatFits:
+      // to reuse the already created yoga Node.
+      const CKSizeRange childRange = {childSize, childSize};
+      const CKSizeRange childConstraintSize = childRange.intersect(childCachedLayout.component.size.resolve(size));
+      
+      childrenLayout[i].layout = [childCachedLayout.component layoutFromYgNode:childNode thatFits:childConstraintSize];
+    } else if ([self canReuseCachedLayout:childCachedLayout forChildWithExactSize:childSize]) {
       childrenLayout[i].layout = childCachedLayout.componentLayout;
     } else {
       childrenLayout[i].layout = CKComputeComponentLayout(childCachedLayout.component, {childSize, childSize}, size);
@@ -719,7 +782,7 @@ static BOOL floatIsSet(CGFloat val)
   YGNodeFreeRecursive(layoutNode);
 
   // width/height should already be within constrainedSize, but we're just clamping to correct for roundoff error
-  return {self, constrainedSize.clamp({width, height}), childrenLayout};
+  return {self, constrainedSize.clamp(size), childrenLayout};
 }
 
 - (BOOL)canReuseCachedLayout:(const CKFlexboxChildCachedLayout * const)childCachedLayout
@@ -728,6 +791,11 @@ static BOOL floatIsSet(CGFloat val)
   return CKYogaNodeCanUseCachedMeasurement(YGMeasureModeExactly, static_cast<float>(childSize.width), YGMeasureModeExactly, static_cast<float>(childSize.height), childCachedLayout.widthMode, childCachedLayout.width, childCachedLayout.heightMode, childCachedLayout.height, static_cast<float>(childCachedLayout.componentLayout.size.width), static_cast<float>(childCachedLayout.componentLayout.size.height), 0, 0, ckYogaDefaultConfig()) ||
     childSize.width == 0 ||
     childSize.height == 0;
+}
+
+- (BOOL)isYogaBasedLayout
+{
+  return YES;
 }
 
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
