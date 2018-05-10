@@ -11,11 +11,14 @@
 #import <XCTest/XCTest.h>
 
 #import <ComponentKit/CKFlexboxComponent.h>
+#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKComponentLayout.h>
 
 #import "yoga/Yoga.h"
 
 @interface CKFlexboxComponent (Test)
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize;
+- (CKComponentLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize;
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
@@ -250,6 +253,73 @@
 {
   CKFlexboxComponentStyle style = {};
   XCTAssertEqual(style.alignItems, CKFlexboxAlignItemsStretch);
+}
+
+- (void)testSameLayoutIsCalculatedWithAndWithoutDeepYogaTrees
+{
+  CKComponentLayout(^buildComponentTreeAndComputeLayout)(BOOL) = ^CKComponentLayout(BOOL usesDeepYogaTrees) {
+    CKFlexboxComponent *component =
+    [CKFlexboxComponent
+     newWithView:{} size:{}
+     style:{
+       .alignItems = CKFlexboxAlignItemsStart,
+       .spacing = 5
+     }
+     children:{
+       {
+         .component = [CKCompositeComponent
+                       newWithComponent:
+                       [CKFlexboxComponent
+                        newWithView:{}
+                        size:{}
+                        style:{
+                          .alignItems = CKFlexboxAlignItemsStart,
+                          .spacing = 5
+                        }
+                        children:{
+                          { [CKCompositeComponent newWithComponent: [CKComponent newWithView:{[UIView class]} size:{}]], .spacingBefore = 15},
+                          { [CKComponent newWithView:{[UIView class]} size:{}], .spacingAfter = 5},
+                          { [CKComponent newWithView:{[UIView class]} size:{}], .spacingAfter = 5},
+                          { [CKComponent newWithView:{[UIView class]} size:{}], .spacingBefore =-10, .spacingAfter = 10},
+                        }
+                        usesDeepYogaTrees:usesDeepYogaTrees]]
+       },
+       { [CKComponent newWithView:{[UIView class]} size:{}], .spacingAfter = 5},
+       { [CKComponent newWithView:{[UIView class]} size:{}], .spacingAfter = 5},
+       { [CKComponent newWithView:{[UIView class]} size:{}], .spacingBefore =-10, .spacingAfter = 10},
+     }
+     usesDeepYogaTrees:usesDeepYogaTrees];
+
+    const CKSizeRange kSize = {{500, 500}, {500, 500}};
+    return [component layoutThatFits:kSize parentSize:kSize.max];
+  };
+
+  XCTAssertTrue(areLayoutsEqual(buildComponentTreeAndComputeLayout(NO), buildComponentTreeAndComputeLayout(YES)));
+}
+
+static BOOL areLayoutsEqual(const CKComponentLayout &left, const CKComponentLayout &right) {
+  if (left.component.class != right.component.class) {
+    return NO;
+  }
+
+  if (CGSizeEqualToSize(left.size, right.size) == NO || left.children->size() != right.children->size()) {
+    return NO;
+  }
+
+  for(std::vector<CKComponentLayoutChild>::size_type i = 0; i != left.children->size(); i++) {
+    auto leftChild = left.children->at(i);
+    auto rightChild = right.children->at(i);
+
+    if (CGPointEqualToPoint(leftChild.position, rightChild.position) == NO) {
+      return NO;
+    }
+
+    if (areLayoutsEqual(leftChild.layout, rightChild.layout) == NO) {
+      return NO;
+    }
+  }
+
+  return YES;
 }
 
 @end

@@ -17,6 +17,7 @@
 #import <ComponentKit/CKRatioLayoutComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentLayoutBaseline.h>
+#import <ComponentKit/CKCompositeComponent.h>
 
 /* Sets baseline to be 10 points higher than normal. */
 @interface CKCustomBaselineComponent : CKComponent
@@ -119,7 +120,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
     };
   };
   BOOL usesDeepYogaTrees = _usesDeepYogaTrees;
-  
+
   CKFlexboxComponent *c =
   [CKFlexboxComponent
    newWithView:{}
@@ -137,49 +138,50 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    children:{
      {
        .component =
-       [CKFlexboxComponent
-        newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}}
-        size:{NAN,NAN}
-        style:{
-          .direction = CKFlexboxDirectionHorizontal,
-          .alignItems = CKFlexboxAlignItemsStretch,
-          .margin = {
-            .top = 10,
-            .start = 10,
-            .end = 10,
-            .bottom = 10,
-          },
-        }
-        children:{
-          {
-            .component =
-            [CKFlexboxComponent
-             newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor brownColor]}}}
-             size:{100,NAN}
-             style:{
-               .alignItems = CKFlexboxAlignItemsStart,
-               .margin = {
-                 .top = 5,
-                 .bottom = 5,
-               },
-               .border = {
-                 .top = 5,
-                 .start = 5,
-                 .end = 5,
-                 .bottom = 5,
-               },
-             }
-             children:{
-               leaf([UIColor redColor], {100,100}),
-               leaf([UIColor greenColor], {100,100}),
-               leaf([UIColor blueColor], {100,100}),
-               leaf([UIColor redColor], {100,100}),
-             }
-             usesDeepYogaTrees:usesDeepYogaTrees]
-          },
-          leaf([UIColor grayColor], {100,NAN}),
-        }
-        usesDeepYogaTrees:usesDeepYogaTrees],
+       [CKCompositeComponent
+        newWithComponent:
+        [CKFlexboxComponent
+         newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}}
+         size:{NAN,NAN}
+         style:{
+           .direction = CKFlexboxDirectionHorizontal,
+           .alignItems = CKFlexboxAlignItemsStretch,
+           .margin = {
+             .top = 10,
+             .start = 10,
+             .end = 10,
+             .bottom = 10,
+           },
+         }
+         children:{
+           {
+             .component =
+             [CKFlexboxComponent
+              newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor brownColor]}}}
+              size:{100,NAN}
+              style:{
+                .margin = {
+                  .top = 5,
+                  .bottom = 5,
+                },
+                .border = {
+                  .top = 5,
+                  .start = 5,
+                  .end = 5,
+                  .bottom = 5,
+                },
+              }
+              children:{
+                leaf([UIColor redColor], {100,100}),
+                leaf([UIColor greenColor], {100,100}),
+                leaf([UIColor blueColor], {100,100}),
+                leaf([UIColor redColor], {100,100}),
+              }
+              usesDeepYogaTrees:usesDeepYogaTrees]
+           },
+           leaf([UIColor grayColor], {100,NAN}),
+         }
+         usesDeepYogaTrees:usesDeepYogaTrees]],
        .alignSelf = CKFlexboxAlignSelfStretch,
      },
      {
@@ -216,7 +218,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
                  },
                },
                {
-                 .component = component([UIColor blueColor], {NAN,NAN}),
+                 .component = [CKCompositeComponent newWithComponent:component([UIColor blueColor], {NAN,NAN})],
                  .flexGrow = 0.2f,
                  .flexShrink = 1.0f,
                  .position = {
@@ -248,7 +250,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      leaf([UIColor grayColor], {100,100}),
    }
    usesDeepYogaTrees:usesDeepYogaTrees];
-  
+
   static CKSizeRange kSize = {{500, 500}, {500, 500}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }

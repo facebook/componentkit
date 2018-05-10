@@ -15,6 +15,7 @@
 
 #import "CKInternalHelpers.h"
 #import "CKComponentInternal.h"
+#import "CKCompositeComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKTreeNode.h"
 #import "CKRenderTreeNodeWithChild.h"
@@ -64,6 +65,11 @@
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
 {
   CK_NOT_DESIGNATED_INITIALIZER();
+}
+
+- (CKComponent *)component
+{
+  return _component;
 }
 
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)owner

@@ -12,13 +12,15 @@
 
 #import "yoga/Yoga.h"
 
-#import "CKComponentSubclass.h"
 #import "CKComponentInternal.h"
-#import "CKInternalHelpers.h"
 #import "CKComponentLayout.h"
 #import "CKComponentLayoutBaseline.h"
-#import "ComponentUtilities.h"
+#import "CKComponentSubclass.h"
+#import "CKCompositeComponent.h"
+#import "CKCompositeComponentInternal.h"
+#import "CKInternalHelpers.h"
 #import "CKRenderTreeNodeWithChildren.h"
+#import "ComponentUtilities.h"
 
 const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
   .hadOverflow = @"hadOverflow"
@@ -84,6 +86,30 @@ static YGConfigRef ckYogaDefaultConfig()
 }
 
 @end
+
+@interface CKCompositeComponent (CKYogaBasedCompositeComponent)
+@end
+
+@implementation CKCompositeComponent (CKYogaBasedCompositeComponent)
+
+- (BOOL)isYogaBasedLayout
+{
+  return self.component.isYogaBasedLayout;
+}
+
+- (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
+{
+  return [self.component ygNode:constrainedSize];
+}
+
+- (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
+{
+  const CKComponentLayout l = [self.component layoutFromYgNode:layoutNode thatFits:constrainedSize];
+  return {self, l.size, {{{0,0}, l}}};
+}
+
+@end
+
 
 @implementation CKFlexboxComponent {
   CKFlexboxComponentStyle _style;
@@ -473,7 +499,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
       applyMarginToEdge(childNode, YGEdgeStart, convertFloatToYogaRepresentation(0));
       applyMarginToEdge(childNode, YGEdgeEnd, convertFloatToYogaRepresentation(0));
     }
-    
+
     // Spacing emulation
     // Stack layout defines spacing in terms of parent Spacing (used only between children) and
     // spacingAfter / spacingBefore for every children
@@ -769,7 +795,7 @@ static BOOL floatIsSet(CGFloat val)
       // to reuse the already created yoga Node.
       const CKSizeRange childRange = {childSize, childSize};
       const CKSizeRange childConstraintSize = childRange.intersect(childCachedLayout.component.size.resolve(size));
-      
+
       childrenLayout[i].layout = [childCachedLayout.component layoutFromYgNode:childNode thatFits:childConstraintSize];
     } else if ([self canReuseCachedLayout:childCachedLayout forChildWithExactSize:childSize]) {
       childrenLayout[i].layout = childCachedLayout.componentLayout;
