@@ -71,6 +71,9 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 };
 
 @interface CKFlexboxComponentSnapshotTests : CKComponentSnapshotTestCase
+
+@property (nonatomic, assign) BOOL usesDeepYogaTrees;
+
 @end
 
 @implementation CKFlexboxComponentSnapshotTests
@@ -79,6 +82,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 {
   [super setUp];
   self.recordMode = NO;
+  _usesDeepYogaTrees = NO;
 }
 
 - (void)testUnderflowBehaviors
@@ -114,6 +118,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
       },
     };
   };
+  BOOL usesDeepYogaTrees = _usesDeepYogaTrees;
   
   CKFlexboxComponent *c =
   [CKFlexboxComponent
@@ -169,10 +174,12 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
                leaf([UIColor greenColor], {100,100}),
                leaf([UIColor blueColor], {100,100}),
                leaf([UIColor redColor], {100,100}),
-             }]
+             }
+             usesDeepYogaTrees:usesDeepYogaTrees]
           },
           leaf([UIColor grayColor], {100,NAN}),
-        }],
+        }
+        usesDeepYogaTrees:usesDeepYogaTrees],
        .alignSelf = CKFlexboxAlignSelfStretch,
      },
      {
@@ -224,20 +231,23 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
                    .type = CKFlexboxPositionTypeRelative,
                  },
                },
-             }]
+             }
+             usesDeepYogaTrees:usesDeepYogaTrees]
           },
           leaf([UIColor yellowColor], {NAN,50}),
           leaf([UIColor magentaColor], {NAN,50}),
           leaf([UIColor redColor], {NAN,50}),
           leaf([UIColor blueColor], {NAN,50}),
           leaf([UIColor greenColor], {NAN,50}),
-        }],
+        }
+        usesDeepYogaTrees:usesDeepYogaTrees],
        .flexGrow = 1.0f,
        .flexShrink = 1.0f,
        .alignSelf = CKFlexboxAlignSelfStretch,
      },
      leaf([UIColor grayColor], {100,100}),
-   }];
+   }
+   usesDeepYogaTrees:usesDeepYogaTrees];
   
   static CKSizeRange kSize = {{500, 500}, {500, 500}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -267,7 +277,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
        .flexShrink = 0,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   // Width is 75px--that's less than the sum of the widths of the child components, which is 100px.
   static CKSizeRange kSize = {{75, 0}, {75, 150}};
@@ -288,7 +299,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}], 1),
      flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{150,150}], 1),
      flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}], 1),
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   // width 300px; height 0-150px.
   static CKSizeRange kUnderflowSize = {{300, 0}, {300, 150}};
@@ -313,7 +325,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,50}]},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,50}]},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   // width 0-300px; height 300px
   static CKSizeRange kVariableHeight = {{0, 300}, {300, 300}};
@@ -339,7 +352,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,50}]},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,50}]},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   // width 0-300px; height 300px
   static CKSizeRange kVariableHeight = {{0, 300}, {300, 300}};
@@ -361,7 +375,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,50}]},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,50}]},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   // width 0-300px; height 300px
   static CKSizeRange kVariableHeight = {{0, 300}, {300, 300}};
@@ -390,7 +405,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    children:{
      {nil},
      {nil},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   // width 300px; height 0-300px
   static CKSizeRange kVariableHeight = {{300, 0}, {300, 300}};
@@ -422,7 +438,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
        .spacingBefore = 20
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   CKSnapshotVerifyComponent(spacingBefore, kAnySize, @"spacingBefore");
 
   CKFlexboxComponent *spacingAfter =
@@ -445,7 +462,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
        .spacingAfter = 20
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   CKSnapshotVerifyComponent(spacingAfter, kAnySize, @"spacingAfter");
 
   CKFlexboxComponent *spacingBalancedOut =
@@ -469,7 +487,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   CKSnapshotVerifyComponent(spacingBalancedOut, kAnySize, @"spacingBalancedOut");
 }
 
@@ -498,7 +517,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
        .spacingBefore = 20
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   CKSnapshotVerifyComponent(spacingBefore, kAnySize, @"spacingBefore");
 
   CKFlexboxComponent *spacingAfter =
@@ -521,7 +541,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
        .spacingAfter = 20
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   CKSnapshotVerifyComponent(spacingAfter, kAnySize, @"spacingAfter");
 
   CKFlexboxComponent *spacingBalancedOut =
@@ -545,7 +566,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   CKSnapshotVerifyComponent(spacingBalancedOut, kAnySize, @"spacingBalancedOut");
 }
 
@@ -574,7 +596,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
        .spacingBefore = 20
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   CKSnapshotVerifyComponent(spacingBefore, kAnySize, @"spacingBefore");
 
   CKFlexboxComponent *spacingAfter =
@@ -597,7 +620,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
        .spacingAfter = 20
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   CKSnapshotVerifyComponent(spacingAfter, kAnySize, @"spacingAfter");
 
   CKFlexboxComponent *spacingBalancedOut =
@@ -621,7 +645,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}],
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   CKSnapshotVerifyComponent(spacingBalancedOut, kAnySize, @"spacingBalancedOut");
 }
 
@@ -640,7 +665,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}], 0},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,70}], 20},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}], 30},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   // width 0-300px; height 300px
   static CKSizeRange kVariableHeight = {{0, 300}, {300, 300}};
@@ -665,7 +691,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        .zIndex = 1},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,50}],
        .zIndex = 2},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   // width 0-300px; height 300px
   static CKSizeRange kVariableHeight = {{0, 300}, {300, 300}};
@@ -690,7 +717,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        .zIndex = 1},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,50}],
        .zIndex = 0},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   // width 0-300px; height 300px
   static CKSizeRange kVariableHeight = {{0, 300}, {300, 300}};
@@ -715,7 +743,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        .zIndex = 1},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,50}],
        .zIndex = 0},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   // width 0-300px; height 300px
   static CKSizeRange kVariableHeight = {{0, 300}, {300, 300}};
@@ -757,7 +786,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        .flexShrink = 1,
        .flexBasis = 80
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{0, 50}, {120, 50}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -798,7 +828,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        .flexShrink = 0,
        .flexBasis = CKRelativeDimension::Percent(0.5)
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{0, 50}, {120, 50}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -828,7 +859,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        .flexShrink = 1
      },
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidth = {{150, 0}, {150, INFINITY}};
   CKSnapshotVerifyComponent(c, kFixedWidth, nil);
@@ -856,7 +888,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{100,20}],
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthAndHeight = {{100, 100}, {100, 100}};
   CKSnapshotVerifyComponent(c, kFixedWidthAndHeight, nil);
@@ -884,7 +917,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{100,20}],
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthAndHeight = {{100, 100}, {100, 100}};
   CKSnapshotVerifyComponent(c, kFixedWidthAndHeight, nil);
@@ -912,7 +946,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{100,20}],
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthAndHeight = {{100, 100}, {100, 100}};
   CKSnapshotVerifyComponent(c, kFixedWidthAndHeight, nil);
@@ -940,7 +975,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{100,20}],
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthAndHeight = {{100, 100}, {100, 100}};
   CKSnapshotVerifyComponent(c, kFixedWidthAndHeight, nil);
@@ -968,7 +1004,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{100,20}],
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthAndHeight = {{100, 100}, {100, 100}};
   CKSnapshotVerifyComponent(c, kFixedWidthAndHeight, nil);
@@ -996,7 +1033,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{100,20}],
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthAndHeight = {{100, 100}, {100, 100}};
   CKSnapshotVerifyComponent(c, kFixedWidthAndHeight, nil);
@@ -1028,7 +1066,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,75}],
        .flexShrink = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthAndHeight = {{200, 200}, {200, 200}};
   CKSnapshotVerifyComponent(c, kFixedWidthAndHeight, nil);
@@ -1063,7 +1102,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,75}],
        .flexShrink = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthAndHeight = {{200, 200}, {200, 200}};
   CKSnapshotVerifyComponent(c, kFixedWidthAndHeight, nil);
@@ -1104,7 +1144,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
         baseline:10],
        .flexShrink = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthAndHeight = {{200, 200}, {200, 200}};
   CKSnapshotVerifyComponent(c, kFixedWidthAndHeight, nil);
@@ -1131,7 +1172,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{75,75}],
        .flexShrink = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{0, 0}, {300, INFINITY}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -1160,7 +1202,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{.minWidth = 20, .minHeight = 20}],
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{200, 200}, {200, 200}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -1189,7 +1232,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{.minWidth = 20, .minHeight = 20}],
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{200, 200}, {200, 200}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -1216,7 +1260,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
          .top = 10,
        },
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{200, 200}, {200, 200}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -1243,7 +1288,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        },
        .flexGrow = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{300, 300}, {300, 300}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -1280,7 +1326,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        },
        .flexGrow = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{300, 300}, {300, 300}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -1318,7 +1365,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        },
        .flexGrow = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{300, 300}, {300, 300}};
   @try {
@@ -1353,7 +1401,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,75}],
        .flexShrink = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthAndHeight = {{200, 200}, {200, 200}};
   CKSnapshotVerifyComponent(c, kFixedWidthAndHeight, nil);
@@ -1378,7 +1427,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}],
        .flexShrink = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidth = {{150, 0}, {150, 100}};
   CKSnapshotVerifyComponent(c, kFixedWidth, nil);
@@ -1402,7 +1452,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}],
        .alignSelf = CKFlexboxAlignSelfCenter,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidth = {{150, 0}, {150, INFINITY}};
   CKSnapshotVerifyComponent(c, kFixedWidth, nil);
@@ -1440,9 +1491,11 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
             .component =
             [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}]
           }
-        }]
+        }
+        usesDeepYogaTrees:_usesDeepYogaTrees]
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthHeight = {{150, 100}, {150, 100}};
   CKSnapshotVerifyComponent(c, kFixedWidthHeight, nil);
@@ -1480,9 +1533,11 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
             .component =
             [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}]
           }
-        }]
+        }
+        usesDeepYogaTrees:_usesDeepYogaTrees]
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthHeight = {{150, 100}, {150, 100}};
   CKSnapshotVerifyComponent(c, kFixedWidthHeight, nil);
@@ -1520,9 +1575,11 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
             .component =
             [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}]
           }
-        }]
+        }
+        usesDeepYogaTrees:_usesDeepYogaTrees]
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthHeight = {{150, 100}, {150, 100}};
   CKSnapshotVerifyComponent(c, kFixedWidthHeight, nil);
@@ -1560,9 +1617,11 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
             .component =
             [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}]
           }
-        }]
+        }
+        usesDeepYogaTrees:_usesDeepYogaTrees]
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kFixedWidthHeight = {{150, 100}, {150, 100}};
   CKSnapshotVerifyComponent(c, kFixedWidthHeight, nil);
@@ -1583,7 +1642,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}], 0},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,70}], 20},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}], 30},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   static CKSizeRange kExactSize = {{300, 300}, {300, 300}};
   CKSnapshotVerifyComponent(c, kExactSize, nil);
 }
@@ -1603,7 +1663,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}], 0},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,70}], 20},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}], 30},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   static CKSizeRange kExactSize = {{300, 300}, {300, 300}};
   CKSnapshotVerifyComponent(c, kExactSize, nil);
 }
@@ -1623,7 +1684,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}], 0},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,70}], 20},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}], 30},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   static CKSizeRange kExactSize = {{300, 300}, {300, 300}};
   CKSnapshotVerifyComponent(c, kExactSize, nil);
 }
@@ -1642,7 +1704,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}}
                           size:{.width = CKRelativeDimension::Percent(1.0), .height = 50}]},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150, 150}], 20},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   static CKSizeRange kVariableSize = {{100, 100}, {200, 200}};
 
   // all children should be 200px wide
@@ -1664,7 +1727,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}], 0},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,70}], 20},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}], 30},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   static CKSizeRange kVariableSize = {{200, 200}, {300, 300}};
 
   // all children should be 200px wide
@@ -1686,7 +1750,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}], 0},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,70}], 20},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,90}], 30},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   static CKSizeRange kVariableSize = {{50, 50}, {300, 300}};
 
   // all children should be 150px wide
@@ -1719,7 +1784,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        .flexGrow = 1,
        .flexBasis = 10,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   // width 300px; height 0-150px.
   static CKSizeRange kUnderflowSize = {{300, 0}, {300, 150}};
@@ -1756,7 +1822,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
        .flexGrow = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{200, 0}, {200, INFINITY}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -1785,7 +1852,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
        .flexBasis = 20,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{300, 0}, {300, 150}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -1820,7 +1888,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
         .flexGrow = 1,
         .flexShrink = 1,
       },
-    }]];
+    }
+    usesDeepYogaTrees:_usesDeepYogaTrees]];
 
   static CKSizeRange kSize = {{300, 0}, {300, INFINITY}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -1849,7 +1918,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
        .flexGrow = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 350 results in a positive violation of 200.
   // Due to each flexible child component specifying a flex grow factor of 1 the violation will be distributed evenly.
   static CKSizeRange kSize = {{350, 350}, {350, 350}};
@@ -1879,7 +1949,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
        .flexGrow = 0.5,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 350 results in a positive violation of 200.
   // Due to each flexible child component specifying a flex grow factor of 0.5 the violation will be distributed evenly.
   static CKSizeRange kSize = {{350, 350}, {350, 350}};
@@ -1909,7 +1980,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
        .flexGrow = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 350 results in a positive violation of 200.
   // The first and third child components specify a flex grow factor of 1 and will flex by 50.
   // The second child component specifies a flex grow factor of 2 and will flex by 100.
@@ -1940,7 +2012,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
        .flexGrow = 0.25,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 350 results in a positive violation of 200.
   // The first and third child components specify a flex grow factor of 0.25 and will flex by 50.
   // The second child component specifies a flex grow factor of 0.25 and will flex by 100.
@@ -1975,7 +2048,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor yellowColor]}}} size:{50,50}],
        .flexGrow = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a positive violation of 200.
   // The first and third child components specify a flex shrink factor of 1 and 0, respectively. They won't flex.
   // The second and fourth child components specify a flex grow factor of 1 and will flex by 100.
@@ -2010,7 +2084,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor yellowColor]}}} size:{50,50}],
        .flexGrow = 0.5,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a positive violation of 200.
   // The first and third child components specify a flex shrink factor of 1 and 0, respectively. They won't flex.
   // The second and fourth child components specify a flex grow factor of 0.5 and will flex by 100.
@@ -2045,7 +2120,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor yellowColor]}}} size:{50,50}],
        .flexGrow = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a positive violation of 200.
   // The first and third child components specify a flex shrink factor of 1 and 0, respectively. They won't flex.
   // The second child component specifies a flex grow factor of 3 and will flex by 150.
@@ -2081,7 +2157,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor yellowColor]}}} size:{50,50}],
        .flexGrow = 0.25,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a positive violation of 200.
   // The first and third child components specify a flex shrink factor of 1 and 0, respectively. They won't flex.
   // The second child component specifies a flex grow factor of 0.75 and will flex by 150.
@@ -2113,7 +2190,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,100}],
        .flexGrow = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   static CKSizeRange kSize = {{300, 300}, {300, 300}};
   // In this scenario a width of 300 results in a positive violation of 175.
   // The second and third child components specify a flex grow factor of 1 and will flex by 88 and 87, respectively.
@@ -2143,7 +2221,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,100}],
        .flexGrow = 0.5,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   static CKSizeRange kSize = {{300, 300}, {300, 300}};
   // In this scenario a width of 300 results in a positive violation of 175.
   // The second and third child components specify a flex grow factor of 0.5 and will flex by 88 and 87, respectively.
@@ -2173,7 +2252,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{200,50}],
        .flexShrink = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex shrink factor of 1 and will flex by -120 and -80, respectively.
   static CKSizeRange kSize = {{400, 400}, {400, 400}};
@@ -2203,7 +2283,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{200,50}],
        .flexShrink = 0.5,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex shrink factor of 0.5 and will flex by -120 and -80, respectively.
   static CKSizeRange kSize = {{400, 400}, {400, 400}};
@@ -2233,7 +2314,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,200}],
        .flexShrink = 2,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex shrink factor of 2 and will flex by -109 and -72, respectively.
   // The second child component specifies a flex shrink factor of 1 and will flex by -18.
@@ -2264,7 +2346,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,200}],
        .flexShrink = 0.4,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex shrink factor of 0.4 and will flex by -109 and -72, respectively.
   // The second child component specifies a flex shrink factor of 0.2 and will flex by -18.
@@ -2299,7 +2382,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor yellowColor]}}} size:{150,50}],
        .flexShrink = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex grow factor of 1 and 0, respectively. They won't flex.
   // The second and fourth child components specify a flex shrink factor of 1 and will flex by -100.
@@ -2334,7 +2418,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor yellowColor]}}} size:{150,50}],
        .flexShrink = 0.5,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex grow factor of 1 and 0, respectively. They won't flex.
   // The second and fourth child components specify a flex shrink factor of 0.5 and will flex by -100.
@@ -2369,7 +2454,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor yellowColor]}}} size:{50,200}],
        .flexShrink = 3,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex grow factor of 1 and 0, respectively. They won't flex.
   // The second child component specifies a flex shrink factor of 1 and will flex by -28.
@@ -2405,7 +2491,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor yellowColor]}}} size:{50,200}],
        .flexShrink = 0.75,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex grow factor of 1 and 0, respectively. They won't flex.
   // The second child component specifies a flex shrink factor of 0.25 and will flex by -28.
@@ -2437,7 +2524,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{200,50}],
        .flexShrink = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex shrink factor of 1 and will flex by 50.
   // The second child component specifies a flex shrink factor of 2 and will flex by -57. It will have a width of 43.
@@ -2468,7 +2556,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{200,50}],
        .flexShrink = 0.25,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   // In this scenario a width of 400 results in a negative violation of 200.
   // The first and third child components specify a flex shrink factor of 0.25 and will flex by 50.
   // The second child component specifies a flex shrink factor of 0.50 and will flex by -57. It will have a width of 43.
@@ -2507,7 +2596,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
           .height = 50
         }]
      }
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   static CKSizeRange kSize = {{0, 0}, {300, INFINITY}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
@@ -2550,7 +2640,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
          size:{}]],
        .flexGrow = 1,
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   static CKSizeRange kSize = {{400, 0}, {400, INFINITY}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
@@ -2577,7 +2668,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{25,25}], 0},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{75,25}], 10},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,25}], 10},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
@@ -2601,7 +2693,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{25,25}], 0},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{75,25}], 10},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,25}], 10},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
@@ -2625,7 +2718,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{25,25}], 0},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{75,25}], 10},
      {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,25}], 10},
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
@@ -2651,7 +2745,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{40,5}],
        .aspectRatio = 1
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{75, 75}, {75, 75}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -2679,7 +2774,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{40,5}],
        .aspectRatio = 2
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{75, 50}, {75, 50}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -2707,7 +2803,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{40,5}],
        .aspectRatio = 0.5
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{75, 100}, {75, 100}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -2735,7 +2832,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{40,5}],
        .aspectRatio = -1
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{75, 75}, {75, 75}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -2763,7 +2861,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{40,5}],
        .aspectRatio = FLT_EPSILON + FLT_MIN_EXP
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{75, 75}, {75, 75}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -2791,7 +2890,8 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{40,5}],
        .aspectRatio = 1
      },
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
 
   static CKSizeRange kSize = {{75, 75}, {75, 75}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -2817,7 +2917,21 @@ static CKFlexboxComponentChild flexChild(CKComponent *c, CGFloat flexFactor)
      flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}], flexFactor),
      flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}], flexFactor),
      flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}], flexFactor),
-   }];
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
+}
+
+@end
+
+@interface CKFlexboxComponentWithDeepYogaTreeSnapshotTests : CKFlexboxComponentSnapshotTests
+@end
+
+@implementation CKFlexboxComponentWithDeepYogaTreeSnapshotTests
+
+- (void)setUp
+{
+  [super setUp];
+  self.usesDeepYogaTrees = YES;
 }
 
 @end
