@@ -17,6 +17,8 @@
 #import "yoga/Yoga.h"
 
 @interface CKFlexboxComponent (Test)
+
+- (BOOL)usesDeepYogaTrees;
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize;
 - (CKComponentLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize;
 
@@ -295,6 +297,16 @@
   };
 
   XCTAssertTrue(areLayoutsEqual(buildComponentTreeAndComputeLayout(NO), buildComponentTreeAndComputeLayout(YES)));
+}
+
+- (void)testPushingDeepYogaTreesFlagToComponentViaContext
+{
+  auto plainComponent = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart} children:{}];
+  XCTAssertFalse([plainComponent usesDeepYogaTrees]);
+  
+  CKComponentContext<CKFlexboxComponentContext> ctx([CKFlexboxComponentContext newWithUsesDeepYogaTrees:YES]);
+  auto deepYogaTreesComponent = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart} children:{}];
+  XCTAssertTrue([deepYogaTreesComponent usesDeepYogaTrees]);
 }
 
 static BOOL areLayoutsEqual(const CKComponentLayout &left, const CKComponentLayout &right) {

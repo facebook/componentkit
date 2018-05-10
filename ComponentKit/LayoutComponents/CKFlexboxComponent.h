@@ -318,6 +318,11 @@ extern const struct CKStackComponentLayoutExtraKeys {
   NSString * const hadOverflow;
 } CKStackComponentLayoutExtraKeys;
 
+/** Context to adjust all flexbox instances */
+@interface CKFlexboxComponentContext: NSObject
++ (instancetype)newWithUsesDeepYogaTrees:(BOOL)usesDeepYogaTrees;
+@end
+
 /**
  @uidocs https://fburl.com/CKFlexboxComponent:ca56
 

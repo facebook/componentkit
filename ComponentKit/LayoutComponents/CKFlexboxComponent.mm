@@ -60,6 +60,20 @@ static YGConfigRef ckYogaDefaultConfig()
   return defaultConfig;
 }
 
+@interface CKFlexboxComponentContext ()
+@property(nonatomic, assign, readonly) BOOL usesDeepYogaTrees;
+@end
+@implementation CKFlexboxComponentContext
++ (instancetype)newWithUsesDeepYogaTrees:(BOOL)usesDeepYogaTrees
+{
+  CKFlexboxComponentContext * const c = [super new];
+  if (c != nil) {
+    c->_usesDeepYogaTrees = usesDeepYogaTrees;
+  }
+  return c;
+}
+@end
+
 @interface CKComponent (CKYogaBasedComponent)
 
 - (BOOL)isYogaBasedLayout;
@@ -122,7 +136,8 @@ static YGConfigRef ckYogaDefaultConfig()
                       style:(const CKFlexboxComponentStyle &)style
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
 {
-  return [self newWithView:view size:size style:style children:std::move(children) usesDeepYogaTrees:NO];
+  const BOOL usesDeepYogaTrees = CKComponentContext<CKFlexboxComponentContext>::get().usesDeepYogaTrees;
+  return [self newWithView:view size:size style:style children:std::move(children) usesDeepYogaTrees:usesDeepYogaTrees];
 }
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
@@ -822,6 +837,11 @@ static BOOL floatIsSet(CGFloat val)
 - (BOOL)isYogaBasedLayout
 {
   return YES;
+}
+
+- (BOOL)usesDeepYogaTrees
+{
+  return _usesDeepYogaTrees;
 }
 
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
