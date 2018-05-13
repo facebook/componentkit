@@ -45,9 +45,9 @@ struct CKButtonComponentOptions {
   CKButtonComponentStateMap<UIImage *> backgroundImages;
   /// The title font the button.
   UIFont *titleFont;
-  /// Wether the button is selected.
+  /// Whether the button is selected.
   BOOL selected = NO;
-  /// Wether the button is enabled.
+  /// Whether the button is enabled.
   BOOL enabled = YES;
   /// The maximum number of lines to use for rendering text.
   NSInteger numberOfLines = 1;
