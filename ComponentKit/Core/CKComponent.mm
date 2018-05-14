@@ -293,13 +293,14 @@ struct CKComponentMountInfo {
   CKAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
            [self class], [layout.component class]);
   CKSizeRange resolvedRange __attribute__((unused)) = constrainedSize.intersect(_size.resolve(parentSize));
-  CKAssert(layout.size.width <= resolvedRange.max.width
-           && layout.size.width >= resolvedRange.min.width
-           && layout.size.height <= resolvedRange.max.height
-           && layout.size.height >= resolvedRange.min.height,
-           @"Computed size %@ for %@ does not fall within constrained size %@\n%@",
-           NSStringFromCGSize(layout.size), [self class], resolvedRange.description(),
-           CK::Component::LayoutContext::currentStackDescription());
+  CKAssertWithCategory(layout.size.width <= resolvedRange.max.width
+                       && layout.size.width >= resolvedRange.min.width
+                       && layout.size.height <= resolvedRange.max.height
+                       && layout.size.height >= resolvedRange.min.height,
+                       NSStringFromClass([self class]),
+                       @"Computed size %@ for %@ does not fall within constrained size %@\n%@",
+                       NSStringFromCGSize(layout.size), [self class], resolvedRange.description(),
+                       CK::Component::LayoutContext::currentStackDescription());
   return layout;
 }
 
