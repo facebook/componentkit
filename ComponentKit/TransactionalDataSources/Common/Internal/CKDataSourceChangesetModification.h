@@ -30,3 +30,7 @@
 @property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;
 
 @end
+
+namespace CK {
+  auto invalidIndexesForInsertionInArray(NSArray *const a, NSIndexSet *const is) -> NSIndexSet *;
+}

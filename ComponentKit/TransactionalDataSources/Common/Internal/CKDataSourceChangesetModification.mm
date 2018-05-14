@@ -173,6 +173,18 @@
       [indexes addIndex:itemIt.first];
       [items addObject:itemIt.second];
     }
+#ifdef CK_ASSERTIONS_ENABLED
+    const auto sectionItems = (NSArray *)[newSections objectAtIndex:sectionIt.first];
+    const auto invalidIndexes = CK::invalidIndexesForInsertionInArray(sectionItems, indexes);
+    if (invalidIndexes.count > 0) {
+      CKCFatal(@"Invalid indexes: %@ for range: %@ in section: %lu. Changeset: %@, user info: %@",
+               invalidIndexes,
+               NSStringFromRange({0, sectionItems.count}),
+               (unsigned long)sectionIt.first,
+               _changeset,
+               _userInfo);
+    }
+#endif
     [[newSections objectAtIndex:sectionIt.first] insertObjects:items atIndexes:indexes];
   }
 
@@ -213,3 +225,20 @@ static NSArray *emptyMutableArrays(NSUInteger count)
 }
 
 @end
+
+#ifdef CK_ASSERTIONS_ENABLED
+namespace CK {
+  auto invalidIndexesForInsertionInArray(NSArray *const a, NSIndexSet *const is) -> NSIndexSet *
+  {
+    auto r = [NSMutableIndexSet new];
+    __block auto arrayCount = a.count;
+    [is enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull) {
+      if (idx > arrayCount) {
+        [r addIndex:idx];
+      }
+      arrayCount++;
+    }];
+    return r;
+  }
+}
+#endif

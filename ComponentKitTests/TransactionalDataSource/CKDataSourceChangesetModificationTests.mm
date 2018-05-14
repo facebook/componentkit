@@ -258,3 +258,44 @@
 
 
 @end
+
+// Based on https://developer.apple.com/documentation/foundation/nsmutablearray/1416482-insertobjects?language=objc
+@interface CKArrayInsertionValidation: XCTestCase
+@end
+
+@implementation CKArrayInsertionValidation
+
+- (void)test_WhenInsertionLocationIsCount_IsValid
+{
+  const auto array = @[];
+  const auto indexes = [NSIndexSet indexSetWithIndex:array.count];
+
+  XCTAssertEqual(CK::invalidIndexesForInsertionInArray(array, indexes).count, 0);
+}
+
+- (void)test_WhenFirstInsertionLocationIsGreaterThanCount_IsNotValid
+{
+  const auto array = @[@"one"];
+  const auto indexes = [NSIndexSet indexSetWithIndex:array.count + 1];
+
+  XCTAssertEqualObjects(CK::invalidIndexesForInsertionInArray(array, indexes), indexes);
+}
+
+- (void)test_WhenOtherInsertionLocationIsGreaterThanCount_IsNotValid
+{
+  const auto array = @[@"one"];
+  const auto indexes = makeIndexSet({1, 3});
+
+  XCTAssertEqualObjects(CK::invalidIndexesForInsertionInArray(array, indexes), makeIndexSet({3}));
+}
+
+static auto makeIndexSet(const std::vector<NSUInteger> v) -> NSIndexSet *
+{
+  auto r = [NSMutableIndexSet new];
+  for (const auto &i : v) {
+    [r addIndex:i];
+  }
+  return r;
+}
+
+@end
