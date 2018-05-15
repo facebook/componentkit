@@ -28,7 +28,6 @@
   return [self initWithComponentProvider:componentProvider
                                  context:context
                                sizeRange:sizeRange
-                alwaysBuildComponentTree:NO
                      unifyBuildAndLayout:NO
                              forceParent:NO
             parallelInsertBuildAndLayout:NO
@@ -43,7 +42,6 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-                 alwaysBuildComponentTree:(BOOL)alwaysBuildComponentTree
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
                               forceParent:(BOOL)forceParent
              parallelInsertBuildAndLayout:(BOOL)parallelInsertBuildAndLayout
@@ -61,7 +59,6 @@
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
-    _alwaysBuildComponentTree = alwaysBuildComponentTree;
     _unifyBuildAndLayout = unifyBuildAndLayout;
     _forceParent = forceParent;
     _parallelInsertBuildAndLayout = parallelInsertBuildAndLayout;

@@ -158,15 +158,14 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
 {
   UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
   flowLayout.itemSize = self.itemSize;
-  
+
   UICollectionViewController *collectionViewController = [[UICollectionViewController alloc]
                                    initWithCollectionViewLayout:flowLayout];
-  
+
   CKDataSourceConfiguration *config = [[CKDataSourceConfiguration alloc]
                                        initWithComponentProvider:(id)self
                                        context:nil
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
-                                       alwaysBuildComponentTree:NO
                                        unifyBuildAndLayout:NO
                                        forceParent:NO
                                        parallelInsertBuildAndLayout:NO

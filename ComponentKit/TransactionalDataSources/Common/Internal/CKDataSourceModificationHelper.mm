@@ -29,7 +29,6 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                                            ^CKComponent *{
                                                              return [componentProvider componentForModel:model context:context];
                                                            },
-                                                           configuration.alwaysBuildComponentTree,
                                                            configuration.forceParent);
     const CKComponentLayout layout = CKComputeRootComponentLayout(result.component,
                                                                   sizeRange,

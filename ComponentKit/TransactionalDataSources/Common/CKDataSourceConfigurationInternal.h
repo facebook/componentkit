@@ -30,7 +30,6 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-                 alwaysBuildComponentTree:(BOOL)alwaysBuildComponentTree
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
                               forceParent:(BOOL)forceParent
              parallelInsertBuildAndLayout:(BOOL)parallelInsertBuildAndLayout
@@ -43,7 +42,6 @@
 
 @property (nonatomic, readonly, strong) id<CKAnalyticsListener> analyticsListener;
 
-@property (nonatomic, assign, readonly) BOOL alwaysBuildComponentTree;
 @property (nonatomic, assign, readonly) BOOL unifyBuildAndLayout;
 @property (nonatomic, assign, readonly) BOOL forceParent;
 @property (nonatomic, assign, readonly) BOOL parallelInsertBuildAndLayout;

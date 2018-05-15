@@ -43,7 +43,6 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
    initWithComponentProvider:provider
    context:@"context"
    sizeRange:{{100, 100}, {100, 100}}
-   alwaysBuildComponentTree:NO
    unifyBuildAndLayout:NO
    forceParent:NO
    parallelInsertBuildAndLayout:parallelBuildAndLayout
