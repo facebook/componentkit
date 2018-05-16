@@ -154,7 +154,8 @@ private:
   CKFlexboxBorderDimension(CGFloat value, bool isDefined)
   : _value(value), _isDefined(isDefined) {}
   CGFloat _value;
-  bool _isDefined;
+  // Make sizeof(_isDefined) == sizeof(_value) to get smaller code via SLP vectorization.
+  NSUInteger _isDefined;
 };
 
 struct CKFlexboxBorder {
@@ -189,7 +190,8 @@ private:
   CKFlexboxDimension(CKRelativeDimension dimension, bool isDefined)
   : _relativeDimension(dimension), _isDefined(isDefined) {}
   CKRelativeDimension _relativeDimension;
-  bool _isDefined;
+  // Make sizeof(_isDefined) == sizeof(void *) to get smaller code via SLP vectorization.
+  NSUInteger _isDefined;
 };
 
 struct CKFlexboxSpacing {
@@ -220,7 +222,8 @@ private:
   CKFlexboxAspectRatio(CGFloat aspectRatio, bool isDefined)
   : _aspectRatio(aspectRatio < 0 ? fabs(aspectRatio) : aspectRatio), _isDefined(isDefined) {}
   CGFloat _aspectRatio;
-  bool _isDefined;
+  // Make sizeof(_isDefined) == sizeof(_aspectRatio) to get smaller code via SLP vectorization.
+  NSUInteger _isDefined;
 };
 
 struct CKFlexboxComponentStyle {
