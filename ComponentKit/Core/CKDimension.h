@@ -52,7 +52,10 @@ namespace std {
 
 class CKRelativeDimension {
 public:
-  enum class Type {
+  // Make sizeof(Type) == sizeof(CGFloat) so that the default
+  // constructor takes fewer instructions (because of SLP
+  // vectorization).
+  enum class Type : NSInteger {
     AUTO,
     POINTS,
     PERCENT,
