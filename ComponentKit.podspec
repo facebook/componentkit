@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'ComponentKit'
-  s.version = '0.21'
+  s.version = '0.22'
   s.license = 'BSD'
   s.summary = 'A React-inspired view framework for iOS'
   s.homepage = 'https://componentkit.org'
