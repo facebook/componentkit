@@ -12,12 +12,12 @@
 
 #import "yoga/Yoga.h"
 
+#import "CKComponent+Yoga.h"
 #import "CKComponentInternal.h"
 #import "CKComponentLayout.h"
 #import "CKComponentLayoutBaseline.h"
 #import "CKComponentSubclass.h"
 #import "CKCompositeComponent.h"
-#import "CKCompositeComponentInternal.h"
 #import "CKInternalHelpers.h"
 #import "CKRenderTreeNodeWithChildren.h"
 #import "ComponentUtilities.h"
@@ -49,17 +49,6 @@ template class std::vector<CKFlexboxComponentChild>;
 
 @end
 
-static YGConfigRef ckYogaDefaultConfig()
-{
-  static YGConfigRef defaultConfig;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    defaultConfig = YGConfigNew();
-    YGConfigSetPointScaleFactor(defaultConfig, [UIScreen mainScreen].scale);
-  });
-  return defaultConfig;
-}
-
 @interface CKFlexboxComponentContext ()
 @property(nonatomic, assign, readonly) BOOL usesDeepYogaTrees;
 @end
@@ -73,57 +62,6 @@ static YGConfigRef ckYogaDefaultConfig()
   return c;
 }
 @end
-
-@interface CKComponent (CKYogaBasedComponent)
-
-- (BOOL)isYogaBasedLayout;
-- (YGNodeRef)ygNode:(CKSizeRange)constrainedSize;
-- (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize;
-
-@end
-
-@implementation CKComponent (CKYogaBasedComponent)
-
-- (BOOL)isYogaBasedLayout
-{
-  return NO;
-}
-
-- (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
-{
-  return YGNodeNewWithConfig(ckYogaDefaultConfig());
-}
-
-- (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
-{
-  return {};
-}
-
-@end
-
-@interface CKCompositeComponent (CKYogaBasedCompositeComponent)
-@end
-
-@implementation CKCompositeComponent (CKYogaBasedCompositeComponent)
-
-- (BOOL)isYogaBasedLayout
-{
-  return self.component.isYogaBasedLayout;
-}
-
-- (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
-{
-  return [self.component ygNode:constrainedSize];
-}
-
-- (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
-{
-  const CKComponentLayout l = [self.component layoutFromYgNode:layoutNode thatFits:constrainedSize];
-  return {self, l.size, {{{0,0}, l}}};
-}
-
-@end
-
 
 @implementation CKFlexboxComponent {
   CKFlexboxComponentStyle _style;
