@@ -9,6 +9,7 @@
  */
 
 #import "CKCellDeallocUnmounter.h"
+#import <objc/runtime.h>
 
 @interface CKCellDeallocUnmounter : NSObject
 
