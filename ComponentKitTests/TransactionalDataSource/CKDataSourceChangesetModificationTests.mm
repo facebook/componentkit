@@ -21,6 +21,7 @@
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceChangesetModification.h>
 #import <ComponentKit/CKDataSourceState.h>
+#import <ComponentKitTestHelpers/NSIndexSetExtensions.h>
 
 #import "CKDataSourceStateTestHelpers.h"
 
@@ -284,18 +285,9 @@
 - (void)test_WhenOtherInsertionLocationIsGreaterThanCount_IsNotValid
 {
   const auto array = @[@"one"];
-  const auto indexes = makeIndexSet({1, 3});
+  const auto indexes = CK::makeIndexSet({1, 3});
 
-  XCTAssertEqualObjects(CK::invalidIndexesForInsertionInArray(array, indexes), makeIndexSet({3}));
-}
-
-static auto makeIndexSet(const std::vector<NSUInteger> v) -> NSIndexSet *
-{
-  auto r = [NSMutableIndexSet new];
-  for (const auto &i : v) {
-    [r addIndex:i];
-  }
-  return r;
+  XCTAssertEqualObjects(CK::invalidIndexesForInsertionInArray(array, indexes), CK::makeIndexSet({3}));
 }
 
 @end

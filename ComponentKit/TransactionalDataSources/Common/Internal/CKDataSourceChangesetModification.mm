@@ -28,6 +28,7 @@
 #import "CKComponentScopeRoot.h"
 #import "CKComponentScopeRootFactory.h"
 #import "CKDataSourceModificationHelper.h"
+#import "CKIndexSetDescription.h"
 
 @implementation CKDataSourceChangesetModification
 {
@@ -177,8 +178,8 @@
     const auto sectionItems = (NSArray *)[newSections objectAtIndex:sectionIt.first];
     const auto invalidIndexes = CK::invalidIndexesForInsertionInArray(sectionItems, indexes);
     if (invalidIndexes.count > 0) {
-      CKCFatal(@"Invalid indexes: %@ for range: %@ in section: %lu. Changeset: %@, user info: %@",
-               invalidIndexes,
+      CKCFatal(@"%@ for range: %@ in section: %lu. Changeset: %@, user info: %@",
+               CK::indexSetDescription(invalidIndexes, @"Invalid indexes", 0),
                NSStringFromRange({0, sectionItems.count}),
                (unsigned long)sectionIt.first,
                _changeset,
