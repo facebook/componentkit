@@ -65,11 +65,6 @@ struct CKButtonComponentOptions {
   UIEdgeInsets imageEdgeInsets = UIEdgeInsetsZero;
 };
 
-struct CKButtonComponentAccessibilityConfiguration {
-  /** Accessibility label for the button. If one is not provided, the button title will be used as a label */
-  NSString *accessibilityLabel;
-};
-
 /**
  @uidocs https://fburl.com/CKButtonComponent:05b0
 
