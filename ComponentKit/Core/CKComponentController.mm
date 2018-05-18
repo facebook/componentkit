@@ -13,18 +13,9 @@
 
 #import <ComponentKit/CKAssert.h>
 
+#import "CKAnimationController.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
-
-struct CKPendingComponentAnimation {
-  CKComponentAnimation animation;
-  id context; // The context returned by the animation's willRemount block.
-};
-
-struct CKAppliedComponentAnimation {
-  CKComponentAnimation animation;
-  id context; // The context returned by the animation's didRemount block.
-};
 
 typedef NS_ENUM(NSInteger, CKComponentControllerState) {
   CKComponentControllerStateUnmounted = 0,
@@ -33,9 +24,6 @@ typedef NS_ENUM(NSInteger, CKComponentControllerState) {
   CKComponentControllerStateRemounting,
   CKComponentControllerStateUnmounting,
 };
-
-typedef size_t CKComponentAnimationID;
-typedef std::unordered_map<CKComponentAnimationID, CKAppliedComponentAnimation> CKAppliedComponentAnimationMap;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
@@ -56,53 +44,19 @@ static NSString *componentStateName(CKComponentControllerState state)
 }
 #pragma clang diagnostic pop
 
-static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnimationID animationID)
-{
-  auto it = map.find(animationID);
-  if (it != map.end()) {
-    const CKAppliedComponentAnimation &appliedAnim = it->second;
-    appliedAnim.animation.cleanup(appliedAnim.context);
-    map.erase(it);
-  }
-}
-
-struct CKComponentControllerAnimationData {
-  CKComponentAnimationID nextAnimationID;
-  std::vector<CKPendingComponentAnimation> pendingAnimationsOnInitialMount;
-  CKAppliedComponentAnimationMap appliedAnimationsOnInitialMount;
-  std::vector<CKPendingComponentAnimation> pendingAnimations;
-  CKAppliedComponentAnimationMap appliedAnimations;
-};
-
-struct CKComponentControllerAnimationWrapper {
-public:
-  CKComponentControllerAnimationData *operator->() {
-    if (_animationData == nullptr) {
-      _animationData.reset(new CKComponentControllerAnimationData());
-    }
-    return _animationData.get();
-  };
-
-  explicit operator bool() const {
-    return _animationData != nullptr;
-  };
-private:
-  std::unique_ptr<CKComponentControllerAnimationData> _animationData;
-};
-
 @implementation CKComponentController
 {
   CKComponentControllerState _state;
   BOOL _updatingComponent;
-  BOOL _performedInitialMount;
   CKComponent *_previousComponent;
-  CKComponentControllerAnimationWrapper _animationData;
+  CKAnimationController *_animationController;
 }
 
 - (instancetype)initWithComponent:(CKComponent *)component
 {
   if (self = [super init]) {
     _component = component;
+    _animationController = [CKAnimationController new];
   }
   return self;
 }
@@ -151,21 +105,12 @@ private:
     case CKComponentControllerStateUnmounted:
       _state = CKComponentControllerStateMounting;
       [self willMount];
-      if (!_performedInitialMount) {
-        _performedInitialMount = YES;
-        for (const auto &animation : [component animationsOnInitialMount]) {
-          _animationData->pendingAnimationsOnInitialMount.push_back({animation, animation.willRemount()});
-        }
-      }
+      [_animationController componentWillStartMounting:component];
       break;
     case CKComponentControllerStateMounted:
       _state = CKComponentControllerStateRemounting;
       [self willRemount];
-      if (_previousComponent) { // Only animate if updating from an old component to a new one, and previously mounted
-        for (const auto &animation : [component animationsFromPreviousComponent:_previousComponent]) {
-          _animationData->pendingAnimations.push_back({animation, animation.willRemount()});
-        }
-      }
+      [_animationController componentWillStartRemounting:component previousComponent:_previousComponent];
       break;
     default:
       if (!component.componentOrAncestorHasScopeConflict) {
@@ -181,36 +126,12 @@ private:
     case CKComponentControllerStateMounting:
       _state = CKComponentControllerStateMounted;
       [self didMount];
-      if (_animationData) {
-        for (const auto &pendingAnimation : _animationData->pendingAnimationsOnInitialMount) {
-          const CKComponentAnimation &anim = pendingAnimation.animation;
-          [CATransaction begin];
-          CKComponentAnimationID animationID = _animationData->nextAnimationID++;
-          [CATransaction setCompletionBlock:^() {
-            eraseAnimation(_animationData->appliedAnimationsOnInitialMount, animationID);
-          }];
-          _animationData->appliedAnimationsOnInitialMount.insert({animationID, {anim, anim.didRemount(pendingAnimation.context)}});
-          [CATransaction commit];
-        }
-        _animationData->pendingAnimationsOnInitialMount.clear();
-      }
+      [_animationController componentDidMount];
       break;
     case CKComponentControllerStateRemounting:
       _state = CKComponentControllerStateMounted;
       [self didRemount];
-      if (_animationData) {
-        for (const auto &pendingAnimation : _animationData->pendingAnimations) {
-          const CKComponentAnimation &anim = pendingAnimation.animation;
-          [CATransaction begin];
-          CKComponentAnimationID animationID = _animationData->nextAnimationID++;
-          [CATransaction setCompletionBlock:^() {
-            eraseAnimation(_animationData->appliedAnimations, animationID);
-          }];
-          _animationData->appliedAnimations.insert({animationID, {anim, anim.didRemount(pendingAnimation.context)}});
-          [CATransaction commit];
-        }
-        _animationData->pendingAnimations.clear();
-      }
+      [_animationController componentDidMount];
       break;
     default:
       if (!component.componentOrAncestorHasScopeConflict) {
@@ -230,7 +151,7 @@ private:
       if (component == _component) {
         _state = CKComponentControllerStateUnmounting;
         [self willUnmount];
-        [self _cleanupAppliedAnimations];
+        [_animationController componentWillUnmount];
       }
       break;
     case CKComponentControllerStateRemounting:
@@ -269,22 +190,8 @@ private:
 - (void)_relinquishView
 {
   [self componentWillRelinquishView];
-  [self _cleanupAppliedAnimations];
+  [_animationController componentWillRelinquishView];
   _view = nil;
-}
-
-- (void)_cleanupAppliedAnimations
-{
-  if (_animationData) {
-    for (const auto &appliedAnimation : _animationData->appliedAnimationsOnInitialMount) {
-      appliedAnimation.second.animation.cleanup(appliedAnimation.second.context);
-    }
-    _animationData->appliedAnimationsOnInitialMount.clear();
-    for (const auto &appliedAnimation : _animationData->appliedAnimations) {
-      appliedAnimation.second.animation.cleanup(appliedAnimation.second.context);
-    }
-    _animationData->appliedAnimations.clear();
-  }
 }
 
 - (void)component:(CKComponent *)component willRelinquishView:(UIView *)view

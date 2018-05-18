@@ -735,6 +735,9 @@
 		D6B0ADF420AAF88C00A31FDF /* CKIndexSetDescriptionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6B0ADF320AAF88C00A31FDF /* CKIndexSetDescriptionTests.mm */; };
 		D6B0AE0120AAFB1000A31FDF /* NSIndexSetExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = D6B0ADFF20AAFB1000A31FDF /* NSIndexSetExtensions.h */; };
 		D6B0AE0220AAFB1000A31FDF /* NSIndexSetExtensions.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6B0AE0020AAFB1000A31FDF /* NSIndexSetExtensions.mm */; };
+		D6CB416920AE0D87000075F9 /* CKAnimationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6F0CB1D20ADF4B100159631 /* CKAnimationController.mm */; };
+		D6F0CB1F20ADF4B100159631 /* CKAnimationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6F0CB1D20ADF4B100159631 /* CKAnimationController.mm */; };
+		D6F0CB2020ADF4B100159631 /* CKAnimationController.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F0CB1E20ADF4B100159631 /* CKAnimationController.h */; };
 		EB14A3411D8267DF0004BECF /* CKAutoSizedImageComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKAutoSizedImageComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB14A3421D8267DF0004BECF /* CKAutoSizedImageComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKAutoSizedImageComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB14A3431D8267DF0004BECF /* CKAutoSizedImageComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = EB14A3401D8267DF0004BECF /* CKAutoSizedImageComponent.mm */; };
@@ -1299,6 +1302,8 @@
 		D6B0ADFF20AAFB1000A31FDF /* NSIndexSetExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSIndexSetExtensions.h; sourceTree = "<group>"; };
 		D6B0AE0020AAFB1000A31FDF /* NSIndexSetExtensions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = NSIndexSetExtensions.mm; sourceTree = "<group>"; };
 		D6B7E9BF1FCF4C6500FAD4E0 /* CKComponentScopeFrameInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKComponentScopeFrameInternal.h; sourceTree = "<group>"; };
+		D6F0CB1D20ADF4B100159631 /* CKAnimationController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnimationController.mm; sourceTree = "<group>"; };
+		D6F0CB1E20ADF4B100159631 /* CKAnimationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAnimationController.h; sourceTree = "<group>"; };
 		EB14A33F1D8267DF0004BECF /* CKAutoSizedImageComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAutoSizedImageComponent.h; sourceTree = "<group>"; };
 		EB14A3401D8267DF0004BECF /* CKAutoSizedImageComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAutoSizedImageComponent.mm; sourceTree = "<group>"; };
 		EB14A34F1D8268580004BECF /* CKImageComponentTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKImageComponentTests.mm; sourceTree = "<group>"; };
@@ -1743,6 +1748,8 @@
 				51993B8E207B67EE00DF0490 /* CKRenderWithSizeSpecComponent.mm */,
 				23FEC5C5203B38800068E09D /* CKRenderComponent.h */,
 				23FEC5C4203B38800068E09D /* CKRenderComponent.mm */,
+				D6F0CB1E20ADF4B100159631 /* CKAnimationController.h */,
+				D6F0CB1D20ADF4B100159631 /* CKAnimationController.mm */,
 				D0B47AD71CBD926700BB33CE /* CKComponentAnimation.h */,
 				D0B47AD81CBD926700BB33CE /* CKComponentAnimation.mm */,
 				D0B47AD91CBD926700BB33CE /* CKComponentAnimationHooks.h */,
@@ -2480,6 +2487,7 @@
 				D0B47D6D1CBD948E00BB33CE /* CKTextKitRendererCache.h in Headers */,
 				D0B47D751CBD948E00BB33CE /* CKAsyncTransactionContainer+Private.h in Headers */,
 				D0B47CFD1CBD948E00BB33CE /* CKComponentSubclass.h in Headers */,
+				D6F0CB2020ADF4B100159631 /* CKAnimationController.h in Headers */,
 				D0B47D6F1CBD948E00BB33CE /* CKTextKitTailTruncater.h in Headers */,
 				D0B47D761CBD948E00BB33CE /* CKAsyncTransactionContainer.h in Headers */,
 				D0B47CE91CBD948E00BB33CE /* CKMacros.h in Headers */,
@@ -2954,6 +2962,7 @@
 				03B8B4AD1D2A346F00EDFF59 /* CKDataSourceUpdateConfigurationModification.mm in Sources */,
 				03B8B4AE1D2A346F00EDFF59 /* CKDataSourceUpdateStateModification.mm in Sources */,
 				2319E3D02048269A00C71E2D /* CKRenderTreeNode.mm in Sources */,
+				D6CB416920AE0D87000075F9 /* CKAnimationController.mm in Sources */,
 				03B8B4B01D2A346F00EDFF59 /* CKComponentAction.mm in Sources */,
 				03B8B4B11D2A346F00EDFF59 /* CKComponentDelegateAttribute.mm in Sources */,
 				03B8B4B21D2A346F00EDFF59 /* CKComponentDelegateForwarder.mm in Sources */,
@@ -3207,6 +3216,7 @@
 				A2E5BDC31EB9303D00444CD9 /* CKComponentKey.mm in Sources */,
 				D0B47CB01CBD943400BB33CE /* CKCenterLayoutComponent.mm in Sources */,
 				D0B47CB11CBD943400BB33CE /* CKInsetComponent.mm in Sources */,
+				D6F0CB1F20ADF4B100159631 /* CKAnimationController.mm in Sources */,
 				D0B47CB21CBD943400BB33CE /* CKOverlayLayoutComponent.mm in Sources */,
 				D0B47CB31CBD943400BB33CE /* CKRatioLayoutComponent.mm in Sources */,
 				EB14A3431D8267DF0004BECF /* CKAutoSizedImageComponent.mm in Sources */,
