@@ -23,3 +23,7 @@
 - (BOOL)isEmpty;
 
 @end
+
+namespace CK {
+  auto changesetDescription(const CKDataSourceChangeset *const changeset) -> NSString *;
+}

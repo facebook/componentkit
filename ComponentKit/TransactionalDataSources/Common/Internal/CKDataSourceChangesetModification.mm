@@ -175,14 +175,14 @@
       [items addObject:itemIt.second];
     }
 #ifdef CK_ASSERTIONS_ENABLED
-    const auto sectionItems = (NSArray *)[newSections objectAtIndex:sectionIt.first];
+    const auto sectionItems = static_cast<NSArray *>([newSections objectAtIndex:sectionIt.first]);
     const auto invalidIndexes = CK::invalidIndexesForInsertionInArray(sectionItems, indexes);
     if (invalidIndexes.count > 0) {
       CKCFatal(@"%@ for range: %@ in section: %lu. Changeset: %@, user info: %@",
                CK::indexSetDescription(invalidIndexes, @"Invalid indexes", 0),
                NSStringFromRange({0, sectionItems.count}),
                (unsigned long)sectionIt.first,
-               _changeset,
+               CK::changesetDescription(_changeset),
                _userInfo);
     }
 #endif

@@ -37,6 +37,11 @@
 
 @implementation CKIndexSetDescriptionTests_WithTitleAndIndent
 
+- (void)test_WhenIndexSetIsEmptyButHasTitle_ReturnsEmptyString
+{
+  XCTAssertEqualObjects(CK::indexSetDescription([NSIndexSet new], @"Removed Sections", 2), @"");
+}
+
 - (void)test_WhenIndentIsNonZero_AddsIndentBeforeTitle
 {
   const auto is = CK::makeIndexSet({1, 2, 4});

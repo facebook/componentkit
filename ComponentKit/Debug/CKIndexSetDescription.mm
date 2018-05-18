@@ -12,6 +12,10 @@
 
 auto CK::indexSetDescription(NSIndexSet *const is, NSString *const title, const int indent) -> NSString *
 {
+  if (is.count == 0) {
+    return @"";
+  }
+
   auto rangeStrings = static_cast<NSMutableArray<NSString *> *>([NSMutableArray array]);
   [is enumerateRangesUsingBlock:^(NSRange range, BOOL * _Nonnull) {
     const auto rangeStr = range.length > 1 ?

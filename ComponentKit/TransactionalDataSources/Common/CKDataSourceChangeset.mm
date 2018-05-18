@@ -10,9 +10,11 @@
 #import "CKDataSourceChangeset.h"
 #import "CKDataSourceChangesetInternal.h"
 
+#import <UIKit/UICollectionView.h>
 #import <UIKit/UITableView.h>
 
 #import "CKEqualityHashHelpers.h"
+#import "CKIndexSetDescription.h"
 #import "CKMacros.h"
 #import "CKAssert.h"
 
@@ -157,3 +159,87 @@ static NSString *ReadableStringForSortedItemsDictionary(NSDictionary *dict)
 }
 
 @end
+
+#ifdef CK_ASSERTIONS_ENABLED
+namespace CK {
+  static auto withNewLineIfNotEmpty(NSString const* s) -> NSString *
+  {
+    return s.length > 0 ? [s stringByAppendingString:@"\n"] : @"";
+  }
+
+  static auto itemsByIndexPathDescription(NSDictionary<NSIndexPath *, NSObject *> * const items, NSString * const title) -> NSString *
+  {
+    if (items.count == 0) {
+      return @"";
+    }
+
+    auto description = [NSMutableString new];
+    [description appendFormat:@"  %@: {\n", title];
+    auto itemStrings = static_cast<NSMutableArray <NSString *> *>([NSMutableArray new]);
+    const auto sortedIps = [[items allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    for (NSIndexPath * const ip in sortedIps) {
+      const auto itemStr = [NSString stringWithFormat:@"    (%ld-%ld): %@", (long)ip.section, (long)ip.item, items[ip]];
+      [itemStrings addObject:itemStr];
+    }
+    [description appendString:[itemStrings componentsJoinedByString:@",\n"]];
+    [description appendString:@"\n  }\n"];
+    return description;
+  }
+
+  static auto movedItemsDescription(NSDictionary<NSIndexPath *, NSIndexPath *> * const ips) -> NSString *
+  {
+    if (ips.count == 0) {
+      return @"";
+    }
+
+    auto description = [NSMutableString new];
+    [description appendString:@"  Moved Items: {\n"];
+    auto ipStrings = static_cast<NSMutableArray <NSString *> *>([NSMutableArray new]);
+    const auto sortedIps = [[ips allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    for (NSIndexPath * const ip in sortedIps) {
+      const auto ipStr = [NSString stringWithFormat:@"    (%ld-%ld) → (%ld-%ld)", (long)ip.section, (long)ip.item, (long)ips[ip].section, (long)ips[ip].item];
+      [ipStrings addObject:ipStr];
+    }
+    [description appendString:[ipStrings componentsJoinedByString:@",\n"]];
+    [description appendString:@"\n  }\n"];
+    return description;
+  }
+
+  static auto removedItemsDescription(NSSet<NSIndexPath *> const* ips) -> NSString *
+  {
+    if (ips.count == 0) {
+      return @"";
+    }
+
+    auto description = [NSMutableString new];
+    [description appendString:@"  Removed Items: {\n"];
+    auto items = static_cast<NSMutableArray<NSString *> *>([NSMutableArray new]);
+    const auto sortedIps = [[ips allObjects] sortedArrayUsingSelector:@selector(compare:)];
+    for (NSIndexPath * const ip : sortedIps) {
+      const auto ipStr = [NSString stringWithFormat:@"    (%ld-%ld)", (long)ip.section, (long)ip.item];
+      [items addObject:ipStr];
+    }
+    [description appendString:[items componentsJoinedByString:@",\n"]];
+    [description appendString:@"\n  }\n"];
+    return description;
+  }
+
+  auto changesetDescription(const CKDataSourceChangeset *const changeset) -> NSString *
+  {
+    if (changeset.isEmpty) {
+      return @"";
+    }
+
+    auto description = [NSMutableString new];
+    [description appendString:@"{\n"];
+    [description appendString:itemsByIndexPathDescription(changeset.updatedItems, @"Updated Items")];
+    [description appendString:removedItemsDescription(changeset.removedItems)];
+    [description appendString:withNewLineIfNotEmpty(indexSetDescription(changeset.removedSections, @"Removed Sections", 2))];
+    [description appendString:movedItemsDescription(changeset.movedItems)];
+    [description appendString:withNewLineIfNotEmpty(indexSetDescription(changeset.insertedSections, @"Inserted Sections", 2))];
+    [description appendString:itemsByIndexPathDescription(changeset.insertedItems, @"Inserted Items")];
+    [description appendString:@"}"];
+    return description;
+  }
+}
+#endif
