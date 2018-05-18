@@ -44,6 +44,21 @@ static NSString *componentStateName(CKComponentControllerState state)
 }
 #pragma clang diagnostic pop
 
+@interface CKComponentControllerContext ()
+@property (nonatomic, assign, readonly) BOOL handleAnimationsInController;
+@end
+
+@implementation CKComponentControllerContext
++ (instancetype)newWithHandleAnimationsInController:(BOOL)handleAnimationsInController
+{
+  const auto c = [super new];
+  if (c != nil) {
+    c->_handleAnimationsInController = handleAnimationsInController;
+  }
+  return c;
+}
+@end
+
 @implementation CKComponentController
 {
   CKComponentControllerState _state;
@@ -56,7 +71,9 @@ static NSString *componentStateName(CKComponentControllerState state)
 {
   if (self = [super init]) {
     _component = component;
-    _animationController = [CKAnimationController new];
+    const auto ctx = CKComponentContext<CKComponentControllerContext>::get();
+    const auto handleAnimationsInController = (ctx == nil) ? YES : ctx.handleAnimationsInController;
+    _animationController = handleAnimationsInController ? [CKAnimationController new] : nil;
   }
   return self;
 }
