@@ -80,10 +80,11 @@
     dispatch_group_t group = dispatch_group_create();
     [[_changeset updatedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
       NSMutableArray *const section = newSections[indexPath.section];
+      std::lock_guard<std::mutex> lRead(_mutex);
       CKDataSourceItem *const oldItem = section[indexPath.item];
       dispatch_group_async(group, _queue, ^{
         CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
-        std::lock_guard<std::mutex> l(_mutex);
+        std::lock_guard<std::mutex> lWrite(_mutex);
         [section replaceObjectAtIndex:indexPath.item withObject:item];
       });
     }];
