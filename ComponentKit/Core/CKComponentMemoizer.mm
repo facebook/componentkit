@@ -10,6 +10,7 @@
 
 #import "CKComponentMemoizer.h"
 
+#import "CKCollection.h"
 #import "CKComponentInternal.h"
 #import "CKComponentScopeFrameInternal.h"
 #import "CKComponentSubclass.h"
@@ -58,16 +59,6 @@ struct CKLayoutMemoizationKey {
   };
 };
 
-namespace CK {
-  namespace Collection {
-    template <typename Collection, typename Predicate>
-    bool contains(const Collection& collection, Predicate &&predicate)
-    {
-      return std::find_if(collection.begin(), collection.end(), predicate) != collection.end();
-    }
-  }
-}
-
 @interface CKComponentScopeHandle (ParentCheck)
 - (bool)isParentOfOrEqualTo:(CKComponentScopeHandle *)other;
 @end
@@ -108,7 +99,7 @@ static bool currentScopeIsAffectedByPendingStateUpdates()
 
   const auto currentScopeHandle = threadLocalScope->stack.top().frame.handle;
   const auto updates = threadLocalScope->stateUpdates;
-  const auto currentScopeOrDescendantHasStateUpdate = CK::Collection::contains(updates, [currentScopeHandle](const auto &pair){
+  const auto currentScopeOrDescendantHasStateUpdate = CK::Collection::containsWhere(updates, [=](const auto &pair){
     return [currentScopeHandle isParentOfOrEqualTo:pair.first];
   });
 
@@ -143,7 +134,7 @@ static bool currentScopeIsAffectedByPendingStateUpdates()
 {
   const auto implicitlyMemoizedChildren = [frame allAcquiredComponentsInDescendants];
   for (const auto &pair : componentCache_) {
-    if (CK::Collection::contains(implicitlyMemoizedChildren, [pair](const auto &c){ return c == pair.second; })) {
+    if (CK::Collection::containsWhere(implicitlyMemoizedChildren, [=](const auto &c){ return c == pair.second; })) {
       [self enqueueComponent:pair.second forKey:pair.first];
     }
   }
@@ -300,4 +291,3 @@ CKComponentLayout CKMemoizeLayout(CKComponent *component, CKSizeRange constraine
   }
   return block();
 }
-
