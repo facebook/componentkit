@@ -41,6 +41,10 @@ To pass data from a component to its controller, expose a `@property` on the com
 @property (nonatomic, strong, readonly) MySong *song;     // All components for a controller share the same value
 @property (nonatomic, assign, readonly) BOOL isPlaying;   // Different components may have different values (part of component state)
 @end
+
+@interface MySongComponentController : CKComponentController
+@end
+
 @implementation MySongComponent : CKCompositeComponent
 + (instancetype)newWithSong:(MySong *)song
 {
@@ -56,13 +60,14 @@ To pass data from a component to its controller, expose a `@property` on the com
   }
   return c;
 }
+
 + (Class<CKComponentControllerProtocol>)controllerClass
 {
   return [MySongComponentController class];
 }
+  
 @end
-@interface MySongComponentController : CKComponentController
-@end
+
 @implementation MySongComponentController
 {
   MySong *_song;
@@ -76,15 +81,18 @@ To pass data from a component to its controller, expose a `@property` on the com
   }
   return self;
 }
+
 - (void)songStateDidChange:(BOOL)isPlaying
 {
   [self.component updateState:^{
     return @(isPlaying);
   } mode:CKUpdateModeAsynchronous];
 }
+
 - (void)didUpdateComponent
 {
   // This only fires on a state *change* (i.e. not through the initializer path).
 }
+
 @end
 {% endhighlight %}
