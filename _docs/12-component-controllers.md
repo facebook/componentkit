@@ -56,17 +56,16 @@ To pass data from a component to its controller, expose a `@property` on the com
   }
   return c;
 }
++ (Class<CKComponentControllerProtocol>)controllerClass
+{
+  return [MySongComponentController class];
+}
 @end
 @interface MySongComponentController : CKComponentController
 @end
 @implementation MySongComponentController
 {
   MySong *_song;
-}
-
-+ (Class<CKComponentControllerProtocol>)controllerClass
-{
-  return [MySongComponentController class];
 }
 
 - (instancetype)initWithComponent:(MySongComponent *)component
