@@ -42,6 +42,8 @@ To pass data from a component to its controller, expose a `@property` on the com
 @property (nonatomic, assign, readonly) BOOL isPlaying;   // Different components may have different values (part of component state)
 @end
 
+// We declare the component controller before the component implementation
+// in order to return the controller class in the `+ (Class<CKComponentControllerProtocol>)controllerClass` method.
 @interface MySongComponentController : CKComponentController
 @end
 
@@ -64,8 +66,7 @@ To pass data from a component to its controller, expose a `@property` on the com
 + (Class<CKComponentControllerProtocol>)controllerClass
 {
   return [MySongComponentController class];
-}
-  
+} 
 @end
 
 @implementation MySongComponentController
@@ -93,6 +94,5 @@ To pass data from a component to its controller, expose a `@property` on the com
 {
   // This only fires on a state *change* (i.e. not through the initializer path).
 }
-
 @end
 {% endhighlight %}
