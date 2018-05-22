@@ -111,7 +111,20 @@
 
   // Moves: first record as inserts for later processing
   [[_changeset movedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *from, NSIndexPath *to, BOOL *stop) {
-    insertedItemsBySection[to.section][to.row] = newSections[from.section][from.item];
+    CKCAssert(from.section < newSections.count,
+              @"Invalid section: %lu (>= %lu) while processing moved items. Changeset: %@, user info: %@",
+              (unsigned long)from.section,
+              (unsigned long)newSections.count,
+              CK::changesetDescription(_changeset),
+              _userInfo);
+    const auto fromSection = static_cast<NSArray *>(newSections[from.section]);
+    CKCAssert(from.item < fromSection.count,
+              @"Invalid item: %lu (>= %lu) while processing moved items. Changeset: %@, user info: %@",
+              (unsigned long)from.item,
+              (unsigned long)fromSection.count,
+              CK::changesetDescription(_changeset),
+              _userInfo);
+    insertedItemsBySection[to.section][to.row] = fromSection[from.item];
   }];
 
   // Moves: then record as removals
