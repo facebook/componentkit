@@ -111,19 +111,21 @@
 
   // Moves: first record as inserts for later processing
   [[_changeset movedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *from, NSIndexPath *to, BOOL *stop) {
-    CKCAssert(from.section < newSections.count,
-              @"Invalid section: %lu (>= %lu) while processing moved items. Changeset: %@, user info: %@",
-              (unsigned long)from.section,
-              (unsigned long)newSections.count,
-              CK::changesetDescription(_changeset),
-              _userInfo);
+    if (from.section >= newSections.count) {
+      CKCFatal(@"Invalid section: %lu (>= %lu) while processing moved items. Changeset: %@, user info: %@",
+               (unsigned long)from.section,
+               (unsigned long)newSections.count,
+               CK::changesetDescription(_changeset),
+               _userInfo);
+    }
     const auto fromSection = static_cast<NSArray *>(newSections[from.section]);
-    CKCAssert(from.item < fromSection.count,
-              @"Invalid item: %lu (>= %lu) while processing moved items. Changeset: %@, user info: %@",
-              (unsigned long)from.item,
-              (unsigned long)fromSection.count,
-              CK::changesetDescription(_changeset),
-              _userInfo);
+    if (from.item >= fromSection.count) {
+      CKCFatal(@"Invalid item: %lu (>= %lu) while processing moved items. Changeset: %@, user info: %@",
+               (unsigned long)from.item,
+               (unsigned long)fromSection.count,
+               CK::changesetDescription(_changeset),
+               _userInfo);
+    }
     insertedItemsBySection[to.section][to.row] = fromSection[from.item];
   }];
 
@@ -137,7 +139,15 @@
     addRemovedIndexPath(removedItem);
   }
   for (const auto &it : removedItemsBySection) {
-    [[newSections objectAtIndex:it.first] removeObjectsAtIndexes:it.second];
+    if (it.first >= newSections.count) {
+      CKCFatal(@"Invalid section: %lu (>= %lu) while processing moved items. Changeset: %@, user info: %@",
+               (unsigned long)it.first,
+               (unsigned long)newSections.count,
+               CK::changesetDescription(_changeset),
+               _userInfo);
+    }
+    const auto section = static_cast<NSMutableArray *>(newSections[it.first]);
+    [section removeObjectsAtIndexes:it.second];
   }
 
   // Remove sections
