@@ -25,3 +25,7 @@
 - (void)didFinishComponentUpdate;
 
 @end
+
+@interface CKComponentControllerContext ()
+@property (nonatomic, assign, readonly) BOOL handleAnimationsInController;
+@end

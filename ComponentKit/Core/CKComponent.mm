@@ -373,8 +373,11 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   if (it == cache->end()) {
     Class c = NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"]);
 
-    // If you override animationsFromPreviousComponent: or animationsOnInitialMount then we need a controller.
-    if (c == nil &&
+    // If you override animationsFromPreviousComponent: or animationsOnInitialMount and if context permits
+    // then we need a controller
+    const auto ctx = CKComponentContext<CKComponentControllerContext>::get();
+    const auto handleAnimationsInController = (ctx == nil) ? YES : ctx.handleAnimationsInController;
+    if (c == nil && handleAnimationsInController &&
         (CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
          CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnInitialMount)))) {
           c = [CKComponentController class];

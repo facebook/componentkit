@@ -44,10 +44,6 @@ static NSString *componentStateName(CKComponentControllerState state)
 }
 #pragma clang diagnostic pop
 
-@interface CKComponentControllerContext ()
-@property (nonatomic, assign, readonly) BOOL handleAnimationsInController;
-@end
-
 @implementation CKComponentControllerContext
 + (instancetype)newWithHandleAnimationsInController:(BOOL)handleAnimationsInController
 {
