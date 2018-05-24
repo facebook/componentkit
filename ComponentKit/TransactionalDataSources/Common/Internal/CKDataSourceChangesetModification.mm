@@ -147,6 +147,17 @@
                _userInfo);
     }
     const auto section = static_cast<NSMutableArray *>(newSections[it.first]);
+#ifdef CK_ASSERTIONS_ENABLED
+    const auto invalidIndexes = CK::invalidIndexesForRemovalFromArray(section, it.second);
+    if (invalidIndexes.count > 0) {
+      CKCFatal(@"%@ (>= %lu) in section: %lu. Changeset: %@, user info: %@",
+               CK::indexSetDescription(invalidIndexes, @"Invalid indexes", 0),
+               (unsigned long)section.count,
+               (unsigned long)it.first,
+               CK::changesetDescription(_changeset),
+               _userInfo);
+    }
+#endif
     [section removeObjectsAtIndexes:it.second];
   }
 
@@ -262,6 +273,17 @@ namespace CK {
         [r addIndex:idx];
       }
       arrayCount++;
+    }];
+    return r;
+  }
+
+  auto invalidIndexesForRemovalFromArray(NSArray *const a, NSIndexSet *const is) -> NSIndexSet *
+  {
+    auto r = [NSMutableIndexSet new];
+    [is enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull) {
+      if (idx >= a.count) {
+        [r addIndex:idx];
+      }
     }];
     return r;
   }

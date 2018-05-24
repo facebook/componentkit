@@ -291,3 +291,34 @@
 }
 
 @end
+
+@interface CKArrayRemovalValidation: XCTestCase
+@end
+
+@implementation CKArrayRemovalValidation
+
+- (void)test_WhenRemovalLocationIsEqualToCount_IsNotValid
+{
+  const auto array = @[];
+  const auto indexes = [NSIndexSet indexSetWithIndex:array.count];
+
+  XCTAssertEqualObjects(CK::invalidIndexesForRemovalFromArray(array, indexes), CK::makeIndexSet({0}));
+}
+
+- (void)test_WhenFirstRemovalLocationIsWithinBounds_IsValid
+{
+  const auto array = @[@"one"];
+  const auto indexes = CK::makeIndexSet({0});
+
+  XCTAssertEqual(CK::invalidIndexesForRemovalFromArray(array, indexes).count, 0);
+}
+
+- (void)test_WhenOtherRemovalLocationIsGreaterThanCount_IsNotValid
+{
+  const auto array = @[@"one"];
+  const auto indexes = CK::makeIndexSet({0, 1});
+
+  XCTAssertEqualObjects(CK::invalidIndexesForRemovalFromArray(array, indexes), CK::makeIndexSet({1}));
+}
+
+@end
