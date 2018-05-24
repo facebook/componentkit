@@ -39,6 +39,48 @@ struct CKComponentHostingViewInputs {
   };
 };
 
+/**
+ A cache for storing information about a component layout for given size.
+ */
+struct CKComponentLayoutAndBuildResultCache {
+private:
+  CKComponentLayout _layout = {};
+  CKBuildComponentResult _buildComponentResult = {};
+  
+public:
+  // We need to declare a default initializer that can make this type compliant to be used as ivar.
+  CKComponentLayoutAndBuildResultCache() { }
+  
+  
+  /**
+   The designated initializer.
+
+   @param layout The layout to store.
+   @param buildComponentResult The build componente result to store.
+   */
+  CKComponentLayoutAndBuildResultCache(CKComponentLayout layout, CKBuildComponentResult buildComponentResult) : _layout(layout), _buildComponentResult(buildComponentResult) { }
+  
+  /**
+   @param c The component holding the information needed to check cache's eligibility.
+   @param s The size to use to check cache's eligibility.
+   @return `YES` if cache is eligible for the given in inpute parameter. `NO` otherwise.
+   */
+  auto isEligibleForComponentAndSize(CKComponent * const c, const CGSize s) const
+  {
+    return CGSizeEqualToSize(s, _layout.size) && _layout.component == c;
+  }
+  
+  auto layout() const
+  {
+    return _layout;
+  }
+  
+  auto buildComponentResult() const
+  {
+    return _buildComponentResult;
+  }
+};
+
 @interface CKComponentHostingView () <CKComponentStateListener, CKComponentDebugReflowListener>
 {
   Class<CKComponentProvider> _componentProvider;
@@ -60,6 +102,10 @@ struct CKComponentHostingViewInputs {
   BOOL _isSynchronouslyUpdatingComponent;
   BOOL _isMountingComponent;
   BOOL _unifyBuildAndLayout;
+  BOOL _useCacheLayoutAndBuildResult;
+  
+  // A convenience cache used to improve the layout calculation of the mounted component.
+  CKComponentLayoutAndBuildResultCache _cacheComponentLayoutAndBuildResult;
 }
 @end
 
@@ -91,7 +137,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil
-                     unifyBuildAndLayout:NO];
+                     unifyBuildAndLayout:NO
+               cacheLayoutAndBuildResult:NO];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -103,7 +150,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:analyticsListener
-                     unifyBuildAndLayout:NO];
+                     unifyBuildAndLayout:NO
+               cacheLayoutAndBuildResult:NO];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -112,6 +160,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
+                cacheLayoutAndBuildResult:(BOOL)cacheLayoutAndBuildResult
 {
   if (self = [super initWithFrame:CGRectZero]) {
     _componentProvider = componentProvider;
@@ -126,6 +175,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
     _unifyBuildAndLayout = unifyBuildAndLayout;
+    _useCacheLayoutAndBuildResult = cacheLayoutAndBuildResult;
 
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -153,17 +203,20 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _isMountingComponent = YES;
     _containerView.frame = self.bounds;
     const CGSize size = self.bounds.size;
-
-    if (!_unifyBuildAndLayout) {
-      [self _synchronouslyUpdateComponentIfNeeded];
-      if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
-        _mountedLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener);
-        [self _sendDidPrepareLayoutIfNeeded];
-      }
+    
+    if (_useCacheLayoutAndBuildResult) {
+      [self _updateMountedComponentLayoutUsingCacheForSize:size];
     } else {
-      [self _synchronouslyBuildAndLayoutComponentIfNeeded:{size,size} forceUpdate:(_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size))];
+      if (!_unifyBuildAndLayout) {
+        [self _synchronouslyUpdateComponentIfNeeded];
+        if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
+          _mountedLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener);
+          [self _sendDidPrepareLayoutIfNeeded];
+        }
+      } else {
+        [self _synchronouslyBuildAndLayoutComponentIfNeeded:{size,size} forceUpdate:(_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size))];
+      }
     }
-
     CKComponentBoundsAnimationApply(_boundsAnimation, ^{
       _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil, _pendingInputs.scopeRoot.analyticsListener) copy];
     }, nil);
@@ -175,13 +228,37 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 - (CGSize)sizeThatFits:(CGSize)size
 {
   CKAssertMainThread();
-  if (!_unifyBuildAndLayout) {
-    [self _synchronouslyUpdateComponentIfNeeded];
-    const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-    return CKComputeRootComponentLayout(_component, constrainedSize, _pendingInputs.scopeRoot.analyticsListener).size;
+  
+  if (_useCacheLayoutAndBuildResult) {
+    // The size to return might have been already calculated before and, if eligible, it can be re-used directly from our cache.
+    //  Otherwise, we calculate the component layout needed to return the requested size and update the cache.
+    
+    if (!_unifyBuildAndLayout) {
+      [self _synchronouslyUpdateComponentIfNeeded];
+      if (_cacheComponentLayoutAndBuildResult.isEligibleForComponentAndSize(_component, size)) {
+        return _cacheComponentLayoutAndBuildResult.layout().size;
+      }
+      
+      const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
+      return [self _buildComponentLayoutWithSizeRange:constrainedSize].size;
+    } else {
+      if (_cacheComponentLayoutAndBuildResult.isEligibleForComponentAndSize(_component, size)) {
+        return _cacheComponentLayoutAndBuildResult.layout().size;
+      }
+      
+      const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
+      auto componentLayoutAndBuildResult = [self _buildAndLayoutComponentIfNeeded:constrainedSize pendingInputs:_pendingInputs];
+      return componentLayoutAndBuildResult.computedLayout.size;
+    }
   } else {
-    const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-    return [self _synchronouslyCalculateLayoutSize:constrainedSize];
+    if (!_unifyBuildAndLayout) {
+      [self _synchronouslyUpdateComponentIfNeeded];
+      const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
+      return CKComputeRootComponentLayout(_component, constrainedSize, _pendingInputs.scopeRoot.analyticsListener).size;
+    } else {
+      const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
+      return [self _synchronouslyCalculateLayoutSize:constrainedSize];
+    }
   }
 }
 
@@ -209,6 +286,28 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 - (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider
 {
   return _pendingInputs.scopeRoot;
+}
+
+/**
+ @return A build component result from current component settings.
+ */
+- (CKBuildComponentResult)currentBuildComponentResult {
+  auto result = CKBuildComponentResult();
+  result.component = _component;
+  result.scopeRoot = _pendingInputs.scopeRoot;
+  result.boundsAnimation = _boundsAnimation;
+  return result;
+}
+
+/**
+ Update the cache layer that holds computed layout and build results.
+
+ @param componentLayout The component layout to store in cache
+ @param buildComponentResult The build component result to store in cache
+ */
+- (void)_updateCachedComponentLayoutWithComponentLayout:(CKComponentLayout)componentLayout andBuildComponentResult:(CKBuildComponentResult)buildComponentResult {
+  CKAssertTrue(_useCacheLayoutAndBuildResult);
+  _cacheComponentLayoutAndBuildResult = CKComponentLayoutAndBuildResultCache {componentLayout, buildComponentResult};
 }
 
 #pragma mark - Appearance
@@ -352,6 +451,22 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedLayout);
 }
 
+
+/**
+ @param sizeRange The size range to use for calculating the proper computed layout.
+ @return The componet layout computed for the in input size range.
+ */
+- (CKComponentLayout)_buildComponentLayoutWithSizeRange:(const CKSizeRange &)sizeRange {
+  CKAssert(!_unifyBuildAndLayout, @"Use -_buildAndLayoutComponentIfNeeded:pendingInputs: for computing component layout in an unifyBuildAndLayout config");
+  auto computedLayout = CKComputeRootComponentLayout(_component, sizeRange, _pendingInputs.scopeRoot.analyticsListener);
+  
+  if (_useCacheLayoutAndBuildResult) {
+    [self _updateCachedComponentLayoutWithComponentLayout:computedLayout andBuildComponentResult:[self currentBuildComponentResult]];
+  }
+  
+  return computedLayout;
+}
+
 #pragma mark - Unified Build And Layout methods
 
 - (CKBuildAndLayoutComponentResult)_buildAndLayoutComponentIfNeeded:(const CKSizeRange &)sizeRange pendingInputs:(const CKComponentHostingViewInputs &)pendingInputs{
@@ -363,6 +478,10 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                                                                       ^{
                                                                         return [_componentProvider componentForModel:model context:context];
                                                                       });
+  if (_useCacheLayoutAndBuildResult) {
+    [self _updateCachedComponentLayoutWithComponentLayout:results.computedLayout andBuildComponentResult:results.buildComponentResult];
+  }
+  
   return results;
 }
 
@@ -424,12 +543,50 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
   _isSynchronouslyUpdatingComponent = YES;
   CKBuildAndLayoutComponentResult results = [self _buildAndLayoutComponentIfNeeded:sizeRange pendingInputs:_pendingInputs];
-  _mountedLayout = results.computedLayout;
-  [self _applyResult:results.buildComponentResult];
-  [self _sendDidPrepareLayoutIfNeeded];
+  [self _updateMountedLayoutWithLayout:results.computedLayout buildComponentResult:results.buildComponentResult];
   _isSynchronouslyUpdatingComponent = NO;
 }
 
+/**
+ Updates the mount layout with a new layout and build component result passed in input.
 
+ @param computedLayout The computed layout to assign to the mounted layout.
+ @param buildComponentResult The build component result to apply after the mounted layout has been updated
+ */
+- (void)_updateMountedLayoutWithLayout:(const CKComponentLayout &)computedLayout buildComponentResult:(const CKBuildComponentResult &)buildComponentResult {
+  _mountedLayout = computedLayout;
+  [self _applyResult:buildComponentResult];
+  [self _sendDidPrepareLayoutIfNeeded];
+}
+
+/**
+ Updates the mounted component layout by reusing any eligible cached layout for the in input size.
+ 
+ @param size The size to use for updating the mounted layout.
+ */
+- (void)_updateMountedComponentLayoutUsingCacheForSize:(CGSize) size {
+  CKAssertTrue(_useCacheLayoutAndBuildResult);
+  
+  // Shared lambda to estimate if an update of the component is needed
+  const auto shouldUpdate = [](CGSize size, CKComponentLayout mountedLayout, CKComponent *component) { return (mountedLayout.component != component || !CGSizeEqualToSize(mountedLayout.size, size)); };
+  
+  if (!_unifyBuildAndLayout) {
+    [self _synchronouslyUpdateComponentIfNeeded];
+    if (shouldUpdate(size, _mountedLayout, _component)) {
+      const auto componentLayout = _cacheComponentLayoutAndBuildResult.isEligibleForComponentAndSize(_component, size) ?
+        _cacheComponentLayoutAndBuildResult.layout() :
+        [self _buildComponentLayoutWithSizeRange:{size, size}];
+      
+      [self _updateMountedLayoutWithLayout:componentLayout buildComponentResult:[self currentBuildComponentResult]];
+    }
+  } else {
+    if (_cacheComponentLayoutAndBuildResult.isEligibleForComponentAndSize(_component, size) &&
+        shouldUpdate(size, _mountedLayout, _component)) {
+      [self _updateMountedLayoutWithLayout:_cacheComponentLayoutAndBuildResult.layout() buildComponentResult:_cacheComponentLayoutAndBuildResult.buildComponentResult()];
+    } else {
+      [self _synchronouslyBuildAndLayoutComponentIfNeeded:{size,size} forceUpdate:shouldUpdate(size, _mountedLayout, _component)];
+    }
+  }
+}
 
 @end

@@ -17,22 +17,29 @@
 #import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
 #import <ComponentKit/CKComponentHostingView.h>
 #import <ComponentKit/CKComponentHostingViewDelegate.h>
+#import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKComponentHostingViewInternal.h>
 
 #import "CKComponentHostingViewTestModel.h"
 
-@interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate>
+@interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate, CKAnalyticsListener>
 @end
 
-static CKComponentHostingView *hostingView(BOOL unifyBuildAndLayout = NO)
+typedef struct {
+  BOOL unifyBuildAndLayout;
+  BOOL cacheLayoutAndBuildResult;
+  id<CKAnalyticsListener> analyticsListener;
+} CKComponentHostingViewConfiguration;
+static CKComponentHostingView *hostingView(const CKComponentHostingViewConfiguration &options = CKComponentHostingViewConfiguration())
 {
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
   CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
                                                                          sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
                                                                        componentPredicates:{}
                                                              componentControllerPredicates:{}
-                                                                         analyticsListener:nil
-                                                                       unifyBuildAndLayout:unifyBuildAndLayout];
+                                                                         analyticsListener:options.analyticsListener
+                                                                       unifyBuildAndLayout:options.unifyBuildAndLayout
+                                                                 cacheLayoutAndBuildResult:options.cacheLayoutAndBuildResult];
   view.bounds = CGRectMake(0, 0, 100, 100);
   [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
@@ -41,6 +48,8 @@ static CKComponentHostingView *hostingView(BOOL unifyBuildAndLayout = NO)
 
 @implementation CKComponentHostingViewTests {
   BOOL _calledSizeDidInvalidate;
+  NSInteger _willLayoutComponentTreeHitCount;
+  NSInteger _didLayoutComponentTreeHitCount;
 }
 
 + (CKComponent *)componentForModel:(CKComponentHostingViewTestModel *)model context:(id<NSObject>)context
@@ -52,6 +61,8 @@ static CKComponentHostingView *hostingView(BOOL unifyBuildAndLayout = NO)
 {
   [super setUp];
   _calledSizeDidInvalidate = NO;
+  _willLayoutComponentTreeHitCount = 0;
+  _didLayoutComponentTreeHitCount = 0;
 }
 
 - (void)testInitializationInsertsContainerViewInHierarchy
@@ -152,9 +163,28 @@ static CKComponentHostingView *hostingView(BOOL unifyBuildAndLayout = NO)
                 @"Expected component controller to get did attach component");
 }
 
+- (void)testReuseComputedComponentLayoutFromCacheIfEligible
+{
+  CKComponentHostingView *view = hostingView({
+    .unifyBuildAndLayout = NO,
+    .cacheLayoutAndBuildResult = YES,
+    .analyticsListener = self
+  });
+  
+  CGSize sizeFit = [view sizeThatFits:CGSizeMake(100, 100)];
+  view.bounds = CGRectMake(0, 0, sizeFit.width, sizeFit.height);
+  [view layoutIfNeeded];
+  
+  XCTAssertEqual(_willLayoutComponentTreeHitCount, 1, @"Expected to reuse component layout from cache after initial component layout computation");
+  XCTAssertEqual(_didLayoutComponentTreeHitCount, 1, @"Expected to reuse component layout from cache after initial component layout computation");
+}
+
 - (void)testUpdatingHostingViewBoundsResizesComponentView_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView(YES);
+  CKComponentHostingView *view = hostingView({
+    .unifyBuildAndLayout = YES
+  });
+  
   view.bounds = CGRectMake(0, 0, 200, 200);
   [view layoutIfNeeded];
 
@@ -165,7 +195,9 @@ static CKComponentHostingView *hostingView(BOOL unifyBuildAndLayout = NO)
 
 - (void)testImmediatelyUpdatesViewOnSynchronousModelChange_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView(YES);
+  CKComponentHostingView *view = hostingView({
+    .unifyBuildAndLayout = YES
+  });
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
                mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
@@ -176,7 +208,9 @@ static CKComponentHostingView *hostingView(BOOL unifyBuildAndLayout = NO)
 
 - (void)testEventuallyUpdatesViewOnAsynchronousModelChange_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView(YES);
+  CKComponentHostingView *view = hostingView({
+    .unifyBuildAndLayout = YES
+  });
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
                mode:CKUpdateModeAsynchronous];
   [view layoutIfNeeded];
@@ -190,7 +224,9 @@ static CKComponentHostingView *hostingView(BOOL unifyBuildAndLayout = NO)
 
 - (void)testInformsDelegateSizeIsInvalidatedOnModelChange_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView(YES);
+  CKComponentHostingView *view = hostingView({
+    .unifyBuildAndLayout = YES
+  });
   view.delegate = self;
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(75, 75))]
                mode:CKUpdateModeSynchronous];
@@ -199,7 +235,9 @@ static CKComponentHostingView *hostingView(BOOL unifyBuildAndLayout = NO)
 
 - (void)testInformsDelegateSizeIsInvalidatedOnContextChange_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView(YES);
+  CKComponentHostingView *view = hostingView({
+    .unifyBuildAndLayout = YES
+  });
   view.delegate = self;
   [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
   XCTAssertTrue(_calledSizeDidInvalidate);
@@ -220,12 +258,30 @@ static CKComponentHostingView *hostingView(BOOL unifyBuildAndLayout = NO)
 {
   CKLifecycleTestComponent *testComponent = nil;
   @autoreleasepool {
-    CKComponentHostingView *view = hostingView(YES);
+    CKComponentHostingView *view = hostingView({
+      .unifyBuildAndLayout = YES
+    });
     [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
     testComponent = (CKLifecycleTestComponent *)view.mountedLayout.component;
   }
   XCTAssertTrue(testComponent.controller.calledInvalidateController,
                 @"Expected component controller to get invalidation event");
+}
+
+- (void)testReuseComputedComponentLayoutFromCacheIfEligible_WithUnifiedBuildAndLayout
+{
+  CKComponentHostingView *view = hostingView({
+    .unifyBuildAndLayout = YES,
+    .cacheLayoutAndBuildResult = YES,
+    .analyticsListener = self
+  });
+  
+  CGSize sizeFit = [view sizeThatFits:CGSizeMake(100, 100)];
+  view.bounds = CGRectMake(0, 0, sizeFit.width, sizeFit.height);
+  [view layoutIfNeeded];
+  
+  XCTAssertEqual(_willLayoutComponentTreeHitCount, 1, @"Expected to reuse component layout from cache after initial component layout computation");
+  XCTAssertEqual(_didLayoutComponentTreeHitCount, 1, @"Expected to reuse component layout from cache after initial component layout computation");
 }
 
 #pragma mark - CKComponentHostingViewDelegate
@@ -234,5 +290,16 @@ static CKComponentHostingView *hostingView(BOOL unifyBuildAndLayout = NO)
 {
   _calledSizeDidInvalidate = YES;
 }
+
+#pragma mark - CKAnalyticsListener
+
+- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot { }
+- (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component { }
+
+- (void)willMountComponentTreeWithRootComponent:(CKComponent *)component { }
+- (void)didMountComponentTreeWithRootComponent:(CKComponent *)component { }
+
+- (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component { _willLayoutComponentTreeHitCount++; }
+- (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component { _didLayoutComponentTreeHitCount++; }
 
 @end
