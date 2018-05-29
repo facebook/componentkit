@@ -79,14 +79,14 @@
 
   component = [CKFlexboxComponent newWithView:{} size:{} style:{
     .alignItems = CKFlexboxAlignItemsStart,
-    .direction = CKFlexboxDirectionVertical
+    .direction = CKFlexboxDirectionColumn
   } children:{}];
   node = [component ygNode:{{0, 0}, {0, 0}}];
   XCTAssertEqual(YGNodeStyleGetFlexDirection(node), YGFlexDirectionColumn);
 
   component = [CKFlexboxComponent newWithView:{} size:{} style:{
     .alignItems = CKFlexboxAlignItemsStart,
-    .direction = CKFlexboxDirectionHorizontal
+    .direction = CKFlexboxDirectionRow
   } children:{}];
   node = [component ygNode:{{0, 0}, {0, 0}}];
   XCTAssertEqual(YGNodeStyleGetFlexDirection(node), YGFlexDirectionRow);

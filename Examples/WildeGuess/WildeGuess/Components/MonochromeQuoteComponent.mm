@@ -40,7 +40,7 @@
    size:{}
    style:{
      .alignItems = CKFlexboxAlignItemsStart,
-     .direction = CKFlexboxDirectionHorizontal
+     .direction = CKFlexboxDirectionRow
    }
    children:{
      {

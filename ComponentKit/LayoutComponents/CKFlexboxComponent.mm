@@ -253,13 +253,13 @@ static YGDirection ygDirectionFromStackStyle(const CKFlexboxComponentStyle &styl
 static YGFlexDirection ygFlexDirectionFromStackStyle(const CKFlexboxComponentStyle &style)
 {
   switch (style.direction) {
-    case CKFlexboxDirectionHorizontal:
+    case CKFlexboxDirectionRow:
       return YGFlexDirectionRow;
-    case CKFlexboxDirectionVertical:
+    case CKFlexboxDirectionColumn:
       return YGFlexDirectionColumn;
-    case CKFlexboxDirectionHorizontalReverse:
+    case CKFlexboxDirectionRowReverse:
       return YGFlexDirectionRowReverse;
-    case CKFlexboxDirectionVerticalReverse:
+    case CKFlexboxDirectionColumnReverse:
       return YGFlexDirectionColumnReverse;
   }
 }
@@ -349,13 +349,13 @@ static YGWrap ygWrapFromStackStyle(const CKFlexboxComponentStyle &style)
 static YGEdge ygSpacingEdgeFromDirection(const CKFlexboxDirection &direction, BOOL reverse = NO)
 {
   switch (direction) {
-    case CKFlexboxDirectionVertical:
+    case CKFlexboxDirectionColumn:
       return reverse ? YGEdgeBottom : YGEdgeTop;
-    case CKFlexboxDirectionVerticalReverse:
+    case CKFlexboxDirectionColumnReverse:
       return reverse ? YGEdgeTop : YGEdgeBottom;
-    case CKFlexboxDirectionHorizontal:
+    case CKFlexboxDirectionRow:
       return reverse ? YGEdgeEnd : YGEdgeStart;
-    case CKFlexboxDirectionHorizontalReverse:
+    case CKFlexboxDirectionRowReverse:
       return reverse ? YGEdgeStart : YGEdgeEnd;
   }
 }
@@ -363,11 +363,11 @@ static YGEdge ygSpacingEdgeFromDirection(const CKFlexboxDirection &direction, BO
 static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
 {
   switch (direction) {
-    case CKFlexboxDirectionVertical:
-    case CKFlexboxDirectionVerticalReverse:
+    case CKFlexboxDirectionColumn:
+    case CKFlexboxDirectionColumnReverse:
       return NO;
-    case CKFlexboxDirectionHorizontal:
-    case CKFlexboxDirectionHorizontalReverse:
+    case CKFlexboxDirectionRow:
+    case CKFlexboxDirectionRowReverse:
       return YES;
   }
 }
