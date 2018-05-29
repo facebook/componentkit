@@ -14,10 +14,14 @@
 #import <ComponentKit/CKContainerWrapper.h>
 
 typedef NS_ENUM(NSInteger, CKFlexboxDirection) {
-  CKFlexboxDirectionVertical,
-  CKFlexboxDirectionHorizontal,
-  CKFlexboxDirectionVerticalReverse,
-  CKFlexboxDirectionHorizontalReverse,
+  CKFlexboxDirectionColumn,
+  CKFlexboxDirectionRow,
+  CKFlexboxDirectionColumnReverse,
+  CKFlexboxDirectionRowReverse,
+  CKFlexboxDirectionVertical = CKFlexboxDirectionColumn,
+  CKFlexboxDirectionHorizontal = CKFlexboxDirectionRow,
+  CKFlexboxDirectionVerticalReverse = CKFlexboxDirectionColumnReverse,
+  CKFlexboxDirectionHorizontalReverse = CKFlexboxDirectionRowReverse,
 };
 
 /** Layout direction is used to support RTL */
