@@ -12,9 +12,9 @@
 
 #import "CKComponent.h"
 
-static NSString *componentDescriptionWClass(CKComponent *component)
+static NSString *componentDescriptionOrClass(CKComponent *component)
 {
-  return [NSString stringWithFormat:@"%@: %@", NSStringFromClass([component class]), [component description]];
+  return [component description] ?: NSStringFromClass([component class]);
 }
 
 NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept
@@ -27,7 +27,7 @@ NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBackt
                                            [description appendString:@"\n"];
                                          }
                                          [description appendString:[@"" stringByPaddingToLength:depth withString:@" " startingAtIndex:0]];
-                                         [description appendString:componentDescriptionWClass(component)];
+                                         [description appendString:componentDescriptionOrClass(component)];
                                        }];
   return description;
 }
@@ -41,7 +41,7 @@ NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKCom
     }
     CKComponent *child = childIter->layout.component;
     if (child) {
-      [description appendString:componentDescriptionWClass(child)];
+      [description appendString:componentDescriptionOrClass(child)];
     }
   }
   return description;
