@@ -13,6 +13,7 @@
 #import <unordered_set>
 
 #import <ComponentKit/CKAnalyticsListener.h>
+#import <ComponentKit/CKCollection.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
@@ -61,6 +62,8 @@
 /** Must be called when initializing a component or controller. */
 - (void)registerComponentController:(id<CKComponentControllerProtocol>)componentController;
 - (void)registerComponent:(id<CKComponentProtocol>)component;
+
+- (CKCocoaCollectionAdapter<id<CKComponentProtocol>>)componentsMatchingPredicate:(CKComponentScopePredicate)predicate;
 
 @property (nonatomic, weak, readonly) id<CKComponentStateListener> listener;
 @property (nonatomic, weak, readonly) id<CKAnalyticsListener> analyticsListener;

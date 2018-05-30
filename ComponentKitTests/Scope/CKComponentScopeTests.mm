@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKCompositeComponent.h>
 
+#import <ComponentKit/CKCollection.h>
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentScopeFrame.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
@@ -728,6 +729,123 @@ static BOOL testComponentControllerProtocolPredicate(id<CKComponentControllerPro
    }];
 
   XCTAssert(foundC1 && foundC2, @"Should have enumerated and found the input controllers");
+}
+
+@end
+
+@interface CKComponentScopeRootTests_RegistrationAndEnumeration: XCTestCase
+@end
+
+@implementation CKComponentScopeRootTests_RegistrationAndEnumeration
+
+- (void)testComponentScopeRootRegisteringProtocolComponentFindsThatComponentWhenEnumerating
+{
+  const auto root = makeScopeRootWithComponentPredicate(&testComponentProtocolPredicate);
+  const auto threadScope = CKThreadLocalComponentScope {root, {}};
+  const auto c = [TestComponentWithScopedProtocol new];
+
+  [root registerComponent:c];
+
+  XCTAssert(CK::Collection::contains([root componentsMatchingPredicate:&testComponentProtocolPredicate], c),
+            @"Should have enumerated and found the input component");
+}
+
+- (void)testComponentScopeRootFactoryRegisteringProtocolComponentFindsThatComponentWhenEnumerating
+{
+  const auto root = CKComponentScopeRootWithPredicates(nil, nil, {&testComponentProtocolPredicate}, {});
+  const auto threadScope = CKThreadLocalComponentScope {root, {}};
+  const auto c = [TestComponentWithScopedProtocol new];
+
+  [root registerComponent:c];
+
+  XCTAssert(CK::Collection::contains([root componentsMatchingPredicate:&testComponentProtocolPredicate], c),
+            @"Should have enumerated and found the input component");
+}
+
+- (void)testComponentScopeRootRegisteringDuplicateProtocolComponent
+{
+  const auto root = makeScopeRootWithComponentPredicate(&testComponentProtocolPredicate);
+  const auto threadScope = CKThreadLocalComponentScope {root, {}};
+  const auto c = [TestComponentWithScopedProtocol new];
+
+  [root registerComponent:c];
+  [root registerComponent:c];
+
+  XCTAssertEqual([root componentsMatchingPredicate:&testComponentProtocolPredicate].size(), 1, @"Should have deduplicate the component");
+}
+
+- (void)testComponentScopeRootFactoryRegisteringDuplicateProtocolComponent
+{
+  const auto root = CKComponentScopeRootWithPredicates(nil, nil, {&testComponentProtocolPredicate}, {});
+  const auto threadScope = CKThreadLocalComponentScope {root, {}};
+  const auto c = [TestComponentWithScopedProtocol new];
+
+  [root registerComponent:c];
+  [root registerComponent:c];
+
+  XCTAssert(CK::Collection::contains([root componentsMatchingPredicate:&testComponentProtocolPredicate], c),
+            @"Should have enumerated and found the input component");
+}
+
+- (void)testComponentScopeRootRegisteringMultipleProtocolComponentFindsBothComponentsWhenEnumerating
+{
+  const auto root = makeScopeRootWithComponentPredicate(&testComponentProtocolPredicate);
+  const auto threadScope = CKThreadLocalComponentScope {root, {}};
+  const auto c1 = [TestComponentWithScopedProtocol new];
+  const auto c2 = [TestComponentWithScopedProtocol new];
+
+  [root registerComponent:c1];
+  [root registerComponent:c2];
+
+  const auto foundC1 = CK::Collection::contains([root componentsMatchingPredicate:&testComponentProtocolPredicate], c1);
+  const auto foundC2 = CK::Collection::contains([root componentsMatchingPredicate:&testComponentProtocolPredicate], c2);
+  XCTAssert(foundC1 && foundC2, @"Should have enumerated and found the input components");
+}
+
+- (void)testComponentScopeRootFactoryRegisteringMultipleProtocolComponentFindsBothComponentsWhenEnumerating
+{
+  const auto root = CKComponentScopeRootWithPredicates(nil, nil, {&testComponentProtocolPredicate}, {});
+  const auto threadScope = CKThreadLocalComponentScope {root, {}};
+  const auto c1 = [TestComponentWithScopedProtocol new];
+  const auto c2 = [TestComponentWithScopedProtocol new];
+
+  [root registerComponent:c1];
+  [root registerComponent:c2];
+
+  const auto foundC1 = CK::Collection::contains([root componentsMatchingPredicate:&testComponentProtocolPredicate], c1);
+  const auto foundC2 = CK::Collection::contains([root componentsMatchingPredicate:&testComponentProtocolPredicate], c2);
+  XCTAssert(foundC1 && foundC2, @"Should have enumerated and found the input components");
+}
+
+- (void)testComponentScopeRootRegisteringNonProtocolComponentFindsNoComponentsWhenEnumerating
+{
+  const auto root = makeScopeRootWithComponentPredicate(&testComponentProtocolPredicate);
+  const auto threadScope = CKThreadLocalComponentScope {root, {}};
+  const auto c = [TestComponentWithoutScopedProtocol new];
+
+  [root registerComponent:c];
+
+  XCTAssert([root componentsMatchingPredicate:&testComponentProtocolPredicate].empty(), @"Should not have found any components");
+}
+
+- (void)testComponentScopeRootFactoryRegisteringNonProtocolComponentFindsNoComponentsWhenEnumerating
+{
+  const auto root = CKComponentScopeRootWithPredicates(nil, nil, {&testComponentProtocolPredicate}, {});
+  const auto threadScope = CKThreadLocalComponentScope {root, {}};
+  const auto c = [TestComponentWithoutScopedProtocol new];
+
+  [root registerComponent:c];
+
+  XCTAssert([root componentsMatchingPredicate:&testComponentProtocolPredicate].empty(), @"Should not have found any components");
+}
+
+static auto makeScopeRootWithComponentPredicate(const CKComponentScopePredicate p) -> CKComponentScopeRoot *
+{
+  return [CKComponentScopeRoot
+          rootWithListener:nil
+          analyticsListener:nil
+          componentPredicates:{p}
+          componentControllerPredicates:{}];
 }
 
 @end
