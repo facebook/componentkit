@@ -440,8 +440,8 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
 
     YGNodeStyleSetPositionType(childNode, (child.position.type == CKFlexboxPositionTypeAbsolute) ? YGPositionTypeAbsolute : YGPositionTypeRelative);
 
-    CKAssert(!((floatIsSet(_style.spacing) || floatIsSet(child.spacingBefore) || floatIsSet(child.spacingAfter)) && flexboxSpacingIsSet(child.margin)),
-             @"You shouldn't use both margin and spacing! Ignoring spacing and falling back to margin behavior for %@", child.component);
+    CKCWarn(!((floatIsSet(_style.spacing) || floatIsSet(child.spacingBefore) || floatIsSet(child.spacingAfter)) && flexboxSpacingIsSet(child.margin)),
+            @"You shouldn't use both margin and spacing! Ignoring spacing and falling back to margin behavior for %@", child.component);
 
     // TODO: In odrer to keep the the logic consistent, we are resetting all
     // the margins that were potentially set from the child's style in
@@ -660,7 +660,6 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
   YGNodeStyleSetBorder(node, edge, convertFloatToYogaRepresentation(value.value()));
 }
 
-#if CK_ASSERTIONS_ENABLED
 static BOOL flexboxSpacingIsSet(CKFlexboxSpacing spacing)
 {
   return
@@ -690,7 +689,6 @@ static BOOL floatIsSet(CGFloat val)
 {
   return fabs(val) > FLT_EPSILON;
 }
-#endif
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
