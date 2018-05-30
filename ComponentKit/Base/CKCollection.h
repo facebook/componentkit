@@ -14,6 +14,7 @@
 #import <algorithm>
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/ComponentUtilities.h>
 
 namespace CK {
   namespace Collection {
@@ -28,6 +29,34 @@ namespace CK {
     {
       return std::find(collection.begin(), collection.end(), value) != collection.end();
     }
+
+    /*
+     Returns elements that are present in the first collection but not in the second. Element equivalence is determined
+     by calling a binary predicate passed as the last parameter.
+     */
+    template <typename Collection1, typename Collection2, typename Predicate>
+    auto difference(const Collection1 &c1, const Collection2 &c2, Predicate &&areEqual)
+    {
+      return filter(c1, [&](const auto &x1) {
+        return !containsWhere(c2, [&](const auto &x2) {
+          return areEqual(x1, x2);
+        });
+      });
+    }
+
+    /*
+     Returns elements that are present both collections. Element equivalence is determined by calling a binary predicate
+     passed as the last parameter.
+     */
+    template <typename Collection1, typename Collection2, typename Predicate>
+    auto intersection(const Collection1 &c1, const Collection2 &c2, Predicate &&areEqual)
+    {
+      return filter(c1, [&](const auto &x1) {
+        return containsWhere(c2, [&](const auto &x2) {
+          return areEqual(x1, x2);
+        });
+      });
+    }
   }
 }
 
@@ -40,7 +69,7 @@ public:
   class Iterator: public std::iterator<std::input_iterator_tag, T> {
   public:
     Iterator() : _enumerator(nil), _value(nil) {};
-    Iterator(NSEnumerator *_Nonnull enumerator) : _enumerator(enumerator), _value(enumerator.nextObject) {};
+    Iterator(NSEnumerator *enumerator) : _enumerator(enumerator), _value(enumerator.nextObject) {};
 
     T operator* () const { return _value; }
     void operator++ () { _value = _enumerator.nextObject; }
@@ -48,14 +77,14 @@ public:
     bool operator != (const Iterator &rhs) const { return !(*this == rhs); }
 
   private:
-    NSEnumerator *_Nonnull _enumerator;
+    NSEnumerator *_enumerator;
     T _value;
   };
 
   using value_type = typename Iterator::value_type;
   using const_reference = const value_type &;
 
-  CKCocoaCollectionAdapter(id _Nonnull collection) : _collection(collection)
+  CKCocoaCollectionAdapter(id collection) : _collection(collection)
   {
     assertCollectionRespondsToSelector(collection, @selector(objectEnumerator));
     assertCollectionRespondsToSelector(collection, @selector(count));
@@ -67,7 +96,7 @@ public:
   auto empty() const { return size() == 0; }
 
 private:
-  static auto assertCollectionRespondsToSelector(id _Nonnull c, SEL _Nonnull sel)
+  static auto assertCollectionRespondsToSelector(id c, SEL sel)
   {
     CKCAssert([c respondsToSelector:sel],
               @"%@ is not a collection since it doesn't respond to %@",
@@ -75,7 +104,7 @@ private:
               NSStringFromSelector(sel));
   }
 
-  id _Nonnull _collection;
+  id _collection;
 };
 
 #endif /* CKCollection_h */
