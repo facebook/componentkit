@@ -24,6 +24,14 @@ BOOL CKComponentBoundsAnimationPredicate(id<CKComponentProtocol> component);
 BOOL CKComponentBoundsAnimationPredicate(id component);
 #endif
 
+#if !defined(NO_PROTOCOLS_IN_OBJCPP)
+auto CKComponentHasAnimationsOnInitialMountPredicate(id<CKComponentProtocol> const c) -> BOOL;
+auto CKComponentHasAnimationsFromPreviousComponentPredicate(id<CKComponentProtocol> const c) -> BOOL;
+#else
+auto CKComponentHasAnimationsOnInitialMountPredicate(id const c) -> BOOL;
+auto CKComponentHasAnimationsFromPreviousComponentPredicate(id const c) -> BOOL;
+#endif
+
 /**
  A predicate that identifies a component that it's controller overrides the 'didPrepareLayout:forComponent:' method.
  */

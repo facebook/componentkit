@@ -23,7 +23,9 @@
  Initializes a CKComponentScopeRoot with the normal, infrastructure-provided predicates necessary for the framework
  to work. You should use this function to create scope roots unless you really know what you're doing.
  */
-CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener, id<CKAnalyticsListener> analyticsListener);
+CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener,
+                                                                id<CKAnalyticsListener> analyticsListener,
+                                                                BOOL includeAnimationPredicates = NO);
 
 /**
  Initializes a CKComponentScopeRoot with your provided predicates in addition to the normal, infrastructure-provided
@@ -36,4 +38,5 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
 CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> listener,
                                                          id<CKAnalyticsListener> analyticsListener,
                                                          const std::unordered_set<CKComponentScopePredicate> &componentPredicates,
-                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates);
+                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates,
+                                                         BOOL includeAnimationPredicates = NO);

@@ -44,6 +44,24 @@ BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id component)
                                  @selector(didPrepareLayout:forComponent:));
 }
 
+#if !defined(NO_PROTOCOLS_IN_OBJCPP)
+auto CKComponentHasAnimationsOnInitialMountPredicate(id<CKComponentProtocol> const c) -> BOOL
+#else
+auto CKComponentHasAnimationsOnInitialMountPredicate(id const c) -> BOOL
+#endif
+{
+  return CKSubclassOverridesSelector([CKComponent class], [c class], @selector(animationsOnInitialMount));
+}
+
+#if !defined(NO_PROTOCOLS_IN_OBJCPP)
+auto CKComponentHasAnimationsFromPreviousComponentPredicate(id<CKComponentProtocol> const c) -> BOOL
+#else
+auto CKComponentHasAnimationsFromPreviousComponentPredicate(id const c) -> BOOL
+#endif
+{
+  return CKSubclassOverridesSelector([CKComponent class], [c class], @selector(animationsFromPreviousComponent:));
+}
+
 CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKComponentScopeRoot *newRoot, CKComponentScopeRoot *previousRoot)
 {
   NSMapTable *const scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];

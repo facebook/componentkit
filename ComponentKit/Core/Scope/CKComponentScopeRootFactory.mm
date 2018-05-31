@@ -13,15 +13,22 @@
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
 
-CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> stateListener, id<CKAnalyticsListener> analyticsListener)
+CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> stateListener,
+                                                                id<CKAnalyticsListener> analyticsListener,
+                                                                BOOL includeAnimationPredicates)
 {
+  auto componentPredicates = std::unordered_set<CKComponentScopePredicate> {
+    &CKComponentBoundsAnimationPredicate,
+    &CKComponentDidPrepareLayoutForComponentToControllerPredicate,
+  };
+  if (includeAnimationPredicates) {
+    componentPredicates.insert(&CKComponentHasAnimationsOnInitialMountPredicate);
+    componentPredicates.insert(&CKComponentHasAnimationsFromPreviousComponentPredicate);
+  }
   return [CKComponentScopeRoot
           rootWithListener:stateListener
           analyticsListener:analyticsListener
-          componentPredicates:{
-            &CKComponentBoundsAnimationPredicate,
-            &CKComponentDidPrepareLayoutForComponentToControllerPredicate
-          }
+          componentPredicates:componentPredicates
           componentControllerPredicates:{
             &CKComponentControllerAppearanceEventPredicate,
             &CKComponentControllerDisappearanceEventPredicate,
@@ -32,7 +39,8 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
 CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> stateListener,
                                                          id<CKAnalyticsListener> analyticsListener,
                                                          const std::unordered_set<CKComponentScopePredicate> &componentPredicates,
-                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates)
+                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates,
+                                                         BOOL includeAnimationPredicates)
 {
   std::unordered_set<CKComponentScopePredicate> componentPredicatesUnion = {
     &CKComponentBoundsAnimationPredicate,
@@ -46,6 +54,10 @@ CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateList
   };
 
   componentPredicatesUnion.insert(componentPredicates.begin(), componentPredicates.end());
+  if (includeAnimationPredicates) {
+    componentPredicatesUnion.insert(&CKComponentHasAnimationsOnInitialMountPredicate);
+    componentPredicatesUnion.insert(&CKComponentHasAnimationsFromPreviousComponentPredicate);
+  }
   componentControllerPredicatesUnion.insert(componentControllerPredicates.begin(), componentControllerPredicates.end());
 
   return [CKComponentScopeRoot
