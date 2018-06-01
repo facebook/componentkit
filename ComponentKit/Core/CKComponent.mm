@@ -371,18 +371,16 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   static std::unordered_map<Class, Class> *cache = new std::unordered_map<Class, Class>();
   const auto &it = cache->find(componentClass);
   if (it == cache->end()) {
-    Class c = NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"]);
-
+    Class c = nil;
     // If you override animationsFromPreviousComponent: or animationsOnInitialMount and if context permits
     // then we need a controller
     const auto ctx = CKComponentContext<CKComponentControllerContext>::get();
     const auto handleAnimationsInController = (ctx == nil) ? YES : ctx.handleAnimationsInController;
-    if (c == nil && handleAnimationsInController &&
+    if (handleAnimationsInController &&
         (CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
          CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnInitialMount)))) {
           c = [CKComponentController class];
         }
-    CKAssertWithCategory((c == nil || c == [CKComponentController class]), NSStringFromClass([self class]), @"Should override + (Class<CKComponentControllerProtocol>)controllerClass to return its controllerClass");
     cache->insert({componentClass, c});
     return c;
   }
