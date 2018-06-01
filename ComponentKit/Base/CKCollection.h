@@ -57,6 +57,19 @@ namespace CK {
         });
       });
     }
+
+    /*
+     Given a collection of other collections, returns a lower-dimensional collection by "flattening" its elements into
+     it, e.g. `flatten({{1, 2}, {3, 4}) == {1, 2, 3, 4}`.
+     */
+    template <typename Collection>
+    auto flatten(const Collection &c) {
+      auto r = std::vector<typename Collection::value_type::value_type> {};
+      for (const auto &x : c) {
+        r.insert(r.end(), x.begin(), x.end());
+      }
+      return r;
+    }
   }
 }
 

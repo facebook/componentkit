@@ -61,4 +61,23 @@ namespace CK {
       .updatedComponents = animatedUpdatedComponentsBetweenScopeRoots(newRoot, previousRoot),
     };
   }
+
+  auto animationsForComponents(const ComponentTreeDiff& animatedComponents) -> CKComponentAnimations
+  {
+    if (animatedComponents.appearedComponents.empty() && animatedComponents.updatedComponents.empty()) {
+      return {};
+    }
+
+    const auto initialAnimations = Collection::flatten(
+      map(animatedComponents.appearedComponents, [](const auto &c) { return c.animationsOnInitialMount; })
+    );
+
+    const auto animationsFromPrevComponent = Collection::flatten(
+      map(animatedComponents.updatedComponents, [](const auto &pair) {
+        return [pair.current animationsFromPreviousComponent:pair.prev];
+      })
+    );
+
+    return {initialAnimations, animationsFromPrevComponent};
+  }
 }

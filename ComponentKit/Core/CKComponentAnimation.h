@@ -43,6 +43,13 @@ struct CKComponentAnimation {
   id didRemount(id context) const;
   void cleanup(id context) const;
 
+  auto isIdenticalTo(const CKComponentAnimation &other) const
+  {
+    return hooks.willRemount == other.hooks.willRemount &&
+    hooks.didRemount == other.hooks.didRemount &&
+    hooks.cleanup == other.hooks.cleanup;
+  }
+
 private:
   CKComponentAnimationHooks hooks;
 };

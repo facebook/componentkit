@@ -25,9 +25,12 @@
 @end
 
 @interface ComponentWithInitialMountAnimations: CKComponent
++ (instancetype)newWithInitialMountAnimations:(std::vector<CKComponentAnimation>)animations;
 @end
 
 @interface ComponentWithAnimationsFromPreviousComponent: CKComponent
++ (instancetype)newWithAnimations:(std::vector<CKComponentAnimation>)animations
+            fromPreviousComponent:(CKComponent *const)component;
 @end
 
 @implementation CKComponentAnimationsTests_Diffing
@@ -83,6 +86,74 @@
 
 @end
 
+@interface CKComponentAnimationsTests: XCTestCase
+@end
+
+@implementation CKComponentAnimationsTests
+
+static auto animationsAreEqual(const std::vector<CKComponentAnimation> &as1,
+                               const std::vector<CKComponentAnimation> &as2) -> bool
+{
+  if (as1.size() != as2.size()) {
+    return false;
+  }
+
+  for (auto i = 0; i < as1.size(); i++) {
+    if (!as1[i].isIdenticalTo(as2[i])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+- (void)test_WhenThereAreNoComponentsToAnimate_ThereAreNoAnimations
+{
+  const auto as = CK::animationsForComponents({});
+
+  const auto expected = std::vector<CKComponentAnimation> {};
+  XCTAssert(animationsAreEqual(as.animationsOnInitialMount(), expected));
+}
+
+- (void)test_ForAllAppearedComponents_AnimationsOnInitialMountAreCollected
+{
+  const auto a1 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
+  const auto a2 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
+  const auto diff = CK::ComponentTreeDiff {
+    .appearedComponents = {
+      [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{a1}],
+      [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{a2}],
+    },
+  };
+
+  const auto as = CK::animationsForComponents(diff);
+
+  const auto expected = std::vector<CKComponentAnimation> {a1, a2};
+  XCTAssert(animationsAreEqual(as.animationsOnInitialMount(), expected));
+}
+
+- (void)test_ForAllUpdatedComponents_AnimationsFromPreviousComponentAreCollected
+{
+  const auto a1 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
+  const auto pc1 = [CKComponent new];
+  const auto a2 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
+  const auto pc2 = [CKComponent new];
+  const auto componentPairs = std::vector<CK::ComponentTreeDiff::Pair> {
+    {pc1, [ComponentWithAnimationsFromPreviousComponent newWithAnimations:{a1} fromPreviousComponent:pc1]},
+    {pc2, [ComponentWithAnimationsFromPreviousComponent newWithAnimations:{a2} fromPreviousComponent:pc2]},
+  };
+  const auto diff = CK::ComponentTreeDiff {
+    .updatedComponents = componentPairs,
+  };
+
+  const auto as = CK::animationsForComponents(diff);
+
+  const auto expected = std::vector<CKComponentAnimation> {a1, a2};
+  XCTAssert(animationsAreEqual(as.animationsFromPreviousComponent(), expected));
+}
+
+@end
+
 @implementation ComponentWithScope
 + (instancetype)newWithComponent:(CKComponent *)component
 {
@@ -91,22 +162,52 @@
 }
 @end
 
-@implementation ComponentWithInitialMountAnimations
-+ (instancetype)new
-{
-  CKComponentScope s(self);
-  return [super new];
+@implementation ComponentWithInitialMountAnimations {
+  std::vector<CKComponentAnimation> _animations;
 }
 
-- (std::vector<CKComponentAnimation>)animationsOnInitialMount { return {}; }
++ (instancetype)new
+{
+  return [self newWithInitialMountAnimations:{}];
+}
+
++ (instancetype)newWithInitialMountAnimations:(std::vector<CKComponentAnimation>)animations
+{
+  CKComponentScope s(self);
+  const auto c = [super new];
+  c->_animations = std::move(animations);
+  return c;
+}
+
+- (std::vector<CKComponentAnimation>)animationsOnInitialMount { return _animations; }
 @end
 
-@implementation ComponentWithAnimationsFromPreviousComponent
-+ (instancetype)new
-{
-  CKComponentScope s(self);
-  return [super new];
+@implementation ComponentWithAnimationsFromPreviousComponent{
+  std::vector<CKComponentAnimation> _animations;
+  CKComponent *_previousComponent;
 }
 
-- (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(CKComponent *)previousComponent { return {}; }
++ (instancetype)new
+{
+  return [self newWithAnimations:{} fromPreviousComponent:nil];
+}
+
++ (instancetype)newWithAnimations:(std::vector<CKComponentAnimation>)animations
+            fromPreviousComponent:(CKComponent *const)component
+{
+  CKComponentScope s(self);
+  const auto c = [super new];
+  c->_animations = std::move(animations);
+  c->_previousComponent = component;
+  return c;
+}
+
+- (std::vector<CKComponentAnimation>)animationsFromPreviousComponent:(CKComponent *)previousComponent
+{
+  if (previousComponent == _previousComponent) {
+    return _animations;
+  } else {
+    return {};
+  };
+}
 @end

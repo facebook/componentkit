@@ -10,15 +10,33 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKComponentAnimation.h>
 #import <ComponentKit/CKComponentTreeDiff.h>
 
 @class CKComponentScopeRoot;
 
 NS_ASSUME_NONNULL_BEGIN
 
+struct CKComponentAnimations {
+  CKComponentAnimations() {}
+  CKComponentAnimations(std::vector<CKComponentAnimation> animationsOnInitialMount,
+                        std::vector<CKComponentAnimation> animationsFromPreviousComponent)
+  : _animationsOnInitialMount(std::move(animationsOnInitialMount)), _animationsFromPreviousComponent(std::move(animationsFromPreviousComponent))
+  {}
+
+  const auto &animationsOnInitialMount() const { return _animationsOnInitialMount; }
+  const auto &animationsFromPreviousComponent() const { return _animationsFromPreviousComponent; }
+
+private:
+  std::vector<CKComponentAnimation> _animationsOnInitialMount = {};
+  std::vector<CKComponentAnimation> _animationsFromPreviousComponent = {};
+};
+
 namespace CK {
   auto animatedComponentsBetweenScopeRoots(CKComponentScopeRoot *const newRoot,
                                            CKComponentScopeRoot *const previousRoot) -> ComponentTreeDiff;
+
+  auto animationsForComponents(const ComponentTreeDiff& animatedComponents) -> CKComponentAnimations;
 }
 
 NS_ASSUME_NONNULL_END
