@@ -89,6 +89,9 @@
 /** Indicates that a scope conflict has been found and either this component or an ancestor is involved in the conflict */
 @property (nonatomic, readonly) BOOL componentOrAncestorHasScopeConflict;
 
+/** If the component owns its own view and is mounted, returns it. */
+@property (nonatomic, readonly) UIView *mountedView;
+
 /** For internal use only; don't touch this. */
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
 

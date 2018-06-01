@@ -439,4 +439,9 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
   return _mountInfo ? _mountInfo->componentOrAncestorHasScopeConflict : NO;
 }
 
+- (UIView *)mountedView
+{
+  return _mountInfo ? _mountInfo->view : nil;
+}
+
 @end
