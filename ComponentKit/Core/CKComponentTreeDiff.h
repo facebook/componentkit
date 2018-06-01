@@ -17,8 +17,6 @@
 
 @class CKComponent;
 
-NS_ASSUME_NONNULL_BEGIN
-
 namespace CK {
   /*
    A structure describing the changes between two instances of the same "logical" component tree,
@@ -40,7 +38,5 @@ namespace CK {
   auto operator==(const ComponentTreeDiff &lhs, const ComponentTreeDiff &rhs) -> bool;
   auto operator==(const ComponentTreeDiff::Pair &lhs, const ComponentTreeDiff::Pair &rhs) -> bool;
 }
-
-NS_ASSUME_NONNULL_END
 
 #endif /* CKComponentTreeDiff_h */

@@ -15,8 +15,6 @@
 
 @class CKComponentScopeRoot;
 
-NS_ASSUME_NONNULL_BEGIN
-
 struct CKComponentAnimations {
   CKComponentAnimations() {}
   CKComponentAnimations(std::vector<CKComponentAnimation> animationsOnInitialMount,
@@ -38,5 +36,3 @@ namespace CK {
 
   auto animationsForComponents(const ComponentTreeDiff& animatedComponents) -> CKComponentAnimations;
 }
-
-NS_ASSUME_NONNULL_END
