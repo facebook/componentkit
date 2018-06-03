@@ -8,10 +8,13 @@ Let's get a sample app powered by ComponentKit up and running, then make some tw
 
 Clone the Github repo, install carthage frameworks and then open the Xcode project.
 
+(You may need to install Carthage first, e.g. with "brew install carthage" on macOS.)
+
 {% highlight sh %}
 $ git clone https://github.com/facebook/componentkit
+$ cd componentkit
 $ carthage checkout
-$ cd componentkit/Examples/WildeGuess/
+$ cd Examples/WildeGuess/
 $ open WildeGuess.xcodeproj
 {% endhighlight %}
 
