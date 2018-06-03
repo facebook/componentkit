@@ -188,8 +188,9 @@ static void buildRecursiveDescriptionForLayout(NSMutableString *description,
     [visitedViews addObject:mountedView];
     [description appendString:@": "];
     [description appendString:forceToSingleLine([mountedView description]) ?: @"(unknown)"];
+    [description appendString:@"\n"];
   } else {
-    [description appendFormat:@"Size: %@\n", NSStringFromCGSize(layout.size)];
+    [description appendFormat:@", size: %@\n", NSStringFromCGSize(layout.size)];
   }
   NSString *newPrefix = [prefix stringByAppendingString:indentString];
   if (layout.children) {
