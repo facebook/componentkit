@@ -382,6 +382,10 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
           c = [CKComponentController class];
         }
     cache->insert({componentClass, c});
+
+    CKAssertWithCategory(!(c == nil && NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"])),
+                         NSStringFromClass([self class]), @"Should override + (Class<CKComponentControllerProtocol>)controllerClass to return its controllerClass");
+
     return c;
   }
   return it->second;
