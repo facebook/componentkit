@@ -10,20 +10,8 @@
 
 #import "CKAnimationController.h"
 
+#import "CKComponentAnimationData.h"
 #import "CKComponentSubclass.h"
-
-struct CKPendingComponentAnimation {
-  CKComponentAnimation animation;
-  id context; // The context returned by the animation's willRemount block.
-};
-
-struct CKAppliedComponentAnimation {
-  CKComponentAnimation animation;
-  id context; // The context returned by the animation's didRemount block.
-};
-
-typedef size_t CKComponentAnimationID;
-typedef std::unordered_map<CKComponentAnimationID, CKAppliedComponentAnimation> CKAppliedComponentAnimationMap;
 
 static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnimationID animationID)
 {
@@ -34,14 +22,6 @@ static void eraseAnimation(CKAppliedComponentAnimationMap &map, CKComponentAnima
     map.erase(it);
   }
 }
-
-struct CKComponentControllerAnimationData {
-  CKComponentAnimationID nextAnimationID;
-  std::vector<CKPendingComponentAnimation> pendingAnimationsOnInitialMount;
-  CKAppliedComponentAnimationMap appliedAnimationsOnInitialMount;
-  std::vector<CKPendingComponentAnimation> pendingAnimations;
-  CKAppliedComponentAnimationMap appliedAnimations;
-};
 
 struct CKComponentControllerAnimationWrapper {
 public:
