@@ -13,6 +13,7 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentAnimations.h>
 
 @class CKComponentScopeRoot;
 @class CKComponent;
@@ -27,6 +28,7 @@ struct CKBuildComponentResult {
   CKComponent *component;
   CKComponentScopeRoot *scopeRoot;
   CKComponentBoundsAnimation boundsAnimation;
+  CKComponentAnimations componentAnimations;
 };
 
 /**
@@ -41,7 +43,8 @@ struct CKBuildComponentResult {
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        BOOL forceParent = NO);
+                                        BOOL forceParent = NO,
+                                        BOOL collectComponentAnimations = NO);
 
 /**
  The results of a build and layout operation.
@@ -77,4 +80,5 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
                                                           const CKComponentStateUpdateMap &stateUpdates,
                                                           const CKSizeRange &sizeRange,
                                                           CKComponent *(^componentFactory)(void),
-                                                          BOOL forceParent = NO);
+                                                          BOOL forceParent = NO,
+                                                          BOOL collectComponentAnimations = NO);
