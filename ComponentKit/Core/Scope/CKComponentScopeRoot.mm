@@ -19,13 +19,8 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKRenderTreeNodeWithChildren.h"
 
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 typedef std::unordered_map<CKComponentScopePredicate, NSHashTable<id<CKComponentProtocol>> *> _CKRegisteredComponentsMap;
 typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id<CKComponentControllerProtocol>> *> _CKRegisteredComponentControllerMap;
-#else
-typedef std::unordered_map<CKComponentScopePredicate, NSHashTable<id> *> _CKRegisteredComponentsMap;
-typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id> *> _CKRegisteredComponentControllerMap;
-#endif
 
 @implementation CKComponentScopeRoot
 {

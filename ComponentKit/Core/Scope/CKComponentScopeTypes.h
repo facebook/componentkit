@@ -33,10 +33,5 @@ typedef void (^CKComponentControllerScopeEnumerator)(id<CKComponentControllerPro
  Scope predicates are a tool used by the framework to register components and controllers on initialization that have
  specific characteristics. These predicates allow rapid enumeration over matching components and controllers.
  */
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 typedef BOOL (*CKComponentScopePredicate)(id<CKComponentProtocol>);
 typedef BOOL (*CKComponentControllerScopePredicate)(id<CKComponentControllerProtocol>);
-#else
-typedef BOOL (*CKComponentScopePredicate)(id);
-typedef BOOL (*CKComponentControllerScopePredicate)(id);
-#endif

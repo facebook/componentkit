@@ -18,28 +18,15 @@
  and is checked on the initialization of components and cached. This allows us to rapidly identify which components
  require animating.
  */
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 BOOL CKComponentBoundsAnimationPredicate(id<CKComponentProtocol> component);
-#else
-BOOL CKComponentBoundsAnimationPredicate(id component);
-#endif
 
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 auto CKComponentHasAnimationsOnInitialMountPredicate(id<CKComponentProtocol> const c) -> BOOL;
 auto CKComponentHasAnimationsFromPreviousComponentPredicate(id<CKComponentProtocol> const c) -> BOOL;
-#else
-auto CKComponentHasAnimationsOnInitialMountPredicate(id const c) -> BOOL;
-auto CKComponentHasAnimationsFromPreviousComponentPredicate(id const c) -> BOOL;
-#endif
 
 /**
  A predicate that identifies a component that it's controller overrides the 'didPrepareLayout:forComponent:' method.
  */
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id<CKComponentProtocol> component);
-#else
-BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id component);
-#endif
 
 /**
  Computes and returns the bounds animations for the transition from a prior generation's scope root.

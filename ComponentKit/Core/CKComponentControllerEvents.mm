@@ -14,29 +14,17 @@
 #import "CKComponentController.h"
 #import "CKComponentControllerProtocol.h"
 
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 BOOL CKComponentControllerAppearanceEventPredicate(id<CKComponentControllerProtocol> controller)
-#else
-BOOL CKComponentControllerAppearanceEventPredicate(id controller)
-#endif
 {
   return CKSubclassOverridesSelector([CKComponentController class], [controller class], @selector(componentTreeWillAppear));
 }
 
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 BOOL CKComponentControllerDisappearanceEventPredicate(id<CKComponentControllerProtocol> controller)
-#else
-BOOL CKComponentControllerDisappearanceEventPredicate(id controller)
-#endif
 {
   return CKSubclassOverridesSelector([CKComponentController class], [controller class], @selector(componentTreeDidDisappear));
 }
 
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 BOOL CKComponentControllerInvalidateEventPredicate(id<CKComponentControllerProtocol> controller)
-#else
-BOOL CKComponentControllerInvalidateEventPredicate(id controller)
-#endif
 {
   return CKSubclassOverridesSelector([CKComponentController class], [controller class], @selector(invalidateController));
 }

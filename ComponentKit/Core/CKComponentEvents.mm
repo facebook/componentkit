@@ -16,27 +16,15 @@
 #import "CKInternalHelpers.h"
 #import "CKComponentProtocol.h"
 
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 BOOL CKComponentBoundsAnimationPredicate(id<CKComponentProtocol> component)
-#else
-BOOL CKComponentBoundsAnimationPredicate(id component)
-#endif
 {
   return CKSubclassOverridesSelector([CKComponent class], [component class], @selector(boundsAnimationFromPreviousComponent:));
 }
 
 /** Filter components that their controllers override the 'didPrepareLayout:ForComponent:' method. */
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id<CKComponentProtocol> component)
-#else
-BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id component)
-#endif
 {
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
   const Class<CKComponentControllerProtocol> controllerClass = [[component class] controllerClass];
-#else
-  const Class controllerClass = [[component class] controllerClass];
-#endif
   return
   controllerClass
   && CKSubclassOverridesSelector([CKComponentController class],
@@ -44,20 +32,12 @@ BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id component)
                                  @selector(didPrepareLayout:forComponent:));
 }
 
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 auto CKComponentHasAnimationsOnInitialMountPredicate(id<CKComponentProtocol> const c) -> BOOL
-#else
-auto CKComponentHasAnimationsOnInitialMountPredicate(id const c) -> BOOL
-#endif
 {
   return CKSubclassOverridesSelector([CKComponent class], [c class], @selector(animationsOnInitialMount));
 }
 
-#if !defined(NO_PROTOCOLS_IN_OBJCPP)
 auto CKComponentHasAnimationsFromPreviousComponentPredicate(id<CKComponentProtocol> const c) -> BOOL
-#else
-auto CKComponentHasAnimationsFromPreviousComponentPredicate(id const c) -> BOOL
-#endif
 {
   return CKSubclassOverridesSelector([CKComponent class], [c class], @selector(animationsFromPreviousComponent:));
 }
