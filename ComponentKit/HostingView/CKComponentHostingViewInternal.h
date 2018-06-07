@@ -17,6 +17,15 @@
 
 #import <unordered_set>
 
+struct CKComponentHostingViewOptions {
+  /// Build and layout components in a unified pass. It's meant to be used only if buildComponentTree == YES; please DO NOT use it yet, it's in a testing stage. Default NO.
+  BOOL unifyBuildAndLayout;
+  /// Enable cache for layout and build result that are computed during the layout process lifetime. DO NOT use it yet, it's in a testing stage. Default NO.
+  BOOL cacheLayoutAndBuildResult;
+  /// If set to YES, allows taps to pass though this hosting view to views behind it. Default NO.
+  BOOL allowTapPassthrough;
+};
+
 @interface CKComponentHostingView () <CKInspectableView>
 
 /**
@@ -27,8 +36,7 @@
                             match the predicate for rapid enumeration later.
  @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
  @param analyticsListener listener conforming to AnalyticsListener will be used to get component lifecycle callbacks for logging
- @param unifyBuildAndLayout  Build and layout components in a unified pass. It's meant to be used only if buildComponentTree == YES; please DO NOT use it yet, it's in a testing stage. Default NO.
- @param cacheLayoutAndBuildResult Enable cache for layout and build result that are computed during the layout process lifetime. DO NOT use it yet, it's in a testing stage. Default NO.
+ @param options Set of CKComponentHostingViewOptions
  @see CKComponentProvider
  @see CKComponentSizeRangeProviding
  */
@@ -37,8 +45,7 @@
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                      unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
-                cacheLayoutAndBuildResult:(BOOL)cacheLayoutAndBuildResultOnComputation;
+                                  options:(const CKComponentHostingViewOptions &)options;
 
 @property (nonatomic, strong, readonly) UIView *containerView;
 

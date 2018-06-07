@@ -20,7 +20,7 @@
 #import "CKComponentDebugController.h"
 #import "CKComponentHostingViewDelegate.h"
 #import "CKComponentLayout.h"
-#import "CKComponentRootView.h"
+#import "CKComponentRootViewInternal.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentScopeRootFactory.h"
 #import "CKComponentSizeRangeProviding.h"
@@ -103,7 +103,8 @@ public:
   BOOL _isMountingComponent;
   BOOL _unifyBuildAndLayout;
   BOOL _useCacheLayoutAndBuildResult;
-  
+  BOOL _allowTapPassthrough;
+
   // A convenience cache used to improve the layout calculation of the mounted component.
   CKComponentLayoutAndBuildResultCache _cacheComponentLayoutAndBuildResult;
 }
@@ -137,8 +138,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil
-                     unifyBuildAndLayout:NO
-               cacheLayoutAndBuildResult:NO];
+                                 options:{}];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -150,8 +150,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:analyticsListener
-                     unifyBuildAndLayout:NO
-               cacheLayoutAndBuildResult:NO];
+                                 options:{}];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -159,8 +158,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                      unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
-                cacheLayoutAndBuildResult:(BOOL)cacheLayoutAndBuildResult
+                                  options:(const CKComponentHostingViewOptions &)options
 {
   if (self = [super initWithFrame:CGRectZero]) {
     _componentProvider = componentProvider;
@@ -169,13 +167,14 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _pendingInputs = {.scopeRoot =
       CKComponentScopeRootWithPredicates(self, analyticsListener ?: sDefaultAnalyticsListener, componentPredicates, componentControllerPredicates)};
 
-    _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
+    _allowTapPassthrough = options.allowTapPassthrough;
+    _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero allowTapPassthrough:_allowTapPassthrough];
     [self addSubview:_containerView];
 
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
-    _unifyBuildAndLayout = unifyBuildAndLayout;
-    _useCacheLayoutAndBuildResult = cacheLayoutAndBuildResult;
+    _unifyBuildAndLayout = options.unifyBuildAndLayout;
+    _useCacheLayoutAndBuildResult = options.cacheLayoutAndBuildResult;
 
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -259,6 +258,19 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
       const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
       return [self _synchronouslyCalculateLayoutSize:constrainedSize];
     }
+  }
+}
+
+#pragma mark - Hit Testing
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+  UIView *const hitView = [super hitTest:point withEvent:event];
+
+  if (_allowTapPassthrough && hitView == self) {
+    return nil;
+  } else {
+    return hitView;
   }
 }
 

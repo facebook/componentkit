@@ -28,18 +28,25 @@
 typedef struct {
   BOOL unifyBuildAndLayout;
   BOOL cacheLayoutAndBuildResult;
+  BOOL allowTapPassthrough;
+  BOOL embedInFlexbox;
   id<CKAnalyticsListener> analyticsListener;
 } CKComponentHostingViewConfiguration;
 static CKComponentHostingView *hostingView(const CKComponentHostingViewConfiguration &options = CKComponentHostingViewConfiguration())
 {
-  CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
+  CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor]
+                                                                                             size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))
+                                                                                   embedInFlexbox:options.embedInFlexbox];
   CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
                                                                          sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
                                                                        componentPredicates:{}
                                                              componentControllerPredicates:{}
                                                                          analyticsListener:options.analyticsListener
-                                                                       unifyBuildAndLayout:options.unifyBuildAndLayout
-                                                                 cacheLayoutAndBuildResult:options.cacheLayoutAndBuildResult];
+                                                                                   options:{
+                                                                                     .unifyBuildAndLayout = options.unifyBuildAndLayout,
+                                                                                     .cacheLayoutAndBuildResult = options.cacheLayoutAndBuildResult,
+                                                                                     .allowTapPassthrough = options.allowTapPassthrough
+                                                                                   }];
   view.bounds = CGRectMake(0, 0, 100, 100);
   [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
@@ -282,6 +289,43 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
   
   XCTAssertEqual(_willLayoutComponentTreeHitCount, 1, @"Expected to reuse component layout from cache after initial component layout computation");
   XCTAssertEqual(_didLayoutComponentTreeHitCount, 1, @"Expected to reuse component layout from cache after initial component layout computation");
+}
+
+- (void)testAllowTapPassthroughOn
+{
+  // We embed this in a flexbox which allows the view to stay at its natural size
+  // while still allowing the host to grow. This allows us to do our hit testing
+  // properly below...
+  CKComponentHostingView *view = hostingView({
+    .allowTapPassthrough = YES,
+    .embedInFlexbox = YES,
+  });
+
+  [view layoutIfNeeded];
+
+  // this point should hit the component
+  UIView *const shouldHit = [view hitTest:CGPointMake(5, 5) withEvent:nil];
+  XCTAssertNotNil(shouldHit, @"When allowTapPassthrough is YES, hitTest should return nil");
+
+  // this one misses
+  UIView *const shouldMiss = [view hitTest:CGPointMake(55, 5) withEvent:nil];
+  XCTAssertNil(shouldMiss, @"When allowTapPassthrough is YES, hitTest should return nil");
+}
+
+- (void)testAllowTapPassthroughOff
+{
+  // We embed this in a flexbox which allows the view to stay at its natural size
+  // while still allowing the host to grow. This allows us to do our hit testing
+  // properly below...
+  CKComponentHostingView *view = hostingView({
+    .embedInFlexbox = YES,
+  });
+
+  [view layoutIfNeeded];
+
+  // this should return the root view
+  UIView *const shouldBeRoot = [view hitTest:CGPointMake(55, 5) withEvent:nil];
+  XCTAssertTrue(shouldBeRoot == view.containerView, @"hitTest should return the hosting view or root view");
 }
 
 #pragma mark - CKComponentHostingViewDelegate

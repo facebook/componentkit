@@ -14,9 +14,21 @@
 #import "CKAssert.h"
 #import "CKComponentDataSourceAttachControllerInternal.h"
 
-@implementation CKComponentRootView
+@implementation CKComponentRootView {
+  BOOL _allowTapPassthrough;
+}
 
 static NSMutableArray *hitTestHooks;
+
+- (instancetype)initWithFrame:(CGRect)frame
+          allowTapPassthrough:(BOOL)allowTapPassthrough
+{
+  self = [super initWithFrame:frame];
+  if (self) {
+    _allowTapPassthrough = allowTapPassthrough;
+  }
+  return self;
+}
 
 + (void)addHitTestHook:(CKComponentRootViewHitTestHook)hook
 {
@@ -39,9 +51,17 @@ static NSMutableArray *hitTestHooks;
   for (CKComponentRootViewHitTestHook hook in hitTestHooks) {
     UIView *hitView = hook(self, point, event, superHitView);
     if (hitView) {
-      return hitView;
+      superHitView = hitView;
+      break;
     }
   }
+
+  if (_allowTapPassthrough) {
+    if (superHitView == self) {
+      superHitView = nil;
+    }
+  }
+
   return superHitView;
 }
 

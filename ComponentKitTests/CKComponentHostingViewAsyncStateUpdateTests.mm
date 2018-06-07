@@ -81,8 +81,9 @@
                                                                               componentPredicates:{}
                                                                     componentControllerPredicates:{}
                                                                                 analyticsListener:nil
-                                                                              unifyBuildAndLayout:YES
-                                                                        cacheLayoutAndBuildResult:NO];
+                                                                                          options:{
+                                                                                            .unifyBuildAndLayout = YES,
+                                                                                          }];
   hostingView.bounds = CGRectMake(0, 0, 100, 100);
   [hostingView layoutIfNeeded];
 
@@ -105,8 +106,9 @@
                                                                               componentPredicates:{}
                                                                     componentControllerPredicates:{}
                                                                                 analyticsListener:nil
-                                                                              unifyBuildAndLayout:YES
-                                                                        cacheLayoutAndBuildResult:NO];
+                                                                                          options:{
+                                                                                            .unifyBuildAndLayout = YES,
+                                                                                          }];
   hostingView.bounds = CGRectMake(0, 0, 100, 100);
   [hostingView layoutIfNeeded];
 
