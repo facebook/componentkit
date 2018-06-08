@@ -17,7 +17,7 @@ But sometimes, you do need an object with a longer lifecycle. *Component control
 ## Creating Controllers 
 
 - Controllers are instantiated automatically by ComponentKit. Don't try to create them manually.
-- Define a controller by simply creating a subclass of `CKComponentController`; the naming convention for the class is your component plus "Controller". However, it's not a must.
+- Define a controller by simply creating a subclass of `CKComponentController`; the naming convention is your component name plus "Controller". However, you can choose a different name or reuse an existing controller.
 - Your component must have a <a href="scopes.html">`CKComponentScope`</a> to have a controller. (If you forget, you will get an assertion failure.)
 - Your component must override `+ (Class<CKComponentControllerProtocol>)controllerClass` to indicate which class is its controller.
 - Any `CKComponentAction` methods handled by your component can also be handled by the controller.
