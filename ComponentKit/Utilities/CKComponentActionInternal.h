@@ -134,6 +134,10 @@ public:
     return nil;
 #endif
   }
+  
+  BOOL isBlockBaseAction() const {
+    return _action._variant == CKActionBase::CKActionVariant::Block;
+  }
 };
 
 #if DEBUG
