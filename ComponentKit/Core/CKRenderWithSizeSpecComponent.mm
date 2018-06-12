@@ -17,7 +17,7 @@
 struct CKRenderWithSizeSpecComponentParameters {
   id<CKTreeNodeWithChildrenProtocol> previousOwnerForChild;
   const CKComponentStateUpdateMap* stateUpdates;
-  CKComponentScopeRoot *scopeRoot;
+  __weak CKComponentScopeRoot *scopeRoot;
   BOOL forceParent;
 
   CKRenderWithSizeSpecComponentParameters(id<CKTreeNodeWithChildrenProtocol> pO,
