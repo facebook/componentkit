@@ -18,10 +18,6 @@ typedef NS_ENUM(NSInteger, CKFlexboxDirection) {
   CKFlexboxDirectionRow,
   CKFlexboxDirectionColumnReverse,
   CKFlexboxDirectionRowReverse,
-  CKFlexboxDirectionVertical = CKFlexboxDirectionColumn,
-  CKFlexboxDirectionHorizontal = CKFlexboxDirectionRow,
-  CKFlexboxDirectionVerticalReverse = CKFlexboxDirectionColumnReverse,
-  CKFlexboxDirectionHorizontalReverse = CKFlexboxDirectionRowReverse,
 };
 
 /** Layout direction is used to support RTL */
