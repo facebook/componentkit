@@ -322,7 +322,7 @@
   }
 }
 
-- (void)testComponentScopeHandleGlobalIdentifierIsTheSameBetweenSiblingsWithComponentScopeCollision
+- (void)testComponentScopeHandleGlobalIdentifierIsNotTheSameBetweenSiblingsWithComponentScopeCollision
 {
   CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   {
@@ -334,12 +334,12 @@
     }
     {
       CKComponentScope scope([CKCompositeComponent class], @"macaque");
-      XCTAssertEqual(globalIdentifier, CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier);
+      XCTAssertNotEqual(globalIdentifier, CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier);
     }
   }
 }
 
-- (void)testComponentScopeHandleGlobalIdentifierIsTheSameBetweenDescendantsWithComponentScopeCollision
+- (void)testComponentScopeHandleGlobalIdentifierIsNotTheSameBetweenDescendantsWithComponentScopeCollision
 {
   CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   {
@@ -356,7 +356,7 @@
       CKComponentScope scope1([CKCompositeComponent class], @"macaque");
       {
         CKComponentScope scope2([CKCompositeComponent class], @"moose");
-        XCTAssertEqual(globalIdentifier, CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier);
+        XCTAssertNotEqual(globalIdentifier, CKThreadLocalComponentScope::currentScope()->stack.top().frame.handle.globalIdentifier);
       }
     }
   }
