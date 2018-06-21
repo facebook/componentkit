@@ -44,7 +44,7 @@
   
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil).mountedComponents;
   
   UIAccessibilityCustomAction *action = controlComponent.viewContext.view.accessibilityCustomActions.firstObject;
   NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[action.target methodSignatureForSelector:action.selector]];
@@ -81,7 +81,7 @@
   
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil).mountedComponents;
   
   UIAccessibilityCustomAction *action = [controlComponent.viewContext.view.accessibilityCustomActions objectAtIndex:2];
   XCTAssertEqualObjects(action.name, @"Test 3");
@@ -114,7 +114,7 @@
   
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil);
+  NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil).mountedComponents;
   
   XCTAssertEqual(controlComponent.viewContext.view.accessibilityCustomActions.count, 1);
   

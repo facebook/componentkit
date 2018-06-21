@@ -55,11 +55,11 @@ std::shared_ptr<const std::vector<CKComponentLayoutChild>> CKComponentLayout::em
   return cached;
 }
 
-NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
-                              UIView *view,
-                              NSSet *previouslyMountedComponents,
-                              CKComponent *supercomponent,
-                              id<CKAnalyticsListener> analyticsListener)
+CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
+                                                    UIView *view,
+                                                    NSSet *previouslyMountedComponents,
+                                                    CKComponent *supercomponent,
+                                                    id<CKAnalyticsListener> analyticsListener)
 {
   struct MountItem {
     const CKComponentLayout &layout;
@@ -105,15 +105,16 @@ NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
     }
   }
 
+  NSMutableSet *componentsToUnmount;
   if (previouslyMountedComponents) {
     // Unmount any components that were in previouslyMountedComponents but are no longer in mountedComponents.
-    NSMutableSet *componentsToUnmount = [previouslyMountedComponents mutableCopy];
+    componentsToUnmount = [previouslyMountedComponents mutableCopy];
     [componentsToUnmount minusSet:mountedComponents];
     CKUnmountComponents(componentsToUnmount);
   }
   [analyticsListener didMountComponentTreeWithRootComponent:layout.component];
 
-  return mountedComponents;
+  return {mountedComponents, componentsToUnmount};
 }
 
 CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent,

@@ -64,6 +64,11 @@ struct CKComponentLayoutChild {
   CKComponentLayout layout;
 };
 
+struct CKMountComponentLayoutResult {
+  NSSet *mountedComponents;
+  NSSet *unmountedComponents;
+};
+
 /**
  Recursively mounts the layout in the view, returning a set of the mounted components.
  @param layout The layout to mount, usually returned from a call to -layoutThatFits:parentSize:
@@ -74,11 +79,11 @@ struct CKComponentLayoutChild {
         component responder chain can be connected correctly.
  @param analyticsListener analytics listener used to log mount time
  */
-NSSet *CKMountComponentLayout(const CKComponentLayout &layout,
-                              UIView *view,
-                              NSSet *previouslyMountedComponents,
-                              CKComponent *supercomponent,
-                              id<CKAnalyticsListener> analyticsListener = nil);
+CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
+                                                    UIView *view,
+                                                    NSSet *previouslyMountedComponents,
+                                                    CKComponent *supercomponent,
+                                                    id<CKAnalyticsListener> analyticsListener = nil);
 
 /**
  Safely computes the layout of the given root component by guarding against nil components.

@@ -94,7 +94,7 @@ using namespace CK::Component::Accessibility;
   }} size:{}];
 
   UIView *container = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([testComponent layoutThatFits:{} parentSize:{}], container, nil, nil);
+  NSSet *mountedComponents = CKMountComponentLayout([testComponent layoutThatFits:{} parentSize:{}], container, nil, nil).mountedComponents;
 
   XCTAssertEqual(testComponent.viewContext.view.isAccessibilityElement, YES);
   XCTAssertEqual(testComponent.viewContext.view.accessibilityLabel, @"accessibleSuperman",);
@@ -117,7 +117,7 @@ using namespace CK::Component::Accessibility;
   }} size:{}];
 
   UIView *container = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([testComponent layoutThatFits:{} parentSize:{}], container, nil, nil);
+  NSSet *mountedComponents = CKMountComponentLayout([testComponent layoutThatFits:{} parentSize:{}], container, nil, nil).mountedComponents;
 
   XCTAssertEqual(testComponent.viewContext.view.isAccessibilityElement, NO);
   XCTAssertNil(testComponent.viewContext.view.accessibilityLabel);

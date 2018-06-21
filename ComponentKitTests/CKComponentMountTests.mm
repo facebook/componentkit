@@ -35,7 +35,7 @@
                @"Expected view component to exist in the layout tree");
 
   UIView *view = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout(layout, view, nil, nil);
+  NSSet *mountedComponents = CKMountComponentLayout(layout, view, nil, nil).mountedComponents;
 
   XCTAssertEqual([[view subviews] count], 0u,
                  @"CKDontMountChildrenComponent should have prevented view component from mounting");
@@ -49,7 +49,7 @@
   CKComponentLayout layout = [c layoutThatFits:{} parentSize:{NAN, NAN}];
 
   UIView *container = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout(layout, container, nil, nil);
+  NSSet *mountedComponents = CKMountComponentLayout(layout, container, nil, nil).mountedComponents;
   XCTAssertEqualObjects(mountedComponents, [NSSet setWithObject:c], @"Didn't mount as expected");
 
   XCTAssertEqualObjects([c nextResponder], container, @"Did not setup responder correctly!");
@@ -69,7 +69,7 @@
   };
 
   UIView *container = [UIView new];
-  NSSet *allMounted = CKMountComponentLayout(layoutBoth, container, nil, nil);
+  NSSet *allMounted = CKMountComponentLayout(layoutBoth, container, nil, nil).mountedComponents;
 
   XCTAssertNotNil(a.viewContext.view, @"Didn't create view");
   XCTAssertNotNil(b.viewContext.view, @"Didn't create view");
@@ -80,7 +80,7 @@
     }
   };
 
-  NSSet *someMounted = CKMountComponentLayout(layoutA, container, allMounted, nil);
+  NSSet *someMounted = CKMountComponentLayout(layoutA, container, allMounted, nil).mountedComponents;
 
   XCTAssertNotNil(a.viewContext.view, @"Should still be mounted");
   XCTAssertNil(b.viewContext.view, @"Should not be mounted");

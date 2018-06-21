@@ -217,7 +217,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
       }
     }
     CKComponentBoundsAnimationApply(_boundsAnimation, ^{
-      _mountedComponents = [CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil, _pendingInputs.scopeRoot.analyticsListener) copy];
+      const auto result = CKMountComponentLayout(_mountedLayout, _containerView, _mountedComponents, nil, _pendingInputs.scopeRoot.analyticsListener);
+      _mountedComponents = result.mountedComponents;
     }, nil);
     _boundsAnimation = {};
     _isMountingComponent = NO;
