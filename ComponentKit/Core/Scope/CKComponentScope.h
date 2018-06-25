@@ -87,8 +87,8 @@ public:
    in +new that props and state are out of sync; this function allows you to "fix" state without triggering another
    separate re-render pass.
 
-   The analogous feature in React is componentWillReceiveProps, which allows you to update state just before render is
-   called during the process of rendering.
+   The analogous feature in React is getDerivedStateFromProps, which allows you to update state in response to
+   props changing.
    */
   static void replaceState(const CKComponentScope &scope, id newState);
 
