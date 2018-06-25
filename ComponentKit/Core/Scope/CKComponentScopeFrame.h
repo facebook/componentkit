@@ -38,4 +38,6 @@ struct CKComponentScopeFramePair {
 
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
 
++ (void)setAlwaysUseStateKeyCounter:(BOOL)alwaysUseStateKeyCounter;
+
 @end
