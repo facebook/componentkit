@@ -68,15 +68,21 @@ namespace CK {
       return {};
     }
 
-    const auto initialAnimations = Collection::flatten(
-      map(animatedComponents.appearedComponents, [](const auto &c) { return c.animationsOnInitialMount; })
-    );
+    const auto animationsOnInitialMountPairs = map(animatedComponents.appearedComponents, [](const auto &c) {
+      return std::make_pair(c, c.animationsOnInitialMount);
+    });
 
-    const auto animationsFromPrevComponent = Collection::flatten(
-      map(animatedComponents.updatedComponents, [](const auto &pair) {
-        return [pair.current animationsFromPreviousComponent:pair.prev];
-      })
-    );
+    const auto initialAnimations =
+    CKComponentAnimations::AnimationsByComponentMap(animationsOnInitialMountPairs.begin(),
+                                                    animationsOnInitialMountPairs.end());
+
+    const auto animationsFromPreviousComponentPairs = map(animatedComponents.updatedComponents, [](const auto &pair) {
+      return std::make_pair(pair.current, [pair.current animationsFromPreviousComponent:pair.prev]);
+    });
+
+    const auto animationsFromPrevComponent =
+    CKComponentAnimations::AnimationsByComponentMap(animationsFromPreviousComponentPairs.begin(),
+                                                    animationsFromPreviousComponentPairs.end());
 
     return {initialAnimations, animationsFromPrevComponent};
   }

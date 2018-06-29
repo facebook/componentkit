@@ -76,14 +76,14 @@ namespace CK {
 
   // For non-objc types use == operator
   template <typename T> struct is_equal<T, typename std::enable_if<!is_objc_class<T>::value>::type> {
-    bool operator ()(const T& a, const T& b) {
+    bool operator ()(const T& a, const T& b) const {
       return a == b;
     }
   };
 
   // For objc types, check pointer equality, then use -isEqual:
   template <typename T> struct is_equal<T, typename std::enable_if<is_objc_class<T>::value>::type> {
-    bool operator ()(id a, id b) {
+    bool operator ()(id a, id b) const {
       return a == b || [a isEqual:b];
     }
   };

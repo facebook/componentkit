@@ -18,6 +18,8 @@
 #import <ComponentKit/CKCompositeComponentInternal.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 
+#import "CKComponentAnimationsEquality.h"
+
 @interface CKComponentAnimationsTests_Diffing : XCTestCase
 @end
 
@@ -91,44 +93,33 @@
 
 @implementation CKComponentAnimationsTests
 
-static auto animationsAreEqual(const std::vector<CKComponentAnimation> &as1,
-                               const std::vector<CKComponentAnimation> &as2) -> bool
-{
-  if (as1.size() != as2.size()) {
-    return false;
-  }
-
-  for (auto i = 0; i < as1.size(); i++) {
-    if (!as1[i].isIdenticalTo(as2[i])) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
 - (void)test_WhenThereAreNoComponentsToAnimate_ThereAreNoAnimations
 {
   const auto as = CK::animationsForComponents({});
 
-  const auto expected = std::vector<CKComponentAnimation> {};
+  const auto expected = CKComponentAnimations::AnimationsByComponentMap {};
   XCTAssert(animationsAreEqual(as.animationsOnInitialMount(), expected));
 }
 
 - (void)test_ForAllAppearedComponents_AnimationsOnInitialMountAreCollected
 {
   const auto a1 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
+  const auto c1 = [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{a1}];
   const auto a2 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
+  const auto c2 = [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{a2}];
   const auto diff = CK::ComponentTreeDiff {
     .appearedComponents = {
-      [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{a1}],
-      [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{a2}],
+      c1,
+      c2,
     },
   };
 
-  const auto as = CK::animationsForComponents(diff);
+  const auto as = animationsForComponents(diff);
 
-  const auto expected = std::vector<CKComponentAnimation> {a1, a2};
+  const auto expected = CKComponentAnimations::AnimationsByComponentMap {
+    {c1, {a1}},
+    {c2, {a2}},
+  };
   XCTAssert(animationsAreEqual(as.animationsOnInitialMount(), expected));
 }
 
@@ -136,20 +127,58 @@ static auto animationsAreEqual(const std::vector<CKComponentAnimation> &as1,
 {
   const auto a1 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
   const auto pc1 = [CKComponent new];
+  const auto c1 = [ComponentWithAnimationsFromPreviousComponent newWithAnimations:{a1} fromPreviousComponent:pc1];
   const auto a2 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
   const auto pc2 = [CKComponent new];
+  const auto c2 = [ComponentWithAnimationsFromPreviousComponent newWithAnimations:{a2} fromPreviousComponent:pc2];
   const auto componentPairs = std::vector<CK::ComponentTreeDiff::Pair> {
-    {pc1, [ComponentWithAnimationsFromPreviousComponent newWithAnimations:{a1} fromPreviousComponent:pc1]},
-    {pc2, [ComponentWithAnimationsFromPreviousComponent newWithAnimations:{a2} fromPreviousComponent:pc2]},
+    {pc1, c1},
+    {pc2, c2},
   };
   const auto diff = CK::ComponentTreeDiff {
     .updatedComponents = componentPairs,
   };
 
-  const auto as = CK::animationsForComponents(diff);
+  const auto as = animationsForComponents(diff);
 
-  const auto expected = std::vector<CKComponentAnimation> {a1, a2};
+  const auto expected = CKComponentAnimations::AnimationsByComponentMap {
+    {c1, {a1}},
+    {c2, {a2}},
+  };
   XCTAssert(animationsAreEqual(as.animationsFromPreviousComponent(), expected));
+}
+
+- (void)test_DefaultInitialised_IsEmpty
+{
+  XCTAssert(CKComponentAnimations {}.isEmpty());
+}
+
+- (void)test_IfHasInitialAnimations_IsNotEmpty
+{
+  const auto a1 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
+  const auto c1 = [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{a1}];
+  const auto as = CKComponentAnimations {
+    {
+      {c1, {a1}},
+    },
+    {}
+  };
+
+  XCTAssertFalse(as.isEmpty());
+}
+
+- (void)test_IfHasAnimationsFromPreviousComponent_IsNotEmpty
+{
+  const auto a1 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
+  const auto c1 = [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{a1}];
+  const auto as = CKComponentAnimations {
+    {},
+    {
+      {c1, {a1}},
+    }
+  };
+
+  XCTAssertFalse(as.isEmpty());
 }
 
 @end

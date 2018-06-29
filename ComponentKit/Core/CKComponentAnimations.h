@@ -10,24 +10,29 @@
 
 #import <Foundation/Foundation.h>
 
+#import <unordered_map>
+
 #import <ComponentKit/CKComponentAnimation.h>
 #import <ComponentKit/CKComponentTreeDiff.h>
+#import <ComponentKit/CKEqualityHashHelpers.h>
 
 @class CKComponentScopeRoot;
 
 struct CKComponentAnimations {
+  using AnimationsByComponentMap = std::unordered_map<CKComponent *, std::vector<CKComponentAnimation>, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
+
   CKComponentAnimations() {}
-  CKComponentAnimations(std::vector<CKComponentAnimation> animationsOnInitialMount,
-                        std::vector<CKComponentAnimation> animationsFromPreviousComponent)
-  : _animationsOnInitialMount(std::move(animationsOnInitialMount)), _animationsFromPreviousComponent(std::move(animationsFromPreviousComponent))
-  {}
+  CKComponentAnimations(AnimationsByComponentMap animationsOnInitialMount,
+                        AnimationsByComponentMap animationsFromPreviousComponent)
+  : _animationsOnInitialMount(std::move(animationsOnInitialMount)), _animationsFromPreviousComponent(std::move(animationsFromPreviousComponent)) {}
 
   const auto &animationsOnInitialMount() const { return _animationsOnInitialMount; }
   const auto &animationsFromPreviousComponent() const { return _animationsFromPreviousComponent; }
+  auto isEmpty() const { return _animationsOnInitialMount.empty() && _animationsFromPreviousComponent.empty(); }
 
 private:
-  std::vector<CKComponentAnimation> _animationsOnInitialMount = {};
-  std::vector<CKComponentAnimation> _animationsFromPreviousComponent = {};
+  AnimationsByComponentMap _animationsOnInitialMount = {};
+  AnimationsByComponentMap _animationsFromPreviousComponent = {};
 };
 
 namespace CK {
