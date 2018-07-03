@@ -44,3 +44,9 @@ namespace CK {
     return true;
   }
 }
+
+auto operator==(const CKComponentAnimations &lhs, const CKComponentAnimations &rhs) -> bool
+{
+  return animationsAreEqual(lhs.animationsOnInitialMount(), rhs.animationsOnInitialMount()) &&
+  animationsAreEqual(lhs.animationsFromPreviousComponent(), rhs.animationsFromPreviousComponent());
+}

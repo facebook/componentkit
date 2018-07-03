@@ -21,4 +21,6 @@ namespace CK {
                           const CKComponentAnimations::AnimationsByComponentMap &as2) -> bool;
 }
 
+auto operator==(const CKComponentAnimations &lhs, const CKComponentAnimations &rhs) -> bool;
+
 #endif /* CKComponentAnimationsEquality_h */
