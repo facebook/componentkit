@@ -51,7 +51,8 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
    parallelUpdateBuildAndLayoutThreshold:0
    componentPredicates:{}
    componentControllerPredicates:{}
-   analyticsListener:nil];
+   analyticsListener:nil
+   qosOptions:{}];
 
   NSMutableArray *sections = [NSMutableArray array];
   for (NSUInteger sectionIndex = 0; sectionIndex < numberOfSections; sectionIndex++) {

@@ -36,7 +36,8 @@
    parallelUpdateBuildAndLayoutThreshold:0
                      componentPredicates:{}
            componentControllerPredicates:{}
-                       analyticsListener:nil];
+                       analyticsListener:nil
+                              qosOptions:{}];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -51,6 +52,7 @@
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                               qosOptions:(CKDataSourceQOSOptions)qosOptions
 {
   if (self = [super init]) {
     _componentProvider = componentProvider;
@@ -65,6 +67,7 @@
     _parallelInsertBuildAndLayoutThreshold = parallelInsertBuildAndLayoutThreshold;
     _parallelUpdateBuildAndLayout = parallelUpdateBuildAndLayout;
     _parallelUpdateBuildAndLayoutThreshold = parallelUpdateBuildAndLayoutThreshold;
+    _qosOptions = qosOptions;
   }
   return self;
 }

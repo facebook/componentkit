@@ -11,10 +11,16 @@
 #import <ComponentKit/CKDataSourceConfiguration.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
+#import <ComponentKit/CKDataSourceQOS.h>
 
 #import <unordered_set>
 
 @protocol CKAnalyticsListener;
+
+struct CKDataSourceQOSOptions {
+  CKDataSourceQOS workQueueQOS = CKDataSourceQOSDefault;
+  CKDataSourceQOS concurrentQueueQOS = CKDataSourceQOSDefault;
+};
 
 @interface CKDataSourceConfiguration ()
 
@@ -38,7 +44,8 @@
     parallelUpdateBuildAndLayoutThreshold:(NSUInteger)parallelUpdateBuildAndLayoutThreshold
                       componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
-                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
+                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                               qosOptions:(CKDataSourceQOSOptions)qosOptions;
 
 @property (nonatomic, readonly, strong) id<CKAnalyticsListener> analyticsListener;
 
@@ -48,6 +55,7 @@
 @property (nonatomic, assign, readonly) NSUInteger parallelInsertBuildAndLayoutThreshold;
 @property (nonatomic, assign, readonly) BOOL parallelUpdateBuildAndLayout;
 @property (nonatomic, assign, readonly) NSUInteger parallelUpdateBuildAndLayoutThreshold;
+@property (nonatomic, assign, readonly) CKDataSourceQOSOptions qosOptions;
 
 - (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;

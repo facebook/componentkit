@@ -70,12 +70,20 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   if (self = [super init]) {
     _state = [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
-    _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
+    auto const workQueueAttributes =
+    dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL,
+                                            qosClassFromDataSourceQOS(configuration.qosOptions.workQueueQOS),
+                                            0);
+    _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", workQueueAttributes);
     _pendingAsynchronousModifications = [NSMutableArray array];
     [CKComponentDebugController registerReflowListener:self];
     if (configuration.parallelInsertBuildAndLayout ||
         configuration.parallelUpdateBuildAndLayout) {
-      _concurrentQueue = dispatch_queue_create("org.componentkit.CKDataSource.concurrent", DISPATCH_QUEUE_CONCURRENT);
+      auto const concurrentQueueAttributes =
+      dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_CONCURRENT,
+                                              qosClassFromDataSourceQOS(configuration.qosOptions.concurrentQueueQOS),
+                                              0);
+      _concurrentQueue = dispatch_queue_create("org.componentkit.CKDataSource.concurrent", concurrentQueueAttributes);
     }
   }
   return self;
@@ -358,6 +366,18 @@ static void sendDidPrepareLayoutForComponentWithIndexPaths(id<NSFastEnumeration>
   for (NSIndexPath *indexPath in indexPaths) {
     CKDataSourceItem *item = [state objectAtIndexPath:indexPath];
     CKComponentSendDidPrepareLayoutForComponent(item.scopeRoot, item.layout);
+  }
+}
+
+static qos_class_t qosClassFromDataSourceQOS(CKDataSourceQOS qos)
+{
+  switch (qos) {
+    case CKDataSourceQOSUserInteractive:
+      return QOS_CLASS_USER_INTERACTIVE;
+    case CKDataSourceQOSUserInitiated:
+      return QOS_CLASS_USER_INITIATED;
+    case CKDataSourceQOSDefault:
+      return QOS_CLASS_DEFAULT;
   }
 }
 

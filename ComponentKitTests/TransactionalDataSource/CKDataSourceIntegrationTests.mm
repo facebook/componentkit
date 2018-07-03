@@ -174,7 +174,8 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        parallelUpdateBuildAndLayoutThreshold:0
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
-                                       analyticsListener:nil];
+                                       analyticsListener:nil
+                                       qosOptions:{}];
   return [[CKCollectionViewDataSource alloc] initWithCollectionView:collectionViewController.collectionView
                                                      supplementaryViewDataSource:nil
                                                                    configuration:config];
