@@ -57,7 +57,7 @@
     return c;
   });
 
-  const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil).layout;
+  const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil).layout();
 
   // Make sure we do build the components cache in case that `buildComponentLayoutCache` is set to `YES`.
   XCTAssertNotNil(layout.extra);
@@ -79,7 +79,7 @@
     return c;
   });
 
-  const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil).layout;
+  const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil).layout();
 
   // Make sure we do build the components cache in case that `buildComponentLayoutCache` is set to `YES`.
   XCTAssertNotNil(layout.extra);

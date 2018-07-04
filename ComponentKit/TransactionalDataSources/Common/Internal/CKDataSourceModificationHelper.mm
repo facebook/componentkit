@@ -32,7 +32,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                                            configuration.forceParent);
     const CKComponentLayout layout = CKComputeRootComponentLayout(result.component,
                                                                   sizeRange,
-                                                                  result.scopeRoot.analyticsListener).layout;
+                                                                  result.scopeRoot.analyticsListener).layout();
     return [[CKDataSourceItem alloc] initWithLayout:layout
                                               model:model
                                           scopeRoot:result.scopeRoot

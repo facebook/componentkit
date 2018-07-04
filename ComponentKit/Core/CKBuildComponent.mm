@@ -68,6 +68,6 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
                                                           BOOL forceParent) {
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   const CKBuildComponentResult buildComponentResult = _CKBuildComponent(previousRoot, stateUpdates, forceParent, threadScope, componentFactory);
-  const CKComponentLayout computedLayout = CKComputeRootComponentLayout(buildComponentResult.component, sizeRange, buildComponentResult.scopeRoot.analyticsListener).layout;
+  const CKComponentLayout computedLayout = CKComputeRootComponentLayout(buildComponentResult.component, sizeRange, buildComponentResult.scopeRoot.analyticsListener).layout();
   return {buildComponentResult, computedLayout};
 }

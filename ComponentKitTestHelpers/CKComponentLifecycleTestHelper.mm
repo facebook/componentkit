@@ -54,7 +54,7 @@
   CKBuildComponentResult result = CKBuildComponent(previousScopeRoot, _pendingStateUpdates, ^{
     return [_componentProvider componentForModel:model context:context];
   });
-  const CKComponentLayout componentLayout = CKComputeRootComponentLayout(result.component, constrainedSize).layout;
+  const CKComponentLayout componentLayout = CKComputeRootComponentLayout(result.component, constrainedSize).layout();
   _previousScopeRoot = result.scopeRoot;
   _pendingStateUpdates.clear();
   return {

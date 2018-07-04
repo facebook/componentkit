@@ -209,7 +209,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
       if (!_unifyBuildAndLayout) {
         [self _synchronouslyUpdateComponentIfNeeded];
         if (_mountedLayout.component != _component || !CGSizeEqualToSize(_mountedLayout.size, size)) {
-          _mountedLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener).layout;
+          _mountedLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener).layout();
           [self _sendDidPrepareLayoutIfNeeded];
         }
       } else {
@@ -254,7 +254,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     if (!_unifyBuildAndLayout) {
       [self _synchronouslyUpdateComponentIfNeeded];
       const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-      return CKComputeRootComponentLayout(_component, constrainedSize, _pendingInputs.scopeRoot.analyticsListener).layout.size;
+      return CKComputeRootComponentLayout(_component, constrainedSize, _pendingInputs.scopeRoot.analyticsListener).layout().size;
     } else {
       const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
       return [self _synchronouslyCalculateLayoutSize:constrainedSize];
@@ -471,7 +471,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
  */
 - (CKComponentLayout)_buildComponentLayoutWithSizeRange:(const CKSizeRange &)sizeRange {
   CKAssert(!_unifyBuildAndLayout, @"Use -_buildAndLayoutComponentIfNeeded:pendingInputs: for computing component layout in an unifyBuildAndLayout config");
-  auto computedLayout = CKComputeRootComponentLayout(_component, sizeRange, _pendingInputs.scopeRoot.analyticsListener).layout;
+  auto computedLayout = CKComputeRootComponentLayout(_component, sizeRange, _pendingInputs.scopeRoot.analyticsListener).layout();
 
   if (_useCacheLayoutAndBuildResult) {
     [self _updateCachedComponentLayoutWithComponentLayout:computedLayout andBuildComponentResult:[self currentBuildComponentResult]];
