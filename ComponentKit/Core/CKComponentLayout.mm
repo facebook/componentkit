@@ -117,16 +117,18 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
   return {mountedComponents, componentsToUnmount};
 }
 
-CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
-                                               const CKSizeRange &sizeRange,
-                                               id<CKAnalyticsListener> analyticsListener)
-                                             {
+CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
+                                                   const CKSizeRange &sizeRange,
+                                                   id<CKAnalyticsListener> analyticsListener)
+{
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent];
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectComponentScopeCollisions(layout);
   CKBuildScopedComponentLayoutCache(layout);
   [analyticsListener didLayoutComponentTreeWithRootComponent:rootComponent];
-  return layout;
+  return {
+    .layout = layout,
+  };
 }
 
 CKComponentLayout CKComputeComponentLayout(CKComponent *component,

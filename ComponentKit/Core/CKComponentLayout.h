@@ -64,6 +64,10 @@ struct CKComponentLayoutChild {
   CKComponentLayout layout;
 };
 
+struct CKComponentRootLayout {
+  CKComponentLayout layout;
+};
+
 struct CKMountComponentLayoutResult {
   NSSet *mountedComponents;
   NSSet *unmountedComponents;
@@ -91,9 +95,9 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
  @param sizeRange The size range to compute the component layout within.
  @param analyticsListener analytics listener used to log layout time.
  */
-CKComponentLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
-                                               const CKSizeRange &sizeRange,
-                                               id<CKAnalyticsListener> analyticsListener = nil);
+CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
+                                                   const CKSizeRange &sizeRange,
+                                                   id<CKAnalyticsListener> analyticsListener = nil);
 
 /**
  Safely computes the layout of the given component by guarding against nil components.
