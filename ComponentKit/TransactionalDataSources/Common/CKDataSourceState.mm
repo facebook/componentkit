@@ -68,23 +68,14 @@
 
 - (NSString *)description
 {
-  if (!_sections || _sections.count == 0) {
-    return @"()";
-  }
+  if (self.numberOfSections == 0) { return @"{}"; }
 
-  NSMutableString *mutableString = [NSMutableString new];
-  [mutableString appendFormat:@"(\n"];
-
-  NSUInteger sectionsCount = 0;
-  for (NSArray *items in _sections) {
-    NSUInteger itemCount = 0;
-    for (NSArray *i in items) {
-      [mutableString appendFormat:@"\t<indexpath: %@ - %@> = %@\n", @(sectionsCount), @(itemCount++), i];
-    }
-    sectionsCount++;
-  }
-  [mutableString appendFormat:@")\n"];
-  return mutableString;
+  const auto itemStrs = static_cast<NSMutableArray<NSString *> *>([NSMutableArray new]);
+  [self enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSIndexPath *ip, BOOL *) {
+    const auto itemStr = [NSString stringWithFormat:@"  (%ld, %ld): %@", (long)ip.section, (long)ip.item, item.model];
+    [itemStrs addObject:itemStr];
+  }];
+  return [NSString stringWithFormat:@"{\n%@\n}", [itemStrs componentsJoinedByString:@",\n"]];;
 }
 
 - (BOOL)isEqual:(id)object

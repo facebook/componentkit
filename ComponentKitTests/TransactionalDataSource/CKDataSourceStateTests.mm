@@ -127,3 +127,29 @@
 }
 
 @end
+
+@interface CKDataSourceStateTests_Description: XCTestCase
+@end
+
+@implementation CKDataSourceStateTests_Description
+- (void)test_WhenStateIsEmpty_CompactDescriptionIsJustBraces
+{
+  const auto state = CKDataSourceTestState([CKDataSourceStateTests class], nil, 0, 0);
+
+  XCTAssertEqualObjects(state.description, @"{}");
+}
+
+- (void)test_CompactDescriptionFormat
+{
+  const auto state = CKDataSourceTestState([CKDataSourceStateTests class], nil, 2, 2);
+
+  const auto expected = @"\
+{\n\
+  (0, 0): 0,\n\
+  (0, 1): 1,\n\
+  (1, 0): 2,\n\
+  (1, 1): 3\n\
+}";
+  XCTAssertEqualObjects(state.description, expected);
+}
+@end
