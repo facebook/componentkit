@@ -66,7 +66,7 @@ struct CKComponentLayoutChild {
 
 struct CKComponentRootLayout {
   CKComponentRootLayout() {}
-  CKComponentRootLayout(CKComponentLayout layout)
+  explicit CKComponentRootLayout(CKComponentLayout layout)
   : _layout(std::move(layout)) {}
 
   const auto &layout() const { return _layout; }

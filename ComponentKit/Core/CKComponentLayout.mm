@@ -126,7 +126,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
   CKDetectComponentScopeCollisions(layout);
   CKBuildScopedComponentLayoutCache(layout);
   [analyticsListener didLayoutComponentTreeWithRootComponent:rootComponent];
-  return { layout };
+  return CKComponentRootLayout {layout};
 }
 
 CKComponentLayout CKComputeComponentLayout(CKComponent *component,
