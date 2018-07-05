@@ -44,7 +44,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                                                        ^CKComponent *{
                                                                          return [componentProvider componentForModel:model context:context];
                                                                        });
-    return [[CKDataSourceItem alloc] initWithLayout:result.computedLayout
+    return [[CKDataSourceItem alloc] initWithLayout:result.computedLayout.layout()
                                               model:model
                                           scopeRoot:result.buildComponentResult.scopeRoot
                                     boundsAnimation:result.buildComponentResult.boundsAnimation];

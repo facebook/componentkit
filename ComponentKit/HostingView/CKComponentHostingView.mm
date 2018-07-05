@@ -248,7 +248,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
       const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
       auto componentLayoutAndBuildResult = [self _buildAndLayoutComponentIfNeeded:constrainedSize pendingInputs:_pendingInputs];
-      return componentLayoutAndBuildResult.computedLayout.size;
+      return componentLayoutAndBuildResult.computedLayout.layout().size;
     }
   } else {
     if (!_unifyBuildAndLayout) {
@@ -492,7 +492,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                                                                         return [_componentProvider componentForModel:model context:context];
                                                                       });
   if (_useCacheLayoutAndBuildResult) {
-    [self _updateCachedComponentLayoutWithComponentLayout:results.computedLayout andBuildComponentResult:results.buildComponentResult];
+    [self _updateCachedComponentLayoutWithComponentLayout:results.computedLayout.layout() andBuildComponentResult:results.buildComponentResult];
   }
 
   return results;
@@ -500,7 +500,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
 - (CGSize)_synchronouslyCalculateLayoutSize:(const CKSizeRange &)sizeRange {
   CKBuildAndLayoutComponentResult results = [self _buildAndLayoutComponentIfNeeded:sizeRange pendingInputs:_pendingInputs];
-  return results.computedLayout.size;
+  return results.computedLayout.layout().size;
 }
 
 - (void)_asynchronouslyBuildAndLayoutComponentIfNeeded
@@ -530,7 +530,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     dispatch_async(dispatch_get_main_queue(), ^{
       // If the inputs haven't changed, apply the result; otherwise, retry.
       if (_pendingInputs == *inputs) {
-        _mountedLayout = results.computedLayout;
+        _mountedLayout = results.computedLayout.layout();
         [self _applyResult:results.buildComponentResult];
         _scheduledAsynchronousBuildAndLayoutUpdate = NO;
         [self setNeedsLayout];
@@ -556,7 +556,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
   _isSynchronouslyUpdatingComponent = YES;
   CKBuildAndLayoutComponentResult results = [self _buildAndLayoutComponentIfNeeded:sizeRange pendingInputs:_pendingInputs];
-  [self _updateMountedLayoutWithLayout:results.computedLayout buildComponentResult:results.buildComponentResult];
+  [self _updateMountedLayoutWithLayout:results.computedLayout.layout() buildComponentResult:results.buildComponentResult];
   _isSynchronouslyUpdatingComponent = NO;
 }
 

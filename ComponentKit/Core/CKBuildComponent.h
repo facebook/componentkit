@@ -56,7 +56,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 
 struct CKBuildAndLayoutComponentResult {
   CKBuildComponentResult buildComponentResult;
-  CKComponentLayout computedLayout;
+  CKComponentRootLayout computedLayout;
 };
 
 /**
