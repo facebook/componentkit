@@ -93,7 +93,7 @@ static u_int32_t globalState = 0;
   CKDataSourceChange *change = [reloadModification changeFromState:originalState];
   CKDataSourceItem *item =
   [[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  CKTestGlobalStateComponent *component = (CKTestGlobalStateComponent *)[item layout].component;
+  CKTestGlobalStateComponent *component = (CKTestGlobalStateComponent *)[item layout].component();
 
   XCTAssertEqual(component.globalStateAtTimeOfCreation, newGlobalState);
 }

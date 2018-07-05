@@ -37,12 +37,12 @@
 {
   CKDataSource *ds = CKComponentTestDataSource([self class]);
   CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  [[item layout].component updateState:^(id oldState){return @"new state";} mode:CKUpdateModeSynchronous];
+  [[item layout].component() updateState:^(id oldState){return @"new state";} mode:CKUpdateModeSynchronous];
 
   // Even for synchronous updates, the update is deferred to the end of the run loop, so we must spin the runloop.
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     CKDataSourceItem *updatedItem = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    return [((CKStateExposingComponent *)[updatedItem layout].component).state isEqual:@"new state"];
+    return [((CKStateExposingComponent *)[updatedItem layout].component()).state isEqual:@"new state"];
   }));
 }
 
@@ -50,14 +50,14 @@
 {
   CKDataSource *ds = CKComponentTestDataSource([self class]);
   CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  NSNumber *originalState = ((CKStateExposingComponent *)[item layout].component).state;
-  [[item layout].component updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
-  [[item layout].component updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
-  [[item layout].component updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
+  NSNumber *originalState = ((CKStateExposingComponent *)[item layout].component()).state;
+  [[item layout].component() updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
+  [[item layout].component() updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
+  [[item layout].component() updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     CKDataSourceItem *updatedItem = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    return [((CKStateExposingComponent *)[updatedItem layout].component).state isEqual:@([originalState unsignedIntegerValue] + 3)];
+    return [((CKStateExposingComponent *)[updatedItem layout].component()).state isEqual:@([originalState unsignedIntegerValue] + 3)];
   }));
 }
 
@@ -65,11 +65,11 @@
 {
   CKDataSource *ds = CKComponentTestDataSource([self class]);
   CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  [[item layout].component updateState:^(id oldState){return @"new state";} mode:CKUpdateModeAsynchronous];
+  [[item layout].component() updateState:^(id oldState){return @"new state";} mode:CKUpdateModeAsynchronous];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     CKDataSourceItem *updatedItem = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    return [((CKStateExposingComponent *)[updatedItem layout].component).state isEqual:@"new state"];
+    return [((CKStateExposingComponent *)[updatedItem layout].component()).state isEqual:@"new state"];
   }));
 }
 
@@ -78,14 +78,14 @@
   CKDataSource *ds = CKComponentTestDataSource([self class]);
   CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
 
-  CKComponent *const component = item.layout.component;
+  CKComponent *const component = item.layout.component();
   [component updateState:^(NSNumber *oldState){return @"NewState"; } mode:CKUpdateModeSynchronous];
   [component updateState:^(NSString *oldState){return [NSMutableString stringWithFormat:@"%@Update1", oldState]; } mode:CKUpdateModeSynchronous];
   [component updateState:^(NSString *oldState){return [NSMutableString stringWithFormat:@"%@Update2", oldState]; } mode:CKUpdateModeSynchronous];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     CKDataSourceItem *updatedItem = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    return [((CKStateExposingComponent *)[updatedItem layout].component).state isEqual:@"NewStateUpdate1Update2"];
+    return [((CKStateExposingComponent *)[updatedItem layout].component()).state isEqual:@"NewStateUpdate1Update2"];
   }));
 }
 

@@ -75,7 +75,7 @@
 
   NSIndexPath *ip = [NSIndexPath indexPathForItem:2 inSection:0];
   CKDataSourceItem *item = [originalState objectAtIndexPath:ip];
-  [[item layout].component updateState:^(id state){return @"hello";} mode:CKUpdateModeSynchronous];
+  [[item layout].component() updateState:^(id state){return @"hello";} mode:CKUpdateModeSynchronous];
 
   CKDataSourceUpdateStateModification *updateStateModification =
   [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingStateUpdates];
@@ -102,7 +102,7 @@
 
   NSIndexPath *ip = [NSIndexPath indexPathForItem:0 inSection:0];
   CKDataSourceItem *item = [originalState objectAtIndexPath:ip];
-  [[item layout].component updateState:^(id state){return @"hello";} mode:CKUpdateModeSynchronous];
+  [[item layout].component() updateState:^(id state){return @"hello";} mode:CKUpdateModeSynchronous];
 
   CKDataSourceUpdateStateModification *updateStateModification =
   [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingStateUpdates];
@@ -110,7 +110,7 @@
   CKDataSourceChange *change = [updateStateModification changeFromState:originalState];
 
   NSString *updatedComponentState =
-  [(CKStatefulTestComponent *)[[[change state] objectAtIndexPath:ip] layout].component state];
+  [(CKStatefulTestComponent *)[[[change state] objectAtIndexPath:ip] layout].component() state];
 
   XCTAssertEqualObjects(updatedComponentState, @"hello");
 }
@@ -121,8 +121,8 @@
 
   NSIndexPath *ip = [NSIndexPath indexPathForItem:0 inSection:0];
   CKDataSourceItem *item = [originalState objectAtIndexPath:ip];
-  [[item layout].component updateState:^(NSString *state){return @"hello";} mode:CKUpdateModeSynchronous];
-  [[item layout].component updateState:^(NSString *state){return [state stringByAppendingString:@" world"];} mode:CKUpdateModeSynchronous];
+  [[item layout].component() updateState:^(NSString *state){return @"hello";} mode:CKUpdateModeSynchronous];
+  [[item layout].component() updateState:^(NSString *state){return [state stringByAppendingString:@" world"];} mode:CKUpdateModeSynchronous];
 
   CKDataSourceUpdateStateModification *updateStateModification =
   [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingStateUpdates];
@@ -130,7 +130,7 @@
   CKDataSourceChange *change = [updateStateModification changeFromState:originalState];
 
   NSString *updatedComponentState =
-  [(CKStatefulTestComponent *)[[[change state] objectAtIndexPath:ip] layout].component state];
+  [(CKStatefulTestComponent *)[[[change state] objectAtIndexPath:ip] layout].component() state];
 
   XCTAssertEqualObjects(updatedComponentState, @"hello world");
 }

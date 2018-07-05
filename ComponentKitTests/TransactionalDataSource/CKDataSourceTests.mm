@@ -223,7 +223,7 @@ struct CKDataSourceAnnouncedUpdate {
     // DataSource deallocation is also triggered on background.
     // CKLifecycleTestComponent will assert if it receives an invalidation not on the main thread,
     CKDataSource *dataSource = CKComponentTestDataSource([self class]);
-    controller = (CKLifecycleTestComponentController *)[[dataSource.state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] layout].component.controller;
+    controller = (CKLifecycleTestComponentController *)[[dataSource.state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] layout].component().controller;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       [dataSource hash];
     });

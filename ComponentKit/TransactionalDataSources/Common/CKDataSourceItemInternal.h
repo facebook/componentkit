@@ -13,7 +13,7 @@
 /** Internal interface since this class is usually only created internally. */
 @interface CKDataSourceItem ()
 
-- (instancetype)initWithLayout:(const CKComponentLayout &)layout
+- (instancetype)initWithLayout:(const CKComponentRootLayout &)layout
                          model:(id)model
                      scopeRoot:(CKComponentScopeRoot *)scopeRoot
                boundsAnimation:(CKComponentBoundsAnimation)boundsAnimation;

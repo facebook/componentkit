@@ -172,7 +172,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
 
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  return [_currentState objectAtIndexPath:indexPath].layout.size;
+  return [_currentState objectAtIndexPath:indexPath].layout.size();
 }
 
 #pragma mark - Reload
@@ -233,7 +233,7 @@ static void attachToCell(CKCollectionViewDataSourceCell *cell,
                          CKComponentDataSourceAttachController *attachController,
                          NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *cellToItemMap)
 {
-  [attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier withBoundsAnimation:item.boundsAnimation toView:cell.rootView analyticsListener:item.scopeRoot.analyticsListener];
+  [attachController attachComponentLayout:item.layout.layout() withScopeIdentifier:item.scopeRoot.globalIdentifier withBoundsAnimation:item.boundsAnimation toView:cell.rootView analyticsListener:item.scopeRoot.analyticsListener];
   [cellToItemMap setObject:item forKey:cell];
 }
 

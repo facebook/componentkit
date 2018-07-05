@@ -15,12 +15,12 @@
 
 @implementation CKDataSourceItem
 {
-  CKComponentLayout _layout;
+  CKComponentRootLayout _layout;
   id _model;
   CKComponentScopeRoot *_scopeRoot;
 }
 
-- (instancetype)initWithLayout:(const CKComponentLayout &)layout
+- (instancetype)initWithLayout:(const CKComponentRootLayout &)layout
                          model:(id)model
                      scopeRoot:(CKComponentScopeRoot *)scopeRoot
                boundsAnimation:(CKComponentBoundsAnimation)boundsAnimation
@@ -34,7 +34,7 @@
   return self;
 }
 
-- (const CKComponentLayout &)layout
+- (const CKComponentRootLayout &)layout
 {
   return _layout;
 }

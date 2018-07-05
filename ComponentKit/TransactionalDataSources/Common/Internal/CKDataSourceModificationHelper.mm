@@ -30,9 +30,9 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                                              return [componentProvider componentForModel:model context:context];
                                                            },
                                                            configuration.forceParent);
-    const CKComponentLayout layout = CKComputeRootComponentLayout(result.component,
-                                                                  sizeRange,
-                                                                  result.scopeRoot.analyticsListener).layout();
+    const auto layout = CKComputeRootComponentLayout(result.component,
+                                                     sizeRange,
+                                                     result.scopeRoot.analyticsListener);
     return [[CKDataSourceItem alloc] initWithLayout:layout
                                               model:model
                                           scopeRoot:result.scopeRoot
@@ -44,7 +44,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                                                        ^CKComponent *{
                                                                          return [componentProvider componentForModel:model context:context];
                                                                        });
-    return [[CKDataSourceItem alloc] initWithLayout:result.computedLayout.layout()
+    return [[CKDataSourceItem alloc] initWithLayout:result.computedLayout
                                               model:model
                                           scopeRoot:result.buildComponentResult.scopeRoot
                                     boundsAnimation:result.buildComponentResult.boundsAnimation];
