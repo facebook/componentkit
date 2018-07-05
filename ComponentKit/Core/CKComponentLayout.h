@@ -70,6 +70,8 @@ struct CKComponentRootLayout {
   : _layout(std::move(layout)) {}
 
   const auto &layout() const { return _layout; }
+  auto component() const { return _layout.component; }
+  auto size() const { return _layout.size; }
 
 private:
   CKComponentLayout _layout;
