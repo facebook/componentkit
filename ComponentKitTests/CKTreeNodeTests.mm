@@ -129,6 +129,31 @@
   XCTAssertTrue(areTreesEqual(root, root2));
 }
 
+- (void)test_childForComponentKey_onCKRenderTreeNodeWithChildren_withDifferentChildOverGenerations
+{
+  // Simulate first component tree creation
+  CKRenderTreeNodeWithChildren *root1 = [[CKRenderTreeNodeWithChildren alloc] init];
+  auto const component1 = [CKComponent newWithView:{} size:{}];
+  CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
+                                                           owner:root1
+                                                   previousOwner:nil
+                                                       scopeRoot:nil
+                                                    stateUpdates:{}];
+
+  // Simulate a component tree creation with a DIFFRENT child
+  CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
+  auto const component2 = [CKRenderComponent newWithView:{} size:{}];
+  CKTreeNode *childNode2 = [[CKRenderTreeNode alloc] initWithComponent:component2
+                                                                 owner:root2
+                                                         previousOwner:root1
+                                                             scopeRoot:nil
+                                                          stateUpdates:{}];
+
+  XCTAssertTrue(verifyChildToParentConnection(root1, childNode1, component1));
+  XCTAssertTrue(verifyChildToParentConnection(root2, childNode2, component2));
+  XCTAssertNotEqual(childNode1.nodeIdentifier, childNode2.nodeIdentifier);
+}
+
 #pragma mark - CKRenderTreeNodeWithChild
 
 - (void)test_childForComponentKey_onCKRenderTreeNodeWithChild {
@@ -288,6 +313,58 @@
   // Make sure CKRenderWithChildrenComponent supports nil initial.
   auto const c2 = [CKTreeNodeTest_RenderComponent_WithNilState new];
   [self _test_initialState_withComponent:c2 initialState:nil andNodeClass:[CKRenderTreeNode class]];
+}
+
+#pragma mark - CKTreeNodeWithChild
+
+- (void)test_childForComponentKey_onCKTreeNodeWithChild_withSameChildOverGenerations
+{
+  // Simulate first component tree creation
+  CKTreeNodeWithChild *root1 = [[CKTreeNodeWithChild alloc] init];
+  auto const component1 = [CKComponent newWithView:{} size:{}];
+  CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
+                                                           owner:root1
+                                                   previousOwner:nil
+                                                       scopeRoot:nil
+                                                    stateUpdates:{}];
+
+  // Simulate a component tree creation due to a state update
+  CKTreeNodeWithChild *root2 = [[CKTreeNodeWithChild alloc] init];
+  auto const component2 = [CKComponent newWithView:{} size:{}];
+  CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
+                                                           owner:root2
+                                                   previousOwner:root1
+                                                       scopeRoot:nil
+                                                    stateUpdates:{}];
+
+  XCTAssertTrue(verifyChildToParentConnection(root1, childNode1, component1));
+  XCTAssertTrue(verifyChildToParentConnection(root2, childNode2, component2));
+  XCTAssertEqual(childNode1.nodeIdentifier, childNode2.nodeIdentifier);
+}
+
+- (void)test_childForComponentKey_onCKTreeNodeWithChild_withDifferentChildOverGenerations
+{
+  // Simulate first component tree creation
+  CKTreeNodeWithChild *root1 = [[CKTreeNodeWithChild alloc] init];
+  auto const component1 = [CKComponent newWithView:{} size:{}];
+  CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
+                                                           owner:root1
+                                                   previousOwner:nil
+                                                       scopeRoot:nil
+                                                    stateUpdates:{}];
+
+  // Simulate a component tree creation with a DIFFRENT child
+  CKTreeNodeWithChild *root2 = [[CKTreeNodeWithChild alloc] init];
+  auto const component2 = [CKRenderComponent newWithView:{} size:{}];
+  CKTreeNode *childNode2 = [[CKRenderTreeNode alloc] initWithComponent:component2
+                                                                 owner:root2
+                                                         previousOwner:root1
+                                                             scopeRoot:nil
+                                                          stateUpdates:{}];
+
+  XCTAssertTrue(verifyChildToParentConnection(root1, childNode1, component1));
+  XCTAssertTrue(verifyChildToParentConnection(root2, childNode2, component2));
+  XCTAssertNotEqual(childNode1.nodeIdentifier, childNode2.nodeIdentifier);
 }
 
 #pragma mark - Helpers

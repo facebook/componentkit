@@ -27,11 +27,10 @@
 
 - (CKTreeNode *)childForComponentKey:(const CKComponentKey &)key
 {
-  CKAssert(std::get<0>(key) == [_child.component class], @"CKComponentKey(%@, %ld) contains incorrect class(%@) type.",
-           std::get<0>(key),
-           (unsigned long)std::get<1>(key),
-           [_child.component class]);
-  return _child;
+  if (std::get<0>(key) == [_child.component class]) {
+    return _child;
+  }
+  return nil;
 }
 
 - (CKComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
