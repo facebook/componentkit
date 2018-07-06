@@ -8,6 +8,7 @@
  *
  */
 
+#import <unordered_map>
 #import <utility>
 #import <vector>
 
@@ -15,6 +16,7 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKSizeRange.h>
+#import <ComponentKit/CKEqualityHashHelpers.h>
 
 @class CKComponent;
 @class CKComponentScopeRoot;
@@ -48,13 +50,6 @@ struct CKComponentLayout {
   CKComponentLayout() noexcept
   : component(nil), size({0, 0}), children(emptyChildren()), extra(nil) {};
 
-  /**
-   This method returns a CKComponentLayout from the cache.
-   It only works in case that the layout was built with 'buildComponentLayoutCache' equals to YES.
-   @param component The component to look for the layout with.
-   */
-  CKComponentLayout cachedLayoutForScopedComponent(CKComponent *scopedComponent) const;
-
 private:
   static std::shared_ptr<const std::vector<CKComponentLayoutChild>> emptyChildren() noexcept;
 };
@@ -65,9 +60,21 @@ struct CKComponentLayoutChild {
 };
 
 struct CKComponentRootLayout {
+  using ComponentLayoutCache = std::unordered_map<CKComponent *, CKComponentLayout, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
+
   CKComponentRootLayout() {}
-  explicit CKComponentRootLayout(CKComponentLayout layout)
-  : _layout(std::move(layout)) {}
+  explicit CKComponentRootLayout(CKComponentLayout layout, ComponentLayoutCache layoutCache)
+  : _layout(std::move(layout)), _layoutCache(std::move(layoutCache)) {}
+
+  /**
+   This method returns a CKComponentLayout from the cache.
+   @param component The component to look for the layout with.
+   */
+  auto cachedLayoutForScopedComponent(CKComponent *const scopedComponent) const
+  {
+    const auto it = _layoutCache.find(scopedComponent);
+    return it != _layoutCache.end() ? it->second : CKComponentLayout {};
+  }
 
   const auto &layout() const { return _layout; }
   auto component() const { return _layout.component; }
@@ -75,6 +82,7 @@ struct CKComponentRootLayout {
 
 private:
   CKComponentLayout _layout;
+  ComponentLayoutCache _layoutCache;
 };
 
 struct CKMountComponentLayoutResult {

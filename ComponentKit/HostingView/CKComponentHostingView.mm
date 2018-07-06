@@ -461,7 +461,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
 - (void)_sendDidPrepareLayoutIfNeeded
 {
-  CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedLayout.layout());
+  CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedLayout);
 }
 
 

@@ -28,7 +28,10 @@ static CKDataSourceItem *item(CKDataSourceConfiguration *configuration, id<CKCom
   const CKBuildComponentResult result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(listener, nil), {}, ^CKComponent *{
     return [configuration.componentProvider componentForModel:model context:configuration.context];
   });
-  const auto layout = CKComponentRootLayout {[result.component layoutThatFits:configuration.sizeRange parentSize:configuration.sizeRange.max]};
+  const auto layout = CKComponentRootLayout {
+    [result.component layoutThatFits:configuration.sizeRange parentSize:configuration.sizeRange.max],
+    CKComponentRootLayout::ComponentLayoutCache {}
+  };
   return [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation];
 }
 

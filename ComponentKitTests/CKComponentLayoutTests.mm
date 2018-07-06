@@ -53,14 +53,11 @@
   __block CKFlexboxComponent *c;
   CKBuildComponentResult results = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     children = createChildrenArray(NO);
-    return flexboxComponentWithScopedChildren(children);
+    c = flexboxComponentWithScopedChildren(children);
     return c;
   });
 
-  const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil).layout();
-
-  // Make sure we do build the components cache in case that `buildComponentLayoutCache` is set to `YES`.
-  XCTAssertNotNil(layout.extra);
+  const auto layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil);
 
   // Make sure the cache contains all the components that have component controller.
   for (id child in children) {
@@ -79,10 +76,7 @@
     return c;
   });
 
-  const CKComponentLayout layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil).layout();
-
-  // Make sure we do build the components cache in case that `buildComponentLayoutCache` is set to `YES`.
-  XCTAssertNotNil(layout.extra);
+  const auto layout = CKComputeRootComponentLayout(c, {{200, 0}, {200, INFINITY}}, nil);
 
   // Make sure the cache contains all the components that have component controller.
   for (id child in children) {

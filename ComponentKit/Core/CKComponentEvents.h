@@ -36,4 +36,4 @@ CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKCom
 /**
  Iterates over the components that their controller overrides 'didPrepareLayout:ForComponent:' and send the callback.
  */
-void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot, const CKComponentLayout layout);
+void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot, const CKComponentRootLayout &layout);
