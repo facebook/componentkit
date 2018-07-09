@@ -59,6 +59,10 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     button.titleLabel.numberOfLines = [value integerValue];
   }};
 
+  static const CKComponentViewAttribute lineBreakModeAttribute = {"CKButtonComponent.lineBreakMode", ^(UIButton *button, id value) {
+    button.titleLabel.lineBreakMode = (NSLineBreakMode)[value integerValue];
+  }};
+
   static const CKComponentViewAttribute configurationAttribute = {
     "CKButtonComponent.config",
     ^(UIButton *view, CKButtonComponentConfiguration *config) {
@@ -123,6 +127,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     {configurationAttribute, configurationFromOptions(options)},
     {titleFontAttribute, options.titleFont},
     {numberOfLinesAttribute, options.numberOfLines},
+    {lineBreakModeAttribute, options.lineBreakMode},
     {@selector(setSelected:), options.selected},
     {@selector(setEnabled:), options.enabled},
     {@selector(setContentEdgeInsets:), contentEdgeInsets},
