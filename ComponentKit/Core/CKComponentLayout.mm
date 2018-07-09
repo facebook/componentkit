@@ -29,21 +29,6 @@ static void _deleteComponentLayoutChild(void *target) noexcept
   delete (std::vector<CKComponentLayoutChild> *)target;
 }
 
-static void CKBuildScopedComponentLayoutCache(const CKComponentLayout &layout,
-                                              CKComponentRootLayout::ComponentLayoutCache &cache)
-{
-  // We need to cache only components that has a component controller.
-  if (layout.component.controller) {
-    cache[layout.component] = layout;
-  }
-
-  if (layout.children != nullptr) {
-    for (auto const child : *layout.children) {
-      CKBuildScopedComponentLayoutCache(child.layout, cache);
-    }
-  }
-}
-
 static auto buildComponentsByPredicateMap(const CKComponentLayout &layout, const std::vector<CKComponentScopePredicate> &predicates)
 {
   auto componentsByPredicate = CKComponentRootLayout::ComponentsByPredicateMap {};
@@ -151,7 +136,11 @@ CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectComponentScopeCollisions(layout);
   auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};
-  CKBuildScopedComponentLayoutCache(layout, layoutCache);
+  layout.enumerateLayouts([&](const auto &l){
+    if (l.component.controller) {
+      layoutCache[l.component] = l;
+    }
+  });
   const auto componentsByPredicate = buildComponentsByPredicateMap(layout, predicates);
   [analyticsListener didLayoutComponentTreeWithRootComponent:rootComponent];
   return CKComponentRootLayout {
