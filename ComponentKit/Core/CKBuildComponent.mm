@@ -22,7 +22,7 @@
 
 static CKBuildComponentResult _CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                                 const CKComponentStateUpdateMap &stateUpdates,
-                                                BOOL forceParent,
+                                                const CKBuildComponentConfig &config,
                                                 CKThreadLocalComponentScope& threadScope,
                                                 CKComponent *(^componentFactory)(void))
 {
@@ -38,7 +38,7 @@ static CKBuildComponentResult _CKBuildComponent(CKComponentScopeRoot *previousRo
                     previousOwner:previousRoot.rootNode
                         scopeRoot:threadScope.newScopeRoot
                      stateUpdates:stateUpdates
-                      forceParent:forceParent];
+                      forceParent:config.forceParent];
   }
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;
@@ -55,19 +55,19 @@ static CKBuildComponentResult _CKBuildComponent(CKComponentScopeRoot *previousRo
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        BOOL forceParent)
+                                        CKBuildComponentConfig config)
 {
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
-  return _CKBuildComponent(previousRoot, stateUpdates, forceParent, threadScope, componentFactory);
+  return _CKBuildComponent(previousRoot, stateUpdates, config, threadScope, componentFactory);
 }
 
 CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *previousRoot,
                                                           const CKComponentStateUpdateMap &stateUpdates,
                                                           const CKSizeRange &sizeRange,
                                                           CKComponent *(^componentFactory)(void),
-                                                          BOOL forceParent) {
+                                                          CKBuildComponentConfig config) {
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
-  const CKBuildComponentResult buildComponentResult = _CKBuildComponent(previousRoot, stateUpdates, forceParent, threadScope, componentFactory);
+  const CKBuildComponentResult buildComponentResult = _CKBuildComponent(previousRoot, stateUpdates, config, threadScope, componentFactory);
   const auto computedLayout = CKComputeRootComponentLayout(buildComponentResult.component, sizeRange, buildComponentResult.scopeRoot.analyticsListener);
   return {buildComponentResult, computedLayout};
 }

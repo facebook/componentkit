@@ -18,6 +18,14 @@
 @class CKComponent;
 
 /**
+ A configuration struct for the build component method.
+ **/
+struct CKBuildComponentConfig {
+  // Defines whether the component tree (CKTreeNode) should ALWAYS use parent based nodes.
+  BOOL forceParent = NO;
+};
+
+/**
  The results of a build operation.
 
  A bounds animations are returned in this method if a component in the hierarchy requested an animation from its prior
@@ -36,12 +44,12 @@ struct CKBuildComponentResult {
  @param previousRoot The previous scope root that was associated with the cell. May be nil if no prior root is available
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
- @param forceParent Defines whether the component tree (CKTreeNode) should ALWAYS use parent based nodes.
+ @param config Provides extra build configuration.
  */
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        BOOL forceParent = NO);
+                                        CKBuildComponentConfig config = {});
 
 /**
  The results of a build and layout operation.
@@ -67,7 +75,7 @@ struct CKBuildAndLayoutComponentResult {
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param sizeRange The size range to compute the component layout within.
  @param componentFactory A block that constructs your component. Must not be nil.
- @param forceParent Defines whether the component tree (CKTreeNode) should ALWAYS use parent based nodes.
+ @param config Provides extra build configuration.
 
  THIS IS EXPERIMENTAL, LINKED WITH THE DEFERRED CHILD COMPONENT CREATION (-render:() RFC) - DO NOT USE DIRECTLY
  */
@@ -77,4 +85,4 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
                                                           const CKComponentStateUpdateMap &stateUpdates,
                                                           const CKSizeRange &sizeRange,
                                                           CKComponent *(^componentFactory)(void),
-                                                          BOOL forceParent = NO);
+                                                          CKBuildComponentConfig config = {});
