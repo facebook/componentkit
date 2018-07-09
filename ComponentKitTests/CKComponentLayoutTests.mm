@@ -15,6 +15,7 @@
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
@@ -106,4 +107,48 @@ static NSArray<CKComponent *>* createChildrenArray(BOOL scoped) {
   return components;
 }
 
+@end
+
+@interface ComponentMatchingPredicate1: CKComponent @end
+@implementation ComponentMatchingPredicate1 @end
+
+@interface ComponentMatchingPredicate2: CKComponent @end
+@implementation ComponentMatchingPredicate2 @end
+
+@interface CKComponentRootLayoutTests: XCTestCase
+@end
+
+const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
+
+@implementation CKComponentRootLayoutTests
+- (void)test_WhenInitialisedWithOnePredicate_ReturnsOnlyMatchingComponents
+{
+  const auto matchingComponent = [ComponentMatchingPredicate1 new];
+  const auto p = CKComponentScopePredicate {[](const auto c){
+    return [c isKindOfClass:[ComponentMatchingPredicate1 class]];
+  }};
+  const auto l = CKComputeRootComponentLayout([CKCompositeComponent newWithComponent:matchingComponent], sizeRange, nil, {p});
+
+  const auto expected = std::vector<CKComponent *> {matchingComponent};
+  XCTAssert(l.componentsMatchingPredicate(p) == expected);
+}
+
+- (void)test_WhenInitialisedWithMultiplePredicates_ReturnsOnlyMatchingComponents
+{
+  const auto matchingComponent = [ComponentMatchingPredicate1 new];
+  const auto p = CKComponentScopePredicate {[](const auto c){
+    return [c isKindOfClass:[ComponentMatchingPredicate1 class]];
+  }};
+  const auto root = flexboxComponentWithScopedChildren(@[
+                                                         matchingComponent,
+                                                         [ComponentMatchingPredicate2 new],
+                                                         ]);
+  const auto l = CKComputeRootComponentLayout(root, sizeRange, nil, {
+    p,
+    CKComponentScopePredicate {[](const auto c){ return [c isKindOfClass:[ComponentMatchingPredicate2 class]]; }},
+  });
+
+  const auto expected = std::vector<CKComponent *> {matchingComponent};
+  XCTAssert(l.componentsMatchingPredicate(p) == expected);
+}
 @end

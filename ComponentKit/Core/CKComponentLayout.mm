@@ -44,6 +44,21 @@ static void CKBuildScopedComponentLayoutCache(const CKComponentLayout &layout,
   }
 }
 
+static auto buildComponentsByPredicateMap(const CKComponentLayout &layout, const std::vector<CKComponentScopePredicate> &predicates)
+{
+  auto componentsByPredicate = CKComponentRootLayout::ComponentsByPredicateMap {};
+  if (predicates.empty()) { return componentsByPredicate; }
+
+  layout.enumerateLayouts([&](const auto &l){
+    for (const auto &p : predicates) {
+      if (p(l.component)) {
+        componentsByPredicate[p].push_back(l.component);
+      }
+    }
+  });
+  return componentsByPredicate;
+}
+
 void CKOffMainThreadDeleter::operator()(std::vector<CKComponentLayoutChild> *target) noexcept
 {
   // When deallocating a large layout tree this is called first on the root node
@@ -129,15 +144,21 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 
 CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    const CKSizeRange &sizeRange,
-                                                   id<CKAnalyticsListener> analyticsListener)
+                                                   id<CKAnalyticsListener> analyticsListener,
+                                                   std::vector<CKComponentScopePredicate> predicates)
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent];
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectComponentScopeCollisions(layout);
   auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};
   CKBuildScopedComponentLayoutCache(layout, layoutCache);
+  const auto componentsByPredicate = buildComponentsByPredicateMap(layout, predicates);
   [analyticsListener didLayoutComponentTreeWithRootComponent:rootComponent];
-  return CKComponentRootLayout {layout, layoutCache};
+  return CKComponentRootLayout {
+    layout,
+    layoutCache,
+    componentsByPredicate,
+  };
 }
 
 CKComponentLayout CKComputeComponentLayout(CKComponent *component,
@@ -151,5 +172,15 @@ void CKUnmountComponents(NSSet *componentsToUnmount)
 {
   for (CKComponent *component in componentsToUnmount) {
     [component unmount];
+  }
+}
+
+void CKComponentLayout::enumerateLayouts(const std::function<void(const CKComponentLayout &)> &f) const
+{
+  f(*this);
+
+  if (children == nil) { return; }
+  for (const auto &child : *children) {
+    child.layout.enumerateLayouts(f);
   }
 }

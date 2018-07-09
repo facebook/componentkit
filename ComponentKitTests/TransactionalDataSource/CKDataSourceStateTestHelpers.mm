@@ -30,7 +30,8 @@ static CKDataSourceItem *item(CKDataSourceConfiguration *configuration, id<CKCom
   });
   const auto layout = CKComponentRootLayout {
     [result.component layoutThatFits:configuration.sizeRange parentSize:configuration.sizeRange.max],
-    CKComponentRootLayout::ComponentLayoutCache {}
+    CKComponentRootLayout::ComponentLayoutCache {},
+    CKComponentRootLayout::ComponentsByPredicateMap {},
   };
   return [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation];
 }

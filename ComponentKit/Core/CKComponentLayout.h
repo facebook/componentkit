@@ -15,8 +15,9 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKSizeRange.h>
+#import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKEqualityHashHelpers.h>
+#import <ComponentKit/CKSizeRange.h>
 
 @class CKComponent;
 @class CKComponentScopeRoot;
@@ -50,6 +51,8 @@ struct CKComponentLayout {
   CKComponentLayout() noexcept
   : component(nil), size({0, 0}), children(emptyChildren()), extra(nil) {};
 
+  void enumerateLayouts(const std::function<void(const CKComponentLayout &)> &f) const;
+
 private:
   static std::shared_ptr<const std::vector<CKComponentLayoutChild>> emptyChildren() noexcept;
 };
@@ -61,10 +64,11 @@ struct CKComponentLayoutChild {
 
 struct CKComponentRootLayout {
   using ComponentLayoutCache = std::unordered_map<CKComponent *, CKComponentLayout, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
+  using ComponentsByPredicateMap = std::unordered_map<CKComponentScopePredicate, std::vector<CKComponent *>>;
 
   CKComponentRootLayout() {}
-  explicit CKComponentRootLayout(CKComponentLayout layout, ComponentLayoutCache layoutCache)
-  : _layout(std::move(layout)), _layoutCache(std::move(layoutCache)) {}
+  explicit CKComponentRootLayout(CKComponentLayout layout, ComponentLayoutCache layoutCache, ComponentsByPredicateMap componentsByPredicate)
+  : _layout(std::move(layout)), _layoutCache(std::move(layoutCache)), _componentsByPredicate(std::move(componentsByPredicate)) {}
 
   /**
    This method returns a CKComponentLayout from the cache.
@@ -76,6 +80,12 @@ struct CKComponentRootLayout {
     return it != _layoutCache.end() ? it->second : CKComponentLayout {};
   }
 
+  auto componentsMatchingPredicate(const CKComponentScopePredicate p) const
+  {
+    const auto it = _componentsByPredicate.find(p);
+    return it != _componentsByPredicate.end() ? it->second : std::vector<CKComponent *> {};
+  }
+
   const auto &layout() const { return _layout; }
   auto component() const { return _layout.component; }
   auto size() const { return _layout.size; }
@@ -83,6 +93,7 @@ struct CKComponentRootLayout {
 private:
   CKComponentLayout _layout;
   ComponentLayoutCache _layoutCache;
+  ComponentsByPredicateMap _componentsByPredicate;
 };
 
 struct CKMountComponentLayoutResult {
@@ -114,7 +125,8 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
  */
 CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    const CKSizeRange &sizeRange,
-                                                   id<CKAnalyticsListener> analyticsListener = nil);
+                                                   id<CKAnalyticsListener> analyticsListener = nil,
+                                                   std::vector<CKComponentScopePredicate> predicates = {});
 
 /**
  Safely computes the layout of the given component by guarding against nil components.
