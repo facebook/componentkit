@@ -156,12 +156,13 @@ void CKDetectComponentScopeCollisions(const CKComponentLayout &layout) {
   CKComponent *const lowestCommonAncestor = collision.lowestCommonAncestor ?: layout.component;
   if (collision.hasCollision()) {
     CKMarkScopeCollision(collision, layout);
-    CKCFailAssert(@"Scope collision. Attempting to create duplicate scope for %@ can lead to incorrect and unexpected behavior\n"
-                  @"Please remove the offending component or provide a unique component scope identifier\nLowest common ancestor: <%@: %p>\nComponent backtrace:\n%@",
-                  [collision.component class],
-                  [lowestCommonAncestor class],
-                  lowestCommonAncestor,
-                  collision.backtraceDescription);
+    CKCFailAssertWithCategory(NSStringFromClass([collision.component class]),
+                              @"Scope collision. Attempting to create duplicate scope for %@ can lead to incorrect and unexpected behavior\n"
+                              @"Please remove the offending component or provide a unique component scope identifier\nLowest common ancestor: <%@: %p>\nComponent backtrace:\n%@",
+                              [collision.component class],
+                              [lowestCommonAncestor class],
+                              lowestCommonAncestor,
+                              collision.backtraceDescription);
   }
 #endif
 }
