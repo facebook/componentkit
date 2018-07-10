@@ -40,6 +40,9 @@
 #define CKFailAssert(description, ...) CKAssert(NO, (description), ##__VA_ARGS__)
 #define CKCFailAssert(description, ...) CKCAssert(NO, (description), ##__VA_ARGS__)
 
+#define CKFailAssertWithCategory(category, description, ...) CKAssertWithCategory(NO, category, (description), ##__VA_ARGS__)
+#define CKCFailAssertWithCategory(category, description, ...) CKCAssertWithCategory(NO, category, (description), ##__VA_ARGS__)
+
 #define CKFatal(description, ...) CKAssert(NO, (description), ##__VA_ARGS__)
 #define CKCFatal(description, ...) CKCAssert(NO, (description), ##__VA_ARGS__)
 
