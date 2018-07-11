@@ -13,6 +13,7 @@
 #import <unordered_map>
 
 #import <ComponentKit/CKComponentAnimation.h>
+#import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentTreeDiff.h>
 #import <ComponentKit/CKEqualityHashHelpers.h>
 
@@ -36,8 +37,8 @@ private:
 };
 
 namespace CK {
-  auto animatedComponentsBetweenScopeRoots(CKComponentScopeRoot *const newRoot,
-                                           CKComponentScopeRoot *const previousRoot) -> ComponentTreeDiff;
+  auto animatedComponentsBetweenLayouts(const CKComponentRootLayout &newLayout,
+                                        const CKComponentRootLayout &previousLayout) -> ComponentTreeDiff;
 
   auto animationsForComponents(const ComponentTreeDiff& animatedComponents) -> CKComponentAnimations;
 }

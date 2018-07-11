@@ -24,8 +24,7 @@
  to work. You should use this function to create scope roots unless you really know what you're doing.
  */
 CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener,
-                                                                id<CKAnalyticsListener> analyticsListener,
-                                                                BOOL includeAnimationPredicates = NO);
+                                                                id<CKAnalyticsListener> analyticsListener);
 
 /**
  Initializes a CKComponentScopeRoot with your provided predicates in addition to the normal, infrastructure-provided
@@ -38,5 +37,4 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
 CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> listener,
                                                          id<CKAnalyticsListener> analyticsListener,
                                                          const std::unordered_set<CKComponentPredicate> &componentPredicates,
-                                                         const std::unordered_set<CKComponentControllerPredicate> &componentControllerPredicates,
-                                                         BOOL includeAnimationPredicates = NO);
+                                                         const std::unordered_set<CKComponentControllerPredicate> &componentControllerPredicates);

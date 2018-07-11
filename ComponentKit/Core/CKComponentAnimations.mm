@@ -23,26 +23,27 @@ namespace CK {
   static auto isSameHandle(CKComponentScopeHandle *const h1, CKComponentScopeHandle *const &h2) { return h1.globalIdentifier == h2.globalIdentifier; };
   static auto acquiredComponent(CKComponentScopeHandle *const h) { return objCForceCast<CKComponent>(h.acquiredComponent); };
 
-  static auto animatedAppearedComponentsBetweenScopeRoots(CKComponentScopeRoot *const newRoot,
-                                                          CKComponentScopeRoot *const previousRoot)
+  static auto animatedAppearedComponentsBetweenLayouts(const CKComponentRootLayout &newLayout,
+                                                       const CKComponentRootLayout &previousLayout)
   {
-    const auto newHandlesWithInitialAnimations = map([newRoot componentsMatchingPredicate:&CKComponentHasAnimationsOnInitialMountPredicate], getScopeHandle);
-    const auto oldHandlesWithInitialAnimations = map([previousRoot componentsMatchingPredicate:&CKComponentHasAnimationsOnInitialMountPredicate], getScopeHandle);
-
+    const auto newHandlesWithInitialAnimations = map(newLayout.componentsMatchingPredicate(CKComponentHasAnimationsOnInitialMountPredicate), getScopeHandle);
+    const auto oldHandlesWithInitialAnimations = map(previousLayout.componentsMatchingPredicate(CKComponentHasAnimationsOnInitialMountPredicate), getScopeHandle);
     const auto handlesForAppearedComponentsWithInitialAnimations = Collection::difference(newHandlesWithInitialAnimations,
                                                                                           oldHandlesWithInitialAnimations,
                                                                                           isSameHandle);
     return map(handlesForAppearedComponentsWithInitialAnimations, acquiredComponent);
   }
 
-  static auto animatedUpdatedComponentsBetweenScopeRoots(CKComponentScopeRoot *const newRoot,
-                                                         CKComponentScopeRoot *const previousRoot)
+  static auto animatedUpdatedComponentsBetweenLayouts(const CKComponentRootLayout &newLayout,
+                                                      const CKComponentRootLayout &previousLayout)
   {
-    const auto newHandlesWithAnimationsFromPreviousComponent = map([newRoot componentsMatchingPredicate:&CKComponentHasAnimationsFromPreviousComponentPredicate], getScopeHandle);
-    const auto oldHandlesWithAnimationsFromPreviousComponent = map([previousRoot componentsMatchingPredicate:&CKComponentHasAnimationsFromPreviousComponentPredicate], getScopeHandle);
+    const auto newHandlesWithAnimationsFromPreviousComponent = map(newLayout.componentsMatchingPredicate(CKComponentHasAnimationsFromPreviousComponentPredicate), getScopeHandle);
+    const auto oldHandlesWithAnimationsFromPreviousComponent = map(previousLayout.componentsMatchingPredicate(CKComponentHasAnimationsFromPreviousComponentPredicate), getScopeHandle);
     const auto handlesForUpdatedComponents = Collection::intersection(newHandlesWithAnimationsFromPreviousComponent,
                                                                       oldHandlesWithAnimationsFromPreviousComponent,
-                                                                      isSameHandle);
+                                                                      [](const auto &h1, const auto &h2){
+                                                                        return isSameHandle(h1, h2) && h1.acquiredComponent != h2.acquiredComponent;
+                                                                      });
 
     return map(handlesForUpdatedComponents, [&](const auto &h){
       const auto prevHandle =
@@ -53,12 +54,12 @@ namespace CK {
     });
   }
 
-  auto animatedComponentsBetweenScopeRoots(CKComponentScopeRoot *const newRoot,
-                                           CKComponentScopeRoot *const previousRoot) -> ComponentTreeDiff
+  auto animatedComponentsBetweenLayouts(const CKComponentRootLayout &newLayout,
+                                        const CKComponentRootLayout &previousLayout) -> ComponentTreeDiff
   {
     return {
-      .appearedComponents = animatedAppearedComponentsBetweenScopeRoots(newRoot, previousRoot),
-      .updatedComponents = animatedUpdatedComponentsBetweenScopeRoots(newRoot, previousRoot),
+      .appearedComponents = animatedAppearedComponentsBetweenLayouts(newLayout, previousLayout),
+      .updatedComponents = animatedUpdatedComponentsBetweenLayouts(newLayout, previousLayout),
     };
   }
 
