@@ -124,7 +124,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 - (void)test_WhenInitialisedWithOnePredicate_ReturnsOnlyMatchingComponents
 {
   const auto matchingComponent = [ComponentMatchingPredicate1 new];
-  const auto p = CKComponentScopePredicate {[](const auto c){
+  const auto p = CKComponentPredicate {[](const auto c){
     return [c isKindOfClass:[ComponentMatchingPredicate1 class]];
   }};
   const auto l = CKComputeRootComponentLayout([CKCompositeComponent newWithComponent:matchingComponent], sizeRange, nil, {p});
@@ -136,7 +136,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 - (void)test_WhenInitialisedWithMultiplePredicates_ReturnsOnlyMatchingComponents
 {
   const auto matchingComponent = [ComponentMatchingPredicate1 new];
-  const auto p = CKComponentScopePredicate {[](const auto c){
+  const auto p = CKComponentPredicate {[](const auto c){
     return [c isKindOfClass:[ComponentMatchingPredicate1 class]];
   }};
   const auto root = flexboxComponentWithScopedChildren(@[
@@ -145,7 +145,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
                                                          ]);
   const auto l = CKComputeRootComponentLayout(root, sizeRange, nil, {
     p,
-    CKComponentScopePredicate {[](const auto c){ return [c isKindOfClass:[ComponentMatchingPredicate2 class]]; }},
+    CKComponentPredicate {[](const auto c){ return [c isKindOfClass:[ComponentMatchingPredicate2 class]]; }},
   });
 
   const auto expected = std::vector<CKComponent *> {matchingComponent};

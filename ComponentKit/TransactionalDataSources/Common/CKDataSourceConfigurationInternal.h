@@ -42,8 +42,8 @@ struct CKDataSourceQOSOptions {
     parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
              parallelUpdateBuildAndLayout:(BOOL)parallelUpdateBuildAndLayout
     parallelUpdateBuildAndLayoutThreshold:(NSUInteger)parallelUpdateBuildAndLayoutThreshold
-                      componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
-            componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+                      componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+            componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                                qosOptions:(CKDataSourceQOSOptions)qosOptions;
 
@@ -57,7 +57,7 @@ struct CKDataSourceQOSOptions {
 @property (nonatomic, assign, readonly) NSUInteger parallelUpdateBuildAndLayoutThreshold;
 @property (nonatomic, assign, readonly) CKDataSourceQOSOptions qosOptions;
 
-- (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates;
-- (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
+- (const std::unordered_set<CKComponentPredicate> &)componentPredicates;
+- (const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates;
 
 @end

@@ -64,7 +64,7 @@ struct CKComponentLayoutChild {
 
 struct CKComponentRootLayout {
   using ComponentLayoutCache = std::unordered_map<CKComponent *, CKComponentLayout, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
-  using ComponentsByPredicateMap = std::unordered_map<CKComponentScopePredicate, std::vector<CKComponent *>>;
+  using ComponentsByPredicateMap = std::unordered_map<CKComponentPredicate, std::vector<CKComponent *>>;
 
   CKComponentRootLayout() {}
   explicit CKComponentRootLayout(CKComponentLayout layout, ComponentLayoutCache layoutCache, ComponentsByPredicateMap componentsByPredicate)
@@ -80,7 +80,7 @@ struct CKComponentRootLayout {
     return it != _layoutCache.end() ? it->second : CKComponentLayout {};
   }
 
-  auto componentsMatchingPredicate(const CKComponentScopePredicate p) const
+  auto componentsMatchingPredicate(const CKComponentPredicate p) const
   {
     const auto it = _componentsByPredicate.find(p);
     return it != _componentsByPredicate.end() ? it->second : std::vector<CKComponent *> {};
@@ -126,7 +126,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener = nil,
-                                                   std::vector<CKComponentScopePredicate> predicates = {});
+                                                   std::vector<CKComponentPredicate> predicates = {});
 
 /**
  Safely computes the layout of the given component by guarding against nil components.

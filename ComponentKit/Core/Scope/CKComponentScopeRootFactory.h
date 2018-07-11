@@ -37,6 +37,6 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
  */
 CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> listener,
                                                          id<CKAnalyticsListener> analyticsListener,
-                                                         const std::unordered_set<CKComponentScopePredicate> &componentPredicates,
-                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates,
+                                                         const std::unordered_set<CKComponentPredicate> &componentPredicates,
+                                                         const std::unordered_set<CKComponentControllerPredicate> &componentControllerPredicates,
                                                          BOOL includeAnimationPredicates = NO);

@@ -17,7 +17,7 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
                                                                 id<CKAnalyticsListener> analyticsListener,
                                                                 BOOL includeAnimationPredicates)
 {
-  auto componentPredicates = std::unordered_set<CKComponentScopePredicate> {
+  auto componentPredicates = std::unordered_set<CKComponentPredicate> {
     &CKComponentBoundsAnimationPredicate,
     &CKComponentDidPrepareLayoutForComponentToControllerPredicate,
   };
@@ -38,16 +38,16 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
 
 CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> stateListener,
                                                          id<CKAnalyticsListener> analyticsListener,
-                                                         const std::unordered_set<CKComponentScopePredicate> &componentPredicates,
-                                                         const std::unordered_set<CKComponentControllerScopePredicate> &componentControllerPredicates,
+                                                         const std::unordered_set<CKComponentPredicate> &componentPredicates,
+                                                         const std::unordered_set<CKComponentControllerPredicate> &componentControllerPredicates,
                                                          BOOL includeAnimationPredicates)
 {
-  std::unordered_set<CKComponentScopePredicate> componentPredicatesUnion = {
+  std::unordered_set<CKComponentPredicate> componentPredicatesUnion = {
     &CKComponentBoundsAnimationPredicate,
     &CKComponentDidPrepareLayoutForComponentToControllerPredicate
   };
 
-  std::unordered_set<CKComponentControllerScopePredicate> componentControllerPredicatesUnion = {
+  std::unordered_set<CKComponentControllerPredicate> componentControllerPredicatesUnion = {
     &CKComponentControllerAppearanceEventPredicate,
     &CKComponentControllerDisappearanceEventPredicate,
     &CKComponentControllerInvalidateEventPredicate

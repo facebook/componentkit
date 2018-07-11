@@ -17,8 +17,8 @@
 @implementation CKDataSourceConfiguration
 {
   CKSizeRange _sizeRange;
-  std::unordered_set<CKComponentScopePredicate> _componentPredicates;
-  std::unordered_set<CKComponentControllerScopePredicate> _componentControllerPredicates;
+  std::unordered_set<CKComponentPredicate> _componentPredicates;
+  std::unordered_set<CKComponentControllerPredicate> _componentControllerPredicates;
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -49,8 +49,8 @@
     parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
              parallelUpdateBuildAndLayout:(BOOL)parallelUpdateBuildAndLayout
     parallelUpdateBuildAndLayoutThreshold:(NSUInteger)parallelUpdateBuildAndLayoutThreshold
-                      componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
-            componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+                      componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+            componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                                qosOptions:(CKDataSourceQOSOptions)qosOptions
 {
@@ -72,12 +72,12 @@
   return self;
 }
 
-- (const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
+- (const std::unordered_set<CKComponentPredicate> &)componentPredicates
 {
   return _componentPredicates;
 }
 
-- (const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+- (const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
 {
   return _componentControllerPredicates;
 }

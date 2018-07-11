@@ -19,13 +19,13 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKRenderTreeNodeWithChildren.h"
 
-typedef std::unordered_map<CKComponentScopePredicate, NSHashTable<id<CKComponentProtocol>> *> _CKRegisteredComponentsMap;
-typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id<CKComponentControllerProtocol>> *> _CKRegisteredComponentControllerMap;
+typedef std::unordered_map<CKComponentPredicate, NSHashTable<id<CKComponentProtocol>> *> _CKRegisteredComponentsMap;
+typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComponentControllerProtocol>> *> _CKRegisteredComponentControllerMap;
 
 @implementation CKComponentScopeRoot
 {
-  std::unordered_set<CKComponentScopePredicate> _componentPredicates;
-  std::unordered_set<CKComponentControllerScopePredicate> _componentControllerPredicates;
+  std::unordered_set<CKComponentPredicate> _componentPredicates;
+  std::unordered_set<CKComponentControllerPredicate> _componentControllerPredicates;
 
   _CKRegisteredComponentsMap _registeredComponents;
   _CKRegisteredComponentControllerMap _registeredComponentControllers;
@@ -33,8 +33,8 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id<C
 
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
                analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-             componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
-   componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+             componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+   componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
 {
   static int32_t nextGlobalIdentifier = 0;
   return [[CKComponentScopeRoot alloc] initWithListener:listener
@@ -56,8 +56,8 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id<C
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                 globalIdentifier:(CKComponentScopeRootIdentifier)globalIdentifier
-             componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
-   componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates
+             componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+   componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
 {
   if (self = [super init]) {
     _listener = listener;
@@ -107,7 +107,7 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id<C
   }
 }
 
-- (void)enumerateComponentsMatchingPredicate:(CKComponentScopePredicate)predicate
+- (void)enumerateComponentsMatchingPredicate:(CKComponentPredicate)predicate
                                        block:(CKComponentScopeEnumerator)block
 {
   if (!block) {
@@ -124,7 +124,7 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id<C
   }
 }
 
-- (CKCocoaCollectionAdapter<id<CKComponentProtocol>>)componentsMatchingPredicate:(CKComponentScopePredicate)predicate
+- (CKCocoaCollectionAdapter<id<CKComponentProtocol>>)componentsMatchingPredicate:(CKComponentPredicate)predicate
 {
   CKCAssert(CK::Collection::contains(_componentPredicates, predicate), @"Scope root must be initialized with predicate to enumerate.");
   const auto componentsIt = _registeredComponents.find(predicate);
@@ -132,7 +132,7 @@ typedef std::unordered_map<CKComponentControllerScopePredicate, NSHashTable<id<C
   return CKCocoaCollectionAdapter<id<CKComponentProtocol>>(components);
 }
 
-- (void)enumerateComponentControllersMatchingPredicate:(CKComponentControllerScopePredicate)predicate
+- (void)enumerateComponentControllersMatchingPredicate:(CKComponentControllerPredicate)predicate
                                                  block:(CKComponentControllerScopeEnumerator)block
 {
   if (!block) {

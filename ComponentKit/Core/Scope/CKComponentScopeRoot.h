@@ -53,8 +53,8 @@
  */
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
                analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-             componentPredicates:(const std::unordered_set<CKComponentScopePredicate> &)componentPredicates
-   componentControllerPredicates:(const std::unordered_set<CKComponentControllerScopePredicate> &)componentControllerPredicates;
+             componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+   componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates;
 
 /** Creates a new version of an existing scope root, ready to be used for building a component tree */
 - (instancetype)newRoot;
@@ -63,7 +63,7 @@
 - (void)registerComponentController:(id<CKComponentControllerProtocol>)componentController;
 - (void)registerComponent:(id<CKComponentProtocol>)component;
 
-- (CKCocoaCollectionAdapter<id<CKComponentProtocol>>)componentsMatchingPredicate:(CKComponentScopePredicate)predicate;
+- (CKCocoaCollectionAdapter<id<CKComponentProtocol>>)componentsMatchingPredicate:(CKComponentPredicate)predicate;
 
 @property (nonatomic, weak, readonly) id<CKComponentStateListener> listener;
 @property (nonatomic, weak, readonly) id<CKAnalyticsListener> analyticsListener;

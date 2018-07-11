@@ -20,10 +20,10 @@
  
  There is no guaranteed ordering of arguments that are provided to the enumerators.
  */
-- (void)enumerateComponentsMatchingPredicate:(CKComponentScopePredicate)predicate
+- (void)enumerateComponentsMatchingPredicate:(CKComponentPredicate)predicate
                                        block:(CKComponentScopeEnumerator)block;
 
-- (void)enumerateComponentControllersMatchingPredicate:(CKComponentControllerScopePredicate)predicate
+- (void)enumerateComponentControllersMatchingPredicate:(CKComponentControllerPredicate)predicate
                                                  block:(CKComponentControllerScopeEnumerator)block;
 
 @end

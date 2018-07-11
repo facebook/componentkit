@@ -839,7 +839,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKComponentControllerPro
   XCTAssert([root componentsMatchingPredicate:&testComponentProtocolPredicate].empty(), @"Should not have found any components");
 }
 
-static auto makeScopeRootWithComponentPredicate(const CKComponentScopePredicate p) -> CKComponentScopeRoot *
+static auto makeScopeRootWithComponentPredicate(const CKComponentPredicate p) -> CKComponentScopeRoot *
 {
   return [CKComponentScopeRoot
           rootWithListener:nil
