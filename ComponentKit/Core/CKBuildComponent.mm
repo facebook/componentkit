@@ -38,7 +38,7 @@ static CKBuildComponentResult _CKBuildComponent(CKComponentScopeRoot *previousRo
                     previousOwner:previousRoot.rootNode
                         scopeRoot:threadScope.newScopeRoot
                      stateUpdates:stateUpdates
-                      forceParent:config.forceParent];
+                           config:config];
   }
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;

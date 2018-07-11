@@ -37,10 +37,10 @@
              previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-               forceParent:(BOOL)forceParent
+                    config:(const CKBuildComponentConfig &)config
 {
   // If forceParent is set to YES, we need to use `CKRenderTreeNodeWithChildren`; each component is a parent component and CKRenderWitjChildrenComponent has multiple children.
-  if (forceParent) {
+  if (config.forceParent) {
     auto const node = [[CKRenderTreeNodeWithChildren alloc]
                        initWithComponent:self
                        owner:owner
@@ -52,7 +52,7 @@
     auto const previousOwnerForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]];
     for (auto const child : children) {
       if (child) {
-        [child buildComponentTree:node previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates forceParent:forceParent];
+        [child buildComponentTree:node previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
       }
     }
   } else {
@@ -72,7 +72,7 @@
     auto const children = [self renderChildren:node.state];
     for (auto const child : children) {
       if (child) {
-        [child buildComponentTree:ownerForChild previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates forceParent:forceParent];
+        [child buildComponentTree:ownerForChild previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
       }
     }
   }

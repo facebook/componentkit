@@ -18,12 +18,12 @@ struct CKRenderWithSizeSpecComponentParameters {
   id<CKTreeNodeWithChildrenProtocol> previousOwnerForChild;
   const CKComponentStateUpdateMap* stateUpdates;
   __weak CKComponentScopeRoot *scopeRoot;
-  BOOL forceParent;
+  CKBuildComponentConfig buildConfig;
 
   CKRenderWithSizeSpecComponentParameters(id<CKTreeNodeWithChildrenProtocol> pO,
                                           const CKComponentStateUpdateMap* sU,
                                           CKComponentScopeRoot *sR,
-                                          BOOL fp) : previousOwnerForChild(pO), stateUpdates(sU), scopeRoot(sR), forceParent(fp) {};
+                                          CKBuildComponentConfig bc) : previousOwnerForChild(pO), stateUpdates(sU), scopeRoot(sR), buildConfig(bc) {};
 };
 
 @implementation CKRenderWithSizeSpecComponent {
@@ -66,7 +66,7 @@ struct CKRenderWithSizeSpecComponentParameters {
               previousOwner:_parameters->previousOwnerForChild
                   scopeRoot:_parameters->scopeRoot
                stateUpdates:*(_parameters->stateUpdates)
-                forceParent:_parameters->forceParent];
+                     config:_parameters->buildConfig];
 #if CK_ASSERTIONS_ENABLED
   [_renderedChildrenSet addObject:child];
 #endif
@@ -108,7 +108,7 @@ struct CKRenderWithSizeSpecComponentParameters {
              previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-               forceParent:(BOOL)forceParent
+                    config:(const CKBuildComponentConfig &)config
 {
   CKAssertTrue([[self class] isOwnerComponent]);
   if (!_node) {
@@ -123,7 +123,7 @@ struct CKRenderWithSizeSpecComponentParameters {
     _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>((id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[_node componentKey]],
                                                                             &stateUpdates,
                                                                             scopeRoot,
-                                                                            forceParent);
+                                                                            config);
   }
 }
 

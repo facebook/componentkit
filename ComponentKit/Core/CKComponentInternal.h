@@ -14,6 +14,7 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
+#import <ComponentKit/CKBuildComponent.h>
 
 @class CKComponentScopeRoot;
 @protocol CKTreeNodeWithChildrenProtocol;
@@ -108,6 +109,6 @@
              previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-               forceParent:(BOOL)forceParent;
+                    config:(const CKBuildComponentConfig &)config;
 
 @end

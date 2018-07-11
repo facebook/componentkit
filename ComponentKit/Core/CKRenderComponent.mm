@@ -43,10 +43,10 @@
              previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-               forceParent:(BOOL)forceParent
+                    config:(const CKBuildComponentConfig &)config
 {
   // If forceParent is set to YES, we need to use `CKRenderTreeNodeWithChild`; each component is a parent component and CKRenderComponent has single child only.
-  if (forceParent) {
+  if (config.forceParent) {
     auto const node = [[CKRenderTreeNodeWithChild alloc]
                        initWithComponent:self
                        owner:owner
@@ -61,7 +61,7 @@
                   previousOwner:(id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]]
                       scopeRoot:scopeRoot
                    stateUpdates:stateUpdates
-                    forceParent:forceParent];
+                         config:config];
     }
   } else {
     // Otherwise, we choose the type of the node according to the `isOwnerComponent` method.
@@ -81,7 +81,7 @@
                   previousOwner:(isOwnerComponent ? (id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]] : previousOwner)
                       scopeRoot:scopeRoot
                    stateUpdates:stateUpdates
-                    forceParent:forceParent];
+                         config:config];
     }
   }
 }

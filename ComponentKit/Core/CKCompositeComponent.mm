@@ -76,9 +76,9 @@
              previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-               forceParent:(BOOL)forceParent
+                    config:(const CKBuildComponentConfig &)config
 {
-  if (forceParent) {
+  if (config.forceParent) {
     auto const node = [[CKTreeNodeWithChild alloc]
                        initWithComponent:self
                        owner:owner
@@ -91,18 +91,11 @@
                        previousOwner:(id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]]
                            scopeRoot:scopeRoot
                         stateUpdates:stateUpdates
-                         forceParent:forceParent];
+                              config:config];
     }
   } else {
-    [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates forceParent:forceParent];
-
-    if (_component) {
-      [_component buildComponentTree:owner
-                       previousOwner:previousOwner
-                           scopeRoot:scopeRoot
-                        stateUpdates:stateUpdates
-                         forceParent:forceParent];
-    }
+    [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
+    [_component buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
   }
 }
 

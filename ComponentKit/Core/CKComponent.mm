@@ -16,6 +16,7 @@
 #import <ComponentKit/CKArgumentPrecondition.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKMutex.h>
@@ -154,15 +155,17 @@ struct CKComponentMountInfo {
              previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-               forceParent:(BOOL)forceParent
+                    config:(const CKBuildComponentConfig &)config
 {
-  // In this case this is a leaf component, which means we don't need to continue the recursion as it has no children.
-  __unused auto const node = [[CKTreeNode alloc]
-                              initWithComponent:self
-                              owner:owner
-                              previousOwner:previousOwner
-                              scopeRoot:scopeRoot
-                              stateUpdates:stateUpdates];
+  if (config.buildLeafNodes) {
+    // In this case this is a leaf component, which means we don't need to continue the recursion as it has no children.
+    __unused auto const node = [[CKTreeNode alloc]
+                                initWithComponent:self
+                                owner:owner
+                                previousOwner:previousOwner
+                                scopeRoot:scopeRoot
+                                stateUpdates:stateUpdates];
+  }
 }
 
 #pragma mark - Mounting and Unmounting
