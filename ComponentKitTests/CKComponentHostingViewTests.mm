@@ -27,7 +27,6 @@
 
 typedef struct {
   BOOL unifyBuildAndLayout;
-  BOOL cacheLayoutAndBuildResult;
   BOOL allowTapPassthrough;
   BOOL embedInFlexbox;
   id<CKAnalyticsListener> analyticsListener;
@@ -44,7 +43,6 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
                                                                          analyticsListener:options.analyticsListener
                                                                                    options:{
                                                                                      .unifyBuildAndLayout = options.unifyBuildAndLayout,
-                                                                                     .cacheLayoutAndBuildResult = options.cacheLayoutAndBuildResult,
                                                                                      .allowTapPassthrough = options.allowTapPassthrough
                                                                                    }];
   view.bounds = CGRectMake(0, 0, 100, 100);
@@ -170,28 +168,12 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
                 @"Expected component controller to get did attach component");
 }
 
-- (void)testReuseComputedComponentLayoutFromCacheIfEligible
-{
-  CKComponentHostingView *view = hostingView({
-    .unifyBuildAndLayout = NO,
-    .cacheLayoutAndBuildResult = YES,
-    .analyticsListener = self
-  });
-  
-  CGSize sizeFit = [view sizeThatFits:CGSizeMake(100, 100)];
-  view.bounds = CGRectMake(0, 0, sizeFit.width, sizeFit.height);
-  [view layoutIfNeeded];
-  
-  XCTAssertEqual(_willLayoutComponentTreeHitCount, 1, @"Expected to reuse component layout from cache after initial component layout computation");
-  XCTAssertEqual(_didLayoutComponentTreeHitCount, 1, @"Expected to reuse component layout from cache after initial component layout computation");
-}
-
 - (void)testUpdatingHostingViewBoundsResizesComponentView_WithUnifiedBuildAndLayout
 {
   CKComponentHostingView *view = hostingView({
     .unifyBuildAndLayout = YES
   });
-  
+
   view.bounds = CGRectMake(0, 0, 200, 200);
   [view layoutIfNeeded];
 
@@ -273,22 +255,6 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
   }
   XCTAssertTrue(testComponent.controller.calledInvalidateController,
                 @"Expected component controller to get invalidation event");
-}
-
-- (void)testReuseComputedComponentLayoutFromCacheIfEligible_WithUnifiedBuildAndLayout
-{
-  CKComponentHostingView *view = hostingView({
-    .unifyBuildAndLayout = YES,
-    .cacheLayoutAndBuildResult = YES,
-    .analyticsListener = self
-  });
-  
-  CGSize sizeFit = [view sizeThatFits:CGSizeMake(100, 100)];
-  view.bounds = CGRectMake(0, 0, sizeFit.width, sizeFit.height);
-  [view layoutIfNeeded];
-  
-  XCTAssertEqual(_willLayoutComponentTreeHitCount, 1, @"Expected to reuse component layout from cache after initial component layout computation");
-  XCTAssertEqual(_didLayoutComponentTreeHitCount, 1, @"Expected to reuse component layout from cache after initial component layout computation");
 }
 
 - (void)testAllowTapPassthroughOn

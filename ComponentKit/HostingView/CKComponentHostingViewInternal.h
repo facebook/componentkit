@@ -20,8 +20,6 @@
 struct CKComponentHostingViewOptions {
   /// Build and layout components in a unified pass. It's meant to be used only if buildComponentTree == YES; please DO NOT use it yet, it's in a testing stage. Default NO.
   BOOL unifyBuildAndLayout;
-  /// Enable cache for layout and build result that are computed during the layout process lifetime. DO NOT use it yet, it's in a testing stage. Default NO.
-  BOOL cacheLayoutAndBuildResult;
   /// If set to YES, allows taps to pass though this hosting view to views behind it. Default NO.
   BOOL allowTapPassthrough;
 };
