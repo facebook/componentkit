@@ -21,9 +21,9 @@
 
 - (instancetype)initWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
                       mountedComponents:(NSSet *)mountedComponents
-                                 layout:(const CKComponentLayout &)layout;
+                             rootLayout:(const CKComponentRootLayout &)rootLayout;
 
-- (const CKComponentLayout &)layout;
+- (const CKComponentRootLayout &)rootLayout;
 
 @end
 

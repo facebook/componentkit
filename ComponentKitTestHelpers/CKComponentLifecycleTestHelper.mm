@@ -88,7 +88,7 @@
 {
   CKAssertMainThread();
   _mountedView = view;
-  [_componentDataSourceAttachController attachComponentLayout:_state.componentLayout
+  [_componentDataSourceAttachController attachComponentRootLayout:CKComponentRootLayout {_state.componentLayout}
                                           withScopeIdentifier:_state.scopeRoot.globalIdentifier
                                           withBoundsAnimation:_state.boundsAnimation
                                                        toView:view

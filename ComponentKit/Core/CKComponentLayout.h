@@ -67,6 +67,8 @@ struct CKComponentRootLayout {
   using ComponentsByPredicateMap = std::unordered_map<CKComponentPredicate, std::vector<CKComponent *>>;
 
   CKComponentRootLayout() {}
+  explicit CKComponentRootLayout(CKComponentLayout layout)
+  : CKComponentRootLayout(layout, {}, {}) {}
   explicit CKComponentRootLayout(CKComponentLayout layout, ComponentLayoutCache layoutCache, ComponentsByPredicateMap componentsByPredicate)
   : _layout(std::move(layout)), _layoutCache(std::move(layoutCache)), _componentsByPredicate(std::move(componentsByPredicate)) {}
 

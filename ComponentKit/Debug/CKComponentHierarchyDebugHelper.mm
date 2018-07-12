@@ -121,7 +121,7 @@ static void buildRecursiveDescriptionForView(NSMutableString *description,
 static CKComponentLayout rootLayoutFromRootView(CKComponentRootView *rootView)
 {
   if (rootView.ck_attachState) {
-    return [rootView.ck_attachState layout];
+    return [rootView.ck_attachState rootLayout].layout();
   } else if ([rootView.superview isKindOfClass:[CKComponentHostingView class]]) {
     CKComponentHostingView *hostingView = (CKComponentHostingView *)rootView.superview;
     return hostingView.mountedLayout;

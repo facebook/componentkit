@@ -50,11 +50,11 @@
 
 #pragma mark - Public API
 
-- (void)attachComponentLayout:(const CKComponentLayout &)layout
-          withScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
-          withBoundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation
-                       toView:(UIView *)view
-            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+- (void)attachComponentRootLayout:(const CKComponentRootLayout &)rootLayout
+              withScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
+              withBoundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation
+                           toView:(UIView *)view
+                analyticsListener:(id<CKAnalyticsListener>)analyticsListener
 {
   CKAssertMainThread();
   CKAssertNotNil(view, @"Impossible to attach a component layout to a nil view");
@@ -67,7 +67,7 @@
     [self _detachComponentLayoutFromView:view];
   }
   // Mount the component tree on the view
-  CKComponentDataSourceAttachState *attachState = mountComponentLayoutInView(layout, view, scopeIdentifier, boundsAnimation, analyticsListener);
+  CKComponentDataSourceAttachState *attachState = mountComponentLayoutInView(rootLayout, view, scopeIdentifier, boundsAnimation, analyticsListener);
   // Mark the view as attached and associates it to the right attach state
   _scopeIdentifierToAttachedViewMap[@(scopeIdentifier)] = view;
   view.ck_attachState = attachState;
@@ -99,7 +99,7 @@
   }
 }
 
-static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComponentLayout &layout,
+static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComponentRootLayout &rootLayout,
                                                                     UIView *view,
                                                                     CKComponentScopeRootIdentifier scopeIdentifier,
                                                                     const CKComponentBoundsAnimation &boundsAnimation,
@@ -109,10 +109,10 @@ static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComp
   NSSet *currentlyMountedComponents = view.ck_attachState.mountedComponents;
   __block NSSet *newMountedComponents = nil;
   CKComponentBoundsAnimationApply(boundsAnimation, ^{
-    const auto result = CKMountComponentLayout(layout, view, currentlyMountedComponents, nil, analyticsListener);
+    const auto result = CKMountComponentLayout(rootLayout.layout(), view, currentlyMountedComponents, nil, analyticsListener);
     newMountedComponents = result.mountedComponents;
   }, nil);
-  return [[CKComponentDataSourceAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents layout:layout];
+  return [[CKComponentDataSourceAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents rootLayout:rootLayout];
 }
 
 static void tearDownAttachStateFromViews(NSArray *views)
@@ -131,26 +131,26 @@ static void tearDownAttachStateFromViews(NSArray *views)
 
 @implementation CKComponentDataSourceAttachState
 {
-  CKComponentLayout _layout;
+  CKComponentRootLayout _rootLayout;
 }
 
 - (instancetype)initWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
                       mountedComponents:(NSSet *)mountedComponents
-                                 layout:(const CKComponentLayout &)layout
+                             rootLayout:(const CKComponentRootLayout &)rootLayout
 {
   self = [super init];
   if (self) {
     CKAssertNotNil(mountedComponents, @"");
     _scopeIdentifier = scopeIdentifier;
     _mountedComponents = [mountedComponents copy];
-    _layout = layout;
+    _rootLayout = rootLayout;
   }
   return self;
 }
 
-- (const CKComponentLayout &)layout
+- (const CKComponentRootLayout &)rootLayout
 {
-  return _layout;
+  return _rootLayout;
 }
 
 @end
