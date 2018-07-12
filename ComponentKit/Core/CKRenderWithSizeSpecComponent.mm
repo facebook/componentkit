@@ -18,12 +18,12 @@ struct CKRenderWithSizeSpecComponentParameters {
   id<CKTreeNodeWithChildrenProtocol> previousOwnerForChild;
   const CKComponentStateUpdateMap* stateUpdates;
   __weak CKComponentScopeRoot *scopeRoot;
-  CKBuildComponentConfig buildConfig;
+  CKBuildComponentConfig buildComponentConfig;
 
   CKRenderWithSizeSpecComponentParameters(id<CKTreeNodeWithChildrenProtocol> pO,
                                           const CKComponentStateUpdateMap* sU,
                                           CKComponentScopeRoot *sR,
-                                          CKBuildComponentConfig bc) : previousOwnerForChild(pO), stateUpdates(sU), scopeRoot(sR), buildConfig(bc) {};
+                                          CKBuildComponentConfig bc) : previousOwnerForChild(pO), stateUpdates(sU), scopeRoot(sR), buildComponentConfig(bc) {};
 };
 
 @implementation CKRenderWithSizeSpecComponent {
@@ -66,7 +66,7 @@ struct CKRenderWithSizeSpecComponentParameters {
               previousOwner:_parameters->previousOwnerForChild
                   scopeRoot:_parameters->scopeRoot
                stateUpdates:*(_parameters->stateUpdates)
-                     config:_parameters->buildConfig];
+                     config:_parameters->buildComponentConfig];
 #if CK_ASSERTIONS_ENABLED
   [_renderedChildrenSet addObject:child];
 #endif

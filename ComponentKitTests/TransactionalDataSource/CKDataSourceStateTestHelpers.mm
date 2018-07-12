@@ -43,16 +43,16 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
    initWithComponentProvider:provider
    context:@"context"
    sizeRange:{{100, 100}, {100, 100}}
+   buildComponentConfig:{}
+   qosOptions:{}
    unifyBuildAndLayout:NO
-   forceParent:NO
    parallelInsertBuildAndLayout:parallelBuildAndLayout
    parallelInsertBuildAndLayoutThreshold:0
    parallelUpdateBuildAndLayout:parallelBuildAndLayout
    parallelUpdateBuildAndLayoutThreshold:0
    componentPredicates:{}
    componentControllerPredicates:{}
-   analyticsListener:nil
-   qosOptions:{}];
+   analyticsListener:nil];
 
   NSMutableArray *sections = [NSMutableArray array];
   for (NSUInteger sectionIndex = 0; sectionIndex < numberOfSections; sectionIndex++) {

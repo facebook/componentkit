@@ -19,6 +19,8 @@
   CKSizeRange _sizeRange;
   std::unordered_set<CKComponentPredicate> _componentPredicates;
   std::unordered_set<CKComponentControllerPredicate> _componentControllerPredicates;
+  CKBuildComponentConfig _buildComponentConfig;
+  CKDataSourceQOSOptions _qosOptions;
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -28,23 +30,24 @@
   return [self initWithComponentProvider:componentProvider
                                  context:context
                                sizeRange:sizeRange
+                    buildComponentConfig:{}
+                              qosOptions:{}
                      unifyBuildAndLayout:NO
-                             forceParent:NO
             parallelInsertBuildAndLayout:NO
    parallelInsertBuildAndLayoutThreshold:0
             parallelUpdateBuildAndLayout:NO
    parallelUpdateBuildAndLayoutThreshold:0
                      componentPredicates:{}
            componentControllerPredicates:{}
-                       analyticsListener:nil
-                              qosOptions:{}];
+                       analyticsListener:nil];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
+                     buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
+                               qosOptions:(const CKDataSourceQOSOptions &)qosOptions
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
-                              forceParent:(BOOL)forceParent
              parallelInsertBuildAndLayout:(BOOL)parallelInsertBuildAndLayout
     parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
              parallelUpdateBuildAndLayout:(BOOL)parallelUpdateBuildAndLayout
@@ -52,7 +55,6 @@
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                               qosOptions:(CKDataSourceQOSOptions)qosOptions
 {
   if (self = [super init]) {
     _componentProvider = componentProvider;
@@ -62,7 +64,7 @@
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
     _unifyBuildAndLayout = unifyBuildAndLayout;
-    _forceParent = forceParent;
+    _buildComponentConfig = buildComponentConfig;
     _parallelInsertBuildAndLayout = parallelInsertBuildAndLayout;
     _parallelInsertBuildAndLayoutThreshold = parallelInsertBuildAndLayoutThreshold;
     _parallelUpdateBuildAndLayout = parallelUpdateBuildAndLayout;
@@ -70,6 +72,16 @@
     _qosOptions = qosOptions;
   }
   return self;
+}
+
+- (const CKBuildComponentConfig &)buildComponentConfig
+{
+  return _buildComponentConfig;
+}
+
+- (const CKDataSourceQOSOptions &)qosOptions
+{
+  return _qosOptions;
 }
 
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates

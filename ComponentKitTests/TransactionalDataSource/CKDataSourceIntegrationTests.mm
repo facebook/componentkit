@@ -166,16 +166,16 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        initWithComponentProvider:(id)self
                                        context:nil
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
+                                       buildComponentConfig:{}
+                                       qosOptions:{}
                                        unifyBuildAndLayout:NO
-                                       forceParent:NO
                                        parallelInsertBuildAndLayout:NO
                                        parallelInsertBuildAndLayoutThreshold:0
                                        parallelUpdateBuildAndLayout:NO
                                        parallelUpdateBuildAndLayoutThreshold:0
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
-                                       analyticsListener:nil
-                                       qosOptions:{}];
+                                       analyticsListener:nil];
   return [[CKCollectionViewDataSource alloc] initWithCollectionView:collectionViewController.collectionView
                                                      supplementaryViewDataSource:nil
                                                                    configuration:config];
