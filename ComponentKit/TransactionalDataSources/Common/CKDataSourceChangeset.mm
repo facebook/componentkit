@@ -38,54 +38,9 @@
   return self;
 }
 
-static NSString *ReadableStringForSortedItemsDictionary(NSDictionary *dict)
-{
-  if (!dict || dict.count == 0) {
-    return @"{}";
-  }
-  NSMutableString *mutableString = [NSMutableString new];
-  [mutableString appendFormat:@"{\n"];
-  NSMutableArray *keys = [[dict allKeys] mutableCopy];
-  [keys sortUsingSelector:@selector(compare:)];
-
-  for (NSIndexPath *key in keys) {
-    id value = [dict objectForKey:key];
-    CKCAssertTrue([key isKindOfClass:[NSIndexPath class]]);
-    [mutableString appendFormat:@"\t<indexpath = %ld - %ld> = \"%@\",\n\t", (long)key.section, (long)key.row, value ? : @""];
-  }
-  [mutableString appendString:@"}\n"];
-  return mutableString;
-}
-
-
 - (NSString *)description
 {
-  NSMutableString *mutableDescription = [NSMutableString stringWithFormat:@"<%@: %p; ", self.class, self];
-
-  NSMutableString *inputDescription = [NSMutableString new];
-  if (_updatedItems.count > 0) {
-    [inputDescription appendString:[NSString stringWithFormat:@"\n\tUpdates: %@", ReadableStringForSortedItemsDictionary(_updatedItems)]];
-  }
-  if (_removedItems.count > 0) {
-    [inputDescription appendString:[NSString stringWithFormat:@"\n\tRemoved Items: %@", _removedItems]];
-  }
-  if (_removedSections.count > 0) {
-    [inputDescription appendString:[NSString stringWithFormat:@"\n\tRemoved Sections: %@", _removedSections]];
-  }
-  if (_movedItems.count > 0) {
-    [inputDescription appendString:[NSString stringWithFormat:@"\n\tMoves: %@", ReadableStringForSortedItemsDictionary(_movedItems)]];
-  }
-  if (_insertedSections.count > 0) {
-    [inputDescription appendString:[NSString stringWithFormat:@"\n\tInserted Sections: %@", _insertedSections]];
-  }
-  if (_insertedItems.count > 0) {
-    [inputDescription appendString:[NSString stringWithFormat:@"\n\tInserted Items: %@", ReadableStringForSortedItemsDictionary(_insertedItems)]];
-  }
-
-  [mutableDescription appendString:(inputDescription.length > 0 ? inputDescription : @"Empty Changeset")];
-  [mutableDescription appendString:@">"];
-
-  return mutableDescription;
+  return CK::changesetDescription(self);
 }
 
 - (BOOL)isEmpty
@@ -160,7 +115,6 @@ static NSString *ReadableStringForSortedItemsDictionary(NSDictionary *dict)
 
 @end
 
-#ifdef CK_ASSERTIONS_ENABLED
 namespace CK {
   static auto withNewLineIfNotEmpty(NSString const* s) -> NSString *
   {
@@ -242,4 +196,3 @@ namespace CK {
     return description;
   }
 }
-#endif
