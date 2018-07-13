@@ -57,7 +57,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
 
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
-  
+
   dispatch_queue_t _concurrentQueue;
 }
 @end
@@ -339,7 +339,7 @@ static void verifyChangeset(CKDataSourceChangeset *changeset,
   if (invalidChangesetInfo.operationType != CKInvalidChangesetOperationTypeNone) {
     NSString *const humanReadableInvalidChangesetOperationType = CKHumanReadableInvalidChangesetOperationType(invalidChangesetInfo.operationType);
     NSString *const humanReadablePendingAsynchronousModifications = readableStringForArray(pendingAsynchronousModifications);
-    CKCFatal(@"Invalid changeset: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@\n*** Invalid section:\n%ld\n*** Invalid item:\n%ld", humanReadableInvalidChangesetOperationType, changeset, state, humanReadablePendingAsynchronousModifications, (long)invalidChangesetInfo.section, (long)invalidChangesetInfo.item);
+    CKCFatalWithCategory(humanReadableInvalidChangesetOperationType, @"Invalid changeset: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@\n*** Invalid section:\n%ld\n*** Invalid item:\n%ld", humanReadableInvalidChangesetOperationType, changeset, state, humanReadablePendingAsynchronousModifications, (long)invalidChangesetInfo.section, (long)invalidChangesetInfo.item);
   }
 #endif
 }

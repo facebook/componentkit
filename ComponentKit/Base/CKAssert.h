@@ -46,21 +46,35 @@
 #define CKFatal(description, ...) CKAssert(NO, (description), ##__VA_ARGS__)
 #define CKCFatal(description, ...) CKCAssert(NO, (description), ##__VA_ARGS__)
 
+#define CKFatalWithCategory(category, description, ...) \
+do { \
+  NSMutableString *__ckError_loggingString = [NSMutableString stringWithFormat:@"[%@] Fatal: ",(category)]; \
+  [__ckError_loggingString appendFormat:(description), ##__VA_ARGS__]; \
+  CKFatal(@"%@", __ckError_loggingString);\
+} while(0)
+
+#define CKCFatalWithCategory(category, description, ...) \
+do { \
+  NSMutableString *__ckError_loggingString = [NSMutableString stringWithFormat:@"[%@] Fatal: ",(category)]; \
+  [__ckError_loggingString appendFormat:(description), ##__VA_ARGS__]; \
+  CKCFatal(@"%@", __ckError_loggingString);\
+} while(0)
+
 #define CKAssertWithCategory(condition, category, description, ...) \
 do { \
   if (!(condition)) { \
-    NSMutableString *__ckWarning_loggingString = [NSMutableString stringWithFormat:@"[%@] Warning: ",(category)]; \
-    [__ckWarning_loggingString appendFormat:(description), ##__VA_ARGS__]; \
-    NSLog(@"%@",__ckWarning_loggingString); \
+    NSMutableString *__ckError_loggingString = [NSMutableString stringWithFormat:@"[%@] Error: ",(category)]; \
+    [__ckError_loggingString appendFormat:(description), ##__VA_ARGS__]; \
+    CKAssert((condition), __ckError_loggingString);\
   } \
 } while(0)
 
 #define CKCAssertWithCategory(condition, category, description, ...) \
 do { \
   if (!(condition)) { \
-    NSMutableString *__ckWarning_loggingString = [NSMutableString stringWithFormat:@"[%@] Warning: ",(category)]; \
-    [__ckWarning_loggingString appendFormat:(description), ##__VA_ARGS__]; \
-    NSLog(@"%@",__ckWarning_loggingString); \
+    NSMutableString *__ckError_loggingString = [NSMutableString stringWithFormat:@"[%@] Error: ",(category)]; \
+    [__ckError_loggingString appendFormat:(description), ##__VA_ARGS__]; \
+    CKCAssert((condition), __ckError_loggingString);\
   } \
 } while(0)
 
