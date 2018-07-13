@@ -74,7 +74,8 @@ CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKCom
   return boundsAnimation;
 }
 
-void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot, const CKComponentRootLayout &layout) {
+void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot, const CKComponentRootLayout &layout)
+{
   // Iterate over the components that their controllers override the 'didPrepareLayoutForComponent' method.
   [scopeRoot enumerateComponentsMatchingPredicate:&CKComponentDidPrepareLayoutForComponentToControllerPredicate
                                             block:^(id<CKComponentProtocol> c) {
