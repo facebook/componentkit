@@ -52,7 +52,7 @@ struct CKComponentHostingViewInputs {
   BOOL _componentNeedsUpdate;
   CKUpdateMode _requestedUpdateMode;
 
-  CKComponentRootLayout _mountedLayout;
+  CKComponentRootLayout _mountedRootLayout;
   NSSet *_mountedComponents;
 
   BOOL _scheduledAsynchronousComponentUpdate;
@@ -158,16 +158,15 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
     if (!_unifyBuildAndLayout) {
       [self _synchronouslyUpdateComponentIfNeeded];
-      if (_mountedLayout.component() != _component || !CGSizeEqualToSize(_mountedLayout.size(), size)) {
-        _mountedLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener);
-        [self _sendDidPrepareLayoutIfNeeded];
+      if (_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size)) {
+        [self setMountedRootLayout:CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener)];
       }
     } else {
-      [self _synchronouslyBuildAndLayoutComponentIfNeeded:{size,size} forceUpdate:(_mountedLayout.component() != _component || !CGSizeEqualToSize(_mountedLayout.size(), size))];
+      [self _synchronouslyBuildAndLayoutComponentIfNeeded:{size,size} forceUpdate:(_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size))];
     }
 
     CKComponentBoundsAnimationApply(_boundsAnimation, ^{
-      const auto result = CKMountComponentLayout(_mountedLayout.layout(), _containerView, _mountedComponents, nil, _pendingInputs.scopeRoot.analyticsListener);
+      const auto result = CKMountComponentLayout(_mountedRootLayout.layout(), _containerView, _mountedComponents, nil, _pendingInputs.scopeRoot.analyticsListener);
       _mountedComponents = result.mountedComponents;
     }, nil);
     _boundsAnimation = {};
@@ -219,7 +218,13 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
 - (CKComponentLayout)mountedLayout
 {
-  return _mountedLayout.layout();
+  return _mountedRootLayout.layout();
+}
+
+- (void)setMountedRootLayout:(const CKComponentRootLayout &)rootLayout
+{
+  _mountedRootLayout = rootLayout;
+  [self _sendDidPrepareLayoutIfNeeded];
 }
 
 - (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider
@@ -376,7 +381,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
 - (void)_sendDidPrepareLayoutIfNeeded
 {
-  CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedLayout);
+  CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedRootLayout);
 }
 
 
@@ -437,8 +442,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     dispatch_async(dispatch_get_main_queue(), ^{
       // If the inputs haven't changed, apply the result; otherwise, retry.
       if (_pendingInputs == *inputs) {
-        _mountedLayout = results.computedLayout;
         [self _applyResult:results.buildComponentResult];
+        [self setMountedRootLayout:results.computedLayout];
         _scheduledAsynchronousBuildAndLayoutUpdate = NO;
         [self setNeedsLayout];
         [_delegate componentHostingViewDidInvalidateSize:self];
@@ -474,9 +479,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
  @param buildComponentResult The build component result to apply after the mounted layout has been updated
  */
 - (void)_updateMountedLayoutWithLayout:(const CKComponentRootLayout &)computedLayout buildComponentResult:(const CKBuildComponentResult &)buildComponentResult {
-  _mountedLayout = computedLayout;
   [self _applyResult:buildComponentResult];
-  [self _sendDidPrepareLayoutIfNeeded];
+  [self setMountedRootLayout:computedLayout];
 }
 
 @end
