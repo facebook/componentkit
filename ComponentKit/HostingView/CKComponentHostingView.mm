@@ -14,6 +14,7 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
 
+#import "CKAnimationApplicator.h"
 #import "CKBuildComponent.h"
 #import "CKComponentAnimation.h"
 #import "CKComponentController.h"
@@ -47,6 +48,9 @@ struct CKComponentHostingViewInputs {
   CKComponentHostingViewInputs _pendingInputs;
 
   CKComponentBoundsAnimation _boundsAnimation;
+  BOOL _enableComponentAnimations;
+  CKComponentAnimations _componentAnimations;
+  std::unique_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> _animationApplicator;
 
   CKComponent *_component;
   BOOL _componentNeedsUpdate;
@@ -89,10 +93,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 {
   return [self initWithComponentProvider:componentProvider
                        sizeRangeProvider:sizeRangeProvider
-                     componentPredicates:{}
-           componentControllerPredicates:{}
-                       analyticsListener:nil
-                                 options:{}];
+                       analyticsListener:nil];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -128,6 +129,10 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
     _unifyBuildAndLayout = options.unifyBuildAndLayout;
+    _enableComponentAnimations = options.enableComponentAnimations;
+    if (_enableComponentAnimations) {
+      _animationApplicator = CK::AnimationApplicatorFactory::make();
+    }
 
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -159,16 +164,24 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     if (!_unifyBuildAndLayout) {
       [self _synchronouslyUpdateComponentIfNeeded];
       if (_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size)) {
-        [self setMountedRootLayout:CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener)];
+        [self setMountedRootLayout:CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, self.layoutPredicates)];
       }
     } else {
       [self _synchronouslyBuildAndLayoutComponentIfNeeded:{size,size} forceUpdate:(_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size))];
     }
 
-    CKComponentBoundsAnimationApply(_boundsAnimation, ^{
-      const auto result = CKMountComponentLayout(_mountedRootLayout.layout(), _containerView, _mountedComponents, nil, _pendingInputs.scopeRoot.analyticsListener);
-      _mountedComponents = result.mountedComponents;
-    }, nil);
+    const auto mountPerformer = ^{
+      __block NSSet<CKComponent *> *unmountedComponents;
+      CKComponentBoundsAnimationApply(_boundsAnimation, ^{
+        const auto result = CKMountComponentLayout(_mountedRootLayout.layout(), _containerView, _mountedComponents, nil, _pendingInputs.scopeRoot.analyticsListener);
+        _mountedComponents = result.mountedComponents;
+        unmountedComponents = result.unmountedComponents;
+      }, nil);
+      return unmountedComponents;
+    };
+    _animationApplicator->runAnimationsWhenMounting(_componentAnimations, mountPerformer);
+
+    _componentAnimations = {};
     _boundsAnimation = {};
     _isMountingComponent = NO;
   }
@@ -223,6 +236,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
 - (void)setMountedRootLayout:(const CKComponentRootLayout &)rootLayout
 {
+  _componentAnimations = [self animationsForNewLayout:rootLayout];
   _mountedRootLayout = rootLayout;
   [self _sendDidPrepareLayoutIfNeeded];
 }
@@ -236,11 +250,27 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
  @return A build component result from current component settings.
  */
 - (CKBuildComponentResult)currentBuildComponentResult {
-  auto result = CKBuildComponentResult();
-  result.component = _component;
-  result.scopeRoot = _pendingInputs.scopeRoot;
-  result.boundsAnimation = _boundsAnimation;
-  return result;
+  return {
+    .component = _component,
+    .scopeRoot = _pendingInputs.scopeRoot,
+    .boundsAnimation = _boundsAnimation,
+  };
+}
+
+- (std::vector<CKComponentPredicate>)layoutPredicates
+{
+  static const auto animationPredicates = std::vector<CKComponentPredicate> {
+    CKComponentHasAnimationsOnInitialMountPredicate,
+    CKComponentHasAnimationsFromPreviousComponentPredicate,
+  };
+  return _enableComponentAnimations ? animationPredicates : std::vector<CKComponentPredicate> {};
+}
+
+- (CKComponentAnimations)animationsForNewLayout:(const CKComponentRootLayout &)newLayout
+{
+  return _enableComponentAnimations ?
+  CK::animationsForComponents(CK::animatedComponentsBetweenLayouts(newLayout, _mountedRootLayout)) :
+  CKComponentAnimations {};
 }
 
 #pragma mark - Appearance
@@ -325,11 +355,16 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
   const auto inputs = std::make_shared<const CKComponentHostingViewInputs>(_pendingInputs);
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    const auto result = std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
-                                                                                        inputs->scopeRoot,
-                                                                                        inputs->stateUpdates,
-                                                                                        ^{ return [_componentProvider componentForModel:inputs->model context:inputs->context]; }
-                                                                                        ));
+    const auto result =
+    std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
+                                                                    inputs->scopeRoot,
+                                                                    inputs->stateUpdates,
+                                                                    ^{
+                                                                      const auto controllerCtx = [CKComponentControllerContext newWithHandleAnimationsInController:!_enableComponentAnimations];
+                                                                      const CKComponentContext<CKComponentControllerContext> ctx {controllerCtx};
+                                                                      return [_componentProvider componentForModel:inputs->model context:inputs->context];
+                                                                    }
+                                                                    ));
     dispatch_async(dispatch_get_main_queue(), ^{
       if (!_componentNeedsUpdate) {
         // A synchronous update snuck in and took care of it for us.
@@ -372,7 +407,9 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   }
 
   _isSynchronouslyUpdatingComponent = YES;
-  [self _applyResult:CKBuildComponent(_pendingInputs.scopeRoot, _pendingInputs.stateUpdates, ^CKComponent *{
+  [self _applyResult:CKBuildComponent(_pendingInputs.scopeRoot, _pendingInputs.stateUpdates, ^{
+    const auto controllerCtx = [CKComponentControllerContext newWithHandleAnimationsInController:!_enableComponentAnimations];
+    const CKComponentContext<CKComponentControllerContext> ctx {controllerCtx};
     return [_componentProvider componentForModel:_pendingInputs.model context:_pendingInputs.context];
   })];
   _isSynchronouslyUpdatingComponent = NO;
@@ -384,17 +421,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedRootLayout);
 }
 
-
-/**
- @param sizeRange The size range to use for calculating the proper computed layout.
- @return The componet layout computed for the in input size range.
- */
-- (CKComponentRootLayout)_buildComponentLayoutWithSizeRange:(const CKSizeRange &)sizeRange {
-  CKAssert(!_unifyBuildAndLayout, @"Use -_buildAndLayoutComponentIfNeeded:pendingInputs: for computing component layout in an unifyBuildAndLayout config");
-  const auto computedLayout = CKComputeRootComponentLayout(_component, sizeRange, _pendingInputs.scopeRoot.analyticsListener);
-  return computedLayout;
-}
-
 #pragma mark - Unified Build And Layout methods
 
 - (CKBuildAndLayoutComponentResult)_buildAndLayoutComponentIfNeeded:(const CKSizeRange &)sizeRange pendingInputs:(const CKComponentHostingViewInputs &)pendingInputs{
@@ -404,6 +430,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                                                                       pendingInputs.stateUpdates,
                                                                       sizeRange,
                                                                       ^{
+                                                                        const auto controllerCtx = [CKComponentControllerContext newWithHandleAnimationsInController:!_enableComponentAnimations];
+                                                                        const CKComponentContext<CKComponentControllerContext> ctx {controllerCtx};
                                                                         return [_componentProvider componentForModel:model context:context];
                                                                       });
 

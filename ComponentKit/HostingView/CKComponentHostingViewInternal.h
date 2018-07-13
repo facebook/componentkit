@@ -22,6 +22,7 @@ struct CKComponentHostingViewOptions {
   BOOL unifyBuildAndLayout;
   /// If set to YES, allows taps to pass though this hosting view to views behind it. Default NO.
   BOOL allowTapPassthrough;
+  BOOL enableComponentAnimations;
 };
 
 @interface CKComponentHostingView () <CKInspectableView>

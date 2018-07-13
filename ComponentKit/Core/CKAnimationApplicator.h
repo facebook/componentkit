@@ -51,6 +51,15 @@ namespace CK {
     std::shared_ptr<AnimationsController> _animationsController;
     ControllerFactoryFunction _controllerFactory;
   };
+
+  struct AnimationApplicatorFactory final {
+    static auto make()
+    {
+      return std::make_unique<AnimationApplicator<ComponentAnimationsController>>([](const CKComponentAnimations &as){
+        return std::make_unique<ComponentAnimationsController>(as);
+      });
+    }
+  };
 }
 
 #endif /* CKAnimationApplicator_h */
