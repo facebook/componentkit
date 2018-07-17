@@ -106,6 +106,32 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
   CKSnapshotVerifyComponent([self _layoutWithJustify:CKFlexboxJustifyContentStart flexFactor:1], kSize, @"flex");
 }
 
+- (void)testShrinkingBehaviourWithFullFlexGrow
+{
+  CKFlexboxComponent *c =
+  [CKFlexboxComponent
+   newWithView:{}
+   size:{500,500}
+   style:{
+     .direction = CKFlexboxDirectionRow,
+     .alignItems = CKFlexboxAlignItemsStart,
+   }
+   children: {
+     {
+       .component = [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{500, 500}],
+       .flexGrow = 0, .flexShrink = 1,
+     },
+     {
+       .component = [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{500, 500}],
+       .flexGrow = 1, .flexShrink = 1,
+     },
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
+  
+  static CKSizeRange kSize = {{500, 500}, {500, 500}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
 - (void)testCorrectnessOfDeeplyNestedFlexboxHierarchies
 {
   CKComponent *(^component)(UIColor *, const CKComponentSize &) = ^CKComponent *(UIColor *color, const CKComponentSize &size) {
