@@ -351,39 +351,50 @@
 		51993B95207B67EF00DF0490 /* CKRenderWithSizeSpecComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 51993B93207B67EF00DF0490 /* CKRenderWithSizeSpecComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		51D6B2BD207BD075000EFA6B /* CKRenderWithSizeSpecComponentTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 51D6B2B8207BD075000EFA6B /* CKRenderWithSizeSpecComponentTests.mm */; };
 		51EDD905207E79C400892C35 /* CKBuildAndLayoutComponentTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 51EDD904207E79C400892C35 /* CKBuildAndLayoutComponentTests.mm */; };
-		534BB670204EB2DA001DC02C /* YGNodePrint.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB65F204EB2D9001DC02C /* YGNodePrint.h */; };
-		534BB671204EB2DA001DC02C /* YGLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB664204EB2D9001DC02C /* YGLayout.cpp */; };
-		534BB672204EB2DA001DC02C /* YGStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB665204EB2D9001DC02C /* YGStyle.cpp */; };
-		534BB673204EB2DA001DC02C /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB666204EB2D9001DC02C /* Utils.cpp */; };
-		534BB674204EB2DA001DC02C /* YGEnums.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB667204EB2DA001DC02C /* YGEnums.cpp */; };
-		534BB675204EB2DA001DC02C /* YGNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB668204EB2DA001DC02C /* YGNode.h */; };
-		534BB676204EB2DA001DC02C /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB669204EB2DA001DC02C /* Utils.h */; };
-		534BB677204EB2DA001DC02C /* YGNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB66A204EB2DA001DC02C /* YGNode.cpp */; };
-		534BB678204EB2DA001DC02C /* Yoga-internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB66B204EB2DA001DC02C /* Yoga-internal.h */; };
-		534BB679204EB2DA001DC02C /* YGNodePrint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB66C204EB2DA001DC02C /* YGNodePrint.cpp */; };
-		534BB67A204EB2DA001DC02C /* YGStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB66D204EB2DA001DC02C /* YGStyle.h */; };
-		534BB67B204EB2DA001DC02C /* YGLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB66E204EB2DA001DC02C /* YGLayout.h */; };
-		534BB67C204EB2DA001DC02C /* Yoga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB66F204EB2DA001DC02C /* Yoga.cpp */; };
-		534BB67F204EBA97001DC02C /* Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F6BAF7B1F1F71A700600828 /* Yoga.h */; };
-		534BB684204EBA9C001DC02C /* YGMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F6BAF771F1F71A700600828 /* YGMacros.h */; };
-		534BB685204EBAD8001DC02C /* YGEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F6BAF761F1F71A700600828 /* YGEnums.h */; };
-		534BB686204EBADA001DC02C /* Yoga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB66F204EB2DA001DC02C /* Yoga.cpp */; };
-		534BB687204EBADD001DC02C /* Yoga-internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB66B204EB2DA001DC02C /* Yoga-internal.h */; };
-		534BB688204EBADF001DC02C /* YGStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB66D204EB2DA001DC02C /* YGStyle.h */; };
-		534BB689204EBAE1001DC02C /* YGStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB665204EB2D9001DC02C /* YGStyle.cpp */; };
-		534BB68A204EBAE4001DC02C /* YGNodePrint.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB65F204EB2D9001DC02C /* YGNodePrint.h */; };
-		534BB68B204EBAE6001DC02C /* YGNodePrint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB66C204EB2DA001DC02C /* YGNodePrint.cpp */; };
-		534BB68C204EBAE8001DC02C /* YGNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB668204EB2DA001DC02C /* YGNode.h */; };
-		534BB68D204EBAEA001DC02C /* YGNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB66A204EB2DA001DC02C /* YGNode.cpp */; };
-		534BB68E204EBAEE001DC02C /* YGLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB66E204EB2DA001DC02C /* YGLayout.h */; };
-		534BB68F204EBAF1001DC02C /* YGLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB664204EB2D9001DC02C /* YGLayout.cpp */; };
-		534BB690204EBAF4001DC02C /* YGEnums.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB667204EB2DA001DC02C /* YGEnums.cpp */; };
-		534BB691204EBAF6001DC02C /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 534BB669204EB2DA001DC02C /* Utils.h */; };
-		534BB692204EBAF9001DC02C /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 534BB666204EB2D9001DC02C /* Utils.cpp */; };
 		6016FC2420A9BA2900440702 /* CKComponent+Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6016FC2520A9BA2900440702 /* CKComponent+Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6016FC2620A9BA2900440702 /* CKComponent+Yoga.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */; };
 		6016FC2720A9BA2900440702 /* CKComponent+Yoga.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */; };
+		60D7B3A920FC90500011AB3B /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39520FC904E0011AB3B /* Utils.h */; };
+		60D7B3AA20FC90500011AB3B /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39520FC904E0011AB3B /* Utils.h */; };
+		60D7B3AB20FC90500011AB3B /* YGConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B39620FC904E0011AB3B /* YGConfig.cpp */; };
+		60D7B3AC20FC90500011AB3B /* YGConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B39620FC904E0011AB3B /* YGConfig.cpp */; };
+		60D7B3AD20FC90500011AB3B /* YGLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39720FC904E0011AB3B /* YGLayout.h */; };
+		60D7B3AE20FC90500011AB3B /* YGLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39720FC904E0011AB3B /* YGLayout.h */; };
+		60D7B3AF20FC90500011AB3B /* YGLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B39820FC904E0011AB3B /* YGLayout.cpp */; };
+		60D7B3B020FC90500011AB3B /* YGLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B39820FC904E0011AB3B /* YGLayout.cpp */; };
+		60D7B3B120FC90500011AB3B /* YGStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39920FC904E0011AB3B /* YGStyle.h */; };
+		60D7B3B220FC90500011AB3B /* YGStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39920FC904E0011AB3B /* YGStyle.h */; };
+		60D7B3B320FC90500011AB3B /* YGConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39A20FC904E0011AB3B /* YGConfig.h */; };
+		60D7B3B420FC90500011AB3B /* YGConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39A20FC904E0011AB3B /* YGConfig.h */; };
+		60D7B3B520FC90500011AB3B /* YGNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39B20FC904E0011AB3B /* YGNode.h */; };
+		60D7B3B620FC90500011AB3B /* YGNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39B20FC904E0011AB3B /* YGNode.h */; };
+		60D7B3B720FC90500011AB3B /* YGNodePrint.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39C20FC904E0011AB3B /* YGNodePrint.h */; };
+		60D7B3B820FC90500011AB3B /* YGNodePrint.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39C20FC904E0011AB3B /* YGNodePrint.h */; };
+		60D7B3B920FC90500011AB3B /* Yoga-internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39D20FC904E0011AB3B /* Yoga-internal.h */; };
+		60D7B3BA20FC90500011AB3B /* Yoga-internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39D20FC904E0011AB3B /* Yoga-internal.h */; };
+		60D7B3BB20FC90500011AB3B /* YGNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B39E20FC904F0011AB3B /* YGNode.cpp */; };
+		60D7B3BC20FC90500011AB3B /* YGNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B39E20FC904F0011AB3B /* YGNode.cpp */; };
+		60D7B3BD20FC90500011AB3B /* YGFloatOptional.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39F20FC904F0011AB3B /* YGFloatOptional.h */; };
+		60D7B3BE20FC90500011AB3B /* YGFloatOptional.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39F20FC904F0011AB3B /* YGFloatOptional.h */; };
+		60D7B3BF20FC90500011AB3B /* Yoga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B3A020FC904F0011AB3B /* Yoga.cpp */; };
+		60D7B3C020FC90500011AB3B /* Yoga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B3A020FC904F0011AB3B /* Yoga.cpp */; };
+		60D7B3C120FC90500011AB3B /* YGEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B3A120FC904F0011AB3B /* YGEnums.h */; };
+		60D7B3C220FC90500011AB3B /* YGEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B3A120FC904F0011AB3B /* YGEnums.h */; };
+		60D7B3C320FC90500011AB3B /* YGMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B3A220FC904F0011AB3B /* YGMacros.h */; };
+		60D7B3C420FC90500011AB3B /* YGMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B3A220FC904F0011AB3B /* YGMacros.h */; };
+		60D7B3C520FC90500011AB3B /* YGStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B3A320FC904F0011AB3B /* YGStyle.cpp */; };
+		60D7B3C620FC90500011AB3B /* YGStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B3A320FC904F0011AB3B /* YGStyle.cpp */; };
+		60D7B3C720FC90500011AB3B /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B3A420FC904F0011AB3B /* Utils.cpp */; };
+		60D7B3C820FC90500011AB3B /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B3A420FC904F0011AB3B /* Utils.cpp */; };
+		60D7B3C920FC90500011AB3B /* Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B3A520FC904F0011AB3B /* Yoga.h */; };
+		60D7B3CA20FC90500011AB3B /* Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B3A520FC904F0011AB3B /* Yoga.h */; };
+		60D7B3CB20FC90500011AB3B /* YGFloatOptional.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B3A620FC904F0011AB3B /* YGFloatOptional.cpp */; };
+		60D7B3CC20FC90500011AB3B /* YGFloatOptional.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B3A620FC904F0011AB3B /* YGFloatOptional.cpp */; };
+		60D7B3CD20FC90500011AB3B /* YGEnums.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B3A720FC904F0011AB3B /* YGEnums.cpp */; };
+		60D7B3CE20FC90500011AB3B /* YGEnums.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B3A720FC904F0011AB3B /* YGEnums.cpp */; };
+		60D7B3CF20FC90500011AB3B /* YGNodePrint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B3A820FC904F0011AB3B /* YGNodePrint.cpp */; };
+		60D7B3D020FC90500011AB3B /* YGNodePrint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B3A820FC904F0011AB3B /* YGNodePrint.cpp */; };
 		60E99CAD209B26EF0072AD84 /* CKCompositeComponentInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60E99CAC209B26EF0072AD84 /* CKCompositeComponentInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		60E99CAE209B26EF0072AD84 /* CKCompositeComponentInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60E99CAC209B26EF0072AD84 /* CKCompositeComponentInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6DAC628C1F83DEB900536113 /* CKComponentScopeEnumeratorProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6DAC628B1F83DEB800536113 /* CKComponentScopeEnumeratorProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -408,9 +419,6 @@
 		7F6BAF691F1F6E5200600828 /* CKComponentLayoutBaseline.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F6BAF651F1F6E5200600828 /* CKComponentLayoutBaseline.m */; };
 		7F6BAF6A1F1F6E5200600828 /* CKFlexboxComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F6BAF661F1F6E5200600828 /* CKFlexboxComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F6BAF6B1F1F6E5200600828 /* CKFlexboxComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F6BAF671F1F6E5200600828 /* CKFlexboxComponent.mm */; };
-		7F6BAF7F1F1F71A700600828 /* YGEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F6BAF761F1F71A700600828 /* YGEnums.h */; };
-		7F6BAF801F1F71A700600828 /* YGMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F6BAF771F1F71A700600828 /* YGMacros.h */; };
-		7F6BAF881F1F71A700600828 /* Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F6BAF7B1F1F71A700600828 /* Yoga.h */; };
 		7F80A4E71F63128B00242503 /* CKFlexboxComponentTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F80A4E61F63128B00242503 /* CKFlexboxComponentTests.mm */; };
 		7F98F58C1F67F2F600436978 /* CKLifecycleTestComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F98F58A1F67F2F600436978 /* CKLifecycleTestComponent.h */; };
 		7F98F58D1F67F2F600436978 /* CKLifecycleTestComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F98F58B1F67F2F600436978 /* CKLifecycleTestComponent.mm */; };
@@ -982,21 +990,28 @@
 		51993B93207B67EF00DF0490 /* CKRenderWithSizeSpecComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderWithSizeSpecComponent.h; sourceTree = "<group>"; };
 		51D6B2B8207BD075000EFA6B /* CKRenderWithSizeSpecComponentTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRenderWithSizeSpecComponentTests.mm; sourceTree = "<group>"; };
 		51EDD904207E79C400892C35 /* CKBuildAndLayoutComponentTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKBuildAndLayoutComponentTests.mm; sourceTree = "<group>"; };
-		534BB65F204EB2D9001DC02C /* YGNodePrint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGNodePrint.h; sourceTree = "<group>"; };
-		534BB664204EB2D9001DC02C /* YGLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGLayout.cpp; sourceTree = "<group>"; };
-		534BB665204EB2D9001DC02C /* YGStyle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGStyle.cpp; sourceTree = "<group>"; };
-		534BB666204EB2D9001DC02C /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
-		534BB667204EB2DA001DC02C /* YGEnums.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGEnums.cpp; sourceTree = "<group>"; };
-		534BB668204EB2DA001DC02C /* YGNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGNode.h; sourceTree = "<group>"; };
-		534BB669204EB2DA001DC02C /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
-		534BB66A204EB2DA001DC02C /* YGNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGNode.cpp; sourceTree = "<group>"; };
-		534BB66B204EB2DA001DC02C /* Yoga-internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Yoga-internal.h"; sourceTree = "<group>"; };
-		534BB66C204EB2DA001DC02C /* YGNodePrint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGNodePrint.cpp; sourceTree = "<group>"; };
-		534BB66D204EB2DA001DC02C /* YGStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGStyle.h; sourceTree = "<group>"; };
-		534BB66E204EB2DA001DC02C /* YGLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGLayout.h; sourceTree = "<group>"; };
-		534BB66F204EB2DA001DC02C /* Yoga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Yoga.cpp; sourceTree = "<group>"; };
 		6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKComponent+Yoga.h"; sourceTree = "<group>"; };
 		6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CKComponent+Yoga.mm"; sourceTree = "<group>"; };
+		60D7B39520FC904E0011AB3B /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		60D7B39620FC904E0011AB3B /* YGConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGConfig.cpp; sourceTree = "<group>"; };
+		60D7B39720FC904E0011AB3B /* YGLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGLayout.h; sourceTree = "<group>"; };
+		60D7B39820FC904E0011AB3B /* YGLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGLayout.cpp; sourceTree = "<group>"; };
+		60D7B39920FC904E0011AB3B /* YGStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGStyle.h; sourceTree = "<group>"; };
+		60D7B39A20FC904E0011AB3B /* YGConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGConfig.h; sourceTree = "<group>"; };
+		60D7B39B20FC904E0011AB3B /* YGNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGNode.h; sourceTree = "<group>"; };
+		60D7B39C20FC904E0011AB3B /* YGNodePrint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGNodePrint.h; sourceTree = "<group>"; };
+		60D7B39D20FC904E0011AB3B /* Yoga-internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Yoga-internal.h"; sourceTree = "<group>"; };
+		60D7B39E20FC904F0011AB3B /* YGNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGNode.cpp; sourceTree = "<group>"; };
+		60D7B39F20FC904F0011AB3B /* YGFloatOptional.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGFloatOptional.h; sourceTree = "<group>"; };
+		60D7B3A020FC904F0011AB3B /* Yoga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Yoga.cpp; sourceTree = "<group>"; };
+		60D7B3A120FC904F0011AB3B /* YGEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGEnums.h; sourceTree = "<group>"; };
+		60D7B3A220FC904F0011AB3B /* YGMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGMacros.h; sourceTree = "<group>"; };
+		60D7B3A320FC904F0011AB3B /* YGStyle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGStyle.cpp; sourceTree = "<group>"; };
+		60D7B3A420FC904F0011AB3B /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
+		60D7B3A520FC904F0011AB3B /* Yoga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Yoga.h; sourceTree = "<group>"; };
+		60D7B3A620FC904F0011AB3B /* YGFloatOptional.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGFloatOptional.cpp; sourceTree = "<group>"; };
+		60D7B3A720FC904F0011AB3B /* YGEnums.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGEnums.cpp; sourceTree = "<group>"; };
+		60D7B3A820FC904F0011AB3B /* YGNodePrint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGNodePrint.cpp; sourceTree = "<group>"; };
 		60E99CAC209B26EF0072AD84 /* CKCompositeComponentInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKCompositeComponentInternal.h; sourceTree = "<group>"; };
 		6DAC628B1F83DEB800536113 /* CKComponentScopeEnumeratorProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentScopeEnumeratorProvider.h; sourceTree = "<group>"; };
 		7279B64320E2801D00A50F6E /* CKDataSourceQOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceQOS.h; sourceTree = "<group>"; };
@@ -1010,9 +1025,6 @@
 		7F6BAF651F1F6E5200600828 /* CKComponentLayoutBaseline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKComponentLayoutBaseline.m; sourceTree = "<group>"; };
 		7F6BAF661F1F6E5200600828 /* CKFlexboxComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKFlexboxComponent.h; sourceTree = "<group>"; };
 		7F6BAF671F1F6E5200600828 /* CKFlexboxComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKFlexboxComponent.mm; sourceTree = "<group>"; };
-		7F6BAF761F1F71A700600828 /* YGEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGEnums.h; sourceTree = "<group>"; };
-		7F6BAF771F1F71A700600828 /* YGMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGMacros.h; sourceTree = "<group>"; };
-		7F6BAF7B1F1F71A700600828 /* Yoga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Yoga.h; sourceTree = "<group>"; };
 		7F80A4E61F63128B00242503 /* CKFlexboxComponentTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKFlexboxComponentTests.mm; sourceTree = "<group>"; };
 		7F98F58A1F67F2F600436978 /* CKLifecycleTestComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKLifecycleTestComponent.h; sourceTree = "<group>"; };
 		7F98F58B1F67F2F600436978 /* CKLifecycleTestComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKLifecycleTestComponent.mm; sourceTree = "<group>"; };
@@ -1483,22 +1495,26 @@
 		7F6BAF741F1F71A700600828 /* yoga */ = {
 			isa = PBXGroup;
 			children = (
-				534BB666204EB2D9001DC02C /* Utils.cpp */,
-				534BB669204EB2DA001DC02C /* Utils.h */,
-				534BB667204EB2DA001DC02C /* YGEnums.cpp */,
-				534BB664204EB2D9001DC02C /* YGLayout.cpp */,
-				534BB66E204EB2DA001DC02C /* YGLayout.h */,
-				534BB66A204EB2DA001DC02C /* YGNode.cpp */,
-				534BB668204EB2DA001DC02C /* YGNode.h */,
-				534BB66C204EB2DA001DC02C /* YGNodePrint.cpp */,
-				534BB65F204EB2D9001DC02C /* YGNodePrint.h */,
-				534BB665204EB2D9001DC02C /* YGStyle.cpp */,
-				534BB66D204EB2DA001DC02C /* YGStyle.h */,
-				534BB66B204EB2DA001DC02C /* Yoga-internal.h */,
-				534BB66F204EB2DA001DC02C /* Yoga.cpp */,
-				7F6BAF761F1F71A700600828 /* YGEnums.h */,
-				7F6BAF771F1F71A700600828 /* YGMacros.h */,
-				7F6BAF7B1F1F71A700600828 /* Yoga.h */,
+				60D7B3A420FC904F0011AB3B /* Utils.cpp */,
+				60D7B39520FC904E0011AB3B /* Utils.h */,
+				60D7B39620FC904E0011AB3B /* YGConfig.cpp */,
+				60D7B39A20FC904E0011AB3B /* YGConfig.h */,
+				60D7B3A720FC904F0011AB3B /* YGEnums.cpp */,
+				60D7B3A120FC904F0011AB3B /* YGEnums.h */,
+				60D7B3A620FC904F0011AB3B /* YGFloatOptional.cpp */,
+				60D7B39F20FC904F0011AB3B /* YGFloatOptional.h */,
+				60D7B39820FC904E0011AB3B /* YGLayout.cpp */,
+				60D7B39720FC904E0011AB3B /* YGLayout.h */,
+				60D7B3A220FC904F0011AB3B /* YGMacros.h */,
+				60D7B39E20FC904F0011AB3B /* YGNode.cpp */,
+				60D7B39B20FC904E0011AB3B /* YGNode.h */,
+				60D7B3A820FC904F0011AB3B /* YGNodePrint.cpp */,
+				60D7B39C20FC904E0011AB3B /* YGNodePrint.h */,
+				60D7B3A320FC904F0011AB3B /* YGStyle.cpp */,
+				60D7B39920FC904E0011AB3B /* YGStyle.h */,
+				60D7B39D20FC904E0011AB3B /* Yoga-internal.h */,
+				60D7B3A020FC904F0011AB3B /* Yoga.cpp */,
+				60D7B3A520FC904F0011AB3B /* Yoga.h */,
 			);
 			name = yoga;
 			path = Carthage/Checkouts/yoga/yoga;
@@ -2203,11 +2219,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2A89C3C2011C110009D0377 /* CKInspectableView.h in Headers */,
-				534BB68A204EBAE4001DC02C /* YGNodePrint.h in Headers */,
 				9092AE9C1DFA4853009878B2 /* CKAvailability.h in Headers */,
 				A29D85791D80D37F00913E60 /* CKComponentContextHelper.h in Headers */,
 				D616A2C020BED2D100695472 /* CKComponentTreeDiff.h in Headers */,
 				2D7A98291DB571700064FC6D /* CKInvalidChangesetOperationType.h in Headers */,
+				60D7B3BA20FC90500011AB3B /* Yoga-internal.h in Headers */,
 				03B8B4D21D2A346F00EDFF59 /* CKComponentRootView.h in Headers */,
 				03B8B4D31D2A346F00EDFF59 /* CKCollectionViewDataSource.h in Headers */,
 				23309AA62045C5F800833BDB /* CKRenderTreeNodeWithChildren.h in Headers */,
@@ -2226,6 +2242,7 @@
 				03B8B4E21D2A346F00EDFF59 /* CKComponentHostingView.h in Headers */,
 				03B8B4E31D2A346F00EDFF59 /* CKComponentAccessibility.h in Headers */,
 				03B8B4E41D2A346F00EDFF59 /* CKComponentHostingViewInternal.h in Headers */,
+				60D7B3B220FC90500011AB3B /* YGStyle.h in Headers */,
 				03B8B4E91D2A346F00EDFF59 /* CKCenterLayoutComponent.h in Headers */,
 				03B8B4EA1D2A346F00EDFF59 /* CKSupplementaryViewDataSource.h in Headers */,
 				03B8B4EB1D2A346F00EDFF59 /* CKComponentDataSourceAttachControllerInternal.h in Headers */,
@@ -2234,7 +2251,6 @@
 				6016FC2520A9BA2900440702 /* CKComponent+Yoga.h in Headers */,
 				03B8B4EF1D2A346F00EDFF59 /* CKStatefulViewReusePool.h in Headers */,
 				03B8B4F01D2A346F00EDFF59 /* CKComponentScopeRootFactory.h in Headers */,
-				534BB684204EBA9C001DC02C /* YGMacros.h in Headers */,
 				03B8B4F21D2A346F00EDFF59 /* CKDataSourceConfiguration.h in Headers */,
 				B1E3067C1E8B0EAA004864CF /* CKBuildComponent.h in Headers */,
 				7279B64520E2801D00A50F6E /* CKDataSourceQOS.h in Headers */,
@@ -2252,12 +2268,12 @@
 				03B8B4FC1D2A346F00EDFF59 /* CKDataSourceListener.h in Headers */,
 				60E99CAE209B26EF0072AD84 /* CKCompositeComponentInternal.h in Headers */,
 				03B8B4FD1D2A346F00EDFF59 /* CKDataSource.h in Headers */,
-				534BB68E204EBAEE001DC02C /* YGLayout.h in Headers */,
 				03B8B4FE1D2A346F00EDFF59 /* CKDataSourceListenerAnnouncer.h in Headers */,
 				03B8B4FF1D2A346F00EDFF59 /* CKDataSourceItem.h in Headers */,
 				03B8B5001D2A346F00EDFF59 /* CKDataSourceStateInternal.h in Headers */,
 				03B8B5021D2A346F00EDFF59 /* CKComponentGestureActionsInternal.h in Headers */,
 				03B8B5031D2A346F00EDFF59 /* CKOverlayLayoutComponent.h in Headers */,
+				60D7B3B620FC90500011AB3B /* YGNode.h in Headers */,
 				03B8B5041D2A346F00EDFF59 /* CKComponentGestureActions.h in Headers */,
 				03B8B5051D2A346F00EDFF59 /* CKOptimisticViewMutations.h in Headers */,
 				03B8B5061D2A346F00EDFF59 /* CKComponentAction.h in Headers */,
@@ -2271,6 +2287,7 @@
 				03B8B5101D2A346F00EDFF59 /* CKComponentViewAttribute.h in Headers */,
 				03B8B5111D2A346F00EDFF59 /* CKDataSourceChange.h in Headers */,
 				03B8B5131D2A346F00EDFF59 /* CKComponentAnimation.h in Headers */,
+				60D7B3B820FC90500011AB3B /* YGNodePrint.h in Headers */,
 				03B8B5141D2A346F00EDFF59 /* CKBackgroundLayoutComponent.h in Headers */,
 				03B8B5151D2A346F00EDFF59 /* CKDataSourceChangesetModification.h in Headers */,
 				03B8B5161D2A346F00EDFF59 /* CKDimension.h in Headers */,
@@ -2282,9 +2299,9 @@
 				03B8B51D1D2A346F00EDFF59 /* CKNetworkImageDownloading.h in Headers */,
 				03B8B51E1D2A346F00EDFF59 /* CKLabelComponent.h in Headers */,
 				D63D381020BF3B4E0081D7A9 /* CKCasting.h in Headers */,
+				60D7B3B420FC90500011AB3B /* YGConfig.h in Headers */,
 				03B8B51F1D2A346F00EDFF59 /* CKComponentFlexibleSizeRangeProvider.h in Headers */,
 				03B8B5201D2A346F00EDFF59 /* CKComponentBoundsAnimation+UICollectionView.h in Headers */,
-				534BB688204EBADF001DC02C /* YGStyle.h in Headers */,
 				23FEC5CB203B43EE0068E09D /* CKRenderWithChildrenComponent.h in Headers */,
 				03B8B5221D2A346F00EDFF59 /* CKStatefulViewComponent.h in Headers */,
 				03B8B5231D2A346F00EDFF59 /* CKTextComponentLayer.h in Headers */,
@@ -2292,8 +2309,10 @@
 				23309AA82045C60B00833BDB /* CKRenderComponentProtocol.h in Headers */,
 				03B8B5251D2A346F00EDFF59 /* CKNetworkImageComponent.h in Headers */,
 				03B8B5271D2A346F00EDFF59 /* CKImageComponent.h in Headers */,
+				60D7B3BE20FC90500011AB3B /* YGFloatOptional.h in Headers */,
 				03B8B5291D2A346F00EDFF59 /* CKStaticLayoutComponent.h in Headers */,
 				2D03A6611D3869C700E4F890 /* CKDetectComponentScopeCollisions.h in Headers */,
+				60D7B3CA20FC90500011AB3B /* Yoga.h in Headers */,
 				03B8B52B1D2A346F00EDFF59 /* CKComponentBoundsAnimation.h in Headers */,
 				03B8B52C1D2A346F00EDFF59 /* CKCollectionViewDataSourceCell.h in Headers */,
 				03B8B52D1D2A346F00EDFF59 /* CKComponentDataSourceAttachController.h in Headers */,
@@ -2310,7 +2329,6 @@
 				03B8B5351D2A346F00EDFF59 /* CKTextKitAttributes.h in Headers */,
 				03B8B5361D2A346F00EDFF59 /* CKComponentScopeTypes.h in Headers */,
 				03B8B5371D2A346F00EDFF59 /* CKEqualityHashHelpers.h in Headers */,
-				534BB68C204EBAE8001DC02C /* YGNode.h in Headers */,
 				03B8B5381D2A346F00EDFF59 /* CKMountAnimationGuard.h in Headers */,
 				23EF1D41209365BA004C95BE /* CKTreeNodeWithChild.h in Headers */,
 				03B8B5391D2A346F00EDFF59 /* CKTextComponentViewInternal.h in Headers */,
@@ -2320,10 +2338,10 @@
 				03B8B53D1D2A346F00EDFF59 /* ComponentMountContext.h in Headers */,
 				03B8B53E1D2A346F00EDFF59 /* CKAsyncLayer.h in Headers */,
 				03B8B53F1D2A346F00EDFF59 /* CKTextKitShadower.h in Headers */,
-				534BB687204EBADD001DC02C /* Yoga-internal.h in Headers */,
 				23EF1D6520936B55004C95BE /* CKRenderTreeNodeWithChild.h in Headers */,
 				03B8B5401D2A346F00EDFF59 /* CKComponentScopeRoot.h in Headers */,
 				2DCA4E731D889D1500AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */,
+				60D7B3AE20FC90500011AB3B /* YGLayout.h in Headers */,
 				03B8B5411D2A346F00EDFF59 /* CKAssert.h in Headers */,
 				03B8B5421D2A346F00EDFF59 /* CKTextKitRenderer.h in Headers */,
 				03B8B5431D2A346F00EDFF59 /* CKThreadLocalComponentScope.h in Headers */,
@@ -2333,6 +2351,7 @@
 				7FE8F8EA2006798E00BEE8D1 /* CKAnalyticsListener.h in Headers */,
 				03B8B5471D2A346F00EDFF59 /* CKTextKitTruncating.h in Headers */,
 				03B8B5491D2A346F00EDFF59 /* CKComponent+UIView.h in Headers */,
+				60D7B3C220FC90500011AB3B /* YGEnums.h in Headers */,
 				03B8B54A1D2A346F00EDFF59 /* CKAsyncLayerInternal.h in Headers */,
 				03B8B54B1D2A346F00EDFF59 /* ComponentViewReuseUtilities.h in Headers */,
 				03B8B54C1D2A346F00EDFF59 /* CKComponentMemoizer.h in Headers */,
@@ -2343,16 +2362,14 @@
 				03B8B5501D2A346F00EDFF59 /* CKComponentScopeHandle.h in Headers */,
 				03B8B5511D2A346F00EDFF59 /* CKAsyncTransaction.h in Headers */,
 				03B8B5521D2A346F00EDFF59 /* CKCacheImpl.h in Headers */,
-				534BB67F204EBA97001DC02C /* Yoga.h in Headers */,
 				03B8B5531D2A346F00EDFF59 /* ComponentUtilities.h in Headers */,
 				03B8B5541D2A346F00EDFF59 /* CKTextKitRenderer+Positioning.h in Headers */,
 				03B8B5551D2A346F00EDFF59 /* ComponentViewManager.h in Headers */,
 				40AB33C91FC39196005D3CE9 /* CKStateUpdateMetadata.h in Headers */,
 				03B8B5561D2A346F00EDFF59 /* CKComponentScopeFrame.h in Headers */,
 				7259D5762099E53000451280 /* CKDataSourceModificationHelper.h in Headers */,
-				534BB685204EBAD8001DC02C /* YGEnums.h in Headers */,
+				60D7B3C420FC90500011AB3B /* YGMacros.h in Headers */,
 				03B8B5571D2A346F00EDFF59 /* CKComponentInternal.h in Headers */,
-				534BB691204EBAF6001DC02C /* Utils.h in Headers */,
 				03B8B5581D2A346F00EDFF59 /* CKTextKitRendererCache.h in Headers */,
 				03B8B5591D2A346F00EDFF59 /* CKAsyncTransactionContainer+Private.h in Headers */,
 				03B8B55A1D2A346F00EDFF59 /* CKComponentSubclass.h in Headers */,
@@ -2369,6 +2386,7 @@
 				03B8B5631D2A346F00EDFF59 /* ComponentLayoutContext.h in Headers */,
 				03B8B5641D2A346F00EDFF59 /* CKCompositeComponent.h in Headers */,
 				03B8B5651D2A346F00EDFF59 /* CKComponentViewConfiguration.h in Headers */,
+				60D7B3AA20FC90500011AB3B /* Utils.h in Headers */,
 				23EF1D45209365BA004C95BE /* CKTreeNodeWithChildren.h in Headers */,
 				D632257B20B251820098A092 /* CKCollection.h in Headers */,
 			);
@@ -2397,7 +2415,6 @@
 				6DAC628C1F83DEB900536113 /* CKComponentScopeEnumeratorProvider.h in Headers */,
 				7F6BAF6A1F1F6E5200600828 /* CKFlexboxComponent.h in Headers */,
 				906125EA1DFA49E600EE18ED /* CKAvailability.h in Headers */,
-				534BB67A204EB2DA001DC02C /* YGStyle.h in Headers */,
 				B167C70F1DD38E4200769084 /* CKMemoizingComponent.h in Headers */,
 				A243B52E1D79A40800E6C393 /* CKComponentContextHelper.h in Headers */,
 				2D7A98281DB571700064FC6D /* CKInvalidChangesetOperationType.h in Headers */,
@@ -2421,8 +2438,6 @@
 				B1EF8FE81DD1562B00E74F43 /* CKComponentActionInternal.h in Headers */,
 				D64CC1A520DE655100DBE8D3 /* CKAnimationApplicator.h in Headers */,
 				23FEC59F203B30DA0068E09D /* CKTreeNode.h in Headers */,
-				7F6BAF801F1F71A700600828 /* YGMacros.h in Headers */,
-				534BB676204EB2DA001DC02C /* Utils.h in Headers */,
 				D0B47D321CBD948E00BB33CE /* CKCenterLayoutComponent.h in Headers */,
 				D0B47D151CBD948E00BB33CE /* CKSupplementaryViewDataSource.h in Headers */,
 				D0B47D1C1CBD948E00BB33CE /* CKComponentDataSourceAttachControllerInternal.h in Headers */,
@@ -2436,7 +2451,6 @@
 				D0B47D641CBD948E00BB33CE /* CKTextComponentView.h in Headers */,
 				D0B47D4C1CBD948E00BB33CE /* CKDataSourceReloadModification.h in Headers */,
 				D0B47D171CBD948E00BB33CE /* CKComponentAnnouncerBaseInternal.h in Headers */,
-				534BB678204EB2DA001DC02C /* Yoga-internal.h in Headers */,
 				238695691FE0571D00D4DAE2 /* CKComponentProtocol.h in Headers */,
 				D0B47D4D1CBD948E00BB33CE /* CKDataSourceStateModifying.h in Headers */,
 				D0B47D6B1CBD948E00BB33CE /* CKTextKitRenderer+TextChecking.h in Headers */,
@@ -2448,13 +2462,15 @@
 				D0B47D471CBD948E00BB33CE /* CKDataSourceListenerAnnouncer.h in Headers */,
 				23309AA52045C5F300833BDB /* CKTreeNodeProtocol.h in Headers */,
 				D0B47D441CBD948E00BB33CE /* CKDataSourceItem.h in Headers */,
+				60D7B3AD20FC90500011AB3B /* YGLayout.h in Headers */,
 				D0B47D491CBD948E00BB33CE /* CKDataSourceStateInternal.h in Headers */,
 				D0B47D581CBD948E00BB33CE /* CKComponentGestureActionsInternal.h in Headers */,
-				534BB670204EB2DA001DC02C /* YGNodePrint.h in Headers */,
 				D0B47D341CBD948E00BB33CE /* CKOverlayLayoutComponent.h in Headers */,
 				D0B47D0E1CBD948E00BB33CE /* CKComponentScopeRootFactory.h in Headers */,
 				EB14A3411D8267DF0004BECF /* CKAutoSizedImageComponent.h in Headers */,
+				60D7B3BD20FC90500011AB3B /* YGFloatOptional.h in Headers */,
 				D0B47D571CBD948E00BB33CE /* CKComponentGestureActions.h in Headers */,
+				60D7B3B120FC90500011AB3B /* YGStyle.h in Headers */,
 				7FF5435F1F1F6DF700EFEFDD /* CKComponentControllerEvents.h in Headers */,
 				D0B47D5D1CBD948E00BB33CE /* CKOptimisticViewMutations.h in Headers */,
 				D0B47D521CBD948E00BB33CE /* CKComponentAction.h in Headers */,
@@ -2480,22 +2496,22 @@
 				7F6BAF681F1F6E5200600828 /* CKComponentLayoutBaseline.h in Headers */,
 				D0B47D451CBD948E00BB33CE /* CKDataSourceItemInternal.h in Headers */,
 				D0B47CFC1CBD948E00BB33CE /* CKComponentSize.h in Headers */,
+				60D7B3A920FC90500011AB3B /* Utils.h in Headers */,
 				D63D380520BF3B4C0081D7A9 /* CKCasting.h in Headers */,
 				D0B47CEA1CBD948E00BB33CE /* ComponentKit.h in Headers */,
 				D0B47CF41CBD948E00BB33CE /* CKComponentControllerInternal.h in Headers */,
 				D0B47CEE1CBD948E00BB33CE /* CKNetworkImageDownloading.h in Headers */,
 				D0B47D601CBD948E00BB33CE /* CKLabelComponent.h in Headers */,
 				23FEC5C7203B38800068E09D /* CKRenderWithChildrenComponent.h in Headers */,
-				534BB67B204EB2DA001DC02C /* YGLayout.h in Headers */,
 				D0B47D2A1CBD948E00BB33CE /* CKComponentFlexibleSizeRangeProvider.h in Headers */,
 				D0B47D141CBD948E00BB33CE /* CKComponentBoundsAnimation+UICollectionView.h in Headers */,
 				D0B47D3B1CBD948E00BB33CE /* CKStatefulViewComponent.h in Headers */,
 				D643289820C008E6000C2400 /* CKComponentAnimationData.h in Headers */,
 				D0B47D621CBD948E00BB33CE /* CKTextComponentLayer.h in Headers */,
 				D0B47D351CBD948E00BB33CE /* CKRatioLayoutComponent.h in Headers */,
-				534BB675204EB2DA001DC02C /* YGNode.h in Headers */,
 				D0B47CED1CBD948E00BB33CE /* CKNetworkImageComponent.h in Headers */,
 				D0B47CEC1CBD948E00BB33CE /* CKImageComponent.h in Headers */,
+				60D7B3C920FC90500011AB3B /* Yoga.h in Headers */,
 				D616A2BF20BED2D100695472 /* CKComponentTreeDiff.h in Headers */,
 				D0B47D3A1CBD948E00BB33CE /* CKStaticLayoutComponent.h in Headers */,
 				D0B47CF21CBD948E00BB33CE /* CKComponentBoundsAnimation.h in Headers */,
@@ -2508,10 +2524,12 @@
 				D0B47D331CBD948E00BB33CE /* CKInsetComponent.h in Headers */,
 				D0B47D041CBD948E00BB33CE /* CKUpdateMode.h in Headers */,
 				D0B47D181CBD948E00BB33CE /* CKComponentAnnouncerHelper.h in Headers */,
+				60D7B3C320FC90500011AB3B /* YGMacros.h in Headers */,
 				23EF1D40209365BA004C95BE /* CKTreeNodeWithChild.h in Headers */,
 				D0B47D671CBD948E00BB33CE /* CKTextKitAttributes.h in Headers */,
 				D0B47D591CBD948E00BB33CE /* CKEqualityHashHelpers.h in Headers */,
 				D0B47D5B1CBD948E00BB33CE /* CKMountAnimationGuard.h in Headers */,
+				60D7B3B320FC90500011AB3B /* YGConfig.h in Headers */,
 				D0B47D661CBD948E00BB33CE /* CKTextComponentViewInternal.h in Headers */,
 				72C5755A2099C6E500FF603E /* CKDataSourceModificationHelper.h in Headers */,
 				D0B47D2F1CBD948E00BB33CE /* CKComponentRootViewInternal.h in Headers */,
@@ -2522,15 +2540,16 @@
 				23EF1D44209365BA004C95BE /* CKTreeNodeWithChildren.h in Headers */,
 				D0B47D711CBD948E00BB33CE /* CKAsyncLayer.h in Headers */,
 				D0B47D6E1CBD948E00BB33CE /* CKTextKitShadower.h in Headers */,
+				60D7B3C120FC90500011AB3B /* YGEnums.h in Headers */,
 				238695681FE0571D00D4DAE2 /* CKComponentControllerProtocol.h in Headers */,
 				D0B47D0D1CBD948E00BB33CE /* CKComponentScopeRoot.h in Headers */,
 				2DBF1D7A1D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h in Headers */,
 				23309A9F2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h in Headers */,
 				D0B47CE81CBD948E00BB33CE /* CKAssert.h in Headers */,
+				60D7B3B920FC90500011AB3B /* Yoga-internal.h in Headers */,
 				D0B47D6C1CBD948E00BB33CE /* CKTextKitRenderer.h in Headers */,
 				40AB33C81FC39196005D3CE9 /* CKStateUpdateMetadata.h in Headers */,
 				D0B47D101CBD948E00BB33CE /* CKThreadLocalComponentScope.h in Headers */,
-				7F6BAF7F1F1F71A700600828 /* YGEnums.h in Headers */,
 				7FB5C1EC1F865BEB00D2726B /* CKComponentDescriptionHelper.h in Headers */,
 				D0B47D791CBD948E00BB33CE /* CKFunctor.h in Headers */,
 				D0B47CE71CBD948E00BB33CE /* CKArgumentPrecondition.h in Headers */,
@@ -2543,8 +2562,8 @@
 				51993B95207B67EF00DF0490 /* CKRenderWithSizeSpecComponent.h in Headers */,
 				D0B47D5C1CBD948E00BB33CE /* CKMutex.h in Headers */,
 				D0B47D7A1CBD948E00BB33CE /* CKHighlightOverlayLayer.h in Headers */,
-				7F6BAF881F1F71A700600828 /* Yoga.h in Headers */,
 				D0B47D681CBD948E00BB33CE /* CKTextKitContext.h in Headers */,
+				60D7B3B720FC90500011AB3B /* YGNodePrint.h in Headers */,
 				D0B47D741CBD948E00BB33CE /* CKAsyncTransaction.h in Headers */,
 				D0B47D781CBD948E00BB33CE /* CKCacheImpl.h in Headers */,
 				D0B47D071CBD948E00BB33CE /* ComponentUtilities.h in Headers */,
@@ -2558,6 +2577,7 @@
 				D0B47D6D1CBD948E00BB33CE /* CKTextKitRendererCache.h in Headers */,
 				D0B47D751CBD948E00BB33CE /* CKAsyncTransactionContainer+Private.h in Headers */,
 				D0B47CFD1CBD948E00BB33CE /* CKComponentSubclass.h in Headers */,
+				60D7B3B520FC90500011AB3B /* YGNode.h in Headers */,
 				D6F0CB2020ADF4B100159631 /* CKAnimationController.h in Headers */,
 				D0B47D6F1CBD948E00BB33CE /* CKTextKitTailTruncater.h in Headers */,
 				D0B47D761CBD948E00BB33CE /* CKAsyncTransactionContainer.h in Headers */,
@@ -2961,17 +2981,20 @@
 				03B8B46F1D2A346F00EDFF59 /* CKImageComponent.mm in Sources */,
 				03B8B4701D2A346F00EDFF59 /* CKNetworkImageComponent.mm in Sources */,
 				B1DC105F1DD480FB00CCBF2F /* CKMemoizingComponent.mm in Sources */,
+				60D7B3CC20FC90500011AB3B /* YGFloatOptional.cpp in Sources */,
 				7FB5C1EE1F865BF500D2726B /* CKComponentDescriptionHelper.mm in Sources */,
+				60D7B3B020FC90500011AB3B /* YGLayout.cpp in Sources */,
 				03B8B4711D2A346F00EDFF59 /* CKComponent.mm in Sources */,
 				23EF1D47209365BA004C95BE /* CKTreeNodeWithChildren.mm in Sources */,
 				03B8B4721D2A346F00EDFF59 /* CKComponentAnimation.mm in Sources */,
 				03B8B4731D2A346F00EDFF59 /* CKComponentBoundsAnimation.mm in Sources */,
+				60D7B3BC20FC90500011AB3B /* YGNode.cpp in Sources */,
 				03B8B4741D2A346F00EDFF59 /* CKComponentController.mm in Sources */,
 				7259D57B2099E53500451280 /* CKDataSourceModificationHelper.mm in Sources */,
+				60D7B3C020FC90500011AB3B /* Yoga.cpp in Sources */,
 				03B8B4751D2A346F00EDFF59 /* CKComponentLayout.mm in Sources */,
 				03B8B4771D2A346F00EDFF59 /* CKComponentMemoizer.mm in Sources */,
 				03B8B4781D2A346F00EDFF59 /* CKComponentSize.mm in Sources */,
-				534BB689204EBAE1001DC02C /* YGStyle.cpp in Sources */,
 				03B8B4791D2A346F00EDFF59 /* CKComponentViewAttribute.mm in Sources */,
 				23629B33203B5499007F765D /* CKRenderWithChildrenComponent.mm in Sources */,
 				03B8B47A1D2A346F00EDFF59 /* CKComponentViewConfiguration.mm in Sources */,
@@ -2979,6 +3002,7 @@
 				03B8B47C1D2A346F00EDFF59 /* CKCompositeComponent.mm in Sources */,
 				7F5A85301F1F903D00238338 /* CKFlexboxComponent.mm in Sources */,
 				03B8B47D1D2A346F00EDFF59 /* CKDimension.mm in Sources */,
+				60D7B3D020FC90500011AB3B /* YGNodePrint.cpp in Sources */,
 				03B8B47E1D2A346F00EDFF59 /* CKSizeRange.mm in Sources */,
 				03B8B47F1D2A346F00EDFF59 /* ComponentLayoutContext.mm in Sources */,
 				03B8B4801D2A346F00EDFF59 /* ComponentViewManager.mm in Sources */,
@@ -2999,7 +3023,6 @@
 				D63F21D920C20559007604F4 /* CKComponentAnimationsController.mm in Sources */,
 				03B8B48C1D2A346F00EDFF59 /* CKComponentAnnouncerHelper.mm in Sources */,
 				03B8B48F1D2A346F00EDFF59 /* CKComponentDataSourceAttachController.mm in Sources */,
-				534BB68B204EBAE6001DC02C /* YGNodePrint.cpp in Sources */,
 				03B8B4941D2A346F00EDFF59 /* CKComponentFlexibleSizeRangeProvider.mm in Sources */,
 				03B8B4951D2A346F00EDFF59 /* CKComponentHostingView.mm in Sources */,
 				03B8B4961D2A346F00EDFF59 /* CKComponentRootView.mm in Sources */,
@@ -3007,27 +3030,27 @@
 				03B8B4971D2A346F00EDFF59 /* CKBackgroundLayoutComponent.mm in Sources */,
 				03B8B4981D2A346F00EDFF59 /* CKCenterLayoutComponent.mm in Sources */,
 				03B8B4991D2A346F00EDFF59 /* CKInsetComponent.mm in Sources */,
+				60D7B3C620FC90500011AB3B /* YGStyle.cpp in Sources */,
 				23EF1D43209365BA004C95BE /* CKTreeNodeWithChild.mm in Sources */,
 				03B8B49A1D2A346F00EDFF59 /* CKOverlayLayoutComponent.mm in Sources */,
 				23FEC5A4203B30DA0068E09D /* CKTreeNode.mm in Sources */,
 				03B8B49B1D2A346F00EDFF59 /* CKRatioLayoutComponent.mm in Sources */,
 				EB14A3441D8267DF0004BECF /* CKAutoSizedImageComponent.mm in Sources */,
 				230ADF731FC5FBEB001570A3 /* CKComponentEvents.mm in Sources */,
-				534BB690204EBAF4001DC02C /* YGEnums.cpp in Sources */,
 				03B8B49F1D2A346F00EDFF59 /* CKStaticLayoutComponent.mm in Sources */,
-				534BB68D204EBAEA001DC02C /* YGNode.cpp in Sources */,
 				03B8B4A01D2A346F00EDFF59 /* CKStatefulViewComponent.mm in Sources */,
+				60D7B3AC20FC90500011AB3B /* YGConfig.cpp in Sources */,
 				03B8B4A11D2A346F00EDFF59 /* CKStatefulViewComponentController.mm in Sources */,
 				7F5A853F1F1F907800238338 /* CKComponentLayoutBaseline.m in Sources */,
 				03B8B4A21D2A346F00EDFF59 /* CKStatefulViewReusePool.mm in Sources */,
 				03B8B4A31D2A346F00EDFF59 /* CKDataSource.mm in Sources */,
-				534BB692204EBAF9001DC02C /* Utils.cpp in Sources */,
 				03B8B4A41D2A346F00EDFF59 /* CKDataSourceAppliedChanges.mm in Sources */,
 				03B8B4A61D2A346F00EDFF59 /* CKDataSourceConfiguration.mm in Sources */,
 				03B8B4A71D2A346F00EDFF59 /* CKDataSourceItem.mm in Sources */,
 				03B8B4A81D2A346F00EDFF59 /* CKDataSourceListenerAnnouncer.mm in Sources */,
 				03B8B4A91D2A346F00EDFF59 /* CKDataSourceState.mm in Sources */,
 				23309AA72045C5FF00833BDB /* CKRenderTreeNodeWithChildren.mm in Sources */,
+				60D7B3C820FC90500011AB3B /* Utils.cpp in Sources */,
 				03B8B4AA1D2A346F00EDFF59 /* CKDataSourceChange.m in Sources */,
 				03B8B4AB1D2A346F00EDFF59 /* CKDataSourceChangesetModification.mm in Sources */,
 				2D640D5E1DB7FD7800271CB4 /* CKInvalidChangesetOperationType.mm in Sources */,
@@ -3048,10 +3071,10 @@
 				2D7A98191DB56BD10064FC6D /* CKDataSourceChangesetVerification.mm in Sources */,
 				03B8B4B91D2A346F00EDFF59 /* CKLabelComponent.mm in Sources */,
 				03B8B4BA1D2A346F00EDFF59 /* CKTextComponent.mm in Sources */,
-				534BB68F204EBAF1001DC02C /* YGLayout.cpp in Sources */,
 				03B8B4BB1D2A346F00EDFF59 /* CKTextComponentLayer.mm in Sources */,
 				03B8B4BC1D2A346F00EDFF59 /* CKTextComponentLayerHighlighter.mm in Sources */,
 				03B8B4BD1D2A346F00EDFF59 /* CKTextComponentView.mm in Sources */,
+				60D7B3CE20FC90500011AB3B /* YGEnums.cpp in Sources */,
 				03B8B4BE1D2A346F00EDFF59 /* CKTextComponentViewControlTracker.mm in Sources */,
 				03B8B4BF1D2A346F00EDFF59 /* CKTextKitAttributes.mm in Sources */,
 				03B8B4C01D2A346F00EDFF59 /* CKTextKitContext.mm in Sources */,
@@ -3064,7 +3087,6 @@
 				6016FC2720A9BA2900440702 /* CKComponent+Yoga.mm in Sources */,
 				03B8B4C61D2A346F00EDFF59 /* CKTextKitShadower.mm in Sources */,
 				03B8B4C71D2A346F00EDFF59 /* CKComponentDebugController.mm in Sources */,
-				534BB686204EBADA001DC02C /* Yoga.cpp in Sources */,
 				03B8B4C81D2A346F00EDFF59 /* CKTextKitTailTruncater.mm in Sources */,
 				03B8B4C91D2A346F00EDFF59 /* CKAsyncLayer.mm in Sources */,
 				03B8B4CA1D2A346F00EDFF59 /* CKAsyncTransaction.m in Sources */,
@@ -3249,6 +3271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				72C5755B2099C6E500FF603E /* CKDataSourceModificationHelper.mm in Sources */,
+				60D7B3CB20FC90500011AB3B /* YGFloatOptional.cpp in Sources */,
 				D0B47C851CBD943400BB33CE /* CKComponentAccessibility.mm in Sources */,
 				D0B47C861CBD943400BB33CE /* CKButtonComponent.mm in Sources */,
 				D0B47C871CBD943400BB33CE /* CKImageComponent.mm in Sources */,
@@ -3263,6 +3286,7 @@
 				D0B47C901CBD943400BB33CE /* CKComponentSize.mm in Sources */,
 				7FB5C1EB1F865BEB00D2726B /* CKComponentDescriptionHelper.mm in Sources */,
 				D0B47C911CBD943400BB33CE /* CKComponentViewAttribute.mm in Sources */,
+				60D7B3AF20FC90500011AB3B /* YGLayout.cpp in Sources */,
 				D0B47C921CBD943400BB33CE /* CKComponentViewConfiguration.mm in Sources */,
 				D0B47C931CBD943400BB33CE /* CKComponent+UIView.mm in Sources */,
 				D0B47C941CBD943400BB33CE /* CKCompositeComponent.mm in Sources */,
@@ -3281,15 +3305,18 @@
 				D0B47C9E1CBD943400BB33CE /* CKThreadLocalComponentScope.mm in Sources */,
 				D0B47CA01CBD943400BB33CE /* CKCollectionViewDataSourceCell.m in Sources */,
 				D0B47CA11CBD943400BB33CE /* CKCollectionViewDataSource.mm in Sources */,
+				60D7B3BB20FC90500011AB3B /* YGNode.cpp in Sources */,
 				D0B47CA21CBD943400BB33CE /* CKComponentBoundsAnimation+UICollectionView.mm in Sources */,
 				D0B47CA31CBD943400BB33CE /* CKComponentAnnouncerBase.mm in Sources */,
 				B1E3067D1E8B0EAA004864CF /* CKBuildComponent.mm in Sources */,
 				D0B47CA41CBD943400BB33CE /* CKComponentAnnouncerHelper.mm in Sources */,
 				D0B47CA71CBD943400BB33CE /* CKComponentDataSourceAttachController.mm in Sources */,
 				B1AE6CF61E8B202F00C9AA96 /* CKComponentScopeRootFactory.mm in Sources */,
-				534BB679204EB2DA001DC02C /* YGNodePrint.cpp in Sources */,
+				60D7B3BF20FC90500011AB3B /* Yoga.cpp in Sources */,
 				D0B47CAC1CBD943400BB33CE /* CKComponentFlexibleSizeRangeProvider.mm in Sources */,
+				60D7B3C720FC90500011AB3B /* Utils.cpp in Sources */,
 				23EF1D6220936B55004C95BE /* CKRenderTreeNodeWithChild.mm in Sources */,
+				60D7B3C520FC90500011AB3B /* YGStyle.cpp in Sources */,
 				D0B47CAD1CBD943400BB33CE /* CKComponentHostingView.mm in Sources */,
 				D0B47CAE1CBD943400BB33CE /* CKComponentRootView.mm in Sources */,
 				D0B47CAF1CBD943400BB33CE /* CKBackgroundLayoutComponent.mm in Sources */,
@@ -3300,10 +3327,10 @@
 				D0B47CB21CBD943400BB33CE /* CKOverlayLayoutComponent.mm in Sources */,
 				D0B47CB31CBD943400BB33CE /* CKRatioLayoutComponent.mm in Sources */,
 				EB14A3431D8267DF0004BECF /* CKAutoSizedImageComponent.mm in Sources */,
-				534BB677204EB2DA001DC02C /* YGNode.cpp in Sources */,
 				23FEC5C8203B38800068E09D /* CKRenderComponent.mm in Sources */,
 				D0B47CB71CBD943400BB33CE /* CKStaticLayoutComponent.mm in Sources */,
 				D0B47CB81CBD943400BB33CE /* CKStatefulViewComponent.mm in Sources */,
+				60D7B3CD20FC90500011AB3B /* YGEnums.cpp in Sources */,
 				D0B47CB91CBD943400BB33CE /* CKStatefulViewComponentController.mm in Sources */,
 				23EF1D42209365BA004C95BE /* CKTreeNodeWithChild.mm in Sources */,
 				2DBF1D7B1D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm in Sources */,
@@ -3313,12 +3340,12 @@
 				D0B47CBC1CBD943400BB33CE /* CKDataSourceAppliedChanges.mm in Sources */,
 				7F6BAF6B1F1F6E5200600828 /* CKFlexboxComponent.mm in Sources */,
 				D0B47CBE1CBD943400BB33CE /* CKDataSourceConfiguration.mm in Sources */,
+				60D7B3CF20FC90500011AB3B /* YGNodePrint.cpp in Sources */,
 				D0B47CBF1CBD943400BB33CE /* CKDataSourceItem.mm in Sources */,
 				D0B47CC01CBD943400BB33CE /* CKDataSourceListenerAnnouncer.mm in Sources */,
 				D0B47CC11CBD943400BB33CE /* CKDataSourceState.mm in Sources */,
 				D63F21D820C20559007604F4 /* CKComponentAnimationsController.mm in Sources */,
 				B167C7101DD38E4200769084 /* CKMemoizingComponent.mm in Sources */,
-				534BB673204EB2DA001DC02C /* Utils.cpp in Sources */,
 				D0B47CC21CBD943400BB33CE /* CKDataSourceChange.m in Sources */,
 				D0B47CC31CBD943400BB33CE /* CKDataSourceChangesetModification.mm in Sources */,
 				D0B47CC41CBD943400BB33CE /* CKDataSourceReloadModification.mm in Sources */,
@@ -3333,7 +3360,6 @@
 				D0B47CCA1CBD943400BB33CE /* CKComponentDelegateForwarder.mm in Sources */,
 				D0B47CCB1CBD943400BB33CE /* CKComponentGestureActions.mm in Sources */,
 				D0B47CCC1CBD943400BB33CE /* CKEqualityHashHelpers.mm in Sources */,
-				534BB672204EB2DA001DC02C /* YGStyle.cpp in Sources */,
 				D0B47CCD1CBD943400BB33CE /* CKInternalHelpers.mm in Sources */,
 				D0B47CCE1CBD943400BB33CE /* CKOptimisticViewMutations.mm in Sources */,
 				D0B47CD01CBD943400BB33CE /* CKWeakObjectContainer.m in Sources */,
@@ -3341,16 +3367,14 @@
 				D0B47CD11CBD943400BB33CE /* CKLabelComponent.mm in Sources */,
 				23309AA02045C5ED00833BDB /* CKRenderTreeNodeWithChildren.mm in Sources */,
 				D0B47CD21CBD943400BB33CE /* CKTextComponent.mm in Sources */,
-				534BB67C204EB2DA001DC02C /* Yoga.cpp in Sources */,
 				2319E3CE20481BDD00C71E2D /* CKRenderTreeNode.mm in Sources */,
 				D0B47CD31CBD943400BB33CE /* CKTextComponentLayer.mm in Sources */,
+				60D7B3AB20FC90500011AB3B /* YGConfig.cpp in Sources */,
 				400B0E5F1F71C63B006BDFEE /* CKDataSourceChangeset.mm in Sources */,
 				23EF1D46209365BA004C95BE /* CKTreeNodeWithChildren.mm in Sources */,
-				534BB671204EB2DA001DC02C /* YGLayout.cpp in Sources */,
 				D0B47CD41CBD943400BB33CE /* CKTextComponentLayerHighlighter.mm in Sources */,
 				D0B47CD51CBD943400BB33CE /* CKTextComponentView.mm in Sources */,
 				7F6BAF691F1F6E5200600828 /* CKComponentLayoutBaseline.m in Sources */,
-				534BB674204EB2DA001DC02C /* YGEnums.cpp in Sources */,
 				D0B47CD61CBD943400BB33CE /* CKTextComponentViewControlTracker.mm in Sources */,
 				D0B47CD71CBD943400BB33CE /* CKTextKitAttributes.mm in Sources */,
 				D0B47CD81CBD943400BB33CE /* CKTextKitContext.mm in Sources */,
