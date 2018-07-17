@@ -35,7 +35,7 @@ CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changes
    This process ensures that the modified state represents the state the changeset will be eventually applied to.
    */
   NSMutableArray<NSNumber *> *sectionCounts = [sectionCountsWithModificationsFoldedIntoState(state, pendingAsynchronousModifications) mutableCopy];
-  const auto originalSectionCounts = static_cast<NSMutableArray<NSNumber *> *>([sectionCounts mutableCopy]);
+  NSArray *originalSectionCounts = [sectionCounts copy];
   __block BOOL invalidChangeFound = NO;
   __block NSInteger invalidSection = -1;
   __block NSInteger invalidItem = -1;
@@ -147,7 +147,7 @@ CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changes
   }
   // Moved items
   [changeset.movedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull fromIndexPath, NSIndexPath * _Nonnull toIndexPath, BOOL * _Nonnull stop) {
-    const BOOL fromIndexPathSectionInvalid = fromIndexPath.section >= originalSectionCounts.count;
+    const BOOL fromIndexPathSectionInvalid = fromIndexPath.section >= sectionCounts.count;
     const BOOL toIndexPathSectionInvalid = toIndexPath.section >= sectionCounts.count;
     if (fromIndexPathSectionInvalid || toIndexPathSectionInvalid) {
       invalidChangeFound = YES;
@@ -164,7 +164,7 @@ CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changes
         invalidChangeFound = YES;
         *stop = YES;
       } else {
-        originalSectionCounts[fromIndexPath.section] = @([originalSectionCounts[fromIndexPath.section] integerValue] - 1);
+        sectionCounts[fromIndexPath.section] = @([sectionCounts[fromIndexPath.section] integerValue] - 1);
         sectionCounts[toIndexPath.section] = @([sectionCounts[toIndexPath.section] integerValue] + 1);
       }
     }

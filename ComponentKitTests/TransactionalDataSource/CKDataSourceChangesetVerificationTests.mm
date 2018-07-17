@@ -600,28 +600,6 @@
   [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
 }
 
-- (void)test_WhenVerifyingMoves_ValidatesFromIndexPathsAgainstOriginalState
-{
-  const auto state = [[CKDataSourceState alloc] initWithConfiguration:nil
-                                                             sections:@[
-                                                                        @[
-                                                                          itemWithModel(@"A"),
-                                                                          ],
-                                                                        @[
-                                                                          itemWithModel(@"B"),
-                                                                          itemWithModel(@"C"),
-                                                                          ],
-                                                                        ]];
-  const auto changeset = [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
-                            withMovedItems:@{
-                                             [NSIndexPath indexPathForItem:1 inSection:1] : [NSIndexPath indexPathForItem:0 inSection:0],
-                                             }]
-                           withRemovedSections:[NSIndexSet indexSetWithIndex:0]]
-                          build];
-
-  [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
-}
-
 #pragma mark - Invalid changesets
 
 - (void)test_invalidUpdateInNegativeSection
