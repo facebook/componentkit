@@ -31,6 +31,10 @@ static inline BOOL CKFloatsEqual(const CGFloat a, const CGFloat b) noexcept {
     return fabs(a - b) < 0.0001f;
 }
 
+static inline bool CKIsGreaterThanOrEqualWithTolerance(CGFloat a,CGFloat b) {
+    return a > b || CKFloatsEqual(a, b);
+}
+
 static inline CGFloat CKRoundValueToPixelGrid(CGFloat value, const BOOL forceCeil,
                                               const BOOL forceFloor) noexcept
 {
