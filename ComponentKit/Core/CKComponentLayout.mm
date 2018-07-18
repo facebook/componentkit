@@ -29,7 +29,7 @@ static void _deleteComponentLayoutChild(void *target) noexcept
   delete (std::vector<CKComponentLayoutChild> *)target;
 }
 
-static auto buildComponentsByPredicateMap(const CKComponentLayout &layout, const std::vector<CKComponentPredicate> &predicates)
+static auto buildComponentsByPredicateMap(const CKComponentLayout &layout, const std::unordered_set<CKComponentPredicate> &predicates)
 {
   auto componentsByPredicate = CKComponentRootLayout::ComponentsByPredicateMap {};
   if (predicates.empty()) { return componentsByPredicate; }
@@ -130,7 +130,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener,
-                                                   std::vector<CKComponentPredicate> predicates)
+                                                   std::unordered_set<CKComponentPredicate> predicates)
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent];
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);

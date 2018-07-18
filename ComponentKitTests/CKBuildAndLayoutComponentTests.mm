@@ -44,7 +44,7 @@
   __block BOOL renderOnChildCalled = NO;
   CKBuildAndLayoutComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, CKSizeRange({200, 200},{200, 200}), ^ {
     return [TestRenderWithSizeSpecComponent newWithRenderCalled:&renderOnChildCalled];
-  });
+  }, {});
   XCTAssertTrue(renderOnChildCalled);
 }
 @end

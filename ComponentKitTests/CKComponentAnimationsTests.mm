@@ -35,7 +35,7 @@
 @end
 
 const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
-const auto animationPredicates = std::vector<CKComponentPredicate> {
+const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
   CKComponentHasAnimationsOnInitialMountPredicate,
   CKComponentHasAnimationsFromPreviousComponentPredicate,
 };

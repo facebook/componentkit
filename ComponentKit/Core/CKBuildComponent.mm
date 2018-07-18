@@ -65,9 +65,10 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
                                                           const CKComponentStateUpdateMap &stateUpdates,
                                                           const CKSizeRange &sizeRange,
                                                           CKComponent *(^componentFactory)(void),
+                                                          const std::unordered_set<CKComponentPredicate> &layoutPredicates,
                                                           CKBuildComponentConfig config) {
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   const CKBuildComponentResult buildComponentResult = _CKBuildComponent(previousRoot, stateUpdates, config, threadScope, componentFactory);
-  const auto computedLayout = CKComputeRootComponentLayout(buildComponentResult.component, sizeRange, buildComponentResult.scopeRoot.analyticsListener);
+  const auto computedLayout = CKComputeRootComponentLayout(buildComponentResult.component, sizeRange, buildComponentResult.scopeRoot.analyticsListener, layoutPredicates);
   return {buildComponentResult, computedLayout};
 }

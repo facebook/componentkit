@@ -87,4 +87,5 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
                                                           const CKComponentStateUpdateMap &stateUpdates,
                                                           const CKSizeRange &sizeRange,
                                                           CKComponent *(^componentFactory)(void),
+                                                          const std::unordered_set<CKComponentPredicate> &layoutPredicates,
                                                           CKBuildComponentConfig config = {});

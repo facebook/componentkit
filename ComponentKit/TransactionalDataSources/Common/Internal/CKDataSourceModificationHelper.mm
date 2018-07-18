@@ -44,6 +44,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                                                        ^CKComponent *{
                                                                          return [componentProvider componentForModel:model context:context];
                                                                        },
+                                                                       {},
                                                                        configuration.buildComponentConfig);
     return [[CKDataSourceItem alloc] initWithLayout:result.computedLayout
                                               model:model

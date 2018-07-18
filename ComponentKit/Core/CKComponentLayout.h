@@ -9,6 +9,7 @@
  */
 
 #import <unordered_map>
+#import <unordered_set>
 #import <utility>
 #import <vector>
 
@@ -128,7 +129,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener = nil,
-                                                   std::vector<CKComponentPredicate> predicates = {});
+                                                   std::unordered_set<CKComponentPredicate> predicates = {});
 
 /**
  Safely computes the layout of the given component by guarding against nil components.

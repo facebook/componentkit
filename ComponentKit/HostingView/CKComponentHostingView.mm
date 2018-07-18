@@ -257,13 +257,13 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   };
 }
 
-- (std::vector<CKComponentPredicate>)layoutPredicates
+- (std::unordered_set<CKComponentPredicate>)layoutPredicates
 {
-  static const auto animationPredicates = std::vector<CKComponentPredicate> {
+  static const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
     CKComponentHasAnimationsOnInitialMountPredicate,
     CKComponentHasAnimationsFromPreviousComponentPredicate,
   };
-  return _enableComponentAnimations ? animationPredicates : std::vector<CKComponentPredicate> {};
+  return _enableComponentAnimations ? animationPredicates : std::unordered_set<CKComponentPredicate> {};
 }
 
 - (CKComponentAnimations)animationsForNewLayout:(const CKComponentRootLayout &)newLayout
@@ -439,7 +439,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                                                                         const auto controllerCtx = [CKComponentControllerContext newWithHandleAnimationsInController:!_enableComponentAnimations];
                                                                         const CKComponentContext<CKComponentControllerContext> ctx {controllerCtx};
                                                                         return [_componentProvider componentForModel:model context:context];
-                                                                      });
+                                                                      },
+                                                                      self.layoutPredicates);
 
   return results;
 }
