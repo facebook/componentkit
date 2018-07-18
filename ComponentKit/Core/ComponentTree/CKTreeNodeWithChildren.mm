@@ -48,6 +48,11 @@ typedef std::unordered_map<CKComponentKey, CKTreeNode *, CKTreeNodeHasher, CKTre
   return children;
 }
 
+- (size_t)childrenSize
+{
+  return _children.size();
+}
+
 - (CKTreeNode *)childForComponentKey:(const CKComponentKey &)key
 {
   return _children[key];

@@ -25,6 +25,11 @@
   return {_child};
 }
 
+- (size_t)childrenSize
+{
+  return _child ? 1 : 0;
+}
+
 - (CKTreeNode *)childForComponentKey:(const CKComponentKey &)key
 {
   if (std::get<0>(key) == [_child.component class]) {

@@ -48,6 +48,8 @@ typedef std::tuple<Class, NSUInteger> CKComponentKey;
 
 - (std::vector<id<CKTreeNodeProtocol>>)children;
 
+- (size_t)childrenSize;
+
 /** Returns a component tree node according to its component key */
 - (id<CKTreeNodeProtocol>)childForComponentKey:(const CKComponentKey &)key;
 

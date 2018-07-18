@@ -137,6 +137,11 @@ static BOOL _alwaysUseStateKeyCounter = NO;
   return self;
 }
 
+- (size_t)childrenSize
+{
+  return _children.size();
+}
+
 - (void)copyChildrenFrom:(CKComponentScopeFrame *)other
 {
   if (other == nil) {

@@ -40,4 +40,6 @@ struct CKComponentScopeFramePair {
 
 + (void)setAlwaysUseStateKeyCounter:(BOOL)alwaysUseStateKeyCounter;
 
+- (size_t)childrenSize;
+
 @end
