@@ -30,7 +30,7 @@ typedef struct {
   BOOL allowTapPassthrough;
   BOOL embedInFlexbox;
   id<CKAnalyticsListener> analyticsListener;
-  BOOL enableComponentAnimations = NO;
+  BOOL enableNewAnimationInfrastructure = NO;
 } CKComponentHostingViewConfiguration;
 static CKComponentHostingView *hostingView(const CKComponentHostingViewConfiguration &options = CKComponentHostingViewConfiguration())
 {

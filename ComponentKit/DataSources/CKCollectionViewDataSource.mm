@@ -11,7 +11,7 @@
 #import "CKCollectionViewDataSource.h"
 
 #import "CKCollectionViewDataSourceCell.h"
-#import "CKDataSourceConfiguration.h"
+#import "CKDataSourceConfigurationInternal.h"
 #import "CKDataSourceListener.h"
 #import "CKDataSourceItem.h"
 #import "CKDataSourceState.h"
@@ -48,7 +48,7 @@
     _collectionView.dataSource = self;
     [_collectionView registerClass:[CKCollectionViewDataSourceCell class] forCellWithReuseIdentifier:kReuseIdentifier];
 
-    _attachController = [[CKComponentDataSourceAttachController alloc] init];
+    _attachController = [CKComponentDataSourceAttachController newWithEnableNewAnimationInfrastructure:configuration.enableNewAnimationInfrastructure];
     _supplementaryViewDataSource = supplementaryViewDataSource;
     _cellToItemMap = [NSMapTable weakToStrongObjectsMapTable];
   }

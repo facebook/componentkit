@@ -44,6 +44,7 @@ struct CKDataSourceQOSOptions {
     parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
              parallelUpdateBuildAndLayout:(BOOL)parallelUpdateBuildAndLayout
     parallelUpdateBuildAndLayoutThreshold:(NSUInteger)parallelUpdateBuildAndLayoutThreshold
+         enableNewAnimationInfrastructure:(BOOL)enableNewAnimationInfrastructure
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
@@ -55,6 +56,7 @@ struct CKDataSourceQOSOptions {
 @property (nonatomic, assign, readonly) NSUInteger parallelInsertBuildAndLayoutThreshold;
 @property (nonatomic, assign, readonly) BOOL parallelUpdateBuildAndLayout;
 @property (nonatomic, assign, readonly) NSUInteger parallelUpdateBuildAndLayoutThreshold;
+@property (nonatomic, assign, readonly) BOOL enableNewAnimationInfrastructure;
 
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates;

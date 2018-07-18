@@ -21,15 +21,27 @@
    being attached will have to be detached before the view is deallocated.
    */
   NSMutableDictionary *_scopeIdentifierToAttachedViewMap;
+  BOOL _enableNewAnimationInfrastructure;
 }
 
 #pragma mark - Initialization/Teardown
 
++ (instancetype)newWithEnableNewAnimationInfrastructure:(BOOL)enableNewAnimationInfrastructure
+{
+  return [[self alloc] initWithEnableNewAnimationInfrastructure:enableNewAnimationInfrastructure];
+}
+
 - (instancetype)init
+{
+  return [self initWithEnableNewAnimationInfrastructure:NO];
+}
+
+- (instancetype)initWithEnableNewAnimationInfrastructure:(BOOL)enableNewAnimationInfrastructure
 {
   self = [super init];
   if (self) {
     _scopeIdentifierToAttachedViewMap = [NSMutableDictionary dictionary];
+    _enableNewAnimationInfrastructure = enableNewAnimationInfrastructure;
   }
   return self;
 }
@@ -67,7 +79,7 @@
     [self _detachComponentLayoutFromView:view];
   }
   // Mount the component tree on the view
-  CKComponentDataSourceAttachState *attachState = mountComponentLayoutInView(rootLayout, view, scopeIdentifier, boundsAnimation, analyticsListener);
+  CKComponentDataSourceAttachState *attachState = mountComponentLayoutInView(rootLayout, view, scopeIdentifier, boundsAnimation, analyticsListener, _enableNewAnimationInfrastructure);
   // Mark the view as attached and associates it to the right attach state
   _scopeIdentifierToAttachedViewMap[@(scopeIdentifier)] = view;
   view.ck_attachState = attachState;
@@ -103,7 +115,8 @@ static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComp
                                                                     UIView *view,
                                                                     CKComponentScopeRootIdentifier scopeIdentifier,
                                                                     const CKComponentBoundsAnimation &boundsAnimation,
-                                                                    id<CKAnalyticsListener> analyticsListener)
+                                                                    id<CKAnalyticsListener> analyticsListener,
+                                                                    BOOL enableNewAnimationInfrastructure)
 {
   CKCAssertNotNil(view, @"Impossible to mount a component layout on a nil view");
   NSSet *currentlyMountedComponents = view.ck_attachState.mountedComponents;

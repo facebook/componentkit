@@ -28,6 +28,9 @@
  */
 @interface CKComponentDataSourceAttachController : NSObject
 
+- (instancetype)initWithEnableNewAnimationInfrastructure:(BOOL)enableNewAnimationInfrastructure;
++ (instancetype)newWithEnableNewAnimationInfrastructure:(BOOL)enableNewAnimationInfrastructure;
+
 /**
  Attaching a component tree to a view, the controller will:
  1) Detach the component tree from the view it is currently attached to, if it is already attached to a view.

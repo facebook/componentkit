@@ -37,6 +37,7 @@
    parallelInsertBuildAndLayoutThreshold:0
             parallelUpdateBuildAndLayout:NO
    parallelUpdateBuildAndLayoutThreshold:0
+        enableNewAnimationInfrastructure:NO
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil];
@@ -52,6 +53,7 @@
     parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
              parallelUpdateBuildAndLayout:(BOOL)parallelUpdateBuildAndLayout
     parallelUpdateBuildAndLayoutThreshold:(NSUInteger)parallelUpdateBuildAndLayoutThreshold
+         enableNewAnimationInfrastructure:(BOOL)enableNewAnimationInfrastructure
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -70,6 +72,7 @@
     _parallelUpdateBuildAndLayout = parallelUpdateBuildAndLayout;
     _parallelUpdateBuildAndLayoutThreshold = parallelUpdateBuildAndLayoutThreshold;
     _qosOptions = qosOptions;
+    _enableNewAnimationInfrastructure = enableNewAnimationInfrastructure;
   }
   return self;
 }
