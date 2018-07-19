@@ -26,6 +26,7 @@ typedef std::tuple<Class, NSUInteger> CKComponentKey;
 @property (nonatomic, strong, readonly) CKComponent *component;
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
 @property (nonatomic, assign, readonly) CKTreeNodeIdentifier nodeIdentifier;
+@property (nonatomic, weak, readonly) id<CKTreeNodeProtocol> parent;
 
 /** Returns the component's state */
 - (id)state;

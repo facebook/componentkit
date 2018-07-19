@@ -24,6 +24,7 @@
 @property (nonatomic, strong, readwrite) CKComponent *component;
 @property (nonatomic, strong, readwrite) CKComponentScopeHandle *handle;
 @property (nonatomic, assign, readwrite) CKTreeNodeIdentifier nodeIdentifier;
+@property (nonatomic, weak, readwrite) id<CKTreeNodeProtocol> parent;
 @end
 
 @implementation CKTreeNode
@@ -82,6 +83,7 @@
 
     // Set the link between the parent and the child.
     [owner setChild:self forComponentKey:_componentKey];
+    self.parent = owner;
     
   }
   return self;
