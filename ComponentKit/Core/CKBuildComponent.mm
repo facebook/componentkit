@@ -28,7 +28,7 @@ static CKBuildComponentResult _CKBuildComponent(CKComponentScopeRoot *previousRo
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   const auto analyticsListener = [previousRoot analyticsListener];
-  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot];
+  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot stateUpdates:stateUpdates];
 
   CKComponent *const component = componentFactory();
 

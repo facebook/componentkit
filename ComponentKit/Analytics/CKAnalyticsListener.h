@@ -9,6 +9,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <ComponentKit/CKComponentScopeTypes.h>
 
 @class CKComponent;
 @class CKComponentScopeRoot;
@@ -21,7 +22,7 @@
  @param scopRoot Scope root for component tree. Use that to identify tree between will/didBuild
  @param component Root component for created tree
  */
-- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot;
+- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 - (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component;
 
 /**

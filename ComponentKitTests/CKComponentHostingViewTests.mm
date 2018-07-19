@@ -304,7 +304,7 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 #pragma mark - CKAnalyticsListener
 
-- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot { }
+- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates { }
 - (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component { }
 
 - (void)willMountComponentTreeWithRootComponent:(CKComponent *)component { }
