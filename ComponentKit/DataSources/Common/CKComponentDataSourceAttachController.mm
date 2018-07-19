@@ -11,6 +11,7 @@
 #import <objc/runtime.h>
 #import "CKComponentInternal.h"
 
+#import "CKComponentAnimations.h"
 #import "CKComponentDataSourceAttachController.h"
 #import "CKComponentDataSourceAttachControllerInternal.h"
 
@@ -119,13 +120,34 @@ static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComp
                                                                     BOOL enableNewAnimationInfrastructure)
 {
   CKCAssertNotNil(view, @"Impossible to mount a component layout on a nil view");
+  const auto animations = enableNewAnimationInfrastructure ?
+  [view, &rootLayout](){
+    const auto prevLayout = view.ck_attachState != nil ? view.ck_attachState.rootLayout : CKComponentRootLayout {};
+    const auto animatedComponents = CK::animatedComponentsBetweenLayouts(rootLayout, prevLayout);
+    return CK::animationsForComponents(animatedComponents);
+  }() : CKComponentAnimations();
+
   NSSet *currentlyMountedComponents = view.ck_attachState.mountedComponents;
   __block NSSet *newMountedComponents = nil;
-  CKComponentBoundsAnimationApply(boundsAnimation, ^{
-    const auto result = CKMountComponentLayout(rootLayout.layout(), view, currentlyMountedComponents, nil, analyticsListener);
-    newMountedComponents = result.mountedComponents;
-  }, nil);
-  return [[CKComponentDataSourceAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents rootLayout:rootLayout];
+  const auto mountPerformer = ^{
+    __block NSSet<CKComponent *> *unmountedComponents;
+    CKComponentBoundsAnimationApply(boundsAnimation, ^{
+      const auto result = CKMountComponentLayout(rootLayout.layout(), view, currentlyMountedComponents, nil, analyticsListener);
+      newMountedComponents = result.mountedComponents;
+      unmountedComponents = result.unmountedComponents;
+    }, nil);
+    return unmountedComponents;
+  };
+
+  std::shared_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> animationApplicator;
+  if (enableNewAnimationInfrastructure) {
+    animationApplicator = view.ck_attachState != nil ? view.ck_attachState.animationApplicator : CK::AnimationApplicatorFactory::make();
+    animationApplicator->runAnimationsWhenMounting(animations, mountPerformer);
+  } else {
+    mountPerformer();
+  }
+
+  return [[CKComponentDataSourceAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents rootLayout:rootLayout animationApplicator:animationApplicator];
 }
 
 static void tearDownAttachStateFromViews(NSArray *views)
@@ -145,11 +167,14 @@ static void tearDownAttachStateFromViews(NSArray *views)
 @implementation CKComponentDataSourceAttachState
 {
   CKComponentRootLayout _rootLayout;
+  // The ownership isn't really shared with anyone, this is just to get copying the pointer in and out of the attach state easier
+  std::shared_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> _animationApplicator;
 }
 
 - (instancetype)initWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
                       mountedComponents:(NSSet *)mountedComponents
                              rootLayout:(const CKComponentRootLayout &)rootLayout
+                    animationApplicator:(const std::shared_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> &)animationApplicator
 {
   self = [super init];
   if (self) {
@@ -157,6 +182,7 @@ static void tearDownAttachStateFromViews(NSArray *views)
     _scopeIdentifier = scopeIdentifier;
     _mountedComponents = [mountedComponents copy];
     _rootLayout = rootLayout;
+    _animationApplicator = animationApplicator;
   }
   return self;
 }
@@ -164,6 +190,11 @@ static void tearDownAttachStateFromViews(NSArray *views)
 - (const CKComponentRootLayout &)rootLayout
 {
   return _rootLayout;
+}
+
+- (const std::shared_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> &)animationApplicator
+{
+  return _animationApplicator;
 }
 
 @end

@@ -11,9 +11,21 @@
 #import "CKDataSourceModificationHelper.h"
 
 #import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKComponentContext.h>
+#import <ComponentKit/CKComponentController.h>
+#import <ComponentKit/CKComponentEvents.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceItemInternal.h>
+
+static auto layoutPredicates(BOOL enableComponentAnimations)
+{
+  static const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
+    CKComponentHasAnimationsOnInitialMountPredicate,
+    CKComponentHasAnimationsFromPreviousComponentPredicate,
+  };
+  return enableComponentAnimations ? animationPredicates : std::unordered_set<CKComponentPredicate> {};
+}
 
 CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
@@ -23,16 +35,20 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         id context)
 {
   Class<CKComponentProvider> componentProvider = [configuration componentProvider];
+  const auto componentFactory = ^{
+    const auto controllerCtx = [CKComponentControllerContext newWithHandleAnimationsInController:!configuration.enableNewAnimationInfrastructure];
+    const CKComponentContext<CKComponentControllerContext> ctx {controllerCtx};
+    return [componentProvider componentForModel:model context:context];
+  };
   if (!configuration.unifyBuildAndLayout) {
     const CKBuildComponentResult result = CKBuildComponent(previousRoot,
                                                            stateUpdates,
-                                                           ^CKComponent *{
-                                                             return [componentProvider componentForModel:model context:context];
-                                                           },
+                                                           componentFactory,
                                                            configuration.buildComponentConfig);
     const auto layout = CKComputeRootComponentLayout(result.component,
                                                      sizeRange,
-                                                     result.scopeRoot.analyticsListener);
+                                                     result.scopeRoot.analyticsListener,
+                                                     layoutPredicates(configuration.enableNewAnimationInfrastructure));
     return [[CKDataSourceItem alloc] initWithLayout:layout
                                               model:model
                                           scopeRoot:result.scopeRoot
@@ -41,10 +57,8 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
     CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent(previousRoot,
                                                                        stateUpdates,
                                                                        sizeRange,
-                                                                       ^CKComponent *{
-                                                                         return [componentProvider componentForModel:model context:context];
-                                                                       },
-                                                                       {},
+                                                                       componentFactory,
+                                                                       layoutPredicates(configuration.enableNewAnimationInfrastructure),
                                                                        configuration.buildComponentConfig);
     return [[CKDataSourceItem alloc] initWithLayout:result.computedLayout
                                               model:model
