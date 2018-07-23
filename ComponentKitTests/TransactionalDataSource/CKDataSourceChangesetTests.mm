@@ -10,13 +10,10 @@
 
 #import <XCTest/XCTest.h>
 
-#import <unordered_map>
-#import <vector>
-
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKDataSourceChangesetInternal.h>
-#import <ComponentKitTestHelpers/NSIndexSetExtensions.h>
+#import <ComponentKitTestHelpers/CKChangesetHelpers.h>
 
 @interface CKDataSourceChangesetTests : XCTestCase
 @end
@@ -198,78 +195,6 @@
   }\n\
 }";
   XCTAssertEqualObjects(CK::changesetDescription(cs), expectedDescription);
-}
-
-namespace CK {
-  struct IndexPath {
-    struct EqualTo {
-      auto operator()(const IndexPath& lhs, const IndexPath& rhs) const noexcept
-      {
-        return lhs.section == rhs.section && lhs.item == rhs.item;
-      }
-    };
-    struct Hash {
-      auto operator()(const IndexPath& ip) const noexcept { return ip.item ^ ip.section; }
-    };
-
-    const int section;
-    const int item;
-
-    auto toCocoa() const
-    {
-      return [NSIndexPath indexPathForItem:item inSection:section];
-    }
-  };
-
-  static auto makeIndexPathSet(const std::vector<IndexPath> ips) -> NSSet<NSIndexPath *> *
-  {
-    auto r = static_cast<NSMutableSet<NSIndexPath *> *>([NSMutableSet new]);
-    for (const auto &ip : ips) {
-      [r addObject:ip.toCocoa()];
-    }
-    return r;
-  }
-
-  struct ChangesetParams {
-    using ItemsByIndexPath = std::unordered_map<IndexPath, NSObject *, CK::IndexPath::Hash, CK::IndexPath::EqualTo>;
-    using IndexPathsByIndexPath = std::unordered_map<IndexPath, IndexPath, CK::IndexPath::Hash, CK::IndexPath::EqualTo>;
-
-    const ItemsByIndexPath updatedItems = {};
-    const std::vector<IndexPath> removedItems = {};
-    const std::vector<NSUInteger> removedSections = {};
-    const IndexPathsByIndexPath movedItems = {};
-    const std::vector<NSUInteger> insertedSections = {};
-    const ItemsByIndexPath insertedItems = {};
-  };
-
-  static auto makeItemsByIndexPathDictionary(const ChangesetParams::ItemsByIndexPath& itemsByIndexPath) -> NSDictionary <NSIndexPath *, NSObject *> *
-  {
-    auto r = static_cast<NSMutableDictionary<NSIndexPath *, NSObject *> *>([NSMutableDictionary new]);
-    for (const auto &kv : itemsByIndexPath) {
-      r[kv.first.toCocoa()] = kv.second;
-    }
-    return r;
-  }
-
-  static auto makeIndexPathsByIndexPathDictionary(const ChangesetParams::IndexPathsByIndexPath& indexPaths) -> NSDictionary <NSIndexPath *, NSIndexPath *> *
-  {
-    auto r = static_cast<NSMutableDictionary<NSIndexPath *, NSIndexPath *> *>([NSMutableDictionary new]);
-    for (const auto &kv : indexPaths) {
-      r[kv.first.toCocoa()] = kv.second.toCocoa();
-    }
-    return r;
-  }
-
-  static auto makeChangeset(const ChangesetParams& params)
-  {
-    return [[[[[[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
-                  withUpdatedItems:makeItemsByIndexPathDictionary(params.updatedItems)]
-                 withRemovedItems:makeIndexPathSet(params.removedItems)]
-                withRemovedSections:makeIndexSet(params.removedSections)]
-               withMovedItems:makeIndexPathsByIndexPathDictionary(params.movedItems)]
-              withInsertedItems:makeItemsByIndexPathDictionary(params.insertedItems)]
-             withInsertedSections:makeIndexSet(params.insertedSections)] build];
-  }
 }
 
 @end
