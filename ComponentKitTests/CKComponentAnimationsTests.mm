@@ -203,6 +203,34 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
   XCTAssertFalse(as.isEmpty());
 }
 
+- (void)test_IfComponentHasNoInitialAnimations_IsEmpty
+{
+  const auto diff = CK::ComponentTreeDiff {
+    .appearedComponents = {
+      [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{}],
+    },
+  };
+
+  const auto as = animationsForComponents(diff);
+
+  XCTAssert(as.isEmpty());
+}
+
+- (void)test_IfComponentHasNoAnimationsFromPreviousComponent_IsEmpty
+{
+  const auto pc1 = [CKComponent new];
+  const auto c1 = [ComponentWithAnimationsFromPreviousComponent newWithAnimations:{} fromPreviousComponent:pc1];
+  const auto diff = CK::ComponentTreeDiff {
+    .updatedComponents = {
+      {pc1, c1},
+    }
+  };
+
+  const auto as = animationsForComponents(diff);
+
+  XCTAssert(as.isEmpty());
+}
+
 @end
 
 @implementation ComponentWithInitialMountAnimations {

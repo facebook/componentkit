@@ -69,16 +69,20 @@ namespace CK {
       return {};
     }
 
-    const auto animationsOnInitialMountPairs = map(animatedComponents.appearedComponents, [](const auto &c) {
+    const auto animationsOnInitialMountPairs = filter(map(animatedComponents.appearedComponents, [](const auto &c) {
       return std::make_pair(c, c.animationsOnInitialMount);
+    }), [](const auto &pair) {
+      return !pair.second.empty();
     });
 
     const auto initialAnimations =
     CKComponentAnimations::AnimationsByComponentMap(animationsOnInitialMountPairs.begin(),
                                                     animationsOnInitialMountPairs.end());
 
-    const auto animationsFromPreviousComponentPairs = map(animatedComponents.updatedComponents, [](const auto &pair) {
+    const auto animationsFromPreviousComponentPairs = filter(map(animatedComponents.updatedComponents, [](const auto &pair) {
       return std::make_pair(pair.current, [pair.current animationsFromPreviousComponent:pair.prev]);
+    }), [](const auto &pair) {
+      return !pair.second.empty();
     });
 
     const auto animationsFromPrevComponent =
