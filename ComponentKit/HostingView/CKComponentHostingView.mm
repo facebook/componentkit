@@ -277,12 +277,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
 - (void)hostingViewWillAppear
 {
-  // We often run into this situation where `hostingViewWillAppear` is called
-  // before the component tree is generated and mounted, resulting in no-op.
-  // This is because component tree is generated in `layoutSubviews` happening at the end of the runloop.
-  // This force the layout immediately to ensure that
-  // component tree is created in order to have the appearance callback received.
-  [self layoutIfNeeded];
   CKComponentScopeRootAnnounceControllerAppearance(_pendingInputs.scopeRoot);
 }
 
