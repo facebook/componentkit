@@ -30,6 +30,7 @@ struct CKComponentAnimations {
   const auto &animationsOnInitialMount() const { return _animationsOnInitialMount; }
   const auto &animationsFromPreviousComponent() const { return _animationsFromPreviousComponent; }
   auto isEmpty() const { return _animationsOnInitialMount.empty() && _animationsFromPreviousComponent.empty(); }
+  auto description() const -> NSString *;
 
 private:
   AnimationsByComponentMap _animationsOnInitialMount = {};

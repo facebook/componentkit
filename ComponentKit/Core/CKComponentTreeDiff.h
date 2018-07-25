@@ -29,6 +29,8 @@ namespace CK {
       CKComponent *const current;
     };
 
+    auto description() const -> NSString *;
+
     /* Components only present in the newer version of the tree. */
     const std::vector<CKComponent *> appearedComponents = {};
     /* Components that appear in both versions of the tree. Each component is paired up with its previous generation. */

@@ -12,6 +12,8 @@
 #define CKCollection_h
 
 #import <algorithm>
+#import <functional>
+#import <type_traits>
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/ComponentUtilities.h>
@@ -69,6 +71,21 @@ namespace CK {
         r.insert(r.end(), x.begin(), x.end());
       }
       return r;
+    }
+
+    /*
+     Returns string representations of elements of the collection separated by comma and new line. String representation
+     of each element is obtained by calling the passed element description provider function.
+     */
+    template <typename Collection, typename ElementDescriptionFunc>
+    auto descriptionForElements(const Collection &c, ElementDescriptionFunc &&d)
+    {
+      static_assert(std::is_convertible<ElementDescriptionFunc, std::function<NSString *(typename Collection::const_reference)>>::value, "Description provider needs to take a const reference to an element of the collection and return an NSString *");
+      auto elementStrs = static_cast<NSMutableArray<NSString *> *>([NSMutableArray array]);
+      for (const auto &e : c) {
+        [elementStrs addObject:d(e)];
+      }
+      return [elementStrs componentsJoinedByString:@",\n"];
     }
   }
 }

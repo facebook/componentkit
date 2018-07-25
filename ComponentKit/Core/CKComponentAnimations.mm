@@ -92,3 +92,30 @@ namespace CK {
     return {initialAnimations, animationsFromPrevComponent};
   }
 }
+
+static auto descriptionForAnimationsByComponentMap(const CKComponentAnimations::AnimationsByComponentMap &map)
+{
+  auto pairStrs = static_cast<NSMutableArray<NSString *> *>([NSMutableArray array]);
+  for (const auto &p : map) {
+    for (const auto &a : p.second) {
+      [pairStrs addObject:[NSString stringWithFormat:@"\t%@: %p", p.first, &a]];
+    }
+  }
+  return [pairStrs componentsJoinedByString:@",\n"];
+}
+
+auto CKComponentAnimations::description() const -> NSString *
+{
+  auto description = [NSMutableString new];
+  if (!_animationsOnInitialMount.empty()) {
+    [description appendString:@"Animations on initial mount: {\n"];
+    [description appendString:descriptionForAnimationsByComponentMap(_animationsOnInitialMount)];
+    [description appendString:@"\n}\n"];
+  }
+  if (!_animationsFromPreviousComponent.empty()) {
+    [description appendString:@"Animations from previous component: {\n"];
+    [description appendString:descriptionForAnimationsByComponentMap(_animationsFromPreviousComponent)];
+    [description appendString:@"\n}\n"];
+  }
+  return description;
+}
