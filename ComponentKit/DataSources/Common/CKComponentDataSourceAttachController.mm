@@ -124,7 +124,8 @@ static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComp
   [view, &rootLayout](){
     const auto prevLayout = view.ck_attachState != nil ? view.ck_attachState.rootLayout : CKComponentRootLayout {};
     const auto animatedComponents = CK::animatedComponentsBetweenLayouts(rootLayout, prevLayout);
-    return CK::animationsForComponents(animatedComponents);
+    const auto animations = CK::animationsForComponents(animatedComponents);
+    return animations;
   }() : CKComponentAnimations();
 
   NSSet *currentlyMountedComponents = view.ck_attachState.mountedComponents;
