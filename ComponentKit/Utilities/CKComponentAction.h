@@ -135,6 +135,16 @@ public:
     return CKAction<T...>(block);
   }
 
+  /** Like actionFromBlock, but allows passing a block that doesn't take a sender component. */
+  static CKAction<T...> actionFromSenderlessBlock(void (^block)(T...)) {
+    if (!block) {
+      return {};
+    }
+    return CKAction<T...>::actionFromBlock(^(CKComponent* sender, T... args) {
+      block(args...);
+    });
+  }
+
   /**
    Allows demoting an action to a simpler action while supplying defaults for the values that won't be passed in.
    */
