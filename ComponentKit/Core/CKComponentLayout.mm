@@ -35,6 +35,7 @@ static auto buildComponentsByPredicateMap(const CKComponentLayout &layout, const
   if (predicates.empty()) { return componentsByPredicate; }
 
   layout.enumerateLayouts([&](const auto &l){
+    if (l.component == nil) { return; }
     for (const auto &p : predicates) {
       if (p(l.component)) {
         componentsByPredicate[p].push_back(l.component);

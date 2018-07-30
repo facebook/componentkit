@@ -151,4 +151,12 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
   const auto expected = std::vector<CKComponent *> {matchingComponent};
   XCTAssert(l.componentsMatchingPredicate(p) == expected);
 }
+
+- (void)test_IgnoresNilComponentsEvenIfTheyMatchPredicate
+{
+  const auto p = CKComponentPredicate {[](const auto c){ return YES; }};
+  const auto l = CKComputeRootComponentLayout([CKCompositeComponent newWithComponent:nil], sizeRange, nil, {p});
+
+  XCTAssert(l.componentsMatchingPredicate(p) == std::vector<CKComponent *> {});
+}
 @end
