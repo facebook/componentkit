@@ -4,7 +4,7 @@
 
 #import <algorithm>
 
-auto CK::IndexTransform::applyToIndex(const NSInteger index) const -> NSInteger
+auto CK::IndexTransform::applyOffsetToIndex(NSInteger index) const -> NSInteger
 {
   const auto maybeRangeOffsetForIdx = std::find_if(_rangeOffsets.begin(), _rangeOffsets.end(), [=](auto r) {
     return NSLocationInRange(index, r.range);
@@ -16,7 +16,7 @@ auto CK::IndexTransform::applyToIndex(const NSInteger index) const -> NSInteger
   }
 }
 
-auto CK::IndexTransform::applyInverseToIndex(const NSInteger index) const -> NSInteger
+auto CK::IndexTransform::findRangeAndApplyOffsetToIndex(NSInteger index) const -> NSInteger
 {
   auto nonRemovedIdx = 0;
   for (const auto rangeOffset : _rangeOffsets) {
@@ -33,9 +33,9 @@ auto CK::IndexTransform::applyInverseToIndex(const NSInteger index) const -> NSI
   return NSNotFound;
 }
 
-CK::IndexTransform::IndexTransform(NSIndexSet *const removedIndexes)
+CK::IndexTransform::IndexTransform(NSIndexSet *const indexes)
 {
-  if (removedIndexes.count == 0) {
+  if (indexes.count == 0) {
     _rangeOffsets = {{NSMakeRange(0, NSIntegerMax), 0}};
     return;
   }
@@ -44,8 +44,8 @@ CK::IndexTransform::IndexTransform(NSIndexSet *const removedIndexes)
   __block auto lastNonRemovedIdx = 1;
   __block auto isFirstRange = true;
   __block std::vector<RangeOffset> rangeOffsets;
-  rangeOffsets.reserve(removedIndexes.count);
-  [removedIndexes enumerateRangesUsingBlock:^(NSRange range, BOOL *_Nonnull) {
+  rangeOffsets.reserve(indexes.count);
+  [indexes enumerateRangesUsingBlock:^(NSRange range, BOOL *_Nonnull) {
     if (isFirstRange) {
       isFirstRange = false;
       if (range.location > 0) {
