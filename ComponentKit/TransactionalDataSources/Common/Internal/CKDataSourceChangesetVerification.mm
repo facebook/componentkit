@@ -15,6 +15,7 @@
 #import <ComponentKit/CKDataSourceChangesetInternal.h>
 #import <ComponentKit/CKDataSourceChangesetModification.h>
 #import <ComponentKit/CKDataSourceStateInternal.h>
+#import <ComponentKit/CKIndexTransform.h>
 
 static NSArray<NSNumber *> *sectionCountsWithModificationsFoldedIntoState(CKDataSourceState *state,
                                                                           NSArray<id<CKDataSourceStateModifying>> *modifications);
@@ -35,7 +36,7 @@ CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changes
    This process ensures that the modified state represents the state the changeset will be eventually applied to.
    */
   NSMutableArray<NSNumber *> *sectionCounts = [sectionCountsWithModificationsFoldedIntoState(state, pendingAsynchronousModifications) mutableCopy];
-  NSArray *originalSectionCounts = [sectionCounts copy];
+  NSMutableArray<NSNumber *> *originalSectionCounts = [sectionCounts mutableCopy];
   __block BOOL invalidChangeFound = NO;
   __block NSInteger invalidSection = -1;
   __block NSInteger invalidItem = -1;
@@ -146,8 +147,11 @@ CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changes
     return { CKInvalidChangesetOperationTypeInsertRow, invalidSection, invalidItem };
   }
   // Moved items
+  const auto sectionIdxTransform =
+  std::make_shared<const CK::CompositeIndexTransform>(std::make_unique<const CK::RemovalIndexTransform>(changeset.removedSections),
+                                                      std::make_unique<const CK::InsertionIndexTransform>(changeset.insertedSections));
   [changeset.movedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull fromIndexPath, NSIndexPath * _Nonnull toIndexPath, BOOL * _Nonnull stop) {
-    const BOOL fromIndexPathSectionInvalid = fromIndexPath.section >= sectionCounts.count;
+    const BOOL fromIndexPathSectionInvalid = fromIndexPath.section >= originalSectionCounts.count;
     const BOOL toIndexPathSectionInvalid = toIndexPath.section >= sectionCounts.count;
     if (fromIndexPathSectionInvalid || toIndexPathSectionInvalid) {
       invalidChangeFound = YES;
@@ -164,8 +168,9 @@ CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changes
         invalidChangeFound = YES;
         *stop = YES;
       } else {
-        sectionCounts[fromIndexPath.section] = @([sectionCounts[fromIndexPath.section] integerValue] - 1);
-        sectionCounts[toIndexPath.section] = @([sectionCounts[toIndexPath.section] integerValue] + 1);
+        originalSectionCounts[fromIndexPath.section] = @([originalSectionCounts[fromIndexPath.section] integerValue] - 1);
+        const auto originalSectionIdx = sectionIdxTransform->applyInverseToIndex(toIndexPath.section);
+        originalSectionCounts[originalSectionIdx] = @([originalSectionCounts[originalSectionIdx] integerValue] + 1);
       }
     }
   }];

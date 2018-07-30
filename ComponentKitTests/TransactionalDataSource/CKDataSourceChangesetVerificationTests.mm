@@ -17,8 +17,10 @@
 #import <ComponentKit/CKDataSourceChangesetModification.h>
 #import <ComponentKit/CKDataSourceItemInternal.h>
 #import <ComponentKit/CKDataSourceStateInternal.h>
+#import <ComponentKitTestHelpers/CKChangesetHelpers.h>
 
 #import "CKDataSourceChangesetVerification.h"
+#import "CKDataSourceStateTestHelpers.h"
 
 @interface CKDataSourceChangesetVerificationTests : XCTestCase
 @end
@@ -597,6 +599,63 @@
                                            [NSIndexPath indexPathForItem:2 inSection:0],
                                            ]]]
    build];
+  [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
+}
+
+- (void)test_WhenVerifyingMovesWithSectionRemoval_ValidatesFromIndexPathsAgainstOriginalState
+{
+  const auto state = CKDataSourceTestState(Nil, nil, 2, 20);
+  const auto changeset = CK::makeChangeset({
+    .removedSections = {
+      0,
+    },
+    .movedItems = {
+      {{1, 1}, {0, 9}},
+      {{1, 4}, {0, 17}},
+      {{1, 18}, {0, 13}},
+      {{1, 19}, {0, 5}},
+    },
+  });
+
+  [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
+}
+
+- (void)test_WhenVerifyingMovesWithSectionInsertion_ValidatesFromIndexPathsAgainstOriginalState
+{
+  const auto state = CKDataSourceTestState(Nil, nil, 1, 20);
+  const auto changeset = CK::makeChangeset({
+    .movedItems = {
+      {{0, 1}, {1, 9}},
+      {{0, 4}, {1, 17}},
+      {{0, 18}, {1, 13}},
+      {{0, 19}, {1, 5}},
+    },
+    .insertedSections = {
+      0
+    },
+  });
+
+  [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
+}
+
+- (void)test_WhenVerifyingMovesWithBothSectionInsertionsAndRemovals_ValidatesFromIndexPathsAgainstOriginalState
+{
+  const auto state = CKDataSourceTestState(Nil, nil, 2, 20);
+  const auto changeset = CK::makeChangeset({
+    .removedSections = {
+      0,
+    },
+    .movedItems = {
+      {{1, 1}, {1, 9}},
+      {{1, 4}, {1, 17}},
+      {{1, 18}, {1, 13}},
+      {{1, 19}, {1, 5}},
+    },
+    .insertedSections = {
+      0
+    },
+  });
+
   [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
 }
 

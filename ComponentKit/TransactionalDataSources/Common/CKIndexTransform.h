@@ -64,15 +64,15 @@ namespace CK {
   };
 
   struct CompositeIndexTransform final: IndexTransformProtocol {
-    CompositeIndexTransform(std::unique_ptr<IndexTransformProtocol> t1,
-                            std::unique_ptr<IndexTransformProtocol> t2)
+    CompositeIndexTransform(std::unique_ptr<const IndexTransformProtocol> t1,
+                            std::unique_ptr<const IndexTransformProtocol> t2)
     : _t1(std::move(t1)), _t2(std::move(t2)) {}
 
     auto applyToIndex(NSInteger index) const -> NSInteger { return _t2->applyToIndex(_t1->applyToIndex(index)); }
     auto applyInverseToIndex(NSInteger index) const -> NSInteger { return _t2->applyInverseToIndex(_t1->applyInverseToIndex(index)); }
 
   private:
-    std::unique_ptr<IndexTransformProtocol> _t1;
-    std::unique_ptr<IndexTransformProtocol> _t2;
+    std::unique_ptr<const IndexTransformProtocol> _t1;
+    std::unique_ptr<const IndexTransformProtocol> _t2;
   };
 }
