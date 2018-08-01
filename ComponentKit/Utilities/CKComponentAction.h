@@ -14,6 +14,8 @@
 #import <ComponentKit/CKComponentActionInternal.h>
 #import <objc/runtime.h>
 
+#pragma once
+
 @class CKComponent;
 
 namespace CK {
