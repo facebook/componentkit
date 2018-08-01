@@ -124,7 +124,7 @@ CKActionInfo CKActionFind(SEL selector, id target) noexcept
   id responder = ([target respondsToSelector:@selector(targetForAction:withSender:)]
                   ? [target targetForAction:selector withSender:target]
                   : target);
-  CKCAssert([responder isProxy],
+  CKCAssert(![responder isProxy],
             @"NSProxy can't be a responder for target-selector CKAction. Please use a block action instead.");
   IMP imp = [responder methodForSelector:selector];
   while (!imp) {
@@ -145,7 +145,7 @@ CKActionInfo CKActionFind(SEL selector, id target) noexcept
     }
     
     responder = forwardingTarget;
-    CKCAssert([responder isProxy],
+    CKCAssert(![responder isProxy],
               @"NSProxy can't be a responder for target-selector CKAction. Please use a block action instead.");
     imp = [responder methodForSelector:selector];
   }
