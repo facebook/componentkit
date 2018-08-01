@@ -70,20 +70,28 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   if (self = [super init]) {
     _state = [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
-    auto const workQueueAttributes =
-    dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL,
-                                            qosClassFromDataSourceQOS(configuration.qosOptions.workQueueQOS),
-                                            0);
-    _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", workQueueAttributes);
+
+    auto const workQueueQOS = configuration.qosOptions.workQueueQOS;
+    if (workQueueQOS == CKDataSourceQOSDefault) {
+      _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
+    } else {
+      auto const workQueueAttributes =
+      dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qosClassFromDataSourceQOS(workQueueQOS), 0);
+      _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", workQueueAttributes);
+    }
+
     _pendingAsynchronousModifications = [NSMutableArray array];
     [CKComponentDebugController registerReflowListener:self];
     if (configuration.parallelInsertBuildAndLayout ||
         configuration.parallelUpdateBuildAndLayout) {
-      auto const concurrentQueueAttributes =
-      dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_CONCURRENT,
-                                              qosClassFromDataSourceQOS(configuration.qosOptions.concurrentQueueQOS),
-                                              0);
-      _concurrentQueue = dispatch_queue_create("org.componentkit.CKDataSource.concurrent", concurrentQueueAttributes);
+      auto const concurrentQueueQOS = configuration.qosOptions.concurrentQueueQOS;
+      if (concurrentQueueQOS == CKDataSourceQOSDefault) {
+        _concurrentQueue = dispatch_queue_create("org.componentkit.CKDataSource.concurrent", DISPATCH_QUEUE_CONCURRENT);
+      } else {
+        auto const concurrentQueueAttributes =
+        dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_CONCURRENT, qosClassFromDataSourceQOS(concurrentQueueQOS), 0);
+        _concurrentQueue = dispatch_queue_create("org.componentkit.CKDataSource.concurrent", concurrentQueueAttributes);
+      }
     }
   }
   return self;
