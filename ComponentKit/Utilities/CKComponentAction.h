@@ -151,6 +151,9 @@ public:
   template<typename... U>
   static CKAction<T...> demotedFrom(CKAction<T..., U...> action, U... defaults) {
     static_assert(!CK::detail::any_references<U...>::value, "Demoting an action with reference defaults is not allowed");
+    if (!action) {
+      return {};
+    }
     return CKAction<T...>::actionFromBlock(^(CKComponent *sender, T... args) {
       action.send(sender, args..., defaults...);
     });
@@ -158,6 +161,9 @@ public:
 
   template<typename... U>
   static CKAction<T..., U...> promotedFrom(CKAction<T...> action) {
+    if (!action) {
+      return {};
+    }
     return CKAction<T..., U...>::actionFromBlock(^(CKComponent* sender, T... argsT, U... argsU) {
       action.send(sender, argsT...);
     });
