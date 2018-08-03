@@ -233,7 +233,13 @@ static void attachToCell(CKCollectionViewDataSourceCell *cell,
                          CKComponentDataSourceAttachController *attachController,
                          NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *cellToItemMap)
 {
-  [attachController attachComponentRootLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier withBoundsAnimation:item.boundsAnimation toView:cell.rootView analyticsListener:item.scopeRoot.analyticsListener];
+  CKComponentDataSourceAttachControllerAttachComponentRootLayout(
+      attachController,
+      {.rootLayout = item.layout,
+       .scopeIdentifier = item.scopeRoot.globalIdentifier,
+       .boundsAnimation = item.boundsAnimation,
+       .view = cell.rootView,
+       .analyticsListener = item.scopeRoot.analyticsListener});
   [cellToItemMap setObject:item forKey:cell];
 }
 

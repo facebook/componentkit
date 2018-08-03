@@ -22,13 +22,14 @@
 
 - (instancetype)initWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
                       mountedComponents:(NSSet *)mountedComponents
-                             rootLayout:(const CKComponentRootLayout &)rootLayout
                     animationApplicator:(const std::shared_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> &)animationApplicator;
 
-- (const CKComponentRootLayout &)rootLayout;
 - (const std::shared_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> &)animationApplicator;
 
 @end
+
+const CKComponentRootLayout &CKComponentDataSourceAttachStateRootLayout(const CKComponentDataSourceAttachState *const self);
+void CKComponentDataSourceAttachStateSetRootLayout(CKComponentDataSourceAttachState *const self, const CKComponentRootLayout &rootLayout);
 
 @interface CKComponentDataSourceAttachController ()
 

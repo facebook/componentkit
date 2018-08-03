@@ -88,11 +88,13 @@
 {
   CKAssertMainThread();
   _mountedView = view;
-  [_componentDataSourceAttachController attachComponentRootLayout:CKComponentRootLayout {_state.componentLayout}
-                                          withScopeIdentifier:_state.scopeRoot.globalIdentifier
-                                          withBoundsAnimation:_state.boundsAnimation
-                                                       toView:view
-                                            analyticsListener:nil];
+  CKComponentDataSourceAttachControllerAttachComponentRootLayout(
+      _componentDataSourceAttachController,
+      {.rootLayout = CKComponentRootLayout{_state.componentLayout},
+       .scopeIdentifier = _state.scopeRoot.globalIdentifier,
+       .boundsAnimation = _state.boundsAnimation,
+       .view = view,
+       .analyticsListener = nil});
 }
 
 - (void)detachFromView

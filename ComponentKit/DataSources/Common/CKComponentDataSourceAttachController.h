@@ -32,6 +32,14 @@
 + (instancetype)newWithEnableNewAnimationInfrastructure:(BOOL)enableNewAnimationInfrastructure;
 
 /**
+ Detaching a component tree will cause it to be unmounted from the view it is currently attached to and will mark the view as available to be
+ attached again to a component tree.
+ */
+- (void)detachComponentLayoutWithScopeIdentifier:(CKComponentScopeRootIdentifier)identifier;
+
+@end
+
+/**
  Attaching a component tree to a view, the controller will:
  1) Detach the component tree from the view it is currently attached to, if it is already attached to a view.
  2) Detach the component tree currently attached to the view, if and only if the component tree currently attached has a different
@@ -42,15 +50,14 @@
  @param scopeIdentifier The scope identifier for the component tree, this identifier should be stable among multiple versions
  of the component tree representing the same logical item.
  */
-- (void)attachComponentRootLayout:(const CKComponentRootLayout &)rootLayout
-              withScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
-              withBoundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation
-                           toView:(UIView *)view
-                analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
-/**
- Detaching a component tree will cause it to be unmounted from the view it is currently attached to and will mark the view as available to be
- attached again to a component tree.
- */
-- (void)detachComponentLayoutWithScopeIdentifier:(CKComponentScopeRootIdentifier)identifier;
+struct CKComponentDataSourceAttachControllerAttachComponentRootLayoutParams {
+  const CKComponentRootLayout &rootLayout;
+  CKComponentScopeRootIdentifier scopeIdentifier;
+  const CKComponentBoundsAnimation &boundsAnimation;
+  UIView *view;
+  id<CKAnalyticsListener> analyticsListener;
+};
 
-@end
+void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
+    const CKComponentDataSourceAttachController *const self,
+    const CKComponentDataSourceAttachControllerAttachComponentRootLayoutParams &params);
