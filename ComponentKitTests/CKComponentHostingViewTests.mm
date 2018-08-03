@@ -13,6 +13,7 @@
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 #import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 
+#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentFlexibleSizeRangeProvider.h>
 #import <ComponentKit/CKComponentHostingView.h>
@@ -304,7 +305,7 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 #pragma mark - CKAnalyticsListener
 
-- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates { }
+- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot buildTrigger:(BuildTrigger)buildTrigger { }
 - (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component { }
 
 - (void)willMountComponentTreeWithRootComponent:(CKComponent *)component { }

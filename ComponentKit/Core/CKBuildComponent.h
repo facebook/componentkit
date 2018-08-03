@@ -17,6 +17,12 @@
 @class CKComponentScopeRoot;
 @class CKComponent;
 
+enum class BuildTrigger {
+  NewTree,
+  StateUpdate,
+  PropsUpdate,
+};
+
 /**
  A configuration struct for the build component method.
  **/

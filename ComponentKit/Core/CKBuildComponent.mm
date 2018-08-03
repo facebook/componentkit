@@ -19,6 +19,12 @@
 #import "CKRenderTreeNodeWithChildren.h"
 #import "CKThreadLocalComponentScope.h"
 
+static BuildTrigger getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) {
+  if (scopeRoot.rootFrame.childrenSize > 0 || scopeRoot.rootNode.childrenSize > 0) {
+    return (stateUpdates.size() > 0) ? BuildTrigger::StateUpdate : BuildTrigger::PropsUpdate;
+  }
+  return BuildTrigger::NewTree;
+}
 
 static CKBuildComponentResult _CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                                 const CKComponentStateUpdateMap &stateUpdates,
@@ -27,8 +33,9 @@ static CKBuildComponentResult _CKBuildComponent(CKComponentScopeRoot *previousRo
                                                 CKComponent *(^componentFactory)(void))
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
-  const auto analyticsListener = [previousRoot analyticsListener];
-  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot stateUpdates:stateUpdates];
+  auto const analyticsListener = [previousRoot analyticsListener];
+  auto const buildTrigger = getBuildTrigger(previousRoot, stateUpdates);
+  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot buildTrigger:buildTrigger];
 
   CKComponent *const component = componentFactory();
 
