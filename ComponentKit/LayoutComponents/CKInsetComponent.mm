@@ -70,11 +70,6 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
   CK_NOT_DESIGNATED_INITIALIZER();
 }
 
-+ (BOOL)isOwnerComponent
-{
-  return NO;
-}
-
 - (CKComponent *)render:(id)state
 {
   return _component;

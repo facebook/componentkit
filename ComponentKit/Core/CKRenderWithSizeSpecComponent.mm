@@ -110,7 +110,6 @@ struct CKRenderWithSizeSpecComponentParameters {
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                     config:(const CKBuildComponentConfig &)config
 {
-  CKAssertTrue([[self class] isOwnerComponent]);
   if (!_node) {
     auto const node = [[CKRenderTreeNodeWithChildren alloc]
                        initWithComponent:self
@@ -132,11 +131,6 @@ struct CKRenderWithSizeSpecComponentParameters {
 }
 
 #pragma mark - CKRenderComponent
-
-+ (BOOL)isOwnerComponent
-{
-  return YES;
-}
 
 + (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component
 {

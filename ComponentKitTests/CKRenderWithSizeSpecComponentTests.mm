@@ -140,10 +140,6 @@
   CKComponent * _child;
 }
 
-+ (BOOL)isOwnerComponent {
-  return YES;
-}
-
 + (TestOwnerRenderWithSizeSpecComponent_ChildFromOutside *)newWithChild:(CKComponent *)child {
   const auto c = [super new];
   if (c) {

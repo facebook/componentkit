@@ -57,11 +57,6 @@
 
 #pragma mark - CKRenderComponentProtocol
 
-+ (BOOL)isOwnerComponent
-{
-  return NO;
-}
-
 + (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component
 {
   return [self initialState];

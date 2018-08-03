@@ -19,27 +19,6 @@
 @protocol CKRenderComponentProtocol <CKComponentProtocol>
 
 /*
- This method defines how a component behaves when the component tree is being constructed with
- 'buildComponentTree:previousOwner:scopeRoot:stateUpdates'.
-
- Each component has a corresponding CKTreeNode; this node holds the component's state and its children nodes.
- If a component is an owner component, its children nodes (CKTreeNode) will be attached to its corresponding node.
- Otherwise, they will be attached to the component's owner.
-
- Return yes in case your component is the owner of its children components.
- Owner means that the component creates its children directly in its render method.
-
- For example:
- CKRenderComponent is an owner component.
- CKFlexboxComponent isn't; it receives its children as props in its constructor.
-
- Default values:
- CKRenderComponent returns YES
- CKRenderWithChildrenComponent returns NO
- */
-+ (BOOL)isOwnerComponent;
-
-/*
  Override this method in order to provide an initialState which depends on the component's props.
  Otherwise, override `+(id)initialState` instead.
  */
