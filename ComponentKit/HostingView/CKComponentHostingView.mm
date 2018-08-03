@@ -164,7 +164,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     if (!_unifyBuildAndLayout) {
       [self _synchronouslyUpdateComponentIfNeeded];
       if (_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size)) {
-        [self setMountedRootLayout:CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, self.layoutPredicates)];
+        setMountedRootLayout(self, CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, self.layoutPredicates));
       }
     } else {
       [self _synchronouslyBuildAndLayoutComponentIfNeeded:{size,size} forceUpdate:(_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size))];
@@ -234,10 +234,10 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   return _mountedRootLayout.layout();
 }
 
-- (void)setMountedRootLayout:(const CKComponentRootLayout &)rootLayout
+static void setMountedRootLayout(CKComponentHostingView *const self, const CKComponentRootLayout &rootLayout)
 {
-  _componentAnimations = [self animationsForNewLayout:rootLayout];
-  _mountedRootLayout = rootLayout;
+  self->_componentAnimations = animationsForNewLayout(self, rootLayout);
+  self->_mountedRootLayout = rootLayout;
   [self _sendDidPrepareLayoutIfNeeded];
 }
 
@@ -266,10 +266,10 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   return _enableNewAnimationInfrastructure ? animationPredicates : std::unordered_set<CKComponentPredicate> {};
 }
 
-- (CKComponentAnimations)animationsForNewLayout:(const CKComponentRootLayout &)newLayout
+static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView *const self, const CKComponentRootLayout &newLayout)
 {
-  return _enableNewAnimationInfrastructure ?
-  CK::animationsForComponents(CK::animatedComponentsBetweenLayouts(newLayout, _mountedRootLayout)) :
+  return self->_enableNewAnimationInfrastructure ?
+  CK::animationsForComponents(CK::animatedComponentsBetweenLayouts(newLayout, self->_mountedRootLayout)) :
   CKComponentAnimations {};
 }
 
@@ -472,7 +472,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
       // If the inputs haven't changed, apply the result; otherwise, retry.
       if (_pendingInputs == *inputs) {
         [self _applyResult:results.buildComponentResult];
-        [self setMountedRootLayout:results.computedLayout];
+        setMountedRootLayout(self, results.computedLayout);
         _scheduledAsynchronousBuildAndLayoutUpdate = NO;
         [self setNeedsLayout];
         [_delegate componentHostingViewDidInvalidateSize:self];
@@ -497,7 +497,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
   _isSynchronouslyUpdatingComponent = YES;
   CKBuildAndLayoutComponentResult results = [self _buildAndLayoutComponentIfNeeded:sizeRange pendingInputs:_pendingInputs];
-  [self _updateMountedLayoutWithLayout:results.computedLayout buildComponentResult:results.buildComponentResult];
+  updateMountedLayoutWithLayoutAndBuildComponentResult(self, results.computedLayout, results.buildComponentResult);
   _isSynchronouslyUpdatingComponent = NO;
 }
 
@@ -507,9 +507,12 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
  @param computedLayout The computed layout to assign to the mounted layout.
  @param buildComponentResult The build component result to apply after the mounted layout has been updated
  */
-- (void)_updateMountedLayoutWithLayout:(const CKComponentRootLayout &)computedLayout buildComponentResult:(const CKBuildComponentResult &)buildComponentResult {
+static void updateMountedLayoutWithLayoutAndBuildComponentResult(CKComponentHostingView *const self,
+                                                                 const CKComponentRootLayout &computedLayout,
+                                                                 const CKBuildComponentResult &buildComponentResult)
+{
   [self _applyResult:buildComponentResult];
-  [self setMountedRootLayout:computedLayout];
+  setMountedRootLayout(self, computedLayout);
 }
 
 @end
