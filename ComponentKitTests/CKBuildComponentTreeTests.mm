@@ -25,17 +25,9 @@
 + (instancetype)newWithComponent:(CKComponent *)component;
 @end
 
-/** Same as 'CKComponentTreeTestComponent_Render', but overrides the CKRenderComponentProtocol and returns: isOwnerComponent = NO */
-@interface CKComponentTreeTestComponent_NonOwner_Render : CKComponentTreeTestComponent_Render
-@end
-
 /** An helper class that inherits from 'CKRenderWithChildrenComponent'; render the component froms the initializer */
 @interface CKComponentTreeTestComponent_RenderWithChildren : CKRenderWithChildrenComponent
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
-@end
-
-/** Same as 'CKComponentTreeTestComponent_RenderWithChildren', but overrides the CKRenderComponentProtocol and returns: isOwnerComponent = YES */
-@interface CKComponentTreeTestComponent_Owner_RenderWithChildren : CKComponentTreeTestComponent_RenderWithChildren
 @end
 
 #pragma mark - Tests
@@ -81,18 +73,13 @@
   verifyChildToParentConnection(root, singleChildNode, renderComponent);
 
   // Check the next level of the tree
-  if ((!_config.forceParent && [singleChildNode isKindOfClass:[CKRenderTreeNodeWithChildren class]]) ||
-      (_config.forceParent && [singleChildNode isKindOfClass:[CKRenderTreeNodeWithChild class]])) {
+  if ([singleChildNode isKindOfClass:[CKRenderTreeNodeWithChild class]]) {
     CKRenderTreeNodeWithChildren *parentNode = (CKRenderTreeNodeWithChildren *)singleChildNode;
     XCTAssertEqual(parentNode.children.size(), 1);
     CKTreeNode *componentNode = parentNode.children[0];
     verifyChildToParentConnection(parentNode, componentNode, c);
   } else {
-    if (_config.forceParent) {
-      XCTFail(@"singleChildNode has to be CKRenderTreeNodeWithChild as it has a child.");
-    } else {
-      XCTFail(@"singleChildNode has to be CKRenderTreeNodeWithChildren as it has children.");
-    }
+    XCTFail(@"singleChildNode has to be CKRenderTreeNodeWithChild as it has a child.");
   }
 
   // Simulate a second tree creation.
@@ -100,25 +87,6 @@
   CKComponent *c2 = [CKComponent newWithView:{} size:{}];
   CKRenderComponent *renderComponent2 = [CKComponentTreeTestComponent_Render newWithComponent:c2];
   [renderComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{} config:_config];
-  XCTAssertTrue(areTreesEqual(root, root2));
-}
-
-- (void)test_buildComponentTree_onCKRenderComponent_overrideNonOwnerComponent
-{
-  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
-  CKComponent *c = [CKComponent newWithView:{} size:{}];
-  CKRenderComponent *renderNoOwnerComponent = [CKComponentTreeTestComponent_NonOwner_Render newWithComponent:c];
-  [renderNoOwnerComponent buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{} config:{ .forceParent = NO }];
-
-  // As singleChildNoOwnerComponent is not an owner, the root should have 2 children.
-  XCTAssertEqual(root.children.size(), 2);
-  XCTAssertTrue(verifyComponentsInNode(root, @[renderNoOwnerComponent, c]));
-
-  // Simulate a second tree creation.
-  CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
-  CKComponent *c2 = [CKComponent newWithView:{} size:{}];
-  CKRenderComponent *renderNoOwnerComponent2 = [CKComponentTreeTestComponent_NonOwner_Render newWithComponent:c2];
-  [renderNoOwnerComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{} config:{ .forceParent = NO }];
   XCTAssertTrue(areTreesEqual(root, root2));
 }
 
@@ -130,27 +98,7 @@
   CKComponent *c10 = [CKComponent newWithView:{} size:{}];
   CKComponent *c11 = [CKComponent newWithView:{} size:{}];
   CKRenderWithChildrenComponent *renderWithChidlrenComponent = [CKComponentTreeTestComponent_RenderWithChildren newWithChildren:{c10, c11}];
-  [renderWithChidlrenComponent buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{} config:{ .forceParent = NO }];
-
-  XCTAssertEqual(root.children.size(), 3);
-  XCTAssertTrue(verifyComponentsInNode(root, @[renderWithChidlrenComponent, c10, c11]));
-
-  // Simulate a second tree creation.
-  CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
-  CKComponent *c20 = [CKComponent newWithView:{} size:{}];
-  CKComponent *c21 = [CKComponent newWithView:{} size:{}];
-  CKRenderWithChildrenComponent *renderWithChidlrenComponent2 = [CKComponentTreeTestComponent_RenderWithChildren newWithChildren:{c20, c21}];
-  [renderWithChidlrenComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{} config:{ .forceParent = NO }];
-  XCTAssertTrue(areTreesEqual(root, root2));
-}
-
-- (void)test_buildComponentTree_onCKRenderWithChildrenComponent_MakeGroupAnOwnerComponent
-{
-  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
-  CKComponent *c10 = [CKComponent newWithView:{} size:{}];
-  CKComponent *c11 = [CKComponent newWithView:{} size:{}];
-  CKRenderWithChildrenComponent *renderWithChidlrenComponent = [CKComponentTreeTestComponent_Owner_RenderWithChildren newWithChildren:{c10, c11}];
-  [renderWithChidlrenComponent buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{} config:{ .forceParent = NO }];
+  [renderWithChidlrenComponent buildComponentTree:root previousOwner:nil scopeRoot:nil stateUpdates:{} config:{}];
 
   XCTAssertEqual(root.children.size(), 1);
   XCTAssertTrue(verifyComponentsInNode(root, @[renderWithChidlrenComponent]));
@@ -170,16 +118,9 @@
   CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
   CKComponent *c20 = [CKComponent newWithView:{} size:{}];
   CKComponent *c21 = [CKComponent newWithView:{} size:{}];
-  CKRenderWithChildrenComponent *renderWithChidlrenComponent2 = [CKComponentTreeTestComponent_Owner_RenderWithChildren newWithChildren:{c20, c21}];
-  [renderWithChidlrenComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{} config:{ .forceParent = NO }];
+  CKRenderWithChildrenComponent *renderWithChidlrenComponent2 = [CKComponentTreeTestComponent_RenderWithChildren newWithChildren:{c20, c21}];
+  [renderWithChidlrenComponent2 buildComponentTree:root2 previousOwner:root scopeRoot:nil stateUpdates:{} config:{}];
   XCTAssertTrue(areTreesEqual(root, root2));
-}
-
-- (void)test_buildComponentTree_withForceParent
-{
-  _config = { .forceParent = YES };
-  [self test_buildComponentTree_onCKComponent];
-  [self test_buildComponentTree_onCKRenderComponent];
 }
 
 #pragma mark - Helpers
@@ -243,13 +184,6 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 }
 @end
 
-@implementation CKComponentTreeTestComponent_NonOwner_Render
-+ (BOOL)isOwnerComponent
-{
-  return NO;
-}
-@end
-
 @implementation CKComponentTreeTestComponent_RenderWithChildren
 {
   std::vector<CKComponent *> _children;
@@ -265,12 +199,5 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 - (std::vector<CKComponent *>)renderChildren:(id)state
 {
   return _children;
-}
-@end
-
-@implementation CKComponentTreeTestComponent_Owner_RenderWithChildren
-+ (BOOL)isOwnerComponent
-{
-  return YES;
 }
 @end

@@ -39,41 +39,18 @@
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                     config:(const CKBuildComponentConfig &)config
 {
-  // If forceParent is set to YES, we need to use `CKRenderTreeNodeWithChildren`; each component is a parent component and CKRenderWitjChildrenComponent has multiple children.
-  if (config.forceParent) {
-    auto const node = [[CKRenderTreeNodeWithChildren alloc]
-                       initWithComponent:self
-                       owner:owner
-                       previousOwner:previousOwner
-                       scopeRoot:scopeRoot
-                       stateUpdates:stateUpdates];
+  auto const node = [[CKRenderTreeNodeWithChildren alloc]
+                     initWithComponent:self
+                     owner:owner
+                     previousOwner:previousOwner
+                     scopeRoot:scopeRoot
+                     stateUpdates:stateUpdates];
 
-    auto const children = [self renderChildren:node.state];
-    auto const previousOwnerForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]];
-    for (auto const child : children) {
-      if (child) {
-        [child buildComponentTree:node previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
-      }
-    }
-  } else {
-    // Otherwise, we choose the type according to the `isOwnerComponent` method.
-    auto const isOwnerComponent = [[self class] isOwnerComponent];
-    const Class nodeClass = isOwnerComponent ? [CKRenderTreeNodeWithChildren class] : [CKRenderTreeNode class];
-    CKTreeNode *const node = [[nodeClass alloc]
-                              initWithComponent:self
-                              owner:owner
-                              previousOwner:previousOwner
-                              scopeRoot:scopeRoot
-                              stateUpdates:stateUpdates];
-
-    const id<CKTreeNodeWithChildrenProtocol> ownerForChild = (isOwnerComponent ? (id<CKTreeNodeWithChildrenProtocol>)node : owner);
-    const id<CKTreeNodeWithChildrenProtocol> previousOwnerForChild = (isOwnerComponent ? (id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]] : previousOwner);
-
-    auto const children = [self renderChildren:node.state];
-    for (auto const child : children) {
-      if (child) {
-        [child buildComponentTree:ownerForChild previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
-      }
+  auto const children = [self renderChildren:node.state];
+  auto const previousOwnerForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]];
+  for (auto const child : children) {
+    if (child) {
+      [child buildComponentTree:node previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
     }
   }
 }

@@ -99,24 +99,16 @@ template class std::vector<CKFlexboxComponentChild>;
               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                     config:(const CKBuildComponentConfig &)config
 {
+  auto const node = [[CKTreeNodeWithChildren alloc]
+                     initWithComponent:self
+                     owner:owner
+                     previousOwner:previousOwner
+                     scopeRoot:scopeRoot
+                     stateUpdates:stateUpdates];
 
-  if (config.forceParent) {
-    auto const node = [[CKTreeNodeWithChildren alloc]
-                       initWithComponent:self
-                       owner:owner
-                       previousOwner:previousOwner
-                       scopeRoot:scopeRoot
-                       stateUpdates:stateUpdates];
-
-    auto const previousOwnerForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]];
-    for (auto const &child : _children) {
-      [child.component buildComponentTree:node previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
-    }
-  } else {
-    [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
-    for (auto const &child : _children) {
-      [child.component buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
-    }
+  auto const previousOwnerForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]];
+  for (auto const &child : _children) {
+    [child.component buildComponentTree:node previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
   }
 }
 

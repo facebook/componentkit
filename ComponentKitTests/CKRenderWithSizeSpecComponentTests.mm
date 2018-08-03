@@ -61,7 +61,7 @@
   CKRenderTreeNodeWithChildren *previuosOwner = [CKRenderTreeNodeWithChildren new];
   [previousRoot setChild:previuosOwner forComponentKey:previuosOwnerKey];
 
-  [c buildComponentTree:root previousOwner:previousRoot scopeRoot:scopeRoot stateUpdates:testUpdateMap config:{ .forceParent = NO }];
+  [c buildComponentTree:root previousOwner:previousRoot scopeRoot:scopeRoot stateUpdates:testUpdateMap config:{}];
 
   // Make sure the root has only one child.
   const auto singleChildNode = root.children[0];

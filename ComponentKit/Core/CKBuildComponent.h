@@ -27,8 +27,6 @@ enum class BuildTrigger {
  A configuration struct for the build component method.
  **/
 struct CKBuildComponentConfig {
-  // Defines whether the component tree (CKTreeNode) should ALWAYS use parent based nodes.
-  BOOL forceParent = NO;
   //  Defines whether leaf components have a corresponding CKTreeNode.
   BOOL buildLeafNodes = YES;
 };
