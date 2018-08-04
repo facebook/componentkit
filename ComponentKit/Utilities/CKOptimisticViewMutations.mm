@@ -41,7 +41,7 @@ void CKPerformOptimisticViewMutation(UIView *view,
   id oldValue = getter(view, context);
   [mutationTeardowns addObject:^(UIView *v) {
     setter(v, oldValue, context);
-    CKCAssert(CKObjectIsEqual(getter(view, context), oldValue), @"Setter failed to restore old value");
+    CKCAssert(CKObjectIsEqual(getter(v, context), oldValue), @"Setter failed to restore old value");
   }];
   setter(view, value, context);
   CKCAssert(CKObjectIsEqual(getter(view, context), value), @"Setter failed to apply new value");
