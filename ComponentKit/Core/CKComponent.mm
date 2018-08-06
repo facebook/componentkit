@@ -175,7 +175,7 @@ struct CKComponentMountInfo {
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
 {
-  CKAssertMainThread();
+  CKCAssertWithCategory([NSThread isMainThread], [self class], @"This method must be called on the main thread");
   // Taking a const ref to a temporary extends the lifetime of the temporary to the lifetime of the const ref
   const CKComponentViewConfiguration &viewConfiguration = CK::Component::Accessibility::IsAccessibilityEnabled() ? CK::Component::Accessibility::AccessibleViewConfiguration(_viewConfiguration) : _viewConfiguration;
 
@@ -220,9 +220,9 @@ struct CKComponentMountInfo {
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
     return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
   } else {
-    CKAssertNil(_mountInfo->view,
-                @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
-                [self class], [_mountInfo->view class], CKComponentBacktraceDescription(generateComponentBacktrace(self)));
+    CKCAssertWithCategory(_mountInfo->view != nil, [self class],
+                          @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
+                          [self class], [_mountInfo->view class], CKComponentBacktraceDescription(generateComponentBacktrace(self)));
     _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, size}};
     return {.mountChildren = YES, .contextForChildren = effectiveContext};
   }
