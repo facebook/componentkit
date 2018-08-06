@@ -19,6 +19,7 @@
 @protocol CKAnalyticsListener;
 
 struct CKDataSourceQOSOptions {
+  BOOL enabled = NO;
   CKDataSourceQOS workQueueQOS = CKDataSourceQOSDefault;
   CKDataSourceQOS concurrentQueueQOS = CKDataSourceQOSDefault;
 };

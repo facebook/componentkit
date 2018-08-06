@@ -71,12 +71,11 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     _state = [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
 
-    auto const workQueueQOS = configuration.qosOptions.workQueueQOS;
-    if (workQueueQOS == CKDataSourceQOSDefault) {
+    if (!configuration.qosOptions.enabled) {
       _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
     } else {
       auto const workQueueAttributes =
-      dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qosClassFromDataSourceQOS(workQueueQOS), 0);
+      dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qosClassFromDataSourceQOS(configuration.qosOptions.workQueueQOS), 0);
       _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", workQueueAttributes);
     }
 
@@ -84,12 +83,11 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     [CKComponentDebugController registerReflowListener:self];
     if (configuration.parallelInsertBuildAndLayout ||
         configuration.parallelUpdateBuildAndLayout) {
-      auto const concurrentQueueQOS = configuration.qosOptions.concurrentQueueQOS;
-      if (concurrentQueueQOS == CKDataSourceQOSDefault) {
+      if (!configuration.qosOptions.enabled) {
         _concurrentQueue = dispatch_queue_create("org.componentkit.CKDataSource.concurrent", DISPATCH_QUEUE_CONCURRENT);
       } else {
         auto const concurrentQueueAttributes =
-        dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_CONCURRENT, qosClassFromDataSourceQOS(concurrentQueueQOS), 0);
+        dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_CONCURRENT, qosClassFromDataSourceQOS(configuration.qosOptions.concurrentQueueQOS), 0);
         _concurrentQueue = dispatch_queue_create("org.componentkit.CKDataSource.concurrent", concurrentQueueAttributes);
       }
     }
