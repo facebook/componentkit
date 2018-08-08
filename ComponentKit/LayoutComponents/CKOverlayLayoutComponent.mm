@@ -42,22 +42,21 @@
   CK_NOT_DESIGNATED_INITIALIZER();
 }
 
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)owner
-             previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
-                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
-              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
+             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                    params:(const CKBuildComponentTreeParams &)params
                     config:(const CKBuildComponentConfig &)config
 {
   auto const node = [[CKTreeNodeWithChildren alloc]
                      initWithComponent:self
-                     owner:owner
-                     previousOwner:previousOwner
-                     scopeRoot:scopeRoot
-                     stateUpdates:stateUpdates];
+                     parent:parent
+                     previousParent:previousParent
+                     scopeRoot:params.scopeRoot
+                     stateUpdates:params.stateUpdates];
   
-  auto const previousOwnerForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]];
-  [_component buildComponentTree:node previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
-  [_overlay buildComponentTree:node previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
+  auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
+  [_component buildComponentTree:node previousParent:previousParentForChild params:params config:config];
+  [_overlay buildComponentTree:node previousParent:previousParentForChild params:params config:config];
 }
 
 /**

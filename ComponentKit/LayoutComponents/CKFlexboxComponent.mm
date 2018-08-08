@@ -93,22 +93,21 @@ template class std::vector<CKFlexboxComponentChild>;
   return component;
 }
 
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)owner
-             previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
-                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
-              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
+             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                    params:(const CKBuildComponentTreeParams &)params
                     config:(const CKBuildComponentConfig &)config
 {
   auto const node = [[CKTreeNodeWithChildren alloc]
                      initWithComponent:self
-                     owner:owner
-                     previousOwner:previousOwner
-                     scopeRoot:scopeRoot
-                     stateUpdates:stateUpdates];
+                     parent:parent
+                     previousParent:previousParent
+                     scopeRoot:params.scopeRoot
+                     stateUpdates:params.stateUpdates];
 
-  auto const previousOwnerForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]];
+  auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
   for (auto const &child : _children) {
-    [child.component buildComponentTree:node previousOwner:previousOwnerForChild scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
+    [child.component buildComponentTree:node previousParent:previousParentForChild params:params config:config];
   }
 }
 

@@ -27,10 +27,10 @@
 @end
 
 @interface TestRenderChildComponentRetainingParameters : CKRenderComponent
-@property (weak) id<CKTreeNodeWithChildrenProtocol> owner;
-@property (weak)id<CKTreeNodeWithChildrenProtocol> previousOwner;
-@property const CKComponentStateUpdateMap* stateUpdates;
-@property (weak)CKComponentScopeRoot *scopeRoot;
+@property (weak) id<CKTreeNodeWithChildrenProtocol> parent;
+@property (weak) id<CKTreeNodeWithChildrenProtocol> previousParent;
+@property const CKBuildComponentTreeParams *params;
+@property const CKBuildComponentConfig *config;
 @end
 
 @interface CKRenderWithSizeSpecComponentTests : XCTestCase
@@ -58,10 +58,15 @@
   TestOwnerRenderWithSizeSpecComponent_ChildFromOutside *c = [TestOwnerRenderWithSizeSpecComponent_ChildFromOutside newWithChild:child];
 
   CKComponentKey previuosOwnerKey = [previousRoot createComponentKeyForChildWithClass:[c class]];
-  CKRenderTreeNodeWithChildren *previuosOwner = [CKRenderTreeNodeWithChildren new];
-  [previousRoot setChild:previuosOwner forComponentKey:previuosOwnerKey];
+  CKRenderTreeNodeWithChildren *previousParent = [CKRenderTreeNodeWithChildren new];
+  [previousRoot setChild:previousParent forComponentKey:previuosOwnerKey];
 
-  [c buildComponentTree:root previousOwner:previousRoot scopeRoot:scopeRoot stateUpdates:testUpdateMap config:{}];
+  const CKBuildComponentTreeParams params = {
+    .scopeRoot = scopeRoot,
+    .stateUpdates = testUpdateMap,
+    .buildTrigger = BuildTrigger::NewTree,
+  };
+  [c buildComponentTree:root previousParent:previousRoot params:params config:{}];
 
   // Make sure the root has only one child.
   const auto singleChildNode = root.children[0];
@@ -91,10 +96,10 @@
   XCTAssertEqual(child, parentNode.children[0].component);
 
   //Make sure that the parameters that we pass to the child component from measureChild: are correct
-  XCTAssertEqual(child.owner, singleChildNode);
-  XCTAssertEqual(child.previousOwner, previuosOwner);
-  XCTAssertEqual(*child.stateUpdates, testUpdateMap);
-  XCTAssertEqual(child.scopeRoot, scopeRoot);
+  XCTAssertEqual(child.parent, singleChildNode);
+  XCTAssertEqual(child.previousParent, previousParent);
+  XCTAssertEqual(child.params->stateUpdates, testUpdateMap);
+  XCTAssertEqual(child.params->scopeRoot, scopeRoot);
 
 }
 
@@ -105,10 +110,10 @@
 + (instancetype)new {
   TestRenderChildComponentRetainingParameters *const c = [super new];
   if (c) {
-    c->_owner = nil;
-    c->_previousOwner = nil;
-    c->_stateUpdates = nullptr;
-    c->_scopeRoot = nil;
+    c->_parent = nil;
+    c->_previousParent = nil;
+    c->_params = nullptr;
+    c->_config = nullptr;
   }
   return c;
 }
@@ -120,17 +125,16 @@
   }];
 }
 
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)owner
-             previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
-                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
-              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
+            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                    params:(const CKBuildComponentTreeParams &)params
                     config:(const CKBuildComponentConfig &)config
 {
-  _owner = owner;
-  _previousOwner = previousOwner;
-  _stateUpdates = &stateUpdates;
-  _scopeRoot = scopeRoot;
-  [super buildComponentTree:owner previousOwner:previousOwner scopeRoot:scopeRoot stateUpdates:stateUpdates config:config];
+  _parent = parent;
+  _previousParent = previousParent;
+  _params = &params;
+  _config = &config;
+  [super buildComponentTree:parent previousParent:previousParent params:params config:config];
 }
 
 @end
@@ -160,4 +164,3 @@
 }
 
 @end
-

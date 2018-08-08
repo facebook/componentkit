@@ -33,8 +33,8 @@
 }
 
 - (instancetype)initWithComponent:(CKComponent *)component
-                            owner:(id<CKTreeNodeWithChildrenProtocol>)owner
-                    previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
+                           parent:(id<CKTreeNodeWithChildrenProtocol>)parent
+                   previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
@@ -46,8 +46,8 @@
     _component = component;
 
     Class componentClass = [component class];
-    _componentKey = [owner createComponentKeyForChildWithClass:componentClass];
-    CKTreeNode *previousNode = [previousOwner childForComponentKey:_componentKey];
+    _componentKey = [parent createComponentKeyForChildWithClass:componentClass];
+    CKTreeNode *previousNode = [previousParent childForComponentKey:_componentKey];
 
     if (previousNode) {
       _nodeIdentifier = previousNode.nodeIdentifier;
@@ -62,7 +62,7 @@
       if (previousNode) {
         _handle = [previousNode.handle newHandleWithStateUpdates:stateUpdates
                                               componentScopeRoot:scopeRoot
-                                                          parent:owner.handle];
+                                                          parent:parent.handle];
       } else {
         // We need a scope handle only if the component has a controller or an initial state.
         id initialState = [self initialStateWithComponent:component];
@@ -71,7 +71,7 @@
                                                       rootIdentifier:scopeRoot.globalIdentifier
                                                       componentClass:componentClass
                                                         initialState:initialState
-                                                              parent:owner.handle];
+                                                              parent:parent.handle];
         }
       }
 
@@ -82,8 +82,8 @@
     }
 
     // Set the link between the parent and the child.
-    [owner setChild:self forComponentKey:_componentKey];
-    self.parent = owner;
+    [parent setChild:self forComponentKey:_componentKey];
+    self.parent = parent;
     
   }
   return self;

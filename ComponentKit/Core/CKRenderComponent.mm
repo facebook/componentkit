@@ -39,26 +39,24 @@
   return nil;
 }
 
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)owner
-             previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
-                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
-              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
+            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                    params:(const CKBuildComponentTreeParams &)params
                     config:(const CKBuildComponentConfig &)config
 {
   auto const node = [[CKRenderTreeNodeWithChild alloc]
                      initWithComponent:self
-                     owner:owner
-                     previousOwner:previousOwner
-                     scopeRoot:scopeRoot
-                     stateUpdates:stateUpdates];
+                     parent:parent
+                     previousParent:previousParent
+                     scopeRoot:params.scopeRoot
+                     stateUpdates:params.stateUpdates];
 
   auto const child = [self render:node.state];
   if (child) {
     _childComponent = child;
     [child buildComponentTree:node
-                previousOwner:(id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[node componentKey]]
-                    scopeRoot:scopeRoot
-                 stateUpdates:stateUpdates
+               previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
+                       params:params
                        config:config];
   }
 }

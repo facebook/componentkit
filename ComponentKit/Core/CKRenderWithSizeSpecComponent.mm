@@ -15,15 +15,13 @@
 #import "CKComponentInternal.h"
 
 struct CKRenderWithSizeSpecComponentParameters {
-  id<CKTreeNodeWithChildrenProtocol> previousOwnerForChild;
-  const CKComponentStateUpdateMap* stateUpdates;
-  __weak CKComponentScopeRoot *scopeRoot;
-  CKBuildComponentConfig buildComponentConfig;
+  id<CKTreeNodeWithChildrenProtocol> previousParentForChild;
+  const CKBuildComponentTreeParams &params;
+  const CKBuildComponentConfig &config;
 
-  CKRenderWithSizeSpecComponentParameters(id<CKTreeNodeWithChildrenProtocol> pO,
-                                          const CKComponentStateUpdateMap* sU,
-                                          CKComponentScopeRoot *sR,
-                                          CKBuildComponentConfig bc) : previousOwnerForChild(pO), stateUpdates(sU), scopeRoot(sR), buildComponentConfig(bc) {};
+  CKRenderWithSizeSpecComponentParameters(id<CKTreeNodeWithChildrenProtocol> pP,
+                                          const CKBuildComponentTreeParams &p,
+                                          const CKBuildComponentConfig &c) : previousParentForChild(pP), params(p), config(c) {};
 };
 
 @implementation CKRenderWithSizeSpecComponent {
@@ -63,10 +61,9 @@ struct CKRenderWithSizeSpecComponentParameters {
              relativeToParentSize:(CGSize)parentSize {
   CKAssert(_parameters.get() != nullptr, @"measureChild called outside layout calculations");
   [child buildComponentTree:_node
-              previousOwner:_parameters->previousOwnerForChild
-                  scopeRoot:_parameters->scopeRoot
-               stateUpdates:*(_parameters->stateUpdates)
-                     config:_parameters->buildComponentConfig];
+             previousParent:_parameters->previousParentForChild
+                     params:_parameters->params
+                     config:_parameters->config];
 #if CK_ASSERTIONS_ENABLED
   [_renderedChildrenSet addObject:child];
 #endif
@@ -104,24 +101,22 @@ struct CKRenderWithSizeSpecComponentParameters {
   return {};
 }
 
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)owner
-             previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
-                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
-              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
+            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                    params:(const CKBuildComponentTreeParams &)params
                     config:(const CKBuildComponentConfig &)config
 {
   if (!_node) {
     auto const node = [[CKRenderTreeNodeWithChildren alloc]
                        initWithComponent:self
-                       owner:owner
-                       previousOwner:previousOwner
-                       scopeRoot:scopeRoot
-                       stateUpdates:stateUpdates];
+                       parent:parent
+                       previousParent:previousParent
+                       scopeRoot:params.scopeRoot
+                       stateUpdates:params.stateUpdates];
     _node = node;
 
-    _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>((id<CKTreeNodeWithChildrenProtocol>)[previousOwner childForComponentKey:[_node componentKey]],
-                                                                            &stateUpdates,
-                                                                            scopeRoot,
+    _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>((id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[_node componentKey]],
+                                                                            params,
                                                                             config);
   }
 }

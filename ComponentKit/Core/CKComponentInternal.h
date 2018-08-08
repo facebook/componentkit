@@ -16,6 +16,15 @@
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKBuildComponent.h>
 
+/**
+ Params struct for the `buildComponentTree:` method.
+ **/
+struct CKBuildComponentTreeParams {
+  __weak CKComponentScopeRoot *scopeRoot;
+  const CKComponentStateUpdateMap &stateUpdates;
+  BuildTrigger buildTrigger;
+};
+
 @class CKComponentScopeRoot;
 @protocol CKTreeNodeWithChildrenProtocol;
 
@@ -105,10 +114,9 @@
  This method translates the component render method into a 'CKTreeNode'; a component tree.
  It's being called by the infra during the component tree creation.
  */
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)owner
-             previousOwner:(id<CKTreeNodeWithChildrenProtocol>)previousOwner
-                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
-              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
+            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                    params:(const CKBuildComponentTreeParams &)params
                     config:(const CKBuildComponentConfig &)config;
 
 @end

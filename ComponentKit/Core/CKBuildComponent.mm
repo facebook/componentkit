@@ -26,25 +26,23 @@ static BuildTrigger getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKCom
   return BuildTrigger::NewTree;
 }
 
-static CKBuildComponentResult _CKBuildComponent(CKComponentScopeRoot *previousRoot,
-                                                const CKComponentStateUpdateMap &stateUpdates,
+static CKBuildComponentResult _CKBuildComponent(const CKBuildComponentTreeParams &params,
                                                 const CKBuildComponentConfig &config,
-                                                CKThreadLocalComponentScope& threadScope,
+                                                CKThreadLocalComponentScope &threadScope,
                                                 CKComponent *(^componentFactory)(void))
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
+  auto const previousRoot = params.scopeRoot;
   auto const analyticsListener = [previousRoot analyticsListener];
-  auto const buildTrigger = getBuildTrigger(previousRoot, stateUpdates);
-  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot buildTrigger:buildTrigger];
+  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot buildTrigger:params.buildTrigger];
 
   CKComponent *const component = componentFactory();
 
   if (threadScope.newScopeRoot.hasRenderComponentInTree) {
     // Build the component tree from the render function.
     [component buildComponentTree:threadScope.newScopeRoot.rootNode
-                    previousOwner:previousRoot.rootNode
-                        scopeRoot:threadScope.newScopeRoot
-                     stateUpdates:stateUpdates
+                   previousParent:previousRoot.rootNode
+                           params:params
                            config:config];
   }
 
@@ -65,7 +63,12 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         CKBuildComponentConfig config)
 {
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
-  return _CKBuildComponent(previousRoot, stateUpdates, config, threadScope, componentFactory);
+  const CKBuildComponentTreeParams params = {
+    .scopeRoot = previousRoot,
+    .stateUpdates = stateUpdates,
+    .buildTrigger = getBuildTrigger(previousRoot, stateUpdates),
+  };
+  return _CKBuildComponent(params, config, threadScope, componentFactory);
 }
 
 CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *previousRoot,
@@ -75,7 +78,12 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
                                                           const std::unordered_set<CKComponentPredicate> &layoutPredicates,
                                                           CKBuildComponentConfig config) {
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
-  const CKBuildComponentResult buildComponentResult = _CKBuildComponent(previousRoot, stateUpdates, config, threadScope, componentFactory);
+  const CKBuildComponentTreeParams params = {
+    .scopeRoot = previousRoot,
+    .stateUpdates = stateUpdates,
+    .buildTrigger = getBuildTrigger(previousRoot, stateUpdates),
+  };
+  const CKBuildComponentResult buildComponentResult = _CKBuildComponent(params, config, threadScope, componentFactory);
   const auto computedLayout = CKComputeRootComponentLayout(buildComponentResult.component, sizeRange, buildComponentResult.scopeRoot.analyticsListener, layoutPredicates);
   return {buildComponentResult, computedLayout};
 }

@@ -56,19 +56,19 @@
   CKRenderTreeNodeWithChildren *root1 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component1 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
-                                                            owner:root1
-                                                    previousOwner:nil
-                                                        scopeRoot:nil
-                                                     stateUpdates:{}];
+                                                          parent:root1
+                                                  previousParent:nil
+                                                       scopeRoot:nil
+                                                    stateUpdates:{}];
 
   // Simulate a component tree creation due to a state update
   CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component2 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
-                                                            owner:root2
-                                                    previousOwner:root1
-                                                        scopeRoot:nil
-                                                     stateUpdates:{}];
+                                                          parent:root2
+                                                  previousParent:root1
+                                                       scopeRoot:nil
+                                                    stateUpdates:{}];
 
   XCTAssertTrue(verifyChildToParentConnection(root1, childNode1, component1));
   XCTAssertTrue(verifyChildToParentConnection(root2, childNode2, component2));
@@ -79,19 +79,19 @@
   CKRenderTreeNodeWithChildren *root1 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component1 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
-                                                            owner:root1
-                                                    previousOwner:nil
-                                                        scopeRoot:nil
-                                                     stateUpdates:{}];
+                                                          parent:root1
+                                                  previousParent:nil
+                                                       scopeRoot:nil
+                                                    stateUpdates:{}];
 
   // Simulate a component tree creation due to a state update
   CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component2 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
-                                                            owner:root2
-                                                    previousOwner:root1
-                                                        scopeRoot:nil
-                                                     stateUpdates:{}];
+                                                          parent:root2
+                                                  previousParent:root1
+                                                       scopeRoot:nil
+                                                    stateUpdates:{}];
 
   XCTAssertEqual(childNode1.nodeIdentifier, childNode2.nodeIdentifier);
 }
@@ -135,8 +135,8 @@
   CKRenderTreeNodeWithChildren *root1 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component1 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
-                                                           owner:root1
-                                                   previousOwner:nil
+                                                          parent:root1
+                                                  previousParent:nil
                                                        scopeRoot:nil
                                                     stateUpdates:{}];
 
@@ -144,8 +144,8 @@
   CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component2 = [CKRenderComponent newWithView:{} size:{}];
   CKTreeNode *childNode2 = [[CKRenderTreeNode alloc] initWithComponent:component2
-                                                                 owner:root2
-                                                         previousOwner:root1
+                                                                parent:root2
+                                                        previousParent:root1
                                                              scopeRoot:nil
                                                           stateUpdates:{}];
 
@@ -161,8 +161,8 @@
   CKRenderTreeNodeWithChild *root1 = [[CKRenderTreeNodeWithChild alloc] init];
   auto const component1 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
-                                                           owner:root1
-                                                   previousOwner:nil
+                                                          parent:root1
+                                                  previousParent:nil
                                                        scopeRoot:nil
                                                     stateUpdates:{}];
 
@@ -170,8 +170,8 @@
   CKRenderTreeNodeWithChild *root2 = [[CKRenderTreeNodeWithChild alloc] init];
   auto const component2 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
-                                                           owner:root2
-                                                   previousOwner:root1
+                                                          parent:root2
+                                                  previousParent:root1
                                                        scopeRoot:nil
                                                     stateUpdates:{}];
 
@@ -184,8 +184,8 @@
   CKRenderTreeNodeWithChild *root1 = [[CKRenderTreeNodeWithChild alloc] init];
   auto const component1 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
-                                                           owner:root1
-                                                   previousOwner:nil
+                                                          parent:root1
+                                                  previousParent:nil
                                                        scopeRoot:nil
                                                     stateUpdates:{}];
 
@@ -193,8 +193,8 @@
   CKRenderTreeNodeWithChild *root2 = [[CKRenderTreeNodeWithChild alloc] init];
   auto const component2 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
-                                                           owner:root2
-                                                   previousOwner:root1
+                                                          parent:root2
+                                                  previousParent:root1
                                                        scopeRoot:nil
                                                     stateUpdates:{}];
 
@@ -213,10 +213,10 @@
   CKRenderTreeNodeWithChildren *root1 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component1 = [CKTreeNodeTest_Component_WithState newWithView:{} size:{}];
   CKTreeNode *childNode = [[CKTreeNode alloc] initWithComponent:component1
-                                                           owner:root1
-                                                   previousOwner:nil
-                                                       scopeRoot:nil
-                                                    stateUpdates:{}];
+                                                         parent:root1
+                                                 previousParent:nil
+                                                      scopeRoot:nil
+                                                   stateUpdates:{}];
 
   // Verify that the initial state is correct.
   XCTAssertTrue([childNode.state isEqualToNumber:[[component1 class] initialState]]);
@@ -233,10 +233,10 @@
     return newState;
   });
   CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
-                                                            owner:root2
-                                                    previousOwner:root1
-                                                        scopeRoot:nil
-                                                     stateUpdates:stateUpdates];
+                                                          parent:root2
+                                                  previousParent:root1
+                                                       scopeRoot:nil
+                                                    stateUpdates:stateUpdates];
 
   XCTAssertTrue([childNode2.state isEqualToNumber:newState]);
 }
@@ -323,8 +323,8 @@
   CKTreeNodeWithChild *root1 = [[CKTreeNodeWithChild alloc] init];
   auto const component1 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
-                                                           owner:root1
-                                                   previousOwner:nil
+                                                          parent:root1
+                                                  previousParent:nil
                                                        scopeRoot:nil
                                                     stateUpdates:{}];
 
@@ -332,8 +332,8 @@
   CKTreeNodeWithChild *root2 = [[CKTreeNodeWithChild alloc] init];
   auto const component2 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
-                                                           owner:root2
-                                                   previousOwner:root1
+                                                          parent:root2
+                                                  previousParent:root1
                                                        scopeRoot:nil
                                                     stateUpdates:{}];
 
@@ -348,8 +348,8 @@
   CKTreeNodeWithChild *root1 = [[CKTreeNodeWithChild alloc] init];
   auto const component1 = [CKComponent newWithView:{} size:{}];
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
-                                                           owner:root1
-                                                   previousOwner:nil
+                                                          parent:root1
+                                                  previousParent:nil
                                                        scopeRoot:nil
                                                     stateUpdates:{}];
 
@@ -357,8 +357,8 @@
   CKTreeNodeWithChild *root2 = [[CKTreeNodeWithChild alloc] init];
   auto const component2 = [CKRenderComponent newWithView:{} size:{}];
   CKTreeNode *childNode2 = [[CKRenderTreeNode alloc] initWithComponent:component2
-                                                                 owner:root2
-                                                         previousOwner:root1
+                                                                parent:root2
+                                                        previousParent:root1
                                                              scopeRoot:nil
                                                           stateUpdates:{}];
 
@@ -376,8 +376,8 @@
   CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
   CKTreeNode *node = [[(Class)nodeClass alloc]
                       initWithComponent:c
-                      owner:root
-                      previousOwner:nil
+                      parent:root
+                      previousParent:nil
                       scopeRoot:nil
                       stateUpdates:{}];
 
@@ -392,8 +392,8 @@
   CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
   CKTreeNode *node = [[(Class)nodeClass alloc]
                       initWithComponent:c
-                      owner:root
-                      previousOwner:nil
+                      parent:root
+                      previousParent:nil
                       scopeRoot:nil
                       stateUpdates:{}];
 
@@ -408,8 +408,8 @@
   CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
   CKTreeNode *node = [[(Class)nodeClass alloc]
                       initWithComponent:c
-                      owner:root
-                      previousOwner:nil
+                      parent:root
+                      previousParent:nil
                       scopeRoot:nil
                       stateUpdates:{}];
 
@@ -424,13 +424,13 @@ static BOOL verifyChildToParentConnection(id<CKTreeNodeWithChildrenProtocol> par
 }
 
 static NSMutableArray<CKTreeNode*> *createsNodesForComponentsWithOwner(id<CKTreeNodeWithChildrenProtocol> owner,
-                                                                       id<CKTreeNodeWithChildrenProtocol> previousOwner,
+                                                                       id<CKTreeNodeWithChildrenProtocol> previousParent,
                                                                        NSArray<CKComponent *> *components) {
   NSMutableArray<CKTreeNode*> *nodes = [NSMutableArray array];
   for (CKComponent *component in components) {
     CKTreeNode *childNode = [[CKTreeNode alloc] initWithComponent:component
-                                                            owner:owner
-                                                    previousOwner:previousOwner
+                                                           parent:owner
+                                                   previousParent:previousParent
                                                         scopeRoot:nil
                                                      stateUpdates:{}];
     [nodes addObject:childNode];
