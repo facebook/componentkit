@@ -659,6 +659,48 @@
   [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
 }
 
+- (void)test_WhenApplyingPendingModificationsWithMoves_TreatsToIndexPathsAsSpecifiedAfterSectionRemovalsAndInsertions
+{
+  const auto state = CKDataSourceTestState(Nil, nil, 5, 1);
+  const auto pendingChangeset = CK::makeChangeset({
+    .removedSections = {
+      0, 2
+    },
+    .movedItems = {
+      {{3, 0}, {4, 0}},
+    },
+    .insertedSections = {
+      0, 2, 3
+    },
+    .insertedItems = {
+      {{0, 0}, @"New"},
+      {{2, 0}, @"New"},
+      {{3, 0}, @"New"},
+    }
+  });
+  const auto pendingModification = [[CKDataSourceChangesetModification alloc] initWithChangeset:pendingChangeset
+                                                                                  stateListener:nil
+                                                                                       userInfo:nil];
+  const auto changeset = CK::makeChangeset({
+    .removedSections = {
+      0, 3
+    },
+    .movedItems = {
+      {{4, 0}, {4, 0}},
+    },
+    .insertedSections = {
+      0, 3
+    },
+    .insertedItems = {
+      {{0, 0}, @"New2"},
+      {{3, 0}, @"New2"},
+    }
+  });
+
+  [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, @[pendingModification])
+                              target:kChangeSetValid];
+}
+
 #pragma mark - Invalid changesets
 
 - (void)test_invalidUpdateInNegativeSection

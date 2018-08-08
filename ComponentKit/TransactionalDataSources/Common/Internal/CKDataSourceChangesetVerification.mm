@@ -208,11 +208,9 @@ static NSArray<NSNumber *> *updatedSectionCountsWithModification(NSArray<NSNumbe
   CKDataSourceChangeset *changeset = changesetModification.changeset;
   NSMutableArray *updatedSectionCounts = [sectionCounts mutableCopy];
   // Move items
-  [changeset.movedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull fromIndexPath, NSIndexPath * _Nonnull toIndexPath, BOOL * _Nonnull stop) {
+  [changeset.movedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull fromIndexPath, NSIndexPath *, BOOL *) {
     // "Remove" the item
     updatedSectionCounts[fromIndexPath.section] = @([updatedSectionCounts[fromIndexPath.section] integerValue] - 1);
-    // "Insert" the item
-    updatedSectionCounts[toIndexPath.section] = @([updatedSectionCounts[toIndexPath.section] integerValue] + 1);
   }];
   // Remove items
   [changeset.removedItems enumerateObjectsUsingBlock:^(NSIndexPath *_Nonnull indexPath, BOOL * _Nonnull stop) {
@@ -226,6 +224,10 @@ static NSArray<NSNumber *> *updatedSectionCountsWithModification(NSArray<NSNumbe
     [emptySections addObject:@0];
   }
   [updatedSectionCounts insertObjects:emptySections atIndexes:changeset.insertedSections];
+  [changeset.movedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *, NSIndexPath * _Nonnull toIndexPath, BOOL *) {
+    // "Insert" the item
+    updatedSectionCounts[toIndexPath.section] = @([updatedSectionCounts[toIndexPath.section] integerValue] + 1);
+  }];
   // Insert items
   [changeset.insertedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull indexPath, id _Nonnull model, BOOL * _Nonnull stop) {
     updatedSectionCounts[indexPath.section] = @([updatedSectionCounts[indexPath.section] integerValue] + 1);
