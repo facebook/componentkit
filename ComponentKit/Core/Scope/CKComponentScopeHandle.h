@@ -21,6 +21,7 @@
 
 @protocol CKComponentStateListener;
 @protocol CKComponentProtocol;
+@protocol CKTreeNodeProtocol;
 
 @interface CKComponentScopeHandle<__covariant ControllerType:id<CKComponentControllerProtocol>> : NSObject
 
@@ -60,6 +61,9 @@
 /** Acquire component, assert if the scope handle is wrong */
 - (void)forceAcquireFromComponent:(id<CKComponentProtocol>)component;
 
+/** Set the tree node of the acquired component. May only be called *before* resolution. */
+- (void)setTreeNode:(id<CKTreeNodeProtocol>)treeNode;
+
 /**
  Should not be called until after handleForComponent:. The controller will assert (if assertions are compiled), and
  return nil until `resolve` is called.
@@ -72,6 +76,7 @@
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
 @property (nonatomic, readonly, weak) id<CKComponentProtocol> acquiredComponent;
 @property (nonatomic, weak, readonly) CKComponentScopeHandle *parent;
+@property (nonatomic, weak, readonly) id<CKTreeNodeProtocol> treeNode;
 
 /**
  Provides a responder corresponding with this scope handle. The controller will assert if called before resolution.

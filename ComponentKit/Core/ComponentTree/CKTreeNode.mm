@@ -77,6 +77,7 @@
 
       if (_handle) {
         [component acquireScopeHandle:_handle];
+        [_handle setTreeNode:self];
         [_handle resolve];
       }
     }
