@@ -30,7 +30,7 @@
   return _child ? 1 : 0;
 }
 
-- (CKTreeNode *)childForComponentKey:(const CKComponentKey &)key
+- (CKTreeNode *)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
   if (std::get<0>(key) == [_child.component class]) {
     return _child;
@@ -38,12 +38,12 @@
   return nil;
 }
 
-- (CKComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
+- (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
 {
   return std::make_tuple(componentClass, 0);
 }
 
-- (void)setChild:(CKTreeNode *)child forComponentKey:(const CKComponentKey &)componentKey
+- (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
 {
   CKAssert(_child == nil, @"_child shouldn't set more than once.");
   _child = child;

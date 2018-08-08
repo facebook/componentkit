@@ -18,20 +18,20 @@
 #import "CKMutex.h"
 
 struct CKTreeNodeComparator {
-  bool operator() (const CKComponentKey &lhs, const CKComponentKey &rhs) const
+  bool operator() (const CKTreeNodeComponentKey &lhs, const CKTreeNodeComponentKey &rhs) const
   {
     return std::get<0>(lhs) == std::get<0>(rhs) && std::get<1>(lhs) == std::get<1>(rhs);
   }
 };
 
 struct CKTreeNodeHasher {
-  std::size_t operator() (const CKComponentKey &n) const
+  std::size_t operator() (const CKTreeNodeComponentKey &n) const
   {
     return [std::get<0>(n) hash] ^ std::get<1>(n);
   }
 };
 
-typedef std::unordered_map<CKComponentKey, CKTreeNode *, CKTreeNodeHasher, CKTreeNodeComparator> CKScopeNodeMap;
+typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CKTreeNodeHasher, CKTreeNodeComparator> CKScopeNodeMap;
 
 @implementation CKTreeNodeWithChildren
 {
@@ -53,17 +53,17 @@ typedef std::unordered_map<CKComponentKey, CKTreeNode *, CKTreeNodeHasher, CKTre
   return _children.size();
 }
 
-- (CKTreeNode *)childForComponentKey:(const CKComponentKey &)key
+- (CKTreeNode *)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
   return _children[key];
 }
 
-- (CKComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
+- (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
 {
   return std::make_tuple(componentClass, _classTypeIdentifier[componentClass]++);
 }
 
-- (void)setChild:(CKTreeNode *)child forComponentKey:(const CKComponentKey &)componentKey
+- (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
 {
   _children[componentKey] = child;
 }

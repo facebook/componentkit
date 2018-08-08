@@ -29,7 +29,7 @@
 
 @implementation CKTreeNode
 {
-  CKComponentKey _componentKey;
+  CKTreeNodeComponentKey _componentKey;
 }
 
 - (instancetype)initWithComponent:(CKComponent *)component
@@ -95,7 +95,7 @@
   return _handle.state;
 }
 
-- (const CKComponentKey &)componentKey
+- (const CKTreeNodeComponentKey &)componentKey
 {
   return _componentKey;
 }

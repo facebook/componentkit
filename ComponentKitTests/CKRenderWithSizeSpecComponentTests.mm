@@ -57,7 +57,7 @@
 
   TestOwnerRenderWithSizeSpecComponent_ChildFromOutside *c = [TestOwnerRenderWithSizeSpecComponent_ChildFromOutside newWithChild:child];
 
-  CKComponentKey previuosOwnerKey = [previousRoot createComponentKeyForChildWithClass:[c class]];
+  CKTreeNodeComponentKey previuosOwnerKey = [previousRoot createComponentKeyForChildWithClass:[c class]];
   CKRenderTreeNodeWithChildren *previousParent = [CKRenderTreeNodeWithChildren new];
   [previousRoot setChild:previousParent forComponentKey:previuosOwnerKey];
 
