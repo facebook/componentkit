@@ -43,6 +43,11 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
 }
 @end
 
+@interface CKButtonWithExtendedTapArea : UIButton
+/// The outset for tap target expansion
+@property (nonatomic, assign) UIEdgeInsets tapTargetExpansion;
+@end
+
 @implementation CKButtonComponent
 {
   CGSize _intrinsicSize;
@@ -133,6 +138,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
     {@selector(setContentEdgeInsets:), contentEdgeInsets},
     {@selector(setTitleEdgeInsets:), titleEdgeInsets},
     {@selector(setImageEdgeInsets:), imageEdgeInsets},
+    {@selector(setTapTargetExpansion:), options.tapTargetExpansion},
     CKComponentActionAttribute(action, UIControlEventTouchUpInside),
   });
 
@@ -145,7 +151,7 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
 
   const auto b = [super
                   newWithView:{
-                    [UIButton class],
+                    [CKButtonWithExtendedTapArea class],
                     std::move(attributes),
                     std::move(accessibilityContext)
                   }
@@ -293,3 +299,14 @@ static inline NSUInteger indexForState(UIControlState state)
 }
 
 @end
+
+@implementation CKButtonWithExtendedTapArea : UIButton
+
+-(BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
+{
+  return CGRectContainsPoint(UIEdgeInsetsInsetRect(self.bounds, self.tapTargetExpansion), point);
+}
+
+@end
+
+

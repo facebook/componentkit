@@ -65,6 +65,8 @@ struct CKButtonComponentOptions {
   UIEdgeInsets titleEdgeInsets = UIEdgeInsetsZero;
   /// The inset or outset margins for the rectangle around the button's image.
   UIEdgeInsets imageEdgeInsets = UIEdgeInsetsZero;
+  /// The outset for tap target expansion
+  UIEdgeInsets tapTargetExpansion;
 };
 
 /**
