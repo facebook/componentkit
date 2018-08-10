@@ -11,7 +11,7 @@
 #import <ComponentKit/CKDataSourceChangeset.h>
 
 /** Internal interface since this class is usually only consumed internally. */
-@interface CKDataSourceChangeset ()
+@interface CKDataSourceChangeset<__covariant ModelType> ()
 
 @property (nonatomic, copy, readonly) NSDictionary *updatedItems;
 @property (nonatomic, copy, readonly) NSSet *removedItems;
@@ -19,6 +19,22 @@
 @property (nonatomic, copy, readonly) NSDictionary *movedItems;
 @property (nonatomic, copy, readonly) NSIndexSet *insertedSections;
 @property (nonatomic, copy, readonly) NSDictionary *insertedItems;
+
+/**
+ Designated initializer. Any parameter may be nil.
+ @param updatedItems Mapping from NSIndexPath to updated model.
+ @param removedItems Set of NSIndexPath.
+ @param removedSections NSIndexSet of section indices.
+ @param movedItems Mapping from NSIndexPath to NSIndexPath.
+ @param insertedSections NSIndexSet of section indices.
+ @param insertedItems Mapping from NSIndexPath to new model.
+ */
+- (instancetype)initWithUpdatedItems:(NSDictionary<NSIndexPath *, ModelType> *)updatedItems
+                        removedItems:(NSSet<NSIndexPath *> *)removedItems
+                     removedSections:(NSIndexSet *)removedSections
+                          movedItems:(NSDictionary<NSIndexPath *, NSIndexPath *> *)movedItems
+                    insertedSections:(NSIndexSet *)insertedSections
+                       insertedItems:(NSDictionary<NSIndexPath *, ModelType> *)insertedItems;
 
 - (BOOL)isEmpty;
 
