@@ -105,17 +105,42 @@
 
 - (CKDataSourceChangeset *)build
 {
-  return [[CKDataSourceChangeset alloc] initWithUpdatedItems:_updatedItems
-                                                                      removedItems:_removedItems
-                                                                   removedSections:_removedSections
-                                                                        movedItems:_movedItems
-                                                                  insertedSections:_insertedSections
-                                                                     insertedItems:_insertedItems];
+  const auto cs = [[CKDataSourceChangeset alloc] initWithUpdatedItems:_updatedItems
+                                                         removedItems:_removedItems
+                                                      removedSections:_removedSections
+                                                           movedItems:_movedItems
+                                                     insertedSections:_insertedSections
+                                                        insertedItems:_insertedItems];
+  CKCAssert(CK::changesetMayBeValid(cs),
+            @"This changeset is invalid and will cause UICollectionView to crash later: %@", cs);
+  return cs;
 }
 
 @end
 
 namespace CK {
+  auto changesetMayBeValid(const CKDataSourceChangeset *const changeset) -> bool
+  {
+    const auto movedFromIndexPaths = changeset.movedItems.allKeys;
+    for (NSIndexPath *ip in changeset.updatedItems) {
+      if ([movedFromIndexPaths containsObject:ip]) {
+        return false;
+      }
+      if ([changeset.removedItems containsObject:ip]) {
+        return false;
+      }
+    }
+
+    const auto movedToIndexPaths = changeset.movedItems.allValues;
+    for (NSIndexPath *ip in changeset.insertedItems.allKeys) {
+      if ([movedToIndexPaths containsObject:ip]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   static auto withNewLineIfNotEmpty(NSString const* s) -> NSString *
   {
     return s.length > 0 ? [s stringByAppendingString:@"\n"] : @"";

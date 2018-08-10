@@ -4,7 +4,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKDataSourceChangeset.h>
+#import <ComponentKit/CKDataSourceChangesetInternal.h>
 #import <ComponentKitTestHelpers/NSIndexSetExtensions.h>
 
 auto CK::IndexPath::toCocoa() const -> NSIndexPath *
@@ -41,11 +41,10 @@ static auto makeIndexPathsByIndexPathDictionary(const CK::ChangesetParams::Index
 
 auto CK::makeChangeset(const CK::ChangesetParams &params) -> CKDataSourceChangeset *
 {
-  return [[[[[[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
-                withUpdatedItems:makeItemsByIndexPathDictionary(params.updatedItems)]
-               withRemovedItems:makeIndexPathSet(params.removedItems)]
-              withRemovedSections:CK::makeIndexSet(params.removedSections)]
-             withMovedItems:makeIndexPathsByIndexPathDictionary(params.movedItems)]
-            withInsertedItems:makeItemsByIndexPathDictionary(params.insertedItems)]
-           withInsertedSections:CK::makeIndexSet(params.insertedSections)] build];
+  return [[CKDataSourceChangeset alloc] initWithUpdatedItems:makeItemsByIndexPathDictionary(params.updatedItems)
+                                                removedItems:makeIndexPathSet(params.removedItems)
+                                             removedSections:CK::makeIndexSet(params.removedSections)
+                                                  movedItems:makeIndexPathsByIndexPathDictionary(params.movedItems)
+                                            insertedSections:CK::makeIndexSet(params.insertedSections)
+                                               insertedItems:makeItemsByIndexPathDictionary(params.insertedItems)];
 }

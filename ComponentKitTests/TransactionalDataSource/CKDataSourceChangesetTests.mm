@@ -78,6 +78,62 @@
 
 @end
 
+@interface CKDataSourceChangesetTests_Validation: XCTestCase
+@end
+
+@implementation CKDataSourceChangesetTests_Validation: XCTestCase
+
+- (void)test_WhenEmpty_MayBeValid
+{
+  const auto cs = CK::makeChangeset({});
+
+  XCTAssert(CK::changesetMayBeValid(cs));
+}
+
+- (void)test_WhenMovesAndUpdatesTheSameIndexPath_IsInvalid
+{
+  const auto cs = CK::makeChangeset({
+    .updatedItems = {
+      {{0, 0}, @"A"},
+    },
+    .movedItems = {
+      {{0, 0}, {0, 1}},
+    }
+  });
+
+  XCTAssertFalse(CK::changesetMayBeValid(cs));
+}
+
+- (void)test_WhenRemovesAndUpdatesTheSameIndexPath_IsInvalid
+{
+  const auto cs = CK::makeChangeset({
+    .updatedItems = {
+      {{0, 0}, @"A"},
+    },
+    .removedItems = {
+      {0, 0},
+    }
+  });
+
+  XCTAssertFalse(CK::changesetMayBeValid(cs));
+}
+
+- (void)test_WhenInsertsAndMovesToTheSameIndexPath_IsInvalid
+{
+  const auto cs = CK::makeChangeset({
+    .insertedItems = {
+      {{0, 1}, @"A"},
+    },
+    .movedItems = {
+      {{0, 0}, {0, 1}},
+    }
+  });
+
+  XCTAssertFalse(CK::changesetMayBeValid(cs));
+}
+
+@end
+
 @interface CKDataSourceChangesetTests_Description: XCTestCase
 @end
 
