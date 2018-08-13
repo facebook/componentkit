@@ -92,7 +92,25 @@
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
   } else {
     [[_changeset updatedItems] enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
+      if (indexPath.section >= newSections.count) {
+        CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeUpdate),
+                             @"Invalid section: %lu (>= %lu). Changeset: %@, user info: %@, state: %@",
+                             (unsigned long)indexPath.section,
+                             (unsigned long)newSections.count,
+                             _changeset,
+                             _userInfo,
+                             oldState);
+      }
       NSMutableArray *const section = newSections[indexPath.section];
+      if (indexPath.item >= section.count) {
+        CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeUpdate),
+                             @"Invalid item: %lu (>= %lu). Changeset: %@, user info: %@, state: %@",
+                             (unsigned long)indexPath.item,
+                             (unsigned long)section.count,
+                             _changeset,
+                             _userInfo,
+                             oldState);
+      }
       CKDataSourceItem *const oldItem = section[indexPath.item];
       CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
       [section replaceObjectAtIndex:indexPath.item withObject:item];
