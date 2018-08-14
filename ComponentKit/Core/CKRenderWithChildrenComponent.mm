@@ -71,4 +71,9 @@
   return [CKTreeNodeEmptyState emptyState];
 }
 
+- (BOOL)isEqualToComponent:(id<CKRenderComponentProtocol>)component
+{
+  return NO;
+}
+
 @end

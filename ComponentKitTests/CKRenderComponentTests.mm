@@ -19,22 +19,15 @@
 
 #import "CKTreeNodeWithChildren.h"
 
-@interface CKTestRenderComponent : CKRenderComponent
-@property (nonatomic, assign) NSUInteger renderCalledCounter;
+@interface CKTestChildRenderComponent : CKRenderComponent
+@property (nonatomic, assign) BOOL hasDirtyParent;
 @end
 
-@implementation CKTestRenderComponent
-- (CKComponent *)render:(id)state
-{
-  _renderCalledCounter++;
-  return nil;
-}
-
-+ (id)initialState
-{
-  return nil;
-}
-
+@interface CKTestRenderComponent : CKRenderComponent
+@property (nonatomic, assign) NSUInteger renderCalledCounter;
+@property (nonatomic, assign) NSUInteger identifier;
+@property (nonatomic, strong) CKTestChildRenderComponent *childComponent;
++ (instancetype)newWithIdentifier:(NSUInteger)identifier;
 @end
 
 @interface CKRenderComponentTests : XCTestCase
@@ -47,7 +40,7 @@
   CKComponentScopeRoot *_scopeRoot;
 }
 
-- (void)setUp
+- (void)setUpForFasterStateUpdates
 {
   _config = {
     .enableFasterStateUpdates = YES,
@@ -59,8 +52,22 @@
   XCTAssertEqual(_c.renderCalledCounter, 1);
 }
 
+- (void)setUpForFasterPropsUpdates:(CKTestRenderComponent *)component
+{
+  _config = {
+    .enableFasterPropsUpdates = YES,
+  };
+
+  // New Tree Creation.
+  _c = component;
+  _scopeRoot = createNewTreeWithComponentAndReturnScopeRoot(_config, _c);
+  XCTAssertEqual(_c.renderCalledCounter, 1);
+}
+
 - (void)test_fasterStateUpdate_componentIsNotBeingReused_onPropsUpdate
 {
+  [self setUpForFasterStateUpdates];
+
   // Simulate props update.
   CKThreadLocalComponentScope threadScope(nil, {});
   auto const c2 = [CKTestRenderComponent new];
@@ -81,6 +88,8 @@
 
 - (void)test_fasterStateUpdate_componentIsBeingReused_onStateUpdateOnADifferentComponentBranch
 {
+  [self setUpForFasterStateUpdates];
+
   // Simulate a state update on a different component branch:
   // 1. treeNodeDirtyIds with fake components ids.
   // 2. hasDirtyParent = NO
@@ -101,10 +110,14 @@
 
   // As the state update doesn't affect the c2, we should reuse c instead.
   [self verifyComponentIsBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
+  // As we reused the previous component, c2 child should be nil.
+  XCTAssertNil(c2.childComponent);
 }
 
 - (void)test_fasterStateUpdate_componentIsNotBeingReused_onStateUpdateOnAParent
 {
+  [self setUpForFasterStateUpdates];
+
   // Simulate a state update on a parent component:
   // 1. hasDirtyParent = YES
   // 2. treeNodeDirtyIds with a fake parent id.
@@ -125,10 +138,14 @@
 
   // As the state update affect c2, we should recreate its children.
   [self verifyComponentIsNotBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
+  // Make sure the dirtyParent is pssed correctly to the child component.
+  XCTAssertTrue(c2.childComponent.hasDirtyParent);
 }
 
 - (void)test_fasterStateUpdate_componentIsNotBeingReused_onStateUpdateOnTheComponent
 {
+  [self setUpForFasterStateUpdates];
+
   // Simulate a state update on the component itself:
   // 1. treeNodeDirtyIds contains the tree node identifier
   CKThreadLocalComponentScope threadScope(nil, {});
@@ -150,10 +167,14 @@
 
   // As the state update affect c2, we should recreate its children.
   [self verifyComponentIsNotBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
+  // Make sure the dirtyParent is pssed correctly to the child component.
+  XCTAssertTrue(c2.childComponent.hasDirtyParent);
 }
 
 - (void)test_fasterStateUpdate_componentIsNotBeingReused_onStateUpdateOnItsChild
 {
+  [self setUpForFasterStateUpdates];
+
   // Simulate a state update on the component child:
   // 1. treeNodeDirtyIds, contains the component tree node id.
   // 2. hasDirtyParent = NO
@@ -177,6 +198,94 @@
 
   // As the state update affect c2, we should recreate its children.
   [self verifyComponentIsNotBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
+  // Make sure the dirtyParent is pssed correctly to the child component.
+  XCTAssertTrue(c2.childComponent.hasDirtyParent);
+}
+
+#pragma mark - Faster Props Update
+
+- (void)test_fasterPropsUpdate_componentIsNotBeingReused_whenPropsAreNotEqual
+{
+  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithIdentifier:1]];
+
+  // Simulate props update.
+  CKThreadLocalComponentScope threadScope(nil, {});
+  auto const c2 = [CKTestRenderComponent newWithIdentifier:2];
+  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+
+  [c2 buildComponentTree:scopeRoot2.rootNode
+          previousParent:_scopeRoot.rootNode
+                  params:{
+                    .scopeRoot = scopeRoot2,
+                    .stateUpdates = {},
+                    .treeNodeDirtyIds = {},
+                    .buildTrigger = BuildTrigger::PropsUpdate,
+                  }
+                  config:_config
+          hasDirtyParent:NO];
+
+  // Props are not equal, we cannot reuse the component in this case.
+  [self verifyComponentIsNotBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
+  // Make sure the dirtyParent is pssed correctly to the child component.
+  XCTAssertFalse(c2.childComponent.hasDirtyParent);
+}
+
+- (void)test_fasterPropsUpdate_componentIsBeingReusedWhenPropsAreEqual
+{
+  // Use the same componentIdentifier for both components.
+  // isEqualToComponent: will return YES in this case and we can reuse the component.
+  NSUInteger componentIdentifier = 1;
+  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithIdentifier:componentIdentifier]];
+
+  // Simulate props update.
+  CKThreadLocalComponentScope threadScope(nil, {});
+  auto const c2 = [CKTestRenderComponent newWithIdentifier:componentIdentifier];
+  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+
+  [c2 buildComponentTree:scopeRoot2.rootNode
+          previousParent:_scopeRoot.rootNode
+                  params:{
+                    .scopeRoot = scopeRoot2,
+                    .stateUpdates = {},
+                    .treeNodeDirtyIds = {},
+                    .buildTrigger = BuildTrigger::PropsUpdate,
+                  }
+                  config:_config
+          hasDirtyParent:NO];
+
+  // The components are equal, we can reuse the previous component.
+  [self verifyComponentIsBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
+  // Make sure the dirtyParent is pssed correctly to the child component.
+  XCTAssertFalse(c2.childComponent.hasDirtyParent);
+}
+
+- (void)test_fasterPropsUpdate_componentIsBeingReused_onStateUpdateWithDirtyParentAndEqualComponents
+{
+  auto const componentIdentifier = 1;
+  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithIdentifier:componentIdentifier]];
+
+  // Simulate a state update on a parent component:
+  // 1. hasDirtyParent = YES
+  // 2. treeNodeDirtyIds with a fake parent id.
+  CKThreadLocalComponentScope threadScope(nil, {});
+  auto const c2 = [CKTestRenderComponent newWithIdentifier:componentIdentifier];
+  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+
+  [c2 buildComponentTree:scopeRoot2.rootNode
+          previousParent:_scopeRoot.rootNode
+                  params:{
+                    .scopeRoot = scopeRoot2,
+                    .stateUpdates = {},
+                    .treeNodeDirtyIds = {100}, // Use a random id that represents a state update on a fake parent.
+                    .buildTrigger = BuildTrigger::StateUpdate,
+                  }
+                  config:_config
+          hasDirtyParent:YES];
+
+  // c has dirty parent, however, the components are equal, so we reuse the previous component.
+  [self verifyComponentIsBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
+  // As we reused the previous component, c2 child should be nil.
+  XCTAssertNil(c2.childComponent);
 }
 
 #pragma mark - Helpers
@@ -240,4 +349,52 @@ static CKComponentScopeRoot *createNewTreeWithComponentAndReturnScopeRoot(const 
 
 @end
 
+#pragma mark - Helper Classes
 
+@implementation CKTestRenderComponent
+
++ (instancetype)newWithIdentifier:(NSUInteger)identifier
+{
+  auto const c = [super new];
+  if (c) {
+    c->_identifier = identifier;
+  }
+  return c;
+}
+
+- (CKComponent *)render:(id)state
+{
+  _renderCalledCounter++;
+  _childComponent = [CKTestChildRenderComponent new];
+  return _childComponent;
+}
+
++ (id)initialState
+{
+  return nil;
+}
+
+- (BOOL)isEqualToComponent:(CKTestRenderComponent *)component
+{
+  return _identifier == component->_identifier;
+}
+
+@end
+
+@implementation CKTestChildRenderComponent
+
++ (id)initialState
+{
+  return nil;
+}
+
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
+            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                    params:(const CKBuildComponentTreeParams &)params
+                    config:(const CKBuildComponentConfig &)config
+            hasDirtyParent:(BOOL)hasDirtyParent
+{
+  _hasDirtyParent = hasDirtyParent;
+}
+
+@end

@@ -52,21 +52,40 @@
                      scopeRoot:params.scopeRoot
                      stateUpdates:params.stateUpdates];
 
-  // Faster state optimization.
-  if (config.enableFasterStateUpdates && !hasDirtyParent && previousParent && params.buildTrigger == BuildTrigger::StateUpdate) {
-    auto const dirtyNodeId = params.treeNodeDirtyIds.find(node.nodeIdentifier);
-    // Check if the tree node is not dirty (not in a branch of a state update).
-    if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
-      auto const componentKey = node.componentKey;
-      auto const previousChild = [previousParent childForComponentKey:componentKey];
-      // Link the previous child to the new parent.
-      [parent setChild:previousChild forComponentKey:componentKey];
-      // Link the previous child component to the the new component.
-      _childComponent = [(CKRenderTreeNodeWithChild *)previousChild child].component;
-      return;
+  // Faster state/props optimizations require previous parent.
+  if (previousParent) {
+    if (params.buildTrigger == BuildTrigger::StateUpdate) {
+      // During state update, we have two possible optimizations:
+      // 1. Faster state update
+      // 2. Faster props update (when the parent is dirty, we handle state update as props update).
+      if (config.enableFasterStateUpdates || config.enableFasterPropsUpdates) {
+        // Check if the tree node is not dirty (not in a branch of a state update).
+        auto const dirtyNodeId = params.treeNodeDirtyIds.find(node.nodeIdentifier);
+        if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
+          // If the component is not dirty and it doesn't have a dirty parent - we can reuse it.
+          if (!hasDirtyParent) {
+            if (config.enableFasterStateUpdates) {
+              // Faster state update optimizations.
+              reusePreviousComponent(self, node, parent, previousParent);
+              return;
+            }
+          } // If the component is not dirty, but its parent is dirty - we handle it as props update.
+          else if (config.enableFasterPropsUpdates &&
+                   reusePreviousComponentIfComponentsAreEqual(self, node, parent, previousParent)) {
+            return;
+          }
+        }
+        else { // If the component is dirty, we mark it with `hasDirtyParent` param for its children.
+          hasDirtyParent = YES;
+        }
+      }
     }
-    else { // Otherwise, update the `hasDirtyParent` param for its children.
-      hasDirtyParent = YES;
+    else if (params.buildTrigger == BuildTrigger::PropsUpdate) {
+      // Faster props update optimizations.
+      if (config.enableFasterPropsUpdates &&
+          reusePreviousComponentIfComponentsAreEqual(self, node, parent, previousParent)) {
+        return;
+      }
     }
   }
 
@@ -93,6 +112,36 @@
   return {self, l.size, {{{0,0}, l}}};
 }
 
+// Reuse the previous component generation and its component tree.
+static void reusePreviousComponent(CKRenderComponent *component,
+                                   CKRenderTreeNodeWithChild *node,
+                                   id<CKTreeNodeWithChildrenProtocol> parent,
+                                   id<CKTreeNodeWithChildrenProtocol> previousParent) {
+  auto const componentKey = node.componentKey;
+  auto const previousChild = [previousParent childForComponentKey:componentKey];
+  // Link the previous child to the new parent.
+  [parent setChild:previousChild forComponentKey:componentKey];
+  // Link the previous child component to the the new component.
+  component->_childComponent = [(CKRenderTreeNodeWithChild *)previousChild child].component;
+}
+
+// Check if isEqualToComponent returns `YES`; if it does, reuse the previous component generation and its component tree.
+static BOOL reusePreviousComponentIfComponentsAreEqual(CKRenderComponent *component,
+                                                       CKRenderTreeNodeWithChild *node,
+                                                       id<CKTreeNodeWithChildrenProtocol> parent,
+                                                       id<CKTreeNodeWithChildrenProtocol> previousParent) {
+  auto const componentKey = node.componentKey;
+  auto const previousChild = [previousParent childForComponentKey:componentKey];
+  if ([component isEqualToComponent:(id<CKRenderComponentProtocol>)previousChild.component]) {
+    // Link the previous child to the new parent.
+    [parent setChild:previousChild forComponentKey:componentKey];
+    // Link the previous child component to the the new component.
+    component->_childComponent = [(CKRenderTreeNodeWithChild *)previousChild child].component;
+    return YES;
+  }
+  return NO;
+}
+
 #pragma mark - CKRenderComponentProtocol
 
 + (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component
@@ -103,6 +152,11 @@
 + (id)initialState
 {
   return [CKTreeNodeEmptyState emptyState];
+}
+
+- (BOOL)isEqualToComponent:(id<CKRenderComponentProtocol>)component
+{
+  return NO;
 }
 
 @end

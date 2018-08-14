@@ -142,6 +142,11 @@ struct CKRenderWithSizeSpecComponentParameters {
   return [CKTreeNodeEmptyState emptyState];
 }
 
+- (BOOL)isEqualToComponent:(id<CKRenderComponentProtocol>)component
+{
+  return NO;
+}
+
 #pragma mark - Render layout checker
 
 #if CK_ASSERTIONS_ENABLED
