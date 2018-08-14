@@ -52,6 +52,24 @@
                      scopeRoot:params.scopeRoot
                      stateUpdates:params.stateUpdates];
 
+  // Faster state optimization.
+  if (config.enableFasterStateUpdates && !hasDirtyParent && previousParent && params.buildTrigger == BuildTrigger::StateUpdate) {
+    auto const dirtyNodeId = params.treeNodeDirtyIds.find(node.nodeIdentifier);
+    // Check if the tree node is not dirty (not in a branch of a state update).
+    if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
+      auto const componentKey = node.componentKey;
+      auto const previousChild = [previousParent childForComponentKey:componentKey];
+      // Link the previous child to the new parent.
+      [parent setChild:previousChild forComponentKey:componentKey];
+      // Link the previous child component to the the new component.
+      _childComponent = [(CKRenderTreeNodeWithChild *)previousChild child].component;
+      return;
+    }
+    else { // Otherwise, update the `hasDirtyParent` param for its children.
+      hasDirtyParent = YES;
+    }
+  }
+
   auto const child = [self render:node.state];
   if (child) {
     _childComponent = child;

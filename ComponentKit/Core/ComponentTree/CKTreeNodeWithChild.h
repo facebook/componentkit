@@ -19,4 +19,6 @@
 
 @interface CKTreeNodeWithChild : CKTreeNode <CKTreeNodeWithChildrenProtocol>
 
+- (id<CKTreeNodeProtocol>)child;
+
 @end

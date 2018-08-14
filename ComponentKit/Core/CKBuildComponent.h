@@ -30,7 +30,7 @@ enum class BuildTrigger {
 struct CKBuildComponentConfig {
   //  Defines whether leaf components have a corresponding CKTreeNode.
   BOOL buildLeafNodes = YES;
-  //  Enable the faster state updates optimization for render components.
+  //  Enable faster state updates optimization for render components.
   BOOL enableFasterStateUpdates = NO;
 };
 

@@ -45,8 +45,13 @@
 
 - (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
 {
-  CKAssert(_child == nil, @"_child shouldn't set more than once.");
+  CKAssert(_child == nil || [_child class] == [child class], @"[_child class]: %@ is different than [child class]: %@", [_child class], [child class]);
   _child = child;
+}
+
+- (id<CKTreeNodeProtocol>)child
+{
+  return _child;
 }
 
 @end
