@@ -51,7 +51,7 @@
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::NewTree,
     .treeNodeDirtyIds = {},
-  } config:_config];
+  } config:_config hasDirtyParent:NO];
 
   XCTAssertEqual(root.children.size(), 1);
   XCTAssertEqual(root.children[0].component, c);
@@ -64,7 +64,7 @@
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::PropsUpdate,
     .treeNodeDirtyIds = {},
-  } config:_config];
+  } config:_config hasDirtyParent:NO];
   XCTAssertTrue(areTreesEqual(root, root2));
 }
 
@@ -80,7 +80,7 @@
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::NewTree,
     .treeNodeDirtyIds = {},
-  } config:_config];
+  } config:_config hasDirtyParent:NO];
 
   // Make sure the root has only one child.
   XCTAssertEqual(root.children.size(), 1);
@@ -106,7 +106,7 @@
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::PropsUpdate,
     .treeNodeDirtyIds = {},
-  } config:_config];
+  } config:_config hasDirtyParent:NO];
   XCTAssertTrue(areTreesEqual(root, root2));
 }
 
@@ -123,7 +123,7 @@
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::NewTree,
     .treeNodeDirtyIds = {},
-  } config:{}];
+  } config:{} hasDirtyParent:NO];
 
   XCTAssertEqual(root.children.size(), 1);
   XCTAssertTrue(verifyComponentsInNode(root, @[renderWithChidlrenComponent]));
@@ -149,7 +149,7 @@
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::PropsUpdate,
     .treeNodeDirtyIds = {},
-  } config:{}];
+  } config:{} hasDirtyParent:NO];
   XCTAssertTrue(areTreesEqual(root, root2));
 }
 

@@ -155,6 +155,7 @@ struct CKComponentMountInfo {
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
                     config:(const CKBuildComponentConfig &)config
+            hasDirtyParent:(BOOL)hasDirtyParent
 {
   if (config.buildLeafNodes) {
     // In this case this is a leaf component, which means we don't need to continue the recursion as it has no children.

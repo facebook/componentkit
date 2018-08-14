@@ -46,6 +46,7 @@
              previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
                     config:(const CKBuildComponentConfig &)config
+            hasDirtyParent:(BOOL)hasDirtyParent
 {
   auto const node = [[CKTreeNodeWithChildren alloc]
                      initWithComponent:self
@@ -55,8 +56,8 @@
                      stateUpdates:params.stateUpdates];
   
   auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
-  [_component buildComponentTree:node previousParent:previousParentForChild params:params config:config];
-  [_overlay buildComponentTree:node previousParent:previousParentForChild params:params config:config];
+  [_component buildComponentTree:node previousParent:previousParentForChild params:params config:config hasDirtyParent:hasDirtyParent];
+  [_overlay buildComponentTree:node previousParent:previousParentForChild params:params config:config hasDirtyParent:hasDirtyParent];
 }
 
 /**

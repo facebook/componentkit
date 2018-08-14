@@ -97,6 +97,7 @@ template class std::vector<CKFlexboxComponentChild>;
              previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
                     config:(const CKBuildComponentConfig &)config
+            hasDirtyParent:(BOOL)hasDirtyParent
 {
   auto const node = [[CKTreeNodeWithChildren alloc]
                      initWithComponent:self
@@ -107,7 +108,7 @@ template class std::vector<CKFlexboxComponentChild>;
 
   auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
   for (auto const &child : _children) {
-    [child.component buildComponentTree:node previousParent:previousParentForChild params:params config:config];
+    [child.component buildComponentTree:node previousParent:previousParentForChild params:params config:config hasDirtyParent:hasDirtyParent];
   }
 }
 

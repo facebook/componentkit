@@ -70,7 +70,8 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                              .treeNodeDirtyIds = treeNodeDirtyIds,
                              .buildTrigger = buildTrigger,
                            }
-                           config:config];
+                           config:config
+                   hasDirtyParent:NO];
   }
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;
@@ -115,7 +116,8 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
     [component buildComponentTree:threadScope.newScopeRoot.rootNode
                    previousParent:previousRoot.rootNode
                            params:params
-                           config:config];
+                           config:config
+                   hasDirtyParent:NO];
   }
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;

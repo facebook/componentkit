@@ -118,6 +118,7 @@ struct CKBuildComponentTreeParams {
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
-                    config:(const CKBuildComponentConfig &)config;
+                    config:(const CKBuildComponentConfig &)config
+            hasDirtyParent:(BOOL)hasDirtyParent;
 
 @end

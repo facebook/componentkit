@@ -18,10 +18,12 @@ struct CKRenderWithSizeSpecComponentParameters {
   id<CKTreeNodeWithChildrenProtocol> previousParentForChild;
   const CKBuildComponentTreeParams &params;
   const CKBuildComponentConfig &config;
+  const BOOL hasDirtyParent;
 
   CKRenderWithSizeSpecComponentParameters(id<CKTreeNodeWithChildrenProtocol> pP,
                                           const CKBuildComponentTreeParams &p,
-                                          const CKBuildComponentConfig &c) : previousParentForChild(pP), params(p), config(c) {};
+                                          const CKBuildComponentConfig &c,
+                                          BOOL hDP) : previousParentForChild(pP), params(p), config(c), hasDirtyParent(hDP) {};
 };
 
 @implementation CKRenderWithSizeSpecComponent {
@@ -63,7 +65,8 @@ struct CKRenderWithSizeSpecComponentParameters {
   [child buildComponentTree:_node
              previousParent:_parameters->previousParentForChild
                      params:_parameters->params
-                     config:_parameters->config];
+                     config:_parameters->config
+             hasDirtyParent:_parameters->hasDirtyParent];
 #if CK_ASSERTIONS_ENABLED
   [_renderedChildrenSet addObject:child];
 #endif
@@ -105,6 +108,7 @@ struct CKRenderWithSizeSpecComponentParameters {
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
                     config:(const CKBuildComponentConfig &)config
+            hasDirtyParent:(BOOL)hasDirtyParent
 {
   if (!_node) {
     auto const node = [[CKRenderTreeNodeWithChildren alloc]
@@ -117,7 +121,8 @@ struct CKRenderWithSizeSpecComponentParameters {
 
     _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>((id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[_node componentKey]],
                                                                             params,
-                                                                            config);
+                                                                            config,
+                                                                            hasDirtyParent);
   }
 }
 

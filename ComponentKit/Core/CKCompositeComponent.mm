@@ -76,6 +76,7 @@
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
                     config:(const CKBuildComponentConfig &)config
+            hasDirtyParent:(BOOL)hasDirtyParent
 {
   auto const node = [[CKTreeNodeWithChild alloc]
                      initWithComponent:self
@@ -88,7 +89,8 @@
     [_component buildComponentTree:node
                      previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
                             params:params
-                            config:config];
+                            config:config
+                    hasDirtyParent:hasDirtyParent];
   }
 }
 
