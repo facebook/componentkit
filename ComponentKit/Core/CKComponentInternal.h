@@ -22,6 +22,7 @@
 struct CKBuildComponentTreeParams {
   __weak CKComponentScopeRoot *scopeRoot;
   const CKComponentStateUpdateMap &stateUpdates;
+  const CKTreeNodeDirtyIds &treeNodeDirtyIds;
   BuildTrigger buildTrigger;
 };
 

@@ -65,6 +65,7 @@
     .scopeRoot = scopeRoot,
     .stateUpdates = testUpdateMap,
     .buildTrigger = BuildTrigger::NewTree,
+    .treeNodeDirtyIds = {},
   };
   [c buildComponentTree:root previousParent:previousRoot params:params config:{}];
 

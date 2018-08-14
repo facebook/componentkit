@@ -15,6 +15,10 @@
 typedef int32_t CKTreeNodeIdentifier;
 typedef std::tuple<Class, NSUInteger> CKTreeNodeComponentKey;
 
+// Data structure that holds the ids of the tree nodes, that represent the components
+// on a branch that had a state update.
+typedef std::unordered_set<CKTreeNodeIdentifier> CKTreeNodeDirtyIds;
+
 /**
  This protocol represents a node in the component tree.
  Each component has a corresponding CKTreeNodeProtocol; this node holds the state of the component.

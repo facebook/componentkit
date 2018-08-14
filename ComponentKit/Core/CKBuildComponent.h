@@ -13,6 +13,7 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKTreeNodeProtocol.h>
 
 @class CKComponentScopeRoot;
 @class CKComponent;
@@ -29,6 +30,8 @@ enum class BuildTrigger {
 struct CKBuildComponentConfig {
   //  Defines whether leaf components have a corresponding CKTreeNode.
   BOOL buildLeafNodes = YES;
+  //  Enable the faster state updates optimization for render components.
+  BOOL enableFasterStateUpdates = NO;
 };
 
 /**

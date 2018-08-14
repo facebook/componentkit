@@ -50,6 +50,7 @@
     .scopeRoot = nil,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::NewTree,
+    .treeNodeDirtyIds = {},
   } config:_config];
 
   XCTAssertEqual(root.children.size(), 1);
@@ -62,6 +63,7 @@
     .scopeRoot = nil,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::PropsUpdate,
+    .treeNodeDirtyIds = {},
   } config:_config];
   XCTAssertTrue(areTreesEqual(root, root2));
 }
@@ -77,6 +79,7 @@
     .scopeRoot = nil,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::NewTree,
+    .treeNodeDirtyIds = {},
   } config:_config];
 
   // Make sure the root has only one child.
@@ -102,6 +105,7 @@
     .scopeRoot = nil,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::PropsUpdate,
+    .treeNodeDirtyIds = {},
   } config:_config];
   XCTAssertTrue(areTreesEqual(root, root2));
 }
@@ -118,6 +122,7 @@
     .scopeRoot = nil,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::NewTree,
+    .treeNodeDirtyIds = {},
   } config:{}];
 
   XCTAssertEqual(root.children.size(), 1);
@@ -143,6 +148,7 @@
     .scopeRoot = nil,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::PropsUpdate,
+    .treeNodeDirtyIds = {},
   } config:{}];
   XCTAssertTrue(areTreesEqual(root, root2));
 }
