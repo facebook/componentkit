@@ -65,7 +65,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
     [component buildComponentTree:threadScope.newScopeRoot.rootNode
                    previousParent:previousRoot.rootNode
                            params:{
-                             .scopeRoot = previousRoot,
+                             .scopeRoot = threadScope.newScopeRoot,
                              .stateUpdates = stateUpdates,
                              .treeNodeDirtyIds = treeNodeDirtyIds,
                              .buildTrigger = buildTrigger,
@@ -99,7 +99,7 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
 
   CKTreeNodeDirtyIds treeNodeDirtyIds;
   const CKBuildComponentTreeParams params = {
-    .scopeRoot = previousRoot,
+    .scopeRoot = threadScope.newScopeRoot,
     .stateUpdates = stateUpdates,
     .treeNodeDirtyIds = treeNodeDirtyIds,
     .buildTrigger = buildTrigger,
