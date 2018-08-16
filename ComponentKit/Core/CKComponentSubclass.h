@@ -137,6 +137,17 @@ extern CGSize const kCKComponentParentSizeUndefined;
 - (CKComponentBoundsAnimation)boundsAnimationFromPreviousComponent:(CKComponent *)previousComponent;
 
 /**
+ **Experimental API, do not use**
+
+ Override to return the list of component / animation pairs that will run when this component is no longer in the mounted
+ hierarchy. You can return multiple animations for this component or specify animations for any child components.
+
+ @warning If you override this method, your component MUST declare a scope (see CKComponentScope). This is used to
+ identify equivalent components between trees.
+ */
+- (std::vector<CKAnimationOnFinalUnmount>)animationsOnFinalUnmount;
+
+/**
  Attempts to return a view suitable for rendering an animation.
 
  Since a component may or may not be backed by a view nil may be returned. Composite components may, given the fact

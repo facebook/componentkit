@@ -277,6 +277,11 @@ struct CKComponentMountInfo {
   return {};
 }
 
+- (std::vector<CKAnimationOnFinalUnmount>)animationsOnFinalUnmount
+{
+  return {};
+}
+
 - (UIView *)viewForAnimation
 {
   CKAssertMainThread();

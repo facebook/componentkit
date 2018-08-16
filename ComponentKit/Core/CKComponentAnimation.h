@@ -53,3 +53,8 @@ struct CKComponentAnimation {
 private:
   CKComponentAnimationHooks hooks;
 };
+
+struct CKAnimationOnFinalUnmount {
+  CKComponent *component;
+  CAAnimation *animation;
+};
