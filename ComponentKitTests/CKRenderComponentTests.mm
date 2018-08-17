@@ -38,12 +38,18 @@
   CKBuildComponentConfig _config;
   CKTestRenderComponent *_c;
   CKComponentScopeRoot *_scopeRoot;
+
+  BOOL _enableFasterStateUpdates;
+  BOOL _enableFasterPropsUpdates;
 }
 
 - (void)setUpForFasterStateUpdates
 {
+  _enableFasterStateUpdates = YES;
+
   _config = {
-    .enableFasterStateUpdates = YES,
+    .enableFasterStateUpdates = _enableFasterStateUpdates,
+    .enableFasterPropsUpdates = _enableFasterPropsUpdates,
   };
 
   // New Tree Creation.
@@ -54,8 +60,11 @@
 
 - (void)setUpForFasterPropsUpdates:(CKTestRenderComponent *)component
 {
+  _enableFasterPropsUpdates = YES;
+
   _config = {
-    .enableFasterPropsUpdates = YES,
+    .enableFasterStateUpdates = _enableFasterStateUpdates,
+    .enableFasterPropsUpdates = _enableFasterPropsUpdates,
   };
 
   // New Tree Creation.
@@ -63,6 +72,8 @@
   _scopeRoot = createNewTreeWithComponentAndReturnScopeRoot(_config, _c);
   XCTAssertEqual(_c.renderCalledCounter, 1);
 }
+
+#pragma mark - State updates
 
 - (void)test_fasterStateUpdate_componentIsNotBeingReused_onPropsUpdate
 {
@@ -286,6 +297,47 @@
   [self verifyComponentIsBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
   // As we reused the previous component, c2 child should be nil.
   XCTAssertNil(c2.childComponent);
+}
+
+- (void)test_fasterPropsUpdate_componentIsBeingReused_onStateUpdateWithNonDirtyComponentAndEqualComponents
+{
+  auto const componentIdentifier = 1;
+  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithIdentifier:componentIdentifier]];
+
+  // Simulate a state update on a parent component:
+  // 1. hasDirtyParent = NO
+  // 2. treeNodeDirtyIds is empty.
+  CKThreadLocalComponentScope threadScope(nil, {});
+  auto const c2 = [CKTestRenderComponent newWithIdentifier:componentIdentifier];
+  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+
+  [c2 buildComponentTree:scopeRoot2.rootNode
+          previousParent:_scopeRoot.rootNode
+                  params:{
+                    .scopeRoot = scopeRoot2,
+                    .stateUpdates = {},
+                    .treeNodeDirtyIds = {},
+                    .buildTrigger = BuildTrigger::StateUpdate,
+                  }
+                  config:_config
+          hasDirtyParent:NO];
+
+  // c is not dirty, the components are equal, so we reuse the previous component.
+  [self verifyComponentIsBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
+  // As we reused the previous component, c2 child should be nil.
+  XCTAssertNil(c2.childComponent);
+}
+
+- (void)test_fasterPropsUpdate_whenBothOptimizationsAreOn
+{
+  _enableFasterStateUpdates = YES;
+  _enableFasterPropsUpdates = YES;
+
+  // Props Updates
+  [self test_fasterPropsUpdate_componentIsNotBeingReused_whenPropsAreNotEqual];
+  [self test_fasterPropsUpdate_componentIsBeingReusedWhenPropsAreEqual];
+  [self test_fasterPropsUpdate_componentIsBeingReused_onStateUpdateWithDirtyParentAndEqualComponents];
+  [self test_fasterPropsUpdate_componentIsBeingReused_onStateUpdateWithNonDirtyComponentAndEqualComponents];
 }
 
 #pragma mark - Helpers

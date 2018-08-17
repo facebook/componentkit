@@ -108,7 +108,8 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
   // Build the component tree if we have a render component in the hierarchy.
   if (threadScope.newScopeRoot.hasRenderComponentInTree) {
 
-    if (config.enableFasterStateUpdates && buildTrigger == BuildTrigger::StateUpdate) {
+    if (buildTrigger == BuildTrigger::StateUpdate &&
+        (config.enableFasterStateUpdates || config.enableFasterPropsUpdates)) {
       treeNodeDirtyIds = createTreeNodeDirtyIds(stateUpdates);
     }
 

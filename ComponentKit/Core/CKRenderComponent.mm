@@ -68,6 +68,10 @@
               // Faster state update optimizations.
               reusePreviousComponent(self, node, parent, previousParent);
               return;
+            } // If `enableFasterStateUpdates` is disabled, we handle it as a props update as the component is not dirty.
+            else if (config.enableFasterPropsUpdates &&
+                     reusePreviousComponentIfComponentsAreEqual(self, node, parent, previousParent)) {
+              return;
             }
           } // If the component is not dirty, but its parent is dirty - we handle it as props update.
           else if (config.enableFasterPropsUpdates &&
