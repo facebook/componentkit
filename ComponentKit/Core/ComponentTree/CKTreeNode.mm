@@ -77,7 +77,6 @@
 
       if (_handle) {
         [component acquireScopeHandle:_handle];
-        [_handle setTreeNode:self];
         [_handle resolve];
       }
     }
@@ -85,7 +84,9 @@
     // Set the link between the parent and the child.
     [parent setChild:self forComponentKey:_componentKey];
     self.parent = parent;
-    
+
+    // Set the link between the tree node and the scope handle.
+    [_handle setTreeNode:self];
   }
   return self;
 }

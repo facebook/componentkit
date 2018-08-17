@@ -10,7 +10,11 @@
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKComponentScopeRootFactory.h>
+
 #import "CKComponent.h"
+#import "CKCompositeComponent.h"
 #import "CKRenderWithChildrenComponent.h"
 #import "CKRenderComponent.h"
 #import "CKComponentInternal.h"
@@ -20,6 +24,17 @@
 #import "CKRenderTreeNodeWithChild.h"
 #import "CKRenderTreeNodeWithChildren.h"
 #import "CKThreadLocalComponentScope.h"
+#import "CKBuildComponent.h"
+
+@interface CKTreeNodeTest_Component_WithScope : CKComponent
+@end
+
+@interface CKTreeNodeTest_RenderComponent_WithChild : CKRenderComponent
+{
+  CKComponent *_child;
+}
++ (instancetype)newWithComponent:(CKComponent *)component;
+@end
 
 @interface CKTreeNodeTest_Component_WithState : CKComponent
 @end
@@ -367,6 +382,23 @@
   XCTAssertNotEqual(childNode1.nodeIdentifier, childNode2.nodeIdentifier);
 }
 
+- (void)test_treeNodeToScopeHandleConnection
+{
+  __block CKTreeNodeTest_RenderComponent_WithChild *c;
+  __block CKTreeNodeTest_Component_WithScope *child;
+  CKComponent *(^block)(void) = ^CKComponent *{
+    child = [CKTreeNodeTest_Component_WithScope new];
+    c = [CKTreeNodeTest_RenderComponent_WithChild
+         newWithComponent:
+         [CKCompositeComponent newWithComponent:child]];
+
+    return c;
+  };
+  auto const results = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, block);
+  XCTAssertEqual(c.scopeHandle.treeNode.component, c);
+  XCTAssertEqual(child.scopeHandle.treeNode.component, child);
+}
+
 #pragma mark - Helpers
 
 - (void)_test_emptyInitialState_withComponent:(CKComponent *)c andNodeClass:(Class<CKTreeNodeProtocol>)nodeClass
@@ -523,17 +555,46 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 }
 @end
 
-@implementation CKTreeNodeTest_RenderWithChildrenComponent_WithNilState : CKRenderWithChildrenComponent
+@implementation CKTreeNodeTest_RenderWithChildrenComponent_WithNilState
 + (id)initialState
 {
   return nil;
 }
 @end
 
-@implementation CKTreeNodeTest_RenderComponent_WithNilState : CKRenderComponent
+@implementation CKTreeNodeTest_RenderComponent_WithNilState
 + (id)initialState
 {
   return nil;
+}
+@end
+
+@implementation CKTreeNodeTest_Component_WithScope
++ (instancetype)new
+{
+  CKComponentScope scope(self);
+  return [super new];
+}
+@end
+
+@implementation CKTreeNodeTest_RenderComponent_WithChild
++ (instancetype)newWithComponent:(CKComponent *)component
+{
+  auto const c = [super new];
+  if (c) {
+    c->_child = component;
+  }
+  return c;
+}
+
++ (id)initialState
+{
+  return nil;
+}
+
+- (CKComponent *)render:(id)state
+{
+  return _child;
 }
 @end
 

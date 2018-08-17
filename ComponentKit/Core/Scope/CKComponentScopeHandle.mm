@@ -197,7 +197,6 @@
 
 - (void)setTreeNode:(id<CKTreeNodeProtocol>)treeNode
 {
-  CKAssertFalse(_resolved);
   CKAssert(_treeNode == nil, @"treeNode cannot be set twice");
   _treeNode = treeNode;
 }
