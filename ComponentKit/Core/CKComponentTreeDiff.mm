@@ -35,7 +35,7 @@ namespace CK {
 
   auto operator==(const ComponentTreeDiff &lhs, const ComponentTreeDiff &rhs) -> bool
   {
-    return lhs.appearedComponents == rhs.appearedComponents && lhs.updatedComponents == rhs.updatedComponents;
+    return lhs.appearedComponents == rhs.appearedComponents && lhs.updatedComponents == rhs.updatedComponents && lhs.disappearedComponents == rhs.disappearedComponents;
   }
 
   auto operator==(const ComponentTreeDiff::Pair &lhs, const ComponentTreeDiff::Pair &rhs) -> bool

@@ -34,10 +34,17 @@
             fromPreviousComponent:(CKComponent *const)component;
 @end
 
+@interface ComponentWithAnimationOnFinalUnmount: CKComponent
+@end
+
+@interface CompositeComponentWithScope: CKCompositeComponent
+@end
+
 const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
   CKComponentHasAnimationsOnInitialMountPredicate,
   CKComponentHasAnimationsFromPreviousComponentPredicate,
+  CKComponentHasAnimationsOnFinalUnmountPredicate,
 };
 
 @implementation CKComponentAnimationsTests_LayoutDiffing
@@ -106,6 +113,30 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
   const auto diff = CK::animatedComponentsBetweenLayouts(l, l);
 
   XCTAssert(diff == CK::ComponentTreeDiff {});
+}
+
+- (void)test_WhenPreviousTreeIsNotEmpty_ReturnsOnlyDisappearedComponentsWithDisappearAnimation
+{
+  __block ComponentWithAnimationOnFinalUnmount *c;
+  const auto bcr = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
+    c = [ComponentWithAnimationOnFinalUnmount new];
+    return [CKCompositeComponent newWithComponent:[CompositeComponentWithScope newWithComponent:c]];
+  });
+  const auto l = CKComputeRootComponentLayout(bcr.component, sizeRange, nil, animationPredicates);
+  const auto bcr2 = CKBuildComponent(bcr.scopeRoot, {}, ^{
+    // Compared to the previous tree there are two components that have disappeared: CompositeComponentWithScope and
+    // ComponentWithDisappearAnimation. However, we should get only the latter in ComponentTreeDiff::disappearedComponents
+    // since the former doesn't define any disappear animation.
+    return [CKCompositeComponent newWithComponent:[CKComponent new]];
+  });
+  const auto l2 = CKComputeRootComponentLayout(bcr2.component, sizeRange, nil, animationPredicates);
+
+  const auto diff = CK::animatedComponentsBetweenLayouts(l2, l);
+
+  const auto expectedDiff = CK::ComponentTreeDiff {
+    .disappearedComponents = {c},
+  };
+  XCTAssert(diff == expectedDiff);
 }
 
 @end
@@ -280,5 +311,26 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
   } else {
     return {};
   };
+}
+@end
+
+@implementation ComponentWithAnimationOnFinalUnmount
++ (instancetype)new
+{
+  CKComponentScope s(self);
+  return [super new];
+}
+
+- (std::vector<CKAnimationOnFinalUnmount>)animationsOnFinalUnmount
+{
+  return {{self, [CAAnimation new]}};
+}
+@end
+
+@implementation CompositeComponentWithScope
++ (instancetype)newWithComponent:(CKComponent *)component
+{
+  CKComponentScope s(self);
+  return [super newWithComponent:component];
 }
 @end

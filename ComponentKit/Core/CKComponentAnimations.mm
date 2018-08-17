@@ -24,7 +24,7 @@ namespace CK {
   static auto acquiredComponent(CKComponentScopeHandle *const h) { return objCForceCast<CKComponent>(h.acquiredComponent); };
 
   static auto animatedAppearedComponentsBetweenLayouts(const CKComponentRootLayout &newLayout,
-                                                       const CKComponentRootLayout &previousLayout)
+                                                       const CKComponentRootLayout &previousLayout) -> std::vector<CKComponent *>
   {
     const auto newHandlesWithInitialAnimations = map(newLayout.componentsMatchingPredicate(CKComponentHasAnimationsOnInitialMountPredicate), getScopeHandle);
     const auto oldHandlesWithInitialAnimations = map(previousLayout.componentsMatchingPredicate(CKComponentHasAnimationsOnInitialMountPredicate), getScopeHandle);
@@ -35,7 +35,7 @@ namespace CK {
   }
 
   static auto animatedUpdatedComponentsBetweenLayouts(const CKComponentRootLayout &newLayout,
-                                                      const CKComponentRootLayout &previousLayout)
+                                                      const CKComponentRootLayout &previousLayout)  -> std::vector<CK::ComponentTreeDiff::Pair>
   {
     const auto newHandlesWithAnimationsFromPreviousComponent = map(newLayout.componentsMatchingPredicate(CKComponentHasAnimationsFromPreviousComponentPredicate), getScopeHandle);
     const auto oldHandlesWithAnimationsFromPreviousComponent = map(previousLayout.componentsMatchingPredicate(CKComponentHasAnimationsFromPreviousComponentPredicate), getScopeHandle);
@@ -54,12 +54,24 @@ namespace CK {
     });
   }
 
+  static auto animatedDisappearedComponentsBetweenLayouts(const CKComponentRootLayout &newLayout,
+                                                          const CKComponentRootLayout &previousLayout) -> std::vector<CKComponent *>
+  {
+    const auto newHandlesWithAnimationsOnDisappear = map(newLayout.componentsMatchingPredicate(CKComponentHasAnimationsOnFinalUnmountPredicate), getScopeHandle);
+    const auto oldHandlesWithAnimationsOnDisappear = map(previousLayout.componentsMatchingPredicate(CKComponentHasAnimationsOnFinalUnmountPredicate), getScopeHandle);
+    const auto handlesForDisappearedComponentsWithAnimationsOnDisappear = Collection::difference(oldHandlesWithAnimationsOnDisappear,
+                                                                                                 newHandlesWithAnimationsOnDisappear,
+                                                                                                 isSameHandle);
+    return map(handlesForDisappearedComponentsWithAnimationsOnDisappear, acquiredComponent);
+  }
+
   auto animatedComponentsBetweenLayouts(const CKComponentRootLayout &newLayout,
                                         const CKComponentRootLayout &previousLayout) -> ComponentTreeDiff
   {
     return {
       .appearedComponents = animatedAppearedComponentsBetweenLayouts(newLayout, previousLayout),
       .updatedComponents = animatedUpdatedComponentsBetweenLayouts(newLayout, previousLayout),
+      .disappearedComponents = animatedDisappearedComponentsBetweenLayouts(newLayout, previousLayout),
     };
   }
 

@@ -35,6 +35,8 @@ namespace CK {
     const std::vector<CKComponent *> appearedComponents = {};
     /* Components that appear in both versions of the tree. Each component is paired up with its previous generation. */
     const std::vector<Pair> updatedComponents = {};
+    /* Components not present in the newer version of the tree. */
+    const std::vector<CKComponent *> disappearedComponents = {};
   };
 
   auto operator==(const ComponentTreeDiff &lhs, const ComponentTreeDiff &rhs) -> bool;
