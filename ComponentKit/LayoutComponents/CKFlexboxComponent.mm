@@ -10,6 +10,8 @@
 
 #import "CKFlexboxComponent.h"
 
+#import <ComponentKit/CKMacros.h>
+
 #import "yoga/Yoga.h"
 
 #import "CKComponent+Yoga.h"
@@ -84,7 +86,7 @@ template class std::vector<CKFlexboxComponentChild>;
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
           usesDeepYogaTrees:(BOOL)usesDeepYogaTrees
 {
-  CKFlexboxComponent * const component = [super newWithView:view size:size];
+  auto const component = [super newRenderComponentWithView:view size:size isLayoutComponent:YES];
   if (component) {
     component->_style = style;
     component->_children = children.take();
@@ -93,23 +95,11 @@ template class std::vector<CKFlexboxComponentChild>;
   return component;
 }
 
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
-             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
-                    params:(const CKBuildComponentTreeParams &)params
-                    config:(const CKBuildComponentConfig &)config
-            hasDirtyParent:(BOOL)hasDirtyParent
+- (std::vector<CKComponent *>)renderChildren:(id)state
 {
-  auto const node = [[CKTreeNodeWithChildren alloc]
-                     initWithComponent:self
-                     parent:parent
-                     previousParent:previousParent
-                     scopeRoot:params.scopeRoot
-                     stateUpdates:params.stateUpdates];
-
-  auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
-  for (auto const &child : _children) {
-    [child.component buildComponentTree:node previousParent:previousParentForChild params:params config:config hasDirtyParent:hasDirtyParent];
-  }
+  return CK::map(_children, [](auto const child) {
+    return child.component;
+  });
 }
 
 static float convertFloatToYogaRepresentation(const float& value) {

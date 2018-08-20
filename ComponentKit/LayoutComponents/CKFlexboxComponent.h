@@ -10,8 +10,9 @@
 
 #import <vector>
 
-#import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKContainerWrapper.h>
+#import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKRenderWithChildrenComponent.h>
 
 typedef NS_ENUM(NSInteger, CKFlexboxDirection) {
   CKFlexboxDirectionColumn,
@@ -337,7 +338,7 @@ extern const struct CKStackComponentLayoutExtraKeys {
  layout configurations and can generate CKFlexboxComponent code for you
 
  */
-@interface CKFlexboxComponent : CKComponent
+@interface CKFlexboxComponent : CKRenderWithChildrenComponent
 
 /**
  @param view A view configuration, or {} for no view.
@@ -349,5 +350,8 @@ extern const struct CKStackComponentLayoutExtraKeys {
                        size:(const CKComponentSize &)size
                       style:(const CKFlexboxComponentStyle &)style
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children;
+
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
+                       size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @end
