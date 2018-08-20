@@ -29,7 +29,7 @@
   if (component == nil) {
     return nil;
   }
-  CKOverlayLayoutComponent *c = [super newWithView:{} size:{}];
+  CKOverlayLayoutComponent *c = [super newRenderComponentWithView:{} size:{} isLayoutComponent:YES];
   if (c) {
     c->_overlay = overlay;
     c->_component = component;
@@ -37,27 +37,9 @@
   return c;
 }
 
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
+- (std::vector<CKComponent *>)renderChildren:(id)state
 {
-  CK_NOT_DESIGNATED_INITIALIZER();
-}
-
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
-             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
-                    params:(const CKBuildComponentTreeParams &)params
-                    config:(const CKBuildComponentConfig &)config
-            hasDirtyParent:(BOOL)hasDirtyParent
-{
-  auto const node = [[CKTreeNodeWithChildren alloc]
-                     initWithComponent:self
-                     parent:parent
-                     previousParent:previousParent
-                     scopeRoot:params.scopeRoot
-                     stateUpdates:params.stateUpdates];
-  
-  auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
-  [_component buildComponentTree:node previousParent:previousParentForChild params:params config:config hasDirtyParent:hasDirtyParent];
-  [_overlay buildComponentTree:node previousParent:previousParentForChild params:params config:config hasDirtyParent:hasDirtyParent];
+  return {_overlay, _component};
 }
 
 /**

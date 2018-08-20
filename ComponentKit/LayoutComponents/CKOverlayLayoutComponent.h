@@ -8,16 +8,21 @@
  *
  */
 
-#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKRenderWithChildrenComponent.h>
+
+#import <ComponentKit/CKMacros.h>
 
 /**
  @uidocs https://fburl.com/CKOverlayLayoutComponent:4ad6
 
  This component lays out a single component and then overlays a component on top of it streched to its size
  */
-@interface CKOverlayLayoutComponent : CKComponent
+@interface CKOverlayLayoutComponent : CKRenderWithChildrenComponent
 
 + (instancetype)newWithComponent:(CKComponent *)component
                          overlay:(CKComponent *)overlay;
+
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
+                       size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @end
