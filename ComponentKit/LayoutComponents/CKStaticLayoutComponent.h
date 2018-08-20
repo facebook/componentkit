@@ -10,9 +10,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKContainerWrapper.h>
 #import <ComponentKit/CKDimension.h>
+#import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKRenderWithChildrenComponent.h>
 
 struct CKStaticLayoutComponentChild {
   CGPoint position;
@@ -35,7 +36,7 @@ struct CKStaticLayoutComponentChild {
 
  Computes a size that is the union of all childrens' frames.
  */
-@interface CKStaticLayoutComponent : CKComponent
+@interface CKStaticLayoutComponent : CKRenderWithChildrenComponent
 
 /**
  @param view Passed to the super class initializer.
@@ -49,5 +50,8 @@ struct CKStaticLayoutComponentChild {
  Convenience that does not have a view or size.
  */
 + (instancetype)newWithChildren:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children;
+
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
+                       size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @end

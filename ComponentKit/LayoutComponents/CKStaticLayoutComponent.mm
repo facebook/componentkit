@@ -10,10 +10,12 @@
 
 #import "CKStaticLayoutComponent.h"
 
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKMacros.h>
+
 #import "ComponentUtilities.h"
 #import "CKComponentSubclass.h"
 #import "CKRenderTreeNodeWithChildren.h"
-#import <ComponentKit/CKComponentInternal.h>
 
 @implementation CKStaticLayoutComponent
 {
@@ -24,7 +26,7 @@
                        size:(const CKComponentSize &)size
                    children:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
 {
-  CKStaticLayoutComponent *c = [super newWithView:view size:size];
+  CKStaticLayoutComponent *c = [super newRenderComponentWithView:view size:size isLayoutComponent:YES];
   if (c) {
     c->_children = children.take();
   }
@@ -36,23 +38,11 @@
   return [self newWithView:{} size:{} children:std::move(children)];
 }
 
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
-             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
-                    params:(const CKBuildComponentTreeParams &)params
-                    config:(const CKBuildComponentConfig &)config
-            hasDirtyParent:(BOOL)hasDirtyParent
+- (std::vector<CKComponent *>)renderChildren:(id)state
 {
-  auto const node = [[CKTreeNodeWithChildren alloc]
-                     initWithComponent:self
-                     parent:parent
-                     previousParent:previousParent
-                     scopeRoot:params.scopeRoot
-                     stateUpdates:params.stateUpdates];
-
-  auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
-  for (auto const &child : _children) {
-    [child.component buildComponentTree:node previousParent:previousParentForChild params:params config:config hasDirtyParent:hasDirtyParent];
-  }
+  return CK::map(_children, [](auto const child) {
+    return child.component;
+  });
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
