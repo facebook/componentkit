@@ -8,12 +8,12 @@
  *
  */
 
-
 #import "CKRenderComponent.h"
 
 #import "CKBuildComponent.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
+#import "CKInternalHelpers.h"
 #import "CKRenderTreeNode.h"
 #import "CKRenderTreeNodeWithChild.h"
 #import "CKRenderTreeNodeWithChildren.h"
@@ -22,6 +22,22 @@
 {
   CKComponent *_childComponent;
 }
+
+#if DEBUG
++ (void)initialize
+{
+  if (self != [CKRenderComponent class]) {
+    CKAssert(!CKSubclassOverridesSelector([CKRenderComponent class], self, @selector(computeLayoutThatFits:)),
+             @"%@ overrides -computeLayoutThatFits: which is not allowed. "
+             "Consider subclassing CKRenderWithChildrenComponent directly if you need to perform custom layout.",
+             self);
+    CKAssert(!CKSubclassOverridesSelector([CKRenderComponent class], self, @selector(layoutThatFits:parentSize:)),
+             @"%@ overrides -layoutThatFits:parentSize: which is not allowed. "
+             "Consider subclassing CKRenderWithChildrenComponent directly if you need to perform custom layout.",
+             self);
+  }
+}
+#endif
 
 + (instancetype)new
 {
