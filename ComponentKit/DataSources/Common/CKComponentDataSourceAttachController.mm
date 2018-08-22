@@ -69,6 +69,11 @@ void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
 {
   CKCAssertMainThread();
   CKCAssertNotNil(params.view, @"Impossible to attach a component layout to a nil view");
+  if (self == nil) {
+    CKCAssert(self, @"Impossible to attach a component layout to a nil attachController");
+    return;
+  }
+
   UIView *currentlyAttachedView = self->_scopeIdentifierToAttachedViewMap[@(params.scopeIdentifier)];
   // If the component tree currently attached to the view is different from the one we want to attach
   if (currentlyAttachedView != params.view) {
