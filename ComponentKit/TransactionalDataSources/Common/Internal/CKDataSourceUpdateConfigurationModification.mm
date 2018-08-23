@@ -47,6 +47,7 @@
   // If only the size range changed, we don't need to regenerate the component; we can simply re-layout the existing one.
   const BOOL onlySizeRangeChanged = [_configuration context] == [[oldState configuration] context]
   && [_configuration componentProvider] == [[oldState configuration] componentProvider];
+  const auto animationPredicates = CKComponentAnimationPredicates(_configuration.enableNewAnimationInfrastructure);
 
   NSMutableArray *newSections = [NSMutableArray array];
   NSMutableSet *updatedIndexPaths = [NSMutableSet set];
@@ -62,7 +63,7 @@
                                                  scopeRoot:[item scopeRoot]
                                            boundsAnimation:[item boundsAnimation]];
       } else {
-        newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, _configuration, [item model], context);
+        newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, _configuration, [item model], context, animationPredicates);
       }
       [newItems addObject:newItem];
     }];

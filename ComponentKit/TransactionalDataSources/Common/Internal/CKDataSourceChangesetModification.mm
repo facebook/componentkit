@@ -68,6 +68,7 @@
   CKDataSourceConfiguration *configuration = [oldState configuration];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
+  const auto animationPredicates = CKComponentAnimationPredicates(configuration.enableNewAnimationInfrastructure);
 
   NSMutableArray *newSections = [NSMutableArray array];
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
@@ -84,7 +85,7 @@
       std::lock_guard<std::mutex> lRead(_mutex);
       CKDataSourceItem *const oldItem = section[indexPath.item];
       dispatch_group_async(group, _queue, ^{
-        CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
+        CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context, animationPredicates);
         std::lock_guard<std::mutex> lWrite(_mutex);
         [section replaceObjectAtIndex:indexPath.item withObject:item];
       });
@@ -112,7 +113,7 @@
                              oldState);
       }
       CKDataSourceItem *const oldItem = section[indexPath.item];
-      CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
+      CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context, animationPredicates);
       [section replaceObjectAtIndex:indexPath.item withObject:item];
     }];
   }
@@ -208,7 +209,8 @@
                                                              sizeRange,
                                                              configuration,
                                                              model,
-                                                             context);
+                                                             context,
+                                                             animationPredicates);
         std::lock_guard<std::mutex> l(_mutex);
         insertedItemsBySection[indexPath.section][indexPath.item] = item;
       });
@@ -223,7 +225,8 @@
                                                            sizeRange,
                                                            configuration,
                                                            model,
-                                                           context);
+                                                           context,
+                                                           animationPredicates);
       insertedItemsBySection[indexPath.section][indexPath.item] = item;
     }];
   }

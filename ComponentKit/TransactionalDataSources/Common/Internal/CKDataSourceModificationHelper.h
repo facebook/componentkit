@@ -16,9 +16,12 @@
 #import <ComponentKit/CKDataSourceConfiguration.h>
 #import <ComponentKit/CKSizeRange.h>
 
+auto CKComponentAnimationPredicates(BOOL enableNewAnimationInfrastructure) -> std::unordered_set<CKComponentPredicate>;
+
 CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         const CKSizeRange &sizeRange,
                                         CKDataSourceConfiguration *configuration,
                                         id model,
-                                        id context);
+                                        id context,
+                                        const std::unordered_set<CKComponentPredicate> &layoutPredicates);

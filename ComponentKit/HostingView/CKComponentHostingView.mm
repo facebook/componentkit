@@ -28,6 +28,7 @@
 #import "CKComponentSubclass.h"
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
+#import "CKDataSourceModificationHelper.h"
 
 struct CKComponentHostingViewInputs {
   CKComponentScopeRoot *scopeRoot;
@@ -51,6 +52,7 @@ struct CKComponentHostingViewInputs {
   BOOL _enableNewAnimationInfrastructure;
   CKComponentAnimations _componentAnimations;
   std::unique_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> _animationApplicator;
+  std::unordered_set<CKComponentPredicate> _animationPredicates;
 
   CKComponent *_component;
   BOOL _componentNeedsUpdate;
@@ -133,6 +135,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     if (_enableNewAnimationInfrastructure) {
       _animationApplicator = CK::AnimationApplicatorFactory::make();
     }
+    _animationPredicates = CKComponentAnimationPredicates(_enableNewAnimationInfrastructure);
 
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -164,7 +167,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     if (!_unifyBuildAndLayout) {
       [self _synchronouslyUpdateComponentIfNeeded];
       if (_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size)) {
-        setMountedRootLayout(self, CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, self.layoutPredicates));
+        setMountedRootLayout(self, CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, _animationPredicates));
       }
     } else {
       [self _synchronouslyBuildAndLayoutComponentIfNeeded:{size,size} forceUpdate:(_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size))];
@@ -255,15 +258,6 @@ static void setMountedRootLayout(CKComponentHostingView *const self, const CKCom
     .scopeRoot = _pendingInputs.scopeRoot,
     .boundsAnimation = _boundsAnimation,
   };
-}
-
-- (std::unordered_set<CKComponentPredicate>)layoutPredicates
-{
-  static const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
-    CKComponentHasAnimationsOnInitialMountPredicate,
-    CKComponentHasAnimationsFromPreviousComponentPredicate,
-  };
-  return _enableNewAnimationInfrastructure ? animationPredicates : std::unordered_set<CKComponentPredicate> {};
 }
 
 static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView *const self, const CKComponentRootLayout &newLayout)
@@ -434,7 +428,7 @@ static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView
                                                                         const CKComponentContext<CKComponentControllerContext> ctx {controllerCtx};
                                                                         return [_componentProvider componentForModel:model context:context];
                                                                       },
-                                                                      self.layoutPredicates);
+                                                                      _animationPredicates);
 
   return results;
 }

@@ -42,6 +42,7 @@
   CKDataSourceConfiguration *configuration = [oldState configuration];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
+  const auto animationPredicates = CKComponentAnimationPredicates(configuration.enableNewAnimationInfrastructure);
 
   NSMutableArray *newSections = [NSMutableArray array];
   NSMutableSet *updatedIndexPaths = [NSMutableSet set];
@@ -59,7 +60,7 @@
           globalIdentifier = stateUpdate->first.globalIdentifier;
         }
         [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
-        CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], stateUpdatesForItem->second, sizeRange, configuration, [item model], context);
+        CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], stateUpdatesForItem->second, sizeRange, configuration, [item model], context, animationPredicates);
         [newItems addObject:newItem];
       }
     }];

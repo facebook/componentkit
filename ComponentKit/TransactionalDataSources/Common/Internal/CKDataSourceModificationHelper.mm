@@ -18,13 +18,15 @@
 #import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceItemInternal.h>
 
-static auto layoutPredicates(BOOL enableComponentAnimations)
+auto CKComponentAnimationPredicates(BOOL enableNewAnimationInfrastructure) -> std::unordered_set<CKComponentPredicate>
 {
-  static const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
+  return
+  enableNewAnimationInfrastructure
+  ? std::unordered_set<CKComponentPredicate> {
     CKComponentHasAnimationsOnInitialMountPredicate,
     CKComponentHasAnimationsFromPreviousComponentPredicate,
-  };
-  return enableComponentAnimations ? animationPredicates : std::unordered_set<CKComponentPredicate> {};
+  }
+  : std::unordered_set<CKComponentPredicate>();
 }
 
 CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
@@ -32,7 +34,8 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         const CKSizeRange &sizeRange,
                                         CKDataSourceConfiguration *configuration,
                                         id model,
-                                        id context)
+                                        id context,
+                                        const std::unordered_set<CKComponentPredicate> &layoutPredicates)
 {
   Class<CKComponentProvider> componentProvider = [configuration componentProvider];
   const auto componentFactory = ^{
@@ -48,7 +51,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
     const auto layout = CKComputeRootComponentLayout(result.component,
                                                      sizeRange,
                                                      result.scopeRoot.analyticsListener,
-                                                     layoutPredicates(configuration.enableNewAnimationInfrastructure));
+                                                     layoutPredicates);
     return [[CKDataSourceItem alloc] initWithLayout:layout
                                               model:model
                                           scopeRoot:result.scopeRoot
@@ -58,7 +61,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                                                        stateUpdates,
                                                                        sizeRange,
                                                                        componentFactory,
-                                                                       layoutPredicates(configuration.enableNewAnimationInfrastructure),
+                                                                       layoutPredicates,
                                                                        configuration.buildComponentConfig);
     return [[CKDataSourceItem alloc] initWithLayout:result.computedLayout
                                               model:model
