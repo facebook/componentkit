@@ -126,7 +126,8 @@ struct CKRenderWithSizeSpecComponentParameters {
   }
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
   _parameters = nullptr;
 }
 
@@ -146,6 +147,8 @@ struct CKRenderWithSizeSpecComponentParameters {
 {
   return NO;
 }
+
+- (void)didReuseComponent:(id<CKRenderComponentProtocol>)component {}
 
 #pragma mark - Render layout checker
 

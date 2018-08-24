@@ -76,4 +76,6 @@
   return NO;
 }
 
+- (void)didReuseComponent:(id<CKRenderComponentProtocol>)component {}
+
 @end

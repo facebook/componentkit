@@ -27,7 +27,7 @@
 @interface CKTestRenderComponent : CKRenderComponent
 @property (nonatomic, assign) NSUInteger renderCalledCounter;
 @property (nonatomic, assign) NSUInteger identifier;
-@property (nonatomic, strong, readonly) CKTestChildRenderComponent *childComponent;
+@property (nonatomic, strong) CKTestChildRenderComponent *childComponent;
 + (instancetype)newWithIdentifier:(NSUInteger)identifier;
 @end
 
@@ -402,7 +402,8 @@ static CKComponentScopeRoot *createNewTreeWithComponentAndReturnScopeRoot(const 
 - (CKComponent *)render:(id)state
 {
   _renderCalledCounter++;
-  return [CKTestChildRenderComponent new];
+  _childComponent = [CKTestChildRenderComponent new];
+  return _childComponent;
 }
 
 + (id)initialState
@@ -415,11 +416,9 @@ static CKComponentScopeRoot *createNewTreeWithComponentAndReturnScopeRoot(const 
   return _identifier == component->_identifier;
 }
 
-- (CKTestRenderComponent *)childComponent
+- (void)didReuseComponent:(CKTestRenderComponent *)component
 {
-  // We use here the _childComponent iVar from CKRenderComponent.
-  // If we override this proprty and the component is being reused, the proprty won't be valid.
-  return [self valueForKeyPath:@"_childComponent"];
+  _childComponent = component->_childComponent;
 }
 
 @end

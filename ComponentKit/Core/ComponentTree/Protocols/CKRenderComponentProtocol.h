@@ -33,4 +33,13 @@
  */
 - (BOOL)isEqualToComponent:(id<CKRenderComponentProtocol>)component;
 
+/*
+ This method is being called when the infrasturcture reuses the previous generation of the component.
+
+ When a previous component is being reused, the render method WON'T be called on the new generation of the component.
+ If your render method is not a pure function (for example, it saves components as iVar), you can use this method
+ in order to update the new component from the reused one.
+ */
+- (void)didReuseComponent:(id<CKRenderComponentProtocol>)component;
+
 @end
