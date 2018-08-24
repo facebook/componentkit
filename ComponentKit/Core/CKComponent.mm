@@ -157,15 +157,13 @@ struct CKComponentMountInfo {
                     config:(const CKBuildComponentConfig &)config
             hasDirtyParent:(BOOL)hasDirtyParent
 {
-  if (config.buildLeafNodes) {
-    // In this case this is a leaf component, which means we don't need to continue the recursion as it has no children.
-    __unused auto const node = [[CKTreeNode alloc]
-                                initWithComponent:self
-                                parent:parent
-                                previousParent:previousParent
-                                scopeRoot:params.scopeRoot
-                                stateUpdates:params.stateUpdates];
-  }
+  // In this case this is a leaf component, which means we don't need to continue the recursion as it has no children.
+  __unused auto const node = [[CKTreeNode alloc]
+                              initWithComponent:self
+                              parent:parent
+                              previousParent:previousParent
+                              scopeRoot:params.scopeRoot
+                              stateUpdates:params.stateUpdates];
 }
 
 #pragma mark - Mounting and Unmounting
