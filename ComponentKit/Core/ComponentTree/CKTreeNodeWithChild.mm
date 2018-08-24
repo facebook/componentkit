@@ -16,9 +16,6 @@
 #include <tuple>
 
 @implementation CKTreeNodeWithChild
-{
-  CKTreeNode *_child;
-}
 
 - (std::vector<id<CKTreeNodeProtocol>>)children
 {
@@ -47,11 +44,6 @@
 {
   CKAssert(_child == nil || [_child class] == [child class], @"[_child class]: %@ is different than [child class]: %@", [_child class], [child class]);
   _child = child;
-}
-
-- (id<CKTreeNodeProtocol>)child
-{
-  return _child;
 }
 
 @end

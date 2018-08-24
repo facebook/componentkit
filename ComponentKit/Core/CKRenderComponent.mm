@@ -138,9 +138,9 @@ static void reusePreviousComponent(CKRenderComponent *component,
                                    id<CKTreeNodeWithChildrenProtocol> parent,
                                    id<CKTreeNodeWithChildrenProtocol> previousParent) {
   auto const componentKey = node.componentKey;
-  auto const previousChild = [previousParent childForComponentKey:componentKey];
-  // Link the previous child to the new parent.
-  [parent setChild:previousChild forComponentKey:componentKey];
+  auto const previousChild = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:componentKey];
+  // Set the child from the previous tree node.
+  node.child = previousChild.child;
   // Link the previous child component to the the new component.
   component->_childComponent = [(CKRenderTreeNodeWithChild *)previousChild child].component;
 }
@@ -151,10 +151,10 @@ static BOOL reusePreviousComponentIfComponentsAreEqual(CKRenderComponent *compon
                                                        id<CKTreeNodeWithChildrenProtocol> parent,
                                                        id<CKTreeNodeWithChildrenProtocol> previousParent) {
   auto const componentKey = node.componentKey;
-  auto const previousChild = [previousParent childForComponentKey:componentKey];
+  auto const previousChild = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:componentKey];
   if ([component isEqualToComponent:(id<CKRenderComponentProtocol>)previousChild.component]) {
-    // Link the previous child to the new parent.
-    [parent setChild:previousChild forComponentKey:componentKey];
+    // Set the child from the previous tree node.
+    node.child = previousChild.child;
     // Link the previous child component to the the new component.
     component->_childComponent = [(CKRenderTreeNodeWithChild *)previousChild child].component;
     return YES;

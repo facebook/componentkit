@@ -17,6 +17,7 @@
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 
+#import "CKTreeNodeWithChild.h"
 #import "CKTreeNodeWithChildren.h"
 
 @interface CKTestChildRenderComponent : CKRenderComponent
@@ -26,7 +27,7 @@
 @interface CKTestRenderComponent : CKRenderComponent
 @property (nonatomic, assign) NSUInteger renderCalledCounter;
 @property (nonatomic, assign) NSUInteger identifier;
-@property (nonatomic, strong) CKTestChildRenderComponent *childComponent;
+@property (nonatomic, strong, readonly) CKTestChildRenderComponent *childComponent;
 + (instancetype)newWithIdentifier:(NSUInteger)identifier;
 @end
 
@@ -121,8 +122,6 @@
 
   // As the state update doesn't affect the c2, we should reuse c instead.
   [self verifyComponentIsBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
-  // As we reused the previous component, c2 child should be nil.
-  XCTAssertNil(c2.childComponent);
 }
 
 - (void)test_fasterStateUpdate_componentIsNotBeingReused_onStateUpdateOnAParent
@@ -295,8 +294,6 @@
 
   // c has dirty parent, however, the components are equal, so we reuse the previous component.
   [self verifyComponentIsBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
-  // As we reused the previous component, c2 child should be nil.
-  XCTAssertNil(c2.childComponent);
 }
 
 - (void)test_fasterPropsUpdate_componentIsBeingReused_onStateUpdateWithNonDirtyComponentAndEqualComponents
@@ -324,8 +321,6 @@
 
   // c is not dirty, the components are equal, so we reuse the previous component.
   [self verifyComponentIsBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
-  // As we reused the previous component, c2 child should be nil.
-  XCTAssertNil(c2.childComponent);
 }
 
 - (void)test_fasterPropsUpdate_whenBothOptimizationsAreOn
@@ -347,12 +342,12 @@
                               scopeRoot:(CKComponentScopeRoot *)scopeRoot
                              scopeRoot2:(CKComponentScopeRoot *)scopeRoot2
 {
-  CKTreeNode *childNode = scopeRoot.rootNode.children[0];
-  CKTreeNode *childNode2 = scopeRoot2.rootNode.children[0];
-  XCTAssertTrue(verifyChildToParentConnection(scopeRoot2.rootNode, childNode2, c2));
-  XCTAssertNotEqual(childNode, childNode2);
+  CKTreeNodeWithChild *childNode = (CKTreeNodeWithChild *)scopeRoot.rootNode.children[0];
+  CKTreeNodeWithChild *childNode2 = (CKTreeNodeWithChild *)scopeRoot2.rootNode.children[0];
   XCTAssertEqual(c.renderCalledCounter, 1);
   XCTAssertEqual(c2.renderCalledCounter, 1);
+  XCTAssertNotEqual(c.childComponent, c2.childComponent);
+  XCTAssertNotEqual(childNode.child, childNode2.child);
 }
 
 - (void)verifyComponentIsBeingReused:(CKTestRenderComponent *)c
@@ -360,22 +355,12 @@
                            scopeRoot:(CKComponentScopeRoot *)scopeRoot
                           scopeRoot2:(CKComponentScopeRoot *)scopeRoot2
 {
-  CKTreeNode *childNode = scopeRoot.rootNode.children[0];
-  CKTreeNode *childNode2 = scopeRoot2.rootNode.children[0];
-  // In case we reuse the previous component, the reused component will be attached to the new root.
-  XCTAssertTrue(verifyChildToParentConnection(scopeRoot2.rootNode, childNode2, c));
-  // Both nodes from the previous and the existing parent will be equal.
-  XCTAssertEqual(childNode, childNode2);
-  // Make sure we don't call render again on c
+  CKTreeNodeWithChild *childNode = (CKTreeNodeWithChild *)scopeRoot.rootNode.children[0];
+  CKTreeNodeWithChild *childNode2 = (CKTreeNodeWithChild *)scopeRoot2.rootNode.children[0];
   XCTAssertEqual(c.renderCalledCounter, 1);
-  // We don't call render on c2 as we reuse c instead.
   XCTAssertEqual(c2.renderCalledCounter, 0);
-}
-
-static BOOL verifyChildToParentConnection(id<CKTreeNodeWithChildrenProtocol> parentNode, CKTreeNode *childNode, CKComponent *c) {
-  auto const componentKey = [childNode componentKey];
-  auto const childComponent = [parentNode childForComponentKey:componentKey].component;
-  return [childComponent isEqual:c];
+  XCTAssertEqual(c.childComponent, c2.childComponent);
+  XCTAssertEqual(childNode.child, childNode2.child);
 }
 
 static const CKBuildComponentTreeParams newTreeParams(CKComponentScopeRoot *scopeRoot) {
@@ -417,8 +402,7 @@ static CKComponentScopeRoot *createNewTreeWithComponentAndReturnScopeRoot(const 
 - (CKComponent *)render:(id)state
 {
   _renderCalledCounter++;
-  _childComponent = [CKTestChildRenderComponent new];
-  return _childComponent;
+  return [CKTestChildRenderComponent new];
 }
 
 + (id)initialState
@@ -429,6 +413,13 @@ static CKComponentScopeRoot *createNewTreeWithComponentAndReturnScopeRoot(const 
 - (BOOL)isEqualToComponent:(CKTestRenderComponent *)component
 {
   return _identifier == component->_identifier;
+}
+
+- (CKTestRenderComponent *)childComponent
+{
+  // We use here the _childComponent iVar from CKRenderComponent.
+  // If we override this proprty and the component is being reused, the proprty won't be valid.
+  return [self valueForKeyPath:@"_childComponent"];
 }
 
 @end
@@ -447,6 +438,7 @@ static CKComponentScopeRoot *createNewTreeWithComponentAndReturnScopeRoot(const 
             hasDirtyParent:(BOOL)hasDirtyParent
 {
   _hasDirtyParent = hasDirtyParent;
+  [super buildComponentTree:parent previousParent:previousParent params:params config:config hasDirtyParent:hasDirtyParent];
 }
 
 @end
