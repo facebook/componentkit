@@ -17,8 +17,9 @@
 #import "CKComponentInternal.h"
 #import "CKCompositeComponentInternal.h"
 #import "CKComponentSubclass.h"
-#import "CKTreeNode.h"
+#import "CKReconciliationHelpers.h"
 #import "CKRenderTreeNodeWithChild.h"
+#import "CKTreeNode.h"
 
 @interface CKCompositeComponent ()
 {
@@ -84,6 +85,11 @@
                      previousParent:previousParent
                      scopeRoot:params.scopeRoot
                      stateUpdates:params.stateUpdates];
+
+  // Update the `hasDirtyParent` param for Faster state/props updates.
+  if (!hasDirtyParent && CKReconciliation::hasDirtyParent(node, previousParent, params, config)) {
+    hasDirtyParent = YES;
+  }
 
   if (_component) {
     [_component buildComponentTree:node

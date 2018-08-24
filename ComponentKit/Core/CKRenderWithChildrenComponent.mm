@@ -11,6 +11,7 @@
 #import "CKRenderWithChildrenComponent.h"
 
 #import "CKBuildComponent.h"
+#import "CKReconciliationHelpers.h"
 #import "CKRenderTreeNode.h"
 #import "CKRenderTreeNodeWithChildren.h"
 #import "CKComponentInternal.h"
@@ -45,6 +46,11 @@
                      previousParent:previousParent
                      scopeRoot:params.scopeRoot
                      stateUpdates:params.stateUpdates];
+
+  // Update the `hasDirtyParent` param for Faster state/props updates.
+  if (!hasDirtyParent && CKReconciliation::hasDirtyParent(node, previousParent, params, config)) {
+    hasDirtyParent = YES;
+  }
 
   auto const children = [self renderChildren:node.state];
   auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];

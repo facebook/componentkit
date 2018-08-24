@@ -11,6 +11,7 @@
 #import "CKRenderWithSizeSpecComponent.h"
 
 #import "CKBuildComponent.h"
+#import "CKReconciliationHelpers.h"
 #import "CKRenderTreeNodeWithChildren.h"
 #import "CKComponentInternal.h"
 
@@ -118,6 +119,11 @@ struct CKRenderWithSizeSpecComponentParameters {
                        scopeRoot:params.scopeRoot
                        stateUpdates:params.stateUpdates];
     _node = node;
+
+    // Update the `hasDirtyParent` param for Faster state/props updates.
+    if (!hasDirtyParent && CKReconciliation::hasDirtyParent(node, previousParent, params, config)) {
+      hasDirtyParent = YES;
+    }
 
     _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>((id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[_node componentKey]],
                                                                             params,

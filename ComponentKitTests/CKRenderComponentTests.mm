@@ -11,6 +11,8 @@
 #import <XCTest/XCTest.h>
 
 #import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKit/CKRenderComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentSubclass.h>
@@ -29,6 +31,9 @@
 @property (nonatomic, assign) NSUInteger identifier;
 @property (nonatomic, strong) CKTestChildRenderComponent *childComponent;
 + (instancetype)newWithIdentifier:(NSUInteger)identifier;
+@end
+
+@interface CKCompositeComponentWithScopeAndState : CKCompositeComponent
 @end
 
 @interface CKRenderComponentTests : XCTestCase
@@ -335,6 +340,48 @@
   [self test_fasterPropsUpdate_componentIsBeingReused_onStateUpdateWithNonDirtyComponentAndEqualComponents];
 }
 
+#pragma mark - hasDirtyParent
+
+- (void)test_hasDirtyParentPropagatedCorrectly
+{
+  CKBuildComponentConfig config = {
+    .enableFasterStateUpdates = YES,
+    .enableFasterPropsUpdates = YES,
+  };
+
+  // Build new tree
+  __block CKTestRenderComponent *c;
+  __block CKCompositeComponentWithScopeAndState *rootComponent;
+
+  auto const componentFactory = ^{
+    c = [CKTestRenderComponent newWithIdentifier:1];
+    rootComponent = generateComponentHierarchyWithComponent(c);
+    return rootComponent;
+  };
+
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, config);
+  XCTAssertFalse(c.childComponent.hasDirtyParent);
+
+  // Simulate a state update on the root.
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[rootComponent.scopeHandle].push_back(^(id){
+    return @2;
+  });
+
+  __block CKTestRenderComponent *c2;
+  __block CKCompositeComponentWithScopeAndState *rootComponent2;
+
+  auto const componentFactory2 = ^{
+    // Use different identifier for c2 to make sure we don't reuse it (otherwise the buildComponentTree won't be called on the child component).
+    c2 = [CKTestRenderComponent newWithIdentifier:2];
+    rootComponent2 = generateComponentHierarchyWithComponent(c2);
+    return rootComponent2;
+  };
+
+  CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory2, config);
+  XCTAssertTrue(c2.childComponent.hasDirtyParent);
+}
+
 #pragma mark - Helpers
 
 - (void)verifyComponentIsNotBeingReused:(CKTestRenderComponent *)c
@@ -382,6 +429,19 @@ static CKComponentScopeRoot *createNewTreeWithComponentAndReturnScopeRoot(const 
                  config:config
          hasDirtyParent:NO];
   return scopeRoot;
+}
+
+static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComponent(CKComponent *c) {
+  return
+  [CKCompositeComponentWithScopeAndState
+   newWithComponent:
+   [CKFlexboxComponent
+    newWithView:{}
+    size:{}
+    style:{}
+    children:{
+      { c }
+    }]];
 }
 
 @end
@@ -436,8 +496,21 @@ static CKComponentScopeRoot *createNewTreeWithComponentAndReturnScopeRoot(const 
                     config:(const CKBuildComponentConfig &)config
             hasDirtyParent:(BOOL)hasDirtyParent
 {
-  _hasDirtyParent = hasDirtyParent;
   [super buildComponentTree:parent previousParent:previousParent params:params config:config hasDirtyParent:hasDirtyParent];
+  _hasDirtyParent = hasDirtyParent;
 }
 
+@end
+
+@implementation CKCompositeComponentWithScopeAndState
++ (instancetype)newWithComponent:(CKComponent *)component
+{
+  CKComponentScope scope(self);
+  return [super newWithComponent:component];
+}
+
++ (id)initialState
+{
+  return @1;
+}
 @end
