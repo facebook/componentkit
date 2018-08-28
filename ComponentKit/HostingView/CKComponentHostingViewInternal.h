@@ -23,6 +23,8 @@ struct CKComponentHostingViewOptions {
   /// If set to YES, allows taps to pass though this hosting view to views behind it. Default NO.
   BOOL allowTapPassthrough;
   BOOL enableNewAnimationInfrastructure;
+  // If set to YES, invalidates controllers that are removed whilst the hosting view remains alive. Default NO.
+  BOOL invalidateRemovedControllers;
 };
 
 @interface CKComponentHostingView () <CKInspectableView>

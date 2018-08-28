@@ -21,7 +21,8 @@
 
 - (instancetype)initWithColor:(UIColor *)color
                          size:(const CKComponentSize &)size
-               embedInFlexbox:(BOOL)embedInFlexbox;
+               embedInFlexbox:(BOOL)embedInFlexbox
+         embedInTestComponent:(BOOL)embedInTestComponent;
 
 - (instancetype)init CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
@@ -30,6 +31,8 @@
 @property (nonatomic, readonly) CKComponentSize size;
 
 @property (nonatomic, readonly) BOOL embedInFlexbox;
+
+@property (nonatomic, readonly) BOOL embedInTestComponent;
 
 @end
 

@@ -521,6 +521,10 @@
 		B761C8AE1CB36BF700CDD03F /* CKDataSourceChangesetTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B761C8AD1CB36BF700CDD03F /* CKDataSourceChangesetTests.mm */; };
 		B761C8B11CB36FA200CDD03F /* CKDataSourceAppliedChangesTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B761C8B01CB36FA200CDD03F /* CKDataSourceAppliedChangesTests.mm */; };
 		B7E2E59F1D077098002A4442 /* CKVectorHelperTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B7E2E59E1D077098002A4442 /* CKVectorHelperTests.mm */; };
+		C1B53823212EAE6A00E13477 /* CKEmbeddedTestComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B53821212EAE6A00E13477 /* CKEmbeddedTestComponent.h */; };
+		C1B53824212EAE6A00E13477 /* CKEmbeddedTestComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B53821212EAE6A00E13477 /* CKEmbeddedTestComponent.h */; };
+		C1B53825212EAE6A00E13477 /* CKEmbeddedTestComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1B53822212EAE6A00E13477 /* CKEmbeddedTestComponent.mm */; };
+		C1B53826212EAE6A00E13477 /* CKEmbeddedTestComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1B53822212EAE6A00E13477 /* CKEmbeddedTestComponent.mm */; };
 		CDCC9DD41E568C2C0005D52E /* CKContainerWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = CDCC9DD31E568C2C0005D52E /* CKContainerWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CDCC9DD51E568C4B0005D52E /* CKContainerWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = CDCC9DD31E568C2C0005D52E /* CKContainerWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D000B81E1CC45440005A27CF /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D000B8101CC41535005A27CF /* FBSnapshotTestCase.framework */; };
@@ -1139,6 +1143,8 @@
 		B761C8AD1CB36BF700CDD03F /* CKDataSourceChangesetTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceChangesetTests.mm; sourceTree = "<group>"; };
 		B761C8B01CB36FA200CDD03F /* CKDataSourceAppliedChangesTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceAppliedChangesTests.mm; sourceTree = "<group>"; };
 		B7E2E59E1D077098002A4442 /* CKVectorHelperTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKVectorHelperTests.mm; sourceTree = "<group>"; };
+		C1B53821212EAE6A00E13477 /* CKEmbeddedTestComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKEmbeddedTestComponent.h; sourceTree = "<group>"; };
+		C1B53822212EAE6A00E13477 /* CKEmbeddedTestComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKEmbeddedTestComponent.mm; sourceTree = "<group>"; };
 		CDCC9DD31E568C2C0005D52E /* CKContainerWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKContainerWrapper.h; sourceTree = "<group>"; };
 		D000B8081CC4152A005A27CF /* FBSnapshotTestCase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSnapshotTestCase.xcodeproj; path = "Carthage/Checkouts/ios-snapshot-test-case/FBSnapshotTestCase.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		D023D12D1E242CD4004A0A61 /* CKComponentAccessibilityCustomActionsAttributeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAccessibilityCustomActionsAttributeTests.mm; sourceTree = "<group>"; tabWidth = 2; };
@@ -1561,6 +1567,8 @@
 		A273801B1AFD144100E6F222 /* ComponentKitTestHelpers */ = {
 			isa = PBXGroup;
 			children = (
+				C1B53821212EAE6A00E13477 /* CKEmbeddedTestComponent.h */,
+				C1B53822212EAE6A00E13477 /* CKEmbeddedTestComponent.mm */,
 				7F98F58A1F67F2F600436978 /* CKLifecycleTestComponent.h */,
 				7F98F58B1F67F2F600436978 /* CKLifecycleTestComponent.mm */,
 				7FA099121F66F36800B81EED /* CKComponentLifecycleTestHelper.h */,
@@ -2252,6 +2260,7 @@
 				03A98A6E1D2B2BFD00C5BAC2 /* CKTestActionComponent.h in Headers */,
 				7F27E2CE1F69E3FC00573E14 /* CKComponentLifecycleTestHelper.h in Headers */,
 				7F27E2C01F69CC0F00573E14 /* CKLifecycleTestComponent.h in Headers */,
+				C1B53824212EAE6A00E13477 /* CKEmbeddedTestComponent.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2443,6 +2452,7 @@
 				7F98F58C1F67F2F600436978 /* CKLifecycleTestComponent.h in Headers */,
 				D657400921013CBF00FD8AAB /* CKChangesetHelpers.h in Headers */,
 				D6B0AE0120AAFB1000A31FDF /* NSIndexSetExtensions.h in Headers */,
+				C1B53823212EAE6A00E13477 /* CKEmbeddedTestComponent.h in Headers */,
 				A27380341AFD172500E6F222 /* CKTestActionComponent.h in Headers */,
 				7FA099141F66F36800B81EED /* CKComponentLifecycleTestHelper.h in Headers */,
 			);
@@ -3015,6 +3025,7 @@
 				7F27E2CF1F69E3FC00573E14 /* CKComponentLifecycleTestHelper.mm in Sources */,
 				D6A2652F20AC5B2100B7B499 /* NSIndexSetExtensions.mm in Sources */,
 				2D8270F71E3F72F1008C1A26 /* CKTestRunLoopRunning.mm in Sources */,
+				C1B53826212EAE6A00E13477 /* CKEmbeddedTestComponent.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3212,6 +3223,7 @@
 				2D8270F61E3F72DE008C1A26 /* CKTestRunLoopRunning.mm in Sources */,
 				D6B0AE0220AAFB1000A31FDF /* NSIndexSetExtensions.mm in Sources */,
 				7FA099151F66F36800B81EED /* CKComponentLifecycleTestHelper.mm in Sources */,
+				C1B53825212EAE6A00E13477 /* CKEmbeddedTestComponent.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

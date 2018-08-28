@@ -149,6 +149,14 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
   }
 }
 
+- (CKCocoaCollectionAdapter<id<CKComponentControllerProtocol>>)componentControllersMatchingPredicate:(CKComponentControllerPredicate)predicate
+{
+  CKAssert(_componentControllerPredicates.find(predicate) != _componentControllerPredicates.end(), @"Scope root must be initialized with predicate to enumerate.");
+  const auto componentControllersIt = _registeredComponentControllers.find(predicate);
+  const auto componentControllers = componentControllersIt != _registeredComponentControllers.end() ? componentControllersIt->second : @[];
+  return CKCocoaCollectionAdapter<id<CKComponentControllerProtocol>>(componentControllers);
+}
+
 #if DEBUG
 - (NSString *)debugDescription
 {

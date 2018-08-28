@@ -11,6 +11,7 @@
 #import "CKComponentHostingViewTestModel.h"
 
 #import <ComponentKit/CKFlexboxComponent.h>
+#import <ComponentKitTestHelpers/CKEmbeddedTestComponent.h>
 #import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 
 @implementation CKComponentHostingViewTestModel
@@ -28,11 +29,13 @@
 - (instancetype)initWithColor:(UIColor *)color
                          size:(const CKComponentSize &)size
                embedInFlexbox:(BOOL)embedInFlexbox
+         embedInTestComponent:(BOOL)embedInTestComponent
 {
   if (self = [super init]) {
     _color = color;
     _size = size;
     _embedInFlexbox = embedInFlexbox;
+    _embedInTestComponent = embedInTestComponent;
   }
   return self;
 }
@@ -41,6 +44,10 @@
 
 CKComponent *CKComponentWithHostingViewTestModel(CKComponentHostingViewTestModel *model)
 {
+  if (model.embedInTestComponent) {
+    return [CKEmbeddedTestComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [model color]}}} size:[model size]];
+  }
+  
   if (model.embedInFlexbox) {
     return [CKFlexboxComponent
             newWithView:{}

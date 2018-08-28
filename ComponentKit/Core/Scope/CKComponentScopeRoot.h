@@ -64,6 +64,7 @@
 - (void)registerComponent:(id<CKComponentProtocol>)component;
 
 - (CKCocoaCollectionAdapter<id<CKComponentProtocol>>)componentsMatchingPredicate:(CKComponentPredicate)predicate;
+- (CKCocoaCollectionAdapter<id<CKComponentControllerProtocol>>)componentControllersMatchingPredicate:(CKComponentControllerPredicate)predicate;
 
 @property (nonatomic, weak, readonly) id<CKComponentStateListener> listener;
 @property (nonatomic, weak, readonly) id<CKAnalyticsListener> analyticsListener;

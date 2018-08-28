@@ -10,6 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKitTestHelpers/CKEmbeddedTestComponent.h>
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 #import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 
@@ -29,7 +30,9 @@
 typedef struct {
   BOOL unifyBuildAndLayout;
   BOOL allowTapPassthrough;
+  BOOL invalidateRemovedControllers;
   BOOL embedInFlexbox;
+  BOOL embedInTestComponent;
   id<CKAnalyticsListener> analyticsListener;
   BOOL enableNewAnimationInfrastructure = NO;
 } CKComponentHostingViewConfiguration;
@@ -37,7 +40,8 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 {
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor]
                                                                                              size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))
-                                                                                   embedInFlexbox:options.embedInFlexbox];
+                                                                                   embedInFlexbox:options.embedInFlexbox
+                                                                             embedInTestComponent:options.embedInTestComponent];
   CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
                                                                          sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
                                                                        componentPredicates:{}
@@ -45,7 +49,8 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
                                                                          analyticsListener:options.analyticsListener
                                                                                    options:{
                                                                                      .unifyBuildAndLayout = options.unifyBuildAndLayout,
-                                                                                     .allowTapPassthrough = options.allowTapPassthrough
+                                                                                     .allowTapPassthrough = options.allowTapPassthrough,
+                                                                                     .invalidateRemovedControllers = options.invalidateRemovedControllers
                                                                                    }];
   view.bounds = CGRectMake(0, 0, 100, 100);
   [view updateModel:model mode:CKUpdateModeSynchronous];
@@ -158,6 +163,22 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
   }
   XCTAssertTrue(testComponent.controller.calledInvalidateController,
                 @"Expected component controller to get invalidation event");
+}
+
+- (void)testComponentControllerReceivesInvalidateEventDuringDeallocationEvenWhenParentIsStillPresent
+{
+  CKComponentHostingView *view = hostingView({
+    .embedInTestComponent = YES,
+    .invalidateRemovedControllers = YES
+  });
+  
+  auto const testComponent = (CKEmbeddedTestComponent *)view.mountedLayout.component;
+  auto const testLifecyleComponent = testComponent.lifecycleTestComponent;
+  
+  [testComponent setLifecycleTestComponentIsHidden:YES];
+  [view layoutIfNeeded];
+  
+  XCTAssertTrue(testLifecyleComponent.controller.calledInvalidateController, @"Expected component controller to get invalidation event");
 }
 
 - (void)testComponentControllerReceivesDidPrepareLayoutForComponent

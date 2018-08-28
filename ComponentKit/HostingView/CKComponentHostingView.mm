@@ -14,6 +14,9 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
 
+#import <algorithm>
+#import <vector>
+
 #import "CKAnimationApplicator.h"
 #import "CKBuildComponent.h"
 #import "CKComponentAnimation.h"
@@ -67,6 +70,7 @@ struct CKComponentHostingViewInputs {
   BOOL _isMountingComponent;
   BOOL _unifyBuildAndLayout;
   BOOL _allowTapPassthrough;
+  BOOL _invalidateRemovedControllers;
 }
 @end
 
@@ -136,6 +140,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
       _animationApplicator = CK::AnimationApplicatorFactory::make();
     }
     _animationPredicates = CKComponentAnimationPredicates(_enableNewAnimationInfrastructure);
+    _invalidateRemovedControllers = options.invalidateRemovedControllers;
 
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -381,11 +386,35 @@ static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView
 
 - (void)_applyResult:(const CKBuildComponentResult &)result
 {
+  if (_invalidateRemovedControllers) {
+    [self _invalidateControllersIfNeeded:result];
+  }
+
   _pendingInputs.scopeRoot = result.scopeRoot;
   _pendingInputs.stateUpdates = {};
   _component = result.component;
   _boundsAnimation = result.boundsAnimation;
   _componentNeedsUpdate = NO;
+}
+
+- (void)_invalidateControllersIfNeeded:(const CKBuildComponentResult &)result
+{
+  if (_pendingInputs.scopeRoot == nil) {
+    return;
+  }
+
+  const auto oldControllers = [_pendingInputs.scopeRoot componentControllersMatchingPredicate:&CKComponentControllerInvalidateEventPredicate];
+  const auto newControllers = [result.scopeRoot componentControllersMatchingPredicate:&CKComponentControllerInvalidateEventPredicate];
+  const auto removedControllers = CK::Collection::difference(oldControllers,
+                                                             newControllers,
+                                                             [](const auto &lhs, const auto &rhs){
+                                                               return lhs == rhs;
+                                                             });
+
+  for (auto it = removedControllers.begin(); it != removedControllers.end(); it++) {
+    const auto controller = (CKComponentController *)*it;
+    [controller invalidateController];
+  }
 }
 
 - (void)_synchronouslyUpdateComponentIfNeeded
