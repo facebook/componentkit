@@ -82,8 +82,9 @@
           if (!hasDirtyParent) {
             if (config.enableFasterStateUpdates) {
               // Faster state update optimizations.
-              reusePreviousComponent(self, node, parent, previousParent);
-              return;
+              if (reusePreviousComponent(self, node, parent, previousParent)) {
+                return;
+              }
             } // If `enableFasterStateUpdates` is disabled, we handle it as a props update as the component is not dirty.
             else if (config.enableFasterPropsUpdates &&
                      reusePreviousComponentIfComponentsAreEqual(self, node, parent, previousParent)) {
@@ -145,12 +146,16 @@ static void reusePreviousComponent(CKRenderComponent *component,
 }
 
 // Reuse the previous component generation and its component tree and notify the previous component about it.
-static void reusePreviousComponent(CKRenderComponent *component,
+static BOOL reusePreviousComponent(CKRenderComponent *component,
                                    CKRenderTreeNodeWithChild *node,
                                    id<CKTreeNodeWithChildrenProtocol> parent,
                                    id<CKTreeNodeWithChildrenProtocol> previousParent) {
   auto const previousChild = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
-  reusePreviousComponent(component, node, previousChild);
+  if (previousChild) {
+    reusePreviousComponent(component, node, previousChild);
+    return YES;
+  }
+  return NO;
 }
 
 // Check if isEqualToComponent returns `YES`; if it does, reuse the previous component generation and its component tree and notify the previous component about it.
@@ -159,7 +164,8 @@ static BOOL reusePreviousComponentIfComponentsAreEqual(CKRenderComponent *compon
                                                        id<CKTreeNodeWithChildrenProtocol> parent,
                                                        id<CKTreeNodeWithChildrenProtocol> previousParent) {
   auto const previousChild = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
-  if ([component isEqualToComponent:(id<CKRenderComponentProtocol>)previousChild.component]) {
+  auto const previousComponent = (id<CKRenderComponentProtocol>)previousChild.component;
+  if (previousComponent && [component isEqualToComponent:previousComponent]) {
     reusePreviousComponent(component, node, previousChild);
     return YES;
   }
