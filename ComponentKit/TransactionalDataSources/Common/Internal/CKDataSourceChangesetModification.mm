@@ -239,6 +239,16 @@
       [indexes addIndex:itemIt.first];
       [items addObject:itemIt.second];
     }
+
+    if (sectionIt.first >= newSections.count) {
+      CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertRow),
+                           @"Invalid section: %lu (>= %lu) while processing inserted items. Changeset: %@, user info: %@, state: %@",
+                           (unsigned long)sectionIt.first,
+                           (unsigned long)newSections.count,
+                           CK::changesetDescription(_changeset),
+                           _userInfo,
+                           oldState);
+    }
 #ifdef CK_ASSERTIONS_ENABLED
     const auto sectionItems = static_cast<NSArray *>([newSections objectAtIndex:sectionIt.first]);
     const auto invalidIndexes = CK::invalidIndexesForInsertionInArray(sectionItems, indexes);
