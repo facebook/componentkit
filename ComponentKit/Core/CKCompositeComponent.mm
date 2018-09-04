@@ -17,7 +17,7 @@
 #import "CKComponentInternal.h"
 #import "CKCompositeComponentInternal.h"
 #import "CKComponentSubclass.h"
-#import "CKReconciliationHelpers.h"
+#import "CKRenderHelpers.h"
 #import "CKRenderTreeNodeWithChild.h"
 #import "CKTreeNode.h"
 
@@ -87,7 +87,7 @@
                      stateUpdates:params.stateUpdates];
 
   // Update the `hasDirtyParent` param for Faster state/props updates.
-  if (!hasDirtyParent && CKReconciliation::hasDirtyParent(node, previousParent, params, config)) {
+  if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params, config)) {
     hasDirtyParent = YES;
   }
 

@@ -8,12 +8,13 @@
  *
  */
 
-#import "CKReconciliationHelpers.h"
+#import "CKRenderHelpers.h"
 
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKTreeNodeWithChild.h>
 
-namespace CKReconciliation {
+namespace CKRender {
   auto hasDirtyParent(id<CKTreeNodeProtocol> node,
                       id<CKTreeNodeWithChildrenProtocol> previousParent,
                       const CKBuildComponentTreeParams &params,

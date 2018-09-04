@@ -15,7 +15,7 @@
 @protocol CKTreeNodeProtocol;
 @protocol CKTreeNodeWithChildrenProtocol;
 
-namespace CKReconciliation {
+namespace CKRender {
   auto hasDirtyParent(id<CKTreeNodeProtocol> node,
                       id<CKTreeNodeWithChildrenProtocol> previousParent,
                       const CKBuildComponentTreeParams &params,

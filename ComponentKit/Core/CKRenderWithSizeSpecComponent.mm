@@ -11,7 +11,7 @@
 #import "CKRenderWithSizeSpecComponent.h"
 
 #import "CKBuildComponent.h"
-#import "CKReconciliationHelpers.h"
+#import "CKRenderHelpers.h"
 #import "CKRenderTreeNodeWithChildren.h"
 #import "CKComponentInternal.h"
 
@@ -121,7 +121,7 @@ struct CKRenderWithSizeSpecComponentParameters {
     _node = node;
 
     // Update the `hasDirtyParent` param for Faster state/props updates.
-    if (!hasDirtyParent && CKReconciliation::hasDirtyParent(node, previousParent, params, config)) {
+    if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params, config)) {
       hasDirtyParent = YES;
     }
 
