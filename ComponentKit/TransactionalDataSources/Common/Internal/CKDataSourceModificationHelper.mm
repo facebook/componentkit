@@ -25,6 +25,7 @@ auto CKComponentAnimationPredicates(BOOL enableNewAnimationInfrastructure) -> st
   ? std::unordered_set<CKComponentPredicate> {
     CKComponentHasAnimationsOnInitialMountPredicate,
     CKComponentHasAnimationsFromPreviousComponentPredicate,
+    CKComponentHasAnimationsOnFinalUnmountPredicate,
   }
   : std::unordered_set<CKComponentPredicate>();
 }

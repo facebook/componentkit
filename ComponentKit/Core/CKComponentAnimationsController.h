@@ -47,6 +47,9 @@ namespace CK {
       applyPendingAnimations(_pendingAnimationsFromPreviousComponent,
                              _appliedAnimationsFromPreviousComponent,
                              transactionProvider);
+      applyPendingAnimations(_pendingAnimationsOnFinalUnmount,
+                             _appliedAnimationsOnFinalUnmount,
+                             transactionProvider);
     }
 
     void cleanupAppliedAnimationsForComponent(CKComponent *const c);
