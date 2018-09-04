@@ -35,6 +35,7 @@
 @end
 
 @interface ComponentWithAnimationOnFinalUnmount: CKComponent
++ (instancetype)newWithAnimation:(CAAnimation *const)animation;
 @end
 
 @interface CompositeComponentWithScope: CKCompositeComponent
@@ -148,7 +149,7 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
 
 - (void)test_WhenThereAreNoComponentsToAnimate_ThereAreNoAnimations
 {
-  const auto as = CK::animationsForComponents({});
+  const auto as = CK::animationsForComponents({}, [UIView new]);
 
   const auto expected = CKComponentAnimations::AnimationsByComponentMap {};
   XCTAssert(animationsAreEqual(as.animationsOnInitialMount(), expected));
@@ -167,7 +168,7 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
     },
   };
 
-  const auto as = animationsForComponents(diff);
+  const auto as = animationsForComponents(diff, [UIView new]);
 
   const auto expected = CKComponentAnimations::AnimationsByComponentMap {
     {c1, {a1}},
@@ -192,13 +193,31 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
     .updatedComponents = componentPairs,
   };
 
-  const auto as = animationsForComponents(diff);
+  const auto as = animationsForComponents(diff, [UIView new]);
 
   const auto expected = CKComponentAnimations::AnimationsByComponentMap {
     {c1, {a1}},
     {c2, {a2}},
   };
   XCTAssert(animationsAreEqual(as.animationsFromPreviousComponent(), expected));
+}
+
+- (void)test_ForAllDisappearedComponents_AnimationsOnFinalUnmountAreCollected
+{
+  const auto a1 = [CAAnimation new];
+  const auto c1 = [ComponentWithAnimationOnFinalUnmount newWithAnimation:a1];
+  const auto a2 = [CAAnimation new];
+  const auto c2 = [ComponentWithAnimationOnFinalUnmount newWithAnimation:a2];
+  const auto diff = CK::ComponentTreeDiff {
+    .disappearedComponents = {
+      c1,
+      c2,
+    },
+  };
+
+  const auto as = animationsForComponents(diff, [UIView new]);
+
+  XCTAssert(as.animationsOnFinalUnmount().size() == diff.disappearedComponents.size());
 }
 
 - (void)test_DefaultInitialised_IsEmpty
@@ -214,6 +233,7 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
     {
       {c1, {a1}},
     },
+    {},
     {}
   };
 
@@ -228,7 +248,8 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
     {},
     {
       {c1, {a1}},
-    }
+    },
+    {}
   };
 
   XCTAssertFalse(as.isEmpty());
@@ -242,7 +263,7 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
     },
   };
 
-  const auto as = animationsForComponents(diff);
+  const auto as = animationsForComponents(diff, [UIView new]);
 
   XCTAssert(as.isEmpty());
 }
@@ -257,7 +278,20 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
     }
   };
 
-  const auto as = animationsForComponents(diff);
+  const auto as = animationsForComponents(diff, [UIView new]);
+
+  XCTAssert(as.isEmpty());
+}
+
+- (void)test_IfComponentHasNoFinalUnmountAnimations_IsEmpty
+{
+  const auto diff = CK::ComponentTreeDiff {
+    .disappearedComponents = {
+      [ComponentWithAnimationOnFinalUnmount newWithAnimation:nil],
+    },
+  };
+
+  const auto as = animationsForComponents(diff, [UIView new]);
 
   XCTAssert(as.isEmpty());
 }
@@ -315,15 +349,32 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
 @end
 
 @implementation ComponentWithAnimationOnFinalUnmount
+{
+  CAAnimation *_animation;
+}
+
 + (instancetype)new
 {
   CKComponentScope s(self);
-  return [super new];
+  return [self newWithAnimation:nil];
 }
 
-- (std::vector<CKAnimationOnFinalUnmount>)animationsOnFinalUnmount
++ (instancetype)newWithAnimation:(CAAnimation *const)animation
 {
-  return {{self, [CAAnimation new]}};
+  const auto c = [super new];
+  if (c) {
+    c->_animation = animation;
+  }
+  return c;
+}
+
+- (std::vector<CKComponentFinalUnmountAnimation>)animationsOnFinalUnmount
+{
+  if (!_animation) {
+    return {};
+  } else {
+    return {{self, _animation}};
+  }
 }
 @end
 

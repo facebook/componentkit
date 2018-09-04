@@ -48,5 +48,6 @@ namespace CK {
 auto operator==(const CKComponentAnimations &lhs, const CKComponentAnimations &rhs) -> bool
 {
   return animationsAreEqual(lhs.animationsOnInitialMount(), rhs.animationsOnInitialMount()) &&
-  animationsAreEqual(lhs.animationsFromPreviousComponent(), rhs.animationsFromPreviousComponent());
+  animationsAreEqual(lhs.animationsFromPreviousComponent(), rhs.animationsFromPreviousComponent()) &&
+  animationsAreEqual(lhs.animationsOnFinalUnmount(), rhs.animationsOnFinalUnmount());
 }

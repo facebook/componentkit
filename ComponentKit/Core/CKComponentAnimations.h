@@ -24,22 +24,33 @@ struct CKComponentAnimations {
 
   CKComponentAnimations() {}
   CKComponentAnimations(AnimationsByComponentMap animationsOnInitialMount,
-                        AnimationsByComponentMap animationsFromPreviousComponent)
-  : _animationsOnInitialMount(std::move(animationsOnInitialMount)), _animationsFromPreviousComponent(std::move(animationsFromPreviousComponent)) {}
+                        AnimationsByComponentMap animationsFromPreviousComponent,
+                        AnimationsByComponentMap animationsOnFinalUnmount):
+  _animationsOnInitialMount(std::move(animationsOnInitialMount)),
+  _animationsFromPreviousComponent(std::move(animationsFromPreviousComponent)),
+  _animationsOnFinalUnmount(std::move(animationsOnFinalUnmount)) {}
 
   const auto &animationsOnInitialMount() const { return _animationsOnInitialMount; }
   const auto &animationsFromPreviousComponent() const { return _animationsFromPreviousComponent; }
-  auto isEmpty() const { return _animationsOnInitialMount.empty() && _animationsFromPreviousComponent.empty(); }
+  const auto &animationsOnFinalUnmount() const { return _animationsOnFinalUnmount; }
+  auto isEmpty() const
+  {
+    return
+    _animationsOnInitialMount.empty() &&
+    _animationsFromPreviousComponent.empty() &&
+    _animationsOnFinalUnmount.empty();
+  }
   auto description() const -> NSString *;
 
 private:
   AnimationsByComponentMap _animationsOnInitialMount = {};
   AnimationsByComponentMap _animationsFromPreviousComponent = {};
+  AnimationsByComponentMap _animationsOnFinalUnmount = {};
 };
 
 namespace CK {
   auto animatedComponentsBetweenLayouts(const CKComponentRootLayout &newLayout,
                                         const CKComponentRootLayout &previousLayout) -> ComponentTreeDiff;
 
-  auto animationsForComponents(const ComponentTreeDiff& animatedComponents) -> CKComponentAnimations;
+  auto animationsForComponents(const ComponentTreeDiff& animatedComponents, UIView *const hostView) -> CKComponentAnimations;
 }

@@ -46,9 +46,38 @@ static CKComponentAnimationHooks hooksForCAAnimation(CKComponent *component, CAA
     }
   };
 }
+  
+static CKComponentAnimationHooks hooksForFinalUnmountAnimation(const CKComponentFinalUnmountAnimation &a,
+                                                               UIView *const hostView) noexcept
+{
+  const auto component = a.component;
+  const auto animation = a.animation;
+  return {
+    .willRemount = ^() {
+      const auto viewForAnimation = [component viewForAnimation];
+      CKCAssert(viewForAnimation, @"Can't animate component without a view. "
+                "Check if %@ has a view.", [component class]);
+      const auto snapshotView = [viewForAnimation snapshotViewAfterScreenUpdates:NO];
+      snapshotView.frame = [viewForAnimation convertRect:viewForAnimation.bounds toView:hostView];
+      snapshotView.userInteractionEnabled = NO;
+      return snapshotView;
+    },
+    .didRemount = ^(UIView *const snapshotView){
+      [hostView addSubview:snapshotView];
+      [snapshotView.layer addAnimation:animation forKey:nil];
+      return snapshotView;
+    },
+    .cleanup = ^(UIView *const snapshotView){
+      [snapshotView removeFromSuperview];
+    }
+  };
+}
 
 CKComponentAnimation::CKComponentAnimation(CKComponent *component, CAAnimation *animation, NSString *layerPath) noexcept
 : hooks(hooksForCAAnimation(component, animation, layerPath)) {}
+  
+CKComponentAnimation::CKComponentAnimation(const CKComponentFinalUnmountAnimation &animation, UIView *const hostView) noexcept
+: hooks(hooksForFinalUnmountAnimation(animation, hostView)) {}
 
 CKComponentAnimation::CKComponentAnimation(const CKComponentAnimationHooks &h) noexcept : hooks(h) {}
 

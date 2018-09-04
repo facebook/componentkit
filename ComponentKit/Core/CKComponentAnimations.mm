@@ -19,7 +19,11 @@
 #import "CKInternalHelpers.h"
 
 namespace CK {
-  static auto getScopeHandle(id<CKComponentProtocol> const c) { return objCForceCast<CKComponent>(c).scopeHandle; }
+  static auto getScopeHandle(id<CKComponentProtocol> const c) {
+    const auto scopeHandle = objCForceCast<CKComponent>(c).scopeHandle;
+    CKCAssertNotNil(scopeHandle, @"Scope must be provided for component animation");
+    return scopeHandle;
+  }
   static auto isSameHandle(CKComponentScopeHandle *const h1, CKComponentScopeHandle *const &h2) { return h1.globalIdentifier == h2.globalIdentifier; };
   static auto acquiredComponent(CKComponentScopeHandle *const h) { return objCForceCast<CKComponent>(h.acquiredComponent); };
 
@@ -75,9 +79,11 @@ namespace CK {
     };
   }
 
-  auto animationsForComponents(const ComponentTreeDiff& animatedComponents) -> CKComponentAnimations
+  auto animationsForComponents(const ComponentTreeDiff& animatedComponents, UIView *const hostView) -> CKComponentAnimations
   {
-    if (animatedComponents.appearedComponents.empty() && animatedComponents.updatedComponents.empty()) {
+    if (animatedComponents.appearedComponents.empty() &&
+        animatedComponents.updatedComponents.empty() &&
+        animatedComponents.disappearedComponents.empty()) {
       return {};
     }
 
@@ -87,7 +93,7 @@ namespace CK {
       return !pair.second.empty();
     });
 
-    const auto initialAnimations =
+    const auto animationsOnInitialMount =
     CKComponentAnimations::AnimationsByComponentMap(animationsOnInitialMountPairs.begin(),
                                                     animationsOnInitialMountPairs.end());
 
@@ -101,7 +107,19 @@ namespace CK {
     CKComponentAnimations::AnimationsByComponentMap(animationsFromPreviousComponentPairs.begin(),
                                                     animationsFromPreviousComponentPairs.end());
 
-    return {initialAnimations, animationsFromPrevComponent};
+    const auto animationsOnFinalUnmountPairs = filter(map(animatedComponents.disappearedComponents, [hostView](const auto &c) {
+      return std::make_pair(c, map(c.animationsOnFinalUnmount, [hostView](const auto &a) {
+        return CKComponentAnimation {a, hostView};
+      }));
+    }), [](const auto &pair) {
+      return !pair.second.empty();
+    });
+
+    const auto animationsOnFinalUnmount =
+    CKComponentAnimations::AnimationsByComponentMap(animationsOnFinalUnmountPairs.begin(),
+                                                    animationsOnFinalUnmountPairs.end());
+
+    return {animationsOnInitialMount, animationsFromPrevComponent, animationsOnFinalUnmount};
   }
 }
 
@@ -127,6 +145,11 @@ auto CKComponentAnimations::description() const -> NSString *
   if (!_animationsFromPreviousComponent.empty()) {
     [description appendString:@"Animations from previous component: {\n"];
     [description appendString:descriptionForAnimationsByComponentMap(_animationsFromPreviousComponent)];
+    [description appendString:@"\n}\n"];
+  }
+  if (!_animationsOnFinalUnmount.empty()) {
+    [description appendString:@"Final unmount animations from component: {\n"];
+    [description appendString:descriptionForAnimationsByComponentMap(_animationsOnFinalUnmount)];
     [description appendString:@"\n}\n"];
   }
   return description;

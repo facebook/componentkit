@@ -268,7 +268,7 @@ static void setMountedRootLayout(CKComponentHostingView *const self, const CKCom
 static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView *const self, const CKComponentRootLayout &newLayout)
 {
   return self->_enableNewAnimationInfrastructure ?
-  CK::animationsForComponents(CK::animatedComponentsBetweenLayouts(newLayout, self->_mountedRootLayout)) :
+  CK::animationsForComponents(CK::animatedComponentsBetweenLayouts(newLayout, self->_mountedRootLayout), self->_containerView) :
   CKComponentAnimations {};
 }
 

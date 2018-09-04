@@ -104,6 +104,7 @@ private:
   controller = std::make_unique<CK::ComponentAnimationsController>(CKComponentAnimations {
     CKComponentAnimations::AnimationsByComponentMap(initialAnimationsPairs.begin(), initialAnimationsPairs.end()),
     CKComponentAnimations::AnimationsByComponentMap(changeAnimationsPairs.begin(), changeAnimationsPairs.end()),
+    {},
   });
   allSpies = CK::chain(spiesForInitialAnimations, spiesForChangeAnimations);
 }
@@ -232,7 +233,7 @@ private:
   const auto animationsFromPreviousComponent = CKComponentAnimations::AnimationsByComponentMap {
     {c1, {as3.makeAnimation()}},
   };
-  const auto animations = CKComponentAnimations(animationsOnInitialMount, animationsFromPreviousComponent);
+  const auto animations = CKComponentAnimations(animationsOnInitialMount, animationsFromPreviousComponent, {});
   controller = std::make_unique<CK::ComponentAnimationsController>(animations);
 }
 

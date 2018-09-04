@@ -145,7 +145,7 @@ extern CGSize const kCKComponentParentSizeUndefined;
  @warning If you override this method, your component MUST declare a scope (see CKComponentScope). This is used to
  identify equivalent components between trees.
  */
-- (std::vector<CKAnimationOnFinalUnmount>)animationsOnFinalUnmount;
+- (std::vector<CKComponentFinalUnmountAnimation>)animationsOnFinalUnmount;
 
 /**
  Attempts to return a view suitable for rendering an animation.

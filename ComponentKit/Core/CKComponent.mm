@@ -275,7 +275,7 @@ struct CKComponentMountInfo {
   return {};
 }
 
-- (std::vector<CKAnimationOnFinalUnmount>)animationsOnFinalUnmount
+- (std::vector<CKComponentFinalUnmountAnimation>)animationsOnFinalUnmount
 {
   return {};
 }

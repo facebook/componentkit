@@ -35,7 +35,8 @@ const auto testAnimations = CKComponentAnimations {
   {
     {[CKComponent new], {CKComponentAnimation([CKComponent new], [CAAnimation new])}},
   },
-  {}
+  {},
+  {},
 };
 const auto unmountedComponents = (NSSet<CKComponent *> *)[NSSet setWithArray:@[
                                                                                [CKComponent new],
