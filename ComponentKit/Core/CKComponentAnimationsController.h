@@ -33,7 +33,8 @@ namespace CK {
     ComponentAnimationsController(CKComponentAnimations animations)
     : _animations(std::move(animations)),
     _appliedAnimationsOnInitialMount(std::make_shared<AppliedAnimationsByComponentMap>()),
-    _appliedAnimationsFromPreviousComponent(std::make_shared<AppliedAnimationsByComponentMap>()) {};
+    _appliedAnimationsFromPreviousComponent(std::make_shared<AppliedAnimationsByComponentMap>()),
+    _appliedAnimationsOnFinalUnmount(std::make_shared<AppliedAnimationsByComponentMap>()) {};
 
     void collectPendingAnimations();
 
@@ -96,9 +97,11 @@ namespace CK {
     const CKComponentAnimations _animations;
     PendingAnimationsByComponentMap _pendingAnimationsOnInitialMount = {};
     PendingAnimationsByComponentMap _pendingAnimationsFromPreviousComponent = {};
+    PendingAnimationsByComponentMap _pendingAnimationsOnFinalUnmount = {};
     // Ownership will be shared with transaction completions which can outlive the controller
     std::shared_ptr<AppliedAnimationsByComponentMap> _appliedAnimationsOnInitialMount;
     std::shared_ptr<AppliedAnimationsByComponentMap> _appliedAnimationsFromPreviousComponent;
+    std::shared_ptr<AppliedAnimationsByComponentMap> _appliedAnimationsOnFinalUnmount;
     int _animationID = 0;
   };
 }

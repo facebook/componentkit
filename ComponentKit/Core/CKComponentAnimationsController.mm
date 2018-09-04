@@ -33,6 +33,11 @@ namespace CK {
                    _animations.animationsFromPreviousComponent().end(),
                    std::inserter(_pendingAnimationsFromPreviousComponent, _pendingAnimationsFromPreviousComponent.begin()),
                    [](const auto &kv){ return std::make_pair(kv.first, map(kv.second, makePendingAnimation)); });
+
+    std::transform(_animations.animationsOnFinalUnmount().begin(),
+                   _animations.animationsOnFinalUnmount().end(),
+                   std::inserter(_pendingAnimationsOnFinalUnmount, _pendingAnimationsOnFinalUnmount.begin()),
+                   [](const auto &kv) { return std::make_pair(kv.first, map(kv.second, makePendingAnimation)); });
   }
 
   auto ComponentAnimationsController::cleanupAppliedAnimationsForComponent(AppliedAnimationsByComponentMap &aas, CKComponent *const c)
@@ -48,5 +53,6 @@ namespace CK {
   {
     cleanupAppliedAnimationsForComponent(*_appliedAnimationsOnInitialMount, c);
     cleanupAppliedAnimationsForComponent(*_appliedAnimationsFromPreviousComponent, c);
+    cleanupAppliedAnimationsForComponent(*_appliedAnimationsOnFinalUnmount, c);
   }
 }
