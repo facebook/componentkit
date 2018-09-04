@@ -13,6 +13,7 @@
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
+#import <ComponentKit/CKDataSourceAnimationOptions.h>
 #import <ComponentKit/CKInspectableView.h>
 
 #import <unordered_set>
@@ -22,7 +23,7 @@ struct CKComponentHostingViewOptions {
   BOOL unifyBuildAndLayout;
   /// If set to YES, allows taps to pass though this hosting view to views behind it. Default NO.
   BOOL allowTapPassthrough;
-  BOOL enableNewAnimationInfrastructure;
+  CKDataSourceAnimationOptions animationOptions;
   // If set to YES, invalidates controllers that are removed whilst the hosting view remains alive. Default NO.
   BOOL invalidateRemovedControllers;
 };

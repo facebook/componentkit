@@ -42,7 +42,7 @@
   CKDataSourceConfiguration *configuration = [oldState configuration];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
-  const auto animationPredicates = CKComponentAnimationPredicates(configuration.enableNewAnimationInfrastructure);
+  const auto animationPredicates = CKComponentAnimationPredicates(configuration.animationOptions);
 
   NSMutableArray *newSections = [NSMutableArray array];
   NSMutableSet *updatedIndexPaths = [NSMutableSet set];

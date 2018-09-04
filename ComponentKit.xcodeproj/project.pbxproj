@@ -408,6 +408,8 @@
 		60EFF4C221135FCA00CA7C68 /* CKStatelessComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 60EFF4B32113555C00CA7C68 /* CKStatelessComponent.mm */; };
 		60EFF4C321135FCD00CA7C68 /* CKStatelessComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 60EFF4B22113555C00CA7C68 /* CKStatelessComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6DAC628C1F83DEB900536113 /* CKComponentScopeEnumeratorProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6DAC628B1F83DEB800536113 /* CKComponentScopeEnumeratorProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		722AA2F12139CC8500405ECA /* CKDataSourceAnimationOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 722AA2F02139CC8400405ECA /* CKDataSourceAnimationOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		722AA2F42139E28D00405ECA /* CKDataSourceAnimationOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 722AA2F02139CC8400405ECA /* CKDataSourceAnimationOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7259D5762099E53000451280 /* CKDataSourceModificationHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 72C575542099C6E400FF603E /* CKDataSourceModificationHelper.h */; };
 		7259D57B2099E53500451280 /* CKDataSourceModificationHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72C575592099C6E500FF603E /* CKDataSourceModificationHelper.mm */; };
 		7279B64420E2801D00A50F6E /* CKDataSourceQOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 7279B64320E2801D00A50F6E /* CKDataSourceQOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1043,6 +1045,7 @@
 		60EFF4B32113555C00CA7C68 /* CKStatelessComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatelessComponent.mm; sourceTree = "<group>"; };
 		60EFF4C021135DE500CA7C68 /* CKStatelessComponentTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatelessComponentTests.mm; sourceTree = "<group>"; };
 		6DAC628B1F83DEB800536113 /* CKComponentScopeEnumeratorProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentScopeEnumeratorProvider.h; sourceTree = "<group>"; };
+		722AA2F02139CC8400405ECA /* CKDataSourceAnimationOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceAnimationOptions.h; sourceTree = "<group>"; };
 		7279B64320E2801D00A50F6E /* CKDataSourceQOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceQOS.h; sourceTree = "<group>"; };
 		72C575542099C6E400FF603E /* CKDataSourceModificationHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceModificationHelper.h; sourceTree = "<group>"; };
 		72C575592099C6E500FF603E /* CKDataSourceModificationHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceModificationHelper.mm; sourceTree = "<group>"; };
@@ -2052,6 +2055,7 @@
 		D0B47B621CBD926700BB33CE /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				722AA2F02139CC8400405ECA /* CKDataSourceAnimationOptions.h */,
 				7279B64320E2801D00A50F6E /* CKDataSourceQOS.h */,
 				400B0E5E1F71C63B006BDFEE /* CKDataSourceChangeset.h */,
 				400B0E5C1F71C63B006BDFEE /* CKDataSourceChangeset.mm */,
@@ -2398,6 +2402,7 @@
 				03B8B5431D2A346F00EDFF59 /* CKThreadLocalComponentScope.h in Headers */,
 				03B8B5441D2A346F00EDFF59 /* CKFunctor.h in Headers */,
 				03B8B5451D2A346F00EDFF59 /* CKArgumentPrecondition.h in Headers */,
+				722AA2F42139E28D00405ECA /* CKDataSourceAnimationOptions.h in Headers */,
 				03B8B5461D2A346F00EDFF59 /* CKAsyncTransactionGroup.h in Headers */,
 				7FE8F8EA2006798E00BEE8D1 /* CKAnalyticsListener.h in Headers */,
 				03B8B5471D2A346F00EDFF59 /* CKTextKitTruncating.h in Headers */,
@@ -2462,6 +2467,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				722AA2F12139CC8500405ECA /* CKDataSourceAnimationOptions.h in Headers */,
 				A2A89C3B2011C0FC009D0377 /* CKInspectableView.h in Headers */,
 				400B0E601F71C63C006BDFEE /* CKDataSourceChangesetInternal.h in Headers */,
 				400B0E611F71C63C006BDFEE /* CKDataSourceChangeset.h in Headers */,

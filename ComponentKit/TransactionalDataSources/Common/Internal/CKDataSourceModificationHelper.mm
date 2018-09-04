@@ -18,16 +18,22 @@
 #import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceItemInternal.h>
 
-auto CKComponentAnimationPredicates(BOOL enableNewAnimationInfrastructure) -> std::unordered_set<CKComponentPredicate>
+auto CKComponentAnimationPredicates(const CKDataSourceAnimationOptions &animationOptions) -> std::unordered_set<CKComponentPredicate>
 {
+  if (!animationOptions.enableNewInfra) {
+    return {};
+  }
   return
-  enableNewAnimationInfrastructure
+  animationOptions.enableDisappearAnimation
   ? std::unordered_set<CKComponentPredicate> {
     CKComponentHasAnimationsOnInitialMountPredicate,
     CKComponentHasAnimationsFromPreviousComponentPredicate,
     CKComponentHasAnimationsOnFinalUnmountPredicate,
   }
-  : std::unordered_set<CKComponentPredicate>();
+  : std::unordered_set<CKComponentPredicate> {
+    CKComponentHasAnimationsOnInitialMountPredicate,
+    CKComponentHasAnimationsFromPreviousComponentPredicate,
+  };
 }
 
 CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
@@ -40,7 +46,8 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
 {
   Class<CKComponentProvider> componentProvider = [configuration componentProvider];
   const auto componentFactory = ^{
-    const auto controllerCtx = [CKComponentControllerContext newWithHandleAnimationsInController:!configuration.enableNewAnimationInfrastructure];
+    const auto controllerCtx = [CKComponentControllerContext
+                                newWithHandleAnimationsInController:!configuration.animationOptions.enableNewInfra];
     const CKComponentContext<CKComponentControllerContext> ctx {controllerCtx};
     return [componentProvider componentForModel:model context:context];
   };

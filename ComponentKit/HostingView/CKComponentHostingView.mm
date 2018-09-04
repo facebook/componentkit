@@ -135,11 +135,11 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
     _unifyBuildAndLayout = options.unifyBuildAndLayout;
-    _enableNewAnimationInfrastructure = options.enableNewAnimationInfrastructure;
+    _enableNewAnimationInfrastructure = options.animationOptions.enableNewInfra;
     if (_enableNewAnimationInfrastructure) {
       _animationApplicator = CK::AnimationApplicatorFactory::make();
     }
-    _animationPredicates = CKComponentAnimationPredicates(_enableNewAnimationInfrastructure);
+    _animationPredicates = CKComponentAnimationPredicates(options.animationOptions);
     _invalidateRemovedControllers = options.invalidateRemovedControllers;
 
     [CKComponentDebugController registerReflowListener:self];

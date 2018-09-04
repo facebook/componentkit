@@ -12,11 +12,12 @@
 
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKdataSourceAnimationOptions.h>
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
 #import <ComponentKit/CKSizeRange.h>
 
-auto CKComponentAnimationPredicates(BOOL enableNewAnimationInfrastructure) -> std::unordered_set<CKComponentPredicate>;
+auto CKComponentAnimationPredicates(const CKDataSourceAnimationOptions &animationOptions) -> std::unordered_set<CKComponentPredicate>;
 
 CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,

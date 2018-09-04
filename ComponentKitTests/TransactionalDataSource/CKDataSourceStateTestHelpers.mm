@@ -50,7 +50,7 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
    parallelInsertBuildAndLayoutThreshold:0
    parallelUpdateBuildAndLayout:parallelBuildAndLayout
    parallelUpdateBuildAndLayoutThreshold:0
-   enableNewAnimationInfrastructure:NO
+   animationOptions:{}
    componentPredicates:{}
    componentControllerPredicates:{}
    analyticsListener:nil];

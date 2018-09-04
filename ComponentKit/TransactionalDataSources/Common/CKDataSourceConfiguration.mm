@@ -21,6 +21,7 @@
   std::unordered_set<CKComponentControllerPredicate> _componentControllerPredicates;
   CKBuildComponentConfig _buildComponentConfig;
   CKDataSourceQOSOptions _qosOptions;
+  CKDataSourceAnimationOptions _animationOptions;
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -37,7 +38,7 @@
    parallelInsertBuildAndLayoutThreshold:0
             parallelUpdateBuildAndLayout:NO
    parallelUpdateBuildAndLayoutThreshold:0
-        enableNewAnimationInfrastructure:NO
+                        animationOptions:{}
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil];
@@ -53,7 +54,7 @@
     parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
              parallelUpdateBuildAndLayout:(BOOL)parallelUpdateBuildAndLayout
     parallelUpdateBuildAndLayoutThreshold:(NSUInteger)parallelUpdateBuildAndLayoutThreshold
-         enableNewAnimationInfrastructure:(BOOL)enableNewAnimationInfrastructure
+                         animationOptions:(const CKDataSourceAnimationOptions &)animationOptions
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -72,7 +73,7 @@
     _parallelUpdateBuildAndLayout = parallelUpdateBuildAndLayout;
     _parallelUpdateBuildAndLayoutThreshold = parallelUpdateBuildAndLayoutThreshold;
     _qosOptions = qosOptions;
-    _enableNewAnimationInfrastructure = enableNewAnimationInfrastructure;
+    _animationOptions = animationOptions;
   }
   return self;
 }
@@ -85,6 +86,11 @@
 - (const CKDataSourceQOSOptions &)qosOptions
 {
   return _qosOptions;
+}
+
+- (const CKDataSourceAnimationOptions &)animationOptions
+{
+  return _animationOptions;
 }
 
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates
