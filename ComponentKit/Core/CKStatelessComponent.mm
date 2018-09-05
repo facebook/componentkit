@@ -24,3 +24,12 @@
 }
 
 @end
+
+CKComponent *CKCreateStatelessComponent(CKComponent *component, NSString *debugIdentifier)
+{
+#if CK_ASSERTIONS_ENABLED
+  return [CKStatelessComponent newWithView:{} component:component identifier:debugIdentifier];
+#else
+  return component;
+#endif
+}
