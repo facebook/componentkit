@@ -18,8 +18,6 @@
 #import "CKCompositeComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKRenderHelpers.h"
-#import "CKRenderTreeNodeWithChild.h"
-#import "CKTreeNode.h"
 
 @interface CKCompositeComponent ()
 {
@@ -79,25 +77,7 @@
                     config:(const CKBuildComponentConfig &)config
             hasDirtyParent:(BOOL)hasDirtyParent
 {
-  auto const node = [[CKTreeNodeWithChild alloc]
-                     initWithComponent:self
-                     parent:parent
-                     previousParent:previousParent
-                     scopeRoot:params.scopeRoot
-                     stateUpdates:params.stateUpdates];
-
-  // Update the `hasDirtyParent` param for Faster state/props updates.
-  if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params, config)) {
-    hasDirtyParent = YES;
-  }
-
-  if (_component) {
-    [_component buildComponentTree:node
-                     previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
-                            params:params
-                            config:config
-                    hasDirtyParent:hasDirtyParent];
-  }
+  CKRender::buildComponentTreeWithPrecomputedChild(self, _component, parent, previousParent, params, config, hasDirtyParent);
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize

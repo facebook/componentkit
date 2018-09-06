@@ -16,6 +16,14 @@
 @protocol CKTreeNodeWithChildrenProtocol;
 
 namespace CKRender {
+  auto buildComponentTreeWithPrecomputedChild(CKComponent *component,
+                                              CKComponent *childComponent,
+                                              id<CKTreeNodeWithChildrenProtocol> parent,
+                                              id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                              const CKBuildComponentTreeParams &params,
+                                              const CKBuildComponentConfig &config,
+                                              BOOL hasDirtyParent) -> void;
+  
   auto hasDirtyParent(id<CKTreeNodeProtocol> node,
                       id<CKTreeNodeWithChildrenProtocol> previousParent,
                       const CKBuildComponentTreeParams &params,

@@ -15,6 +15,35 @@
 #import <ComponentKit/CKTreeNodeWithChild.h>
 
 namespace CKRender {
+  auto buildComponentTreeWithPrecomputedChild(CKComponent *component,
+                                              CKComponent *childComponent,
+                                              id<CKTreeNodeWithChildrenProtocol> parent,
+                                              id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                              const CKBuildComponentTreeParams &params,
+                                              const CKBuildComponentConfig &config,
+                                              BOOL hasDirtyParent) -> void {
+
+    auto const node = [[CKTreeNodeWithChild alloc]
+                       initWithComponent:component
+                       parent:parent
+                       previousParent:previousParent
+                       scopeRoot:params.scopeRoot
+                       stateUpdates:params.stateUpdates];
+
+    // Update the `hasDirtyParent` param for Faster state/props updates.
+    if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params, config)) {
+      hasDirtyParent = YES;
+    }
+
+    if (childComponent) {
+      [childComponent buildComponentTree:node
+                          previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
+                                  params:params
+                                  config:config
+                          hasDirtyParent:hasDirtyParent];
+    }
+  }
+
   auto hasDirtyParent(id<CKTreeNodeProtocol> node,
                       id<CKTreeNodeWithChildrenProtocol> previousParent,
                       const CKBuildComponentTreeParams &params,

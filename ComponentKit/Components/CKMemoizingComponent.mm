@@ -15,6 +15,7 @@
 #import "CKComponentMemoizer.h"
 #import "CKComponentScope.h"
 #import "CKComponentSubclass.h"
+#import "CKRenderHelpers.h"
 
 /**
  Memoizers work by preparing a thread-local stack. We want to be able to preserve this state between component tree
@@ -119,6 +120,15 @@ private:
     c->_component = result;
   }
   return c;
+}
+
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
+            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                    params:(const CKBuildComponentTreeParams &)params
+                    config:(const CKBuildComponentConfig &)config
+            hasDirtyParent:(BOOL)hasDirtyParent
+{
+  CKRender::buildComponentTreeWithPrecomputedChild(self, _component, parent, previousParent, params, config, hasDirtyParent);
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
