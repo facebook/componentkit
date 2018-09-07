@@ -14,9 +14,9 @@
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKInternalHelpers.h"
-#import "CKRenderTreeNode.h"
-#import "CKRenderTreeNodeWithChild.h"
-#import "CKRenderTreeNodeWithChildren.h"
+#import "CKRenderHelpers.h"
+#import "CKTreeNode.h"
+
 
 @implementation CKRenderComponent
 {
@@ -61,64 +61,7 @@
                     config:(const CKBuildComponentConfig &)config
             hasDirtyParent:(BOOL)hasDirtyParent
 {
-  auto const node = [[CKRenderTreeNodeWithChild alloc]
-                     initWithComponent:self
-                     parent:parent
-                     previousParent:previousParent
-                     scopeRoot:params.scopeRoot
-                     stateUpdates:params.stateUpdates];
-
-  // Faster state/props optimizations require previous parent.
-  if (previousParent) {
-    if (params.buildTrigger == BuildTrigger::StateUpdate) {
-      // During state update, we have two possible optimizations:
-      // 1. Faster state update
-      // 2. Faster props update (when the parent is dirty, we handle state update as props update).
-      if (config.enableFasterStateUpdates || config.enableFasterPropsUpdates) {
-        // Check if the tree node is not dirty (not in a branch of a state update).
-        auto const dirtyNodeId = params.treeNodeDirtyIds.find(node.nodeIdentifier);
-        if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
-          // If the component is not dirty and it doesn't have a dirty parent - we can reuse it.
-          if (!hasDirtyParent) {
-            if (config.enableFasterStateUpdates) {
-              // Faster state update optimizations.
-              if (reusePreviousComponent(self, node, parent, previousParent)) {
-                return;
-              }
-            } // If `enableFasterStateUpdates` is disabled, we handle it as a props update as the component is not dirty.
-            else if (config.enableFasterPropsUpdates &&
-                     reusePreviousComponentIfComponentsAreEqual(self, node, parent, previousParent)) {
-              return;
-            }
-          } // If the component is not dirty, but its parent is dirty - we handle it as props update.
-          else if (config.enableFasterPropsUpdates &&
-                   reusePreviousComponentIfComponentsAreEqual(self, node, parent, previousParent)) {
-            return;
-          }
-        }
-        else { // If the component is dirty, we mark it with `hasDirtyParent` param for its children.
-          hasDirtyParent = YES;
-        }
-      }
-    }
-    else if (params.buildTrigger == BuildTrigger::PropsUpdate) {
-      // Faster props update optimizations.
-      if (config.enableFasterPropsUpdates &&
-          reusePreviousComponentIfComponentsAreEqual(self, node, parent, previousParent)) {
-        return;
-      }
-    }
-  }
-
-  auto const child = [self render:node.state];
-  if (child) {
-    _childComponent = child;
-    [child buildComponentTree:node
-               previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
-                       params:params
-                       config:config
-               hasDirtyParent:hasDirtyParent];
-  }
+  CKRender::buildComponentTreeWithSingleChild(self, &_childComponent, parent, previousParent, params, config, hasDirtyParent);
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
@@ -131,45 +74,6 @@
 
   auto const l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];
   return {self, l.size, {{{0,0}, l}}};
-}
-
-// Reuse the previous component generation and its component tree and notify the previous component about it.
-static void reusePreviousComponent(CKRenderComponent *component,
-                                   CKRenderTreeNodeWithChild *node,
-                                   CKRenderTreeNodeWithChild *previousChild) {
-  // Set the child from the previous tree node.
-  node.child = previousChild.child;
-  // Link the previous child component to the the new component.
-  component->_childComponent = [(CKRenderTreeNodeWithChild *)previousChild child].component;
-  // Notify the new component about the reuse of the previous component.
-  [component didReuseComponent:(id<CKRenderComponentProtocol>)previousChild.component];
-}
-
-// Reuse the previous component generation and its component tree and notify the previous component about it.
-static BOOL reusePreviousComponent(CKRenderComponent *component,
-                                   CKRenderTreeNodeWithChild *node,
-                                   id<CKTreeNodeWithChildrenProtocol> parent,
-                                   id<CKTreeNodeWithChildrenProtocol> previousParent) {
-  auto const previousChild = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
-  if (previousChild) {
-    reusePreviousComponent(component, node, previousChild);
-    return YES;
-  }
-  return NO;
-}
-
-// Check if isEqualToComponent returns `YES`; if it does, reuse the previous component generation and its component tree and notify the previous component about it.
-static BOOL reusePreviousComponentIfComponentsAreEqual(CKRenderComponent *component,
-                                                       CKRenderTreeNodeWithChild *node,
-                                                       id<CKTreeNodeWithChildrenProtocol> parent,
-                                                       id<CKTreeNodeWithChildrenProtocol> previousParent) {
-  auto const previousChild = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
-  auto const previousComponent = (id<CKRenderComponentProtocol>)previousChild.component;
-  if (previousComponent && [component isEqualToComponent:previousComponent]) {
-    reusePreviousComponent(component, node, previousChild);
-    return YES;
-  }
-  return NO;
 }
 
 #pragma mark - CKRenderComponentProtocol
