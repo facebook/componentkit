@@ -93,7 +93,7 @@ namespace CKRender {
     }
   }
 
-  auto buildComponentTreeWithSingleChild(CKRenderComponent *component,
+  auto buildComponentTreeWithSingleChild(id<CKRenderWithChildComponentProtocol> component,
                                          __strong CKComponent **childComponent,
                                          id<CKTreeNodeWithChildrenProtocol> parent,
                                          id<CKTreeNodeWithChildrenProtocol> previousParent,

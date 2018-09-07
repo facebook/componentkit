@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKComponentInternal.h>
 
+@protocol CKRenderWithChildComponentProtocol;
 @protocol CKTreeNodeProtocol;
 @protocol CKTreeNodeWithChildrenProtocol;
 
@@ -27,7 +28,7 @@ namespace CKRender {
                                               const CKBuildComponentConfig &config,
                                               BOOL hasDirtyParent) -> void;
 
-  auto buildComponentTreeWithSingleChild(CKRenderComponent *component,
+  auto buildComponentTreeWithSingleChild(id<CKRenderWithChildComponentProtocol> component,
                                          __strong CKComponent **childComponent,
                                          id<CKTreeNodeWithChildrenProtocol> parent,
                                          id<CKTreeNodeWithChildrenProtocol> previousParent,

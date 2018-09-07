@@ -16,7 +16,7 @@
 @warning Overriding -layoutThatFits:parentSize: or -computeLayoutThatFits: is **not allowed** for any subclass.
 */
 
-@interface CKRenderComponent : CKComponent <CKRenderComponentProtocol>
+@interface CKRenderComponent : CKComponent <CKRenderWithChildComponentProtocol>
 
 /**
  Returns a child component that needs to be rendered from this component.

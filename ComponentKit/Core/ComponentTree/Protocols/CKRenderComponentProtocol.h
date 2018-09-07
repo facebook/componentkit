@@ -43,3 +43,18 @@
 - (void)didReuseComponent:(id<CKRenderComponentProtocol>)component;
 
 @end
+
+
+/**
+ Render component with a single child.
+ */
+@protocol CKRenderWithChildComponentProtocol <CKRenderComponentProtocol>
+
+/**
+ Returns a child component that needs to be rendered from this component.
+
+ @param state The current state of the component.
+ */
+- (CKComponent *)render:(id)state;
+
+@end
