@@ -29,7 +29,7 @@
   if (component == nil) {
     return nil;
   }
-  CKOverlayLayoutComponent *c = [super newRenderComponentWithView:{} size:{} isLayoutComponent:YES];
+  CKOverlayLayoutComponent *c = [super newWithView:{} size:{}];
   if (c) {
     c->_overlay = overlay;
     c->_component = component;

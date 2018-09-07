@@ -26,7 +26,7 @@
                        size:(const CKComponentSize &)size
                    children:(CKContainerWrapper<std::vector<CKStaticLayoutComponentChild>> &&)children
 {
-  CKStaticLayoutComponent *c = [super newRenderComponentWithView:view size:size isLayoutComponent:YES];
+  CKStaticLayoutComponent *c = [super newWithView:view size:size];
   if (c) {
     c->_children = children.take();
   }

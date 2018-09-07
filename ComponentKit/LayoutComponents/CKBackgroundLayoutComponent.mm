@@ -29,7 +29,7 @@
   if (component == nil) {
     return nil;
   }
-  CKBackgroundLayoutComponent *c = [super newRenderComponentWithView:{} size:{} isLayoutComponent:YES];
+  CKBackgroundLayoutComponent *c = [super newWithView:{} size:{}];
   if (c) {
     c->_component = component;
     c->_background = background;

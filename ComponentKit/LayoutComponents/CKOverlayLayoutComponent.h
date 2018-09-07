@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKRenderWithChildrenComponent.h>
+#import <ComponentKit/CKRenderLayoutWithChildrenComponent.h>
 
 #import <ComponentKit/CKMacros.h>
 
@@ -17,7 +17,7 @@
 
  This component lays out a single component and then overlays a component on top of it streched to its size
  */
-@interface CKOverlayLayoutComponent : CKRenderWithChildrenComponent
+@interface CKOverlayLayoutComponent : CKRenderLayoutWithChildrenComponent
 
 + (instancetype)newWithComponent:(CKComponent *)component
                          overlay:(CKComponent *)overlay;

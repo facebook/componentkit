@@ -86,7 +86,7 @@ template class std::vector<CKFlexboxComponentChild>;
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
           usesDeepYogaTrees:(BOOL)usesDeepYogaTrees
 {
-  auto const component = [super newRenderComponentWithView:view size:size isLayoutComponent:YES];
+  auto const component = [super newWithView:view size:size];
   if (component) {
     component->_style = style;
     component->_children = children.take();

@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKRenderWithChildrenComponent.h>
+#import <ComponentKit/CKRenderLayoutWithChildrenComponent.h>
 
 #import <ComponentKit/CKMacros.h>
 
@@ -17,7 +17,7 @@
 
  Lays out a single child component, then lays out a background component behind it stretched to its size.
  */
-@interface CKBackgroundLayoutComponent : CKRenderWithChildrenComponent
+@interface CKBackgroundLayoutComponent : CKRenderLayoutWithChildrenComponent
 
 /**
  @param component A child that is laid out to determine the size of this component. If this is nil, then this method
