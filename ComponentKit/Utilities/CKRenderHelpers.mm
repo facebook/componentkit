@@ -15,6 +15,7 @@
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKTreeNodeWithChild.h>
 #import <ComponentKit/CKRenderTreeNodeWithChild.h>
+#import <ComponentKit/CKRenderTreeNodeWithChildren.h>
 
 namespace CKRenderInternal {
   // Reuse the previous component generation and its component tree and notify the previous component about it.
@@ -69,7 +70,8 @@ namespace CKRender {
                                               id<CKTreeNodeWithChildrenProtocol> previousParent,
                                               const CKBuildComponentTreeParams &params,
                                               const CKBuildComponentConfig &config,
-                                              BOOL hasDirtyParent) -> void {
+                                              BOOL hasDirtyParent) -> void
+  {
     CKCAssert(component, @"component cannot be nil");
 
     auto const node = [[CKTreeNodeWithChild alloc]
@@ -99,7 +101,8 @@ namespace CKRender {
                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
                                          const CKBuildComponentTreeParams &params,
                                          const CKBuildComponentConfig &config,
-                                         BOOL hasDirtyParent) -> void {
+                                         BOOL hasDirtyParent) -> void
+  {
     CKCAssert(component, @"component cannot be nil");
 
     auto const node = [[CKRenderTreeNodeWithChild alloc]
@@ -163,6 +166,38 @@ namespace CKRender {
                          params:params
                          config:config
                  hasDirtyParent:hasDirtyParent];
+    }
+  }
+
+  auto buildComponentTreeWithMultiChild(id<CKRenderWithChildrenComponentProtocol> component,
+                                        id<CKTreeNodeWithChildrenProtocol> parent,
+                                        id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                        const CKBuildComponentTreeParams &params,
+                                        const CKBuildComponentConfig &config,
+                                        BOOL hasDirtyParent) -> void
+  {
+    auto const node = [[CKRenderTreeNodeWithChildren alloc]
+                       initWithComponent:component
+                       parent:parent
+                       previousParent:previousParent
+                       scopeRoot:params.scopeRoot
+                       stateUpdates:params.stateUpdates];
+
+    // Update the `hasDirtyParent` param for Faster state/props updates.
+    if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params, config)) {
+      hasDirtyParent = YES;
+    }
+
+    auto const children = [component renderChildren:node.state];
+    auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
+    for (auto const child : children) {
+      if (child) {
+        [child buildComponentTree:node
+                   previousParent:previousParentForChild
+                           params:params
+                           config:config
+                   hasDirtyParent:hasDirtyParent];
+      }
     }
   }
 

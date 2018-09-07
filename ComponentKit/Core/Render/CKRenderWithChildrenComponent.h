@@ -9,10 +9,9 @@
  */
 
 #import <ComponentKit/CKComponent.h>
-#import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
 
-@interface CKRenderWithChildrenComponent : CKComponent <CKRenderComponentProtocol>
+@interface CKRenderWithChildrenComponent : CKComponent <CKRenderWithChildrenComponentProtocol>
 
 /*
  Returns a vector of 'CKComponent' children that will be rendered to the screen.

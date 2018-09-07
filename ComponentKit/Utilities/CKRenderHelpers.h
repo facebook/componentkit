@@ -13,6 +13,7 @@
 #import <ComponentKit/CKComponentInternal.h>
 
 @protocol CKRenderWithChildComponentProtocol;
+@protocol CKRenderWithChildrenComponentProtocol;
 @protocol CKTreeNodeProtocol;
 @protocol CKTreeNodeWithChildrenProtocol;
 
@@ -35,6 +36,13 @@ namespace CKRender {
                                          const CKBuildComponentTreeParams &params,
                                          const CKBuildComponentConfig &config,
                                          BOOL hasDirtyParent) -> void;
+
+  auto buildComponentTreeWithMultiChild(id<CKRenderWithChildrenComponentProtocol> component,
+                                        id<CKTreeNodeWithChildrenProtocol> parent,
+                                        id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                        const CKBuildComponentTreeParams &params,
+                                        const CKBuildComponentConfig &config,
+                                        BOOL hasDirtyParent) -> void;
   
   auto hasDirtyParent(id<CKTreeNodeProtocol> node,
                       id<CKTreeNodeWithChildrenProtocol> previousParent,

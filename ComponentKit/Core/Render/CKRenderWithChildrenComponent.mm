@@ -40,29 +40,7 @@
                     config:(const CKBuildComponentConfig &)config
             hasDirtyParent:(BOOL)hasDirtyParent
 {
-  auto const node = [[CKRenderTreeNodeWithChildren alloc]
-                     initWithComponent:self
-                     parent:parent
-                     previousParent:previousParent
-                     scopeRoot:params.scopeRoot
-                     stateUpdates:params.stateUpdates];
-
-  // Update the `hasDirtyParent` param for Faster state/props updates.
-  if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params, config)) {
-    hasDirtyParent = YES;
-  }
-
-  auto const children = [self renderChildren:node.state];
-  auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
-  for (auto const child : children) {
-    if (child) {
-      [child buildComponentTree:node
-                 previousParent:previousParentForChild
-                         params:params
-                         config:config
-                 hasDirtyParent:hasDirtyParent];
-    }
-  }
+  CKRender::buildComponentTreeWithMultiChild(self, parent, previousParent, params, config, hasDirtyParent);
 }
 
 #pragma mark - CKRenderComponentProtocol
