@@ -12,6 +12,7 @@
 
 #import "CKBuildComponent.h"
 #import "CKComponentInternal.h"
+#import "CKRenderComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKInternalHelpers.h"
 #import "CKRenderHelpers.h"
@@ -74,6 +75,11 @@
 
   auto const l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];
   return {self, l.size, {{{0,0}, l}}};
+}
+
+- (CKComponent *)childComponent
+{
+  return _childComponent;
 }
 
 #pragma mark - CKRenderComponentProtocol
