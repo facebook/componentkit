@@ -25,10 +25,14 @@
 
 @end
 
-CKComponent *CKCreateStatelessComponent(CKComponent *component, NSString *debugIdentifier)
+CKComponent *CKCreateStatelessComponent(CKComponent *component, const char *debugIdentifier)
 {
 #if CK_ASSERTIONS_ENABLED
-  return [CKStatelessComponent newWithView:{} component:component identifier:debugIdentifier];
+  return
+  [CKStatelessComponent
+   newWithView:{}
+   component:component
+   identifier:[NSString stringWithCString:debugIdentifier encoding:NSUTF8StringEncoding]];
 #else
   return component;
 #endif
