@@ -24,7 +24,6 @@
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentViewConfiguration.h"
-#import "CKOptimisticViewMutations.h"
 
 using namespace CK::Component;
 
@@ -99,6 +98,7 @@ int32_t PersistentAttributeShape::computeIdentifier(const CKViewComponentAttribu
 {
 @public
   std::shared_ptr<const CKViewComponentAttributeValueMap> _attributes;
+  std::vector<CKOptimisticViewMutationTeardown> _optimisticViewMutationTeardowns;
 }
 @end
 
@@ -214,16 +214,8 @@ UIView *ViewManager::viewForConfiguration(Class componentClass, const CKComponen
 
 static char kPersistentAttributesViewKey = ' ';
 
-void AttributeApplicator::apply(UIView *view, const CKComponentViewConfiguration &config)
+static CKComponentAttributeSetWrapper *attributeSetWrapperForView(UIView *view)
 {
-  CK::Component::ActionDisabler actionDisabler; // We never want implicit animations when applying attributes
-
-  // Reset optimistic mutations so that applicators see they see the state they expect.
-  CKResetOptimisticMutationsForView(view);
-
-  // Avoid the static destructor fiasco, use a pointer:
-  static const auto *empty = new CKViewComponentAttributeValueMap();
-
   CKComponentAttributeSetWrapper *wrapper = objc_getAssociatedObject(view, &kPersistentAttributesViewKey);
   if (wrapper == nil) {
     wrapper = [[CKComponentAttributeSetWrapper alloc] init];
@@ -231,6 +223,29 @@ void AttributeApplicator::apply(UIView *view, const CKComponentViewConfiguration
                              wrapper,
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
   }
+  return wrapper;
+}
+
+void AttributeApplicator::apply(UIView *view, const CKComponentViewConfiguration &config)
+{
+  CK::Component::ActionDisabler actionDisabler; // We never want implicit animations when applying attributes
+
+  // Avoid the static destructor fiasco, use a pointer:
+  static const auto *empty = new CKViewComponentAttributeValueMap();
+
+  CKComponentAttributeSetWrapper *const wrapper = attributeSetWrapperForView(view);
+
+  // Reset optimistic mutations so that applicators see they see the state they expect.
+  if (!wrapper->_optimisticViewMutationTeardowns.empty()) {
+    const auto copiedTeardowns = wrapper->_optimisticViewMutationTeardowns;
+    wrapper->_optimisticViewMutationTeardowns.clear();
+    for (CKOptimisticViewMutationTeardown teardown : copiedTeardowns) {
+      if (teardown) {
+        teardown(view);
+      }
+    }
+  }
+
   const CKViewComponentAttributeValueMap &oldAttributes = wrapper->_attributes ? *wrapper->_attributes : *empty;
   const CKViewComponentAttributeValueMap &newAttributes = *config.attributes();
 
@@ -268,6 +283,14 @@ void AttributeApplicator::apply(UIView *view, const CKComponentViewConfiguration
 
   // Update the wrapper to reference the new attributes. Don't do this before now since it changes oldAttributes.
   wrapper->_attributes = config.attributes();
+}
+
+void AttributeApplicator::addOptimisticViewMutationTeardown(UIView *view, CKOptimisticViewMutationTeardown teardown)
+{
+  // We must tear down the mutations in the *reverse* order in which they were applied,
+  // or we could end up restoring the wrong value.
+  CKComponentAttributeSetWrapper *const wrapper = attributeSetWrapperForView(view);
+  wrapper->_optimisticViewMutationTeardowns.insert(wrapper->_optimisticViewMutationTeardowns.begin(), teardown);
 }
 
 @implementation CKComponentAttributeSetWrapper

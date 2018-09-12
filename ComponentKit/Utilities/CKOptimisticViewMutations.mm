@@ -10,14 +10,9 @@
 
 #import "CKOptimisticViewMutations.h"
 
-#import <objc/runtime.h>
-
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/ComponentUtilities.h>
-
-typedef void (^CKOptimisticViewMutationTeardown)(UIView *v);
-
-const char kOptimisticViewMutationTeardownsAssociatedObjectKey = ' ';
+#import <ComponentKit/ComponentViewManager.h>
 
 void CKPerformOptimisticViewMutation(UIView *view,
                                      CKOptimisticViewMutationGetter getter,
@@ -33,16 +28,11 @@ void CKPerformOptimisticViewMutation(UIView *view,
     return;
   }
 
-  NSMutableArray<CKOptimisticViewMutationTeardown> *mutationTeardowns = objc_getAssociatedObject(view, &kOptimisticViewMutationTeardownsAssociatedObjectKey);
-  if (mutationTeardowns == nil) {
-    mutationTeardowns = [NSMutableArray array];
-    objc_setAssociatedObject(view, &kOptimisticViewMutationTeardownsAssociatedObjectKey, mutationTeardowns, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-  }
   id oldValue = getter(view, context);
-  [mutationTeardowns addObject:^(UIView *v) {
+  CK::Component::AttributeApplicator::addOptimisticViewMutationTeardown(view, ^(UIView *v) {
     setter(v, oldValue, context);
     CKCAssert(CKObjectIsEqual(getter(v, context), oldValue), @"Setter failed to restore old value");
-  }];
+  });
   setter(view, value, context);
   CKCAssert(CKObjectIsEqual(getter(view, context), value), @"Setter failed to apply new value");
 }
@@ -61,15 +51,4 @@ void CKPerformOptimisticViewMutation(UIView *view, NSString *keyPath, id value)
 {
   CKCAssertNotNil(keyPath, @"Must have a non-nil keyPath");
   CKPerformOptimisticViewMutation(view, &keyPathGetter, &keyPathSetter, value, keyPath);
-}
-
-void CKResetOptimisticMutationsForView(UIView *view)
-{
-  NSArray *mutationTeardowns = [objc_getAssociatedObject(view, &kOptimisticViewMutationTeardownsAssociatedObjectKey) copy];
-  objc_setAssociatedObject(view, &kOptimisticViewMutationTeardownsAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-  // We must tear down the mutations in the *reverse* order in which they were applied, or we could end up restoring
-  // the wrong value.
-  for (CKOptimisticViewMutationTeardown teardown in [mutationTeardowns reverseObjectEnumerator]) {
-    teardown(view);
-  }
 }

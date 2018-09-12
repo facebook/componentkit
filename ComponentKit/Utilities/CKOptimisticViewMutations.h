@@ -38,6 +38,3 @@ void CKPerformOptimisticViewMutation(UIView *view,
 
 /** A helper that creates a getter and setter for a given keypath. */
 void CKPerformOptimisticViewMutation(UIView *view, NSString *keyPath, id value);
-
-/** Used by the infrastructure to tear down optimistic mutations. Don't call this yourself. */
-void CKResetOptimisticMutationsForView(UIView *view);

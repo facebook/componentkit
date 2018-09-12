@@ -22,6 +22,8 @@
 @class CKComponent;
 class CKComponentViewConfiguration;
 
+typedef void (^CKOptimisticViewMutationTeardown)(UIView *v);
+
 namespace CK {
   namespace Component {
     /**
@@ -166,6 +168,9 @@ namespace CK {
     class AttributeApplicator {
     public:
       static void apply(UIView *view, const CKComponentViewConfiguration &config);
+
+      /** Internal implementation detail of CKPerformOptimisticViewMutation; don't use this directly. */
+      static void addOptimisticViewMutationTeardown(UIView *view, CKOptimisticViewMutationTeardown teardown);
     };
   }
 }
