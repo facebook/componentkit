@@ -67,7 +67,7 @@
 - (CKCocoaCollectionAdapter<id<CKComponentControllerProtocol>>)componentControllersMatchingPredicate:(CKComponentControllerPredicate)predicate;
 
 @property (nonatomic, weak, readonly) id<CKComponentStateListener> listener;
-@property (nonatomic, weak, readonly) id<CKAnalyticsListener> analyticsListener;
+@property (nonatomic, strong, readonly) id<CKAnalyticsListener> analyticsListener;
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier globalIdentifier;
 @property (nonatomic, strong, readonly) CKComponentScopeFrame *rootFrame;
 
