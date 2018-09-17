@@ -14,7 +14,7 @@
 #import "CKComponentAnimations.h"
 #import "CKComponentDataSourceAttachController.h"
 #import "CKComponentDataSourceAttachControllerInternal.h"
-#import "CKComponentRootLayoutProvider.h"
+#import "CKDataSourceItem.h"
 
 @implementation CKComponentDataSourceAttachController
 {
@@ -24,6 +24,7 @@
    */
   NSMutableDictionary *_scopeIdentifierToAttachedViewMap;
   BOOL _enableNewAnimationInfrastructure;
+  NSMapTable<NSNumber *, id<CKComponentRootLayoutProvider>> *_scopeIdentifierToLayoutProvider;
 }
 
 #pragma mark - Initialization/Teardown
@@ -44,6 +45,9 @@
   if (self) {
     _scopeIdentifierToAttachedViewMap = [NSMutableDictionary dictionary];
     _enableNewAnimationInfrastructure = enableNewAnimationInfrastructure;
+    if (enableNewAnimationInfrastructure) {
+      _scopeIdentifierToLayoutProvider = [NSMapTable strongToWeakObjectsMapTable];
+    }
   }
   return self;
 }
@@ -65,8 +69,8 @@
 #pragma mark - Public API
 
 void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
-                                                                    const CKComponentDataSourceAttachController *const self,
-                                                                    const CKComponentDataSourceAttachControllerAttachComponentRootLayoutParams &params)
+    const CKComponentDataSourceAttachController *const self,
+    const CKComponentDataSourceAttachControllerAttachComponentRootLayoutParams &params)
 {
   CKCAssertMainThread();
   CKCAssertNotNil(params.view, @"Impossible to attach a component layout to a nil view");
@@ -83,9 +87,20 @@ void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
     // 2 - Unmount the component tree currently in the view we want to attach our component layout to
     [self _detachComponentLayoutFromView:params.view];
   }
+
+  const auto &prevLayout = !self->_enableNewAnimationInfrastructure
+  ? CKComponentRootLayout {}
+  : [&]() {
+    if (const auto layoutProvider = [self->_scopeIdentifierToLayoutProvider objectForKey:@(params.scopeIdentifier)]) {
+      return layoutProvider.rootLayout;
+    } else {
+      return CKComponentRootLayout {};
+    }
+  }();
   // Mount the component tree on the view
   const auto &layout = params.layoutProvider ? params.layoutProvider.rootLayout : CKComponentRootLayout {};
   const auto attachState = mountComponentLayoutInView(layout,
+                                                      prevLayout,
                                                       params.view,
                                                       params.scopeIdentifier,
                                                       params.boundsAnimation,
@@ -93,6 +108,11 @@ void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
                                                       self->_enableNewAnimationInfrastructure);
   // Mark the view as attached and associates it to the right attach state
   self->_scopeIdentifierToAttachedViewMap[@(params.scopeIdentifier)] = params.view;
+  if (self->_enableNewAnimationInfrastructure && params.layoutProvider) {
+    // Save layout provider in map, it will be used for figuring out animations between two layouts.
+    [self->_scopeIdentifierToLayoutProvider setObject:params.layoutProvider
+                                               forKey:@(params.scopeIdentifier)];
+  }
   params.view.ck_attachState = attachState;
 }
 
@@ -100,6 +120,9 @@ void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
 {
   CKAssertMainThread();
   [self _detachComponentLayoutFromView:[_scopeIdentifierToAttachedViewMap objectForKey:@(scopeIdentifier)]];
+  if (_enableNewAnimationInfrastructure) {
+    [_scopeIdentifierToLayoutProvider removeObjectForKey:@(scopeIdentifier)];
+  }
 }
 
 #pragma mark - Internal API
@@ -123,6 +146,7 @@ void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
 }
 
 static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComponentRootLayout &rootLayout,
+                                                                    const CKComponentRootLayout &prevLayout,
                                                                     UIView *view,
                                                                     CKComponentScopeRootIdentifier scopeIdentifier,
                                                                     const CKComponentBoundsAnimation &boundsAnimation,
@@ -131,8 +155,7 @@ static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComp
 {
   CKCAssertNotNil(view, @"Impossible to mount a component layout on a nil view");
   const auto animations = enableNewAnimationInfrastructure ?
-  [view, &rootLayout](){
-    const auto prevLayout = view.ck_attachState != nil ? CKComponentDataSourceAttachStateRootLayout(view.ck_attachState) : CKComponentRootLayout {};
+  [view, &rootLayout, &prevLayout](){
     const auto animatedComponents = CK::animatedComponentsBetweenLayouts(rootLayout, prevLayout);
     const auto animations = CK::animationsForComponents(animatedComponents, view);
     return animations;

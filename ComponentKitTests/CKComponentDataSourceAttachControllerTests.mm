@@ -44,24 +44,40 @@
 @interface CKComponentDataSourceAttachControllerTests : XCTestCase
 @end
 
-@implementation CKComponentDataSourceAttachControllerTests {
-  CKComponentDataSourceAttachController *_attachController;
-}
-
-- (void)setUp
-{
-  [super setUp];
-  _attachController = [CKComponentDataSourceAttachController new];
-}
+@implementation CKComponentDataSourceAttachControllerTests
 
 - (void)testAttachingAndDetachingComponentLayoutOnViewResultsInCorrectAttachState
+{
+  auto const attachController = [CKComponentDataSourceAttachController new];
+  [self _testAttachingAndDetachingComponentLayoutOnViewResultsInCorrectAttachStateWithAttachController:attachController];
+}
+
+- (void)testAttachingAndDetachingComponentLayoutOnViewResultsInCorrectAttachStateWithNewAnimationInfra;
+{
+  auto const attachController = [CKComponentDataSourceAttachController newWithEnableNewAnimationInfrastructure:YES];
+  [self _testAttachingAndDetachingComponentLayoutOnViewResultsInCorrectAttachStateWithAttachController:attachController];
+}
+
+- (void)testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetachedWithAttachController
+{
+  auto const attachController = [CKComponentDataSourceAttachController new];
+  [self _testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetachedWithAttachController:attachController];
+}
+
+- (void)testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetachedWithAttachControllerWithNewAnimationInfra
+{
+  auto const attachController = [CKComponentDataSourceAttachController newWithEnableNewAnimationInfrastructure:YES];
+  [self _testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetachedWithAttachController:attachController];
+}
+
+- (void)_testAttachingAndDetachingComponentLayoutOnViewResultsInCorrectAttachStateWithAttachController:(CKComponentDataSourceAttachController *)attachController
 {
   UIView *view = [UIView new];
   CKComponent *component = [CKComponent new];
   CKComponentScopeRootIdentifier scopeIdentifier = 0x5C09E;
 
   CKComponentDataSourceAttachControllerAttachComponentRootLayout(
-      _attachController,
+      attachController,
       {.layoutProvider =
         [[CKComponentRootLayoutTestProvider alloc]
          initWithRootLayout:CKComponentRootLayout {{component, {0, 0}}}],
@@ -69,22 +85,22 @@
        .boundsAnimation = {},
        .view = view,
        .analyticsListener = nil});
-  CKComponentDataSourceAttachState *attachState = [_attachController attachStateForScopeIdentifier:scopeIdentifier];
+  CKComponentDataSourceAttachState *attachState = [attachController attachStateForScopeIdentifier:scopeIdentifier];
   XCTAssertEqualObjects(attachState.mountedComponents, [NSSet setWithObject:component]);
   XCTAssertEqual(attachState.scopeIdentifier, scopeIdentifier);
 
-  [_attachController detachComponentLayoutWithScopeIdentifier:scopeIdentifier];
-  attachState = [_attachController attachStateForScopeIdentifier:scopeIdentifier];
+  [attachController detachComponentLayoutWithScopeIdentifier:scopeIdentifier];
+  attachState = [attachController attachStateForScopeIdentifier:scopeIdentifier];
   XCTAssertNil(attachState);
 }
 
-- (void)testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetached
+- (void)_testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetachedWithAttachController:(CKComponentDataSourceAttachController *)attachController
 {
   UIView *view = [UIView new];
   CKComponent *component = [CKComponent new];
   CKComponentScopeRootIdentifier scopeIdentifier = 0x5C09E;
   CKComponentDataSourceAttachControllerAttachComponentRootLayout(
-      _attachController,
+      attachController,
       {.layoutProvider =
         [[CKComponentRootLayoutTestProvider alloc]
          initWithRootLayout:CKComponentRootLayout {{component, {0, 0}}}],
@@ -96,7 +112,7 @@
   CKComponent *component2 = [CKComponent new];
   CKComponentScopeRootIdentifier scopeIdentifier2 = 0x5C09E2;
   CKComponentDataSourceAttachControllerAttachComponentRootLayout(
-      _attachController,
+      attachController,
       {.layoutProvider =
         [[CKComponentRootLayoutTestProvider alloc]
          initWithRootLayout:CKComponentRootLayout {{component2, {0, 0}}}],
@@ -106,11 +122,11 @@
        .analyticsListener = nil});
 
   // the first component is now detached
-  CKComponentDataSourceAttachState *attachState = [_attachController attachStateForScopeIdentifier:scopeIdentifier];
+  CKComponentDataSourceAttachState *attachState = [attachController attachStateForScopeIdentifier:scopeIdentifier];
   XCTAssertNil(attachState);
 
   // the second component is attached
-  CKComponentDataSourceAttachState *attachState2 = [_attachController attachStateForScopeIdentifier:scopeIdentifier2];
+  CKComponentDataSourceAttachState *attachState2 = [attachController attachStateForScopeIdentifier:scopeIdentifier2];
   XCTAssertEqualObjects(attachState2.mountedComponents, [NSSet setWithObject:component2]);
   XCTAssertEqual(attachState2.scopeIdentifier, scopeIdentifier2);
 }
