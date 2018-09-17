@@ -15,6 +15,31 @@
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentDataSourceAttachController.h>
 #import <ComponentKit/CKComponentDataSourceAttachControllerInternal.h>
+#import <ComponentKit/CKComponentRootLayoutProvider.h>
+
+@interface CKComponentRootLayoutTestProvider: NSObject <CKComponentRootLayoutProvider>
+
+@end
+
+@implementation CKComponentRootLayoutTestProvider
+{
+  CKComponentRootLayout _rootLayout;
+}
+
+- (instancetype)initWithRootLayout:(const CKComponentRootLayout &)rootLayout
+{
+  if (self = [super init]) {
+    _rootLayout = rootLayout;
+  }
+  return self;
+}
+
+- (const CKComponentRootLayout &)rootLayout
+{
+  return _rootLayout;
+}
+
+@end
 
 @interface CKComponentDataSourceAttachControllerTests : XCTestCase
 @end
@@ -37,7 +62,9 @@
 
   CKComponentDataSourceAttachControllerAttachComponentRootLayout(
       _attachController,
-      {.rootLayout = CKComponentRootLayout {{component, {0, 0}}},
+      {.layoutProvider =
+        [[CKComponentRootLayoutTestProvider alloc]
+         initWithRootLayout:CKComponentRootLayout {{component, {0, 0}}}],
        .scopeIdentifier = scopeIdentifier,
        .boundsAnimation = {},
        .view = view,
@@ -58,7 +85,9 @@
   CKComponentScopeRootIdentifier scopeIdentifier = 0x5C09E;
   CKComponentDataSourceAttachControllerAttachComponentRootLayout(
       _attachController,
-      {.rootLayout = CKComponentRootLayout {{component, {0, 0}}},
+      {.layoutProvider =
+        [[CKComponentRootLayoutTestProvider alloc]
+         initWithRootLayout:CKComponentRootLayout {{component, {0, 0}}}],
        .scopeIdentifier = scopeIdentifier,
        .boundsAnimation = {},
        .view = view,
@@ -68,7 +97,9 @@
   CKComponentScopeRootIdentifier scopeIdentifier2 = 0x5C09E2;
   CKComponentDataSourceAttachControllerAttachComponentRootLayout(
       _attachController,
-      {.rootLayout = CKComponentRootLayout {{component2, {0, 0}}},
+      {.layoutProvider =
+        [[CKComponentRootLayoutTestProvider alloc]
+         initWithRootLayout:CKComponentRootLayout {{component2, {0, 0}}}],
        .scopeIdentifier = scopeIdentifier2,
        .boundsAnimation = {},
        .view = view,

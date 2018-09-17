@@ -13,6 +13,8 @@
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 
+@protocol CKComponentRootLayoutProvider;
+
 /**
  @brief This controller can be used to manage attaching and detaching a component trees to a view.
 
@@ -51,7 +53,7 @@
  of the component tree representing the same logical item.
  */
 struct CKComponentDataSourceAttachControllerAttachComponentRootLayoutParams {
-  const CKComponentRootLayout &rootLayout;
+  const id<CKComponentRootLayoutProvider> layoutProvider;
   CKComponentScopeRootIdentifier scopeIdentifier;
   const CKComponentBoundsAnimation &boundsAnimation;
   UIView *view;

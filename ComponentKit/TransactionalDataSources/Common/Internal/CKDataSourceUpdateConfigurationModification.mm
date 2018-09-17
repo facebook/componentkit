@@ -57,11 +57,11 @@
       [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
       CKDataSourceItem *newItem;
       if (onlySizeRangeChanged && !_configuration.unifyBuildAndLayout) {
-        const auto layout = CKComputeRootComponentLayout(item.layout.component(), sizeRange, [item scopeRoot].analyticsListener);
-        newItem = [[CKDataSourceItem alloc] initWithLayout:layout
-                                                     model:[item model]
-                                                 scopeRoot:[item scopeRoot]
-                                           boundsAnimation:[item boundsAnimation]];
+        const auto rootLayout = CKComputeRootComponentLayout(item.rootLayout.component(), sizeRange, [item scopeRoot].analyticsListener);
+        newItem = [[CKDataSourceItem alloc] initWithRootLayout:rootLayout
+                                                         model:[item model]
+                                                     scopeRoot:[item scopeRoot]
+                                               boundsAnimation:[item boundsAnimation]];
       } else {
         newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, _configuration, [item model], context, animationPredicates);
       }

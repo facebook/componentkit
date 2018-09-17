@@ -124,7 +124,7 @@
   [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
   CKDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];
   CKDataSourceItem *item = [[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  XCTAssertTrue([[item layout].component() isKindOfClass:[CKCompositeComponent class]]);
+  XCTAssertTrue([[item rootLayout].component() isKindOfClass:[CKCompositeComponent class]]);
 }
 
 - (void)testReturnsComponentsWithUpdatedContext
@@ -139,7 +139,7 @@
   [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
   CKDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];
   CKDataSourceItem *item = [[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  CKTestContextComponent *component = (CKTestContextComponent *)[item layout].component();
+  CKTestContextComponent *component = (CKTestContextComponent *)[item rootLayout].component();
   XCTAssertEqualObjects([component context], @"some new context");
 }
 
@@ -155,7 +155,7 @@
   [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
   CKDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];
   CKDataSourceItem *item = [[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  XCTAssertTrue(CGSizeEqualToSize([item layout].size(), CGSizeMake(50, 50)));
+  XCTAssertTrue(CGSizeEqualToSize([item rootLayout].size(), CGSizeMake(50, 50)));
 }
 
 @end

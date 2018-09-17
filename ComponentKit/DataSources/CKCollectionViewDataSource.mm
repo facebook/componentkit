@@ -173,7 +173,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
 
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  return [_currentState objectAtIndexPath:indexPath].layout.size();
+  return [_currentState objectAtIndexPath:indexPath].rootLayout.size();
 }
 
 #pragma mark - Reload
@@ -236,7 +236,7 @@ static void attachToCell(CKCollectionViewDataSourceCell *cell,
 {
   CKComponentDataSourceAttachControllerAttachComponentRootLayout(
       attachController,
-      {.rootLayout = item.layout,
+      {.layoutProvider = item,
        .scopeIdentifier = item.scopeRoot.globalIdentifier,
        .boundsAnimation = item.boundsAnimation,
        .view = cell.rootView,

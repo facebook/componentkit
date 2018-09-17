@@ -90,14 +90,14 @@
 
 - (void)testStateEquality
 {
-  CKDataSourceItem *firstItem = [[CKDataSourceItem alloc] initWithLayout:{} model:@"model" scopeRoot:nil boundsAnimation:{}];
+  CKDataSourceItem *firstItem = [[CKDataSourceItem alloc] initWithRootLayout:{} model:@"model" scopeRoot:nil boundsAnimation:{}];
   CKDataSourceConfiguration *firstConfiguration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceStateTests class]
                                                                              context:@"context"
                                                                            sizeRange:CKSizeRange()];
   CKDataSourceState *firstState = [[CKDataSourceState alloc] initWithConfiguration:firstConfiguration sections:@[@[firstItem]]];
 
-  CKDataSourceItem *secondItem = [[CKDataSourceItem alloc] initWithLayout:{} model:@"model" scopeRoot:nil boundsAnimation:{}];
+  CKDataSourceItem *secondItem = [[CKDataSourceItem alloc] initWithRootLayout:{} model:@"model" scopeRoot:nil boundsAnimation:{}];
   CKDataSourceConfiguration *secondConfiguration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceStateTests class]
                                                                              context:@"context"
@@ -109,14 +109,14 @@
 
 - (void)testNonEqualStates
 {
-  CKDataSourceItem *firstItem = [[CKDataSourceItem alloc] initWithLayout:{} model:@"model" scopeRoot:nil boundsAnimation:{}];
+  CKDataSourceItem *firstItem = [[CKDataSourceItem alloc] initWithRootLayout:{} model:@"model" scopeRoot:nil boundsAnimation:{}];
   CKDataSourceConfiguration *firstConfiguration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceStateTests class]
                                                                              context:@"context"
                                                                            sizeRange:CKSizeRange()];
   CKDataSourceState *firstState = [[CKDataSourceState alloc] initWithConfiguration:firstConfiguration sections:@[@[firstItem]]];
 
-  CKDataSourceItem *secondItem = [[CKDataSourceItem alloc] initWithLayout:{} model:@"model2" scopeRoot:nil boundsAnimation:{}];
+  CKDataSourceItem *secondItem = [[CKDataSourceItem alloc] initWithRootLayout:{} model:@"model2" scopeRoot:nil boundsAnimation:{}];
   CKDataSourceConfiguration *secondConfiguration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceStateTests class]
                                                                              context:@"context"

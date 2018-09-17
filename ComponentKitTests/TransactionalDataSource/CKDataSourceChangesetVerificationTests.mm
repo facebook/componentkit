@@ -1155,10 +1155,10 @@ static const CKInvalidChangesetInfo kChangeSetValid = { CKInvalidChangesetOperat
 
 static CKDataSourceItem *itemWithModel(id model)
 {
-  return [[CKDataSourceItem alloc] initWithLayout:{}
-                                            model:model
-                                        scopeRoot:nil
-                                  boundsAnimation:{}];
+  return [[CKDataSourceItem alloc] initWithRootLayout:{}
+                                                model:model
+                                            scopeRoot:nil
+                                      boundsAnimation:{}];
 }
 
 @end

@@ -371,7 +371,7 @@ static void sendDidPrepareLayoutForComponentWithIndexPaths(id<NSFastEnumeration>
 {
   for (NSIndexPath *indexPath in indexPaths) {
     CKDataSourceItem *item = [state objectAtIndexPath:indexPath];
-    CKComponentSendDidPrepareLayoutForComponent(item.scopeRoot, item.layout);
+    CKComponentSendDidPrepareLayoutForComponent(item.scopeRoot, item.rootLayout);
   }
 }
 

@@ -103,7 +103,7 @@
 
   XCTAssertEqual([[change state] numberOfSections], (NSUInteger)1);
   XCTAssertEqual([[change state] numberOfObjectsInSection:0], (NSUInteger)1);
-  auto c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] layout].component();
+  auto c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] rootLayout].component();
   XCTAssertEqualObjects(c.model, @3);
 }
 
@@ -120,7 +120,7 @@
                                                                             userInfo:nil];
   CKDataSourceChange *change = [changesetModification changeFromState:originalState];
 
-  auto c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] layout].component();
+  auto c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] rootLayout].component();
   XCTAssertEqualObjects(c.model, @"updated");
 }
 
@@ -143,7 +143,7 @@
   // Result should be [1, 2]
   // If removals were applied after insertions, we'd end up with [2, 1] instead.
 
-  auto c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] layout].component();
+  auto c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] rootLayout].component();
   XCTAssertEqualObjects(c.model, @2);
 }
 
@@ -164,13 +164,13 @@
   // We move the first element to the last position
   // Result should be [1, 2, 0]
 
-  auto c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] layout].component();
+  auto c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] rootLayout].component();
   XCTAssertEqualObjects(c.model, @1);
 
-  c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] layout].component();
+  c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] rootLayout].component();
   XCTAssertEqualObjects(c.model, @2);
 
-  c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:2 inSection:0]] layout].component();
+  c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:2 inSection:0]] rootLayout].component();
   XCTAssertEqualObjects(c.model, @0);
 }
 
@@ -194,10 +194,10 @@
   // If moves were applied immediately one-by-one instead of being modeled as batched removals + inserts,
   // then we'd basically just move 0 into section 1 and then back, ending with the same state.
 
-  auto c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] layout].component();
+  auto c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] rootLayout].component();
   XCTAssertEqualObjects(c.model, @2);
 
-  c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:1]] layout].component();
+  c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:1]] rootLayout].component();
   XCTAssertEqualObjects(c.model, @0);
 }
 
@@ -216,8 +216,8 @@
   CKDataSourceChange *change = [changesetModification changeFromState:originalState];
 
   // Initial state: [0, 1, 2, 3], Final state: [3, 0]
-  auto c0 = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] layout].component();
-  auto c1 = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] layout].component();
+  auto c0 = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] rootLayout].component();
+  auto c1 = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] rootLayout].component();
   XCTAssertEqualObjects(c0.model, @3);
   XCTAssertEqualObjects(c1.model, @0);
 }

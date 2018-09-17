@@ -56,14 +56,14 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                                            stateUpdates,
                                                            componentFactory,
                                                            configuration.buildComponentConfig);
-    const auto layout = CKComputeRootComponentLayout(result.component,
-                                                     sizeRange,
-                                                     result.scopeRoot.analyticsListener,
-                                                     layoutPredicates);
-    return [[CKDataSourceItem alloc] initWithLayout:layout
-                                              model:model
-                                          scopeRoot:result.scopeRoot
-                                    boundsAnimation:result.boundsAnimation];
+    const auto rootLayout = CKComputeRootComponentLayout(result.component,
+                                                         sizeRange,
+                                                         result.scopeRoot.analyticsListener,
+                                                         layoutPredicates);
+    return [[CKDataSourceItem alloc] initWithRootLayout:rootLayout
+                                                  model:model
+                                              scopeRoot:result.scopeRoot
+                                        boundsAnimation:result.boundsAnimation];
   } else {
     CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent(previousRoot,
                                                                        stateUpdates,
@@ -71,10 +71,10 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                                                        componentFactory,
                                                                        layoutPredicates,
                                                                        configuration.buildComponentConfig);
-    return [[CKDataSourceItem alloc] initWithLayout:result.computedLayout
-                                              model:model
-                                          scopeRoot:result.buildComponentResult.scopeRoot
-                                    boundsAnimation:result.buildComponentResult.boundsAnimation];
+    return [[CKDataSourceItem alloc] initWithRootLayout:result.computedLayout
+                                                  model:model
+                                              scopeRoot:result.buildComponentResult.scopeRoot
+                                        boundsAnimation:result.buildComponentResult.boundsAnimation];
   }
 
 }

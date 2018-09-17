@@ -18,9 +18,10 @@
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentSizeRangeProviding.h>
+#import <ComponentKit/CKComponentRootLayoutProvider.h>
 #import <ComponentKit/CKDimension.h>
 
-@interface CKComponentLifecycleTestHelper () <CKComponentStateListener>
+@interface CKComponentLifecycleTestHelper () <CKComponentStateListener, CKComponentRootLayoutProvider>
 @end
 
 @implementation CKComponentLifecycleTestHelper
@@ -30,6 +31,7 @@
   CKComponentScopeRoot *_previousScopeRoot;
   CKComponentStateUpdateMap _pendingStateUpdates;
   CKComponentLifecycleTestHelperState _state;
+  CKComponentRootLayout _rootLayout;
   UIView *_mountedView;
   CKComponentDataSourceAttachController *_componentDataSourceAttachController;
 }
@@ -82,6 +84,7 @@
 {
   CKAssertMainThread();
   _state = state;
+  _rootLayout = CKComponentRootLayout{_state.componentLayout};
 }
 
 - (void)attachToView:(UIView *)view
@@ -90,7 +93,7 @@
   _mountedView = view;
   CKComponentDataSourceAttachControllerAttachComponentRootLayout(
       _componentDataSourceAttachController,
-      {.rootLayout = CKComponentRootLayout{_state.componentLayout},
+      {.layoutProvider = self,
        .scopeIdentifier = _state.scopeRoot.globalIdentifier,
        .boundsAnimation = _state.boundsAnimation,
        .view = view,
@@ -123,6 +126,13 @@
   [self updateWithState:[self prepareForUpdateWithModel:_state.model
                                         constrainedSize:constrainedSize
                                                 context:_state.context]];
+}
+
+#pragma mark - CKComponentRootLayoutProvider
+
+- (const CKComponentRootLayout &)rootLayout
+{
+  return _rootLayout;
 }
 
 @end

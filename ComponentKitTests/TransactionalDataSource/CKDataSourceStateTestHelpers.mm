@@ -29,7 +29,7 @@ static CKDataSourceItem *item(CKDataSourceConfiguration *configuration, id<CKCom
     return [configuration.componentProvider componentForModel:model context:configuration.context];
   });
   const auto layout = CKComponentRootLayout {[result.component layoutThatFits:configuration.sizeRange parentSize:configuration.sizeRange.max]};
-  return [[CKDataSourceItem alloc] initWithLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation];
+  return [[CKDataSourceItem alloc] initWithRootLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation];
 }
 
 CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,

@@ -14,6 +14,7 @@
 #import "CKComponentAnimations.h"
 #import "CKComponentDataSourceAttachController.h"
 #import "CKComponentDataSourceAttachControllerInternal.h"
+#import "CKComponentRootLayoutProvider.h"
 
 @implementation CKComponentDataSourceAttachController
 {
@@ -64,8 +65,8 @@
 #pragma mark - Public API
 
 void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
-    const CKComponentDataSourceAttachController *const self,
-    const CKComponentDataSourceAttachControllerAttachComponentRootLayoutParams &params)
+                                                                    const CKComponentDataSourceAttachController *const self,
+                                                                    const CKComponentDataSourceAttachControllerAttachComponentRootLayoutParams &params)
 {
   CKCAssertMainThread();
   CKCAssertNotNil(params.view, @"Impossible to attach a component layout to a nil view");
@@ -83,7 +84,8 @@ void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
     [self _detachComponentLayoutFromView:params.view];
   }
   // Mount the component tree on the view
-  const auto attachState = mountComponentLayoutInView(params.rootLayout,
+  const auto &layout = params.layoutProvider ? params.layoutProvider.rootLayout : CKComponentRootLayout {};
+  const auto attachState = mountComponentLayoutInView(layout,
                                                       params.view,
                                                       params.scopeIdentifier,
                                                       params.boundsAnimation,
@@ -228,3 +230,4 @@ static char const kViewAttachStateKey = ' ';
 }
 
 @end
+
