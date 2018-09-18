@@ -30,6 +30,7 @@ struct CKRenderWithSizeSpecComponentParameters {
 @implementation CKRenderWithSizeSpecComponent {
   __weak CKRenderTreeNodeWithChildren *_node;
   std::unique_ptr<CKRenderWithSizeSpecComponentParameters> _parameters;
+  NSHashTable<CKComponent *> *_measuredComponents;
 #if CK_ASSERTIONS_ENABLED
   NSMutableSet *_renderedChildrenSet;
 #endif
@@ -51,58 +52,13 @@ struct CKRenderWithSizeSpecComponentParameters {
                          isLayoutComponent:(BOOL)isLayoutComponent
 {
   auto const c = [super newRenderComponentWithView:view size:size isLayoutComponent:isLayoutComponent];
-#if CK_ASSERTIONS_ENABLED
   if (c) {
+    c->_measuredComponents = [NSHashTable weakObjectsHashTable];
+#if CK_ASSERTIONS_ENABLED
     c->_renderedChildrenSet = [NSMutableSet new];
+#endif
   }
-#endif
   return c;
-}
-
-- (CKComponentLayout)measureChild:(CKComponent *)child
-                  constrainedSize:(CKSizeRange)constrainedSize
-             relativeToParentSize:(CGSize)parentSize {
-  CKAssert(_parameters.get() != nullptr, @"measureChild called outside layout calculations");
-  [child buildComponentTree:_node
-             previousParent:_parameters->previousParentForChild
-                     params:_parameters->params
-                     config:_parameters->config
-             hasDirtyParent:_parameters->hasDirtyParent];
-#if CK_ASSERTIONS_ENABLED
-  [_renderedChildrenSet addObject:child];
-#endif
-  return CKComputeComponentLayout(child, constrainedSize, parentSize);
-}
-
-#pragma mark - Layout
-
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
-                          restrictedToSize:(const CKComponentSize &)size
-                      relativeToParentSize:(CGSize)parentSize
-{
-  [_node reset];
-  auto const layout = [self render:_node.state constrainedSize:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
-#if CK_ASSERTIONS_ENABLED
-  checkIfAllChildrenComponentHaveBeenAddedToComponentTree(layout,_renderedChildrenSet);
-#endif
-
-  return layout;
-}
-
-- (CKComponentLayout)render:(id)state
-            constrainedSize:(CKSizeRange)constrainedSize
-           restrictedToSize:(const CKComponentSize &)size
-       relativeToParentSize:(CGSize)parentSize
-{
-  const CKSizeRange resolvedRange = constrainedSize.intersect([self size].resolve(parentSize));
-  return [self render:state constrainedSize:resolvedRange];
-}
-
-- (CKComponentLayout)render:(id)state
-            constrainedSize:(CKSizeRange)constrainedSize
-{
-  CKFailAssert( @"When subclassing CKRenderWithSizeSpecComponent, you NEED to ovrride %@", NSStringFromSelector(_cmd));
-  return {};
 }
 
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
@@ -125,11 +81,62 @@ struct CKRenderWithSizeSpecComponentParameters {
       hasDirtyParent = YES;
     }
 
-    _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>((id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[_node componentKey]],
+    auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
+    _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>(previousParentForChild,
                                                                             params,
                                                                             config,
                                                                             hasDirtyParent);
   }
+}
+
+
+- (CKComponentLayout)measureChild:(CKComponent *)child
+                  constrainedSize:(CKSizeRange)constrainedSize
+             relativeToParentSize:(CGSize)parentSize {
+  CKAssert(_parameters.get() != nullptr, @"measureChild called outside layout calculations");
+  if (![_measuredComponents containsObject:child]) {
+    [child buildComponentTree:_node
+               previousParent:_parameters->previousParentForChild
+                       params:_parameters->params
+                       config:_parameters->config
+               hasDirtyParent:_parameters->hasDirtyParent];
+    [_measuredComponents addObject:child];
+  }
+
+#if CK_ASSERTIONS_ENABLED
+  [_renderedChildrenSet addObject:child];
+#endif
+  return CKComputeComponentLayout(child, constrainedSize, parentSize);
+}
+
+#pragma mark - Layout
+
+- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+                          restrictedToSize:(const CKComponentSize &)size
+                      relativeToParentSize:(CGSize)parentSize
+{
+  auto const layout = [self render:_node.state constrainedSize:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
+#if CK_ASSERTIONS_ENABLED
+  checkIfAllChildrenComponentHaveBeenAddedToComponentTree(layout,_renderedChildrenSet);
+#endif
+
+  return layout;
+}
+
+- (CKComponentLayout)render:(id)state
+            constrainedSize:(CKSizeRange)constrainedSize
+           restrictedToSize:(const CKComponentSize &)size
+       relativeToParentSize:(CGSize)parentSize
+{
+  const CKSizeRange resolvedRange = constrainedSize.intersect([self size].resolve(parentSize));
+  return [self render:state constrainedSize:resolvedRange];
+}
+
+- (CKComponentLayout)render:(id)state
+            constrainedSize:(CKSizeRange)constrainedSize
+{
+  CKFailAssert( @"When subclassing CKRenderWithSizeSpecComponent, you NEED to ovrride %@", NSStringFromSelector(_cmd));
+  return {};
 }
 
 - (void)dealloc
