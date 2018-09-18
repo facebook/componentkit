@@ -19,6 +19,4 @@
 
 @interface CKTreeNodeWithChildren : CKTreeNode <CKTreeNodeWithChildrenProtocol>
 
-- (void)reset;
-
 @end
