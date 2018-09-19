@@ -248,7 +248,7 @@
 - (void)test_fasterPropsUpdate_componentIsBeingReusedWhenPropsAreEqual
 {
   // Use the same componentIdentifier for both components.
-  // isEqualToComponent: will return YES in this case and we can reuse the component.
+  // shouldComponentUpdate: will return NO in this case and we can reuse the component.
   NSUInteger componentIdentifier = 1;
   [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithIdentifier:componentIdentifier]];
 
@@ -471,9 +471,9 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   return nil;
 }
 
-- (BOOL)isEqualToComponent:(CKTestRenderComponent *)component
+- (BOOL)shouldComponentUpdate:(CKTestRenderComponent *)component
 {
-  return _identifier == component->_identifier;
+  return _identifier != component->_identifier;
 }
 
 - (void)didReuseComponent:(CKTestRenderComponent *)component

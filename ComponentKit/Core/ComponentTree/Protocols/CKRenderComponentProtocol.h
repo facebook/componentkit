@@ -25,13 +25,13 @@
 + (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component;
 
 /*
- Override this method in order to allow the infrastructure to reuse previous components.
+ Override this method in order to allow ComopnentKit to reuse the previous components.
 
  You can always assume that the `component` parameter is the same type as your component.
 
- The default value is `NO`
+ The default value is `YES`.
  */
-- (BOOL)isEqualToComponent:(id<CKRenderComponentProtocol>)component;
+- (BOOL)shouldComponentUpdate:(id<CKRenderComponentProtocol>)component;
 
 /*
  This method is being called when the infrasturcture reuses the previous generation of the component.

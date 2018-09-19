@@ -94,9 +94,9 @@
   return [CKTreeNodeEmptyState emptyState];
 }
 
-- (BOOL)isEqualToComponent:(id<CKRenderComponentProtocol>)component
+- (BOOL)shouldComponentUpdate:(id<CKRenderComponentProtocol>)component
 {
-  return NO;
+  return YES;
 }
 
 - (void)didReuseComponent:(id<CKRenderComponentProtocol>)component {}

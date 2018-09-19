@@ -55,7 +55,7 @@ namespace CKRenderInternal {
                                                          id<CKTreeNodeWithChildrenProtocol> previousParent) -> BOOL {
     auto const previousChild = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
     auto const previousComponent = (id<CKRenderComponentProtocol>)previousChild.component;
-    if (previousComponent && [component isEqualToComponent:previousComponent]) {
+    if (previousComponent && ![component shouldComponentUpdate:previousComponent]) {
       CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousChild);
       return YES;
     }
