@@ -23,6 +23,11 @@
   return c;
 }
 
+- (NSString *)description
+{
+  return [NSString stringWithFormat:@"%@ (%@)", NSStringFromClass([self class]), _identifier];
+}
+
 @end
 
 CKComponent *CKCreateStatelessComponent(CKComponent *component, const char *debugIdentifier)
