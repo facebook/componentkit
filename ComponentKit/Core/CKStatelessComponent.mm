@@ -25,7 +25,7 @@
 
 - (NSString *)description
 {
-  return [NSString stringWithFormat:@"%@ (%@)", NSStringFromClass([self class]), _identifier];
+  return [NSString stringWithFormat:@"%@ (%@)", _identifier, NSStringFromClass([self class])];
 }
 
 @end
