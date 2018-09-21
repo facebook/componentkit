@@ -18,7 +18,7 @@
 struct CKRenderWithSizeSpecComponentParameters {
   id<CKTreeNodeWithChildrenProtocol> previousParentForChild;
   const CKBuildComponentTreeParams &params;
-  const CKBuildComponentConfig &config;
+  const CKBuildComponentConfig config;
   const BOOL hasDirtyParent;
 
   CKRenderWithSizeSpecComponentParameters(id<CKTreeNodeWithChildrenProtocol> pP,
