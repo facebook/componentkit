@@ -251,7 +251,8 @@
   [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
                                                  stateListener:nil
                                                       userInfo:nil
-                                                         queue:queue];
+                                                         queue:queue
+                                                           qos:CKDataSourceQOSDefault];
   CKDataSourceChange *change = [changesetModification changeFromState:originalState];
   XCTAssertEqual([[change state] numberOfSections], (NSUInteger)10);
   XCTAssertEqual([[change state] numberOfObjectsInSection:0], (NSUInteger)2);

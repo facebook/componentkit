@@ -8,7 +8,7 @@
  *
  */
 
-#import <Foundation/Foundation.h>
+#import "CKDataSourceQOS.h"
 
 @class CKDataSourceChange;
 @class CKDataSourceState;
@@ -19,4 +19,11 @@
 
 // This method allows to extract an additional information relevant to modification
 - (NSDictionary *)userInfo;
+
+/**
+ @return The QOS to *enforced* on the queue processing the application of current id<CKDataSourceStateModifying> object.
+ @discussion This QOS overrides any QOS specified in the queue it runs on, unless it's applied on the main queue.
+*/
+- (CKDataSourceQOS)qos;
+
 @end

@@ -123,6 +123,14 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
                   mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo
 {
+  [self applyChangeset:changeset mode:mode qos:CKDataSourceQOSDefault userInfo:userInfo];
+}
+
+- (void)applyChangeset:(CKDataSourceChangeset *)changeset
+                  mode:(CKUpdateMode)mode
+                   qos:(CKDataSourceQOS)qos
+              userInfo:(NSDictionary *)userInfo
+{
   CKAssertMainThread();
 
   verifyChangeset(changeset, _state, _pendingAsynchronousModifications);
@@ -131,7 +139,8 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
                                                  stateListener:self
                                                       userInfo:userInfo
-                                                         queue:_concurrentQueue];
+                                                         queue:_concurrentQueue
+                                                           qos:qos];
   switch (mode) {
     case CKUpdateModeAsynchronous:
       [self _enqueueModification:modification];
@@ -241,14 +250,18 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 {
   CKAssertMainThread();
 
+  id<CKDataSourceStateModifying> modification = _pendingAsynchronousModifications.firstObject;
   if (_pendingAsynchronousModifications.count > 0) {
     CKDataSourceModificationPair *modificationPair =
     [[CKDataSourceModificationPair alloc]
-     initWithModification:_pendingAsynchronousModifications.firstObject
+     initWithModification:modification
      state:_state];
-    dispatch_async(_workQueue, ^{
+
+    dispatch_block_t block = blockUsingDataSourceQOS(^{
       [self _applyModificationPair:modificationPair];
-    });
+    }, [modification qos]);
+
+    dispatch_async(_workQueue, block);
   }
 }
 
@@ -384,6 +397,19 @@ static qos_class_t qosClassFromDataSourceQOS(CKDataSourceQOS qos)
       return QOS_CLASS_USER_INITIATED;
     case CKDataSourceQOSDefault:
       return QOS_CLASS_DEFAULT;
+  }
+}
+
+
+static dispatch_block_t blockUsingDataSourceQOS(dispatch_block_t block, CKDataSourceQOS qos)
+{
+  switch (qos) {
+    case CKDataSourceQOSUserInteractive:
+    case CKDataSourceQOSUserInitiated:
+      return dispatch_block_create_with_qos_class(DISPATCH_BLOCK_ENFORCE_QOS_CLASS, qosClassFromDataSourceQOS(qos), 0, block);
+    case CKDataSourceQOSDefault:
+      /// If the desired QOS is the default there is no need to enforce it by dispatching async on the _workQueue defined QOS.
+      return block;
   }
 }
 

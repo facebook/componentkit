@@ -37,6 +37,7 @@
   NSDictionary *_userInfo;
   dispatch_queue_t _queue;
   std::mutex _mutex;
+  CKDataSourceQOS _qos;
 }
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
@@ -46,19 +47,22 @@
   return [self initWithChangeset:changeset
                    stateListener:stateListener
                         userInfo:userInfo
-                           queue:nil];
+                           queue:nil
+                             qos:CKDataSourceQOSDefault];
 }
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
                             queue:(dispatch_queue_t)queue
+                              qos:(CKDataSourceQOS)qos
 {
   if (self = [super init]) {
     _changeset = changeset;
     _stateListener = stateListener;
     _userInfo = [userInfo copy];
     _queue = queue;
+    _qos = qos;
   }
   return self;
 }
@@ -300,6 +304,11 @@ static NSArray *emptyMutableArrays(NSUInteger count)
     [arrays addObject:[NSMutableArray array]];
   }
   return arrays;
+}
+
+- (CKDataSourceQOS)qos
+{
+  return _qos;
 }
 
 @end

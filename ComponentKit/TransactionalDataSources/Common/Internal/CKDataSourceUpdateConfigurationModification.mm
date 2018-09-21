@@ -92,4 +92,9 @@
   return _userInfo;
 }
 
+- (CKDataSourceQOS)qos
+{
+  return CKDataSourceQOSDefault;
+}
+
 @end

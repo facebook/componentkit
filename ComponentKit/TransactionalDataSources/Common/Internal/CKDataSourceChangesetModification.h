@@ -25,7 +25,8 @@
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
-                            queue:(dispatch_queue_t)queue;
+                            queue:(dispatch_queue_t)queue
+                              qos:(CKDataSourceQOS)qos;
 
 @property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;
 

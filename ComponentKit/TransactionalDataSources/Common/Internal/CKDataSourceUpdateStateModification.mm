@@ -89,4 +89,9 @@
   return nil;
 }
 
+- (CKDataSourceQOS)qos
+{
+  return CKDataSourceQOSDefault;
+}
+
 @end
