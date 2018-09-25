@@ -57,7 +57,8 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   if (threadScope.newScopeRoot.hasRenderComponentInTree) {
 
     CKTreeNodeDirtyIds treeNodeDirtyIds;
-    if (config.enableFasterStateUpdates && buildTrigger == BuildTrigger::StateUpdate) {
+    if (buildTrigger == BuildTrigger::StateUpdate &&
+        (config.enableFasterStateUpdates || config.enableFasterPropsUpdates)) {
       treeNodeDirtyIds = createTreeNodeDirtyIds(stateUpdates);
     }
 
