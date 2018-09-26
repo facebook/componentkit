@@ -27,13 +27,15 @@ function ci() {
   sed -i -e "s/s.version = \'[\.0-9]*\'/s.version = \'$(project_version)\'/g" ComponentKit.podspec
   
   xcodebuild \
+    clean \
     -project $1 \
     -scheme $2 \
     -sdk $3 \
     -destination "$4" \
     -configuration $5 \
     $6 \
-    -json
+    -json \
+    -UseModernBuildSystem=NO
 }
 
 function ios_ci() {

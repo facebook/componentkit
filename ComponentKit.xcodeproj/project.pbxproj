@@ -373,6 +373,8 @@
 		6016FC2620A9BA2900440702 /* CKComponent+Yoga.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */; };
 		6016FC2720A9BA2900440702 /* CKComponent+Yoga.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */; };
 		605A5B272142D89800B195AC /* CKRequired.h in Headers */ = {isa = PBXBuildFile; fileRef = 605A5B252142D89800B195AC /* CKRequired.h */; };
+		606E57E5215B84BF0080A274 /* ReferenceImages_IOS12_64 in Resources */ = {isa = PBXBuildFile; fileRef = 606E57DA215B84BF0080A274 /* ReferenceImages_IOS12_64 */; };
+		606E57E9215B8C410080A274 /* ReferenceImages_IOS12_64 in Resources */ = {isa = PBXBuildFile; fileRef = 606E57E8215B8C410080A274 /* ReferenceImages_IOS12_64 */; };
 		60D7B3A920FC90500011AB3B /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39520FC904E0011AB3B /* Utils.h */; };
 		60D7B3AA20FC90500011AB3B /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 60D7B39520FC904E0011AB3B /* Utils.h */; };
 		60D7B3AB20FC90500011AB3B /* YGConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60D7B39620FC904E0011AB3B /* YGConfig.cpp */; };
@@ -1041,6 +1043,8 @@
 		6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKComponent+Yoga.h"; sourceTree = "<group>"; };
 		6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CKComponent+Yoga.mm"; sourceTree = "<group>"; };
 		605A5B252142D89800B195AC /* CKRequired.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKRequired.h; sourceTree = "<group>"; };
+		606E57DA215B84BF0080A274 /* ReferenceImages_IOS12_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS12_64; sourceTree = "<group>"; };
+		606E57E8215B8C410080A274 /* ReferenceImages_IOS12_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS12_64; sourceTree = "<group>"; };
 		60D7B39520FC904E0011AB3B /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		60D7B39620FC904E0011AB3B /* YGConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = YGConfig.cpp; sourceTree = "<group>"; };
 		60D7B39720FC904E0011AB3B /* YGLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGLayout.h; sourceTree = "<group>"; };
@@ -2274,6 +2278,7 @@
 		D0B47DBA1CBDACEA00BB33CE /* ReferenceImages */ = {
 			isa = PBXGroup;
 			children = (
+				606E57DA215B84BF0080A274 /* ReferenceImages_IOS12_64 */,
 				7F6AC97620935A1900DDF374 /* ReferenceImages_IOS11_3_64 */,
 				7F6AC97020935A0B00DDF374 /* ReferenceImages_IOS11_64 */,
 				2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */,
@@ -2284,6 +2289,7 @@
 		D0B47DC31CBDAD2C00BB33CE /* ReferenceImages */ = {
 			isa = PBXGroup;
 			children = (
+				606E57E8215B8C410080A274 /* ReferenceImages_IOS12_64 */,
 				7F6AC97F2093680900DDF374 /* ReferenceImages_IOS11_3_64 */,
 				7F31BF541F7C3E4A0087E614 /* ReferenceImages_IOS11_64 */,
 				2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */,
@@ -3038,6 +3044,7 @@
 				7F6AC97520935A0B00DDF374 /* ReferenceImages_IOS11_64 in Resources */,
 				7F6AC97720935A1900DDF374 /* ReferenceImages_IOS11_3_64 in Resources */,
 				2D8C3D441D64F41E00E6D47A /* ReferenceImages_IOS10_64 in Resources */,
+				606E57E5215B84BF0080A274 /* ReferenceImages_IOS12_64 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3048,6 +3055,7 @@
 				7F31BF551F7C3E4A0087E614 /* ReferenceImages_IOS11_64 in Resources */,
 				7F6AC9802093680900DDF374 /* ReferenceImages_IOS11_3_64 in Resources */,
 				2D8C3D521D64F43E00E6D47A /* ReferenceImages_IOS10_64 in Resources */,
+				606E57E9215B8C410080A274 /* ReferenceImages_IOS12_64 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

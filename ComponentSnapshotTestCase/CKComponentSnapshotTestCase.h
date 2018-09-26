@@ -26,6 +26,7 @@
 #define CKSnapshotReferenceDirectorySuffix() \
 ({ \
 NSString *suffix = \
+CK_AT_LEAST_IOS12 ? @"_IOS12" : \
 CK_AT_LEAST_IOS11_3 ? @"_IOS11_3" : \
 CK_AT_LEAST_IOS11 ? @"_IOS11" : \
 CK_AT_LEAST_IOS10_BETA_4 ? @"_IOS10" : \
