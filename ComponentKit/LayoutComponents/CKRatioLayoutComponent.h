@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKRenderLayoutComponent.h>
 
 /**
  @uidocs https://fburl.com/CKRatioLayoutComponent:b4d0
@@ -32,7 +32,7 @@
  |_ _|
 
  **/
-@interface CKRatioLayoutComponent : CKComponent
+@interface CKRatioLayoutComponent : CKRenderLayoutComponent
 
 + (instancetype)newWithRatio:(CGFloat)ratio
                         size:(const CKComponentSize &)size

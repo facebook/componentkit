@@ -40,6 +40,11 @@
   return c;
 }
 
+- (CKComponent *)render:(id)state
+{
+  return _component;
+}
+
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   std::vector<CGSize> sizeOptions;
