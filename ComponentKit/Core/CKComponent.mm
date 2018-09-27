@@ -56,6 +56,10 @@ struct CKComponentMountInfo {
 
   /** Only non-null while mounted. */
   std::unique_ptr<CKComponentMountInfo> _mountInfo;
+
+#if CK_ASSERTIONS_ENABLED
+  BOOL leafComponentOnARenderTree;
+#endif
 }
 
 #if DEBUG
@@ -157,6 +161,9 @@ struct CKComponentMountInfo {
                     config:(const CKBuildComponentConfig &)config
             hasDirtyParent:(BOOL)hasDirtyParent
 {
+#if CK_ASSERTIONS_ENABLED
+  leafComponentOnARenderTree = YES;
+#endif
   // In this case this is a leaf component, which means we don't need to continue the recursion as it has no children.
   __unused auto const node = [[CKTreeNode alloc]
                               initWithComponent:self
@@ -307,6 +314,22 @@ struct CKComponentMountInfo {
                        @"Computed size %@ for %@ does not fall within constrained size %@\n%@",
                        NSStringFromCGSize(layout.size), [self class], resolvedRange.description(),
                        CK::Component::LayoutContext::currentStackDescription());
+
+#if CK_ASSERTIONS_ENABLED
+  // If `leafComponentOnARenderTree` is true, the infrastructure treats this component as a leaf component.
+  // If this component has children in its layout, this means that it's not a real leaf component.
+  // As a result, the infrastructure won't call `buildComponentTree:` on the component's children and can affect the render process.
+  if (leafComponentOnARenderTree && layout.children != nullptr) {
+    auto const childrenSize = layout.children->size();
+    CKAssertWithCategory(childrenSize == 0,
+                         NSStringFromClass([self class]),
+                         @"%@ inherits from CKComponent, but it's not a leaf component (as it has children). "
+                         "This component tree has CKRenderComponent or CKRenderWithChildrenComponent components in the tree, therefore, that's not allowed. "
+                         "Instead, please subclass from %@ directly.",
+                         [self class],
+                         (childrenSize == 1 ? @"CKRenderLayoutComponent" : @"CKRenderLayoutWithChildrenComponent"));
+  }
+#endif
   return layout;
 }
 
