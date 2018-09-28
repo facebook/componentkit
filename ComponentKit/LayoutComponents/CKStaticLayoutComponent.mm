@@ -40,7 +40,7 @@
 
 - (std::vector<CKComponent *>)renderChildren:(id)state
 {
-  return CK::map(_children, [](auto const child) {
+  return CK::map(_children, [](auto const &child) {
     return child.component;
   });
 }
