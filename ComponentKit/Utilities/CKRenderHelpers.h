@@ -10,6 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
 
 @protocol CKRenderWithChildComponentProtocol;
@@ -44,4 +45,14 @@ namespace CKRender {
   auto hasDirtyParent(id<CKTreeNodeProtocol> node,
                       id<CKTreeNodeWithChildrenProtocol> previousParent,
                       const CKBuildComponentTreeParams &params) -> BOOL;
+
+  /**
+   @return A collection of tree node marked as dirty if any. An empty collection otherwise.
+   */
+  auto treeNodeDirtyIdsFor(const CKComponentStateUpdateMap &stateUpdates, const BuildTrigger &buildTrigger, const CKBuildComponentConfig &config) -> CKTreeNodeDirtyIds;
+
+  /**
+   @return `YES` if the in input scope requires to build a component tree. `NO` otherwise.
+   */
+  auto shouldBuildComponentTreeFrom(CKThreadLocalComponentScope threadScope) -> BOOL;
 }

@@ -10,11 +10,12 @@
 
 #import <memory>
 
+#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/ComponentMountContext.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
-#import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKTreeNodeProtocol.h>
 
 /**
  Params struct for the `buildComponentTree:` method.

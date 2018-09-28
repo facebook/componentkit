@@ -10,7 +10,13 @@
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKit/CKFlexboxComponent.h>
+
+#import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
+
+#import "CKRenderHelpers.h"
 #import "CKComponent.h"
+#import "CKCompositeComponent.h"
 #import "CKRenderComponent.h"
 #import "CKRenderWithChildrenComponent.h"
 #import "CKComponentInternal.h"
@@ -18,6 +24,7 @@
 #import "CKTreeNode.h"
 #import "CKRenderTreeNodeWithChild.h"
 #import "CKRenderTreeNodeWithChildren.h"
+#import "CKComponentScopeRootFactory.h"
 #import "CKThreadLocalComponentScope.h"
 
 /** An helper class that inherits from 'CKRenderComponent'; render the component from the initializer */
@@ -148,6 +155,86 @@
     .treeNodeDirtyIds = {},
   } hasDirtyParent:NO];
   XCTAssertTrue(areTreesEqual(root, root2));
+}
+
+#pragma mark - Build Component Helpers
+
+- (void)test_renderComponentHelpers_shouldBuildComponentTreeFromLocalComponentScope_containingComponentTree
+{
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
+  CKThreadLocalComponentScope threadScope(scopeRoot, {});
+  threadScope.newScopeRoot.hasRenderComponentInTree = YES;
+  XCTAssertTrue(CKRender::shouldBuildComponentTreeFrom(threadScope), @"Expected to return YES for a scope root containing a render component in the tree");
+}
+
+- (void)test_renderComponentHelpers_shouldBuildComponentTreeFromLocalComponentScope_notContainingComponentTree
+{
+  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
+  CKThreadLocalComponentScope threadScope(scopeRoot, {});
+  XCTAssertFalse(CKRender::shouldBuildComponentTreeFrom(threadScope), @"Default scope root is not expected to have a render component in the tree");
+}
+
+- (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_onNewTreeAndPropsUpdate_noOptimizations
+{
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::NewTree, {}).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::PropsUpdate, {}).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
+}
+
+- (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_onNewTreeAndPropsUpdate_withOptimizations
+{
+  auto config = CKBuildComponentConfig({ .enableFasterStateUpdates = YES });
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::NewTree, config).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::PropsUpdate, config).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
+
+  config = CKBuildComponentConfig({ .enableFasterPropsUpdates = YES });
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::NewTree, config).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::PropsUpdate, config).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
+}
+
+- (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_onStateUpdate_noOptimizations
+{
+  __block CKComponentTreeTestComponent_Render *c;
+  __block CKCompositeComponentWithScopeAndState *rootComponent;
+  auto const componentFactory = ^{
+    c = [CKComponentTreeTestComponent_Render newWithComponent:[CKComponent newWithView:{} size:{}]];
+    rootComponent = [CKCompositeComponentWithScopeAndState
+                     newWithComponent:c];
+    return rootComponent;
+  };
+
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, {});
+
+  // Simulate a state update on the root.
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[rootComponent.scopeHandle].push_back(^(id){
+    return @2;
+  });
+
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(stateUpdates, BuildTrigger::StateUpdate, {}).empty(), @"It is not expected to have dirty nodes when no optimization is enabled");
+}
+
+- (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_onStateUpdate_withFasterStateUpdatesOption
+{
+  auto const config = CKBuildComponentConfig({ .enableFasterStateUpdates = YES });
+
+  __block CKComponentTreeTestComponent_Render *c;
+  __block CKCompositeComponentWithScopeAndState *rootComponent;
+  auto const componentFactory = ^{
+    c = [CKComponentTreeTestComponent_Render newWithComponent:[CKComponent newWithView:{} size:{}]];
+    rootComponent = [CKCompositeComponentWithScopeAndState
+                     newWithComponent:c];
+    return rootComponent;
+  };
+
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, config);
+
+  // Simulate a state update on the root.
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[rootComponent.scopeHandle].push_back(^(id){
+    return @2;
+  });
+
+  XCTAssertEqual(CKRender::treeNodeDirtyIdsFor(stateUpdates, BuildTrigger::StateUpdate, config).size(), 2);
 }
 
 #pragma mark - Helpers

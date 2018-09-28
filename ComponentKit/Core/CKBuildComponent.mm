@@ -16,27 +16,19 @@
 #import "CKComponentInternal.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"
+#import "CKRenderHelpers.h"
 #import "CKRenderTreeNodeWithChildren.h"
+#import "CKTreeNodeProtocol.h"
 #import "CKThreadLocalComponentScope.h"
 
-static CKTreeNodeDirtyIds createTreeNodeDirtyIds(const CKComponentStateUpdateMap &stateUpdates)
-{
-  CKTreeNodeDirtyIds treeNodesDirtyIds;
-  for (auto const & stateUpdate : stateUpdates) {
-    CKTreeNode *treeNode = stateUpdate.first.treeNode;
-    while (treeNode != nil) {
-      treeNodesDirtyIds.insert(treeNode.nodeIdentifier);
-      treeNode = treeNode.parent;
+namespace CKBuildComponentHelpers {
+  auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> BuildTrigger
+  {
+    if (scopeRoot.rootFrame.childrenSize > 0 || scopeRoot.rootNode.childrenSize > 0) {
+      return (stateUpdates.size() > 0) ? BuildTrigger::StateUpdate : BuildTrigger::PropsUpdate;
     }
+    return BuildTrigger::NewTree;
   }
-  return treeNodesDirtyIds;
-}
-
-static BuildTrigger getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) {
-  if (scopeRoot.rootFrame.childrenSize > 0 || scopeRoot.rootNode.childrenSize > 0) {
-    return (stateUpdates.size() > 0) ? BuildTrigger::StateUpdate : BuildTrigger::PropsUpdate;
-  }
-  return BuildTrigger::NewTree;
 }
 
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
@@ -48,19 +40,14 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   auto const analyticsListener = [previousRoot analyticsListener];
-  auto const buildTrigger = getBuildTrigger(previousRoot, stateUpdates);
+  auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot buildTrigger:buildTrigger];
 
   auto const component = componentFactory();
 
   // Build the component tree if we have a render component in the hierarchy.
-  if (threadScope.newScopeRoot.hasRenderComponentInTree) {
-
-    CKTreeNodeDirtyIds treeNodeDirtyIds;
-    if (buildTrigger == BuildTrigger::StateUpdate &&
-        (config.enableFasterStateUpdates || config.enableFasterPropsUpdates)) {
-      treeNodeDirtyIds = createTreeNodeDirtyIds(stateUpdates);
-    }
+  if (CKRender::shouldBuildComponentTreeFrom(threadScope)) {
+    CKTreeNodeDirtyIds treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(stateUpdates, buildTrigger, config);
 
     // Build the component tree from the render function.
     [component buildComponentTree:threadScope.newScopeRoot.rootNode
@@ -95,7 +82,7 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   auto const analyticsListener = [previousRoot analyticsListener];
-  auto const buildTrigger = getBuildTrigger(previousRoot, stateUpdates);
+  auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
 
   auto const component = componentFactory();
 
@@ -110,12 +97,8 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
   };
 
   // Build the component tree if we have a render component in the hierarchy.
-  if (threadScope.newScopeRoot.hasRenderComponentInTree) {
-
-    if (buildTrigger == BuildTrigger::StateUpdate &&
-        (config.enableFasterStateUpdates || config.enableFasterPropsUpdates)) {
-      treeNodeDirtyIds = createTreeNodeDirtyIds(stateUpdates);
-    }
+  if (CKRender::shouldBuildComponentTreeFrom(threadScope)) {
+    treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(stateUpdates, buildTrigger, config);
 
     // Build the component tree from the render function.
     [component buildComponentTree:threadScope.newScopeRoot.rootNode

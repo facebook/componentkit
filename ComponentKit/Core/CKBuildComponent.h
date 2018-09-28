@@ -13,11 +13,11 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentLayout.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
 
 @class CKComponentScopeRoot;
 @class CKComponent;
 
+// Collection of events that trigger a new component generation.
 enum class BuildTrigger {
   NewTree,
   StateUpdate,
@@ -34,6 +34,15 @@ struct CKBuildComponentConfig {
   //  Enable faster props updates optimization for render components.
   BOOL enableFasterPropsUpdates = NO;
 };
+
+namespace CKBuildComponentHelpers {
+  /**
+   Depending on the scope root and the list of state updates the proper build trigger is derived.
+
+   @return The related build trigger given the in input parameters
+   */
+  auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> BuildTrigger;
+}
 
 /**
  The results of a build operation.

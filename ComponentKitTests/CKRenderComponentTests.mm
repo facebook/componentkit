@@ -11,30 +11,15 @@
 #import <XCTest/XCTest.h>
 
 #import <ComponentKit/CKBuildComponent.h>
-#import <ComponentKit/CKCompositeComponent.h>
-#import <ComponentKit/CKFlexboxComponent.h>
-#import <ComponentKit/CKRenderComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 
+#import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
+
 #import "CKTreeNodeWithChild.h"
 #import "CKTreeNodeWithChildren.h"
-
-@interface CKTestChildRenderComponent : CKRenderComponent
-@property (nonatomic, assign) BOOL hasDirtyParent;
-@end
-
-@interface CKTestRenderComponent : CKRenderComponent
-@property (nonatomic, assign) NSUInteger renderCalledCounter;
-@property (nonatomic, assign) NSUInteger identifier;
-@property (nonatomic, strong) CKTestChildRenderComponent *childComponent;
-+ (instancetype)newWithIdentifier:(NSUInteger)identifier;
-@end
-
-@interface CKCompositeComponentWithScopeAndState : CKCompositeComponent
-@end
 
 @interface CKRenderComponentTests : XCTestCase
 @end
@@ -452,72 +437,4 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
     }]];
 }
 
-@end
-
-#pragma mark - Helper Classes
-
-@implementation CKTestRenderComponent
-
-+ (instancetype)newWithIdentifier:(NSUInteger)identifier
-{
-  auto const c = [super new];
-  if (c) {
-    c->_identifier = identifier;
-  }
-  return c;
-}
-
-- (CKComponent *)render:(id)state
-{
-  _renderCalledCounter++;
-  _childComponent = [CKTestChildRenderComponent new];
-  return _childComponent;
-}
-
-+ (id)initialState
-{
-  return nil;
-}
-
-- (BOOL)shouldComponentUpdate:(CKTestRenderComponent *)component
-{
-  return _identifier != component->_identifier;
-}
-
-- (void)didReuseComponent:(CKTestRenderComponent *)component
-{
-  _childComponent = component->_childComponent;
-}
-
-@end
-
-@implementation CKTestChildRenderComponent
-
-+ (id)initialState
-{
-  return nil;
-}
-
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
-            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
-                    params:(const CKBuildComponentTreeParams &)params
-            hasDirtyParent:(BOOL)hasDirtyParent
-{
-  [super buildComponentTree:parent previousParent:previousParent params:params hasDirtyParent:hasDirtyParent];
-  _hasDirtyParent = hasDirtyParent;
-}
-
-@end
-
-@implementation CKCompositeComponentWithScopeAndState
-+ (instancetype)newWithComponent:(CKComponent *)component
-{
-  CKComponentScope scope(self);
-  return [super newWithComponent:component];
-}
-
-+ (id)initialState
-{
-  return @1;
-}
 @end

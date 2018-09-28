@@ -10,8 +10,9 @@
 
 #import "CKRenderHelpers.h"
 
-#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKRenderComponent.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKTreeNodeWithChild.h>
 #import <ComponentKit/CKRenderTreeNodeWithChild.h>
@@ -203,5 +204,33 @@ namespace CKRender {
       return dirtyNodeId != params.treeNodeDirtyIds.end();
     }
     return NO;
+  }
+
+  static auto createTreeNodeDirtyIds(const CKComponentStateUpdateMap &stateUpdates) -> CKTreeNodeDirtyIds
+  {
+    CKTreeNodeDirtyIds treeNodesDirtyIds;
+    for (auto const & stateUpdate : stateUpdates) {
+      id<CKTreeNodeProtocol> treeNode = stateUpdate.first.treeNode;
+      while (treeNode != nil) {
+        treeNodesDirtyIds.insert(treeNode.nodeIdentifier);
+        treeNode = treeNode.parent;
+      }
+    }
+    return treeNodesDirtyIds;
+  }
+
+  auto treeNodeDirtyIdsFor(const CKComponentStateUpdateMap &stateUpdates, const BuildTrigger &buildTrigger, const CKBuildComponentConfig &config) -> CKTreeNodeDirtyIds
+  {
+    if (buildTrigger == BuildTrigger::StateUpdate &&
+        (config.enableFasterStateUpdates || config.enableFasterPropsUpdates)) {
+      return createTreeNodeDirtyIds(stateUpdates);
+    }
+
+    return CKTreeNodeDirtyIds();
+  }
+
+  auto shouldBuildComponentTreeFrom(CKThreadLocalComponentScope threadScope) -> BOOL
+  {
+    return threadScope.newScopeRoot.hasRenderComponentInTree;
   }
 }

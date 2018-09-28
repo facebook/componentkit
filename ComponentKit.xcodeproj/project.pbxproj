@@ -357,6 +357,8 @@
 		2DCA4E721D889D0300AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2DCA4E731D889D1500AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */; };
 		39B090BF1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */; };
+		3E9D6723215E39530019429E /* CKRenderComponentTestHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E9D6721215E39520019429E /* CKRenderComponentTestHelpers.h */; };
+		3E9D6724215E39530019429E /* CKRenderComponentTestHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3E9D6722215E39530019429E /* CKRenderComponentTestHelpers.mm */; };
 		400B0E5F1F71C63B006BDFEE /* CKDataSourceChangeset.mm in Sources */ = {isa = PBXBuildFile; fileRef = 400B0E5C1F71C63B006BDFEE /* CKDataSourceChangeset.mm */; };
 		400B0E601F71C63C006BDFEE /* CKDataSourceChangesetInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 400B0E5D1F71C63B006BDFEE /* CKDataSourceChangesetInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		400B0E611F71C63C006BDFEE /* CKDataSourceChangeset.h in Headers */ = {isa = PBXBuildFile; fileRef = 400B0E5E1F71C63B006BDFEE /* CKDataSourceChangeset.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1031,6 +1033,8 @@
 		2DBF1D791D3425ED004F28E8 /* CKDetectComponentScopeCollisions.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDetectComponentScopeCollisions.mm; sourceTree = "<group>"; };
 		2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKDataSourceConfigurationInternal.h; sourceTree = "<group>"; };
 		39B090BE1B71645600A5470B /* CKComponentDataSourceAttachControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDataSourceAttachControllerTests.mm; sourceTree = "<group>"; };
+		3E9D6721215E39520019429E /* CKRenderComponentTestHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderComponentTestHelpers.h; sourceTree = "<group>"; };
+		3E9D6722215E39530019429E /* CKRenderComponentTestHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRenderComponentTestHelpers.mm; sourceTree = "<group>"; };
 		400B0E5C1F71C63B006BDFEE /* CKDataSourceChangeset.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceChangeset.mm; sourceTree = "<group>"; };
 		400B0E5D1F71C63B006BDFEE /* CKDataSourceChangesetInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceChangesetInternal.h; sourceTree = "<group>"; };
 		400B0E5E1F71C63B006BDFEE /* CKDataSourceChangeset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceChangeset.h; sourceTree = "<group>"; };
@@ -1621,6 +1625,8 @@
 				7FA099121F66F36800B81EED /* CKComponentLifecycleTestHelper.h */,
 				7FA099131F66F36800B81EED /* CKComponentLifecycleTestHelper.mm */,
 				035FD0491D83218100D28351 /* CKComponentTestRootScope.h */,
+				3E9D6721215E39520019429E /* CKRenderComponentTestHelpers.h */,
+				3E9D6722215E39530019429E /* CKRenderComponentTestHelpers.mm */,
 				A273801C1AFD144100E6F222 /* CKTestActionComponent.h */,
 				A273801E1AFD144100E6F222 /* CKTestActionComponent.mm */,
 				035FD04A1D83218100D28351 /* CKTestRunLoopRunning.h */,
@@ -2504,6 +2510,7 @@
 			files = (
 				7F98F58C1F67F2F600436978 /* CKLifecycleTestComponent.h in Headers */,
 				D657400921013CBF00FD8AAB /* CKChangesetHelpers.h in Headers */,
+				3E9D6723215E39530019429E /* CKRenderComponentTestHelpers.h in Headers */,
 				D6B0AE0120AAFB1000A31FDF /* NSIndexSetExtensions.h in Headers */,
 				C1B53823212EAE6A00E13477 /* CKEmbeddedTestComponent.h in Headers */,
 				A27380341AFD172500E6F222 /* CKTestActionComponent.h in Headers */,
@@ -3284,6 +3291,7 @@
 				D657400821013CBF00FD8AAB /* CKChangesetHelpers.mm in Sources */,
 				7F98F58D1F67F2F600436978 /* CKLifecycleTestComponent.mm in Sources */,
 				A273801F1AFD144100E6F222 /* CKTestActionComponent.mm in Sources */,
+				3E9D6724215E39530019429E /* CKRenderComponentTestHelpers.mm in Sources */,
 				2D8270F61E3F72DE008C1A26 /* CKTestRunLoopRunning.mm in Sources */,
 				D6B0AE0220AAFB1000A31FDF /* NSIndexSetExtensions.mm in Sources */,
 				7FA099151F66F36800B81EED /* CKComponentLifecycleTestHelper.mm in Sources */,
