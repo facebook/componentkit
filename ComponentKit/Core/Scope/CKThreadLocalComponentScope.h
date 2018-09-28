@@ -25,7 +25,7 @@ public:
 
   /** Returns nullptr if there isn't a current scope */
   static CKThreadLocalComponentScope *currentScope() noexcept;
-
+  
   CKComponentScopeRoot *const newScopeRoot;
   const CKComponentStateUpdateMap stateUpdates;
   std::stack<CKComponentScopeFramePair> stack;

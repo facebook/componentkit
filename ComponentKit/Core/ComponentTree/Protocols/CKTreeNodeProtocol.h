@@ -10,6 +10,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 
 typedef int32_t CKTreeNodeIdentifier;
@@ -20,13 +22,63 @@ typedef std::tuple<Class, NSUInteger> CKTreeNodeComponentKey;
 typedef std::unordered_set<CKTreeNodeIdentifier> CKTreeNodeDirtyIds;
 
 /**
+ Params struct for the `buildComponentTree:` method.
+ **/
+struct CKBuildComponentTreeParams {
+  // Weak reference to the scope root of the new generation
+  __weak CKComponentScopeRoot *scopeRoot;
+
+  // A map of state updates
+  const CKComponentStateUpdateMap &stateUpdates;
+
+  // Colleciton of nodes that are marked as dirty.
+  // @discussion "Dirty nodes" are used to implement optimizations as faster state updates and faster props updates.
+  const CKTreeNodeDirtyIds &treeNodeDirtyIds;
+
+  //  Enable faster state updates optimization for render components.
+  BOOL enableFasterStateUpdates = NO;
+
+  //  Enable faster props updates optimization for render components.
+  BOOL enableFasterPropsUpdates = NO;
+
+  // The trigger for initiating a new generation
+  BuildTrigger buildTrigger;
+};
+
+@protocol CKTreeNodeWithChildrenProtocol;
+
+
+/**
+ The component that is hosted by a `CKTreeNodeProtocol`.
+ It represents the component holding the the scope handle, capable of building a component tree (CKTreeNode).
+ */
+@protocol CKTreeNodeComponentProtocol<CKComponentProtocol>
+
+/** Reference to the component's scope handle. */
+- (CKComponentScopeHandle *)scopeHandle;
+
+/** Ask the component to acquire a scope handle. */
+- (void)acquireScopeHandle:(CKComponentScopeHandle *)scopeHandle;
+
+/**
+ This method translates the component render method into a 'CKTreeNode'; a component tree.
+ It's being called by the infra during the component tree creation.
+ */
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
+            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                    params:(const CKBuildComponentTreeParams &)params
+            hasDirtyParent:(BOOL)hasDirtyParent;
+
+@end
+
+/**
  This protocol represents a node in the component tree.
  Each component has a corresponding CKTreeNodeProtocol; this node holds the state of the component.
  */
 
 @protocol CKTreeNodeProtocol <NSObject>
 
-@property (nonatomic, strong, readonly) CKComponent *component;
+@property (nonatomic, strong, readonly) id<CKTreeNodeComponentProtocol> component;
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
 @property (nonatomic, assign, readonly) CKTreeNodeIdentifier nodeIdentifier;
 @property (nonatomic, weak, readonly) id<CKTreeNodeProtocol> parent;
@@ -38,7 +90,7 @@ typedef std::unordered_set<CKTreeNodeIdentifier> CKTreeNodeDirtyIds;
 - (const CKTreeNodeComponentKey &)componentKey;
 
 /** Returns the initial state of the component */
-- (id)initialStateWithComponent:(CKComponent *)component;
+- (id)initialStateWithComponent:(id<CKTreeNodeComponentProtocol>)component;
 
 @end
 

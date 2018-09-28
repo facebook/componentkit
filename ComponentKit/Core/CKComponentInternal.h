@@ -17,34 +17,7 @@
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 
-/**
- Params struct for the `buildComponentTree:` method.
- **/
-struct CKBuildComponentTreeParams {
-  // Weak reference to the scope root of the new generation
-  __weak CKComponentScopeRoot *scopeRoot;
-
-  // A map of state updates
-  const CKComponentStateUpdateMap &stateUpdates;
-
-  // Colleciton of nodes that are marked as dirty.
-  // @discussion "Dirty nodes" are used to implement optimizations as faster state updates and faster props updates.
-  const CKTreeNodeDirtyIds &treeNodeDirtyIds;
-
-  //  Enable faster state updates optimization for render components.
-  BOOL enableFasterStateUpdates = NO;
-
-  //  Enable faster props updates optimization for render components.
-  BOOL enableFasterPropsUpdates = NO;
-
-  // The trigger for initiating a new generation
-  BuildTrigger buildTrigger;
-};
-
-@class CKComponentScopeRoot;
-@protocol CKTreeNodeWithChildrenProtocol;
-
-@interface CKComponent ()
+@interface CKComponent () <CKTreeNodeComponentProtocol>
 
 /**
  Mounts the component in the given context:
@@ -120,19 +93,5 @@ struct CKBuildComponentTreeParams {
 
 /** For internal use only; don't touch this. */
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
-
-/** For internal use only; don't touch this. */
-- (void)acquireScopeHandle:(CKComponentScopeHandle *)scopeHandle;
-
-/**
- For internal use only; don't touch this.
-
- This method translates the component render method into a 'CKTreeNode'; a component tree.
- It's being called by the infra during the component tree creation.
- */
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
-            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
-                    params:(const CKBuildComponentTreeParams &)params
-            hasDirtyParent:(BOOL)hasDirtyParent;
 
 @end

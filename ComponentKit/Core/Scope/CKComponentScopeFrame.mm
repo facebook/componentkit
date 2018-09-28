@@ -15,7 +15,6 @@
 #import <libkern/OSAtomic.h>
 
 #import "CKAssert.h"
-#import "CKComponentInternal.h"
 #import "CKComponentScopeHandle.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"

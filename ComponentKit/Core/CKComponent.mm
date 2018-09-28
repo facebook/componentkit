@@ -37,7 +37,7 @@
 #import "ComponentLayoutContext.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKComponentScopeRoot.h"
-#import "CKTreeNode.h"
+#import "CKRenderHelpers.h"
 
 CGFloat const kCKComponentParentDimensionUndefined = NAN;
 CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndefined, kCKComponentParentDimensionUndefined};
@@ -164,12 +164,7 @@ struct CKComponentMountInfo {
   leafComponentOnARenderTree = YES;
 #endif
   // In this case this is a leaf component, which means we don't need to continue the recursion as it has no children.
-  __unused auto const node = [[CKTreeNode alloc]
-                              initWithComponent:self
-                              parent:parent
-                              previousParent:previousParent
-                              scopeRoot:params.scopeRoot
-                              stateUpdates:params.stateUpdates];
+  CKRender::buildComponentTreeForLeafComponent(self, parent, previousParent, params);
 }
 
 #pragma mark - Mounting and Unmounting

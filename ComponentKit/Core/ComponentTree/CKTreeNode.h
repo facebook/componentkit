@@ -25,7 +25,7 @@
  */
 @interface CKTreeNode: NSObject <CKTreeNodeProtocol>
 
-- (instancetype)initWithComponent:(CKComponent *)component
+- (instancetype)initWithComponent:(id<CKTreeNodeComponentProtocol>)component
                            parent:(id<CKTreeNodeWithChildrenProtocol>)parent
                    previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot

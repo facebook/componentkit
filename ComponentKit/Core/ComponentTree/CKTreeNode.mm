@@ -21,7 +21,7 @@
 #import "CKThreadLocalComponentScope.h"
 
 @interface CKTreeNode ()
-@property (nonatomic, strong, readwrite) CKComponent *component;
+@property (nonatomic, strong, readwrite) id<CKTreeNodeComponentProtocol> component;
 @property (nonatomic, strong, readwrite) CKComponentScopeHandle *handle;
 @property (nonatomic, assign, readwrite) CKTreeNodeIdentifier nodeIdentifier;
 @property (nonatomic, weak, readwrite) id<CKTreeNodeProtocol> parent;
@@ -32,7 +32,7 @@
   CKTreeNodeComponentKey _componentKey;
 }
 
-- (instancetype)initWithComponent:(CKComponent *)component
+- (instancetype)initWithComponent:(id<CKTreeNodeComponentProtocol>)component
                            parent:(id<CKTreeNodeWithChildrenProtocol>)parent
                    previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
@@ -101,7 +101,7 @@
   return _componentKey;
 }
 
-- (id)initialStateWithComponent:(CKComponent *)component
+- (id)initialStateWithComponent:(id<CKTreeNodeComponentProtocol>)component
 {
   // For CKComponent, we bridge a `nil` initial state to `CKTreeNodeEmptyState`.
   // The base initializer will create a scope handle for the component only if the initial state is different than `CKTreeNodeEmptyState`.

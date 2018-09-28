@@ -15,22 +15,20 @@
 
 @protocol CKRenderWithChildComponentProtocol;
 @protocol CKRenderWithChildrenComponentProtocol;
-@protocol CKTreeNodeProtocol;
-@protocol CKTreeNodeWithChildrenProtocol;
 
 @class CKRenderComponent;
 @class CKRenderTreeNodeWithChild;
 
 namespace CKRender {
-  auto buildComponentTreeWithPrecomputedChild(CKComponent *component,
-                                              CKComponent *childComponent,
+  auto buildComponentTreeWithPrecomputedChild(id<CKTreeNodeComponentProtocol> component,
+                                              id<CKTreeNodeComponentProtocol> childComponent,
                                               id<CKTreeNodeWithChildrenProtocol> parent,
                                               id<CKTreeNodeWithChildrenProtocol> previousParent,
                                               const CKBuildComponentTreeParams &params,
                                               BOOL hasDirtyParent) -> void;
 
   auto buildComponentTreeWithSingleChild(id<CKRenderWithChildComponentProtocol> component,
-                                         __strong CKComponent **childComponent,
+                                         __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                          id<CKTreeNodeWithChildrenProtocol> parent,
                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
                                          const CKBuildComponentTreeParams &params,
@@ -41,7 +39,12 @@ namespace CKRender {
                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
                                         const CKBuildComponentTreeParams &params,
                                         BOOL hasDirtyParent) -> void;
-  
+
+  auto buildComponentTreeForLeafComponent(id<CKTreeNodeComponentProtocol> component,
+                                          id<CKTreeNodeWithChildrenProtocol> parent,
+                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                          const CKBuildComponentTreeParams &params) -> void;
+
   auto hasDirtyParent(id<CKTreeNodeProtocol> node,
                       id<CKTreeNodeWithChildrenProtocol> previousParent,
                       const CKBuildComponentTreeParams &params) -> BOOL;

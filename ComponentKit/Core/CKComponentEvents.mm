@@ -85,7 +85,7 @@ void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot
   [scopeRoot enumerateComponentsMatchingPredicate:&CKComponentDidPrepareLayoutForComponentToControllerPredicate
                                             block:^(id<CKComponentProtocol> c) {
                                               CKComponent *component = (CKComponent *)c;
-                                              const CKComponentLayout componentLayout = layout.cachedLayoutForScopedComponent(c);
+                                              const CKComponentLayout componentLayout = layout.cachedLayoutForScopedComponent(component);
                                               [component.controller didPrepareLayout:componentLayout forComponent:component];
                                             }];
 }

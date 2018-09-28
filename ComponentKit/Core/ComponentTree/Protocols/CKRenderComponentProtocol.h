@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKComponentProtocol.h>
+#import <ComponentKit/CKTreeNodeProtocol.h>
 
 /**
  This protocol is being implemented by the components that has a render method: `CKRenderComponent` and `CKRenderWithChildrenComponent`.
@@ -16,7 +16,7 @@
  Please DO NOT implement a new component that conforms to this protocol;
  your component should subclass either from `CKRenderComponent` or `CKRenderWithChildrenComponent`.
  */
-@protocol CKRenderComponentProtocol <CKComponentProtocol>
+@protocol CKRenderComponentProtocol <CKTreeNodeComponentProtocol>
 
 /*
  Override this method in order to provide an initialState which depends on the component's props.
@@ -41,7 +41,6 @@
  in order to update the new component from the reused one.
  */
 - (void)didReuseComponent:(id<CKRenderComponentProtocol>)component;
-
 @end
 
 
@@ -55,7 +54,7 @@
 
  @param state The current state of the component.
  */
-- (CKComponent *)render:(id)state;
+- (id<CKTreeNodeComponentProtocol>)render:(id)state;
 
 @end
 
@@ -69,6 +68,6 @@
 
  @param state The current state of the component.
  */
-- (std::vector<CKComponent *>)renderChildren:(id)state;
+- (std::vector<id<CKTreeNodeComponentProtocol>>)renderChildren:(id)state;
 
 @end

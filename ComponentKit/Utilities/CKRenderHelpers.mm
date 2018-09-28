@@ -21,7 +21,7 @@
 namespace CKRenderInternal {
   // Reuse the previous component generation and its component tree and notify the previous component about it.
   static auto reusePreviousComponent(id<CKRenderComponentProtocol> component,
-                                     __strong CKComponent **childComponent,
+                                     __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                      CKRenderTreeNodeWithChild *node,
                                      CKRenderTreeNodeWithChild *previousChild) -> void {
     // Set the child from the previous tree node.
@@ -36,7 +36,7 @@ namespace CKRenderInternal {
 
   // Reuse the previous component generation and its component tree and notify the previous component about it.
   static auto reusePreviousComponent(id<CKRenderComponentProtocol> component,
-                                     __strong CKComponent **childComponent,
+                                     __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                      CKRenderTreeNodeWithChild *node,
                                      id<CKTreeNodeWithChildrenProtocol> parent,
                                      id<CKTreeNodeWithChildrenProtocol> previousParent) -> BOOL {
@@ -50,7 +50,7 @@ namespace CKRenderInternal {
 
   // Check if isEqualToComponent returns `YES`; if it does, reuse the previous component generation and its component tree and notify the previous component about it.
   static auto reusePreviousComponentIfComponentsAreEqual(id<CKRenderComponentProtocol> component,
-                                                         __strong CKComponent **childComponent,
+                                                         __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                                          CKRenderTreeNodeWithChild *node,
                                                          id<CKTreeNodeWithChildrenProtocol> parent,
                                                          id<CKTreeNodeWithChildrenProtocol> previousParent) -> BOOL {
@@ -65,8 +65,8 @@ namespace CKRenderInternal {
 }
 
 namespace CKRender {
-  auto buildComponentTreeWithPrecomputedChild(CKComponent *component,
-                                              CKComponent *childComponent,
+  auto buildComponentTreeWithPrecomputedChild(id<CKTreeNodeComponentProtocol> component,
+                                              id<CKTreeNodeComponentProtocol> childComponent,
                                               id<CKTreeNodeWithChildrenProtocol> parent,
                                               id<CKTreeNodeWithChildrenProtocol> previousParent,
                                               const CKBuildComponentTreeParams &params,
@@ -95,7 +95,7 @@ namespace CKRender {
   }
 
   auto buildComponentTreeWithSingleChild(id<CKRenderWithChildComponentProtocol> component,
-                                         __strong CKComponent **childComponent,
+                                         __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                          id<CKTreeNodeWithChildrenProtocol> parent,
                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
                                          const CKBuildComponentTreeParams &params,
@@ -194,6 +194,18 @@ namespace CKRender {
                    hasDirtyParent:hasDirtyParent];
       }
     }
+  }
+
+  auto buildComponentTreeForLeafComponent(id<CKTreeNodeComponentProtocol> component,
+                                          id<CKTreeNodeWithChildrenProtocol> parent,
+                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                          const CKBuildComponentTreeParams &params) -> void {
+    __unused auto const node = [[CKTreeNode alloc]
+                                initWithComponent:component
+                                parent:parent
+                                previousParent:previousParent
+                                scopeRoot:params.scopeRoot
+                                stateUpdates:params.stateUpdates];
   }
 
   auto hasDirtyParent(id<CKTreeNodeProtocol> node,
