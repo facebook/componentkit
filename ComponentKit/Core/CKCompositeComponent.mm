@@ -74,10 +74,9 @@
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
-                    config:(const CKBuildComponentConfig &)config
             hasDirtyParent:(BOOL)hasDirtyParent
 {
-  CKRender::buildComponentTreeWithPrecomputedChild(self, _component, parent, previousParent, params, config, hasDirtyParent);
+  CKRender::buildComponentTreeWithPrecomputedChild(self, _component, parent, previousParent, params, hasDirtyParent);
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize

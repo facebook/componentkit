@@ -30,6 +30,7 @@ enum class BuildTrigger {
 struct CKBuildComponentConfig {
   //  Enable faster state updates optimization for render components.
   BOOL enableFasterStateUpdates = NO;
+
   //  Enable faster props updates optimization for render components.
   BOOL enableFasterPropsUpdates = NO;
 };

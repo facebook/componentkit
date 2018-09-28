@@ -67,7 +67,7 @@
     .buildTrigger = BuildTrigger::NewTree,
     .treeNodeDirtyIds = {},
   };
-  [c buildComponentTree:root previousParent:previousRoot params:params config:{} hasDirtyParent:NO];
+  [c buildComponentTree:root previousParent:previousRoot params:params hasDirtyParent:NO];
 
   // Make sure the root has only one child.
   const auto singleChildNode = root.children[0];
@@ -129,14 +129,12 @@
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
-                    config:(const CKBuildComponentConfig &)config
             hasDirtyParent:(BOOL)hasDirtyParent
 {
   _parent = parent;
   _previousParent = previousParent;
   _params = &params;
-  _config = &config;
-  [super buildComponentTree:parent previousParent:previousParent params:params config:config  hasDirtyParent:hasDirtyParent];
+  [super buildComponentTree:parent previousParent:previousParent params:params hasDirtyParent:hasDirtyParent];
 }
 
 @end

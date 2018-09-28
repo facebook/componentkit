@@ -20,9 +20,23 @@
  Params struct for the `buildComponentTree:` method.
  **/
 struct CKBuildComponentTreeParams {
+  // Weak reference to the scope root of the new generation
   __weak CKComponentScopeRoot *scopeRoot;
+
+  // A map of state updates
   const CKComponentStateUpdateMap &stateUpdates;
+
+  // Colleciton of nodes that are marked as dirty.
+  // @discussion "Dirty nodes" are used to implement optimizations as faster state updates and faster props updates.
   const CKTreeNodeDirtyIds &treeNodeDirtyIds;
+
+  //  Enable faster state updates optimization for render components.
+  BOOL enableFasterStateUpdates = NO;
+
+  //  Enable faster props updates optimization for render components.
+  BOOL enableFasterPropsUpdates = NO;
+
+  // The trigger for initiating a new generation
   BuildTrigger buildTrigger;
 };
 
@@ -118,7 +132,6 @@ struct CKBuildComponentTreeParams {
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
-                    config:(const CKBuildComponentConfig &)config
             hasDirtyParent:(BOOL)hasDirtyParent;
 
 @end

@@ -26,10 +26,9 @@
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
-                    config:(const CKBuildComponentConfig &)config
             hasDirtyParent:(BOOL)hasDirtyParent
 {
-  CKRender::buildComponentTreeWithMultiChild(self, parent, previousParent, params, config, hasDirtyParent);
+  CKRender::buildComponentTreeWithMultiChild(self, parent, previousParent, params, hasDirtyParent);
 }
 
 #pragma mark - CKRenderComponentProtocol

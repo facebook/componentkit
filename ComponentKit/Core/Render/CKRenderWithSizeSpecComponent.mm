@@ -18,13 +18,11 @@
 struct CKRenderWithSizeSpecComponentParameters {
   id<CKTreeNodeWithChildrenProtocol> previousParentForChild;
   const CKBuildComponentTreeParams &params;
-  const CKBuildComponentConfig config;
   const BOOL hasDirtyParent;
 
   CKRenderWithSizeSpecComponentParameters(id<CKTreeNodeWithChildrenProtocol> pP,
                                           const CKBuildComponentTreeParams &p,
-                                          const CKBuildComponentConfig &c,
-                                          BOOL hDP) : previousParentForChild(pP), params(p), config(c), hasDirtyParent(hDP) {};
+                                          BOOL hDP) : previousParentForChild(pP), params(p), hasDirtyParent(hDP) {};
 };
 
 @implementation CKRenderWithSizeSpecComponent {
@@ -64,7 +62,6 @@ struct CKRenderWithSizeSpecComponentParameters {
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
-                    config:(const CKBuildComponentConfig &)config
             hasDirtyParent:(BOOL)hasDirtyParent
 {
   if (!_node) {
@@ -77,14 +74,13 @@ struct CKRenderWithSizeSpecComponentParameters {
     _node = node;
 
     // Update the `hasDirtyParent` param for Faster state/props updates.
-    if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params, config)) {
+    if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params)) {
       hasDirtyParent = YES;
     }
 
     auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
     _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>(previousParentForChild,
                                                                             params,
-                                                                            config,
                                                                             hasDirtyParent);
   }
 }
@@ -98,7 +94,6 @@ struct CKRenderWithSizeSpecComponentParameters {
     [child buildComponentTree:_node
                previousParent:_parameters->previousParentForChild
                        params:_parameters->params
-                       config:_parameters->config
                hasDirtyParent:_parameters->hasDirtyParent];
     [_measuredComponents addObject:child];
   }

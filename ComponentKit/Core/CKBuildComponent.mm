@@ -70,8 +70,9 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                              .stateUpdates = stateUpdates,
                              .treeNodeDirtyIds = treeNodeDirtyIds,
                              .buildTrigger = buildTrigger,
+                             .enableFasterStateUpdates = config.enableFasterStateUpdates,
+                             .enableFasterPropsUpdates = config.enableFasterPropsUpdates
                            }
-                           config:config
                    hasDirtyParent:NO];
   }
 
@@ -104,6 +105,8 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
     .stateUpdates = stateUpdates,
     .treeNodeDirtyIds = treeNodeDirtyIds,
     .buildTrigger = buildTrigger,
+    .enableFasterStateUpdates = config.enableFasterStateUpdates,
+    .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
   };
 
   // Build the component tree if we have a render component in the hierarchy.
@@ -118,7 +121,6 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
     [component buildComponentTree:threadScope.newScopeRoot.rootNode
                    previousParent:previousRoot.rootNode
                            params:params
-                           config:config
                    hasDirtyParent:NO];
   }
 

@@ -26,7 +26,6 @@ namespace CKRender {
                                               id<CKTreeNodeWithChildrenProtocol> parent,
                                               id<CKTreeNodeWithChildrenProtocol> previousParent,
                                               const CKBuildComponentTreeParams &params,
-                                              const CKBuildComponentConfig &config,
                                               BOOL hasDirtyParent) -> void;
 
   auto buildComponentTreeWithSingleChild(id<CKRenderWithChildComponentProtocol> component,
@@ -34,18 +33,15 @@ namespace CKRender {
                                          id<CKTreeNodeWithChildrenProtocol> parent,
                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
                                          const CKBuildComponentTreeParams &params,
-                                         const CKBuildComponentConfig &config,
                                          BOOL hasDirtyParent) -> void;
 
   auto buildComponentTreeWithMultiChild(id<CKRenderWithChildrenComponentProtocol> component,
                                         id<CKTreeNodeWithChildrenProtocol> parent,
                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
                                         const CKBuildComponentTreeParams &params,
-                                        const CKBuildComponentConfig &config,
                                         BOOL hasDirtyParent) -> void;
   
   auto hasDirtyParent(id<CKTreeNodeProtocol> node,
                       id<CKTreeNodeWithChildrenProtocol> previousParent,
-                      const CKBuildComponentTreeParams &params,
-                      const CKBuildComponentConfig &config) -> BOOL;
+                      const CKBuildComponentTreeParams &params) -> BOOL;
 }

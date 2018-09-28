@@ -97,7 +97,6 @@
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::PropsUpdate,
                   }
-                  config:_config
           hasDirtyParent:NO];
 
   [self verifyComponentIsNotBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
@@ -121,8 +120,9 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {100, 101}, // Use a random id that represents a fake state update on a different branch.
                     .buildTrigger = BuildTrigger::StateUpdate,
+                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
+                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
-                  config:_config
           hasDirtyParent:NO];
 
   // As the state update doesn't affect the c2, we should reuse c instead.
@@ -147,8 +147,9 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {100}, // Use a random id that represents a state update on a fake parent.
                     .buildTrigger = BuildTrigger::StateUpdate,
+                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
+                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
-                  config:_config
           hasDirtyParent:YES];
 
   // As the state update affect c2, we should recreate its children.
@@ -176,8 +177,9 @@
                       _c.scopeHandle.treeNode.nodeIdentifier
                     },
                     .buildTrigger = BuildTrigger::StateUpdate,
+                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
+                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
-                  config:_config
           hasDirtyParent:NO];
 
   // As the state update affect c2, we should recreate its children.
@@ -207,8 +209,9 @@
                       _c.scopeHandle.treeNode.nodeIdentifier // Mark the component as dirty
                     },
                     .buildTrigger = BuildTrigger::StateUpdate,
+                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
+                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
-                  config:_config
           hasDirtyParent:NO];
 
   // As the state update affect c2, we should recreate its children.
@@ -235,8 +238,9 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::PropsUpdate,
+                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
+                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
-                  config:_config
           hasDirtyParent:NO];
 
   // Props are not equal, we cannot reuse the component in this case.
@@ -264,8 +268,9 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::PropsUpdate,
+                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
+                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
-                  config:_config
           hasDirtyParent:NO];
 
   // The components are equal, we can reuse the previous component.
@@ -293,8 +298,9 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {100}, // Use a random id that represents a state update on a fake parent.
                     .buildTrigger = BuildTrigger::StateUpdate,
+                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
+                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
-                  config:_config
           hasDirtyParent:YES];
 
   // c has dirty parent, however, the components are equal, so we reuse the previous component.
@@ -320,8 +326,9 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::StateUpdate,
+                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
+                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
-                  config:_config
           hasDirtyParent:NO];
 
   // c is not dirty, the components are equal, so we reuse the previous component.
@@ -410,23 +417,24 @@
   XCTAssertEqual(childNode.child, childNode2.child);
 }
 
-static const CKBuildComponentTreeParams newTreeParams(CKComponentScopeRoot *scopeRoot) {
+static const CKBuildComponentTreeParams newTreeParams(CKComponentScopeRoot *scopeRoot, const CKBuildComponentConfig &config) {
   return {
     .scopeRoot = scopeRoot,
     .stateUpdates = {},
     .treeNodeDirtyIds = {},
     .buildTrigger = BuildTrigger::NewTree,
+    .enableFasterStateUpdates = config.enableFasterStateUpdates,
+    .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
   };
 }
 
 static CKComponentScopeRoot *createNewTreeWithComponentAndReturnScopeRoot(const CKBuildComponentConfig &config, CKTestRenderComponent *c) {
   CKThreadLocalComponentScope threadScope(nil, {});
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  const CKBuildComponentTreeParams params = newTreeParams(scopeRoot);
+  const CKBuildComponentTreeParams params = newTreeParams(scopeRoot, config);
   [c buildComponentTree:scopeRoot.rootNode
          previousParent:nil
                  params:params
-                 config:config
          hasDirtyParent:NO];
   return scopeRoot;
 }
@@ -493,10 +501,9 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
-                    config:(const CKBuildComponentConfig &)config
             hasDirtyParent:(BOOL)hasDirtyParent
 {
-  [super buildComponentTree:parent previousParent:previousParent params:params config:config hasDirtyParent:hasDirtyParent];
+  [super buildComponentTree:parent previousParent:previousParent params:params hasDirtyParent:hasDirtyParent];
   _hasDirtyParent = hasDirtyParent;
 }
 
