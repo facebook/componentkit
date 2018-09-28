@@ -35,6 +35,11 @@
   return c;
 }
 
+- (CKComponent *)render:(id)state
+{
+  return _child;
+}
+
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   // If we have a finite size in any direction, pass this so that the child can
