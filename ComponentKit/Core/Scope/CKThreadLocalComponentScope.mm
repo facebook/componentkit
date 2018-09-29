@@ -48,3 +48,9 @@ CKThreadLocalComponentScope::~CKThreadLocalComponentScope()
   CKCAssert(keys.size() == 1 && keys.top().empty(), @"Expected keys to be at initial state in destructor");
   pthread_setspecific(_threadKey(), previousScope);
 }
+
+void CKThreadLocalComponentScope::markScopeWithRenderComponentInTree(CKThreadLocalComponentScope *scope)
+{
+  CKCAssert(scope != nullptr && scope != NULL, @"Current scope should never be null here. Thread-local stack is corrupted.");
+  scope->newScopeRoot.hasRenderComponentInTree = YES;
+}

@@ -25,7 +25,13 @@ public:
 
   /** Returns nullptr if there isn't a current scope */
   static CKThreadLocalComponentScope *currentScope() noexcept;
-  
+
+  /**
+   Marks the in input component scope as containing a component tree.
+   This is used to ensure that during build component time we are initiating a component tree generation by `callingbuildComponentTree:` on the root component.
+   */
+  static void markScopeWithRenderComponentInTree(CKThreadLocalComponentScope *scope);
+
   CKComponentScopeRoot *const newScopeRoot;
   const CKComponentStateUpdateMap stateUpdates;
   std::stack<CKComponentScopeFramePair> stack;
