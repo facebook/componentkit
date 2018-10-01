@@ -240,9 +240,4 @@ namespace CKRender {
 
     return CKTreeNodeDirtyIds();
   }
-
-  auto shouldBuildComponentTreeFrom(CKThreadLocalComponentScope threadScope) -> BOOL
-  {
-    return threadScope.newScopeRoot.hasRenderComponentInTree;
-  }
 }

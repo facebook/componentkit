@@ -46,7 +46,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   auto const component = componentFactory();
 
   // Build the component tree if we have a render component in the hierarchy.
-  if (CKRender::shouldBuildComponentTreeFrom(threadScope)) {
+  if (threadScope.newScopeRoot.hasRenderComponentInTree) {
     CKTreeNodeDirtyIds treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(stateUpdates, buildTrigger, config);
 
     // Build the component tree from the render function.
@@ -97,7 +97,7 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
   };
 
   // Build the component tree if we have a render component in the hierarchy.
-  if (CKRender::shouldBuildComponentTreeFrom(threadScope)) {
+  if (threadScope.newScopeRoot.hasRenderComponentInTree) {
     treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(stateUpdates, buildTrigger, config);
 
     // Build the component tree from the render function.

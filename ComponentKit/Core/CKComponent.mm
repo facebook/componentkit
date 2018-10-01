@@ -120,7 +120,7 @@ struct CKComponentMountInfo {
     // We will build a component tree (CKTreeNode) only in case that we have a render component in the tree.
     if (!isLayoutComponent) {
       CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
-      if (currentScope != nullptr && currentScope != NULL) {
+      if (currentScope != nullptr) {
         CKThreadLocalComponentScope::markScopeWithRenderComponentInTree(currentScope);
       }
     }

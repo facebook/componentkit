@@ -159,21 +159,6 @@
 
 #pragma mark - Build Component Helpers
 
-- (void)test_renderComponentHelpers_shouldBuildComponentTreeFromLocalComponentScope_containingComponentTree
-{
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  CKThreadLocalComponentScope threadScope(scopeRoot, {});
-  threadScope.newScopeRoot.hasRenderComponentInTree = YES;
-  XCTAssertTrue(CKRender::shouldBuildComponentTreeFrom(threadScope), @"Expected to return YES for a scope root containing a render component in the tree");
-}
-
-- (void)test_renderComponentHelpers_shouldBuildComponentTreeFromLocalComponentScope_notContainingComponentTree
-{
-  CKComponentScopeRoot *scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  CKThreadLocalComponentScope threadScope(scopeRoot, {});
-  XCTAssertFalse(CKRender::shouldBuildComponentTreeFrom(threadScope), @"Default scope root is not expected to have a render component in the tree");
-}
-
 - (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_onNewTreeAndPropsUpdate_noOptimizations
 {
   XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::NewTree, {}).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
