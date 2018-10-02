@@ -46,6 +46,7 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
    buildComponentConfig:{}
    qosOptions:{}
    workQueue:nil
+   applyChangesetsOnWorkQueue:NO
    unifyBuildAndLayout:NO
    parallelInsertBuildAndLayout:parallelBuildAndLayout
    parallelInsertBuildAndLayoutThreshold:0

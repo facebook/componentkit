@@ -169,6 +169,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        buildComponentConfig:{}
                                        qosOptions:{}
                                        workQueue:nil
+                                       applyChangesetsOnWorkQueue:NO
                                        unifyBuildAndLayout:NO
                                        parallelInsertBuildAndLayout:NO
                                        parallelInsertBuildAndLayoutThreshold:0
