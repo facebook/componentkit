@@ -117,7 +117,7 @@
 #pragma mark - CKRenderWithChildrenComponent
 
 - (void)test_buildComponentTree_onCKRenderWithChildrenComponent
-{
+{  
   CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
   CKComponent *c10 = [CKComponent newWithView:{} size:{}];
   CKComponent *c11 = [CKComponent newWithView:{} size:{}];

@@ -49,8 +49,10 @@ CKThreadLocalComponentScope::~CKThreadLocalComponentScope()
   pthread_setspecific(_threadKey(), previousScope);
 }
 
-void CKThreadLocalComponentScope::markScopeWithRenderComponentInTree(CKThreadLocalComponentScope *scope)
+void CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree()
 {
-  CKCAssert(scope != nullptr, @"Scope should never be null here. Thread-local stack is corrupted.");
-  scope->newScopeRoot.hasRenderComponentInTree = YES;
+  CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
+  if (currentScope != nullptr) {
+    currentScope->newScopeRoot.hasRenderComponentInTree = YES;
+  }
 }

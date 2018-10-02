@@ -27,10 +27,10 @@ public:
   static CKThreadLocalComponentScope *currentScope() noexcept;
 
   /**
-   Marks the in input component scope as containing a component tree.
-   This is used to ensure that during build component time we are initiating a component tree generation by `callingbuildComponentTree:` on the root component.
+   Marks the current component scope as containing a component tree.
+   This is used to ensure that during build component time we are initiating a component tree generation by calling `buildComponentTree:` on the root component.
    */
-  static void markScopeWithRenderComponentInTree(CKThreadLocalComponentScope *scope);
+  static void markCurrentScopeWithRenderComponentInTree();
 
   CKComponentScopeRoot *const newScopeRoot;
   const CKComponentStateUpdateMap stateUpdates;

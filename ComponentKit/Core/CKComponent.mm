@@ -109,15 +109,10 @@ struct CKComponentMountInfo {
                                        size:(const CKComponentSize &)size
 {
   if (self = [super init]) {
+    // Mark render component in the scope root.
+    CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree();
     _viewConfiguration = view;
     _size = size;
-
-    // Mark render component in the scope root.
-    // The infrastructure will build a component tree (CKTreeNode) only in case that there is a render component in the tree.
-    CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
-    if (currentScope != nullptr) {
-      CKThreadLocalComponentScope::markScopeWithRenderComponentInTree(currentScope);
-    }
   }
   return self;
 }
