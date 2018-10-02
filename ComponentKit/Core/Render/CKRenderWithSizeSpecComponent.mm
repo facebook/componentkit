@@ -36,20 +36,19 @@ struct CKRenderWithSizeSpecComponentParameters {
 
 + (instancetype)new
 {
-  return [self newRenderComponentWithView:{} size:{} isLayoutComponent:NO];
+  return [self newRenderComponentWithView:{} size:{}];
 }
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
 {
-  return [self newRenderComponentWithView:view size:size isLayoutComponent:NO];
+  return [self newRenderComponentWithView:view size:size];
 }
 
 + (instancetype)newRenderComponentWithView:(const CKComponentViewConfiguration &)view
                                       size:(const CKComponentSize &)size
-                         isLayoutComponent:(BOOL)isLayoutComponent
 {
-  auto const c = [super newRenderComponentWithView:view size:size isLayoutComponent:isLayoutComponent];
+  auto const c = [super newRenderComponentWithView:view size:size];
   if (c) {
     c->_measuredComponents = [NSHashTable weakObjectsHashTable];
 #if CK_ASSERTIONS_ENABLED

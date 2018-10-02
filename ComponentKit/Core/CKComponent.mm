@@ -80,9 +80,8 @@ struct CKComponentMountInfo {
 
 + (instancetype)newRenderComponentWithView:(const CKComponentViewConfiguration &)view
                                       size:(const CKComponentSize &)size
-                         isLayoutComponent:(BOOL)isLayoutComponent
 {
-  return [[self alloc] initRenderComponentWithView:view size:size isLayoutComponent:isLayoutComponent];
+  return [[self alloc] initRenderComponentWithView:view size:size];
 }
 
 + (instancetype)new
@@ -108,21 +107,16 @@ struct CKComponentMountInfo {
 
 - (instancetype)initRenderComponentWithView:(const CKComponentViewConfiguration &)view
                                        size:(const CKComponentSize &)size
-                          isLayoutComponent:(BOOL)isLayoutComponent
 {
   if (self = [super init]) {
     _viewConfiguration = view;
     _size = size;
 
-    // Mark render component in the scope root, but only in case that it's not a layout component.
-    // We converted layout components (such as CKFlexboxComponent, CKInsetComponent etc.) to be a CKRenderComponentProtocol
-    // in order to support mix and match of CKCompositeComponents/CKComponent and CKRenderComponentProtocol components.
-    // We will build a component tree (CKTreeNode) only in case that we have a render component in the tree.
-    if (!isLayoutComponent) {
-      CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
-      if (currentScope != nullptr) {
-        CKThreadLocalComponentScope::markScopeWithRenderComponentInTree(currentScope);
-      }
+    // Mark render component in the scope root.
+    // The infrastructure will build a component tree (CKTreeNode) only in case that there is a render component in the tree.
+    CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
+    if (currentScope != nullptr) {
+      CKThreadLocalComponentScope::markScopeWithRenderComponentInTree(currentScope);
     }
   }
   return self;

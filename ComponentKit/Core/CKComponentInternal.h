@@ -49,13 +49,11 @@
 
  @param view A struct describing the view for this component. Pass {} to specify that no view should be created.
  @param size A size constraint that should apply to this component. Pass {} to specify no size constraint.
- @param isLayoutComponent should be YES if it's being called from an internal layout component.
 
  This initializer will not try to acquire the scope handle from the thread local store.
  */
 + (instancetype)newRenderComponentWithView:(const CKComponentViewConfiguration &)view
-                                      size:(const CKComponentSize &)size
-                         isLayoutComponent:(BOOL)isLayoutComponent;
+                                      size:(const CKComponentSize &)size;
 
 /**
  Unmounts the component:

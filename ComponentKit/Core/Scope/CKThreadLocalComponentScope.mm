@@ -51,6 +51,6 @@ CKThreadLocalComponentScope::~CKThreadLocalComponentScope()
 
 void CKThreadLocalComponentScope::markScopeWithRenderComponentInTree(CKThreadLocalComponentScope *scope)
 {
-  CKCAssert(scope != nullptr && scope != NULL, @"Current scope should never be null here. Thread-local stack is corrupted.");
+  CKCAssert(scope != nullptr, @"Scope should never be null here. Thread-local stack is corrupted.");
   scope->newScopeRoot.hasRenderComponentInTree = YES;
 }

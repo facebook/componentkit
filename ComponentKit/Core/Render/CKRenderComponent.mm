@@ -42,13 +42,13 @@
 
 + (instancetype)new
 {
-  return [super newRenderComponentWithView:{} size:{} isLayoutComponent:NO];
+  return [super newRenderComponentWithView:{} size:{}];
 }
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
 {
-  return [super newRenderComponentWithView:view size:size isLayoutComponent:NO];
+  return [super newRenderComponentWithView:view size:size];
 }
 
 - (CKComponent *)render:(id)state
