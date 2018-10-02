@@ -148,16 +148,20 @@
   [self setUpForFasterStateUpdates];
 
   // Simulate a state update on the component itself:
-  // 1. treeNodeDirtyIds contains the tree node identifier
+  // 1. treeNodeDirtyIds, contains the component tree node id.
+  // 2. stateUpdates, contains a state update block for the component.
   CKThreadLocalComponentScope threadScope(nil, {});
   CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[_c.scopeHandle] = {^id(id s) { return s; }};
 
   auto const c2 = [CKTestRenderComponent new];
   [c2 buildComponentTree:scopeRoot2.rootNode
           previousParent:_scopeRoot.rootNode
                   params:{
                     .scopeRoot = scopeRoot2,
-                    .stateUpdates = {},
+                    .stateUpdates = stateUpdates,
                     .treeNodeDirtyIds = {
                       _c.scopeHandle.treeNode.nodeIdentifier
                     },
@@ -179,9 +183,13 @@
 
   // Simulate a state update on the component child:
   // 1. treeNodeDirtyIds, contains the component tree node id.
-  // 2. hasDirtyParent = NO
+  // 2. stateUpdates, contains a state update block for the component.
+  // 3. hasDirtyParent = NO
   CKThreadLocalComponentScope threadScope(nil, {});
   CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[_c.scopeHandle] = {^id(id s) { return s; }};
 
   auto const c2 = [CKTestRenderComponent new];
 
@@ -189,9 +197,9 @@
           previousParent:_scopeRoot.rootNode
                   params:{
                     .scopeRoot = scopeRoot2,
-                    .stateUpdates = {},
+                    .stateUpdates = stateUpdates,
                     .treeNodeDirtyIds = {
-                      _c.scopeHandle.treeNode.nodeIdentifier // Mark the component as dirty
+                      _c.scopeHandle.treeNode.nodeIdentifier
                     },
                     .buildTrigger = BuildTrigger::StateUpdate,
                     .enableFasterStateUpdates = _config.enableFasterStateUpdates,

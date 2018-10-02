@@ -111,7 +111,7 @@ namespace CKRender {
                        stateUpdates:params.stateUpdates];
 
     // Faster state/props optimizations require previous parent.
-    if (previousParent) {
+    if (previousParent && childComponent != nullptr) {
       if (params.buildTrigger == BuildTrigger::StateUpdate) {
         // During state update, we have two possible optimizations:
         // 1. Faster state update
@@ -138,9 +138,6 @@ namespace CKRender {
               return;
             }
           }
-          else { // If the component is dirty, we mark it with `hasDirtyParent` param for its children.
-            hasDirtyParent = YES;
-          }
         }
       }
       else if (params.buildTrigger == BuildTrigger::PropsUpdate) {
@@ -150,6 +147,11 @@ namespace CKRender {
           return;
         }
       }
+    }
+
+    // Update the `hasDirtyParent` param for Faster state/props updates.
+    if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params)) {
+      hasDirtyParent = YES;
     }
 
     auto const child = [component render:node.state];
@@ -212,8 +214,11 @@ namespace CKRender {
                       id<CKTreeNodeWithChildrenProtocol> previousParent,
                       const CKBuildComponentTreeParams &params) -> BOOL {
     if (previousParent && params.buildTrigger == BuildTrigger::StateUpdate && (params.enableFasterStateUpdates || params.enableFasterPropsUpdates)) {
-      auto const dirtyNodeId = params.treeNodeDirtyIds.find(node.nodeIdentifier);
-      return dirtyNodeId != params.treeNodeDirtyIds.end();
+      auto const scopeHandle = node.handle;
+      if (scopeHandle != nil) {
+        auto const stateUpdateBlock = params.stateUpdates.find(scopeHandle);
+        return stateUpdateBlock != params.stateUpdates.end();
+      }
     }
     return NO;
   }
