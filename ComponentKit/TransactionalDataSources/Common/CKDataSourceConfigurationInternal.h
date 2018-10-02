@@ -31,6 +31,7 @@ struct CKDataSourceQOSOptions {
  @param componentProvider See @protocol(CKComponentProvider)
  @param context Passed to methods exposed by @protocol(CKComponentProvider).
  @param sizeRange Used for the root layout.
+ @param workQueue Queue used for processing asynchronous state updates.
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
@@ -41,6 +42,7 @@ struct CKDataSourceQOSOptions {
                                 sizeRange:(const CKSizeRange &)sizeRange
                      buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                                qosOptions:(const CKDataSourceQOSOptions &)qosOptions
+                                workQueue:(dispatch_queue_t)workQueue
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
              parallelInsertBuildAndLayout:(BOOL)parallelInsertBuildAndLayout
     parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
@@ -53,6 +55,7 @@ struct CKDataSourceQOSOptions {
 
 @property (nonatomic, readonly, strong) id<CKAnalyticsListener> analyticsListener;
 
+@property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
 @property (nonatomic, assign, readonly) BOOL unifyBuildAndLayout;
 @property (nonatomic, assign, readonly) BOOL parallelInsertBuildAndLayout;
 @property (nonatomic, assign, readonly) NSUInteger parallelInsertBuildAndLayoutThreshold;

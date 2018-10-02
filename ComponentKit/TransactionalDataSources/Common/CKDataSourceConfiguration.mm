@@ -33,6 +33,7 @@
                                sizeRange:sizeRange
                     buildComponentConfig:{}
                               qosOptions:{}
+                               workQueue:nil
                      unifyBuildAndLayout:NO
             parallelInsertBuildAndLayout:NO
    parallelInsertBuildAndLayoutThreshold:0
@@ -49,6 +50,7 @@
                                 sizeRange:(const CKSizeRange &)sizeRange
                      buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                                qosOptions:(const CKDataSourceQOSOptions &)qosOptions
+                                workQueue:(dispatch_queue_t)workQueue
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
              parallelInsertBuildAndLayout:(BOOL)parallelInsertBuildAndLayout
     parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
@@ -73,6 +75,7 @@
     _parallelUpdateBuildAndLayout = parallelUpdateBuildAndLayout;
     _parallelUpdateBuildAndLayoutThreshold = parallelUpdateBuildAndLayoutThreshold;
     _qosOptions = qosOptions;
+    _workQueue = workQueue;
     _animationOptions = animationOptions;
   }
   return self;

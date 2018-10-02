@@ -78,6 +78,9 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
       dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qosClassFromDataSourceQOS(configuration.qosOptions.workQueueQOS), 0);
       _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", workQueueAttributes);
     }
+    if (configuration.workQueue != nil) {
+      dispatch_set_target_queue(_workQueue, configuration.workQueue);
+    }
 
     _pendingAsynchronousModifications = [NSMutableArray array];
     [CKComponentDebugController registerReflowListener:self];
