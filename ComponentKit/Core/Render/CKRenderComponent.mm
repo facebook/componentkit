@@ -59,9 +59,9 @@
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
-            hasDirtyParent:(BOOL)hasDirtyParent
+      parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
-  CKRender::buildComponentTreeWithSingleChild(self, &_childComponent, parent, previousParent, params, hasDirtyParent);
+  CKRender::buildComponentTreeWithSingleChild(self, &_childComponent, parent, previousParent, params, parentHasStateUpdate);
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize

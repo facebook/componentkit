@@ -18,11 +18,11 @@
 struct CKRenderWithSizeSpecComponentParameters {
   id<CKTreeNodeWithChildrenProtocol> previousParentForChild;
   const CKBuildComponentTreeParams &params;
-  const BOOL hasDirtyParent;
+  const BOOL parentHasStateUpdate;
 
   CKRenderWithSizeSpecComponentParameters(id<CKTreeNodeWithChildrenProtocol> pP,
                                           const CKBuildComponentTreeParams &p,
-                                          BOOL hDP) : previousParentForChild(pP), params(p), hasDirtyParent(hDP) {};
+                                          BOOL hDP) : previousParentForChild(pP), params(p), parentHasStateUpdate(hDP) {};
 };
 
 @implementation CKRenderWithSizeSpecComponent {
@@ -61,7 +61,7 @@ struct CKRenderWithSizeSpecComponentParameters {
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
-            hasDirtyParent:(BOOL)hasDirtyParent
+      parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
   if (!_node) {
     auto const node = [[CKRenderTreeNodeWithChildren alloc]
@@ -72,15 +72,15 @@ struct CKRenderWithSizeSpecComponentParameters {
                        stateUpdates:params.stateUpdates];
     _node = node;
 
-    // Update the `hasDirtyParent` param for Faster state/props updates.
-    if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params)) {
-      hasDirtyParent = YES;
+    // Update the `parentHasStateUpdate` param for Faster state/props updates.
+    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
+      parentHasStateUpdate = YES;
     }
 
     auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
     _parameters = std::make_unique<CKRenderWithSizeSpecComponentParameters>(previousParentForChild,
                                                                             params,
-                                                                            hasDirtyParent);
+                                                                            parentHasStateUpdate);
   }
 }
 
@@ -93,7 +93,7 @@ struct CKRenderWithSizeSpecComponentParameters {
     [child buildComponentTree:_node
                previousParent:_parameters->previousParentForChild
                        params:_parameters->params
-               hasDirtyParent:_parameters->hasDirtyParent];
+         parentHasStateUpdate:_parameters->parentHasStateUpdate];
     [_measuredComponents addObject:child];
   }
 

@@ -15,7 +15,7 @@
 
 @interface CKTestChildRenderComponent : CKRenderComponent
 
-@property (nonatomic, assign) BOOL hasDirtyParent;
+@property (nonatomic, assign) BOOL parentHasStateUpdate;
 
 @end
 

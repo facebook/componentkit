@@ -147,7 +147,7 @@ struct CKComponentMountInfo {
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
-            hasDirtyParent:(BOOL)hasDirtyParent
+      parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
 #if CK_ASSERTIONS_ENABLED
   leafComponentOnARenderTree = YES;

@@ -70,7 +70,7 @@ namespace CKRender {
                                               id<CKTreeNodeWithChildrenProtocol> parent,
                                               id<CKTreeNodeWithChildrenProtocol> previousParent,
                                               const CKBuildComponentTreeParams &params,
-                                              BOOL hasDirtyParent) -> void
+                                              BOOL parentHasStateUpdate) -> void
   {
     CKCAssert(component, @"component cannot be nil");
 
@@ -81,16 +81,16 @@ namespace CKRender {
                        scopeRoot:params.scopeRoot
                        stateUpdates:params.stateUpdates];
 
-    // Update the `hasDirtyParent` param for Faster state/props updates.
-    if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params)) {
-      hasDirtyParent = YES;
+    // Update the `parentHasStateUpdate` param for Faster state/props updates.
+    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
+      parentHasStateUpdate = YES;
     }
 
     if (childComponent) {
       [childComponent buildComponentTree:node
                           previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
                                   params:params
-                          hasDirtyParent:hasDirtyParent];
+                    parentHasStateUpdate:parentHasStateUpdate];
     }
   }
 
@@ -99,7 +99,7 @@ namespace CKRender {
                                          id<CKTreeNodeWithChildrenProtocol> parent,
                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
                                          const CKBuildComponentTreeParams &params,
-                                         BOOL hasDirtyParent) -> void
+                                         BOOL parentHasStateUpdate) -> void
   {
     CKCAssert(component, @"component cannot be nil");
 
@@ -120,8 +120,8 @@ namespace CKRender {
           // Check if the tree node is not dirty (not in a branch of a state update).
           auto const dirtyNodeId = params.treeNodeDirtyIds.find(node.nodeIdentifier);
           if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
-            // If the component is not dirty and it doesn't have a dirty parent - we can reuse it.
-            if (!hasDirtyParent) {
+            // If the component is not dirty and it doesn't have a parent with a state update - we can reuse it.
+            if (!parentHasStateUpdate) {
               if (params.enableFasterStateUpdates) {
                 // Faster state update optimizations.
                 if (CKRenderInternal::reusePreviousComponent(component, childComponent, node, parent, previousParent)) {
@@ -149,9 +149,9 @@ namespace CKRender {
       }
     }
 
-    // Update the `hasDirtyParent` param for Faster state/props updates.
-    if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params)) {
-      hasDirtyParent = YES;
+    // Update the `parentHasStateUpdate` param for Faster state/props updates.
+    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
+      parentHasStateUpdate = YES;
     }
 
     auto const child = [component render:node.state];
@@ -164,7 +164,7 @@ namespace CKRender {
       [child buildComponentTree:node
                  previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
                          params:params
-                 hasDirtyParent:hasDirtyParent];
+           parentHasStateUpdate:parentHasStateUpdate];
     }
   }
 
@@ -172,7 +172,7 @@ namespace CKRender {
                                         id<CKTreeNodeWithChildrenProtocol> parent,
                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
                                         const CKBuildComponentTreeParams &params,
-                                        BOOL hasDirtyParent) -> void
+                                        BOOL parentHasStateUpdate) -> void
   {
     auto const node = [[CKRenderTreeNodeWithChildren alloc]
                        initWithComponent:component
@@ -181,9 +181,9 @@ namespace CKRender {
                        scopeRoot:params.scopeRoot
                        stateUpdates:params.stateUpdates];
 
-    // Update the `hasDirtyParent` param for Faster state/props updates.
-    if (!hasDirtyParent && CKRender::hasDirtyParent(node, previousParent, params)) {
-      hasDirtyParent = YES;
+    // Update the `parentHasStateUpdate` param for Faster state/props updates.
+    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
+      parentHasStateUpdate = YES;
     }
 
     auto const children = [component renderChildren:node.state];
@@ -193,7 +193,7 @@ namespace CKRender {
         [child buildComponentTree:node
                    previousParent:previousParentForChild
                            params:params
-                   hasDirtyParent:hasDirtyParent];
+             parentHasStateUpdate:parentHasStateUpdate];
       }
     }
   }
@@ -210,9 +210,9 @@ namespace CKRender {
                                 stateUpdates:params.stateUpdates];
   }
 
-  auto hasDirtyParent(id<CKTreeNodeProtocol> node,
-                      id<CKTreeNodeWithChildrenProtocol> previousParent,
-                      const CKBuildComponentTreeParams &params) -> BOOL {
+  auto componentHasStateUpdate(id<CKTreeNodeProtocol> node,
+                               id<CKTreeNodeWithChildrenProtocol> previousParent,
+                               const CKBuildComponentTreeParams &params) -> BOOL {
     if (previousParent && params.buildTrigger == BuildTrigger::StateUpdate && (params.enableFasterStateUpdates || params.enableFasterPropsUpdates)) {
       auto const scopeHandle = node.handle;
       if (scopeHandle != nil) {

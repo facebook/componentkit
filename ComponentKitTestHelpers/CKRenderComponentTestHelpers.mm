@@ -59,10 +59,10 @@
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
-            hasDirtyParent:(BOOL)hasDirtyParent
+      parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
-  [super buildComponentTree:parent previousParent:previousParent params:params hasDirtyParent:hasDirtyParent];
-  _hasDirtyParent = hasDirtyParent;
+  [super buildComponentTree:parent previousParent:previousParent params:params parentHasStateUpdate:parentHasStateUpdate];
+  _parentHasStateUpdate = parentHasStateUpdate;
 }
 
 @end

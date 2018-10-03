@@ -60,7 +60,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                              .enableFasterStateUpdates = config.enableFasterStateUpdates,
                              .enableFasterPropsUpdates = config.enableFasterPropsUpdates
                            }
-                   hasDirtyParent:NO];
+             parentHasStateUpdate:NO];
   }
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;
@@ -104,7 +104,7 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
     [component buildComponentTree:threadScope.newScopeRoot.rootNode
                    previousParent:previousRoot.rootNode
                            params:params
-                   hasDirtyParent:NO];
+     parentHasStateUpdate:NO];
   }
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;

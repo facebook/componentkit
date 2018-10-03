@@ -25,29 +25,29 @@ namespace CKRender {
                                               id<CKTreeNodeWithChildrenProtocol> parent,
                                               id<CKTreeNodeWithChildrenProtocol> previousParent,
                                               const CKBuildComponentTreeParams &params,
-                                              BOOL hasDirtyParent) -> void;
+                                              BOOL parentHasStateUpdate) -> void;
 
   auto buildComponentTreeWithSingleChild(id<CKRenderWithChildComponentProtocol> component,
                                          __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                          id<CKTreeNodeWithChildrenProtocol> parent,
                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
                                          const CKBuildComponentTreeParams &params,
-                                         BOOL hasDirtyParent) -> void;
+                                         BOOL parentHasStateUpdate) -> void;
 
   auto buildComponentTreeWithMultiChild(id<CKRenderWithChildrenComponentProtocol> component,
                                         id<CKTreeNodeWithChildrenProtocol> parent,
                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
                                         const CKBuildComponentTreeParams &params,
-                                        BOOL hasDirtyParent) -> void;
+                                        BOOL parentHasStateUpdate) -> void;
 
   auto buildComponentTreeForLeafComponent(id<CKTreeNodeComponentProtocol> component,
                                           id<CKTreeNodeWithChildrenProtocol> parent,
                                           id<CKTreeNodeWithChildrenProtocol> previousParent,
                                           const CKBuildComponentTreeParams &params) -> void;
 
-  auto hasDirtyParent(id<CKTreeNodeProtocol> node,
-                      id<CKTreeNodeWithChildrenProtocol> previousParent,
-                      const CKBuildComponentTreeParams &params) -> BOOL;
+  auto componentHasStateUpdate(id<CKTreeNodeProtocol> node,
+                               id<CKTreeNodeWithChildrenProtocol> previousParent,
+                               const CKBuildComponentTreeParams &params) -> BOOL;
 
   /**
    @return A collection of tree node marked as dirty if any. An empty collection otherwise.
