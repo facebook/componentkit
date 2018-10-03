@@ -286,18 +286,6 @@ struct CKComponentMountInfo {
                                         restrictedToSize:_size
                                     relativeToParentSize:parentSize];
 
-  CKAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
-           [self class], [layout.component class]);
-  CKSizeRange resolvedRange __attribute__((unused)) = constrainedSize.intersect(_size.resolve(parentSize));
-  CKAssertWithCategory(CKIsGreaterThanOrEqualWithTolerance(resolvedRange.max.width, layout.size.width)
-                       && CKIsGreaterThanOrEqualWithTolerance(layout.size.width, resolvedRange.min.width)
-                       && CKIsGreaterThanOrEqualWithTolerance(resolvedRange.max.height,layout.size.height)
-                       && CKIsGreaterThanOrEqualWithTolerance(layout.size.height,resolvedRange.min.height),
-                       NSStringFromClass([self class]),
-                       @"Computed size %@ for %@ does not fall within constrained size %@\n%@",
-                       NSStringFromCGSize(layout.size), [self class], resolvedRange.description(),
-                       CK::Component::LayoutContext::currentStackDescription());
-
 #if CK_ASSERTIONS_ENABLED
   // If `leafComponentOnARenderTree` is true, the infrastructure treats this component as a leaf component.
   // If this component has children in its layout, this means that it's not a real leaf component.
@@ -313,6 +301,18 @@ struct CKComponentMountInfo {
                          (childrenSize == 1 ? @"CKRenderLayoutComponent" : @"CKRenderLayoutWithChildrenComponent"));
   }
 #endif
+  
+  CKAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
+           [self class], [layout.component class]);
+  CKSizeRange resolvedRange __attribute__((unused)) = constrainedSize.intersect(_size.resolve(parentSize));
+  CKAssertWithCategory(CKIsGreaterThanOrEqualWithTolerance(resolvedRange.max.width, layout.size.width)
+                       && CKIsGreaterThanOrEqualWithTolerance(layout.size.width, resolvedRange.min.width)
+                       && CKIsGreaterThanOrEqualWithTolerance(resolvedRange.max.height,layout.size.height)
+                       && CKIsGreaterThanOrEqualWithTolerance(layout.size.height,resolvedRange.min.height),
+                       NSStringFromClass([self class]),
+                       @"Computed size %@ for %@ does not fall within constrained size %@\n%@",
+                       NSStringFromCGSize(layout.size), [self class], resolvedRange.description(),
+                       CK::Component::LayoutContext::currentStackDescription());
   return layout;
 }
 
