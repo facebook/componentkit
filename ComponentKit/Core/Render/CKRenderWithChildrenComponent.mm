@@ -31,6 +31,7 @@
 
 - (std::vector<CKComponent *>)renderChildren:(id)state
 {
+  CKFailAssert(@"%@ MUST override the '%@' method.", [self class], NSStringFromSelector(_cmd));
   return {};
 }
 
