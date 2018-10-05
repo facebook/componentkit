@@ -73,6 +73,8 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   // Used by assertions to identify whether methods on the data source are being
   // called on the correct queue (the ID is stored on the queue).
   NSInteger _dataSourceID;
+  // The queue that was tagged with the data source ID.
+  dispatch_queue_t _taggedQueue;
 #endif
 }
 @end
@@ -93,13 +95,18 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
       dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qosClassFromDataSourceQOS(configuration.qosOptions.workQueueQOS), 0);
       _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", workQueueAttributes);
     }
+    _applyChangesetsOnWorkQueue = configuration.applyChangesetsOnWorkQueue;
+    _changesetQueue = _applyChangesetsOnWorkQueue ? _workQueue : dispatch_get_main_queue();
     if (configuration.workQueue != nil) {
       dispatch_set_target_queue(_workQueue, configuration.workQueue);
     }
-    _applyChangesetsOnWorkQueue = configuration.applyChangesetsOnWorkQueue;
-    _changesetQueue = _applyChangesetsOnWorkQueue ? _workQueue : dispatch_get_main_queue();
 #if CK_ASSERTIONS_ENABLED
-    _dataSourceID = addDataSourceIDToQueue(_changesetQueue);
+    // dispatch_get_specific() will return the context value if the key has been set on the
+    // specified queue *or* it's target queue. We should tag the queue that _workQueue is
+    // targeting, so that whether something runs on _workQueue or configuration.workQueue, it
+    // will be able to read the key value.
+    _taggedQueue = _applyChangesetsOnWorkQueue ? (configuration.workQueue ?: _workQueue) : dispatch_get_main_queue();
+    _dataSourceID = addDataSourceIDToQueue(_taggedQueue);
 #endif
     _pendingAsynchronousModifications = [NSMutableArray array];
     [CKComponentDebugController registerReflowListener:self];
@@ -120,7 +127,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 - (void)dealloc
 {
 #if CK_ASSERTIONS_ENABLED
-  removeDataSourceIDFromQueue(_changesetQueue, _dataSourceID);
+  removeDataSourceIDFromQueue(_taggedQueue, _dataSourceID);
 #endif
   
   // We want to ensure that controller invalidation is called on the main thread
