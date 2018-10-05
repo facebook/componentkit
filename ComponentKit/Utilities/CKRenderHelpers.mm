@@ -94,6 +94,37 @@ namespace CKRender {
     }
   }
 
+  auto buildComponentTreeWithPrecomputedChildren(id<CKTreeNodeComponentProtocol> component,
+                                                 std::vector<id<CKTreeNodeComponentProtocol>> childrenComponents,
+                                                 id<CKTreeNodeWithChildrenProtocol> parent,
+                                                 id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                                 const CKBuildComponentTreeParams &params,
+                                                 BOOL parentHasStateUpdate) -> void
+  {
+    CKCAssert(component, @"component cannot be nil");
+
+    auto const node = [[CKTreeNodeWithChildren alloc]
+                       initWithComponent:component
+                       parent:parent
+                       previousParent:previousParent
+                       scopeRoot:params.scopeRoot
+                       stateUpdates:params.stateUpdates];
+
+    // Update the `parentHasStateUpdate` param for Faster state/props updates.
+    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
+      parentHasStateUpdate = YES;
+    }
+
+    for (auto const childComponent : childrenComponents) {
+      if (childComponent) {
+        [childComponent buildComponentTree:node
+                            previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
+                                    params:params
+                      parentHasStateUpdate:parentHasStateUpdate];
+      }
+    }
+  }
+
   auto buildComponentTreeWithSingleChild(id<CKRenderWithChildComponentProtocol> component,
                                          __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                          id<CKTreeNodeWithChildrenProtocol> parent,
