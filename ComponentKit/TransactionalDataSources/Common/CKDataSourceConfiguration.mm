@@ -34,7 +34,7 @@
                     buildComponentConfig:{}
                               qosOptions:{}
                                workQueue:nil
-              applyChangesetsOnWorkQueue:NO
+           applyModificationsOnWorkQueue:NO
                      unifyBuildAndLayout:NO
             parallelInsertBuildAndLayout:NO
    parallelInsertBuildAndLayoutThreshold:0
@@ -52,7 +52,7 @@
                      buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                                qosOptions:(const CKDataSourceQOSOptions &)qosOptions
                                 workQueue:(dispatch_queue_t)workQueue
-               applyChangesetsOnWorkQueue:(BOOL)applyChangesetsOnWorkQueue
+            applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
              parallelInsertBuildAndLayout:(BOOL)parallelInsertBuildAndLayout
     parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
@@ -78,7 +78,7 @@
     _parallelUpdateBuildAndLayoutThreshold = parallelUpdateBuildAndLayoutThreshold;
     _qosOptions = qosOptions;
     _workQueue = workQueue;
-    _applyChangesetsOnWorkQueue = applyChangesetsOnWorkQueue;
+    _applyModificationsOnWorkQueue = applyModificationsOnWorkQueue;
     _animationOptions = animationOptions;
   }
   return self;

@@ -67,8 +67,9 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
 
   dispatch_queue_t _concurrentQueue;
-  dispatch_queue_t _changesetQueue;
-  BOOL _applyChangesetsOnWorkQueue;
+  // The queue that modifications are processed on.
+  dispatch_queue_t _modificationQueue;
+  BOOL _applyModificationsOnWorkQueue;
 #if CK_ASSERTIONS_ENABLED
   // Used by assertions to identify whether methods on the data source are being
   // called on the correct queue (the ID is stored on the queue).
@@ -95,8 +96,8 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
       dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qosClassFromDataSourceQOS(configuration.qosOptions.workQueueQOS), 0);
       _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", workQueueAttributes);
     }
-    _applyChangesetsOnWorkQueue = configuration.applyChangesetsOnWorkQueue;
-    _changesetQueue = _applyChangesetsOnWorkQueue ? _workQueue : dispatch_get_main_queue();
+    _applyModificationsOnWorkQueue = configuration.applyModificationsOnWorkQueue;
+    _modificationQueue = _applyModificationsOnWorkQueue ? _workQueue : dispatch_get_main_queue();
     if (configuration.workQueue != nil) {
       dispatch_set_target_queue(_workQueue, configuration.workQueue);
     }
@@ -105,7 +106,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     // specified queue *or* it's target queue. We should tag the queue that _workQueue is
     // targeting, so that whether something runs on _workQueue or configuration.workQueue, it
     // will be able to read the key value.
-    _taggedQueue = _applyChangesetsOnWorkQueue ? (configuration.workQueue ?: _workQueue) : dispatch_get_main_queue();
+    _taggedQueue = _applyModificationsOnWorkQueue ? (configuration.workQueue ?: _workQueue) : dispatch_get_main_queue();
     _dataSourceID = addDataSourceIDToQueue(_taggedQueue);
 #endif
     _pendingAsynchronousModifications = [NSMutableArray array];
@@ -249,7 +250,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   CKAssertMainThread();
   dispatch_block_t const handleStateUpdate = ^(void) {
     if (self->_pendingAsynchronousStateUpdates.empty() && self->_pendingSynchronousStateUpdates.empty()) {
-      dispatch_async(self->_changesetQueue, ^{
+      dispatch_async(self->_modificationQueue, ^{
         [self _processStateUpdates];
       });
     }
@@ -261,10 +262,10 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     }
   };
   
-  // Locking is only necessary if changesets are being applied on the work queue,
+  // Locking is only necessary if modifications are being applied on the work queue,
   // since otherwise this will be called on the main queue and component state updates
   // are received on the main queue.
-  if (_applyChangesetsOnWorkQueue) {
+  if (_applyModificationsOnWorkQueue) {
     CK::MutexLocker l(_pendingStateUpdatesLock);
     handleStateUpdate();
   } else {
@@ -363,10 +364,10 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     syncStateUpdateModification = [self _consumePendingSynchronousStateUpdates];
   };
   
-  // Locking is only necessary if changesets are being applied on the work queue,
+  // Locking is only necessary if modifications are being applied on the work queue,
   // since otherwise this will be called on the main queue and component state updates
   // are received on the main queue.
-  if (_applyChangesetsOnWorkQueue) {
+  if (_applyModificationsOnWorkQueue) {
     CK::MutexLocker l(_pendingStateUpdatesLock);
     consumePendingStateUpdates();
   } else {
@@ -418,7 +419,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
               didGenerateNewState:[change state]
                           changes:[change appliedChanges]];
 
-  dispatch_async(_changesetQueue, ^{
+  dispatch_async(_modificationQueue, ^{
     // If the first object in _pendingAsynchronousModifications is not still the modification,
     // it may have been canceled; don't apply it.
     if ([_pendingAsynchronousModifications firstObject] == modificationPair.modification && self->_state == modificationPair.state) {

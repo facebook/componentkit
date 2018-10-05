@@ -32,8 +32,8 @@ struct CKDataSourceQOSOptions {
  @param context Passed to methods exposed by @protocol(CKComponentProvider).
  @param sizeRange Used for the root layout.
  @param workQueue Queue used for processing asynchronous state updates.
- @param applyChangesetsOnWorkQueue Normally, changesets must be applied on the main thread. Specifying
- this option will allow you to call -applyChangeset:mode:userInfo: on `workQueue` instead, where
+ @param applyModificationsOnWorkQueue Normally, modifications must be applied on the main thread.
+ Specifying this option will allow you to call -applyChangeset:mode:userInfo: on `workQueue` instead, where
  synchronous updates will be applied immediately on the queue and asynchronous updates will be enqueued
  to execute asynchronously on the work queue. If this is set to `YES`, all methods called on the data
  source must be called on the work queue rather than the main thread.
@@ -48,7 +48,7 @@ struct CKDataSourceQOSOptions {
                      buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                                qosOptions:(const CKDataSourceQOSOptions &)qosOptions
                                 workQueue:(dispatch_queue_t)workQueue
-               applyChangesetsOnWorkQueue:(BOOL)applyChangesetsOnWorkQueue
+            applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
              parallelInsertBuildAndLayout:(BOOL)parallelInsertBuildAndLayout
     parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
@@ -62,7 +62,7 @@ struct CKDataSourceQOSOptions {
 @property (nonatomic, readonly, strong) id<CKAnalyticsListener> analyticsListener;
 
 @property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
-@property (nonatomic, assign, readonly) BOOL applyChangesetsOnWorkQueue;
+@property (nonatomic, assign, readonly) BOOL applyModificationsOnWorkQueue;
 @property (nonatomic, assign, readonly) BOOL unifyBuildAndLayout;
 @property (nonatomic, assign, readonly) BOOL parallelInsertBuildAndLayout;
 @property (nonatomic, assign, readonly) NSUInteger parallelInsertBuildAndLayoutThreshold;
