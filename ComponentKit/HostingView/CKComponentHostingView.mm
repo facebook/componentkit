@@ -125,9 +125,17 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
 
-    _pendingInputs = {.scopeRoot =
-      CKComponentScopeRootWithPredicates(self, analyticsListener ?: sDefaultAnalyticsListener, componentPredicates, componentControllerPredicates)};
-
+    if (options.previousScopeRoot != nil) {
+      _pendingInputs = {
+        .scopeRoot = options.previousScopeRoot,
+        .stateUpdates = options.pendingStateUpdates,
+      };
+    } else {
+      _pendingInputs = {
+        .scopeRoot = CKComponentScopeRootWithPredicates(self, analyticsListener ?: sDefaultAnalyticsListener, componentPredicates, componentControllerPredicates)
+      };
+    }
+    
     _allowTapPassthrough = options.allowTapPassthrough;
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero allowTapPassthrough:_allowTapPassthrough];
     [self addSubview:_containerView];
