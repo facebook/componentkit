@@ -40,6 +40,8 @@
 @interface CKTestScopeActionComponent : CKComponent
 
 + (instancetype)newWithBlock:(void(^)(CKComponent *sender, id context))block;
++ (instancetype)newWithBlock:(void(^)(CKComponent *sender, id context))block
+        useComponentAsTarget:(BOOL)useComponentAsTarget;
 
 - (void)triggerAction:(id)context;
 
@@ -51,13 +53,23 @@
   void (^_block)(CKComponent *, id);
 }
 
++ (instancetype)newWithBlock:(void(^)(CKComponent *sender, id context))block
+{
+  return [self newWithBlock:block useComponentAsTarget:NO];
+}
+
 + (instancetype)newWithBlock:(void (^)(CKComponent *, id))block
+        useComponentAsTarget:(BOOL)useComponentAsTarget
 {
   CKComponentScope scope(self);
 
   CKTestScopeActionComponent *c = [super newWithView:{} size:{}];
   if (c) {
-    c->_action = {scope, @selector(actionMethod:context:)};
+    if (useComponentAsTarget) {
+      c->_action = {c, @selector(actionMethod:context:)};
+    } else {
+      c->_action = {scope, @selector(actionMethod:context:)};
+    }
     c->_block = block;
   }
   return c;
@@ -78,6 +90,8 @@
 @interface CKTestControllerScopeActionComponent : CKComponent
 
 + (instancetype)newWithBlock:(void(^)(CKComponent *sender, id context))block;
++ (instancetype)newWithBlock:(void(^)(CKComponent *sender, id context))block
+        useComponentAsTarget:(BOOL)useComponentAsTarget;
 
 - (void(^)(CKComponent *sender, id context))block;
 
@@ -94,13 +108,23 @@
   void (^_block)(CKComponent *, id);
 }
 
++ (instancetype)newWithBlock:(void(^)(CKComponent *sender, id context))block
+{
+  return [self newWithBlock:block useComponentAsTarget:NO];
+}
+
 + (instancetype)newWithBlock:(void (^)(CKComponent *, id))block
+        useComponentAsTarget:(BOOL)useComponentAsTarget
 {
   CKComponentScope scope(self);
 
   CKTestControllerScopeActionComponent *c = [super newWithView:{} size:{}];
   if (c) {
-    c->_action = {scope, @selector(actionMethod:context:)};
+    if (useComponentAsTarget) {
+      c->_action = {c, @selector(actionMethod:context:)};
+    } else {
+      c->_action = {scope, @selector(actionMethod:context:)};
+    }
     c->_block = block;
   }
   return c;
@@ -505,6 +529,23 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
   XCTAssertTrue(calledAction, @"Should have called the action on the test component");
 }
 
+- (void)testComponentAsTargetActionCallsMethodOnComponent
+{
+  __block BOOL calledAction = NO;
+
+  // We have to use build component here to ensure the scopes are properly configured.
+  CKTestScopeActionComponent *component = (CKTestScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
+    return [CKTestScopeActionComponent
+            newWithBlock:^(CKComponent *sender, id context) {
+              calledAction = YES;
+            } useComponentAsTarget:YES];
+  }).component;
+
+  [component triggerAction:nil];
+
+  XCTAssertTrue(calledAction, @"Should have called the action on the test component");
+}
+
 - (void)testScopeActionCallsMethodOnScopedComponentWithCorrectContext
 {
   __block id actionContext = nil;
@@ -534,6 +575,23 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
             newWithBlock:^(CKComponent *sender, id context) {
               calledAction = YES;
             }];
+  }).component;
+
+  [component triggerAction:nil];
+
+  XCTAssertTrue(calledAction, @"Should have called the action on the test component");
+}
+
+- (void)testComponentAsTargetActionCallsMethodOnComponentControllerIfNotImplementedOnComponent
+{
+  __block BOOL calledAction = NO;
+
+  // We have to use build component here to ensure the scopes are properly configured.
+  CKTestControllerScopeActionComponent *component = (CKTestControllerScopeActionComponent *)CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
+    return [CKTestControllerScopeActionComponent
+            newWithBlock:^(CKComponent *sender, id context) {
+              calledAction = YES;
+            } useComponentAsTarget:YES];
   }).component;
 
   [component triggerAction:nil];

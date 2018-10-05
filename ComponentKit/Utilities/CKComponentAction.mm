@@ -383,17 +383,8 @@ void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SE
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
   const Class klass = scopeHandle.componentClass;
-  // We allow component actions to be implemented either in the component, or its controller.
-  const Class controllerKlass = [klass controllerClass];
 
-  if (selector == NULL) {
-    return;
-  }
-  CKCAssert([klass instancesRespondToSelector:selector] || [controllerKlass instancesRespondToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", klass, NSStringFromSelector(selector));
-
-  // Type encoding with NSMethodSignatue isn't working well for C++, so we use class_getInstanceMethod()
-  Method method = class_getInstanceMethod(klass, selector) ?: class_getInstanceMethod(controllerKlass, selector);
-  checkMethodSignatureAgainstTypeEncodings(selector, method, typeEncodings);
+  _CKTypedComponentDebugCheckComponent(klass, selector, typeEncodings);
 }
 
 void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
@@ -404,9 +395,31 @@ void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const st
   if (selector == NULL) {
     return;
   }
+
+  // If the target is `Class<CKComponentProtocol>`, we pass it to the `_CKTypedComponentDebugCheckComponent` function.
+  if ([target respondsToSelector:@selector(controllerClass)]) {
+    _CKTypedComponentDebugCheckComponent([target class], selector, typeEncodings);
+    return;
+  }
+
   CKCAssert([target respondsToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", [target class], NSStringFromSelector(selector));
 
   Method method = class_getInstanceMethod([target class], selector);
+  checkMethodSignatureAgainstTypeEncodings(selector, method, typeEncodings);
+}
+
+void _CKTypedComponentDebugCheckComponent(Class<CKComponentProtocol> klass, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
+{
+  // We allow component actions to be implemented either in the component, or its controller.
+  const Class componentKlass = klass;
+  const Class controllerKlass = [klass controllerClass];
+  if (selector == NULL) {
+    return;
+  }
+  CKCAssert([componentKlass instancesRespondToSelector:selector] || [controllerKlass instancesRespondToSelector:selector], @"Target does not respond to selector for component action. -[%@ %@]", componentKlass, NSStringFromSelector(selector));
+
+  // Type encoding with NSMethodSignatue isn't working well for C++, so we use class_getInstanceMethod()
+  Method method = class_getInstanceMethod(componentKlass, selector) ?: class_getInstanceMethod(controllerKlass, selector);
   checkMethodSignatureAgainstTypeEncodings(selector, method, typeEncodings);
 }
 #endif
