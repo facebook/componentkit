@@ -20,6 +20,17 @@
 @class CKRenderTreeNodeWithChild;
 
 namespace CKRender {
+  /**
+   Builds a component tree for a component having a child component that has been already initialized.
+   This should be called when a component, on initialization, receives its child component from the outside and it's not meant to be converted to a render component.
+
+   @param component The component at the head of the component tree.
+   @param childComponent The pre-computed child component owned by the component in input.
+   @param parent The current parent tree node of the component in input.
+   @param previousParent The previous generation of the parent tree node of the component in input.
+   @param params Collection of parameters to use to properly setup build component tree step.
+   @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
+   */
   auto buildComponentTreeWithPrecomputedChild(id<CKTreeNodeComponentProtocol> component,
                                               id<CKTreeNodeComponentProtocol> childComponent,
                                               id<CKTreeNodeWithChildrenProtocol> parent,
@@ -27,6 +38,34 @@ namespace CKRender {
                                               const CKBuildComponentTreeParams &params,
                                               BOOL parentHasStateUpdate) -> void;
 
+
+  /**
+   Builds a component tree for a component having children components that have been already initialized.
+   This should be called when a component receives its children components as a prop and it's not meant to be converted to a render component.
+
+   @param component The component at the head of the component tree.
+   @param childrenComponent The pre-computed children components owned by the component in input.
+   @param parent The current parent tree node of the component in input.
+   @param previousParent The previous generation of the parent tree node of the component in input.
+   @param params Collection of parameters to use to properly setup build component tree step.
+   @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
+   */
+  auto buildComponentTreeWithPrecomputedChildren(id<CKTreeNodeComponentProtocol> component,
+                                                 std::vector<id<CKTreeNodeComponentProtocol>> childrenComponents,
+                                                 id<CKTreeNodeWithChildrenProtocol> parent,
+                                                 id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                                 const CKBuildComponentTreeParams &params,
+                                                 BOOL parentHasStateUpdate) -> void;
+  /**
+   Builds a component tree for the input *render* component having a child component.
+
+   @param component The *render* component at the head of the component tree.
+   @param childComponent The child component owned by the component in input.
+   @param parent The current parent tree node of the component in input.
+   @param previousParent The previous generation of the parent tree node of the component in input.
+   @param params Collection of parameters to use to properly setup build component tree step.
+   @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
+   */
   auto buildComponentTreeWithSingleChild(id<CKRenderWithChildComponentProtocol> component,
                                          __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                          id<CKTreeNodeWithChildrenProtocol> parent,
@@ -34,17 +73,39 @@ namespace CKRender {
                                          const CKBuildComponentTreeParams &params,
                                          BOOL parentHasStateUpdate) -> void;
 
+  /**
+   Builds a component tree for the input *render* component having children components.
+
+   @param component The *render* component at the head of the component tree.
+   @param parent The current parent of the component in input.
+   @param previousParent The previous generation of the parent tree node of the component in input.
+   @param params Collection of parameters to use to properly setup build component tree step.
+   @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
+   */
   auto buildComponentTreeWithMultiChild(id<CKRenderWithChildrenComponentProtocol> component,
                                         id<CKTreeNodeWithChildrenProtocol> parent,
                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
                                         const CKBuildComponentTreeParams &params,
                                         BOOL parentHasStateUpdate) -> void;
 
+  /**
+   Builds a leaf node for a leaf component in the tree.
+   This should be called when the component in input is a leaf component in the tree.
+
+   @param component The leaf component at the end of the component tree.
+   @param parent The current parent of the component in input.
+   @param previousParent The previous generation of the parent tree node of the component in input.
+   @param params Collection of parameters to use to properly setup build component tree step.
+   */
   auto buildComponentTreeForLeafComponent(id<CKTreeNodeComponentProtocol> component,
                                           id<CKTreeNodeWithChildrenProtocol> parent,
                                           id<CKTreeNodeWithChildrenProtocol> previousParent,
                                           const CKBuildComponentTreeParams &params) -> void;
 
+
+  /**
+   @return `YES` if the input node is part of a state update path. `NO` otherwise.
+   */
   auto componentHasStateUpdate(id<CKTreeNodeProtocol> node,
                                id<CKTreeNodeWithChildrenProtocol> previousParent,
                                const CKBuildComponentTreeParams &params) -> BOOL;
