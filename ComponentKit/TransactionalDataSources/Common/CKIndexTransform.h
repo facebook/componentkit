@@ -50,7 +50,7 @@ namespace CK {
   };
 
   struct RemovalIndexTransform final: IndexTransform {
-    using IndexTransform::IndexTransform;
+    explicit RemovalIndexTransform(NSIndexSet *indexes) : IndexTransform(indexes) {};
 
     auto applyToIndex(NSInteger index) const -> NSInteger { return applyOffsetToIndex(index); }
     auto applyInverseToIndex(NSInteger index) const -> NSInteger { return findRangeAndApplyOffsetToIndex(index); }
