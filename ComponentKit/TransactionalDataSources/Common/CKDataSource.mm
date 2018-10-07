@@ -229,13 +229,11 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
 - (void)addListener:(id<CKDataSourceListener>)listener
 {
-  CKAssertChangesetQueue();
   [_announcer addListener:listener];
 }
 
 - (void)removeListener:(id<CKDataSourceListener>)listener
 {
-  CKAssertChangesetQueue();
   [_announcer removeListener:listener];
 }
 
