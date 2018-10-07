@@ -130,6 +130,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
         .scopeRoot = options.previousScopeRoot,
         .stateUpdates = options.pendingStateUpdates,
       };
+      _component = options.previousComponent;
     } else {
       _pendingInputs = {
         .scopeRoot = CKComponentScopeRootWithPredicates(self, analyticsListener ?: sDefaultAnalyticsListener, componentPredicates, componentControllerPredicates)
@@ -140,8 +141,11 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero allowTapPassthrough:_allowTapPassthrough];
     [self addSubview:_containerView];
 
-    _componentNeedsUpdate = YES;
-    _requestedUpdateMode = CKUpdateModeSynchronous;
+    if (_component == nil || !_pendingInputs.stateUpdates.empty()) {
+      _componentNeedsUpdate = YES;
+      _requestedUpdateMode = CKUpdateModeSynchronous;
+    }
+    
     _unifyBuildAndLayout = options.unifyBuildAndLayout;
     _enableNewAnimationInfrastructure = options.animationOptions.enableNewInfra;
     if (_enableNewAnimationInfrastructure) {
