@@ -52,21 +52,9 @@
   [self _testAttachingAndDetachingComponentLayoutOnViewResultsInCorrectAttachStateWithAttachController:attachController];
 }
 
-- (void)testAttachingAndDetachingComponentLayoutOnViewResultsInCorrectAttachStateWithNewAnimationInfra;
-{
-  auto const attachController = [CKComponentDataSourceAttachController newWithEnableNewAnimationInfrastructure:YES];
-  [self _testAttachingAndDetachingComponentLayoutOnViewResultsInCorrectAttachStateWithAttachController:attachController];
-}
-
 - (void)testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetachedWithAttachController
 {
   auto const attachController = [CKComponentDataSourceAttachController new];
-  [self _testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetachedWithAttachController:attachController];
-}
-
-- (void)testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetachedWithAttachControllerWithNewAnimationInfra
-{
-  auto const attachController = [CKComponentDataSourceAttachController newWithEnableNewAnimationInfrastructure:YES];
   [self _testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetachedWithAttachController:attachController];
 }
 

@@ -175,7 +175,6 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        parallelInsertBuildAndLayoutThreshold:0
                                        parallelUpdateBuildAndLayout:NO
                                        parallelUpdateBuildAndLayoutThreshold:0
-                                       animationOptions:{}
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
                                        analyticsListener:nil];

@@ -30,9 +30,6 @@
  */
 @interface CKComponentDataSourceAttachController : NSObject
 
-- (instancetype)initWithEnableNewAnimationInfrastructure:(BOOL)enableNewAnimationInfrastructure;
-+ (instancetype)newWithEnableNewAnimationInfrastructure:(BOOL)enableNewAnimationInfrastructure;
-
 /**
  Detaching a component tree will cause it to be unmounted from the view it is currently attached to and will mark the view as available to be
  attached again to a component tree.

@@ -52,7 +52,6 @@ struct CKComponentHostingViewInputs {
   CKComponentHostingViewInputs _pendingInputs;
 
   CKComponentBoundsAnimation _boundsAnimation;
-  BOOL _enableNewAnimationInfrastructure;
   CKComponentAnimations _componentAnimations;
   std::unique_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> _animationApplicator;
   std::unordered_set<CKComponentPredicate> _animationPredicates;
@@ -147,11 +146,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     }
     
     _unifyBuildAndLayout = options.unifyBuildAndLayout;
-    _enableNewAnimationInfrastructure = options.animationOptions.enableNewInfra;
-    if (_enableNewAnimationInfrastructure) {
-      _animationApplicator = CK::AnimationApplicatorFactory::make();
-    }
-    _animationPredicates = CKComponentAnimationPredicates(options.animationOptions);
+    _animationApplicator = CK::AnimationApplicatorFactory::make();
+    _animationPredicates = CKComponentAnimationPredicates();
     _invalidateRemovedControllers = options.invalidateRemovedControllers;
 
     [CKComponentDebugController registerReflowListener:self];
@@ -279,9 +275,7 @@ static void setMountedRootLayout(CKComponentHostingView *const self, const CKCom
 
 static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView *const self, const CKComponentRootLayout &newLayout)
 {
-  return self->_enableNewAnimationInfrastructure ?
-  CK::animationsForComponents(CK::animatedComponentsBetweenLayouts(newLayout, self->_mountedRootLayout), self->_containerView) :
-  CKComponentAnimations {};
+  return CK::animationsForComponents(CK::animatedComponentsBetweenLayouts(newLayout, self->_mountedRootLayout), self->_containerView);
 }
 
 #pragma mark - Appearance
@@ -371,8 +365,6 @@ static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView
                                                                     inputs->scopeRoot,
                                                                     inputs->stateUpdates,
                                                                     ^{
-                                                                      const auto controllerCtx = [CKComponentControllerContext newWithHandleAnimationsInController:!_enableNewAnimationInfrastructure];
-                                                                      const CKComponentContext<CKComponentControllerContext> ctx {controllerCtx};
                                                                       return [_componentProvider componentForModel:inputs->model context:inputs->context];
                                                                     }
                                                                     ));
@@ -443,8 +435,6 @@ static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView
 
   _isSynchronouslyUpdatingComponent = YES;
   [self _applyResult:CKBuildComponent(_pendingInputs.scopeRoot, _pendingInputs.stateUpdates, ^{
-    const auto controllerCtx = [CKComponentControllerContext newWithHandleAnimationsInController:!_enableNewAnimationInfrastructure];
-    const CKComponentContext<CKComponentControllerContext> ctx {controllerCtx};
     return [_componentProvider componentForModel:_pendingInputs.model context:_pendingInputs.context];
   })];
   _isSynchronouslyUpdatingComponent = NO;
@@ -465,8 +455,6 @@ static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView
                                                                       pendingInputs.stateUpdates,
                                                                       sizeRange,
                                                                       ^{
-                                                                        const auto controllerCtx = [CKComponentControllerContext newWithHandleAnimationsInController:!_enableNewAnimationInfrastructure];
-                                                                        const CKComponentContext<CKComponentControllerContext> ctx {controllerCtx};
                                                                         return [_componentProvider componentForModel:model context:context];
                                                                       },
                                                                       _animationPredicates);

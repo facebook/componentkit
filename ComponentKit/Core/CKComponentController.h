@@ -100,7 +100,3 @@
 + (instancetype)new NS_UNAVAILABLE;
 
 @end
-
-@interface CKComponentControllerContext: NSObject
-+ (instancetype)newWithHandleAnimationsInController:(BOOL)handleAnimationsInController;
-@end

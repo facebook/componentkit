@@ -35,7 +35,6 @@
 //Data sources
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKCollectionViewDataSource.h>
-#import <ComponentKit/CKDataSourceAnimationOptions.h>
 #import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
 #import <ComponentKit/CKDataSourceQOS.h>

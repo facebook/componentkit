@@ -13,7 +13,6 @@
 
 #import <ComponentKit/CKAssert.h>
 
-#import "CKAnimationController.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 
@@ -44,32 +43,17 @@ static NSString *componentStateName(CKComponentControllerState state)
 }
 #pragma clang diagnostic pop
 
-@implementation CKComponentControllerContext
-+ (instancetype)newWithHandleAnimationsInController:(BOOL)handleAnimationsInController
-{
-  const auto c = [super new];
-  if (c != nil) {
-    c->_handleAnimationsInController = handleAnimationsInController;
-  }
-  return c;
-}
-@end
-
 @implementation CKComponentController
 {
   CKComponentControllerState _state;
   BOOL _updatingComponent;
   CKComponent *_previousComponent;
-  CKAnimationController *_animationController;
 }
 
 - (instancetype)initWithComponent:(CKComponent *)component
 {
   if (self = [super init]) {
     _component = component;
-    const auto ctx = CKComponentContext<CKComponentControllerContext>::get();
-    const auto handleAnimationsInController = (ctx == nil) ? YES : ctx.handleAnimationsInController;
-    _animationController = handleAnimationsInController ? [CKAnimationController new] : nil;
   }
   return self;
 }
@@ -118,12 +102,10 @@ static NSString *componentStateName(CKComponentControllerState state)
     case CKComponentControllerStateUnmounted:
       _state = CKComponentControllerStateMounting;
       [self willMount];
-      [_animationController componentWillStartMounting:component];
       break;
     case CKComponentControllerStateMounted:
       _state = CKComponentControllerStateRemounting;
       [self willRemount];
-      [_animationController componentWillStartRemounting:component previousComponent:_previousComponent];
       break;
     default:
       if (!component.componentOrAncestorHasScopeConflict) {
@@ -139,12 +121,10 @@ static NSString *componentStateName(CKComponentControllerState state)
     case CKComponentControllerStateMounting:
       _state = CKComponentControllerStateMounted;
       [self didMount];
-      [_animationController componentDidMount];
       break;
     case CKComponentControllerStateRemounting:
       _state = CKComponentControllerStateMounted;
       [self didRemount];
-      [_animationController componentDidMount];
       break;
     default:
       if (!component.componentOrAncestorHasScopeConflict) {
@@ -164,7 +144,6 @@ static NSString *componentStateName(CKComponentControllerState state)
       if (component == _component) {
         _state = CKComponentControllerStateUnmounting;
         [self willUnmount];
-        [_animationController componentWillUnmount];
       }
       break;
     case CKComponentControllerStateRemounting:
@@ -203,7 +182,6 @@ static NSString *componentStateName(CKComponentControllerState state)
 - (void)_relinquishView
 {
   [self componentWillRelinquishView];
-  [_animationController componentWillRelinquishView];
   _view = nil;
 }
 

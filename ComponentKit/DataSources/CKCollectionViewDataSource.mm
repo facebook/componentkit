@@ -48,8 +48,7 @@
     _collectionView.dataSource = self;
     [_collectionView registerClass:[CKCollectionViewDataSourceCell class] forCellWithReuseIdentifier:kReuseIdentifier];
 
-    _attachController = [CKComponentDataSourceAttachController
-                         newWithEnableNewAnimationInfrastructure:configuration.animationOptions.enableNewInfra];
+    _attachController = [CKComponentDataSourceAttachController new];
     _supplementaryViewDataSource = supplementaryViewDataSource;
     _cellToItemMap = [NSMapTable weakToStrongObjectsMapTable];
   }

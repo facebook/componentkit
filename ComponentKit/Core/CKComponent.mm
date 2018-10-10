@@ -377,30 +377,9 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
     return Nil; // Don't create root CKComponentControllers as it does nothing interesting.
   }
 
-  static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER; // protects cache
-  CK::StaticMutexLocker l(mutex);
-
-  static std::unordered_map<Class, Class> *cache = new std::unordered_map<Class, Class>();
-  const auto &it = cache->find(componentClass);
-  if (it == cache->end()) {
-    Class c = nil;
-    // If you override animationsFromPreviousComponent: or animationsOnInitialMount and if context permits
-    // then we need a controller
-    const auto ctx = CKComponentContext<CKComponentControllerContext>::get();
-    const auto handleAnimationsInController = (ctx == nil) ? YES : ctx.handleAnimationsInController;
-    if (handleAnimationsInController &&
-        (CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
-         CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnInitialMount)))) {
-          c = [CKComponentController class];
-        }
-    cache->insert({componentClass, c});
-
-    CKAssertWithCategory(!(c == nil && NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"])),
-                         NSStringFromClass([self class]), @"Should override + (Class<CKComponentControllerProtocol>)controllerClass to return its controllerClass");
-
-    return c;
-  }
-  return it->second;
+  CKAssertWithCategory(!NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"]),
+                       NSStringFromClass([self class]), @"Should override + (Class<CKComponentControllerProtocol>)controllerClass to return its controllerClass");
+  return Nil;
 }
 
 + (id)initialState

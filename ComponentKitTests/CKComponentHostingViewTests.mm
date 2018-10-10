@@ -34,7 +34,6 @@ typedef struct {
   BOOL embedInFlexbox;
   BOOL embedInTestComponent;
   id<CKAnalyticsListener> analyticsListener;
-  BOOL enableNewAnimationInfrastructure = NO;
 } CKComponentHostingViewConfiguration;
 static CKComponentHostingView *hostingView(const CKComponentHostingViewConfiguration &options = CKComponentHostingViewConfiguration())
 {
