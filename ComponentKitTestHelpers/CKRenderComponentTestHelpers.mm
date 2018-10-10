@@ -56,6 +56,11 @@
   return nil;
 }
 
+- (CKComponent *)render:(id)state
+{
+  return nil;
+}
+
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
