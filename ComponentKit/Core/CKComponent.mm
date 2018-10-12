@@ -301,7 +301,7 @@ struct CKComponentMountInfo {
                          (childrenSize == 1 ? @"CKRenderLayoutComponent" : @"CKRenderLayoutWithChildrenComponent"));
   }
 #endif
-  
+
   CKAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
            [self class], [layout.component class]);
   CKSizeRange resolvedRange __attribute__((unused)) = constrainedSize.intersect(_size.resolve(parentSize));
@@ -385,6 +385,28 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 + (id)initialState
 {
   return nil;
+}
+
++ (BOOL)requiresScopeHandle
+{
+  const Class componentClass = self;
+
+  static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER; // protects cache
+  CK::StaticMutexLocker l(mutex);
+
+  static std::unordered_map<Class, BOOL> *cache = new std::unordered_map<Class, BOOL>();
+  const auto &it = cache->find(componentClass);
+  if (it == cache->end()) {
+    BOOL hasAnimations = NO;
+    if (CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
+        CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnInitialMount)) ||
+        CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnFinalUnmount))) {
+      hasAnimations = YES;
+    }
+    cache->insert({componentClass, hasAnimations});
+    return hasAnimations;
+  }
+  return it->second;
 }
 
 #pragma mark - State

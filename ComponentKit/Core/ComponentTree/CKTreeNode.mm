@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
 
@@ -66,7 +67,9 @@
       } else {
         // We need a scope handle only if the component has a controller or an initial state.
         id initialState = [self initialStateWithComponent:component];
-        if (initialState != [CKTreeNodeEmptyState emptyState] || [componentClass controllerClass]) {
+        if (initialState != [CKTreeNodeEmptyState emptyState] ||
+            [componentClass controllerClass] ||
+            [self componentRequiresScopeHandle:componentClass]) {
           _handle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
                                                       rootIdentifier:scopeRoot.globalIdentifier
                                                       componentClass:componentClass
@@ -106,6 +109,12 @@
   // For CKComponent, we bridge a `nil` initial state to `CKTreeNodeEmptyState`.
   // The base initializer will create a scope handle for the component only if the initial state is different than `CKTreeNodeEmptyState`.
   return [[component class] initialState] ?: [CKTreeNodeEmptyState emptyState];
+}
+
+// For non-render comopnents, we don't need to check this code as the comopnent creates its scope handle.
+- (BOOL)componentRequiresScopeHandle:(Class<CKTreeNodeComponentProtocol>)componentClass
+{
+  return NO;
 }
 
 @end

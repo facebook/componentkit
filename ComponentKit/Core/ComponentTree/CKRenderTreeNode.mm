@@ -19,4 +19,9 @@
   return [[component class] initialStateWithComponent:component];
 }
 
+- (BOOL)componentRequiresScopeHandle:(Class<CKTreeNodeComponentProtocol>)componentClass
+{
+  return [componentClass requiresScopeHandle];
+}
+
 @end

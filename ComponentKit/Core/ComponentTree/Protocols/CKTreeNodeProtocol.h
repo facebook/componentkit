@@ -69,6 +69,9 @@ struct CKBuildComponentTreeParams {
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate;
 
+/** Returns true if the component requires scope handle */
++ (BOOL)requiresScopeHandle;
+
 @end
 
 /**
@@ -91,6 +94,9 @@ struct CKBuildComponentTreeParams {
 
 /** Returns the initial state of the component */
 - (id)initialStateWithComponent:(id<CKTreeNodeComponentProtocol>)component;
+
+/** Returns whether component requires a scope handle */
+- (BOOL)componentRequiresScopeHandle:(Class<CKTreeNodeComponentProtocol>)component;
 
 @end
 
