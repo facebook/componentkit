@@ -15,7 +15,6 @@
 
 #import "ComponentUtilities.h"
 #import "CKComponentSubclass.h"
-#import "CKRenderTreeNodeWithChildren.h"
 
 @implementation CKStaticLayoutComponent
 {

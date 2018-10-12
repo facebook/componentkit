@@ -14,7 +14,9 @@
 /**
  This object represents a node with a single child in the component tree.
 
- Each CKRenderComponent will have a corresponding CKRenderTreeNodeWithChild (when we use parent based component key).
+ Each render component will have a corresponding CKRenderTreeNodeWithChild.
+
+ For more information about render components see: CKRenderComponentProtocol.h
  */
 
 @interface CKRenderTreeNodeWithChild : CKTreeNodeWithChild

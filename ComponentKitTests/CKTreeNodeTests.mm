@@ -20,7 +20,6 @@
 #import "CKComponentInternal.h"
 #import "CKButtonComponent.h"
 #import "CKTreeNode.h"
-#import "CKRenderTreeNode.h"
 #import "CKRenderTreeNodeWithChild.h"
 #import "CKRenderTreeNodeWithChildren.h"
 #import "CKThreadLocalComponentScope.h"
@@ -158,11 +157,11 @@
   // Simulate a component tree creation with a DIFFRENT child
   CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
   auto const component2 = [CKRenderComponent newWithView:{} size:{}];
-  CKTreeNode *childNode2 = [[CKRenderTreeNode alloc] initWithComponent:component2
-                                                                parent:root2
-                                                        previousParent:root1
-                                                             scopeRoot:nil
-                                                          stateUpdates:{}];
+  CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
+                                                          parent:root2
+                                                  previousParent:root1
+                                                       scopeRoot:nil
+                                                    stateUpdates:{}];
 
   XCTAssertTrue(verifyChildToParentConnection(root1, childNode1, component1));
   XCTAssertTrue(verifyChildToParentConnection(root2, childNode2, component2));
@@ -271,39 +270,39 @@
 - (void)test_nonNil_initialState_onCKRenderTreeNode_withCKRenderComponent
 {
   auto const c = [CKTreeNodeTest_RenderComponent_WithState new];
-  [self _test_nonNil_initialState_withComponent:c andNodeClass:[CKRenderTreeNode class]];
+  [self _test_nonNil_initialState_withComponent:c andNodeClass:[CKRenderTreeNodeWithChild class]];
 }
 
 - (void)test_nonNil_initialState_onCKRenderTreeNode_withCKRenderWithChildrenComponent
 {
   auto const c = [CKTreeNodeTest_RenderWithChildrenComponent_WithState new];
-  [self _test_nonNil_initialState_withComponent:c andNodeClass:[CKRenderTreeNode class]];
+  [self _test_nonNil_initialState_withComponent:c andNodeClass:[CKRenderTreeNodeWithChild class]];
 }
 
 - (void)test_emptyInitialState_onCKRenderTreeNode_withCKRenderComponent
 {
   auto const c = [CKRenderComponent new];
-  [self _test_emptyInitialState_withComponent:c andNodeClass:[CKRenderTreeNode class]];
+  [self _test_emptyInitialState_withComponent:c andNodeClass:[CKRenderTreeNodeWithChild class]];
 }
 
 - (void)test_emptyInitialState_onCKRenderTreeNode_withCKRenderWithChildrenComponent
 {
   auto const c = [CKRenderWithChildrenComponent new];
-  [self _test_emptyInitialState_withComponent:c andNodeClass:[CKRenderTreeNode class]];
+  [self _test_emptyInitialState_withComponent:c andNodeClass:[CKRenderTreeNodeWithChild class]];
 }
 
 - (void)test_initialStateFromPtops_onCKRenderTreeNode_withCKRenderWithChildrenComponent
 {
   id prop = @1;
   auto const c = [CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps newWithProp:prop];
-  [self _test_initialState_withComponent:c initialState:prop andNodeClass:[CKRenderTreeNode class]];
+  [self _test_initialState_withComponent:c initialState:prop andNodeClass:[CKRenderTreeNodeWithChild class]];
 }
 
 - (void)test_initialStateFromPtops_onCKRenderTreeNode_withCKRenderComponent
 {
   id prop = @1;
   auto const c = [CKTreeNodeTest_RenderComponent_WithStateFromProps newWithProp:prop];
-  [self _test_initialState_withComponent:c initialState:prop andNodeClass:[CKRenderTreeNode class]];
+  [self _test_initialState_withComponent:c initialState:prop andNodeClass:[CKRenderTreeNodeWithChild class]];
 }
 
 - (void)test_nilInitialState_onCKRenderTreeNode_withCKRenderWithChildrenComponent
@@ -311,11 +310,11 @@
   // Make sure CKRenderWithChildrenComponent supports nil initial state from prop.
   id prop = nil;
   auto const c = [CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps newWithProp:prop];
-  [self _test_initialState_withComponent:c initialState:prop andNodeClass:[CKRenderTreeNode class]];
+  [self _test_initialState_withComponent:c initialState:prop andNodeClass:[CKRenderTreeNodeWithChild class]];
 
   // Make sure CKRenderWithChildrenComponent supports nil initial.
   auto const c2 = [CKTreeNodeTest_RenderWithChildrenComponent_WithNilState new];
-  [self _test_initialState_withComponent:c2 initialState:nil andNodeClass:[CKRenderTreeNode class]];
+  [self _test_initialState_withComponent:c2 initialState:nil andNodeClass:[CKRenderTreeNodeWithChild class]];
 }
 
 - (void)test_nilInitialState_onCKRenderTreeNode_withCKRenderComponent
@@ -323,11 +322,11 @@
   // Make sure CKRenderComponent supports nil initial state from prop.
   id prop = nil;
   auto const c = [CKTreeNodeTest_RenderComponent_WithStateFromProps newWithProp:prop];
-  [self _test_initialState_withComponent:c initialState:nil andNodeClass:[CKRenderTreeNode class]];
+  [self _test_initialState_withComponent:c initialState:nil andNodeClass:[CKRenderTreeNodeWithChild class]];
 
   // Make sure CKRenderWithChildrenComponent supports nil initial.
   auto const c2 = [CKTreeNodeTest_RenderComponent_WithNilState new];
-  [self _test_initialState_withComponent:c2 initialState:nil andNodeClass:[CKRenderTreeNode class]];
+  [self _test_initialState_withComponent:c2 initialState:nil andNodeClass:[CKRenderTreeNodeWithChild class]];
 }
 
 #pragma mark - CKTreeNodeWithChild
@@ -371,11 +370,11 @@
   // Simulate a component tree creation with a DIFFRENT child
   CKTreeNodeWithChild *root2 = [[CKTreeNodeWithChild alloc] init];
   auto const component2 = [CKRenderComponent newWithView:{} size:{}];
-  CKTreeNode *childNode2 = [[CKRenderTreeNode alloc] initWithComponent:component2
-                                                                parent:root2
-                                                        previousParent:root1
-                                                             scopeRoot:nil
-                                                          stateUpdates:{}];
+  CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
+                                                          parent:root2
+                                                  previousParent:root1
+                                                       scopeRoot:nil
+                                                    stateUpdates:{}];
 
   XCTAssertTrue(verifyChildToParentConnection(root1, childNode1, component1));
   XCTAssertTrue(verifyChildToParentConnection(root2, childNode2, component2));

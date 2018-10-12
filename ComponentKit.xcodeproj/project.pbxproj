@@ -272,10 +272,6 @@
 		230ADF731FC5FBEB001570A3 /* CKComponentEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 230ADF6F1FC5FBDA001570A3 /* CKComponentEvents.mm */; };
 		231039BE2142908700422B0E /* CKRenderComponentInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 231039B32142908700422B0E /* CKRenderComponentInternal.h */; };
 		231039BF2142908700422B0E /* CKRenderComponentInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 231039B32142908700422B0E /* CKRenderComponentInternal.h */; };
-		2319E3CE20481BDD00C71E2D /* CKRenderTreeNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2319E3C220481BDD00C71E2D /* CKRenderTreeNode.mm */; };
-		2319E3CF20481BDD00C71E2D /* CKRenderTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2319E3CD20481BDD00C71E2D /* CKRenderTreeNode.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2319E3D02048269A00C71E2D /* CKRenderTreeNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2319E3C220481BDD00C71E2D /* CKRenderTreeNode.mm */; };
-		2319E3D12048269F00C71E2D /* CKRenderTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2319E3CD20481BDD00C71E2D /* CKRenderTreeNode.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		23309A9F2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h in Headers */ = {isa = PBXBuildFile; fileRef = 23309A9D2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		23309AA02045C5ED00833BDB /* CKRenderTreeNodeWithChildren.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23309A9E2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.mm */; };
 		23309AA42045C5F300833BDB /* CKRenderComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 23309AA22045C5F300833BDB /* CKRenderComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -983,8 +979,6 @@
 		230ADF6E1FC5FBDA001570A3 /* CKComponentEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentEvents.h; sourceTree = "<group>"; };
 		230ADF6F1FC5FBDA001570A3 /* CKComponentEvents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentEvents.mm; sourceTree = "<group>"; };
 		231039B32142908700422B0E /* CKRenderComponentInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderComponentInternal.h; sourceTree = "<group>"; };
-		2319E3C220481BDD00C71E2D /* CKRenderTreeNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRenderTreeNode.mm; sourceTree = "<group>"; };
-		2319E3CD20481BDD00C71E2D /* CKRenderTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderTreeNode.h; sourceTree = "<group>"; };
 		23309A9D2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderTreeNodeWithChildren.h; sourceTree = "<group>"; };
 		23309A9E2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRenderTreeNodeWithChildren.mm; sourceTree = "<group>"; };
 		23309AA22045C5F300833BDB /* CKRenderComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderComponentProtocol.h; sourceTree = "<group>"; };
@@ -1559,8 +1553,6 @@
 				23EF1D3D209365B9004C95BE /* CKTreeNodeWithChild.mm */,
 				23EF1D3E209365B9004C95BE /* CKTreeNodeWithChildren.h */,
 				23EF1D3F209365B9004C95BE /* CKTreeNodeWithChildren.mm */,
-				2319E3CD20481BDD00C71E2D /* CKRenderTreeNode.h */,
-				2319E3C220481BDD00C71E2D /* CKRenderTreeNode.mm */,
 				23EF1D6120936B54004C95BE /* CKRenderTreeNodeWithChild.h */,
 				23EF1D5620936B54004C95BE /* CKRenderTreeNodeWithChild.mm */,
 				23309A9D2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h */,
@@ -2473,7 +2465,6 @@
 				03B8B55D1D2A346F00EDFF59 /* CKMacros.h in Headers */,
 				230ADF721FC5FBE8001570A3 /* CKComponentEvents.h in Headers */,
 				03B8B55E1D2A346F00EDFF59 /* CKTextKitEntityAttribute.h in Headers */,
-				2319E3D12048269F00C71E2D /* CKRenderTreeNode.h in Headers */,
 				03B8B55F1D2A346F00EDFF59 /* CKAsyncLayerSubclass.h in Headers */,
 				D657401321051C6F00FD8AAB /* CKIndexTransform.h in Headers */,
 				03B8B5601D2A346F00EDFF59 /* CKComponentDebugController.h in Headers */,
@@ -2677,7 +2668,6 @@
 				D0B47D081CBD948E00BB33CE /* ComponentViewManager.h in Headers */,
 				237E893F213FFC6D00793B4D /* CKRenderLayoutWithChildrenComponent.h in Headers */,
 				D0B47D0B1CBD948E00BB33CE /* CKComponentScopeFrame.h in Headers */,
-				2319E3CF20481BDD00C71E2D /* CKRenderTreeNode.h in Headers */,
 				D0B47CF51CBD948E00BB33CE /* CKComponentInternal.h in Headers */,
 				D6C3B05E20B71DBE0089F06A /* CKComponentAnimations.h in Headers */,
 				605A5B272142D89800B195AC /* CKRequired.h in Headers */,
@@ -3171,7 +3161,6 @@
 				03B8B4AC1D2A346F00EDFF59 /* CKDataSourceReloadModification.mm in Sources */,
 				03B8B4AD1D2A346F00EDFF59 /* CKDataSourceUpdateConfigurationModification.mm in Sources */,
 				03B8B4AE1D2A346F00EDFF59 /* CKDataSourceUpdateStateModification.mm in Sources */,
-				2319E3D02048269A00C71E2D /* CKRenderTreeNode.mm in Sources */,
 				03B8B4B01D2A346F00EDFF59 /* CKComponentAction.mm in Sources */,
 				03B8B4B11D2A346F00EDFF59 /* CKComponentDelegateAttribute.mm in Sources */,
 				03B8B4B21D2A346F00EDFF59 /* CKComponentDelegateForwarder.mm in Sources */,
@@ -3491,7 +3480,6 @@
 				23309AA02045C5ED00833BDB /* CKRenderTreeNodeWithChildren.mm in Sources */,
 				D0B47CD21CBD943400BB33CE /* CKTextComponent.mm in Sources */,
 				D657401421051C6F00FD8AAB /* CKIndexTransform.mm in Sources */,
-				2319E3CE20481BDD00C71E2D /* CKRenderTreeNode.mm in Sources */,
 				D0B47CD31CBD943400BB33CE /* CKTextComponentLayer.mm in Sources */,
 				60D7B3AB20FC90500011AB3B /* YGConfig.cpp in Sources */,
 				400B0E5F1F71C63B006BDFEE /* CKDataSourceChangeset.mm in Sources */,

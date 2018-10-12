@@ -15,7 +15,6 @@
 #import <ComponentKit/CKComponentInternal.h>
 
 #import "CKComponentSubclass.h"
-#import "CKRenderTreeNodeWithChildren.h"
 
 @implementation CKBackgroundLayoutComponent
 {

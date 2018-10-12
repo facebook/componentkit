@@ -21,7 +21,6 @@
 #import "CKComponentSubclass.h"
 #import "CKCompositeComponent.h"
 #import "CKInternalHelpers.h"
-#import "CKRenderTreeNodeWithChildren.h"
 #import "ComponentUtilities.h"
 
 const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
