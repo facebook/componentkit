@@ -10,10 +10,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class CKDataSource;
 @class CKDataSourceState;
 @protocol CKComponentProvider;
 @protocol CKComponentStateListener;
+@protocol CKDataSourceListener;
+@protocol CKDataSourceProtocol;
 
 CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
                                          id<CKComponentStateListener> listener,
@@ -22,6 +23,8 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
                                          BOOL parallelBuildAndLayout = NO);
 
 /** Returns a data source with one item and one section. */
-CKDataSource *CKComponentTestDataSource(Class<CKComponentProvider> provider);
+id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> dataSourceClass,
+                                                   Class<CKComponentProvider> provider,
+                                                   id<CKDataSourceListener> listener);
 
 NSSet *CKTestIndexPaths(NSUInteger numberOfSections, NSUInteger numberOfItemsPerSection);

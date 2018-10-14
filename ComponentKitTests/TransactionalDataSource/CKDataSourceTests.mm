@@ -23,20 +23,16 @@
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceListener.h>
 #import <ComponentKit/CKDataSourceState.h>
+#import <ComponentKit/CKThreadSafeDataSource.h>
 
 #import "CKDataSourceStateTestHelpers.h"
 
 @interface CKDataSourceTests : XCTestCase <CKComponentProvider, CKDataSourceAsyncListener>
 @end
 
-struct CKDataSourceAnnouncedUpdate {
-  CKDataSourceState *previousState;
-  CKDataSourceAppliedChanges *appliedChanges;
-};
-
 @implementation CKDataSourceTests
 {
-  std::vector<CKDataSourceAnnouncedUpdate> _announcedChanges;
+  NSMutableArray<CKDataSourceAppliedChanges *> *_announcedChanges;
   NSInteger _willGenerateChangeCounter;
   NSInteger _didGenerateChangeCounter;
   NSInteger _syncModificationStartCounter;
@@ -47,9 +43,15 @@ struct CKDataSourceAnnouncedUpdate {
   return [CKLifecycleTestComponent new];
 }
 
+- (void)setUp
+{
+  [super setUp];
+  _announcedChanges = [NSMutableArray new];
+}
+
 - (void)tearDown
 {
-  _announcedChanges.clear();
+  [_announcedChanges removeAllObjects];
   _willGenerateChangeCounter = 0;
   _didGenerateChangeCounter = 0;
   _syncModificationStartCounter = 0;
@@ -58,18 +60,38 @@ struct CKDataSourceAnnouncedUpdate {
 
 - (void)testDataSourceIsInitiallyEmpty
 {
-  CKDataSource *ds =
-  [[CKDataSource alloc] initWithConfiguration:
+  [self _testDataSourceIsInitiallyEmptyWithDataSourceClass:[CKDataSource class]];
+}
+
+- (void)testThreadSafeDataSourceIsInitiallyEmpty
+{
+  [self _testDataSourceIsInitiallyEmptyWithDataSourceClass:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testDataSourceIsInitiallyEmptyWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  id<CKDataSourceProtocol> ds =
+  [[(Class)dataSourceClass alloc] initWithConfiguration:
    [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
                                                         context:nil
                                                       sizeRange:{}]];
   XCTAssertEqual([[ds state] numberOfSections], (NSUInteger)0);
 }
 
-- (void)testSynchronouslyInsertingItemsAnnouncesInsertion
+- (void)testDataSourceSynchronouslyInsertingItemsAnnouncesInsertion
 {
-  CKDataSource *ds =
-  [[CKDataSource alloc] initWithConfiguration:
+  [self _testSynchronouslyInsertingItemsAnnouncesInsertionWithDataSourceClass:[CKDataSource class]];
+}
+
+- (void)testThreadSafeDataSourceSynchronouslyInsertingItemsAnnouncesInsertion
+{
+  [self _testSynchronouslyInsertingItemsAnnouncesInsertionWithDataSourceClass:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testSynchronouslyInsertingItemsAnnouncesInsertionWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  id<CKDataSourceProtocol> ds =
+  [[(Class)dataSourceClass alloc] initWithConfiguration:
    [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
                                                         context:nil
                                                       sizeRange:{}]];
@@ -91,16 +113,29 @@ struct CKDataSourceAnnouncedUpdate {
                                              insertedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
                                                        userInfo:nil];
 
-  XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return [_announcedChanges.firstObject isEqual:expectedAppliedChanges];
+  }));
   XCTAssertEqual(_syncModificationStartCounter, 1);
   XCTAssertEqual(_willGenerateChangeCounter, 0);
   XCTAssertEqual(_didGenerateChangeCounter, 0);
 }
 
-- (void)testAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronously
+- (void)testDataSourceAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronously
 {
-  CKDataSource *ds =
-  [[CKDataSource alloc] initWithConfiguration:
+  [self _testAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronouslyWithDataSourceClass:[CKDataSource class]];
+}
+
+- (void)testThreadSafeDataSourceAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronously
+{
+  [self _testAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronouslyWithDataSourceClass:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronouslyWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  id<CKDataSourceProtocol> ds =
+  [[(Class)dataSourceClass alloc] initWithConfiguration:
    [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
                                                         context:nil
                                                       sizeRange:{}]];
@@ -123,17 +158,26 @@ struct CKDataSourceAnnouncedUpdate {
                                                        userInfo:nil];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
-    return _announcedChanges.size() == 1 && [_announcedChanges[0].appliedChanges isEqual:expectedAppliedChanges];
+    return [_announcedChanges.firstObject isEqual:expectedAppliedChanges];
   }));
   XCTAssertEqual(_syncModificationStartCounter, 0);
   XCTAssertEqual(_willGenerateChangeCounter, 1);
   XCTAssertEqual(_didGenerateChangeCounter, 1);
 }
 
-- (void)testUpdatingConfigurationAnnouncesUpdate
+- (void)testDataSourceUpdatingConfigurationAnnouncesUpdate
 {
-  CKDataSource *ds = CKComponentTestDataSource([self class]);
-  [ds addListener:self];
+  [self _testUpdatingConfigurationAnnouncesUpdateWithDataSourceClass:[CKDataSource class]];
+}
+
+- (void)testThreadSafeDataSourceUpdatingConfigurationAnnouncesUpdate
+{
+  [self _testUpdatingConfigurationAnnouncesUpdateWithDataSourceClass:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testUpdatingConfigurationAnnouncesUpdateWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  id<CKDataSourceProtocol> ds = CKComponentTestDataSource(dataSourceClass, [self class], self);
 
   CKDataSourceConfiguration *config =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
@@ -152,17 +196,28 @@ struct CKDataSourceAnnouncedUpdate {
                                              insertedIndexPaths:nil
                                                        userInfo:nil];
 
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
+    return _announcedChanges.count == 2 && [_announcedChanges[1] isEqual:expectedAppliedChanges];
+  }));
   XCTAssertEqual([[ds state] configuration], config);
-  XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
-  XCTAssertEqual(_syncModificationStartCounter, 1);
+  XCTAssertEqual(_syncModificationStartCounter, 2);
   XCTAssertEqual(_willGenerateChangeCounter, 0);
   XCTAssertEqual(_didGenerateChangeCounter, 0);
 }
 
-- (void)testReloadingAnnouncesUpdate
+- (void)testDataSourceReloadingAnnouncesUpdate
 {
-  CKDataSource *ds = CKComponentTestDataSource([self class]);
-  [ds addListener:self];
+  [self _testReloadingAnnouncesUpdateWithDataSourceClass:[CKDataSource class]];
+}
+
+- (void)testThreadSafeDataSourceReloadingAnnouncesUpdate
+{
+  [self _testReloadingAnnouncesUpdateWithDataSourceClass:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testReloadingAnnouncesUpdateWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  id<CKDataSourceProtocol> ds = CKComponentTestDataSource(dataSourceClass, [self class], self);
   [ds reloadWithMode:CKUpdateModeSynchronous userInfo:nil];
 
   CKDataSourceAppliedChanges *expectedAppliedChanges =
@@ -173,16 +228,18 @@ struct CKDataSourceAnnouncedUpdate {
                                                insertedSections:nil
                                              insertedIndexPaths:nil
                                                        userInfo:nil];
-  XCTAssertEqualObjects(_announcedChanges[0].appliedChanges, expectedAppliedChanges);
-  XCTAssertEqual(_syncModificationStartCounter, 1);
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
+    return _announcedChanges.count == 2 && [_announcedChanges[1] isEqual:expectedAppliedChanges];
+  }));
+  XCTAssertEqual(_syncModificationStartCounter, 2);
   XCTAssertEqual(_willGenerateChangeCounter, 0);
   XCTAssertEqual(_didGenerateChangeCounter, 0);
 }
 
-- (void)testSynchronousReloadCancelsPreviousAsynchronousReload
+- (void)testDataSourceSynchronousReloadCancelsPreviousAsynchronousReload
 {
-  CKDataSource *ds = CKComponentTestDataSource([self class]);
-  [ds addListener:self];
+  id<CKDataSourceProtocol> ds = CKComponentTestDataSource([CKDataSource class], [self class], self);
 
   // The initial asynchronous reload should be canceled by the immediately subsequent synchronous reload.
   // We then request *another* async reload so that we can wait for it to complete and assert that the initial
@@ -208,21 +265,31 @@ struct CKDataSourceAnnouncedUpdate {
                                              insertedIndexPaths:nil
                                                        userInfo:@{@"id": @3}];
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _announcedChanges.size() == 2
-    && [_announcedChanges[0].appliedChanges isEqual:expectedAppliedChangesForSyncReload]
-    && [_announcedChanges[1].appliedChanges isEqual:expectedAppliedChangesForSecondAsyncReload];
+    return _announcedChanges.count == 3
+    && [_announcedChanges[1] isEqual:expectedAppliedChangesForSyncReload]
+    && [_announcedChanges[2] isEqual:expectedAppliedChangesForSecondAsyncReload];
   }));
-  XCTAssertEqual(_syncModificationStartCounter, 1);
+  XCTAssertEqual(_syncModificationStartCounter, 2);
 }
 
-- (void)testDeallocatingDataSourceTriggersInvalidateOnMainThread
+- (void)testDataSourceDeallocatingDataSourceTriggersInvalidateOnMainThread
+{
+  [self _testDeallocatingDataSourceTriggersInvalidateOnMainThreadWithDataSourceClass:[CKDataSource class]];
+}
+
+- (void)testThreadSafeDataSourceDeallocatingDataSourceTriggersInvalidateOnMainThread
+{
+  [self _testDeallocatingDataSourceTriggersInvalidateOnMainThreadWithDataSourceClass:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testDeallocatingDataSourceTriggersInvalidateOnMainThreadWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
   CKLifecycleTestComponentController *controller = nil;
   @autoreleasepool {
     // We dispatch empty operation on Data Source to background so that
     // DataSource deallocation is also triggered on background.
     // CKLifecycleTestComponent will assert if it receives an invalidation not on the main thread,
-    CKDataSource *dataSource = CKComponentTestDataSource([self class]);
+    id<CKDataSourceProtocol> dataSource = CKComponentTestDataSource(dataSourceClass, [self class], nil);
     controller = (CKLifecycleTestComponentController *)[[dataSource.state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component().controller;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       [dataSource hash];
@@ -241,7 +308,7 @@ struct CKDataSourceAnnouncedUpdate {
                   withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
-  _announcedChanges.push_back({previousState, changes});
+  [_announcedChanges addObject:changes];
 }
 
 - (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo

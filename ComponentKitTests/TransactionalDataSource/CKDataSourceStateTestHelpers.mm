@@ -68,13 +68,16 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
   return [[CKDataSourceState alloc] initWithConfiguration:configuration sections:sections];
 }
 
-CKDataSource *CKComponentTestDataSource(Class<CKComponentProvider> provider)
+id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> dataSourceClass,
+                                                   Class<CKComponentProvider> provider,
+                                                   id<CKDataSourceListener> listener)
 {
-  CKDataSource *ds =
-  [[CKDataSource alloc] initWithConfiguration:
+  id<CKDataSourceProtocol> ds =
+  [[(Class)dataSourceClass alloc] initWithConfiguration:
    [[CKDataSourceConfiguration alloc] initWithComponentProvider:provider
                                                                               context:nil
                                                                             sizeRange:{}]];
+  [ds addListener:listener];
 
   CKDataSourceChangeset *insertion =
   [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
