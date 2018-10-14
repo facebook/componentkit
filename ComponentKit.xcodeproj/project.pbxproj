@@ -421,6 +421,8 @@
 		60EFF4C221135FCA00CA7C68 /* CKStatelessComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 60EFF4B32113555C00CA7C68 /* CKStatelessComponent.mm */; };
 		60EFF4C321135FCD00CA7C68 /* CKStatelessComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 60EFF4B22113555C00CA7C68 /* CKStatelessComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6DAC628C1F83DEB900536113 /* CKComponentScopeEnumeratorProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6DAC628B1F83DEB800536113 /* CKComponentScopeEnumeratorProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7203EB85216FF35E00109F4A /* CKDataSourceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 7203EB80216FF35E00109F4A /* CKDataSourceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7203EB86216FF35E00109F4A /* CKDataSourceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 7203EB80216FF35E00109F4A /* CKDataSourceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		721AAE54214F19B700B9EE8A /* CKComponentRootLayoutProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 721AAE4F214F19B600B9EE8A /* CKComponentRootLayoutProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		721AAE55214F19B700B9EE8A /* CKComponentRootLayoutProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 721AAE4F214F19B600B9EE8A /* CKComponentRootLayoutProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		7259D5762099E53000451280 /* CKDataSourceModificationHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 72C575542099C6E400FF603E /* CKDataSourceModificationHelper.h */; };
@@ -1062,6 +1064,7 @@
 		60EFF4B32113555C00CA7C68 /* CKStatelessComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatelessComponent.mm; sourceTree = "<group>"; };
 		60EFF4C021135DE500CA7C68 /* CKStatelessComponentTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatelessComponentTests.mm; sourceTree = "<group>"; };
 		6DAC628B1F83DEB800536113 /* CKComponentScopeEnumeratorProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentScopeEnumeratorProvider.h; sourceTree = "<group>"; };
+		7203EB80216FF35E00109F4A /* CKDataSourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceProtocol.h; sourceTree = "<group>"; };
 		721AAE4F214F19B600B9EE8A /* CKComponentRootLayoutProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentRootLayoutProvider.h; sourceTree = "<group>"; };
 		7279B64320E2801D00A50F6E /* CKDataSourceQOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceQOS.h; sourceTree = "<group>"; };
 		72C575542099C6E400FF603E /* CKDataSourceModificationHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceModificationHelper.h; sourceTree = "<group>"; };
@@ -2098,6 +2101,7 @@
 				D0B47B701CBD926700BB33CE /* CKDataSourceListener.h */,
 				D0B47B711CBD926700BB33CE /* CKDataSourceListenerAnnouncer.h */,
 				D0B47B721CBD926700BB33CE /* CKDataSourceListenerAnnouncer.mm */,
+				7203EB80216FF35E00109F4A /* CKDataSourceProtocol.h */,
 				D0B47B731CBD926700BB33CE /* CKDataSourceState.h */,
 				D0B47B741CBD926700BB33CE /* CKDataSourceState.mm */,
 				D0B47B751CBD926700BB33CE /* CKDataSourceStateInternal.h */,
@@ -2465,6 +2469,7 @@
 				03B8B55D1D2A346F00EDFF59 /* CKMacros.h in Headers */,
 				230ADF721FC5FBE8001570A3 /* CKComponentEvents.h in Headers */,
 				03B8B55E1D2A346F00EDFF59 /* CKTextKitEntityAttribute.h in Headers */,
+				7203EB86216FF35E00109F4A /* CKDataSourceProtocol.h in Headers */,
 				03B8B55F1D2A346F00EDFF59 /* CKAsyncLayerSubclass.h in Headers */,
 				D657401321051C6F00FD8AAB /* CKIndexTransform.h in Headers */,
 				03B8B5601D2A346F00EDFF59 /* CKComponentDebugController.h in Headers */,
@@ -2515,6 +2520,7 @@
 				23309AA42045C5F300833BDB /* CKRenderComponentProtocol.h in Headers */,
 				D0B47D431CBD948E00BB33CE /* CKDataSourceInternal.h in Headers */,
 				D0B47D4F1CBD948E00BB33CE /* CKDataSourceUpdateStateModification.h in Headers */,
+				7203EB85216FF35E00109F4A /* CKDataSourceProtocol.h in Headers */,
 				D0B47D271CBD948E00BB33CE /* CKComponentProvider.h in Headers */,
 				D0B47D161CBD948E00BB33CE /* CKComponentAnnouncerBase.h in Headers */,
 				D0B47CF61CBD948E00BB33CE /* CKComponentLayout.h in Headers */,
