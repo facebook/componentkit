@@ -26,6 +26,7 @@
 #import "CKDataSourceConfigurationInternal.h"
 #import "CKDataSourceItem.h"
 #import "CKDataSourceListenerAnnouncer.h"
+#import "CKDataSourceQOSHelper.h"
 #import "CKDataSourceReloadModification.h"
 #import "CKDataSourceStateInternal.h"
 #import "CKDataSourceStateModifying.h"
@@ -348,8 +349,8 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
   // Announce 'didPrepareLayoutForComponent:'.
   auto const appliedChanges = [change appliedChanges];
-  sendDidPrepareLayoutForComponentWithIndexPaths([[appliedChanges finalUpdatedIndexPaths] allValues], _state);
-  sendDidPrepareLayoutForComponentWithIndexPaths([appliedChanges insertedIndexPaths], _state);
+  CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([[appliedChanges finalUpdatedIndexPaths] allValues], _state);
+  CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([appliedChanges insertedIndexPaths], _state);
 }
 
 - (void)_processStateUpdates
@@ -506,40 +507,6 @@ static void IDSetDestructor(void *IDSet)
 }
 
 #endif
-
-static void sendDidPrepareLayoutForComponentWithIndexPaths(id<NSFastEnumeration> indexPaths,
-                                                           CKDataSourceState*state)
-{
-  for (NSIndexPath *indexPath in indexPaths) {
-    CKDataSourceItem *item = [state objectAtIndexPath:indexPath];
-    CKComponentSendDidPrepareLayoutForComponent(item.scopeRoot, item.rootLayout);
-  }
-}
-
-static qos_class_t qosClassFromDataSourceQOS(CKDataSourceQOS qos)
-{
-  switch (qos) {
-    case CKDataSourceQOSUserInteractive:
-      return QOS_CLASS_USER_INTERACTIVE;
-    case CKDataSourceQOSUserInitiated:
-      return QOS_CLASS_USER_INITIATED;
-    case CKDataSourceQOSDefault:
-      return QOS_CLASS_DEFAULT;
-  }
-}
-
-
-static dispatch_block_t blockUsingDataSourceQOS(dispatch_block_t block, CKDataSourceQOS qos)
-{
-  switch (qos) {
-    case CKDataSourceQOSUserInteractive:
-    case CKDataSourceQOSUserInitiated:
-      return dispatch_block_create_with_qos_class(DISPATCH_BLOCK_ENFORCE_QOS_CLASS, qosClassFromDataSourceQOS(qos), 0, block);
-    case CKDataSourceQOSDefault:
-      /// If the desired QOS is the default there is no need to enforce it by dispatching async on the _workQueue defined QOS.
-      return block;
-  }
-}
 
 @end
 

@@ -15,6 +15,8 @@
 #import "CKComponentSubclass.h"
 #import "CKInternalHelpers.h"
 #import "CKComponentProtocol.h"
+#import "CKDataSourceItem.h"
+#import "CKDataSourceState.h"
 
 BOOL CKComponentBoundsAnimationPredicate(id<CKComponentProtocol> component)
 {
@@ -88,4 +90,13 @@ void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot
                                               const CKComponentLayout componentLayout = layout.cachedLayoutForScopedComponent(component);
                                               [component.controller didPrepareLayout:componentLayout forComponent:component];
                                             }];
+}
+
+void CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths(id<NSFastEnumeration> indexPaths,
+                                                                CKDataSourceState *state)
+{
+  for (NSIndexPath *indexPath in indexPaths) {
+    CKDataSourceItem *item = [state objectAtIndexPath:indexPath];
+    CKComponentSendDidPrepareLayoutForComponent(item.scopeRoot, item.rootLayout);
+  }
 }

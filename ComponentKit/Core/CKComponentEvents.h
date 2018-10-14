@@ -13,6 +13,8 @@
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentLayout.h>
 
+@class CKDataSourceState;
+
 /**
  A predicate that identifies if a component implements bounds animations. This predicate is passed to the scope root
  and is checked on the initialization of components and cached. This allows us to rapidly identify which components
@@ -38,3 +40,9 @@ CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKCom
  Iterates over the components that their controller overrides 'didPrepareLayout:ForComponent:' and send the callback.
  */
 void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot, const CKComponentRootLayout &layout);
+
+/**
+ Call 'CKComponentSendDidPrepareLayoutForComponent' with objects in indexPaths of CKDataSourceState
+ */
+void CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths(id<NSFastEnumeration> indexPaths,
+                                                                CKDataSourceState *state);
