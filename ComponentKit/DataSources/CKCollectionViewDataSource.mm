@@ -89,8 +89,9 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
 
 #pragma mark - CKDataSourceListener
 
-- (void)componentDataSource:(CKDataSource *)dataSource
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
      didModifyPreviousState:(CKDataSourceState *)previousState
+                  withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
   const BOOL changesIncludeNonUpdates = (changes.removedIndexPaths.count ||
@@ -99,8 +100,6 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
                                          changes.insertedSections.count ||
                                          changes.removedSections.count);
   const BOOL changesIncludeOnlyUpdates = (changes.updatedIndexPaths.count && !changesIncludeNonUpdates);
-
-  CKDataSourceState *state = [_componentDataSource state];
 
   if (changesIncludeOnlyUpdates) {
     // We are not able to animate the updates individually, so we pick the

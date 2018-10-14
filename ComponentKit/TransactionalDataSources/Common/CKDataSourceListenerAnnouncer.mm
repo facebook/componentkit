@@ -24,25 +24,26 @@
   CK::Component::AnnouncerHelper::removeListener(self, _cmd, listener);
 }
 
-- (void)componentDataSource:(CKDataSource *)dataSource
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
      didModifyPreviousState:(CKDataSourceState *)previousState
+                  withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
-  CK::Component::AnnouncerHelper::call(self, _cmd, dataSource, previousState, changes);
+  CK::Component::AnnouncerHelper::call(self, _cmd, dataSource, previousState, state, changes);
 }
 
-- (void)componentDataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo
 {
   CK::Component::AnnouncerHelper::callOptional(self, _cmd, dataSource, userInfo);
 }
 
-- (void)componentDataSourceWillGenerateNewState:(CKDataSource *)dataSource
+- (void)componentDataSourceWillGenerateNewState:(id<CKDataSourceProtocol>)dataSource
                                        userInfo:(NSDictionary *)userInfo
 {
   CK::Component::AnnouncerHelper::callOptional(self, _cmd, dataSource, userInfo);
 }
 
-- (void)componentDataSource:(CKDataSource *)dataSource
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
         didGenerateNewState:(CKDataSourceState *)newState
                     changes:(CKDataSourceAppliedChanges *)changes
 {

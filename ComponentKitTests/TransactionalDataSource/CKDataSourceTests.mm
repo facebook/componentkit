@@ -236,24 +236,25 @@ struct CKDataSourceAnnouncedUpdate {
 
 #pragma mark - Listener
 
-- (void)componentDataSource:(CKDataSource *)dataSource
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
      didModifyPreviousState:(CKDataSourceState *)previousState
+                  withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
   _announcedChanges.push_back({previousState, changes});
 }
 
-- (void)componentDataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo
 {
   _syncModificationStartCounter++;
 }
 
-- (void)componentDataSourceWillGenerateNewState:(CKDataSource *)dataSource userInfo:(NSDictionary *)userInfo
+- (void)componentDataSourceWillGenerateNewState:(id<CKDataSourceProtocol>)dataSource userInfo:(NSDictionary *)userInfo
 {
   _willGenerateChangeCounter++;
 }
 
-- (void)componentDataSource:(CKDataSource *)dataSource didGenerateNewState:(CKDataSourceState *)newState changes:(CKDataSourceAppliedChanges *)changes
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource didGenerateNewState:(CKDataSourceState *)newState changes:(CKDataSourceAppliedChanges *)changes
 {
   _didGenerateChangeCounter++;
 }

@@ -343,6 +343,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
   [_announcer componentDataSource:self
            didModifyPreviousState:previousState
+                        withState:_state
                 byApplyingChanges:[change appliedChanges]];
 
   // Announce 'didPrepareLayoutForComponent:'.

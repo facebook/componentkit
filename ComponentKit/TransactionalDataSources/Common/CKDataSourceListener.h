@@ -10,21 +10,24 @@
 
 #import <Foundation/Foundation.h>
 
-@class CKDataSource;
 @class CKDataSourceAppliedChanges;
 @class CKDataSourceState;
 
+@protocol CKDataSourceProtocol;
 @protocol CKDataSourceListener
 
 /**
  Announced on the main thread when the data source has just updated its state.
- @param dataSource The sending data source; its state property now returns an updated object.
+ @param dataSource The sending data source.
  @param previousState The state that the data source was previously exposing.
+ @param newState The state that the data source currently has. Always use this to get new state instead of relying on dataSource.state
  @param changes The changes that were applied (which may correspond to multiple 
         CKDataSourceChangeset objects).
  */
-- (void)componentDataSource:(CKDataSource *)dataSource
+
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
      didModifyPreviousState:(CKDataSourceState *)previousState
+                  withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes;
 
 @end
@@ -40,7 +43,7 @@
  @param userInfo Additional information that was passed with modification
  */
 
-- (void)componentDataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo;
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo;
 
 /**
  Announced on the background thread when the data source will generate new state.
@@ -48,7 +51,7 @@
  @param dataSource The sending data source
  @param userInfo Additional information that was passed with modification
  */
-- (void)componentDataSourceWillGenerateNewState:(CKDataSource *)dataSource
+- (void)componentDataSourceWillGenerateNewState:(id<CKDataSourceProtocol>)dataSource
                                        userInfo:(NSDictionary *)userInfo;
 
 /**
@@ -58,7 +61,7 @@
  @param newState The state that the data source has just generated and will schedule for applying.
  @param changes The changes that ar going to be applied.
  */
-- (void)componentDataSource:(CKDataSource *)dataSource
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
         didGenerateNewState:(CKDataSourceState *)newState
                     changes:(CKDataSourceAppliedChanges *)changes;
 
