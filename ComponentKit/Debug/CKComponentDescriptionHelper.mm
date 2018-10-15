@@ -46,3 +46,17 @@ NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKCom
   }
   return description;
 }
+
+NSString *CKComponentDescriptionWithChildren(NSString *description, NSArray *children)
+{
+  NSMutableString *result = [description mutableCopy];
+  for (id childComponent in children) {
+    NSString *nested = [childComponent description];
+    __block NSUInteger index = 0;
+    [nested enumerateLinesUsingBlock:^(NSString *line, BOOL *stop) {
+      [result appendString:(index++ ? @"\n    " : @"\n  - ")];
+      [result appendString:line];
+    }];
+  }
+  return result;
+}

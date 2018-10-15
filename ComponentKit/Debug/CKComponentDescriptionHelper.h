@@ -15,3 +15,9 @@
 NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept;
 
 NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKComponentLayoutChild>> children) noexcept;
+
+__BEGIN_DECLS
+
+extern NSString *CKComponentDescriptionWithChildren(NSString *description, NSArray *children);
+
+__END_DECLS
