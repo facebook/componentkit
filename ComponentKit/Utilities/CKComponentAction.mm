@@ -397,7 +397,7 @@ void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const st
   }
 
   // If the target is `Class<CKComponentProtocol>`, we pass it to the `_CKTypedComponentDebugCheckComponent` function.
-  if ([target respondsToSelector:@selector(controllerClass)]) {
+  if ([[target class] respondsToSelector:@selector(controllerClass)]) {
     _CKTypedComponentDebugCheckComponent([target class], selector, typeEncodings);
     return;
   }
