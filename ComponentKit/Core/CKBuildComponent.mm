@@ -88,7 +88,8 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
-
+  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot buildTrigger:buildTrigger];
+  
   auto const component = componentFactory();
 
   CKTreeNodeDirtyIds treeNodeDirtyIds;
