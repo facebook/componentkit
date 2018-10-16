@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 
 struct CKComponentContextPreviousState {
-  id key;
+  Class key;
   id originalValue;
   id newValue;
 };
@@ -41,6 +41,10 @@ struct CKComponentContextHelper {
   static CKComponentContextPreviousState store(id key, id object);
   static void restore(const CKComponentContextPreviousState &storeResult);
   static id fetch(id key);
+
+  static void enableRenderSupport(BOOL enable);
+  static void markRenderComponent();
+  static void unmarkRenderComponent();
   /**
    Returns a structure with all the items that are currently in CKComponentContext.
    This could be used to bridge CKComponentContext items to another language or system.
@@ -68,3 +72,25 @@ struct CKComponentContextHelper {
   /** Restores the state of CKComponentContext to what it was before a call to setDynamicLookup. */
   static void restoreDynamicLookup(const CKComponentContextPreviousDynamicLookupState &setResult);
 };
+
+/**
+ Enable support for render components.
+
+ Should be called from the CKBuildComponent function before any component is being built.
+ */
+class CKComponentContextRenderSupport {
+public:
+  CKComponentContextRenderSupport(BOOL enableRenderSupport) : _enableRenderSupport(enableRenderSupport) {
+    if (_enableRenderSupport) { CKComponentContextHelper::enableRenderSupport(YES); }
+  }
+  ~CKComponentContextRenderSupport() {
+    if (_enableRenderSupport) { CKComponentContextHelper::enableRenderSupport(NO);}
+  }
+
+private:
+  BOOL _enableRenderSupport;
+
+  CKComponentContextRenderSupport(const CKComponentContextRenderSupport&) = delete;
+  CKComponentContextRenderSupport &operator=(const CKComponentContextRenderSupport&) = delete;
+};
+

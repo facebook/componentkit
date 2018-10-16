@@ -28,7 +28,7 @@
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
-  CKRender::buildComponentTreeWithMultiChild(self, parent, previousParent, params, parentHasStateUpdate);
+  CKRender::buildComponentTreeWithMultiChild(self, parent, previousParent, params, parentHasStateUpdate, YES);
 }
 
 #pragma mark - CKRenderComponentProtocol

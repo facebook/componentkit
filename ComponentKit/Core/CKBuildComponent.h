@@ -33,6 +33,9 @@ struct CKBuildComponentConfig {
 
   //  Enable faster props updates optimization for render components.
   BOOL enableFasterPropsUpdates = NO;
+
+  // Enable render support in CKComponentContext
+  BOOL enableContextRenderSupport = NO;
 };
 
 namespace CKBuildComponentHelpers {

@@ -11,6 +11,7 @@
 #import "CKRenderHelpers.h"
 
 #import <ComponentKit/CKRenderComponent.h>
+#import <ComponentKit/CKComponentContextHelper.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
@@ -130,7 +131,8 @@ namespace CKRender {
                                          id<CKTreeNodeWithChildrenProtocol> parent,
                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
                                          const CKBuildComponentTreeParams &params,
-                                         BOOL parentHasStateUpdate) -> void
+                                         BOOL parentHasStateUpdate,
+                                         BOOL isBridgeComponent) -> void
   {
     CKCAssert(component, @"component cannot be nil");
 
@@ -142,7 +144,7 @@ namespace CKRender {
                        stateUpdates:params.stateUpdates];
 
     // Faster state/props optimizations require previous parent.
-    if (previousParent && childComponent != nullptr) {
+    if (previousParent && childComponent != nullptr && !isBridgeComponent) {
       if (params.buildTrigger == BuildTrigger::StateUpdate) {
         // During state update, we have two possible optimizations:
         // 1. Faster state update
@@ -156,16 +158,25 @@ namespace CKRender {
               if (params.enableFasterStateUpdates) {
                 // Faster state update optimizations.
                 if (CKRenderInternal::reusePreviousComponent(component, childComponent, node, parent, previousParent)) {
+                  if (params.enableContextRenderSupport) {
+                    CKComponentContextHelper::unmarkRenderComponent();
+                  }
                   return;
                 }
               } // If `enableFasterStateUpdates` is disabled, we handle it as a props update as the component is not dirty.
               else if (params.enableFasterPropsUpdates &&
                        CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent)) {
+                if (params.enableContextRenderSupport) {
+                  CKComponentContextHelper::unmarkRenderComponent();
+                }
                 return;
               }
             } // If the component is not dirty, but its parent is dirty - we handle it as props update.
             else if (params.enableFasterPropsUpdates &&
                      CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent)) {
+              if (params.enableContextRenderSupport) {
+                CKComponentContextHelper::unmarkRenderComponent();
+              }
               return;
             }
           }
@@ -175,6 +186,9 @@ namespace CKRender {
         // Faster props update optimizations.
         if (params.enableFasterPropsUpdates &&
             CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent)) {
+          if (params.enableContextRenderSupport) {
+            CKComponentContextHelper::unmarkRenderComponent();
+          }
           return;
         }
       }
@@ -197,13 +211,18 @@ namespace CKRender {
                          params:params
            parentHasStateUpdate:parentHasStateUpdate];
     }
+
+    if (!isBridgeComponent && params.enableContextRenderSupport) {
+      CKComponentContextHelper::unmarkRenderComponent();
+    }
   }
 
   auto buildComponentTreeWithMultiChild(id<CKRenderWithChildrenComponentProtocol> component,
                                         id<CKTreeNodeWithChildrenProtocol> parent,
                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
                                         const CKBuildComponentTreeParams &params,
-                                        BOOL parentHasStateUpdate) -> void
+                                        BOOL parentHasStateUpdate,
+                                        BOOL isBridgeComponent) -> void
   {
     auto const node = [[CKRenderTreeNodeWithChildren alloc]
                        initWithComponent:component
@@ -226,6 +245,10 @@ namespace CKRender {
                            params:params
              parentHasStateUpdate:parentHasStateUpdate];
       }
+    }
+
+    if (!isBridgeComponent && params.enableContextRenderSupport) {
+      CKComponentContextHelper::unmarkRenderComponent();
     }
   }
 

@@ -17,6 +17,7 @@
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKComponentContextHelper.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKMutex.h>
@@ -111,6 +112,7 @@ struct CKComponentMountInfo {
   if (self = [super init]) {
     // Mark render component in the scope root.
     CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree();
+    CKComponentContextHelper::markRenderComponent();
     _viewConfiguration = view;
     _size = size;
   }

@@ -65,13 +65,17 @@ namespace CKRender {
    @param previousParent The previous generation of the parent tree node of the component in input.
    @param params Collection of parameters to use to properly setup build component tree step.
    @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
+   @param isBridgeComponent Flag used to mark components that are not "real" render components;
+          when they are being created they don't mark the `hasRenderComponentInTree` flag in the thread local store as well.
+          Default value is `NO`.
    */
   auto buildComponentTreeWithSingleChild(id<CKRenderWithChildComponentProtocol> component,
                                          __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                          id<CKTreeNodeWithChildrenProtocol> parent,
                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
                                          const CKBuildComponentTreeParams &params,
-                                         BOOL parentHasStateUpdate) -> void;
+                                         BOOL parentHasStateUpdate,
+                                         BOOL isBridgeComponent = NO) -> void;
 
   /**
    Builds a component tree for the input *render* component having children components.
@@ -81,12 +85,16 @@ namespace CKRender {
    @param previousParent The previous generation of the parent tree node of the component in input.
    @param params Collection of parameters to use to properly setup build component tree step.
    @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
+   @param isBridgeComponent Flag used to mark components that are not "real" render components;
+          when they are being created they don't mark the `hasRenderComponentInTree` flag in the thread local store as well.
+          Default value is `NO`.
    */
   auto buildComponentTreeWithMultiChild(id<CKRenderWithChildrenComponentProtocol> component,
                                         id<CKTreeNodeWithChildrenProtocol> parent,
                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
                                         const CKBuildComponentTreeParams &params,
-                                        BOOL parentHasStateUpdate) -> void;
+                                        BOOL parentHasStateUpdate,
+                                        BOOL isBridgeComponent = NO) -> void;
 
   /**
    Builds a leaf node for a leaf component in the tree.

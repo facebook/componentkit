@@ -41,6 +41,9 @@ struct CKBuildComponentTreeParams {
   //  Enable faster props updates optimization for render components.
   BOOL enableFasterPropsUpdates = NO;
 
+  // Enable render support in CKComponentContext
+  BOOL enableContextRenderSupport = NO;
+
   // The trigger for initiating a new generation
   BuildTrigger buildTrigger;
 };
