@@ -49,7 +49,7 @@ namespace CKRenderInternal {
     return NO;
   }
 
-  // Check if isEqualToComponent returns `YES`; if it does, reuse the previous component generation and its component tree and notify the previous component about it.
+  // Check if shouldComponentUpdate returns `NO`; if it does, reuse the previous component generation and its component tree and notify the previous component about it.
   static auto reusePreviousComponentIfComponentsAreEqual(id<CKRenderComponentProtocol> component,
                                                          __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                                          CKRenderTreeNodeWithChild *node,
@@ -61,6 +61,51 @@ namespace CKRenderInternal {
       CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousChild);
       return YES;
     }
+    return NO;
+  }
+
+  static auto reusePreviousComponentForSingleChild(CKRenderTreeNodeWithChild *node,
+                                                   id<CKRenderWithChildComponentProtocol> component,
+                                                   __strong id<CKTreeNodeComponentProtocol> *childComponent,
+                                                   id<CKTreeNodeWithChildrenProtocol> parent,
+                                                   id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                                   const CKBuildComponentTreeParams &params,
+                                                   BOOL parentHasStateUpdate) -> BOOL {
+
+    // If there is no previous parent or no childComponent, we bail early.
+    if (previousParent == nil || childComponent == nullptr) {
+      return NO;
+    }
+
+    // State update branch:
+    if (params.buildTrigger == BuildTrigger::StateUpdate) {
+      // During state update, we have two possible optimizations:
+      // 1. Faster state update
+      // 2. Faster props update (when the parent is dirty, we handle state update as props update).
+      if (params.enableFasterStateUpdates || params.enableFasterPropsUpdates) {
+        // Check if the tree node is not dirty (not in a branch of a state update).
+        auto const dirtyNodeId = params.treeNodeDirtyIds.find(node.nodeIdentifier);
+        if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
+          // We reuse the component without checking `shouldComponentUpdate:` in the following conditions:
+          // 1. The component is not dirty (on a state update branch)
+          // 2. No direct parent has a state update
+          // 3. `enableFasterStateUpdates` is on
+          if (!parentHasStateUpdate && params.enableFasterStateUpdates) {
+            // Faster state update optimizations.
+            return CKRenderInternal::reusePreviousComponent(component, childComponent, node, parent, previousParent);
+          }
+          // We fallback to the props update optimization in 2 cases:
+          // 1. The component is not dirty, but the parent has a state update.
+          // 2. The component is not dirty, the parent has no state update, but `enableFasterStateUpdates` is off.
+          return (params.enableFasterPropsUpdates && CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent));
+        }
+      }
+    }
+    // Props update branch:
+    else if (params.buildTrigger == BuildTrigger::PropsUpdate && params.enableFasterPropsUpdates) {
+      return CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent);
+    }
+
     return NO;
   }
 }
@@ -144,54 +189,11 @@ namespace CKRender {
                        stateUpdates:params.stateUpdates];
 
     // Faster state/props optimizations require previous parent.
-    if (previousParent && childComponent != nullptr && !isBridgeComponent) {
-      if (params.buildTrigger == BuildTrigger::StateUpdate) {
-        // During state update, we have two possible optimizations:
-        // 1. Faster state update
-        // 2. Faster props update (when the parent is dirty, we handle state update as props update).
-        if (params.enableFasterStateUpdates || params.enableFasterPropsUpdates) {
-          // Check if the tree node is not dirty (not in a branch of a state update).
-          auto const dirtyNodeId = params.treeNodeDirtyIds.find(node.nodeIdentifier);
-          if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
-            // If the component is not dirty and it doesn't have a parent with a state update - we can reuse it.
-            if (!parentHasStateUpdate) {
-              if (params.enableFasterStateUpdates) {
-                // Faster state update optimizations.
-                if (CKRenderInternal::reusePreviousComponent(component, childComponent, node, parent, previousParent)) {
-                  if (params.enableContextRenderSupport) {
-                    CKComponentContextHelper::unmarkRenderComponent();
-                  }
-                  return;
-                }
-              } // If `enableFasterStateUpdates` is disabled, we handle it as a props update as the component is not dirty.
-              else if (params.enableFasterPropsUpdates &&
-                       CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent)) {
-                if (params.enableContextRenderSupport) {
-                  CKComponentContextHelper::unmarkRenderComponent();
-                }
-                return;
-              }
-            } // If the component is not dirty, but its parent is dirty - we handle it as props update.
-            else if (params.enableFasterPropsUpdates &&
-                     CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent)) {
-              if (params.enableContextRenderSupport) {
-                CKComponentContextHelper::unmarkRenderComponent();
-              }
-              return;
-            }
-          }
-        }
+    if (!isBridgeComponent && CKRenderInternal::reusePreviousComponentForSingleChild(node, component, childComponent, parent, previousParent, params, parentHasStateUpdate)) {
+      if (params.enableContextRenderSupport) {
+        CKComponentContextHelper::unmarkRenderComponent();
       }
-      else if (params.buildTrigger == BuildTrigger::PropsUpdate) {
-        // Faster props update optimizations.
-        if (params.enableFasterPropsUpdates &&
-            CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent)) {
-          if (params.enableContextRenderSupport) {
-            CKComponentContextHelper::unmarkRenderComponent();
-          }
-          return;
-        }
-      }
+      return;
     }
 
     // Update the `parentHasStateUpdate` param for Faster state/props updates.

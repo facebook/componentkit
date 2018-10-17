@@ -21,6 +21,7 @@
 
 @interface CKTestRenderComponent : CKRenderComponent
 
+@property (nonatomic, assign) BOOL didReuseComponent;
 @property (nonatomic, assign) NSUInteger renderCalledCounter;
 @property (nonatomic, assign) NSUInteger identifier;
 @property (nonatomic, strong) CKTestChildRenderComponent *childComponent;

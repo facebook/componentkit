@@ -393,6 +393,7 @@
   CKTreeNodeWithChild *childNode2 = (CKTreeNodeWithChild *)scopeRoot2.rootNode.children[0];
   XCTAssertEqual(c.renderCalledCounter, 1);
   XCTAssertEqual(c2.renderCalledCounter, 1);
+  XCTAssertFalse(c2.didReuseComponent);
   XCTAssertNotEqual(c.childComponent, c2.childComponent);
   XCTAssertNotEqual(childNode.child, childNode2.child);
 }
@@ -406,6 +407,7 @@
   CKTreeNodeWithChild *childNode2 = (CKTreeNodeWithChild *)scopeRoot2.rootNode.children[0];
   XCTAssertEqual(c.renderCalledCounter, 1);
   XCTAssertEqual(c2.renderCalledCounter, 0);
+  XCTAssertTrue(c2.didReuseComponent);
   XCTAssertEqual(c.childComponent, c2.childComponent);
   XCTAssertEqual(childNode.child, childNode2.child);
 }

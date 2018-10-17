@@ -44,6 +44,7 @@
 
 - (void)didReuseComponent:(CKTestRenderComponent *)component
 {
+  _didReuseComponent = YES;
   _childComponent = component->_childComponent;
 }
 
