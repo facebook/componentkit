@@ -188,10 +188,16 @@ namespace CKRender {
                        scopeRoot:params.scopeRoot
                        stateUpdates:params.stateUpdates];
 
+    auto const enableContextRenderSupport = !isBridgeComponent && params.enableContextRenderSupport;
+
+    if (enableContextRenderSupport) {
+      CKComponentContextHelper::willBuildComponentTree(component);
+    }
+
     // Faster state/props optimizations require previous parent.
     if (!isBridgeComponent && CKRenderInternal::reusePreviousComponentForSingleChild(node, component, childComponent, parent, previousParent, params, parentHasStateUpdate)) {
-      if (params.enableContextRenderSupport) {
-        CKComponentContextHelper::unmarkRenderComponent();
+      if (enableContextRenderSupport) {
+        CKComponentContextHelper::didBuildComponentTree(component);
       }
       return;
     }
@@ -214,8 +220,8 @@ namespace CKRender {
            parentHasStateUpdate:parentHasStateUpdate];
     }
 
-    if (!isBridgeComponent && params.enableContextRenderSupport) {
-      CKComponentContextHelper::unmarkRenderComponent();
+    if (enableContextRenderSupport) {
+      CKComponentContextHelper::didBuildComponentTree(component);
     }
   }
 
@@ -233,6 +239,12 @@ namespace CKRender {
                        scopeRoot:params.scopeRoot
                        stateUpdates:params.stateUpdates];
 
+    auto const enableContextRenderSupport = !isBridgeComponent && params.enableContextRenderSupport;
+
+    if (enableContextRenderSupport) {
+      CKComponentContextHelper::willBuildComponentTree(component);
+    }
+
     // Update the `parentHasStateUpdate` param for Faster state/props updates.
     if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
       parentHasStateUpdate = YES;
@@ -249,8 +261,8 @@ namespace CKRender {
       }
     }
 
-    if (!isBridgeComponent && params.enableContextRenderSupport) {
-      CKComponentContextHelper::unmarkRenderComponent();
+    if (enableContextRenderSupport) {
+      CKComponentContextHelper::didBuildComponentTree(component);
     }
   }
 

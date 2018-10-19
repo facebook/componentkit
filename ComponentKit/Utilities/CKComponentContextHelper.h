@@ -42,9 +42,15 @@ struct CKComponentContextHelper {
   static void restore(const CKComponentContextPreviousState &storeResult);
   static id fetch(id key);
 
+  /** Enable render support */
   static void enableRenderSupport(BOOL enable);
-  static void markRenderComponent();
-  static void unmarkRenderComponent();
+  /** Creates a backup of the existing store, in the renderToDictionary map */
+  static void didCreateRenderComponent(id component);
+  /** Pushes the existing store into a stack and change it with the one from the component's backup */
+  static void willBuildComponentTree(id component);
+  /** Restores the previous store from the stack */
+  static void didBuildComponentTree(id component);
+
   /**
    Returns a structure with all the items that are currently in CKComponentContext.
    This could be used to bridge CKComponentContext items to another language or system.

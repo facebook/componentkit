@@ -10,7 +10,27 @@
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentContext.h>
+#import <ComponentKit/CKComponentScopeRootFactory.h>
+#import <ComponentKit/CKRenderComponent.h>
+#import <ComponentKit/CKRenderLayoutWithChildrenComponent.h>
+
+@interface CKContextTestComponent<T> : CKComponent
+@property (nonatomic, strong) id<NSObject> objectFromContext;
+@end
+
+@interface CKContextTestRenderComponent<T> : CKRenderComponent
++ (instancetype)newWithContextObject:(NSNumber *)object;
+@property (nonatomic, strong) id<NSObject> objectFromContext;
+@property (nonatomic, strong) CKContextTestComponent *child;
+@end
+
+@interface CKContextTestWithChildrenComponent : CKRenderLayoutWithChildrenComponent
++ (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
+@property (nonatomic, assign) std::vector<CKComponent *>children;
+@end
 
 @interface CKTestDynamicLookup : NSObject <CKComponentContextDynamicLookup>
 - (instancetype)initWithObjects:(NSArray *)objects;
@@ -47,19 +67,20 @@
 - (void)testComponentContextDoesntCleansUpWhenItGoesOutOfScopeIfThereIsRenderComponentInSubtree
 {
   CKComponentContextRenderSupport contextSupport(YES);
-
   NSObject *o = [[NSObject alloc] init];
+  CKComponent *component = [CKComponent new];
 
   {
     CKComponentContext<NSObject> context(o);
     // This makes sure that the context values will leave after the context object goes out of scope.
-    CKComponentContextHelper::markRenderComponent();
+    CKComponentContextHelper::didCreateRenderComponent(component);
   }
 
+  CKComponentContextHelper::willBuildComponentTree(component);
   NSObject *o2 = CKComponentContext<NSObject>::get();
   XCTAssertTrue(o == o2);
 
-  CKComponentContextHelper::unmarkRenderComponent();
+  CKComponentContextHelper::didBuildComponentTree(component);
   XCTAssertNil(CKComponentContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
 }
 
@@ -75,56 +96,57 @@
   XCTAssertTrue(CKComponentContext<NSObject>::get() == outer);
 }
 
-- (void)testNestedComponentContextChangesValueAndRestoresItAfterGoingOutOfStackWithRenderComponentInSubtree
+- (void)testSameContextInSiblingComponentsAndOverrideContextWithRenderInTheTree
 {
-  CKComponentContextRenderSupport contextSupport(YES);
+  NSNumber *n0 = @0;
+  NSNumber *n1 = @1;
+  NSNumber *n2 = @2;
+  NSNumber *n3 = @3;
 
-  NSObject *outer = [[NSObject alloc] init];
-  NSObject *inner = [[NSObject alloc] init];
+  //                +--------+
+  //                |puhs(n0)|
+  //                |  Root  |
+  //                |        |
+  //                |        |
+  //     +----------+---+----+---------+
+  //     |              |              |
+  //     |              |              |
+  // +---v----+     +---v----+    +----v---+
+  // |read(n0)|     |read(n0)|    |read(n0)|
+  // |   c1   |     |   c2   |    |   c3   |
+  // |push(n1)|     |puhs(n2)|    |push(n3)|
+  // |        |     |        |    |        |
+  // +---+----+     +---+----+    +----+---+
+  //     |              |              |
+  //     |              |              |
+  // +---v----+     +---v----+    +----v---+
+  // |read(n1)|     |read(n2)|    |read(n3)|
+  // | child1 |     | child2 |    | child3 |
+  // |        |     |        |    |        |
+  // |        |     |        |    |        |
+  // +--------+     +--------+    +--------+
 
-  {
-    CKComponentContext<NSObject> outerContext(outer);
-    // Simulate creation of render component.
-    CKComponentContextHelper::markRenderComponent();
+  __block CKContextTestRenderComponent *c1;
+  __block CKContextTestRenderComponent *c2;
+  __block CKContextTestRenderComponent *c3;
+  auto const componentFactory = ^{
+    CKComponentContext<NSNumber> context(n0);
+    c1 = [CKContextTestRenderComponent newWithContextObject:n1];
+    c2 = [CKContextTestRenderComponent newWithContextObject:n2];
+    c3 = [CKContextTestRenderComponent newWithContextObject:n3];
+    return [CKContextTestWithChildrenComponent newWithChildren:{c1,c2,c3}];
+  };
 
-    {
-      CKComponentContext<NSObject> innerContext(inner);
-      // Simulate creation of render component.
-      CKComponentContextHelper::markRenderComponent();
-      XCTAssertTrue(CKComponentContext<NSObject>::get() == inner);
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, {
+    .enableContextRenderSupport = YES,
+  });
 
-      // Check different type of context with no render in between
-      {
-        NSNumber *n1 = @1;
-        NSNumber *n2 = @2;
-        CKComponentContext<NSNumber> innerContext1(n1);
-        CKComponentContext<NSNumber> innerContext2(n2);
-        {
-          NSNumber *n3 = @3;
-          CKComponentContext<NSNumber> innerContext3(n3);
-          XCTAssertTrue(CKComponentContext<NSNumber>::get() == n3);
-        }
-        XCTAssertTrue(CKComponentContext<NSNumber>::get() == n2);
-      }
-    }
-
-    // Make sure the context lives after it goes out of the scope (as there is a render component).
-    XCTAssertTrue(CKComponentContext<NSObject>::get() == inner);
-
-    // Simulate the end of buildComponentTree in render component.
-    CKComponentContextHelper::unmarkRenderComponent();
-
-    XCTAssertTrue(CKComponentContext<NSObject>::get() == outer);
-  }
-
-  // Make sure the context lives after it goes out of the scope (as there is a render component).
-  XCTAssertTrue(CKComponentContext<NSObject>::get() == outer);
-
-  // Simulate the end of buildComponentTree in render component.
-  CKComponentContextHelper::unmarkRenderComponent();
-
-  // Not the context should be nil as the render component has finished its comonent creation.
-  XCTAssertNil(CKComponentContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
+  XCTAssertTrue(n0 == c1.objectFromContext);
+  XCTAssertTrue(n0 == c2.objectFromContext);
+  XCTAssertTrue(n0 == c3.objectFromContext);
+  XCTAssertTrue(n1 == c1.child.objectFromContext);
+  XCTAssertTrue(n2 == c2.child.objectFromContext);
+  XCTAssertTrue(n3 == c3.child.objectFromContext);
 }
 
 - (void)testTriplyNestedComponentContextWithNilMiddleValueCorrectlyRestoresOuterValue
@@ -176,13 +198,18 @@
   NSObject *o1 = [NSObject alloc];
   NSObject *o2 = [NSObject alloc];
 
+  CKComponent *component1;
+
   {
     CKComponentContext<NSObject> context1(o1);
     XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
 
     // Simulate creation of render component.
-    CKComponentContextHelper::markRenderComponent();
+    component1 = [CKComponent new];
+    CKComponentContextHelper::didCreateRenderComponent(component1);
   }
+
+  CKComponentContextHelper::willBuildComponentTree(component1);
 
   // As there is a render component in the tree, o1 still need to stay in the store.
   XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
@@ -196,7 +223,7 @@
 
   XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
 
-  CKComponentContextHelper::unmarkRenderComponent();
+  CKComponentContextHelper::didBuildComponentTree(component1);
   XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, nil);
 }
 
@@ -244,32 +271,27 @@
   XCTAssertTrue(CKComponentContext<NSObject>::get() == o);
 }
 
-- (void)testMarkRenderComponentWhenEnableRenderSupportOff
+- (void)testMarkRenderComponentWhenRenderSupportIsDisabled
 {
-  NSObject *const o1 = [[NSObject alloc] init];
-  NSObject *const o2 = [[NSObject alloc] init];
+  NSNumber *n1 = @1;
+  // Build new tree
+  __block CKContextTestRenderComponent *c1;
 
-  {
-    CKComponentContext<NSObject> context1(o1);
-    CKComponentContextHelper::markRenderComponent();
-    XCTAssertTrue(CKComponentContext<NSObject>::get() == o1);
-    {
-      CKComponentContext<NSObject> context2(o2);
-      CKComponentContextHelper::markRenderComponent();
-      XCTAssertTrue(CKComponentContext<NSObject>::get() == o2);
-    }
-  }
+  auto const componentFactory = ^{
+    c1 = [CKContextTestRenderComponent newWithContextObject:n1];
+    return c1;
+  };
 
-  // As the render support is off, `markRenderComponent()` should do nothig and the context should be nil.
-  XCTAssertNil(CKComponentContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, {
+    .enableContextRenderSupport = NO,
+  });
 
-  // Make sure `unmarkRenderComponent()` does nothing when the render support is off.
-  CKComponentContextHelper::unmarkRenderComponent();
-  CKComponentContextHelper::unmarkRenderComponent();
-  XCTAssertNil(CKComponentContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
+  XCTAssertTrue(c1.child.objectFromContext == nil);
 }
 
 @end
+
+#pragma mark - Helpers
 
 @implementation CKTestDynamicLookup
 {
@@ -294,4 +316,56 @@
   return nil;
 }
 
+@end
+
+@implementation CKContextTestComponent
+
++ (instancetype)new
+{
+  id objectFromContext = CKComponentContext<NSNumber>::get();
+  auto const c = [super new];
+  if (c) {
+    c->_objectFromContext = objectFromContext;
+  }
+  return c;
+}
+@end
+
+@implementation CKContextTestRenderComponent
++ (instancetype)newWithContextObject:(NSNumber *)object
+{
+  // Read the existing value from context.
+  NSNumber *objectFromContext = CKComponentContext<NSNumber>::get();
+
+  // Override push new context with the same key
+  CKComponentContext<NSNumber> context(object);
+  auto const c = [super new];
+  if (c) {
+    c->_objectFromContext = objectFromContext;
+  }
+  return c;
+}
+
+- (CKComponent *)render:(id)state
+{
+  _child = [CKContextTestComponent new];
+  return _child;
+}
+@end
+
+@implementation CKContextTestWithChildrenComponent
+
++ (instancetype)newWithChildren:(std::vector<CKComponent *>)children
+{
+  auto const c = [super new];
+  if (c) {
+    c->_children = children;
+  }
+  return c;
+}
+
+- (std::vector<CKComponent *>)renderChildren:(id)state
+{
+  return _children;
+}
 @end

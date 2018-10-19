@@ -112,7 +112,7 @@ struct CKComponentMountInfo {
   if (self = [super init]) {
     // Mark render component in the scope root.
     CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree();
-    CKComponentContextHelper::markRenderComponent();
+    CKComponentContextHelper::didCreateRenderComponent(self);
     _viewConfiguration = view;
     _size = size;
   }

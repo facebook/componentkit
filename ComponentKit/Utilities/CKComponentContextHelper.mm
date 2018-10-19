@@ -17,18 +17,21 @@
 static NSString *const kThreadDictionaryKey = @"CKComponentContext";
 static NSString *const kThreadRenderSupportKey = @"CKRenderComponentContextSupport";
 
-struct CKComponentContextStackItem {
-  CKComponentContextPreviousState state;
-  NSUInteger renderCounter;
-};
-
 @interface CKComponentContextValue : NSObject
 {
 @public
+  // The main store.
   NSMutableDictionary *_dictionary;
-  std::stack<CKComponentContextStackItem> _stack;
-  id<CKComponentContextDynamicLookup> _dynamicLookup;
+  // A map between render component to its dictionary.
+  NSMapTable<id, NSMutableDictionary *> *_renderToDictionaryCache;
+  // Stack of previous store dictionaries.
+  std::stack<NSMutableDictionary *> _stack;
+  // Dirty flag for the current store in use.
+  BOOL _itemWasAdded;
+  // Enable the render support.
   BOOL _enableRenderSupport;
+
+  id<CKComponentContextDynamicLookup> _dynamicLookup;
 }
 @end
 @implementation CKComponentContextValue @end
@@ -40,6 +43,7 @@ static CKComponentContextValue *contextValue(BOOL create)
   if (contextValue == nil && create) {
     contextValue = [CKComponentContextValue new];
     contextValue->_dictionary = [NSMutableDictionary dictionary];
+    contextValue->_renderToDictionaryCache = [NSMapTable weakToStrongObjectsMapTable];
     contextValue->_enableRenderSupport = [threadDictionary[kThreadRenderSupportKey] boolValue];
     threadDictionary[kThreadDictionaryKey] = contextValue;
   }
@@ -59,7 +63,7 @@ bool CKComponentContextContents::operator!=(const CKComponentContextContents &ot
 
 static void clearContextValueIfEmpty(CKComponentContextValue *const currentValue)
 {
-  if ([currentValue->_dictionary count] == 0 && currentValue->_stack.empty() && currentValue->_dynamicLookup == nil) {
+  if ([currentValue->_dictionary count] == 0 && currentValue->_renderToDictionaryCache.count == 0 && currentValue->_dynamicLookup == nil) {
     [[[NSThread currentThread] threadDictionary] removeObjectForKey:kThreadDictionaryKey];
   }
 }
@@ -70,10 +74,8 @@ CKComponentContextPreviousState CKComponentContextHelper::store(id key, id objec
   NSMutableDictionary *const c = v->_dictionary;
   id originalValue = c[key];
   c[key] = object;
+  v->_itemWasAdded = YES;
   CKComponentContextPreviousState state = {.key = key, .originalValue = originalValue, .newValue = object};
-  if (v->_enableRenderSupport) {
-    v->_stack.push({.state = state, .renderCounter = 0});
-  }
   return state;
 }
 
@@ -83,28 +85,10 @@ void CKComponentContextHelper::restore(const CKComponentContextPreviousState &st
   // value. In practice it should always exist already except for an obscure edge case; see the unit test
   // testTriplyNestedComponentContextWithNilMiddleValueCorrectlyRestoresOuterValue for an example.
   CKComponentContextValue *const v = contextValue(YES);
-
-  // If the stack is not empty, we need to make sure that the top element's counter is `0` before deleteing this element.
-  if (!v->_stack.empty()) {
-    CKComponentContextStackItem &item = v->_stack.top();
-    // If the counter is not '0' we keep it in the store. It will be cleaned later by `unmarkRenederComponent`.
-    if (item.renderCounter > 0) {
-      return;
-    }
-    CKCAssert(item.state.newValue == storeResult.newValue, @"Context value for %@ unexpectedly mutated from stack", storeResult.key);
-    v->_stack.pop();
-  }
   NSMutableDictionary *const c = v->_dictionary;
   CKCAssert(c[storeResult.key] == storeResult.newValue, @"Context value for %@ unexpectedly mutated", storeResult.key);
   c[storeResult.key] = storeResult.originalValue;
   clearContextValueIfEmpty(v);
-}
-
-static void restoreFromStack(CKComponentContextValue *const v, const CKComponentContextPreviousState &storeResult)
-{
-  NSMutableDictionary *const c = v->_dictionary;
-  CKCAssert(c[storeResult.key] == storeResult.newValue, @"Context value for %@ unexpectedly mutated", storeResult.key);
-  c[storeResult.key] = storeResult.originalValue;
 }
 
 void CKComponentContextHelper::enableRenderSupport(BOOL enable)
@@ -117,52 +101,59 @@ void CKComponentContextHelper::enableRenderSupport(BOOL enable)
   }
 }
 
-void CKComponentContextHelper::markRenderComponent()
+void CKComponentContextHelper::didCreateRenderComponent(id component)
 {
   CKComponentContextValue *const v = contextValue(NO);
   if (!v || !v->_enableRenderSupport) {
     return;
   }
 
-  // Increment the counter of the top element.
-  if (!v->_stack.empty()) {
-    CKComponentContextStackItem &item = v->_stack.top();
-    item.renderCounter++;
+  // Make a backup dictionary if needed and store it in the _renderToDictionaryCache map.
+  if (v->_itemWasAdded) {
+    NSMutableDictionary *renderDictionary = [v->_dictionary mutableCopy];
+    [v->_renderToDictionaryCache setObject:renderDictionary forKey:component];
+    v->_itemWasAdded = NO;
   }
 }
 
-void CKComponentContextHelper::unmarkRenderComponent()
+void CKComponentContextHelper::willBuildComponentTree(id component)
 {
   CKComponentContextValue *const v = contextValue(NO);
   if (!v || !v->_enableRenderSupport) {
     return;
   }
 
-  if (!v->_stack.empty()) {
-    // Decrement the counter of the top element.
-    CKComponentContextStackItem &item = v->_stack.top();
-    CKCAssert(item.renderCounter > 0, @"Top item counter is already 0 and cannot be decremented");
-    item.renderCounter--;
+  NSMutableDictionary *renderDictionary = [v->_renderToDictionaryCache objectForKey:component];
+  if (renderDictionary) {
+    // Push the current store into the stack.
+    v->_stack.push(v->_dictionary);
+    // Update the pointer to the latest render dictionary
+    v->_dictionary = renderDictionary;
+  }
+}
 
-    // Remove the top item if `renderCounter == 0`
-    if (item.renderCounter == 0) {
-      restoreFromStack(v, item.state);
-      v->_stack.pop();
-
-      // Clean all remaining top elements with `renderCounter == 0` (which have been saved because of the render component).
-      while (!v->_stack.empty()) {
-        CKComponentContextStackItem &itemFromStack = v->_stack.top();
-        if (itemFromStack.renderCounter == 0) {
-          restoreFromStack(v, itemFromStack.state);
-          v->_stack.pop();
-        } else {
-          break;
-        }
-      }
-    }
+void CKComponentContextHelper::didBuildComponentTree(id component)
+{
+  CKComponentContextValue *const v = contextValue(NO);
+  if (!v || !v->_enableRenderSupport) {
+    return;
   }
 
-  clearContextValueIfEmpty(v);
+  NSMutableDictionary *renderDictionary = [v->_renderToDictionaryCache objectForKey:component];
+  if (renderDictionary) {
+    CKCAssert(!v->_stack.empty(), @"The stack cannot be empty if there is a render dictionary in the cache");
+    CKCAssert(v->_dictionary == renderDictionary, @"The current store is different than the renderDictionary");
+    
+    // Update the pointer to the latest render dictionary
+    if (!v->_stack.empty()) {
+      v->_dictionary = v->_stack.top();
+      // Pop the top backup from the stack
+      v->_stack.pop();
+      // Remove the dictionary from the map
+      [v->_renderToDictionaryCache removeObjectForKey:component];
+    }
+    clearContextValueIfEmpty(v);
+  }
 }
 
 id CKComponentContextHelper::fetch(id key)
