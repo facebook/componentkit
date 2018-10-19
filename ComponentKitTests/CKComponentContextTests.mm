@@ -32,10 +32,6 @@
 @property (nonatomic, assign) std::vector<CKComponent *>children;
 @end
 
-@interface CKTestDynamicLookup : NSObject <CKComponentContextDynamicLookup>
-- (instancetype)initWithObjects:(NSArray *)objects;
-@end
-
 @interface CKComponentContextTests : XCTestCase
 @end
 
@@ -227,50 +223,6 @@
   XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, nil);
 }
 
-- (void)testDynamicLookupIsConsultedOnFetch
-{
-  NSObject *const objectInDynamicLookup = [[NSObject alloc] init];
-  const CKComponentContextPreviousDynamicLookupState previousState =
-  CKComponentContextHelper::setDynamicLookup([[CKTestDynamicLookup alloc] initWithObjects:@[objectInDynamicLookup]]);
-  // Even though we didn't put objectInDynamicLookup in context, it will be found on fetch.
-  XCTAssertTrue(CKComponentContext<NSObject>::get() == objectInDynamicLookup);
-  CKComponentContextHelper::restoreDynamicLookup(previousState);
-}
-
-- (void)testDynamicLookupIsNotConsultedOnFetchForObjectSetInContextAfterSettingDynamicLookup
-{
-  NSObject *const objectInDynamicLookup = [[NSObject alloc] init];
-  const CKComponentContextPreviousDynamicLookupState previousState =
-  CKComponentContextHelper::setDynamicLookup([[CKTestDynamicLookup alloc] initWithObjects:@[objectInDynamicLookup]]);
-  {
-    NSObject *const objectInRegularContext = [[NSObject alloc] init];
-    CKComponentContext<NSObject> c(objectInRegularContext);
-    // CKComponentContext should override the dynamic lookup.
-    XCTAssertTrue(CKComponentContext<NSObject>::get() == objectInRegularContext);
-  }
-  CKComponentContextHelper::restoreDynamicLookup(previousState);
-}
-
-- (void)testDynamicLookupClearsPreviousContextContentsOnSet
-{
-  NSObject *const o = [[NSObject alloc] init];
-  CKComponentContext<NSObject> context(o);
-  const CKComponentContextPreviousDynamicLookupState previousState =
-  CKComponentContextHelper::setDynamicLookup([[CKTestDynamicLookup alloc] initWithObjects:@[]]);
-  XCTAssertNil(CKComponentContext<NSObject>::get());
-  CKComponentContextHelper::restoreDynamicLookup(previousState);
-}
-
-- (void)testDynamicLookupRestoresPreviousContextContentsOnRestore
-{
-  NSObject *const o = [[NSObject alloc] init];
-  CKComponentContext<NSObject> context(o);
-  const CKComponentContextPreviousDynamicLookupState previousState =
-  CKComponentContextHelper::setDynamicLookup([[CKTestDynamicLookup alloc] initWithObjects:@[]]);
-  CKComponentContextHelper::restoreDynamicLookup(previousState);
-  XCTAssertTrue(CKComponentContext<NSObject>::get() == o);
-}
-
 - (void)testMarkRenderComponentWhenRenderSupportIsDisabled
 {
   NSNumber *n1 = @1;
@@ -292,31 +244,6 @@
 @end
 
 #pragma mark - Helpers
-
-@implementation CKTestDynamicLookup
-{
-  NSArray *_objects;
-}
-
-- (instancetype)initWithObjects:(NSArray *)objects
-{
-  if (self = [super init]) {
-    _objects = [objects copy];
-  }
-  return self;
-}
-
-- (id)contextValueForClass:(Class)c
-{
-  for (id object : _objects) {
-    if ([object isKindOfClass:c]) {
-      return object;
-    }
-  }
-  return nil;
-}
-
-@end
 
 @implementation CKContextTestComponent
 

@@ -30,8 +30,6 @@ static NSString *const kThreadRenderSupportKey = @"CKRenderComponentContextSuppo
   BOOL _itemWasAdded;
   // Enable the render support.
   BOOL _enableRenderSupport;
-
-  id<CKComponentContextDynamicLookup> _dynamicLookup;
 }
 @end
 @implementation CKComponentContextValue @end
@@ -52,8 +50,7 @@ static CKComponentContextValue *contextValue(BOOL create)
 
 bool CKComponentContextContents::operator==(const CKComponentContextContents &other) const
 {
-  return ((other.objects == nil && objects == nil) || [other.objects isEqualToDictionary:objects])
-  && other.dynamicLookup == dynamicLookup;
+  return ((other.objects == nil && objects == nil) || [other.objects isEqualToDictionary:objects]);
 }
 
 bool CKComponentContextContents::operator!=(const CKComponentContextContents &other) const
@@ -63,7 +60,7 @@ bool CKComponentContextContents::operator!=(const CKComponentContextContents &ot
 
 static void clearContextValueIfEmpty(CKComponentContextValue *const currentValue)
 {
-  if ([currentValue->_dictionary count] == 0 && currentValue->_renderToDictionaryCache.count == 0 && currentValue->_dynamicLookup == nil) {
+  if ([currentValue->_dictionary count] == 0 && currentValue->_renderToDictionaryCache.count == 0) {
     [[[NSThread currentThread] threadDictionary] removeObjectForKey:kThreadDictionaryKey];
   }
 }
@@ -159,7 +156,7 @@ void CKComponentContextHelper::didBuildComponentTree(id component)
 id CKComponentContextHelper::fetch(id key)
 {
   CKComponentContextValue *const v = contextValue(NO);
-  return v ? (v->_dictionary[key] ?: [v->_dynamicLookup contextValueForClass:key]) : nil;
+  return v ? v->_dictionary[key] : nil;
 }
 
 CKComponentContextContents CKComponentContextHelper::fetchAll()
@@ -170,29 +167,5 @@ CKComponentContextContents CKComponentContextHelper::fetchAll()
   }
   return {
     .objects = [v->_dictionary copy],
-    .dynamicLookup = v->_dynamicLookup,
   };
-}
-
-CKComponentContextPreviousDynamicLookupState CKComponentContextHelper::setDynamicLookup(id<CKComponentContextDynamicLookup> lookup)
-{
-  CKComponentContextValue *const v = contextValue(YES);
-  const CKComponentContextPreviousDynamicLookupState previousState = {
-    .previousContents = [v->_dictionary copy],
-    .originalLookup = v->_dynamicLookup,
-    .newLookup = lookup,
-  };
-  v->_dictionary = [NSMutableDictionary dictionary];
-  v->_dynamicLookup = lookup;
-  return previousState;
-}
-
-void CKComponentContextHelper::restoreDynamicLookup(const CKComponentContextPreviousDynamicLookupState &setResult)
-{
-  CKComponentContextValue *const v = contextValue(YES);
-  CKCAssert([v->_dictionary count] == 0, @"Value stored but not yet restored at dynamic lookup restore time");
-  CKCAssert(v->_dynamicLookup == setResult.newLookup, @"Lookup unexpectedly mutated");
-  v->_dictionary = [NSMutableDictionary dictionaryWithDictionary:setResult.previousContents];
-  v->_dynamicLookup = setResult.originalLookup;
-  clearContextValueIfEmpty(v);
 }
