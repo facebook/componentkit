@@ -104,6 +104,11 @@
   return _componentKey;
 }
 
+- (void)didReuseByParent:(id<CKTreeNodeProtocol>)parent
+{
+  _parent = parent;
+}
+
 - (id)initialStateWithComponent:(id<CKTreeNodeComponentProtocol>)component
 {
   // For CKComponent, we bridge a `nil` initial state to `CKTreeNodeEmptyState`.

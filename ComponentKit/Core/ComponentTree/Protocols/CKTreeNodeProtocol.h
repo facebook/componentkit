@@ -101,6 +101,9 @@ struct CKBuildComponentTreeParams {
 /** Returns whether component requires a scope handle */
 - (BOOL)componentRequiresScopeHandle:(Class<CKTreeNodeComponentProtocol>)component;
 
+/** Update the parent after component's reuse */
+- (void)didReuseByParent:(id<CKTreeNodeProtocol>)parent;
+
 @end
 
 /**

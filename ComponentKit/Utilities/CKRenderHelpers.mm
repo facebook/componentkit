@@ -27,6 +27,8 @@ namespace CKRenderInternal {
                                      CKRenderTreeNodeWithChild *previousChild) -> void {
     // Set the child from the previous tree node.
     node.child = previousChild.child;
+    // Set the new parent to the child node.
+    [node.child didReuseByParent:node];
     if (childComponent != nullptr) {
       // Link the previous child component to the the new component.
       *childComponent = [(CKRenderTreeNodeWithChild *)previousChild child].component;
