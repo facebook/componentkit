@@ -103,7 +103,6 @@
                              initWithChangeset:changeset
                              stateListener:self
                              userInfo:userInfo
-                             queue:nil
                              qos:qos];
   switch (mode) {
     case CKUpdateModeAsynchronous:

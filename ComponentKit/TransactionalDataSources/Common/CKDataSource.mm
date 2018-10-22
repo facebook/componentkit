@@ -67,7 +67,6 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
 
-  dispatch_queue_t _concurrentQueue;
   // The queue that modifications are processed on.
   dispatch_queue_t _modificationQueue;
   BOOL _applyModificationsOnWorkQueue;
@@ -90,13 +89,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     _state = [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
 
-    if (!configuration.qosOptions.enabled) {
-      _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
-    } else {
-      auto const workQueueAttributes =
-      dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qosClassFromDataSourceQOS(configuration.qosOptions.workQueueQOS), 0);
-      _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", workQueueAttributes);
-    }
+    _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
     _applyModificationsOnWorkQueue = configuration.applyModificationsOnWorkQueue;
     _modificationQueue = _applyModificationsOnWorkQueue ? _workQueue : dispatch_get_main_queue();
     if (configuration.workQueue != nil) {
@@ -112,16 +105,6 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 #endif
     _pendingAsynchronousModifications = [NSMutableArray array];
     [CKComponentDebugController registerReflowListener:self];
-    if (configuration.parallelInsertBuildAndLayout ||
-        configuration.parallelUpdateBuildAndLayout) {
-      if (!configuration.qosOptions.enabled) {
-        _concurrentQueue = dispatch_queue_create("org.componentkit.CKDataSource.concurrent", DISPATCH_QUEUE_CONCURRENT);
-      } else {
-        auto const concurrentQueueAttributes =
-        dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_CONCURRENT, qosClassFromDataSourceQOS(configuration.qosOptions.concurrentQueueQOS), 0);
-        _concurrentQueue = dispatch_queue_create("org.componentkit.CKDataSource.concurrent", concurrentQueueAttributes);
-      }
-    }
   }
   return self;
 }
@@ -174,7 +157,6 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
                                                  stateListener:self
                                                       userInfo:userInfo
-                                                         queue:_concurrentQueue
                                                            qos:qos];
   switch (mode) {
     case CKUpdateModeAsynchronous:

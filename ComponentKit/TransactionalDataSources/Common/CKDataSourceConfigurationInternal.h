@@ -18,12 +18,6 @@
 
 @protocol CKAnalyticsListener;
 
-struct CKDataSourceQOSOptions {
-  BOOL enabled = NO;
-  CKDataSourceQOS workQueueQOS = CKDataSourceQOSDefault;
-  CKDataSourceQOS concurrentQueueQOS = CKDataSourceQOSDefault;
-};
-
 @interface CKDataSourceConfiguration ()
 
 /**
@@ -45,14 +39,9 @@ struct CKDataSourceQOSOptions {
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
                      buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
-                               qosOptions:(const CKDataSourceQOSOptions &)qosOptions
                                 workQueue:(dispatch_queue_t)workQueue
             applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
-             parallelInsertBuildAndLayout:(BOOL)parallelInsertBuildAndLayout
-    parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
-             parallelUpdateBuildAndLayout:(BOOL)parallelUpdateBuildAndLayout
-    parallelUpdateBuildAndLayoutThreshold:(NSUInteger)parallelUpdateBuildAndLayoutThreshold
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
@@ -62,15 +51,10 @@ struct CKDataSourceQOSOptions {
 @property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
 @property (nonatomic, assign, readonly) BOOL applyModificationsOnWorkQueue;
 @property (nonatomic, assign, readonly) BOOL unifyBuildAndLayout;
-@property (nonatomic, assign, readonly) BOOL parallelInsertBuildAndLayout;
-@property (nonatomic, assign, readonly) NSUInteger parallelInsertBuildAndLayoutThreshold;
-@property (nonatomic, assign, readonly) BOOL parallelUpdateBuildAndLayout;
-@property (nonatomic, assign, readonly) NSUInteger parallelUpdateBuildAndLayoutThreshold;
 
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates;
 
 - (const CKBuildComponentConfig &)buildComponentConfig;
-- (const CKDataSourceQOSOptions &)qosOptions;
 
 @end
