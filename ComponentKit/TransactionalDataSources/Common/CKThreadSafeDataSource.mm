@@ -10,7 +10,6 @@
 
 #import "CKThreadSafeDataSource.h"
 
-#import "CKAssert.h"
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
 #import "CKComponentControllerInternal.h"
@@ -40,8 +39,6 @@
   CKComponentStateUpdatesMap _pendingAsynchronousStateUpdates;
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
   CK::Mutex _pendingStateUpdatesMutex;
-
-  CK::Mutex _processingMutex;
 
   CKDataSourceListenerAnnouncer *_announcer;
   dispatch_queue_t _workQueue;
@@ -191,7 +188,6 @@
 
 - (void)_applyModificationAsync:(id<CKDataSourceStateModifying>)modification
 {
-  _processingMutex.lock();
   dispatch_async(_workQueue, blockUsingDataSourceQOS(^{
     [_announcer componentDataSourceWillGenerateNewState:self userInfo:modification.userInfo];
     auto change = [self _changeFromModification:modification];
@@ -199,25 +195,28 @@
                 didGenerateNewState:[change state]
                             changes:[change appliedChanges]];
     [self _applyChange:change];
-    _processingMutex.unlock();
   }, [modification qos]));
 }
 
 - (void)_applyModificationSync:(id<CKDataSourceStateModifying>)modification
 {
-  CK::MutexLocker lock(_processingMutex);
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [_announcer componentDataSource:self willSyncApplyModificationWithUserInfo:[modification userInfo]];
+  dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+  dispatch_async(_workQueue, ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [_announcer componentDataSource:self willSyncApplyModificationWithUserInfo:[modification userInfo]];
+    });
+    auto change = [self _changeFromModification:modification];
+    [self _applyChange:change];
+    dispatch_semaphore_signal(semaphore);
   });
-  auto change = [self _changeFromModification:modification];
-  [self _applyChange:change];
+  dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 }
 
 - (CKDataSourceChange *)_changeFromModification:(id<CKDataSourceStateModifying>)modification
 {
 #if CK_ASSERTIONS_ENABLED
   if ([modification isKindOfClass:[CKDataSourceChangesetModification class]]) {
-    verifyChangeset(((CKDataSourceChangesetModification *)modification).changeset, self.state);
+    CKVerifyChangeset(((CKDataSourceChangesetModification *)modification).changeset, self.state, @[]);
   }
 #endif
 
@@ -274,7 +273,7 @@
       _pendingSynchronousStateUpdates.clear();
     }
   }
-  
+
   if (asyncStateUpdateModification != nil) {
     [self _applyModificationAsync:asyncStateUpdateModification];
   }
@@ -282,19 +281,5 @@
     [self _applyModificationSync:syncStateUpdateModification];
   }
 }
-
-#if CK_ASSERTIONS_ENABLED
-static void verifyChangeset(CKDataSourceChangeset *changeset,
-                            CKDataSourceState *state)
-{
-  const CKInvalidChangesetInfo invalidChangesetInfo = CKIsValidChangesetForState(changeset,
-                                                                                 state,
-                                                                                 @[]);
-  if (invalidChangesetInfo.operationType != CKInvalidChangesetOperationTypeNone) {
-    NSString *const humanReadableInvalidChangesetOperationType = CKHumanReadableInvalidChangesetOperationType(invalidChangesetInfo.operationType);
-    CKCFatalWithCategory(humanReadableInvalidChangesetOperationType, @"Invalid changeset: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Invalid section:\n%ld\n*** Invalid item:\n%ld", humanReadableInvalidChangesetOperationType, changeset, state, (long)invalidChangesetInfo.section, (long)invalidChangesetInfo.item);
-  }
-}
-#endif
 
 @end
