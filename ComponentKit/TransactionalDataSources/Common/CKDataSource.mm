@@ -11,7 +11,6 @@
 #import "CKDataSource.h"
 #import "CKDataSourceInternal.h"
 
-#import "CKAssert.h"
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
 #import "CKComponentControllerInternal.h"
@@ -151,7 +150,9 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 {
   CKAssertChangesetQueue();
 
-  verifyChangeset(changeset, _state, _pendingAsynchronousModifications);
+#if CK_ASSERTIONS_ENABLED
+  CKVerifyChangeset(changeset, _state, _pendingAsynchronousModifications);
+#endif
 
   id<CKDataSourceStateModifying> modification =
   [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
@@ -413,36 +414,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   });
 }
 
-static void verifyChangeset(CKDataSourceChangeset *changeset,
-                            CKDataSourceState *state,
-                            NSArray<id<CKDataSourceStateModifying>> *pendingAsynchronousModifications)
-{
 #if CK_ASSERTIONS_ENABLED
-  const CKInvalidChangesetInfo invalidChangesetInfo = CKIsValidChangesetForState(changeset,
-                                                                                 state,
-                                                                                 pendingAsynchronousModifications);
-  if (invalidChangesetInfo.operationType != CKInvalidChangesetOperationTypeNone) {
-    NSString *const humanReadableInvalidChangesetOperationType = CKHumanReadableInvalidChangesetOperationType(invalidChangesetInfo.operationType);
-    NSString *const humanReadablePendingAsynchronousModifications = readableStringForArray(pendingAsynchronousModifications);
-    CKCFatalWithCategory(humanReadableInvalidChangesetOperationType, @"Invalid changeset: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@\n*** Invalid section:\n%ld\n*** Invalid item:\n%ld", humanReadableInvalidChangesetOperationType, changeset, state, humanReadablePendingAsynchronousModifications, (long)invalidChangesetInfo.section, (long)invalidChangesetInfo.item);
-  }
-#endif
-}
-
-#if CK_ASSERTIONS_ENABLED
-static NSString *readableStringForArray(NSArray *array)
-{
-  if (!array || array.count == 0) {
-    return @"()";
-  }
-  NSMutableString *mutableString = [NSMutableString new];
-  [mutableString appendFormat:@"(\n"];
-  for (id value in array) {
-    [mutableString appendFormat:@"\t%@,\n", value];
-  }
-  [mutableString appendString:@")\n"];
-  return mutableString;
-}
 
 static CK::StaticMutex _IDMutex = CK_MUTEX_INITIALIZER;
 static NSInteger _incrementingDataSourceID = 0;
