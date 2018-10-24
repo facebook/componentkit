@@ -334,6 +334,16 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   auto const appliedChanges = [change appliedChanges];
   CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([[appliedChanges finalUpdatedIndexPaths] allValues], _state);
   CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([appliedChanges insertedIndexPaths], _state);
+  
+  // Handle deferred changeset (if there is one)
+  auto const deferredChangeset = [change deferredChangeset];
+  if (deferredChangeset != nil) {
+    // This needs to be applied synchronously, because any future enqueued modifications may assume
+    // that the entirety of the changeset has been applied at this point.
+    [self applyChangeset:deferredChangeset
+                    mode:CKUpdateModeSynchronous
+                userInfo:[appliedChanges userInfo]];
+  }
 }
 
 - (void)_processStateUpdates

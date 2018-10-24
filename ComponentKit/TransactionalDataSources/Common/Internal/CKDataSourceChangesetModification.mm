@@ -241,7 +241,8 @@
                                                        userInfo:_userInfo];
 
   return [[CKDataSourceChange alloc] initWithState:newState
-                                    appliedChanges:appliedChanges];
+                                    appliedChanges:appliedChanges
+                                 deferredChangeset:nil];
 }
 
 - (NSDictionary *)userInfo
