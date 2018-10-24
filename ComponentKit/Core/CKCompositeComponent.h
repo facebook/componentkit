@@ -26,13 +26,13 @@
 @interface CKCompositeComponent<__covariant CKComponentStateType:id> : CKComponent
 
 /** Calls the initializer with {} for view. */
-+ (instancetype)newWithComponent:(CKComponent *)component;
++ (instancetype)newWithComponent:(__attribute__((ns_consumed)) CKComponent *)component;
 
 /**
  @param view Passed to CKComponent's initializer. This should be used sparingly for CKCompositeComponent. Prefer
  delegating view configuration completely to the child component to hide implementation details.
  @param component The component the composite component uses for layout and sizing.
  */
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view component:(CKComponent *)component;
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view component:(__attribute__((ns_consumed)) CKComponent *)component;
 
 @end
