@@ -310,10 +310,10 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 - (void)_synchronouslyApplyModification:(id<CKDataSourceStateModifying>)modification
 {
   [_announcer componentDataSource:self willSyncApplyModificationWithUserInfo:[modification userInfo]];
-  [self _synchronouslyApplyChange:[modification changeFromState:_state]];
+  [self _synchronouslyApplyChange:[modification changeFromState:_state] qos:modification.qos];
 }
 
-- (void)_synchronouslyApplyChange:(CKDataSourceChange *)change
+- (void)_synchronouslyApplyChange:(CKDataSourceChange *)change qos:(CKDataSourceQOS)qos
 {
   CKAssertChangesetQueue();
   CKDataSourceState *previousState = _state;
@@ -338,11 +338,14 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   // Handle deferred changeset (if there is one)
   auto const deferredChangeset = [change deferredChangeset];
   if (deferredChangeset != nil) {
-    // This needs to be applied synchronously, because any future enqueued modifications may assume
+    // This needs to be applied immediately, because any future enqueued modifications may assume
     // that the entirety of the changeset has been applied at this point.
-    [self applyChangeset:deferredChangeset
-                    mode:CKUpdateModeSynchronous
-                userInfo:[appliedChanges userInfo]];
+    id<CKDataSourceStateModifying> modification =
+    [[CKDataSourceChangesetModification alloc] initWithChangeset:deferredChangeset
+                                                   stateListener:self
+                                                        userInfo:[appliedChanges userInfo]
+                                                             qos:qos];
+    [self _synchronouslyApplyModification:modification];
   }
 }
 
@@ -417,7 +420,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     // it may have been canceled; don't apply it.
     if ([_pendingAsynchronousModifications firstObject] == modificationPair.modification && self->_state == modificationPair.state) {
       [_pendingAsynchronousModifications removeObjectAtIndex:0];
-      [self _synchronouslyApplyChange:change];
+      [self _synchronouslyApplyChange:change qos:modificationPair.modification.qos];
     }
 
     [self _startAsynchronousModificationIfNeeded];
