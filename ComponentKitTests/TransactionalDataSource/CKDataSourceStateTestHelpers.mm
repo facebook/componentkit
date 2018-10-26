@@ -44,6 +44,7 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
    context:@"context"
    sizeRange:{{100, 100}, {100, 100}}
    buildComponentConfig:{}
+   splitChangesetOptions:{}
    workQueue:nil
    applyModificationsOnWorkQueue:NO
    unifyBuildAndLayout:NO

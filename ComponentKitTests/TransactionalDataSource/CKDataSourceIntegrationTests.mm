@@ -167,6 +167,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        context:nil
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
                                        buildComponentConfig:{}
+                                       splitChangesetOptions:{}
                                        workQueue:nil
                                        applyModificationsOnWorkQueue:NO
                                        unifyBuildAndLayout:NO

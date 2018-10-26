@@ -20,6 +20,7 @@
   std::unordered_set<CKComponentPredicate> _componentPredicates;
   std::unordered_set<CKComponentControllerPredicate> _componentControllerPredicates;
   CKBuildComponentConfig _buildComponentConfig;
+  CKDataSourceSplitChangesetOptions _splitChangesetOptions;
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -30,6 +31,7 @@
                                  context:context
                                sizeRange:sizeRange
                     buildComponentConfig:{}
+                   splitChangesetOptions:{}
                                workQueue:nil
            applyModificationsOnWorkQueue:NO
                      unifyBuildAndLayout:NO
@@ -42,6 +44,7 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
                      buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
+                    splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                                 workQueue:(dispatch_queue_t)workQueue
             applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
@@ -58,6 +61,7 @@
     _analyticsListener = analyticsListener;
     _unifyBuildAndLayout = unifyBuildAndLayout;
     _buildComponentConfig = buildComponentConfig;
+    _splitChangesetOptions = splitChangesetOptions;
     _workQueue = workQueue;
     _applyModificationsOnWorkQueue = applyModificationsOnWorkQueue;
   }
@@ -67,6 +71,11 @@
 - (const CKBuildComponentConfig &)buildComponentConfig
 {
   return _buildComponentConfig;
+}
+
+- (const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
+{
+  return _splitChangesetOptions;
 }
 
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates

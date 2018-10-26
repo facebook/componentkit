@@ -18,6 +18,31 @@
 
 @protocol CKAnalyticsListener;
 
+typedef NS_ENUM(NSInteger, CKDataSourceLayoutAxis) {
+  CKDataSourceLayoutAxisVertical,
+  CKDataSourceLayoutAxisHorizontal
+};
+
+/**
+ * Configuration for splitting changesets so that the part of the changeset that fills
+ * the viewport with the specified bounding size gets applied first, and the second
+ * part of the changeset is deferred until immediately after.
+ */
+struct CKDataSourceSplitChangesetOptions {
+  /** Whether changeset splitting is enabled. */
+  BOOL enabled = NO;
+  /**
+   * The size of the viewport to use for component layout. Any components that are laid out outside
+   * this bounding size are deferred to a second changeset.
+   */
+  CGSize viewportBoundingSize = CGSizeZero;
+  /**
+   * The direction in which components are being laid out. This, along with `viewportBoundingSize`
+   * is used to compute whether a component layout is outside of the bounds of the viewport.
+   */
+  CKDataSourceLayoutAxis layoutAxis = CKDataSourceLayoutAxisVertical;
+};
+
 @interface CKDataSourceConfiguration ()
 
 /**
@@ -39,6 +64,7 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
                      buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
+                    splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                                 workQueue:(dispatch_queue_t)workQueue
             applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
@@ -56,5 +82,6 @@
 - (const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates;
 
 - (const CKBuildComponentConfig &)buildComponentConfig;
+- (const CKDataSourceSplitChangesetOptions &)splitChangesetOptions;
 
 @end
