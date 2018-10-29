@@ -27,6 +27,7 @@
 
 @class CKComponentScopeFrame;
 @class CKComponentScopeRoot;
+@class CKTreeNodeWithChild;
 
 /** Component state announcements will always be made on the main thread. */
 @protocol CKComponentStateListener <NSObject>
@@ -62,6 +63,9 @@
 /** Must be called when initializing a component or controller. */
 - (void)registerComponentController:(id<CKComponentControllerProtocol>)componentController;
 - (void)registerComponent:(id<CKComponentProtocol>)component;
+
+- (void)registerReusedTreeNode:(CKTreeNodeWithChild *)treeNode;
+- (NSHashTable<CKTreeNodeWithChild *> *)reusedTreeNodes;
 
 - (CKCocoaCollectionAdapter<id<CKComponentProtocol>>)componentsMatchingPredicate:(CKComponentPredicate)predicate;
 - (CKCocoaCollectionAdapter<id<CKComponentControllerProtocol>>)componentControllersMatchingPredicate:(CKComponentControllerPredicate)predicate;

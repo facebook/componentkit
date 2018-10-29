@@ -12,6 +12,7 @@
 
 #import <libkern/OSAtomic.h>
 
+#import "CKTreeNodeWithChild.h"
 #import "CKComponentProtocol.h"
 #import "CKComponentControllerProtocol.h"
 #import "CKComponentScopeFrameInternal.h"
@@ -29,6 +30,7 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
 
   _CKRegisteredComponentsMap _registeredComponents;
   _CKRegisteredComponentControllerMap _registeredComponentControllers;
+  NSHashTable<CKTreeNodeWithChild *> *_reusedTreeNodes;
 }
 
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
@@ -67,6 +69,7 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
     _rootNode = [[CKRenderTreeNodeWithChildren alloc] init];
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
+    _reusedTreeNodes = [NSHashTable weakObjectsHashTable];
   }
   return self;
 }
@@ -105,6 +108,16 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
       [hashTable addObject:componentController];
     }
   }
+}
+
+- (void)registerReusedTreeNode:(CKTreeNodeWithChild *)treeNode
+{
+  [_reusedTreeNodes addObject:treeNode];
+}
+
+- (NSHashTable<CKTreeNodeWithChild *> *)reusedTreeNodes
+{
+  return _reusedTreeNodes;
 }
 
 - (void)enumerateComponentsMatchingPredicate:(CKComponentPredicate)predicate

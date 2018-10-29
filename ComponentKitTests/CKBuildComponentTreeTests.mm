@@ -32,6 +32,12 @@
 + (instancetype)newWithComponent:(CKComponent *)component;
 @end
 
+/** An helper class that inherits from 'CKRenderComponent' and render a random CKComponent */
+@interface CKComponentTreeTestComponent_RenderWithChild : CKRenderComponent
+@property (nonatomic, strong) CKCompositeComponentWithScopeAndState *childComponent;
+@property (nonatomic, assign) BOOL hasReusedComponent;
+@end
+
 /** An helper class that inherits from 'CKRenderWithChildrenComponent'; render the component froms the initializer */
 @interface CKComponentTreeTestComponent_RenderWithChildren : CKRenderWithChildrenComponent
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
@@ -161,19 +167,19 @@
 
 - (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_onNewTreeAndPropsUpdate_noOptimizations
 {
-  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::NewTree, {}).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
-  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::PropsUpdate, {}).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, BuildTrigger::NewTree, {}).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, BuildTrigger::PropsUpdate, {}).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
 }
 
 - (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_onNewTreeAndPropsUpdate_withOptimizations
 {
   auto config = CKBuildComponentConfig({ .enableFasterStateUpdates = YES });
-  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::NewTree, config).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
-  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::PropsUpdate, config).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, BuildTrigger::NewTree, config).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, BuildTrigger::PropsUpdate, config).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
 
   config = CKBuildComponentConfig({ .enableFasterPropsUpdates = YES });
-  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::NewTree, config).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
-  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor({}, BuildTrigger::PropsUpdate, config).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, BuildTrigger::NewTree, config).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, BuildTrigger::PropsUpdate, config).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
 }
 
 - (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_onStateUpdate_noOptimizations
@@ -195,7 +201,7 @@
     return @2;
   });
 
-  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(stateUpdates, BuildTrigger::StateUpdate, {}).empty(), @"It is not expected to have dirty nodes when no optimization is enabled");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(buildResults.scopeRoot, stateUpdates, BuildTrigger::StateUpdate, {}).empty(), @"It is not expected to have dirty nodes when no optimization is enabled");
 }
 
 - (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_onStateUpdate_withFasterStateUpdatesOption
@@ -219,7 +225,52 @@
     return @2;
   });
 
-  XCTAssertEqual(CKRender::treeNodeDirtyIdsFor(stateUpdates, BuildTrigger::StateUpdate, config).size(), 2);
+  XCTAssertEqual(CKRender::treeNodeDirtyIdsFor(buildResults.scopeRoot, stateUpdates, BuildTrigger::StateUpdate, config).size(), 2);
+}
+
+- (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_updateParentOnStateUpdate
+{
+  auto const config = CKBuildComponentConfig({ .enableFasterStateUpdates = YES });
+  
+  __block CKComponentTreeTestComponent_RenderWithChild *child1;
+  __block CKCompositeComponentWithScopeAndState *child2;
+  __block CKComponentTreeTestComponent_RenderWithChildren *rootComponent;
+  auto const componentFactory = ^{
+    child1 = [CKComponentTreeTestComponent_RenderWithChild new];
+    child2 =  [CKCompositeComponentWithScopeAndState newWithComponent:[CKComponent new]];
+    rootComponent = [CKComponentTreeTestComponent_RenderWithChildren newWithChildren:{child1, child2}];
+    return rootComponent;
+  };
+  
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, config);
+  XCTAssertFalse(child1.hasReusedComponent);
+ 
+  // Simulate a state update on child2 (child1 should be reused in this case).
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[child2.scopeHandle].push_back(^(id){
+    return @2;
+  });
+  
+  auto const buildResultsAfterStateUpdate = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, config);
+  XCTAssertTrue(child1.hasReusedComponent);
+  
+  
+  // Simulate a state update on `child1.childComponent` - which should mark the path from `child1.childComponent` to the root as dirty.
+  CKComponentStateUpdateMap stateUpdates2;
+  stateUpdates2[child1.childComponent.scopeHandle].push_back(^(id){
+    return @2;
+  });
+  
+  auto const dirtyNodeIds = CKRender::treeNodeDirtyIdsFor(buildResultsAfterStateUpdate.scopeRoot, stateUpdates2, BuildTrigger::StateUpdate, config);
+  CKTreeNodeDirtyIds expectedDirtyNodeIds = {
+    child1.childComponent.scopeHandle.treeNode.nodeIdentifier,
+    child1.scopeHandle.treeNode.nodeIdentifier,
+    rootComponent.scopeHandle.treeNode.nodeIdentifier,
+    buildResultsAfterStateUpdate.scopeRoot.rootNode.nodeIdentifier,
+  };
+  XCTAssertTrue(child1.scopeHandle.treeNode.parent.component == rootComponent);
+  XCTAssertTrue(child1.childComponent.scopeHandle.treeNode.parent.component == child1);
+  XCTAssertTrue(dirtyNodeIds == expectedDirtyNodeIds);
 }
 
 #pragma mark - Helpers
@@ -283,6 +334,24 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 }
 @end
 
+@implementation CKComponentTreeTestComponent_RenderWithChild
++ (BOOL)requiresScopeHandle
+{
+  return YES;
+}
+- (CKComponent *)render:(id)state
+{
+  _childComponent = [CKCompositeComponentWithScopeAndState newWithComponent:[CKComponent new]];
+  return _childComponent;
+}
+
+- (void)didReuseComponent:(CKComponentTreeTestComponent_RenderWithChild *)component
+{
+  _childComponent = component->_childComponent;
+  _hasReusedComponent = YES;
+}
+@end
+
 @implementation CKComponentTreeTestComponent_RenderWithChildren
 {
   std::vector<CKComponent *> _children;
@@ -294,6 +363,10 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
     c->_children = children;
   }
   return c;
+}
++ (BOOL)requiresScopeHandle
+{
+  return YES;
 }
 - (std::vector<CKComponent *>)renderChildren:(id)state
 {

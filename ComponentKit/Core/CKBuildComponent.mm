@@ -49,7 +49,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 
   // Build the component tree if we have a render component in the hierarchy.
   if (threadScope.newScopeRoot.hasRenderComponentInTree) {
-    CKTreeNodeDirtyIds treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(stateUpdates, buildTrigger, config);
+    CKTreeNodeDirtyIds treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger, config);
 
     // Build the component tree from the render function.
     [component buildComponentTree:threadScope.newScopeRoot.rootNode
@@ -105,7 +105,7 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
 
   // Build the component tree if we have a render component in the hierarchy.
   if (threadScope.newScopeRoot.hasRenderComponentInTree) {
-    treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(stateUpdates, buildTrigger, config);
+    treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger, config);
 
     // Build the component tree from the render function.
     [component buildComponentTree:threadScope.newScopeRoot.rootNode

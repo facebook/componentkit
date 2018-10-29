@@ -13,6 +13,7 @@
 #import <ComponentKit/CKRenderComponent.h>
 #import <ComponentKit/CKComponentContextHelper.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKMutex.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKTreeNodeWithChild.h>
@@ -24,17 +25,21 @@ namespace CKRenderInternal {
   static auto reusePreviousComponent(id<CKRenderComponentProtocol> component,
                                      __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                      CKRenderTreeNodeWithChild *node,
-                                     CKRenderTreeNodeWithChild *previousChild) -> void {
+                                     CKRenderTreeNodeWithChild *previousNode,
+                                     const CKBuildComponentTreeParams &params) -> void {
     // Set the child from the previous tree node.
-    node.child = previousChild.child;
-    // Set the new parent to the child node.
-    [node.child didReuseByParent:node];
+    node.child = previousNode.child;
+    // Save the reused node in the scope root for the next component creation.
+    [params.scopeRoot registerReusedTreeNode:node];
+
+    auto const prevChildComponent = [(CKRenderTreeNodeWithChild *)previousNode child].component;
+
     if (childComponent != nullptr) {
       // Link the previous child component to the the new component.
-      *childComponent = [(CKRenderTreeNodeWithChild *)previousChild child].component;
+      *childComponent = prevChildComponent;
     }
     // Notify the new component about the reuse of the previous component.
-    [component didReuseComponent:(id<CKRenderComponentProtocol>)previousChild.component];
+    [component didReuseComponent:(id<CKRenderComponentProtocol>)previousNode.component];
   }
 
   // Reuse the previous component generation and its component tree and notify the previous component about it.
@@ -42,10 +47,11 @@ namespace CKRenderInternal {
                                      __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                      CKRenderTreeNodeWithChild *node,
                                      id<CKTreeNodeWithChildrenProtocol> parent,
-                                     id<CKTreeNodeWithChildrenProtocol> previousParent) -> BOOL {
-    auto const previousChild = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
-    if (previousChild) {
-      CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousChild);
+                                     id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                     const CKBuildComponentTreeParams &params) -> BOOL {
+    auto const previousNode = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
+    if (previousNode) {
+      CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousNode, params);
       return YES;
     }
     return NO;
@@ -56,11 +62,12 @@ namespace CKRenderInternal {
                                                          __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                                          CKRenderTreeNodeWithChild *node,
                                                          id<CKTreeNodeWithChildrenProtocol> parent,
-                                                         id<CKTreeNodeWithChildrenProtocol> previousParent) -> BOOL {
-    auto const previousChild = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
-    auto const previousComponent = (id<CKRenderComponentProtocol>)previousChild.component;
+                                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                                         const CKBuildComponentTreeParams &params) -> BOOL {
+    auto const previousNode = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
+    auto const previousComponent = (id<CKRenderComponentProtocol>)previousNode.component;
     if (previousComponent && ![component shouldComponentUpdate:previousComponent]) {
-      CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousChild);
+      CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousNode, params);
       return YES;
     }
     return NO;
@@ -94,18 +101,18 @@ namespace CKRenderInternal {
           // 3. `enableFasterStateUpdates` is on
           if (!parentHasStateUpdate && params.enableFasterStateUpdates) {
             // Faster state update optimizations.
-            return CKRenderInternal::reusePreviousComponent(component, childComponent, node, parent, previousParent);
+            return CKRenderInternal::reusePreviousComponent(component, childComponent, node, parent, previousParent, params);
           }
           // We fallback to the props update optimization in 2 cases:
           // 1. The component is not dirty, but the parent has a state update.
           // 2. The component is not dirty, the parent has no state update, but `enableFasterStateUpdates` is off.
-          return (params.enableFasterPropsUpdates && CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent));
+          return (params.enableFasterPropsUpdates && CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params));
         }
       }
     }
     // Props update branch:
     else if (params.buildTrigger == BuildTrigger::PropsUpdate && params.enableFasterPropsUpdates) {
-      return CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent);
+      return CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params);
     }
 
     return NO;
@@ -293,26 +300,34 @@ namespace CKRender {
     return NO;
   }
 
-  static auto createTreeNodeDirtyIds(const CKComponentStateUpdateMap &stateUpdates) -> CKTreeNodeDirtyIds
+  auto treeNodeDirtyIdsFor(CKComponentScopeRoot *previousRoot, const CKComponentStateUpdateMap &stateUpdates, const BuildTrigger &buildTrigger, const CKBuildComponentConfig &config) -> CKTreeNodeDirtyIds
   {
     CKTreeNodeDirtyIds treeNodesDirtyIds;
-    for (auto const & stateUpdate : stateUpdates) {
-      id<CKTreeNodeProtocol> treeNode = stateUpdate.first.treeNode;
-      while (treeNode != nil) {
-        treeNodesDirtyIds.insert(treeNode.nodeIdentifier);
-        treeNode = treeNode.parent;
+    
+    if (config.enableFasterStateUpdates || config.enableFasterPropsUpdates) {
+      // Protect the read/write operations on CKTreeNode parent property.
+      static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER;
+      CK::StaticMutexLocker l(mutex);
+      
+      // Update the parents pointer from the reuse cache.
+      NSHashTable<CKTreeNodeWithChild *> *reusedNodes = [previousRoot reusedTreeNodes];
+      for (CKTreeNodeWithChild *node in reusedNodes) {
+        [node.child didReuseByParent:node];
+      }
+      
+      // Compute the dirtyNodeIds in case of a state update only.
+      if (buildTrigger == BuildTrigger::StateUpdate) {
+        for (auto const & stateUpdate : stateUpdates) {
+          id<CKTreeNodeProtocol> treeNode = stateUpdate.first.treeNode;
+          while (treeNode != nil) {
+            treeNodesDirtyIds.insert(treeNode.nodeIdentifier);
+            CKCAssert((treeNode.parent || treeNode.parent == nil && treeNode.nodeIdentifier == 0), @"The next parent is nil, but the current tree node is not the root one.");
+            treeNode = treeNode.parent;
+          }
+        }
       }
     }
+
     return treeNodesDirtyIds;
-  }
-
-  auto treeNodeDirtyIdsFor(const CKComponentStateUpdateMap &stateUpdates, const BuildTrigger &buildTrigger, const CKBuildComponentConfig &config) -> CKTreeNodeDirtyIds
-  {
-    if (buildTrigger == BuildTrigger::StateUpdate &&
-        (config.enableFasterStateUpdates || config.enableFasterPropsUpdates)) {
-      return createTreeNodeDirtyIds(stateUpdates);
-    }
-
-    return CKTreeNodeDirtyIds();
   }
 }

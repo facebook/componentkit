@@ -121,5 +121,5 @@ namespace CKRender {
   /**
    @return A collection of tree node marked as dirty if any. An empty collection otherwise.
    */
-  auto treeNodeDirtyIdsFor(const CKComponentStateUpdateMap &stateUpdates, const BuildTrigger &buildTrigger, const CKBuildComponentConfig &config) -> CKTreeNodeDirtyIds;
+  auto treeNodeDirtyIdsFor(CKComponentScopeRoot *previousRoot, const CKComponentStateUpdateMap &stateUpdates, const BuildTrigger &buildTrigger, const CKBuildComponentConfig &config) -> CKTreeNodeDirtyIds;
 }
