@@ -21,6 +21,7 @@
 #import "CKEqualityHashHelpers.h"
 #import "CKMacros.h"
 #import "CKThreadLocalComponentScope.h"
+#import "CKTreeNodeProtocol.h"
 
 static bool keyVectorsEqual(const std::vector<id<NSObject>> &a, const std::vector<id<NSObject>> &b)
 {
@@ -126,6 +127,69 @@ static BOOL _alwaysUseStateKeyCounter = NO;
   CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
   pair.frame->_children.insert({stateScopeKey, newChild});
   return {.frame = newChild, .equivalentPreviousFrame = existingChildFrameOfEquivalentPreviousFrame};
+}
+
++ (void)willBuildComponentTreeWithTreeNode:(id<CKTreeNodeProtocol>)node
+{
+  auto const threadLocalScope = CKThreadLocalComponentScope::currentScope();
+  if (threadLocalScope == nullptr) {
+    return;
+  }
+  
+  // Create a unique key based on the tree node identifier and the component class.
+  CKStateScopeKey stateScopeKey = {[node.component class], @(node.nodeIdentifier)};
+  
+  // Get the frame from the previous generation if it exists.
+  CKComponentScopeFrame *existingChildFrameOfEquivalentPreviousFrame;
+  CKComponentScopeFramePair &pair = threadLocalScope->stack.top();
+  if (pair.equivalentPreviousFrame) {
+    const auto &equivalentPreviousFrameChildren = pair.equivalentPreviousFrame->_children;
+    const auto it = equivalentPreviousFrameChildren.find(stateScopeKey);
+    existingChildFrameOfEquivalentPreviousFrame = (it == equivalentPreviousFrameChildren.end()) ? nil : it->second;
+  }
+  
+  // Create a scope frame for the render component children.
+  CKComponentScopeFrame *newFrame = [[CKComponentScopeFrame alloc] initWithHandle:node.handle];
+  // Push the new scope frame to the parent frame's children.
+  pair.frame->_children.insert({stateScopeKey, newFrame});
+  // Push the new pair into the thread local.
+  threadLocalScope->stack.push({.frame = newFrame, .equivalentPreviousFrame = existingChildFrameOfEquivalentPreviousFrame});
+}
+
++ (void)didBuildComponentTreeWithNode:(id<CKTreeNodeProtocol>)node
+{
+  auto const threadLocalScope = CKThreadLocalComponentScope::currentScope();
+  if (threadLocalScope == nullptr) {
+    return;
+  }
+  
+  CKAssert(!threadLocalScope->stack.empty() && threadLocalScope->stack.top().frame.handle == node.handle, @"frame.handle is not equal to node.handle");
+  // Pop the top element of the stack.
+  threadLocalScope->stack.pop();
+}
+
++ (void)didReuseRenderWithTreeNode:(id<CKTreeNodeProtocol>)node
+{
+  auto const threadLocalScope = CKThreadLocalComponentScope::currentScope();
+  if (threadLocalScope == nullptr) {
+    return;
+  }
+  
+  // Create a unique key based on the tree node identifier and the component class.
+  CKStateScopeKey stateScopeKey = {[node.component class], @(node.nodeIdentifier)};
+  // Get the frame from the previous generation if it exists.
+  CKComponentScopeFrame *existingChildFrameOfEquivalentPreviousFrame;
+  CKComponentScopeFramePair &pair = threadLocalScope->stack.top();
+  if (pair.equivalentPreviousFrame) {
+    const auto &equivalentPreviousFrameChildren = pair.equivalentPreviousFrame->_children;
+    const auto it = equivalentPreviousFrameChildren.find(stateScopeKey);
+    existingChildFrameOfEquivalentPreviousFrame = (it == equivalentPreviousFrameChildren.end()) ? nil : it->second;
+  }
+  
+  // Transfer the previous frame into the parent from the new generation.
+  if (existingChildFrameOfEquivalentPreviousFrame) {
+    pair.frame->_children.insert({stateScopeKey, existingChildFrameOfEquivalentPreviousFrame});
+  }
 }
 
 - (instancetype)initWithHandle:(CKComponentScopeHandle *)handle

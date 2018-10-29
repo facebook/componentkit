@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKRenderComponent.h>
 #import <ComponentKit/CKComponentContextHelper.h>
+#import <ComponentKit/CKComponentScopeFrame.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKMutex.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
@@ -31,6 +32,8 @@ namespace CKRenderInternal {
     node.child = previousNode.child;
     // Save the reused node in the scope root for the next component creation.
     [params.scopeRoot registerReusedTreeNode:node];
+    // Update the scope frame of the reuse of this component in order to transfer the render scope frame.
+    [CKComponentScopeFrame didReuseRenderWithTreeNode:node];
 
     auto const prevChildComponent = [(CKRenderTreeNodeWithChild *)previousNode child].component;
 
@@ -198,6 +201,7 @@ namespace CKRender {
                        stateUpdates:params.stateUpdates];
 
     auto const enableContextRenderSupport = !isBridgeComponent && params.enableContextRenderSupport;
+    auto const enableReuseComponent = !isBridgeComponent && (params.enableFasterStateUpdates || params.enableFasterPropsUpdates);
 
     if (enableContextRenderSupport) {
       CKComponentContextHelper::willBuildComponentTree(component);
@@ -215,6 +219,10 @@ namespace CKRender {
     if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
       parentHasStateUpdate = YES;
     }
+    
+    if (enableReuseComponent) {
+      [CKComponentScopeFrame willBuildComponentTreeWithTreeNode:node];
+    }
 
     auto const child = [component render:node.state];
     if (child) {
@@ -227,6 +235,10 @@ namespace CKRender {
                  previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
                          params:params
            parentHasStateUpdate:parentHasStateUpdate];
+    }
+    
+    if (enableReuseComponent) {
+      [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
     }
 
     if (enableContextRenderSupport) {

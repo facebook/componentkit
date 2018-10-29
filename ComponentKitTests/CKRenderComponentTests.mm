@@ -71,9 +71,9 @@
   [self setUpForFasterStateUpdates];
 
   // Simulate props update.
-  CKThreadLocalComponentScope threadScope(nil, {});
+  CKThreadLocalComponentScope threadScope(_scopeRoot, {});
   auto const c2 = [CKTestRenderComponent new];
-  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+  CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
   [c2 buildComponentTree:scopeRoot2.rootNode
           previousParent:_scopeRoot.rootNode
                   params:{
@@ -94,9 +94,9 @@
   // Simulate a state update on a different component branch:
   // 1. treeNodeDirtyIds with fake components ids.
   // 2. parentHasStateUpdate = NO
-  CKThreadLocalComponentScope threadScope(nil, {});
+  CKThreadLocalComponentScope threadScope(_scopeRoot, {});
   auto const c2 = [CKTestRenderComponent new];
-  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+  CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   [c2 buildComponentTree:scopeRoot2.rootNode
           previousParent:_scopeRoot.rootNode
@@ -121,8 +121,8 @@
   // Simulate a state update on a parent component:
   // 1. parentHasStateUpdate = YES
   // 2. treeNodeDirtyIds with a fake parent id.
-  CKThreadLocalComponentScope threadScope(nil, {});
-  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+  CKThreadLocalComponentScope threadScope(_scopeRoot, {});
+  CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   auto const c2 = [CKTestRenderComponent new];
   [c2 buildComponentTree:scopeRoot2.rootNode
@@ -150,8 +150,8 @@
   // Simulate a state update on the component itself:
   // 1. treeNodeDirtyIds, contains the component tree node id.
   // 2. stateUpdates, contains a state update block for the component.
-  CKThreadLocalComponentScope threadScope(nil, {});
-  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+  CKThreadLocalComponentScope threadScope(_scopeRoot, {});
+  CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   CKComponentStateUpdateMap stateUpdates;
   stateUpdates[_c.scopeHandle] = {^id(id s) { return s; }};
@@ -185,8 +185,8 @@
   // 1. treeNodeDirtyIds, contains the component tree node id.
   // 2. stateUpdates, contains a state update block for the component.
   // 3. hasDirtyParent = NO
-  CKThreadLocalComponentScope threadScope(nil, {});
-  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+  CKThreadLocalComponentScope threadScope(_scopeRoot, {});
+  CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   CKComponentStateUpdateMap stateUpdates;
   stateUpdates[_c.scopeHandle] = {^id(id s) { return s; }};
@@ -220,9 +220,9 @@
   [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithIdentifier:1]];
 
   // Simulate props update.
-  CKThreadLocalComponentScope threadScope(nil, {});
+  CKThreadLocalComponentScope threadScope(_scopeRoot, {});
   auto const c2 = [CKTestRenderComponent newWithIdentifier:2];
-  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+  CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   [c2 buildComponentTree:scopeRoot2.rootNode
           previousParent:_scopeRoot.rootNode
@@ -250,9 +250,9 @@
   [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithIdentifier:componentIdentifier]];
 
   // Simulate props update.
-  CKThreadLocalComponentScope threadScope(nil, {});
+  CKThreadLocalComponentScope threadScope(_scopeRoot, {});
   auto const c2 = [CKTestRenderComponent newWithIdentifier:componentIdentifier];
-  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+  CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   [c2 buildComponentTree:scopeRoot2.rootNode
           previousParent:_scopeRoot.rootNode
@@ -280,9 +280,9 @@
   // Simulate a state update on a parent component:
   // 1. parentHasStateUpdate = YES
   // 2. treeNodeDirtyIds with a fake parent id.
-  CKThreadLocalComponentScope threadScope(nil, {});
+  CKThreadLocalComponentScope threadScope(_scopeRoot, {});
   auto const c2 = [CKTestRenderComponent newWithIdentifier:componentIdentifier];
-  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+  CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   [c2 buildComponentTree:scopeRoot2.rootNode
           previousParent:_scopeRoot.rootNode
@@ -308,9 +308,9 @@
   // Simulate a state update on a parent component:
   // 1. parentHasStateUpdate = NO
   // 2. treeNodeDirtyIds is empty.
-  CKThreadLocalComponentScope threadScope(nil, {});
+  CKThreadLocalComponentScope threadScope(_scopeRoot, {});
   auto const c2 = [CKTestRenderComponent newWithIdentifier:componentIdentifier];
-  CKComponentScopeRoot *scopeRoot2 = [_scopeRoot newRoot];
+  CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   [c2 buildComponentTree:scopeRoot2.rootNode
           previousParent:_scopeRoot.rootNode
@@ -424,14 +424,13 @@ static const CKBuildComponentTreeParams newTreeParams(CKComponentScopeRoot *scop
 }
 
 static CKComponentScopeRoot *createNewTreeWithComponentAndReturnScopeRoot(const CKBuildComponentConfig &config, CKTestRenderComponent *c) {
-  CKThreadLocalComponentScope threadScope(nil, {});
-  auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  const CKBuildComponentTreeParams params = newTreeParams(scopeRoot, config);
-  [c buildComponentTree:scopeRoot.rootNode
+  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
+  const CKBuildComponentTreeParams params = newTreeParams(threadScope.newScopeRoot, config);
+  [c buildComponentTree:threadScope.newScopeRoot.rootNode
          previousParent:nil
                  params:params
    parentHasStateUpdate:NO];
-  return scopeRoot;
+  return threadScope.newScopeRoot;
 }
 
 static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComponent(CKComponent *c) {
