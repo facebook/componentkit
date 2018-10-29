@@ -189,7 +189,8 @@ namespace CKRender {
                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
                                          const CKBuildComponentTreeParams &params,
                                          BOOL parentHasStateUpdate,
-                                         BOOL isBridgeComponent) -> void
+                                         BOOL isBridgeComponent,
+                                         BOOL *didReuseComponent) -> void
   {
     CKCAssert(component, @"component cannot be nil");
 
@@ -212,6 +213,9 @@ namespace CKRender {
       if (enableContextRenderSupport) {
         CKComponentContextHelper::didBuildComponentTree(component);
       }
+      if (didReuseComponent != nullptr) {
+        *didReuseComponent = YES;
+      }
       return;
     }
 
@@ -219,7 +223,7 @@ namespace CKRender {
     if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
       parentHasStateUpdate = YES;
     }
-    
+
     if (enableReuseComponent) {
       [CKComponentScopeFrame willBuildComponentTreeWithTreeNode:node];
     }
@@ -236,7 +240,7 @@ namespace CKRender {
                          params:params
            parentHasStateUpdate:parentHasStateUpdate];
     }
-    
+
     if (enableReuseComponent) {
       [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
     }
@@ -315,18 +319,18 @@ namespace CKRender {
   auto treeNodeDirtyIdsFor(CKComponentScopeRoot *previousRoot, const CKComponentStateUpdateMap &stateUpdates, const BuildTrigger &buildTrigger, const CKBuildComponentConfig &config) -> CKTreeNodeDirtyIds
   {
     CKTreeNodeDirtyIds treeNodesDirtyIds;
-    
+
     if (config.enableFasterStateUpdates || config.enableFasterPropsUpdates) {
       // Protect the read/write operations on CKTreeNode parent property.
       static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER;
       CK::StaticMutexLocker l(mutex);
-      
+
       // Update the parents pointer from the reuse cache.
       NSHashTable<CKTreeNodeWithChild *> *reusedNodes = [previousRoot reusedTreeNodes];
       for (CKTreeNodeWithChild *node in reusedNodes) {
         [node.child didReuseByParent:node];
       }
-      
+
       // Compute the dirtyNodeIds in case of a state update only.
       if (buildTrigger == BuildTrigger::StateUpdate) {
         for (auto const & stateUpdate : stateUpdates) {
