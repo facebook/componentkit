@@ -59,8 +59,6 @@ namespace std {
   };
 }
 
-static BOOL _alwaysUseStateKeyCounter = NO;
-
 @implementation CKComponentScopeFrame
 {
   std::unordered_map<CKStateScopeKey, CKComponentScopeFrame *> _children;
@@ -80,37 +78,16 @@ static BOOL _alwaysUseStateKeyCounter = NO;
   CKComponentScopeFrame *existingChildFrameOfEquivalentPreviousFrame;
   CKStateScopeKey stateScopeKey = {componentClass, identifier, keys};
 
-  // If 'alwaysUseStateKeyCounter' is set to YES, we increment the stateKeyCounter by default to avoid scope collisions.
-  if (_alwaysUseStateKeyCounter) {
-    // We increment the `stateKeyCounter` in the parent frame map (`_stateKeyCounterMap`)
-    // and use it as part of the state scope key; this way we can gurautee that each `CKStateScopeKey` is unique.
-    auto const stateKeyCounter = ++(pair.frame->_stateKeyCounterMap[stateScopeKey]);
-    stateScopeKey = {componentClass, identifier, keys, stateKeyCounter};
-  }
+  // We increment the `stateKeyCounter` in the parent frame map (`_stateKeyCounterMap`)
+  // and use it as part of the state scope key; this way we can gurautee that each `CKStateScopeKey` is unique.
+  auto const stateKeyCounter = ++(pair.frame->_stateKeyCounterMap[stateScopeKey]);
+  stateScopeKey = {componentClass, identifier, keys, stateKeyCounter};
 
   // Get the child from the previous equivalent scope frame.
   if (pair.equivalentPreviousFrame) {
     const auto &equivalentPreviousFrameChildren = pair.equivalentPreviousFrame->_children;
     const auto it = equivalentPreviousFrameChildren.find(stateScopeKey);
     existingChildFrameOfEquivalentPreviousFrame = (it == equivalentPreviousFrameChildren.end()) ? nil : it->second;
-  }
-
-  // If 'alwaysUseStateKeyCounter' is set to NO, we check for a scope collision.
-  // If we have one, we use the `stateKeyCounter` to create a unique state key.
-  if (!_alwaysUseStateKeyCounter) {
-    const auto existingChild = pair.frame->_children.find(stateScopeKey);
-    if (!pair.frame->_children.empty() && (existingChild != pair.frame->_children.end())) {
-      // In case of a scope collision, we increment the `stateKeyCounter` in the parent frame map (`_stateKeyCounterMap`)
-      // and use it as part of the state scope key; this way we can gurautee that each `CKStateScopeKey` is unique.
-      auto const stateKeyCounter = ++(pair.frame->_stateKeyCounterMap[stateScopeKey]);
-      stateScopeKey = {componentClass, identifier, keys, stateKeyCounter};
-
-      if (pair.equivalentPreviousFrame) {
-        const auto &equivalentPreviousFrameChildren = pair.equivalentPreviousFrame->_children;
-        const auto it = equivalentPreviousFrameChildren.find(stateScopeKey);
-        existingChildFrameOfEquivalentPreviousFrame = (it == equivalentPreviousFrameChildren.end()) ? nil : it->second;
-      }
-    }
   }
 
   CKComponentScopeHandle *newHandle =
@@ -229,14 +206,6 @@ static BOOL _alwaysUseStateKeyCounter = NO;
   for (const auto &pair : _children) {
     [pair.second collectAllAquiredComponentsInto:components];
   }
-}
-
-+ (void)setAlwaysUseStateKeyCounter:(BOOL)alwaysUseStateKeyCounter
-{
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    _alwaysUseStateKeyCounter = alwaysUseStateKeyCounter;
-  });
 }
 
 #if DEBUG

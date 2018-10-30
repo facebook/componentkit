@@ -104,14 +104,6 @@
   [self verifyComponentsHasCorrectStateAndController:component1 component2:component2 state1:state1 state2:state2];
 }
 
-- (void)testAllWithAlwaysUseStateKeyCounterOn
-{
-  [CKComponentScopeFrame setAlwaysUseStateKeyCounter:YES];
-  [self testSiblingComponentsWithSameTypeGetCorrectControllerAndState_WithoutScopeIdentifiers];
-  [self testSiblingComponentsWithSameTypeGetCorrectControllerAndState_WithDifferentScopeIdentifiers];
-  [self testSiblingComponentsWithSameTypeGetCorrectControllerAndState_WithIdenticalScopeIdentifiers];
-}
-
 #pragma mark - Helpers
 
 // Verify both components have different scope handles, controllers and states.
