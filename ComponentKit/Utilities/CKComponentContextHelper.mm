@@ -17,6 +17,11 @@
 static NSString *const kThreadDictionaryKey = @"CKComponentContext";
 static NSString *const kThreadRenderSupportKey = @"CKRenderComponentContextSupport";
 
+struct CKComponentContextStackItem {
+  NSMutableDictionary *dictionary;
+  BOOL itemWasAdded;
+};
+
 @interface CKComponentContextValue : NSObject
 {
 @public
@@ -25,7 +30,7 @@ static NSString *const kThreadRenderSupportKey = @"CKRenderComponentContextSuppo
   // A map between render component to its dictionary.
   NSMapTable<id, NSMutableDictionary *> *_renderToDictionaryCache;
   // Stack of previous store dictionaries.
-  std::stack<NSMutableDictionary *> _stack;
+  std::stack<CKComponentContextStackItem> _stack;
   // Dirty flag for the current store in use.
   BOOL _itemWasAdded;
   // Enable the render support.
@@ -109,7 +114,6 @@ void CKComponentContextHelper::didCreateRenderComponent(id component)
   if (v->_itemWasAdded) {
     NSMutableDictionary *renderDictionary = [v->_dictionary mutableCopy];
     [v->_renderToDictionaryCache setObject:renderDictionary forKey:component];
-    v->_itemWasAdded = NO;
   }
 }
 
@@ -123,9 +127,13 @@ void CKComponentContextHelper::willBuildComponentTree(id component)
   NSMutableDictionary *renderDictionary = [v->_renderToDictionaryCache objectForKey:component];
   if (renderDictionary) {
     // Push the current store into the stack.
-    v->_stack.push(v->_dictionary);
+    v->_stack.push({
+      .dictionary = v->_dictionary,
+      .itemWasAdded = v->_itemWasAdded,
+    });
     // Update the pointer to the latest render dictionary
     v->_dictionary = renderDictionary;
+    v->_itemWasAdded = NO;
   }
 }
 
@@ -143,7 +151,10 @@ void CKComponentContextHelper::didBuildComponentTree(id component)
     
     // Update the pointer to the latest render dictionary
     if (!v->_stack.empty()) {
-      v->_dictionary = v->_stack.top();
+      // Retrieve the previous value from the stack.
+      auto const &topItem = v->_stack.top();
+      v->_dictionary = topItem.dictionary;
+      v->_itemWasAdded = topItem.itemWasAdded;
       // Pop the top backup from the stack
       v->_stack.pop();
       // Remove the dictionary from the map

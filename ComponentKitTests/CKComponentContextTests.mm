@@ -92,6 +92,53 @@
   XCTAssertTrue(CKComponentContext<NSObject>::get() == outer);
 }
 
+- (void)testSameContextInSiblingComponentsWithRenderInTheTree
+{
+  NSNumber *n0 = @0;
+  
+  //                +--------+
+  //                |push(n0)|
+  //                |  Root  |
+  //                |        |
+  //                |        |
+  //     +----------+---+----+---------+
+  //     |              |              |
+  //     |              |              |
+  // +---v----+     +---v----+    +----v---+
+  // |        |     |        |    |        |
+  // |   c1   |     |   c2   |    |   c3   |
+  // |(render)|     |(render)|    |(render)|
+  // |        |     |        |    |        |
+  // +---+----+     +---+----+    +----+---+
+  //     |              |              |
+  //     |              |              |
+  // +---v----+     +---v----+    +----v---+
+  // |read(n0)|     |read(n0)|    |read(n0)|
+  // | child1 |     | child2 |    | child3 |
+  // |        |     |        |    |        |
+  // |        |     |        |    |        |
+  // +--------+     +--------+    +--------+
+  
+  __block CKContextTestRenderComponent *c1;
+  __block CKContextTestRenderComponent *c2;
+  __block CKContextTestRenderComponent *c3;
+  auto const componentFactory = ^{
+    CKComponentContext<NSNumber> context(n0);
+    c1 = [CKContextTestRenderComponent new];
+    c2 = [CKContextTestRenderComponent new];
+    c3 = [CKContextTestRenderComponent new];
+    return [CKContextTestWithChildrenComponent newWithChildren:{c1,c2,c3}];
+  };
+  
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, {
+    .enableContextRenderSupport = YES,
+  });
+  
+  XCTAssertTrue(n0 == c1.child.objectFromContext);
+  XCTAssertTrue(n0 == c2.child.objectFromContext);
+  XCTAssertTrue(n0 == c3.child.objectFromContext);
+}
+
 - (void)testSameContextInSiblingComponentsAndOverrideContextWithRenderInTheTree
 {
   NSNumber *n0 = @0;
@@ -100,7 +147,7 @@
   NSNumber *n3 = @3;
 
   //                +--------+
-  //                |puhs(n0)|
+  //                |push(n0)|
   //                |  Root  |
   //                |        |
   //                |        |
@@ -110,8 +157,8 @@
   // +---v----+     +---v----+    +----v---+
   // |read(n0)|     |read(n0)|    |read(n0)|
   // |   c1   |     |   c2   |    |   c3   |
-  // |push(n1)|     |puhs(n2)|    |push(n3)|
-  // |        |     |        |    |        |
+  // |(render)|     |(render)|    |(render)|
+  // |push(n1)|     |push(n2)|    |push(n3)|
   // +---+----+     +---+----+    +----+---+
   //     |              |              |
   //     |              |              |
@@ -263,7 +310,7 @@
 {
   // Read the existing value from context.
   NSNumber *objectFromContext = CKComponentContext<NSNumber>::get();
-
+  
   // Override push new context with the same key
   CKComponentContext<NSNumber> context(object);
   auto const c = [super new];
