@@ -19,6 +19,7 @@
 #import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceState.h>
+#import <ComponentKit/CKThreadSafeDataSource.h>
 
 #import "CKStateExposingComponent.h"
 #import "CKDataSourceStateTestHelpers.h"
@@ -35,7 +36,17 @@
 
 - (void)testSynchronousStateUpdateResultsInUpdatedComponent
 {
-  CKDataSource *ds = CKComponentTestDataSource([CKDataSource class], [self class], nil);
+  [self _testSynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:[CKDataSource class]];
+}
+
+- (void)testSynchronousStateUpdateResultsInUpdatedComponentWithThreadSafeDataSource
+{
+  [self _testSynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testSynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  CKDataSource *ds = CKComponentTestDataSource(dataSourceClass, [self class], nil);
   CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
   [[item rootLayout].component() updateState:^(id oldState){return @"new state";} mode:CKUpdateModeSynchronous];
 
@@ -48,7 +59,17 @@
 
 - (void)testMultipleSynchronousStateUpdatesAreCoalesced
 {
-  CKDataSource *ds = CKComponentTestDataSource([CKDataSource class], [self class], nil);
+  [self _testMultipleSynchronousStateUpdatesAreCoalescedWithDataSourceClass:[CKDataSource class]];
+}
+
+- (void)testMultipleSynchronousStateUpdatesAreCoalescedWithThreadSafeDataSource
+{
+  [self _testMultipleSynchronousStateUpdatesAreCoalescedWithDataSourceClass:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testMultipleSynchronousStateUpdatesAreCoalescedWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  CKDataSource *ds = CKComponentTestDataSource(dataSourceClass, [self class], nil);
   CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
   NSNumber *originalState = ((CKStateExposingComponent *)[item rootLayout].component()).state;
   [[item rootLayout].component() updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
@@ -63,7 +84,17 @@
 
 - (void)testAsynchronousStateUpdateResultsInUpdatedComponent
 {
-  CKDataSource *ds = CKComponentTestDataSource([CKDataSource class], [self class], nil);
+  [self _testAsynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:[CKDataSource class]];
+}
+
+- (void)testAsynchronousStateUpdateResultsInUpdatedComponentWithThreadSafeDataSource
+{
+  [self _testAsynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testAsynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  CKDataSource *ds = CKComponentTestDataSource(dataSourceClass, [self class], nil);
   CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
   [[item rootLayout].component() updateState:^(id oldState){return @"new state";} mode:CKUpdateModeAsynchronous];
 
@@ -75,7 +106,17 @@
 
 - (void)testStateUpdatesAreProcessedInTheOrderTheyWereEnqueued
 {
-  CKDataSource *ds = CKComponentTestDataSource([CKDataSource class], [self class], nil);
+  [self _testStateUpdatesAreProcessedInTheOrderTheyWereEnqueuedWithDataSourceClass:[CKDataSource class]];
+}
+
+- (void)testStateUpdatesAreProcessedInTheOrderTheyWereEnqueuedWithThreadSafeDataSource
+{
+  [self _testStateUpdatesAreProcessedInTheOrderTheyWereEnqueuedWithDataSourceClass:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testStateUpdatesAreProcessedInTheOrderTheyWereEnqueuedWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  CKDataSource *ds = CKComponentTestDataSource(dataSourceClass, [self class], nil);
   CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
 
   CKComponent *const component = item.rootLayout.component();
