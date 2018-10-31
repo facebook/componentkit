@@ -340,6 +340,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   if (deferredChangeset != nil) {
     // This needs to be applied immediately, because any future enqueued modifications may assume
     // that the entirety of the changeset has been applied at this point.
+    [_announcer componentDataSource:self willApplyDeferredChangeset:deferredChangeset];
     id<CKDataSourceStateModifying> modification =
     [[CKDataSourceChangesetModification alloc] initWithChangeset:deferredChangeset
                                                    stateListener:self

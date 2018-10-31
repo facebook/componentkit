@@ -42,7 +42,7 @@
 {
   CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {});
   [dataSource addListener:self];
-  
+
   [dataSource applyChangeset:initialInsertionChangeset(10, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
   XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 10)), _announcedChanges.firstObject);
 }
@@ -55,7 +55,7 @@
     .layoutAxis = CKDataSourceLayoutAxisVertical,
   });
   [dataSource addListener:self];
-  
+
   [dataSource applyChangeset:initialInsertionChangeset(1, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
   XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 1)), _announcedChanges.firstObject);
 }
@@ -68,7 +68,7 @@
     .layoutAxis = CKDataSourceLayoutAxisVertical,
   });
   [dataSource addListener:self];
-  
+
   [dataSource applyChangeset:initialInsertionChangeset(2, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
   XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 2)), _announcedChanges.firstObject);
 }
@@ -81,7 +81,7 @@
     .layoutAxis = CKDataSourceLayoutAxisVertical,
   });
   [dataSource addListener:self];
-  
+
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
   XCTAssertEqual(2, _announcedChanges.count);
   XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 2)), _announcedChanges[0]);
@@ -96,7 +96,7 @@
     .layoutAxis = CKDataSourceLayoutAxisHorizontal,
   });
   [dataSource addListener:self];
-  
+
   [dataSource applyChangeset:initialInsertionChangeset(1, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
   XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 1)), _announcedChanges.firstObject);
 }
@@ -109,7 +109,7 @@
     .layoutAxis = CKDataSourceLayoutAxisHorizontal,
   });
   [dataSource addListener:self];
-  
+
   [dataSource applyChangeset:initialInsertionChangeset(2, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
   XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 2)), _announcedChanges.firstObject);
 }
@@ -122,7 +122,7 @@
     .layoutAxis = CKDataSourceLayoutAxisHorizontal,
   });
   [dataSource addListener:self];
-  
+
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
   XCTAssertEqual(2, _announcedChanges.count);
   XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 2)), _announcedChanges[0]);
@@ -137,7 +137,7 @@
     .layoutAxis = CKDataSourceLayoutAxisHorizontal,
   });
   [dataSource addListener:self];
-  
+
   NSDictionary<NSString *, id> *const userInfo = @{@"foo": @YES};
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:userInfo];
   XCTAssertEqual(2, _announcedChanges.count);
@@ -153,7 +153,7 @@
     .layoutAxis = CKDataSourceLayoutAxisVertical,
   });
   [dataSource addListener:self];
-  
+
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeAsynchronous userInfo:nil];
   [dataSource applyChangeset:tailInsertionChangeset(NSMakeRange(4, 1), {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
   XCTAssertEqual(3, _announcedChanges.count);
@@ -318,7 +318,6 @@ static NSValue *sizeValue(CGFloat width, CGFloat height)
 
 #pragma mark - CKDataSourceListener
 
-
 - (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
      didModifyPreviousState:(CKDataSourceState *)previousState
                   withState:(CKDataSourceState *)state
@@ -326,5 +325,8 @@ static NSValue *sizeValue(CGFloat width, CGFloat height)
 {
   [_announcedChanges addObject:changes];
 }
+
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+ willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset {}
 
 @end

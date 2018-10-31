@@ -50,4 +50,10 @@
   CK::Component::AnnouncerHelper::callOptional(self, _cmd, dataSource, newState, changes);
 }
 
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+ willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset
+{
+  CK::Component::AnnouncerHelper::call(self, _cmd, dataSource, deferredChangeset);
+}
+
 @end

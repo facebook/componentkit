@@ -153,6 +153,9 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
   }
 }
 
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+ willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset {}
+
 - (void)_detachComponentLayoutForRemovedItemsAtIndexPaths:(NSSet *)removedIndexPaths
                                                   inState:(CKDataSourceState *)state
 {

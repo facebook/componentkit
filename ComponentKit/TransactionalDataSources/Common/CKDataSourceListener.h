@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 
 @class CKDataSourceAppliedChanges;
+@class CKDataSourceChangeset;
 @class CKDataSourceState;
 
 @protocol CKDataSourceProtocol;
@@ -29,6 +30,15 @@
      didModifyPreviousState:(CKDataSourceState *)previousState
                   withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes;
+
+/**
+ Announced when the data source is about to apply a deferred changeset -- this only occurs if changeset
+ splitting is enabled and the changeset passed to -applyChangeset: was large enough to be split.
+ @param dataSource The sending data source.
+ @param deferredChangeset The deferred changeset that is about to be applied.
+ */
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+ willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset;
 
 @end
 
