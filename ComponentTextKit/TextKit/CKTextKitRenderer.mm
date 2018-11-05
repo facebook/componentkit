@@ -71,13 +71,6 @@ static NSCharacterSet *_defaultAvoidTruncationCharacterSet()
 
 - (void)_calculateSize
 {
-  // Force glyph generation and layout, which may not have happened yet (and isn't triggered by
-  // -usedRectForTextContainer:).
-  [_context performBlockWithLockedTextKitComponents:^(NSLayoutManager *layoutManager, NSTextStorage *textStorage, NSTextContainer *textContainer) {
-    [layoutManager ensureLayoutForTextContainer:textContainer];
-  }];
-
-
   CGRect constrainedRect = {CGPointZero, _constrainedSize};
   __block CGRect boundingRect;
   [_context performBlockWithLockedTextKitComponents:^(NSLayoutManager *layoutManager, NSTextStorage *textStorage, NSTextContainer *textContainer) {
