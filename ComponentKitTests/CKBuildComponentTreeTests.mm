@@ -38,11 +38,6 @@
 @property (nonatomic, assign) BOOL hasReusedComponent;
 @end
 
-/** An helper class that inherits from 'CKRenderWithChildrenComponent'; render the component froms the initializer */
-@interface CKComponentTreeTestComponent_RenderWithChildren : CKRenderWithChildrenComponent
-+ (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
-@end
-
 #pragma mark - Tests
 
 @interface CKBuildComponentTreeTests : XCTestCase
@@ -127,7 +122,7 @@
   CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
   CKComponent *c10 = [CKComponent newWithView:{} size:{}];
   CKComponent *c11 = [CKComponent newWithView:{} size:{}];
-  CKRenderWithChildrenComponent *renderWithChidlrenComponent = [CKComponentTreeTestComponent_RenderWithChildren newWithChildren:{c10, c11}];
+  CKRenderWithChildrenComponent *renderWithChidlrenComponent = [CKTestRenderWithChildrenComponent newWithChildren:{c10, c11}];
   [renderWithChidlrenComponent buildComponentTree:root previousParent:nil params:{
     .scopeRoot = nil,
     .stateUpdates = {},
@@ -153,7 +148,7 @@
   CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
   CKComponent *c20 = [CKComponent newWithView:{} size:{}];
   CKComponent *c21 = [CKComponent newWithView:{} size:{}];
-  CKRenderWithChildrenComponent *renderWithChidlrenComponent2 = [CKComponentTreeTestComponent_RenderWithChildren newWithChildren:{c20, c21}];
+  CKRenderWithChildrenComponent *renderWithChidlrenComponent2 = [CKTestRenderWithChildrenComponent newWithChildren:{c20, c21}];
   [renderWithChidlrenComponent2 buildComponentTree:root2 previousParent:root params:{
     .scopeRoot = nil,
     .stateUpdates = {},
@@ -234,11 +229,11 @@
   
   __block CKComponentTreeTestComponent_RenderWithChild *child1;
   __block CKCompositeComponentWithScopeAndState *child2;
-  __block CKComponentTreeTestComponent_RenderWithChildren *rootComponent;
+  __block CKTestRenderWithChildrenComponent *rootComponent;
   auto const componentFactory = ^{
     child1 = [CKComponentTreeTestComponent_RenderWithChild new];
     child2 =  [CKCompositeComponentWithScopeAndState newWithComponent:[CKComponent new]];
-    rootComponent = [CKComponentTreeTestComponent_RenderWithChildren newWithChildren:{child1, child2}];
+    rootComponent = [CKTestRenderWithChildrenComponent newWithChildren:{child1, child2}];
     return rootComponent;
   };
   
@@ -349,27 +344,5 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 {
   _childComponent = component->_childComponent;
   _hasReusedComponent = YES;
-}
-@end
-
-@implementation CKComponentTreeTestComponent_RenderWithChildren
-{
-  std::vector<CKComponent *> _children;
-}
-+ (instancetype)newWithChildren:(std::vector<CKComponent *>)children
-{
-  auto const c = [super newWithView:{} size:{}];
-  if (c) {
-    c->_children = children;
-  }
-  return c;
-}
-+ (BOOL)requiresScopeHandle
-{
-  return YES;
-}
-- (std::vector<CKComponent *>)renderChildren:(id)state
-{
-  return _children;
 }
 @end

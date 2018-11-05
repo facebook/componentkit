@@ -80,6 +80,7 @@
 
       if (_handle) {
         [component acquireScopeHandle:_handle];
+        [scopeRoot registerComponent:component];
         [_handle resolve];
       }
     }
@@ -107,6 +108,19 @@
 - (void)didReuseByParent:(id<CKTreeNodeProtocol>)parent
 {
   _parent = parent;
+}
+
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot
+{
+  if (_handle) {
+    // Register the reused comopnent in the new scope root.
+    [scopeRoot registerComponent:_component];
+    auto const controller = _handle.controller;
+    if (controller) {
+      // Register the controller in the new scope root.
+      [scopeRoot registerComponentController:controller];
+    }
+  }
 }
 
 - (id)initialStateWithComponent:(id<CKTreeNodeComponentProtocol>)component

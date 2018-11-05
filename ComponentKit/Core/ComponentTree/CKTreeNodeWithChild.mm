@@ -46,4 +46,10 @@
   _child = child;
 }
 
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot
+{
+  [super didReuseInScopeRoot:scopeRoot];
+  [_child didReuseInScopeRoot:scopeRoot];
+}
+
 @end

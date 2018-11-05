@@ -112,7 +112,10 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
 
 - (void)registerReusedTreeNode:(CKTreeNodeWithChild *)treeNode
 {
+  // Save the reused tree node in the cache.
   [_reusedTreeNodes addObject:treeNode];
+  // Update the node with the new scope root.
+  [treeNode didReuseInScopeRoot:self];
 }
 
 - (NSHashTable<CKTreeNodeWithChild *> *)reusedTreeNodes

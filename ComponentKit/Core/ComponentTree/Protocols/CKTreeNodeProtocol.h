@@ -104,6 +104,9 @@ struct CKBuildComponentTreeParams {
 /** Update the parent after component's reuse (this method is not thread safe - please use it carefully) */
 - (void)didReuseByParent:(id<CKTreeNodeProtocol>)parent;
 
+/** Register the reused component and controller in the scope root */
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot;
+
 @end
 
 /**

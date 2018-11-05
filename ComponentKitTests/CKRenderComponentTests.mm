@@ -382,7 +382,52 @@
   XCTAssertTrue(c2.childComponent.parentHasStateUpdate);
 }
 
+- (void)test_registerComponentsAndControllersInScopeRootAfterReuse
+{
+  CKBuildComponentConfig config = {
+    .enableFasterStateUpdates = YES,
+    .enableFasterPropsUpdates = YES,
+  };
+
+  // Build new tree with siblings `CKTestRenderComponent` components.
+  __block CKTestRenderComponent *c1;
+  __block CKTestRenderComponent *c2;
+  auto const componentFactory = ^{
+    c1 = [CKTestRenderComponent newWithIdentifier:1];
+    c2 = [CKTestRenderComponent newWithIdentifier:2];
+    return [CKTestRenderWithChildrenComponent newWithChildren:{c1, c2}];
+  };
+
+  // Build scope root with predicates.
+  auto const scopeRoot = CKComponentScopeRootWithPredicates(nil, nil, {&CKComponentRenderTestsPredicate}, {&CKComponentControllerRenderTestsPredicate});
+  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory, config);
+  // Verify components and controllers registration in the scope root.
+  [self verifyComponentsAndControllersAreRegisteredInScopeRoot:buildResults.scopeRoot components:{c1.childComponent, c2.childComponent}];
+
+  // Simulate a state update on c2.
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[c2.scopeHandle].push_back(^(id){
+    return @2;
+  });
+
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, config);
+  // Verify c1 has been reused
+  XCTAssertTrue(c1.didReuseComponent);
+  // Verify components and controllers registration in the scope root.
+  [self verifyComponentsAndControllersAreRegisteredInScopeRoot:buildResults2.scopeRoot components:{c1.childComponent, c2.childComponent}];
+}
+
 #pragma mark - Helpers
+
+// Filters `CKTestChildRenderComponent` components.
+static BOOL CKComponentRenderTestsPredicate(id<CKComponentProtocol> controller) {
+  return [controller class] == [CKTestChildRenderComponent class];
+}
+
+// Filters `CKTestChildRenderComponentController` controllers.
+static BOOL CKComponentControllerRenderTestsPredicate(id<CKComponentControllerProtocol> controller) {
+  return [controller class] == [CKTestChildRenderComponentController class];
+}
 
 - (void)verifyComponentIsNotBeingReused:(CKTestRenderComponent *)c
                                      c2:(CKTestRenderComponent *)c2
@@ -410,6 +455,17 @@
   XCTAssertTrue(c2.didReuseComponent);
   XCTAssertEqual(c.childComponent, c2.childComponent);
   XCTAssertEqual(childNode.child, childNode2.child);
+}
+
+- (void)verifyComponentsAndControllersAreRegisteredInScopeRoot:(CKComponentScopeRoot *)scopeRoot
+                                                    components:(std::vector<CKComponent *>)components
+{
+  auto const registeredComponents = [scopeRoot componentsMatchingPredicate:&CKComponentRenderTestsPredicate];
+  auto const registeredControllers = [scopeRoot componentControllersMatchingPredicate:&CKComponentControllerRenderTestsPredicate];
+  for (auto const &c: components) {
+    XCTAssertTrue(CK::Collection::contains(registeredComponents, c));
+    XCTAssertTrue(CK::Collection::contains(registeredControllers, c.scopeHandle.controller));
+  }
 }
 
 static const CKBuildComponentTreeParams newTreeParams(CKComponentScopeRoot *scopeRoot, const CKBuildComponentConfig &config) {

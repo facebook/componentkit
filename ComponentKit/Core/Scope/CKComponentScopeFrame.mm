@@ -124,7 +124,7 @@ namespace std {
     const auto it = equivalentPreviousFrameChildren.find(stateScopeKey);
     existingChildFrameOfEquivalentPreviousFrame = (it == equivalentPreviousFrameChildren.end()) ? nil : it->second;
   }
-  
+
   // Create a scope frame for the render component children.
   CKComponentScopeFrame *newFrame = [[CKComponentScopeFrame alloc] initWithHandle:node.handle];
   // Push the new scope frame to the parent frame's children.
@@ -139,7 +139,7 @@ namespace std {
   if (threadLocalScope == nullptr) {
     return;
   }
-  
+
   CKAssert(!threadLocalScope->stack.empty() && threadLocalScope->stack.top().frame.handle == node.handle, @"frame.handle is not equal to node.handle");
   // Pop the top element of the stack.
   threadLocalScope->stack.pop();
