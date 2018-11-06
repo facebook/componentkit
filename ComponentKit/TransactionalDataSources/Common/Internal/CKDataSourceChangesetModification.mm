@@ -208,35 +208,37 @@
     }
     if (!contentSizeOverflowsViewport(contentSize, splitChangesetOptions.viewportBoundingSize, splitChangesetOptions.layoutAxis)) {
       NSArray<NSIndexPath *> *const sortedIndexPaths = [[insertedItems allKeys] sortedArrayUsingSelector:@selector(compare:)];
-      __block NSUInteger endIndex = sortedIndexPaths.count;
-      [sortedIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger idx, BOOL *stop) {
-        CKDataSourceItem *const item = buildItem(insertedItems[indexPath]);
-        insertedItemsBySection[indexPath.section][indexPath.item] = item;
+      if (indexPathsAreContiguousAtTail(sortedIndexPaths, newSections)) {
+        __block NSUInteger endIndex = sortedIndexPaths.count;
+        [sortedIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger idx, BOOL *stop) {
+          CKDataSourceItem *const item = buildItem(insertedItems[indexPath]);
+          insertedItemsBySection[indexPath.section][indexPath.item] = item;
 
-        const CGSize layoutSize = [item rootLayout].size();
-        contentSize.width += layoutSize.width;
-        contentSize.height += layoutSize.height;
+          const CGSize layoutSize = [item rootLayout].size();
+          contentSize.width += layoutSize.width;
+          contentSize.height += layoutSize.height;
 
-        if (contentSizeOverflowsViewport(contentSize, splitChangesetOptions.viewportBoundingSize, splitChangesetOptions.layoutAxis)) {
-          *stop = YES;
-          endIndex = idx + 1;
+          if (contentSizeOverflowsViewport(contentSize, splitChangesetOptions.viewportBoundingSize, splitChangesetOptions.layoutAxis)) {
+            *stop = YES;
+            endIndex = idx + 1;
+          }
+        }];
+
+        insertedIndexPaths = [sortedIndexPaths subarrayWithRange:NSMakeRange(0, endIndex)];
+
+        if (endIndex < sortedIndexPaths.count) {
+          NSArray<NSIndexPath *> *const remainingIndexPaths = [sortedIndexPaths subarrayWithRange:NSMakeRange(endIndex, sortedIndexPaths.count - endIndex)];
+          NSMutableDictionary<NSIndexPath *, id> *const deferredInsertions = [NSMutableDictionary<NSIndexPath *, id> dictionaryWithCapacity:remainingIndexPaths.count];
+          for (NSIndexPath *indexPath in remainingIndexPaths) {
+            deferredInsertions[indexPath] = insertedItems[indexPath];
+          }
+          deferredChangeset = [[CKDataSourceChangeset alloc] initWithUpdatedItems:nil
+                                                                     removedItems:nil
+                                                                  removedSections:nil
+                                                                       movedItems:nil
+                                                                 insertedSections:nil
+                                                                    insertedItems:deferredInsertions];
         }
-      }];
-
-      insertedIndexPaths = [sortedIndexPaths subarrayWithRange:NSMakeRange(0, endIndex)];
-
-      if (endIndex < sortedIndexPaths.count) {
-        NSArray<NSIndexPath *> *const remainingIndexPaths = [sortedIndexPaths subarrayWithRange:NSMakeRange(endIndex, sortedIndexPaths.count - endIndex)];
-        NSMutableDictionary<NSIndexPath *, id> *const deferredInsertions = [NSMutableDictionary<NSIndexPath *, id> dictionaryWithCapacity:remainingIndexPaths.count];
-        for (NSIndexPath *indexPath in remainingIndexPaths) {
-          deferredInsertions[indexPath] = insertedItems[indexPath];
-        }
-        deferredChangeset = [[CKDataSourceChangeset alloc] initWithUpdatedItems:nil
-                                                                   removedItems:nil
-                                                                removedSections:nil
-                                                                     movedItems:nil
-                                                               insertedSections:nil
-                                                                  insertedItems:deferredInsertions];
       }
     }
   }
@@ -327,6 +329,35 @@ static BOOL contentSizeOverflowsViewport(CGSize contentSize, CGSize viewportSize
     case CKDataSourceLayoutAxisHorizontal:
       return contentSize.width >= viewportSize.width;
   }
+}
+
+static BOOL indexPathsAreContiguousAtTail(NSArray<NSIndexPath *> *indexPaths, NSArray<NSArray<CKDataSourceItem *> *> *sections)
+{
+  __block BOOL isContiguousAtTail = YES;
+  [sections enumerateObjectsUsingBlock:^(NSArray<CKDataSourceItem *> *section, NSUInteger idx, BOOL *stop) {
+    NSArray<NSIndexPath *> *const filteredBySection =
+    [indexPaths filteredArrayUsingPredicate:
+     [NSPredicate predicateWithBlock:^BOOL(NSIndexPath *indexPath, NSDictionary *bindings) {
+      return [indexPath section] == idx;
+    }]];
+    if (!indexPathsAreContiguousAtTailForSection(filteredBySection, section, idx)) {
+      isContiguousAtTail = NO;
+      *stop = YES;
+    }
+  }];
+  return isContiguousAtTail;
+}
+
+static BOOL indexPathsAreContiguousAtTailForSection(NSArray<NSIndexPath *> *indexPaths, NSArray<CKDataSourceItem *> *section, NSUInteger sectionIndex)
+{
+  NSUInteger expectedItemIndex = section.count;
+  for (NSIndexPath *indexPath in indexPaths) {
+    if ([indexPath section] != sectionIndex || [indexPath item] != expectedItemIndex) {
+      return NO;
+    }
+    expectedItemIndex++;
+  }
+  return YES;
 }
 
 - (CKDataSourceQOS)qos

@@ -252,6 +252,24 @@
   XCTAssertEqualObjects([NSSet setWithObject:[NSIndexPath indexPathForRow:1 inSection:0]], _announcedChanges[2].insertedIndexPaths);
 }
 
+- (void)testDataSourceDoesNotSplitChangesetsIfNotContiguousTailInsertion
+{
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+    .enabled = YES,
+    .viewportBoundingSize = { .width = 10, .height = 20 },
+    .layoutAxis = CKDataSourceLayoutAxisVertical,
+  });
+  [dataSource addListener:self];
+
+  [dataSource applyChangeset:initialInsertionChangeset(1, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  [dataSource applyChangeset:tailInsertionChangeset(NSMakeRange(0, 2), {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+
+  XCTAssertEqual(2, _announcedChanges.count);
+  XCTAssertEqualObjects([NSSet setWithObject:[NSIndexPath indexPathForRow:0 inSection:0]], _announcedChanges[0].insertedIndexPaths);
+  NSSet<NSIndexPath *> *const expectedInsertedIndexPaths = [NSSet setWithObjects:[NSIndexPath indexPathForRow:0 inSection:0], [NSIndexPath indexPathForRow:1 inSection:0], nil];
+  XCTAssertEqualObjects(expectedInsertedIndexPaths, _announcedChanges[1].insertedIndexPaths);
+}
+
 static CKDataSource *dataSourceWithSplitChangesetOptions(Class<CKComponentProvider> componentProvider, const CKDataSourceSplitChangesetOptions &splitChangesetOptions)
 {
   CKDataSourceConfiguration *const config =
