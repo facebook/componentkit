@@ -198,16 +198,13 @@
 
 - (void)_applyModificationSync:(id<CKDataSourceStateModifying>)modification
 {
-  dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-  dispatch_async(_workQueue, blockUsingDataSourceQOS(^{
+  dispatch_sync(_workQueue, blockUsingDataSourceQOS(^{
     dispatch_async(dispatch_get_main_queue(), ^{
       [_announcer componentDataSource:self willSyncApplyModificationWithUserInfo:[modification userInfo]];
     });
     auto change = [self _changeFromModification:modification];
     [self _applyChange:change];
-    dispatch_semaphore_signal(semaphore);
   }, [modification qos]));
-  dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 }
 
 - (CKDataSourceChange *)_changeFromModification:(id<CKDataSourceStateModifying>)modification
