@@ -25,8 +25,11 @@ typedef std::unordered_set<CKTreeNodeIdentifier> CKTreeNodeDirtyIds;
  Params struct for the `buildComponentTree:` method.
  **/
 struct CKBuildComponentTreeParams {
-  // Weak reference to the scope root of the new generation
+  // Weak reference to the scope root of the new generation.
   __weak CKComponentScopeRoot *scopeRoot;
+
+  // Weak reference to the scope root of the previous generation.
+  __weak CKComponentScopeRoot *previousScopeRoot;
 
   // A map of state updates
   const CKComponentStateUpdateMap &stateUpdates;
@@ -87,7 +90,6 @@ struct CKBuildComponentTreeParams {
 @property (nonatomic, strong, readonly) id<CKTreeNodeComponentProtocol> component;
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
 @property (nonatomic, assign, readonly) CKTreeNodeIdentifier nodeIdentifier;
-@property (nonatomic, weak, readonly) id<CKTreeNodeProtocol> parent;
 
 /** Returns the component's state */
 - (id)state;
@@ -101,11 +103,8 @@ struct CKBuildComponentTreeParams {
 /** Returns whether component requires a scope handle */
 - (BOOL)componentRequiresScopeHandle:(Class<CKTreeNodeComponentProtocol>)component;
 
-/** Update the parent after component's reuse (this method is not thread safe - please use it carefully) */
-- (void)didReuseByParent:(id<CKTreeNodeProtocol>)parent;
-
-/** Register the reused component and controller in the scope root */
-- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot;
+/** This method should be called after a node has been reused */
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
 
 @end
 

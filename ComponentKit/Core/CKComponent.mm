@@ -57,7 +57,7 @@ struct CKComponentMountInfo {
 
   /** Only non-null while mounted. */
   std::unique_ptr<CKComponentMountInfo> _mountInfo;
-
+  
 #if CK_ASSERTIONS_ENABLED
   BOOL leafComponentOnARenderTree;
 #endif

@@ -44,9 +44,8 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot buildTrigger:buildTrigger];
-
   auto const component = componentFactory();
-
+  
   // Build the component tree if we have a render component in the hierarchy.
   if (threadScope.newScopeRoot.hasRenderComponentInTree) {
     CKTreeNodeDirtyIds treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger, config);
@@ -56,6 +55,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                    previousParent:previousRoot.rootNode
                            params:{
                              .scopeRoot = threadScope.newScopeRoot,
+                             .previousScopeRoot = previousRoot,
                              .stateUpdates = stateUpdates,
                              .treeNodeDirtyIds = treeNodeDirtyIds,
                              .buildTrigger = buildTrigger,
@@ -95,6 +95,7 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
   CKTreeNodeDirtyIds treeNodeDirtyIds;
   const CKBuildComponentTreeParams params = {
     .scopeRoot = threadScope.newScopeRoot,
+    .previousScopeRoot = previousRoot,
     .stateUpdates = stateUpdates,
     .treeNodeDirtyIds = treeNodeDirtyIds,
     .buildTrigger = buildTrigger,

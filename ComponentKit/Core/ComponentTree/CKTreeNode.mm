@@ -25,7 +25,6 @@
 @property (nonatomic, strong, readwrite) id<CKTreeNodeComponentProtocol> component;
 @property (nonatomic, strong, readwrite) CKComponentScopeHandle *handle;
 @property (nonatomic, assign, readwrite) CKTreeNodeIdentifier nodeIdentifier;
-@property (nonatomic, weak, readwrite) id<CKTreeNodeProtocol> parent;
 @end
 
 @implementation CKTreeNode
@@ -39,11 +38,9 @@
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-
   static int32_t nextGlobalIdentifier = 0;
 
   if (self = [super init]) {
-
     _component = component;
 
     Class componentClass = [component class];
@@ -87,7 +84,7 @@
 
     // Set the link between the parent and the child.
     [parent setChild:self forComponentKey:_componentKey];
-    self.parent = parent;
+    [scopeRoot registerNode:self withParent:parent];
 
     // Set the link between the tree node and the scope handle.
     [_handle setTreeNode:self];
@@ -105,13 +102,11 @@
   return _componentKey;
 }
 
-- (void)didReuseByParent:(id<CKTreeNodeProtocol>)parent
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 {
-  _parent = parent;
-}
-
-- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot
-{
+  auto const parent = [previousScopeRoot parentForNode:self];
+  CKAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");
+  [scopeRoot registerNode:self withParent:parent];
   if (_handle) {
     // Register the reused comopnent in the new scope root.
     [scopeRoot registerComponent:_component];

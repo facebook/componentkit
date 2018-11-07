@@ -28,10 +28,14 @@ namespace CKRenderInternal {
                                      CKRenderTreeNodeWithChild *node,
                                      CKRenderTreeNodeWithChild *previousNode,
                                      const CKBuildComponentTreeParams &params) -> void {
+    auto const reusedChild = previousNode.child;
     // Set the child from the previous tree node.
-    node.child = previousNode.child;
+    node.child = reusedChild;
     // Save the reused node in the scope root for the next component creation.
-    [params.scopeRoot registerReusedTreeNode:node];
+    [reusedChild didReuseInScopeRoot:params.scopeRoot fromPreviousScopeRoot:params.previousScopeRoot];
+    // Update the new parent in the new scope root
+    [params.scopeRoot registerNode:reusedChild withParent:node];
+
     // Update the scope frame of the reuse of this component in order to transfer the render scope frame.
     [CKComponentScopeFrame didReuseRenderWithTreeNode:node];
 
@@ -321,24 +325,15 @@ namespace CKRender {
     CKTreeNodeDirtyIds treeNodesDirtyIds;
 
     if (config.enableFasterStateUpdates || config.enableFasterPropsUpdates) {
-      // Protect the read/write operations on CKTreeNode parent property.
-      static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER;
-      CK::StaticMutexLocker l(mutex);
-
-      // Update the parents pointer from the reuse cache.
-      NSHashTable<CKTreeNodeWithChild *> *reusedNodes = [previousRoot reusedTreeNodes];
-      for (CKTreeNodeWithChild *node in reusedNodes) {
-        [node.child didReuseByParent:node];
-      }
-
       // Compute the dirtyNodeIds in case of a state update only.
       if (buildTrigger == BuildTrigger::StateUpdate) {
         for (auto const & stateUpdate : stateUpdates) {
           id<CKTreeNodeProtocol> treeNode = stateUpdate.first.treeNode;
           while (treeNode != nil) {
             treeNodesDirtyIds.insert(treeNode.nodeIdentifier);
-            CKCAssert((treeNode.parent || treeNode.parent == nil && treeNode.nodeIdentifier == 0), @"The next parent is nil, but the current tree node is not the root one.");
-            treeNode = treeNode.parent;
+            auto const parentNode = [previousRoot parentForNode:treeNode];
+            CKCAssert((parentNode || parentNode == nil && treeNode.nodeIdentifier == 0), @"The next parent is nil, but the current tree node is not the root one.");
+            treeNode = parentNode;
           }
         }
       }

@@ -68,11 +68,11 @@ typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CKTreeNodeHashe
   _children[componentKey] = child;
 }
 
-- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 {
-  [super didReuseInScopeRoot:scopeRoot];
+  [super didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
   for (auto const &child : _children) {
-    [child.second didReuseInScopeRoot:scopeRoot];
+    [child.second didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
   }
 }
 

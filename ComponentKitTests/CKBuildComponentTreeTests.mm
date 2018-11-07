@@ -118,13 +118,16 @@
 #pragma mark - CKRenderWithChildrenComponent
 
 - (void)test_buildComponentTree_onCKRenderWithChildrenComponent
-{  
+{
+  CKThreadLocalComponentScope threadScope(nil, {});
+  auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
   CKComponent *c10 = [CKComponent newWithView:{} size:{}];
   CKComponent *c11 = [CKComponent newWithView:{} size:{}];
   CKRenderWithChildrenComponent *renderWithChidlrenComponent = [CKTestRenderWithChildrenComponent newWithChildren:{c10, c11}];
   [renderWithChidlrenComponent buildComponentTree:root previousParent:nil params:{
-    .scopeRoot = nil,
+    .scopeRoot = scopeRoot,
+    .previousScopeRoot = nil,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::NewTree,
     .treeNodeDirtyIds = {},
@@ -150,7 +153,8 @@
   CKComponent *c21 = [CKComponent newWithView:{} size:{}];
   CKRenderWithChildrenComponent *renderWithChidlrenComponent2 = [CKTestRenderWithChildrenComponent newWithChildren:{c20, c21}];
   [renderWithChidlrenComponent2 buildComponentTree:root2 previousParent:root params:{
-    .scopeRoot = nil,
+    .scopeRoot = [scopeRoot newRoot],
+    .previousScopeRoot = scopeRoot,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::PropsUpdate,
     .treeNodeDirtyIds = {},
@@ -263,8 +267,11 @@
     rootComponent.scopeHandle.treeNode.nodeIdentifier,
     buildResultsAfterStateUpdate.scopeRoot.rootNode.nodeIdentifier,
   };
-  XCTAssertTrue(child1.scopeHandle.treeNode.parent.component == rootComponent);
-  XCTAssertTrue(child1.childComponent.scopeHandle.treeNode.parent.component == child1);
+
+  auto const child1ParentNode = [buildResultsAfterStateUpdate.scopeRoot parentForNode:child1.scopeHandle.treeNode];
+  auto const child1ChildComponentParentNode = [buildResultsAfterStateUpdate.scopeRoot parentForNode:child1.childComponent.scopeHandle.treeNode];
+  XCTAssertTrue(child1ParentNode.component == rootComponent);
+  XCTAssertTrue(child1ChildComponentParentNode.component == child1);
   XCTAssertTrue(dirtyNodeIds == expectedDirtyNodeIds);
 }
 

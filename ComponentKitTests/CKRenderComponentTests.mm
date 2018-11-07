@@ -102,6 +102,7 @@
           previousParent:_scopeRoot.rootNode
                   params:{
                     .scopeRoot = scopeRoot2,
+                    .previousScopeRoot = _scopeRoot,
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {100, 101}, // Use a random id that represents a fake state update on a different branch.
                     .buildTrigger = BuildTrigger::StateUpdate,
@@ -258,6 +259,7 @@
           previousParent:_scopeRoot.rootNode
                   params:{
                     .scopeRoot = scopeRoot2,
+                    .previousScopeRoot = _scopeRoot,
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::PropsUpdate,
@@ -288,6 +290,7 @@
           previousParent:_scopeRoot.rootNode
                   params:{
                     .scopeRoot = scopeRoot2,
+                    .previousScopeRoot = _scopeRoot,
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {100}, // Use a random id that represents a state update on a fake parent.
                     .buildTrigger = BuildTrigger::StateUpdate,
@@ -316,6 +319,7 @@
           previousParent:_scopeRoot.rootNode
                   params:{
                     .scopeRoot = scopeRoot2,
+                    .previousScopeRoot = _scopeRoot,
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::StateUpdate,

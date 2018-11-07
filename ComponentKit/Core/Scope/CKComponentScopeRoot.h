@@ -23,11 +23,11 @@
 
 @protocol CKComponentProtocol;
 @protocol CKComponentControllerProtocol;
+@protocol CKTreeNodeProtocol;
 @protocol CKTreeNodeWithChildrenProtocol;
 
 @class CKComponentScopeFrame;
 @class CKComponentScopeRoot;
-@class CKTreeNodeWithChild;
 
 /** Component state announcements will always be made on the main thread. */
 @protocol CKComponentStateListener <NSObject>
@@ -64,8 +64,8 @@
 - (void)registerComponentController:(id<CKComponentControllerProtocol>)componentController;
 - (void)registerComponent:(id<CKComponentProtocol>)component;
 
-- (void)registerReusedTreeNode:(CKTreeNodeWithChild *)treeNode;
-- (NSHashTable<CKTreeNodeWithChild *> *)reusedTreeNodes;
+- (void)registerNode:(id<CKTreeNodeProtocol>)node withParent:(id<CKTreeNodeProtocol>)parent;
+- (id<CKTreeNodeProtocol>)parentForNode:(id<CKTreeNodeProtocol>)node;
 
 - (CKCocoaCollectionAdapter<id<CKComponentProtocol>>)componentsMatchingPredicate:(CKComponentPredicate)predicate;
 - (CKCocoaCollectionAdapter<id<CKComponentControllerProtocol>>)componentControllersMatchingPredicate:(CKComponentControllerPredicate)predicate;

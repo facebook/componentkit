@@ -46,10 +46,10 @@
   _child = child;
 }
 
-- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 {
-  [super didReuseInScopeRoot:scopeRoot];
-  [_child didReuseInScopeRoot:scopeRoot];
+  [super didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
+  [_child didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
 }
 
 @end

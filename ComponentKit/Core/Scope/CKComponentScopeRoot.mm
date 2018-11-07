@@ -30,7 +30,8 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
 
   _CKRegisteredComponentsMap _registeredComponents;
   _CKRegisteredComponentControllerMap _registeredComponentControllers;
-  NSHashTable<CKTreeNodeWithChild *> *_reusedTreeNodes;
+  // A map between a tree node identifier to its parent node.
+  std::unordered_map<CKTreeNodeIdentifier, id<CKTreeNodeProtocol>> _nodesToParentNodes;
 }
 
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
@@ -69,7 +70,6 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
     _rootNode = [[CKRenderTreeNodeWithChildren alloc] init];
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
-    _reusedTreeNodes = [NSHashTable weakObjectsHashTable];
   }
   return self;
 }
@@ -110,17 +110,21 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
   }
 }
 
-- (void)registerReusedTreeNode:(CKTreeNodeWithChild *)treeNode
+- (void)registerNode:(id<CKTreeNodeProtocol>)node withParent:(id<CKTreeNodeProtocol>)parent
 {
-  // Save the reused tree node in the cache.
-  [_reusedTreeNodes addObject:treeNode];
-  // Update the node with the new scope root.
-  [treeNode didReuseInScopeRoot:self];
+  CKAssert(node != nil, @"Cannot register a nil node");
+  CKAssert(parent != nil, @"Cannot register a nil parent node");
+  _nodesToParentNodes[node.nodeIdentifier] = parent;
 }
 
-- (NSHashTable<CKTreeNodeWithChild *> *)reusedTreeNodes
+- (id<CKTreeNodeProtocol>)parentForNode:(id<CKTreeNodeProtocol>)node
 {
-  return _reusedTreeNodes;
+  CKAssert(node != nil, @"Cannot retrieve parent for a nil node");
+  auto const it = _nodesToParentNodes.find(node.nodeIdentifier);
+  if (it != _nodesToParentNodes.end()) {
+    return it->second;
+  }
+  return nil;
 }
 
 - (void)enumerateComponentsMatchingPredicate:(CKComponentPredicate)predicate
