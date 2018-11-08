@@ -76,4 +76,17 @@ typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CKTreeNodeHashe
   }
 }
 
+#if DEBUG
+- (NSArray<NSString *> *)debugDescriptionNodes
+{
+  NSMutableArray<NSString *> *debugDescriptionNodes = [NSMutableArray arrayWithArray:[super debugDescriptionNodes]];
+  for (auto const &child : _children) {
+    for (NSString *s in [child.second debugDescriptionNodes]) {
+      [debugDescriptionNodes addObject:[@"  " stringByAppendingString:s]];
+    }
+  }
+  return debugDescriptionNodes;
+}
+#endif
+
 @end

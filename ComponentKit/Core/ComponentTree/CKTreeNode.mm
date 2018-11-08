@@ -131,6 +131,22 @@
   return NO;
 }
 
+#if DEBUG
+/** Returns a multi-line string describing this node and its children nodes */
+- (NSString *)debugDescription
+{
+  return [[self debugDescriptionNodes] componentsJoinedByString:@"\n"];
+}
+
+- (NSArray<NSString *> *)debugDescriptionNodes
+{
+  return @[[NSString stringWithFormat:@"- %@ %d - %@",
+            [_component class],
+            _nodeIdentifier,
+            self]];
+}
+#endif
+
 @end
 
 /**

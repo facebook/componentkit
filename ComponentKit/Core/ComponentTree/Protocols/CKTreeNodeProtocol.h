@@ -106,6 +106,12 @@ struct CKBuildComponentTreeParams {
 /** This method should be called after a node has been reused */
 - (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
 
+#if DEBUG
+/** Returns a multi-line string describing this node and its children nodes */
+- (NSString *)debugDescription;
+- (NSArray<NSString *> *)debugDescriptionNodes;
+#endif
+
 @end
 
 /**
