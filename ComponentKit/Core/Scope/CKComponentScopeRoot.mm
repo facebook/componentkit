@@ -112,9 +112,10 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
 
 - (void)registerNode:(id<CKTreeNodeProtocol>)node withParent:(id<CKTreeNodeProtocol>)parent
 {
-  CKAssert(node != nil, @"Cannot register a nil node");
   CKAssert(parent != nil, @"Cannot register a nil parent node");
-  _nodesToParentNodes[node.nodeIdentifier] = parent;
+  if (node) {
+    _nodesToParentNodes[node.nodeIdentifier] = parent;
+  }
 }
 
 - (id<CKTreeNodeProtocol>)parentForNode:(id<CKTreeNodeProtocol>)node
