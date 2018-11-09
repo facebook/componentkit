@@ -330,9 +330,16 @@ namespace CKRender {
         for (auto const & stateUpdate : stateUpdates) {
           id<CKTreeNodeProtocol> treeNode = stateUpdate.first.treeNode;
           while (treeNode != nil) {
-            treeNodesDirtyIds.insert(treeNode.nodeIdentifier);
+            auto const insertPair = treeNodesDirtyIds.insert(treeNode.nodeIdentifier);
+            // If we got to a node that is already in the set, we can stop as the path to the root is already dirty.
+            if (insertPair.second == false) {
+              break;
+            }
             auto const parentNode = [previousRoot parentForNode:treeNode];
-            CKCAssert((parentNode || parentNode == nil && treeNode.nodeIdentifier == 0), @"The next parent is nil, but the current tree node is not the root one.");
+            CKCAssert((parentNode ||
+                       (parentNode == nil && treeNode.nodeIdentifier == 0) ||
+                       stateUpdate.first.treeNode == treeNode),
+                      @"The next parent is nil, but the current tree node is not the root one.");
             treeNode = parentNode;
           }
         }
