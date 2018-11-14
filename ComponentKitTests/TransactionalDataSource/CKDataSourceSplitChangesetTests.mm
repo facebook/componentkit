@@ -18,6 +18,8 @@
 #import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceListener.h>
 
+#import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
+
 @interface CKDataSourceSplitChangesetTests : XCTestCase <CKComponentProvider, CKDataSourceListener>
 
 @end
@@ -83,9 +85,28 @@
   [dataSource addListener:self];
 
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
-  XCTAssertEqual(2, _announcedChanges.count);
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
   XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 2)), _announcedChanges[0]);
   XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(2, 2)), _announcedChanges[1]);
+}
+
+- (void)testSplitChangesetIsAppliedAsynchronously
+{
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+    .enabled = YES,
+    .viewportBoundingSize = { .width = 10, .height = 20 },
+    .layoutAxis = CKDataSourceLayoutAxisVertical,
+  });
+  [dataSource addListener:self];
+
+  [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  XCTAssertEqual(1, _announcedChanges.count);
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
 }
 
 - (void)testDataSourceDoesNotSplitChangesetIfDoesntFillViewportHorizontal
@@ -124,7 +145,9 @@
   [dataSource addListener:self];
 
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
-  XCTAssertEqual(2, _announcedChanges.count);
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
   XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 2)), _announcedChanges[0]);
   XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(2, 2)), _announcedChanges[1]);
 }
@@ -140,24 +163,11 @@
 
   NSDictionary<NSString *, id> *const userInfo = @{@"foo": @YES};
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:userInfo];
-  XCTAssertEqual(2, _announcedChanges.count);
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
   XCTAssertEqualObjects(userInfo, _announcedChanges[0].userInfo);
   XCTAssertEqualObjects(userInfo, _announcedChanges[1].userInfo);
-}
-
-- (void)testDeferredChangesetAppliedImmediatelyAfterOriginalChangeset
-{
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
-    .enabled = YES,
-    .viewportBoundingSize = { .width = 10, .height = 20 },
-    .layoutAxis = CKDataSourceLayoutAxisVertical,
-  });
-  [dataSource addListener:self];
-
-  [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeAsynchronous userInfo:nil];
-  [dataSource applyChangeset:tailInsertionChangeset(NSMakeRange(4, 1), {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
-  XCTAssertEqual(3, _announcedChanges.count);
-  XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(4, 1)), _announcedChanges[2]);
 }
 
 - (void)testDataSourceDoesNotSplitChangesetIfExistingContentFillsViewport
@@ -221,7 +231,9 @@
                         }]
    build];
   [dataSource applyChangeset:updateChangeset mode:CKUpdateModeSynchronous userInfo:nil];
-  XCTAssertEqual(3, _announcedChanges.count);
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 3;
+  }));
   XCTAssertEqualObjects([NSSet setWithObject:[NSIndexPath indexPathForRow:0 inSection:0]], _announcedChanges[1].updatedIndexPaths);
   XCTAssertEqualObjects([NSSet setWithObject:[NSIndexPath indexPathForRow:1 inSection:0]], _announcedChanges[1].insertedIndexPaths);
   XCTAssertEqualObjects([NSSet setWithObject:[NSIndexPath indexPathForRow:2 inSection:0]], _announcedChanges[2].insertedIndexPaths);
@@ -246,7 +258,9 @@
                         }]
    build];
   [dataSource applyChangeset:removalChangeset mode:CKUpdateModeSynchronous userInfo:nil];
-  XCTAssertEqual(3, _announcedChanges.count);
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 3;
+  }));
   XCTAssertEqualObjects([NSSet setWithObject:[NSIndexPath indexPathForRow:0 inSection:0]], _announcedChanges[1].removedIndexPaths);
   XCTAssertEqualObjects([NSSet setWithObject:[NSIndexPath indexPathForRow:0 inSection:0]], _announcedChanges[1].insertedIndexPaths);
   XCTAssertEqualObjects([NSSet setWithObject:[NSIndexPath indexPathForRow:1 inSection:0]], _announcedChanges[2].insertedIndexPaths);

@@ -338,15 +338,24 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   // Handle deferred changeset (if there is one)
   auto const deferredChangeset = [change deferredChangeset];
   if (deferredChangeset != nil) {
-    // This needs to be applied immediately, because any future enqueued modifications may assume
-    // that the entirety of the changeset has been applied at this point.
     [_announcer componentDataSource:self willApplyDeferredChangeset:deferredChangeset];
     id<CKDataSourceStateModifying> modification =
     [[CKDataSourceChangesetModification alloc] initWithChangeset:deferredChangeset
                                                    stateListener:self
                                                         userInfo:[appliedChanges userInfo]
                                                              qos:qos];
-    [self _synchronouslyApplyModification:modification];
+
+    // This needs to be applied asynchronously to avoid having both the first part of the changeset
+    // and the deferred changeset be applied in the same runloop tick -- otherwise, the completion
+    // of the first update will need to wait until the deferred changeset is applied and regress
+    // overall performance.
+    //
+    // This is manually inserted at the front of the asynchronous modifications queue to avoid having
+    // existing enqueued async modifications be applied against a mismatched data source state.
+    [_pendingAsynchronousModifications insertObject:modification atIndex:0];
+    if (_pendingAsynchronousModifications.count == 1) {
+      [self _startAsynchronousModificationIfNeeded];
+    }
   }
 }
 
