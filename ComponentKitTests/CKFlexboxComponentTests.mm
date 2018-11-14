@@ -299,16 +299,6 @@
   XCTAssertTrue(areLayoutsEqual(buildComponentTreeAndComputeLayout(NO), buildComponentTreeAndComputeLayout(YES)));
 }
 
-- (void)testPushingDeepYogaTreesFlagToComponentViaContext
-{
-  auto plainComponent = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart} children:{}];
-  XCTAssertFalse([plainComponent usesDeepYogaTrees]);
-  
-  CKComponentContext<CKFlexboxComponentContext> ctx([CKFlexboxComponentContext newWithUsesDeepYogaTrees:YES]);
-  auto deepYogaTreesComponent = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart} children:{}];
-  XCTAssertTrue([deepYogaTreesComponent usesDeepYogaTrees]);
-}
-
 static BOOL areLayoutsEqual(const CKComponentLayout &left, const CKComponentLayout &right) {
   if (left.component.class != right.component.class) {
     return NO;
