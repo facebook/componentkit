@@ -37,8 +37,8 @@ public:
   std::stack<CKComponentScopeFramePair> stack;
   std::stack<std::vector<id<NSObject>>> keys;
 
+  /** Enable extra logging from scopes creation to the current CKAnalyticsListener */
   bool enableLogging;
-  std::stack<Class> componentClassStack;
 
 private:
   CKThreadLocalComponentScope *const previousScope;

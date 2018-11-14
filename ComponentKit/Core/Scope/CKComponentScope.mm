@@ -22,10 +22,9 @@ CKComponentScope::~CKComponentScope()
     [_scopeHandle resolve];
 
     if (_threadLocalScope->enableLogging) {
-      auto const componentClass = _threadLocalScope->componentClassStack.top();
+      auto const componentClass = _threadLocalScope->stack.top().frame.handle.componentClass;
       auto const analyticsListener = [_threadLocalScope->newScopeRoot analyticsListener];
       [analyticsListener didBuildComponent:componentClass];
-      _threadLocalScope->componentClassStack.pop();
     }
 
     _threadLocalScope->stack.pop();
@@ -42,7 +41,6 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
     if (_threadLocalScope->enableLogging) {
       auto const analyticsListener = [_threadLocalScope->newScopeRoot analyticsListener];
       [analyticsListener willBuildComponent:componentClass];
-      _threadLocalScope->componentClassStack.push(componentClass);
     }
 
     const auto childPair = [CKComponentScopeFrame childPairForPair:_threadLocalScope->stack.top()
