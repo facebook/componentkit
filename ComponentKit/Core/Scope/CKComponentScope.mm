@@ -10,14 +10,24 @@
 
 #import "CKComponentScope.h"
 
+#import "CKAnalyticsListener.h"
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeHandle.h"
+#import "CKComponentScopeRoot.h"
 #import "CKThreadLocalComponentScope.h"
 
 CKComponentScope::~CKComponentScope()
 {
   if (_threadLocalScope != nullptr) {
     [_scopeHandle resolve];
+
+    if (_threadLocalScope->enableLogging) {
+      auto const componentClass = _threadLocalScope->componentClassStack.top();
+      auto const analyticsListener = [_threadLocalScope->newScopeRoot analyticsListener];
+      [analyticsListener didBuildComponent:componentClass];
+      _threadLocalScope->componentClassStack.pop();
+    }
+
     _threadLocalScope->stack.pop();
     CKCAssert(_threadLocalScope->keys.top().empty(), @"Expected keys to be cleared by destructor time");
     _threadLocalScope->keys.pop();
@@ -28,6 +38,13 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
 {
   _threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (_threadLocalScope != nullptr) {
+
+    if (_threadLocalScope->enableLogging) {
+      auto const analyticsListener = [_threadLocalScope->newScopeRoot analyticsListener];
+      [analyticsListener willBuildComponent:componentClass];
+      _threadLocalScope->componentClassStack.push(componentClass);
+    }
+
     const auto childPair = [CKComponentScopeFrame childPairForPair:_threadLocalScope->stack.top()
                                                            newRoot:_threadLocalScope->newScopeRoot
                                                     componentClass:componentClass

@@ -34,7 +34,7 @@ CKThreadLocalComponentScope *CKThreadLocalComponentScope::currentScope() noexcep
 
 CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                                                          const CKComponentStateUpdateMap &updates)
-: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), previousScope(CKThreadLocalComponentScope::currentScope())
+: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), enableLogging(false), previousScope(CKThreadLocalComponentScope::currentScope())
 {
   stack.push({[newScopeRoot rootFrame], [previousScopeRoot rootFrame]});
   keys.push({});

@@ -51,4 +51,9 @@
 - (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component;
 - (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component;
 
+/**
+  Called before/after building a scoped component
+ */
+- (void)willBuildComponent:(Class)componentClass;
+- (void)didBuildComponent:(Class)componentClass;
 @end

@@ -334,4 +334,7 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 - (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component { _willLayoutComponentTreeHitCount++; }
 - (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component { _didLayoutComponentTreeHitCount++; }
 
+- (void)willBuildComponent:(Class)componentClass { }
+- (void)didBuildComponent:(Class)componentClass { }
+
 @end

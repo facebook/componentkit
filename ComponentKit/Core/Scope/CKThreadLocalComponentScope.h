@@ -37,6 +37,9 @@ public:
   std::stack<CKComponentScopeFramePair> stack;
   std::stack<std::vector<id<NSObject>>> keys;
 
+  bool enableLogging;
+  std::stack<Class> componentClassStack;
+
 private:
   CKThreadLocalComponentScope *const previousScope;
 };
