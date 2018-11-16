@@ -102,7 +102,8 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
       const MountResult mountResult = [item.layout.component mountInContext:item.mountContext
                                                                        size:item.layout.size
                                                                    children:item.layout.children
-                                                             supercomponent:item.supercomponent];
+                                                             supercomponent:item.supercomponent
+                                                          analyticsListener:nil];
       [mountedComponents addObject:item.layout.component];
 
       if (mountResult.mountChildren) {

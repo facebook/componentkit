@@ -57,7 +57,7 @@ struct CKComponentMountInfo {
 
   /** Only non-null while mounted. */
   std::unique_ptr<CKComponentMountInfo> _mountInfo;
-  
+
 #if CK_ASSERTIONS_ENABLED
   BOOL leafComponentOnARenderTree;
 #endif
@@ -164,6 +164,7 @@ struct CKComponentMountInfo {
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
+                           analyticsListener:(id<CKAnalyticsListener>)analyticsListener
 {
   CKCAssertWithCategory([NSThread isMainThread], [self class], @"This method must be called on the main thread");
   // Taking a const ref to a temporary extends the lifetime of the temporary to the lifetime of the const ref
