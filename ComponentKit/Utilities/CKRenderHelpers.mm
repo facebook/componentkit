@@ -205,18 +205,16 @@ namespace CKRender {
                        scopeRoot:params.scopeRoot
                        stateUpdates:params.stateUpdates];
 
-    auto const enableContextRenderSupport = !isBridgeComponent && params.enableContextRenderSupport;
     auto const enableReuseComponent = !isBridgeComponent && (params.enableFasterStateUpdates || params.enableFasterPropsUpdates);
 
-    if (enableContextRenderSupport) {
+    if (!isBridgeComponent) {
       CKComponentContextHelper::willBuildComponentTree(component);
     }
 
     // Faster state/props optimizations require previous parent.
     if (!isBridgeComponent && CKRenderInternal::reusePreviousComponentForSingleChild(node, component, childComponent, parent, previousParent, params, parentHasStateUpdate)) {
-      if (enableContextRenderSupport) {
-        CKComponentContextHelper::didBuildComponentTree(component);
-      }
+      CKComponentContextHelper::didBuildComponentTree(component);
+
       if (didReuseComponent != nullptr) {
         *didReuseComponent = YES;
       }
@@ -249,7 +247,7 @@ namespace CKRender {
       [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
     }
 
-    if (enableContextRenderSupport) {
+    if (!isBridgeComponent) {
       CKComponentContextHelper::didBuildComponentTree(component);
     }
   }
@@ -268,9 +266,7 @@ namespace CKRender {
                        scopeRoot:params.scopeRoot
                        stateUpdates:params.stateUpdates];
 
-    auto const enableContextRenderSupport = !isBridgeComponent && params.enableContextRenderSupport;
-
-    if (enableContextRenderSupport) {
+    if (!isBridgeComponent) {
       CKComponentContextHelper::willBuildComponentTree(component);
     }
 
@@ -290,7 +286,7 @@ namespace CKRender {
       }
     }
 
-    if (enableContextRenderSupport) {
+    if (!isBridgeComponent) {
       CKComponentContextHelper::didBuildComponentTree(component);
     }
   }

@@ -33,8 +33,6 @@ struct CKComponentContextStackItem {
   std::stack<CKComponentContextStackItem> _stack;
   // Dirty flag for the current store in use.
   BOOL _itemWasAdded;
-  // Enable the render support.
-  BOOL _enableRenderSupport;
 }
 @end
 @implementation CKComponentContextValue @end
@@ -47,7 +45,6 @@ static CKComponentContextValue *contextValue(BOOL create)
     contextValue = [CKComponentContextValue new];
     contextValue->_dictionary = [NSMutableDictionary dictionary];
     contextValue->_renderToDictionaryCache = [NSMapTable weakToStrongObjectsMapTable];
-    contextValue->_enableRenderSupport = [threadDictionary[kThreadRenderSupportKey] boolValue];
     threadDictionary[kThreadDictionaryKey] = contextValue;
   }
   return contextValue;
@@ -93,20 +90,10 @@ void CKComponentContextHelper::restore(const CKComponentContextPreviousState &st
   clearContextValueIfEmpty(v);
 }
 
-void CKComponentContextHelper::enableRenderSupport(BOOL enable)
-{
-  NSMutableDictionary *const threadDictionary = [[NSThread currentThread] threadDictionary];
-  threadDictionary[kThreadRenderSupportKey] = [NSNumber numberWithBool:enable];
-  CKComponentContextValue *const v = contextValue(NO);
-  if (v) {
-    v->_enableRenderSupport = enable;
-  }
-}
-
 void CKComponentContextHelper::didCreateRenderComponent(id component)
 {
   CKComponentContextValue *const v = contextValue(NO);
-  if (!v || !v->_enableRenderSupport) {
+  if (!v) {
     return;
   }
 
@@ -120,7 +107,7 @@ void CKComponentContextHelper::didCreateRenderComponent(id component)
 void CKComponentContextHelper::willBuildComponentTree(id component)
 {
   CKComponentContextValue *const v = contextValue(NO);
-  if (!v || !v->_enableRenderSupport) {
+  if (!v) {
     return;
   }
 
@@ -140,7 +127,7 @@ void CKComponentContextHelper::willBuildComponentTree(id component)
 void CKComponentContextHelper::didBuildComponentTree(id component)
 {
   CKComponentContextValue *const v = contextValue(NO);
-  if (!v || !v->_enableRenderSupport) {
+  if (!v) {
     return;
   }
 

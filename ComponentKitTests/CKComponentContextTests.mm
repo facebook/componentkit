@@ -62,7 +62,6 @@
 
 - (void)testComponentContextDoesntCleansUpWhenItGoesOutOfScopeIfThereIsRenderComponentInSubtree
 {
-  CKComponentContextRenderSupport contextSupport(YES);
   NSObject *o = [[NSObject alloc] init];
   CKComponent *component = [CKComponent new];
 
@@ -130,9 +129,7 @@
     return [CKContextTestWithChildrenComponent newWithChildren:{c1,c2,c3}];
   };
   
-  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, {
-    .enableContextRenderSupport = YES,
-  });
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory);
   
   XCTAssertTrue(n0 == c1.child.objectFromContext);
   XCTAssertTrue(n0 == c2.child.objectFromContext);
@@ -180,9 +177,7 @@
     return [CKContextTestWithChildrenComponent newWithChildren:{c1,c2,c3}];
   };
 
-  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, {
-    .enableContextRenderSupport = YES,
-  });
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory);
 
   XCTAssertTrue(n0 == c1.objectFromContext);
   XCTAssertTrue(n0 == c2.objectFromContext);
@@ -236,8 +231,6 @@
 
 - (void)testFetchingAllComponentContextWhenRenderComponentIsInTheTree
 {
-  CKComponentContextRenderSupport contextSupport(YES);
-
   NSObject *o1 = [NSObject alloc];
   NSObject *o2 = [NSObject alloc];
 
@@ -268,24 +261,6 @@
 
   CKComponentContextHelper::didBuildComponentTree(component1);
   XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, nil);
-}
-
-- (void)testMarkRenderComponentWhenRenderSupportIsDisabled
-{
-  NSNumber *n1 = @1;
-  // Build new tree
-  __block CKContextTestRenderComponent *c1;
-
-  auto const componentFactory = ^{
-    c1 = [CKContextTestRenderComponent newWithContextObject:n1];
-    return c1;
-  };
-
-  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, {
-    .enableContextRenderSupport = NO,
-  });
-
-  XCTAssertTrue(c1.child.objectFromContext == nil);
 }
 
 @end

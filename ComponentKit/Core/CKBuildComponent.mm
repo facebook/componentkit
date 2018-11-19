@@ -39,7 +39,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
 
-  CKComponentContextRenderSupport contextSupport(config.enableContextRenderSupport);
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
@@ -61,7 +60,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                              .buildTrigger = buildTrigger,
                              .enableFasterStateUpdates = config.enableFasterStateUpdates,
                              .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
-                             .enableContextRenderSupport = config.enableContextRenderSupport,
                            }
              parentHasStateUpdate:NO];
   }
@@ -84,7 +82,6 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
                                                           CKBuildComponentConfig config) {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
 
-  CKComponentContextRenderSupport contextSupport(config.enableContextRenderSupport);
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
@@ -101,7 +98,6 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
     .buildTrigger = buildTrigger,
     .enableFasterStateUpdates = config.enableFasterStateUpdates,
     .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
-    .enableContextRenderSupport = config.enableContextRenderSupport,
   };
 
   // Build the component tree if we have a render component in the hierarchy.

@@ -30,8 +30,6 @@ struct CKComponentContextHelper {
   static void restore(const CKComponentContextPreviousState &storeResult);
   static id fetch(id key);
 
-  /** Enable render support */
-  static void enableRenderSupport(BOOL enable);
   /** Creates a backup of the existing store, in the renderToDictionary map */
   static void didCreateRenderComponent(id component);
   /** Pushes the existing store into a stack and change it with the one from the component's backup */
@@ -44,26 +42,5 @@ struct CKComponentContextHelper {
    This could be used to bridge CKComponentContext items to another language or system.
    */
   static CKComponentContextContents fetchAll();
-};
-
-/**
- Enable support for render components.
-
- Should be called from the CKBuildComponent function before any component is being built.
- */
-class CKComponentContextRenderSupport {
-public:
-  CKComponentContextRenderSupport(BOOL enableRenderSupport) : _enableRenderSupport(enableRenderSupport) {
-    if (_enableRenderSupport) { CKComponentContextHelper::enableRenderSupport(YES); }
-  }
-  ~CKComponentContextRenderSupport() {
-    if (_enableRenderSupport) { CKComponentContextHelper::enableRenderSupport(NO);}
-  }
-
-private:
-  BOOL _enableRenderSupport;
-
-  CKComponentContextRenderSupport(const CKComponentContextRenderSupport&) = delete;
-  CKComponentContextRenderSupport &operator=(const CKComponentContextRenderSupport&) = delete;
 };
 
