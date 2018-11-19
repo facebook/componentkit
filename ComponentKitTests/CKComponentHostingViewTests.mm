@@ -336,8 +336,13 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)willBuildComponent:(Class)componentClass {}
 - (void)didBuildComponent:(Class)componentClass {}
+
 - (void)willMountComponent:(CKComponent *)component {}
 - (void)didMountComponent:(CKComponent *)component {}
+
+- (void)willLayoutComponent:(CKComponent *)component {}
+- (void)didLayoutComponent:(CKComponent *)component {}
+
 - (void)updateSystraceEnabledFlag:(BOOL *)systraceEnabled {}
 
 @end

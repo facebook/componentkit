@@ -64,6 +64,12 @@
 - (void)didMountComponent:(CKComponent *)component;
 
 /**
+ Called before/after unmounting a component
+ */
+- (void)willLayoutComponent:(CKComponent *)component;
+- (void)didLayoutComponent:(CKComponent *)component;
+
+/**
   Will set the value to true on the passed BOOL pointer if the Systrace logging is enabled.
 */
 - (void)updateSystraceEnabledFlag:(BOOL *)systraceEnabled;
