@@ -170,13 +170,13 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
     .embedInTestComponent = YES,
     .invalidateRemovedControllers = YES
   });
-  
+
   auto const testComponent = (CKEmbeddedTestComponent *)view.mountedLayout.component;
   auto const testLifecyleComponent = testComponent.lifecycleTestComponent;
-  
+
   [testComponent setLifecycleTestComponentIsHidden:YES];
   [view layoutIfNeeded];
-  
+
   XCTAssertTrue(testLifecyleComponent.controller.calledInvalidateController, @"Expected component controller to get invalidation event");
 }
 
@@ -325,16 +325,19 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 #pragma mark - CKAnalyticsListener
 
-- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot buildTrigger:(BuildTrigger)buildTrigger { }
-- (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component { }
+- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot buildTrigger:(BuildTrigger)buildTrigger {}
+- (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component {}
 
-- (void)willMountComponentTreeWithRootComponent:(CKComponent *)component { }
-- (void)didMountComponentTreeWithRootComponent:(CKComponent *)component { }
+- (void)willMountComponentTreeWithRootComponent:(CKComponent *)component {}
+- (void)didMountComponentTreeWithRootComponent:(CKComponent *)component {}
 
 - (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component { _willLayoutComponentTreeHitCount++; }
 - (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component { _didLayoutComponentTreeHitCount++; }
 
-- (void)willBuildComponent:(Class)componentClass { }
-- (void)didBuildComponent:(Class)componentClass { }
+- (void)willBuildComponent:(Class)componentClass {}
+- (void)didBuildComponent:(Class)componentClass {}
+- (void)willMountComponent:(CKComponent *)component {}
+- (void)didMountComponent:(CKComponent *)component {}
+- (void)updateSystraceEnabledFlag:(BOOL *)systraceEnabled {}
 
 @end
