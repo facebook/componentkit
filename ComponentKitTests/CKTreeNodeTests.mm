@@ -381,23 +381,6 @@
   XCTAssertNotEqual(childNode1.nodeIdentifier, childNode2.nodeIdentifier);
 }
 
-- (void)test_treeNodeToScopeHandleConnection
-{
-  __block CKTreeNodeTest_RenderComponent_WithChild *c;
-  __block CKTreeNodeTest_Component_WithScope *child;
-  CKComponent *(^block)(void) = ^CKComponent *{
-    child = [CKTreeNodeTest_Component_WithScope new];
-    c = [CKTreeNodeTest_RenderComponent_WithChild
-         newWithComponent:
-         [CKCompositeComponent newWithComponent:child]];
-
-    return c;
-  };
-  auto const results = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, block);
-  XCTAssertEqual(c.scopeHandle.treeNode.component, c);
-  XCTAssertEqual(child.scopeHandle.treeNode.component, child);
-}
-
 #pragma mark - Helpers
 
 - (void)_test_emptyInitialState_withComponent:(CKComponent *)c andNodeClass:(Class<CKTreeNodeProtocol>)nodeClass

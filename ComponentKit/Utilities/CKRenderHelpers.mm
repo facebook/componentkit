@@ -324,19 +324,17 @@ namespace CKRender {
       // Compute the dirtyNodeIds in case of a state update only.
       if (buildTrigger == BuildTrigger::StateUpdate) {
         for (auto const & stateUpdate : stateUpdates) {
-          id<CKTreeNodeProtocol> treeNode = stateUpdate.first.treeNode;
-          while (treeNode != nil) {
-            auto const insertPair = treeNodesDirtyIds.insert(treeNode.nodeIdentifier);
+          CKTreeNodeIdentifier treeNodeIdentifier = stateUpdate.first.treeNodeIdentifier;
+          while (treeNodeIdentifier != 0) {
+            auto const insertPair = treeNodesDirtyIds.insert(treeNodeIdentifier);
             // If we got to a node that is already in the set, we can stop as the path to the root is already dirty.
             if (insertPair.second == false) {
               break;
             }
-            auto const parentNode = [previousRoot parentForNode:treeNode];
-            CKCAssert((parentNode ||
-                       (parentNode == nil && treeNode.nodeIdentifier == 0) ||
-                       stateUpdate.first.treeNode == treeNode),
-                      @"The next parent is nil, but the current tree node is not the root one.");
-            treeNode = parentNode;
+            auto const parentNode = [previousRoot parentForNodeIdentifier:treeNodeIdentifier];
+            CKCAssert((parentNode || stateUpdate.first.treeNodeIdentifier == treeNodeIdentifier),
+                      @"The next parent cannot be nil unless it's a root component.");
+            treeNodeIdentifier = parentNode.nodeIdentifier;
           }
         }
       }

@@ -87,7 +87,7 @@
     [scopeRoot registerNode:self withParent:parent];
 
     // Set the link between the tree node and the scope handle.
-    [_handle setTreeNode:self];
+    [_handle setTreeNodeIdentifier:_nodeIdentifier];
   }
   return self;
 }
@@ -104,7 +104,7 @@
 
 - (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 {
-  auto const parent = [previousScopeRoot parentForNode:self];
+  auto const parent = [previousScopeRoot parentForNodeIdentifier:_nodeIdentifier];
   CKAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");
   [scopeRoot registerNode:self withParent:parent];
   if (_handle) {

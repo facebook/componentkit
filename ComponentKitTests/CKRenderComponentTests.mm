@@ -164,7 +164,7 @@
                     .scopeRoot = scopeRoot2,
                     .stateUpdates = stateUpdates,
                     .treeNodeDirtyIds = {
-                      _c.scopeHandle.treeNode.nodeIdentifier
+                      _c.scopeHandle.treeNodeIdentifier
                     },
                     .buildTrigger = BuildTrigger::StateUpdate,
                     .enableFasterStateUpdates = _config.enableFasterStateUpdates,
@@ -200,7 +200,7 @@
                     .scopeRoot = scopeRoot2,
                     .stateUpdates = stateUpdates,
                     .treeNodeDirtyIds = {
-                      _c.scopeHandle.treeNode.nodeIdentifier
+                      _c.scopeHandle.treeNodeIdentifier
                     },
                     .buildTrigger = BuildTrigger::StateUpdate,
                     .enableFasterStateUpdates = _config.enableFasterStateUpdates,

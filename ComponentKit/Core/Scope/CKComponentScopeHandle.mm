@@ -195,10 +195,10 @@
   _acquiredComponent = component;
 }
 
-- (void)setTreeNode:(id<CKTreeNodeProtocol>)treeNode
+- (void)setTreeNodeIdentifier:(CKTreeNodeIdentifier)treeNodeIdentifier
 {
-  CKAssert(_treeNode == nil, @"treeNode cannot be set twice");
-  _treeNode = treeNode;
+  CKAssert(_treeNodeIdentifier == 0, @"_treeNodeIdentifier cannot be set twice");
+  _treeNodeIdentifier = treeNodeIdentifier;
 }
 
 - (void)resolve

@@ -118,10 +118,10 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
   }
 }
 
-- (id<CKTreeNodeProtocol>)parentForNode:(id<CKTreeNodeProtocol>)node
+- (id<CKTreeNodeProtocol>)parentForNodeIdentifier:(CKTreeNodeIdentifier)nodeIdentifier
 {
-  CKAssert(node != nil, @"Cannot retrieve parent for a nil node");
-  auto const it = _nodesToParentNodes.find(node.nodeIdentifier);
+  CKAssert(nodeIdentifier != 0, @"Cannot retrieve parent for an empty node");
+  auto const it = _nodesToParentNodes.find(nodeIdentifier);
   if (it != _nodesToParentNodes.end()) {
     return it->second;
   }

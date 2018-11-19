@@ -13,13 +13,7 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
-
-typedef int32_t CKTreeNodeIdentifier;
-typedef std::tuple<Class, NSUInteger> CKTreeNodeComponentKey;
-
-// Data structure that holds the ids of the tree nodes, that represent the components
-// on a branch that had a state update.
-typedef std::unordered_set<CKTreeNodeIdentifier> CKTreeNodeDirtyIds;
+#import <ComponentKit/CKTreeNodeTypes.h>
 
 /**
  Params struct for the `buildComponentTree:` method.

@@ -224,7 +224,9 @@
     return @2;
   });
 
-  XCTAssertEqual(CKRender::treeNodeDirtyIdsFor(buildResults.scopeRoot, stateUpdates, BuildTrigger::StateUpdate, config).size(), 2);
+  CKTreeNodeDirtyIds dirtyNodeIds = CKRender::treeNodeDirtyIdsFor(buildResults.scopeRoot, stateUpdates, BuildTrigger::StateUpdate, config);
+  CKTreeNodeDirtyIds expectedDirtyNodeIds = {rootComponent.scopeHandle.treeNodeIdentifier};
+  XCTAssertEqual(dirtyNodeIds, expectedDirtyNodeIds);
 }
 
 - (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_updateParentOnStateUpdate
@@ -262,14 +264,13 @@
   
   auto const dirtyNodeIds = CKRender::treeNodeDirtyIdsFor(buildResultsAfterStateUpdate.scopeRoot, stateUpdates2, BuildTrigger::StateUpdate, config);
   CKTreeNodeDirtyIds expectedDirtyNodeIds = {
-    child1.childComponent.scopeHandle.treeNode.nodeIdentifier,
-    child1.scopeHandle.treeNode.nodeIdentifier,
-    rootComponent.scopeHandle.treeNode.nodeIdentifier,
-    buildResultsAfterStateUpdate.scopeRoot.rootNode.nodeIdentifier,
+    child1.childComponent.scopeHandle.treeNodeIdentifier,
+    child1.scopeHandle.treeNodeIdentifier,
+    rootComponent.scopeHandle.treeNodeIdentifier,
   };
 
-  auto const child1ParentNode = [buildResultsAfterStateUpdate.scopeRoot parentForNode:child1.scopeHandle.treeNode];
-  auto const child1ChildComponentParentNode = [buildResultsAfterStateUpdate.scopeRoot parentForNode:child1.childComponent.scopeHandle.treeNode];
+  auto const child1ParentNode = [buildResultsAfterStateUpdate.scopeRoot parentForNodeIdentifier:child1.scopeHandle.treeNodeIdentifier];
+  auto const child1ChildComponentParentNode = [buildResultsAfterStateUpdate.scopeRoot parentForNodeIdentifier:child1.childComponent.scopeHandle.treeNodeIdentifier];
   XCTAssertTrue(child1ParentNode.component == rootComponent);
   XCTAssertTrue(child1ChildComponentParentNode.component == child1);
   XCTAssertTrue(dirtyNodeIds == expectedDirtyNodeIds);
