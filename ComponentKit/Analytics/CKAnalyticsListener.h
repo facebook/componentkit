@@ -64,7 +64,7 @@
 - (void)didMountComponent:(CKComponent *)component;
 
 /**
- Called before/after unmounting a component
+ Called before/after layout a component
  */
 - (void)willLayoutComponent:(CKComponent *)component;
 - (void)didLayoutComponent:(CKComponent *)component;
