@@ -55,7 +55,11 @@ typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CKTreeNodeHashe
 
 - (CKTreeNode *)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
-  return _children[key];
+  auto const it = _children.find(key);
+  if (it != _children.end()) {
+    return it->second;
+  }
+  return nil;
 }
 
 - (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
