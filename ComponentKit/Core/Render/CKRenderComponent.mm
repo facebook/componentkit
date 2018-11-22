@@ -73,8 +73,11 @@
            @"CKRenderComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@)", size.description(), _childComponent);
 
-  auto const l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];
-  return {self, l.size, {{{0,0}, l}}};
+  if (_childComponent) {
+    auto const l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];
+    return {self, l.size, {{{0,0}, l}}};
+  }
+  return [super computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
 }
 
 - (CKComponent *)childComponent
