@@ -33,7 +33,9 @@ typedef struct {
   BOOL invalidateRemovedControllers;
   BOOL embedInFlexbox;
   BOOL embedInTestComponent;
+  BOOL forceSizeCacheEnabled;
   id<CKAnalyticsListener> analyticsListener;
+  id<CKComponentSizeRangeProviding> sizeRangeProvider;
 } CKComponentHostingViewConfiguration;
 static CKComponentHostingView *hostingView(const CKComponentHostingViewConfiguration &options = CKComponentHostingViewConfiguration())
 {
@@ -42,14 +44,15 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
                                                                                    embedInFlexbox:options.embedInFlexbox
                                                                              embedInTestComponent:options.embedInTestComponent];
   CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
-                                                                         sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
+                                                                         sizeRangeProvider:options.sizeRangeProvider ?: [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
                                                                        componentPredicates:{}
                                                              componentControllerPredicates:{}
                                                                          analyticsListener:options.analyticsListener
                                                                                    options:{
                                                                                      .unifyBuildAndLayout = options.unifyBuildAndLayout,
                                                                                      .allowTapPassthrough = options.allowTapPassthrough,
-                                                                                     .invalidateRemovedControllers = options.invalidateRemovedControllers
+                                                                                     .invalidateRemovedControllers = options.invalidateRemovedControllers,
+                                                                                     .forceSizeCacheEnabled = options.forceSizeCacheEnabled,
                                                                                    }];
   view.bounds = CGRectMake(0, 0, 100, 100);
   [view updateModel:model mode:CKUpdateModeSynchronous];
@@ -314,6 +317,56 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
   // this should return the root view
   UIView *const shouldBeRoot = [view hitTest:CGPointMake(55, 5) withEvent:nil];
   XCTAssertTrue(shouldBeRoot == view.containerView, @"hitTest should return the hosting view or root view");
+}
+
+- (void)testSizeCacheEnabled_CachedSizeIsNotUsedIfSizeCacheIsDisabled
+{
+  CKComponentHostingView *view = hostingView({
+    .analyticsListener = self,
+  });
+  const auto constrainedSize = CGSizeMake(100, 100);
+  [view sizeThatFits:constrainedSize];
+  [view sizeThatFits:constrainedSize];
+  XCTAssertEqual(_willLayoutComponentTreeHitCount, 3);
+}
+
+- (void)testSizeCacheEnabled_CachedSizeIsUsedIfConstrainedSizesAreSame
+{
+  CKComponentHostingView *view = hostingView({
+    .analyticsListener = self,
+    .forceSizeCacheEnabled = YES,
+  });
+  const auto constrainedSize = CGSizeMake(100, 100);
+  [view sizeThatFits:constrainedSize];
+  [view sizeThatFits:constrainedSize];
+  XCTAssertEqual(_willLayoutComponentTreeHitCount, 2);
+}
+
+- (void)testSizeCacheEnabled_CachedSizeIsNotUsedIfConstrainedSizesAreDifferent
+{
+  CKComponentHostingView *view = hostingView({
+    .analyticsListener = self,
+    .forceSizeCacheEnabled = YES,
+    .sizeRangeProvider = [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibilityNone],
+  });
+  const auto constrainedSize1 = CGSizeMake(100, 100);
+  const auto constrainedSize2 = CGSizeMake(200, 200);
+  [view sizeThatFits:constrainedSize1];
+  [view sizeThatFits:constrainedSize2];
+  XCTAssertEqual(_willLayoutComponentTreeHitCount, 3);
+}
+
+- (void)testSizeCacheEnabled_CacheSizeIsNotUsedIfComponentIsUpdated
+{
+  CKComponentHostingView *view = hostingView({
+    .analyticsListener = self,
+    .forceSizeCacheEnabled = YES,
+  });
+  const auto constrainedSize = CGSizeMake(100, 100);
+  [view sizeThatFits:constrainedSize];
+  [view updateModel:nil mode:CKUpdateModeSynchronous];
+  [view sizeThatFits:constrainedSize];
+  XCTAssertEqual(_willLayoutComponentTreeHitCount, 3);
 }
 
 #pragma mark - CKComponentHostingViewDelegate
