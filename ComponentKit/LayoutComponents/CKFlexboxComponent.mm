@@ -50,20 +50,6 @@ template class std::vector<CKFlexboxComponentChild>;
 
 @end
 
-@interface CKFlexboxComponentContext ()
-@property(nonatomic, assign, readonly) BOOL usesDeepYogaTrees;
-@end
-@implementation CKFlexboxComponentContext
-+ (instancetype)newWithUsesDeepYogaTrees:(BOOL)usesDeepYogaTrees
-{
-  CKFlexboxComponentContext * const c = [super new];
-  if (c != nil) {
-    c->_usesDeepYogaTrees = usesDeepYogaTrees;
-  }
-  return c;
-}
-@end
-
 @implementation CKFlexboxComponent {
   CKFlexboxComponentStyle _style;
   std::vector<CKFlexboxComponentChild> _children;
@@ -75,8 +61,7 @@ template class std::vector<CKFlexboxComponentChild>;
                       style:(const CKFlexboxComponentStyle &)style
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
 {
-  const BOOL usesDeepYogaTrees = CKComponentContext<CKFlexboxComponentContext>::get().usesDeepYogaTrees;
-  return [self newWithView:view size:size style:style children:std::move(children) usesDeepYogaTrees:usesDeepYogaTrees];
+  return [self newWithView:view size:size style:style children:std::move(children) usesDeepYogaTrees:NO];
 }
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view

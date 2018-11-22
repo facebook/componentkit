@@ -11,6 +11,7 @@
 #import "CKRenderComponentTestHelpers.h"
 
 #import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 
@@ -52,6 +53,11 @@
 
 @implementation CKTestChildRenderComponent
 
++ (Class<CKComponentControllerProtocol>)controllerClass
+{
+  return [CKTestChildRenderComponentController class];
+}
+
 + (id)initialState
 {
   return nil;
@@ -84,4 +90,29 @@
 {
   return @1;
 }
+@end
+
+@implementation CKTestRenderWithChildrenComponent
+{
+  std::vector<CKComponent *> _children;
+}
++ (instancetype)newWithChildren:(std::vector<CKComponent *>)children
+{
+  auto const c = [super newWithView:{} size:{}];
+  if (c) {
+    c->_children = children;
+  }
+  return c;
+}
++ (BOOL)requiresScopeHandle
+{
+  return YES;
+}
+- (std::vector<CKComponent *>)renderChildren:(id)state
+{
+  return _children;
+}
+@end
+
+@implementation CKTestChildRenderComponentController
 @end

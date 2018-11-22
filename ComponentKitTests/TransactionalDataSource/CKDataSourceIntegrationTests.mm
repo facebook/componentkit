@@ -167,14 +167,10 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        context:nil
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
                                        buildComponentConfig:{}
-                                       qosOptions:{}
+                                       splitChangesetOptions:{}
                                        workQueue:nil
                                        applyModificationsOnWorkQueue:NO
                                        unifyBuildAndLayout:NO
-                                       parallelInsertBuildAndLayout:NO
-                                       parallelInsertBuildAndLayoutThreshold:0
-                                       parallelUpdateBuildAndLayout:NO
-                                       parallelUpdateBuildAndLayoutThreshold:0
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
                                        analyticsListener:nil];

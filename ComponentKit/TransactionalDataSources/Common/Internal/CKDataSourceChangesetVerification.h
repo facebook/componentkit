@@ -26,3 +26,7 @@ struct CKInvalidChangesetInfo {
 CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changeset,
                                                   CKDataSourceState *state,
                                                   NSArray<id<CKDataSourceStateModifying>> *pendingAsynchronousModifications);
+
+void CKVerifyChangeset(CKDataSourceChangeset *changeset,
+                       CKDataSourceState *state,
+                       NSArray<id<CKDataSourceStateModifying>> *pendingAsynchronousModifications);

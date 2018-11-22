@@ -51,7 +51,9 @@ static CKComponentAnimationHooks hooksForFinalUnmountAnimation(const CKComponent
                                                                UIView *const hostView) noexcept
 {
   const auto component = a.component;
-  const auto animation = a.animation;
+  CAAnimation *const animation = [a.animation copy];
+  animation.fillMode = kCAFillModeForwards;
+  animation.removedOnCompletion = NO;
   return {
     .willRemount = ^() {
       const auto viewForAnimation = [component viewForAnimation];

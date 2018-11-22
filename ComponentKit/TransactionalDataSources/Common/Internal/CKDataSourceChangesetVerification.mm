@@ -10,6 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import "CKAssert.h"
 #import "CKDataSourceChangesetVerification.h"
 
 #import <ComponentKit/CKDataSourceChangesetInternal.h>
@@ -179,6 +180,34 @@ CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changes
     invalidSection,
     invalidItem
   };
+}
+
+static NSString *readableStringForArray(NSArray *array)
+{
+  if (!array || array.count == 0) {
+    return @"()";
+  }
+  NSMutableString *mutableString = [NSMutableString new];
+  [mutableString appendFormat:@"(\n"];
+  for (id value in array) {
+    [mutableString appendFormat:@"\t%@,\n", value];
+  }
+  [mutableString appendString:@")\n"];
+  return mutableString;
+}
+
+void CKVerifyChangeset(CKDataSourceChangeset *changeset,
+                       CKDataSourceState *state,
+                       NSArray<id<CKDataSourceStateModifying>> *pendingAsynchronousModifications)
+{
+  const CKInvalidChangesetInfo invalidChangesetInfo = CKIsValidChangesetForState(changeset,
+                                                                                 state,
+                                                                                 pendingAsynchronousModifications);
+  if (invalidChangesetInfo.operationType != CKInvalidChangesetOperationTypeNone) {
+    NSString *const humanReadableInvalidChangesetOperationType = CKHumanReadableInvalidChangesetOperationType(invalidChangesetInfo.operationType);
+    NSString *const humanReadablePendingAsynchronousModifications = readableStringForArray(pendingAsynchronousModifications);
+    CKCFatalWithCategory(humanReadableInvalidChangesetOperationType, @"Invalid changeset: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@\n*** Invalid section:\n%ld\n*** Invalid item:\n%ld", humanReadableInvalidChangesetOperationType, changeset, state, humanReadablePendingAsynchronousModifications, (long)invalidChangesetInfo.section, (long)invalidChangesetInfo.item);
+  }
 }
 
 static NSArray<NSNumber *> *sectionCountsWithModificationsFoldedIntoState(CKDataSourceState *state,

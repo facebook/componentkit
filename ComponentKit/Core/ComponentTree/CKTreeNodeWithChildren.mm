@@ -55,7 +55,11 @@ typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CKTreeNodeHashe
 
 - (CKTreeNode *)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
-  return _children[key];
+  auto const it = _children.find(key);
+  if (it != _children.end()) {
+    return it->second;
+  }
+  return nil;
 }
 
 - (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
@@ -67,5 +71,26 @@ typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CKTreeNodeHashe
 {
   _children[componentKey] = child;
 }
+
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+{
+  [super didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
+  for (auto const &child : _children) {
+    [child.second didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
+  }
+}
+
+#if DEBUG
+- (NSArray<NSString *> *)debugDescriptionNodes
+{
+  NSMutableArray<NSString *> *debugDescriptionNodes = [NSMutableArray arrayWithArray:[super debugDescriptionNodes]];
+  for (auto const &child : _children) {
+    for (NSString *s in [child.second debugDescriptionNodes]) {
+      [debugDescriptionNodes addObject:[@"  " stringByAppendingString:s]];
+    }
+  }
+  return debugDescriptionNodes;
+}
+#endif
 
 @end

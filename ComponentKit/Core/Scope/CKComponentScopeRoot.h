@@ -19,10 +19,12 @@
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKComponentControllerProtocol.h>
 #import <ComponentKit/CKStateUpdateMetadata.h>
+#import <ComponentKit/CKTreeNodeTypes.h>
 #import <ComponentKit/CKUpdateMode.h>
 
 @protocol CKComponentProtocol;
 @protocol CKComponentControllerProtocol;
+@protocol CKTreeNodeProtocol;
 @protocol CKTreeNodeWithChildrenProtocol;
 
 @class CKComponentScopeFrame;
@@ -62,6 +64,9 @@
 /** Must be called when initializing a component or controller. */
 - (void)registerComponentController:(id<CKComponentControllerProtocol>)componentController;
 - (void)registerComponent:(id<CKComponentProtocol>)component;
+
+- (void)registerNode:(id<CKTreeNodeProtocol>)node withParent:(id<CKTreeNodeProtocol>)parent;
+- (id<CKTreeNodeProtocol>)parentForNodeIdentifier:(CKTreeNodeIdentifier)nodeIdentifier;
 
 - (CKCocoaCollectionAdapter<id<CKComponentProtocol>>)componentsMatchingPredicate:(CKComponentPredicate)predicate;
 - (CKCocoaCollectionAdapter<id<CKComponentControllerProtocol>>)componentControllersMatchingPredicate:(CKComponentControllerPredicate)predicate;

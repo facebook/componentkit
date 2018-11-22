@@ -17,6 +17,8 @@
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 
+@protocol CKAnalyticsListener;
+
 @interface CKComponent () <CKTreeNodeComponentProtocol>
 
 /**
@@ -36,13 +38,15 @@
  @param size The size for this component
  @param children The positioned children for this component. Normally this parameter is ignored.
  @param supercomponent This component's parent component
+ @param analyticsListener The current analytics listener - can be nil.
  @return An updated mount context. In most cases, this is just be the passed-in context. If a view was created, this is
  used to specify that subcomponents should be mounted inside the view.
  */
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
-                              supercomponent:(CKComponent *)supercomponent NS_REQUIRES_SUPER;
+                              supercomponent:(CKComponent *)supercomponent
+                           analyticsListener:(id<CKAnalyticsListener>)analyticsListener NS_REQUIRES_SUPER;
 
 /**
  For internal use only; don't use this initializer.

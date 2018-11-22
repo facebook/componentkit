@@ -10,7 +10,6 @@
 
 #import "CKThreadSafeDataSource.h"
 
-#import "CKAssert.h"
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
 #import "CKComponentControllerInternal.h"
@@ -39,9 +38,6 @@
 
   CKComponentStateUpdatesMap _pendingAsynchronousStateUpdates;
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
-  CK::Mutex _pendingStateUpdatesMutex;
-
-  CK::Mutex _processingMutex;
 
   CKDataSourceListenerAnnouncer *_announcer;
   dispatch_queue_t _workQueue;
@@ -103,7 +99,6 @@
                              initWithChangeset:changeset
                              stateListener:self
                              userInfo:userInfo
-                             queue:nil
                              qos:qos];
   switch (mode) {
     case CKUpdateModeAsynchronous:
@@ -168,9 +163,8 @@
                         mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
-  CK::MutexLocker lock(_pendingStateUpdatesMutex);
   if (_pendingAsynchronousStateUpdates.empty() && _pendingSynchronousStateUpdates.empty()) {
-    dispatch_async(_workQueue, ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
       [self _processStateUpdates];
     });
   }
@@ -192,7 +186,6 @@
 
 - (void)_applyModificationAsync:(id<CKDataSourceStateModifying>)modification
 {
-  _processingMutex.lock();
   dispatch_async(_workQueue, blockUsingDataSourceQOS(^{
     [_announcer componentDataSourceWillGenerateNewState:self userInfo:modification.userInfo];
     auto change = [self _changeFromModification:modification];
@@ -200,25 +193,25 @@
                 didGenerateNewState:[change state]
                             changes:[change appliedChanges]];
     [self _applyChange:change];
-    _processingMutex.unlock();
   }, [modification qos]));
 }
 
 - (void)_applyModificationSync:(id<CKDataSourceStateModifying>)modification
 {
-  CK::MutexLocker lock(_processingMutex);
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [_announcer componentDataSource:self willSyncApplyModificationWithUserInfo:[modification userInfo]];
-  });
-  auto change = [self _changeFromModification:modification];
-  [self _applyChange:change];
+  dispatch_sync(_workQueue, blockUsingDataSourceQOS(^{
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [_announcer componentDataSource:self willSyncApplyModificationWithUserInfo:[modification userInfo]];
+    });
+    auto change = [self _changeFromModification:modification];
+    [self _applyChange:change];
+  }, [modification qos]));
 }
 
 - (CKDataSourceChange *)_changeFromModification:(id<CKDataSourceStateModifying>)modification
 {
 #if CK_ASSERTIONS_ENABLED
   if ([modification isKindOfClass:[CKDataSourceChangesetModification class]]) {
-    verifyChangeset(((CKDataSourceChangesetModification *)modification).changeset, self.state);
+    CKVerifyChangeset(((CKDataSourceChangesetModification *)modification).changeset, self.state, @[]);
   }
 #endif
 
@@ -260,42 +253,18 @@
 
 - (void)_processStateUpdates
 {
-  CKDataSourceUpdateStateModification *asyncStateUpdateModification = nil;
-  CKDataSourceUpdateStateModification *syncStateUpdateModification = nil;
-  {
-    CK::MutexLocker lock(_pendingStateUpdatesMutex);
-    if (!_pendingAsynchronousStateUpdates.empty()) {
-      asyncStateUpdateModification =
-      [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingAsynchronousStateUpdates];
-      _pendingAsynchronousStateUpdates.clear();
-    }
-    if (!_pendingSynchronousStateUpdates.empty()) {
-      syncStateUpdateModification =
-      [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingSynchronousStateUpdates];
-      _pendingSynchronousStateUpdates.clear();
-    }
-  }
-  
-  if (asyncStateUpdateModification != nil) {
+  if (!_pendingAsynchronousStateUpdates.empty()) {
+    CKDataSourceUpdateStateModification *asyncStateUpdateModification =
+    [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingAsynchronousStateUpdates];
+    _pendingAsynchronousStateUpdates.clear();
     [self _applyModificationAsync:asyncStateUpdateModification];
   }
-  if (syncStateUpdateModification != nil) {
+  if (!_pendingSynchronousStateUpdates.empty()) {
+    CKDataSourceUpdateStateModification *syncStateUpdateModification =
+    [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingSynchronousStateUpdates];
+    _pendingSynchronousStateUpdates.clear();
     [self _applyModificationSync:syncStateUpdateModification];
   }
 }
-
-#if CK_ASSERTIONS_ENABLED
-static void verifyChangeset(CKDataSourceChangeset *changeset,
-                            CKDataSourceState *state)
-{
-  const CKInvalidChangesetInfo invalidChangesetInfo = CKIsValidChangesetForState(changeset,
-                                                                                 state,
-                                                                                 @[]);
-  if (invalidChangesetInfo.operationType != CKInvalidChangesetOperationTypeNone) {
-    NSString *const humanReadableInvalidChangesetOperationType = CKHumanReadableInvalidChangesetOperationType(invalidChangesetInfo.operationType);
-    CKCFatalWithCategory(humanReadableInvalidChangesetOperationType, @"Invalid changeset: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Invalid section:\n%ld\n*** Invalid item:\n%ld", humanReadableInvalidChangesetOperationType, changeset, state, (long)invalidChangesetInfo.section, (long)invalidChangesetInfo.item);
-  }
-}
-#endif
 
 @end

@@ -326,4 +326,7 @@
   _didGenerateChangeCounter++;
 }
 
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+ willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset {}
+
 @end

@@ -39,29 +39,27 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
 
-  CKComponentContextRenderSupport contextSupport(config.enableContextRenderSupport);
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot buildTrigger:buildTrigger];
-
   auto const component = componentFactory();
-
+  
   // Build the component tree if we have a render component in the hierarchy.
   if (threadScope.newScopeRoot.hasRenderComponentInTree) {
-    CKTreeNodeDirtyIds treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(stateUpdates, buildTrigger, config);
+    CKTreeNodeDirtyIds treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger, config);
 
     // Build the component tree from the render function.
     [component buildComponentTree:threadScope.newScopeRoot.rootNode
                    previousParent:previousRoot.rootNode
                            params:{
                              .scopeRoot = threadScope.newScopeRoot,
+                             .previousScopeRoot = previousRoot,
                              .stateUpdates = stateUpdates,
                              .treeNodeDirtyIds = treeNodeDirtyIds,
                              .buildTrigger = buildTrigger,
                              .enableFasterStateUpdates = config.enableFasterStateUpdates,
                              .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
-                             .enableContextRenderSupport = config.enableContextRenderSupport,
                            }
              parentHasStateUpdate:NO];
   }
@@ -84,7 +82,6 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
                                                           CKBuildComponentConfig config) {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
 
-  CKComponentContextRenderSupport contextSupport(config.enableContextRenderSupport);
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
@@ -95,17 +92,17 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
   CKTreeNodeDirtyIds treeNodeDirtyIds;
   const CKBuildComponentTreeParams params = {
     .scopeRoot = threadScope.newScopeRoot,
+    .previousScopeRoot = previousRoot,
     .stateUpdates = stateUpdates,
     .treeNodeDirtyIds = treeNodeDirtyIds,
     .buildTrigger = buildTrigger,
     .enableFasterStateUpdates = config.enableFasterStateUpdates,
     .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
-    .enableContextRenderSupport = config.enableContextRenderSupport,
   };
 
   // Build the component tree if we have a render component in the hierarchy.
   if (threadScope.newScopeRoot.hasRenderComponentInTree) {
-    treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(stateUpdates, buildTrigger, config);
+    treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger, config);
 
     // Build the component tree from the render function.
     [component buildComponentTree:threadScope.newScopeRoot.rootNode

@@ -11,6 +11,7 @@
 
 #import "CKStatefulViewReusePool.h"
 #import "CKAssert.h"
+#import "CKDispatch.h"
 
 #import <unordered_map>
 
@@ -148,7 +149,7 @@ struct PoolKeyHasher {
   _enqueuedPendingPurge = YES;
   // Wait for the run loop to turn over before trying to relinquish the view. That ensures that if we are remounted on
   // a different root view, we reuse the same view (since didMount will be called immediately after didUnmount).
-  dispatch_async(dispatch_get_main_queue(), ^{
+  CKDispatchMainDefaultMode(^{
     self->_enqueuedPendingPurge = NO;
     [self purgePendingPool];
   });

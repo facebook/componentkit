@@ -11,7 +11,6 @@
 #import "CKDataSource.h"
 #import "CKDataSourceInternal.h"
 
-#import "CKAssert.h"
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
 #import "CKComponentControllerInternal.h"
@@ -67,7 +66,6 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
 
-  dispatch_queue_t _concurrentQueue;
   // The queue that modifications are processed on.
   dispatch_queue_t _modificationQueue;
   BOOL _applyModificationsOnWorkQueue;
@@ -90,13 +88,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     _state = [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
 
-    if (!configuration.qosOptions.enabled) {
-      _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
-    } else {
-      auto const workQueueAttributes =
-      dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qosClassFromDataSourceQOS(configuration.qosOptions.workQueueQOS), 0);
-      _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", workQueueAttributes);
-    }
+    _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
     _applyModificationsOnWorkQueue = configuration.applyModificationsOnWorkQueue;
     _modificationQueue = _applyModificationsOnWorkQueue ? _workQueue : dispatch_get_main_queue();
     if (configuration.workQueue != nil) {
@@ -112,16 +104,6 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 #endif
     _pendingAsynchronousModifications = [NSMutableArray array];
     [CKComponentDebugController registerReflowListener:self];
-    if (configuration.parallelInsertBuildAndLayout ||
-        configuration.parallelUpdateBuildAndLayout) {
-      if (!configuration.qosOptions.enabled) {
-        _concurrentQueue = dispatch_queue_create("org.componentkit.CKDataSource.concurrent", DISPATCH_QUEUE_CONCURRENT);
-      } else {
-        auto const concurrentQueueAttributes =
-        dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_CONCURRENT, qosClassFromDataSourceQOS(configuration.qosOptions.concurrentQueueQOS), 0);
-        _concurrentQueue = dispatch_queue_create("org.componentkit.CKDataSource.concurrent", concurrentQueueAttributes);
-      }
-    }
   }
   return self;
 }
@@ -168,13 +150,14 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 {
   CKAssertChangesetQueue();
 
-  verifyChangeset(changeset, _state, _pendingAsynchronousModifications);
+#if CK_ASSERTIONS_ENABLED
+  CKVerifyChangeset(changeset, _state, _pendingAsynchronousModifications);
+#endif
 
   id<CKDataSourceStateModifying> modification =
   [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
                                                  stateListener:self
                                                       userInfo:userInfo
-                                                         queue:_concurrentQueue
                                                            qos:qos];
   switch (mode) {
     case CKUpdateModeAsynchronous:
@@ -327,10 +310,10 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 - (void)_synchronouslyApplyModification:(id<CKDataSourceStateModifying>)modification
 {
   [_announcer componentDataSource:self willSyncApplyModificationWithUserInfo:[modification userInfo]];
-  [self _synchronouslyApplyChange:[modification changeFromState:_state]];
+  [self _synchronouslyApplyChange:[modification changeFromState:_state] qos:modification.qos];
 }
 
-- (void)_synchronouslyApplyChange:(CKDataSourceChange *)change
+- (void)_synchronouslyApplyChange:(CKDataSourceChange *)change qos:(CKDataSourceQOS)qos
 {
   CKAssertChangesetQueue();
   CKDataSourceState *previousState = _state;
@@ -351,6 +334,29 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   auto const appliedChanges = [change appliedChanges];
   CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([[appliedChanges finalUpdatedIndexPaths] allValues], _state);
   CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([appliedChanges insertedIndexPaths], _state);
+  
+  // Handle deferred changeset (if there is one)
+  auto const deferredChangeset = [change deferredChangeset];
+  if (deferredChangeset != nil) {
+    [_announcer componentDataSource:self willApplyDeferredChangeset:deferredChangeset];
+    id<CKDataSourceStateModifying> modification =
+    [[CKDataSourceChangesetModification alloc] initWithChangeset:deferredChangeset
+                                                   stateListener:self
+                                                        userInfo:[appliedChanges userInfo]
+                                                             qos:qos];
+
+    // This needs to be applied asynchronously to avoid having both the first part of the changeset
+    // and the deferred changeset be applied in the same runloop tick -- otherwise, the completion
+    // of the first update will need to wait until the deferred changeset is applied and regress
+    // overall performance.
+    //
+    // This is manually inserted at the front of the asynchronous modifications queue to avoid having
+    // existing enqueued async modifications be applied against a mismatched data source state.
+    [_pendingAsynchronousModifications insertObject:modification atIndex:0];
+    if (_pendingAsynchronousModifications.count == 1) {
+      [self _startAsynchronousModificationIfNeeded];
+    }
+  }
 }
 
 - (void)_processStateUpdates
@@ -424,43 +430,14 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     // it may have been canceled; don't apply it.
     if ([_pendingAsynchronousModifications firstObject] == modificationPair.modification && self->_state == modificationPair.state) {
       [_pendingAsynchronousModifications removeObjectAtIndex:0];
-      [self _synchronouslyApplyChange:change];
+      [self _synchronouslyApplyChange:change qos:modificationPair.modification.qos];
     }
 
     [self _startAsynchronousModificationIfNeeded];
   });
 }
 
-static void verifyChangeset(CKDataSourceChangeset *changeset,
-                            CKDataSourceState *state,
-                            NSArray<id<CKDataSourceStateModifying>> *pendingAsynchronousModifications)
-{
 #if CK_ASSERTIONS_ENABLED
-  const CKInvalidChangesetInfo invalidChangesetInfo = CKIsValidChangesetForState(changeset,
-                                                                                 state,
-                                                                                 pendingAsynchronousModifications);
-  if (invalidChangesetInfo.operationType != CKInvalidChangesetOperationTypeNone) {
-    NSString *const humanReadableInvalidChangesetOperationType = CKHumanReadableInvalidChangesetOperationType(invalidChangesetInfo.operationType);
-    NSString *const humanReadablePendingAsynchronousModifications = readableStringForArray(pendingAsynchronousModifications);
-    CKCFatalWithCategory(humanReadableInvalidChangesetOperationType, @"Invalid changeset: %@\n*** Changeset:\n%@\n*** Data source state:\n%@\n*** Pending data source modifications:\n%@\n*** Invalid section:\n%ld\n*** Invalid item:\n%ld", humanReadableInvalidChangesetOperationType, changeset, state, humanReadablePendingAsynchronousModifications, (long)invalidChangesetInfo.section, (long)invalidChangesetInfo.item);
-  }
-#endif
-}
-
-#if CK_ASSERTIONS_ENABLED
-static NSString *readableStringForArray(NSArray *array)
-{
-  if (!array || array.count == 0) {
-    return @"()";
-  }
-  NSMutableString *mutableString = [NSMutableString new];
-  [mutableString appendFormat:@"(\n"];
-  for (id value in array) {
-    [mutableString appendFormat:@"\t%@,\n", value];
-  }
-  [mutableString appendString:@")\n"];
-  return mutableString;
-}
 
 static CK::StaticMutex _IDMutex = CK_MUTEX_INITIALIZER;
 static NSInteger _incrementingDataSourceID = 0;

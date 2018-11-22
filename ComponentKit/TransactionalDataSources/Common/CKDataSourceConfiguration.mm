@@ -20,7 +20,7 @@
   std::unordered_set<CKComponentPredicate> _componentPredicates;
   std::unordered_set<CKComponentControllerPredicate> _componentControllerPredicates;
   CKBuildComponentConfig _buildComponentConfig;
-  CKDataSourceQOSOptions _qosOptions;
+  CKDataSourceSplitChangesetOptions _splitChangesetOptions;
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -31,14 +31,10 @@
                                  context:context
                                sizeRange:sizeRange
                     buildComponentConfig:{}
-                              qosOptions:{}
+                   splitChangesetOptions:{}
                                workQueue:nil
            applyModificationsOnWorkQueue:NO
                      unifyBuildAndLayout:NO
-            parallelInsertBuildAndLayout:NO
-   parallelInsertBuildAndLayoutThreshold:0
-            parallelUpdateBuildAndLayout:NO
-   parallelUpdateBuildAndLayoutThreshold:0
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil];
@@ -48,14 +44,10 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
                      buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
-                               qosOptions:(const CKDataSourceQOSOptions &)qosOptions
+                    splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                                 workQueue:(dispatch_queue_t)workQueue
             applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
-             parallelInsertBuildAndLayout:(BOOL)parallelInsertBuildAndLayout
-    parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
-             parallelUpdateBuildAndLayout:(BOOL)parallelUpdateBuildAndLayout
-    parallelUpdateBuildAndLayoutThreshold:(NSUInteger)parallelUpdateBuildAndLayoutThreshold
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -69,11 +61,7 @@
     _analyticsListener = analyticsListener;
     _unifyBuildAndLayout = unifyBuildAndLayout;
     _buildComponentConfig = buildComponentConfig;
-    _parallelInsertBuildAndLayout = parallelInsertBuildAndLayout;
-    _parallelInsertBuildAndLayoutThreshold = parallelInsertBuildAndLayoutThreshold;
-    _parallelUpdateBuildAndLayout = parallelUpdateBuildAndLayout;
-    _parallelUpdateBuildAndLayoutThreshold = parallelUpdateBuildAndLayoutThreshold;
-    _qosOptions = qosOptions;
+    _splitChangesetOptions = splitChangesetOptions;
     _workQueue = workQueue;
     _applyModificationsOnWorkQueue = applyModificationsOnWorkQueue;
   }
@@ -85,9 +73,9 @@
   return _buildComponentConfig;
 }
 
-- (const CKDataSourceQOSOptions &)qosOptions
+- (const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
 {
-  return _qosOptions;
+  return _splitChangesetOptions;
 }
 
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates

@@ -222,43 +222,6 @@
   XCTAssertEqualObjects(c1.model, @0);
 }
 
-- (void)testParallelism
-{
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 5, 5, YES);
-  CKDataSourceChangeset *changeset =
-  [[[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
-      withInsertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 5)]]
-     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1,
-                         [NSIndexPath indexPathForItem:1 inSection:0]: @2,
-                         [NSIndexPath indexPathForItem:0 inSection:1]: @1,
-                         [NSIndexPath indexPathForItem:1 inSection:1]: @2,
-                         [NSIndexPath indexPathForItem:0 inSection:2]: @1,
-                         [NSIndexPath indexPathForItem:1 inSection:2]: @2,
-                         [NSIndexPath indexPathForItem:0 inSection:3]: @1,
-                         [NSIndexPath indexPathForItem:1 inSection:3]: @2,
-                         [NSIndexPath indexPathForItem:0 inSection:4]: @1,
-                         [NSIndexPath indexPathForItem:1 inSection:4]: @2,
-                         }]
-    withUpdatedItems:@{[NSIndexPath indexPathForRow:0 inSection:0]: @1,
-                       [NSIndexPath indexPathForRow:0 inSection:1]: @1,
-                       [NSIndexPath indexPathForRow:0 inSection:2]: @1,
-                       [NSIndexPath indexPathForRow:0 inSection:3]: @1,
-                       [NSIndexPath indexPathForRow:0 inSection:4]: @1,
-                       }]
-   build];
-  dispatch_queue_t queue = dispatch_queue_create("org.componentkit.tests.queue", DISPATCH_QUEUE_CONCURRENT);
-  CKDataSourceChangesetModification *changesetModification =
-  [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
-                                                 stateListener:nil
-                                                      userInfo:nil
-                                                         queue:queue
-                                                           qos:CKDataSourceQOSDefault];
-  CKDataSourceChange *change = [changesetModification changeFromState:originalState];
-  XCTAssertEqual([[change state] numberOfSections], (NSUInteger)10);
-  XCTAssertEqual([[change state] numberOfObjectsInSection:0], (NSUInteger)2);
-}
-
-
 @end
 
 // Based on https://developer.apple.com/documentation/foundation/nsmutablearray/1416482-insertobjects?language=objc

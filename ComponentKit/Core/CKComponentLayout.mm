@@ -79,6 +79,8 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
     BOOL visited;
   };
 
+  BOOL systraceEnabled = NO;
+  [analyticsListener updateSystraceEnabledFlag:&systraceEnabled];
   [analyticsListener willMountComponentTreeWithRootComponent:layout.component];
   // Using a stack to mount ensures that the components are mounted
   // in a DFS fashion which is handy if you want to animate a subpart
@@ -102,7 +104,8 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
       const MountResult mountResult = [item.layout.component mountInContext:item.mountContext
                                                                        size:item.layout.size
                                                                    children:item.layout.children
-                                                             supercomponent:item.supercomponent];
+                                                             supercomponent:item.supercomponent
+                                                          analyticsListener:systraceEnabled ? analyticsListener : nil];
       [mountedComponents addObject:item.layout.component];
 
       if (mountResult.mountChildren) {

@@ -22,6 +22,8 @@
 
 #import "CKTextComponentView.h"
 
+@protocol CKAnalyticsListener;
+
 static CK::TextKit::Renderer::Cache *sharedRendererCache()
 {
   // This cache is sized arbitrarily
@@ -102,11 +104,13 @@ static CKTextKitRenderer *rendererForAttributes(CKTextKitAttributes &attributes,
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
+                           analyticsListener:(id<CKAnalyticsListener>)analyticsListener
 {
   CK::Component::MountResult result = [super mountInContext:context
                                                        size:size
                                                    children:children
-                                             supercomponent:supercomponent];
+                                             supercomponent:supercomponent
+                                          analyticsListener:analyticsListener];
   CKTextComponentView *view = (CKTextComponentView *)result.contextForChildren.viewManager->view;
   CKTextKitRenderer *renderer = rendererForAttributes(_attributes, size);
   view.renderer = renderer;

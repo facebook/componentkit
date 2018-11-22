@@ -18,10 +18,29 @@
 
 @protocol CKAnalyticsListener;
 
-struct CKDataSourceQOSOptions {
+typedef NS_ENUM(NSInteger, CKDataSourceLayoutAxis) {
+  CKDataSourceLayoutAxisVertical,
+  CKDataSourceLayoutAxisHorizontal
+};
+
+/**
+ * Configuration for splitting changesets so that the part of the changeset that fills
+ * the viewport with the specified bounding size gets applied first, and the second
+ * part of the changeset is deferred until immediately after.
+ */
+struct CKDataSourceSplitChangesetOptions {
+  /** Whether changeset splitting is enabled. */
   BOOL enabled = NO;
-  CKDataSourceQOS workQueueQOS = CKDataSourceQOSDefault;
-  CKDataSourceQOS concurrentQueueQOS = CKDataSourceQOSDefault;
+  /**
+   * The size of the viewport to use for component layout. Any components that are laid out outside
+   * this bounding size are deferred to a second changeset.
+   */
+  CGSize viewportBoundingSize = CGSizeZero;
+  /**
+   * The direction in which components are being laid out. This, along with `viewportBoundingSize`
+   * is used to compute whether a component layout is outside of the bounds of the viewport.
+   */
+  CKDataSourceLayoutAxis layoutAxis = CKDataSourceLayoutAxisVertical;
 };
 
 @interface CKDataSourceConfiguration ()
@@ -45,14 +64,10 @@ struct CKDataSourceQOSOptions {
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
                      buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
-                               qosOptions:(const CKDataSourceQOSOptions &)qosOptions
+                    splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                                 workQueue:(dispatch_queue_t)workQueue
             applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                       unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
-             parallelInsertBuildAndLayout:(BOOL)parallelInsertBuildAndLayout
-    parallelInsertBuildAndLayoutThreshold:(NSUInteger)parallelInsertBuildAndLayoutThreshold
-             parallelUpdateBuildAndLayout:(BOOL)parallelUpdateBuildAndLayout
-    parallelUpdateBuildAndLayoutThreshold:(NSUInteger)parallelUpdateBuildAndLayoutThreshold
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
@@ -62,15 +77,11 @@ struct CKDataSourceQOSOptions {
 @property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
 @property (nonatomic, assign, readonly) BOOL applyModificationsOnWorkQueue;
 @property (nonatomic, assign, readonly) BOOL unifyBuildAndLayout;
-@property (nonatomic, assign, readonly) BOOL parallelInsertBuildAndLayout;
-@property (nonatomic, assign, readonly) NSUInteger parallelInsertBuildAndLayoutThreshold;
-@property (nonatomic, assign, readonly) BOOL parallelUpdateBuildAndLayout;
-@property (nonatomic, assign, readonly) NSUInteger parallelUpdateBuildAndLayoutThreshold;
 
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates;
 
 - (const CKBuildComponentConfig &)buildComponentConfig;
-- (const CKDataSourceQOSOptions &)qosOptions;
+- (const CKDataSourceSplitChangesetOptions &)splitChangesetOptions;
 
 @end

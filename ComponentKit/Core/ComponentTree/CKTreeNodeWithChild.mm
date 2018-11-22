@@ -46,4 +46,21 @@
   _child = child;
 }
 
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+{
+  [super didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
+  [_child didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
+}
+
+#if DEBUG
+- (NSArray<NSString *> *)debugDescriptionNodes
+{
+  NSMutableArray<NSString *> *debugDescriptionNodes = [NSMutableArray arrayWithArray:[super debugDescriptionNodes]];
+  for (NSString *s in [_child debugDescriptionNodes]) {
+    [debugDescriptionNodes addObject:[@"  " stringByAppendingString:s]];
+  }
+  return debugDescriptionNodes;
+}
+#endif
+
 @end

@@ -112,7 +112,7 @@ struct CKComponentMountInfo {
   if (self = [super init]) {
     // Mark render component in the scope root.
     CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree();
-    CKComponentContextHelper::markRenderComponent();
+    CKComponentContextHelper::didCreateRenderComponent(self);
     _viewConfiguration = view;
     _size = size;
   }
@@ -164,8 +164,12 @@ struct CKComponentMountInfo {
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
+                           analyticsListener:(id<CKAnalyticsListener>)analyticsListener
 {
   CKCAssertWithCategory([NSThread isMainThread], [self class], @"This method must be called on the main thread");
+  if (analyticsListener) {
+    [analyticsListener willMountComponent:self];
+  }
   // Taking a const ref to a temporary extends the lifetime of the temporary to the lifetime of the const ref
   const CKComponentViewConfiguration &viewConfiguration = CK::Component::Accessibility::IsAccessibilityEnabled() ? CK::Component::Accessibility::AccessibleViewConfiguration(_viewConfiguration) : _viewConfiguration;
 
@@ -208,12 +212,18 @@ struct CKComponentMountInfo {
     }
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
+    if (analyticsListener) {
+      [analyticsListener didMountComponent:self];
+    }
     return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
   } else {
     CKCAssertWithCategory(_mountInfo->view == nil, [self class],
                           @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
                           [self class], [_mountInfo->view class], CKComponentBacktraceDescription(generateComponentBacktrace(self)));
     _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, size}};
+    if (analyticsListener) {
+      [analyticsListener didMountComponent:self];
+    }
     return {.mountChildren = YES, .contextForChildren = effectiveContext};
   }
 }

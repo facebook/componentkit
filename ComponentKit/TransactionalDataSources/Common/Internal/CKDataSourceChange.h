@@ -11,12 +11,21 @@
 #import <Foundation/Foundation.h>
 
 @class CKDataSourceAppliedChanges;
+@class CKDataSourceChangeset;
 @class CKDataSourceState;
 
 /** Immutable value object returned from objects adopting CKDataSourceStateModifying. */
 @interface CKDataSourceChange : NSObject
 - (instancetype)initWithState:(CKDataSourceState *)state
-               appliedChanges:(CKDataSourceAppliedChanges *)appliedChanges;
+               appliedChanges:(CKDataSourceAppliedChanges *)appliedChanges
+            deferredChangeset:(CKDataSourceChangeset *)deferredChangeset;
 @property (nonatomic, strong, readonly) CKDataSourceState *state;
 @property (nonatomic, strong, readonly) CKDataSourceAppliedChanges *appliedChanges;
+/**
+ * A changeset that should be applied immediately afterward.
+ *
+ * This is used to support split changesets, where a single changeset is split into multiple
+ * changesets for the purpose of optimizing the performance of the initial render.
+ */
+@property (nonatomic, strong, readonly) CKDataSourceChangeset *deferredChangeset;
 @end

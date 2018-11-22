@@ -14,10 +14,12 @@
 
 - (instancetype)initWithState:(CKDataSourceState *)state
                appliedChanges:(CKDataSourceAppliedChanges *)appliedChanges
+            deferredChangeset:(CKDataSourceChangeset *)deferredChangeset
 {
   if (self = [super init]) {
     _state = state;
     _appliedChanges = appliedChanges;
+    _deferredChangeset = deferredChangeset;
   }
   return self;
 }

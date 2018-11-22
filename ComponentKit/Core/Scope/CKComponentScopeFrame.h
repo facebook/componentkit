@@ -18,6 +18,8 @@
 @class CKComponentScopeHandle;
 @class CKComponentScopeRoot;
 @protocol CKComponentProtocol;
+@protocol CKTreeNodeComponentProtocol;
+@protocol CKTreeNodeProtocol;
 
 struct CKComponentScopeFramePair {
   CKComponentScopeFrame *frame;
@@ -38,8 +40,11 @@ struct CKComponentScopeFramePair {
 
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
 
-+ (void)setAlwaysUseStateKeyCounter:(BOOL)alwaysUseStateKeyCounter;
-
 - (size_t)childrenSize;
+
+// Render support
++ (void)willBuildComponentTreeWithTreeNode:(id<CKTreeNodeProtocol>)node;
++ (void)didBuildComponentTreeWithNode:(id<CKTreeNodeProtocol>)node;
++ (void)didReuseRenderWithTreeNode:(id<CKTreeNodeProtocol>)node;
 
 @end

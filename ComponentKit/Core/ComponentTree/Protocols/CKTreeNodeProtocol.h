@@ -13,20 +13,17 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
-
-typedef int32_t CKTreeNodeIdentifier;
-typedef std::tuple<Class, NSUInteger> CKTreeNodeComponentKey;
-
-// Data structure that holds the ids of the tree nodes, that represent the components
-// on a branch that had a state update.
-typedef std::unordered_set<CKTreeNodeIdentifier> CKTreeNodeDirtyIds;
+#import <ComponentKit/CKTreeNodeTypes.h>
 
 /**
  Params struct for the `buildComponentTree:` method.
  **/
 struct CKBuildComponentTreeParams {
-  // Weak reference to the scope root of the new generation
+  // Weak reference to the scope root of the new generation.
   __weak CKComponentScopeRoot *scopeRoot;
+
+  // Weak reference to the scope root of the previous generation.
+  __weak CKComponentScopeRoot *previousScopeRoot;
 
   // A map of state updates
   const CKComponentStateUpdateMap &stateUpdates;
@@ -40,9 +37,6 @@ struct CKBuildComponentTreeParams {
 
   //  Enable faster props updates optimization for render components.
   BOOL enableFasterPropsUpdates = NO;
-
-  // Enable render support in CKComponentContext
-  BOOL enableContextRenderSupport = NO;
 
   // The trigger for initiating a new generation
   BuildTrigger buildTrigger;
@@ -87,7 +81,6 @@ struct CKBuildComponentTreeParams {
 @property (nonatomic, strong, readonly) id<CKTreeNodeComponentProtocol> component;
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
 @property (nonatomic, assign, readonly) CKTreeNodeIdentifier nodeIdentifier;
-@property (nonatomic, weak, readonly) id<CKTreeNodeProtocol> parent;
 
 /** Returns the component's state */
 - (id)state;
@@ -100,6 +93,15 @@ struct CKBuildComponentTreeParams {
 
 /** Returns whether component requires a scope handle */
 - (BOOL)componentRequiresScopeHandle:(Class<CKTreeNodeComponentProtocol>)component;
+
+/** This method should be called after a node has been reused */
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
+
+#if DEBUG
+/** Returns a multi-line string describing this node and its children nodes */
+- (NSString *)debugDescription;
+- (NSArray<NSString *> *)debugDescriptionNodes;
+#endif
 
 @end
 

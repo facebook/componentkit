@@ -25,7 +25,6 @@
 @property (nonatomic, strong, readwrite) id<CKTreeNodeComponentProtocol> component;
 @property (nonatomic, strong, readwrite) CKComponentScopeHandle *handle;
 @property (nonatomic, assign, readwrite) CKTreeNodeIdentifier nodeIdentifier;
-@property (nonatomic, weak, readwrite) id<CKTreeNodeProtocol> parent;
 @end
 
 @implementation CKTreeNode
@@ -39,11 +38,9 @@
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-
   static int32_t nextGlobalIdentifier = 0;
 
   if (self = [super init]) {
-
     _component = component;
 
     Class componentClass = [component class];
@@ -80,16 +77,17 @@
 
       if (_handle) {
         [component acquireScopeHandle:_handle];
+        [scopeRoot registerComponent:component];
         [_handle resolve];
       }
     }
 
     // Set the link between the parent and the child.
     [parent setChild:self forComponentKey:_componentKey];
-    self.parent = parent;
+    [scopeRoot registerNode:self withParent:parent];
 
     // Set the link between the tree node and the scope handle.
-    [_handle setTreeNode:self];
+    [_handle setTreeNodeIdentifier:_nodeIdentifier];
   }
   return self;
 }
@@ -104,6 +102,22 @@
   return _componentKey;
 }
 
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+{
+  auto const parent = [previousScopeRoot parentForNodeIdentifier:_nodeIdentifier];
+  CKAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");
+  [scopeRoot registerNode:self withParent:parent];
+  if (_handle) {
+    // Register the reused comopnent in the new scope root.
+    [scopeRoot registerComponent:_component];
+    auto const controller = _handle.controller;
+    if (controller) {
+      // Register the controller in the new scope root.
+      [scopeRoot registerComponentController:controller];
+    }
+  }
+}
+
 - (id)initialStateWithComponent:(id<CKTreeNodeComponentProtocol>)component
 {
   // For CKComponent, we bridge a `nil` initial state to `CKTreeNodeEmptyState`.
@@ -116,6 +130,22 @@
 {
   return NO;
 }
+
+#if DEBUG
+/** Returns a multi-line string describing this node and its children nodes */
+- (NSString *)debugDescription
+{
+  return [[self debugDescriptionNodes] componentsJoinedByString:@"\n"];
+}
+
+- (NSArray<NSString *> *)debugDescriptionNodes
+{
+  return @[[NSString stringWithFormat:@"- %@ %d - %@",
+            [_component class],
+            _nodeIdentifier,
+            self]];
+}
+#endif
 
 @end
 

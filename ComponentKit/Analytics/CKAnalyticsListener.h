@@ -51,4 +51,27 @@
 - (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component;
 - (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component;
 
+/**
+  Called before/after building a scoped component
+ */
+- (void)willBuildComponent:(Class)componentClass;
+- (void)didBuildComponent:(Class)componentClass;
+
+/**
+  Called before/after mounting a component
+ */
+- (void)willMountComponent:(CKComponent *)component;
+- (void)didMountComponent:(CKComponent *)component;
+
+/**
+ Called before/after layout a component
+ */
+- (void)willLayoutComponent:(CKComponent *)component;
+- (void)didLayoutComponent:(CKComponent *)component;
+
+/**
+  Will set the value to true on the passed BOOL pointer if the Systrace logging is enabled.
+*/
+- (void)updateSystraceEnabledFlag:(BOOL *)systraceEnabled;
+
 @end

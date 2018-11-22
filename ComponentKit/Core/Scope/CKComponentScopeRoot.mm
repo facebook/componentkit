@@ -12,6 +12,7 @@
 
 #import <libkern/OSAtomic.h>
 
+#import "CKTreeNodeWithChild.h"
 #import "CKComponentProtocol.h"
 #import "CKComponentControllerProtocol.h"
 #import "CKComponentScopeFrameInternal.h"
@@ -29,6 +30,8 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
 
   _CKRegisteredComponentsMap _registeredComponents;
   _CKRegisteredComponentControllerMap _registeredComponentControllers;
+  // A map between a tree node identifier to its parent node.
+  std::unordered_map<CKTreeNodeIdentifier, id<CKTreeNodeProtocol>> _nodesToParentNodes;
 }
 
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
@@ -105,6 +108,24 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
       [hashTable addObject:componentController];
     }
   }
+}
+
+- (void)registerNode:(id<CKTreeNodeProtocol>)node withParent:(id<CKTreeNodeProtocol>)parent
+{
+  CKAssert(parent != nil, @"Cannot register a nil parent node");
+  if (node) {
+    _nodesToParentNodes[node.nodeIdentifier] = parent;
+  }
+}
+
+- (id<CKTreeNodeProtocol>)parentForNodeIdentifier:(CKTreeNodeIdentifier)nodeIdentifier
+{
+  CKAssert(nodeIdentifier != 0, @"Cannot retrieve parent for an empty node");
+  auto const it = _nodesToParentNodes.find(nodeIdentifier);
+  if (it != _nodesToParentNodes.end()) {
+    return it->second;
+  }
+  return nil;
 }
 
 - (void)enumerateComponentsMatchingPredicate:(CKComponentPredicate)predicate

@@ -44,7 +44,7 @@
 
 @end
 
-CKComponent *CKCreateStatelessComponent(CKComponent *component, const char *debugIdentifier)
+CKComponent *CKCreateStatelessComponent(NS_RELEASES_ARGUMENT CKComponent *component, const char *debugIdentifier) NS_RETURNS_RETAINED
 {
 #if CK_ASSERTIONS_ENABLED
   return
