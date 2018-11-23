@@ -44,7 +44,7 @@
     // addLayoutManager after addTextContainer can be surer trigger glyph generation and layout.
     _textStorage = [[NSTextStorage alloc] init];
     [_textStorage addLayoutManager:_layoutManager];
-    // set attributedString at last to be surer textkit can handle NSOriginalFont correctly.
+    // set attributedString at the last, textkit can handle NSOriginalFont correctly.
     if (attributedString) {
       [_textStorage setAttributedString:attributedString];
     }
