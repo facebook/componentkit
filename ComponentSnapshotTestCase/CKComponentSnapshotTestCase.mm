@@ -40,7 +40,7 @@ static CKComponent *_leakyComponent;
   [componentLifecycleTestController attachToView:view];
   return [self compareSnapshotOfView:view
             referenceImagesDirectory:referenceImagesDirectory
-                  imageDiffDirectory:@IMAGE_DIFF_DIR
+                  imageDiffDirectory:[self getImageDiffDirectoryWithDefault:@IMAGE_DIFF_DIR]
                           identifier:identifier
                            tolerance:self.tolerance
                                error:errorPtr];
