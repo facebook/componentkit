@@ -197,7 +197,9 @@
 
 - (void)setTreeNodeIdentifier:(CKTreeNodeIdentifier)treeNodeIdentifier
 {
-  CKAssert(_treeNodeIdentifier == 0, @"_treeNodeIdentifier cannot be set twice");
+  CKAssertWithCategory(_treeNodeIdentifier == 0,
+                       NSStringFromClass([_acquiredComponent class]),
+                       @"_treeNodeIdentifier cannot be set twice");
   _treeNodeIdentifier = treeNodeIdentifier;
 }
 
