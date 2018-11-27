@@ -100,7 +100,7 @@ namespace std {
   };
 }
 
-class CKComponentViewClass;
+struct CKComponentViewClass;
 
 namespace CK {
   namespace Component {

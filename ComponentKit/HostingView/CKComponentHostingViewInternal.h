@@ -23,6 +23,8 @@ struct CKComponentHostingViewOptions {
   BOOL unifyBuildAndLayout;
   /// If set to YES, allows taps to pass though this hosting view to views behind it. Default NO.
   BOOL allowTapPassthrough;
+  /// If set to YES, value from global config will be overridden. Default NO.
+  BOOL forceSizeCacheEnabled;
   // If set to YES, invalidates controllers that are removed whilst the hosting view remains alive. Default NO.
   BOOL invalidateRemovedControllers;
   /// Previously constructed scope root. This is specified in the case where component generation occurs before

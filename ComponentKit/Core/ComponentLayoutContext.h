@@ -16,7 +16,7 @@
 
 namespace CK {
   namespace Component {
-    class LayoutContext;
+    struct LayoutContext;
 
     /** A stack of layout contexts. */
     typedef std::vector<LayoutContext *> LayoutContextStack;

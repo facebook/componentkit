@@ -32,6 +32,7 @@
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
 #import "CKDataSourceModificationHelper.h"
+#import "CKGlobalConfig.h"
 
 struct CKComponentHostingViewInputs {
   CKComponentScopeRoot *scopeRoot;
@@ -42,6 +43,33 @@ struct CKComponentHostingViewInputs {
   bool operator==(const CKComponentHostingViewInputs &i) const {
     return scopeRoot == i.scopeRoot && model == i.model && context == i.context && stateUpdates == i.stateUpdates;
   };
+};
+
+struct CKComponentHostingViewSizeCache {
+  CKComponentHostingViewSizeCache()
+  : _constrainedSize({}), _computedSize({}), _component(nil), _empty(YES) {};
+
+  CKComponentHostingViewSizeCache(const CKSizeRange constrainedSize,
+                                  const CGSize computedSize,
+                                  CKComponent *const component)
+  : _constrainedSize(constrainedSize), _computedSize(computedSize), _component(component), _empty(NO) {};
+
+  CGSize computedSize() {
+    return _computedSize;
+  }
+
+  BOOL isValid(const CKSizeRange constrainedSize, CKComponent *const component) {
+    return _constrainedSize == constrainedSize && _component == component;
+  }
+
+  operator bool() {
+    return !_empty;
+  }
+private:
+  CKSizeRange _constrainedSize;
+  CGSize _computedSize;
+  CKComponent *_component;
+  BOOL _empty;
 };
 
 @interface CKComponentHostingView () <CKComponentStateListener, CKComponentDebugReflowListener>
@@ -70,6 +98,8 @@ struct CKComponentHostingViewInputs {
   BOOL _unifyBuildAndLayout;
   BOOL _allowTapPassthrough;
   BOOL _invalidateRemovedControllers;
+  BOOL _sizeCacheEnabled;
+  CKComponentHostingViewSizeCache _sizeCache;
 }
 @end
 
@@ -149,6 +179,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _animationApplicator = CK::AnimationApplicatorFactory::make();
     _animationPredicates = CKComponentAnimationPredicates();
     _invalidateRemovedControllers = options.invalidateRemovedControllers;
+    _sizeCacheEnabled = options.forceSizeCacheEnabled ?: CKReadGlobalConfig().hostingViewSizeCacheEnabled;
 
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -209,10 +240,26 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   if (!_unifyBuildAndLayout) {
     [self _synchronouslyUpdateComponentIfNeeded];
     const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-    return CKComputeRootComponentLayout(_component, constrainedSize, _pendingInputs.scopeRoot.analyticsListener).size();
+    if (_sizeCacheEnabled && _sizeCache && _sizeCache.isValid(constrainedSize, _component)) {
+      return _sizeCache.computedSize();
+    }
+    const auto computedSize = CKComputeRootComponentLayout(_component,
+                                                           constrainedSize,
+                                                           _pendingInputs.scopeRoot.analyticsListener).size();
+    if (_sizeCacheEnabled) {
+      _sizeCache = {constrainedSize, computedSize, _component};
+    }
+    return computedSize;
   } else {
     const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-    return [self _synchronouslyCalculateLayoutSize:constrainedSize];
+    if (_sizeCacheEnabled && _sizeCache && _sizeCache.isValid(constrainedSize, _component)) {
+      return _sizeCache.computedSize();
+    }
+    const auto computedSize = [self _synchronouslyCalculateLayoutSize:constrainedSize];
+    if (_sizeCacheEnabled) {
+      _sizeCache = {constrainedSize, computedSize, _component};
+    }
+    return computedSize;
   }
 }
 
