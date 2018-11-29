@@ -28,9 +28,6 @@ enum class BuildTrigger {
  A configuration struct for the build component method.
  **/
 struct CKBuildComponentConfig {
-  //  Enable faster state updates optimization for render components.
-  BOOL enableFasterStateUpdates = NO;
-
   //  Enable faster props updates optimization for render components.
   BOOL enableFasterPropsUpdates = NO;
 };

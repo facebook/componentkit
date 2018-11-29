@@ -44,7 +44,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot buildTrigger:buildTrigger];
   auto const component = componentFactory();
-  
+
   // Build the component tree if we have a render component in the hierarchy.
   if (threadScope.newScopeRoot.hasRenderComponentInTree) {
     CKTreeNodeDirtyIds treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger, config);
@@ -58,7 +58,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                              .stateUpdates = stateUpdates,
                              .treeNodeDirtyIds = treeNodeDirtyIds,
                              .buildTrigger = buildTrigger,
-                             .enableFasterStateUpdates = config.enableFasterStateUpdates,
                              .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
                            }
              parentHasStateUpdate:NO];
@@ -86,7 +85,7 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot buildTrigger:buildTrigger];
-  
+
   auto const component = componentFactory();
 
   CKTreeNodeDirtyIds treeNodeDirtyIds;
@@ -96,7 +95,6 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
     .stateUpdates = stateUpdates,
     .treeNodeDirtyIds = treeNodeDirtyIds,
     .buildTrigger = buildTrigger,
-    .enableFasterStateUpdates = config.enableFasterStateUpdates,
     .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
   };
 

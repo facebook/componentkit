@@ -30,16 +30,12 @@
   CKTestRenderComponent *_c;
   CKComponentScopeRoot *_scopeRoot;
 
-  BOOL _enableFasterStateUpdates;
   BOOL _enableFasterPropsUpdates;
 }
 
 - (void)setUpForFasterStateUpdates
 {
-  _enableFasterStateUpdates = YES;
-
   _config = {
-    .enableFasterStateUpdates = _enableFasterStateUpdates,
     .enableFasterPropsUpdates = _enableFasterPropsUpdates,
   };
 
@@ -52,9 +48,8 @@
 - (void)setUpForFasterPropsUpdates:(CKTestRenderComponent *)component
 {
   _enableFasterPropsUpdates = YES;
-
+  
   _config = {
-    .enableFasterStateUpdates = _enableFasterStateUpdates,
     .enableFasterPropsUpdates = _enableFasterPropsUpdates,
   };
 
@@ -106,7 +101,6 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {100, 101}, // Use a random id that represents a fake state update on a different branch.
                     .buildTrigger = BuildTrigger::StateUpdate,
-                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
                     .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:NO];
@@ -133,7 +127,6 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {100}, // Use a random id that represents a state update on a fake parent.
                     .buildTrigger = BuildTrigger::StateUpdate,
-                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
                     .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:YES];
@@ -167,7 +160,6 @@
                       _c.scopeHandle.treeNodeIdentifier
                     },
                     .buildTrigger = BuildTrigger::StateUpdate,
-                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
                     .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:NO];
@@ -203,7 +195,6 @@
                       _c.scopeHandle.treeNodeIdentifier
                     },
                     .buildTrigger = BuildTrigger::StateUpdate,
-                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
                     .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:NO];
@@ -232,7 +223,6 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::PropsUpdate,
-                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
                     .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:NO];
@@ -263,7 +253,6 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::PropsUpdate,
-                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
                     .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:NO];
@@ -294,7 +283,6 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {100}, // Use a random id that represents a state update on a fake parent.
                     .buildTrigger = BuildTrigger::StateUpdate,
-                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
                     .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:YES];
@@ -323,7 +311,6 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::StateUpdate,
-                    .enableFasterStateUpdates = _config.enableFasterStateUpdates,
                     .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:NO];
@@ -332,24 +319,11 @@
   [self verifyComponentIsBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
 }
 
-- (void)test_fasterPropsUpdate_whenBothOptimizationsAreOn
-{
-  _enableFasterStateUpdates = YES;
-  _enableFasterPropsUpdates = YES;
-
-  // Props Updates
-  [self test_fasterPropsUpdate_componentIsNotBeingReused_whenPropsAreNotEqual];
-  [self test_fasterPropsUpdate_componentIsBeingReusedWhenPropsAreEqual];
-  [self test_fasterPropsUpdate_componentIsBeingReused_onStateUpdateWithDirtyParentAndEqualComponents];
-  [self test_fasterPropsUpdate_componentIsBeingReused_onStateUpdateWithNonDirtyComponentAndEqualComponents];
-}
-
 #pragma mark - parentHasStateUpdate
 
 - (void)test_parentHasStateUpdatePropagatedCorrectly
 {
   CKBuildComponentConfig config = {
-    .enableFasterStateUpdates = YES,
     .enableFasterPropsUpdates = YES,
   };
 
@@ -389,7 +363,6 @@
 - (void)test_registerComponentsAndControllersInScopeRootAfterReuse
 {
   CKBuildComponentConfig config = {
-    .enableFasterStateUpdates = YES,
     .enableFasterPropsUpdates = YES,
   };
 
@@ -478,7 +451,6 @@ static const CKBuildComponentTreeParams newTreeParams(CKComponentScopeRoot *scop
     .stateUpdates = {},
     .treeNodeDirtyIds = {},
     .buildTrigger = BuildTrigger::NewTree,
-    .enableFasterStateUpdates = config.enableFasterStateUpdates,
     .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
   };
 }
