@@ -11,6 +11,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'ComponentKit/**/*', 'ComponentTextKit/**/*'
+  s.exclude_files = ['ComponentKit/Info.plist']
   s.frameworks = 'UIKit', 'CoreText'
   s.library = 'c++'
   s.xcconfig = {
