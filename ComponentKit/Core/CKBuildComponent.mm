@@ -42,7 +42,9 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
-  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot buildTrigger:buildTrigger];
+  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
+                                            buildTrigger:buildTrigger
+                                            stateUpdates:stateUpdates];
   auto const component = componentFactory();
 
   // Build the component tree if we have a render component in the hierarchy.
@@ -84,7 +86,9 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
-  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot buildTrigger:buildTrigger];
+  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
+                                            buildTrigger:buildTrigger
+                                            stateUpdates:stateUpdates];
 
   auto const component = componentFactory();
 
