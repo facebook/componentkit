@@ -32,9 +32,6 @@ struct CKBuildComponentTreeParams {
   // @discussion "Dirty nodes" are used to implement optimizations as faster state updates and faster props updates.
   const CKTreeNodeDirtyIds &treeNodeDirtyIds;
 
-  //  Enable faster state updates optimization for render components.
-  BOOL enableFasterStateUpdates = NO;
-
   //  Enable faster props updates optimization for render components.
   BOOL enableFasterPropsUpdates = NO;
 

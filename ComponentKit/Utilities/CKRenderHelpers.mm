@@ -95,26 +95,19 @@ namespace CKRenderInternal {
 
     // State update branch:
     if (params.buildTrigger == BuildTrigger::StateUpdate) {
-      // During state update, we have two possible optimizations:
-      // 1. Faster state update
-      // 2. Faster props update (when the parent is dirty, we handle state update as props update).
-      if (params.enableFasterStateUpdates || params.enableFasterPropsUpdates) {
-        // Check if the tree node is not dirty (not in a branch of a state update).
-        auto const dirtyNodeId = params.treeNodeDirtyIds.find(node.nodeIdentifier);
-        if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
-          // We reuse the component without checking `shouldComponentUpdate:` in the following conditions:
-          // 1. The component is not dirty (on a state update branch)
-          // 2. No direct parent has a state update
-          // 3. `enableFasterStateUpdates` is on
-          if (!parentHasStateUpdate && params.enableFasterStateUpdates) {
-            // Faster state update optimizations.
-            return CKRenderInternal::reusePreviousComponent(component, childComponent, node, parent, previousParent, params);
-          }
-          // We fallback to the props update optimization in 2 cases:
-          // 1. The component is not dirty, but the parent has a state update.
-          // 2. The component is not dirty, the parent has no state update, but `enableFasterStateUpdates` is off.
-          return (params.enableFasterPropsUpdates && CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params));
+      // Check if the tree node is not dirty (not in a branch of a state update).
+      auto const dirtyNodeId = params.treeNodeDirtyIds.find(node.nodeIdentifier);
+      if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
+        // We reuse the component without checking `shouldComponentUpdate:` in the following conditions:
+        // 1. The component is not dirty (on a state update branch)
+        // 2. No direct parent has a state update
+        if (!parentHasStateUpdate) {
+          // Faster state update optimizations.
+          return CKRenderInternal::reusePreviousComponent(component, childComponent, node, parent, previousParent, params);
         }
+        // We fallback to the props update optimization in the follwing case:
+        // - The component is not dirty, but the parent has a state update.
+        return (params.enableFasterPropsUpdates && CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params));
       }
     }
     // Props update branch:
@@ -205,8 +198,6 @@ namespace CKRender {
                        scopeRoot:params.scopeRoot
                        stateUpdates:params.stateUpdates];
 
-    auto const enableReuseComponent = !isBridgeComponent && (params.enableFasterStateUpdates || params.enableFasterPropsUpdates);
-
     if (!isBridgeComponent) {
       CKComponentContextHelper::willBuildComponentTree(component);
     }
@@ -226,7 +217,7 @@ namespace CKRender {
       parentHasStateUpdate = YES;
     }
 
-    if (enableReuseComponent) {
+    if (!isBridgeComponent) {
       [CKComponentScopeFrame willBuildComponentTreeWithTreeNode:node];
     }
 
@@ -243,11 +234,8 @@ namespace CKRender {
            parentHasStateUpdate:parentHasStateUpdate];
     }
 
-    if (enableReuseComponent) {
-      [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
-    }
-
     if (!isBridgeComponent) {
+      [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
       CKComponentContextHelper::didBuildComponentTree(component);
     }
   }
@@ -306,7 +294,7 @@ namespace CKRender {
   auto componentHasStateUpdate(id<CKTreeNodeProtocol> node,
                                id<CKTreeNodeWithChildrenProtocol> previousParent,
                                const CKBuildComponentTreeParams &params) -> BOOL {
-    if (previousParent && params.buildTrigger == BuildTrigger::StateUpdate && (params.enableFasterStateUpdates || params.enableFasterPropsUpdates)) {
+    if (previousParent && params.buildTrigger == BuildTrigger::StateUpdate) {
       auto const scopeHandle = node.handle;
       if (scopeHandle != nil) {
         auto const stateUpdateBlock = params.stateUpdates.find(scopeHandle);
@@ -320,22 +308,20 @@ namespace CKRender {
   {
     CKTreeNodeDirtyIds treeNodesDirtyIds;
 
-    if (config.enableFasterStateUpdates || config.enableFasterPropsUpdates) {
-      // Compute the dirtyNodeIds in case of a state update only.
-      if (buildTrigger == BuildTrigger::StateUpdate) {
-        for (auto const & stateUpdate : stateUpdates) {
-          CKTreeNodeIdentifier treeNodeIdentifier = stateUpdate.first.treeNodeIdentifier;
-          while (treeNodeIdentifier != 0) {
-            auto const insertPair = treeNodesDirtyIds.insert(treeNodeIdentifier);
-            // If we got to a node that is already in the set, we can stop as the path to the root is already dirty.
-            if (insertPair.second == false) {
-              break;
-            }
-            auto const parentNode = [previousRoot parentForNodeIdentifier:treeNodeIdentifier];
-            CKCAssert((parentNode || stateUpdate.first.treeNodeIdentifier == treeNodeIdentifier),
-                      @"The next parent cannot be nil unless it's a root component.");
-            treeNodeIdentifier = parentNode.nodeIdentifier;
+    // Compute the dirtyNodeIds in case of a state update only.
+    if (buildTrigger == BuildTrigger::StateUpdate) {
+      for (auto const & stateUpdate : stateUpdates) {
+        CKTreeNodeIdentifier treeNodeIdentifier = stateUpdate.first.treeNodeIdentifier;
+        while (treeNodeIdentifier != 0) {
+          auto const insertPair = treeNodesDirtyIds.insert(treeNodeIdentifier);
+          // If we got to a node that is already in the set, we can stop as the path to the root is already dirty.
+          if (insertPair.second == false) {
+            break;
           }
+          auto const parentNode = [previousRoot parentForNodeIdentifier:treeNodeIdentifier];
+          CKCAssert((parentNode || stateUpdate.first.treeNodeIdentifier == treeNodeIdentifier),
+                    @"The next parent cannot be nil unless it's a root component.");
+          treeNodeIdentifier = parentNode.nodeIdentifier;
         }
       }
     }

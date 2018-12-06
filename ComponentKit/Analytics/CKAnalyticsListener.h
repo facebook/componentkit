@@ -18,12 +18,22 @@
 @protocol CKAnalyticsListener <NSObject>
 
 /**
- Called before/after building component tree
+ Called before the component tree creation
+
+ @param scopRoot Scope root for component tree. Use that to identify tree between will/didBuild.
+ @param buildTrigger The build trigger (new tree, state update, props updates) for this component tree creation.
+ @param stateUpdates The state updates map for the component tree creation.
+ */
+- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
+                               buildTrigger:(BuildTrigger)buildTrigger
+                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
+
+/**
+ Called after the component tree creation
 
  @param scopRoot Scope root for component tree. Use that to identify tree between will/didBuild
  @param component Root component for created tree
  */
-- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot buildTrigger:(BuildTrigger)buildTrigger;
 - (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component;
 
 /**

@@ -42,7 +42,8 @@
 - (void)test_ChildNode_IsAttached_To_OwnerRenderNode {
   // The 'resolve' method in CKComponentScopeHandle requires a CKThreadLocalComponentScope.
   // We should get rid of this assert once we move to the render method only.
-  CKThreadLocalComponentScope threadScope(nil, {});
+  CKComponentScopeRoot *scoperoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
+  CKThreadLocalComponentScope threadScope(scoperoot, {});
   CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
   TestRenderChildComponentRetainingParameters *child = [TestRenderChildComponentRetainingParameters new];
   CKRenderTreeNodeWithChildren *previousRoot = [[CKRenderTreeNodeWithChildren alloc] init];
