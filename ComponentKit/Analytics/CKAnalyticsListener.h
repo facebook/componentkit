@@ -80,8 +80,8 @@
 - (void)didLayoutComponent:(CKComponent *)component;
 
 /**
-  Will set the value to true on the passed BOOL pointer if the Systrace logging is enabled.
+  Return YES  if the systrace logging is enabled.
 */
-- (void)updateSystraceEnabledFlag:(BOOL *)systraceEnabled;
+- (BOOL)isSystraceEnabled;
 
 @end
