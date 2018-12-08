@@ -179,7 +179,6 @@
   [newSections insertObjects:emptyMutableArrays([[_changeset insertedSections] count]) atIndexes:[_changeset insertedSections]];
 
   // Insert items
-
   const auto buildItem = ^CKDataSourceItem *(id model) {
     return CKBuildDataSourceItem(CKComponentScopeRootWithPredicates(_stateListener,
                                                                     configuration.analyticsListener,
@@ -191,21 +190,16 @@
                                  context,
                                  animationPredicates);
   };
+
   const auto splitChangesetOptions = [configuration splitChangesetOptions];
   NSDictionary<NSIndexPath *, id> *const insertedItems = [_changeset insertedItems];
-  NSArray<NSIndexPath *> *insertedIndexPaths = nil;
-  CKDataSourceChangeset *deferredChangeset = nil;
+  NSDictionary<NSIndexPath *, id> *initialInsertedItems = nil;
+  NSDictionary<NSIndexPath *, id> *deferredInsertedItems = nil;
+
   if (splitChangesetOptions.enabled) {
     // Compute the height of the existing content (after updates and removals) -- if changeset splitting is
     // enabled and the content is already overflowing the viewport, we won't split the changeset.
-    __block CGSize contentSize = CGSizeZero;
-    for (NSArray<CKDataSourceItem *> *items in newSections) {
-      for (CKDataSourceItem *item in items) {
-        const CGSize layoutSize = item.rootLayout.size();
-        contentSize.width += layoutSize.width;
-        contentSize.height += layoutSize.height;
-      }
-    }
+    __block CGSize contentSize = computeTotalHeightOfSections(newSections);
     if (!contentSizeOverflowsViewport(contentSize, splitChangesetOptions.viewportBoundingSize, splitChangesetOptions.layoutAxis)) {
       NSArray<NSIndexPath *> *const sortedIndexPaths = [[insertedItems allKeys] sortedArrayUsingSelector:@selector(compare:)];
       if (indexPathsAreContiguousAtTail(sortedIndexPaths, newSections)) {
@@ -224,29 +218,17 @@
           }
         }];
 
-        insertedIndexPaths = [sortedIndexPaths subarrayWithRange:NSMakeRange(0, endIndex)];
-
-        if (endIndex < sortedIndexPaths.count) {
-          NSArray<NSIndexPath *> *const remainingIndexPaths = [sortedIndexPaths subarrayWithRange:NSMakeRange(endIndex, sortedIndexPaths.count - endIndex)];
-          NSMutableDictionary<NSIndexPath *, id> *const deferredInsertions = [NSMutableDictionary<NSIndexPath *, id> dictionaryWithCapacity:remainingIndexPaths.count];
-          for (NSIndexPath *indexPath in remainingIndexPaths) {
-            deferredInsertions[indexPath] = insertedItems[indexPath];
-          }
-          deferredChangeset = [[CKDataSourceChangeset alloc] initWithUpdatedItems:nil
-                                                                     removedItems:nil
-                                                                  removedSections:nil
-                                                                       movedItems:nil
-                                                                 insertedSections:nil
-                                                                    insertedItems:deferredInsertions];
-        }
+        const CKDataSourceSplitChangesetItems splitChangesetItems = splitItemsAtIndex(endIndex, sortedIndexPaths, insertedItems);
+        initialInsertedItems = splitChangesetItems.initialChangesetItems;
+        deferredInsertedItems = splitChangesetItems.deferredChangesetItems;
       }
     }
   }
-  if (insertedIndexPaths == nil) {
+  if (initialInsertedItems == nil) {
     [insertedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
       insertedItemsBySection[indexPath.section][indexPath.item] = buildItem(model);
     }];
-    insertedIndexPaths = [[_changeset insertedItems] allKeys];
+    initialInsertedItems = insertedItems;
   }
   
   for (const auto &sectionIt : insertedItemsBySection) {
@@ -294,12 +276,12 @@
                                                 removedSections:[_changeset removedSections]
                                                 movedIndexPaths:[_changeset movedItems]
                                                insertedSections:[_changeset insertedSections]
-                                             insertedIndexPaths:[NSSet setWithArray:insertedIndexPaths]
+                                             insertedIndexPaths:[NSSet setWithArray:[initialInsertedItems allKeys]]
                                                        userInfo:_userInfo];
 
   return [[CKDataSourceChange alloc] initWithState:newState
                                     appliedChanges:appliedChanges
-                                 deferredChangeset:deferredChangeset];
+                                 deferredChangeset:createDeferredChangeset(deferredInsertedItems)];
 }
 
 - (NSDictionary *)userInfo
@@ -319,6 +301,62 @@ static NSArray *emptyMutableArrays(NSUInteger count)
     [arrays addObject:[NSMutableArray array]];
   }
   return arrays;
+}
+
+static CGSize computeTotalHeightOfSections(NSArray<NSArray<CKDataSourceItem *> *> *sections)
+{
+  CGSize contentSize = CGSizeZero;
+  for (NSArray<CKDataSourceItem *> *items in sections) {
+    for (CKDataSourceItem *item in items) {
+      const CGSize layoutSize = item.rootLayout.size();
+      contentSize.width += layoutSize.width;
+      contentSize.height += layoutSize.height;
+    }
+  }
+  return contentSize;
+}
+
+struct CKDataSourceSplitChangesetItems {
+  NSDictionary<NSIndexPath *, id> *initialChangesetItems;
+  NSDictionary<NSIndexPath *, id> *deferredChangesetItems;
+};
+
+static CKDataSourceSplitChangesetItems splitItemsAtIndex(NSUInteger splitIndex, NSArray<NSIndexPath *> *indexPaths, NSDictionary<NSIndexPath *, id> *allItems)
+{
+  NSDictionary<NSIndexPath *, id> *initialChangesetItems = nil;
+  NSDictionary<NSIndexPath *, id> *deferredChangesetItems = nil;
+  if (splitIndex < indexPaths.count) {
+    initialChangesetItems = dictionaryWithValuesForKeys(allItems, [indexPaths subarrayWithRange:NSMakeRange(0, splitIndex)]);
+    deferredChangesetItems = dictionaryWithValuesForKeys(allItems, [indexPaths subarrayWithRange:NSMakeRange(splitIndex, indexPaths.count - splitIndex)]);
+  } else {
+    initialChangesetItems = allItems;
+  }
+  return {
+    .initialChangesetItems = initialChangesetItems,
+    .deferredChangesetItems = deferredChangesetItems,
+  };
+}
+
+static NSDictionary *dictionaryWithValuesForKeys(NSDictionary *dictionary, NSArray<id<NSCopying>> *keys)
+{
+  NSMutableDictionary *const subdictionary = [NSMutableDictionary dictionaryWithCapacity:keys.count];
+  for (id<NSCopying> key in keys) {
+    subdictionary[key] = dictionary[key];
+  }
+  return subdictionary;
+}
+
+static CKDataSourceChangeset *createDeferredChangeset(NSDictionary<NSIndexPath *, id> *insertedItems)
+{
+  if (insertedItems == nil) {
+    return nil;
+  }
+  return [[CKDataSourceChangeset alloc] initWithUpdatedItems:nil
+                                                removedItems:nil
+                                             removedSections:nil
+                                                  movedItems:nil
+                                            insertedSections:nil
+                                               insertedItems:insertedItems];
 }
 
 static BOOL contentSizeOverflowsViewport(CGSize contentSize, CGSize viewportSize, CKDataSourceLayoutAxis layoutAxis)
