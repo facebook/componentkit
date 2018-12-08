@@ -284,6 +284,65 @@
   XCTAssertEqualObjects(expectedInsertedIndexPaths, _announcedChanges[1].insertedIndexPaths);
 }
 
+- (void)testDataSourceDoesNotSplitUpdateChangesetsWhenOptionDisabled
+{
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+    .enabled = YES,
+    .viewportBoundingSize = { .width = 10, .height = 20 },
+    .layoutAxis = CKDataSourceLayoutAxisVertical,
+  });
+  [dataSource addListener:self];
+
+  [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  [dataSource applyChangeset:updateChangeset(NSMakeRange(0, 4), {.width = 10, .height = 20}) mode:CKUpdateModeSynchronous userInfo:nil];
+
+  XCTAssertEqual(3, _announcedChanges.count);
+  XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 2)), _announcedChanges[0]);
+  XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(2, 2)), _announcedChanges[1]);
+  XCTAssertEqualObjects(expectedAppliedChangesForUpdate(NSMakeRange(0, 4)), _announcedChanges[2]);
+}
+
+- (void)testDataSourceSplitsUpdateChangesetsWhenOptionEnabled
+{
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+    .enabled = YES,
+    .splitUpdates = YES,
+    .viewportBoundingSize = { .width = 10, .height = 20 },
+    .layoutAxis = CKDataSourceLayoutAxisVertical,
+  });
+  [dataSource addListener:self];
+
+  [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  [dataSource applyChangeset:updateChangeset(NSMakeRange(0, 4), {.width = 10, .height = 20}) mode:CKUpdateModeSynchronous userInfo:nil];
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 4;
+  }));
+  XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 2)), _announcedChanges[0]);
+  XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(2, 2)), _announcedChanges[1]);
+  XCTAssertEqualObjects(expectedAppliedChangesForUpdate(NSMakeRange(0, 1)), _announcedChanges[2]);
+  XCTAssertEqualObjects(expectedAppliedChangesForUpdate(NSMakeRange(1, 3)), _announcedChanges[3]);
+}
+
+- (void)testDataSourceDoesNotSplitUpdateChangesetForOutOfViewportItems
+{
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+    .enabled = YES,
+    .splitUpdates = YES,
+    .viewportBoundingSize = { .width = 10, .height = 20 },
+    .layoutAxis = CKDataSourceLayoutAxisVertical,
+  });
+  [dataSource addListener:self];
+
+  [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  [dataSource applyChangeset:updateChangeset(NSMakeRange(2, 2), {.width = 10, .height = 20}) mode:CKUpdateModeSynchronous userInfo:nil];
+
+  XCTAssertEqual(3, _announcedChanges.count);
+  XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 2)), _announcedChanges[0]);
+  XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(2, 2)), _announcedChanges[1]);
+  XCTAssertEqualObjects(expectedAppliedChangesForUpdate(NSMakeRange(2, 2)), _announcedChanges[2]);
+}
+
 static CKDataSource *dataSourceWithSplitChangesetOptions(Class<CKComponentProvider> componentProvider, const CKDataSourceSplitChangesetOptions &splitChangesetOptions)
 {
   CKDataSourceConfiguration *const config =
@@ -323,6 +382,15 @@ static CKDataSourceChangeset *tailInsertionChangeset(NSRange range, CGSize size)
   return [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] withInsertedItems:items] build];
 }
 
+static CKDataSourceChangeset *updateChangeset(NSRange range, CGSize size)
+{
+  NSMutableDictionary<NSIndexPath *, NSValue *> *const items = [NSMutableDictionary<NSIndexPath *, NSValue *> dictionaryWithCapacity:range.length];
+  for (NSUInteger i = 0; i < range.length; i++) {
+    items[[NSIndexPath indexPathForItem:i + range.location inSection:0]] = [NSValue valueWithCGSize:size];
+  }
+  return [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] withUpdatedItems:items] build];
+}
+
 static CKDataSourceAppliedChanges *expectedAppliedChangesForInsertion(NSRange range)
 {
   NSIndexSet *insertedSections = nil;
@@ -340,6 +408,22 @@ static CKDataSourceAppliedChanges *expectedAppliedChangesForInsertion(NSRange ra
           movedIndexPaths:nil
           insertedSections:insertedSections
           insertedIndexPaths:insertedIndexPaths
+          userInfo:nil];
+}
+
+static CKDataSourceAppliedChanges *expectedAppliedChangesForUpdate(NSRange range)
+{
+  NSMutableSet<NSIndexPath *> *const updatedIndexPaths = [NSMutableSet<NSIndexPath *> setWithCapacity:range.length];
+  for (NSUInteger i = 0; i < range.length; i++) {
+    [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:range.location + i inSection:0]];
+  }
+  return [[CKDataSourceAppliedChanges alloc]
+          initWithUpdatedIndexPaths:updatedIndexPaths
+          removedIndexPaths:nil
+          removedSections:nil
+          movedIndexPaths:nil
+          insertedSections:nil
+          insertedIndexPaths:nil
           userInfo:nil];
 }
 
