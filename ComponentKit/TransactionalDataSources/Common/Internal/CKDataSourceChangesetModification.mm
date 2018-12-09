@@ -140,6 +140,7 @@
 
   __block std::unordered_map<NSUInteger, std::map<NSUInteger, CKDataSourceItem *>> insertedItemsBySection;
   __block std::unordered_map<NSUInteger, NSMutableIndexSet *> removedItemsBySection;
+  NSMutableDictionary<NSIndexPath *, id> *mutableDeferredUpdatedItems = [deferredUpdatedItems mutableCopy];
   void (^addRemovedIndexPath)(NSIndexPath *) = ^(NSIndexPath *ip){
     const auto &element = removedItemsBySection.find(ip.section);
     if (element == removedItemsBySection.end()) {
@@ -147,6 +148,7 @@
     } else {
       [element->second addIndex:ip.item];
     }
+    [mutableDeferredUpdatedItems removeObjectForKey:ip];
   };
 
   // Moves: first record as inserts for later processing
@@ -210,7 +212,13 @@
   }
 
   // Remove sections
-  [newSections removeObjectsAtIndexes:[_changeset removedSections]];
+  NSIndexSet *const removedSections = [_changeset removedSections];
+  [newSections removeObjectsAtIndexes:removedSections];
+  for (NSIndexPath *indexPath in deferredUpdatedItems) {
+    if ([removedSections containsIndex:indexPath.section]) {
+      [mutableDeferredUpdatedItems removeObjectForKey:indexPath];
+    }
+  }
 
   // Insert sections
   [newSections insertObjects:emptyMutableArrays([[_changeset insertedSections] count]) atIndexes:[_changeset insertedSections]];
@@ -314,7 +322,7 @@
 
   return [[CKDataSourceChange alloc] initWithState:newState
                                     appliedChanges:appliedChanges
-                                 deferredChangeset:createDeferredChangeset(deferredInsertedItems, deferredUpdatedItems)];
+                                 deferredChangeset:createDeferredChangeset(deferredInsertedItems, mutableDeferredUpdatedItems)];
 }
 
 - (NSDictionary *)userInfo
