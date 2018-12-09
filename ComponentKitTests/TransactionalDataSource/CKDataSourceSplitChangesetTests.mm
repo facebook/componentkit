@@ -324,25 +324,6 @@
   XCTAssertEqualObjects(expectedAppliedChangesForUpdate(NSMakeRange(1, 3)), _announcedChanges[3]);
 }
 
-- (void)testDataSourceDoesNotSplitUpdateChangesetForOutOfViewportItems
-{
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
-    .enabled = YES,
-    .splitUpdates = YES,
-    .viewportBoundingSize = { .width = 10, .height = 20 },
-    .layoutAxis = CKDataSourceLayoutAxisVertical,
-  });
-  [dataSource addListener:self];
-
-  [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
-  [dataSource applyChangeset:updateChangeset(NSMakeRange(2, 2), {.width = 10, .height = 20}) mode:CKUpdateModeSynchronous userInfo:nil];
-
-  XCTAssertEqual(3, _announcedChanges.count);
-  XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 2)), _announcedChanges[0]);
-  XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(2, 2)), _announcedChanges[1]);
-  XCTAssertEqualObjects(expectedAppliedChangesForUpdate(NSMakeRange(2, 2)), _announcedChanges[2]);
-}
-
 static CKDataSource *dataSourceWithSplitChangesetOptions(Class<CKComponentProvider> componentProvider, const CKDataSourceSplitChangesetOptions &splitChangesetOptions)
 {
   CKDataSourceConfiguration *const config =

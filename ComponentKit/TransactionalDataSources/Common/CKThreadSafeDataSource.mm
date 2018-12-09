@@ -99,6 +99,7 @@
                              initWithChangeset:changeset
                              stateListener:self
                              userInfo:userInfo
+                             isDeferredChangeset:NO
                              qos:qos];
   switch (mode) {
     case CKUpdateModeAsynchronous:

@@ -158,6 +158,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
                                                  stateListener:self
                                                       userInfo:userInfo
+                                           isDeferredChangeset:NO
                                                            qos:qos];
   switch (mode) {
     case CKUpdateModeAsynchronous:
@@ -343,6 +344,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     [[CKDataSourceChangesetModification alloc] initWithChangeset:deferredChangeset
                                                    stateListener:self
                                                         userInfo:[appliedChanges userInfo]
+                                             isDeferredChangeset:YES
                                                              qos:qos];
 
     // This needs to be applied asynchronously to avoid having both the first part of the changeset

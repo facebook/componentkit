@@ -36,6 +36,7 @@
   id<CKComponentStateListener> _stateListener;
   NSDictionary *_userInfo;
   std::mutex _mutex;
+  BOOL _isDeferredChangeset;
   CKDataSourceQOS _qos;
 }
 
@@ -46,18 +47,21 @@
   return [self initWithChangeset:changeset
                    stateListener:stateListener
                         userInfo:userInfo
+             isDeferredChangeset:NO
                              qos:CKDataSourceQOSDefault];
 }
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
+              isDeferredChangeset:(BOOL)isDeferredChangeset
                               qos:(CKDataSourceQOS)qos
 {
   if (self = [super init]) {
     _changeset = changeset;
     _stateListener = stateListener;
     _userInfo = [userInfo copy];
+    _isDeferredChangeset = isDeferredChangeset;
     _qos = qos;
   }
   return self;
@@ -70,6 +74,7 @@
   const CKSizeRange sizeRange = [configuration sizeRange];
   const auto animationPredicates = CKComponentAnimationPredicates();
   const auto splitChangesetOptions = [configuration splitChangesetOptions];
+  const BOOL enableChangesetSplitting = !_isDeferredChangeset && splitChangesetOptions.enabled;
 
   NSMutableArray *newSections = [NSMutableArray array];
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
@@ -81,7 +86,7 @@
   NSDictionary<NSIndexPath *, id> *initialUpdatedItems = nil;
   NSDictionary<NSIndexPath *, id> *deferredUpdatedItems = nil;
 
-  if (splitChangesetOptions.enabled && splitChangesetOptions.splitUpdates) {
+  if (enableChangesetSplitting && splitChangesetOptions.splitUpdates) {
     const CKDataSourceSplitUpdateResult result =
     splitUpdatedItems(newSections,
                       updatedItems,
@@ -222,7 +227,7 @@
   NSDictionary<NSIndexPath *, id> *initialInsertedItems = nil;
   NSDictionary<NSIndexPath *, id> *deferredInsertedItems = nil;
 
-  if (splitChangesetOptions.enabled) {
+  if (enableChangesetSplitting) {
     // Compute the height of the existing content (after updates and removals) -- if changeset splitting is
     // enabled and the content is already overflowing the viewport, we won't split the changeset.
     __block CGSize contentSize = computeTotalHeightOfSections(newSections);
@@ -386,46 +391,32 @@ static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSou
 
   __block CGSize contentSize = CGSizeZero;
   __block BOOL hasContentOverflowedViewport = NO;
-  __block BOOL disableDeferringItems = NO;
   [sections enumerateObjectsUsingBlock:^(NSArray<CKDataSourceItem *> *items, NSUInteger sectionIdx, BOOL *stop) {
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *stop1) {
       NSIndexPath *const indexPath = [NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx];
       id const updatedModel = mutableUpdatedItems[indexPath];
       [mutableUpdatedItems removeObjectForKey:indexPath];
 
-      void (^computeItem)(void) = ^{
-        CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, updatedModel, context, layoutPredicates);
-        computedItems[indexPath] = newItem;
-        initialUpdatedItems[indexPath] = updatedModel;
-        contentSize = addSizeToSize(contentSize, [newItem rootLayout].size());
-      };
-
       if (updatedModel == nil) {
         contentSize = addSizeToSize(contentSize, [item rootLayout].size());
-      } else if (hasContentOverflowedViewport && !disableDeferringItems) {
-        if (initialUpdatedItems.count == 0) {
-          // If there are no items in the initial part of the changeset by the time we reach
-          // the first deferred update, that means the entire changeset is going to be deferred,
-          // which doesn't make any sense -- in that case, we disable deferring the items and
-          // put everything in the initial changeset.
-          disableDeferringItems = YES;
-          computeItem();
-        } else {
-          // If the item was already out of the viewport, we assume that it will still be out
-          // of the viewport once the item is updated. This assumption may not hold true
-          // if the update *reduces* the size of the item enough such that it now is inside
-          // the viewport. In this scenario, we under-render and there is a potential performance
-          // regression.
-          deferredUpdatedItems[indexPath] = updatedModel;
-          contentSize = addSizeToSize(contentSize, [item rootLayout].size());
-        }
+      } else if (hasContentOverflowedViewport) {
+        // If the item was already out of the viewport, we assume that it will still be out
+        // of the viewport once the item is updated. This assumption may not hold true
+        // if the update *reduces* the size of the item enough such that it now is inside
+        // the viewport. In this scenario, we under-render and there is a potential performance
+        // regression.
+        deferredUpdatedItems[indexPath] = updatedModel;
+        contentSize = addSizeToSize(contentSize, [item rootLayout].size());
       } else {
         // If the item was in the viewport before the update, we assume that the item will still
         // be in the viewport after the update. This assumption may not hold true if the update
         // *increases* the size of the item such that it is now outside the viewport. In this
         // scenario, we over-render, which is not a problem since that is not a regression over
         // the original behavior.
-        computeItem();
+        CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, updatedModel, context, layoutPredicates);
+        computedItems[indexPath] = newItem;
+        initialUpdatedItems[indexPath] = updatedModel;
+        contentSize = addSizeToSize(contentSize, [newItem rootLayout].size());
       }
       hasContentOverflowedViewport = contentSizeOverflowsViewport(contentSize, viewportSize, layoutAxis);
     }];

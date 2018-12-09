@@ -25,6 +25,7 @@
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
+              isDeferredChangeset:(BOOL)isDeferredChangeset
                               qos:(CKDataSourceQOS)qos;
 
 @property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;
