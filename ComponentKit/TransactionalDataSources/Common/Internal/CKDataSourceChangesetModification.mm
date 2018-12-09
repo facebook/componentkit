@@ -37,6 +37,7 @@
   NSDictionary *_userInfo;
   std::mutex _mutex;
   BOOL _isDeferredChangeset;
+  CGPoint _contentOffset;
   CKDataSourceQOS _qos;
 }
 
@@ -48,6 +49,7 @@
                    stateListener:stateListener
                         userInfo:userInfo
              isDeferredChangeset:NO
+                   contentOffset:CGPointZero
                              qos:CKDataSourceQOSDefault];
 }
 
@@ -55,6 +57,7 @@
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
               isDeferredChangeset:(BOOL)isDeferredChangeset
+                    contentOffset:(CGPoint)contentOffset
                               qos:(CKDataSourceQOS)qos
 {
   if (self = [super init]) {
@@ -62,6 +65,7 @@
     _stateListener = stateListener;
     _userInfo = [userInfo copy];
     _isDeferredChangeset = isDeferredChangeset;
+    _contentOffset = contentOffset;
     _qos = qos;
   }
   return self;
@@ -98,7 +102,8 @@
                       _userInfo,
                       oldState,
                       splitChangesetOptions.viewportBoundingSize,
-                      splitChangesetOptions.layoutAxis);
+                      splitChangesetOptions.layoutAxis,
+                      _contentOffset);
     initialUpdatedItems = result.splitItems.initialChangesetItems;
     deferredUpdatedItems = result.splitItems.deferredChangesetItems;
     [result.computedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, CKDataSourceItem *item, BOOL *stop) {
@@ -231,7 +236,7 @@
     // Compute the height of the existing content (after updates and removals) -- if changeset splitting is
     // enabled and the content is already overflowing the viewport, we won't split the changeset.
     __block CGSize contentSize = computeTotalHeightOfSections(newSections);
-    if (!contentSizeOverflowsViewport(contentSize, splitChangesetOptions.viewportBoundingSize, splitChangesetOptions.layoutAxis)) {
+    if (!contentSizeOverflowsViewportAtTail(contentSize, _contentOffset, splitChangesetOptions.viewportBoundingSize, splitChangesetOptions.layoutAxis)) {
       NSArray<NSIndexPath *> *const sortedIndexPaths = [[insertedItems allKeys] sortedArrayUsingSelector:@selector(compare:)];
       if (indexPathsAreContiguousAtTail(sortedIndexPaths, newSections)) {
         __block NSUInteger endIndex = sortedIndexPaths.count;
@@ -240,7 +245,7 @@
           insertedItemsBySection[indexPath.section][indexPath.item] = item;
           contentSize = addSizeToSize(contentSize, item.rootLayout.size());
 
-          if (contentSizeOverflowsViewport(contentSize, splitChangesetOptions.viewportBoundingSize, splitChangesetOptions.layoutAxis)) {
+          if (contentSizeOverflowsViewportAtTail(contentSize, _contentOffset,  splitChangesetOptions.viewportBoundingSize, splitChangesetOptions.layoutAxis)) {
             *stop = YES;
             endIndex = idx + 1;
           }
@@ -378,7 +383,8 @@ static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSou
                                                        NSDictionary *userInfo,
                                                        CKDataSourceState *oldState,
                                                        CGSize viewportSize,
-                                                       CKDataSourceLayoutAxis layoutAxis)
+                                                       CKDataSourceLayoutAxis layoutAxis,
+                                                       CGPoint contentOffset)
 {
   if (updatedItems.count == 0) {
     return {};
@@ -390,7 +396,6 @@ static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSou
   NSMutableDictionary<NSIndexPath *, id> *deferredUpdatedItems = [NSMutableDictionary<NSIndexPath *, id> dictionary];
 
   __block CGSize contentSize = CGSizeZero;
-  __block BOOL hasContentOverflowedViewport = NO;
   [sections enumerateObjectsUsingBlock:^(NSArray<CKDataSourceItem *> *items, NSUInteger sectionIdx, BOOL *stop) {
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *stop1) {
       NSIndexPath *const indexPath = [NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx];
@@ -399,7 +404,7 @@ static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSou
 
       if (updatedModel == nil) {
         contentSize = addSizeToSize(contentSize, [item rootLayout].size());
-      } else if (hasContentOverflowedViewport) {
+      } else if (contentSizeOverflowsViewport(contentSize, contentOffset, viewportSize, layoutAxis)) {
         // If the item was already out of the viewport, we assume that it will still be out
         // of the viewport once the item is updated. This assumption may not hold true
         // if the update *reduces* the size of the item enough such that it now is inside
@@ -418,7 +423,6 @@ static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSou
         initialUpdatedItems[indexPath] = updatedModel;
         contentSize = addSizeToSize(contentSize, [newItem rootLayout].size());
       }
-      hasContentOverflowedViewport = contentSizeOverflowsViewport(contentSize, viewportSize, layoutAxis);
     }];
   }];
 
@@ -476,13 +480,23 @@ static CKDataSourceChangeset *createDeferredChangeset(NSDictionary<NSIndexPath *
                                                insertedItems:insertedItems];
 }
 
-static BOOL contentSizeOverflowsViewport(CGSize contentSize, CGSize viewportSize, CKDataSourceLayoutAxis layoutAxis)
+static BOOL contentSizeOverflowsViewport(CGSize contentSize, CGPoint contentOffset, CGSize viewportSize, CKDataSourceLayoutAxis layoutAxis)
 {
   switch (layoutAxis) {
     case CKDataSourceLayoutAxisVertical:
-      return contentSize.height >= viewportSize.height;
+      return (contentSize.height < contentOffset.y) || (contentSize.height >= (contentOffset.y + viewportSize.height));
     case CKDataSourceLayoutAxisHorizontal:
-      return contentSize.width >= viewportSize.width;
+      return (contentSize.width < contentOffset.x) || (contentSize.width >= (contentOffset.x + viewportSize.width));
+  }
+}
+
+static BOOL contentSizeOverflowsViewportAtTail(CGSize contentSize, CGPoint contentOffset, CGSize viewportSize, CKDataSourceLayoutAxis layoutAxis)
+{
+  switch (layoutAxis) {
+    case CKDataSourceLayoutAxisVertical:
+      return contentSize.height >= (contentOffset.y + viewportSize.height);
+    case CKDataSourceLayoutAxisHorizontal:
+      return contentSize.width >= (contentOffset.x + viewportSize.width);
   }
 }
 

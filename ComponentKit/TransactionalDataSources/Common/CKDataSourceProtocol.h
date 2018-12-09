@@ -64,6 +64,11 @@
 - (void)reloadWithMode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo;
 
+/**
+ Content offset used for calculating items that are in the viewport, when changeset splitting is enabled.
+ */
+- (void)setContentOffset:(CGPoint)contentOffset;
+
 - (void)addListener:(id<CKDataSourceListener>)listener;
 - (void)removeListener:(id<CKDataSourceListener>)listener;
 

@@ -65,6 +65,10 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   CK::Mutex _pendingStateUpdatesLock;
 
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
+  BOOL _changesetSplittingEnabled;
+
+  CGPoint _contentOffset;
+  CK::Mutex _contentOffsetLock;
 
   // The queue that modifications are processed on.
   dispatch_queue_t _modificationQueue;
@@ -103,6 +107,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     _dataSourceID = addDataSourceIDToQueue(_taggedQueue);
 #endif
     _pendingAsynchronousModifications = [NSMutableArray array];
+    _changesetSplittingEnabled = configuration.splitChangesetOptions.enabled;
     [CKComponentDebugController registerReflowListener:self];
   }
   return self;
@@ -159,6 +164,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
                                                  stateListener:self
                                                       userInfo:userInfo
                                            isDeferredChangeset:NO
+                                                 contentOffset:self.contentOffset
                                                            qos:qos];
   switch (mode) {
     case CKUpdateModeAsynchronous:
@@ -210,6 +216,24 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
       [self _synchronouslyApplyModification:modification];
       break;
   }
+}
+
+- (CGPoint)contentOffset
+{
+  if (!_changesetSplittingEnabled) {
+    return CGPointZero;
+  }
+  CK::MutexLocker l(_contentOffsetLock);
+  return _contentOffset;
+}
+
+- (void)setContentOffset:(CGPoint)contentOffset
+{
+  if (!_changesetSplittingEnabled) {
+    return;
+  }
+  CK::MutexLocker l(_contentOffsetLock);
+  _contentOffset = contentOffset;
 }
 
 - (void)addListener:(id<CKDataSourceListener>)listener
@@ -345,6 +369,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
                                                    stateListener:self
                                                         userInfo:[appliedChanges userInfo]
                                              isDeferredChangeset:YES
+                                                   contentOffset:self.contentOffset
                                                              qos:qos];
 
     // This needs to be applied asynchronously to avoid having both the first part of the changeset
