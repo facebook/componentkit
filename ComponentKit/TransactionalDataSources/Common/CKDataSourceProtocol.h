@@ -9,6 +9,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CGGeometry.h>
 
 #import <ComponentKit/CKDataSourceQOS.h>
 #import <ComponentKit/CKUpdateMode.h>
