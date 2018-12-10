@@ -31,6 +31,13 @@ typedef NS_ENUM(NSInteger, CKDataSourceLayoutAxis) {
 struct CKDataSourceSplitChangesetOptions {
   /** Whether changeset splitting is enabled. */
   BOOL enabled = NO;
+
+  /**
+   * Whether updates for items not in the viewport should also be split to a
+   * deferred changeset. The default behavior is to only split for insertions.
+   */
+  BOOL splitUpdates = NO;
+
   /**
    * The size of the viewport to use for component layout. Any components that are laid out outside
    * this bounding size are deferred to a second changeset.
