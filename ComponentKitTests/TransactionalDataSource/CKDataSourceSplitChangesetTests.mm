@@ -460,6 +460,106 @@
   XCTAssertEqualObjects(expectedRemovalChanges, _announcedChanges[2]);
 }
 
+- (void)testDataSourceShiftsUpdatedChangesetIndicesWhenItemsAreRemoved
+{
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+    .enabled = YES,
+    .splitUpdates = YES,
+    .viewportBoundingSize = { .width = 10, .height = 20 },
+    .layoutAxis = CKDataSourceLayoutAxisVertical,
+  });
+  [dataSource addListener:self];
+
+  [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  CKDataSourceChangeset *const updateWithRemovalChangeset =
+  [[[[CKDataSourceChangesetBuilder
+      transactionalComponentDataSourceChangeset]
+     withUpdatedItems:@{[NSIndexPath indexPathForItem:2 inSection:0]: [NSValue valueWithCGSize:{.width = 10, .height = 10}]}]
+    withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]]
+   build];
+  [dataSource applyChangeset:updateWithRemovalChangeset mode:CKUpdateModeSynchronous userInfo:nil];
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 4;
+  }));
+  XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(0, 2)), _announcedChanges[0]);
+  XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(2, 2)), _announcedChanges[1]);
+  CKDataSourceAppliedChanges *const expectedRemovalChanges =
+  [[CKDataSourceAppliedChanges alloc]
+   initWithUpdatedIndexPaths:nil
+   removedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+   removedSections:nil
+   movedIndexPaths:nil
+   insertedSections:nil
+   insertedIndexPaths:nil
+   userInfo:nil];
+  XCTAssertEqualObjects(expectedRemovalChanges, _announcedChanges[2]);
+
+  CKDataSourceAppliedChanges *const expectedUpdateChanges =
+  [[CKDataSourceAppliedChanges alloc]
+   initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]
+   removedIndexPaths:nil
+   removedSections:nil
+   movedIndexPaths:nil
+   insertedSections:nil
+   insertedIndexPaths:nil
+   userInfo:nil];
+  XCTAssertEqualObjects(expectedUpdateChanges, _announcedChanges[3]);
+}
+
+- (void)testDataSourceShiftsUpdatedChangesetIndicesWhenSectionsAreRemoved
+{
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+    .enabled = YES,
+    .splitUpdates = YES,
+    .viewportBoundingSize = { .width = 10, .height = 10 },
+    .layoutAxis = CKDataSourceLayoutAxisVertical,
+  });
+  [dataSource addListener:self];
+
+  CKDataSourceChangeset *const insertionChangeset =
+  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withInsertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]]
+    withInsertedItems:@{
+                        [NSIndexPath indexPathForItem:0 inSection:0]: [NSValue valueWithCGSize:{.width = 10, .height = 10}],
+                        [NSIndexPath indexPathForItem:0 inSection:1]: [NSValue valueWithCGSize:{.width = 10, .height = 10}]
+                        }]
+   build];
+  [dataSource applyChangeset:insertionChangeset mode:CKUpdateModeSynchronous userInfo:nil];
+  CKDataSourceChangeset *const updateWithRemovalChangeset =
+  [[[[CKDataSourceChangesetBuilder
+      transactionalComponentDataSourceChangeset]
+     withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:1]: [NSValue valueWithCGSize:{.width = 10, .height = 10}]}]
+    withRemovedSections:[NSIndexSet indexSetWithIndex:0]]
+   build];
+  [dataSource applyChangeset:updateWithRemovalChangeset mode:CKUpdateModeSynchronous userInfo:nil];
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 4;
+  }));
+  CKDataSourceAppliedChanges *const expectedRemovalChanges =
+  [[CKDataSourceAppliedChanges alloc]
+   initWithUpdatedIndexPaths:nil
+   removedIndexPaths:nil
+   removedSections:[NSIndexSet indexSetWithIndex:0]
+   movedIndexPaths:nil
+   insertedSections:nil
+   insertedIndexPaths:nil
+   userInfo:nil];
+  XCTAssertEqualObjects(expectedRemovalChanges, _announcedChanges[2]);
+
+  CKDataSourceAppliedChanges *const expectedUpdateChanges =
+  [[CKDataSourceAppliedChanges alloc]
+   initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
+   removedIndexPaths:nil
+   removedSections:nil
+   movedIndexPaths:nil
+   insertedSections:nil
+   insertedIndexPaths:nil
+   userInfo:nil];
+  XCTAssertEqualObjects(expectedUpdateChanges, _announcedChanges[3]);
+}
+
 static CKDataSource *dataSourceWithSplitChangesetOptions(Class<CKComponentProvider> componentProvider, const CKDataSourceSplitChangesetOptions &splitChangesetOptions)
 {
   CKDataSourceConfiguration *const config =
