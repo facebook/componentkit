@@ -140,7 +140,6 @@
 
   __block std::unordered_map<NSUInteger, std::map<NSUInteger, CKDataSourceItem *>> insertedItemsBySection;
   __block std::unordered_map<NSUInteger, NSMutableIndexSet *> removedItemsBySection;
-  NSMutableDictionary<NSIndexPath *, id> *mutableDeferredUpdatedItems = [deferredUpdatedItems mutableCopy];
   void (^addRemovedIndexPath)(NSIndexPath *) = ^(NSIndexPath *ip){
     const auto &element = removedItemsBySection.find(ip.section);
     if (element == removedItemsBySection.end()) {
@@ -148,7 +147,6 @@
     } else {
       [element->second addIndex:ip.item];
     }
-    [mutableDeferredUpdatedItems removeObjectForKey:ip];
   };
 
   // Moves: first record as inserts for later processing
@@ -184,6 +182,19 @@
   for (NSIndexPath *removedItem in [_changeset removedItems]) {
     addRemovedIndexPath(removedItem);
   }
+  // Used to keep track of the items in each section that have been marked for a deferred update,
+  // once removals are processed we use this to compute the final set of deferred updates using the correct indices.
+  NSMutableArray<NSMutableArray<id> *> *sectionsForDeferredUpdatedItems = nil;
+  if (deferredUpdatedItems.count != 0) {
+    sectionsForDeferredUpdatedItems = [NSMutableArray<NSMutableArray<id> *> arrayWithCapacity:newSections.count];
+    [sectionsForDeferredUpdatedItems addObjectsFromArray:emptyMutableArrays(newSections.count)];
+    [newSections enumerateObjectsUsingBlock:^(NSArray<CKDataSourceItem *> *items, NSUInteger idx, BOOL *stop) {
+      [sectionsForDeferredUpdatedItems[idx] addObjectsFromArray:nullPlaceholderArray(items.count)];
+    }];
+    [deferredUpdatedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id obj, BOOL *stop) {
+      sectionsForDeferredUpdatedItems[indexPath.section][indexPath.item] = obj;
+    }];
+  }
   for (const auto &it : removedItemsBySection) {
     if (it.first >= newSections.count) {
       CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeRemoveRow),
@@ -209,19 +220,19 @@
     }
 #endif
     [section removeObjectsAtIndexes:it.second];
+    [sectionsForDeferredUpdatedItems[it.first] removeObjectsAtIndexes:it.second];
   }
 
   // Remove sections
   NSIndexSet *const removedSections = [_changeset removedSections];
   [newSections removeObjectsAtIndexes:removedSections];
-  for (NSIndexPath *indexPath in deferredUpdatedItems) {
-    if ([removedSections containsIndex:indexPath.section]) {
-      [mutableDeferredUpdatedItems removeObjectForKey:indexPath];
-    }
-  }
+  [sectionsForDeferredUpdatedItems removeObjectsAtIndexes:removedSections];
 
   // Insert sections
   [newSections insertObjects:emptyMutableArrays([[_changeset insertedSections] count]) atIndexes:[_changeset insertedSections]];
+  if (sectionsForDeferredUpdatedItems != nil) {
+    [sectionsForDeferredUpdatedItems insertObjects:emptyMutableArrays([[_changeset insertedSections] count]) atIndexes:[_changeset insertedSections]];
+  }
 
   // Insert items
   const auto buildItem = ^CKDataSourceItem *(id model) {
@@ -305,6 +316,7 @@
     }
 #endif
     [[newSections objectAtIndex:sectionIt.first] insertObjects:items atIndexes:indexes];
+    [[sectionsForDeferredUpdatedItems objectAtIndex:sectionIt.first] insertObjects:items atIndexes:indexes];
   }
 
   CKDataSourceState *newState =
@@ -322,7 +334,7 @@
 
   return [[CKDataSourceChange alloc] initWithState:newState
                                     appliedChanges:appliedChanges
-                                 deferredChangeset:createDeferredChangeset(deferredInsertedItems, mutableDeferredUpdatedItems)];
+                                 deferredChangeset:createDeferredChangeset(deferredInsertedItems, computeDeferredItems(sectionsForDeferredUpdatedItems))];
 }
 
 - (NSDictionary *)userInfo
@@ -342,6 +354,15 @@ static NSArray *emptyMutableArrays(NSUInteger count)
     [arrays addObject:[NSMutableArray array]];
   }
   return arrays;
+}
+
+static NSArray<NSNull *> *nullPlaceholderArray(NSUInteger count)
+{
+  NSMutableArray<NSNull *> *const array = [NSMutableArray<NSNull *> arrayWithCapacity:count];
+  for (NSUInteger i = 0; i < count; i++) {
+    [array addObject:[NSNull null]];
+  }
+  return array;
 }
 
 static CGSize computeTotalHeightOfSections(NSArray<NSArray<CKDataSourceItem *> *> *sections)
@@ -473,6 +494,19 @@ static NSDictionary *dictionaryWithValuesForKeys(NSDictionary *dictionary, NSArr
     subdictionary[key] = dictionary[key];
   }
   return subdictionary;
+}
+
+static NSDictionary<NSIndexPath *, id> *computeDeferredItems(NSArray<NSArray<id> *> *sectionsForDeferredItems)
+{
+  NSMutableDictionary<NSIndexPath *, id> *const deferredItems = [NSMutableDictionary<NSIndexPath *, id> new];
+  [sectionsForDeferredItems enumerateObjectsUsingBlock:^(NSArray<id> *items, NSUInteger sectionIdx, BOOL *stop) {
+    [items enumerateObjectsUsingBlock:^(id obj, NSUInteger itemIdx, BOOL *stop1) {
+      if (obj != [NSNull null]) {
+        deferredItems[[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]] = obj;
+      }
+    }];
+  }];
+  return deferredItems;
 }
 
 static CKDataSourceChangeset *createDeferredChangeset(NSDictionary<NSIndexPath *, id> *insertedItems, NSDictionary<NSIndexPath *, id> *updatedItems)
