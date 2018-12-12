@@ -99,7 +99,10 @@ static CGSize convertCGSizeToYogaRepresentation(const CGSize& size) {
 }
 
 static CKSizeRange convertCKSizeRangeToYogaRepresentation(const CKSizeRange& size) {
-  return CKSizeRange(convertCGSizeToYogaRepresentation(size.min), convertCGSizeToYogaRepresentation(size.max));
+  auto range = CKSizeRange{};
+  range.min = convertCGSizeToYogaRepresentation(size.min);
+  range.max = convertCGSizeToYogaRepresentation(size.max);
+  return range;
 }
 
 static float convertFloatToCKRepresentation(const float& value) {
