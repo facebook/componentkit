@@ -14,10 +14,12 @@
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceInternal.h>
+#import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceAppliedChanges.h>
 #import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceListener.h>
+#import <ComponentKit/CKDataSourceState.h>
 
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
@@ -27,6 +29,7 @@
 
 @implementation CKDataSourceSplitChangesetTests {
   NSMutableArray<CKDataSourceAppliedChanges *> *_announcedChanges;
+  CKDataSourceState *_currentDataSourceState;
 }
 
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
@@ -39,6 +42,7 @@
 {
   [super setUp];
   _announcedChanges = [NSMutableArray<CKDataSourceAppliedChanges *> new];
+  _currentDataSourceState = nil;
 }
 
 - (void)testDataSourceDoesNotSplitChangesetIfChangesetSplittingDisabled
@@ -560,6 +564,43 @@
   XCTAssertEqualObjects(expectedUpdateChanges, _announcedChanges[3]);
 }
 
+- (void)testDataSourceStateAfterApplyingSplitUpdateChangesetContainsCorrectModels
+{
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+    .enabled = YES,
+    .splitUpdates = YES,
+    .viewportBoundingSize = { .width = 10, .height = 10 },
+    .layoutAxis = CKDataSourceLayoutAxisVertical,
+  });
+  [dataSource addListener:self];
+
+  CKDataSourceChangeset *const insertionChangeset =
+  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+     withInsertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]]
+    withInsertedItems:@{
+                        [NSIndexPath indexPathForItem:0 inSection:0]: [NSValue valueWithCGSize:{.width = 10, .height = 10}],
+                        [NSIndexPath indexPathForItem:0 inSection:1]: [NSValue valueWithCGSize:{.width = 10, .height = 10}]
+                        }]
+   build];
+  [dataSource applyChangeset:insertionChangeset mode:CKUpdateModeSynchronous userInfo:nil];
+  CKDataSourceChangeset *const updateWithInsertionChangeset =
+  [[[[CKDataSourceChangesetBuilder
+      transactionalComponentDataSourceChangeset]
+     withInsertedItems:@{[NSIndexPath indexPathForItem:1 inSection:1]: [NSValue valueWithCGSize:{.width = 10, .height = 10}]}]
+     withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:1]: [NSValue valueWithCGSize:{.width = 10, .height = 10}]}]
+   build];
+  [dataSource applyChangeset:updateWithInsertionChangeset mode:CKUpdateModeSynchronous userInfo:nil];
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 4;
+  }));
+
+  NSValue *const expectedModel = [NSValue valueWithCGSize:{.width = 10, .height = 10}];
+  [_currentDataSourceState enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSIndexPath *indexPath, BOOL *stop) {
+    XCTAssertEqualObjects(expectedModel, item.model);
+  }];
+}
+
 static CKDataSource *dataSourceWithSplitChangesetOptions(Class<CKComponentProvider> componentProvider, const CKDataSourceSplitChangesetOptions &splitChangesetOptions)
 {
   CKDataSourceConfiguration *const config =
@@ -657,6 +698,7 @@ static NSValue *sizeValue(CGFloat width, CGFloat height)
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
   [_announcedChanges addObject:changes];
+  _currentDataSourceState = state;
 }
 
 - (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
