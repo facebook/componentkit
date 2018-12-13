@@ -316,7 +316,7 @@
     }
 #endif
     [[newSections objectAtIndex:sectionIt.first] insertObjects:items atIndexes:indexes];
-    [[sectionsForDeferredUpdatedItems objectAtIndex:sectionIt.first] insertObjects:items atIndexes:indexes];
+    [[sectionsForDeferredUpdatedItems objectAtIndex:sectionIt.first] insertObjects:nullPlaceholderArray(indexes.count) atIndexes:indexes];
   }
 
   CKDataSourceState *newState =
