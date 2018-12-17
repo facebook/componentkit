@@ -19,9 +19,6 @@
 #define CKAssert(condition, description, ...) NSAssert(condition, description, ##__VA_ARGS__)
 #define CKCAssert(condition, description, ...) NSCAssert(condition, description, ##__VA_ARGS__)
 
-#define CKConditionalAssert(shouldTestCondition, condition, description, ...) CKAssert((!(shouldTestCondition) || (condition)), (description), ##__VA_ARGS__)
-#define CKCConditionalAssert(shouldTestCondition, condition, description, ...) CKCAssert((!(shouldTestCondition) || (condition)), (description), ##__VA_ARGS__)
-
 #define CKAssertNil(condition, description, ...) CKAssert(!(condition), (description), ##__VA_ARGS__)
 #define CKCAssertNil(condition, description, ...) CKCAssert(!(condition), (description), ##__VA_ARGS__)
 

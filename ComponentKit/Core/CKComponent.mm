@@ -66,11 +66,12 @@ struct CKComponentMountInfo {
 #if DEBUG
 + (void)initialize
 {
-  CKConditionalAssert(self != [CKComponent class],
-                      !CKSubclassOverridesSelector([CKComponent class], self, @selector(layoutThatFits:parentSize:)),
-                      @"%@ overrides -layoutThatFits:parentSize: which is not allowed. Override -computeLayoutThatFits: "
-                      "or -computeLayoutThatFits:restrictedToSize:relativeToParentSize: instead.",
-                      self);
+  if (self != [CKComponent class]) {
+    CKAssert(!CKSubclassOverridesSelector([CKComponent class], self, @selector(layoutThatFits:parentSize:)),
+             @"%@ overrides -layoutThatFits:parentSize: which is not allowed. Override -computeLayoutThatFits: "
+             "or -computeLayoutThatFits:restrictedToSize:relativeToParentSize: instead.",
+             self);
+  }
 }
 #endif
 
