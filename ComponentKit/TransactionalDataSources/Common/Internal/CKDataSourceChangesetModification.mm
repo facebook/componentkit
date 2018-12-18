@@ -37,7 +37,7 @@
   NSDictionary *_userInfo;
   std::mutex _mutex;
   BOOL _isDeferredChangeset;
-  CGPoint _contentOffset;
+  CKDataSourceViewport _viewport;
   CKDataSourceQOS _qos;
 }
 
@@ -49,7 +49,7 @@
                    stateListener:stateListener
                         userInfo:userInfo
              isDeferredChangeset:NO
-                   contentOffset:CGPointZero
+                        viewport:{}
                              qos:CKDataSourceQOSDefault];
 }
 
@@ -57,7 +57,7 @@
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
               isDeferredChangeset:(BOOL)isDeferredChangeset
-                    contentOffset:(CGPoint)contentOffset
+                         viewport:(CKDataSourceViewport)viewport
                               qos:(CKDataSourceQOS)qos
 {
   if (self = [super init]) {
@@ -65,7 +65,7 @@
     _stateListener = stateListener;
     _userInfo = [userInfo copy];
     _isDeferredChangeset = isDeferredChangeset;
-    _contentOffset = contentOffset;
+    _viewport = viewport;
     _qos = qos;
   }
   return self;
@@ -79,6 +79,9 @@
   const auto animationPredicates = CKComponentAnimationPredicates();
   const auto splitChangesetOptions = [configuration splitChangesetOptions];
   const BOOL enableChangesetSplitting = !_isDeferredChangeset && splitChangesetOptions.enabled;
+  const CGSize viewportSize = (_viewport.size.width == 0.0 || _viewport.size.height == 0.0)
+    ? splitChangesetOptions.viewportBoundingSize
+    : _viewport.size;
 
   NSMutableArray *newSections = [NSMutableArray array];
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
@@ -101,9 +104,9 @@
                       _changeset,
                       _userInfo,
                       oldState,
-                      splitChangesetOptions.viewportBoundingSize,
+                      viewportSize,
                       splitChangesetOptions.layoutAxis,
-                      _contentOffset);
+                      _viewport.contentOffset);
     initialUpdatedItems = result.splitItems.initialChangesetItems;
     deferredUpdatedItems = result.splitItems.deferredChangesetItems;
     [result.computedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, CKDataSourceItem *item, BOOL *stop) {
@@ -255,7 +258,7 @@
     // Compute the height of the existing content (after updates and removals) -- if changeset splitting is
     // enabled and the content is already overflowing the viewport, we won't split the changeset.
     __block CGSize contentSize = computeTotalHeightOfSections(newSections);
-    if (!contentSizeOverflowsViewportAtTail(contentSize, _contentOffset, splitChangesetOptions.viewportBoundingSize, splitChangesetOptions.layoutAxis)) {
+    if (!contentSizeOverflowsViewportAtTail(contentSize, _viewport.contentOffset, viewportSize, splitChangesetOptions.layoutAxis)) {
       NSArray<NSIndexPath *> *const sortedIndexPaths = [[insertedItems allKeys] sortedArrayUsingSelector:@selector(compare:)];
       if (indexPathsAreContiguousAtTail(sortedIndexPaths, newSections)) {
         __block NSUInteger endIndex = sortedIndexPaths.count;
@@ -264,7 +267,7 @@
           insertedItemsBySection[indexPath.section][indexPath.item] = item;
           contentSize = addSizeToSize(contentSize, item.rootLayout.size());
 
-          if (contentSizeOverflowsViewportAtTail(contentSize, _contentOffset,  splitChangesetOptions.viewportBoundingSize, splitChangesetOptions.layoutAxis)) {
+          if (contentSizeOverflowsViewportAtTail(contentSize, _viewport.contentOffset, viewportSize, splitChangesetOptions.layoutAxis)) {
             *stop = YES;
             endIndex = idx + 1;
           }

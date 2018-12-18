@@ -9,8 +9,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <CoreGraphics/CGGeometry.h>
 
+#import <ComponentKit/CKDataSourceProtocol.h>
 #import <ComponentKit/CKDataSourceStateModifying.h>
 
 @class CKDataSourceChangeset;
@@ -27,7 +27,7 @@
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
               isDeferredChangeset:(BOOL)isDeferredChangeset
-                    contentOffset:(CGPoint)contentOffset
+                         viewport:(CKDataSourceViewport)viewport
                               qos:(CKDataSourceQOS)qos;
 
 @property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;

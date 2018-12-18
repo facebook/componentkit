@@ -338,7 +338,9 @@
     .layoutAxis = CKDataSourceLayoutAxisVertical,
   });
   [dataSource addListener:self];
-  [dataSource setContentOffset:{ .x = 0, .y = 10 }];
+  [dataSource setViewport:{
+    .contentOffset = { .x = 0, .y = 10 },
+  }];
 
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
   [dataSource applyChangeset:updateChangeset(NSMakeRange(0, 4), {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
