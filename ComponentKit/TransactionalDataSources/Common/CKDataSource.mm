@@ -67,8 +67,8 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
   BOOL _changesetSplittingEnabled;
 
-  CGPoint _contentOffset;
-  CK::Mutex _contentOffsetLock;
+  CKDataSourceViewport _viewport;
+  CK::Mutex _viewportLock;
 
   // The queue that modifications are processed on.
   dispatch_queue_t _modificationQueue;
@@ -164,7 +164,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
                                                  stateListener:self
                                                       userInfo:userInfo
                                            isDeferredChangeset:NO
-                                                 contentOffset:self.contentOffset
+                                                      viewport:self.viewport
                                                            qos:qos];
   switch (mode) {
     case CKUpdateModeAsynchronous:
@@ -218,22 +218,22 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   }
 }
 
-- (CGPoint)contentOffset
+- (CKDataSourceViewport)viewport
 {
   if (!_changesetSplittingEnabled) {
-    return CGPointZero;
+    return {};
   }
-  CK::MutexLocker l(_contentOffsetLock);
-  return _contentOffset;
+  CK::MutexLocker l(_viewportLock);
+  return _viewport;
 }
 
-- (void)setContentOffset:(CGPoint)contentOffset
+- (void)setViewport:(CKDataSourceViewport)viewport
 {
   if (!_changesetSplittingEnabled) {
     return;
   }
-  CK::MutexLocker l(_contentOffsetLock);
-  _contentOffset = contentOffset;
+  CK::MutexLocker l(_viewportLock);
+  _viewport = viewport;
 }
 
 - (void)addListener:(id<CKDataSourceListener>)listener
@@ -369,7 +369,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
                                                    stateListener:self
                                                         userInfo:[appliedChanges userInfo]
                                              isDeferredChangeset:YES
-                                                   contentOffset:self.contentOffset
+                                                        viewport:self.viewport
                                                              qos:qos];
 
     // This needs to be applied asynchronously to avoid having both the first part of the changeset

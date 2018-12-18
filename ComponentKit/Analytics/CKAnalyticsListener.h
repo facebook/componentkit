@@ -12,6 +12,8 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 
+@protocol CKTreeNodeProtocol;
+
 @class CKComponent;
 @class CKComponentScopeRoot;
 
@@ -83,5 +85,19 @@
   Return YES  if the systrace logging is enabled.
 */
 - (BOOL)isSystraceEnabled;
+
+@optional
+
+/** Render Components **/
+
+/**
+ Called after a component tree's node has been reused
+
+ @param node The tree node that has been reused.
+ @param scopeRoot Scope root for component tree.
+ @param previousScopeRoot The previous scope root of the component tree
+ @warning A node is only reused if conforming to the render protocol.
+ */
+- (void)didReuseNode:(id<CKTreeNodeProtocol>)node inScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
 
 @end

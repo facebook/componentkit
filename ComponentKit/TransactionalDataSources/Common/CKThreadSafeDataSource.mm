@@ -100,7 +100,7 @@
                              stateListener:self
                              userInfo:userInfo
                              isDeferredChangeset:NO
-                             contentOffset:CGPointZero
+                             viewport:{}
                              qos:qos];
   switch (mode) {
     case CKUpdateModeAsynchronous:
@@ -144,7 +144,7 @@
   }
 }
 
-- (void)setContentOffset:(CGPoint)contentOffset {}
+- (void)setViewport:(CKDataSourceViewport)viewport {}
 
 - (void)addListener:(id<CKDataSourceListener>)listener
 {

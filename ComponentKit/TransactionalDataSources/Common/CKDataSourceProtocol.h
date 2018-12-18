@@ -21,6 +21,21 @@
 @class CKDataSourceConfiguration;
 @class CKDataSourceState;
 
+/**
+ Describes the currently visible viewport for content rendered by the data source -- this is used to optimize
+ component mounting so that components inside the viewport get mounted as soon as possible.
+ */
+struct CKDataSourceViewport {
+  /**
+   The size of the viewport. This is equivalent to the scroll view's bounds.
+   */
+  CGSize size;
+  /**
+   The point at which the origin of the content view is offset from the origin of the scroll view.
+   */
+  CGPoint contentOffset;
+};
+
 @protocol CKDataSourceProtocol <NSObject>
 
 /** Designated initializer. */
@@ -66,9 +81,9 @@
               userInfo:(NSDictionary *)userInfo;
 
 /**
- Content offset used for calculating items that are in the viewport, when changeset splitting is enabled.
+ Viewport metrics used for calculating items that are in the viewport, when changeset splitting is enabled.
  */
-- (void)setContentOffset:(CGPoint)contentOffset;
+- (void)setViewport:(CKDataSourceViewport)viewport;
 
 - (void)addListener:(id<CKDataSourceListener>)listener;
 - (void)removeListener:(id<CKDataSourceListener>)listener;
