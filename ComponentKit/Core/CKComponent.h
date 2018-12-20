@@ -9,7 +9,7 @@
  */
 
 #ifndef __cplusplus
-#error This file must be compiled as Obj-C++. If you're importing it, you must change your file extension to .mm.
+#error This file must be compiled as Obj-C++. If you are importing it, you must change your file extension to .mm.
 #endif
 
 #import <UIKit/UIKit.h>
