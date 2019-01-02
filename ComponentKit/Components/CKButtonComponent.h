@@ -45,6 +45,8 @@ struct CKButtonComponentOptions {
   CKButtonComponentStateMap<UIImage *> backgroundImages;
   /// The title font the button.
   UIFont *titleFont;
+  /// The title alignment
+  NSTextAlignment titleAlignment;
   /// Whether the button is selected.
   BOOL selected = NO;
   /// Whether the button is enabled.
