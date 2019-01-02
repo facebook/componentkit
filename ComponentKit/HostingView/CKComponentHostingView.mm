@@ -72,7 +72,7 @@ private:
   BOOL _empty;
 };
 
-@interface CKComponentHostingView () <CKComponentStateListener, CKComponentDebugReflowListener>
+@interface CKComponentHostingView () <CKComponentDebugReflowListener>
 {
   Class<CKComponentProvider> _componentProvider;
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;

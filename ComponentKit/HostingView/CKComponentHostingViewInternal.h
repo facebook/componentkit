@@ -13,6 +13,7 @@
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKInspectableView.h>
@@ -44,7 +45,7 @@ struct CKComponentHostingViewOptions {
   CKComponentStateUpdateMap pendingStateUpdates;
 };
 
-@interface CKComponentHostingView () <CKInspectableView>
+@interface CKComponentHostingView () <CKComponentStateListener, CKInspectableView>
 
 /**
  @param componentProvider  provider conforming to CKComponentProvider protocol.
