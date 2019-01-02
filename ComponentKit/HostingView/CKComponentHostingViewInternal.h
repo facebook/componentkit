@@ -8,6 +8,7 @@
  *
  */
 
+#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentHostingView.h>
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKComponentLayout.h>
@@ -68,6 +69,9 @@ struct CKComponentHostingViewOptions {
 
 /** Returns the current scope enumerator provider. Main thread only. */
 - (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider;
+
+/** Applies a result from a component built outside the hosting view. Main thread only. */
+- (void)applyResult:(const CKBuildComponentResult &)result;
 
 /**
  Function for setting default analytics listener that will be used if CKComponentHostingView doesn't have one

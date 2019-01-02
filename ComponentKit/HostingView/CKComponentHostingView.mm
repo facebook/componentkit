@@ -292,6 +292,14 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   [self _setNeedsUpdateWithMode:mode];
 }
 
+- (void)applyResult:(const CKBuildComponentResult &)result
+{
+  CKAssertMainThread();
+  [self _applyResult:result];
+  [self setNeedsLayout];
+  [_delegate componentHostingViewDidInvalidateSize:self];
+}
+
 - (CKComponentLayout)mountedLayout
 {
   return _mountedRootLayout.layout();
