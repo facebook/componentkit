@@ -14,13 +14,15 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeFrame.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 
 class CKThreadLocalComponentScope {
 public:
   CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
-                              const CKComponentStateUpdateMap &updates);
+                              const CKComponentStateUpdateMap &updates,
+                              BuildTrigger trigger = BuildTrigger::NewTree);
   ~CKThreadLocalComponentScope();
 
   /** Returns nullptr if there isn't a current scope */
@@ -39,6 +41,9 @@ public:
 
   /** Enable extra logging from scopes creation to the current CKAnalyticsListener */
   bool enableLogging;
+  
+  /** Build trigger of the corsposnding component creation */
+  BuildTrigger buildTrigger;
 
 private:
   CKThreadLocalComponentScope *const previousScope;

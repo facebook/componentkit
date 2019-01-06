@@ -33,8 +33,9 @@ CKThreadLocalComponentScope *CKThreadLocalComponentScope::currentScope() noexcep
 }
 
 CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
-                                                         const CKComponentStateUpdateMap &updates)
-: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), enableLogging(false), previousScope(CKThreadLocalComponentScope::currentScope())
+                                                         const CKComponentStateUpdateMap &updates,
+                                                         BuildTrigger trigger)
+: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), enableLogging(false), buildTrigger(trigger), previousScope(CKThreadLocalComponentScope::currentScope())
 {
   stack.push({[newScopeRoot rootFrame], [previousScopeRoot rootFrame]});
   keys.push({});

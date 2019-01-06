@@ -38,10 +38,10 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         CKBuildComponentConfig config)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
-
-  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
-  auto const analyticsListener = [previousRoot analyticsListener];
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
+  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates, buildTrigger);
+  
+  auto const analyticsListener = [previousRoot analyticsListener];
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
                                             buildTrigger:buildTrigger
                                             stateUpdates:stateUpdates];
@@ -83,9 +83,10 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
                                                           CKBuildComponentConfig config) {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
 
-  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
-  auto const analyticsListener = [previousRoot analyticsListener];
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
+  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates, buildTrigger);
+  
+  auto const analyticsListener = [previousRoot analyticsListener];
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
                                             buildTrigger:buildTrigger
                                             stateUpdates:stateUpdates];
