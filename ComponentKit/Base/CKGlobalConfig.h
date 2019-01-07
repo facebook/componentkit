@@ -11,7 +11,6 @@
 #import <Foundation/Foundation.h>
 
 struct CKGlobalConfig {
-  BOOL hostingViewSizeCacheEnabled = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

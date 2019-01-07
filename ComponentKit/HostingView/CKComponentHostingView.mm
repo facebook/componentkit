@@ -98,7 +98,6 @@ private:
   BOOL _unifyBuildAndLayout;
   BOOL _allowTapPassthrough;
   BOOL _invalidateRemovedControllers;
-  BOOL _sizeCacheEnabled;
   CKComponentHostingViewSizeCache _sizeCache;
 }
 @end
@@ -179,7 +178,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _animationApplicator = CK::AnimationApplicatorFactory::make();
     _animationPredicates = CKComponentAnimationPredicates();
     _invalidateRemovedControllers = options.invalidateRemovedControllers;
-    _sizeCacheEnabled = options.forceSizeCacheEnabled ?: CKReadGlobalConfig().hostingViewSizeCacheEnabled;
 
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -240,25 +238,21 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   if (!_unifyBuildAndLayout) {
     [self _synchronouslyUpdateComponentIfNeeded];
     const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-    if (_sizeCacheEnabled && _sizeCache && _sizeCache.isValid(constrainedSize, _component)) {
+    if (_sizeCache && _sizeCache.isValid(constrainedSize, _component)) {
       return _sizeCache.computedSize();
     }
     const auto computedSize = CKComputeRootComponentLayout(_component,
                                                            constrainedSize,
                                                            _pendingInputs.scopeRoot.analyticsListener).size();
-    if (_sizeCacheEnabled) {
-      _sizeCache = {constrainedSize, computedSize, _component};
-    }
+    _sizeCache = {constrainedSize, computedSize, _component};
     return computedSize;
   } else {
     const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-    if (_sizeCacheEnabled && _sizeCache && _sizeCache.isValid(constrainedSize, _component)) {
+    if (_sizeCache && _sizeCache.isValid(constrainedSize, _component)) {
       return _sizeCache.computedSize();
     }
     const auto computedSize = [self _synchronouslyCalculateLayoutSize:constrainedSize];
-    if (_sizeCacheEnabled) {
-      _sizeCache = {constrainedSize, computedSize, _component};
-    }
+    _sizeCache = {constrainedSize, computedSize, _component};
     return computedSize;
   }
 }

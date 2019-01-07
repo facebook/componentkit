@@ -33,7 +33,6 @@ typedef struct {
   BOOL invalidateRemovedControllers;
   BOOL embedInFlexbox;
   BOOL embedInTestComponent;
-  BOOL forceSizeCacheEnabled;
   id<CKAnalyticsListener> analyticsListener;
   id<CKComponentSizeRangeProviding> sizeRangeProvider;
 } CKComponentHostingViewConfiguration;
@@ -52,7 +51,6 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
                                                                                      .unifyBuildAndLayout = options.unifyBuildAndLayout,
                                                                                      .allowTapPassthrough = options.allowTapPassthrough,
                                                                                      .invalidateRemovedControllers = options.invalidateRemovedControllers,
-                                                                                     .forceSizeCacheEnabled = options.forceSizeCacheEnabled,
                                                                                    }];
   view.bounds = CGRectMake(0, 0, 100, 100);
   [view updateModel:model mode:CKUpdateModeSynchronous];
@@ -319,22 +317,10 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
   XCTAssertTrue(shouldBeRoot == view.containerView, @"hitTest should return the hosting view or root view");
 }
 
-- (void)testSizeCacheEnabled_CachedSizeIsNotUsedIfSizeCacheIsDisabled
+- (void)testSizeCache_CachedSizeIsUsedIfConstrainedSizesAreSame
 {
   CKComponentHostingView *view = hostingView({
     .analyticsListener = self,
-  });
-  const auto constrainedSize = CGSizeMake(100, 100);
-  [view sizeThatFits:constrainedSize];
-  [view sizeThatFits:constrainedSize];
-  XCTAssertEqual(_willLayoutComponentTreeHitCount, 3);
-}
-
-- (void)testSizeCacheEnabled_CachedSizeIsUsedIfConstrainedSizesAreSame
-{
-  CKComponentHostingView *view = hostingView({
-    .analyticsListener = self,
-    .forceSizeCacheEnabled = YES,
   });
   const auto constrainedSize = CGSizeMake(100, 100);
   [view sizeThatFits:constrainedSize];
@@ -342,11 +328,10 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
   XCTAssertEqual(_willLayoutComponentTreeHitCount, 2);
 }
 
-- (void)testSizeCacheEnabled_CachedSizeIsNotUsedIfConstrainedSizesAreDifferent
+- (void)testSizeCache_CachedSizeIsNotUsedIfConstrainedSizesAreDifferent
 {
   CKComponentHostingView *view = hostingView({
     .analyticsListener = self,
-    .forceSizeCacheEnabled = YES,
     .sizeRangeProvider = [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibilityNone],
   });
   const auto constrainedSize1 = CGSizeMake(100, 100);
@@ -356,11 +341,10 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
   XCTAssertEqual(_willLayoutComponentTreeHitCount, 3);
 }
 
-- (void)testSizeCacheEnabled_CacheSizeIsNotUsedIfComponentIsUpdated
+- (void)testSizeCache_CacheSizeIsNotUsedIfComponentIsUpdated
 {
   CKComponentHostingView *view = hostingView({
     .analyticsListener = self,
-    .forceSizeCacheEnabled = YES,
   });
   const auto constrainedSize = CGSizeMake(100, 100);
   [view sizeThatFits:constrainedSize];
