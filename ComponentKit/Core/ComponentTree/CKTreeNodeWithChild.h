@@ -14,7 +14,7 @@
 /**
  This object represents a node with a single child in the component tree.
 
- Each parent component with a single child will have CKTreeNodeWithChild.
+ Each component with a single child will have CKTreeNodeWithChild.
  */
 
 @interface CKTreeNodeWithChild : CKTreeNode <CKTreeNodeWithChildrenProtocol>

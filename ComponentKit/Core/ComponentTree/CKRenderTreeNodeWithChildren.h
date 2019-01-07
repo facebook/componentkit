@@ -12,9 +12,11 @@
 #import "CKTreeNodeProtocol.h"
 
 /**
- This object represents a render component with multi children.
+ This object represents a render component with multiple children in the component tree.
 
- Each owner component will have a corresponding CKRenderTreeNodeWithChildren.
+ Each render component with multiplpe children will have a CKRenderTreeNodeWithChildren.
+
+ For more information about render components see: CKRenderComponentProtocol.h
  */
 
 @interface CKRenderTreeNodeWithChildren : CKTreeNodeWithChildren

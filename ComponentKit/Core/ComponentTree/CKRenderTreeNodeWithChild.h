@@ -12,9 +12,9 @@
 #import "CKTreeNodeProtocol.h"
 
 /**
- This object represents a node with a single child in the component tree.
+ This object represents a render component with a single child in the component tree.
 
- Each render component will have a corresponding CKRenderTreeNodeWithChild.
+ Each render component with single child will have a corresponding CKRenderTreeNodeWithChild.
 
  For more information about render components see: CKRenderComponentProtocol.h
  */

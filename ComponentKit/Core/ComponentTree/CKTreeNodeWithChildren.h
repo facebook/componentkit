@@ -12,7 +12,7 @@
 #import "CKTreeNodeProtocol.h"
 
 /**
- This object represents an owner node (has children) in the component tree.
+ This object represents a node with children in the component tree.
 
  Each component with multiple children will have a corresponding CKTreeNodeWithChildren.
  */
