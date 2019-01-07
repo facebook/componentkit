@@ -15,7 +15,6 @@
 #import <stack>
 
 static NSString *const kThreadDictionaryKey = @"CKComponentContext";
-static NSString *const kThreadRenderSupportKey = @"CKRenderComponentContextSupport";
 
 struct CKComponentContextStackItem {
   NSMutableDictionary *dictionary;
