@@ -40,7 +40,7 @@ public:
   std::stack<std::vector<id<NSObject>>> keys;
 
   /** Enable extra logging from scopes creation to the current CKAnalyticsListener */
-  bool enableLogging;
+  bool isSystraceEnabled;
   
   /** Build trigger of the corsposnding component creation */
   BuildTrigger buildTrigger;

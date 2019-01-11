@@ -205,6 +205,11 @@ namespace CKRender {
 
     if (!isBridgeComponent) {
       CKComponentContextHelper::willBuildComponentTree(component);
+
+      // Systrace logging
+      if (params.isSystraceEnabled) {
+        [params.scopeRoot.analyticsListener willBuildComponent:component.class];
+      }
     }
 
     // Faster state/props optimizations require previous parent.
@@ -213,6 +218,11 @@ namespace CKRender {
 
       if (didReuseComponent != nullptr) {
         *didReuseComponent = YES;
+      }
+
+      // Systrace logging
+      if (params.isSystraceEnabled) {
+        [params.scopeRoot.analyticsListener didBuildComponent:component.class];
       }
       return;
     }
@@ -242,6 +252,11 @@ namespace CKRender {
     if (!isBridgeComponent) {
       [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
       CKComponentContextHelper::didBuildComponentTree(component);
+
+      // Systrace logging
+      if (params.isSystraceEnabled) {
+        [params.scopeRoot.analyticsListener didBuildComponent:component.class];
+      }
     }
   }
 

@@ -61,6 +61,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                              .treeNodeDirtyIds = treeNodeDirtyIds,
                              .buildTrigger = buildTrigger,
                              .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
+                             .isSystraceEnabled = threadScope.isSystraceEnabled,
                            }
              parentHasStateUpdate:NO];
   }
@@ -101,6 +102,7 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
     .treeNodeDirtyIds = treeNodeDirtyIds,
     .buildTrigger = buildTrigger,
     .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
+    .isSystraceEnabled = threadScope.isSystraceEnabled,
   };
 
   // Build the component tree if we have a render component in the hierarchy.

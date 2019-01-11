@@ -37,6 +37,9 @@ struct CKBuildComponentTreeParams {
 
   // The trigger for initiating a new generation
   BuildTrigger buildTrigger;
+
+  /** Enable extra logging from scopes creation to the current CKAnalyticsListener */
+  BOOL isSystraceEnabled;
 };
 
 @protocol CKTreeNodeWithChildrenProtocol;

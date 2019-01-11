@@ -25,7 +25,7 @@ CKComponentPerfScope::CKComponentPerfScope(Class __unsafe_unretained componentCl
 {
   auto const threadLocalScope = CKThreadLocalComponentScope::currentScope();
 
-  if (threadLocalScope != nullptr && threadLocalScope->enableLogging) {
+  if (threadLocalScope != nullptr && threadLocalScope->isSystraceEnabled) {
     auto const analyticsListener = [threadLocalScope->newScopeRoot analyticsListener];
     if (analyticsListener)
     {

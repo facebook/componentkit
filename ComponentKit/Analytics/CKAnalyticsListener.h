@@ -64,19 +64,25 @@
 - (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component;
 
 /**
-  Called before/after building a scoped component
+  Called before/after building a scoped component.
+
+  Will be called only when `isSystraceEnabled` is enabled.
  */
 - (void)willBuildComponent:(Class)componentClass;
 - (void)didBuildComponent:(Class)componentClass;
 
 /**
-  Called before/after mounting a component
+  Called before/after mounting a component.
+
+  Will be called only when `isSystraceEnabled` is enabled.
  */
 - (void)willMountComponent:(CKComponent *)component;
 - (void)didMountComponent:(CKComponent *)component;
 
 /**
- Called before/after layout a component
+ Called before/after layout a component.
+
+ Will be called only when `isSystraceEnabled` is enabled.
  */
 - (void)willLayoutComponent:(CKComponent *)component;
 - (void)didLayoutComponent:(CKComponent *)component;

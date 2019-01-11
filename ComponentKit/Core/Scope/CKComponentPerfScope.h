@@ -21,7 +21,7 @@
 
  Notes:
  * If your component already has CKComponentScope, please DON'T use this one; it DOES the same under the hood.
- * It works only when `enableLogging` is on in the CKThreadLocalComponentScope.
+ * It only works when `isSystraceEnabled` is on in the CKThreadLocalComponentScope.
 
  Example usage:
  + (instancetype)newWithModel:(Model *)model
