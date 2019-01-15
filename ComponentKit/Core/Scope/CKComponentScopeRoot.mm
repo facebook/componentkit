@@ -164,6 +164,13 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
 }
 
 #if DEBUG
+// In DEBUG, we'd want to always build the component tree (CKTreeNode).
+// This can help firing relevant asserts to Render component and avoid fragmentation while debugging.
+- (BOOL)hasRenderComponentInTree
+{
+  return YES;
+}
+
 - (NSString *)debugDescription
 {
   return [[_rootFrame debugDescriptionComponents] componentsJoinedByString:@"\n"];
