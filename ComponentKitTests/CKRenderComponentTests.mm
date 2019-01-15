@@ -69,8 +69,8 @@
   CKThreadLocalComponentScope threadScope(_scopeRoot, {});
   auto const c2 = [CKTestRenderComponent new];
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
-  [c2 buildComponentTree:scopeRoot2.rootNode
-          previousParent:_scopeRoot.rootNode
+  [c2 buildComponentTree:scopeRoot2.rootNode.node()
+          previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
                     .stateUpdates = {},
@@ -93,8 +93,8 @@
   auto const c2 = [CKTestRenderComponent new];
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
-  [c2 buildComponentTree:scopeRoot2.rootNode
-          previousParent:_scopeRoot.rootNode
+  [c2 buildComponentTree:scopeRoot2.rootNode.node()
+          previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
                     .previousScopeRoot = _scopeRoot,
@@ -120,8 +120,8 @@
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   auto const c2 = [CKTestRenderComponent new];
-  [c2 buildComponentTree:scopeRoot2.rootNode
-          previousParent:_scopeRoot.rootNode
+  [c2 buildComponentTree:scopeRoot2.rootNode.node()
+          previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
                     .stateUpdates = {},
@@ -151,8 +151,8 @@
   stateUpdates[_c.scopeHandle] = {^id(id s) { return s; }};
 
   auto const c2 = [CKTestRenderComponent new];
-  [c2 buildComponentTree:scopeRoot2.rootNode
-          previousParent:_scopeRoot.rootNode
+  [c2 buildComponentTree:scopeRoot2.rootNode.node()
+          previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
                     .stateUpdates = stateUpdates,
@@ -186,8 +186,8 @@
 
   auto const c2 = [CKTestRenderComponent new];
 
-  [c2 buildComponentTree:scopeRoot2.rootNode
-          previousParent:_scopeRoot.rootNode
+  [c2 buildComponentTree:scopeRoot2.rootNode.node()
+          previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
                     .stateUpdates = stateUpdates,
@@ -216,8 +216,8 @@
   auto const c2 = [CKTestRenderComponent newWithIdentifier:2];
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
-  [c2 buildComponentTree:scopeRoot2.rootNode
-          previousParent:_scopeRoot.rootNode
+  [c2 buildComponentTree:scopeRoot2.rootNode.node()
+          previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
                     .stateUpdates = {},
@@ -245,8 +245,8 @@
   auto const c2 = [CKTestRenderComponent newWithIdentifier:componentIdentifier];
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
-  [c2 buildComponentTree:scopeRoot2.rootNode
-          previousParent:_scopeRoot.rootNode
+  [c2 buildComponentTree:scopeRoot2.rootNode.node()
+          previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
                     .previousScopeRoot = _scopeRoot,
@@ -275,8 +275,8 @@
   auto const c2 = [CKTestRenderComponent newWithIdentifier:componentIdentifier];
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
-  [c2 buildComponentTree:scopeRoot2.rootNode
-          previousParent:_scopeRoot.rootNode
+  [c2 buildComponentTree:scopeRoot2.rootNode.node()
+          previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
                     .previousScopeRoot = _scopeRoot,
@@ -303,8 +303,8 @@
   auto const c2 = [CKTestRenderComponent newWithIdentifier:componentIdentifier];
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
-  [c2 buildComponentTree:scopeRoot2.rootNode
-          previousParent:_scopeRoot.rootNode
+  [c2 buildComponentTree:scopeRoot2.rootNode.node()
+          previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
                     .previousScopeRoot = _scopeRoot,
@@ -411,8 +411,8 @@ static BOOL CKComponentControllerRenderTestsPredicate(id<CKComponentControllerPr
                               scopeRoot:(CKComponentScopeRoot *)scopeRoot
                              scopeRoot2:(CKComponentScopeRoot *)scopeRoot2
 {
-  CKTreeNodeWithChild *childNode = (CKTreeNodeWithChild *)scopeRoot.rootNode.children[0];
-  CKTreeNodeWithChild *childNode2 = (CKTreeNodeWithChild *)scopeRoot2.rootNode.children[0];
+  CKTreeNodeWithChild *childNode = (CKTreeNodeWithChild *)scopeRoot.rootNode.node().children[0];
+  CKTreeNodeWithChild *childNode2 = (CKTreeNodeWithChild *)scopeRoot2.rootNode.node().children[0];
   XCTAssertEqual(c.renderCalledCounter, 1);
   XCTAssertEqual(c2.renderCalledCounter, 1);
   XCTAssertFalse(c2.didReuseComponent);
@@ -425,8 +425,8 @@ static BOOL CKComponentControllerRenderTestsPredicate(id<CKComponentControllerPr
                            scopeRoot:(CKComponentScopeRoot *)scopeRoot
                           scopeRoot2:(CKComponentScopeRoot *)scopeRoot2
 {
-  CKTreeNodeWithChild *childNode = (CKTreeNodeWithChild *)scopeRoot.rootNode.children[0];
-  CKTreeNodeWithChild *childNode2 = (CKTreeNodeWithChild *)scopeRoot2.rootNode.children[0];
+  CKTreeNodeWithChild *childNode = (CKTreeNodeWithChild *)scopeRoot.rootNode.node().children[0];
+  CKTreeNodeWithChild *childNode2 = (CKTreeNodeWithChild *)scopeRoot2.rootNode.node().children[0];
   XCTAssertEqual(c.renderCalledCounter, 1);
   XCTAssertEqual(c2.renderCalledCounter, 0);
   XCTAssertTrue(c2.didReuseComponent);
@@ -458,7 +458,7 @@ static const CKBuildComponentTreeParams newTreeParams(CKComponentScopeRoot *scop
 static CKComponentScopeRoot *createNewTreeWithComponentAndReturnScopeRoot(const CKBuildComponentConfig &config, CKTestRenderComponent *c) {
   CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
   const CKBuildComponentTreeParams params = newTreeParams(threadScope.newScopeRoot, config);
-  [c buildComponentTree:threadScope.newScopeRoot.rootNode
+  [c buildComponentTree:threadScope.newScopeRoot.rootNode.node()
          previousParent:nil
                  params:params
    parentHasStateUpdate:NO];

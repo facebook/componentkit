@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKRootTreeNode.h>
 
 @protocol CKRenderWithChildComponentProtocol;
 @protocol CKRenderWithChildrenComponentProtocol;
@@ -124,7 +125,7 @@ namespace CKRender {
    Mark all the dirty nodes, on a path from an existing node up to the root node in the passed CKTreeNodeDirtyIds set.
    */
   auto markTreeNodeDirtyIdsFromNodeUntilRoot(CKTreeNodeIdentifier nodeIdentifier,
-                                             CKComponentScopeRoot *previousRoot,
+                                             CKRootTreeNode &previousRootNode,
                                              CKTreeNodeDirtyIds &treeNodesDirtyIds) -> void;
   
   /**

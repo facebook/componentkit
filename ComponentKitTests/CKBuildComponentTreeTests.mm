@@ -49,10 +49,11 @@
 
 - (void)test_buildComponentTree_onCKComponent
 {
-  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
+  auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
+  auto const root = scopeRoot.rootNode.node();
   CKComponent *c = [CKComponent newWithView:{} size:{}];
   [c buildComponentTree:root previousParent:nil params:{
-    .scopeRoot = nil,
+    .scopeRoot = scopeRoot,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::NewTree,
     .treeNodeDirtyIds = {},
@@ -62,10 +63,11 @@
   XCTAssertEqual(root.children[0].component, c);
 
   // Simulate a second tree creation.
-  CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
+  auto const scopeRoot2 = [scopeRoot newRoot];
+  auto const root2 = scopeRoot2.rootNode.node();
   CKComponent *c2 = [CKComponent newWithView:{} size:{}];
   [c2 buildComponentTree:root2 previousParent:root params:{
-    .scopeRoot = nil,
+    .scopeRoot = scopeRoot2,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::PropsUpdate,
     .treeNodeDirtyIds = {},
@@ -77,11 +79,12 @@
 
 - (void)test_buildComponentTree_onCKRenderComponent
 {
-  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
+  auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
+  auto const root = scopeRoot.rootNode.node();
   CKComponent *c = [CKComponent newWithView:{} size:{}];
   CKRenderComponent *renderComponent = [CKComponentTreeTestComponent_Render newWithComponent:c];
   [renderComponent buildComponentTree:root previousParent:nil params:{
-    .scopeRoot = nil,
+    .scopeRoot = scopeRoot,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::NewTree,
     .treeNodeDirtyIds = {},
@@ -103,11 +106,12 @@
   }
 
   // Simulate a second tree creation.
-  CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
+  auto const scopeRoot2 = [scopeRoot newRoot];
+  auto const root2 = scopeRoot2.rootNode.node();
   CKComponent *c2 = [CKComponent newWithView:{} size:{}];
   CKRenderComponent *renderComponent2 = [CKComponentTreeTestComponent_Render newWithComponent:c2];
   [renderComponent2 buildComponentTree:root2 previousParent:root params:{
-    .scopeRoot = nil,
+    .scopeRoot = scopeRoot2,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::PropsUpdate,
     .treeNodeDirtyIds = {},
@@ -119,8 +123,8 @@
 
 - (void)test_buildComponentTree_onCKRenderWithChildrenComponent
 {
-  CKThreadLocalComponentScope threadScope(nil, {});
-  auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
+  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
+  auto const scopeRoot = threadScope.newScopeRoot;
   CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
   CKComponent *c10 = [CKComponent newWithView:{} size:{}];
   CKComponent *c11 = [CKComponent newWithView:{} size:{}];
@@ -148,12 +152,13 @@
   }
 
   // Simulate a second tree creation.
-  CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
+  auto const scopeRoot2 = [scopeRoot newRoot];
+  auto const root2 = scopeRoot2.rootNode.node();
   CKComponent *c20 = [CKComponent newWithView:{} size:{}];
   CKComponent *c21 = [CKComponent newWithView:{} size:{}];
   CKRenderWithChildrenComponent *renderWithChidlrenComponent2 = [CKTestRenderWithChildrenComponent newWithChildren:{c20, c21}];
   [renderWithChidlrenComponent2 buildComponentTree:root2 previousParent:root params:{
-    .scopeRoot = [scopeRoot newRoot],
+    .scopeRoot = scopeRoot2,
     .previousScopeRoot = scopeRoot,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::PropsUpdate,
@@ -235,8 +240,8 @@
     rootComponent.scopeHandle.treeNodeIdentifier,
   };
 
-  auto const child1ParentNode = [buildResultsAfterStateUpdate.scopeRoot parentForNodeIdentifier:child1.scopeHandle.treeNodeIdentifier];
-  auto const child1ChildComponentParentNode = [buildResultsAfterStateUpdate.scopeRoot parentForNodeIdentifier:child1.childComponent.scopeHandle.treeNodeIdentifier];
+  auto const child1ParentNode = buildResultsAfterStateUpdate.scopeRoot.rootNode.parentForNodeIdentifier(child1.scopeHandle.treeNodeIdentifier);
+  auto const child1ChildComponentParentNode = buildResultsAfterStateUpdate.scopeRoot.rootNode.parentForNodeIdentifier(child1.childComponent.scopeHandle.treeNodeIdentifier);
   XCTAssertTrue(child1ParentNode.component == rootComponent);
   XCTAssertTrue(child1ChildComponentParentNode.component == child1);
   XCTAssertTrue(dirtyNodeIds == expectedDirtyNodeIds);

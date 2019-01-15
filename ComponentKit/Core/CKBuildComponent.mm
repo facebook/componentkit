@@ -25,7 +25,7 @@
 namespace CKBuildComponentHelpers {
   auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> BuildTrigger
   {
-    if (scopeRoot.rootFrame.childrenSize > 0 || scopeRoot.rootNode.childrenSize > 0) {
+    if (scopeRoot.rootFrame.childrenSize > 0 || !scopeRoot.rootNode.isEmpty()) {
       return (stateUpdates.size() > 0) ? BuildTrigger::StateUpdate : BuildTrigger::PropsUpdate;
     }
     return BuildTrigger::NewTree;
@@ -52,8 +52,8 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
     CKTreeNodeDirtyIds treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger);
 
     // Build the component tree from the render function.
-    [component buildComponentTree:threadScope.newScopeRoot.rootNode
-                   previousParent:previousRoot.rootNode
+    [component buildComponentTree:threadScope.newScopeRoot.rootNode.node()
+                   previousParent:previousRoot.rootNode.node()
                            params:{
                              .scopeRoot = threadScope.newScopeRoot,
                              .previousScopeRoot = previousRoot,
@@ -110,8 +110,8 @@ CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *
     treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger);
 
     // Build the component tree from the render function.
-    [component buildComponentTree:threadScope.newScopeRoot.rootNode
-                   previousParent:previousRoot.rootNode
+    [component buildComponentTree:threadScope.newScopeRoot.rootNode.node()
+                   previousParent:previousRoot.rootNode.node()
                            params:params
      parentHasStateUpdate:NO];
   }

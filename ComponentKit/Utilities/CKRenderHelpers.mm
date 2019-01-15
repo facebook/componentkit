@@ -34,7 +34,7 @@ namespace CKRenderInternal {
     // Save the reused node in the scope root for the next component creation.
     [reusedChild didReuseInScopeRoot:params.scopeRoot fromPreviousScopeRoot:params.previousScopeRoot];
     // Update the new parent in the new scope root
-    [params.scopeRoot registerNode:reusedChild withParent:node];
+    params.scopeRoot.rootNode.registerNode(reusedChild, node);
 
     // Update the scope frame of the reuse of this component in order to transfer the render scope frame.
     [CKComponentScopeFrame didReuseRenderWithTreeNode:node];
@@ -325,7 +325,7 @@ namespace CKRender {
   }
 
   auto markTreeNodeDirtyIdsFromNodeUntilRoot(CKTreeNodeIdentifier nodeIdentifier,
-                                             CKComponentScopeRoot *previousRoot,
+                                             CKRootTreeNode &previousRootNode,
                                              CKTreeNodeDirtyIds &treeNodesDirtyIds) -> void
   {
     CKTreeNodeIdentifier currentNodeIdentifier = nodeIdentifier;
@@ -335,7 +335,7 @@ namespace CKRender {
       if (insertPair.second == false) {
         break;
       }
-      auto const parentNode = [previousRoot parentForNodeIdentifier:currentNodeIdentifier];
+      auto const parentNode = previousRootNode.parentForNodeIdentifier(currentNodeIdentifier);
       CKCAssert((parentNode || nodeIdentifier == currentNodeIdentifier),
                 @"The next parent cannot be nil unless it's a root component.");
       currentNodeIdentifier = parentNode.nodeIdentifier;
@@ -350,7 +350,7 @@ namespace CKRender {
     // Compute the dirtyNodeIds in case of a state update only.
     if (buildTrigger == BuildTrigger::StateUpdate) {
       for (auto const & stateUpdate : stateUpdates) {
-        CKRender::markTreeNodeDirtyIdsFromNodeUntilRoot(stateUpdate.first.treeNodeIdentifier, previousRoot, treeNodesDirtyIds);
+        CKRender::markTreeNodeDirtyIdsFromNodeUntilRoot(stateUpdate.first.treeNodeIdentifier, previousRoot.rootNode, treeNodesDirtyIds);
       }
     }
     return treeNodesDirtyIds;

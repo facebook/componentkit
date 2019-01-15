@@ -18,7 +18,6 @@
 #import "CKComponentScopeFrameInternal.h"
 #import "CKInternalHelpers.h"
 #import "CKThreadLocalComponentScope.h"
-#import "CKRenderTreeNodeWithChildren.h"
 
 typedef std::unordered_map<CKComponentPredicate, NSHashTable<id<CKComponentProtocol>> *> _CKRegisteredComponentsMap;
 typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComponentControllerProtocol>> *> _CKRegisteredComponentControllerMap;
@@ -30,8 +29,8 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
 
   _CKRegisteredComponentsMap _registeredComponents;
   _CKRegisteredComponentControllerMap _registeredComponentControllers;
-  // A map between a tree node identifier to its parent node.
-  std::unordered_map<CKTreeNodeIdentifier, id<CKTreeNodeProtocol>> _nodesToParentNodes;
+
+  CKRootTreeNode _rootNode;
 }
 
 + (instancetype)rootWithListener:(id<CKComponentStateListener>)listener
@@ -67,7 +66,6 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
     _analyticsListener = analyticsListener;
     _globalIdentifier = globalIdentifier;
     _rootFrame = [[CKComponentScopeFrame alloc] initWithHandle:nil];
-    _rootNode = [[CKRenderTreeNodeWithChildren alloc] init];
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
   }
@@ -108,24 +106,6 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
       [hashTable addObject:componentController];
     }
   }
-}
-
-- (void)registerNode:(id<CKTreeNodeProtocol>)node withParent:(id<CKTreeNodeProtocol>)parent
-{
-  CKAssert(parent != nil, @"Cannot register a nil parent node");
-  if (node) {
-    _nodesToParentNodes[node.nodeIdentifier] = parent;
-  }
-}
-
-- (id<CKTreeNodeProtocol>)parentForNodeIdentifier:(CKTreeNodeIdentifier)nodeIdentifier
-{
-  CKAssert(nodeIdentifier != 0, @"Cannot retrieve parent for an empty node");
-  auto const it = _nodesToParentNodes.find(nodeIdentifier);
-  if (it != _nodesToParentNodes.end()) {
-    return it->second;
-  }
-  return nil;
 }
 
 - (void)enumerateComponentsMatchingPredicate:(CKComponentPredicate)predicate
@@ -176,6 +156,11 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
   const auto componentControllersIt = _registeredComponentControllers.find(predicate);
   const auto componentControllers = componentControllersIt != _registeredComponentControllers.end() ? componentControllersIt->second : @[];
   return CKCocoaCollectionAdapter<id<CKComponentControllerProtocol>>(componentControllers);
+}
+
+- (CKRootTreeNode &)rootNode
+{
+  return _rootNode;
 }
 
 #if DEBUG

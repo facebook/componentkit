@@ -15,6 +15,7 @@
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
+#import <ComponentKit/CKRootTreeNode.h>
 
 #include <tuple>
 
@@ -84,7 +85,7 @@
 
     // Set the link between the parent and the child.
     [parent setChild:self forComponentKey:_componentKey];
-    [scopeRoot registerNode:self withParent:parent];
+    scopeRoot.rootNode.registerNode(self, parent);
 
     // Set the link between the tree node and the scope handle.
     [_handle setTreeNodeIdentifier:_nodeIdentifier];
@@ -104,9 +105,9 @@
 
 - (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 {
-  auto const parent = [previousScopeRoot parentForNodeIdentifier:_nodeIdentifier];
+  auto const parent = previousScopeRoot.rootNode.parentForNodeIdentifier(_nodeIdentifier);
   CKAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");
-  [scopeRoot registerNode:self withParent:parent];
+  scopeRoot.rootNode.registerNode(self, parent);
   if (_handle) {
     // Register the reused comopnent in the new scope root.
     [scopeRoot registerComponent:_component];

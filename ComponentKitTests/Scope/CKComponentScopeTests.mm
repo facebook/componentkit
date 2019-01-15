@@ -136,7 +136,7 @@
     
     // Create render component.
     CKTreeNode *node = [[CKTreeNode alloc] initWithComponent:[CKRenderComponent new]
-                                                      parent:newRoot.rootNode
+                                                      parent:newRoot.rootNode.node()
                                               previousParent:nil
                                                    scopeRoot:newRoot
                                                 stateUpdates:{}];
@@ -167,8 +167,8 @@
     
     // Create render component.
     CKTreeNode *node = [[CKTreeNode alloc] initWithComponent:[CKRenderComponent new]
-                                                      parent:newRoot2.rootNode
-                                              previousParent:newRoot.rootNode
+                                                      parent:newRoot2.rootNode.node()
+                                              previousParent:newRoot.rootNode.node()
                                                    scopeRoot:newRoot2
                                                 stateUpdates:{}];
     
@@ -191,8 +191,8 @@
     
     // Create render component.
     CKTreeNode *node = [[CKTreeNode alloc] initWithComponent:[CKRenderComponent new]
-                                                      parent:newRoot3.rootNode
-                                              previousParent:newRoot2.rootNode
+                                                      parent:newRoot3.rootNode.node()
+                                              previousParent:newRoot2.rootNode.node()
                                                    scopeRoot:newRoot3
                                                 stateUpdates:stateUpdates];
     [CKComponentScopeFrame willBuildComponentTreeWithTreeNode:node];

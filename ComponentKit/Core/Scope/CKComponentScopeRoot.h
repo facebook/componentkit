@@ -20,6 +20,7 @@
 #import <ComponentKit/CKComponentControllerProtocol.h>
 #import <ComponentKit/CKStateUpdateMetadata.h>
 #import <ComponentKit/CKTreeNodeTypes.h>
+#import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKUpdateMode.h>
 
 @protocol CKComponentProtocol;
@@ -65,9 +66,6 @@
 - (void)registerComponentController:(id<CKComponentControllerProtocol>)componentController;
 - (void)registerComponent:(id<CKComponentProtocol>)component;
 
-- (void)registerNode:(id<CKTreeNodeProtocol>)node withParent:(id<CKTreeNodeProtocol>)parent;
-- (id<CKTreeNodeProtocol>)parentForNodeIdentifier:(CKTreeNodeIdentifier)nodeIdentifier;
-
 - (CKCocoaCollectionAdapter<id<CKComponentProtocol>>)componentsMatchingPredicate:(CKComponentPredicate)predicate;
 - (CKCocoaCollectionAdapter<id<CKComponentControllerProtocol>>)componentControllersMatchingPredicate:(CKComponentControllerPredicate)predicate;
 
@@ -77,8 +75,8 @@
 @property (nonatomic, strong, readonly) CKComponentScopeFrame *rootFrame;
 
 /** Render Support */
-@property (nonatomic, strong, readonly) id<CKTreeNodeWithChildrenProtocol> rootNode;
 @property (nonatomic, assign) BOOL hasRenderComponentInTree;
+- (CKRootTreeNode &)rootNode;
 
 #if DEBUG
 /** Returns a multi-line string describing all the components in this root. */
