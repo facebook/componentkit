@@ -324,28 +324,35 @@ namespace CKRender {
     return NO;
   }
 
-  auto treeNodeDirtyIdsFor(CKComponentScopeRoot *previousRoot, const CKComponentStateUpdateMap &stateUpdates, const BuildTrigger &buildTrigger, const CKBuildComponentConfig &config) -> CKTreeNodeDirtyIds
+  auto markTreeNodeDirtyIdsFromNodeUntilRoot(CKTreeNodeIdentifier nodeIdentifier,
+                                             CKComponentScopeRoot *previousRoot,
+                                             CKTreeNodeDirtyIds &treeNodesDirtyIds) -> void
+  {
+    CKTreeNodeIdentifier currentNodeIdentifier = nodeIdentifier;
+    while (currentNodeIdentifier != 0) {
+      auto const insertPair = treeNodesDirtyIds.insert(currentNodeIdentifier);
+      // If we got to a node that is already in the set, we can stop as the path to the root is already dirty.
+      if (insertPair.second == false) {
+        break;
+      }
+      auto const parentNode = [previousRoot parentForNodeIdentifier:currentNodeIdentifier];
+      CKCAssert((parentNode || nodeIdentifier == currentNodeIdentifier),
+                @"The next parent cannot be nil unless it's a root component.");
+      currentNodeIdentifier = parentNode.nodeIdentifier;
+    }
+  }
+
+  auto treeNodeDirtyIdsFor(CKComponentScopeRoot *previousRoot,
+                           const CKComponentStateUpdateMap &stateUpdates,
+                           const BuildTrigger &buildTrigger) -> CKTreeNodeDirtyIds
   {
     CKTreeNodeDirtyIds treeNodesDirtyIds;
-
     // Compute the dirtyNodeIds in case of a state update only.
     if (buildTrigger == BuildTrigger::StateUpdate) {
       for (auto const & stateUpdate : stateUpdates) {
-        CKTreeNodeIdentifier treeNodeIdentifier = stateUpdate.first.treeNodeIdentifier;
-        while (treeNodeIdentifier != 0) {
-          auto const insertPair = treeNodesDirtyIds.insert(treeNodeIdentifier);
-          // If we got to a node that is already in the set, we can stop as the path to the root is already dirty.
-          if (insertPair.second == false) {
-            break;
-          }
-          auto const parentNode = [previousRoot parentForNodeIdentifier:treeNodeIdentifier];
-          CKCAssert((parentNode || stateUpdate.first.treeNodeIdentifier == treeNodeIdentifier),
-                    @"The next parent cannot be nil unless it's a root component.");
-          treeNodeIdentifier = parentNode.nodeIdentifier;
-        }
+        CKRender::markTreeNodeDirtyIdsFromNodeUntilRoot(stateUpdate.first.treeNodeIdentifier, previousRoot, treeNodesDirtyIds);
       }
     }
-
     return treeNodesDirtyIds;
   }
 }

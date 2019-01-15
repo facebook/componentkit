@@ -121,7 +121,16 @@ namespace CKRender {
                                const CKBuildComponentTreeParams &params) -> BOOL;
 
   /**
+   Mark all the dirty nodes, on a path from an existing node up to the root node in the passed CKTreeNodeDirtyIds set.
+   */
+  auto markTreeNodeDirtyIdsFromNodeUntilRoot(CKTreeNodeIdentifier nodeIdentifier,
+                                             CKComponentScopeRoot *previousRoot,
+                                             CKTreeNodeDirtyIds &treeNodesDirtyIds) -> void;
+  
+  /**
    @return A collection of tree node marked as dirty if any. An empty collection otherwise.
    */
-  auto treeNodeDirtyIdsFor(CKComponentScopeRoot *previousRoot, const CKComponentStateUpdateMap &stateUpdates, const BuildTrigger &buildTrigger, const CKBuildComponentConfig &config) -> CKTreeNodeDirtyIds;
+  auto treeNodeDirtyIdsFor(CKComponentScopeRoot *previousRoot,
+                           const CKComponentStateUpdateMap &stateUpdates,
+                           const BuildTrigger &buildTrigger) -> CKTreeNodeDirtyIds;
 }
