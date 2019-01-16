@@ -11,6 +11,8 @@
 #import <Foundation/Foundation.h>
 
 struct CKGlobalConfig {
+  /** Can be used to trigger asserts for Render components even if there is no Render component in the tree */
+  BOOL forceBuildRenderTreeInDebug = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

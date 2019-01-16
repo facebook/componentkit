@@ -19,6 +19,10 @@
 #import "CKInternalHelpers.h"
 #import "CKThreadLocalComponentScope.h"
 
+#if DEBUG
+#import "CKGlobalConfig.h"
+#endif
+
 typedef std::unordered_map<CKComponentPredicate, NSHashTable<id<CKComponentProtocol>> *> _CKRegisteredComponentsMap;
 typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComponentControllerProtocol>> *> _CKRegisteredComponentControllerMap;
 
@@ -68,6 +72,9 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
     _rootFrame = [[CKComponentScopeFrame alloc] initWithHandle:nil];
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
+#if DEBUG
+    _hasRenderComponentInTree = CKReadGlobalConfig().forceBuildRenderTreeInDebug;
+#endif
   }
   return self;
 }
@@ -164,13 +171,6 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
 }
 
 #if DEBUG
-// In DEBUG, we'd want to always build the component tree (CKTreeNode).
-// This can help firing relevant asserts to Render component and avoid fragmentation while debugging.
-- (BOOL)hasRenderComponentInTree
-{
-  return YES;
-}
-
 - (NSString *)debugDescription
 {
   return [[_rootFrame debugDescriptionComponents] componentsJoinedByString:@"\n"];

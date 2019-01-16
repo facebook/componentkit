@@ -307,8 +307,8 @@ struct CKComponentMountInfo {
     auto const childrenSize = layout.children->size();
     CKAssertWithCategory(childrenSize == 0,
                          NSStringFromClass([self class]),
-                         @"%@ is subclassing CKComponent directly, you need to subclass %@ instead."
-                         "Context: we’re phasing out CKComponent subclasses for in favor of CKRenderLayoutComponent/CKRenderLayoutWithChildrenComponent subclasses."
+                         @"%@ is subclassing CKComponent directly, you need to subclass %@ instead. "
+                         "Context: we’re phasing out CKComponent subclasses for in favor of CKRenderLayoutComponent/CKRenderLayoutWithChildrenComponent subclasses. "
                          "While this is still kinda OK for leaf components, things start to break when you introduce a CKComponent subclass with children.",
                          [self class],
                          (childrenSize == 1 ? @"CKRenderLayoutComponent" : @"CKRenderLayoutWithChildrenComponent"));
