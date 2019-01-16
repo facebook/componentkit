@@ -27,20 +27,6 @@ struct CKComponentHostingViewOptions {
   BOOL allowTapPassthrough;
   // If set to YES, invalidates controllers that are removed whilst the hosting view remains alive. Default NO.
   BOOL invalidateRemovedControllers;
-  /// Previously constructed scope root. This is specified in the case where component generation occurs before
-  /// the component hosting view is created.
-  ///
-  /// The initial scope root must have been constructed using a proxy for the state listener that can be redirected
-  /// to the component hosting view once it is constructed. Otherwise, the hosting view will not be able to receive and
-  /// process state updates.
-  CKComponentScopeRoot *previousScopeRoot;
-  /// Previously constructed component corresponding to `previousScopeRoot`. If this is specified, the component
-  /// hosting view will not trigger an update when it is initialized unless pending state updates are specified
-  /// via the `pendingStateUpdates` option.
-  CKComponent *previousComponent;
-  /// If `initialScopeRoot` is specified, this can also be specified to give the hosting view a map of pending state
-  /// updates that should be processed in the next update.
-  CKComponentStateUpdateMap pendingStateUpdates;
 };
 
 @interface CKComponentHostingView () <CKComponentStateListener, CKInspectableView>
