@@ -22,6 +22,7 @@
 #import "ComponentUtilities.h"
 #import "ComponentViewReuseUtilities.h"
 #import "CKComponentInternal.h"
+#import "CKComponent+UIView.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentViewConfiguration.h"
 
@@ -173,13 +174,20 @@ void ViewReusePoolMap::reset(UIView *container)
 
     if (vendedViewIt != nextVendedViewIt) {
       NSUInteger swapIndex = [subviews indexOfObjectIdenticalTo:*nextVendedViewIt];
-      CKCAssert(swapIndex != NSNotFound, @"Expected to find subview %@ in %@",
-                [*nextVendedViewIt class], [container class]);
-
-      // This naive algorithm does not do the minimal number of swaps. But it's simple, and swaps should be relatively
-      // rare in any case, so let's go with it.
-      [subviews exchangeObjectAtIndex:i withObjectAtIndex:swapIndex];
-      [container exchangeSubviewAtIndex:i withSubviewAtIndex:swapIndex];
+      
+      // This check can cause some z-ordering issue if views vended by the framework are manipulated outside of the framework
+      if (swapIndex != NSNotFound) {
+        // This naive algorithm does not do the minimal number of swaps. But it's simple, and swaps should be relatively
+        // rare in any case, so let's go with it.
+        [subviews exchangeObjectAtIndex:i withObjectAtIndex:swapIndex];
+        [container exchangeSubviewAtIndex:i withSubviewAtIndex:swapIndex];
+      } else {
+        CKCFailAssert(@"Expected to find subview %@ (component: %@) in %@ (component: %@)",
+                      [*nextVendedViewIt class],
+                      [[*nextVendedViewIt ck_component] class],
+                      [container class],
+                      [[container ck_component] class]);
+      }
     }
 
     ++nextVendedViewIt;
