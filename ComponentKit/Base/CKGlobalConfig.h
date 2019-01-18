@@ -13,6 +13,7 @@
 struct CKGlobalConfig {
   /** Can be used to trigger asserts for Render components even if there is no Render component in the tree */
   BOOL forceBuildRenderTreeInDebug = NO;
+  BOOL crashOnViewReuseError = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

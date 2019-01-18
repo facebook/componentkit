@@ -16,6 +16,7 @@
 #import "CKMutex.h"
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKGlobalConfig.h>
 
 #import "CKInternalHelpers.h"
 #import "CKMutex.h"
@@ -25,6 +26,7 @@
 #import "CKComponent+UIView.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentViewConfiguration.h"
+
 
 using namespace CK::Component;
 
@@ -182,11 +184,14 @@ void ViewReusePoolMap::reset(UIView *container)
         [subviews exchangeObjectAtIndex:i withObjectAtIndex:swapIndex];
         [container exchangeSubviewAtIndex:i withSubviewAtIndex:swapIndex];
       } else {
-        CKCFailAssert(@"Expected to find subview %@ (component: %@) in %@ (component: %@)",
-                      [*nextVendedViewIt class],
-                      [[*nextVendedViewIt ck_component] class],
-                      [container class],
-                      [[container ck_component] class]);
+        if (CKReadGlobalConfig().crashOnViewReuseError) {
+          CKCFatalWithCategory([[*nextVendedViewIt ck_component] class],
+                               @"Expected to find subview %@ (component: %@) in %@ (component: %@)",
+                               [*nextVendedViewIt class],
+                               [[*nextVendedViewIt ck_component] class],
+                               [container class],
+                               [[container ck_component] class]);
+        }
       }
     }
 
