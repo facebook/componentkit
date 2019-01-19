@@ -92,8 +92,6 @@
 */
 - (BOOL)isSystraceEnabled;
 
-@optional
-
 /** Render Components **/
 
 /**

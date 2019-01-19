@@ -384,4 +384,6 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (BOOL)isSystraceEnabled { return NO; }
 
+- (void)didReuseNode:(id<CKTreeNodeProtocol>)node inScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot {}
+
 @end

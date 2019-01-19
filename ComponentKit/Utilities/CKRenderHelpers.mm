@@ -49,9 +49,7 @@ namespace CKRenderInternal {
     [component didReuseComponent:(id<CKRenderComponentProtocol>)previousNode.component];
 
     // Notify scope root listener
-    if ([params.scopeRoot.analyticsListener respondsToSelector:@selector(didReuseNode:inScopeRoot:fromPreviousScopeRoot:)]) {
-      [params.scopeRoot.analyticsListener didReuseNode:reusedChild inScopeRoot:params.scopeRoot fromPreviousScopeRoot:params.previousScopeRoot];
-    }
+    [params.scopeRoot.analyticsListener didReuseNode:reusedChild inScopeRoot:params.scopeRoot fromPreviousScopeRoot:params.previousScopeRoot];
   }
 
   // Reuse the previous component generation and its component tree and notify the previous component about it.
