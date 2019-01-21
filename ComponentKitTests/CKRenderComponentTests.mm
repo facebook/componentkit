@@ -13,6 +13,7 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 
@@ -29,33 +30,35 @@
   CKBuildComponentConfig _config;
   CKTestRenderComponent *_c;
   CKComponentScopeRoot *_scopeRoot;
-
-  BOOL _enableFasterPropsUpdates;
 }
 
 - (void)setUpForFasterStateUpdates
 {
-  _config = {
-    .enableFasterPropsUpdates = _enableFasterPropsUpdates,
-  };
+  [self setUpForFasterStateUpdates:^{
+    return [CKTestRenderComponent new];
+  }];
+}
+
+- (void)setUpForFasterStateUpdates:(CKComponent *(^)(void))componentFactory
+{
+  _config = {};
 
   // New Tree Creation.
-  _c = [CKTestRenderComponent new];
-  _scopeRoot = createNewTreeWithComponentAndReturnScopeRoot(_config, _c);
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, _config);
+
+  _c = (CKTestRenderComponent *)buildResults.component;
+  _scopeRoot = buildResults.scopeRoot;
   XCTAssertEqual(_c.renderCalledCounter, 1);
 }
 
-- (void)setUpForFasterPropsUpdates:(CKTestRenderComponent *)component
+- (void)setUpForFasterPropsUpdates:(CKComponent *(^)(void))componentFactory
 {
-  _enableFasterPropsUpdates = YES;
-  
-  _config = {
-    .enableFasterPropsUpdates = _enableFasterPropsUpdates,
-  };
+  _config = {.enableFasterPropsUpdates = YES};
 
   // New Tree Creation.
-  _c = component;
-  _scopeRoot = createNewTreeWithComponentAndReturnScopeRoot(_config, _c);
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, _config);
+  _c = (CKTestRenderComponent *)buildResults.component;
+  _scopeRoot = buildResults.scopeRoot;
   XCTAssertEqual(_c.renderCalledCounter, 1);
 }
 
@@ -124,6 +127,7 @@
           previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
+                    .previousScopeRoot = _scopeRoot,
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {100}, // Use a random id that represents a state update on a fake parent.
                     .buildTrigger = BuildTrigger::StateUpdate,
@@ -155,6 +159,7 @@
           previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
+                    .previousScopeRoot = _scopeRoot,
                     .stateUpdates = stateUpdates,
                     .treeNodeDirtyIds = {
                       _c.scopeHandle.treeNodeIdentifier
@@ -190,6 +195,7 @@
           previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
+                    .previousScopeRoot = _scopeRoot,
                     .stateUpdates = stateUpdates,
                     .treeNodeDirtyIds = {
                       _c.scopeHandle.treeNodeIdentifier
@@ -209,7 +215,9 @@
 
 - (void)test_fasterPropsUpdate_componentIsNotBeingReused_whenPropsAreNotEqual
 {
-  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithProps:{.identifier = 1}]];
+  [self setUpForFasterPropsUpdates:^(){
+    return [CKTestRenderComponent newWithProps:{.identifier = 1}];
+  }];
 
   // Simulate props update.
   CKThreadLocalComponentScope threadScope(_scopeRoot, {});
@@ -239,7 +247,9 @@
   // Use the same componentIdentifier for both components.
   // shouldComponentUpdate: will return NO in this case and we can reuse the component.
   NSUInteger componentIdentifier = 1;
-  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}]];
+  [self setUpForFasterPropsUpdates:^{
+    return [CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}];
+  }];
 
   // Simulate props update.
   CKThreadLocalComponentScope threadScope(_scopeRoot, {});
@@ -267,7 +277,9 @@
 - (void)test_fasterPropsUpdate_componentIsBeingReused_onStateUpdateWithDirtyParentAndEqualComponents
 {
   auto const componentIdentifier = 1;
-  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}]];
+  [self setUpForFasterPropsUpdates:^{
+    return [CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}];
+  }];
 
   // Simulate a state update on a parent component:
   // 1. parentHasStateUpdate = YES
@@ -295,7 +307,9 @@
 - (void)test_fasterPropsUpdate_componentIsBeingReused_onStateUpdateWithNonDirtyComponentAndEqualComponents
 {
   auto const componentIdentifier = 1;
-  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}]];
+  [self setUpForFasterPropsUpdates:^{
+    return [CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}];
+  }];
 
   // Simulate a state update on a parent component:
   // 1. parentHasStateUpdate = NO
@@ -326,33 +340,27 @@
   // shouldComponentUpdate: will return NO in this case.
   // However, we simulate a case when the node id is dirty, hence cannot be reused.
   NSUInteger componentIdentifier = 1;
-  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithProps:{.
-    identifier = componentIdentifier,
-    .shouldMarkTopRenderComponentAsDirtyForPropsUpdates = YES,
-  }]];
+  [self setUpForFasterPropsUpdates:^{
+    return [CKTestRenderComponent newWithProps:{
+      .identifier = componentIdentifier,
+      .shouldUseComponentContext = YES,
+    }];
+  }];
 
   // Simulate props update.
-  CKThreadLocalComponentScope threadScope(_scopeRoot, {});
-  auto const c2 = [CKTestRenderComponent newWithProps:{
-    .identifier = componentIdentifier,
-    .shouldMarkTopRenderComponentAsDirtyForPropsUpdates = YES,
-  }];
-  CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
+  __block CKTestRenderComponent *c2;
+  auto const componentFactory = ^{
+    c2 = [CKTestRenderComponent newWithProps:{
+      .identifier = componentIdentifier,
+      .shouldUseComponentContext = YES,
+    }];
+    return c2;
+  };
 
-  [c2 buildComponentTree:scopeRoot2.rootNode.node()
-          previousParent:_scopeRoot.rootNode.node()
-                  params:{
-                    .scopeRoot = scopeRoot2,
-                    .previousScopeRoot = _scopeRoot,
-                    .stateUpdates = {},
-                    .treeNodeDirtyIds = {},
-                    .buildTrigger = BuildTrigger::PropsUpdate,
-                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
-                  }
-    parentHasStateUpdate:NO];
+  auto const buildResults = CKBuildComponent(_scopeRoot, {}, componentFactory, _config);
 
   // The components are equal, but the node id is dirty - hence, we cannot reuse the previous component.
-  [self verifyComponentIsNotBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
+  [self verifyComponentIsNotBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:buildResults.scopeRoot];
 
 }
 
@@ -480,26 +488,6 @@ static BOOL CKComponentControllerRenderTestsPredicate(id<CKComponentControllerPr
     XCTAssertTrue(CK::Collection::contains(registeredComponents, c));
     XCTAssertTrue(CK::Collection::contains(registeredControllers, c.scopeHandle.controller));
   }
-}
-
-static const CKBuildComponentTreeParams newTreeParams(CKComponentScopeRoot *scopeRoot, const CKBuildComponentConfig &config) {
-  return {
-    .scopeRoot = scopeRoot,
-    .stateUpdates = {},
-    .treeNodeDirtyIds = {},
-    .buildTrigger = BuildTrigger::NewTree,
-    .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
-  };
-}
-
-static CKComponentScopeRoot *createNewTreeWithComponentAndReturnScopeRoot(const CKBuildComponentConfig &config, CKTestRenderComponent *c) {
-  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
-  const CKBuildComponentTreeParams params = newTreeParams(threadScope.newScopeRoot, config);
-  [c buildComponentTree:threadScope.newScopeRoot.rootNode.node()
-         previousParent:nil
-                 params:params
-   parentHasStateUpdate:NO];
-  return threadScope.newScopeRoot;
 }
 
 static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComponent(CKComponent *c) {

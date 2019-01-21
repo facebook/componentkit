@@ -18,7 +18,7 @@
 
 // Leaf render component with component controller.
 struct CKTestChildRenderComponentProps {
-  BOOL shouldMarkTopRenderComponentAsDirtyForPropsUpdates;
+  BOOL shouldUseComponentContext;
 };
 
 @interface CKTestChildRenderComponent : CKRenderComponent
@@ -29,7 +29,7 @@ struct CKTestChildRenderComponentProps {
 // Render component with a `CKTestChildRenderComponent` child component.
 struct CKTestRenderComponentProps {
   NSUInteger identifier;
-  BOOL shouldMarkTopRenderComponentAsDirtyForPropsUpdates;
+  BOOL shouldUseComponentContext;
 };
 
 @interface CKTestRenderComponent : CKRenderComponent

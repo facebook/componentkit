@@ -19,7 +19,7 @@
 
 @implementation CKTestRenderComponent
 {
-  BOOL _shouldMarkTopRenderComponentAsDirtyForPropsUpdates;
+  BOOL _shouldUseComponentContext;
 }
 
 + (instancetype)newWithProps:(const CKTestRenderComponentProps &)props
@@ -27,16 +27,17 @@
   auto const c = [super new];
   if (c) {
     c->_identifier = props.identifier;
-    c->_shouldMarkTopRenderComponentAsDirtyForPropsUpdates = props.shouldMarkTopRenderComponentAsDirtyForPropsUpdates;
+    c->_shouldUseComponentContext = props.shouldUseComponentContext;
   }
   return c;
 }
 
 - (CKComponent *)render:(id)state
 {
+  CKComponentContext<NSNumber> context(@1);
   _renderCalledCounter++;
   _childComponent = [CKTestChildRenderComponent newWithProps:{
-    .shouldMarkTopRenderComponentAsDirtyForPropsUpdates = _shouldMarkTopRenderComponentAsDirtyForPropsUpdates,
+    .shouldUseComponentContext = _shouldUseComponentContext,
   }];
   return _childComponent;
 }
@@ -61,14 +62,16 @@
 
 @implementation CKTestChildRenderComponent
 {
-  BOOL _shouldMarkTopRenderComponentAsDirtyForPropsUpdates;
+  NSNumber *_value;
 }
 
 + (instancetype)newWithProps:(const CKTestChildRenderComponentProps &)props
 {
   auto const c = [super new];
   if (c) {
-    c->_shouldMarkTopRenderComponentAsDirtyForPropsUpdates = props.shouldMarkTopRenderComponentAsDirtyForPropsUpdates;
+    if (props.shouldUseComponentContext) {
+      c->_value = CKComponentContext<NSNumber>::get();
+    }
   }
   return c;
 }
@@ -95,10 +98,6 @@
 {
   [super buildComponentTree:parent previousParent:previousParent params:params parentHasStateUpdate:parentHasStateUpdate];
   _parentHasStateUpdate = parentHasStateUpdate;
-
-  if (_shouldMarkTopRenderComponentAsDirtyForPropsUpdates) {
-    params.scopeRoot.rootNode.markTopRenderComponentAsDirtyForPropsUpdates();
-  }
 }
 
 @end
