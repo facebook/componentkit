@@ -209,17 +209,18 @@
 
 - (void)test_fasterPropsUpdate_componentIsNotBeingReused_whenPropsAreNotEqual
 {
-  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithIdentifier:1]];
+  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithProps:{.identifier = 1}]];
 
   // Simulate props update.
   CKThreadLocalComponentScope threadScope(_scopeRoot, {});
-  auto const c2 = [CKTestRenderComponent newWithIdentifier:2];
+  auto const c2 = [CKTestRenderComponent newWithProps:{.identifier = 2}];
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   [c2 buildComponentTree:scopeRoot2.rootNode.node()
           previousParent:_scopeRoot.rootNode.node()
                   params:{
                     .scopeRoot = scopeRoot2,
+                    .previousScopeRoot = _scopeRoot,
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::PropsUpdate,
@@ -238,11 +239,11 @@
   // Use the same componentIdentifier for both components.
   // shouldComponentUpdate: will return NO in this case and we can reuse the component.
   NSUInteger componentIdentifier = 1;
-  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithIdentifier:componentIdentifier]];
+  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}]];
 
   // Simulate props update.
   CKThreadLocalComponentScope threadScope(_scopeRoot, {});
-  auto const c2 = [CKTestRenderComponent newWithIdentifier:componentIdentifier];
+  auto const c2 = [CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}];
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   [c2 buildComponentTree:scopeRoot2.rootNode.node()
@@ -266,13 +267,13 @@
 - (void)test_fasterPropsUpdate_componentIsBeingReused_onStateUpdateWithDirtyParentAndEqualComponents
 {
   auto const componentIdentifier = 1;
-  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithIdentifier:componentIdentifier]];
+  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}]];
 
   // Simulate a state update on a parent component:
   // 1. parentHasStateUpdate = YES
   // 2. treeNodeDirtyIds with a fake parent id.
   CKThreadLocalComponentScope threadScope(_scopeRoot, {});
-  auto const c2 = [CKTestRenderComponent newWithIdentifier:componentIdentifier];
+  auto const c2 = [CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}];
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   [c2 buildComponentTree:scopeRoot2.rootNode.node()
@@ -294,13 +295,13 @@
 - (void)test_fasterPropsUpdate_componentIsBeingReused_onStateUpdateWithNonDirtyComponentAndEqualComponents
 {
   auto const componentIdentifier = 1;
-  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithIdentifier:componentIdentifier]];
+  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}]];
 
   // Simulate a state update on a parent component:
   // 1. parentHasStateUpdate = NO
   // 2. treeNodeDirtyIds is empty.
   CKThreadLocalComponentScope threadScope(_scopeRoot, {});
-  auto const c2 = [CKTestRenderComponent newWithIdentifier:componentIdentifier];
+  auto const c2 = [CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}];
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
   [c2 buildComponentTree:scopeRoot2.rootNode.node()
@@ -319,6 +320,42 @@
   [self verifyComponentIsBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
 }
 
+- (void)test_fasterPropsUpdate_componentIsNotBeingReusedWhenPropsAreEqualButNodeIdIsDirty
+{
+  // Use the same componentIdentifier for both components.
+  // shouldComponentUpdate: will return NO in this case.
+  // However, we simulate a case when the node id is dirty, hence cannot be reused.
+  NSUInteger componentIdentifier = 1;
+  [self setUpForFasterPropsUpdates:[CKTestRenderComponent newWithProps:{.
+    identifier = componentIdentifier,
+    .shouldMarkTopRenderComponentAsDirtyForPropsUpdates = YES,
+  }]];
+
+  // Simulate props update.
+  CKThreadLocalComponentScope threadScope(_scopeRoot, {});
+  auto const c2 = [CKTestRenderComponent newWithProps:{
+    .identifier = componentIdentifier,
+    .shouldMarkTopRenderComponentAsDirtyForPropsUpdates = YES,
+  }];
+  CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
+
+  [c2 buildComponentTree:scopeRoot2.rootNode.node()
+          previousParent:_scopeRoot.rootNode.node()
+                  params:{
+                    .scopeRoot = scopeRoot2,
+                    .previousScopeRoot = _scopeRoot,
+                    .stateUpdates = {},
+                    .treeNodeDirtyIds = {},
+                    .buildTrigger = BuildTrigger::PropsUpdate,
+                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
+                  }
+    parentHasStateUpdate:NO];
+
+  // The components are equal, but the node id is dirty - hence, we cannot reuse the previous component.
+  [self verifyComponentIsNotBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
+
+}
+
 #pragma mark - parentHasStateUpdate
 
 - (void)test_parentHasStateUpdatePropagatedCorrectly
@@ -332,7 +369,7 @@
   __block CKCompositeComponentWithScopeAndState *rootComponent;
 
   auto const componentFactory = ^{
-    c = [CKTestRenderComponent newWithIdentifier:1];
+    c = [CKTestRenderComponent newWithProps:{.identifier = 1}];
     rootComponent = generateComponentHierarchyWithComponent(c);
     return rootComponent;
   };
@@ -351,7 +388,7 @@
 
   auto const componentFactory2 = ^{
     // Use different identifier for c2 to make sure we don't reuse it (otherwise the buildComponentTree won't be called on the child component).
-    c2 = [CKTestRenderComponent newWithIdentifier:2];
+    c2 = [CKTestRenderComponent newWithProps:{.identifier = 2}];
     rootComponent2 = generateComponentHierarchyWithComponent(c2);
     return rootComponent2;
   };
@@ -370,8 +407,8 @@
   __block CKTestRenderComponent *c1;
   __block CKTestRenderComponent *c2;
   auto const componentFactory = ^{
-    c1 = [CKTestRenderComponent newWithIdentifier:1];
-    c2 = [CKTestRenderComponent newWithIdentifier:2];
+    c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
+    c2 = [CKTestRenderComponent newWithProps:{.identifier = 2}];
     return [CKTestRenderWithChildrenComponent newWithChildren:{c1, c2}];
   };
 

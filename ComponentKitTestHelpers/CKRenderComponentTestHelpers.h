@@ -17,17 +17,27 @@
 #import <ComponentKit/CKRenderWithChildrenComponent.h>
 
 // Leaf render component with component controller.
+struct CKTestChildRenderComponentProps {
+  BOOL shouldMarkTopRenderComponentAsDirtyForPropsUpdates;
+};
+
 @interface CKTestChildRenderComponent : CKRenderComponent
 @property (nonatomic, assign) BOOL parentHasStateUpdate;
++ (instancetype)newWithProps:(const CKTestChildRenderComponentProps &)props;
 @end
 
 // Render component with a `CKTestChildRenderComponent` child component.
+struct CKTestRenderComponentProps {
+  NSUInteger identifier;
+  BOOL shouldMarkTopRenderComponentAsDirtyForPropsUpdates;
+};
+
 @interface CKTestRenderComponent : CKRenderComponent
 @property (nonatomic, assign) BOOL didReuseComponent;
 @property (nonatomic, assign) NSUInteger renderCalledCounter;
 @property (nonatomic, assign) NSUInteger identifier;
 @property (nonatomic, strong) CKTestChildRenderComponent *childComponent;
-+ (instancetype)newWithIdentifier:(NSUInteger)identifier;
++ (instancetype)newWithProps:(const CKTestRenderComponentProps &)props;
 @end
 
 // CKCompositeComponent with scope and state.

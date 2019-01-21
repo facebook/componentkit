@@ -13,15 +13,21 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 
 @implementation CKTestRenderComponent
+{
+  BOOL _shouldMarkTopRenderComponentAsDirtyForPropsUpdates;
+}
 
-+ (instancetype)newWithIdentifier:(NSUInteger)identifier
++ (instancetype)newWithProps:(const CKTestRenderComponentProps &)props
 {
   auto const c = [super new];
   if (c) {
-    c->_identifier = identifier;
+    c->_identifier = props.identifier;
+    c->_shouldMarkTopRenderComponentAsDirtyForPropsUpdates = props.shouldMarkTopRenderComponentAsDirtyForPropsUpdates;
   }
   return c;
 }
@@ -29,7 +35,9 @@
 - (CKComponent *)render:(id)state
 {
   _renderCalledCounter++;
-  _childComponent = [CKTestChildRenderComponent new];
+  _childComponent = [CKTestChildRenderComponent newWithProps:{
+    .shouldMarkTopRenderComponentAsDirtyForPropsUpdates = _shouldMarkTopRenderComponentAsDirtyForPropsUpdates,
+  }];
   return _childComponent;
 }
 
@@ -52,6 +60,18 @@
 @end
 
 @implementation CKTestChildRenderComponent
+{
+  BOOL _shouldMarkTopRenderComponentAsDirtyForPropsUpdates;
+}
+
++ (instancetype)newWithProps:(const CKTestChildRenderComponentProps &)props
+{
+  auto const c = [super new];
+  if (c) {
+    c->_shouldMarkTopRenderComponentAsDirtyForPropsUpdates = props.shouldMarkTopRenderComponentAsDirtyForPropsUpdates;
+  }
+  return c;
+}
 
 + (Class<CKComponentControllerProtocol>)controllerClass
 {
@@ -75,6 +95,10 @@
 {
   [super buildComponentTree:parent previousParent:previousParent params:params parentHasStateUpdate:parentHasStateUpdate];
   _parentHasStateUpdate = parentHasStateUpdate;
+
+  if (_shouldMarkTopRenderComponentAsDirtyForPropsUpdates) {
+    params.scopeRoot.rootNode.markTopRenderComponentAsDirtyForPropsUpdates();
+  }
 }
 
 @end

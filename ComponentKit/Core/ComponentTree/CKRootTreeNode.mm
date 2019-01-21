@@ -38,3 +38,25 @@ bool CKRootTreeNode::isEmpty() {
 id<CKTreeNodeWithChildrenProtocol> CKRootTreeNode::node() {
   return _node;
 }
+
+const CKTreeNodeDirtyIds& CKRootTreeNode::dirtyNodeIdsForPropsUpdates() const {
+  return _dirtyNodeIdsForPropsUpdates;
+}
+
+void CKRootTreeNode::markTopRenderComponentAsDirtyForPropsUpdates() {
+  while (!_stack.empty()) {
+    auto nodeIdentifier = _stack.top();
+    _dirtyNodeIdsForPropsUpdates.insert(nodeIdentifier);
+    _stack.pop();
+  }
+}
+
+void CKRootTreeNode::willBuildComponentTree(id<CKTreeNodeProtocol>node) {
+  _stack.push(node.nodeIdentifier);
+}
+
+void CKRootTreeNode::didBuildComponentTree(id<CKTreeNodeProtocol>node) {
+  if (!_stack.empty()) {
+    _stack.pop();
+  }
+}

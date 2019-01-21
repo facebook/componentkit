@@ -76,9 +76,15 @@ namespace CKRenderInternal {
                                                          const CKBuildComponentTreeParams &params) -> BOOL {
     auto const previousNode = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
     auto const previousComponent = (id<CKRenderComponentProtocol>)previousNode.component;
-    if (previousComponent && ![component shouldComponentUpdate:previousComponent]) {
-      CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousNode, params);
-      return YES;
+    // If there is no previous compononet, there is nothing to reuse.
+    if (previousComponent) {
+      // We check if the component node is dirty in the **previous** scope root.
+      auto const dirtyNodeIdsForPropsUpdates = params.previousScopeRoot.rootNode.dirtyNodeIdsForPropsUpdates();
+      auto const dirtyNodeId = dirtyNodeIdsForPropsUpdates.find(node.nodeIdentifier);
+      if (dirtyNodeId == params.treeNodeDirtyIds.end() && ![component shouldComponentUpdate:previousComponent]) {
+        CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousNode, params);
+        return YES;
+      }
     }
     return NO;
   }
@@ -119,6 +125,44 @@ namespace CKRenderInternal {
     }
 
     return NO;
+  }
+
+  static auto willBuildComponentTreeWithSingleChild(id<CKTreeNodeProtocol> node,
+                                                    id<CKTreeNodeComponentProtocol> component,
+                                                    const CKBuildComponentTreeParams &params) -> void {
+    auto const scopeRoot = params.scopeRoot;
+
+    // Context support
+    CKComponentContextHelper::willBuildComponentTree(component);
+
+    // Faster Props updates and context support
+    if (params.enableFasterPropsUpdates) {
+      scopeRoot.rootNode.willBuildComponentTree(node);
+    }
+
+    // Systrace logging
+    if (params.isSystraceEnabled) {
+      [scopeRoot.analyticsListener willBuildComponent:component.class];
+    }
+  }
+
+  static auto didBuildComponentTreeWithSingleChild(id<CKTreeNodeProtocol> node,
+                                                   id<CKTreeNodeComponentProtocol> component,
+                                                   const CKBuildComponentTreeParams &params) -> void {
+    auto const scopeRoot = params.scopeRoot;
+
+    // Context support
+    CKComponentContextHelper::didBuildComponentTree(component);
+
+    // Props updates and context support
+    if (params.enableFasterPropsUpdates) {
+      scopeRoot.rootNode.didBuildComponentTree(node);
+    }
+
+    // Systrace logging
+    if (params.isSystraceEnabled) {
+      [scopeRoot.analyticsListener didBuildComponent:component.class];
+    }
   }
 }
 
@@ -202,26 +246,18 @@ namespace CKRender {
                        stateUpdates:params.stateUpdates];
 
     if (!isBridgeComponent) {
-      CKComponentContextHelper::willBuildComponentTree(component);
-
-      // Systrace logging
-      if (params.isSystraceEnabled) {
-        [params.scopeRoot.analyticsListener willBuildComponent:component.class];
-      }
+      CKRenderInternal::willBuildComponentTreeWithSingleChild(node, component, params);
     }
 
     // Faster state/props optimizations require previous parent.
     if (!isBridgeComponent && CKRenderInternal::reusePreviousComponentForSingleChild(node, component, childComponent, parent, previousParent, params, parentHasStateUpdate)) {
-      CKComponentContextHelper::didBuildComponentTree(component);
+
+      CKRenderInternal::didBuildComponentTreeWithSingleChild(node, component, params);
 
       if (didReuseComponent != nullptr) {
         *didReuseComponent = YES;
       }
 
-      // Systrace logging
-      if (params.isSystraceEnabled) {
-        [params.scopeRoot.analyticsListener didBuildComponent:component.class];
-      }
       return;
     }
 
@@ -249,12 +285,7 @@ namespace CKRender {
 
     if (!isBridgeComponent) {
       [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
-      CKComponentContextHelper::didBuildComponentTree(component);
-
-      // Systrace logging
-      if (params.isSystraceEnabled) {
-        [params.scopeRoot.analyticsListener didBuildComponent:component.class];
-      }
+      CKRenderInternal::didBuildComponentTreeWithSingleChild(node, component, params);
     }
   }
 
