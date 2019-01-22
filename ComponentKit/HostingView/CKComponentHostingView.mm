@@ -47,19 +47,18 @@ struct CKComponentHostingViewInputs {
 
 struct CKComponentHostingViewSizeCache {
   CKComponentHostingViewSizeCache()
-  : _constrainedSize({}), _computedSize({}), _component(nil), _empty(YES) {};
+  : _constrainedSize({}), _computedSize({}), _empty(YES) {};
 
   CKComponentHostingViewSizeCache(const CKSizeRange constrainedSize,
-                                  const CGSize computedSize,
-                                  CKComponent *const component)
-  : _constrainedSize(constrainedSize), _computedSize(computedSize), _component(component), _empty(NO) {};
+                                  const CGSize computedSize)
+  : _constrainedSize(constrainedSize), _computedSize(computedSize), _empty(NO) {};
 
   CGSize computedSize() {
     return _computedSize;
   }
 
-  BOOL isValid(const CKSizeRange constrainedSize, CKComponent *const component) {
-    return _constrainedSize == constrainedSize && _component == component;
+  BOOL isValid(const CKSizeRange constrainedSize) {
+    return _constrainedSize == constrainedSize;
   }
 
   operator bool() {
@@ -68,7 +67,6 @@ struct CKComponentHostingViewSizeCache {
 private:
   CKSizeRange _constrainedSize;
   CGSize _computedSize;
-  CKComponent *_component;
   BOOL _empty;
 };
 
@@ -230,21 +228,21 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   if (!_unifyBuildAndLayout) {
     [self _synchronouslyUpdateComponentIfNeeded];
     const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-    if (_sizeCache && _sizeCache.isValid(constrainedSize, _component)) {
+    if (_sizeCache && _sizeCache.isValid(constrainedSize)) {
       return _sizeCache.computedSize();
     }
     const auto computedSize = CKComputeRootComponentLayout(_component,
                                                            constrainedSize,
                                                            _pendingInputs.scopeRoot.analyticsListener).size();
-    _sizeCache = {constrainedSize, computedSize, _component};
+    _sizeCache = {constrainedSize, computedSize};
     return computedSize;
   } else {
     const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-    if (_sizeCache && _sizeCache.isValid(constrainedSize, _component)) {
+    if (_sizeCache && _sizeCache.isValid(constrainedSize)) {
       return _sizeCache.computedSize();
     }
     const auto computedSize = [self _synchronouslyCalculateLayoutSize:constrainedSize];
-    _sizeCache = {constrainedSize, computedSize, _component};
+    _sizeCache = {constrainedSize, computedSize};
     return computedSize;
   }
 }
@@ -444,6 +442,7 @@ static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView
 
   _pendingInputs.scopeRoot = result.scopeRoot;
   _pendingInputs.stateUpdates = {};
+  _sizeCache = {};
   _component = result.component;
   _boundsAnimation = result.boundsAnimation;
   _componentNeedsUpdate = NO;
