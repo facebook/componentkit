@@ -35,8 +35,8 @@ struct CKComponentContextStackItem {
   std::stack<CKComponentContextStackItem> _stack;
   // Dirty flag for the current store in use.
   BOOL _itemWasAdded;
-  // A pointer to the existing rootNode, which we set only if `enableFasterPropsUpdates` is enabled.
-  CKRootTreeNode *_rootNode;
+  // A pointer to the existing scope root, which we set only if `enableFasterPropsUpdates` is enabled.
+  __weak CKComponentScopeRoot *_scopeRoot;
 }
 @end
 @implementation CKComponentContextValue @end
@@ -52,11 +52,13 @@ static CKComponentContextValue *contextValue(BOOL create)
     threadDictionary[kThreadDictionaryKey] = contextValue;
     // Props updates support.
     CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
-    // Keep a pointer to the existing rootNode only if `enableFasterPropsUpdates` is enabled.
-    if (currentScope != nullptr && currentScope->enableFasterPropsUpdates) {
-      contextValue->_rootNode = &(currentScope->newScopeRoot.rootNode);
+    // Save the existing scope root, but only if `enableFasterPropsUpdates` is enabled.
+    if (currentScope != nullptr &&
+        currentScope->enableFasterPropsUpdates &&
+        currentScope->newScopeRoot) {
+      contextValue->_scopeRoot = currentScope->newScopeRoot;
     } else {
-      contextValue->_rootNode = nullptr;
+      contextValue->_scopeRoot = nil;
     }
   }
   return contextValue;
@@ -167,8 +169,9 @@ id CKComponentContextHelper::fetch(id key)
 {
   CKComponentContextValue *const v = contextValue(NO);
   if (v) {
-    if (v->_rootNode != nullptr) {
-      v->_rootNode->markTopRenderComponentAsDirtyForPropsUpdates();
+    auto const scopeRoot = v->_scopeRoot;
+    if (scopeRoot) {
+      scopeRoot.rootNode.markTopRenderComponentAsDirtyForPropsUpdates();
     }
     return v->_dictionary[key];
   }
