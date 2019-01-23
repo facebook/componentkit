@@ -20,7 +20,7 @@
 #import "CKDataSourceChange.h"
 #import "CKDataSourceChangesetModification.h"
 #import "CKDataSourceChangesetVerification.h"
-#import "CKDataSourceConfiguration.h"
+#import "CKDataSourceConfigurationInternal.h"
 #import "CKDataSourceItem.h"
 #import "CKDataSourceListenerAnnouncer.h"
 #import "CKDataSourceQOSHelper.h"
@@ -49,6 +49,9 @@
 - (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
 {
   CKAssertNotNil(configuration, @"Configuration is required");
+  CKAssertNil(configuration.workQueue, @"CKThreadSafeDataSource doesn't support `workQueue`");
+  CKAssert(!configuration.applyModificationsOnWorkQueue, @"CKThreadSafeDataSource doesn't support `applyModificationsOnWorkQueue`");
+  CKAssert(!configuration.splitChangesetOptions.enabled, @"CKThreadSafeDataSource doesn't support `splitChangesetOptions`");
   if (self = [super init]) {
     _state = [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
