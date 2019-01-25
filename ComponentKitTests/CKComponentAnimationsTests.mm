@@ -385,3 +385,57 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
   return [super newWithComponent:component];
 }
 @end
+
+@interface CKComponentAnimationTests : XCTestCase
+@end
+
+@implementation CKComponentAnimationTests
+
+- (void)test_WhenInitialisedWithComponentAndAnimation_CallsCompletionFromCleanup
+{
+  __block auto numCompletionCalls = 0;
+  auto const a = CKComponentAnimation {
+    [CKComponent new],
+    [CAAnimation new],
+    nil,
+    ^{ ++numCompletionCalls; }
+  };
+
+  a.cleanup(nil);
+
+  XCTAssertEqual(numCompletionCalls, 1);
+}
+
+- (void)test_WhenInitialisedWithFinalUnmountAnimation_CallsCompletionFromCleanup
+{
+  __block auto numCompletionCalls = 0;
+  auto const a = CKComponentAnimation {
+    CKComponentFinalUnmountAnimation {
+      [CKComponent new], [CAAnimation new], ^{ ++numCompletionCalls; }
+    },
+    [UIView new]
+  };
+
+  a.cleanup(nil);
+
+  XCTAssertEqual(numCompletionCalls, 1);
+}
+
+- (void)test_WhenInitialisedWithHooks_CallsCompletionFromCleanup
+{
+  __block auto numCompletionCalls = 0;
+  auto const a = CKComponentAnimation {
+    CKComponentAnimationHooks {
+      ^id(){ return nil; },
+      ^id(id){ return nil; },
+      ^(id){}
+    },
+    ^{ ++numCompletionCalls; }
+  };
+
+  a.cleanup(nil);
+
+  XCTAssertEqual(numCompletionCalls, 1);
+}
+
+@end

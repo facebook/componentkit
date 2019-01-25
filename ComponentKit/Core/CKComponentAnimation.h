@@ -18,6 +18,7 @@
 struct CKComponentFinalUnmountAnimation {
   CKComponent *component;
   CAAnimation *animation;
+  CKComponentAnimationCompletion completion;
 };
 
 struct CKComponentAnimation {
@@ -39,13 +40,13 @@ struct CKComponentAnimation {
    @param animation A CAAnimation to apply on the component's layer.
    @param layerPath A key path to a sublayer of the component's view. Defaults to nil.
    */
-  CKComponentAnimation(CKComponent *component, CAAnimation *animation, NSString *layerPath = nil) noexcept;
+  CKComponentAnimation(CKComponent *component, CAAnimation *animation, NSString *layerPath = nil, CKComponentAnimationCompletion completion = nil) noexcept;
   
   /** Creates a CKComponentAnimation from CKComponentFinalUnmountAnimation */
   CKComponentAnimation(const CKComponentFinalUnmountAnimation &animation, UIView *const hostView) noexcept;
 
   /** Creates a completely custom animation with arbitrary hooks. */
-  CKComponentAnimation(const CKComponentAnimationHooks &hooks) noexcept;
+  CKComponentAnimation(const CKComponentAnimationHooks &hooks, CKComponentAnimationCompletion completion = nil) noexcept;
 
   id willRemount() const;
   id didRemount(id context) const;

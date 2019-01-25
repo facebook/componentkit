@@ -14,6 +14,8 @@ typedef id (^CKComponentWillRemountAnimationBlock)(void);
 typedef id (^CKComponentDidRemountAnimationBlock)(id context);
 typedef void (^CKComponentCleanupAnimationBlock)(id context);
 
+using CKComponentAnimationCompletion = void (^)();
+
 struct CKComponentAnimationHooks {
   /**
    Corresponds to [CKComponentController -willRemountComponent]. The old component and its children are still mounted.
@@ -40,4 +42,19 @@ struct CKComponentAnimationHooks {
    Receives the context returned by the didRemount block.
    */
   CKComponentCleanupAnimationBlock cleanup;
+
+  auto byAddingCompletion(CKComponentAnimationCompletion c) const -> CKComponentAnimationHooks
+  {
+    if (c == nil) { return *this; }
+    // Make sure we're not capturing `this` (which is not managed by ARC)
+    auto const origCleanup = cleanup;
+    return {
+      willRemount,
+      didRemount,
+      ^(id ctx){
+        if (auto _cleanup = origCleanup) { _cleanup(ctx); };
+        c();
+      }
+    };
+  }
 };
