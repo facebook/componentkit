@@ -178,6 +178,15 @@ id CKComponentContextHelper::fetch(id key)
   return nil;
 }
 
+id CKComponentContextHelper::fetchConst(id key)
+{
+  CKComponentContextValue *const v = contextValue(NO);
+  if (v) {
+    return v->_dictionary[key];
+  }
+  return nil;
+}
+
 CKComponentContextContents CKComponentContextHelper::fetchAll()
 {
   CKComponentContextValue *const v = contextValue(NO);
