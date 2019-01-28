@@ -10,6 +10,7 @@
 
 #import "CKThreadSafeDataSource.h"
 
+#import "CKThreadSafeDataSourceInternal.h"
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
 #import "CKComponentControllerInternal.h"
@@ -34,7 +35,6 @@
 @interface CKThreadSafeDataSource () <CKComponentStateListener, CKComponentDebugReflowListener>
 {
   CKDataSourceState *_state;
-  CK::Mutex _stateMutex;
 
   CKComponentStateUpdatesMap _pendingAsynchronousStateUpdates;
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
@@ -48,12 +48,18 @@
 
 - (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
 {
+  return [self initWithConfiguration:configuration state:nil];
+}
+
+- (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
+                                state:(CKDataSourceState *)state
+{
   CKAssertNotNil(configuration, @"Configuration is required");
   CKAssertNil(configuration.workQueue, @"CKThreadSafeDataSource doesn't support `workQueue`");
   CKAssert(!configuration.applyModificationsOnWorkQueue, @"CKThreadSafeDataSource doesn't support `applyModificationsOnWorkQueue`");
   CKAssert(!configuration.splitChangesetOptions.enabled, @"CKThreadSafeDataSource doesn't support `splitChangesetOptions`");
   if (self = [super init]) {
-    _state = [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
+    _state = state ?: [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
     _workQueue = dispatch_queue_create("org.componentkit.CKThreadSafeDataSource", DISPATCH_QUEUE_SERIAL);
 
@@ -67,7 +73,7 @@
   // We want to ensure that controller invalidation is called on the main thread
   // The chain of ownership is following: CKDataSourceState -> array of CKDataSourceItem-> ScopeRoot -> controllers.
   // We delay desctruction of DataSourceState to guarantee that controllers are alive.
-  auto const state = self.state;
+  auto const state = _state;
   void (^completion)() = ^() {
     [state enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSIndexPath *, BOOL *stop) {
       CKComponentScopeRootAnnounceControllerInvalidation([item scopeRoot]);
@@ -78,12 +84,6 @@
   } else {
     dispatch_async(dispatch_get_main_queue(), completion);
   }
-}
-
-- (CKDataSourceState *)state
-{
-  CK::MutexLocker lock(_stateMutex);
-  return _state;
 }
 
 - (void)applyChangeset:(CKDataSourceChangeset *)changeset
@@ -218,26 +218,21 @@
 {
 #if CK_ASSERTIONS_ENABLED
   if ([modification isKindOfClass:[CKDataSourceChangesetModification class]]) {
-    CKVerifyChangeset(((CKDataSourceChangesetModification *)modification).changeset, self.state, @[]);
+    CKVerifyChangeset(((CKDataSourceChangesetModification *)modification).changeset, _state, @[]);
   }
 #endif
-
-  auto const state = self.state;
   CKDataSourceChange *change = nil;
   @autoreleasepool {
-    change = [modification changeFromState:state];
+    change = [modification changeFromState:_state];
   }
   return change;
 }
 
 - (void)_applyChange:(CKDataSourceChange *)change
 {
-  auto const previousState = self.state;
+  auto const previousState = _state;
   auto const newState = change.state;
-  {
-    CK::MutexLocker lock(_stateMutex);
-    _state = newState;
-  }
+  _state = newState;
 
   dispatch_async(dispatch_get_main_queue(), ^{
     auto const appliedChanges = change.appliedChanges;

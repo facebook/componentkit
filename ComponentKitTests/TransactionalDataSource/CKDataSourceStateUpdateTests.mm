@@ -20,14 +20,19 @@
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceState.h>
 #import <ComponentKit/CKThreadSafeDataSource.h>
+#import <ComponentKit/CKDataSourceListener.h>
 
 #import "CKStateExposingComponent.h"
 #import "CKDataSourceStateTestHelpers.h"
 
-@interface CKDataSourceStateUpdateTests : XCTestCase <CKComponentProvider>
+@interface CKDataSourceStateUpdateTests : XCTestCase <CKComponentProvider, CKDataSourceListener>
 @end
 
 @implementation CKDataSourceStateUpdateTests
+{
+  id<CKDataSourceProtocol> _dataSource;
+  CKDataSourceState *_state;
+}
 
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
 {
@@ -46,14 +51,13 @@
 
 - (void)_testSynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  CKDataSource *ds = CKComponentTestDataSource(dataSourceClass, [self class], nil);
-  CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  [[item rootLayout].component() updateState:^(id oldState){return @"new state";} mode:CKUpdateModeSynchronous];
+  _dataSource = CKComponentTestDataSource(dataSourceClass, [self class], self);
+  NSString *const newState = @"new state";
+  [self _updateStates:@[newState] mode:CKUpdateModeSynchronous];
 
   // Even for synchronous updates, the update is deferred to the end of the run loop, so we must spin the runloop.
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    CKDataSourceItem *updatedItem = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    return [((CKStateExposingComponent *)[updatedItem rootLayout].component()).state isEqual:@"new state"];
+    return [self _isEqualState:newState];
   }));
 }
 
@@ -69,16 +73,12 @@
 
 - (void)_testMultipleSynchronousStateUpdatesAreCoalescedWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  CKDataSource *ds = CKComponentTestDataSource(dataSourceClass, [self class], nil);
-  CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  NSNumber *originalState = ((CKStateExposingComponent *)[item rootLayout].component()).state;
-  [[item rootLayout].component() updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
-  [[item rootLayout].component() updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
-  [[item rootLayout].component() updateState:^(NSNumber *oldState){return @([oldState unsignedIntegerValue] + 1);} mode:CKUpdateModeSynchronous];
+  _dataSource = CKComponentTestDataSource(dataSourceClass, [self class], self);
+  NSArray<id> *const newStates = @[@1, @2, @3];
+  [self _updateStates:newStates mode:CKUpdateModeSynchronous];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    CKDataSourceItem *updatedItem = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    return [((CKStateExposingComponent *)[updatedItem rootLayout].component()).state isEqual:@([originalState unsignedIntegerValue] + 3)];
+    return [self _isEqualState:newStates.lastObject];
   }));
 }
 
@@ -94,13 +94,12 @@
 
 - (void)_testAsynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  CKDataSource *ds = CKComponentTestDataSource(dataSourceClass, [self class], nil);
-  CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  [[item rootLayout].component() updateState:^(id oldState){return @"new state";} mode:CKUpdateModeAsynchronous];
+  _dataSource = CKComponentTestDataSource(dataSourceClass, [self class], self);
+  NSString *const newState = @"new state";
+  [self _updateStates:@[newState] mode:CKUpdateModeAsynchronous];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    CKDataSourceItem *updatedItem = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    return [((CKStateExposingComponent *)[updatedItem rootLayout].component()).state isEqual:@"new state"];
+    return [self _isEqualState:newState];
   }));
 }
 
@@ -116,18 +115,52 @@
 
 - (void)_testStateUpdatesAreProcessedInTheOrderTheyWereEnqueuedWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  CKDataSource *ds = CKComponentTestDataSource(dataSourceClass, [self class], nil);
-  CKDataSourceItem *item = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-
-  CKComponent *const component = item.rootLayout.component();
-  [component updateState:^(NSNumber *oldState){return @"NewState"; } mode:CKUpdateModeSynchronous];
-  [component updateState:^(NSString *oldState){return [NSMutableString stringWithFormat:@"%@Update1", oldState]; } mode:CKUpdateModeSynchronous];
-  [component updateState:^(NSString *oldState){return [NSMutableString stringWithFormat:@"%@Update2", oldState]; } mode:CKUpdateModeSynchronous];
+  _dataSource = CKComponentTestDataSource(dataSourceClass, [self class], self);
+  NSArray<id> *const newStates = @[@"NewState", @"NewStateUpdate1", @"NewStateUpdate1Update2"];
+  [self _updateStates:newStates mode:CKUpdateModeSynchronous];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    CKDataSourceItem *updatedItem = [[ds state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    return [((CKStateExposingComponent *)[updatedItem rootLayout].component()).state isEqual:@"NewStateUpdate1Update2"];
+    return [self _isEqualState:newStates.lastObject];
   }));
+}
+
+#pragma mark - CKDataSourceListener
+
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+     didModifyPreviousState:(CKDataSourceState *)previousState
+                  withState:(CKDataSourceState *)state
+          byApplyingChanges:(CKDataSourceAppliedChanges *)changes
+{
+  _state = state;
+}
+
+- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+ willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset
+{
+}
+
+#pragma mark - Helpers
+
+- (void)_updateStates:(NSArray<id> *)states mode:(CKUpdateMode)mode
+{
+  // We need to wait until the first changeset is applied becuase CKThreadSafeDataSource always dispatch_async
+  // `componentDataSource:didModifyPreviousState` to the main queue in order to maintain the sequence of modifications.
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state != nil;
+  });
+  CKDataSourceItem *const item = [_state objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+  CKComponent *const component = [item rootLayout].component();
+  for (id state in states) {
+    [component updateState:^(id oldState){return state;} mode:mode];
+  }
+}
+
+- (BOOL)_isEqualState:(id)state
+{
+  CKDataSourceItem *updatedItem = [_state objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+  return updatedItem
+  ? [((CKStateExposingComponent *)[updatedItem rootLayout].component()).state isEqual:state]
+  : NO;
 }
 
 @end

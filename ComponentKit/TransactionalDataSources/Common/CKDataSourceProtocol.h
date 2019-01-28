@@ -38,11 +38,10 @@ struct CKDataSourceViewport {
 
 @protocol CKDataSourceProtocol <NSObject>
 
-/** Designated initializer. */
+/**
+ @param configuration @see CKDataSourceConfiguration.
+ */
 - (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration;
-
-/** An immutable object representing the current state of the data source. */
-- (CKDataSourceState *)state;
 
 /**
  Applies the specified changes to the data source. If you apply a changeset synchronously while previous asynchronous

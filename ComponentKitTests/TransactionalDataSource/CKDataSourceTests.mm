@@ -36,6 +36,7 @@
   NSInteger _willGenerateChangeCounter;
   NSInteger _didGenerateChangeCounter;
   NSInteger _syncModificationStartCounter;
+  CKDataSourceState *_state;
 }
 
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
@@ -56,26 +57,6 @@
   _didGenerateChangeCounter = 0;
   _syncModificationStartCounter = 0;
   [super tearDown];
-}
-
-- (void)testDataSourceIsInitiallyEmpty
-{
-  [self _testDataSourceIsInitiallyEmptyWithDataSourceClass:[CKDataSource class]];
-}
-
-- (void)testThreadSafeDataSourceIsInitiallyEmpty
-{
-  [self _testDataSourceIsInitiallyEmptyWithDataSourceClass:[CKThreadSafeDataSource class]];
-}
-
-- (void)_testDataSourceIsInitiallyEmptyWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
-{
-  id<CKDataSourceProtocol> ds =
-  [[(Class)dataSourceClass alloc] initWithConfiguration:
-   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                        context:nil
-                                                      sizeRange:{}]];
-  XCTAssertEqual([[ds state] numberOfSections], (NSUInteger)0);
 }
 
 - (void)testDataSourceSynchronouslyInsertingItemsAnnouncesInsertion
@@ -199,7 +180,7 @@
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
     return _announcedChanges.count == 2 && [_announcedChanges[1] isEqual:expectedAppliedChanges];
   }));
-  XCTAssertEqual([[ds state] configuration], config);
+  XCTAssertEqual([_state configuration], config);
   XCTAssertEqual(_syncModificationStartCounter, 2);
   XCTAssertEqual(_willGenerateChangeCounter, 0);
   XCTAssertEqual(_didGenerateChangeCounter, 0);
@@ -289,8 +270,11 @@
     // We dispatch empty operation on Data Source to background so that
     // DataSource deallocation is also triggered on background.
     // CKLifecycleTestComponent will assert if it receives an invalidation not on the main thread,
-    id<CKDataSourceProtocol> dataSource = CKComponentTestDataSource(dataSourceClass, [self class], nil);
-    controller = (CKLifecycleTestComponentController *)[[dataSource.state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component().controller;
+    id<CKDataSourceProtocol> dataSource = CKComponentTestDataSource(dataSourceClass, [self class], self);
+    CKRunRunLoopUntilBlockIsTrue(^BOOL{
+      return _state != nil;
+    });
+    controller = (CKLifecycleTestComponentController *)[[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component().controller;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       [dataSource hash];
     });
@@ -308,6 +292,7 @@
                   withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
+  _state = state;
   [_announcedChanges addObject:changes];
 }
 

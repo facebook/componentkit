@@ -9,8 +9,9 @@
  */
 
 #import <ComponentKit/CKDataSource.h>
+#import <ComponentKit/CKDataSourceProtocolInternal.h>
 
-@interface CKDataSource ()
+@interface CKDataSource () <CKDataSourceProtocolInternal>
 
 /**
  The queue that the data source uses for its asynchronous operations.

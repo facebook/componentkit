@@ -437,6 +437,10 @@
 		7203EB90217005CE00109F4A /* CKThreadSafeDataSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7203EB89217005CE00109F4A /* CKThreadSafeDataSource.mm */; };
 		7203EB91217005CE00109F4A /* CKThreadSafeDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 7203EB8E217005CE00109F4A /* CKThreadSafeDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7203EB92217005CE00109F4A /* CKThreadSafeDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 7203EB8E217005CE00109F4A /* CKThreadSafeDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		72122F4221FD3352004BF8B3 /* CKThreadSafeDataSourceInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 72122F3C21FD3351004BF8B3 /* CKThreadSafeDataSourceInternal.h */; };
+		72122F4321FD3352004BF8B3 /* CKThreadSafeDataSourceInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 72122F3C21FD3351004BF8B3 /* CKThreadSafeDataSourceInternal.h */; };
+		72122F4421FD3352004BF8B3 /* CKDataSourceProtocolInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 72122F4121FD3351004BF8B3 /* CKDataSourceProtocolInternal.h */; };
+		72122F4521FD3352004BF8B3 /* CKDataSourceProtocolInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 72122F4121FD3351004BF8B3 /* CKDataSourceProtocolInternal.h */; };
 		721AAE54214F19B700B9EE8A /* CKComponentRootLayoutProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 721AAE4F214F19B600B9EE8A /* CKComponentRootLayoutProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		721AAE55214F19B700B9EE8A /* CKComponentRootLayoutProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 721AAE4F214F19B600B9EE8A /* CKComponentRootLayoutProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		7221BA512172AED200969D41 /* CKDataSourceQOSHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 7221BA4B2172AED200969D41 /* CKDataSourceQOSHelper.h */; };
@@ -1097,6 +1101,8 @@
 		7203EB80216FF35E00109F4A /* CKDataSourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceProtocol.h; sourceTree = "<group>"; };
 		7203EB89217005CE00109F4A /* CKThreadSafeDataSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKThreadSafeDataSource.mm; sourceTree = "<group>"; };
 		7203EB8E217005CE00109F4A /* CKThreadSafeDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKThreadSafeDataSource.h; sourceTree = "<group>"; };
+		72122F3C21FD3351004BF8B3 /* CKThreadSafeDataSourceInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKThreadSafeDataSourceInternal.h; sourceTree = "<group>"; };
+		72122F4121FD3351004BF8B3 /* CKDataSourceProtocolInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceProtocolInternal.h; sourceTree = "<group>"; };
 		721AAE4F214F19B600B9EE8A /* CKComponentRootLayoutProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentRootLayoutProvider.h; sourceTree = "<group>"; };
 		7221BA4B2172AED200969D41 /* CKDataSourceQOSHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceQOSHelper.h; sourceTree = "<group>"; };
 		7221BA552172B07200969D41 /* CKDataSourceQOSHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceQOSHelper.mm; sourceTree = "<group>"; };
@@ -2147,6 +2153,7 @@
 				D0B47B711CBD926700BB33CE /* CKDataSourceListenerAnnouncer.h */,
 				D0B47B721CBD926700BB33CE /* CKDataSourceListenerAnnouncer.mm */,
 				7203EB80216FF35E00109F4A /* CKDataSourceProtocol.h */,
+				72122F4121FD3351004BF8B3 /* CKDataSourceProtocolInternal.h */,
 				D0B47B731CBD926700BB33CE /* CKDataSourceState.h */,
 				D0B47B741CBD926700BB33CE /* CKDataSourceState.mm */,
 				D0B47B751CBD926700BB33CE /* CKDataSourceStateInternal.h */,
@@ -2154,6 +2161,7 @@
 				D657401121051C6E00FD8AAB /* CKIndexTransform.mm */,
 				7203EB8E217005CE00109F4A /* CKThreadSafeDataSource.h */,
 				7203EB89217005CE00109F4A /* CKThreadSafeDataSource.mm */,
+				72122F3C21FD3351004BF8B3 /* CKThreadSafeDataSourceInternal.h */,
 				D0B47B761CBD926700BB33CE /* Internal */,
 			);
 			path = Common;
@@ -2431,6 +2439,7 @@
 				03B8B5131D2A346F00EDFF59 /* CKComponentAnimation.h in Headers */,
 				60D7B3B820FC90500011AB3B /* YGNodePrint.h in Headers */,
 				03B8B5141D2A346F00EDFF59 /* CKBackgroundLayoutComponent.h in Headers */,
+				72122F4521FD3352004BF8B3 /* CKDataSourceProtocolInternal.h in Headers */,
 				03B8B5151D2A346F00EDFF59 /* CKDataSourceChangesetModification.h in Headers */,
 				03B8B5161D2A346F00EDFF59 /* CKDimension.h in Headers */,
 				03B8B5171D2A346F00EDFF59 /* CKTextComponentLayerHighlighter.h in Headers */,
@@ -2462,6 +2471,7 @@
 				03B8B52E1D2A346F00EDFF59 /* CKButtonComponent.h in Headers */,
 				7221BA522172AED200969D41 /* CKDataSourceQOSHelper.h in Headers */,
 				03B8B52F1D2A346F00EDFF59 /* CKComponentDelegateForwarder.h in Headers */,
+				72122F4321FD3352004BF8B3 /* CKThreadSafeDataSourceInternal.h in Headers */,
 				7FB5C1ED1F865BF300D2726B /* CKComponentDescriptionHelper.h in Headers */,
 				03B8B5311D2A346F00EDFF59 /* CKInsetComponent.h in Headers */,
 				23FEC5A0203B30DA0068E09D /* CKTreeNode.h in Headers */,
@@ -2622,6 +2632,7 @@
 				D0B47D471CBD948E00BB33CE /* CKDataSourceListenerAnnouncer.h in Headers */,
 				D657401221051C6F00FD8AAB /* CKIndexTransform.h in Headers */,
 				23309AA52045C5F300833BDB /* CKTreeNodeProtocol.h in Headers */,
+				72122F4221FD3352004BF8B3 /* CKThreadSafeDataSourceInternal.h in Headers */,
 				D0B47D441CBD948E00BB33CE /* CKDataSourceItem.h in Headers */,
 				60D7B3AD20FC90500011AB3B /* YGLayout.h in Headers */,
 				23B65AC9213FF9300049FFAC /* CKRenderComponent.h in Headers */,
@@ -2713,6 +2724,7 @@
 				2DBF1D7A1D3425ED004F28E8 /* CKDetectComponentScopeCollisions.h in Headers */,
 				23309A9F2045C5ED00833BDB /* CKRenderTreeNodeWithChildren.h in Headers */,
 				D0B47CE81CBD948E00BB33CE /* CKAssert.h in Headers */,
+				72122F4421FD3352004BF8B3 /* CKDataSourceProtocolInternal.h in Headers */,
 				60D7B3B920FC90500011AB3B /* Yoga-internal.h in Headers */,
 				D0B47D6C1CBD948E00BB33CE /* CKTextKitRenderer.h in Headers */,
 				40AB33C81FC39196005D3CE9 /* CKStateUpdateMetadata.h in Headers */,

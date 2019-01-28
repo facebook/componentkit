@@ -87,9 +87,15 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
 - (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
 {
+  return [self initWithConfiguration:configuration state:nil];
+}
+
+- (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
+                                state:(CKDataSourceState *)state
+{
   CKAssertNotNil(configuration, @"Configuration is required");
   if (self = [super init]) {
-    _state = [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
+    _state = state ?: [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
 
     _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
@@ -133,12 +139,6 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   } else {
     dispatch_async(dispatch_get_main_queue(), completion);
   }
-}
-
-- (CKDataSourceState *)state
-{
-  CKAssertChangesetQueue();
-  return _state;
 }
 
 - (void)applyChangeset:(CKDataSourceChangeset *)changeset
