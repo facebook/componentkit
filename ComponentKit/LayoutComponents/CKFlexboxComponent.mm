@@ -384,7 +384,10 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     if (YGNodeGetChildCount(childNode) == 0) {
       YGNodeSetMeasureFunc(childNode, measureYGComponent);
     }
-    YGNodeSetBaselineFunc(childNode, computeBaseline);
+    
+    if (_style.alignItems == CKFlexboxAlignItemsBaseline) {
+        YGNodeSetBaselineFunc(childNode, computeBaseline);
+    }
 
     applySizeAttributes(childNode, child, parentWidth, parentHeight);
 
