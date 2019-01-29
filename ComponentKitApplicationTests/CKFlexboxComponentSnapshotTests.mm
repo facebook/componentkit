@@ -53,6 +53,11 @@
   return parentLayout;
 }
 
+- (BOOL)usesCustomBaseline
+{
+  return YES;
+}
+
 @end
 
 @interface CKFlexboxComponent (Test)

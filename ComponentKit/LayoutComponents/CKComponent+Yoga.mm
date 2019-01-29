@@ -39,6 +39,11 @@ YGConfigRef ckYogaDefaultConfig()
   return {};
 }
 
+- (BOOL)usesCustomBaseline
+{
+  return NO;
+}
+
 @end
 
 @implementation CKCompositeComponent (Yoga)

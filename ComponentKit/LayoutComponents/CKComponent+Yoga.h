@@ -43,6 +43,13 @@ YGConfigRef ckYogaDefaultConfig();
  */
 - (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize;
 
+/**
+ A flag that represents whether the component's layout sets a custom baseline value using the key
+ [kCKComponentLayoutExtraBaselineKey] or not
+ 
+ The default value is NO
+ */
+- (BOOL)usesCustomBaseline;
 @end
 
 @interface CKComponent (Yoga) <CKYogaBasedComponentProtocol>

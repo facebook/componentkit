@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 
 /**
- Set a key value pair using this in CKComponentLayout.extra for a custom baseline.
+ Set a key value pair using this in CKComponentLayout.extra for a custom baseline. The component which uses this property should also override @{usesCustomBaseline} to return YES.
  e.g. @{kCKComponentLayoutExtraBaselineKey : 20}
  */
 
