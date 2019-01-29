@@ -41,6 +41,7 @@ const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
 @property (nonatomic) CGSize parentSize;
 @property (nonatomic) CKFlexboxAlignSelf align;
 @property (nonatomic) NSInteger zIndex;
+@property (nonatomic) CKBaselineFunc baselineFunction;
 
 @end
 
@@ -175,12 +176,28 @@ static YGSize measureYGComponent(YGNodeRef node,
 
 static float computeBaseline(YGNodeRef node, const float width, const float height)
 {
-  CKFlexboxChildCachedLayout *cachedLayout = (__bridge CKFlexboxChildCachedLayout *)YGNodeGetContext(node);
+  CKFlexboxChildCachedLayout *const cachedLayout = getCKFlexboxChildCachedLayoutFromYogaNode(node, width, height);
+  if ([cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey]) {
+    CKCAssert([[cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey] isKindOfClass:[NSNumber class]], @"You must set a NSNumber for kCKComponentLayoutExtraBaselineKey");
+    return [[cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey] floatValue];
+  }
+
+  return height;
+}
+
+static float delegateBaselineFunction(YGNodeRef node, const float width, const float height)
+{
+  CKFlexboxChildCachedLayout *const cachedLayout = getCKFlexboxChildCachedLayoutFromYogaNode(node, width, height);
+  return cachedLayout.baselineFunction(cachedLayout.component, width, height);
+}
+
+static CKFlexboxChildCachedLayout* getCKFlexboxChildCachedLayoutFromYogaNode(YGNodeRef node, const float width, const float height)
+{
+  CKFlexboxChildCachedLayout *const cachedLayout = (__bridge CKFlexboxChildCachedLayout *)YGNodeGetContext(node);
 
   if (!CKYogaNodeCanUseCachedMeasurement(YGMeasureModeExactly, width, YGMeasureModeExactly, height, cachedLayout.widthMode, cachedLayout.width, cachedLayout.heightMode, cachedLayout.height, static_cast<float>(cachedLayout.componentLayout.size.width), static_cast<float>(cachedLayout.componentLayout.size.height), 0, 0, ckYogaDefaultConfig())) {
-    CKComponent *component = cachedLayout.component;
-    CGSize fixedSize = {width, height};
-    CKComponentLayout componentLayout = CKComputeComponentLayout(component, convertCKSizeRangeToCKRepresentation(CKSizeRange(fixedSize, fixedSize)), convertCGSizeToCKRepresentation(cachedLayout.parentSize));
+    const CGSize fixedSize = {width, height};
+    const CKComponentLayout componentLayout = CKComputeComponentLayout(cachedLayout.component, convertCKSizeRangeToCKRepresentation(CKSizeRange(fixedSize, fixedSize)), convertCGSizeToCKRepresentation(cachedLayout.parentSize));
     cachedLayout.componentLayout = componentLayout;
     cachedLayout.width = width;
     cachedLayout.height = height;
@@ -188,12 +205,7 @@ static float computeBaseline(YGNodeRef node, const float width, const float heig
     cachedLayout.heightMode = YGMeasureModeExactly;
   }
 
-  if ([cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey]) {
-    CKCAssert([[cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey] isKindOfClass:[NSNumber class]], @"You must set a NSNumber for kCKComponentLayoutExtraBaselineKey");
-    return [[cachedLayout.componentLayout.extra objectForKey:kCKComponentLayoutExtraBaselineKey] floatValue];
-  }
-
-  return height;
+  return cachedLayout;
 }
 
 static YGDirection ygApplicationDirection()
@@ -374,6 +386,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     childLayout.parentSize = parentSize;
     childLayout.align = child.alignSelf;
     childLayout.zIndex = child.zIndex;
+    childLayout.baselineFunction = child.baselineFunction;
     if (child.aspectRatio.isDefined()) {
       YGNodeStyleSetAspectRatio(childNode, child.aspectRatio.aspectRatio());
     }
@@ -386,7 +399,9 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     }
     
     if (_style.alignItems == CKFlexboxAlignItemsBaseline) {
-        YGNodeSetBaselineFunc(childNode, computeBaseline);
+      YGNodeSetBaselineFunc(childNode, computeBaseline);
+    } else if (child.baselineFunction) {
+      YGNodeSetBaselineFunc(childNode, delegateBaselineFunction);
     }
 
     applySizeAttributes(childNode, child, parentWidth, parentHeight);
