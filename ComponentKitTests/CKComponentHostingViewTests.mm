@@ -24,9 +24,6 @@
 
 #import "CKComponentHostingViewTestModel.h"
 
-@interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate, CKAnalyticsListener>
-@end
-
 typedef struct {
   BOOL unifyBuildAndLayout;
   BOOL allowTapPassthrough;
@@ -36,32 +33,43 @@ typedef struct {
   id<CKAnalyticsListener> analyticsListener;
   id<CKComponentSizeRangeProviding> sizeRangeProvider;
 } CKComponentHostingViewConfiguration;
-static CKComponentHostingView *hostingView(const CKComponentHostingViewConfiguration &options = CKComponentHostingViewConfiguration())
+
+@interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate, CKAnalyticsListener>
++ (CKComponentHostingView *)makeHostingView:(const CKComponentHostingViewConfiguration &)options;
+@end
+
+@implementation CKComponentHostingViewTests {
+  BOOL _calledSizeDidInvalidate;
+  NSInteger _willLayoutComponentTreeHitCount;
+  NSInteger _didLayoutComponentTreeHitCount;
+}
+
++ (CKComponentHostingView *)hostingView:(const CKComponentHostingViewConfiguration &)options
 {
-  CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor]
-                                                                                             size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))
-                                                                                   embedInFlexbox:options.embedInFlexbox
-                                                                             embedInTestComponent:options.embedInTestComponent];
-  CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
-                                                                         sizeRangeProvider:options.sizeRangeProvider ?: [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
-                                                                       componentPredicates:{}
-                                                             componentControllerPredicates:{}
-                                                                         analyticsListener:options.analyticsListener
-                                                                                   options:{
-                                                                                     .unifyBuildAndLayout = options.unifyBuildAndLayout,
-                                                                                     .allowTapPassthrough = options.allowTapPassthrough,
-                                                                                     .invalidateRemovedControllers = options.invalidateRemovedControllers,
-                                                                                   }];
+  auto const model = [[CKComponentHostingViewTestModel alloc]
+                      initWithColor:[UIColor orangeColor]
+                      size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))
+                      embedInFlexbox:options.embedInFlexbox
+                      embedInTestComponent:options.embedInTestComponent];
+  auto const view = [self makeHostingView:options];
   view.bounds = CGRectMake(0, 0, 100, 100);
   [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
   return view;
 }
 
-@implementation CKComponentHostingViewTests {
-  BOOL _calledSizeDidInvalidate;
-  NSInteger _willLayoutComponentTreeHitCount;
-  NSInteger _didLayoutComponentTreeHitCount;
++ (CKComponentHostingView *)makeHostingView:(const CKComponentHostingViewConfiguration &)options
+{
+  return [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
+                                                 sizeRangeProvider:options.sizeRangeProvider ?: [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
+                                               componentPredicates:{}
+                                     componentControllerPredicates:{}
+                                                 analyticsListener:options.analyticsListener
+                                                           options:{
+                                                             .unifyBuildAndLayout = options.unifyBuildAndLayout,
+                                                             .allowTapPassthrough = options.allowTapPassthrough,
+                                                             .invalidateRemovedControllers = options.invalidateRemovedControllers,
+                                                           }];
 }
 
 + (CKComponent *)componentForModel:(CKComponentHostingViewTestModel *)model context:(id<NSObject>)context
@@ -79,19 +87,19 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testInitializationInsertsContainerViewInHierarchy
 {
-  CKComponentHostingView *view = hostingView();
+  CKComponentHostingView *view = [[self class] hostingView:{}];
   XCTAssertTrue(view.subviews.count == 1, @"Expect hosting view to have a single subview.");
 }
 
 - (void)testInitializationInsertsComponentViewInHierarchy
 {
-  CKComponentHostingView *view = hostingView();
+  CKComponentHostingView *view = [[self class] hostingView:{}];
   XCTAssertTrue([view.containerView.subviews count] > 0, @"Expect that initialization should insert component view as subview of container view.");
 }
 
 - (void)testUpdatingHostingViewBoundsResizesComponentView
 {
-  CKComponentHostingView *view = hostingView();
+  CKComponentHostingView *view = [[self class] hostingView:{}];
   view.bounds = CGRectMake(0, 0, 200, 200);
   [view layoutIfNeeded];
 
@@ -102,7 +110,7 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testImmediatelyUpdatesViewOnSynchronousModelChange
 {
-  CKComponentHostingView *view = hostingView();
+  CKComponentHostingView *view = [[self class] hostingView:{}];
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
                mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
@@ -113,7 +121,7 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testEventuallyUpdatesViewOnAsynchronousModelChange
 {
-  CKComponentHostingView *view = hostingView();
+  CKComponentHostingView *view = [[self class] hostingView:{}];
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
                mode:CKUpdateModeAsynchronous];
   [view layoutIfNeeded];
@@ -127,7 +135,7 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testInformsDelegateSizeIsInvalidatedOnModelChange
 {
-  CKComponentHostingView *view = hostingView();
+  CKComponentHostingView *view = [[self class] hostingView:{}];
   view.delegate = self;
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(75, 75))]
                mode:CKUpdateModeSynchronous];
@@ -136,7 +144,7 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testInformsDelegateSizeIsInvalidatedOnContextChange
 {
-  CKComponentHostingView *view = hostingView();
+  CKComponentHostingView *view = [[self class] hostingView:{}];
   view.delegate = self;
   [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
   XCTAssertTrue(_calledSizeDidInvalidate);
@@ -145,8 +153,7 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 - (void)testUpdateWithEmptyBoundsMountLayout
 {
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
-  CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[self class]
-                                                                         sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
+  auto const view = [CKComponentHostingViewTests makeHostingView:{}];
   [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
 
@@ -157,7 +164,7 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 {
   CKLifecycleTestComponent *testComponent = nil;
   @autoreleasepool {
-    CKComponentHostingView *view = hostingView();
+    CKComponentHostingView *view = [[self class] hostingView:{}];
     [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
     testComponent = (CKLifecycleTestComponent *)view.mountedLayout.component;
   }
@@ -167,10 +174,10 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testComponentControllerReceivesInvalidateEventDuringDeallocationEvenWhenParentIsStillPresent
 {
-  CKComponentHostingView *view = hostingView({
+  CKComponentHostingView *view = [[self class] hostingView:{
     .embedInTestComponent = YES,
     .invalidateRemovedControllers = YES
-  });
+  }];
 
   auto const testComponent = (CKEmbeddedTestComponent *)view.mountedLayout.component;
   auto const testLifecyleComponent = testComponent.lifecycleTestComponent;
@@ -184,7 +191,7 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 - (void)testComponentControllerReceivesDidPrepareLayoutForComponent
 {
   CKLifecycleTestComponent *testComponent = nil;
-  CKComponentHostingView *view = hostingView();
+  CKComponentHostingView *view = [[self class] hostingView:{}];
   [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
   testComponent = (CKLifecycleTestComponent *)view.mountedLayout.component;
   XCTAssertTrue(testComponent.controller.calledDidPrepareLayoutForComponent,
@@ -193,9 +200,9 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testUpdatingHostingViewBoundsResizesComponentView_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView({
+  CKComponentHostingView *view = [[self class] hostingView:{
     .unifyBuildAndLayout = YES
-  });
+  }];
 
   view.bounds = CGRectMake(0, 0, 200, 200);
   [view layoutIfNeeded];
@@ -207,9 +214,9 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testImmediatelyUpdatesViewOnSynchronousModelChange_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView({
+  CKComponentHostingView *view = [[self class] hostingView:{
     .unifyBuildAndLayout = YES
-  });
+  }];
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
                mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
@@ -220,9 +227,9 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testEventuallyUpdatesViewOnAsynchronousModelChange_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView({
+  CKComponentHostingView *view = [[self class] hostingView:{
     .unifyBuildAndLayout = YES
-  });
+  }];
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
                mode:CKUpdateModeAsynchronous];
   [view layoutIfNeeded];
@@ -236,9 +243,9 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testInformsDelegateSizeIsInvalidatedOnModelChange_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView({
+  CKComponentHostingView *view = [[self class] hostingView:{
     .unifyBuildAndLayout = YES
-  });
+  }];
   view.delegate = self;
   [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(75, 75))]
                mode:CKUpdateModeSynchronous];
@@ -247,9 +254,9 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testInformsDelegateSizeIsInvalidatedOnContextChange_WithUnifiedBuildAndLayout
 {
-  CKComponentHostingView *view = hostingView({
+  CKComponentHostingView *view = [[self class] hostingView:{
     .unifyBuildAndLayout = YES
-  });
+  }];
   view.delegate = self;
   [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
   XCTAssertTrue(_calledSizeDidInvalidate);
@@ -258,8 +265,7 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 - (void)testUpdateWithEmptyBoundsMountLayout_WithUnifiedBuildAndLayout
 {
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
-  CKComponentHostingView *view = [[CKComponentHostingView alloc] initWithComponentProvider:[self class]
-                                                                         sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
+  auto const view = [CKComponentHostingViewTests makeHostingView:{}];
   [view updateModel:model mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
 
@@ -270,9 +276,9 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 {
   CKLifecycleTestComponent *testComponent = nil;
   @autoreleasepool {
-    CKComponentHostingView *view = hostingView({
+    CKComponentHostingView *view = [[self class] hostingView:{
       .unifyBuildAndLayout = YES
-    });
+    }];
     [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
     testComponent = (CKLifecycleTestComponent *)view.mountedLayout.component;
   }
@@ -285,10 +291,10 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
   // We embed this in a flexbox which allows the view to stay at its natural size
   // while still allowing the host to grow. This allows us to do our hit testing
   // properly below...
-  CKComponentHostingView *view = hostingView({
+  CKComponentHostingView *view = [[self class] hostingView:{
     .allowTapPassthrough = YES,
     .embedInFlexbox = YES,
-  });
+  }];
 
   [view layoutIfNeeded];
 
@@ -306,9 +312,9 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
   // We embed this in a flexbox which allows the view to stay at its natural size
   // while still allowing the host to grow. This allows us to do our hit testing
   // properly below...
-  CKComponentHostingView *view = hostingView({
+  CKComponentHostingView *view = [[self class] hostingView:{
     .embedInFlexbox = YES,
-  });
+  }];
 
   [view layoutIfNeeded];
 
@@ -319,9 +325,9 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testSizeCache_CachedSizeIsUsedIfConstrainedSizesAreSame
 {
-  CKComponentHostingView *view = hostingView({
+  CKComponentHostingView *view = [[self class] hostingView:{
     .analyticsListener = self,
-  });
+  }];
   const auto constrainedSize = CGSizeMake(100, 100);
   [view sizeThatFits:constrainedSize];
   [view sizeThatFits:constrainedSize];
@@ -330,10 +336,10 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testSizeCache_CachedSizeIsNotUsedIfConstrainedSizesAreDifferent
 {
-  CKComponentHostingView *view = hostingView({
+  CKComponentHostingView *view = [[self class] hostingView:{
     .analyticsListener = self,
     .sizeRangeProvider = [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibilityNone],
-  });
+  }];
   const auto constrainedSize1 = CGSizeMake(100, 100);
   const auto constrainedSize2 = CGSizeMake(200, 200);
   [view sizeThatFits:constrainedSize1];
@@ -343,9 +349,9 @@ static CKComponentHostingView *hostingView(const CKComponentHostingViewConfigura
 
 - (void)testSizeCache_CacheSizeIsNotUsedIfComponentIsUpdated
 {
-  CKComponentHostingView *view = hostingView({
+  CKComponentHostingView *view = [[self class] hostingView:{
     .analyticsListener = self,
-  });
+  }];
   const auto constrainedSize = CGSizeMake(100, 100);
   [view sizeThatFits:constrainedSize];
   [view updateModel:nil mode:CKUpdateModeSynchronous];
