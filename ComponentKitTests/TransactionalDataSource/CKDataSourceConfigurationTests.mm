@@ -11,18 +11,12 @@
 #import <XCTest/XCTest.h>
 
 #import <ComponentKit/CKComponent.h>
-#import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
 
-@interface CKDataSourceConfigurationTests : XCTestCase <CKComponentProvider>
+@interface CKDataSourceConfigurationTests : XCTestCase
 @end
 
 @implementation CKDataSourceConfigurationTests
-
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
-{
-  return [CKComponent newWithView:{} size:{}];
-}
 
 - (void)testConfigurationEquality
 {
@@ -37,7 +31,20 @@
   XCTAssertEqualObjects(firstConfiguration, secondConfiguration);
 }
 
-- (void)testNonEqualConfigurations
+- (void)test_WhenComponentProvidersAreDifferent_NotEqual
+{
+  auto const c1 =
+  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceConfigurationTests class]
+                                                       context:@"context"
+                                                     sizeRange:CKSizeRange()];
+  auto const c2 =
+  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[UIView class]
+                                                       context:@"context"
+                                                     sizeRange:CKSizeRange()];
+  XCTAssertNotEqualObjects(c1, c2);
+}
+
+- (void)test_WhenContextsAreDifferent_NotEqual
 {
   CKDataSourceConfiguration *firstConfiguration =
   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceConfigurationTests class]
@@ -48,6 +55,19 @@
                                                        context:@"context2"
                                                      sizeRange:CKSizeRange()];
   XCTAssertNotEqualObjects(firstConfiguration, secondConfiguration);
+}
+
+- (void)test_WhenSizeRangesAreDifferent_NotEqual
+{
+  auto const c1 =
+  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceConfigurationTests class]
+                                                       context:@"context"
+                                                     sizeRange:CKSizeRange()];
+  auto const c2 =
+  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceConfigurationTests class]
+                                                       context:@"context"
+                                                     sizeRange:{CGSizeZero, {100, 100}}];
+  XCTAssertNotEqualObjects(c1, c2);
 }
 
 @end
