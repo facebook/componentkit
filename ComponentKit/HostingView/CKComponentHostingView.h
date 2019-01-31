@@ -34,6 +34,9 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
 
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                            sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
+
 /**
  @param componentProvider provider conforming to CKComponentProvider protocol.
  @param sizeRangeProvider sizing range provider conforming to CKComponentSizeRangeProviding.
@@ -44,6 +47,10 @@
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
+
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                            sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
 
 /** Updates the model used to render the component. */
 - (void)updateModel:(id<NSObject>)model mode:(CKUpdateMode)mode;

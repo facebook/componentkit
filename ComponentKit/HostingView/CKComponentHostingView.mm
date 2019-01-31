@@ -72,7 +72,7 @@ private:
 
 @interface CKComponentHostingView () <CKComponentDebugReflowListener>
 {
-  Class<CKComponentProvider> _componentProvider;
+  CKComponentProviderBlock _componentProvider;
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
 
   CKComponentHostingViewInputs _pendingInputs;
@@ -128,6 +128,14 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                        analyticsListener:nil];
 }
 
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                            sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+{
+  return [self initWithComponentProviderFunc:componentProvider
+                           sizeRangeProvider:sizeRangeProvider
+                           analyticsListener:nil];
+}
+
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -140,12 +148,58 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                                  options:{}];
 }
 
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                            sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+{
+  return [self initWithComponentProviderFunc:componentProvider
+                           sizeRangeProvider:sizeRangeProvider
+                         componentPredicates:{}
+               componentControllerPredicates:{}
+                           analyticsListener:analyticsListener
+                                     options:{}];
+}
+
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                                   options:(const CKComponentHostingViewOptions &)options
+{
+  auto const p = ^(id<NSObject> m, id<NSObject> c) {
+    return [componentProvider componentForModel:m context:c];
+  };
+  return [self initWithComponentProviderBlock:p
+                            sizeRangeProvider:sizeRangeProvider
+                          componentPredicates:componentPredicates
+                componentControllerPredicates:componentControllerPredicates
+                            analyticsListener:analyticsListener
+                                      options:options];
+}
+
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                            sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                          componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+                componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
+                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                                      options:(const CKComponentHostingViewOptions &)options
+{
+  auto const p = ^(id<NSObject> m, id<NSObject> c) { return componentProvider(m, c); };
+  return [self initWithComponentProviderBlock:p
+                            sizeRangeProvider:sizeRangeProvider
+                          componentPredicates:componentPredicates
+                componentControllerPredicates:componentControllerPredicates
+                            analyticsListener:analyticsListener
+                                      options:options];
+}
+
+- (instancetype)initWithComponentProviderBlock:(CKComponentProviderBlock)componentProvider
+                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
+                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                                       options:(const CKComponentHostingViewOptions &)options
 {
   if (self = [super initWithFrame:CGRectZero]) {
     _componentProvider = componentProvider;
@@ -154,7 +208,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _pendingInputs = {
       .scopeRoot = CKComponentScopeRootWithPredicates(self, analyticsListener ?: sDefaultAnalyticsListener, componentPredicates, componentControllerPredicates)
     };
-    
+
     _allowTapPassthrough = options.allowTapPassthrough;
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero allowTapPassthrough:_allowTapPassthrough];
     [self addSubview:_containerView];
@@ -163,7 +217,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
       _componentNeedsUpdate = YES;
       _requestedUpdateMode = CKUpdateModeSynchronous;
     }
-    
+
     _unifyBuildAndLayout = options.unifyBuildAndLayout;
     _animationApplicator = CK::AnimationApplicatorFactory::make();
     _animationPredicates = CKComponentAnimationPredicates();
@@ -411,7 +465,7 @@ static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView
                                                                     inputs->scopeRoot,
                                                                     inputs->stateUpdates,
                                                                     ^{
-                                                                      return [_componentProvider componentForModel:inputs->model context:inputs->context];
+                                                                      return _componentProvider(inputs->model, inputs->context);
                                                                     }
                                                                     ));
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -482,7 +536,7 @@ static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView
 
   _isSynchronouslyUpdatingComponent = YES;
   [self _applyResult:CKBuildComponent(_pendingInputs.scopeRoot, _pendingInputs.stateUpdates, ^{
-    return [_componentProvider componentForModel:_pendingInputs.model context:_pendingInputs.context];
+    return _componentProvider(_pendingInputs.model, _pendingInputs.context);
   })];
   _isSynchronouslyUpdatingComponent = NO;
 }
@@ -502,7 +556,7 @@ static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView
                                                                       pendingInputs.stateUpdates,
                                                                       sizeRange,
                                                                       ^{
-                                                                        return [_componentProvider componentForModel:model context:context];
+                                                                        return _componentProvider(model, context);
                                                                       },
                                                                       _animationPredicates);
 

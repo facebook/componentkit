@@ -50,6 +50,13 @@ struct CKComponentHostingViewOptions {
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                                   options:(const CKComponentHostingViewOptions &)options;
 
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                            sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                          componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+                componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
+                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                                      options:(const CKComponentHostingViewOptions &)options;
+
 @property (nonatomic, strong, readonly) UIView *containerView;
 
 /** Returns the current scope enumerator provider. Main thread only. */

@@ -31,3 +31,6 @@
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context;
 
 @end
+
+typedef CKComponent *(*CKComponentProviderFunc)(id<NSObject>, id<NSObject>);
+typedef CKComponent *(^CKComponentProviderBlock)(id<NSObject>, id<NSObject>);

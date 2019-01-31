@@ -393,3 +393,25 @@ typedef struct {
 - (void)didReuseNode:(id<CKTreeNodeProtocol>)node inScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot {}
 
 @end
+
+@interface CKComponentHostingViewTests_ComponentProviderFunction : CKComponentHostingViewTests
+@end
+
+@implementation CKComponentHostingViewTests_ComponentProviderFunction
+
++ (CKComponentHostingView *)makeHostingView:(const CKComponentHostingViewConfiguration &)options
+{
+  auto const p = [](id<NSObject> m, id<NSObject>){ return CKComponentWithHostingViewTestModel(m); };
+  return [[CKComponentHostingView alloc] initWithComponentProviderFunc:p
+                                                     sizeRangeProvider:options.sizeRangeProvider ?: [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
+                                                   componentPredicates:{}
+                                         componentControllerPredicates:{}
+                                                     analyticsListener:options.analyticsListener
+                                                               options:{
+                                                                 .unifyBuildAndLayout = options.unifyBuildAndLayout,
+                                                                 .allowTapPassthrough = options.allowTapPassthrough,
+                                                                 .invalidateRemovedControllers = options.invalidateRemovedControllers,
+                                                               }];
+}
+
+@end
