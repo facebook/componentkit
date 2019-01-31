@@ -79,8 +79,8 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
     BOOL visited;
   };
 
-  BOOL isSystraceEnabled = [analyticsListener isSystraceEnabled];
   [analyticsListener willMountComponentTreeWithRootComponent:layout.component];
+  auto const analyticsListenerForMount = [analyticsListener isSystraceEnabled] ? analyticsListener : nil;
   // Using a stack to mount ensures that the components are mounted
   // in a DFS fashion which is handy if you want to animate a subpart
   // of the tree
@@ -93,7 +93,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
   while (!stack.empty()) {
     MountItem &item = stack.top();
     if (item.visited) {
-      [item.layout.component childrenDidMount];
+      [item.layout.component childrenDidMount:analyticsListenerForMount];
       stack.pop();
     } else {
       item.visited = YES;
@@ -104,7 +104,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
                                                                        size:item.layout.size
                                                                    children:item.layout.children
                                                              supercomponent:item.supercomponent
-                                                          analyticsListener:isSystraceEnabled ? analyticsListener : nil];
+                                                          analyticsListener:analyticsListenerForMount];
       [mountedComponents addObject:item.layout.component];
 
       if (mountResult.mountChildren) {

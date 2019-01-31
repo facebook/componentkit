@@ -72,8 +72,12 @@
 
 - (id)nextResponderAfterController;
 
-/** Called when the component and all its children have been mounted. */
-- (void)childrenDidMount;
+/**
+ Called when the component and all its children have been mounted.
+
+ @param analyticsListener The current analytics listener - can be nil.
+ */
+- (void)childrenDidMount:(id<CKAnalyticsListener>)analyticsListener;
 
 /** Used to get the root component in the responder chain; don't touch this. */
 @property (nonatomic, weak) UIView *rootComponentMountedView;

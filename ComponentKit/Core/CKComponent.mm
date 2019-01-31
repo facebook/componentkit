@@ -213,18 +213,14 @@ struct CKComponentMountInfo {
     }
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
-    if (analyticsListener) {
-      [analyticsListener didMountComponent:self];
-    }
+
     return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
   } else {
     CKCAssertWithCategory(_mountInfo->view == nil, [self class],
                           @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
                           [self class], [_mountInfo->view class], CKComponentBacktraceDescription(generateComponentBacktrace(self)));
     _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, size}};
-    if (analyticsListener) {
-      [analyticsListener didMountComponent:self];
-    }
+
     return {.mountChildren = YES, .contextForChildren = effectiveContext};
   }
 }
@@ -256,9 +252,10 @@ struct CKComponentMountInfo {
   }
 }
 
-- (void)childrenDidMount
+- (void)childrenDidMount:(id<CKAnalyticsListener>)analyticsListener
 {
   [_scopeHandle.controller componentDidMount:self];
+  [analyticsListener didMountComponent:self];
 }
 
 #pragma mark - Animation
