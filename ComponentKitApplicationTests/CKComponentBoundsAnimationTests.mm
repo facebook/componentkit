@@ -186,4 +186,14 @@
   CKUnmountComponents(secondMountedComponents);
 }
 
+#if CK_ASSERTIONS_ENABLED
+- (void)test_StoresComponentThatProducedBoundsAnimation
+{
+  auto const f = ^{ return [CKBoundsAnimationComponent newWithIdentifier:@0]; };
+  auto const bcr1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, f);
+  auto const bcr2 = CKBuildComponent(bcr1.scopeRoot, {}, f);
+  XCTAssertEqualObjects(bcr2.boundsAnimation.component, bcr2.component);
+}
+#endif
+
 @end

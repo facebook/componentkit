@@ -71,9 +71,12 @@ CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKCom
      if (scopeFrameToken) {
        CKComponent *oldComponent = [scopeFrameTokenToOldComponent objectForKey:scopeFrameToken];
        if (oldComponent) {
-         const CKComponentBoundsAnimation ba = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
+         auto const ba = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
          if (ba.duration != 0) {
            boundsAnimation = ba;
+#if CK_ASSERTIONS_ENABLED
+           boundsAnimation.component = newComponent;
+#endif
          }
        }
      }

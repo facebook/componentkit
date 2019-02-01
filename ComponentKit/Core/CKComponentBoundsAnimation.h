@@ -10,12 +10,16 @@
 
 #import <UIKit/UIKit.h>
 
+#import <ComponentKit/CKAssert.h>
+
 typedef NS_ENUM(NSInteger, CKComponentBoundsAnimationMode) {
   /** Wraps changes in a UIView animation block */
   CKComponentBoundsAnimationModeDefault = 0,
   /** Wraps changes in a UIView spring animation block */
   CKComponentBoundsAnimationModeSpring,
 };
+
+@class CKComponent;
 
 /**
  Specifies how to animate a change to the component tree.
@@ -43,6 +47,9 @@ struct CKComponentBoundsAnimation {
   CGFloat springDampingRatio;
   /** Ignored unless mode is Spring, in which case it specifies the initial velocity passed to UIKit. */
   CGFloat springInitialVelocity;
+#if CK_ASSERTIONS_ENABLED
+  __weak CKComponent *component;
+#endif
 };
 
 /**
