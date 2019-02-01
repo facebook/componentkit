@@ -45,8 +45,7 @@
   const CKSizeRange sizeRange = [_configuration sizeRange];
 
   // If only the size range changed, we don't need to regenerate the component; we can simply re-layout the existing one.
-  const BOOL onlySizeRangeChanged = [_configuration context] == [[oldState configuration] context]
-  && [_configuration componentProvider] == [[oldState configuration] componentProvider];
+  const BOOL onlySizeRangeChanged = [_configuration hasSameComponentProviderAndContextAs:oldState.configuration];
   const auto animationPredicates = CKComponentAnimationPredicates();
 
   NSMutableArray *newSections = [NSMutableArray array];

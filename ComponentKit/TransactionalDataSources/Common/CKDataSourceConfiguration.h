@@ -10,9 +10,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKDimension.h>
-
-@protocol CKComponentProvider;
 
 /** Immutable value object that configures a data source */
 @interface CKDataSourceConfiguration : NSObject
@@ -26,9 +25,14 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange;
 
-@property (nonatomic, strong, readonly) Class<CKComponentProvider> componentProvider;
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                                      context:(id<NSObject>)context
+                                    sizeRange:(const CKSizeRange &)sizeRange;
+
 @property (nonatomic, strong, readonly) id<NSObject> context;
 
 - (const CKSizeRange &)sizeRange;
+- (CKComponentProviderBlock)componentProvider;
+- (BOOL)hasSameComponentProviderAndContextAs:(CKDataSourceConfiguration *)other;
 
 @end

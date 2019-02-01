@@ -132,7 +132,7 @@
   CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 1);
   CKDataSourceConfiguration *oldConfiguration = [originalState configuration];
   CKDataSourceConfiguration *newConfiguration =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[oldConfiguration componentProvider]
+  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
                                                        context:@"some new context"
                                                      sizeRange:[oldConfiguration sizeRange]];
   CKDataSourceUpdateConfigurationModification *updateConfigurationModification =
@@ -148,7 +148,7 @@
   CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 1);
   CKDataSourceConfiguration *oldConfiguration = [originalState configuration];
   CKDataSourceConfiguration *newConfiguration =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[oldConfiguration componentProvider]
+  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
                                                        context:[oldConfiguration context]
                                                      sizeRange:{{50, 50}, {50, 50}}];
   CKDataSourceUpdateConfigurationModification *updateConfigurationModification =

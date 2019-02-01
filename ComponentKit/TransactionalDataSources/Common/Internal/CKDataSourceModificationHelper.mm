@@ -35,9 +35,9 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         id context,
                                         const std::unordered_set<CKComponentPredicate> &layoutPredicates)
 {
-  Class<CKComponentProvider> componentProvider = [configuration componentProvider];
+  auto const componentProvider = [configuration componentProvider];
   const auto componentFactory = ^{
-    return [componentProvider componentForModel:model context:context];
+    return componentProvider(model, context);
   };
   if (!configuration.unifyBuildAndLayout) {
     const CKBuildComponentResult result = CKBuildComponent(previousRoot,

@@ -21,6 +21,9 @@
   std::unordered_set<CKComponentControllerPredicate> _componentControllerPredicates;
   CKBuildComponentConfig _buildComponentConfig;
   CKDataSourceSplitChangesetOptions _splitChangesetOptions;
+  CKComponentProviderBlock _componentProviderBlock;
+  // These are preserved only for the purposes of equality checking
+  Class _componentProviderClass;
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -40,6 +43,23 @@
                        analyticsListener:nil];
 }
 
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                                      context:(id<NSObject>)context
+                                    sizeRange:(const CKSizeRange &)sizeRange
+{
+  return [self initWithComponentProviderFunc:componentProvider
+                                     context:context
+                                   sizeRange:sizeRange
+                        buildComponentConfig:{}
+                       splitChangesetOptions:{}
+                                   workQueue:nil
+               applyModificationsOnWorkQueue:NO
+                         unifyBuildAndLayout:NO
+                         componentPredicates:{}
+               componentControllerPredicates:{}
+                           analyticsListener:nil];
+}
+
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
@@ -52,8 +72,63 @@
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
 {
+  auto const pb = ^(id<NSObject> m, id<NSObject> c){ return [componentProvider componentForModel:m context:c]; };
+  return [self initWithComponentProviderClass:componentProvider
+                       componentProviderBlock:pb
+                                      context:context
+                                    sizeRange:sizeRange
+                         buildComponentConfig:buildComponentConfig
+                        splitChangesetOptions:splitChangesetOptions
+                                    workQueue:workQueue
+                applyModificationsOnWorkQueue:applyModificationsOnWorkQueue
+                          unifyBuildAndLayout:unifyBuildAndLayout
+                          componentPredicates:componentPredicates
+                componentControllerPredicates:componentControllerPredicates
+                            analyticsListener:analyticsListener];
+}
+
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                                      context:(id<NSObject>)context
+                                    sizeRange:(const CKSizeRange &)sizeRange
+                         buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
+                        splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
+                                    workQueue:(dispatch_queue_t)workQueue
+                applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
+                          unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
+                          componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+                componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
+                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+{
+  return [self initWithComponentProviderClass:Nil
+                       componentProviderBlock:^(id<NSObject> m, id<NSObject> c){ return componentProvider(m, c); }
+                                      context:context
+                                    sizeRange:sizeRange
+                         buildComponentConfig:buildComponentConfig
+                        splitChangesetOptions:splitChangesetOptions
+                                    workQueue:workQueue
+                applyModificationsOnWorkQueue:applyModificationsOnWorkQueue
+                          unifyBuildAndLayout:unifyBuildAndLayout
+                          componentPredicates:componentPredicates
+                componentControllerPredicates:componentControllerPredicates
+                            analyticsListener:analyticsListener];
+}
+
+- (instancetype)initWithComponentProviderClass:(Class<CKComponentProvider>)componentProviderClass
+                        componentProviderBlock:(CKComponentProviderBlock)componentProviderBlock
+                                       context:(id<NSObject>)context
+                                     sizeRange:(const CKSizeRange &)sizeRange
+                          buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
+                         splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
+                                     workQueue:(dispatch_queue_t)workQueue
+                 applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
+                           unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
+                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
+                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+{
   if (self = [super init]) {
-    _componentProvider = componentProvider;
+    _componentProviderClass = componentProviderClass;
+    _componentProviderBlock = componentProviderBlock;
     _context = context;
     _sizeRange = sizeRange;
     _componentPredicates = componentPredicates;
@@ -66,6 +141,22 @@
     _applyModificationsOnWorkQueue = applyModificationsOnWorkQueue;
   }
   return self;
+}
+
+- (instancetype)copyWithContext:(id<NSObject>)context sizeRange:(const CKSizeRange &)sizeRange
+{
+  return [[CKDataSourceConfiguration alloc] initWithComponentProviderClass:_componentProviderClass
+                                                    componentProviderBlock:_componentProviderBlock
+                                                                   context:context
+                                                                 sizeRange:sizeRange
+                                                      buildComponentConfig:_buildComponentConfig
+                                                     splitChangesetOptions:_splitChangesetOptions
+                                                                 workQueue:_workQueue
+                                             applyModificationsOnWorkQueue:_applyModificationsOnWorkQueue
+                                                       unifyBuildAndLayout:_unifyBuildAndLayout
+                                                       componentPredicates:_componentPredicates
+                                             componentControllerPredicates:_componentControllerPredicates
+                                                         analyticsListener:_analyticsListener];
 }
 
 - (const CKBuildComponentConfig &)buildComponentConfig
@@ -93,16 +184,29 @@
   return _sizeRange;
 }
 
+- (CKComponentProviderBlock)componentProvider
+{
+  return _componentProviderBlock;
+}
+
 - (BOOL)isEqual:(id)object
 {
   if (![object isKindOfClass:[CKDataSourceConfiguration class]]) {
     return NO;
   } else {
     CKDataSourceConfiguration *obj = (CKDataSourceConfiguration *)object;
-    return (_componentProvider == obj.componentProvider
+    return (_componentProviderClass == obj->_componentProviderClass
             && (_context == obj.context || [_context isEqual:obj.context])
             && _sizeRange == obj.sizeRange);
   }
+}
+
+- (BOOL)hasSameComponentProviderAndContextAs:(CKDataSourceConfiguration *)other
+{
+  if (other == nil) {
+    return NO;
+  }
+  return _componentProviderClass == other->_componentProviderClass && (_context == other.context || [_context isEqual:other.context]);
 }
 
 - (NSUInteger)hash
