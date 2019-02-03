@@ -33,16 +33,19 @@
     static std::mutex *__static_mutex = new std::mutex;
     std::lock_guard<std::mutex> l(*__static_mutex);
     // Create the TextKit component stack with our default configuration.
-    _textStorage = (attributedString ? [[NSTextStorage alloc] initWithAttributedString:attributedString] : [[NSTextStorage alloc] init]);
     _layoutManager = layoutManagerFactory ? layoutManagerFactory() : [[NSLayoutManager alloc] init];
     _layoutManager.usesFontLeading = NO;
-    [_textStorage addLayoutManager:_layoutManager];
     _textContainer = [[NSTextContainer alloc] initWithSize:constrainedSize];
     // We want the text laid out up to the very edges of the container.
     _textContainer.lineFragmentPadding = 0;
     _textContainer.lineBreakMode = lineBreakMode;
     _textContainer.maximumNumberOfLines = maximumNumberOfLines;
     [_layoutManager addTextContainer:_textContainer];
+    _textStorage = [[NSTextStorage alloc] init];
+    [_textStorage addLayoutManager:_layoutManager];
+    if (attributedString) {
+      [_textStorage setAttributedString:attributedString];
+    }
   }
   return self;
 }
