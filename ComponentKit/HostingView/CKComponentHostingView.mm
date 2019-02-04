@@ -90,10 +90,8 @@ private:
   NSSet *_mountedComponents;
 
   BOOL _scheduledAsynchronousComponentUpdate;
-  BOOL _scheduledAsynchronousBuildAndLayoutUpdate;
   BOOL _isSynchronouslyUpdatingComponent;
   BOOL _isMountingComponent;
-  BOOL _unifyBuildAndLayout;
   BOOL _allowTapPassthrough;
   BOOL _invalidateRemovedControllers;
   CKComponentHostingViewSizeCache _sizeCache;
@@ -218,7 +216,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
       _requestedUpdateMode = CKUpdateModeSynchronous;
     }
 
-    _unifyBuildAndLayout = options.unifyBuildAndLayout;
     _animationApplicator = CK::AnimationApplicatorFactory::make();
     _animationPredicates = CKComponentAnimationPredicates();
     _invalidateRemovedControllers = options.invalidateRemovedControllers;
@@ -250,13 +247,9 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _containerView.frame = self.bounds;
     const CGSize size = self.bounds.size;
 
-    if (!_unifyBuildAndLayout) {
-      [self _synchronouslyUpdateComponentIfNeeded];
-      if (_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size)) {
-        setMountedRootLayout(self, CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, _animationPredicates));
-      }
-    } else {
-      [self _synchronouslyBuildAndLayoutComponentIfNeeded:{size,size} forceUpdate:(_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size))];
+    [self _synchronouslyUpdateComponentIfNeeded];
+    if (_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size)) {
+      setMountedRootLayout(self, CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, _animationPredicates));
     }
 
     const auto mountPerformer = ^{
@@ -279,26 +272,16 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 - (CGSize)sizeThatFits:(CGSize)size
 {
   CKAssertMainThread();
-  if (!_unifyBuildAndLayout) {
-    [self _synchronouslyUpdateComponentIfNeeded];
-    const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-    if (_sizeCache && _sizeCache.isValid(constrainedSize)) {
-      return _sizeCache.computedSize();
-    }
-    const auto computedSize = CKComputeRootComponentLayout(_component,
-                                                           constrainedSize,
-                                                           _pendingInputs.scopeRoot.analyticsListener).size();
-    _sizeCache = {constrainedSize, computedSize};
-    return computedSize;
-  } else {
-    const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-    if (_sizeCache && _sizeCache.isValid(constrainedSize)) {
-      return _sizeCache.computedSize();
-    }
-    const auto computedSize = [self _synchronouslyCalculateLayoutSize:constrainedSize];
-    _sizeCache = {constrainedSize, computedSize};
-    return computedSize;
+  [self _synchronouslyUpdateComponentIfNeeded];
+  const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
+  if (_sizeCache && _sizeCache.isValid(constrainedSize)) {
+    return _sizeCache.computedSize();
   }
+  const auto computedSize = CKComputeRootComponentLayout(_component,
+                                                         constrainedSize,
+                                                         _pendingInputs.scopeRoot.analyticsListener).size();
+  _sizeCache = {constrainedSize, computedSize};
+  return computedSize;
 }
 
 #pragma mark - Hit Testing
@@ -424,11 +407,7 @@ static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView
 
   switch (mode) {
     case CKUpdateModeAsynchronous:
-      if (_unifyBuildAndLayout) {
-        [self _asynchronouslyBuildAndLayoutComponentIfNeeded];
-      } else {
-        [self _asynchronouslyUpdateComponentIfNeeded];
-      }
+      [self _asynchronouslyUpdateComponentIfNeeded];
       break;
     case CKUpdateModeSynchronous:
       [self setNeedsLayout];
@@ -545,98 +524,6 @@ static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView
 - (void)_sendDidPrepareLayoutIfNeeded
 {
   CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedRootLayout);
-}
-
-#pragma mark - Unified Build And Layout methods
-
-- (CKBuildAndLayoutComponentResult)_buildAndLayoutComponentIfNeeded:(const CKSizeRange &)sizeRange pendingInputs:(const CKComponentHostingViewInputs &)pendingInputs{
-  id<NSObject> model = pendingInputs.model;
-  id<NSObject> context = pendingInputs.context;
-  CKBuildAndLayoutComponentResult results = CKBuildAndLayoutComponent(pendingInputs.scopeRoot,
-                                                                      pendingInputs.stateUpdates,
-                                                                      sizeRange,
-                                                                      ^{
-                                                                        return _componentProvider(model, context);
-                                                                      },
-                                                                      _animationPredicates);
-
-  return results;
-}
-
-- (CGSize)_synchronouslyCalculateLayoutSize:(const CKSizeRange &)sizeRange {
-  CKBuildAndLayoutComponentResult results = [self _buildAndLayoutComponentIfNeeded:sizeRange pendingInputs:_pendingInputs];
-  return results.computedLayout.size();
-}
-
-- (void)_asynchronouslyBuildAndLayoutComponentIfNeeded
-{
-  if (_scheduledAsynchronousBuildAndLayoutUpdate) {
-    return;
-  }
-  _scheduledAsynchronousBuildAndLayoutUpdate = YES;
-
-  // Wait until the end of the run loop so that if multiple async updates are triggered we don't thrash.
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [self _scheduleAsynchronousBuildAndLayout];
-  });
-}
-
-- (void)_scheduleAsynchronousBuildAndLayout
-{
-  if (_requestedUpdateMode != CKUpdateModeAsynchronous) {
-    // A synchronous build and layout was either scheduled or completed, so we can skip the async update.
-    _scheduledAsynchronousBuildAndLayoutUpdate = NO;
-    return;
-  }
-  const auto inputs = std::make_shared<const CKComponentHostingViewInputs>(_pendingInputs);
-  const CKSizeRange constrainedSize = {self.bounds.size,self.bounds.size};
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    CKBuildAndLayoutComponentResult results = [self _buildAndLayoutComponentIfNeeded:constrainedSize pendingInputs:*inputs];
-    dispatch_async(dispatch_get_main_queue(), ^{
-      // If the inputs haven't changed, apply the result; otherwise, retry.
-      if (_pendingInputs == *inputs) {
-        [self _applyResult:results.buildComponentResult];
-        setMountedRootLayout(self, results.computedLayout);
-        _scheduledAsynchronousBuildAndLayoutUpdate = NO;
-        [self setNeedsLayout];
-        [_delegate componentHostingViewDidInvalidateSize:self];
-      } else {
-        [self _scheduleAsynchronousUpdate];
-      }
-    });
-  });
-}
-
-- (void)_synchronouslyBuildAndLayoutComponentIfNeeded:(const CKSizeRange &)sizeRange forceUpdate:(BOOL)forceUpdate
-{
-  if (!forceUpdate && (_componentNeedsUpdate == NO || _requestedUpdateMode == CKUpdateModeAsynchronous)) {
-    return;
-  }
-
-  if (_isSynchronouslyUpdatingComponent) {
-    CKFailAssert(@"CKComponentHostingView is not re-entrant. This is called by -layoutSubviews, so ensure "
-                 "that there is nothing that is triggering a nested call to -layoutSubviews.");
-    return;
-  }
-
-  _isSynchronouslyUpdatingComponent = YES;
-  CKBuildAndLayoutComponentResult results = [self _buildAndLayoutComponentIfNeeded:sizeRange pendingInputs:_pendingInputs];
-  updateMountedLayoutWithLayoutAndBuildComponentResult(self, results.computedLayout, results.buildComponentResult);
-  _isSynchronouslyUpdatingComponent = NO;
-}
-
-/**
- Updates the mount layout with a new layout and build component result passed in input.
-
- @param computedLayout The computed layout to assign to the mounted layout.
- @param buildComponentResult The build component result to apply after the mounted layout has been updated
- */
-static void updateMountedLayoutWithLayoutAndBuildComponentResult(CKComponentHostingView *const self,
-                                                                 const CKComponentRootLayout &computedLayout,
-                                                                 const CKBuildComponentResult &buildComponentResult)
-{
-  [self _applyResult:buildComponentResult];
-  setMountedRootLayout(self, computedLayout);
 }
 
 @end

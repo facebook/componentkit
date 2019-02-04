@@ -47,7 +47,6 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
    splitChangesetOptions:{}
    workQueue:nil
    applyModificationsOnWorkQueue:NO
-   unifyBuildAndLayout:NO
    componentPredicates:{}
    componentControllerPredicates:{}
    analyticsListener:nil];

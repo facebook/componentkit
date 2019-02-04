@@ -21,8 +21,6 @@
 #import <unordered_set>
 
 struct CKComponentHostingViewOptions {
-  /// Build and layout components in a unified pass. It's meant to be used only if buildComponentTree == YES; please DO NOT use it yet, it's in a testing stage. Default NO.
-  BOOL unifyBuildAndLayout;
   /// If set to YES, allows taps to pass though this hosting view to views behind it. Default NO.
   BOOL allowTapPassthrough;
   // If set to YES, invalidates controllers that are removed whilst the hosting view remains alive. Default NO.

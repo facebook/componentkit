@@ -40,7 +40,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates, buildTrigger, config.enableFasterPropsUpdates);
-  
+
   auto const analyticsListener = [previousRoot analyticsListener];
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
                                             buildTrigger:buildTrigger
@@ -74,57 +74,4 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
     .scopeRoot = newScopeRoot,
     .boundsAnimation = CKComponentBoundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot),
   };
-}
-
-CKBuildAndLayoutComponentResult CKBuildAndLayoutComponent(CKComponentScopeRoot *previousRoot,
-                                                          const CKComponentStateUpdateMap &stateUpdates,
-                                                          const CKSizeRange &sizeRange,
-                                                          CKComponent *(^componentFactory)(void),
-                                                          const std::unordered_set<CKComponentPredicate> &layoutPredicates,
-                                                          CKBuildComponentConfig config) {
-  CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
-
-  auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
-  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates, buildTrigger, config.enableFasterPropsUpdates);
-  
-  auto const analyticsListener = [previousRoot analyticsListener];
-  [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
-                                            buildTrigger:buildTrigger
-                                            stateUpdates:stateUpdates];
-
-  auto const component = componentFactory();
-
-  CKTreeNodeDirtyIds treeNodeDirtyIds;
-  const CKBuildComponentTreeParams params = {
-    .scopeRoot = threadScope.newScopeRoot,
-    .previousScopeRoot = previousRoot,
-    .stateUpdates = stateUpdates,
-    .treeNodeDirtyIds = treeNodeDirtyIds,
-    .buildTrigger = buildTrigger,
-    .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
-    .isSystraceEnabled = threadScope.isSystraceEnabled,
-  };
-
-  // Build the component tree if we have a render component in the hierarchy.
-  if (threadScope.newScopeRoot.hasRenderComponentInTree) {
-    treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger);
-
-    // Build the component tree from the render function.
-    [component buildComponentTree:threadScope.newScopeRoot.rootNode.node()
-                   previousParent:previousRoot.rootNode.node()
-                           params:params
-     parentHasStateUpdate:NO];
-  }
-
-  CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;
-
-  [analyticsListener didBuildComponentTreeWithScopeRoot:newScopeRoot component:component];
-
-  const CKBuildComponentResult buildComponentResult = {
-    .component = component,
-    .scopeRoot = newScopeRoot,
-    .boundsAnimation = CKComponentBoundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot),
-  };
-  const auto computedLayout = CKComputeRootComponentLayout(buildComponentResult.component, sizeRange, buildComponentResult.scopeRoot.analyticsListener, layoutPredicates);
-  return {buildComponentResult, computedLayout};
 }

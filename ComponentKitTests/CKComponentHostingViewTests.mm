@@ -25,7 +25,6 @@
 #import "CKComponentHostingViewTestModel.h"
 
 typedef struct {
-  BOOL unifyBuildAndLayout;
   BOOL allowTapPassthrough;
   BOOL invalidateRemovedControllers;
   BOOL embedInFlexbox;
@@ -66,7 +65,6 @@ typedef struct {
                                      componentControllerPredicates:{}
                                                  analyticsListener:options.analyticsListener
                                                            options:{
-                                                             .unifyBuildAndLayout = options.unifyBuildAndLayout,
                                                              .allowTapPassthrough = options.allowTapPassthrough,
                                                              .invalidateRemovedControllers = options.invalidateRemovedControllers,
                                                            }];
@@ -198,94 +196,6 @@ typedef struct {
                 @"Expected component controller to get did attach component");
 }
 
-- (void)testUpdatingHostingViewBoundsResizesComponentView_WithUnifiedBuildAndLayout
-{
-  CKComponentHostingView *view = [[self class] hostingView:{
-    .unifyBuildAndLayout = YES
-  }];
-
-  view.bounds = CGRectMake(0, 0, 200, 200);
-  [view layoutIfNeeded];
-
-  UIView *componentView = [view.containerView.subviews firstObject];
-  XCTAssertEqualObjects(componentView.backgroundColor, [UIColor orangeColor], @"Expected to find orange component view");
-  XCTAssertTrue(CGRectEqualToRect(componentView.bounds, CGRectMake(0, 0, 200, 200)));
-}
-
-- (void)testImmediatelyUpdatesViewOnSynchronousModelChange_WithUnifiedBuildAndLayout
-{
-  CKComponentHostingView *view = [[self class] hostingView:{
-    .unifyBuildAndLayout = YES
-  }];
-  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
-               mode:CKUpdateModeSynchronous];
-  [view layoutIfNeeded];
-
-  UIView *componentView = [view.containerView.subviews firstObject];
-  XCTAssertEqualObjects(componentView.backgroundColor, [UIColor redColor], @"Expected component view to become red");
-}
-
-- (void)testEventuallyUpdatesViewOnAsynchronousModelChange_WithUnifiedBuildAndLayout
-{
-  CKComponentHostingView *view = [[self class] hostingView:{
-    .unifyBuildAndLayout = YES
-  }];
-  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor redColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))]
-               mode:CKUpdateModeAsynchronous];
-  [view layoutIfNeeded];
-
-  UIView *componentView = [view.containerView.subviews firstObject];
-  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^{
-    [view layoutIfNeeded];
-    return [componentView.backgroundColor isEqual:[UIColor redColor]];
-  }));
-}
-
-- (void)testInformsDelegateSizeIsInvalidatedOnModelChange_WithUnifiedBuildAndLayout
-{
-  CKComponentHostingView *view = [[self class] hostingView:{
-    .unifyBuildAndLayout = YES
-  }];
-  view.delegate = self;
-  [view updateModel:[[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(75, 75))]
-               mode:CKUpdateModeSynchronous];
-  XCTAssertTrue(_calledSizeDidInvalidate);
-}
-
-- (void)testInformsDelegateSizeIsInvalidatedOnContextChange_WithUnifiedBuildAndLayout
-{
-  CKComponentHostingView *view = [[self class] hostingView:{
-    .unifyBuildAndLayout = YES
-  }];
-  view.delegate = self;
-  [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
-  XCTAssertTrue(_calledSizeDidInvalidate);
-}
-
-- (void)testUpdateWithEmptyBoundsMountLayout_WithUnifiedBuildAndLayout
-{
-  CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
-  auto const view = [CKComponentHostingViewTests makeHostingView:{}];
-  [view updateModel:model mode:CKUpdateModeSynchronous];
-  [view layoutIfNeeded];
-
-  XCTAssertEqual([view.containerView.subviews count], 1u, @"Expect the component is mounted with empty bounds");
-}
-
-- (void)testComponentControllerReceivesInvalidateEventDuringDeallocation_WithUnifiedBuildAndLayout
-{
-  CKLifecycleTestComponent *testComponent = nil;
-  @autoreleasepool {
-    CKComponentHostingView *view = [[self class] hostingView:{
-      .unifyBuildAndLayout = YES
-    }];
-    [view updateContext:@"foo" mode:CKUpdateModeSynchronous];
-    testComponent = (CKLifecycleTestComponent *)view.mountedLayout.component;
-  }
-  XCTAssertTrue(testComponent.controller.calledInvalidateController,
-                @"Expected component controller to get invalidation event");
-}
-
 - (void)testAllowTapPassthroughOn
 {
   // We embed this in a flexbox which allows the view to stay at its natural size
@@ -408,7 +318,6 @@ typedef struct {
                                          componentControllerPredicates:{}
                                                      analyticsListener:options.analyticsListener
                                                                options:{
-                                                                 .unifyBuildAndLayout = options.unifyBuildAndLayout,
                                                                  .allowTapPassthrough = options.allowTapPassthrough,
                                                                  .invalidateRemovedControllers = options.invalidateRemovedControllers,
                                                                }];

@@ -74,7 +74,6 @@ struct CKDataSourceSplitChangesetOptions {
                     splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                                 workQueue:(dispatch_queue_t)workQueue
             applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
-                      unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
@@ -86,7 +85,6 @@ struct CKDataSourceSplitChangesetOptions {
                         splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                                     workQueue:(dispatch_queue_t)workQueue
                 applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
-                          unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
@@ -97,7 +95,6 @@ struct CKDataSourceSplitChangesetOptions {
 
 @property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
 @property (nonatomic, assign, readonly) BOOL applyModificationsOnWorkQueue;
-@property (nonatomic, assign, readonly) BOOL unifyBuildAndLayout;
 
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates;
