@@ -118,9 +118,9 @@
 size:(const CGSize)size
 children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
 supercomponent:(CKComponent *)supercomponent
-analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+systraceListener:(id<CKSystraceListener>)systraceListener
 {
-  CK::Component::MountResult r = [super mountInContext:context size:size children:children supercomponent:supercomponent analyticsListener:analyticsListener];
+  CK::Component::MountResult r = [super mountInContext:context size:size children:children supercomponent:supercomponent systraceListener:systraceListener];
   return {
     .mountChildren = NO,
     .contextForChildren = r.contextForChildren

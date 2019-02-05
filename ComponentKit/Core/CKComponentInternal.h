@@ -17,7 +17,7 @@
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 
-@protocol CKAnalyticsListener;
+@protocol CKSystraceListener;
 
 @interface CKComponent () <CKTreeNodeComponentProtocol>
 
@@ -38,7 +38,7 @@
  @param size The size for this component
  @param children The positioned children for this component. Normally this parameter is ignored.
  @param supercomponent This component's parent component
- @param analyticsListener The current analytics listener - can be nil.
+ @param systraceListener The current systrace listener - will be nil if systrace is not enabled.
  @return An updated mount context. In most cases, this is just be the passed-in context. If a view was created, this is
  used to specify that subcomponents should be mounted inside the view.
  */
@@ -46,7 +46,7 @@
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
-                           analyticsListener:(id<CKAnalyticsListener>)analyticsListener NS_REQUIRES_SUPER;
+                            systraceListener:(id<CKSystraceListener>)systraceListener NS_REQUIRES_SUPER;
 
 /**
  For internal use only; don't use this initializer.
@@ -75,9 +75,9 @@
 /**
  Called when the component and all its children have been mounted.
 
- @param analyticsListener The current analytics listener - can be nil.
+ @param systraceListener The current systrace listener - will be nil if systrace is not enabled.
  */
-- (void)childrenDidMount:(id<CKAnalyticsListener>)analyticsListener;
+- (void)childrenDidMount:(id<CKSystraceListener>)systraceListener;
 
 /** Used to get the root component in the responder chain; don't touch this. */
 @property (nonatomic, weak) UIView *rootComponentMountedView;

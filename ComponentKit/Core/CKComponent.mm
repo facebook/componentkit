@@ -165,12 +165,12 @@ struct CKComponentMountInfo {
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
-                           analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                            systraceListener:(id<CKSystraceListener>)systraceListener
 {
   CKCAssertWithCategory([NSThread isMainThread], [self class], @"This method must be called on the main thread");
-  if (analyticsListener) {
-    [analyticsListener willMountComponent:self];
-  }
+
+  [systraceListener willMountComponent:self];
+
   // Taking a const ref to a temporary extends the lifetime of the temporary to the lifetime of the const ref
   const CKComponentViewConfiguration &viewConfiguration = CK::Component::Accessibility::IsAccessibilityEnabled() ? CK::Component::Accessibility::AccessibleViewConfiguration(_viewConfiguration) : _viewConfiguration;
 
@@ -252,10 +252,10 @@ struct CKComponentMountInfo {
   }
 }
 
-- (void)childrenDidMount:(id<CKAnalyticsListener>)analyticsListener
+- (void)childrenDidMount:(id<CKSystraceListener>)systraceListener
 {
   [_scopeHandle.controller componentDidMount:self];
-  [analyticsListener didMountComponent:self];
+  [systraceListener didMountComponent:self];
 }
 
 #pragma mark - Animation
