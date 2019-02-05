@@ -17,7 +17,47 @@
 @class CKComponent;
 @class CKComponentScopeRoot;
 
-@protocol CKAnalyticsListener <NSObject>
+/**
+ This protocol is being used by the infrastructure to collect data of the components' life cycles.
+
+ Will be used only when `isSystraceEnabled` is enabled.
+ */
+@protocol CKSystraceListener <NSObject>
+/**
+ Called before/after building a scoped component.
+
+ Will be called only when `isSystraceEnabled` is enabled.
+ */
+- (void)willBuildComponent:(Class)componentClass;
+- (void)didBuildComponent:(Class)componentClass;
+
+/**
+ Called before/after mounting a component.
+
+ Will be called only when `isSystraceEnabled` is enabled.
+ */
+- (void)willMountComponent:(CKComponent *)component;
+- (void)didMountComponent:(CKComponent *)component;
+
+/**
+ Called before/after layout a component.
+
+ Will be called only when `isSystraceEnabled` is enabled.
+ */
+- (void)willLayoutComponent:(CKComponent *)component;
+- (void)didLayoutComponent:(CKComponent *)component;
+
+/**
+ Return YES  if the systrace logging is enabled.
+ */
+- (BOOL)isSystraceEnabled;
+
+@end
+
+/**
+ This protocol is being used by the infrastructure to collect data about the component tree life cycle.
+ */
+@protocol CKAnalyticsListener <CKSystraceListener>
 
 /**
  Called before the component tree creation
@@ -63,35 +103,6 @@
 - (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component;
 - (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component;
 
-/**
-  Called before/after building a scoped component.
-
-  Will be called only when `isSystraceEnabled` is enabled.
- */
-- (void)willBuildComponent:(Class)componentClass;
-- (void)didBuildComponent:(Class)componentClass;
-
-/**
-  Called before/after mounting a component.
-
-  Will be called only when `isSystraceEnabled` is enabled.
- */
-- (void)willMountComponent:(CKComponent *)component;
-- (void)didMountComponent:(CKComponent *)component;
-
-/**
- Called before/after layout a component.
-
- Will be called only when `isSystraceEnabled` is enabled.
- */
-- (void)willLayoutComponent:(CKComponent *)component;
-- (void)didLayoutComponent:(CKComponent *)component;
-
-/**
-  Return YES  if the systrace logging is enabled.
-*/
-- (BOOL)isSystraceEnabled;
-
 /** Render Components **/
 
 /**
@@ -102,6 +113,8 @@
  @param previousScopeRoot The previous scope root of the component tree
  @warning A node is only reused if conforming to the render protocol.
  */
-- (void)didReuseNode:(id<CKTreeNodeProtocol>)node inScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
+- (void)didReuseNode:(id<CKTreeNodeProtocol>)node
+         inScopeRoot:(CKComponentScopeRoot *)scopeRoot
+fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
 
 @end
