@@ -119,12 +119,6 @@ typedef NS_ENUM(NSInteger, CKFlexboxPositionType) {
   CKFlexboxPositionTypeAbsolute,
 };
 
-/**
- This is used for overriding how the baseline of a component is calculated and called from baseline function callback from
- YOGA. The value returned by this method will be used as baseline for the component.
- */
-typedef CGFloat (*CKBaselineFunc)(CKComponent *component, const CGFloat width, const CGFloat height);
-
 struct CKFlexboxPosition {
   CKFlexboxPositionType type;
   /** Defines offset from starting edge of parent to starting edge of child */
@@ -319,13 +313,10 @@ struct CKFlexboxComponentChild {
    */
   BOOL useTextRounding;
   /**
-   Baseline function property which allows to override how the baseline of a component is calculated. This baseline function is
-   called from the baseline function callback from Yoga. If baseline function is set on a component then the baseline for that
-   component is simply the value returned by baseline function else Yoga traverses through the children to find the baseline of
-   component (If children will be displayed in multiple lines or all children have position type absolute then baseline is height
-   of the component else baseline of first child is used).
+   This property allows to override how the baseline of a component is calculated. The default baseline of component is the baseline
+   of first child in Yoga. If this property is set to YES then height of a component will be used as baseline.
    */
-  CKBaselineFunc baselineFunction;
+  BOOL useHeightAsBaseline;
 };
 
 extern template class std::vector<CKFlexboxComponentChild>;
