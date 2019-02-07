@@ -18,6 +18,8 @@
 #import <ComponentKit/CKComponentScopeFrame.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 
+@protocol CKSystraceListener;
+
 class CKThreadLocalComponentScope {
 public:
   CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
@@ -40,8 +42,8 @@ public:
   std::stack<CKComponentScopeFramePair> stack;
   std::stack<std::vector<id<NSObject>>> keys;
 
-  /** Enable extra logging from scopes creation to the current CKAnalyticsListener */
-  bool isSystraceEnabled;
+  /** The current systrace listener. Can be nil if systrace is not enabled. */
+  id<CKSystraceListener> systraceListener;
   
   /** Build trigger of the corsposnding component creation */
   BuildTrigger buildTrigger;

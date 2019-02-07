@@ -298,7 +298,7 @@ typedef struct {
 - (void)willLayoutComponent:(CKComponent *)component {}
 - (void)didLayoutComponent:(CKComponent *)component {}
 
-- (BOOL)isSystraceEnabled { return NO; }
+- (id<CKSystraceListener>)systraceListener { return nil; }
 
 - (void)didReuseNode:(id<CKTreeNodeProtocol>)node inScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot {}
 

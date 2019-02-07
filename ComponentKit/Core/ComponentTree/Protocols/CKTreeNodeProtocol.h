@@ -15,6 +15,8 @@
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKTreeNodeTypes.h>
 
+@protocol CKSystraceListener;
+
 /**
  Params struct for the `buildComponentTree:` method.
  **/
@@ -38,8 +40,8 @@ struct CKBuildComponentTreeParams {
   // The trigger for initiating a new generation
   BuildTrigger buildTrigger;
 
-  /** Enable extra logging from scopes creation to the current CKAnalyticsListener */
-  BOOL isSystraceEnabled;
+  /** The current systrace listener. Can be nil if systrace is not enabled. */
+  id<CKSystraceListener> systraceListener;
 };
 
 @protocol CKTreeNodeWithChildrenProtocol;

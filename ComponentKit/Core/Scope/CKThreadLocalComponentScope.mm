@@ -36,7 +36,7 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *p
                                                          const CKComponentStateUpdateMap &updates,
                                                          BuildTrigger trigger,
                                                          BOOL fasterPropsUpdates)
-: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), isSystraceEnabled(previousScopeRoot.analyticsListener.isSystraceEnabled), buildTrigger(trigger), enableFasterPropsUpdates(fasterPropsUpdates), previousScope(CKThreadLocalComponentScope::currentScope())
+: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), systraceListener(previousScopeRoot.analyticsListener.systraceListener), buildTrigger(trigger), enableFasterPropsUpdates(fasterPropsUpdates), previousScope(CKThreadLocalComponentScope::currentScope())
 {
   stack.push({[newScopeRoot rootFrame], [previousScopeRoot rootFrame]});
   keys.push({});

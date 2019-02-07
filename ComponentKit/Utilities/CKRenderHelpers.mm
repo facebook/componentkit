@@ -141,9 +141,7 @@ namespace CKRenderInternal {
     }
 
     // Systrace logging
-    if (params.isSystraceEnabled) {
-      [scopeRoot.analyticsListener willBuildComponent:component.class];
-    }
+    [params.systraceListener willBuildComponent:component.class];
   }
 
   static auto didBuildComponentTreeWithSingleChild(id<CKTreeNodeProtocol> node,
@@ -160,9 +158,7 @@ namespace CKRenderInternal {
     }
 
     // Systrace logging
-    if (params.isSystraceEnabled) {
-      [scopeRoot.analyticsListener didBuildComponent:component.class];
-    }
+    [params.systraceListener didBuildComponent:component.class];
   }
 }
 

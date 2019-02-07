@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol CKAnalyticsListener;
+@protocol CKSystraceListener;
 
 /**
  This class measures component's creation time.
@@ -21,7 +21,7 @@
 
  Notes:
  * If your component already has CKComponentScope, please DON'T use this one; it DOES the same under the hood.
- * It only works when `isSystraceEnabled` is on in the CKThreadLocalComponentScope.
+ * It only works when systrace is enabled.
 
  Example usage:
  + (instancetype)newWithModel:(Model *)model
@@ -41,6 +41,6 @@ public:
 private:
   CKComponentPerfScope(const CKComponentPerfScope&) = delete;
   CKComponentPerfScope &operator=(const CKComponentPerfScope&) = delete;
-  id<CKAnalyticsListener> _analyticsListener;
+  id<CKSystraceListener> _systraceListener;
   Class _componentClass;
 };

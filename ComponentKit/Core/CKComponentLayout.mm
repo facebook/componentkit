@@ -82,7 +82,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
   };
 
   [analyticsListener willMountComponentTreeWithRootComponent:layout.component];
-  auto const systraceListener = [analyticsListener isSystraceEnabled] ? analyticsListener : nil;
+  auto const systraceListener = [analyticsListener systraceListener];
   // Using a stack to mount ensures that the components are mounted
   // in a DFS fashion which is handy if you want to animate a subpart
   // of the tree
@@ -138,7 +138,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    std::unordered_set<CKComponentPredicate> predicates)
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent];
-  LayoutSystraceContext systraceContext([analyticsListener isSystraceEnabled] ? analyticsListener : nil);
+  LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectComponentScopeCollisions(layout);
   auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};

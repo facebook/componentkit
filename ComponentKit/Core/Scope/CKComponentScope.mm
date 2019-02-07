@@ -21,10 +21,9 @@ CKComponentScope::~CKComponentScope()
   if (_threadLocalScope != nullptr) {
     [_scopeHandle resolve];
 
-    if (_threadLocalScope->isSystraceEnabled) {
+    if (_threadLocalScope->systraceListener) {
       auto const componentClass = _threadLocalScope->stack.top().frame.handle.componentClass;
-      auto const analyticsListener = [_threadLocalScope->newScopeRoot analyticsListener];
-      [analyticsListener didBuildComponent:componentClass];
+      [_threadLocalScope->systraceListener didBuildComponent:componentClass];
     }
 
     _threadLocalScope->stack.pop();
@@ -38,10 +37,7 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
   _threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (_threadLocalScope != nullptr) {
 
-    if (_threadLocalScope->isSystraceEnabled) {
-      auto const analyticsListener = [_threadLocalScope->newScopeRoot analyticsListener];
-      [analyticsListener willBuildComponent:componentClass];
-    }
+    [_threadLocalScope->systraceListener willBuildComponent:componentClass];
 
     const auto childPair = [CKComponentScopeFrame childPairForPair:_threadLocalScope->stack.top()
                                                            newRoot:_threadLocalScope->newScopeRoot

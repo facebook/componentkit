@@ -16,21 +16,19 @@
 
 CKComponentPerfScope::~CKComponentPerfScope()
 {
-  if (_analyticsListener) {
-    [_analyticsListener didBuildComponent:_componentClass];
-  }
+  [_systraceListener didBuildComponent:_componentClass];
 }
 
 CKComponentPerfScope::CKComponentPerfScope(Class __unsafe_unretained componentClass) noexcept
 {
   auto const threadLocalScope = CKThreadLocalComponentScope::currentScope();
 
-  if (threadLocalScope != nullptr && threadLocalScope->isSystraceEnabled) {
-    auto const analyticsListener = [threadLocalScope->newScopeRoot analyticsListener];
-    if (analyticsListener)
+  if (threadLocalScope != nullptr) {
+    auto const systraceListener = threadLocalScope->systraceListener;
+    if (systraceListener)
     {
-      [analyticsListener willBuildComponent:componentClass];
-      _analyticsListener = analyticsListener;
+      [systraceListener willBuildComponent:componentClass];
+      _systraceListener = systraceListener;
       _componentClass = componentClass;
     }
   }
