@@ -291,6 +291,8 @@ struct CKComponentMountInfo {
 - (CKComponentLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize
 {
   CK::Component::LayoutContext context(self, constrainedSize);
+  auto const systraceListener = context.systraceListener;
+  [systraceListener willLayoutComponent:self];
 
   CKComponentLayout layout = [self computeLayoutThatFits:constrainedSize
                                         restrictedToSize:_size
@@ -323,6 +325,9 @@ struct CKComponentMountInfo {
                        @"Computed size %@ for %@ does not fall within constrained size %@\n%@",
                        NSStringFromCGSize(layout.size), [self class], resolvedRange.description(),
                        CK::Component::LayoutContext::currentStackDescription());
+
+  [systraceListener didLayoutComponent:self];
+
   return layout;
 }
 

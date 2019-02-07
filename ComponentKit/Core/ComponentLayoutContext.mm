@@ -21,16 +21,19 @@ using namespace CK::Component;
 static pthread_key_t kCKComponentLayoutContextThreadKey;
 
 struct ThreadKeyInitializer {
-  static void destroyStack(LayoutContextStack *p) { delete p; }
+  static void destroyStack(LayoutContextValue *p) { delete p; }
   ThreadKeyInitializer() { pthread_key_create(&kCKComponentLayoutContextThreadKey, (void (*)(void*))destroyStack); }
 };
 
-static LayoutContextStack &componentStack()
+static LayoutContextValue &componentValue(id<CKSystraceListener> listener = nil)
 {
   static ThreadKeyInitializer threadKey;
-  LayoutContextStack *contexts = static_cast<LayoutContextStack *>(pthread_getspecific(kCKComponentLayoutContextThreadKey));
+  LayoutContextValue *contexts = static_cast<LayoutContextValue *>(pthread_getspecific(kCKComponentLayoutContextThreadKey));
   if (!contexts) {
-    contexts = new LayoutContextStack;
+    contexts = new LayoutContextValue;
+    if (listener) {
+      contexts->systraceListener = listener;
+    }
     pthread_setspecific(kCKComponentLayoutContextThreadKey, contexts);
   }
   return *contexts;
@@ -38,20 +41,21 @@ static LayoutContextStack &componentStack()
 
 static void removeComponentStackForThisThread()
 {
-  LayoutContextStack *contexts = static_cast<LayoutContextStack *>(pthread_getspecific(kCKComponentLayoutContextThreadKey));
+  LayoutContextValue *contexts = static_cast<LayoutContextValue *>(pthread_getspecific(kCKComponentLayoutContextThreadKey));
   ThreadKeyInitializer::destroyStack(contexts);
   pthread_setspecific(kCKComponentLayoutContextThreadKey, nullptr);
 }
 
 LayoutContext::LayoutContext(CKComponent *c, CKSizeRange r) : component(c), sizeRange(r)
 {
-  auto &stack = componentStack();
-  stack.push_back(this);
+  auto &value = componentValue();
+  systraceListener = value.systraceListener;
+  value.stack.push_back(this);
 }
 
 LayoutContext::~LayoutContext()
 {
-  auto &stack = componentStack();
+  auto &stack = componentValue().stack;
   CKCAssert(stack.back() == this,
             @"Last component layout context %@ is not %@", stack.back()->component, component);
   stack.pop_back();
@@ -62,12 +66,12 @@ LayoutContext::~LayoutContext()
 
 const CK::Component::LayoutContextStack &LayoutContext::currentStack()
 {
-  return componentStack();
+  return componentValue().stack;
 }
 
 NSString *LayoutContext::currentStackDescription()
 {
-  const auto &stack = componentStack();
+  const auto &stack = componentValue().stack;
   NSMutableString *s = [NSMutableString string];
   NSUInteger idx = 0;
   for (CK::Component::LayoutContext *c : stack) {
@@ -85,5 +89,12 @@ NSString *LayoutContext::currentStackDescription()
 
 NSString *LayoutContext::currentRootComponentClassName()
 {
-  return componentStack().empty() ? @"" : NSStringFromClass([componentStack()[0]->component class]);
+  const auto &stack = componentValue().stack;
+  return stack.empty() ? @"" : NSStringFromClass([stack[0]->component class]);
+}
+
+LayoutSystraceContext::LayoutSystraceContext(id<CKSystraceListener> listener) {
+  if (listener) {
+    componentValue(listener);
+  }
 }

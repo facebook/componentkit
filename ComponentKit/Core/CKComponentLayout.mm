@@ -16,11 +16,13 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <UIKit/UIKit.h>
 
+#import "ComponentLayoutContext.h"
 #import "ComponentUtilities.h"
 #import "CKAnalyticsListener.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKDetectComponentScopeCollisions.h"
+
 
 using namespace CK::Component;
 
@@ -136,6 +138,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    std::unordered_set<CKComponentPredicate> predicates)
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent];
+  LayoutSystraceContext systraceContext([analyticsListener isSystraceEnabled] ? analyticsListener : nil);
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectComponentScopeCollisions(layout);
   auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};

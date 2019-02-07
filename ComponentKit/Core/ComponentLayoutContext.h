@@ -13,13 +13,20 @@
 #import <vector>
 
 @class CKComponent;
+@protocol CKSystraceListener;
 
 namespace CK {
   namespace Component {
     struct LayoutContext;
 
-    /** A stack of layout contexts. */
     typedef std::vector<LayoutContext *> LayoutContextStack;
+
+    struct LayoutContextValue {
+      /** A stack of layout contexts. */
+      LayoutContextStack stack;
+      /** The current systrace listener. Can be nil if systrace is not enabled. */
+      id<CKSystraceListener> systraceListener;
+    };
 
     /**
      Keeps track of the stack of components performing layout.
@@ -44,6 +51,9 @@ namespace CK {
       /** The size range passed to the component. */
       const CKSizeRange sizeRange;
 
+      /** The current systrace listener. Can be nil if systrace is not enabled. */
+      id<CKSystraceListener> systraceListener;
+
       /**
        Returns a reference to the current stack of components performing layout.
 
@@ -64,6 +74,10 @@ namespace CK {
 
       LayoutContext(const LayoutContext&) = delete;
       LayoutContext &operator=(const LayoutContext&) = delete;
+    };
+
+    struct LayoutSystraceContext {
+      LayoutSystraceContext(id<CKSystraceListener> listener);
     };
   }
 }
