@@ -211,10 +211,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero allowTapPassthrough:_allowTapPassthrough];
     [self addSubview:_containerView];
 
-    if (_component == nil || !_pendingInputs.stateUpdates.empty()) {
-      _componentNeedsUpdate = YES;
-      _requestedUpdateMode = CKUpdateModeSynchronous;
-    }
+    _componentNeedsUpdate = YES;
+    _requestedUpdateMode = CKUpdateModeSynchronous;
 
     _animationApplicator = CK::AnimationApplicatorFactory::make();
     _animationPredicates = CKComponentAnimationPredicates();
