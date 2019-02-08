@@ -48,13 +48,16 @@ struct CKComponentAnimationHooks {
     if (c == nil) { return *this; }
     // Make sure we're not capturing `this` (which is not managed by ARC)
     auto const origCleanup = cleanup;
+
+    void (^block)(id) = ^(id ctx){
+      if (auto _cleanup = origCleanup) { _cleanup(ctx); };
+      c();
+    };
+
     return {
       willRemount,
       didRemount,
-      ^(id ctx){
-        if (auto _cleanup = origCleanup) { _cleanup(ctx); };
-        c();
-      }
+      [block copy]
     };
   }
 };
