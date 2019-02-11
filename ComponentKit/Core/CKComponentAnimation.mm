@@ -27,7 +27,7 @@ static CKComponentAnimationHooks hooksForCAAnimation(CKComponent *component, CAA
   // immediately to protect against the *caller* mutating the animation after this point but before it's used.)
   CAAnimation *copiedAnimation = [originalAnimation copy];
   return {
-    .didRemount = ^(id context){
+    .didRemount = [^(id context){
       CALayer *layer = layerPath ? [component.viewForAnimation valueForKeyPath:layerPath] : component.viewForAnimation.layer;
       CKCAssertNotNil(layer, @"%@ has no mounted layer at key path %@, so it cannot be animated", [component class], layerPath);
       NSString *key = [[NSUUID UUID] UUIDString];
@@ -40,13 +40,13 @@ static CKComponentAnimationHooks hooksForCAAnimation(CKComponent *component, CAA
       }
       [layer addAnimation:copiedAnimation forKey:key];
       return [[CKAppliedAnimationContext alloc] initWithTargetLayer:layer key:key];
-    },
+    } copy],
     .cleanup = ^(CKAppliedAnimationContext *context){
       [context.targetLayer removeAnimationForKey:context.key];
     }
   };
 }
-  
+
 static CKComponentAnimationHooks hooksForFinalUnmountAnimation(const CKComponentFinalUnmountAnimation &a,
                                                                UIView *const hostView) noexcept
 {
@@ -77,7 +77,7 @@ static CKComponentAnimationHooks hooksForFinalUnmountAnimation(const CKComponent
 
 CKComponentAnimation::CKComponentAnimation(CKComponent *component, CAAnimation *animation, NSString *layerPath, CKComponentAnimationCompletion completion) noexcept
 : hooks(hooksForCAAnimation(component, animation, layerPath).byAddingCompletion(completion)) {}
-  
+
 CKComponentAnimation::CKComponentAnimation(const CKComponentFinalUnmountAnimation &animation, UIView *const hostView) noexcept
 : hooks(hooksForFinalUnmountAnimation(animation, hostView)) {}
 
