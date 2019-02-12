@@ -50,6 +50,18 @@ static BOOL _shouldEarlyReturnNew = NO;
   return [super newWithView:view size:size];
 }
 
+- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+                          restrictedToSize:(const CKComponentSize &)size
+                      relativeToParentSize:(CGSize)parentSize
+{
+  const auto result = [super computeLayoutThatFits:constrainedSize
+                                  restrictedToSize:size
+                              relativeToParentSize:parentSize];
+
+  _computeLayoutCount++;
+  return result;
+}
+
 - (CKLifecycleTestComponentController *)controller
 {
   // We provide this convenience method here to avoid having all the casts in the tests above.
