@@ -17,22 +17,21 @@
 
 @protocol CKComponentStateListener;
 
-@interface CKDataSourceChangesetModification : NSObject <CKDataSourceStateModifying>
-
-- (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
-                    stateListener:(id<CKComponentStateListener>)stateListener
-                         userInfo:(NSDictionary *)userInfo;
+/**
+ A changeset modification that is equivalent to `CKDataSourceChangesetModifcation`, with the addition of
+ support for the experimental changeset splitting feature. When enabled, this automatically splits the changeset
+ into two parts: one changeset for what's inside the viewport, and a deferred changeset for the part outside
+ the viewport. This allows for parallelizing the mount of the components that are inside the viewport with the
+ generation of components outside the viewport.
+ */
+@interface CKDataSourceSplitChangesetModification : NSObject <CKDataSourceStateModifying>
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
+                         viewport:(CKDataSourceViewport)viewport
                               qos:(CKDataSourceQOS)qos;
 
 @property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;
 
 @end
-
-namespace CK {
-  auto invalidIndexesForInsertionInArray(NSArray *const a, NSIndexSet *const is) -> NSIndexSet *;
-  auto invalidIndexesForRemovalFromArray(NSArray *const a, NSIndexSet *const is) -> NSIndexSet *;
-}
