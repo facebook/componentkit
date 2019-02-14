@@ -185,6 +185,9 @@
   [dataSource addListener:self];
 
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
   [dataSource applyChangeset:tailInsertionChangeset(NSMakeRange(4, 4), {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
   XCTAssertEqual(3, _announcedChanges.count);
   XCTAssertEqualObjects(expectedAppliedChangesForInsertion(NSMakeRange(4, 4)), _announcedChanges[2]);
@@ -299,6 +302,10 @@
   [dataSource addListener:self];
 
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
+  
   [dataSource applyChangeset:updateChangeset(NSMakeRange(0, 4), {.width = 10, .height = 20}) mode:CKUpdateModeSynchronous userInfo:nil];
 
   XCTAssertEqual(3, _announcedChanges.count);
@@ -318,6 +325,9 @@
   [dataSource addListener:self];
 
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
   [dataSource applyChangeset:updateChangeset(NSMakeRange(0, 4), {.width = 10, .height = 20}) mode:CKUpdateModeSynchronous userInfo:nil];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
@@ -343,6 +353,10 @@
   }];
 
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
+
   [dataSource applyChangeset:updateChangeset(NSMakeRange(0, 4), {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
@@ -405,6 +419,10 @@
   [dataSource addListener:self];
 
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
+
   CKDataSourceChangeset *const updateWithRemovalChangeset =
   [[[[CKDataSourceChangesetBuilder
      transactionalComponentDataSourceChangeset]
@@ -441,6 +459,10 @@
   [dataSource addListener:self];
 
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
+
   CKDataSourceChangeset *const updateWithRemovalChangeset =
   [[[[CKDataSourceChangesetBuilder
       transactionalComponentDataSourceChangeset]
@@ -477,6 +499,10 @@
   [dataSource addListener:self];
 
   [dataSource applyChangeset:initialInsertionChangeset(4, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
+
   CKDataSourceChangeset *const updateWithRemovalChangeset =
   [[[[CKDataSourceChangesetBuilder
       transactionalComponentDataSourceChangeset]
@@ -532,6 +558,10 @@
                         }]
    build];
   [dataSource applyChangeset:insertionChangeset mode:CKUpdateModeSynchronous userInfo:nil];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
+
   CKDataSourceChangeset *const updateWithRemovalChangeset =
   [[[[CKDataSourceChangesetBuilder
       transactionalComponentDataSourceChangeset]
@@ -585,6 +615,10 @@
                         }]
    build];
   [dataSource applyChangeset:insertionChangeset mode:CKUpdateModeSynchronous userInfo:nil];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 2;
+  }));
+  
   CKDataSourceChangeset *const updateWithInsertionChangeset =
   [[[[CKDataSourceChangesetBuilder
       transactionalComponentDataSourceChangeset]
