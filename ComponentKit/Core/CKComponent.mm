@@ -47,7 +47,6 @@ struct CKComponentMountInfo {
   CKComponent *supercomponent;
   UIView *view;
   CKComponentViewContext viewContext;
-  BOOL componentOrAncestorHasScopeConflict;
 };
 
 @implementation CKComponent
@@ -178,7 +177,6 @@ struct CKComponentMountInfo {
     _mountInfo.reset(new CKComponentMountInfo());
   }
   _mountInfo->supercomponent = supercomponent;
-  _mountInfo->componentOrAncestorHasScopeConflict = context.componentOrAncestorHasScopeConflict;
 
   CKComponentController *controller = _scopeHandle.controller;
   [controller componentWillMount:self];
@@ -462,11 +460,6 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
     [componentBacktrace addObject:[componentBacktrace lastObject]->_mountInfo->supercomponent];
   }
   return componentBacktrace;
-}
-
-- (BOOL)componentOrAncestorHasScopeConflict
-{
-  return _mountInfo ? _mountInfo->componentOrAncestorHasScopeConflict : NO;
 }
 
 - (UIView *)mountedView

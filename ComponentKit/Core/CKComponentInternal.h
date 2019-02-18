@@ -91,9 +91,6 @@
 /** Used to get the scope root enumerator; during component creation only */
 @property (nonatomic, strong, readonly) id<CKComponentScopeEnumeratorProvider> scopeEnumeratorProvider;
 
-/** Indicates that a scope conflict has been found and either this component or an ancestor is involved in the conflict */
-@property (nonatomic, readonly) BOOL componentOrAncestorHasScopeConflict;
-
 /** If the component owns its own view and is mounted, returns it. */
 @property (nonatomic, readonly) UIView *mountedView;
 
