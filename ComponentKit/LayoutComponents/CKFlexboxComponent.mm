@@ -395,7 +395,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
       YGNodeSetMeasureFunc(childNode, measureYGComponent);
     }
     
-    if (_style.alignItems == CKFlexboxAlignItemsBaseline) {
+    if (_style.alignItems == CKFlexboxAlignItemsBaseline && [childLayout.component usesCustomBaseline]) {
       YGNodeSetBaselineFunc(childNode, computeBaseline);
     } else if (child.useHeightAsBaseline) {
       YGNodeSetBaselineFunc(childNode, useHeightAsBaselineFunction);
