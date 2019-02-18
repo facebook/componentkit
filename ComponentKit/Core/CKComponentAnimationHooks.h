@@ -51,10 +51,10 @@ struct CKComponentAnimationHooks {
     return {
       willRemount,
       didRemount,
-      ^(id ctx){
+      [^(id ctx){
         if (auto _cleanup = origCleanup) { _cleanup(ctx); };
         c();
-      }
+      } copy]
     };
   }
 };
