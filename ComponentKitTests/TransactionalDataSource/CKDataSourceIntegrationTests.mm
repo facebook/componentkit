@@ -170,7 +170,6 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        splitChangesetOptions:{}
                                        workQueue:nil
                                        applyModificationsOnWorkQueue:NO
-                                       unifyBuildAndLayout:NO
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
                                        analyticsListener:nil];

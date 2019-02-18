@@ -47,7 +47,6 @@ struct CKComponentMountInfo {
   CKComponent *supercomponent;
   UIView *view;
   CKComponentViewContext viewContext;
-  BOOL componentOrAncestorHasScopeConflict;
 };
 
 @implementation CKComponent
@@ -165,12 +164,12 @@ struct CKComponentMountInfo {
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
-                           analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                            systraceListener:(id<CKSystraceListener>)systraceListener
 {
   CKCAssertWithCategory([NSThread isMainThread], [self class], @"This method must be called on the main thread");
-  if (analyticsListener) {
-    [analyticsListener willMountComponent:self];
-  }
+
+  [systraceListener willMountComponent:self];
+
   // Taking a const ref to a temporary extends the lifetime of the temporary to the lifetime of the const ref
   const CKComponentViewConfiguration &viewConfiguration = CK::Component::Accessibility::IsAccessibilityEnabled() ? CK::Component::Accessibility::AccessibleViewConfiguration(_viewConfiguration) : _viewConfiguration;
 
@@ -178,7 +177,6 @@ struct CKComponentMountInfo {
     _mountInfo.reset(new CKComponentMountInfo());
   }
   _mountInfo->supercomponent = supercomponent;
-  _mountInfo->componentOrAncestorHasScopeConflict = context.componentOrAncestorHasScopeConflict;
 
   CKComponentController *controller = _scopeHandle.controller;
   [controller componentWillMount:self];
@@ -252,10 +250,10 @@ struct CKComponentMountInfo {
   }
 }
 
-- (void)childrenDidMount:(id<CKAnalyticsListener>)analyticsListener
+- (void)childrenDidMount:(id<CKSystraceListener>)systraceListener
 {
   [_scopeHandle.controller componentDidMount:self];
-  [analyticsListener didMountComponent:self];
+  [systraceListener didMountComponent:self];
 }
 
 #pragma mark - Animation
@@ -291,6 +289,8 @@ struct CKComponentMountInfo {
 - (CKComponentLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize
 {
   CK::Component::LayoutContext context(self, constrainedSize);
+  auto const systraceListener = context.systraceListener;
+  [systraceListener willLayoutComponent:self];
 
   CKComponentLayout layout = [self computeLayoutThatFits:constrainedSize
                                         restrictedToSize:_size
@@ -323,6 +323,9 @@ struct CKComponentMountInfo {
                        @"Computed size %@ for %@ does not fall within constrained size %@\n%@",
                        NSStringFromCGSize(layout.size), [self class], resolvedRange.description(),
                        CK::Component::LayoutContext::currentStackDescription());
+
+  [systraceListener didLayoutComponent:self];
+
   return layout;
 }
 
@@ -457,11 +460,6 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
     [componentBacktrace addObject:[componentBacktrace lastObject]->_mountInfo->supercomponent];
   }
   return componentBacktrace;
-}
-
-- (BOOL)componentOrAncestorHasScopeConflict
-{
-  return _mountInfo ? _mountInfo->componentOrAncestorHasScopeConflict : NO;
 }
 
 - (UIView *)mountedView

@@ -41,7 +41,6 @@ const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
 @property (nonatomic) CGSize parentSize;
 @property (nonatomic) CKFlexboxAlignSelf align;
 @property (nonatomic) NSInteger zIndex;
-@property (nonatomic) CKBaselineFunc baselineFunction;
 
 @end
 
@@ -185,10 +184,9 @@ static float computeBaseline(YGNodeRef node, const float width, const float heig
   return height;
 }
 
-static float delegateBaselineFunction(YGNodeRef node, const float width, const float height)
+static float useHeightAsBaselineFunction(YGNodeRef node, const float width, const float height)
 {
-  CKFlexboxChildCachedLayout *const cachedLayout = getCKFlexboxChildCachedLayoutFromYogaNode(node, width, height);
-  return cachedLayout.baselineFunction(cachedLayout.component, width, height);
+  return height;
 }
 
 static CKFlexboxChildCachedLayout* getCKFlexboxChildCachedLayoutFromYogaNode(YGNodeRef node, const float width, const float height)
@@ -386,7 +384,6 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     childLayout.parentSize = parentSize;
     childLayout.align = child.alignSelf;
     childLayout.zIndex = child.zIndex;
-    childLayout.baselineFunction = child.baselineFunction;
     if (child.aspectRatio.isDefined()) {
       YGNodeStyleSetAspectRatio(childNode, child.aspectRatio.aspectRatio());
     }
@@ -400,8 +397,8 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     
     if (_style.alignItems == CKFlexboxAlignItemsBaseline) {
       YGNodeSetBaselineFunc(childNode, computeBaseline);
-    } else if (child.baselineFunction) {
-      YGNodeSetBaselineFunc(childNode, delegateBaselineFunction);
+    } else if (child.useHeightAsBaseline) {
+      YGNodeSetBaselineFunc(childNode, useHeightAsBaselineFunction);
     }
 
     applySizeAttributes(childNode, child, parentWidth, parentHeight);

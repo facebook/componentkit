@@ -108,10 +108,7 @@ static NSString *componentStateName(CKComponentControllerState state)
       [self willRemount];
       break;
     default:
-      if (!component.componentOrAncestorHasScopeConflict) {
-        // Scope collisions cause all sorts of havoc; ignore when that happens.
-        CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
-      }
+      CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
   }
 }
 
@@ -127,10 +124,7 @@ static NSString *componentStateName(CKComponentControllerState state)
       [self didRemount];
       break;
     default:
-      if (!component.componentOrAncestorHasScopeConflict) {
-        // Scope collisions cause all sorts of havoc; ignore when that happens.
-        CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
-      }
+     CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
   }
 
   [self didFinishComponentUpdate];
@@ -150,10 +144,7 @@ static NSString *componentStateName(CKComponentControllerState state)
       CKAssert(component != _component, @"Didn't expect the new component to be unmounting during remount");
       break;
     default:
-      if (!component.componentOrAncestorHasScopeConflict) {
-        // Scope collisions cause all sorts of havoc; ignore when that happens.
-        CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
-      }
+      CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
   }
 }
 
@@ -172,10 +163,7 @@ static NSString *componentStateName(CKComponentControllerState state)
       CKAssert(component != _component, @"Didn't expect the new component to be unmounted while mounted");
       break;
     default:
-      if (!component.componentOrAncestorHasScopeConflict) {
-        // Scope collisions cause all sorts of havoc; ignore when that happens.
-        CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
-      }
+      CKCAssertWithCategory(NO, NSStringFromClass([self class]), @"Unexpected state '%@' for %@", componentStateName(_state), [_component class]);
   }
 }
 

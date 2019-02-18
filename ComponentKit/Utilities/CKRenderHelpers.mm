@@ -49,7 +49,7 @@ namespace CKRenderInternal {
     [component didReuseComponent:(id<CKRenderComponentProtocol>)previousNode.component];
 
     // Notify scope root listener
-    [params.scopeRoot.analyticsListener didReuseNode:reusedChild inScopeRoot:params.scopeRoot fromPreviousScopeRoot:params.previousScopeRoot];
+    [params.scopeRoot.analyticsListener didReuseNode:node inScopeRoot:params.scopeRoot fromPreviousScopeRoot:params.previousScopeRoot];
   }
 
   // Reuse the previous component generation and its component tree and notify the previous component about it.
@@ -141,9 +141,7 @@ namespace CKRenderInternal {
     }
 
     // Systrace logging
-    if (params.isSystraceEnabled) {
-      [scopeRoot.analyticsListener willBuildComponent:component.class];
-    }
+    [params.systraceListener willBuildComponent:component.class];
   }
 
   static auto didBuildComponentTreeWithSingleChild(id<CKTreeNodeProtocol> node,
@@ -160,9 +158,7 @@ namespace CKRenderInternal {
     }
 
     // Systrace logging
-    if (params.isSystraceEnabled) {
-      [scopeRoot.analyticsListener didBuildComponent:component.class];
-    }
+    [params.systraceListener didBuildComponent:component.class];
   }
 }
 

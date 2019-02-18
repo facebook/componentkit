@@ -16,11 +16,12 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <UIKit/UIKit.h>
 
+#import "ComponentLayoutContext.h"
 #import "ComponentUtilities.h"
 #import "CKAnalyticsListener.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
-#import "CKDetectComponentScopeCollisions.h"
+#import "CKDetectDuplicateComponent.h"
 
 using namespace CK::Component;
 
@@ -80,12 +81,12 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
   };
 
   [analyticsListener willMountComponentTreeWithRootComponent:layout.component];
-  auto const analyticsListenerForMount = [analyticsListener isSystraceEnabled] ? analyticsListener : nil;
+  auto const systraceListener = [analyticsListener systraceListener];
   // Using a stack to mount ensures that the components are mounted
   // in a DFS fashion which is handy if you want to animate a subpart
   // of the tree
   std::stack<MountItem> stack;
-  stack.push({layout, MountContext::RootContext(view, CKComponentLayoutOrAncestorHasScopeConflict(layout)), supercomponent, NO});
+  stack.push({layout, MountContext::RootContext(view), supercomponent, NO});
   NSMutableSet *mountedComponents = [NSMutableSet set];
 
   layout.component.rootComponentMountedView = view;
@@ -93,7 +94,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
   while (!stack.empty()) {
     MountItem &item = stack.top();
     if (item.visited) {
-      [item.layout.component childrenDidMount:analyticsListenerForMount];
+      [item.layout.component childrenDidMount:systraceListener];
       stack.pop();
     } else {
       item.visited = YES;
@@ -104,15 +105,14 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
                                                                        size:item.layout.size
                                                                    children:item.layout.children
                                                              supercomponent:item.supercomponent
-                                                          analyticsListener:analyticsListenerForMount];
+                                                           systraceListener:systraceListener];
       [mountedComponents addObject:item.layout.component];
 
       if (mountResult.mountChildren) {
         // Ordering of components should correspond to ordering of mount. Push components on backwards so the
         // bottom-most component is mounted first.
         for (auto riter = item.layout.children->rbegin(); riter != item.layout.children->rend(); riter ++) {
-          BOOL hasScopeConflict = CKComponentLayoutOrAncestorHasScopeConflict(item.layout);
-          stack.push({riter->layout, mountResult.contextForChildren.offset(riter->position, item.layout.size, riter->layout.size, hasScopeConflict), item.layout.component, NO});
+          stack.push({riter->layout, mountResult.contextForChildren.offset(riter->position, item.layout.size, riter->layout.size), item.layout.component, NO});
         }
       }
     }
@@ -136,8 +136,9 @@ CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    std::unordered_set<CKComponentPredicate> predicates)
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent];
+  LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
-  CKDetectComponentScopeCollisions(layout);
+  CKDetectDuplicateComponent(layout);
   auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};
   layout.enumerateLayouts([&](const auto &l){
     if (l.component.controller) {

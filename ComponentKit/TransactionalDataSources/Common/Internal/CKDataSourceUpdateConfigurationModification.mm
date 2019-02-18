@@ -55,7 +55,7 @@
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
       [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
       CKDataSourceItem *newItem;
-      if (onlySizeRangeChanged && !_configuration.unifyBuildAndLayout) {
+      if (onlySizeRangeChanged) {
         const auto rootLayout = CKComputeRootComponentLayout(item.rootLayout.component(), sizeRange, [item scopeRoot].analyticsListener);
         newItem = [[CKDataSourceItem alloc] initWithRootLayout:rootLayout
                                                          model:[item model]

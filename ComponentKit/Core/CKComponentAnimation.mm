@@ -46,7 +46,7 @@ static CKComponentAnimationHooks hooksForCAAnimation(CKComponent *component, CAA
     }
   };
 }
-  
+
 static CKComponentAnimationHooks hooksForFinalUnmountAnimation(const CKComponentFinalUnmountAnimation &a,
                                                                UIView *const hostView) noexcept
 {
@@ -77,7 +77,7 @@ static CKComponentAnimationHooks hooksForFinalUnmountAnimation(const CKComponent
 
 CKComponentAnimation::CKComponentAnimation(CKComponent *component, CAAnimation *animation, NSString *layerPath, CKComponentAnimationCompletion completion) noexcept
 : hooks(hooksForCAAnimation(component, animation, layerPath).byAddingCompletion(completion)) {}
-  
+
 CKComponentAnimation::CKComponentAnimation(const CKComponentFinalUnmountAnimation &animation, UIView *const hostView) noexcept
 : hooks(hooksForFinalUnmountAnimation(animation, hostView)) {}
 

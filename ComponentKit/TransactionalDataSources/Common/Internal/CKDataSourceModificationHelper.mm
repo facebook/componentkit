@@ -39,30 +39,16 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
   const auto componentFactory = ^{
     return componentProvider(model, context);
   };
-  if (!configuration.unifyBuildAndLayout) {
-    const CKBuildComponentResult result = CKBuildComponent(previousRoot,
-                                                           stateUpdates,
-                                                           componentFactory,
-                                                           configuration.buildComponentConfig);
-    const auto rootLayout = CKComputeRootComponentLayout(result.component,
-                                                         sizeRange,
-                                                         result.scopeRoot.analyticsListener,
-                                                         layoutPredicates);
-    return [[CKDataSourceItem alloc] initWithRootLayout:rootLayout
-                                                  model:model
-                                              scopeRoot:result.scopeRoot
-                                        boundsAnimation:result.boundsAnimation];
-  } else {
-    CKBuildAndLayoutComponentResult result = CKBuildAndLayoutComponent(previousRoot,
-                                                                       stateUpdates,
-                                                                       sizeRange,
-                                                                       componentFactory,
-                                                                       layoutPredicates,
-                                                                       configuration.buildComponentConfig);
-    return [[CKDataSourceItem alloc] initWithRootLayout:result.computedLayout
-                                                  model:model
-                                              scopeRoot:result.buildComponentResult.scopeRoot
-                                        boundsAnimation:result.buildComponentResult.boundsAnimation];
-  }
-
+  const CKBuildComponentResult result = CKBuildComponent(previousRoot,
+                                                         stateUpdates,
+                                                         componentFactory,
+                                                         configuration.buildComponentConfig);
+  const auto rootLayout = CKComputeRootComponentLayout(result.component,
+                                                       sizeRange,
+                                                       result.scopeRoot.analyticsListener,
+                                                       layoutPredicates);
+  return [[CKDataSourceItem alloc] initWithRootLayout:rootLayout
+                                                model:model
+                                            scopeRoot:result.scopeRoot
+                                      boundsAnimation:result.boundsAnimation];
 }

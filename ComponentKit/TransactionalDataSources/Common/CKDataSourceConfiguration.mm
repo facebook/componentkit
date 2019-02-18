@@ -37,7 +37,6 @@
                    splitChangesetOptions:{}
                                workQueue:nil
            applyModificationsOnWorkQueue:NO
-                     unifyBuildAndLayout:NO
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil];
@@ -54,7 +53,6 @@
                        splitChangesetOptions:{}
                                    workQueue:nil
                applyModificationsOnWorkQueue:NO
-                         unifyBuildAndLayout:NO
                          componentPredicates:{}
                componentControllerPredicates:{}
                            analyticsListener:nil];
@@ -67,7 +65,6 @@
                     splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                                 workQueue:(dispatch_queue_t)workQueue
             applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
-                      unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -81,7 +78,6 @@
                         splitChangesetOptions:splitChangesetOptions
                                     workQueue:workQueue
                 applyModificationsOnWorkQueue:applyModificationsOnWorkQueue
-                          unifyBuildAndLayout:unifyBuildAndLayout
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
                             analyticsListener:analyticsListener];
@@ -94,7 +90,6 @@
                         splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                                     workQueue:(dispatch_queue_t)workQueue
                 applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
-                          unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -107,7 +102,6 @@
                         splitChangesetOptions:splitChangesetOptions
                                     workQueue:workQueue
                 applyModificationsOnWorkQueue:applyModificationsOnWorkQueue
-                          unifyBuildAndLayout:unifyBuildAndLayout
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
                             analyticsListener:analyticsListener];
@@ -121,7 +115,6 @@
                          splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                                      workQueue:(dispatch_queue_t)workQueue
                  applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
-                           unifyBuildAndLayout:(BOOL)unifyBuildAndLayout
                            componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                  componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                              analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -134,7 +127,6 @@
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
-    _unifyBuildAndLayout = unifyBuildAndLayout;
     _buildComponentConfig = buildComponentConfig;
     _splitChangesetOptions = splitChangesetOptions;
     _workQueue = workQueue;
@@ -153,7 +145,6 @@
                                                      splitChangesetOptions:_splitChangesetOptions
                                                                  workQueue:_workQueue
                                              applyModificationsOnWorkQueue:_applyModificationsOnWorkQueue
-                                                       unifyBuildAndLayout:_unifyBuildAndLayout
                                                        componentPredicates:_componentPredicates
                                              componentControllerPredicates:_componentControllerPredicates
                                                          analyticsListener:_analyticsListener];
