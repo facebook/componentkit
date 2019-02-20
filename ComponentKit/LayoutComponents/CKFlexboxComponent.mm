@@ -394,7 +394,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     if (YGNodeGetChildCount(childNode) == 0) {
       YGNodeSetMeasureFunc(childNode, measureYGComponent);
     }
-    
+
     if (_style.alignItems == CKFlexboxAlignItemsBaseline && [childLayout.component usesCustomBaseline]) {
       YGNodeSetBaselineFunc(childNode, computeBaseline);
     } else if (child.useHeightAsBaseline) {
@@ -423,9 +423,6 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     applyPaddingToEdge(childNode, YGEdgeEnd, child.padding.end);
 
     YGNodeStyleSetPositionType(childNode, (child.position.type == CKFlexboxPositionTypeAbsolute) ? YGPositionTypeAbsolute : YGPositionTypeRelative);
-
-    CKCWarn(!((floatIsSet(_style.spacing) || floatIsSet(child.spacingBefore) || floatIsSet(child.spacingAfter)) && flexboxSpacingIsSet(child.margin)),
-            @"You shouldn't use both margin and spacing! Ignoring spacing and falling back to margin behavior for %@", child.component);
 
     // TODO: In odrer to keep the the logic consistent, we are resetting all
     // the margins that were potentially set from the child's style in
@@ -642,36 +639,6 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
     return;
   }
   YGNodeStyleSetBorder(node, edge, convertFloatToYogaRepresentation(value.value()));
-}
-
-static BOOL flexboxSpacingIsSet(CKFlexboxSpacing spacing)
-{
-  return
-  dimensionIsSet(spacing.top) ||
-  dimensionIsSet(spacing.bottom) ||
-  dimensionIsSet(spacing.start) ||
-  dimensionIsSet(spacing.end);
-}
-
-static BOOL dimensionIsSet(CKFlexboxDimension dimension)
-{
-  if (dimension.isDefined() == false) {
-    return false;
-  }
-
-  switch(dimension.dimension().type()) {
-    case CKRelativeDimension::Type::PERCENT:
-      return floatIsSet(dimension.dimension().value());
-    case CKRelativeDimension::Type::POINTS:
-      return floatIsSet(dimension.dimension().value());
-    case CKRelativeDimension::Type::AUTO:
-      return false;
-  }
-}
-
-static BOOL floatIsSet(CGFloat val)
-{
-  return fabs(val) > FLT_EPSILON;
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
