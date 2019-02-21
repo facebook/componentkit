@@ -14,11 +14,20 @@ void CKComponentBoundsAnimationApply(const CKComponentBoundsAnimation &animation
                                      void (^animations)(void),
                                      void (^completion)(BOOL finished))
 {
+  // Avoid capturing the unmanaged reference to animation
+  auto const ac = animation.completion;
+  auto const _completion = ^(BOOL finished){
+    if (auto c = ac) {
+      c();
+    }
+    if (auto c = completion) {
+      c(finished);
+    }
+  };
+
   if (animation.duration == 0) {
     [UIView performWithoutAnimation:animations];
-    if (completion) {
-      completion(YES);
-    }
+    _completion(YES);
   } else if (animation.mode == CKComponentBoundsAnimationModeSpring) {
     [UIView animateWithDuration:animation.duration
                           delay:animation.delay
@@ -26,12 +35,12 @@ void CKComponentBoundsAnimationApply(const CKComponentBoundsAnimation &animation
           initialSpringVelocity:animation.springInitialVelocity
                         options:animation.options
                      animations:animations
-                     completion:completion];
+                     completion:_completion];
   } else {
     [UIView animateWithDuration:animation.duration
                           delay:animation.delay
                         options:animation.options
                      animations:animations
-                     completion:completion];
+                     completion:_completion];
   }
 }
