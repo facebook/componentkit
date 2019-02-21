@@ -26,6 +26,7 @@ typedef void (^CKOptimisticViewMutationTeardown)(UIView *v);
 
 namespace CK {
   namespace Component {
+    struct MountAnalyticsContext;
     /**
      Describes a set of attribute *identifiers* for attributes that can't be un-applied (unapplicator is nil).
      Any two components that have a different PersistentAttributeShape cannot recycle the same view.
@@ -109,9 +110,9 @@ namespace CK {
       ViewReusePool() : position(pool.begin()) {};
 
       /** Unhides all views vended so far; hides others. Resets position to begin(). */
-      void reset();
+      void reset(MountAnalyticsContext *mountAnalyticsContext);
 
-      UIView *viewForClass(const CKComponentViewClass &viewClass, UIView *container);
+      UIView *viewForClass(const CKComponentViewClass &viewClass, UIView *container, MountAnalyticsContext *mountAnalyticsContext);
     private:
       std::vector<UIView *> pool;
       /** Points to the next view in pool that has *not* yet been vended. */
@@ -127,9 +128,12 @@ namespace CK {
       ViewReusePoolMap() {};
 
       /** Resets each individual pool inside the map. */
-      void reset(UIView *container);
+      void reset(UIView *container, MountAnalyticsContext *mountAnalyticsContext);
 
-      UIView *viewForConfiguration(Class componentClass, const CKComponentViewConfiguration &config, UIView *container);
+      UIView *viewForConfiguration(Class componentClass,
+                                   const CKComponentViewConfiguration &config,
+                                   UIView *container,
+                                   MountAnalyticsContext *mountAnalyticsContext);
     private:
       std::unordered_map<ViewKey, ViewReusePool> map;
       std::vector<UIView *> vendedViews;
@@ -149,17 +153,19 @@ namespace CK {
      */
     class ViewManager {
     public:
-      ViewManager(UIView *v) : view(v), viewReusePoolMap(ViewReusePoolMap::viewReusePoolMapForView(v)) {};
-      ~ViewManager() { viewReusePoolMap.reset(view); }
+      ViewManager(UIView *v, MountAnalyticsContext *ma = nullptr) : view(v), viewReusePoolMap(ViewReusePoolMap::viewReusePoolMapForView(v)), mountAnalyticsContext(ma) {};
+      ~ViewManager() { viewReusePoolMap.reset(view, mountAnalyticsContext); }
 
       /** The view being managed. */
       UIView *const view;
 
       /** Returns a recycled or newly created subview for the given configuration. */
-      UIView *viewForConfiguration(Class componentClass, const CKComponentViewConfiguration &config);
+      UIView *viewForConfiguration(Class componentClass,
+                                   const CKComponentViewConfiguration &config);
 
     private:
       ViewReusePoolMap &viewReusePoolMap;
+      MountAnalyticsContext *mountAnalyticsContext;
 
       ViewManager(const ViewManager&) = delete;
       ViewManager &operator=(const ViewManager&) = delete;

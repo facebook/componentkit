@@ -126,7 +126,6 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
     CKUnmountComponents(componentsToUnmount);
   }
   [analyticsListener didMountComponentTreeWithRootComponent:layout.component];
-
   return {mountedComponents, componentsToUnmount};
 }
 

@@ -16,6 +16,8 @@ class CKComponentViewClass;
 
 namespace CK {
   namespace Component {
+    struct MountAnalyticsContext;
+
     class ViewReuseUtilities {
     public:
       /** Called when Components will begin mounting in a root view */
@@ -26,9 +28,9 @@ namespace CK {
       static void mountingInChildContext(UIView *view, UIView *parent);
 
       /** Called when Components is about to hide a Components-managed view */
-      static void didHide(UIView *view);
+      static void didHide(UIView *view, MountAnalyticsContext *mountAnalyticsContext);
       /** Called when Components is about to unhide a Components-managed view */
-      static void willUnhide(UIView *view);
+      static void willUnhide(UIView *view, MountAnalyticsContext *mountAnalyticsContext);
     };
   }
 }

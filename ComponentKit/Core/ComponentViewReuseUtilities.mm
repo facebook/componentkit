@@ -25,8 +25,8 @@ static char const kViewReuseInfoKey = ' ';
       didEnterReusePoolBlock:(void (^)(UIView *))didEnterReusePoolBlock
      willLeaveReusePoolBlock:(void (^)(UIView *))willLeaveReusePoolBlock;
 - (void)registerChildViewInfo:(CKComponentViewReuseInfo *)info;
-- (void)didHide;
-- (void)willUnhide;
+- (void)didHide:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext;
+- (void)willUnhide:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext;
 - (void)ancestorDidHide;
 - (void)ancestorWillUnhide;
 @end
@@ -77,18 +77,18 @@ void ViewReuseUtilities::mountingInChildContext(UIView *view, UIView *parent)
   [parentInfo registerChildViewInfo:info];
 }
 
-void ViewReuseUtilities::didHide(UIView *view)
+void ViewReuseUtilities::didHide(UIView *view, CK::Component::MountAnalyticsContext *mountAnalyticsContext)
 {
   CKComponentViewReuseInfo *info = objc_getAssociatedObject(view, &kViewReuseInfoKey);
   CKCAssertNotNil(info, @"Expect to find reuse info on all components-managed views but found none on %@", view);
-  [info didHide];
+  [info didHide:mountAnalyticsContext];
 }
 
-void ViewReuseUtilities::willUnhide(UIView *view)
+void ViewReuseUtilities::willUnhide(UIView *view, CK::Component::MountAnalyticsContext *mountAnalyticsContext)
 {
   CKComponentViewReuseInfo *info = objc_getAssociatedObject(view, &kViewReuseInfoKey);
   CKCAssertNotNil(info, @"Expect to find reuse info on all components-managed views but found none on %@", view);
-  [info willUnhide];
+  [info willUnhide:mountAnalyticsContext];
 }
 
 @implementation CKComponentViewReuseInfo
@@ -122,7 +122,7 @@ void ViewReuseUtilities::willUnhide(UIView *view)
   [_childViewInfos addObject:info];
 }
 
-- (void)didHide
+- (void)didHide:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext
 {
   if (_hidden) {
     return;
@@ -135,9 +135,13 @@ void ViewReuseUtilities::willUnhide(UIView *view)
   for (CKComponentViewReuseInfo *descendantInfo in _childViewInfos) {
     [descendantInfo ancestorDidHide];
   }
+
+  if (auto mac = mountAnalyticsContext) {
+    mac->hideViews++;
+  }
 }
 
-- (void)willUnhide
+- (void)willUnhide:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext
 {
   if (!_hidden) {
     return;
@@ -149,6 +153,10 @@ void ViewReuseUtilities::willUnhide(UIView *view)
 
   for (CKComponentViewReuseInfo *descendantInfo in _childViewInfos) {
     [descendantInfo ancestorWillUnhide];
+  }
+
+  if (auto mac = mountAnalyticsContext) {
+    mac->unhideViews++;
   }
 }
 
