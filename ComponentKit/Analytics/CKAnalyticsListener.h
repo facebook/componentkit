@@ -47,6 +47,14 @@
 - (void)willLayoutComponent:(CKComponent *)component;
 - (void)didLayoutComponent:(CKComponent *)component;
 
+/**
+  Called before/after evaluating a component should be updated or not.
+
+  Will be called only when systrace is enabled.
+*/
+- (void)willCheckShouldComponentUpdate:(CKComponent *)component;
+- (void)didCheckShouldComponentUpdate:(CKComponent *)component;
+
 @end
 
 /**

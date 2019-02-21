@@ -81,9 +81,14 @@ namespace CKRenderInternal {
       // We check if the component node is dirty in the **previous** scope root.
       auto const dirtyNodeIdsForPropsUpdates = params.previousScopeRoot.rootNode.dirtyNodeIdsForPropsUpdates();
       auto const dirtyNodeId = dirtyNodeIdsForPropsUpdates.find(node.nodeIdentifier);
-      if (dirtyNodeId == params.treeNodeDirtyIds.end() && ![component shouldComponentUpdate:previousComponent]) {
-        CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousNode, params);
-        return YES;
+      if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
+        [params.systraceListener willCheckShouldComponentUpdate:component];
+        auto const shouldComponentUpdate = [component shouldComponentUpdate:previousComponent];
+        [params.systraceListener didCheckShouldComponentUpdate:component];
+        if (!shouldComponentUpdate) {
+          CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousNode, params);
+          return YES;
+        }
       }
     }
     return NO;
