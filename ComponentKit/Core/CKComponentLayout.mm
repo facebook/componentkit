@@ -86,7 +86,9 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
   // in a DFS fashion which is handy if you want to animate a subpart
   // of the tree
   std::stack<MountItem> stack;
-  stack.push({layout, MountContext::RootContext(view), supercomponent, NO});
+  CK::Component::MountAnalyticsContext mountAnalyticsContext;
+  auto const mountAnalyticsContextPointer = [analyticsListener shouldCollectMountInformationForRootComponent:layout.component] ? &mountAnalyticsContext : nullptr;
+  stack.push({layout, MountContext::RootContext(view, mountAnalyticsContextPointer), supercomponent, NO});
   NSMutableSet *mountedComponents = [NSMutableSet set];
 
   layout.component.rootComponentMountedView = view;
@@ -125,7 +127,8 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
     [componentsToUnmount minusSet:mountedComponents];
     CKUnmountComponents(componentsToUnmount);
   }
-  [analyticsListener didMountComponentTreeWithRootComponent:layout.component];
+  [analyticsListener didMountComponentTreeWithRootComponent:layout.component
+                                      mountAnalyticsContext:mountAnalyticsContextPointer];
   return {mountedComponents, componentsToUnmount};
 }
 

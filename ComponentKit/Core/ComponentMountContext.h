@@ -23,8 +23,8 @@ namespace CK {
     struct MountAnalyticsContext {
       NSUInteger viewAllocations = 0;
       NSUInteger viewReuses = 0;
-      NSUInteger hideViews = 0;
-      NSUInteger unhideViews = 0;
+      NSUInteger viewHides = 0;
+      NSUInteger viewUnhides = 0;
     };
 
     struct MountContext {

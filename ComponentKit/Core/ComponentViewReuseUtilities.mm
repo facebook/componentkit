@@ -137,7 +137,7 @@ void ViewReuseUtilities::willUnhide(UIView *view, CK::Component::MountAnalyticsC
   }
 
   if (auto mac = mountAnalyticsContext) {
-    mac->hideViews++;
+    mac->viewHides++;
   }
 }
 
@@ -156,7 +156,7 @@ void ViewReuseUtilities::willUnhide(UIView *view, CK::Component::MountAnalyticsC
   }
 
   if (auto mac = mountAnalyticsContext) {
-    mac->unhideViews++;
+    mac->viewUnhides++;
   }
 }
 
