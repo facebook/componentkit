@@ -138,6 +138,12 @@ struct CKComponentMountInfo {
   return _viewConfiguration;
 }
 
+- (void)setViewConfiguration:(const CKComponentViewConfiguration &)viewConfiguration
+{
+  CKAssert(_viewConfiguration.isDefaultConfiguration(), @"Component(%@) already has '_viewConfiguration'.", self);
+  _viewConfiguration = viewConfiguration;
+}
+
 - (CKComponentViewContext)viewContext
 {
   CKAssertMainThread();

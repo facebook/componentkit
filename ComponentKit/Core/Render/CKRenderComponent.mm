@@ -62,7 +62,13 @@
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
-  CKRender::buildComponentTreeWithSingleChild(self, &_childComponent, parent, previousParent, params, parentHasStateUpdate);
+  auto const node = CKRender::buildComponentTreeWithSingleChild(self, &_childComponent, parent, previousParent, params, parentHasStateUpdate);
+  if (params.enableViewConfigurationWithState) {
+    auto const viewConfiguration = [self viewConfigurationWithState:node.state];
+    if (!viewConfiguration.isDefaultConfiguration()) {
+      [self setViewConfiguration:viewConfiguration];
+    }
+  }
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
@@ -103,5 +109,10 @@
 }
 
 - (void)didReuseComponent:(id<CKRenderComponentProtocol>)component {}
+
+- (CKComponentViewConfiguration)viewConfigurationWithState:(id)state
+{
+  return {};
+}
 
 @end

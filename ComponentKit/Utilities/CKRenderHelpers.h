@@ -78,7 +78,7 @@ namespace CKRender {
                                          const CKBuildComponentTreeParams &params,
                                          BOOL parentHasStateUpdate,
                                          BOOL isBridgeComponent = NO,
-                                         BOOL *didReuseComponent = nullptr) -> void;
+                                         BOOL *didReuseComponent = nullptr) -> id<CKTreeNodeProtocol>;
 
   /**
    Builds a component tree for the input *render* component having children components.
@@ -97,7 +97,7 @@ namespace CKRender {
                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
                                         const CKBuildComponentTreeParams &params,
                                         BOOL parentHasStateUpdate,
-                                        BOOL isBridgeComponent = NO) -> void;
+                                        BOOL isBridgeComponent = NO) -> id<CKTreeNodeProtocol>;
 
   /**
    Builds a leaf node for a leaf component in the tree.

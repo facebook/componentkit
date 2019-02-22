@@ -235,7 +235,7 @@ namespace CKRender {
                                          const CKBuildComponentTreeParams &params,
                                          BOOL parentHasStateUpdate,
                                          BOOL isBridgeComponent,
-                                         BOOL *didReuseComponent) -> void
+                                         BOOL *didReuseComponent) -> id<CKTreeNodeProtocol>
   {
     CKCAssert(component, @"component cannot be nil");
 
@@ -259,7 +259,7 @@ namespace CKRender {
         *didReuseComponent = YES;
       }
 
-      return;
+      return node;
     }
 
     // Update the `parentHasStateUpdate` param for Faster state/props updates.
@@ -288,6 +288,8 @@ namespace CKRender {
       [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
       CKRenderInternal::didBuildComponentTreeWithSingleChild(node, component, params);
     }
+
+    return node;
   }
 
   auto buildComponentTreeWithMultiChild(id<CKRenderWithChildrenComponentProtocol> component,
@@ -295,7 +297,7 @@ namespace CKRender {
                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
                                         const CKBuildComponentTreeParams &params,
                                         BOOL parentHasStateUpdate,
-                                        BOOL isBridgeComponent) -> void
+                                        BOOL isBridgeComponent) -> id<CKTreeNodeProtocol>
   {
     auto const node = [[CKRenderTreeNodeWithChildren alloc]
                        initWithComponent:component
@@ -327,6 +329,8 @@ namespace CKRender {
     if (!isBridgeComponent) {
       CKComponentContextHelper::didBuildComponentTree(component);
     }
+
+    return node;
   }
 
   auto buildComponentTreeForLeafComponent(id<CKTreeNodeComponentProtocol> component,

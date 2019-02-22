@@ -60,6 +60,11 @@
                                       size:(const CKComponentSize &)size;
 
 /**
+ For internal use only; don't use this directly.
+ */
+- (void)setViewConfiguration:(const CKComponentViewConfiguration &)viewConfiguration;
+
+/**
  Unmounts the component:
  - Clears the references to supercomponent and superview.
  - If the component has a _mountedView:
