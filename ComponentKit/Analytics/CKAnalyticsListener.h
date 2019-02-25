@@ -101,6 +101,14 @@
 - (BOOL)shouldCollectMountInformationForRootComponent:(CKComponent *)component;
 
 /**
+ Called before/after collecting animations from a component tree.
+
+ @param component Root component for the tree that is about to be mounted.
+ */
+- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component;
+- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component;
+
+/**
  Called before/after component tree layout
 
  @param component Root component for laid out tree

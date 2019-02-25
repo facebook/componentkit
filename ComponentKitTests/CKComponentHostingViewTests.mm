@@ -287,6 +287,9 @@ typedef struct {
 - (void)didMountComponentTreeWithRootComponent:(CKComponent *)component
                          mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext {}
 
+- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component {}
+- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component {}
+
 - (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component { _willLayoutComponentTreeHitCount++; }
 - (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component { _didLayoutComponentTreeHitCount++; }
 
