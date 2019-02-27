@@ -197,3 +197,62 @@
 #endif
 
 @end
+
+@interface CKComponentBoundsAnimationTests_Equality : XCTestCase
+@end
+
+@implementation CKComponentBoundsAnimationTests_Equality
+
+- (void)test_WhenAllFieldsForDefaultModeAreEqual_IsEqual
+{
+  auto const ba1 = CKComponentBoundsAnimation {
+    .duration = 0.5,
+    .delay = 0.2,
+    .mode = CKComponentBoundsAnimationModeDefault,
+    .options = UIViewAnimationOptionPreferredFramesPerSecond60
+  };
+  auto const ba2 = CKComponentBoundsAnimation {
+    .duration = 0.5,
+    .delay = 0.2,
+    .options = UIViewAnimationOptionPreferredFramesPerSecond60
+  };
+
+  XCTAssert(ba1 == ba2);
+}
+
+- (void)test_WhenSpringParamsAreNotEqual_IsNotEqual
+{
+  auto const ba1 = CKComponentBoundsAnimation {
+    .duration = 0.5,
+    .delay = 0.2,
+    .mode = CKComponentBoundsAnimationModeSpring,
+  };
+  auto const ba2 = CKComponentBoundsAnimation {
+    .duration = 0.5,
+    .delay = 0.2,
+    .mode = CKComponentBoundsAnimationModeSpring,
+    .springDampingRatio = 0.3,
+    .springInitialVelocity = 10,
+  };
+
+  XCTAssertFalse(ba1 == ba2);
+}
+
+- (void)test_WhenModeIsDefault_SpringProperiesAreIgnored
+{
+  auto const ba1 = CKComponentBoundsAnimation {
+    .duration = 0.5,
+    .delay = 0.2,
+    .mode = CKComponentBoundsAnimationModeDefault,
+  };
+  auto const ba2 = CKComponentBoundsAnimation {
+    .duration = 0.5,
+    .delay = 0.2,
+    .springDampingRatio = 0.3,
+    .springInitialVelocity = 10,
+  };
+
+  XCTAssert(ba1 == ba2);
+}
+
+@end

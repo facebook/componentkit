@@ -44,3 +44,21 @@ void CKComponentBoundsAnimationApply(const CKComponentBoundsAnimation &animation
                      completion:_completion];
   }
 }
+
+auto operator ==(const CKComponentBoundsAnimation &lhs, const CKComponentBoundsAnimation &rhs) -> bool
+{
+  auto const commonPropsAreEqual =
+      lhs.duration == rhs.duration && lhs.delay == rhs.delay && lhs.mode == rhs.mode && lhs.options == rhs.options;
+
+  if (lhs.mode == CKComponentBoundsAnimationModeDefault) {
+    return commonPropsAreEqual;
+  }
+
+  return commonPropsAreEqual && lhs.springDampingRatio == rhs.springDampingRatio &&
+         lhs.springInitialVelocity == rhs.springInitialVelocity;
+}
+
+auto operator !=(const CKComponentBoundsAnimation &lhs, const CKComponentBoundsAnimation &rhs) -> bool
+{
+  return !(lhs == rhs);
+}
