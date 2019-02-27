@@ -284,7 +284,11 @@ typedef struct {
 - (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component {}
 
 - (void)willMountComponentTreeWithRootComponent:(CKComponent *)component {}
-- (void)didMountComponentTreeWithRootComponent:(CKComponent *)component {}
+- (void)didMountComponentTreeWithRootComponent:(CKComponent *)component
+                         mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext {}
+
+- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component {}
+- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component {}
 
 - (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component { _willLayoutComponentTreeHitCount++; }
 - (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component { _didLayoutComponentTreeHitCount++; }
@@ -299,6 +303,8 @@ typedef struct {
 - (void)didLayoutComponent:(CKComponent *)component {}
 
 - (id<CKSystraceListener>)systraceListener { return nil; }
+
+- (BOOL)shouldCollectMountInformationForRootComponent:(CKComponent *)component { return NO; }
 
 - (void)didReuseNode:(id<CKTreeNodeProtocol>)node inScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot {}
 

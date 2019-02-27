@@ -111,7 +111,7 @@ int32_t PersistentAttributeShape::computeIdentifier(const CKViewComponentAttribu
 }
 @end
 
-UIView *ViewReusePool::viewForClass(const CKComponentViewClass &viewClass, UIView *container)
+UIView *ViewReusePool::viewForClass(const CKComponentViewClass &viewClass, UIView *container, CK::Component::MountAnalyticsContext *mountAnalyticsContext)
 {
   if (position == pool.end()) {
     UIView *v = viewClass.createView();
@@ -120,21 +120,27 @@ UIView *ViewReusePool::viewForClass(const CKComponentViewClass &viewClass, UIVie
     pool.push_back(v);
     position = pool.end();
     ViewReuseUtilities::createdView(v, viewClass, container);
+    if (auto mac = mountAnalyticsContext) {
+      mac->viewAllocations++;
+    }
     return v;
   } else {
+    if (auto mac = mountAnalyticsContext) {
+      mac->viewReuses++;
+    }
     return *position++;
   }
 }
 
-void ViewReusePool::reset()
+void ViewReusePool::reset(CK::Component::MountAnalyticsContext *mountAnalyticsContext)
 {
   for (auto it = pool.begin(); it != position; ++it) {
-    ViewReuseUtilities::willUnhide(*it);
+    ViewReuseUtilities::willUnhide(*it, mountAnalyticsContext);
     [*it setHidden:NO];
   }
   for (auto it = position; it != pool.end(); ++it) {
     [*it setHidden:YES];
-    ViewReuseUtilities::didHide(*it);
+    ViewReuseUtilities::didHide(*it, mountAnalyticsContext);
   }
   position = pool.begin();
 }
@@ -151,10 +157,10 @@ ViewReusePoolMap &ViewReusePoolMap::viewReusePoolMapForView(UIView *v)
   return wrapper->_viewReusePoolMap;
 }
 
-void ViewReusePoolMap::reset(UIView *container)
+void ViewReusePoolMap::reset(UIView *container, CK::Component::MountAnalyticsContext *mountAnalyticsContext)
 {
   for (auto &it : map) {
-    it.second.reset();
+    it.second.reset(mountAnalyticsContext);
   }
 
   // Now we need to ensure that the ordering of container.subviews matches vendedViews.
@@ -203,7 +209,8 @@ void ViewReusePoolMap::reset(UIView *container)
 
 UIView *ViewReusePoolMap::viewForConfiguration(Class componentClass,
                                                const CKComponentViewConfiguration &config,
-                                               UIView *container)
+                                               UIView *container,
+                                               CK::Component::MountAnalyticsContext *mountAnalyticsContext)
 {
   if (!config.viewClass().hasView()) {
     return nil;
@@ -215,14 +222,15 @@ UIView *ViewReusePoolMap::viewForConfiguration(Class componentClass,
     config.rep->attributeShape
   };
   // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
-  UIView *v = map[key].viewForClass(config.viewClass(), container);
+  UIView *v = map[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
   vendedViews.push_back(v);
   return v;
 }
 
-UIView *ViewManager::viewForConfiguration(Class componentClass, const CKComponentViewConfiguration &config)
+UIView *ViewManager::viewForConfiguration(Class componentClass,
+                                          const CKComponentViewConfiguration &config)
 {
-  return viewReusePoolMap.viewForConfiguration(componentClass, config, view);
+  return viewReusePoolMap.viewForConfiguration(componentClass, config, view, mountAnalyticsContext);
 }
 
 static char kPersistentAttributesViewKey = ' ';

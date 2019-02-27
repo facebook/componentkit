@@ -39,7 +39,13 @@
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
-  CKRender::buildComponentTreeWithMultiChild(self, parent, previousParent, params, parentHasStateUpdate);
+  auto const node = CKRender::buildComponentTreeWithMultiChild(self, parent, previousParent, params, parentHasStateUpdate);
+  if (params.enableViewConfigurationWithState) {
+    auto const viewConfiguration = [self viewConfigurationWithState:node.state];
+    if (!viewConfiguration.isDefaultConfiguration()) {
+      [self setViewConfiguration:viewConfiguration];
+    }
+  }
 }
 
 #pragma mark - CKRenderComponentProtocol
@@ -60,5 +66,10 @@
 }
 
 - (void)didReuseComponent:(id<CKRenderComponentProtocol>)component {}
+
+- (CKComponentViewConfiguration)viewConfigurationWithState:(id)state
+{
+  return {};
+}
 
 @end

@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
+#import <ComponentKit/ComponentMountContext.h>
 
 @protocol CKTreeNodeProtocol;
 
@@ -47,6 +48,14 @@
 - (void)willLayoutComponent:(CKComponent *)component;
 - (void)didLayoutComponent:(CKComponent *)component;
 
+/**
+  Called before/after evaluating a component should be updated or not.
+
+  Will be called only when systrace is enabled.
+*/
+- (void)willCheckShouldComponentUpdate:(CKComponent *)component;
+- (void)didCheckShouldComponentUpdate:(CKComponent *)component;
+
 @end
 
 /**
@@ -74,13 +83,30 @@
 - (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component;
 
 /**
- Called before/after mounting component tree
+ Called before/after mounting a component tree
 
  @param component Root component for mounted tree
  */
 
 - (void)willMountComponentTreeWithRootComponent:(CKComponent *)component;
-- (void)didMountComponentTreeWithRootComponent:(CKComponent *)component;
+- (void)didMountComponentTreeWithRootComponent:(CKComponent *)component
+                         mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext;
+
+/**
+ Called before mounting a component tree.
+
+ If returns YES, an extra information will be collected during the mount process.
+ The extra information will be provided back in `didMountComponentTreeWithRootComponent` callback.
+ */
+- (BOOL)shouldCollectMountInformationForRootComponent:(CKComponent *)component;
+
+/**
+ Called before/after collecting animations from a component tree.
+
+ @param component Root component for the tree that is about to be mounted.
+ */
+- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component;
+- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component;
 
 /**
  Called before/after component tree layout

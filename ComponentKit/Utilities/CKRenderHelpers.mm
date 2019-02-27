@@ -81,9 +81,14 @@ namespace CKRenderInternal {
       // We check if the component node is dirty in the **previous** scope root.
       auto const dirtyNodeIdsForPropsUpdates = params.previousScopeRoot.rootNode.dirtyNodeIdsForPropsUpdates();
       auto const dirtyNodeId = dirtyNodeIdsForPropsUpdates.find(node.nodeIdentifier);
-      if (dirtyNodeId == params.treeNodeDirtyIds.end() && ![component shouldComponentUpdate:previousComponent]) {
-        CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousNode, params);
-        return YES;
+      if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
+        [params.systraceListener willCheckShouldComponentUpdate:component];
+        auto const shouldComponentUpdate = [component shouldComponentUpdate:previousComponent];
+        [params.systraceListener didCheckShouldComponentUpdate:component];
+        if (!shouldComponentUpdate) {
+          CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousNode, params);
+          return YES;
+        }
       }
     }
     return NO;
@@ -230,7 +235,7 @@ namespace CKRender {
                                          const CKBuildComponentTreeParams &params,
                                          BOOL parentHasStateUpdate,
                                          BOOL isBridgeComponent,
-                                         BOOL *didReuseComponent) -> void
+                                         BOOL *didReuseComponent) -> id<CKTreeNodeProtocol>
   {
     CKCAssert(component, @"component cannot be nil");
 
@@ -254,7 +259,7 @@ namespace CKRender {
         *didReuseComponent = YES;
       }
 
-      return;
+      return node;
     }
 
     // Update the `parentHasStateUpdate` param for Faster state/props updates.
@@ -283,6 +288,8 @@ namespace CKRender {
       [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
       CKRenderInternal::didBuildComponentTreeWithSingleChild(node, component, params);
     }
+
+    return node;
   }
 
   auto buildComponentTreeWithMultiChild(id<CKRenderWithChildrenComponentProtocol> component,
@@ -290,7 +297,7 @@ namespace CKRender {
                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
                                         const CKBuildComponentTreeParams &params,
                                         BOOL parentHasStateUpdate,
-                                        BOOL isBridgeComponent) -> void
+                                        BOOL isBridgeComponent) -> id<CKTreeNodeProtocol>
   {
     auto const node = [[CKRenderTreeNodeWithChildren alloc]
                        initWithComponent:component
@@ -322,6 +329,8 @@ namespace CKRender {
     if (!isBridgeComponent) {
       CKComponentContextHelper::didBuildComponentTree(component);
     }
+
+    return node;
   }
 
   auto buildComponentTreeForLeafComponent(id<CKTreeNodeComponentProtocol> component,

@@ -121,6 +121,11 @@ bool CKComponentViewConfiguration::operator==(const CKComponentViewConfiguration
   }
 }
 
+BOOL CKComponentViewConfiguration::isDefaultConfiguration() const
+{
+  return rep == singletonViewConfiguration();
+}
+
 const CKComponentViewClass &CKComponentViewConfiguration::viewClass() const noexcept
 {
   return rep->viewClass;

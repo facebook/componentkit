@@ -50,6 +50,7 @@ struct CKComponentBoundsAnimation {
 #if CK_ASSERTIONS_ENABLED
   __weak CKComponent *component;
 #endif
+  void (^completion)();
 };
 
 /**

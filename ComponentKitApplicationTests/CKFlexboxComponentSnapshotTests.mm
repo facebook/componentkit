@@ -1090,14 +1090,17 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,100}],
        .flexShrink = 1,
+       .useHeightAsBaseline = YES,
      },
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}],
        .flexShrink = 1,
+       .useHeightAsBaseline = YES,
      },
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,75}],
        .flexShrink = 1,
+       .useHeightAsBaseline = YES,
      },
    }
    usesDeepYogaTrees:_usesDeepYogaTrees];
@@ -1123,6 +1126,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,100}],
        .flexShrink = 1,
+       .useHeightAsBaseline = YES,
      },
      {
        [CKCustomBaselineComponent
@@ -1134,6 +1138,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
      {
        [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,75}],
        .flexShrink = 1,
+       .useHeightAsBaseline = YES,
      },
    }
    usesDeepYogaTrees:_usesDeepYogaTrees];

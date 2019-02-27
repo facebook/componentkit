@@ -115,6 +115,7 @@ struct CKComponentViewConfiguration {
   const CKComponentViewClass &viewClass() const noexcept;
   std::shared_ptr<const CKViewComponentAttributeValueMap> attributes() const noexcept;
   const CKComponentAccessibilityContext &accessibilityContext() const noexcept;
+  BOOL isDefaultConfiguration() const;
 
 private:
   struct Repr {
