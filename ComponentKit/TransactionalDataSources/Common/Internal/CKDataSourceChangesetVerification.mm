@@ -15,6 +15,7 @@
 
 #import <ComponentKit/CKDataSourceChangesetInternal.h>
 #import <ComponentKit/CKDataSourceChangesetModification.h>
+#import <ComponentKit/CKDataSourceSplitChangesetModification.h>
 #import <ComponentKit/CKDataSourceStateInternal.h>
 #import <ComponentKit/CKIndexTransform.h>
 
@@ -23,8 +24,10 @@ static NSArray<NSNumber *> *sectionCountsWithModificationsFoldedIntoState(CKData
 
 static NSArray<NSNumber *> *sectionCountsForState(CKDataSourceState *state);
 
-static NSArray<NSNumber *> *updatedSectionCountsWithModification(NSArray<NSNumber *> *sectionCounts,
-                                                                 CKDataSourceChangesetModification *changesetModification);
+static CKDataSourceChangeset *changesetFromModification(id<CKDataSourceStateModifying> modification);
+
+static NSArray<NSNumber *> *updatedSectionCountsWithChangeset(NSArray<NSNumber *> *sectionCounts,
+                                                              CKDataSourceChangeset *changeset);
 
 static NSArray<NSIndexPath *> *sortedIndexPaths(NSArray<NSIndexPath *> *indexPaths);
 
@@ -215,9 +218,7 @@ static NSArray<NSNumber *> *sectionCountsWithModificationsFoldedIntoState(CKData
 {
   NSArray<NSNumber *> *sectionCounts = sectionCountsForState(state);
   for (id<CKDataSourceStateModifying> modification in modifications) {
-    if ([modification isKindOfClass:[CKDataSourceChangesetModification class]]) {
-      sectionCounts = updatedSectionCountsWithModification(sectionCounts, modification);
-    }
+    sectionCounts = updatedSectionCountsWithChangeset(sectionCounts, changesetFromModification(modification));
   }
   return sectionCounts;
 }
@@ -231,10 +232,23 @@ static NSArray<NSNumber *> *sectionCountsForState(CKDataSourceState *state)
   return sectionCounts;
 }
 
-static NSArray<NSNumber *> *updatedSectionCountsWithModification(NSArray<NSNumber *> *sectionCounts,
-                                                                 CKDataSourceChangesetModification *changesetModification)
+static CKDataSourceChangeset *changesetFromModification(id<CKDataSourceStateModifying> modification)
 {
-  CKDataSourceChangeset *changeset = changesetModification.changeset;
+  if ([modification isKindOfClass:[CKDataSourceChangesetModification class]]) {
+    return [(CKDataSourceChangesetModification *)modification changeset];
+  } else if ([modification isKindOfClass:[CKDataSourceSplitChangesetModification class]]) {
+    return [(CKDataSourceSplitChangesetModification *)modification changeset];
+  }
+  return nil;
+}
+
+static NSArray<NSNumber *> *updatedSectionCountsWithChangeset(NSArray<NSNumber *> *sectionCounts,
+                                                              CKDataSourceChangeset *changeset)
+{
+  if (changeset == nil) {
+    return sectionCounts;
+  }
+
   NSMutableArray *updatedSectionCounts = [sectionCounts mutableCopy];
   // Move items
   [changeset.movedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull fromIndexPath, NSIndexPath *, BOOL *) {

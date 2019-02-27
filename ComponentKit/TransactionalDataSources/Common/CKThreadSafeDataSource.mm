@@ -102,8 +102,6 @@
                              initWithChangeset:changeset
                              stateListener:self
                              userInfo:userInfo
-                             isDeferredChangeset:NO
-                             viewport:{}
                              qos:qos];
   switch (mode) {
     case CKUpdateModeAsynchronous:

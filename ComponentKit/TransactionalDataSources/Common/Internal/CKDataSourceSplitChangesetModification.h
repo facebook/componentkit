@@ -17,22 +17,14 @@
 
 @protocol CKComponentStateListener;
 
-@interface CKDataSourceChangesetModification : NSObject <CKDataSourceStateModifying>
-
-- (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
-                    stateListener:(id<CKComponentStateListener>)stateListener
-                         userInfo:(NSDictionary *)userInfo;
+@interface CKDataSourceSplitChangesetModification : NSObject <CKDataSourceStateModifying>
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
+                         viewport:(CKDataSourceViewport)viewport
                               qos:(CKDataSourceQOS)qos;
 
 @property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;
 
 @end
-
-namespace CK {
-  auto invalidIndexesForInsertionInArray(NSArray *const a, NSIndexSet *const is) -> NSIndexSet *;
-  auto invalidIndexesForRemovalFromArray(NSArray *const a, NSIndexSet *const is) -> NSIndexSet *;
-}

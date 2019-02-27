@@ -27,6 +27,7 @@
 #import "CKDataSourceListenerAnnouncer.h"
 #import "CKDataSourceQOSHelper.h"
 #import "CKDataSourceReloadModification.h"
+#import "CKDataSourceSplitChangesetModification.h"
 #import "CKDataSourceStateInternal.h"
 #import "CKDataSourceStateModifying.h"
 #import "CKDataSourceUpdateConfigurationModification.h"
@@ -159,13 +160,12 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   CKVerifyChangeset(changeset, _state, _pendingAsynchronousModifications);
 #endif
 
-  id<CKDataSourceStateModifying> modification =
-  [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
-                                                 stateListener:self
-                                                      userInfo:userInfo
-                                           isDeferredChangeset:NO
-                                                      viewport:self.viewport
-                                                           qos:qos];
+  id<CKDataSourceStateModifying> const modification =
+  [self _changesetGenerationModificationForChangeset:changeset
+                                            userInfo:userInfo
+                                                 qos:qos
+                                 isDeferredChangeset:NO];
+
   switch (mode) {
     case CKUpdateModeAsynchronous:
       [self _enqueueModification:modification];
@@ -216,15 +216,6 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
       [self _synchronouslyApplyModification:modification];
       break;
   }
-}
-
-- (CKDataSourceViewport)viewport
-{
-  if (!_changesetSplittingEnabled) {
-    return {};
-  }
-  CK::MutexLocker l(_viewportLock);
-  return _viewport;
 }
 
 - (void)setViewport:(CKDataSourceViewport)viewport
@@ -364,13 +355,11 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   auto const deferredChangeset = [change deferredChangeset];
   if (deferredChangeset != nil) {
     [_announcer componentDataSource:self willApplyDeferredChangeset:deferredChangeset];
-    id<CKDataSourceStateModifying> modification =
-    [[CKDataSourceChangesetModification alloc] initWithChangeset:deferredChangeset
-                                                   stateListener:self
-                                                        userInfo:[appliedChanges userInfo]
-                                             isDeferredChangeset:YES
-                                                        viewport:self.viewport
-                                                             qos:qos];
+    id<CKDataSourceStateModifying> const modification =
+    [self _changesetGenerationModificationForChangeset:deferredChangeset
+                                              userInfo:[appliedChanges userInfo]
+                                                   qos:qos
+                                   isDeferredChangeset:YES];
 
     // This needs to be applied asynchronously to avoid having both the first part of the changeset
     // and the deferred changeset be applied in the same runloop tick -- otherwise, the completion
@@ -462,6 +451,32 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
     [self _startAsynchronousModificationIfNeeded];
   });
+}
+
+- (id<CKDataSourceStateModifying>)_changesetGenerationModificationForChangeset:(CKDataSourceChangeset *)changeset
+                                                                    userInfo:(NSDictionary *)userInfo
+                                                                         qos:(CKDataSourceQOS)qos
+                                                         isDeferredChangeset:(BOOL)isDeferredChangeset
+{
+  if (!isDeferredChangeset && _changesetSplittingEnabled) {
+    CKDataSourceViewport viewport;
+    {
+      CK::MutexLocker l(_viewportLock);
+      viewport = _viewport;
+    }
+    return
+    [[CKDataSourceSplitChangesetModification alloc] initWithChangeset:changeset
+                                                        stateListener:self
+                                                             userInfo:userInfo
+                                                             viewport:viewport
+                                                                  qos:qos];
+  } else {
+    return
+    [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
+                                                   stateListener:self
+                                                        userInfo:userInfo
+                                                             qos:qos];
+  }
 }
 
 #if CK_ASSERTIONS_ENABLED
