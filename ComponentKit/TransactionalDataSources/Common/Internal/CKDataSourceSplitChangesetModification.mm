@@ -217,6 +217,32 @@
   [sectionsForDeferredUpdatedItems removeObjectsAtIndexes:removedSections];
 
   // Insert sections
+
+  // Quick validation to make sure the locations specified by indexes do not exceed the bounds of the receiving array.
+  if ([[_changeset insertedSections] count] > 0 &&
+      ([[_changeset insertedSections] firstIndex] > newSections.count)) {
+    CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertSection),
+                         @"Invalid first index location: %lu (> %lu) while processing inserted sections. Changeset: %@, user info: %@, state: %@",
+                         (unsigned long)[[_changeset insertedSections] firstIndex],
+                         (unsigned long)newSections.count,
+                         CK::changesetDescription(_changeset),
+                         _userInfo,
+                         oldState);
+  }
+#ifdef CK_ASSERTIONS_ENABLED
+    // Deep validation of the indexes we are going to insert for better logging.
+  auto const invalidInsertedSectionsIndexes = CK::invalidIndexesForInsertionInArray(newSections, [_changeset insertedSections]);
+  if (invalidInsertedSectionsIndexes.count) {
+  CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertSection),
+                       @"%@ for range: %@ in sections: %@. Changeset: %@, user info: %@, state: %@",
+                       CK::indexSetDescription(invalidInsertedSectionsIndexes, @"Invalid indexes", 0),
+                       NSStringFromRange({0, newSections.count}),
+                       newSections,
+                       CK::changesetDescription(_changeset),
+                       _userInfo,
+                       oldState);
+  }
+#endif
   [newSections insertObjects:emptyMutableArrays([[_changeset insertedSections] count]) atIndexes:[_changeset insertedSections]];
   if (sectionsForDeferredUpdatedItems != nil) {
     [sectionsForDeferredUpdatedItems insertObjects:emptyMutableArrays([[_changeset insertedSections] count]) atIndexes:[_changeset insertedSections]];
