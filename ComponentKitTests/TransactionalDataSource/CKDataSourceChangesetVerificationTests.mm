@@ -659,6 +659,22 @@
   [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
 }
 
+- (void)test_WhenVerifyingMovesToNewSection_ValidatesToIndexPathsAgainstFinalState
+{
+  const auto state = CKDataSourceTestState(Nil, nil, 2, 2);
+  const auto changeset = CK::makeChangeset({
+    .movedItems = {
+      {{0, 0}, {1, 0}},
+      {{1, 0}, {1, 1}},
+    },
+    .insertedSections = {
+      1
+    },
+  });
+
+  [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
+}
+
 - (void)test_WhenApplyingPendingModificationsWithMoves_TreatsToIndexPathsAsSpecifiedAfterSectionRemovalsAndInsertions
 {
   const auto state = CKDataSourceTestState(Nil, nil, 5, 1);
