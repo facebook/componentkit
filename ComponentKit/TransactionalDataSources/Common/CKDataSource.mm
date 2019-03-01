@@ -130,16 +130,11 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   // The chain of ownership is following: CKDataSourceState -> array of CKDataSourceItem-> ScopeRoot -> controllers.
   // We delay desctruction of DataSourceState to guarantee that controllers are alive.
   CKDataSourceState *state = _state;
-  void (^completion)() = ^() {
+  performBlockOnMainQueue(^() {
     [state enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSIndexPath *, BOOL *stop) {
       CKComponentScopeRootAnnounceControllerInvalidation([item scopeRoot]);
     }];
-  };
-  if ([NSThread isMainThread]) {
-    completion();
-  } else {
-    dispatch_async(dispatch_get_main_queue(), completion);
-  }
+  });
 }
 
 - (void)applyChangeset:(CKDataSourceChangeset *)changeset
@@ -332,24 +327,29 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 - (void)_synchronouslyApplyChange:(CKDataSourceChange *)change qos:(CKDataSourceQOS)qos
 {
   CKAssertChangesetQueue();
-  CKDataSourceState *previousState = _state;
-  _state = [change state];
+  CKDataSourceAppliedChanges *const appliedChanges = [change appliedChanges];
+  CKDataSourceState *const previousState = _state;
+  CKDataSourceState *const newState = [change state];
+  _state = newState;
 
   // Announce 'invalidateController'.
-  for (NSIndexPath *removedIndex in [[change appliedChanges] removedIndexPaths]) {
-    CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
-    CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
-  }
+  performBlockOnMainQueue(^{
+    for (NSIndexPath *removedIndex in [appliedChanges removedIndexPaths]) {
+      CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
+      CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
+    }
+  });
 
   [_announcer componentDataSource:self
            didModifyPreviousState:previousState
-                        withState:_state
-                byApplyingChanges:[change appliedChanges]];
+                        withState:newState
+                byApplyingChanges:appliedChanges];
 
   // Announce 'didPrepareLayoutForComponent:'.
-  auto const appliedChanges = [change appliedChanges];
-  CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([[appliedChanges finalUpdatedIndexPaths] allValues], _state);
-  CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([appliedChanges insertedIndexPaths], _state);
+  performBlockOnMainQueue(^{
+    CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([[appliedChanges finalUpdatedIndexPaths] allValues], newState);
+    CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([appliedChanges insertedIndexPaths], newState);
+  });
   
   // Handle deferred changeset (if there is one)
   auto const deferredChangeset = [change deferredChangeset];
@@ -476,6 +476,15 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
                                                    stateListener:self
                                                         userInfo:userInfo
                                                              qos:qos];
+  }
+}
+
+static void performBlockOnMainQueue(dispatch_block_t block)
+{
+  if ([NSThread isMainThread]) {
+    block();
+  } else {
+    dispatch_async(dispatch_get_main_queue(), block);
   }
 }
 
