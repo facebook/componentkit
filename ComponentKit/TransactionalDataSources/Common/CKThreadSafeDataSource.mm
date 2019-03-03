@@ -32,7 +32,7 @@
 #import "CKDataSourceUpdateStateModification.h"
 #import "CKMutex.h"
 
-@interface CKThreadSafeDataSource () <CKComponentStateListener, CKComponentDebugReflowListener>
+@interface CKThreadSafeDataSource () <CKComponentDebugReflowListener>
 {
   CKDataSourceState *_state;
 

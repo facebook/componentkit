@@ -56,7 +56,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 
 @end
 
-@interface CKDataSource () <CKComponentStateListener, CKComponentDebugReflowListener>
+@interface CKDataSource () <CKComponentDebugReflowListener>
 {
   CKDataSourceState *_state;
   CKDataSourceListenerAnnouncer *_announcer;

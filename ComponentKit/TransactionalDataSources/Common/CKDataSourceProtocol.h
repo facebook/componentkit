@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CGGeometry.h>
 
+#import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKDataSourceQOS.h>
 #import <ComponentKit/CKUpdateMode.h>
 
@@ -36,7 +37,7 @@ struct CKDataSourceViewport {
   CGPoint contentOffset;
 };
 
-@protocol CKDataSourceProtocol <NSObject>
+@protocol CKDataSourceProtocol <NSObject, CKComponentStateListener>
 
 /**
  @param configuration @see CKDataSourceConfiguration.
