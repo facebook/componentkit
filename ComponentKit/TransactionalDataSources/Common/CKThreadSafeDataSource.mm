@@ -41,6 +41,7 @@
 
   CKDataSourceListenerAnnouncer *_announcer;
   dispatch_queue_t _workQueue;
+  id<CKComponentStateListener> _stateListener;
 }
 @end
 
@@ -62,6 +63,7 @@
     _state = state ?: [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
     _workQueue = dispatch_queue_create("org.componentkit.CKThreadSafeDataSource", DISPATCH_QUEUE_SERIAL);
+    _stateListener = configuration.stateListener;
 
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -100,7 +102,7 @@
 {
   auto const modification = [[CKDataSourceChangesetModification alloc]
                              initWithChangeset:changeset
-                             stateListener:self
+                             stateListener:_stateListener ?: self
                              userInfo:userInfo
                              qos:qos];
   switch (mode) {

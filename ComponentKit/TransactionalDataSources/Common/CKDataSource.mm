@@ -66,6 +66,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   CK::Mutex _pendingStateUpdatesLock;
 
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
+  id<CKComponentStateListener> _stateListener;
   BOOL _changesetSplittingEnabled;
 
   CKDataSourceViewport _viewport;
@@ -115,6 +116,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 #endif
     _pendingAsynchronousModifications = [NSMutableArray array];
     _changesetSplittingEnabled = configuration.splitChangesetOptions.enabled;
+    _stateListener = configuration.stateListener;
     [CKComponentDebugController registerReflowListener:self];
   }
   return self;
@@ -466,14 +468,14 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
     }
     return
     [[CKDataSourceSplitChangesetModification alloc] initWithChangeset:changeset
-                                                        stateListener:self
+                                                        stateListener:_stateListener ?: self
                                                              userInfo:userInfo
                                                              viewport:viewport
                                                                   qos:qos];
   } else {
     return
     [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
-                                                   stateListener:self
+                                                   stateListener:_stateListener ?: self
                                                         userInfo:userInfo
                                                              qos:qos];
   }

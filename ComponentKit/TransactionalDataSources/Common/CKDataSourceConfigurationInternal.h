@@ -17,6 +17,7 @@
 #import <unordered_set>
 
 @protocol CKAnalyticsListener;
+@protocol CKComponentStateListener;
 
 typedef NS_ENUM(NSInteger, CKDataSourceLayoutAxis) {
   CKDataSourceLayoutAxisVertical,
@@ -66,6 +67,8 @@ struct CKDataSourceSplitChangesetOptions {
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
  @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
+ @param stateListener A state listener that listens to state updates from the generated components. If
+ unspecified, this defaults to the data source itself.
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
@@ -76,7 +79,8 @@ struct CKDataSourceSplitChangesetOptions {
             applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
+                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                            stateListener:(id<CKComponentStateListener>)stateListener;
 
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                                       context:(id<NSObject>)context
@@ -87,11 +91,13 @@ struct CKDataSourceSplitChangesetOptions {
                 applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
+                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                                stateListener:(id<CKComponentStateListener>)stateListener;
 
 - (instancetype)copyWithContext:(id<NSObject>)context sizeRange:(const CKSizeRange &)sizeRange;
 
 @property (nonatomic, readonly, strong) id<CKAnalyticsListener> analyticsListener;
+@property (nonatomic, readonly, strong) id<CKComponentStateListener> stateListener;
 
 @property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
 @property (nonatomic, assign, readonly) BOOL applyModificationsOnWorkQueue;

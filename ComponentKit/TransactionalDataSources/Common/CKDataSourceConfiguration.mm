@@ -39,7 +39,8 @@
            applyModificationsOnWorkQueue:NO
                      componentPredicates:{}
            componentControllerPredicates:{}
-                       analyticsListener:nil];
+                       analyticsListener:nil
+                           stateListener:nil];
 }
 
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
@@ -55,7 +56,8 @@
                applyModificationsOnWorkQueue:NO
                          componentPredicates:{}
                componentControllerPredicates:{}
-                           analyticsListener:nil];
+                           analyticsListener:nil
+                               stateListener:nil];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -68,6 +70,7 @@
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                            stateListener:(id<CKComponentStateListener>)stateListener
 {
   auto const pb = ^(id<NSObject> m, id<NSObject> c){ return [componentProvider componentForModel:m context:c]; };
   return [self initWithComponentProviderClass:componentProvider
@@ -80,7 +83,8 @@
                 applyModificationsOnWorkQueue:applyModificationsOnWorkQueue
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
-                            analyticsListener:analyticsListener];
+                            analyticsListener:analyticsListener
+                                stateListener:stateListener];
 }
 
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
@@ -93,6 +97,7 @@
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                                stateListener:(id<CKComponentStateListener>)stateListener
 {
   return [self initWithComponentProviderClass:Nil
                        componentProviderBlock:^(id<NSObject> m, id<NSObject> c){ return componentProvider(m, c); }
@@ -104,7 +109,8 @@
                 applyModificationsOnWorkQueue:applyModificationsOnWorkQueue
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
-                            analyticsListener:analyticsListener];
+                            analyticsListener:analyticsListener
+                                stateListener:stateListener];
 }
 
 - (instancetype)initWithComponentProviderClass:(Class<CKComponentProvider>)componentProviderClass
@@ -118,6 +124,7 @@
                            componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                  componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                              analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                                 stateListener:(id<CKComponentStateListener>)stateListener
 {
   if (self = [super init]) {
     _componentProviderClass = componentProviderClass;
@@ -127,6 +134,7 @@
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
+    _stateListener = stateListener;
     _buildComponentConfig = buildComponentConfig;
     _splitChangesetOptions = splitChangesetOptions;
     _workQueue = workQueue;
@@ -147,7 +155,8 @@
                                              applyModificationsOnWorkQueue:_applyModificationsOnWorkQueue
                                                        componentPredicates:_componentPredicates
                                              componentControllerPredicates:_componentControllerPredicates
-                                                         analyticsListener:_analyticsListener];
+                                                         analyticsListener:_analyticsListener
+                                                             stateListener:_stateListener];
 }
 
 - (const CKBuildComponentConfig &)buildComponentConfig

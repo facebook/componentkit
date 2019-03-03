@@ -305,7 +305,7 @@
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _announcedChanges.count == 2;
   }));
-  
+
   [dataSource applyChangeset:updateChangeset(NSMakeRange(0, 4), {.width = 10, .height = 20}) mode:CKUpdateModeSynchronous userInfo:nil];
 
   XCTAssertEqual(3, _announcedChanges.count);
@@ -618,7 +618,7 @@
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _announcedChanges.count == 2;
   }));
-  
+
   CKDataSourceChangeset *const updateWithInsertionChangeset =
   [[[[CKDataSourceChangesetBuilder
       transactionalComponentDataSourceChangeset]
@@ -650,7 +650,8 @@ static CKDataSource *dataSourceWithSplitChangesetOptions(Class<CKComponentProvid
    applyModificationsOnWorkQueue:NO
    componentPredicates:{}
    componentControllerPredicates:{}
-   analyticsListener:nil];
+   analyticsListener:nil
+   stateListener:nil];
   return [[CKDataSource alloc] initWithConfiguration:config];
 }
 

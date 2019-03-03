@@ -172,7 +172,8 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        applyModificationsOnWorkQueue:NO
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
-                                       analyticsListener:nil];
+                                       analyticsListener:nil
+                                       stateListener:nil];
   return [[CKCollectionViewDataSource alloc] initWithCollectionView:collectionViewController.collectionView
                                                      supplementaryViewDataSource:nil
                                                                    configuration:config];
