@@ -132,11 +132,10 @@ static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComp
                                                                     id<CKAnalyticsListener> analyticsListener)
 {
   CKCAssertNotNil(view, @"Impossible to mount a component layout on a nil view");
-  const auto animations = [view, &rootLayout, &prevLayout](){
-    const auto animatedComponents = CK::animatedComponentsBetweenLayouts(rootLayout, prevLayout);
-    const auto animations = CK::animationsForComponents(animatedComponents, view);
-    return animations;
-  }();
+  [analyticsListener willCollectAnimationsFromComponentTreeWithRootComponent:rootLayout.component()];
+  const auto animatedComponents = CK::animatedComponentsBetweenLayouts(rootLayout, prevLayout);
+  const auto animations = CK::animationsForComponents(animatedComponents, view);
+  [analyticsListener didCollectAnimationsFromComponentTreeWithRootComponent:rootLayout.component()];
 
   NSSet *currentlyMountedComponents = view.ck_attachState.mountedComponents;
   __block NSSet *newMountedComponents = nil;

@@ -17,6 +17,8 @@
 #import <ComponentKit/CKComponentDataSourceAttachControllerInternal.h>
 #import <ComponentKit/CKComponentRootLayoutProvider.h>
 
+#import "CKAnalyticsListenerSpy.h"
+
 @interface CKComponentRootLayoutTestProvider: NSObject <CKComponentRootLayoutProvider>
 
 @end
@@ -117,6 +119,46 @@
   CKComponentDataSourceAttachState *attachState2 = [attachController attachStateForScopeIdentifier:scopeIdentifier2];
   XCTAssertEqualObjects(attachState2.mountedComponents, [NSSet setWithObject:component2]);
   XCTAssertEqual(attachState2.scopeIdentifier, scopeIdentifier2);
+}
+
+- (void)test_WhenMountsLayout_ReportsWillCollectAnimationsEvent
+{
+  auto const attachController = [CKComponentDataSourceAttachController new];
+  auto const layout = CKComponentRootLayout {
+    {[CKComponent new], {0, 0}}
+  };
+  auto const layoutProvider = [[CKComponentRootLayoutTestProvider alloc] initWithRootLayout:layout];
+  auto const spy = [CKAnalyticsListenerSpy new];
+
+  CKComponentDataSourceAttachControllerAttachComponentRootLayout(attachController,
+                                                                 {.layoutProvider =
+                                                                   layoutProvider,
+                                                                   .scopeIdentifier = 0x5C09E,
+                                                                   .boundsAnimation = {},
+                                                                   .view = [UIView new],
+                                                                   .analyticsListener = spy});
+
+  XCTAssertEqual(spy->_willCollectAnimationsHitCount, 1);
+}
+
+- (void)test_WhenMountsLayout_ReportsDidCollectAnimationsEvent
+{
+  auto const attachController = [CKComponentDataSourceAttachController new];
+  auto const layout = CKComponentRootLayout {
+    {[CKComponent new], {0, 0}}
+  };
+  auto const layoutProvider = [[CKComponentRootLayoutTestProvider alloc] initWithRootLayout:layout];
+  auto const spy = [CKAnalyticsListenerSpy new];
+
+  CKComponentDataSourceAttachControllerAttachComponentRootLayout(attachController,
+                                                                 {.layoutProvider =
+                                                                   layoutProvider,
+                                                                   .scopeIdentifier = 0x5C09E,
+                                                                   .boundsAnimation = {},
+                                                                   .view = [UIView new],
+                                                                   .analyticsListener = spy});
+
+  XCTAssertEqual(spy->_didCollectAnimationsHitCount, 1);
 }
 
 @end
