@@ -37,6 +37,8 @@ typedef struct {
   @package
   NSInteger _willLayoutComponentTreeHitCount;
   NSInteger _didLayoutComponentTreeHitCount;
+  NSInteger _willCollectAnimationsHitCount;
+  NSInteger _didCollectAnimationsHitCount;
 }
 @end
 
@@ -281,6 +283,26 @@ typedef struct {
   _calledSizeDidInvalidate = YES;
 }
 
+- (void)test_WhenMountsLayout_ReportsWillCollectAnimationsEvent
+{
+  // This has a side-effect of mounting the test layout
+  [[self class] hostingView:{
+    .analyticsListener = _analyticsListenerSpy,
+  }];
+
+  XCTAssertEqual(_analyticsListenerSpy->_willCollectAnimationsHitCount, 1);
+}
+
+- (void)test_WhenMountsLayout_ReportsDidCollectAnimationsEvent
+{
+  // This has a side-effect of mounting the test layout
+  [[self class] hostingView:{
+    .analyticsListener = _analyticsListenerSpy,
+  }];
+
+  XCTAssertEqual(_analyticsListenerSpy->_didCollectAnimationsHitCount, 1);
+}
+
 @end
 
 #pragma mark - CKAnalyticsListener
@@ -296,8 +318,15 @@ typedef struct {
 - (void)didMountComponentTreeWithRootComponent:(CKComponent *)component
                          mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext {}
 
-- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component {}
-- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component {}
+- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component
+{
+  _willCollectAnimationsHitCount++;
+}
+
+- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component
+{
+  _didCollectAnimationsHitCount++;
+}
 
 - (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component { _willLayoutComponentTreeHitCount++; }
 - (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component { _didLayoutComponentTreeHitCount++; }

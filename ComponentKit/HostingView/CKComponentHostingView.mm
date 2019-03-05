@@ -247,7 +247,13 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
     [self _synchronouslyUpdateComponentIfNeeded];
     if (_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size)) {
-      setMountedRootLayout(self, CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, _animationPredicates));
+      auto const rootLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, _animationPredicates);
+      auto const al = _pendingInputs.scopeRoot.analyticsListener;
+      [al willCollectAnimationsFromComponentTreeWithRootComponent:_component];
+      _componentAnimations = animationsForNewLayout(self, rootLayout);
+      [al didCollectAnimationsFromComponentTreeWithRootComponent:_component];
+      _mountedRootLayout = rootLayout;
+      [self _sendDidPrepareLayoutIfNeeded];
     }
 
     const auto mountPerformer = ^{
@@ -329,13 +335,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 - (CKComponentLayout)mountedLayout
 {
   return _mountedRootLayout.layout();
-}
-
-static void setMountedRootLayout(CKComponentHostingView *const self, const CKComponentRootLayout &rootLayout)
-{
-  self->_componentAnimations = animationsForNewLayout(self, rootLayout);
-  self->_mountedRootLayout = rootLayout;
-  [self _sendDidPrepareLayoutIfNeeded];
 }
 
 - (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider
