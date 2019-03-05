@@ -22,6 +22,7 @@
 #import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKComponentHostingViewInternal.h>
 
+#import "CKAnalyticsListenerSpy.h"
 #import "CKComponentHostingViewTestModel.h"
 
 typedef struct {
@@ -33,22 +34,13 @@ typedef struct {
   id<CKComponentSizeRangeProviding> sizeRangeProvider;
 } CKComponentHostingViewConfiguration;
 
-@interface AnalyticsListenerSpy: NSObject <CKAnalyticsListener> {
-  @package
-  NSInteger _willLayoutComponentTreeHitCount;
-  NSInteger _didLayoutComponentTreeHitCount;
-  NSInteger _willCollectAnimationsHitCount;
-  NSInteger _didCollectAnimationsHitCount;
-}
-@end
-
 @interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate>
 + (CKComponentHostingView *)makeHostingView:(const CKComponentHostingViewConfiguration &)options;
 @end
 
 @implementation CKComponentHostingViewTests {
   BOOL _calledSizeDidInvalidate;
-  AnalyticsListenerSpy *_analyticsListenerSpy;
+  CKAnalyticsListenerSpy *_analyticsListenerSpy;
 }
 
 + (CKComponentHostingView *)hostingView:(const CKComponentHostingViewConfiguration &)options
@@ -87,7 +79,7 @@ typedef struct {
 {
   [super setUp];
   _calledSizeDidInvalidate = NO;
-  _analyticsListenerSpy = [AnalyticsListenerSpy new];
+  _analyticsListenerSpy = [CKAnalyticsListenerSpy new];
 }
 
 - (void)testInitializationInsertsContainerViewInHierarchy
@@ -302,49 +294,6 @@ typedef struct {
 
   XCTAssertEqual(_analyticsListenerSpy->_didCollectAnimationsHitCount, 1);
 }
-
-@end
-
-#pragma mark - CKAnalyticsListener
-
-@implementation AnalyticsListenerSpy
-
-- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
-                               buildTrigger:(BuildTrigger)buildTrigger
-                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates {}
-- (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component {}
-
-- (void)willMountComponentTreeWithRootComponent:(CKComponent *)component {}
-- (void)didMountComponentTreeWithRootComponent:(CKComponent *)component
-                         mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext {}
-
-- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component
-{
-  _willCollectAnimationsHitCount++;
-}
-
-- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component
-{
-  _didCollectAnimationsHitCount++;
-}
-
-- (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component { _willLayoutComponentTreeHitCount++; }
-- (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component { _didLayoutComponentTreeHitCount++; }
-
-- (void)willBuildComponent:(Class)componentClass {}
-- (void)didBuildComponent:(Class)componentClass {}
-
-- (void)willMountComponent:(CKComponent *)component {}
-- (void)didMountComponent:(CKComponent *)component {}
-
-- (void)willLayoutComponent:(CKComponent *)component {}
-- (void)didLayoutComponent:(CKComponent *)component {}
-
-- (id<CKSystraceListener>)systraceListener { return nil; }
-
-- (BOOL)shouldCollectMountInformationForRootComponent:(CKComponent *)component { return NO; }
-
-- (void)didReuseNode:(id<CKTreeNodeProtocol>)node inScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot {}
 
 @end
 
