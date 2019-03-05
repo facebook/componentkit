@@ -33,14 +33,20 @@ typedef struct {
   id<CKComponentSizeRangeProviding> sizeRangeProvider;
 } CKComponentHostingViewConfiguration;
 
-@interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate, CKAnalyticsListener>
+@interface AnalyticsListenerSpy: NSObject <CKAnalyticsListener> {
+  @package
+  NSInteger _willLayoutComponentTreeHitCount;
+  NSInteger _didLayoutComponentTreeHitCount;
+}
+@end
+
+@interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate>
 + (CKComponentHostingView *)makeHostingView:(const CKComponentHostingViewConfiguration &)options;
 @end
 
 @implementation CKComponentHostingViewTests {
   BOOL _calledSizeDidInvalidate;
-  NSInteger _willLayoutComponentTreeHitCount;
-  NSInteger _didLayoutComponentTreeHitCount;
+  AnalyticsListenerSpy *_analyticsListenerSpy;
 }
 
 + (CKComponentHostingView *)hostingView:(const CKComponentHostingViewConfiguration &)options
@@ -79,8 +85,7 @@ typedef struct {
 {
   [super setUp];
   _calledSizeDidInvalidate = NO;
-  _willLayoutComponentTreeHitCount = 0;
-  _didLayoutComponentTreeHitCount = 0;
+  _analyticsListenerSpy = [AnalyticsListenerSpy new];
 }
 
 - (void)testInitializationInsertsContainerViewInHierarchy
@@ -236,37 +241,37 @@ typedef struct {
 - (void)testSizeCache_CachedSizeIsUsedIfConstrainedSizesAreSame
 {
   CKComponentHostingView *view = [[self class] hostingView:{
-    .analyticsListener = self,
+    .analyticsListener = _analyticsListenerSpy,
   }];
   const auto constrainedSize = CGSizeMake(100, 100);
   [view sizeThatFits:constrainedSize];
   [view sizeThatFits:constrainedSize];
-  XCTAssertEqual(_willLayoutComponentTreeHitCount, 2);
+  XCTAssertEqual(_analyticsListenerSpy->_willLayoutComponentTreeHitCount, 2);
 }
 
 - (void)testSizeCache_CachedSizeIsNotUsedIfConstrainedSizesAreDifferent
 {
   CKComponentHostingView *view = [[self class] hostingView:{
-    .analyticsListener = self,
+    .analyticsListener = _analyticsListenerSpy,
     .sizeRangeProvider = [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibilityNone],
   }];
   const auto constrainedSize1 = CGSizeMake(100, 100);
   const auto constrainedSize2 = CGSizeMake(200, 200);
   [view sizeThatFits:constrainedSize1];
   [view sizeThatFits:constrainedSize2];
-  XCTAssertEqual(_willLayoutComponentTreeHitCount, 3);
+  XCTAssertEqual(_analyticsListenerSpy->_willLayoutComponentTreeHitCount, 3);
 }
 
 - (void)testSizeCache_CacheSizeIsNotUsedIfComponentIsUpdated
 {
   CKComponentHostingView *view = [[self class] hostingView:{
-    .analyticsListener = self,
+    .analyticsListener = _analyticsListenerSpy,
   }];
   const auto constrainedSize = CGSizeMake(100, 100);
   [view sizeThatFits:constrainedSize];
   [view updateModel:nil mode:CKUpdateModeSynchronous];
   [view sizeThatFits:constrainedSize];
-  XCTAssertEqual(_willLayoutComponentTreeHitCount, 3);
+  XCTAssertEqual(_analyticsListenerSpy->_willLayoutComponentTreeHitCount, 3);
 }
 
 #pragma mark - CKComponentHostingViewDelegate
@@ -276,7 +281,11 @@ typedef struct {
   _calledSizeDidInvalidate = YES;
 }
 
+@end
+
 #pragma mark - CKAnalyticsListener
+
+@implementation AnalyticsListenerSpy
 
 - (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
                                buildTrigger:(BuildTrigger)buildTrigger
