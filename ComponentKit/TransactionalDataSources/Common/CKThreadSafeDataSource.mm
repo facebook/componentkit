@@ -151,13 +151,11 @@
 
 - (void)addListener:(id<CKDataSourceListener>)listener
 {
-  CKAssertMainThread();
   [_announcer addListener:listener];
 }
 
 - (void)removeListener:(id<CKDataSourceListener>)listener
 {
-  CKAssertMainThread();
   [_announcer removeListener:listener];
 }
 
