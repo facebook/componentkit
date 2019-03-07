@@ -9,7 +9,7 @@ auto CK::IndexTransform::applyOffsetToIndex(NSInteger index) const -> NSInteger
   const auto maybeRangeOffsetForIdx = std::find_if(_rangeOffsets.begin(), _rangeOffsets.end(), [=](auto r) {
     return NSLocationInRange(index, r.range);
   });
-  if (maybeRangeOffsetForIdx != _rangeOffsets.end() && (*maybeRangeOffsetForIdx).offset != NSNotFound) {
+  if (maybeRangeOffsetForIdx != _rangeOffsets.end()) {
     return index + (*maybeRangeOffsetForIdx).offset;
   } else {
     return NSNotFound;

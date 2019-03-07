@@ -164,26 +164,18 @@ CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changes
       *stop = YES;
     } else {
       const BOOL fromIndexPathItemInvalid = fromIndexPath.item >= [originalSectionCounts[fromIndexPath.section] integerValue];
-      originalSectionCounts[fromIndexPath.section] = @([originalSectionCounts[fromIndexPath.section] integerValue] - 1);
-      const auto originalSectionIdx = sectionIdxTransform.applyInverseToIndex(toIndexPath.section);
-      const auto toIndexPathItemInvalid = [&](){
-        if (originalSectionIdx == toIndexPath.section) {
-          return toIndexPath.item > [originalSectionCounts[originalSectionIdx] integerValue];
-        }
-        return toIndexPath.item > [sectionCounts[toIndexPath.section] integerValue];
-      }();
+      const BOOL toIndexPathItemInvalid = ((fromIndexPath.section == toIndexPath.section)
+                                           ? toIndexPath.item >= [sectionCounts[toIndexPath.section] integerValue]
+                                           : toIndexPath.item > [sectionCounts[toIndexPath.section] integerValue]);
       if (fromIndexPathItemInvalid || toIndexPathItemInvalid) {
         invalidSection = fromIndexPathItemInvalid ? fromIndexPath.section : toIndexPath.section;
         invalidItem = fromIndexPathItemInvalid ? fromIndexPath.row : toIndexPath.row;
         invalidChangeFound = YES;
         *stop = YES;
       } else {
-        const auto movingToJustInsertedSection = (originalSectionIdx == NSNotFound);
-        if (movingToJustInsertedSection) {
-          sectionCounts[toIndexPath.section] = @([sectionCounts[toIndexPath.section] integerValue] + 1);
-        } else {
-          originalSectionCounts[originalSectionIdx] = @([originalSectionCounts[originalSectionIdx] integerValue] + 1);
-        }
+        originalSectionCounts[fromIndexPath.section] = @([originalSectionCounts[fromIndexPath.section] integerValue] - 1);
+        const auto originalSectionIdx = sectionIdxTransform.applyInverseToIndex(toIndexPath.section);
+        originalSectionCounts[originalSectionIdx] = @([originalSectionCounts[originalSectionIdx] integerValue] + 1);
       }
     }
   }];
