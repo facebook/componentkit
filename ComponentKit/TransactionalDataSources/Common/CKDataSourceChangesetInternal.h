@@ -41,14 +41,5 @@
 @end
 
 namespace CK {
-  auto changesetDescription(const CKDataSourceChangeset * changeset) -> NSString *;
-
-  /**
-   @return  `true` is the changeset may be valid, and `false` if it is definitely invalid.
-
-   @discussion  This function performs a number of checks similar to what `UICollectionView` will do when performing
-   batch updates. Not everything in a changeset can be validated without the actual data source state but these checks
-   can be performed on a changeset alone. This helps with pinpointing the source of an invalid changeset.
-   */
-  auto changesetMayBeValid(const CKDataSourceChangeset *changeset) -> bool;
+  auto changesetDescription(const CKDataSourceChangeset *const changeset) -> NSString *;
 }
