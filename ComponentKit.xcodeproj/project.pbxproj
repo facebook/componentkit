@@ -438,8 +438,8 @@
 		7203EB92217005CE00109F4A /* CKThreadSafeDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 7203EB8E217005CE00109F4A /* CKThreadSafeDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		72122F4221FD3352004BF8B3 /* CKThreadSafeDataSourceInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 72122F3C21FD3351004BF8B3 /* CKThreadSafeDataSourceInternal.h */; };
 		72122F4321FD3352004BF8B3 /* CKThreadSafeDataSourceInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 72122F3C21FD3351004BF8B3 /* CKThreadSafeDataSourceInternal.h */; };
-		72122F4421FD3352004BF8B3 /* CKDataSourceProtocolInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 72122F4121FD3351004BF8B3 /* CKDataSourceProtocolInternal.h */; };
-		72122F4521FD3352004BF8B3 /* CKDataSourceProtocolInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 72122F4121FD3351004BF8B3 /* CKDataSourceProtocolInternal.h */; };
+		72122F4421FD3352004BF8B3 /* CKDataSourceProtocolInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 72122F4121FD3351004BF8B3 /* CKDataSourceProtocolInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		72122F4521FD3352004BF8B3 /* CKDataSourceProtocolInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 72122F4121FD3351004BF8B3 /* CKDataSourceProtocolInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		721AAE54214F19B700B9EE8A /* CKComponentRootLayoutProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 721AAE4F214F19B600B9EE8A /* CKComponentRootLayoutProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		721AAE55214F19B700B9EE8A /* CKComponentRootLayoutProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 721AAE4F214F19B600B9EE8A /* CKComponentRootLayoutProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		7221BA512172AED200969D41 /* CKDataSourceQOSHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 7221BA4B2172AED200969D41 /* CKDataSourceQOSHelper.h */; };
