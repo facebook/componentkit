@@ -17,9 +17,11 @@
 /** Immutable value object returned from objects adopting CKDataSourceStateModifying. */
 @interface CKDataSourceChange : NSObject
 - (instancetype)initWithState:(CKDataSourceState *)state
+                previousState:(CKDataSourceState *)previousState
                appliedChanges:(CKDataSourceAppliedChanges *)appliedChanges
             deferredChangeset:(CKDataSourceChangeset *)deferredChangeset;
 @property (nonatomic, strong, readonly) CKDataSourceState *state;
+@property (nonatomic, strong, readonly) CKDataSourceState *previousState;
 @property (nonatomic, strong, readonly) CKDataSourceAppliedChanges *appliedChanges;
 /**
  * A changeset that should be applied immediately afterward.

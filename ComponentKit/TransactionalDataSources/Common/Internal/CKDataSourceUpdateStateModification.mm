@@ -81,6 +81,7 @@
                                                        userInfo:@{@"updatedComponentIdentifier":@(globalIdentifier)}];
 
   return [[CKDataSourceChange alloc] initWithState:newState
+                                     previousState:oldState
                                     appliedChanges:appliedChanges
                                  deferredChangeset:nil];
 }

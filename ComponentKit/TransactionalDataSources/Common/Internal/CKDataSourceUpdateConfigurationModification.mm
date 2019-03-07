@@ -83,6 +83,7 @@
                                                        userInfo:_userInfo];
 
   return [[CKDataSourceChange alloc] initWithState:newState
+                                     previousState:oldState
                                     appliedChanges:appliedChanges
                                  deferredChangeset:nil];
 }

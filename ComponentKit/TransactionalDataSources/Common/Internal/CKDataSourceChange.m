@@ -13,11 +13,13 @@
 @implementation CKDataSourceChange
 
 - (instancetype)initWithState:(CKDataSourceState *)state
+                previousState:(CKDataSourceState *)previousState
                appliedChanges:(CKDataSourceAppliedChanges *)appliedChanges
             deferredChangeset:(CKDataSourceChangeset *)deferredChangeset
 {
   if (self = [super init]) {
     _state = state;
+    _previousState = previousState;
     _appliedChanges = appliedChanges;
     _deferredChangeset = deferredChangeset;
   }
