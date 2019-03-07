@@ -158,6 +158,19 @@ static void *kWorkQueueKey = &kWorkQueueKey;
   }
 }
 
+- (BOOL)applyChange:(CKDataSourceChange *)change
+{
+  __block BOOL isApplied = NO;
+  dispatch_sync(_workQueue, ^{
+    if (_state != change.previousState) {
+      return;
+    }
+    [self _applyChange:change];
+    isApplied = YES;
+  });
+  return isApplied;
+}
+
 - (void)setViewport:(CKDataSourceViewport)viewport {}
 
 - (void)addListener:(id<CKDataSourceListener>)listener

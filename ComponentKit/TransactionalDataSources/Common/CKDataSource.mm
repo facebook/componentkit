@@ -215,6 +215,16 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
   }
 }
 
+- (BOOL)applyChange:(CKDataSourceChange *)change
+{
+  CKAssertChangesetQueue();
+  if (change.previousState != _state) {
+    return NO;
+  }
+  [self _synchronouslyApplyChange:change qos:CKDataSourceQOSDefault];
+  return YES;
+}
+
 - (void)setViewport:(CKDataSourceViewport)viewport
 {
   if (!_changesetSplittingEnabled) {
