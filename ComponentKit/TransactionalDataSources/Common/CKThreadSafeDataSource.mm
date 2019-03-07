@@ -32,6 +32,13 @@
 #import "CKDataSourceUpdateStateModification.h"
 #import "CKMutex.h"
 
+#if CK_ASSERTIONS_ENABLED
+static void *kWorkQueueKey = &kWorkQueueKey;
+#define CKAssertWorkQueue() CKAssert(dispatch_get_specific(kWorkQueueKey) == kWorkQueueKey, @"This method must be called on the work queue")
+#else
+#define CKAssertWorkQueue()
+#endif
+
 @interface CKThreadSafeDataSource () <CKComponentDebugReflowListener>
 {
   CKDataSourceState *_state;
@@ -66,6 +73,10 @@
     _stateListener = configuration.stateListener;
 
     [CKComponentDebugController registerReflowListener:self];
+
+#if CK_ASSERTIONS_ENABLED
+    dispatch_queue_set_specific(_workQueue, kWorkQueueKey, kWorkQueueKey, NULL);
+#endif
   }
   return self;
 }
@@ -228,6 +239,8 @@
 
 - (void)_applyChange:(CKDataSourceChange *)change
 {
+  CKAssertWorkQueue();
+  
   auto const previousState = _state;
   auto const newState = change.state;
   _state = newState;
