@@ -456,6 +456,8 @@
 		72A275CD219E145E00C1837F /* CKGlobalConfig.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72A275C9219E145E00C1837F /* CKGlobalConfig.mm */; };
 		72C5755A2099C6E500FF603E /* CKDataSourceModificationHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 72C575542099C6E400FF603E /* CKDataSourceModificationHelper.h */; };
 		72C5755B2099C6E500FF603E /* CKDataSourceModificationHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72C575592099C6E500FF603E /* CKDataSourceModificationHelper.mm */; };
+		72E9B98322329686004E3B90 /* CKCollectionViewDataSourceInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 72E9B98222329686004E3B90 /* CKCollectionViewDataSourceInternal.h */; };
+		72E9B98422329686004E3B90 /* CKCollectionViewDataSourceInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 72E9B98222329686004E3B90 /* CKCollectionViewDataSourceInternal.h */; };
 		7F27E2C01F69CC0F00573E14 /* CKLifecycleTestComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F98F58A1F67F2F600436978 /* CKLifecycleTestComponent.h */; };
 		7F27E2C11F69CC0F00573E14 /* CKLifecycleTestComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F98F58B1F67F2F600436978 /* CKLifecycleTestComponent.mm */; };
 		7F27E2CE1F69E3FC00573E14 /* CKComponentLifecycleTestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA099121F66F36800B81EED /* CKComponentLifecycleTestHelper.h */; };
@@ -1114,6 +1116,7 @@
 		72A275C9219E145E00C1837F /* CKGlobalConfig.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKGlobalConfig.mm; sourceTree = "<group>"; };
 		72C575542099C6E400FF603E /* CKDataSourceModificationHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceModificationHelper.h; sourceTree = "<group>"; };
 		72C575592099C6E500FF603E /* CKDataSourceModificationHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceModificationHelper.mm; sourceTree = "<group>"; };
+		72E9B98222329686004E3B90 /* CKCollectionViewDataSourceInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewDataSourceInternal.h; sourceTree = "<group>"; };
 		7F31BF541F7C3E4A0087E614 /* ReferenceImages_IOS11_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS11_64; sourceTree = "<group>"; };
 		7F47ECDD218A254300AD4E55 /* CKDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDispatch.h; sourceTree = "<group>"; };
 		7F47ECDE218A254300AD4E55 /* CKDispatch.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDispatch.mm; sourceTree = "<group>"; };
@@ -2033,6 +2036,7 @@
 				D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.m */,
 				D0B47B131CBD926700BB33CE /* CKCollectionViewDataSource.h */,
 				D0B47B141CBD926700BB33CE /* CKCollectionViewDataSource.mm */,
+				72E9B98222329686004E3B90 /* CKCollectionViewDataSourceInternal.h */,
 				D0B47B151CBD926700BB33CE /* CKComponentBoundsAnimation+UICollectionView.h */,
 				D0B47B161CBD926700BB33CE /* CKComponentBoundsAnimation+UICollectionView.mm */,
 				D0B47B171CBD926700BB33CE /* CKSupplementaryViewDataSource.h */,
@@ -2448,6 +2452,7 @@
 				03B8B5111D2A346F00EDFF59 /* CKDataSourceChange.h in Headers */,
 				23EA314521A2E57400FEC59C /* CKTreeNodeTypes.h in Headers */,
 				03B8B5131D2A346F00EDFF59 /* CKComponentAnimation.h in Headers */,
+				72E9B98422329686004E3B90 /* CKCollectionViewDataSourceInternal.h in Headers */,
 				60D7B3B820FC90500011AB3B /* YGNodePrint.h in Headers */,
 				03B8B5141D2A346F00EDFF59 /* CKBackgroundLayoutComponent.h in Headers */,
 				72122F4521FD3352004BF8B3 /* CKDataSourceProtocolInternal.h in Headers */,
@@ -2749,6 +2754,7 @@
 				D0B47D001CBD948E00BB33CE /* CKComponent+UIView.h in Headers */,
 				D0B47D721CBD948E00BB33CE /* CKAsyncLayerInternal.h in Headers */,
 				D0B47D091CBD948E00BB33CE /* ComponentViewReuseUtilities.h in Headers */,
+				72E9B98322329686004E3B90 /* CKCollectionViewDataSourceInternal.h in Headers */,
 				D0B47CFB1CBD948E00BB33CE /* CKComponentMemoizer.h in Headers */,
 				D0B47D5C1CBD948E00BB33CE /* CKMutex.h in Headers */,
 				D0B47D7A1CBD948E00BB33CE /* CKHighlightOverlayLayer.h in Headers */,

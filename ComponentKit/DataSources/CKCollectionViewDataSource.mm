@@ -16,6 +16,8 @@
 #import "CKDataSourceItem.h"
 #import "CKDataSourceState.h"
 #import "CKDataSourceAppliedChanges.h"
+#import "CKDataSourceInternal.h"
+#import "CKCollectionViewDataSourceInternal.h"
 #import "CKComponentRootView.h"
 #import "CKComponentLayout.h"
 #import "CKComponentDataSourceAttachController.h"
@@ -243,6 +245,23 @@ static void attachToCell(CKCollectionViewDataSourceCell *cell,
        .view = cell.rootView,
        .analyticsListener = item.scopeRoot.analyticsListener});
   [cellToItemMap setObject:item forKey:cell];
+}
+
+#pragma mark - Internal
+
+- (BOOL)applyChange:(CKDataSourceChange *)change
+{
+  return [_componentDataSource applyChange:change];
+}
+
+- (void)addListener:(id<CKDataSourceListener>)listener
+{
+  [_componentDataSource addListener:listener];
+}
+
+- (void)removeListener:(id<CKDataSourceListener>)listener
+{
+  [_componentDataSource removeListener:listener];
 }
 
 @end
