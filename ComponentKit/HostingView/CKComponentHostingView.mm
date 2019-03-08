@@ -317,13 +317,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   [self _setNeedsUpdateWithMode:mode];
 }
 
-- (void)updateStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates mode:(CKUpdateMode)mode
-{
-  CKAssertMainThread();
-  _pendingInputs.stateUpdates = stateUpdates;
-  [self _setNeedsUpdateWithMode:mode];
-}
-
 - (void)applyResult:(const CKBuildComponentResult &)result
 {
   CKAssertMainThread();

@@ -57,9 +57,6 @@ struct CKComponentHostingViewOptions {
 
 @property (nonatomic, strong, readonly) UIView *containerView;
 
-/** Updates the list of state updates to be processed on the current scope root. Main thread only. */
-- (void)updateStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates mode:(CKUpdateMode)mode;
-
 /** Applies a result from a component built outside the hosting view. Main thread only. */
 - (void)applyResult:(const CKBuildComponentResult &)result;
 
