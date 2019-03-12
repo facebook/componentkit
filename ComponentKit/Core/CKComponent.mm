@@ -192,7 +192,7 @@ struct CKComponentMountInfo {
 
   UIView *v = effectiveContext.viewManager->viewForConfiguration([self class], viewConfiguration);
   if (v) {
-    CKMountAnimationGuard g(v.ck_component, self, context);
+    CKMountAnimationGuard g(v.ck_component, self, context, _viewConfiguration);
     if (_mountInfo->view != v) {
       [self _relinquishMountedView]; // First release our old view
       [v.ck_component unmount];      // Then unmount old component (if any) from the new view

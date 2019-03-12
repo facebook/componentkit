@@ -107,7 +107,8 @@ struct CKComponentViewConfiguration {
 
   CKComponentViewConfiguration(CKComponentViewClass &&cls,
                                CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs,
-                               CKComponentAccessibilityContext &&accessibilityCtx) noexcept;
+                               CKComponentAccessibilityContext &&accessibilityCtx,
+                               bool blockImplicitAnimations = false) noexcept;
 
   ~CKComponentViewConfiguration();
   bool operator==(const CKComponentViewConfiguration &other) const noexcept;
@@ -116,6 +117,7 @@ struct CKComponentViewConfiguration {
   std::shared_ptr<const CKViewComponentAttributeValueMap> attributes() const noexcept;
   const CKComponentAccessibilityContext &accessibilityContext() const noexcept;
   BOOL isDefaultConfiguration() const;
+  bool blockImplicitAnimations() const noexcept;
 
 private:
   struct Repr {
@@ -123,6 +125,7 @@ private:
     std::shared_ptr<const CKViewComponentAttributeValueMap> attributes;
     CKComponentAccessibilityContext accessibilityContext;
     CK::Component::PersistentAttributeShape attributeShape;
+    bool blockImplicitAnimations;
   };
 
   static std::shared_ptr<const Repr> singletonViewConfiguration();
