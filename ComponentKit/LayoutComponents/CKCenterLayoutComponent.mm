@@ -10,6 +10,8 @@
 
 #import "CKCenterLayoutComponent.h"
 
+#import <ComponentKit/CKComponentPerfScope.h>
+
 #import "CKInternalHelpers.h"
 #import "CKComponentSubclass.h"
 #import "ComponentUtilities.h"
@@ -26,6 +28,7 @@
                                   child:(CKComponent *)child
                                    size:(const CKComponentSize &)size
 {
+  CKComponentPerfScope prefScope(self);
   CKCenterLayoutComponent *c = [super newWithView:{} size:size];
   if (c) {
     c->_centeringOptions = centeringOptions;

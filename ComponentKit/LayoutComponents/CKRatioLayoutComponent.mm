@@ -14,6 +14,7 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKComponentPerfScope.h>
 
 #import "CKInternalHelpers.h"
 
@@ -31,7 +32,7 @@
   if (ratio <= 0 || component == nil) {
     return nil;
   }
-
+  CKComponentPerfScope prefScope(self);
   CKRatioLayoutComponent *c = [self newWithView:{} size:size];
   if (c) {
     c->_ratio = ratio;

@@ -13,6 +13,7 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentPerfScope.h>
 
 #import "CKComponentSubclass.h"
 
@@ -28,6 +29,7 @@
   if (component == nil) {
     return nil;
   }
+  CKComponentPerfScope prefScope(self);
   CKOverlayLayoutComponent *c = [super newWithView:{} size:{}];
   if (c) {
     c->_overlay = overlay;
@@ -53,7 +55,7 @@
            "(component=%@, overlay=%@)", size.description(), _component, _overlay);
 
   const CKComponentLayout contentsLayout = [_component layoutThatFits:constrainedSize parentSize:parentSize];
-  
+
   return {
     self,
     contentsLayout.size,

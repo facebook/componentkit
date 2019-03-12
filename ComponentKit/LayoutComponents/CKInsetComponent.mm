@@ -13,6 +13,7 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentPerfScope.h>
 
 #import "CKComponentSubclass.h"
 #import "CKInternalHelpers.h"
@@ -57,6 +58,7 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
   if (component == nil) {
     return nil;
   }
+  CKComponentPerfScope prefScope(self);
   CKInsetComponent *c = [super newWithView:view size:{}];
   if (c) {
     c->_insets = insets;

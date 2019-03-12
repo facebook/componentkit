@@ -13,7 +13,7 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKComponentInternal.h>
-
+#import <ComponentKit/CKComponentPerfScope.h>
 #import "CKComponentSubclass.h"
 
 @implementation CKBackgroundLayoutComponent
@@ -28,6 +28,7 @@
   if (component == nil) {
     return nil;
   }
+  CKComponentPerfScope prefScope(self);
   CKBackgroundLayoutComponent *c = [super newWithView:{} size:{}];
   if (c) {
     c->_component = component;
