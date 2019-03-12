@@ -48,11 +48,10 @@
     [currentScope->newScopeRoot registerComponent:component];
     return handle;
   }
-  CKCAssertNil([component.class controllerClass] &&
-               ![component conformsToProtocol:@protocol(CKRenderComponentProtocol)]
-                , @"%@ has a controller but no scope! "
-               "Make sure you construct your scope(self) before constructing the component or CKComponentTestRootScope "
-               "at the start of the test.", [component class]);
+  CKAssertWithCategory([component.class controllerClass] == Nil || [component conformsToProtocol:@protocol(CKRenderComponentProtocol)],
+    NSStringFromClass([component class]),
+    @"Component has a controller but no scope! Make sure you construct your scope(self) "
+    "before constructing the component or CKComponentTestRootScope at the start of the test.");
 
   return nil;
 }
