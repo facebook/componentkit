@@ -1442,6 +1442,8 @@
 		D602CB7E222D861900BF308F /* CKAnalyticsListenerSpy.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnalyticsListenerSpy.mm; sourceTree = "<group>"; };
 		D616A2BB20BED2D100695472 /* CKComponentTreeDiff.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentTreeDiff.mm; sourceTree = "<group>"; };
 		D616A2BC20BED2D100695472 /* CKComponentTreeDiff.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKComponentTreeDiff.h; sourceTree = "<group>"; };
+		D62122E4223855B7008F3473 /* CKAnimationSpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAnimationSpy.h; sourceTree = "<group>"; };
+		D62122EF223856B2008F3473 /* TransactionProviderSpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransactionProviderSpy.h; sourceTree = "<group>"; };
 		D62D6DBB2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewConfigurationTests.mm; sourceTree = "<group>"; };
 		D63A9262222482BD00E7CC91 /* CKOptional.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKOptional.h; sourceTree = "<group>"; };
 		D63A926D2224857D00E7CC91 /* CKOptionalTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKOptionalTests.mm; sourceTree = "<group>"; };
@@ -1755,6 +1757,8 @@
 				D602CB7E222D861900BF308F /* CKAnalyticsListenerSpy.mm */,
 				D63A926D2224857D00E7CC91 /* CKOptionalTests.mm */,
 				D62D6DBB2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm */,
+				D62122E4223855B7008F3473 /* CKAnimationSpy.h */,
+				D62122EF223856B2008F3473 /* TransactionProviderSpy.h */,
 			);
 			path = ComponentKitTests;
 			sourceTree = "<group>";

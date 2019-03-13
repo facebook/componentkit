@@ -14,66 +14,11 @@
 #import <ComponentKit/CKComponentAnimationsController.h>
 #import <ComponentKit/ComponentUtilities.h>
 
+#import "CKAnimationSpy.h"
+#import "TransactionProviderSpy.h"
+
 @interface CKComponentAnimationsControllerTests : XCTestCase
 @end
-
-struct CKAnimationSpy {
-  auto makeAnimation() {
-    return CKComponentAnimation({
-      .willRemount = ^{
-        willRemountWasCalled = true;
-        return willRemountCtx;
-      },
-      .didRemount = ^(id context){
-        actualWillRemountCtx = context;
-        return didRemountCtx;
-      },
-      .cleanup = ^(id context){
-        cleanupCallCount++;
-        actualDidRemountCtx = context;
-      },
-    });
-  }
-
-  const id willRemountCtx = [NSObject new];
-  id actualWillRemountCtx = nil;
-  bool willRemountWasCalled = false;
-  const id didRemountCtx = [NSObject new];
-  id actualDidRemountCtx = nil;
-  int cleanupCallCount = 0;
-};
-
-struct TransactionProviderSpy {
-  using TransactionBlock = void (^)(void);
-  using CompletionBlock = void (^)(void);
-
-  auto inTransaction(TransactionBlock t, CompletionBlock c)
-  {
-    _transactions.push_back(t);
-    _completions.push_back(c);
-  }
-
-  auto runAllTransactions() const
-  {
-    for (const auto &t : _transactions) {
-      t();
-    }
-  }
-
-  auto runAllCompletions() const
-  {
-    for (const auto &c : _completions) {
-      c();
-    }
-  }
-
-  const auto &transactions() const { return _transactions; }
-  const auto &completions() const { return _completions; };
-
-private:
-  std::vector<TransactionBlock> _transactions;
-  std::vector<CompletionBlock> _completions;
-};
 
 @implementation CKComponentAnimationsControllerTests {
   std::vector<std::shared_ptr<CKAnimationSpy>> allSpies;
