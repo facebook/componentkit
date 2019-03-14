@@ -37,7 +37,7 @@ struct None {
     return true;
   }
 };
-  
+
 /**
  Singleton empty value for all optionals.
  */
@@ -239,14 +239,34 @@ public:
 
    @param f function-like object that will be invoked if the Optional contains the value.
 
-   @return A new Optional that wraps the result of calling `f` with the wrapped value if the Optional was not empty, or
-   an empty Optional otherwise.
+   @return The result of calling `f` with the wrapped value if the Optional was not empty, or an empty Optional otherwise.
    */
   template <typename F>
   auto flatMap(F&& f) const
   -> Optional<typename decltype(f(std::declval<T>()))::ValueType> {
     return match(
                  [&](const T& value) { return f(value); }, []() { return none; });
+  }
+
+  /**
+   Transforms a value wrapped inside the Optional using a function that itself returns an Optional, "flattening" the
+   final result, e.g.:
+
+   struct HasOptional {
+     Optional<int> x;
+   };
+   Optional<HasOptional> a = HasOptional { 123 };
+   Optional<int> x = a.flatMap(&HasOptional::x); // Not Optional<Optional<int>>!
+
+   @param f pointer-to-member function that will be invoked if the Optional contains the value.
+
+   @return The result of calling `f` with the wrapped value if the Optional was not empty, or an empty Optional otherwise.
+   */
+  template <typename F>
+  auto flatMap(F&& f) const -> Optional<typename MemberType<F>::ValueType> {
+    return match(
+                 [&](const T& value) { return Optional<typename MemberType<F>::ValueType>{value.*f}; },
+                 []() { return none; });
   }
 
   /**

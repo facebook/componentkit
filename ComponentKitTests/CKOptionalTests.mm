@@ -78,6 +78,19 @@ static auto toInt(const std::string& s) -> Optional<int> {
   XCTAssert(c.flatMap(toInt) == none);
 }
 
+struct HasOptional {
+  Optional<int> x;
+};
+
+- (void)test_FlatMap_PointerToMember
+{
+  Optional<HasOptional> const a = HasOptional { 123 };
+  Optional<HasOptional> const b = HasOptional { none };
+
+  XCTAssert(a.flatMap(&HasOptional::x) == 123);
+  XCTAssert(b.flatMap(&HasOptional::x) == none);
+}
+
 - (void)test_WhenEmpty_ValuePtrIsNull
 {
   auto const empty = Optional<int>{};
