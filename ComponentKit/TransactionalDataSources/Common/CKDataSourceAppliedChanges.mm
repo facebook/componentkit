@@ -14,10 +14,11 @@
 #import "CKEqualityHashHelpers.h"
 #import "CKMacros.h"
 
+#import <mutex>
 
 @implementation CKDataSourceAppliedChanges {
   NSDictionary<NSIndexPath *, NSIndexPath *>* _finalUpdatedIndexPaths;
-  dispatch_once_t _finalUpdatedPathsToken;
+  std::mutex _finalUpdatedIndexPathsLock;
 }
 
 - (instancetype)init
@@ -110,82 +111,87 @@ static NSIndexPath *indexPathWithDeltas(NSIndexPath *indexPath, NSUInteger secti
 
 - (NSDictionary<NSIndexPath *, NSIndexPath *> *)finalUpdatedIndexPaths
 {
-  dispatch_once(&_finalUpdatedPathsToken, ^{
-    NSArray *updatedIndexPaths = [self.updatedIndexPaths allObjects];
-    
-    // The dictionary that will be returned will have the structure:
-    // (old update index path) -> (new update index path)
-    NSMutableDictionary<NSIndexPath *, NSIndexPath *> *finalUpdatedIndexPaths = [NSMutableDictionary new];
-    
-    // Initialize with updated index paths mapping to themselves
-    for (NSIndexPath *indexPath in [self.updatedIndexPaths allObjects]) {
-      finalUpdatedIndexPaths[indexPath] = indexPath;
-    }
-    
-    
-    // Translate moves into removals and insertions
-    NSArray *moveRemovals = [self.movedIndexPaths allKeys];
-    NSArray *moveInsertions = [self.movedIndexPaths allValues];
-    
-    // Removed rows
-    // Reverse sort (hence the -1 coefficient) so we don't end up in a situation like the following
-    // Updating (0, 5) and removing (0,2) (0,3) (0,4). Since the removed index paths are unordered (NSSet) we could end up in a situation where we remove (0,2) and (0,3), so (0,5) -> (0,3) and when we remove (0,4) the updated row is assumed unaffected
-    NSArray *allRemovals = [[self.removedIndexPaths allObjects] arrayByAddingObjectsFromArray:moveRemovals];
-    for (NSIndexPath *removedIndexPath in sortedIndexPaths(allRemovals, YES)) {
-      for (NSIndexPath *sourceUpdatePath in updatedIndexPaths) {
-        NSIndexPath *destinationUpdatePath = finalUpdatedIndexPaths[sourceUpdatePath];
-        if (removedIndexPath.section == destinationUpdatePath.section &&
-            removedIndexPath.row < destinationUpdatePath.row) {
-          finalUpdatedIndexPaths[sourceUpdatePath] = indexPathWithDeltas(destinationUpdatePath, 0, -1);
-        }
+  std::lock_guard<std::mutex> lock(_finalUpdatedIndexPathsLock);
+
+  if (_finalUpdatedIndexPaths) {
+    return _finalUpdatedIndexPaths;
+  }
+
+  NSArray *updatedIndexPaths = [self.updatedIndexPaths allObjects];
+
+  // The dictionary that will be returned will have the structure:
+  // (old update index path) -> (new update index path)
+  NSMutableDictionary<NSIndexPath *, NSIndexPath *> *finalUpdatedIndexPaths = [NSMutableDictionary new];
+
+  // Initialize with updated index paths mapping to themselves
+  for (NSIndexPath *indexPath in [self.updatedIndexPaths allObjects]) {
+    finalUpdatedIndexPaths[indexPath] = indexPath;
+  }
+
+
+  // Translate moves into removals and insertions
+  NSArray *moveRemovals = [self.movedIndexPaths allKeys];
+  NSArray *moveInsertions = [self.movedIndexPaths allValues];
+
+  // Removed rows
+  // Reverse sort (hence the -1 coefficient) so we don't end up in a situation like the following
+  // Updating (0, 5) and removing (0,2) (0,3) (0,4). Since the removed index paths are unordered (NSSet) we could end up in a situation where we remove (0,2) and (0,3), so (0,5) -> (0,3) and when we remove (0,4) the updated row is assumed unaffected
+  NSArray *allRemovals = [[self.removedIndexPaths allObjects] arrayByAddingObjectsFromArray:moveRemovals];
+  for (NSIndexPath *removedIndexPath in sortedIndexPaths(allRemovals, YES)) {
+    for (NSIndexPath *sourceUpdatePath in updatedIndexPaths) {
+      NSIndexPath *destinationUpdatePath = finalUpdatedIndexPaths[sourceUpdatePath];
+      if (removedIndexPath.section == destinationUpdatePath.section &&
+          removedIndexPath.row < destinationUpdatePath.row) {
+        finalUpdatedIndexPaths[sourceUpdatePath] = indexPathWithDeltas(destinationUpdatePath, 0, -1);
       }
     }
-    
-    // Removed sections
-    [self.removedSections enumerateIndexesWithOptions:NSEnumerationReverse usingBlock:^(NSUInteger removedSection, BOOL *_Nonnull removedSectionsStop) {
-      for (NSIndexPath *sourceUpdatePath in updatedIndexPaths) {
-        NSIndexPath *destinationUpdatePath = finalUpdatedIndexPaths[sourceUpdatePath];
-        if (removedSection < destinationUpdatePath.section) {
-          finalUpdatedIndexPaths[sourceUpdatePath] = indexPathWithDeltas(destinationUpdatePath, -1, 0);
-        }
-      }
-    }];
-    
-    // Inserted sections
-    [self.insertedSections enumerateIndexesUsingBlock:^(NSUInteger insertedSection, BOOL *_Nonnull insertedSectionsStop) {
-      for (NSIndexPath *sourceUpdatePath in updatedIndexPaths) {
-        NSIndexPath *destinationUpdatePath = finalUpdatedIndexPaths[sourceUpdatePath];
-        if (insertedSection <= destinationUpdatePath.section) {
-          finalUpdatedIndexPaths[sourceUpdatePath] = indexPathWithDeltas(destinationUpdatePath, 1, 0);
-        }
-      }
-    }];
-    
-    // Inserted rows
-    // Sort for the same reason as above when we sorted the removed index paths
-    // First take care of the "normal" insertions, where we check the destination update path
-    NSArray *allInsertions = [[self.insertedIndexPaths allObjects] arrayByAddingObjectsFromArray:moveInsertions];
-    for (NSIndexPath *insertedIndexPath in sortedIndexPaths(allInsertions, NO)) {
-      for (NSIndexPath *sourceUpdatePath in updatedIndexPaths) {
-        NSIndexPath *destinationUpdatePath = finalUpdatedIndexPaths[sourceUpdatePath];
-        if (insertedIndexPath.section == destinationUpdatePath.section &&
-            insertedIndexPath.row <= destinationUpdatePath.row) {
-          finalUpdatedIndexPaths[sourceUpdatePath] = indexPathWithDeltas(destinationUpdatePath, 0, 1);
-        }
+  }
+
+  // Removed sections
+  [self.removedSections enumerateIndexesWithOptions:NSEnumerationReverse usingBlock:^(NSUInteger removedSection, BOOL *_Nonnull removedSectionsStop) {
+    for (NSIndexPath *sourceUpdatePath in updatedIndexPaths) {
+      NSIndexPath *destinationUpdatePath = finalUpdatedIndexPaths[sourceUpdatePath];
+      if (removedSection < destinationUpdatePath.section) {
+        finalUpdatedIndexPaths[sourceUpdatePath] = indexPathWithDeltas(destinationUpdatePath, -1, 0);
       }
     }
-    
-    // The destination index path of a move is *always* correct and we have it take the precedence over all above.
-    // If one inserts a section at the front, even a move within an existing section
-    // has to provide the correct final section index.
-    [self.movedIndexPaths enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *sourceIndexPath, NSIndexPath *destinationIndexPath, BOOL *_Nonnull stop) {
-      if (finalUpdatedIndexPaths[sourceIndexPath]) {
-        finalUpdatedIndexPaths[sourceIndexPath] = destinationIndexPath;
+  }];
+
+  // Inserted sections
+  [self.insertedSections enumerateIndexesUsingBlock:^(NSUInteger insertedSection, BOOL *_Nonnull insertedSectionsStop) {
+    for (NSIndexPath *sourceUpdatePath in updatedIndexPaths) {
+      NSIndexPath *destinationUpdatePath = finalUpdatedIndexPaths[sourceUpdatePath];
+      if (insertedSection <= destinationUpdatePath.section) {
+        finalUpdatedIndexPaths[sourceUpdatePath] = indexPathWithDeltas(destinationUpdatePath, 1, 0);
       }
-    }];
-    
-    _finalUpdatedIndexPaths = finalUpdatedIndexPaths;
-  });
+    }
+  }];
+
+  // Inserted rows
+  // Sort for the same reason as above when we sorted the removed index paths
+  // First take care of the "normal" insertions, where we check the destination update path
+  NSArray *allInsertions = [[self.insertedIndexPaths allObjects] arrayByAddingObjectsFromArray:moveInsertions];
+  for (NSIndexPath *insertedIndexPath in sortedIndexPaths(allInsertions, NO)) {
+    for (NSIndexPath *sourceUpdatePath in updatedIndexPaths) {
+      NSIndexPath *destinationUpdatePath = finalUpdatedIndexPaths[sourceUpdatePath];
+      if (insertedIndexPath.section == destinationUpdatePath.section &&
+          insertedIndexPath.row <= destinationUpdatePath.row) {
+        finalUpdatedIndexPaths[sourceUpdatePath] = indexPathWithDeltas(destinationUpdatePath, 0, 1);
+      }
+    }
+  }
+
+  // The destination index path of a move is *always* correct and we have it take the precedence over all above.
+  // If one inserts a section at the front, even a move within an existing section
+  // has to provide the correct final section index.
+  [self.movedIndexPaths enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *sourceIndexPath, NSIndexPath *destinationIndexPath, BOOL *_Nonnull stop) {
+    if (finalUpdatedIndexPaths[sourceIndexPath]) {
+      finalUpdatedIndexPaths[sourceIndexPath] = destinationIndexPath;
+    }
+  }];
+
+  _finalUpdatedIndexPaths = finalUpdatedIndexPaths;
+
   return _finalUpdatedIndexPaths;
 }
 
