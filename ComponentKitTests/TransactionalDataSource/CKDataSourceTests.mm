@@ -355,6 +355,32 @@
   XCTAssertTrue(_state == newState);
 }
 
+- (void)testDataSourceApplyingPrecomputedChangeWhenThereIsPendingModification
+{
+  const auto dataSource = (id<CKDataSourceProtocol, CKDataSourceProtocolInternal>)CKComponentTestDataSource([CKDataSource class], [self class], self);
+  const auto insertion =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
+   build];
+  const auto modification =
+  [[CKDataSourceChangesetModification alloc]
+   initWithChangeset:insertion
+   stateListener:nil userInfo:@{}];
+  const auto oldState = _state;
+  const auto change1 = [modification changeFromState:oldState];
+  [dataSource reloadWithMode:CKUpdateModeAsynchronous userInfo:@{}];
+  const auto isApplied1 = [dataSource applyChange:change1];
+  // State is not changed but calling `applyChange` should fail because of pending modification.
+  XCTAssertTrue(_state == oldState);
+  XCTAssertFalse(isApplied1);
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state != oldState;
+  });
+  const auto change2 = [modification changeFromState:_state];
+  const auto isApplied2 = [dataSource applyChange:change2];
+  XCTAssertTrue(isApplied2);
+}
+
 #pragma mark - Listener
 
 - (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource

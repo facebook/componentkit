@@ -218,7 +218,7 @@ typedef NS_ENUM(NSInteger, NextPipelineState) {
 - (BOOL)applyChange:(CKDataSourceChange *)change
 {
   CKAssertChangesetQueue();
-  if (change.previousState != _state) {
+  if (change.previousState != _state || _pendingAsynchronousModifications.count > 0) {
     return NO;
   }
   [self _synchronouslyApplyChange:change qos:CKDataSourceQOSDefault];
