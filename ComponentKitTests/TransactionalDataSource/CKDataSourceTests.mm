@@ -313,7 +313,7 @@
    stateListener:nil userInfo:@{}];
   const auto change = [modification changeFromState:_state];
   const auto isApplied = [dataSource applyChange:change];
-  XCTAssertTrue(isApplied);
+  XCTAssertTrue(isApplied, @"Change should be applied to datasource successfully.");
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _state == change.state;
   }));
@@ -348,11 +348,11 @@
   [dataSource reloadWithMode:CKUpdateModeSynchronous userInfo:@{}];
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _state != oldState;
-  });
+  }); 
   const auto newState = _state;
   const auto isApplied = [dataSource applyChange:change];
-  XCTAssertFalse(isApplied);
-  XCTAssertTrue(_state == newState);
+  XCTAssertFalse(isApplied, @"Applying change to datasource should fail.");
+  XCTAssertEqualObjects(_state, newState, @"State should remain the same.");
 }
 
 - (void)testDataSourceApplyingPrecomputedChangeWhenThereIsPendingModification
@@ -370,15 +370,14 @@
   const auto change1 = [modification changeFromState:oldState];
   [dataSource reloadWithMode:CKUpdateModeAsynchronous userInfo:@{}];
   const auto isApplied1 = [dataSource applyChange:change1];
-  // State is not changed but calling `applyChange` should fail because of pending modification.
-  XCTAssertTrue(_state == oldState);
-  XCTAssertFalse(isApplied1);
+  XCTAssertEqualObjects(_state, oldState, @"State is not changed but calling `applyChange` should fail because of pending modification.");
+  XCTAssertFalse(isApplied1, @"Applying change to datasource should fail.");
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _state != oldState;
   });
   const auto change2 = [modification changeFromState:_state];
   const auto isApplied2 = [dataSource applyChange:change2];
-  XCTAssertTrue(isApplied2);
+  XCTAssertTrue(isApplied2, @"Re-applying change should succeed once the pending modification finishes processing.");
 }
 
 #pragma mark - Listener
