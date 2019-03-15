@@ -4,7 +4,7 @@ layout: docs
 permalink: /docs/responder-chain.html
 ---
 
-ComponentKit has a responder chain that is similar to the [responder chain on iOS](https://developer.apple.com/library/ios/documentation/EventHandling/Conceptual/EventHandlingiPhoneOS/event_delivery_responder_chain/event_delivery_responder_chain.html). The ComponentKit responder chain is separate from `UIView`'s responder chain, so you must manually bridge over to the component responder chain if desired.
+ComponentKit has a responder chain that is similar to the [responder chain on iOS](https://developer.apple.com/documentation/uikit/touches_presses_and_gestures/using_responders_and_the_responder_chain_to_handle_events). The ComponentKit responder chain is separate from `UIView`'s responder chain, so you must manually bridge over to the component responder chain if desired.
 
 <img src="/static/images/responder-chain.png" alt="Responder Chain" width="618" height="443">
 
