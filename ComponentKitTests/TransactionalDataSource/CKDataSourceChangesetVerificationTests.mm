@@ -659,6 +659,67 @@
   [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
 }
 
+- (void)test_WhenVerifyingMovesToNewSection_ValidatesToIndexPathsAgainstFinalState
+{
+  const auto state = CKDataSourceTestState(Nil, nil, 2, 2);
+  const auto changeset = CK::makeChangeset({
+    .movedItems = {
+      {{0, 0}, {1, 0}},
+      {{1, 0}, {1, 1}},
+    },
+    .insertedSections = {
+      1
+    },
+  });
+
+  [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
+}
+
+- (void)test_WhenVerifyingMovesWithinSection_ValidatesToIndexPathsAgainstFinalState
+{
+  const auto state = CKDataSourceTestState(Nil, nil, 1, 7);
+  const auto changeset = CK::makeChangeset({
+    .updatedItems = {
+      {{0, 0}, @"Upd"},
+      {{0, 1}, @"Upd"},
+      {{0, 2}, @"Upd"},
+      {{0, 3}, @"Upd"},
+      {{0, 5}, @"Upd"},
+      {{0, 6}, @"Upd"},
+    },
+    .movedItems = {
+      {{0, 0}, {0, 9}},
+      {{0, 1}, {0, 10}},
+    },
+    .insertedItems = {
+      {{0, 2}, @"New"},
+      {{0, 3}, @"New"},
+      {{0, 4}, @"New"},
+      {{0, 5}, @"New"},
+      {{0, 6}, @"New"},
+      {{0, 7}, @"New"},
+    }
+  });
+
+  [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
+}
+
+- (void)test_WhenVerifyingMovesFromDeletedSection
+{
+  const auto state = CKDataSourceTestState(Nil, nil, 2, 2);
+  const auto changeset = CK::makeChangeset({
+    .movedItems = {
+      {{0, 0}, {0, 0}},
+      {{0, 1}, {0, 1}},
+    },
+    .removedSections = {
+      0
+    },
+  });
+
+  [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
+}
+
 - (void)test_WhenApplyingPendingModificationsWithMoves_TreatsToIndexPathsAsSpecifiedAfterSectionRemovalsAndInsertions
 {
   const auto state = CKDataSourceTestState(Nil, nil, 5, 1);

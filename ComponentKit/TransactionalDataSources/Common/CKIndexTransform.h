@@ -66,7 +66,12 @@ namespace CK {
     CompositeIndexTransform(T1 &&t1, T2 &&t2)
     : _t1(std::forward<T1>(t1)), _t2(std::forward<T2>(t2)) {}
 
-    auto applyToIndex(NSInteger index) const -> NSInteger { return _t2.applyToIndex(_t1.applyToIndex(index)); }
+    auto applyToIndex(NSInteger index) const -> NSInteger
+    {
+      auto const i = _t1.applyToIndex(index);
+      return i != NSNotFound ? _t2.applyToIndex(i) : NSNotFound;
+    }
+
     auto applyInverseToIndex(NSInteger index) const -> NSInteger { return _t2.applyInverseToIndex(_t1.applyInverseToIndex(index)); }
 
   private:
