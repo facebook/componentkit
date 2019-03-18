@@ -25,7 +25,6 @@
 /**
  This property returns a mapping for each row being updated
  from their current index path to their new index path after the changeset has been applied.
- It is lazily initialized and cached, so the calculation occures only once if needed
  
  Because this is pretty confusing, here's a simple example:
  Let's say we have a changeset made up of the following operations:
