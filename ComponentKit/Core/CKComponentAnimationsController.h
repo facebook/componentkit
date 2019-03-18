@@ -86,11 +86,20 @@ namespace CK {
         const auto appliedAnimation = CKAppliedComponentAnimation {animation, animation.didRemount(pa.context)};
         animationsForComponent.insert({animationID, appliedAnimation});
       }, [pa, c, animationID, animations](){
-        auto &animationsForComponent = (*animations)[c];
+        const auto animationsForComponentIt = animations->find(c);
+        if (animationsForComponentIt == animations->end()) {
+          // If we wound up here, this means the animation was cleaned up already via
+          // cleanupAppliedAnimationsForComponent()
+          return;
+        }
+        auto &animationsForComponent = animationsForComponentIt->second;
         const auto it = animationsForComponent.find(animationID);
         if (it == animationsForComponent.end()) { return; }
         pa.animation.cleanup(it->second.context);
         animationsForComponent.erase(it);
+        if (animationsForComponent.empty()) {
+          animations->erase(c);
+        }
       });
     }
 
