@@ -14,15 +14,17 @@
 #import <ComponentKit/CKComponentAnimationsController.h>
 
 namespace CK {
-  template <typename AnimationsController>
+  template <typename AnimationsController, typename TransactionProvider = CATransactionProvider>
   class AnimationApplicator final {
   public:
     // Ownership is shared with the test code
     using ControllerFactoryFunction = std::function<std::shared_ptr<AnimationsController>(const CKComponentAnimations &)>;
     using MountPerformerBlock = NSSet<CKComponent *> *(^)(void);
 
-    AnimationApplicator(ControllerFactoryFunction controllerFactory)
-    :_controllerFactory(std::move(controllerFactory)) {}
+    AnimationApplicator(ControllerFactoryFunction controllerFactory,
+                        std::shared_ptr<TransactionProvider> transactionProvider = std::make_shared<TransactionProvider>())
+    :_controllerFactory(std::move(controllerFactory)),
+    _transactionProvider(std::move(transactionProvider)){}
 
     auto runAnimationsWhenMounting(const CKComponentAnimations &as, const MountPerformerBlock p)
     {
@@ -43,13 +45,14 @@ namespace CK {
         }
       }
 
-      const auto tp = CATransactionProvider();
-      _animationsController->applyPendingAnimations(tp);
+      _animationsController->applyPendingAnimations(*_transactionProvider);
     }
 
   private:
     std::shared_ptr<AnimationsController> _animationsController;
     ControllerFactoryFunction _controllerFactory;
+    // Ownership is shared with the test code
+    std::shared_ptr<TransactionProvider> _transactionProvider;
   };
 
   struct AnimationApplicatorFactory final {
