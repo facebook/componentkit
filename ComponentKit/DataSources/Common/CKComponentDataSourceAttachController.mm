@@ -149,7 +149,7 @@ static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComp
     return unmountedComponents;
   };
 
-  std::shared_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> animationApplicator;
+  std::shared_ptr<CK::AnimationApplicator<>> animationApplicator;
   animationApplicator = view.ck_attachState != nil ? view.ck_attachState.animationApplicator : CK::AnimationApplicatorFactory::make();
   animationApplicator->runAnimationsWhenMounting(animations, mountPerformer);
 
@@ -176,12 +176,12 @@ static void tearDownAttachStateFromViews(NSArray *views)
 {
   CKComponentRootLayout _rootLayout;
   // The ownership isn't really shared with anyone, this is just to get copying the pointer in and out of the attach state easier
-  std::shared_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> _animationApplicator;
+  std::shared_ptr<CK::AnimationApplicator<>> _animationApplicator;
 }
 
 - (instancetype)initWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
                       mountedComponents:(NSSet *)mountedComponents
-                    animationApplicator:(const std::shared_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> &)animationApplicator
+                    animationApplicator:(const std::shared_ptr<CK::AnimationApplicator<>> &)animationApplicator
 {
   self = [super init];
   if (self) {
@@ -203,7 +203,7 @@ void CKComponentDataSourceAttachStateSetRootLayout(CKComponentDataSourceAttachSt
   self->_rootLayout = rootLayout;
 }
 
-- (const std::shared_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> &)animationApplicator
+- (const std::shared_ptr<CK::AnimationApplicator<>> &)animationApplicator
 {
   return _animationApplicator;
 }

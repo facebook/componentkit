@@ -25,7 +25,7 @@
   CKComponentAnimations testAnimations;
   std::vector<std::shared_ptr<CKAnimationSpy>> allSpies;
   std::shared_ptr<TransactionProviderSpy> transactionSpy;
-  std::unique_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController, TransactionProviderSpy>> applicator;
+  std::unique_ptr<CK::AnimationApplicator<TransactionProviderSpy>> applicator;
 }
 
 - (void)setUp
@@ -58,7 +58,7 @@
     return std::make_unique<CK::ComponentAnimationsController>(as);
   };
   transactionSpy = std::make_shared<TransactionProviderSpy>();
-  applicator = std::make_unique<CK::AnimationApplicator<CK::ComponentAnimationsController, TransactionProviderSpy>>(factory, transactionSpy);
+  applicator = std::make_unique<CK::AnimationApplicator<TransactionProviderSpy>>(factory, transactionSpy);
 }
 
 - (void)test_WhenThereAreNoAnimationsToApply_PerformsMount
@@ -83,7 +83,7 @@
     factoryWasInvoked = true;
     return std::make_unique<CK::ComponentAnimationsController>(as);
   };
-  applicator = std::make_unique<CK::AnimationApplicator<CK::ComponentAnimationsController, TransactionProviderSpy>>(factory);
+  applicator = std::make_unique<CK::AnimationApplicator<TransactionProviderSpy>>(factory);
 
   applicator->runAnimationsWhenMounting({}, ^{ return [NSSet new]; });
 
@@ -97,7 +97,7 @@
     animations = as;
     return std::make_unique<CK::ComponentAnimationsController>(as);
   };
-  applicator = std::make_unique<CK::AnimationApplicator<CK::ComponentAnimationsController, TransactionProviderSpy>>(factory);
+  applicator = std::make_unique<CK::AnimationApplicator<TransactionProviderSpy>>(factory);
 
   applicator->runAnimationsWhenMounting(testAnimations, ^{ return [NSSet new]; });
 
@@ -162,7 +162,7 @@
   CKAnimationSpy as2;
   CKAnimationSpy as3;
   std::shared_ptr<TransactionProviderSpy> transactionSpy;
-  std::unique_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController, TransactionProviderSpy>> applicator;
+  std::unique_ptr<CK::AnimationApplicator<TransactionProviderSpy>> applicator;
   CKComponentAnimations testAnimations;
 }
 
@@ -184,7 +184,7 @@
   auto const factory = [](const CKComponentAnimations &as){
     return std::make_unique<CK::ComponentAnimationsController>(as);
   };
-  applicator = std::make_unique<CK::AnimationApplicator<CK::ComponentAnimationsController, TransactionProviderSpy>>(factory, transactionSpy);
+  applicator = std::make_unique<CK::AnimationApplicator<TransactionProviderSpy>>(factory, transactionSpy);
   testAnimations = CKComponentAnimations {
     animationsOnInitialMount,
     animationsFromPreviousComponent,

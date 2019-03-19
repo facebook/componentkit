@@ -22,9 +22,9 @@
 
 - (instancetype)initWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
                       mountedComponents:(NSSet *)mountedComponents
-                    animationApplicator:(const std::shared_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> &)animationApplicator;
+                    animationApplicator:(const std::shared_ptr<CK::AnimationApplicator<>> &)animationApplicator;
 
-- (const std::shared_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> &)animationApplicator;
+- (const std::shared_ptr<CK::AnimationApplicator<>> &)animationApplicator;
 
 @end
 

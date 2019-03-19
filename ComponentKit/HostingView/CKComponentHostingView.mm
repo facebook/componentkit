@@ -79,7 +79,7 @@ private:
 
   CKComponentBoundsAnimation _boundsAnimation;
   CKComponentAnimations _componentAnimations;
-  std::unique_ptr<CK::AnimationApplicator<CK::ComponentAnimationsController>> _animationApplicator;
+  std::unique_ptr<CK::AnimationApplicator<>> _animationApplicator;
   std::unordered_set<CKComponentPredicate> _animationPredicates;
 
   CKComponent *_component;
