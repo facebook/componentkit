@@ -128,6 +128,40 @@
   [self assertDidRemountHooksWereCalledWithContextFromWillRemountHooks];
 }
 
+- (void)test_WhenHasAnimationsToApply_WrapsThenIntoIndividualTransactions
+{
+  applicator->runAnimationsWhenMounting(testAnimations, ^{ return [NSSet new]; });
+
+  XCTAssertEqual(transactionSpy->transactions().size(), allSpies.size());
+}
+
+- (void)test_WhenHasAnimationsToApplyAndTransactionCompletes_CleansUpAnimationsAndPassesContextFromApplicationStage
+{
+  applicator->runAnimationsWhenMounting(testAnimations, ^{ return [NSSet new]; });
+
+  transactionSpy->runAllTransactions();
+  transactionSpy->runAllCompletions();
+  [self assertCleanupHooksWereCalledWithContextFromDidRemountHook];
+}
+
+- (void)test_WhenControllerIsDeallocated_CallingTransactionCompletionDoesNotCrash
+{
+  applicator->runAnimationsWhenMounting(testAnimations, ^{ return [NSSet new]; });
+  auto spy = CKAnimationSpy {};
+  auto const newAnimations = CKComponentAnimations {
+    {
+      {[CKComponent new], {spy.makeAnimation()}}
+    },
+    {},
+    {}
+  };
+  transactionSpy->runAllTransactions();
+  // This deallocates the previous animation controller
+  applicator->runAnimationsWhenMounting(newAnimations, ^{ return [NSSet new]; });
+
+  transactionSpy->runAllCompletions();
+}
+
 - (void)assertWillRemountHooksWereCalled
 {
   const auto willRemountWasCalled = CK::map(allSpies, [](const auto &s){ return s->willRemountWasCalled; });
@@ -149,6 +183,13 @@
   const auto actualWillRemountCtxs = CK::map(allSpies, [](const auto &s){ return s->actualWillRemountCtx; });
   const auto willRemountCtxs = CK::map(allSpies, [](const auto &s){ return s->willRemountCtx; });
   XCTAssert(actualWillRemountCtxs == willRemountCtxs);
+}
+
+- (void)assertCleanupHooksWereCalledWithContextFromDidRemountHook
+{
+  const auto actualDidRemountCtxs = CK::map(allSpies, [](const auto &s){ return s->actualDidRemountCtx; });
+  const auto didRemountCtxs = CK::map(allSpies, [](const auto &s){ return s->didRemountCtx; });
+  XCTAssert(actualDidRemountCtxs == didRemountCtxs);
 }
 
 @end
@@ -210,6 +251,43 @@
   XCTAssertEqualObjects(as1.actualDidRemountCtx, as1.didRemountCtx);
   XCTAssertNil(as2.actualDidRemountCtx);
   XCTAssertEqualObjects(as3.actualDidRemountCtx, as3.didRemountCtx);
+}
+
+- (void)test_WhenHasAnimationsToApply_CleansUpOnlyAnimationsThatHaveNotBeenCleanedUpAlready
+{
+  applicator->runAnimationsWhenMounting(testAnimations, ^{ return [NSSet new]; });
+  transactionSpy->runAllTransactions();
+  transactionSpy->completions()[0](); // Completes the animation for c1
+  auto spy = CKAnimationSpy {};
+  auto const newAnimations = CKComponentAnimations {
+    {
+      {[CKComponent new], {spy.makeAnimation()}}
+    },
+    {},
+    {}
+  };
+  applicator->runAnimationsWhenMounting(newAnimations, ^{ return [NSSet setWithObject:c1]; });
+
+  XCTAssertEqual(as1.cleanupCallCount, 1);
+}
+
+- (void)test_WhenTransactionCompletesForAnimationThatWasAlreadyCleanedUp_DoesNothing
+{
+  applicator->runAnimationsWhenMounting(testAnimations, ^{ return [NSSet new]; });
+  transactionSpy->runAllTransactions();
+  auto spy = CKAnimationSpy {};
+  auto const newAnimations = CKComponentAnimations {
+    {
+      {[CKComponent new], {spy.makeAnimation()}}
+    },
+    {},
+    {}
+  };
+  applicator->runAnimationsWhenMounting(newAnimations, ^{ return [NSSet setWithObject:c1]; });
+
+  transactionSpy->runAllCompletions();
+
+  XCTAssertEqual(as1.cleanupCallCount, 1);
 }
 
 // Justifies the nil check for previousController
