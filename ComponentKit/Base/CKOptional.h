@@ -11,6 +11,7 @@
 #pragma once
 
 #include <cstdlib>
+#include <functional>
 #include <new>
 #include <type_traits>
 #include <utility>
@@ -296,6 +297,25 @@ public:
     return match(
                  [](const T& value) { return std::move(value); },
                  [&]() { return std::forward<T>(dflt); });
+  }
+
+  /**
+   Substitutes a default value in case the optional is empty. The callable argument is only invoked when the optional is
+   empty. Use this variant of `valueOr` when the computation of the default value is expensive or has side effects.
+
+   @param defaultProvider  a function-like object that takes no arguments and returns a default non-optional value to
+                           substitute.
+
+   @return The value wrapped in the Optional if it is not empty, or the default value otherwise.
+   */
+  template <typename F, typename = std::enable_if_t<std::is_convertible<F, std::function<T()>>::value>>
+  auto valueOr(F&& defaultProvider) const& -> T {
+    return match([](const T& value) { return value; }, [&]() { return defaultProvider(); });
+  }
+
+  template <typename F, typename = std::enable_if_t<std::is_convertible<F, std::function<T()>>::value>>
+  auto valueOr(F&& defaultProvider) && -> T {
+    return match([](const T& value) { return std::move(value); }, [&]() { return defaultProvider(); });
   }
 
   /**

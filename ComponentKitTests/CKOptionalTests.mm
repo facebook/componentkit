@@ -111,4 +111,19 @@ struct HasOptional {
   }
 }
 
+- (void)test_WhenHasValue_ValueOrTakingFunctionDoesNotInvokeIt
+{
+  auto fail = ^{
+    XCTFail();
+    return 3;
+  };
+  auto x = Optional<int>{2};
+
+  auto y = x.valueOr(fail);
+  XCTAssertEqual(y, 2);
+
+  auto z = toInt("2").valueOr(fail);
+  XCTAssertEqual(z, 2);
+}
+
 @end
