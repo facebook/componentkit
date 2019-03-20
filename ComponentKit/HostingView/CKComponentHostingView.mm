@@ -33,6 +33,7 @@
 #import "CKComponentEvents.h"
 #import "CKDataSourceModificationHelper.h"
 #import "CKGlobalConfig.h"
+#import "CKComponentHostingContainerView.h"
 
 struct CKComponentHostingViewInputs {
   CKComponentScopeRoot *scopeRoot;
@@ -45,31 +46,6 @@ struct CKComponentHostingViewInputs {
   };
 };
 
-struct CKComponentHostingViewSizeCache {
-  CKComponentHostingViewSizeCache()
-  : _constrainedSize({}), _computedSize({}), _empty(YES) {};
-
-  CKComponentHostingViewSizeCache(const CKSizeRange constrainedSize,
-                                  const CGSize computedSize)
-  : _constrainedSize(constrainedSize), _computedSize(computedSize), _empty(NO) {};
-
-  CGSize computedSize() {
-    return _computedSize;
-  }
-
-  BOOL isValid(const CKSizeRange constrainedSize) {
-    return _constrainedSize == constrainedSize;
-  }
-
-  operator bool() {
-    return !_empty;
-  }
-private:
-  CKSizeRange _constrainedSize;
-  CGSize _computedSize;
-  BOOL _empty;
-};
-
 @interface CKComponentHostingView () <CKComponentDebugReflowListener>
 {
   CKComponentProviderBlock _componentProvider;
@@ -77,9 +53,7 @@ private:
 
   CKComponentHostingViewInputs _pendingInputs;
 
-  CKComponentBoundsAnimation _boundsAnimation;
-  CKComponentAnimations _componentAnimations;
-  std::unique_ptr<CK::AnimationApplicator<>> _animationApplicator;
+  CKComponentHostingContainerView *_containerView;
   std::unordered_set<CKComponentPredicate> _animationPredicates;
 
   CKComponent *_component;
@@ -87,14 +61,12 @@ private:
   CKUpdateMode _requestedUpdateMode;
 
   CKComponentRootLayout _mountedRootLayout;
-  NSSet *_mountedComponents;
 
   BOOL _scheduledAsynchronousComponentUpdate;
   BOOL _isSynchronouslyUpdatingComponent;
   BOOL _isMountingComponent;
   BOOL _allowTapPassthrough;
   BOOL _invalidateRemovedControllers;
-  CKComponentHostingViewSizeCache _sizeCache;
 }
 @end
 
@@ -208,13 +180,18 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     };
 
     _allowTapPassthrough = options.allowTapPassthrough;
-    _containerView = [[CKComponentRootView alloc] initWithFrame:CGRectZero allowTapPassthrough:_allowTapPassthrough];
+    _containerView =
+    [[CKComponentHostingContainerView alloc]
+     initWithFrame:CGRectZero
+     scopeIdentifier:_pendingInputs.scopeRoot.globalIdentifier
+     analyticsListener:_pendingInputs.scopeRoot.analyticsListener
+     sizeRangeProvider:sizeRangeProvider
+     allowTapPassthrough:_allowTapPassthrough];
     [self addSubview:_containerView];
 
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
 
-    _animationApplicator = CK::AnimationApplicatorFactory::make();
     _animationPredicates = CKComponentAnimationPredicates();
     _invalidateRemovedControllers = options.invalidateRemovedControllers;
 
@@ -226,7 +203,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 - (void)dealloc
 {
   CKAssertMainThread(); // UIKit should guarantee this
-  CKUnmountComponents(_mountedComponents);
   CKComponentScopeRootAnnounceControllerInvalidation(_pendingInputs.scopeRoot);
 }
 
@@ -248,27 +224,11 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     [self _synchronouslyUpdateComponentIfNeeded];
     if (_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size)) {
       auto const rootLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, _animationPredicates);
-      auto const al = _pendingInputs.scopeRoot.analyticsListener;
-      [al willCollectAnimationsFromComponentTreeWithRootComponent:_component];
-      _componentAnimations = animationsForNewLayout(self, rootLayout);
-      [al didCollectAnimationsFromComponentTreeWithRootComponent:_component];
       _mountedRootLayout = rootLayout;
       [self _sendDidPrepareLayoutIfNeeded];
+      [_containerView setRootLayout:rootLayout];
     }
-
-    const auto mountPerformer = ^{
-      __block NSSet<CKComponent *> *unmountedComponents;
-      CKComponentBoundsAnimationApply(_boundsAnimation, ^{
-        const auto result = CKMountComponentLayout(_mountedRootLayout.layout(), _containerView, _mountedComponents, nil, _pendingInputs.scopeRoot.analyticsListener);
-        _mountedComponents = result.mountedComponents;
-        unmountedComponents = result.unmountedComponents;
-      }, nil);
-      return unmountedComponents;
-    };
-    _animationApplicator->runAnimationsWhenMounting(_componentAnimations, mountPerformer);
-
-    _componentAnimations = {};
-    _boundsAnimation = {};
+    [_containerView mount];
     _isMountingComponent = NO;
   }
 }
@@ -277,15 +237,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 {
   CKAssertMainThread();
   [self _synchronouslyUpdateComponentIfNeeded];
-  const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-  if (_sizeCache && _sizeCache.isValid(constrainedSize)) {
-    return _sizeCache.computedSize();
-  }
-  const auto computedSize = CKComputeRootComponentLayout(_component,
-                                                         constrainedSize,
-                                                         _pendingInputs.scopeRoot.analyticsListener).size();
-  _sizeCache = {constrainedSize, computedSize};
-  return computedSize;
+  return [_containerView sizeThatFits:size];
 }
 
 #pragma mark - Hit Testing
@@ -333,22 +285,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 - (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider
 {
   return _pendingInputs.scopeRoot;
-}
-
-/**
- @return A build component result from current component settings.
- */
-- (CKBuildComponentResult)currentBuildComponentResult {
-  return {
-    .component = _component,
-    .scopeRoot = _pendingInputs.scopeRoot,
-    .boundsAnimation = _boundsAnimation,
-  };
-}
-
-static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView *const self, const CKComponentRootLayout &newLayout)
-{
-  return CK::animationsForComponents(CK::animatedComponentsBetweenLayouts(newLayout, self->_mountedRootLayout), self->_containerView);
 }
 
 #pragma mark - Appearance
@@ -465,9 +401,9 @@ static CKComponentAnimations animationsForNewLayout(const CKComponentHostingView
 
   _pendingInputs.scopeRoot = result.scopeRoot;
   _pendingInputs.stateUpdates = {};
-  _sizeCache = {};
   _component = result.component;
-  _boundsAnimation = result.boundsAnimation;
+  [_containerView setBoundsAnimation:result.boundsAnimation];
+  [_containerView setComponent:result.component];
   _componentNeedsUpdate = NO;
 }
 
