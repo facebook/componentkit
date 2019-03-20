@@ -28,26 +28,46 @@ namespace CK {
     }
   };
 
+  using PendingAnimationsByComponentMap = std::unordered_map<CKComponent *, std::vector<CKPendingComponentAnimation>, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
+
+  struct PendingAnimations final {
+    PendingAnimations(PendingAnimationsByComponentMap animationsOnInitialMount,
+                      PendingAnimationsByComponentMap animationsFromPreviousComponent,
+                      PendingAnimationsByComponentMap animationsOnFinalUnmount):
+    _animationsOnInitialMount(std::move(animationsOnInitialMount)),
+    _animationsFromPreviousComponent(std::move(animationsFromPreviousComponent)),
+    _animationsOnFinalUnmount(std::move(animationsOnFinalUnmount)) {}
+
+    const auto &animationsOnInitialMount() const { return _animationsOnInitialMount; }
+    const auto &animationsFromPreviousComponent() const { return _animationsFromPreviousComponent; }
+    const auto &animationsOnFinalUnmount() const { return _animationsOnFinalUnmount; }
+
+  private:
+    PendingAnimationsByComponentMap _animationsOnInitialMount = {};
+    PendingAnimationsByComponentMap _animationsFromPreviousComponent = {};
+    PendingAnimationsByComponentMap _animationsOnFinalUnmount = {};
+  };
+
+  auto collectPendingAnimations(const CKComponentAnimations &animations) -> PendingAnimations;
+
   class ComponentAnimationsController final {
   public:
     ComponentAnimationsController(CKComponentAnimations animations)
-    : _animations(std::move(animations)),
+    : _pendingAnimations(collectPendingAnimations(animations)),
     _appliedAnimationsOnInitialMount(std::make_shared<AppliedAnimationsByComponentMap>()),
     _appliedAnimationsFromPreviousComponent(std::make_shared<AppliedAnimationsByComponentMap>()),
     _appliedAnimationsOnFinalUnmount(std::make_shared<AppliedAnimationsByComponentMap>()) {};
 
-    void collectPendingAnimations();
-
     template <typename TransactionProvider>
     void applyPendingAnimations(TransactionProvider& transactionProvider)
     {
-      applyPendingAnimations(_pendingAnimationsOnInitialMount,
+      applyPendingAnimations(_pendingAnimations.animationsOnInitialMount(),
                              _appliedAnimationsOnInitialMount,
                              transactionProvider);
-      applyPendingAnimations(_pendingAnimationsFromPreviousComponent,
+      applyPendingAnimations(_pendingAnimations.animationsFromPreviousComponent(),
                              _appliedAnimationsFromPreviousComponent,
                              transactionProvider);
-      applyPendingAnimations(_pendingAnimationsOnFinalUnmount,
+      applyPendingAnimations(_pendingAnimations.animationsOnFinalUnmount(),
                              _appliedAnimationsOnFinalUnmount,
                              transactionProvider);
     }
@@ -55,7 +75,6 @@ namespace CK {
     void cleanupAppliedAnimationsForComponent(CKComponent *const c);
 
   private:
-    using PendingAnimationsByComponentMap = std::unordered_map<CKComponent *, std::vector<CKPendingComponentAnimation>, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
     using AppliedAnimationsByComponentMap = std::unordered_map<CKComponent *, CKAppliedComponentAnimationMap, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
 
     template <typename TransactionProvider>
@@ -106,10 +125,7 @@ namespace CK {
     static auto cleanupAppliedAnimationsForComponent(AppliedAnimationsByComponentMap &aas,
                                                      CKComponent *const c);
 
-    const CKComponentAnimations _animations;
-    PendingAnimationsByComponentMap _pendingAnimationsOnInitialMount = {};
-    PendingAnimationsByComponentMap _pendingAnimationsFromPreviousComponent = {};
-    PendingAnimationsByComponentMap _pendingAnimationsOnFinalUnmount = {};
+    PendingAnimations _pendingAnimations;
     // Ownership will be shared with transaction completions which can outlive the controller
     std::shared_ptr<AppliedAnimationsByComponentMap> _appliedAnimationsOnInitialMount;
     std::shared_ptr<AppliedAnimationsByComponentMap> _appliedAnimationsFromPreviousComponent;

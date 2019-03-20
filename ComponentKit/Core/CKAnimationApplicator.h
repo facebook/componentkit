@@ -35,7 +35,6 @@ namespace CK {
 
       auto previousController = _animationsController;
       _animationsController = _controllerFactory(as);
-      _animationsController->collectPendingAnimations();
 
       const auto unmountedComponents = p();
 
