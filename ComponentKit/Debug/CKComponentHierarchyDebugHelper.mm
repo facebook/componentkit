@@ -15,8 +15,8 @@
 #import "CKComponent+UIView.h"
 #import "CKComponent.h"
 #import "CKComponentInternal.h"
-#import "CKComponentDataSourceAttachController.h"
-#import "CKComponentDataSourceAttachControllerInternal.h"
+#import "CKComponentAttachController.h"
+#import "CKComponentAttachControllerInternal.h"
 #import "CKComponentLayout.h"
 #import "CKComponentRootView.h"
 #import "CKComponentHostingView.h"
@@ -121,7 +121,7 @@ static void buildRecursiveDescriptionForView(NSMutableString *description,
 static CKComponentLayout rootLayoutFromRootView(CKComponentRootView *rootView)
 {
   if (rootView.ck_attachState) {
-    return CKComponentDataSourceAttachStateRootLayout(rootView.ck_attachState).layout();
+    return CKComponentAttachStateRootLayout(rootView.ck_attachState).layout();
   } else if ([rootView.superview isKindOfClass:[CKComponentHostingView class]]) {
     CKComponentHostingView *hostingView = (CKComponentHostingView *)rootView.superview;
     return hostingView.mountedLayout;

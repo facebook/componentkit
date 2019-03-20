@@ -11,11 +11,11 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKAnimationApplicator.h>
-#import <ComponentKit/CKComponentDataSourceAttachController.h>
+#import <ComponentKit/CKComponentAttachController.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 
 /** This is exposed for unit tests. */
-@interface CKComponentDataSourceAttachState : NSObject
+@interface CKComponentAttachState : NSObject
 
 @property (nonatomic, strong, readonly) NSSet *mountedComponents;
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier scopeIdentifier;
@@ -28,17 +28,17 @@
 
 @end
 
-const CKComponentRootLayout &CKComponentDataSourceAttachStateRootLayout(const CKComponentDataSourceAttachState *const self);
-void CKComponentDataSourceAttachStateSetRootLayout(CKComponentDataSourceAttachState *const self, const CKComponentRootLayout &rootLayout);
+const CKComponentRootLayout &CKComponentAttachStateRootLayout(const CKComponentAttachState *const self);
+void CKComponentAttachStateSetRootLayout(CKComponentAttachState *const self, const CKComponentRootLayout &rootLayout);
 
-@interface CKComponentDataSourceAttachController ()
+@interface CKComponentAttachController ()
 
-- (CKComponentDataSourceAttachState *)attachStateForScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier;
+- (CKComponentAttachState *)attachStateForScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier;
 
 @end
 
-@interface UIView (CKComponentDataSourceAttachController)
+@interface UIView (CKComponentAttachController)
 
-@property (nonatomic, strong, setter=ck_setAttachState:) CKComponentDataSourceAttachState *ck_attachState;
+@property (nonatomic, strong, setter=ck_setAttachState:) CKComponentAttachState *ck_attachState;
 
 @end

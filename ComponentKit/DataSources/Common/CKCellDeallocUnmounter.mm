@@ -14,7 +14,7 @@
 @interface CKCellDeallocUnmounter : NSObject
 
 @property (nonatomic, assign) CKComponentScopeRootIdentifier scopeIdentifier;
-@property (nonatomic, weak) CKComponentDataSourceAttachController *attachController;
+@property (nonatomic, weak) CKComponentAttachController *attachController;
 
 + (CKCellDeallocUnmounter *)unmounterForCell:(UIView *)cell;
 @end
@@ -27,7 +27,7 @@
   _scopeIdentifier = scopeIdentifier;
 }
 
-- (void)setAttachController:(CKComponentDataSourceAttachController *)attachController
+- (void)setAttachController:(CKComponentAttachController *)attachController
 {
   CKAssertMainThread();
   _attachController = attachController;
@@ -52,7 +52,7 @@
 @end
 
 
-void CKSetupDeallocUnmounter(UIView *cell, CKComponentScopeRootIdentifier scopeIdentifier, CKComponentDataSourceAttachController *attachController)
+void CKSetupDeallocUnmounter(UIView *cell, CKComponentScopeRootIdentifier scopeIdentifier, CKComponentAttachController *attachController)
 {
   CKCellDeallocUnmounter *unmounter = [CKCellDeallocUnmounter unmounterForCell:cell];
   unmounter.scopeIdentifier = scopeIdentifier;

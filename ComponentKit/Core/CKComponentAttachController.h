@@ -22,13 +22,10 @@
  1) One and only one component tree with the same scope identifier is attached to a view
  2) Component trees with different scope identifiers cannot be attached to the same view
 
- This controller is best used in contexts where views used to display a component tree are being reused, for instance along with a
- UICollectionViewDataSource to power a UICollectionView.
-
  @warning This controller is affined to the main thread, all the methods should be called on the main thread and it should never
  cross a thread boundary.
  */
-@interface CKComponentDataSourceAttachController : NSObject
+@interface CKComponentAttachController : NSObject
 
 /**
  Detaching a component tree will cause it to be unmounted from the view it is currently attached to and will mark the view as available to be
@@ -49,7 +46,7 @@
  @param scopeIdentifier The scope identifier for the component tree, this identifier should be stable among multiple versions
  of the component tree representing the same logical item.
  */
-struct CKComponentDataSourceAttachControllerAttachComponentRootLayoutParams {
+struct CKComponentAttachControllerAttachComponentRootLayoutParams {
   const id<CKComponentRootLayoutProvider> layoutProvider;
   CKComponentScopeRootIdentifier scopeIdentifier;
   const CKComponentBoundsAnimation &boundsAnimation;
@@ -57,6 +54,6 @@ struct CKComponentDataSourceAttachControllerAttachComponentRootLayoutParams {
   id<CKAnalyticsListener> analyticsListener;
 };
 
-void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
-    const CKComponentDataSourceAttachController *const self,
-    const CKComponentDataSourceAttachControllerAttachComponentRootLayoutParams &params);
+void CKComponentAttachControllerAttachComponentRootLayout(
+    const CKComponentAttachController *const self,
+    const CKComponentAttachControllerAttachComponentRootLayoutParams &params);

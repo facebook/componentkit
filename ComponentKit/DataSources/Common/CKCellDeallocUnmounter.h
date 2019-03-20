@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIView.h>
 
-#import <ComponentKit/CKComponentDataSourceAttachController.h>
+#import <ComponentKit/CKComponentAttachController.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 
 /*
@@ -41,4 +41,4 @@
  * Thus, we should unmount whatever was mounted to the cell's root view, which will cause the Map->RootView link
  * and all the View <--> Component links to be broken and the whole structure to be freed.
  */
-void CKSetupDeallocUnmounter(UIView *cell, CKComponentScopeRootIdentifier scopeIdentifier, CKComponentDataSourceAttachController *attachController);
+void CKSetupDeallocUnmounter(UIView *cell, CKComponentScopeRootIdentifier scopeIdentifier, CKComponentAttachController *attachController);

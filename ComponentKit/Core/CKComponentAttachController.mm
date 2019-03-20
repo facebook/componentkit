@@ -12,11 +12,11 @@
 #import "CKComponentInternal.h"
 
 #import "CKComponentAnimations.h"
-#import "CKComponentDataSourceAttachController.h"
-#import "CKComponentDataSourceAttachControllerInternal.h"
+#import "CKComponentAttachController.h"
+#import "CKComponentAttachControllerInternal.h"
 #import "CKDataSourceItem.h"
 
-@implementation CKComponentDataSourceAttachController
+@implementation CKComponentAttachController
 {
   /**
    We keep a strong reference to the mounted view to enforce that every view
@@ -54,9 +54,9 @@
 
 #pragma mark - Public API
 
-void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
-    const CKComponentDataSourceAttachController *const self,
-    const CKComponentDataSourceAttachControllerAttachComponentRootLayoutParams &params)
+void CKComponentAttachControllerAttachComponentRootLayout(
+    const CKComponentAttachController *const self,
+    const CKComponentAttachControllerAttachComponentRootLayoutParams &params)
 {
   CKCAssertMainThread();
   CKCAssertNotNil(params.view, @"Impossible to attach a component layout to a nil view");
@@ -106,7 +106,7 @@ void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
 
 #pragma mark - Internal API
 
-- (CKComponentDataSourceAttachState *)attachStateForScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
+- (CKComponentAttachState *)attachStateForScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
 {
   return ((UIView *)_scopeIdentifierToAttachedViewMap[@(scopeIdentifier)]).ck_attachState;
 }
@@ -115,7 +115,7 @@ void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
 
 - (void)_detachComponentLayoutFromView:(UIView *)view
 {
-  CKComponentDataSourceAttachState *attachState = view.ck_attachState;
+  CKComponentAttachState *attachState = view.ck_attachState;
   if (attachState) {
     CKUnmountComponents(attachState.mountedComponents);
     // Mark the view as detached
@@ -124,7 +124,7 @@ void CKComponentDataSourceAttachControllerAttachComponentRootLayout(
   }
 }
 
-static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComponentRootLayout &rootLayout,
+static CKComponentAttachState *mountComponentLayoutInView(const CKComponentRootLayout &rootLayout,
                                                                     const CKComponentRootLayout &prevLayout,
                                                                     UIView *view,
                                                                     CKComponentScopeRootIdentifier scopeIdentifier,
@@ -153,15 +153,15 @@ static CKComponentDataSourceAttachState *mountComponentLayoutInView(const CKComp
   animationApplicator = view.ck_attachState != nil ? view.ck_attachState.animationApplicator : CK::AnimationApplicatorFactory::make();
   animationApplicator->runAnimationsWhenMounting(animations, mountPerformer);
 
-  const auto attachState = [[CKComponentDataSourceAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents animationApplicator:animationApplicator];
-  CKComponentDataSourceAttachStateSetRootLayout(attachState, rootLayout);
+  const auto attachState = [[CKComponentAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents animationApplicator:animationApplicator];
+  CKComponentAttachStateSetRootLayout(attachState, rootLayout);
   return attachState;
 }
 
 static void tearDownAttachStateFromViews(NSArray *views)
 {
   for (UIView *view in views) {
-    CKComponentDataSourceAttachState *attachState = view.ck_attachState;
+    CKComponentAttachState *attachState = view.ck_attachState;
     if (attachState) {
       CKUnmountComponents(attachState.mountedComponents);
       view.ck_attachState = nil;
@@ -172,7 +172,7 @@ static void tearDownAttachStateFromViews(NSArray *views)
 @end
 
 
-@implementation CKComponentDataSourceAttachState
+@implementation CKComponentAttachState
 {
   CKComponentRootLayout _rootLayout;
   // The ownership isn't really shared with anyone, this is just to get copying the pointer in and out of the attach state easier
@@ -193,12 +193,12 @@ static void tearDownAttachStateFromViews(NSArray *views)
   return self;
 }
 
-const CKComponentRootLayout &CKComponentDataSourceAttachStateRootLayout(const CKComponentDataSourceAttachState *const self)
+const CKComponentRootLayout &CKComponentAttachStateRootLayout(const CKComponentAttachState *const self)
 {
   return self->_rootLayout;
 }
 
-void CKComponentDataSourceAttachStateSetRootLayout(CKComponentDataSourceAttachState *const self, const CKComponentRootLayout &rootLayout)
+void CKComponentAttachStateSetRootLayout(CKComponentAttachState *const self, const CKComponentRootLayout &rootLayout)
 {
   self->_rootLayout = rootLayout;
 }
@@ -210,16 +210,16 @@ void CKComponentDataSourceAttachStateSetRootLayout(CKComponentDataSourceAttachSt
 
 @end
 
-@implementation UIView (CKComponentDataSourceAttachController)
+@implementation UIView (CKComponentAttachController)
 
 static char const kViewAttachStateKey = ' ';
 
-- (void)ck_setAttachState:(CKComponentDataSourceAttachState *)ck_attachState
+- (void)ck_setAttachState:(CKComponentAttachState *)ck_attachState
 {
   objc_setAssociatedObject(self, &kViewAttachStateKey, ck_attachState, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (CKComponentDataSourceAttachState *)ck_attachState
+- (CKComponentAttachState *)ck_attachState
 {
   return objc_getAssociatedObject(self, &kViewAttachStateKey);
 }

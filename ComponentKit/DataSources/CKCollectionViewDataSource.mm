@@ -20,7 +20,7 @@
 #import "CKCollectionViewDataSourceInternal.h"
 #import "CKComponentRootView.h"
 #import "CKComponentLayout.h"
-#import "CKComponentDataSourceAttachController.h"
+#import "CKComponentAttachController.h"
 #import "CKComponentBoundsAnimation+UICollectionView.h"
 #import "CKComponentControllerEvents.h"
 
@@ -29,7 +29,7 @@
   CKDataSource *_componentDataSource;
   __weak id<CKSupplementaryViewDataSource> _supplementaryViewDataSource;
   CKDataSourceState *_currentState;
-  CKComponentDataSourceAttachController *_attachController;
+  CKComponentAttachController *_attachController;
   NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *_cellToItemMap;
 }
 @end
@@ -50,7 +50,7 @@
     _collectionView.dataSource = self;
     [_collectionView registerClass:[CKCollectionViewDataSourceCell class] forCellWithReuseIdentifier:kReuseIdentifier];
 
-    _attachController = [CKComponentDataSourceAttachController new];
+    _attachController = [CKComponentAttachController new];
     _supplementaryViewDataSource = supplementaryViewDataSource;
     _cellToItemMap = [NSMapTable weakToStrongObjectsMapTable];
   }
@@ -69,7 +69,7 @@
 }
 
 static void applyChangesToCollectionView(UICollectionView *collectionView,
-                                         CKComponentDataSourceAttachController *attachController,
+                                         CKComponentAttachController *attachController,
                                          NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *cellToItemMap,
                                          CKDataSourceState *currentState,
                                          CKDataSourceAppliedChanges *changes)
@@ -234,10 +234,10 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
 
 static void attachToCell(CKCollectionViewDataSourceCell *cell,
                          CKDataSourceItem *item,
-                         CKComponentDataSourceAttachController *attachController,
+                         CKComponentAttachController *attachController,
                          NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *cellToItemMap)
 {
-  CKComponentDataSourceAttachControllerAttachComponentRootLayout(
+  CKComponentAttachControllerAttachComponentRootLayout(
       attachController,
       {.layoutProvider = item,
        .scopeIdentifier = item.scopeRoot.globalIdentifier,
