@@ -170,19 +170,17 @@ CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changes
         sectionCounts[fromSectionIdxAfterUpdate] = @([sectionCounts[fromSectionIdxAfterUpdate] integerValue] - 1);
       }
       const auto originalSectionIdx = sectionIdxTransform.applyInverseToIndex(toIndexPath.section);
+      const auto movingToJustInsertedSection = (originalSectionIdx == NSNotFound);
+      if (!movingToJustInsertedSection) {
+        originalSectionCounts[originalSectionIdx] = @([originalSectionCounts[originalSectionIdx] integerValue] + 1);
+      }
       const auto toIndexPathItemInvalid = toIndexPath.item > [sectionCounts[toIndexPath.section] integerValue];
+      sectionCounts[toIndexPath.section] = @([sectionCounts[toIndexPath.section] integerValue] + 1);
       if (fromIndexPathItemInvalid || toIndexPathItemInvalid) {
         invalidSection = fromIndexPathItemInvalid ? fromIndexPath.section : toIndexPath.section;
         invalidItem = fromIndexPathItemInvalid ? fromIndexPath.row : toIndexPath.row;
         invalidChangeFound = YES;
         *stop = YES;
-      } else {
-        const auto movingToJustInsertedSection = (originalSectionIdx == NSNotFound);
-        if (movingToJustInsertedSection) {
-          sectionCounts[toIndexPath.section] = @([sectionCounts[toIndexPath.section] integerValue] + 1);
-        } else {
-          originalSectionCounts[originalSectionIdx] = @([originalSectionCounts[originalSectionIdx] integerValue] + 1);
-        }
       }
     }
   }];

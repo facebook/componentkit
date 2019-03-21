@@ -720,6 +720,59 @@
   [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
 }
 
+- (void)test_WhenVerifyingMovesWithinSection
+{
+  const auto state = CKDataSourceTestState(Nil, nil, 1, 20);
+  const auto changeset = CK::makeChangeset({
+    .movedItems = {
+      {{0, 0}, {0, 19}},
+      {{0, 1}, {0, 20}},
+      {{0, 2}, {0, 21}},
+      {{0, 3}, {0, 22}},
+      {{0, 4}, {0, 23}},
+      {{0, 5}, {0, 24}},
+      {{0, 6}, {0, 25}},
+      {{0, 7}, {0, 26}},
+      {{0, 8}, {0, 27}},
+      {{0, 9}, {0, 28}},
+      {{0, 10}, {0, 29}},
+      {{0, 11}, {0, 30}},
+      {{0, 12}, {0, 31}},
+      {{0, 13}, {0, 32}},
+      {{0, 14}, {0, 33}},
+      {{0, 15}, {0, 34}},
+      {{0, 16}, {0, 35}},
+      {{0, 17}, {0, 36}},
+      {{0, 18}, {0, 37}},
+      {{0, 19}, {0, 38}}
+    },
+    .insertedItems = {
+      {{0, 0}, @"New"},
+      {{0, 1}, @"New"},
+      {{0, 2}, @"New"},
+      {{0, 3}, @"New"},
+      {{0, 4}, @"New"},
+      {{0, 5}, @"New"},
+      {{0, 6}, @"New"},
+      {{0, 7}, @"New"},
+      {{0, 8}, @"New"},
+      {{0, 9}, @"New"},
+      {{0, 10}, @"New"},
+      {{0, 11}, @"New"},
+      {{0, 12}, @"New"},
+      {{0, 13}, @"New"},
+      {{0, 14}, @"New"},
+      {{0, 15}, @"New"},
+      {{0, 16}, @"New"},
+      {{0, 17}, @"New"},
+      {{0, 18}, @"New"}
+    }
+  });
+
+  [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
+}
+
+
 - (void)test_WhenApplyingPendingModificationsWithMoves_TreatsToIndexPathsAsSpecifiedAfterSectionRemovalsAndInsertions
 {
   const auto state = CKDataSourceTestState(Nil, nil, 5, 1);
