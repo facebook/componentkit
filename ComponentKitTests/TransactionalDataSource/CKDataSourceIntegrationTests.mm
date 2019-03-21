@@ -168,12 +168,9 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
                                        buildComponentConfig:{}
                                        splitChangesetOptions:{}
-                                       workQueue:nil
-                                       applyModificationsOnWorkQueue:NO
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
-                                       analyticsListener:nil
-                                       stateListener:nil];
+                                       analyticsListener:nil];
   return [[CKCollectionViewDataSource alloc] initWithCollectionView:collectionViewController.collectionView
                                                      supplementaryViewDataSource:nil
                                                                    configuration:config];

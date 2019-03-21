@@ -35,12 +35,9 @@
                                sizeRange:sizeRange
                     buildComponentConfig:{}
                    splitChangesetOptions:{}
-                               workQueue:nil
-           applyModificationsOnWorkQueue:NO
                      componentPredicates:{}
            componentControllerPredicates:{}
-                       analyticsListener:nil
-                           stateListener:nil];
+                       analyticsListener:nil];
 }
 
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
@@ -52,12 +49,9 @@
                                    sizeRange:sizeRange
                         buildComponentConfig:{}
                        splitChangesetOptions:{}
-                                   workQueue:nil
-               applyModificationsOnWorkQueue:NO
                          componentPredicates:{}
                componentControllerPredicates:{}
-                           analyticsListener:nil
-                               stateListener:nil];
+                           analyticsListener:nil];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -65,12 +59,9 @@
                                 sizeRange:(const CKSizeRange &)sizeRange
                      buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                     splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-                                workQueue:(dispatch_queue_t)workQueue
-            applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                            stateListener:(id<CKComponentStateListener>)stateListener
 {
   auto const pb = ^(id<NSObject> m, id<NSObject> c){ return [componentProvider componentForModel:m context:c]; };
   return [self initWithComponentProviderClass:componentProvider
@@ -79,12 +70,9 @@
                                     sizeRange:sizeRange
                          buildComponentConfig:buildComponentConfig
                         splitChangesetOptions:splitChangesetOptions
-                                    workQueue:workQueue
-                applyModificationsOnWorkQueue:applyModificationsOnWorkQueue
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
-                            analyticsListener:analyticsListener
-                                stateListener:stateListener];
+                            analyticsListener:analyticsListener];
 }
 
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
@@ -92,12 +80,9 @@
                                     sizeRange:(const CKSizeRange &)sizeRange
                          buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                         splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-                                    workQueue:(dispatch_queue_t)workQueue
-                applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                                stateListener:(id<CKComponentStateListener>)stateListener
 {
   return [self initWithComponentProviderClass:Nil
                        componentProviderBlock:^(id<NSObject> m, id<NSObject> c){ return componentProvider(m, c); }
@@ -105,12 +90,9 @@
                                     sizeRange:sizeRange
                          buildComponentConfig:buildComponentConfig
                         splitChangesetOptions:splitChangesetOptions
-                                    workQueue:workQueue
-                applyModificationsOnWorkQueue:applyModificationsOnWorkQueue
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
-                            analyticsListener:analyticsListener
-                                stateListener:stateListener];
+                            analyticsListener:analyticsListener];
 }
 
 - (instancetype)initWithComponentProviderClass:(Class<CKComponentProvider>)componentProviderClass
@@ -119,12 +101,9 @@
                                      sizeRange:(const CKSizeRange &)sizeRange
                           buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                          splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-                                     workQueue:(dispatch_queue_t)workQueue
-                 applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                            componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                  componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                              analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                                 stateListener:(id<CKComponentStateListener>)stateListener
 {
   if (self = [super init]) {
     _componentProviderClass = componentProviderClass;
@@ -134,11 +113,8 @@
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
-    _stateListener = stateListener;
     _buildComponentConfig = buildComponentConfig;
     _splitChangesetOptions = splitChangesetOptions;
-    _workQueue = workQueue;
-    _applyModificationsOnWorkQueue = applyModificationsOnWorkQueue;
   }
   return self;
 }
@@ -151,12 +127,9 @@
                                                                  sizeRange:sizeRange
                                                       buildComponentConfig:_buildComponentConfig
                                                      splitChangesetOptions:_splitChangesetOptions
-                                                                 workQueue:_workQueue
-                                             applyModificationsOnWorkQueue:_applyModificationsOnWorkQueue
                                                        componentPredicates:_componentPredicates
                                              componentControllerPredicates:_componentControllerPredicates
-                                                         analyticsListener:_analyticsListener
-                                                             stateListener:_stateListener];
+                                                         analyticsListener:_analyticsListener];
 }
 
 - (const CKBuildComponentConfig &)buildComponentConfig

@@ -48,7 +48,6 @@ static void *kWorkQueueKey = &kWorkQueueKey;
 
   CKDataSourceListenerAnnouncer *_announcer;
   dispatch_queue_t _workQueue;
-  id<CKComponentStateListener> _stateListener;
 }
 @end
 
@@ -63,14 +62,11 @@ static void *kWorkQueueKey = &kWorkQueueKey;
                                 state:(CKDataSourceState *)state
 {
   CKAssertNotNil(configuration, @"Configuration is required");
-  CKAssertNil(configuration.workQueue, @"CKThreadSafeDataSource doesn't support `workQueue`");
-  CKAssert(!configuration.applyModificationsOnWorkQueue, @"CKThreadSafeDataSource doesn't support `applyModificationsOnWorkQueue`");
   CKAssert(!configuration.splitChangesetOptions.enabled, @"CKThreadSafeDataSource doesn't support `splitChangesetOptions`");
   if (self = [super init]) {
     _state = state ?: [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
     _workQueue = dispatch_queue_create("org.componentkit.CKThreadSafeDataSource", DISPATCH_QUEUE_SERIAL);
-    _stateListener = configuration.stateListener;
 
     [CKComponentDebugController registerReflowListener:self];
 
@@ -113,7 +109,7 @@ static void *kWorkQueueKey = &kWorkQueueKey;
 {
   auto const modification = [[CKDataSourceChangesetModification alloc]
                              initWithChangeset:changeset
-                             stateListener:_stateListener ?: self
+                             stateListener:self
                              userInfo:userInfo
                              qos:qos];
   switch (mode) {

@@ -57,50 +57,32 @@ struct CKDataSourceSplitChangesetOptions {
  @param componentProvider See @protocol(CKComponentProvider)
  @param context Passed to methods exposed by @protocol(CKComponentProvider).
  @param sizeRange Used for the root layout.
- @param workQueue Queue used for processing asynchronous state updates.
- @param applyModificationsOnWorkQueue Normally, modifications must be applied on the main thread.
- Specifying this option will allow you to call -applyChangeset:mode:userInfo: on `workQueue` instead, where
- synchronous updates will be applied immediately on the queue and asynchronous updates will be enqueued
- to execute asynchronously on the work queue. If this is set to `YES`, all methods called on the data
- source must be called on the work queue rather than the main thread.
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
                             root. By passing in the predicates on initialization, we are able to cache which components
                             match the predicate for rapid enumeration later.
  @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
- @param stateListener A state listener that listens to state updates from the generated components. If
- unspecified, this defaults to the data source itself.
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
                      buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                     splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-                                workQueue:(dispatch_queue_t)workQueue
-            applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                            stateListener:(id<CKComponentStateListener>)stateListener;
+                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
 
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                                       context:(id<NSObject>)context
                                     sizeRange:(const CKSizeRange &)sizeRange
                          buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                         splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-                                    workQueue:(dispatch_queue_t)workQueue
-                applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                                stateListener:(id<CKComponentStateListener>)stateListener;
+                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
 
 - (instancetype)copyWithContext:(id<NSObject>)context sizeRange:(const CKSizeRange &)sizeRange;
 
 @property (nonatomic, readonly, strong) id<CKAnalyticsListener> analyticsListener;
-@property (nonatomic, readonly, strong) id<CKComponentStateListener> stateListener;
-
-@property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
-@property (nonatomic, assign, readonly) BOOL applyModificationsOnWorkQueue;
 
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates;
