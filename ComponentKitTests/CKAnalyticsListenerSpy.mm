@@ -19,9 +19,16 @@
                                stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates {}
 - (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component {}
 
-- (void)willMountComponentTreeWithRootComponent:(CKComponent *)component {}
+- (void)willMountComponentTreeWithRootComponent:(CKComponent *)component
+{
+  _willMountComponentHitCount++;
+}
+
 - (void)didMountComponentTreeWithRootComponent:(CKComponent *)component
-                         mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext {}
+                         mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext
+{
+  _didMountComponentHitCount++;
+}
 
 - (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component
 {

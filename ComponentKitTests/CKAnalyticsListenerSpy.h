@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
   NSInteger _didLayoutComponentTreeHitCount;
   NSInteger _willCollectAnimationsHitCount;
   NSInteger _didCollectAnimationsHitCount;
+  NSInteger _willMountComponentHitCount;
+  NSInteger _didMountComponentHitCount;
 }
 @end
 
