@@ -90,11 +90,16 @@
   // The chain of ownership is following: CKDataSourceState -> array of CKDataSourceItem-> ScopeRoot -> controllers.
   // We delay desctruction of DataSourceState to guarantee that controllers are alive.
   CKDataSourceState *state = _state;
-  performBlockOnMainQueue(^() {
+  void (^completion)() = ^() {
     [state enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSIndexPath *, BOOL *stop) {
       CKComponentScopeRootAnnounceControllerInvalidation([item scopeRoot]);
     }];
-  });
+  };
+  if ([NSThread isMainThread]) {
+    completion();
+  } else {
+    dispatch_async(dispatch_get_main_queue(), completion);
+  }
 }
 
 - (void)applyChangeset:(CKDataSourceChangeset *)changeset
@@ -294,12 +299,10 @@
   _state = newState;
 
   // Announce 'invalidateController'.
-  performBlockOnMainQueue(^{
-    for (NSIndexPath *removedIndex in [appliedChanges removedIndexPaths]) {
-      CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
-      CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
-    }
-  });
+  for (NSIndexPath *removedIndex in [appliedChanges removedIndexPaths]) {
+    CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
+    CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
+  }
 
   [_announcer componentDataSource:self
            didModifyPreviousState:previousState
@@ -307,10 +310,8 @@
                 byApplyingChanges:appliedChanges];
 
   // Announce 'didPrepareLayoutForComponent:'.
-  performBlockOnMainQueue(^{
-    CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([[appliedChanges finalUpdatedIndexPaths] allValues], newState);
-    CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([appliedChanges insertedIndexPaths], newState);
-  });
+  CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([[appliedChanges finalUpdatedIndexPaths] allValues], newState);
+  CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([appliedChanges insertedIndexPaths], newState);
 
   // Handle deferred changeset (if there is one)
   auto const deferredChangeset = [change deferredChangeset];
@@ -422,15 +423,6 @@
                                                    stateListener:self
                                                         userInfo:userInfo
                                                              qos:qos];
-  }
-}
-
-static void performBlockOnMainQueue(dispatch_block_t block)
-{
-  if ([NSThread isMainThread]) {
-    block();
-  } else {
-    dispatch_async(dispatch_get_main_queue(), block);
   }
 }
 
