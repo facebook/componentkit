@@ -10,20 +10,21 @@
 
 #import <ComponentKit/CKCollectionViewDataSource.h>
 
-@protocol CKDataSourceListener;
-@class CKDataSourceChange;
+@class CKDataSource;
+@class CKDataSourceState;
 
 @interface CKCollectionViewDataSource ()
 
 /**
- Apply a pre-computed `CKDataSourceChange` to the datasource.
- `NO` will be returned if the change is computed based on a outdated state.
- @param change pre-computed `CKDataSourceChange`
- @return YES if the applied change is legit.
+ The underlying `CKDataSource` that `CKCollectionViewDataSource` is holding. @see CKDataSource
+ A new instance of `componentDataSource` will be created if a new state is set to `CKCollectionViewDataSource`.
  */
-- (BOOL)applyChange:(CKDataSourceChange *)change;
+@property (nonatomic, readonly, strong) CKDataSource *componentDataSource;
 
-- (void)addListener:(id<CKDataSourceListener>)listener;
-- (void)removeListener:(id<CKDataSourceListener>)listener;
+/**
+ Set a new `CKDataSourceState` and reload data of the underlying collection view.
+ A new instance of `componentDataSource` will be created.
+ */
+- (void)setState:(CKDataSourceState *)state;
 
 @end

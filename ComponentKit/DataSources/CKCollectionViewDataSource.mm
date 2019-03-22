@@ -249,19 +249,17 @@ static void attachToCell(CKCollectionViewDataSourceCell *cell,
 
 #pragma mark - Internal
 
-- (BOOL)applyChange:(CKDataSourceChange *)change
+- (void)setState:(CKDataSourceState *)state
 {
-  return [_componentDataSource applyChange:change];
-}
-
-- (void)addListener:(id<CKDataSourceListener>)listener
-{
-  [_componentDataSource addListener:listener];
-}
-
-- (void)removeListener:(id<CKDataSourceListener>)listener
-{
-  [_componentDataSource removeListener:listener];
+  CKAssertMainThread();
+  if (_currentState == state) {
+    return;
+  }
+  _currentState = state;
+  [_componentDataSource removeListener:self];
+  _componentDataSource = [[CKDataSource alloc] initWithConfiguration:state.configuration state:state];
+  [_componentDataSource addListener:self];
+  [_collectionView reloadData];
 }
 
 @end
