@@ -12,6 +12,7 @@
 
 @class CKDataSource;
 @class CKDataSourceState;
+@protocol CKCollectionViewDataSourceListener;
 
 @interface CKCollectionViewDataSource ()
 
@@ -26,5 +27,8 @@
  A new instance of `componentDataSource` will be created.
  */
 - (void)setState:(CKDataSourceState *)state;
+
+- (void)addListener:(id<CKCollectionViewDataSourceListener>)listener;
+- (void)removeListener:(id<CKCollectionViewDataSourceListener>)listener;
 
 @end

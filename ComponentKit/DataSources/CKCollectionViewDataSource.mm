@@ -23,6 +23,7 @@
 #import "CKComponentAttachController.h"
 #import "CKComponentBoundsAnimation+UICollectionView.h"
 #import "CKComponentControllerEvents.h"
+#import "CKCollectionViewDataSourceListenerAnnouncer.h"
 
 @interface CKCollectionViewDataSource () <UICollectionViewDataSource, CKDataSourceListener>
 {
@@ -31,6 +32,7 @@
   CKDataSourceState *_currentState;
   CKComponentAttachController *_attachController;
   NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *_cellToItemMap;
+  CKCollectionViewDataSourceListenerAnnouncer *_announcer;
 }
 @end
 
@@ -53,6 +55,7 @@
     _attachController = [CKComponentAttachController new];
     _supplementaryViewDataSource = supplementaryViewDataSource;
     _cellToItemMap = [NSMapTable weakToStrongObjectsMapTable];
+    _announcer = [CKCollectionViewDataSourceListenerAnnouncer new];
   }
   return self;
 }
@@ -96,6 +99,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
                   withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
+  [_announcer dataSourceWillBeginUpdates:self];
   const BOOL changesIncludeNonUpdates = (changes.removedIndexPaths.count ||
                                          changes.insertedIndexPaths.count ||
                                          changes.movedIndexPaths.count ||
@@ -116,7 +120,9 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
     void (^applyUpdatedState)(CKDataSourceState *) = ^(CKDataSourceState *updatedState) {
       [_collectionView performBatchUpdates:^{
         _currentState = updatedState;
-      } completion:^(BOOL finished) {}];
+      } completion:^(BOOL finished) {
+        [_announcer dataSourceDidEndUpdates:self didModifyPreviousState:previousState withState:state byApplyingChanges:changes];
+      }];
     };
 
     // We only apply the bounds animation if we found one with a duration.
@@ -151,7 +157,9 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
                                                       inState:previousState];
       // Update current state
       _currentState = state;
-    } completion:NULL];
+    } completion:^(BOOL finished){
+      [_announcer dataSourceDidEndUpdates:self didModifyPreviousState:previousState withState:state byApplyingChanges:changes];
+    }];
   }
 }
 
@@ -260,6 +268,16 @@ static void attachToCell(CKCollectionViewDataSourceCell *cell,
   _componentDataSource = [[CKDataSource alloc] initWithState:state];
   [_componentDataSource addListener:self];
   [_collectionView reloadData];
+}
+
+- (void)addListener:(id<CKCollectionViewDataSourceListener>)listener
+{
+  [_announcer addListener:listener];
+}
+
+- (void)removeListener:(id<CKCollectionViewDataSourceListener>)listener
+{
+  [_announcer removeListener:listener];
 }
 
 @end
