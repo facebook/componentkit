@@ -60,6 +60,12 @@
   return self;
 }
 
+- (CKDataSourceState *)currentState
+{
+  CKAssertMainThread();
+  return _currentState;
+}
+
 #pragma mark - Changeset application
 
 - (void)applyChangeset:(CKDataSourceChangeset *)changeset

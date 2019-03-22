@@ -28,6 +28,9 @@
  */
 - (void)setState:(CKDataSourceState *)state;
 
+/** Access the current state. Main thread affined */
+- (CKDataSourceState *)currentState;
+
 - (void)addListener:(id<CKCollectionViewDataSourceListener>)listener;
 - (void)removeListener:(id<CKCollectionViewDataSourceListener>)listener;
 
