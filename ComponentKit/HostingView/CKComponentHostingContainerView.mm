@@ -77,7 +77,9 @@ private:
 - (CGSize)sizeThatFits:(CGSize)size
 {
   CKAssertMainThread();
-  CKAssertNotNil(_component, @"`component` should not be nil before calculating size");
+  if (!_component) {
+    return CGSizeZero;
+  }
   const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
   const auto computeSize = [&]() {
     return CKComputeRootComponentLayout(_component,
@@ -113,7 +115,10 @@ private:
 - (void)mount
 {
   CKAssertMainThread();
-  CKAssertNotNil(_rootLayout.component(), @"`rootLayout` should be set before calling `mount`");
+  if (!_rootLayout.component()) {
+    [_attachController detachComponentLayoutWithScopeIdentifier:_scopeIdentifier];
+    return;
+  }
   CKComponentAttachControllerAttachComponentRootLayout(_attachController,
   {
     .layoutProvider = self,
