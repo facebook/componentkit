@@ -7,11 +7,9 @@
 @protocol CKDataSourceProtocolInternal <NSObject>
 
 /**
- @param configuration @see CKDataSourceConfiguration.
  @param state initial state of dataSource, pass `nil` for an empty state.
  */
-- (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
-                                state:(CKDataSourceState *)state;
+- (instancetype)initWithState:(CKDataSourceState *)state;
 
 /**
  Apply a pre-computed `CKDataSourceChange` to the datasource.

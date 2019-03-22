@@ -55,16 +55,16 @@ static void *kWorkQueueKey = &kWorkQueueKey;
 
 - (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
 {
-  return [self initWithConfiguration:configuration state:nil];
+  return [self initWithState:[[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]]];
 }
 
-- (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
-                                state:(CKDataSourceState *)state
+- (instancetype)initWithState:(CKDataSourceState *)state
 {
-  CKAssertNotNil(configuration, @"Configuration is required");
-  CKAssert(!configuration.splitChangesetOptions.enabled, @"CKThreadSafeDataSource doesn't support `splitChangesetOptions`");
+  CKAssertNotNil(state, @"Initial state is required");
+  CKAssertNotNil(state.configuration, @"Configuration is required");
+  CKAssert(!state.configuration.splitChangesetOptions.enabled, @"CKThreadSafeDataSource doesn't support `splitChangesetOptions`");
   if (self = [super init]) {
-    _state = state ?: [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
+    _state = state;
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
     _workQueue = dispatch_queue_create("org.componentkit.CKThreadSafeDataSource", DISPATCH_QUEUE_SERIAL);
 

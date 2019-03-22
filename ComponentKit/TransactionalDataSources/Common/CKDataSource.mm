@@ -64,15 +64,16 @@
 
 - (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
 {
-  return [self initWithConfiguration:configuration state:nil];
+  return [self initWithState:[[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]]];
 }
 
-- (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
-                                state:(CKDataSourceState *)state
+- (instancetype)initWithState:(CKDataSourceState *)state
 {
-  CKAssertNotNil(configuration, @"Configuration is required");
+  CKAssertNotNil(state, @"Initial state is required");
+  CKAssertNotNil(state.configuration, @"Configuration is required");
   if (self = [super init]) {
-    _state = state ?: [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
+    const auto configuration = state.configuration;
+    _state = state;
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
 
     _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);

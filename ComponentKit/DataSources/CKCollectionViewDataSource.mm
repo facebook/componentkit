@@ -257,7 +257,7 @@ static void attachToCell(CKCollectionViewDataSourceCell *cell,
   }
   _currentState = state;
   [_componentDataSource removeListener:self];
-  _componentDataSource = [[CKDataSource alloc] initWithConfiguration:state.configuration state:state];
+  _componentDataSource = [[CKDataSource alloc] initWithState:state];
   [_componentDataSource addListener:self];
   [_collectionView reloadData];
 }
