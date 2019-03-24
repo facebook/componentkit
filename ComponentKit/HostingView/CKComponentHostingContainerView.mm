@@ -32,7 +32,9 @@ private:
   CGSize _computedSize;
 };
 
-@interface CKComponentHostingContainerView () <CKComponentRootLayoutProvider>
+@interface CKComponentHostingContainerLayoutProvider : NSObject <CKComponentRootLayoutProvider>
+
+- (instancetype)initWithRootLayout:(const CKComponentRootLayout &)rootLayout;
 
 @end
 
@@ -42,7 +44,8 @@ private:
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
   CKComponentScopeRootIdentifier _scopeIdentifier;
 
-  CKComponentRootLayout _rootLayout;
+  CKComponentHostingContainerLayoutProvider *_previousLayoutProvider;
+  CKComponentHostingContainerLayoutProvider *_layoutProvider;
   CKComponentBoundsAnimation _boundsAnimation;
   CKComponent *_component;
 
@@ -96,7 +99,8 @@ private:
 - (void)setRootLayout:(const CKComponentRootLayout &)rootLayout
 {
   CKAssertMainThread();
-  _rootLayout = rootLayout;
+  _previousLayoutProvider = _layoutProvider;
+  _layoutProvider = [[CKComponentHostingContainerLayoutProvider alloc] initWithRootLayout:rootLayout];
 }
 
 - (void)setBoundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation
@@ -115,13 +119,13 @@ private:
 - (void)mount
 {
   CKAssertMainThread();
-  if (!_rootLayout.component()) {
+  if (!_layoutProvider) {
     [_attachController detachComponentLayoutWithScopeIdentifier:_scopeIdentifier];
     return;
   }
   CKComponentAttachControllerAttachComponentRootLayout(_attachController,
   {
-    .layoutProvider = self,
+    .layoutProvider = _layoutProvider,
     .scopeIdentifier = _scopeIdentifier,
     .boundsAnimation = _boundsAnimation,
     .view = self,
@@ -130,7 +134,20 @@ private:
   _boundsAnimation = {};
 }
 
-#pragma mark - CKComponentRootLayoutProvider
+@end
+
+@implementation CKComponentHostingContainerLayoutProvider
+{
+  CKComponentRootLayout _rootLayout;
+}
+
+- (instancetype)initWithRootLayout:(const CKComponentRootLayout &)rootLayout
+{
+  if (self = [super init]) {
+    _rootLayout = rootLayout;
+  }
+  return self;
+}
 
 - (const CKComponentRootLayout &)rootLayout
 {
