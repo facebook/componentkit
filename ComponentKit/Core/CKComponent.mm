@@ -192,16 +192,17 @@ struct CKComponentMountInfo {
 
   UIView *v = effectiveContext.viewManager->viewForConfiguration([self class], viewConfiguration);
   if (v) {
-    CKMountAnimationGuard g(v.ck_component, self, context, _viewConfiguration);
+    CKComponent *currentMountedComponent = CKMountedComponentForView(v);
+    CKMountAnimationGuard g(currentMountedComponent, self, context, _viewConfiguration);
     if (_mountInfo->view != v) {
-      [self _relinquishMountedView]; // First release our old view
-      [v.ck_component unmount];      // Then unmount old component (if any) from the new view
-      v.ck_component = self;
+      [self _relinquishMountedView];     // First release our old view
+      [currentMountedComponent unmount]; // Then unmount old component (if any) from the new view
+      CKSetMountedComponentForView(v, self);
       CK::Component::AttributeApplicator::apply(v, viewConfiguration);
       [controller component:self didAcquireView:v];
       _mountInfo->view = v;
     } else {
-      CKAssert(v.ck_component == self, @"");
+      CKAssert(currentMountedComponent == self, @"");
     }
 
     @try {
@@ -248,9 +249,9 @@ struct CKComponentMountInfo {
   if (_mountInfo != nullptr) {
     UIView *view = _mountInfo->view;
     if (view) {
-      CKAssert(view.ck_component == self, @"");
+      CKAssert(CKMountedComponentForView(view) == self, @"");
       [_scopeHandle.controller component:self willRelinquishView:view];
-      view.ck_component = nil;
+      CKSetMountedComponentForView(view, nil);
       _mountInfo->view = nil;
     }
   }

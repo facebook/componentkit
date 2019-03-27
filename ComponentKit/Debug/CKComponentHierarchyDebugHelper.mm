@@ -68,7 +68,7 @@ static void buildRecursiveDescriptionForView(NSMutableString *description,
   }
   [visitedViews addObject:view];
 
-  CKComponent *component = view.ck_component;
+  CKComponent *component = CKMountedComponentForView(view);
   if (component) {
     // If we encounter a component in this way, either we were asked to start printing from the
     // middle of the tree via componentHierarchyDescriptionForView:, or someone is playing tricks

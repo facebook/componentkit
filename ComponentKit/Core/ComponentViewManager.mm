@@ -182,7 +182,7 @@ void ViewReusePoolMap::reset(UIView *container, CK::Component::MountAnalyticsCon
 
     if (vendedViewIt != nextVendedViewIt) {
       NSUInteger swapIndex = [subviews indexOfObjectIdenticalTo:*nextVendedViewIt];
-      
+
       // This check can cause some z-ordering issue if views vended by the framework are manipulated outside of the framework
       if (swapIndex != NSNotFound) {
         // This naive algorithm does not do the minimal number of swaps. But it's simple, and swaps should be relatively
@@ -191,12 +191,12 @@ void ViewReusePoolMap::reset(UIView *container, CK::Component::MountAnalyticsCon
         [container exchangeSubviewAtIndex:i withSubviewAtIndex:swapIndex];
       } else {
         if (CKReadGlobalConfig().crashOnViewReuseError) {
-          CKCFatalWithCategory([[*nextVendedViewIt ck_component] class],
+          CKCFatalWithCategory([CKMountedComponentForView(*nextVendedViewIt) class],
                                @"Expected to find subview %@ (component: %@) in %@ (component: %@)",
                                [*nextVendedViewIt class],
-                               [[*nextVendedViewIt ck_component] class],
+                               [CKMountedComponentForView(*nextVendedViewIt) class],
                                [container class],
-                               [[container ck_component] class]);
+                               [CKMountedComponentForView(container) class]);
         }
       }
     }

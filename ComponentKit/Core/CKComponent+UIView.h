@@ -8,15 +8,21 @@
  *
  */
 
-#import <vector>
-
 #import <UIKit/UIKit.h>
 
 @class CKComponent;
 
-@interface UIView (CKComponent)
+#ifndef __cplusplus
+#error This file must be compiled as Obj-C++. If you are importing it, you must change your file extension to .mm.
+#endif
 
 /** Strong reference back to the associated component while the component is mounted. */
-@property (nonatomic, strong, setter=ck_setComponent:) CKComponent *ck_component;
+CKComponent *CKMountedComponentForView(UIView *view);
 
+/** This is for internal use by the framework only. */
+void CKSetMountedComponentForView(UIView *view, CKComponent *component);
+
+@interface UIView (CKComponent)
+/** Deprecated: a wrapper around CKMountedComponentForView/CKSetMountedComponentForView. */
+@property (nonatomic, strong, setter=ck_setComponent:) CKComponent *ck_component;
 @end

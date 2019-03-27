@@ -75,12 +75,12 @@ CKActionBase::CKActionBase(const CKComponentScope &scope, SEL selector) noexcept
     [handle globalIdentifier],
     ^id(void) {
 
-      /** 
+      /**
        At one point in the history of ComponentKit, it was possible for a CKScopeResponder to
        return a "stale" target for an action. This was often caused by retain cycles, or,
        "old" component hierarchies with prolonged lifecycles.
-       
-       To prevent this from happening in the future we now provide a key which gives the 
+
+       To prevent this from happening in the future we now provide a key which gives the
        scopeResponder the wisdom to ignore older generations.
        */
       return [scopedResponder responderForKey:responderKey];
@@ -143,17 +143,17 @@ CKActionInfo CKActionFind(SEL selector, id target) noexcept
       CKCFailAssert(@"Forwarding target failed for action:%@ %@", target, NSStringFromSelector(selector));
       return {};
     }
-    
+
     responder = forwardingTarget;
     CKCAssert(![responder isProxy],
               @"NSProxy can't be a responder for target-selector CKAction. Please use a block action instead.");
     imp = [responder methodForSelector:selector];
   }
-  
+
   CKCAssert(imp != nil,
             @"IMP not found for selector => SEL: %@ | target: %@",
             NSStringFromSelector(selector), [target class]);
-  
+
   return {imp, responder};
 }
 
@@ -266,7 +266,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKAction<UIEvent 
   CKCAssertNotNil(list, @"Forwarder should always find an action list installed by applicator");
   // Protect against mutation-during-enumeration by copying the list of actions to send:
   const std::vector<CKAction<UIEvent *>> copiedActions = list->_actions[_controlEvents];
-  CKComponent *const sendingComponent = sender.ck_component;
+  CKComponent *const sendingComponent = CKMountedComponentForView(sender);
   for (const auto &action : copiedActions) {
     // If the action can be handled by the sender itself, send it there instead of looking up the chain.
     action.send(sendingComponent, CKComponentActionSendBehaviorStartAtSender, event);
@@ -295,7 +295,7 @@ BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, Method method, const
   if (selector == NULL) {
     return NO;
   }
-  
+
   if (typeEncodings.size() + 3 < method_getNumberOfArguments(method)) {
     CKCFailAssert(@"Expected action method %@ to take less than %llu arguments, but it supports %llu", NSStringFromSelector(selector), (unsigned long long)typeEncodings.size(), (unsigned long long)method_getNumberOfArguments(method) - 3);
     return NO;
@@ -370,7 +370,7 @@ BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, Method method, const
       return NO;
     }
   }
-  
+
   return YES;
 }
 
@@ -454,7 +454,7 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {
 
 - (BOOL)ck_send
 {
-  _ck_action.send(_ck_view.ck_component, CKComponentActionSendBehaviorStartAtSender);
+  _ck_action.send(CKMountedComponentForView(_ck_view), CKComponentActionSendBehaviorStartAtSender);
   return YES;
 }
 

@@ -14,16 +14,28 @@
 
 static char const kViewComponentKey = ' ';
 
+/** Strong reference back to the associated component while the component is mounted. */
+CKComponent *CKMountedComponentForView(UIView *view)
+{
+  return objc_getAssociatedObject(view, &kViewComponentKey);
+}
+
+/** This is for internal use by the framework only. */
+void CKSetMountedComponentForView(UIView *view, CKComponent *component)
+{
+  objc_setAssociatedObject(view, &kViewComponentKey, component, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 @implementation UIView (CKComponent)
 
 - (CKComponent *)ck_component
 {
-  return objc_getAssociatedObject(self, &kViewComponentKey);
+  return CKMountedComponentForView(self);
 }
 
 - (void)ck_setComponent:(CKComponent *)component
 {
-  objc_setAssociatedObject(self, &kViewComponentKey, component, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  CKSetMountedComponentForView(self, component);
 }
 
 @end

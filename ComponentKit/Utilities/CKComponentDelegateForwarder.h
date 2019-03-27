@@ -34,7 +34,7 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
 /**
  The view is used to find out where to start looking in the component responder chain.
 
- The forwarder will call [view.ck_component targetForAction: withSender:] to proxy to the responder chain, so this needs to be accurate when you mount/unmount.
+ The forwarder will call [CKMountedComponentForView(view) targetForAction: withSender:] to proxy to the responder chain, so this needs to be accurate when you mount/unmount.
  */
 @property (nonatomic, weak) UIView *view;
 
@@ -46,4 +46,3 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
 @property (nonatomic, strong, setter=ck_setDelegateProxy:) CKComponentDelegateForwarder *ck_delegateProxy;
 
 @end
-

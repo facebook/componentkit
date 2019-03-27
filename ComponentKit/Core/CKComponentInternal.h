@@ -29,8 +29,8 @@
    - Unmounts the view's previous component (if any).
    - Applies attributes to the view.
    - Stores a reference to the view in _mountedView (for -viewContext, transient view state, and -unmount).
-   - Stores a reference back to this component in view.ck_component. (This sets up a retain cycle which must be torn
-     down in -unmount.)
+   - Stores a reference back to this component using CKSetMountedComponentForView. (This sets up a
+     retain cycle which must be torn down in -unmount.)
 
  Override this if your component wants to perform a custom mounting action, but this should be very rare!
 
@@ -68,7 +68,7 @@
  Unmounts the component:
  - Clears the references to supercomponent and superview.
  - If the component has a _mountedView:
-   - Clears the view's reference back to this component in ck_component.
+   - Clears the view's reference back to this component using CKSetMountedComponentForView().
    - Clears _mountedView.
  */
 - (void)unmount;
