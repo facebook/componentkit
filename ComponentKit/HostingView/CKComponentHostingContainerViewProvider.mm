@@ -8,11 +8,12 @@
  *
  */
 
-#import "CKComponentHostingContainerView.h"
+#import "CKComponentHostingContainerViewProvider.h"
 
 #import "CKComponentAttachController.h"
 #import "CKComponentLayout.h"
 #import "CKComponentRootLayoutProvider.h"
+#import "CKComponentRootView.h"
 #import "CKComponentRootViewInternal.h"
 #import "CKComponentSizeRangeProviding.h"
 #import "CKOptional.h"
@@ -38,19 +39,28 @@ private:
 
 @end
 
-@implementation CKComponentHostingContainerView
+@interface CKComponentHostingContainerView : CKComponentRootView
+
+- (instancetype)initWithFrame:(CGRect)frame
+            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+            sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+          allowTapPassthrough:(BOOL)allowTapPassthrough;
+
+- (void)setComponent:(CKComponent *)component;
+
+@end
+
+@implementation CKComponentHostingContainerViewProvider
 {
   id<CKAnalyticsListener> _analyticsListener;
-  id<CKComponentSizeRangeProviding> _sizeRangeProvider;
   CKComponentScopeRootIdentifier _scopeIdentifier;
 
   CKComponentHostingContainerLayoutProvider *_previousLayoutProvider;
   CKComponentHostingContainerLayoutProvider *_layoutProvider;
   CKComponentBoundsAnimation _boundsAnimation;
-  CKComponent *_component;
 
+  CKComponentHostingContainerView *_containerView;
   CKComponentAttachController *_attachController;
-  Optional<CKComponentHostingContainerViewSizeCache> _sizeCache;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -59,41 +69,22 @@ private:
             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
           allowTapPassthrough:(BOOL)allowTapPassthrough
 {
-  if (self = [super initWithFrame:frame allowTapPassthrough:allowTapPassthrough]) {
+  if (self = [super init]) {
     _scopeIdentifier = scopeIdentifier;
     _analyticsListener = analyticsListener;
-    _sizeRangeProvider = sizeRangeProvider;
+    _containerView = [[CKComponentHostingContainerView alloc]
+                      initWithFrame:frame
+                      analyticsListener:analyticsListener
+                      sizeRangeProvider:sizeRangeProvider
+                      allowTapPassthrough:allowTapPassthrough];
     _attachController = [CKComponentAttachController new];
   }
   return self;
 }
 
-- (void)didMoveToSuperview
+- (void)dealloc
 {
-  [super didMoveToSuperview];
-  if (!self.superview) {
-    // Detaching component layout will remove the reference of `CKComponentHostingContainerView` from attach controller and avoid retain cycle.
-    [_attachController detachComponentLayoutWithScopeIdentifier:_scopeIdentifier];
-  }
-}
-
-- (CGSize)sizeThatFits:(CGSize)size
-{
-  CKAssertMainThread();
-  if (!_component) {
-    return CGSizeZero;
-  }
-  const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
-  const auto computeSize = [&]() {
-    return CKComputeRootComponentLayout(_component,
-                                        constrainedSize,
-                                        _analyticsListener).size();
-  };
-  const auto computedSize = _sizeCache.flatMap([&](const auto &sizeCache) {
-    return sizeCache.sizeForConstrainedSize(constrainedSize);
-  }).valueOr(computeSize);
-  _sizeCache = CKComponentHostingContainerViewSizeCache {constrainedSize, computedSize};
-  return computedSize;
+  [_attachController detachComponentLayoutWithScopeIdentifier:_scopeIdentifier];
 }
 
 - (void)setRootLayout:(const CKComponentRootLayout &)rootLayout
@@ -112,8 +103,7 @@ private:
 - (void)setComponent:(CKComponent *)component
 {
   CKAssertMainThread();
-  _component = component;
-  _sizeCache = none;
+  [_containerView setComponent:component];
 }
 
 - (void)mount
@@ -128,7 +118,7 @@ private:
     .layoutProvider = _layoutProvider,
     .scopeIdentifier = _scopeIdentifier,
     .boundsAnimation = _boundsAnimation,
-    .view = self,
+    .view = _containerView,
     .analyticsListener = _analyticsListener,
   });
   _boundsAnimation = {};
@@ -152,6 +142,54 @@ private:
 - (const CKComponentRootLayout &)rootLayout
 {
   return _rootLayout;
+}
+
+@end
+
+@implementation CKComponentHostingContainerView
+{
+  id<CKAnalyticsListener> _analyticsListener;
+  id<CKComponentSizeRangeProviding> _sizeRangeProvider;
+  CKComponent *_component;
+  Optional<CKComponentHostingContainerViewSizeCache> _sizeCache;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+            sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+          allowTapPassthrough:(BOOL)allowTapPassthrough
+{
+  if (self = [super initWithFrame:frame allowTapPassthrough:allowTapPassthrough]) {
+    _analyticsListener = analyticsListener;
+    _sizeRangeProvider = sizeRangeProvider;
+  }
+  return self;
+}
+
+- (void)setComponent:(CKComponent *)component
+{
+  CKAssertMainThread();
+  _component = component;
+  _sizeCache = none;
+}
+
+- (CGSize)sizeThatFits:(CGSize)size
+{
+  CKAssertMainThread();
+  if (!_component) {
+    return CGSizeZero;
+  }
+  const CKSizeRange constrainedSize = [_sizeRangeProvider sizeRangeForBoundingSize:size];
+  const auto computeSize = [&]() {
+    return CKComputeRootComponentLayout(_component,
+                                        constrainedSize,
+                                        _analyticsListener).size();
+  };
+  const auto computedSize = _sizeCache.flatMap([&](const auto &sizeCache) {
+    return sizeCache.sizeForConstrainedSize(constrainedSize);
+  }).valueOr(computeSize);
+  _sizeCache = CKComponentHostingContainerViewSizeCache {constrainedSize, computedSize};
+  return computedSize;
 }
 
 @end

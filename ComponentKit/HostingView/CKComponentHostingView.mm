@@ -33,7 +33,7 @@
 #import "CKComponentEvents.h"
 #import "CKDataSourceModificationHelper.h"
 #import "CKGlobalConfig.h"
-#import "CKComponentHostingContainerView.h"
+#import "CKComponentHostingContainerViewProvider.h"
 
 struct CKComponentHostingViewInputs {
   CKComponentScopeRoot *scopeRoot;
@@ -53,7 +53,7 @@ struct CKComponentHostingViewInputs {
 
   CKComponentHostingViewInputs _pendingInputs;
 
-  CKComponentHostingContainerView *_containerView;
+  CKComponentHostingContainerViewProvider *_containerViewProvider;
   std::unordered_set<CKComponentPredicate> _animationPredicates;
 
   CKComponent *_component;
@@ -180,14 +180,14 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     };
 
     _allowTapPassthrough = options.allowTapPassthrough;
-    _containerView =
-    [[CKComponentHostingContainerView alloc]
+    _containerViewProvider =
+    [[CKComponentHostingContainerViewProvider alloc]
      initWithFrame:CGRectZero
      scopeIdentifier:_pendingInputs.scopeRoot.globalIdentifier
      analyticsListener:_pendingInputs.scopeRoot.analyticsListener
      sizeRangeProvider:sizeRangeProvider
      allowTapPassthrough:_allowTapPassthrough];
-    [self addSubview:_containerView];
+    [self addSubview:self.containerView];
 
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
@@ -206,6 +206,11 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   CKComponentScopeRootAnnounceControllerInvalidation(_pendingInputs.scopeRoot);
 }
 
+- (UIView *)containerView
+{
+  return _containerViewProvider.containerView;
+}
+
 #pragma mark - Layout
 
 - (void)layoutSubviews
@@ -218,7 +223,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   // to avoid.
   if (!_isMountingComponent) {
     _isMountingComponent = YES;
-    _containerView.frame = self.bounds;
+    self.containerView.frame = self.bounds;
     const CGSize size = self.bounds.size;
 
     [self _synchronouslyUpdateComponentIfNeeded];
@@ -226,9 +231,9 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
       auto const rootLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, _animationPredicates);
       _mountedRootLayout = rootLayout;
       [self _sendDidPrepareLayoutIfNeeded];
-      [_containerView setRootLayout:rootLayout];
+      [_containerViewProvider setRootLayout:rootLayout];
     }
-    [_containerView mount];
+    [_containerViewProvider mount];
     _isMountingComponent = NO;
   }
 }
@@ -237,7 +242,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 {
   CKAssertMainThread();
   [self _synchronouslyUpdateComponentIfNeeded];
-  return [_containerView sizeThatFits:size];
+  return [self.containerView sizeThatFits:size];
 }
 
 #pragma mark - Hit Testing
@@ -402,8 +407,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   _pendingInputs.scopeRoot = result.scopeRoot;
   _pendingInputs.stateUpdates = {};
   _component = result.component;
-  [_containerView setBoundsAnimation:result.boundsAnimation];
-  [_containerView setComponent:result.component];
+  [_containerViewProvider setBoundsAnimation:result.boundsAnimation];
+  [_containerViewProvider setComponent:result.component];
   _componentNeedsUpdate = NO;
 }
 

@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKComponentRootView.h>
+#import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
@@ -18,21 +18,20 @@
 @protocol CKComponentSizeRangeProviding;
 
 /**
- * A container view which is used in a component hosting view that provides component mount
+ * Providers a container view which is used in a component hosting view that provides component mount
  * in additional to functionalities of a `CKComponentRootView`.
  */
-@interface CKComponentHostingContainerView : CKComponentRootView
+@interface CKComponentHostingContainerViewProvider : NSObject
+
+@property (nonatomic, readonly, strong) UIView *containerView;
 
 - (instancetype)initWithFrame:(CGRect)frame
               scopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
           allowTapPassthrough:(BOOL)allowTapPassthrough NS_DESIGNATED_INITIALIZER;
-
-- (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
-- (instancetype)initWithFrame:(CGRect)frame
-          allowTapPassthrough:(BOOL)allowTapPassthrough NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (void)setRootLayout:(const CKComponentRootLayout &)rootLayout;
 - (void)setBoundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation;
