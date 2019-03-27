@@ -121,6 +121,7 @@ private:
     .view = _containerView,
     .analyticsListener = _analyticsListener,
   });
+  _previousLayoutProvider = nil;
   _boundsAnimation = {};
 }
 
