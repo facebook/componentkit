@@ -14,8 +14,21 @@
 #import <ComponentKit/CKDataSourceStateModifying.h>
 
 @class CKDataSourceChangeset;
+@class CKDataSourceItem;
 
 @protocol CKComponentStateListener;
+
+@protocol CKDataSourceChangesetModificationItemGenerator
+
+- (CKDataSourceItem *)buildDataSourceItemForPreviousRoot:(CKComponentScopeRoot *)previousRoot
+                                            stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                                               sizeRange:(const CKSizeRange &)sizeRange
+                                           configuration:(CKDataSourceConfiguration *)configuration
+                                                   model:(id)model
+                                                 context:(id)context
+                                        layoutPredicates:(const std::unordered_set<CKComponentPredicate> &)layoutPredicates;
+
+@end
 
 @interface CKDataSourceChangesetModification : NSObject <CKDataSourceStateModifying>
 
@@ -29,6 +42,8 @@
                               qos:(CKDataSourceQOS)qos;
 
 @property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;
+
+- (void)setItemGenerator:(id<CKDataSourceChangesetModificationItemGenerator>)itemGenerator;
 
 @end
 

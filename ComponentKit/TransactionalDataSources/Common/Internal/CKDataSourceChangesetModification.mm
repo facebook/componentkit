@@ -36,6 +36,7 @@
   id<CKComponentStateListener> _stateListener;
   NSDictionary *_userInfo;
   CKDataSourceQOS _qos;
+  __weak id<CKDataSourceChangesetModificationItemGenerator> _itemGenerator;
 }
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
@@ -60,6 +61,11 @@
     _qos = qos;
   }
   return self;
+}
+
+- (void)setItemGenerator:(id<CKDataSourceChangesetModificationItemGenerator>)itemGenerator
+{
+  _itemGenerator = itemGenerator;
 }
 
 - (CKDataSourceChange *)changeFromState:(CKDataSourceState *)oldState
@@ -97,7 +103,13 @@
                            oldState);
     }
     CKDataSourceItem *const oldItem = section[indexPath.item];
-    CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context, animationPredicates);
+    CKDataSourceItem *const item = [self _buildDataSourceItemForPreviousRoot:[oldItem scopeRoot]
+                                                                stateUpdates:{}
+                                                                   sizeRange:sizeRange
+                                                               configuration:configuration
+                                                                       model:model
+                                                                     context:context
+                                                            layoutPredicates:animationPredicates];
     [section replaceObjectAtIndex:indexPath.item withObject:item];
   }];
 
@@ -209,15 +221,16 @@
 
   // Insert items
   const auto buildItem = ^CKDataSourceItem *(id model) {
-    return CKBuildDataSourceItem(CKComponentScopeRootWithPredicates(_stateListener,
-                                                                    configuration.analyticsListener,
-                                                                    configuration.componentPredicates,
-                                                                    configuration.componentControllerPredicates), {},
-                                 sizeRange,
-                                 configuration,
-                                 model,
-                                 context,
-                                 animationPredicates);
+    return [self _buildDataSourceItemForPreviousRoot:CKComponentScopeRootWithPredicates(_stateListener,
+                                                                                        configuration.analyticsListener,
+                                                                                        configuration.componentPredicates,
+                                                                                        configuration.componentControllerPredicates)
+                                        stateUpdates:{}
+                                           sizeRange:sizeRange
+                                       configuration:configuration
+                                               model:model
+                                             context:context
+                                    layoutPredicates:animationPredicates];
   };
 
   NSDictionary<NSIndexPath *, id> *const insertedItems = [_changeset insertedItems];
@@ -277,6 +290,27 @@
                                      previousState:oldState
                                     appliedChanges:appliedChanges
                                  deferredChangeset:nil];
+}
+
+- (CKDataSourceItem *)_buildDataSourceItemForPreviousRoot:(CKComponentScopeRoot *)previousRoot
+                                             stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                                                sizeRange:(const CKSizeRange &)sizeRange
+                                            configuration:(CKDataSourceConfiguration *)configuration
+                                                    model:(id)model
+                                                  context:(id)context
+                                         layoutPredicates:(const std::unordered_set<CKComponentPredicate> &)layoutPredicates
+{
+  if (_itemGenerator) {
+    return [_itemGenerator buildDataSourceItemForPreviousRoot:previousRoot
+                                                 stateUpdates:stateUpdates
+                                                    sizeRange:sizeRange
+                                                configuration:configuration
+                                                        model:model
+                                                      context:context
+                                             layoutPredicates:layoutPredicates];
+  } else {
+    return CKBuildDataSourceItem(previousRoot, stateUpdates, sizeRange, configuration, model, context, layoutPredicates);
+  }
 }
 
 - (NSDictionary *)userInfo
