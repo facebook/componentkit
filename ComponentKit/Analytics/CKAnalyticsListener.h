@@ -56,6 +56,13 @@
 - (void)willCheckShouldComponentUpdate:(CKComponent *)component;
 - (void)didCheckShouldComponentUpdate:(CKComponent *)component;
 
+/**
+ Called before/after we block on the main thread because we're not yet finished
+ generating the component on a background thread.
+ */
+- (void)willBlockThreadOnGeneratingItemLayout;
+- (void)didBlockThreadOnGeneratingItemLayout;
+
 @end
 
 /**
