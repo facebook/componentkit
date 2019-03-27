@@ -52,22 +52,21 @@ namespace CK {
 
   class ComponentAnimationsController final {
   public:
-    ComponentAnimationsController(CKComponentAnimations animations)
-    : _pendingAnimations(collectPendingAnimations(animations)),
+    ComponentAnimationsController() :
     _appliedAnimationsOnInitialMount(std::make_shared<AppliedAnimationsByComponentMap>()),
     _appliedAnimationsFromPreviousComponent(std::make_shared<AppliedAnimationsByComponentMap>()),
     _appliedAnimationsOnFinalUnmount(std::make_shared<AppliedAnimationsByComponentMap>()) {};
 
     template <typename TransactionProvider>
-    void applyPendingAnimations(TransactionProvider& transactionProvider)
+    void applyPendingAnimations(const PendingAnimations &pendingAnimations, TransactionProvider& transactionProvider)
     {
-      applyPendingAnimations(_pendingAnimations.animationsOnInitialMount(),
+      applyPendingAnimations(pendingAnimations.animationsOnInitialMount(),
                              _appliedAnimationsOnInitialMount,
                              transactionProvider);
-      applyPendingAnimations(_pendingAnimations.animationsFromPreviousComponent(),
+      applyPendingAnimations(pendingAnimations.animationsFromPreviousComponent(),
                              _appliedAnimationsFromPreviousComponent,
                              transactionProvider);
-      applyPendingAnimations(_pendingAnimations.animationsOnFinalUnmount(),
+      applyPendingAnimations(pendingAnimations.animationsOnFinalUnmount(),
                              _appliedAnimationsOnFinalUnmount,
                              transactionProvider);
     }
@@ -125,7 +124,6 @@ namespace CK {
     static auto cleanupAppliedAnimationsForComponent(AppliedAnimationsByComponentMap &aas,
                                                      CKComponent *const c);
 
-    PendingAnimations _pendingAnimations;
     // Ownership will be shared with transaction completions which can outlive the controller
     std::shared_ptr<AppliedAnimationsByComponentMap> _appliedAnimationsOnInitialMount;
     std::shared_ptr<AppliedAnimationsByComponentMap> _appliedAnimationsFromPreviousComponent;

@@ -24,7 +24,7 @@
 @implementation CKAnimationApplicatorTests {
   CKComponentAnimations testAnimations;
   std::vector<std::shared_ptr<CKAnimationSpy>> allSpies;
-  std::shared_ptr<TransactionProviderSpy> transactionSpy;
+  TransactionProviderSpy *transactionSpy;
   std::unique_ptr<CK::AnimationApplicator<TransactionProviderSpy>> applicator;
 }
 
@@ -54,11 +54,9 @@
     {},
   };
   allSpies = CK::chain(spiesForInitialAnimations, spiesForChangeAnimations);
-  auto const factory = [](const CKComponentAnimations &as){
-    return std::make_unique<CK::ComponentAnimationsController>(as);
-  };
-  transactionSpy = std::make_shared<TransactionProviderSpy>();
-  applicator = std::make_unique<CK::AnimationApplicator<TransactionProviderSpy>>(factory, transactionSpy);
+  auto __transactionSpy = std::make_unique<TransactionProviderSpy>();
+  transactionSpy = __transactionSpy.get();
+  applicator = std::make_unique<CK::AnimationApplicator<TransactionProviderSpy>>(std::move(__transactionSpy));
 }
 
 - (void)test_WhenThereAreNoAnimationsToApply_PerformsMount
@@ -74,34 +72,6 @@
   });
 
   XCTAssert(performedMount);
-}
-
-- (void)test_WhenThereAreNoAnimationsToApply_DoesNotInvokeControllerFactory
-{
-  auto factoryWasInvoked = false;
-  auto const factory = [&factoryWasInvoked](const CKComponentAnimations &as){
-    factoryWasInvoked = true;
-    return std::make_unique<CK::ComponentAnimationsController>(as);
-  };
-  applicator = std::make_unique<CK::AnimationApplicator<TransactionProviderSpy>>(factory);
-
-  applicator->runAnimationsWhenMounting({}, ^{ return [NSSet new]; });
-
-  XCTAssertFalse(factoryWasInvoked);
-}
-
-- (void)test_WhenHasAnimationsToApply_InvokesControllerFactoryWithThem
-{
-  auto animations = CKComponentAnimations {};
-  auto const factory = [&animations](const CKComponentAnimations &as){
-    animations = as;
-    return std::make_unique<CK::ComponentAnimationsController>(as);
-  };
-  applicator = std::make_unique<CK::AnimationApplicator<TransactionProviderSpy>>(factory);
-
-  applicator->runAnimationsWhenMounting(testAnimations, ^{ return [NSSet new]; });
-
-  XCTAssert(animations == testAnimations);
 }
 
 - (void)test_WhenHasAnimationsToApply_PerformsMountAfterCollectingPendingAnimations
@@ -202,7 +172,7 @@
   CKAnimationSpy as1;
   CKAnimationSpy as2;
   CKAnimationSpy as3;
-  std::shared_ptr<TransactionProviderSpy> transactionSpy;
+  TransactionProviderSpy *transactionSpy;
   std::unique_ptr<CK::AnimationApplicator<TransactionProviderSpy>> applicator;
   CKComponentAnimations testAnimations;
 }
@@ -221,11 +191,9 @@
   const auto animationsFromPreviousComponent = CKComponentAnimations::AnimationsByComponentMap {
     {c1, {as3.makeAnimation()}},
   };
-  transactionSpy = std::make_shared<TransactionProviderSpy>();
-  auto const factory = [](const CKComponentAnimations &as){
-    return std::make_unique<CK::ComponentAnimationsController>(as);
-  };
-  applicator = std::make_unique<CK::AnimationApplicator<TransactionProviderSpy>>(factory, transactionSpy);
+  auto __transactionSpy = std::make_unique<TransactionProviderSpy>();
+  transactionSpy = __transactionSpy.get();
+  applicator = std::make_unique<CK::AnimationApplicator<TransactionProviderSpy>>(std::move(__transactionSpy));
   testAnimations = CKComponentAnimations {
     animationsOnInitialMount,
     animationsFromPreviousComponent,
@@ -288,12 +256,6 @@
   transactionSpy->runAllCompletions();
 
   XCTAssertEqual(as1.cleanupCallCount, 1);
-}
-
-// Justifies the nil check for previousController
-- (void)test_WhenHasAnimationsToApplyAndComponentsAreUnmountedImmediately_DoesNotCrash
-{
-  applicator->runAnimationsWhenMounting(testAnimations, ^{ return [NSSet setWithObject:[CKComponent new]]; });
 }
 
 @end
