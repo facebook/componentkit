@@ -48,15 +48,16 @@
 {
   CKDataSourceState *_state;
   CKDataSourceListenerAnnouncer *_announcer;
-
+  
   CKComponentStateUpdatesMap _pendingAsynchronousStateUpdates;
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
   dispatch_queue_t _workQueue;
-
+  
   CKDataSourceViewport _viewport;
   CK::Mutex _viewportLock;
   BOOL _changesetSplittingEnabled;
+  id<CKDataSourceChangesetModificationGenerator> _changesetModificationGenerator;
 }
 @end
 
@@ -100,6 +101,12 @@
   } else {
     dispatch_async(dispatch_get_main_queue(), completion);
   }
+}
+
+- (void)setChangesetModificationGenerator:(id<CKDataSourceChangesetModificationGenerator>)changesetModificationGenerator
+{
+  CKAssertMainThread();
+  _changesetModificationGenerator = changesetModificationGenerator;
 }
 
 - (void)applyChangeset:(CKDataSourceChangeset *)changeset
@@ -417,6 +424,11 @@
                                                              userInfo:userInfo
                                                              viewport:viewport
                                                                   qos:qos];
+  } else if(_changesetModificationGenerator) {
+    return [_changesetModificationGenerator changesetGenerationModificationForChangeset:changeset
+                                                                               userInfo:userInfo
+                                                                                    qos:qos
+                                                                          stateListener:self];
   } else {
     return
     [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
