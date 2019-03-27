@@ -35,7 +35,8 @@ namespace CKBuildComponentHelpers {
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        CKBuildComponentConfig config)
+                                        CKBuildComponentConfig config,
+                                        BOOL ignoreComponentReuseOptimizations)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
@@ -62,6 +63,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                              .buildTrigger = buildTrigger,
                              .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
                              .enableViewConfigurationWithState = config.enableViewConfigurationWithState,
+                             .ignoreComponentReuseOptimizations = ignoreComponentReuseOptimizations,
                              .systraceListener = threadScope.systraceListener,
                            }
              parentHasStateUpdate:NO];

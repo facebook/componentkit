@@ -107,6 +107,11 @@ namespace CKRenderInternal {
       return NO;
     }
 
+    // Check if the reuse components optimizations are off.
+    if (params.ignoreComponentReuseOptimizations) {
+      return NO;
+    }
+
     // State update branch:
     if (params.buildTrigger == BuildTrigger::StateUpdate) {
       // Check if the tree node is not dirty (not in a branch of a state update).

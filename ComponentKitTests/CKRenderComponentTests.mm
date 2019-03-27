@@ -439,6 +439,60 @@
   [self verifyComponentsAndControllersAreRegisteredInScopeRoot:buildResults2.scopeRoot components:{c1.childComponent, c2.childComponent}];
 }
 
+- (void)test_componentIsNotBeingReusedOnAStateUpdate_WhenIgnoreComponentReuseOptimizationsIsOn
+{
+  // Build new tree with siblings `CKTestRenderComponent` components.
+  __block CKTestRenderComponent *c1;
+  __block CKTestRenderComponent *c2;
+  auto const componentFactory = ^{
+    c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
+    c2 = [CKTestRenderComponent newWithProps:{.identifier = 2}];
+    return [CKTestRenderWithChildrenComponent newWithChildren:{c1, c2}];
+  };
+
+  // Build scope root with predicates.
+  auto const scopeRoot = CKComponentScopeRootWithPredicates(nil, nil, {}, {});
+  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory, _config);
+
+  // Simulate a state update on c2.
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[c2.scopeHandle].push_back(^(id){
+    return @2;
+  });
+
+  auto ignoreComponentReuseOptimizationsIsOn = YES;
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, _config, ignoreComponentReuseOptimizationsIsOn);
+  // Verify no component have been reused.
+  XCTAssertFalse(c1.didReuseComponent);
+  XCTAssertFalse(c2.didReuseComponent);
+}
+
+- (void)test_componentIsNotBeingReusedOnAPropsUpdate_WhenIgnoreComponentReuseOptimizationsIsOn
+{
+  CKBuildComponentConfig config = {
+    .enableFasterPropsUpdates = YES,
+  };
+
+  // Build new tree with siblings `CKTestRenderComponent` components.
+  __block CKTestRenderComponent *c1;
+  __block CKTestRenderComponent *c2;
+  auto const componentFactory = ^{
+    c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
+    c2 = [CKTestRenderComponent newWithProps:{.identifier = 2}];
+    return [CKTestRenderWithChildrenComponent newWithChildren:{c1, c2}];
+  };
+
+  // Build scope root with predicates.
+  auto const scopeRoot = CKComponentScopeRootWithPredicates(nil, nil, {}, {});
+  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory, config);
+
+  auto ignoreComponentReuseOptimizationsIsOn = YES;
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, {}, componentFactory, config, ignoreComponentReuseOptimizationsIsOn);
+  // Verify no component have been reused.
+  XCTAssertFalse(c1.didReuseComponent);
+  XCTAssertFalse(c2.didReuseComponent);
+}
+
 #pragma mark - Helpers
 
 // Filters `CKTestChildRenderComponent` components.

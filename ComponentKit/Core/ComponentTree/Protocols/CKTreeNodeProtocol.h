@@ -45,6 +45,9 @@ struct CKBuildComponentTreeParams {
 
   /** The current systrace listener. Can be nil if systrace is not enabled. */
   id<CKSystraceListener> systraceListener;
+
+  // When enabled, all the comopnents will be regenerated (no component reuse optimiztions).
+  BOOL ignoreComponentReuseOptimizations = NO;
 };
 
 @protocol CKTreeNodeWithChildrenProtocol;

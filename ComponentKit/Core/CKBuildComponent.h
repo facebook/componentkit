@@ -63,8 +63,10 @@ struct CKBuildComponentResult {
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
  @param config Provides extra build configuration.
+ @param ignoreComponentReuseOptimizations When enabled, all the comopnents will be regenerated (no component reuse optimiztions).
  */
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        CKBuildComponentConfig config = {});
+                                        CKBuildComponentConfig config = {},
+                                        BOOL ignoreComponentReuseOptimizations = NO);
