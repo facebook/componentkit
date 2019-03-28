@@ -33,7 +33,8 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         CKDataSourceConfiguration *configuration,
                                         id model,
                                         id context,
-                                        const std::unordered_set<CKComponentPredicate> &layoutPredicates)
+                                        const std::unordered_set<CKComponentPredicate> &layoutPredicates,
+                                        BOOL ignoreComponentReuseOptimizations)
 {
   auto const componentProvider = [configuration componentProvider];
   const auto componentFactory = ^{
@@ -42,7 +43,8 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
   const CKBuildComponentResult result = CKBuildComponent(previousRoot,
                                                          stateUpdates,
                                                          componentFactory,
-                                                         configuration.buildComponentConfig);
+                                                         configuration.buildComponentConfig,
+                                                         ignoreComponentReuseOptimizations);
   const auto rootLayout = CKComputeRootComponentLayout(result.component,
                                                        sizeRange,
                                                        result.scopeRoot.analyticsListener,

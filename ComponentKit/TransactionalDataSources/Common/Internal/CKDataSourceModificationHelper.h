@@ -24,4 +24,5 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         CKDataSourceConfiguration *configuration,
                                         id model,
                                         id context,
-                                        const std::unordered_set<CKComponentPredicate> &layoutPredicates);
+                                        const std::unordered_set<CKComponentPredicate> &layoutPredicates,
+                                        BOOL ignoreComponentReuseOptimizations = NO);

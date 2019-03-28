@@ -49,7 +49,8 @@
     NSMutableArray *newItems = [NSMutableArray array];
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
       [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
-      CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, [item model], context, animationPredicates);
+      // On reload, we would like avoid component reuse - by passing `ignoreComponentReuseOptimizations = YES`, we make sure that all the components will be recreated.
+      CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, [item model], context, animationPredicates, YES);
       [newItems addObject:newItem];
      }];
     [newSections addObject:newItems];
