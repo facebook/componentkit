@@ -69,7 +69,7 @@ static NSMutableArray *hitTestHooks;
 {
   // It's weird to reach into ck_attachState here. ck_attachState should probably be refactored
   // to simply be a concrete method on this class, instead of a category.
-  CKComponentAttachState *const attachState = self.ck_attachState;
+  CKComponentAttachState *const attachState = CKGetAttachStateForView(self);
   return attachState ? CKComponentAttachStateRootLayout(attachState).layout() : CKComponentLayout();
 }
 

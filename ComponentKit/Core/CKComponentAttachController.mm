@@ -94,7 +94,7 @@ void CKComponentAttachControllerAttachComponentRootLayout(
   // Save layout provider in map, it will be used for figuring out animations between two layouts.
   [self->_scopeIdentifierToLayoutProvider setObject:params.layoutProvider
                                              forKey:@(params.scopeIdentifier)];
-  params.view.ck_attachState = attachState;
+  CKSetAttachStateForView(params.view, attachState);
 }
 
 - (void)detachComponentLayoutWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
@@ -108,19 +108,19 @@ void CKComponentAttachControllerAttachComponentRootLayout(
 
 - (CKComponentAttachState *)attachStateForScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
 {
-  return ((UIView *)_scopeIdentifierToAttachedViewMap[@(scopeIdentifier)]).ck_attachState;
+  return CKGetAttachStateForView(((UIView *)_scopeIdentifierToAttachedViewMap[@(scopeIdentifier)]));
 }
 
 #pragma mark - Attach helpers
 
 - (void)_detachComponentLayoutFromView:(UIView *)view
 {
-  CKComponentAttachState *attachState = view.ck_attachState;
+  CKComponentAttachState *attachState = CKGetAttachStateForView(view);
   if (attachState) {
     CKUnmountComponents(attachState.mountedComponents);
     // Mark the view as detached
     [_scopeIdentifierToAttachedViewMap removeObjectForKey:@(attachState.scopeIdentifier)];
-    view.ck_attachState = nil;
+    CKSetAttachStateForView(view, nil);
   }
 }
 
@@ -137,7 +137,8 @@ static CKComponentAttachState *mountComponentLayoutInView(const CKComponentRootL
   const auto animations = CK::animationsForComponents(animatedComponents, view);
   [analyticsListener didCollectAnimationsFromComponentTreeWithRootComponent:rootLayout.component()];
 
-  NSSet *currentlyMountedComponents = view.ck_attachState.mountedComponents;
+  auto const oldAttachState = CKGetAttachStateForView(view);
+  NSSet *currentlyMountedComponents = oldAttachState.mountedComponents;
   __block NSSet *newMountedComponents = nil;
   const auto mountPerformer = ^{
     __block NSSet<CKComponent *> *unmountedComponents;
@@ -150,7 +151,7 @@ static CKComponentAttachState *mountComponentLayoutInView(const CKComponentRootL
   };
 
   std::shared_ptr<CK::AnimationApplicator<>> animationApplicator;
-  animationApplicator = view.ck_attachState != nil ? view.ck_attachState.animationApplicator : CK::AnimationApplicatorFactory::make();
+  animationApplicator = oldAttachState != nil ? oldAttachState.animationApplicator : CK::AnimationApplicatorFactory::make();
   animationApplicator->runAnimationsWhenMounting(animations, mountPerformer);
 
   const auto attachState = [[CKComponentAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents animationApplicator:animationApplicator];
@@ -161,10 +162,10 @@ static CKComponentAttachState *mountComponentLayoutInView(const CKComponentRootL
 static void tearDownAttachStateFromViews(NSArray *views)
 {
   for (UIView *view in views) {
-    CKComponentAttachState *attachState = view.ck_attachState;
+    CKComponentAttachState *attachState = CKGetAttachStateForView(view);
     if (attachState) {
       CKUnmountComponents(attachState.mountedComponents);
-      view.ck_attachState = nil;
+      CKSetAttachStateForView(view, nil);
     }
   }
 }
@@ -221,18 +222,3 @@ auto CKSetAttachStateForView(UIView *view, CKComponentAttachState *attachState) 
 {
   objc_setAssociatedObject(view, &kViewAttachStateKey, attachState, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
-@implementation UIView (CKComponentAttachController)
-
-- (void)ck_setAttachState:(CKComponentAttachState *)ck_attachState
-{
-  CKSetAttachStateForView(self, ck_attachState);
-}
-
-- (CKComponentAttachState *)ck_attachState
-{
-  return CKGetAttachStateForView(self);
-}
-
-@end
-
