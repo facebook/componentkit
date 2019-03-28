@@ -210,18 +210,28 @@ void CKComponentAttachStateSetRootLayout(CKComponentAttachState *const self, con
 
 @end
 
-@implementation UIView (CKComponentAttachController)
-
 static char const kViewAttachStateKey = ' ';
+
+auto CKGetAttachStateForView(UIView *view) -> CKComponentAttachState *
+{
+  return objc_getAssociatedObject(view, &kViewAttachStateKey);
+}
+
+auto CKSetAttachStateForView(UIView *view, CKComponentAttachState *attachState) -> void
+{
+  objc_setAssociatedObject(view, &kViewAttachStateKey, attachState, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@implementation UIView (CKComponentAttachController)
 
 - (void)ck_setAttachState:(CKComponentAttachState *)ck_attachState
 {
-  objc_setAssociatedObject(self, &kViewAttachStateKey, ck_attachState, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  CKSetAttachStateForView(self, ck_attachState);
 }
 
 - (CKComponentAttachState *)ck_attachState
 {
-  return objc_getAssociatedObject(self, &kViewAttachStateKey);
+  return CKGetAttachStateForView(self);
 }
 
 @end

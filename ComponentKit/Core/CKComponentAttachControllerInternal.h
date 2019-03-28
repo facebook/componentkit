@@ -37,6 +37,9 @@ void CKComponentAttachStateSetRootLayout(CKComponentAttachState *const self, con
 
 @end
 
+auto CKGetAttachStateForView(UIView *view) -> CKComponentAttachState *;
+auto CKSetAttachStateForView(UIView *view, CKComponentAttachState *attachState) -> void;
+
 @interface UIView (CKComponentAttachController)
 
 @property (nonatomic, strong, setter=ck_setAttachState:) CKComponentAttachState *ck_attachState;
