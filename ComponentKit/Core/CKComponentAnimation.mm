@@ -66,6 +66,8 @@ static CKComponentAnimationHooks hooksForFinalUnmountAnimation(const CKComponent
     },
     .didRemount = ^(UIView *const snapshotView){
       [hostView addSubview:snapshotView];
+      auto const animationAddTime = [snapshotView.layer convertTime:CACurrentMediaTime() fromLayer:nil];
+      animation.beginTime += animationAddTime;
       [snapshotView.layer addAnimation:animation forKey:nil];
       return snapshotView;
     },
