@@ -59,23 +59,17 @@ struct CKLayoutMemoizationKey {
   };
 };
 
-@interface CKComponentScopeHandle (ParentCheck)
-- (bool)isParentOfOrEqualTo:(CKComponentScopeHandle *)other;
-@end
-
-@implementation CKComponentScopeHandle (ParentCheck)
-- (bool)isParentOfOrEqualTo:(CKComponentScopeHandle *)other
+static auto scopeHandleIsParentOfOrEqualTo(CKComponentScopeHandle *handle, CKComponentScopeHandle *other) -> bool
 {
   auto candidate = other;
   while (candidate != nil) {
-    if (std::equal_to<CKComponentScopeHandle *>()(candidate, self)) {
+    if (std::equal_to<CKComponentScopeHandle *>()(candidate, handle)) {
       return true;
     }
     candidate = candidate.parent;
   }
   return false;
 }
-@end
 
 @interface CKComponentMemoizerState : NSObject {
   @package
@@ -100,7 +94,7 @@ static bool currentScopeIsAffectedByPendingStateUpdates()
   const auto currentScopeHandle = threadLocalScope->stack.top().frame.handle;
   const auto updates = threadLocalScope->stateUpdates;
   const auto currentScopeOrDescendantHasStateUpdate = CK::Collection::containsWhere(updates, [=](const auto &pair){
-    return [currentScopeHandle isParentOfOrEqualTo:pair.first];
+    return scopeHandleIsParentOfOrEqualTo(currentScopeHandle, pair.first);
   });
 
   return currentScopeOrDescendantHasStateUpdate;
