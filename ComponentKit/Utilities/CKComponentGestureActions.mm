@@ -81,7 +81,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
         }
 
         [view removeGestureRecognizer:recognizer];
-        CKSetComponentActionForGestureRecognizer(recognizer, nullptr);
+        CKUnsetComponentActionForGestureRecognizer(recognizer);
 
         // Tear down delegate proxying if applicable
         if (delegateSelectors.size() > 0) {

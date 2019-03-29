@@ -120,6 +120,11 @@ void CKSetComponentActionForGestureRecognizer(UIGestureRecognizer *gRecognizer, 
   objc_setAssociatedObject(gRecognizer, &kCKComponentActionGestureRecognizerKey, wrapper, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
+void CKUnsetComponentActionForGestureRecognizer(UIGestureRecognizer *gRecognizer)
+{
+  objc_setAssociatedObject(gRecognizer, &kCKComponentActionGestureRecognizerKey, nil, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 
 @implementation CKComponentGestureActionForwarder
 

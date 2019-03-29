@@ -26,6 +26,8 @@ CKAction<UIGestureRecognizer *> CKComponentGestureGetAction(UIGestureRecognizer 
 /** This is for internal use by the framework only. */
 void CKSetComponentActionForGestureRecognizer(UIGestureRecognizer *gRecognizer, const CKAction<UIGestureRecognizer *> &action);
 
+void CKUnsetComponentActionForGestureRecognizer(UIGestureRecognizer *gRecognizer);
+
 /** A simple little object that serves as a reuse pool for gesture recognizers. */
 class CKGestureRecognizerReusePool {
 public:
