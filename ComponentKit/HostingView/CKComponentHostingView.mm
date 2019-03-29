@@ -20,6 +20,7 @@
 #import "CKAnimationApplicator.h"
 #import "CKBuildComponent.h"
 #import "CKComponentAnimation.h"
+#import "CKComponentAnimationPredicates.h"
 #import "CKComponentController.h"
 #import "CKComponentDebugController.h"
 #import "CKComponentHostingViewDelegate.h"
@@ -31,7 +32,6 @@
 #import "CKComponentSubclass.h"
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
-#import "CKDataSourceModificationHelper.h"
 #import "CKGlobalConfig.h"
 #import "CKComponentHostingContainerViewProvider.h"
 

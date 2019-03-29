@@ -13,19 +13,9 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKComponentController.h>
-#import <ComponentKit/CKComponentEvents.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceItemInternal.h>
-
-auto CKComponentAnimationPredicates() -> std::unordered_set<CKComponentPredicate>
-{
-  return {
-    CKComponentHasAnimationsOnInitialMountPredicate,
-    CKComponentHasAnimationsFromPreviousComponentPredicate,
-    CKComponentHasAnimationsOnFinalUnmountPredicate,
-  };
-}
 
 CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,

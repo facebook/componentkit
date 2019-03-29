@@ -17,6 +17,7 @@
 #import "CKDataSourceItemInternal.h"
 #import "CKDataSourceAppliedChanges.h"
 #import "CKBuildComponent.h"
+#import "CKComponentAnimationPredicates.h"
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
