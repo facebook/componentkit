@@ -113,18 +113,14 @@ static BOOL selectorInList(SEL selector, const CKComponentForwardedSelectors &se
 
 @end
 
-@implementation NSObject (CKComponentDelegateForwarder)
-
 static const char kCKComponentDelegateProxyKey = ' ';
 
-- (CKComponentDelegateForwarder *)ck_delegateProxy
+auto CKDelegateProxyForObject(NSObject *obj) -> CKComponentDelegateForwarder *
 {
-  return objc_getAssociatedObject(self, &kCKComponentDelegateProxyKey);
+  return objc_getAssociatedObject(obj, &kCKComponentDelegateProxyKey);
 }
 
-- (void)ck_setDelegateProxy:(CKComponentDelegateForwarder *)delegateProxy
+auto CKSetDelegateProxyForObject(NSObject *obj, CKComponentDelegateForwarder *delegateProxy) -> void
 {
-  objc_setAssociatedObject(self, &kCKComponentDelegateProxyKey, delegateProxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  objc_setAssociatedObject(obj, &kCKComponentDelegateProxyKey, delegateProxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
-@end

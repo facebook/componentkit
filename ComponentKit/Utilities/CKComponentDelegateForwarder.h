@@ -29,20 +29,20 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
 /**
  This initializer will make an object that forwards calls to the given selectors on to the component, and its nextResponder, etc.
  */
-+ (instancetype)newWithSelectors:(CKComponentForwardedSelectors)selectors;
++ (instancetype _Nullable)newWithSelectors:(CKComponentForwardedSelectors)selectors;
 
 /**
  The view is used to find out where to start looking in the component responder chain.
 
  The forwarder will call [CKMountedComponentForView(view) targetForAction: withSender:] to proxy to the responder chain, so this needs to be accurate when you mount/unmount.
  */
-@property (nonatomic, weak) UIView *view;
+@property (nonatomic, weak) UIView * _Nullable view;
 
 @end
 
+NS_ASSUME_NONNULL_BEGIN
 
-@interface NSObject (CKComponentDelegateProxy)
+auto CKDelegateProxyForObject(NSObject *obj) -> CKComponentDelegateForwarder *_Nullable;
+auto CKSetDelegateProxyForObject(NSObject *obj, CKComponentDelegateForwarder *_Nullable delegateProxy) -> void;
 
-@property (nonatomic, strong, setter=ck_setDelegateProxy:) CKComponentDelegateForwarder *ck_delegateProxy;
-
-@end
+NS_ASSUME_NONNULL_END

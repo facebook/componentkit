@@ -17,12 +17,6 @@
 #import "CKComponent+UIView.h"
 #import "CKComponentSubclass.h"
 
-@interface UIView (CKDelegateProxy)
-
-@property (nonatomic, strong, setter=ck_setDelegateProxy:) CKComponentDelegateForwarder *ck_delegateProxy;
-
-@end
-
 CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
                                                            CKComponentForwardedSelectors selectors) noexcept
 {
@@ -43,12 +37,12 @@ CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
 
         // Create a proxy for this set of selectors
 
-        CKCAssertNil(view.ck_delegateProxy,
-                     @"Unsupported: registered two delegate proxies for the same view: %@ %@", view, view.ck_delegateProxy);
+        CKCAssertNil(CKDelegateProxyForObject(view),
+                     @"Unsupported: registered two delegate proxies for the same view: %@ %@", view, CKDelegateProxyForObject(view));
 
         CKComponentDelegateForwarder *proxy = [CKComponentDelegateForwarder newWithSelectors:selectors];
         proxy.view = view;
-        view.ck_delegateProxy = proxy;
+        CKSetDelegateProxyForObject(view, proxy);
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -59,9 +53,9 @@ CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,
       ^(UIView *view, id value){
 
         // When unapplied, remove association with the view
-        CKComponentDelegateForwarder *proxy = view.ck_delegateProxy;
+        CKComponentDelegateForwarder *proxy = CKDelegateProxyForObject(view);
         proxy.view = nil;
-        view.ck_delegateProxy = nil;
+        CKSetDelegateProxyForObject(view, nil);
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"

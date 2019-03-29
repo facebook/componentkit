@@ -141,7 +141,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
           proxy.view = view;
           gestureRecognizer.delegate = (id<UIGestureRecognizerDelegate>)proxy;
           // This will retain it
-          gestureRecognizer.ck_delegateProxy = proxy;
+          CKSetDelegateProxyForObject(gestureRecognizer, proxy);
         }
         [view addGestureRecognizer:gestureRecognizer];
       },
@@ -156,10 +156,10 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
         
         // Tear down delegate proxying if applicable
         if (delegateSelectors.size() > 0) {
-          CKComponentDelegateForwarder *proxy = recognizer.ck_delegateProxy;
+          CKComponentDelegateForwarder *proxy = CKDelegateProxyForObject(recognizer);
           proxy.view = nil;
           recognizer.delegate = nil;
-          recognizer.ck_delegateProxy = nil;
+          CKSetDelegateProxyForObject(recognizer, nil);
         }
         reusePool->recycle(recognizer);
       }
