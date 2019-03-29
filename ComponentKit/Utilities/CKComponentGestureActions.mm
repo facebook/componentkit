@@ -9,7 +9,7 @@
  */
 
 #import "CKComponentGestureActions.h"
-#import "CKComponentGestureActionsInternal.h"
+#import "CKComponentGestureActionHelper.h"
 
 #import <vector>
 #import <objc/runtime.h>
@@ -17,51 +17,6 @@
 #import "CKAssert.h"
 #import "CKComponent+UIView.h"
 #import "CKInternalHelpers.h"
-#import "CKMutex.h"
-
-/** Find a UIGestureRecognizer attached to a view that has a given ck_componentAction. */
-static UIGestureRecognizer *recognizerForAction(UIView *view, CKAction<UIGestureRecognizer *> action)
-{
-  for (UIGestureRecognizer *recognizer in view.gestureRecognizers) {
-    if ([recognizer ck_componentAction] == action) {
-      return recognizer;
-    }
-  }
-  return nil;
-}
-
-/** A simple little object that serves as a reuse pool for gesture recognizers. */
-class CKGestureRecognizerReusePool {
-public:
-  /** Pass in a property block if you need to initialize the gesture recognizer **/
-  CKGestureRecognizerReusePool(Class gestureRecognizerClass, CKComponentGestureRecognizerSetupFunction setupFunction)
-  : _gestureRecognizerClass(gestureRecognizerClass), _setupFunction(setupFunction) {}
-  UIGestureRecognizer *get() {
-    if (_reusePool.empty()) {
-      UIGestureRecognizer *ret =
-      [[_gestureRecognizerClass alloc] initWithTarget:[CKComponentGestureActionForwarder sharedInstance]
-                                               action:@selector(handleGesture:)];
-      if (_setupFunction) {
-        _setupFunction(ret);
-      }
-      return ret;
-    } else {
-      UIGestureRecognizer *value = _reusePool.back();
-      _reusePool.pop_back();
-      return value;
-    }
-  }
-  void recycle(UIGestureRecognizer *recognizer) {
-    static const size_t kLimit = 5;
-    if (_reusePool.size() < kLimit) {
-      _reusePool.push_back(recognizer);
-    }
-  }
-private:
-  Class _gestureRecognizerClass;
-  CKComponentGestureRecognizerSetupFunction _setupFunction;
-  std::vector<UIGestureRecognizer *> _reusePool;
-};
 
 CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKAction<UIGestureRecognizer *> action)
 {
@@ -76,26 +31,6 @@ CKComponentViewAttributeValue CKComponentPanGestureAttribute(CKAction<UIGestureR
 CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(CKAction<UIGestureRecognizer *> action)
 {
   return CKComponentGestureAttribute([UILongPressGestureRecognizer class], nullptr, action);
-}
-
-struct CKGestureRecognizerReusePoolMapKey {
-  __unsafe_unretained Class gestureRecognizerClass;
-  CKComponentGestureRecognizerSetupFunction setupFunction;
-  
-  bool operator==(const CKGestureRecognizerReusePoolMapKey &other) const
-  {
-    return other.gestureRecognizerClass == gestureRecognizerClass && other.setupFunction == setupFunction;
-  }
-};
-
-namespace std {
-  template<> struct hash<CKGestureRecognizerReusePoolMapKey>
-  {
-    size_t operator()(const CKGestureRecognizerReusePoolMapKey &k) const
-    {
-      return [k.gestureRecognizerClass hash] ^ std::hash<CKComponentGestureRecognizerSetupFunction>()(k.setupFunction);
-    }
-  };
 }
 
 CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognizerClass,
@@ -113,14 +48,8 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
       @YES  // Bogus value, we don't use it.
     };
   }
-  
-  static auto *reusePoolMap = new std::unordered_map<CKGestureRecognizerReusePoolMapKey, CKGestureRecognizerReusePool *>();
-  static CK::StaticMutex reusePoolMapMutex = CK_MUTEX_INITIALIZER;
-  CK::StaticMutexLocker l(reusePoolMapMutex);
-  auto &reusePool = (*reusePoolMap)[{gestureRecognizerClass, setupFunction}];
-  if (reusePool == nullptr) {
-    reusePool = new CKGestureRecognizerReusePool(gestureRecognizerClass, setupFunction);
-  }
+
+  auto reusePool = CKCreateOrGetReusePool(gestureRecognizerClass, setupFunction);
   CKAction<UIGestureRecognizer *> blockAction = action;
   return {
     {
@@ -129,11 +58,11 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
       + "-" + action.identifier()
       + CKIdentifierFromDelegateForwarderSelectors(delegateSelectors),
       ^(UIView *view, id value){
-        CKCAssertNil(recognizerForAction(view, blockAction),
+        CKCAssertNil(CKRecognizerForAction(view, blockAction),
                      @"Registered two gesture recognizers with the same action %@", NSStringFromSelector(blockAction.selector()));
         UIGestureRecognizer *gestureRecognizer = reusePool->get();
-        [gestureRecognizer ck_setComponentAction:blockAction];
-        
+        CKSetComponentActionForGestureRecognizer(gestureRecognizer,blockAction);
+
         // Setup delegate proxying if applicable
         if (delegateSelectors.size() > 0) {
           CKCAssertNil(gestureRecognizer.delegate, @"Doesn't make sense to set the gesture delegate and provide selectors to proxy");
@@ -146,14 +75,14 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
         [view addGestureRecognizer:gestureRecognizer];
       },
       ^(UIView *view, id value){
-        UIGestureRecognizer *recognizer = recognizerForAction(view, blockAction);
+        UIGestureRecognizer *recognizer = CKRecognizerForAction(view, blockAction);
         if (recognizer == nil) {
           return;
         }
-        
+
         [view removeGestureRecognizer:recognizer];
-        [recognizer ck_setComponentAction:nullptr];
-        
+        CKSetComponentActionForGestureRecognizer(recognizer, nullptr);
+
         // Tear down delegate proxying if applicable
         if (delegateSelectors.size() > 0) {
           CKComponentDelegateForwarder *proxy = CKDelegateProxyForObject(recognizer);
@@ -167,81 +96,3 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
     @YES // Bogus value, we don't use it.
   };
 }
-
-@implementation CKComponentGestureActionForwarder
-
-+ (instancetype)sharedInstance
-{
-  static CKComponentGestureActionForwarder *forwarder;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    forwarder = [[CKComponentGestureActionForwarder alloc] init];
-  });
-  return forwarder;
-}
-
-- (void)handleGesture:(UIGestureRecognizer *)recognizer
-{
-  if (recognizer.view.ck_component) {
-    // If the action can be handled by the sender itself, send it there instead of looking up the chain.
-    [recognizer ck_componentAction].send(recognizer.view.ck_component, CKComponentActionSendBehaviorStartAtSender, recognizer);
-  }
-}
-
-@end
-
-@interface _CKGestureActionWrapper : NSObject <NSCopying>
-
-- (instancetype)initWithGestureAction:(const CKAction<UIGestureRecognizer *> &)action;
-
-- (CKAction<UIGestureRecognizer *>)action;
-
-@end
-
-@implementation _CKGestureActionWrapper
-{
-  CKAction<UIGestureRecognizer *> _action;
-}
-
-- (instancetype)initWithGestureAction:(const CKAction<UIGestureRecognizer *> &)action
-{
-  if (self = [super init]) {
-    _action = action;
-  }
-  return self;
-}
-
-- (CKAction<UIGestureRecognizer *>)action
-{ return _action; }
-
-- (id)copyWithZone:(NSZone *)zone
-{ return self; }
-
-@end
-
-CKAction<UIGestureRecognizer *> CKComponentGestureGetAction(UIGestureRecognizer *gesture)
-{
-  return [gesture ck_componentAction];
-};
-
-@implementation UIGestureRecognizer (CKComponent)
-
-static const char kCKComponentActionGestureRecognizerKey = ' ';
-
-- (CKAction<UIGestureRecognizer *>)ck_componentAction
-{
-  _CKGestureActionWrapper *wrapper = objc_getAssociatedObject(self, &kCKComponentActionGestureRecognizerKey);
-  if (wrapper) {
-    return wrapper.action;
-  } else {
-    return {};
-  }
-}
-
-- (void)ck_setComponentAction:(const CKAction<UIGestureRecognizer *> &)action
-{
-  _CKGestureActionWrapper *wrapper = [[_CKGestureActionWrapper alloc] initWithGestureAction:action];
-  objc_setAssociatedObject(self, &kCKComponentActionGestureRecognizerKey, wrapper, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
-
-@end

@@ -15,9 +15,3 @@
 + (instancetype)sharedInstance;
 - (void)handleGesture:(UIGestureRecognizer *)recognizer;
 @end
-
-/** Exposed only for testing. Do not touch this directly. */
-@interface UIGestureRecognizer (CKComponent)
-- (CKAction<UIGestureRecognizer *>)ck_componentAction;
-- (void)ck_setComponentAction:(const CKAction<UIGestureRecognizer *> &)action;
-@end

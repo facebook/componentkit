@@ -10,14 +10,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKComponentAction.h>
 #import <ComponentKit/CKComponentDelegateForwarder.h>
 
-typedef void (*CKComponentGestureRecognizerSetupFunction)(UIGestureRecognizer *);
+#import <ComponentKit/CKComponentGestureActionHelper.h>
 
 /**
  Returns a view attribute that creates and configures a tap gesture recognizer to send the given CKComponentAction.
- 
+
  @param action Sent up the responder chain when a tap occurs. Sender is the component that created the view.
  Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
@@ -25,7 +24,7 @@ CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKAction<UIGestureR
 
 /**
  Returns a view attribute that creates and configures a pan gesture recognizer to send the given CKComponentAction.
- 
+
  @param action Sent up the responder chain when a pan occurs. Sender is the component that created the view.
  Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
@@ -33,7 +32,7 @@ CKComponentViewAttributeValue CKComponentPanGestureAttribute(CKAction<UIGestureR
 
 /**
  Returns a view attribute that creates and configures a long press gesture recognizer to send the given CKComponentAction.
- 
+
  @param action Sent up the responder chain when a long press occurs. Sender is the component that created the view.
  Context is the gesture recognizer. May be NULL, in which case no action will be sent.
  */
@@ -41,7 +40,7 @@ CKComponentViewAttributeValue CKComponentLongPressGestureAttribute(CKAction<UIGe
 
 /**
  Returns a view attribute that creates and configures a gesture recognizer.
- 
+
  @param gestureRecognizerClass Must be a subclass of UIGestureRecognizer. Instantiated with -initWithTarget:action:.
  @param setupFunction Optional; pass nullptr if not needed. Called once for each new gesture recognizer; you may use
  this function to configure the new gesture recognizer.
@@ -52,9 +51,3 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
                                                           CKComponentGestureRecognizerSetupFunction setupFunction,
                                                           CKAction<UIGestureRecognizer *> action,
                                                           CKComponentForwardedSelectors delegateSelectors = {});
-
-/**
- Allows mapping a UIGestureRecognizer back to the original CKComponentAction selector,
- since ComponentKit internally changes the selector to be able send to the component responder chain.
- */
-CKAction<UIGestureRecognizer *> CKComponentGestureGetAction(UIGestureRecognizer *gesture);
