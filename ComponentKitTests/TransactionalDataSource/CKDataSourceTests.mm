@@ -331,7 +331,7 @@
 
 - (void)_testApplyingPrecomputedChangeAfterStateIsChanged:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  const auto dataSource = (id<CKDataSourceProtocol, CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, [self class], self);
+  const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, [self class], self);
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _state != nil;
   });
@@ -357,7 +357,7 @@
 
 - (void)testDataSourceApplyingPrecomputedChangeWhenThereIsPendingModification
 {
-  const auto dataSource = (id<CKDataSourceProtocol, CKDataSourceProtocolInternal>)CKComponentTestDataSource([CKDataSource class], [self class], self);
+  const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource([CKDataSource class], [self class], self);
   const auto insertion =
   [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]

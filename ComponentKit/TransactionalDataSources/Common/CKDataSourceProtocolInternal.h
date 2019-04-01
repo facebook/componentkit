@@ -2,9 +2,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKDataSourceProtocol.h>
+
 @class CKDataSourceChange;
 
-@protocol CKDataSourceProtocolInternal <NSObject>
+@protocol CKDataSourceProtocolInternal <CKDataSourceProtocol>
 
 /**
  @param state initial state of dataSource, pass `nil` for an empty state.
