@@ -167,6 +167,15 @@ static void *kWorkQueueKey = &kWorkQueueKey;
   return isApplied;
 }
 
+- (BOOL)verifyChange:(CKDataSourceChange *)change
+{
+  __block BOOL isValid = NO;
+  dispatch_sync(_workQueue, ^{
+    isValid = _state == change.previousState;
+  });
+  return isValid;
+}
+
 - (void)setViewport:(CKDataSourceViewport)viewport {}
 
 - (void)addListener:(id<CKDataSourceListener>)listener

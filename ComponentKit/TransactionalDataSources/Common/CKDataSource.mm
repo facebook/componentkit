@@ -188,11 +188,17 @@
 - (BOOL)applyChange:(CKDataSourceChange *)change
 {
   CKAssertMainThread();
-  if (change.previousState != _state || _pendingAsynchronousModifications.count > 0) {
+  if (![self verifyChange:change]) {
     return NO;
   }
   [self _synchronouslyApplyChange:change qos:CKDataSourceQOSDefault];
   return YES;
+}
+
+- (BOOL)verifyChange:(CKDataSourceChange *)change
+{
+  CKAssertMainThread();
+  return change.previousState == _state && _pendingAsynchronousModifications.count == 0;
 }
 
 - (void)setViewport:(CKDataSourceViewport)viewport
