@@ -82,11 +82,6 @@ private:
   return self;
 }
 
-- (void)dealloc
-{
-  [_attachController detachComponentLayoutWithScopeIdentifier:_scopeIdentifier];
-}
-
 - (void)setRootLayout:(const CKComponentRootLayout &)rootLayout
 {
   CKAssertMainThread();

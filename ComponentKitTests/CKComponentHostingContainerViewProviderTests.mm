@@ -10,6 +10,8 @@
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
+
 #import "CKAnalyticsListenerSpy.h"
 #import "CKComponent.h"
 #import "CKComponentFlexibleSizeRangeProvider.h"
@@ -24,6 +26,7 @@
 {
   CKAnalyticsListenerSpy *_analyticsListener;
   CKComponentHostingContainerViewProvider *_containerViewProvider;
+  CKLifecycleTestComponent *_component;
 }
 
 - (void)setUp
@@ -45,10 +48,11 @@
   const auto result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, _analyticsListener),
                                        {},
                                        ^{
-                                         return [CKComponent
+                                         return [CKLifecycleTestComponent
                                                  newWithView:{}
                                                  size:{.width = size.width, size.height}];
                                        });
+  _component = (CKLifecycleTestComponent *)result.component;
   const auto rootLayout = CKComputeRootComponentLayout(result.component, {size, size}, _analyticsListener);
   [_containerViewProvider setRootLayout:rootLayout];
   [_containerViewProvider setComponent:result.component];
@@ -60,6 +64,12 @@
 {
   XCTAssertEqual(_analyticsListener->_willMountComponentHitCount, 1);
   XCTAssertEqual(_analyticsListener->_didMountComponentHitCount, 1);
+}
+
+- (void)testUnmount
+{
+  _containerViewProvider = nil;
+  XCTAssertEqual(_component.controller.counts.willUnmount, 1);
 }
 
 - (void)test_WhenMountsLayout_ReportsWillCollectAnimationsEvent
