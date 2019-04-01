@@ -53,6 +53,7 @@
                                                    model:(id)model
                                                  context:(id)context
                                         layoutPredicates:(const std::unordered_set<CKComponentPredicate> &)layoutPredicates
+                                                itemType:(CKDataSourceChangesetModificationItemType)itemType
 {
   auto item = [[CKDataSourceAsyncLayoutItem alloc] initWithQueue:_workQueue
                                                              qos:_workQos

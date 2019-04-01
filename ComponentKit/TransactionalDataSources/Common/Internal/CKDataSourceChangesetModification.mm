@@ -110,7 +110,8 @@
                                                                configuration:configuration
                                                                        model:model
                                                                      context:context
-                                                            layoutPredicates:animationPredicates];
+                                                            layoutPredicates:animationPredicates
+                                                                    itemType:CKDataSourceChangesetModificationItemTypeUpdate];
     [section replaceObjectAtIndex:indexPath.item withObject:item];
   }];
 
@@ -231,7 +232,8 @@
                                        configuration:configuration
                                                model:model
                                              context:context
-                                    layoutPredicates:animationPredicates];
+                                    layoutPredicates:animationPredicates
+                                            itemType:CKDataSourceChangesetModificationItemTypeInsert];
   };
 
   NSDictionary<NSIndexPath *, id> *const insertedItems = [_changeset insertedItems];
@@ -300,6 +302,7 @@
                                                     model:(id)model
                                                   context:(id)context
                                          layoutPredicates:(const std::unordered_set<CKComponentPredicate> &)layoutPredicates
+                                                 itemType:(CKDataSourceChangesetModificationItemType)itemType
 {
   if (_itemGenerator) {
     return [_itemGenerator buildDataSourceItemForPreviousRoot:previousRoot
@@ -308,7 +311,8 @@
                                                 configuration:configuration
                                                         model:model
                                                       context:context
-                                             layoutPredicates:layoutPredicates];
+                                             layoutPredicates:layoutPredicates
+                                                     itemType:itemType];
   } else {
     return CKBuildDataSourceItem(previousRoot, stateUpdates, sizeRange, configuration, model, context, layoutPredicates);
   }
