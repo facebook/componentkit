@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKDataSourceQOS.h"
+#import <ComponentKit/CKDataSourceQOS.h>
 
 @class CKDataSourceChange;
 @class CKDataSourceState;

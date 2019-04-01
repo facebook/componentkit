@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKComponentScopeFrame.h"
+#import <ComponentKit/CKComponentScopeFrame.h>
 
 @class CKComponent;
 
