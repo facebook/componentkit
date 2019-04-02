@@ -16,6 +16,8 @@
 #import <ComponentKit/CKCollectionViewDataSourceListener.h>
 #import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
+#import <ComponentKit/CKDataSourceState.h>
+#import <ComponentKit/CKDataSourceStateInternal.h>
 #import <ComponentKit/CKSupplementaryViewDataSource.h>
 #import <ComponentKit/CKSizeRange.h>
 
@@ -27,6 +29,10 @@
 @interface CKCollectionViewDataSourceSpy : NSObject <CKCollectionViewDataSourceListener>
 @property (nonatomic, assign) NSUInteger willApplyChangeset;
 @property (nonatomic, assign) NSUInteger didApplyChangeset;
+@property (nonatomic, assign) NSUInteger willChangeState;
+@property (nonatomic, assign) NSUInteger didChangeState;
+@property (nonatomic, retain) id state;
+@property (nonatomic, retain) id previousState;
 @end
 
 @interface CKCollectionViewDataSourceTests : XCTestCase
@@ -63,7 +69,7 @@
   [self.dataSource collectionView:self.mockCollectionView viewForSupplementaryElementOfKind:viewKind atIndexPath:indexPath];
 }
 
-- (void)testDataSourceListener
+- (void)testDataSourceListenerApplyChangeset
 {
   OCMStub([self.mockCollectionView performBatchUpdates:[OCMArg any] completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
     void(^block)(BOOL completed);
@@ -71,7 +77,7 @@
     block(YES);
   });
 
-  CKCollectionViewDataSourceSpy *spy = [CKCollectionViewDataSourceSpy new];
+  auto const spy = [CKCollectionViewDataSourceSpy new];
   [self.dataSource addListener:spy];
 
   [self.dataSource applyChangeset:
@@ -82,6 +88,23 @@
 
   XCTAssertEqual(spy.willApplyChangeset, 1);
   XCTAssertEqual(spy.didApplyChangeset, 1);
+  XCTAssertNotEqual(spy.state, spy.previousState);
+}
+
+- (void)testDataSourceListenerSetState
+{
+  auto const spy = [CKCollectionViewDataSourceSpy new];
+  [self.dataSource addListener:spy];
+
+  id configuration = [[CKDataSourceConfiguration alloc] initWithComponentProvider:nil context:nil sizeRange:{}];
+  id newState = [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
+
+  [self.dataSource setState:newState];
+
+  XCTAssertEqual(spy.willChangeState, 1);
+  XCTAssertEqual(spy.didChangeState, 1);
+  XCTAssertEqual(newState, spy.state);
+  XCTAssertNotEqual(newState, spy.previousState);
 }
 
 @end
@@ -99,6 +122,23 @@
               byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
   _didApplyChangeset++;
+  _previousState = previousState;
+  _state = state;
+}
+
+- (void)dataSource:(CKCollectionViewDataSource *)dataSource
+   willChangeState:(CKDataSourceState *)state
+{
+  _willChangeState++;
+}
+
+- (void)dataSource:(CKCollectionViewDataSource *)dataSource
+    didChangeState:(CKDataSourceState *)previousState
+         withState:(CKDataSourceState *)state
+{
+  _didChangeState++;
+  _previousState = previousState;
+  _state = state;
 }
 
 @end

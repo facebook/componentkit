@@ -37,4 +37,17 @@
   CK::Component::AnnouncerHelper::call(self, _cmd, dataSource, previousState, state, changes);
 }
 
+- (void)dataSource:(CKCollectionViewDataSource *)dataSource
+   willChangeState:(CKDataSourceState *)state
+{
+  CK::Component::AnnouncerHelper::call(self, _cmd, dataSource, state);
+}
+
+- (void)dataSource:(CKCollectionViewDataSource *)dataSource
+    didChangeState:(CKDataSourceState *)previousState
+         withState:(CKDataSourceState *)state
+{
+  CK::Component::AnnouncerHelper::call(self, _cmd, dataSource, previousState, state);
+}
+
 @end

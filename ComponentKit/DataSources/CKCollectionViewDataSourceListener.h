@@ -21,4 +21,11 @@
                       withState:(CKDataSourceState *)state
               byApplyingChanges:(CKDataSourceAppliedChanges *)changes;
 
+- (void)dataSource:(CKCollectionViewDataSource *)dataSource
+   willChangeState:(CKDataSourceState *)state;
+
+- (void)dataSource:(CKCollectionViewDataSource *)dataSource
+    didChangeState:(CKDataSourceState *)previousState
+         withState:(CKDataSourceState *)state;
+
 @end
