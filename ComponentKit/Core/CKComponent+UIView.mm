@@ -25,17 +25,3 @@ void CKSetMountedComponentForView(UIView *view, CKComponent *component)
 {
   objc_setAssociatedObject(view, &kViewComponentKey, component, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
-@implementation UIView (CKComponent)
-
-- (CKComponent *)ck_component
-{
-  return CKMountedComponentForView(self);
-}
-
-- (void)ck_setComponent:(CKComponent *)component
-{
-  CKSetMountedComponentForView(self, component);
-}
-
-@end

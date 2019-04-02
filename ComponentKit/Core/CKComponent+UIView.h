@@ -21,8 +21,3 @@ CKComponent *CKMountedComponentForView(UIView *view);
 
 /** This is for internal use by the framework only. */
 void CKSetMountedComponentForView(UIView *view, CKComponent *component);
-
-@interface UIView (CKComponent)
-/** Deprecated: a wrapper around CKMountedComponentForView/CKSetMountedComponentForView. */
-@property (nonatomic, strong, setter=ck_setComponent:) CKComponent *ck_component;
-@end

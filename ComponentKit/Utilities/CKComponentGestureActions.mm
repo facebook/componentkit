@@ -61,7 +61,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
         CKCAssertNil(CKRecognizerForAction(view, blockAction),
                      @"Registered two gesture recognizers with the same action %@", NSStringFromSelector(blockAction.selector()));
         UIGestureRecognizer *gestureRecognizer = reusePool->get();
-        CKSetComponentActionForGestureRecognizer(gestureRecognizer,blockAction);
+        CKSetComponentActionForGestureRecognizer(gestureRecognizer, blockAction);
 
         // Setup delegate proxying if applicable
         if (delegateSelectors.size() > 0) {
