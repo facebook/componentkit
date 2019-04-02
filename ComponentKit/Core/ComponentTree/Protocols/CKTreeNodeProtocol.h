@@ -37,9 +37,6 @@ struct CKBuildComponentTreeParams {
   //  Enable faster props updates optimization for render components.
   BOOL enableFasterPropsUpdates = NO;
 
-  // Enable view configuration with state for render components.
-  BOOL enableViewConfigurationWithState = NO;
-
   // The trigger for initiating a new generation
   BuildTrigger buildTrigger;
 

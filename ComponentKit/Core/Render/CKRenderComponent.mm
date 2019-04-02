@@ -63,11 +63,9 @@
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
   auto const node = CKRender::buildComponentTreeWithSingleChild(self, &_childComponent, parent, previousParent, params, parentHasStateUpdate);
-  if (params.enableViewConfigurationWithState) {
-    auto const viewConfiguration = [self viewConfigurationWithState:node.state];
-    if (!viewConfiguration.isDefaultConfiguration()) {
-      [self setViewConfiguration:viewConfiguration];
-    }
+  auto const viewConfiguration = [self viewConfigurationWithState:node.state];
+  if (!viewConfiguration.isDefaultConfiguration()) {
+    [self setViewConfiguration:viewConfiguration];
   }
 }
 

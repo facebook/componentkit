@@ -62,7 +62,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                              .treeNodeDirtyIds = treeNodeDirtyIds,
                              .buildTrigger = buildTrigger,
                              .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
-                             .enableViewConfigurationWithState = config.enableViewConfigurationWithState,
                              .ignoreComponentReuseOptimizations = ignoreComponentReuseOptimizations,
                              .systraceListener = threadScope.systraceListener,
                            }
