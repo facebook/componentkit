@@ -140,7 +140,10 @@ CKActionInfo CKActionFind(SEL selector, id target) noexcept
     id forwardingTarget = [responder forwardingTargetForSelector:selector];
     if (!forwardingTarget || forwardingTarget == responder) {
       // Bail, the object they're asking us to message will just crash if the method is invoked on them
-      CKCFailAssert(@"Forwarding target failed for action:%@ %@", target, NSStringFromSelector(selector));
+      CKCFailAssertWithCategory(NSStringFromSelector(selector),
+                                @"Forwarding target failed for action: %@ %@",
+                                NSStringFromSelector(selector),
+                                target);
       return {};
     }
 
