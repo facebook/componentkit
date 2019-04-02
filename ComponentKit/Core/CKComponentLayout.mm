@@ -19,6 +19,7 @@
 #import "ComponentLayoutContext.h"
 #import "ComponentUtilities.h"
 #import "CKAnalyticsListener.h"
+#import "CKComponentEvents.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKDetectDuplicateComponent.h"

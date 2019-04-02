@@ -21,7 +21,6 @@
 #import "CKDataSourceItemInternal.h"
 #import "CKDataSourceAppliedChanges.h"
 #import "CKBuildComponent.h"
-#import "CKComponentAnimationPredicates.h"
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
 #import "CKComponentLayout.h"
@@ -62,7 +61,6 @@
   CKDataSourceConfiguration *configuration = [oldState configuration];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
-  const auto animationPredicates = CKComponentAnimationPredicates();
   const auto splitChangesetOptions = [configuration splitChangesetOptions];
   const BOOL enableChangesetSplitting = splitChangesetOptions.enabled;
   const CGSize viewportSize = (_viewport.size.width == 0.0 || _viewport.size.height == 0.0)
@@ -86,7 +84,6 @@
                       sizeRange,
                       configuration,
                       context,
-                      animationPredicates,
                       _changeset,
                       _userInfo,
                       oldState,
@@ -122,7 +119,7 @@
                              oldState);
       }
       CKDataSourceItem *const oldItem = section[indexPath.item];
-      CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context, animationPredicates);
+      CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
       [section replaceObjectAtIndex:indexPath.item withObject:item];
     }];
   }
@@ -258,8 +255,7 @@
                                  sizeRange,
                                  configuration,
                                  model,
-                                 context,
-                                 animationPredicates);
+                                 context);
   };
 
   NSDictionary<NSIndexPath *, id> *const insertedItems = [_changeset insertedItems];
@@ -423,7 +419,6 @@ static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSou
                                                        const CKSizeRange &sizeRange,
                                                        CKDataSourceConfiguration *configuration,
                                                        id<NSObject> context,
-                                                       const std::unordered_set<CKComponentPredicate> &layoutPredicates,
                                                        CKDataSourceChangeset *changeset,
                                                        NSDictionary *userInfo,
                                                        CKDataSourceState *oldState,
@@ -463,7 +458,7 @@ static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSou
         // *increases* the size of the item such that it is now outside the viewport. In this
         // scenario, we over-render, which is not a problem since that is not a regression over
         // the original behavior.
-        CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, updatedModel, context, layoutPredicates);
+        CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, updatedModel, context);
         computedItems[indexPath] = newItem;
         initialUpdatedItems[indexPath] = updatedModel;
         contentSize = addSizeToSize(contentSize, [newItem rootLayout].size());

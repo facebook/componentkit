@@ -23,7 +23,6 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         CKDataSourceConfiguration *configuration,
                                         id model,
                                         id context,
-                                        const std::unordered_set<CKComponentPredicate> &layoutPredicates,
                                         BOOL ignoreComponentReuseOptimizations)
 {
   auto const componentProvider = [configuration componentProvider];
@@ -37,8 +36,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                                          ignoreComponentReuseOptimizations);
   const auto rootLayout = CKComputeRootComponentLayout(result.component,
                                                        sizeRange,
-                                                       result.scopeRoot.analyticsListener,
-                                                       layoutPredicates);
+                                                       result.scopeRoot.analyticsListener);
   return [[CKDataSourceItem alloc] initWithRootLayout:rootLayout
                                                 model:model
                                             scopeRoot:result.scopeRoot

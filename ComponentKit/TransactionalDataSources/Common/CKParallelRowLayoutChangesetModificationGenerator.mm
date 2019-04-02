@@ -48,11 +48,10 @@
 
 - (CKDataSourceItem *)buildDataSourceItemForPreviousRoot:(CKComponentScopeRoot *)previousRoot
                                             stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                                               sizeRange:(const CKSizeRange &)sizeRange 
+                                               sizeRange:(const CKSizeRange &)sizeRange
                                            configuration:(CKDataSourceConfiguration *)configuration
                                                    model:(id)model
                                                  context:(id)context
-                                        layoutPredicates:(const std::unordered_set<CKComponentPredicate> &)layoutPredicates
                                                 itemType:(CKDataSourceChangesetModificationItemType)itemType
 {
   auto item = [[CKDataSourceAsyncLayoutItem alloc] initWithQueue:_workQueue
@@ -62,8 +61,7 @@
                                                        sizeRange:sizeRange
                                                    configuration:configuration
                                                            model:model
-                                                         context:context
-                                                layoutPredicates:layoutPredicates];
+                                                         context:context];
   [item beginLayout];
   return item;
 }

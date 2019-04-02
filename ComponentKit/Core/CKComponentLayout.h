@@ -16,6 +16,7 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKComponentAnimationPredicates.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKEqualityHashHelpers.h>
 #import <ComponentKit/CKSizeRange.h>
@@ -129,7 +130,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener = nil,
-                                                   std::unordered_set<CKComponentPredicate> predicates = {});
+                                                   std::unordered_set<CKComponentPredicate> predicates = CKComponentAnimationPredicates());
 
 /**
  Safely computes the layout of the given component by guarding against nil components.

@@ -31,7 +31,6 @@ typedef NS_ENUM(NSUInteger, CKDataSourceChangesetModificationItemType) {
                                            configuration:(CKDataSourceConfiguration *)configuration
                                                    model:(id)model
                                                  context:(id)context
-                                        layoutPredicates:(const std::unordered_set<CKComponentPredicate> &)layoutPredicates
                                                 itemType:(CKDataSourceChangesetModificationItemType)itemType;
 
 @end

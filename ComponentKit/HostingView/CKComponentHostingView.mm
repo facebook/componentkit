@@ -20,7 +20,6 @@
 #import "CKAnimationApplicator.h"
 #import "CKBuildComponent.h"
 #import "CKComponentAnimation.h"
-#import "CKComponentAnimationPredicates.h"
 #import "CKComponentController.h"
 #import "CKComponentDebugController.h"
 #import "CKComponentHostingViewDelegate.h"
@@ -54,7 +53,6 @@ struct CKComponentHostingViewInputs {
   CKComponentHostingViewInputs _pendingInputs;
 
   CKComponentHostingContainerViewProvider *_containerViewProvider;
-  std::unordered_set<CKComponentPredicate> _animationPredicates;
 
   CKComponent *_component;
   BOOL _componentNeedsUpdate;
@@ -192,7 +190,6 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
 
-    _animationPredicates = CKComponentAnimationPredicates();
     _invalidateRemovedControllers = options.invalidateRemovedControllers;
 
     [CKComponentDebugController registerReflowListener:self];
@@ -228,7 +225,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 
     [self _synchronouslyUpdateComponentIfNeeded];
     if (_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size)) {
-      auto const rootLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, _animationPredicates);
+      auto const rootLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener);
       _mountedRootLayout = rootLayout;
       [self _sendDidPrepareLayoutIfNeeded];
       [_containerViewProvider setRootLayout:rootLayout];

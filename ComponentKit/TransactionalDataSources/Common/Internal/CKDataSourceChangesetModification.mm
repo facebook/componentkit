@@ -20,7 +20,6 @@
 #import "CKDataSourceItemInternal.h"
 #import "CKDataSourceAppliedChanges.h"
 #import "CKBuildComponent.h"
-#import "CKComponentAnimationPredicates.h"
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
 #import "CKComponentLayout.h"
@@ -74,7 +73,6 @@
   CKDataSourceConfiguration *configuration = [oldState configuration];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
-  const auto animationPredicates = CKComponentAnimationPredicates();
 
   NSMutableArray *newSections = [NSMutableArray array];
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
@@ -110,7 +108,6 @@
                                                                configuration:configuration
                                                                        model:model
                                                                      context:context
-                                                            layoutPredicates:animationPredicates
                                                                     itemType:CKDataSourceChangesetModificationItemTypeUpdate];
     [section replaceObjectAtIndex:indexPath.item withObject:item];
   }];
@@ -232,7 +229,6 @@
                                        configuration:configuration
                                                model:model
                                              context:context
-                                    layoutPredicates:animationPredicates
                                             itemType:CKDataSourceChangesetModificationItemTypeInsert];
   };
 
@@ -301,7 +297,6 @@
                                             configuration:(CKDataSourceConfiguration *)configuration
                                                     model:(id)model
                                                   context:(id)context
-                                         layoutPredicates:(const std::unordered_set<CKComponentPredicate> &)layoutPredicates
                                                  itemType:(CKDataSourceChangesetModificationItemType)itemType
 {
   if (_itemGenerator) {
@@ -311,10 +306,9 @@
                                                 configuration:configuration
                                                         model:model
                                                       context:context
-                                             layoutPredicates:layoutPredicates
                                                      itemType:itemType];
   } else {
-    return CKBuildDataSourceItem(previousRoot, stateUpdates, sizeRange, configuration, model, context, layoutPredicates);
+    return CKBuildDataSourceItem(previousRoot, stateUpdates, sizeRange, configuration, model, context);
   }
 }
 

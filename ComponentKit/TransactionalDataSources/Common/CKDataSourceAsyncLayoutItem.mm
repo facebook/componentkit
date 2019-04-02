@@ -23,19 +23,18 @@
   std::atomic<BOOL> _hasStartedLayout;
   dispatch_queue_t _queue;
   CKDataSourceQOS _qos;
-  
+
   std::atomic<BOOL> _isFinished;
   std::mutex _waitOnLayoutMutex;
   CKDataSourceItem *_item;
   id<CKSystraceListener> _systraceListener;
-  
+
   CKComponentScopeRoot *_previousRoot;
   CKComponentStateUpdateMap _stateUpdateMap;
   CKSizeRange _sizeRange;
   CKDataSourceConfiguration *_configuration;
   id _model;
   id _context;
-  std::unordered_set<CKComponentPredicate> _layoutPredicates;
 }
 
 - (instancetype)initWithQueue:(dispatch_queue_t)queue
@@ -46,7 +45,6 @@
                 configuration:(CKDataSourceConfiguration *)configuration
                         model:(id)model
                       context:(id)context
-             layoutPredicates:(const std::unordered_set<CKComponentPredicate> &)layoutPredicates
 {
   if(self = [self initWithModel:model scopeRoot:previousRoot]) {
     _isFinished = NO;
@@ -59,7 +57,6 @@
     _configuration = configuration;
     _model = model;
     _context = context;
-    _layoutPredicates = layoutPredicates;
     _systraceListener = [[previousRoot analyticsListener] systraceListener];
   }
   return self;
@@ -77,7 +74,7 @@
        */
       {
         std::lock_guard<std::mutex> l(_waitOnLayoutMutex);
-        auto item = CKBuildDataSourceItem(_previousRoot, _stateUpdateMap, _sizeRange, _configuration, _model, _context, _layoutPredicates);
+        auto item = CKBuildDataSourceItem(_previousRoot, _stateUpdateMap, _sizeRange, _configuration, _model, _context);
         _item = item;
       }
       _isFinished = YES;

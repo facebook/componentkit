@@ -36,13 +36,12 @@
                     sizeRange:(const CKSizeRange &)sizeRange
                 configuration:(CKDataSourceConfiguration *)configuration
                         model:(id)model
-                      context:(id)context
-             layoutPredicates:(const std::unordered_set<CKComponentPredicate> &)layoutPredicates;
+                      context:(id)context;
 
 /**
  Called to actually kick off the async layout, however we will not kick off
  the layout multiple times if this method is called multiple times.
- 
+
  NOTE: If you have not kicked off the async layout by the time someone asks for
  the layout for this item it will be done without calling this method.
  */
