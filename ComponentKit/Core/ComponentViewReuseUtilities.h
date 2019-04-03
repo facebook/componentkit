@@ -12,7 +12,7 @@
 
 #import <UIKit/UIKit.h>
 
-class CKComponentViewClass;
+struct CKComponentViewClass;
 
 namespace CK {
   namespace Component {

@@ -13,7 +13,7 @@
 #import <ComponentKit/ComponentUtilities.h>
 #import <ComponentKit/CKComponentAction.h>
 
-class CKComponentViewConfiguration;
+struct CKComponentViewConfiguration;
 
 typedef NSString *(^CKAccessibilityLazyTextBlock)();
 
