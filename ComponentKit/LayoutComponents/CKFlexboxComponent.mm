@@ -15,6 +15,7 @@
 #import <ComponentKit/CKGlobalConfig.h>
 
 #import "yoga/Yoga.h"
+#import "yoga/Yoga-internal.h"
 
 #import "CKComponent+Yoga.h"
 #import "CKComponentInternal.h"
