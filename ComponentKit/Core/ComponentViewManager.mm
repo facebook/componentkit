@@ -16,7 +16,6 @@
 #import "CKMutex.h"
 
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKGlobalConfig.h>
 
 #import "CKInternalHelpers.h"
 #import "CKMutex.h"
@@ -182,23 +181,20 @@ void ViewReusePoolMap::reset(UIView *container, CK::Component::MountAnalyticsCon
 
     if (vendedViewIt != nextVendedViewIt) {
       NSUInteger swapIndex = [subviews indexOfObjectIdenticalTo:*nextVendedViewIt];
-
-      // This check can cause some z-ordering issue if views vended by the framework are manipulated outside of the framework
+      // This check can cause some z-ordering issue if views vended by the framework are manipulated outside of the framework,
       if (swapIndex != NSNotFound) {
         // This naive algorithm does not do the minimal number of swaps. But it's simple, and swaps should be relatively
         // rare in any case, so let's go with it.
         [subviews exchangeObjectAtIndex:i withObjectAtIndex:swapIndex];
         [container exchangeSubviewAtIndex:i withSubviewAtIndex:swapIndex];
-      } else {
-        if (CKReadGlobalConfig().crashOnViewReuseError) {
-          CKCFatalWithCategory([CKMountedComponentForView(*nextVendedViewIt) class],
-                               @"Expected to find subview %@ (component: %@) in %@ (component: %@)",
-                               [*nextVendedViewIt class],
-                               [CKMountedComponentForView(*nextVendedViewIt) class],
-                               [container class],
-                               [CKMountedComponentForView(container) class]);
-        }
       }
+      CKCAssertWithCategory(swapIndex != NSNotFound,
+                            [CKMountedComponentForView(*nextVendedViewIt) class],
+                            @"Expected to find subview %@ (component: %@) in %@ (component: %@)",
+                            [*nextVendedViewIt class],
+                            [CKMountedComponentForView(*nextVendedViewIt) class],
+                            [container class],
+                            [CKMountedComponentForView(container) class]);
     }
 
     ++nextVendedViewIt;
