@@ -861,6 +861,8 @@
 		D657401421051C6F00FD8AAB /* CKIndexTransform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D657401121051C6E00FD8AAB /* CKIndexTransform.mm */; };
 		D657401521051C6F00FD8AAB /* CKIndexTransform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D657401121051C6E00FD8AAB /* CKIndexTransform.mm */; };
 		D67FE134222DD4790099ED6D /* CKAnalyticsListenerSpy.mm in Sources */ = {isa = PBXBuildFile; fileRef = D602CB7E222D861900BF308F /* CKAnalyticsListenerSpy.mm */; };
+		D68927F7225B6090009DBBD9 /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D68927EC225B5B29009DBBD9 /* CKLinkable.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D68927F8225B6091009DBBD9 /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D68927EC225B5B29009DBBD9 /* CKLinkable.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D6A2652120AC333F00B7B499 /* CKIndexSetDescription.mm in Sources */ = {isa = PBXBuildFile; fileRef = D63F9F8220AAF487003F3887 /* CKIndexSetDescription.mm */; };
 		D6A2652F20AC5B2100B7B499 /* NSIndexSetExtensions.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6B0AE0020AAFB1000A31FDF /* NSIndexSetExtensions.mm */; };
 		D6B0ADF420AAF88C00A31FDF /* CKIndexSetDescriptionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6B0ADF320AAF88C00A31FDF /* CKIndexSetDescriptionTests.mm */; };
@@ -1505,6 +1507,7 @@
 		D657400721013CBF00FD8AAB /* CKChangesetHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKChangesetHelpers.h; sourceTree = "<group>"; };
 		D657401021051C6E00FD8AAB /* CKIndexTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKIndexTransform.h; sourceTree = "<group>"; };
 		D657401121051C6E00FD8AAB /* CKIndexTransform.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKIndexTransform.mm; sourceTree = "<group>"; };
+		D68927EC225B5B29009DBBD9 /* CKLinkable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKLinkable.h; sourceTree = "<group>"; };
 		D6B0ADF320AAF88C00A31FDF /* CKIndexSetDescriptionTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKIndexSetDescriptionTests.mm; sourceTree = "<group>"; };
 		D6B0ADFF20AAFB1000A31FDF /* NSIndexSetExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSIndexSetExtensions.h; sourceTree = "<group>"; };
 		D6B0AE0020AAFB1000A31FDF /* NSIndexSetExtensions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = NSIndexSetExtensions.mm; sourceTree = "<group>"; };
@@ -1967,6 +1970,7 @@
 				D6CB418520AF0783000075F9 /* CKCasting.h */,
 				72A275C8219E145E00C1837F /* CKGlobalConfig.h */,
 				72A275C9219E145E00C1837F /* CKGlobalConfig.mm */,
+				D68927EC225B5B29009DBBD9 /* CKLinkable.h */,
 				D63A9262222482BD00E7CC91 /* CKOptional.h */,
 			);
 			path = Base;
@@ -2468,6 +2472,7 @@
 				03B8B4DC1D2A346F00EDFF59 /* CKStatefulViewComponentController.h in Headers */,
 				03B8B4DF1D2A346F00EDFF59 /* CKComponent.h in Headers */,
 				03B8B4E11D2A346F00EDFF59 /* CKComponentController.h in Headers */,
+				D68927F8225B6091009DBBD9 /* CKLinkable.h in Headers */,
 				03B8B4E21D2A346F00EDFF59 /* CKComponentHostingView.h in Headers */,
 				03B8B4E31D2A346F00EDFF59 /* CKComponentAccessibility.h in Headers */,
 				03B8B4E41D2A346F00EDFF59 /* CKComponentHostingViewInternal.h in Headers */,
@@ -2700,6 +2705,7 @@
 				D0B47D2B1CBD948E00BB33CE /* CKComponentHostingView.h in Headers */,
 				D0B47CE51CBD948E00BB33CE /* CKComponentAccessibility.h in Headers */,
 				7F47ECDF218A254300AD4E55 /* CKDispatch.h in Headers */,
+				D68927F7225B6090009DBBD9 /* CKLinkable.h in Headers */,
 				D0B47D2D1CBD948E00BB33CE /* CKComponentHostingViewInternal.h in Headers */,
 				B1EF8FE81DD1562B00E74F43 /* CKComponentActionInternal.h in Headers */,
 				D64CC1A520DE655100DBE8D3 /* CKAnimationApplicator.h in Headers */,
@@ -3074,6 +3080,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
