@@ -211,8 +211,10 @@
 
   // Remove sections
   NSIndexSet *const removedSections = [_changeset removedSections];
-  [newSections removeObjectsAtIndexes:removedSections];
-  [sectionsForDeferredUpdatedItems removeObjectsAtIndexes:removedSections];
+  if ([removedSections count] > 0) {
+    [newSections removeObjectsAtIndexes:removedSections];
+    [sectionsForDeferredUpdatedItems removeObjectsAtIndexes:removedSections];
+  }
 
   // Insert sections
 
