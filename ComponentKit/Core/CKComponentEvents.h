@@ -32,11 +32,6 @@ auto CKComponentHasAnimationsOnFinalUnmountPredicate(id<CKComponentProtocol> con
 BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id<CKComponentProtocol> component);
 
 /**
- Computes and returns the bounds animations for the transition from a prior generation's scope root.
- */
-CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKComponentScopeRoot *newRoot, CKComponentScopeRoot *previousRoot);
-
-/**
  Iterates over the components that their controller overrides 'didPrepareLayout:ForComponent:' and send the callback.
  */
 void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot, const CKComponentRootLayout &layout);

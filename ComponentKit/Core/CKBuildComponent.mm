@@ -30,6 +30,45 @@ namespace CKBuildComponentHelpers {
     }
     return BuildTrigger::NewTree;
   }
+
+  /**
+   Computes and returns the bounds animations for the transition from a prior generation's scope root.
+   */
+  static auto boundsAnimationFromPreviousScopeRoot(CKComponentScopeRoot *newRoot,
+                                                   CKComponentScopeRoot *previousRoot) -> CKComponentBoundsAnimation
+  {
+    NSMapTable *const scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
+    [previousRoot
+     enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
+     block:^(id<CKComponentProtocol> component) {
+       CKComponent *oldComponent = (CKComponent *)component;
+       id scopeFrameToken = [oldComponent scopeFrameToken];
+       if (scopeFrameToken) {
+         [scopeFrameTokenToOldComponent setObject:oldComponent forKey:scopeFrameToken];
+       }
+     }];
+
+    __block CKComponentBoundsAnimation boundsAnimation {};
+    [newRoot
+     enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
+     block:^(id<CKComponentProtocol> component) {
+       CKComponent *newComponent = (CKComponent *)component;
+       id scopeFrameToken = [newComponent scopeFrameToken];
+       if (scopeFrameToken) {
+         CKComponent *oldComponent = [scopeFrameTokenToOldComponent objectForKey:scopeFrameToken];
+         if (oldComponent) {
+           auto const ba = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
+           if (ba.duration != 0) {
+             boundsAnimation = ba;
+#if CK_ASSERTIONS_ENABLED
+             boundsAnimation.component = newComponent;
+#endif
+           }
+         }
+       }
+     }];
+    return boundsAnimation;
+  }
 }
 
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
@@ -74,6 +113,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   return {
     .component = component,
     .scopeRoot = newScopeRoot,
-    .boundsAnimation = CKComponentBoundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot),
+    .boundsAnimation = CKBuildComponentHelpers::boundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot),
   };
 }

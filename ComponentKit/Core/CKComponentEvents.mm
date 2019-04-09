@@ -49,41 +49,6 @@ auto CKComponentHasAnimationsOnFinalUnmountPredicate(id<CKComponentProtocol> con
   return CKSubclassOverridesSelector([CKComponent class], [c class], @selector(animationsOnFinalUnmount));
 }
 
-CKComponentBoundsAnimation CKComponentBoundsAnimationFromPreviousScopeRoot(CKComponentScopeRoot *newRoot, CKComponentScopeRoot *previousRoot)
-{
-  NSMapTable *const scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
-  [previousRoot
-   enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
-   block:^(id<CKComponentProtocol> component) {
-     CKComponent *oldComponent = (CKComponent *)component;
-     id scopeFrameToken = [oldComponent scopeFrameToken];
-     if (scopeFrameToken) {
-       [scopeFrameTokenToOldComponent setObject:oldComponent forKey:scopeFrameToken];
-     }
-   }];
-
-  __block CKComponentBoundsAnimation boundsAnimation {};
-  [newRoot
-   enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
-   block:^(id<CKComponentProtocol> component) {
-     CKComponent *newComponent = (CKComponent *)component;
-     id scopeFrameToken = [newComponent scopeFrameToken];
-     if (scopeFrameToken) {
-       CKComponent *oldComponent = [scopeFrameTokenToOldComponent objectForKey:scopeFrameToken];
-       if (oldComponent) {
-         auto const ba = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
-         if (ba.duration != 0) {
-           boundsAnimation = ba;
-#if CK_ASSERTIONS_ENABLED
-           boundsAnimation.component = newComponent;
-#endif
-         }
-       }
-     }
-   }];
-  return boundsAnimation;
-}
-
 void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot, const CKComponentRootLayout &layout)
 {
   // Iterate over the components that their controllers override the 'didPrepareLayoutForComponent' method.
