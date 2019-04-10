@@ -873,6 +873,10 @@
 		D6C3B06A20B71DE90089F06A /* CKComponentAnimations.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3B05C20B71DBE0089F06A /* CKComponentAnimations.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D6C3B06B20B71E240089F06A /* CKComponentAnimations.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6C3B05D20B71DBE0089F06A /* CKComponentAnimations.mm */; };
 		D6C3B06D20B71FFD0089F06A /* CKComponentAnimationsTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6C3B06C20B71FFD0089F06A /* CKComponentAnimationsTests.mm */; };
+		D6C713F9224CCA5800BADCC6 /* CKAnimationComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C713ED224CCA5700BADCC6 /* CKAnimationComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D6C713FA224CCA5800BADCC6 /* CKAnimationComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C713ED224CCA5700BADCC6 /* CKAnimationComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D6C713FB224CCA5800BADCC6 /* CKAnimationComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6C713F8224CCA5700BADCC6 /* CKAnimationComponent.mm */; };
+		D6C713FC224CCA5800BADCC6 /* CKAnimationComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6C713F8224CCA5700BADCC6 /* CKAnimationComponent.mm */; };
 		EB14A3411D8267DF0004BECF /* CKAutoSizedImageComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKAutoSizedImageComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB14A3421D8267DF0004BECF /* CKAutoSizedImageComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKAutoSizedImageComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB14A3431D8267DF0004BECF /* CKAutoSizedImageComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = EB14A3401D8267DF0004BECF /* CKAutoSizedImageComponent.mm */; };
@@ -1515,6 +1519,8 @@
 		D6C3B05C20B71DBE0089F06A /* CKComponentAnimations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKComponentAnimations.h; sourceTree = "<group>"; };
 		D6C3B05D20B71DBE0089F06A /* CKComponentAnimations.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAnimations.mm; sourceTree = "<group>"; };
 		D6C3B06C20B71FFD0089F06A /* CKComponentAnimationsTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAnimationsTests.mm; sourceTree = "<group>"; };
+		D6C713ED224CCA5700BADCC6 /* CKAnimationComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAnimationComponent.h; sourceTree = "<group>"; };
+		D6C713F8224CCA5700BADCC6 /* CKAnimationComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnimationComponent.mm; sourceTree = "<group>"; };
 		D6CB417A20AF04A9000075F9 /* CKCollection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKCollection.h; sourceTree = "<group>"; };
 		D6CB418520AF0783000075F9 /* CKCasting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKCasting.h; sourceTree = "<group>"; };
 		D6CD290520DFE723000881EF /* CKComponentAnimationsEquality.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKComponentAnimationsEquality.h; sourceTree = "<group>"; };
@@ -1979,6 +1985,8 @@
 		D0B47ACC1CBD926700BB33CE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				D6C713ED224CCA5700BADCC6 /* CKAnimationComponent.h */,
+				D6C713F8224CCA5700BADCC6 /* CKAnimationComponent.mm */,
 				D0B47ACD1CBD926700BB33CE /* CKButtonComponent.h */,
 				D0B47ACE1CBD926700BB33CE /* CKButtonComponent.mm */,
 				D0B47ACF1CBD926700BB33CE /* CKImageComponent.h */,
@@ -2507,6 +2515,7 @@
 				03B8B4FE1D2A346F00EDFF59 /* CKDataSourceListenerAnnouncer.h in Headers */,
 				03B8B4FF1D2A346F00EDFF59 /* CKDataSourceItem.h in Headers */,
 				03B8B5001D2A346F00EDFF59 /* CKDataSourceStateInternal.h in Headers */,
+				D6C713FA224CCA5800BADCC6 /* CKAnimationComponent.h in Headers */,
 				03B8B5021D2A346F00EDFF59 /* CKComponentGestureActionsInternal.h in Headers */,
 				03B8B5031D2A346F00EDFF59 /* CKOverlayLayoutComponent.h in Headers */,
 				60D7B3B620FC90500011AB3B /* YGNode.h in Headers */,
@@ -2713,6 +2722,7 @@
 				D0B47D151CBD948E00BB33CE /* CKSupplementaryViewDataSource.h in Headers */,
 				D0B47D291CBD948E00BB33CE /* CKComponentHierarchyDebugHelper.h in Headers */,
 				D0B47D611CBD948E00BB33CE /* CKTextComponent.h in Headers */,
+				D6C713F9224CCA5800BADCC6 /* CKAnimationComponent.h in Headers */,
 				23EA314421A2E57400FEC59C /* CKTreeNodeTypes.h in Headers */,
 				D0B47D3D1CBD948E00BB33CE /* CKStatefulViewReusePool.h in Headers */,
 				7FF44A501FF685EC00E83E30 /* CKAnalyticsListener.h in Headers */,
@@ -3320,6 +3330,7 @@
 				7203EB90217005CE00109F4A /* CKThreadSafeDataSource.mm in Sources */,
 				B1AE6CF71E8B202F00C9AA96 /* CKComponentScopeRootFactory.mm in Sources */,
 				03B8B48B1D2A346F00EDFF59 /* CKComponentAnnouncerBase.mm in Sources */,
+				D6C713FC224CCA5800BADCC6 /* CKAnimationComponent.mm in Sources */,
 				60EFF4C221135FCA00CA7C68 /* CKStatelessComponent.mm in Sources */,
 				D63F21D920C20559007604F4 /* CKComponentAnimationsController.mm in Sources */,
 				03B8B48C1D2A346F00EDFF59 /* CKComponentAnnouncerHelper.mm in Sources */,
@@ -3695,6 +3706,7 @@
 				D657401421051C6F00FD8AAB /* CKIndexTransform.mm in Sources */,
 				D0B47CD31CBD943400BB33CE /* CKTextComponentLayer.mm in Sources */,
 				60D7B3AB20FC90500011AB3B /* YGConfig.cpp in Sources */,
+				D6C713FB224CCA5800BADCC6 /* CKAnimationComponent.mm in Sources */,
 				400B0E5F1F71C63B006BDFEE /* CKDataSourceChangeset.mm in Sources */,
 				23EF1D46209365BA004C95BE /* CKTreeNodeWithChildren.mm in Sources */,
 				ACFAD6B72245759200D6E051 /* log.cpp in Sources */,
