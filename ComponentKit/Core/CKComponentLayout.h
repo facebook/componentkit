@@ -113,13 +113,15 @@ struct CKMountComponentLayoutResult {
         CKMountComponentLayout; any components that are not present in the new layout will be unmounted.
  @param supercomponent Usually pass nil; if you are mounting a subtree of a layout, pass the parent component so the
         component responder chain can be connected correctly.
- @param analyticsListener analytics listener used to log mount time
+ @param analyticsListener analytics listener used to log mount time.
+ @param isUpdate Indicates whether the mount is due to an (state/props) update.
  */
 CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
                                                     UIView *view,
                                                     NSSet *previouslyMountedComponents,
                                                     CKComponent *supercomponent,
-                                                    id<CKAnalyticsListener> analyticsListener = nil);
+                                                    id<CKAnalyticsListener> analyticsListener = nil,
+                                                    BOOL isUpdate = NO);
 
 /**
  Safely computes the layout of the given root component by guarding against nil components.

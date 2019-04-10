@@ -72,7 +72,8 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
                                                     UIView *view,
                                                     NSSet *previouslyMountedComponents,
                                                     CKComponent *supercomponent,
-                                                    id<CKAnalyticsListener> analyticsListener)
+                                                    id<CKAnalyticsListener> analyticsListener,
+                                                    BOOL isUpdate)
 {
   struct MountItem {
     const CKComponentLayout &layout;
@@ -89,7 +90,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
   std::stack<MountItem> stack;
   CK::Component::MountAnalyticsContext mountAnalyticsContext;
   auto const mountAnalyticsContextPointer = [analyticsListener shouldCollectMountInformationForRootComponent:layout.component] ? &mountAnalyticsContext : nullptr;
-  stack.push({layout, MountContext::RootContext(view, mountAnalyticsContextPointer), supercomponent, NO});
+  stack.push({layout, MountContext::RootContext(view, mountAnalyticsContextPointer, isUpdate), supercomponent, NO});
   NSMutableSet *mountedComponents = [NSMutableSet set];
 
   layout.component.rootComponentMountedView = view;

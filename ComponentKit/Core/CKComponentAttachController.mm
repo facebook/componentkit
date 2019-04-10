@@ -88,7 +88,8 @@ void CKComponentAttachControllerAttachComponentRootLayout(
                                                       params.view,
                                                       params.scopeIdentifier,
                                                       params.boundsAnimation,
-                                                      params.analyticsListener);
+                                                      params.analyticsListener,
+                                                      params.isUpdate);
   // Mark the view as attached and associates it to the right attach state
   self->_scopeIdentifierToAttachedViewMap[@(params.scopeIdentifier)] = params.view;
   // Save layout provider in map, it will be used for figuring out animations between two layouts.
@@ -125,11 +126,12 @@ void CKComponentAttachControllerAttachComponentRootLayout(
 }
 
 static CKComponentAttachState *mountComponentLayoutInView(const CKComponentRootLayout &rootLayout,
-                                                                    const CKComponentRootLayout &prevLayout,
-                                                                    UIView *view,
-                                                                    CKComponentScopeRootIdentifier scopeIdentifier,
-                                                                    const CKComponentBoundsAnimation &boundsAnimation,
-                                                                    id<CKAnalyticsListener> analyticsListener)
+                                                          const CKComponentRootLayout &prevLayout,
+                                                          UIView *view,
+                                                          CKComponentScopeRootIdentifier scopeIdentifier,
+                                                          const CKComponentBoundsAnimation &boundsAnimation,
+                                                          id<CKAnalyticsListener> analyticsListener,
+                                                          BOOL isUpdate)
 {
   CKCAssertNotNil(view, @"Impossible to mount a component layout on a nil view");
   [analyticsListener willCollectAnimationsFromComponentTreeWithRootComponent:rootLayout.component()];
@@ -143,7 +145,7 @@ static CKComponentAttachState *mountComponentLayoutInView(const CKComponentRootL
   const auto mountPerformer = ^{
     __block NSSet<CKComponent *> *unmountedComponents;
     CKComponentBoundsAnimationApply(boundsAnimation, ^{
-      const auto result = CKMountComponentLayout(rootLayout.layout(), view, currentlyMountedComponents, nil, analyticsListener);
+      const auto result = CKMountComponentLayout(rootLayout.layout(), view, currentlyMountedComponents, nil, analyticsListener, isUpdate);
       newMountedComponents = result.mountedComponents;
       unmountedComponents = result.unmountedComponents;
     }, nil);
