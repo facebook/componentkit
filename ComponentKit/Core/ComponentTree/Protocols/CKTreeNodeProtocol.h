@@ -102,6 +102,11 @@ struct CKBuildComponentTreeParams {
 /** This method should be called after a node has been reused */
 - (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
 
+/** This method will called during the tree node creation in order to provide the component key based on the parent */
+- (CKTreeNodeComponentKey)createComponentKeyForComponent:(id<CKTreeNodeComponentProtocol>)component
+                                                  parent:(id<CKTreeNodeWithChildrenProtocol>)parent
+                                          componentClass:(Class<CKTreeNodeComponentProtocol>)componentClass;
+
 #if DEBUG
 /** Returns a multi-line string describing this node and its children nodes */
 - (NSString *)debugDescription;
@@ -126,7 +131,8 @@ struct CKBuildComponentTreeParams {
 - (id<CKTreeNodeProtocol>)childForComponentKey:(const CKTreeNodeComponentKey &)key;
 
 /** Creates a component key for a child node according to its component class; this method is being called once during the component tree creation */
-- (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass;
+- (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
+                                                   identifier:(id<NSObject>)identifier;
 
 /** Save a child node in the parent node according to its component key; this method is being called once during the component tree creation */
 - (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;

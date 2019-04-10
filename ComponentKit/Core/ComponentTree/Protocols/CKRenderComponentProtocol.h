@@ -41,6 +41,28 @@
  in order to update the new component from the reused one.
  */
 - (void)didReuseComponent:(id<CKRenderComponentProtocol>)component;
+
+/**
+ Override this method in order to assign a unique identifier to a component.
+
+ The default identifier of a component would be its class and an integer which represent the order it was built.
+ However, if you reorder/add/removed sibling components from the same type/class (as a result of a state/props update),
+ you need to assign them a uniqute identifier. Otherwise, the infrastrcture cannot distingiush between them after the change.
+
+       +-----+                                  +-----+
+       |     |                                  |     |
+       |  A  |                                  |  A  |
+       |     |                                  |     |
+       +-----+             ------->             +-----+
+ +-----+      +-----+                     +-----+      +-----+
+ |     |      |     |                     |     |      |     |
+ | B1  |      |  B2 |                     | B2  |      |  B1 |
+ |     |      |     |                     |     |      |     |
+ +-----+      +-----+                     +-----+      +-----+
+
+ In this case, the infrastrcture cannot distinguish between B1 and B2, unless it provides a unqiue identifier.
+ */
+- (id<NSObject>)componentIdentifier;
 @end
 
 

@@ -23,5 +23,12 @@
   return [componentClass requiresScopeHandle];
 }
 
+- (CKTreeNodeComponentKey)createComponentKeyForComponent:(id<CKRenderComponentProtocol>)component
+                                                  parent:(id<CKTreeNodeWithChildrenProtocol>)parent
+                                          componentClass:(Class<CKTreeNodeComponentProtocol>)componentClass
+{
+  return [parent createComponentKeyForChildWithClass:componentClass identifier:[component componentIdentifier]];
+}
+
 @end
 

@@ -10,8 +10,10 @@
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
+#import <ComponentKit/CKFlexboxComponent.h>
 
 #import "CKComponent.h"
 #import "CKCompositeComponent.h"
@@ -56,6 +58,10 @@
 @end
 
 @interface CKTreeNodeTest_RenderComponent_WithNilState : CKRenderComponent
+@end
+
+@interface CKTreeNodeTest_RenderComponent_WithIdentifier : CKRenderComponent
++ (instancetype)newWithIdentifier:(id<NSObject>)identifier;
 @end
 
 @interface CKTreeNodeTests : XCTestCase
@@ -220,6 +226,86 @@
 
   XCTAssertEqual(childNode1.nodeIdentifier, childNode2.nodeIdentifier);
 }
+
+- (void)test_componentIdentifierOnCKRenderTreeNodeWithChildren_withReorder {
+  // Simulate first component tree creation
+  __block CKTreeNodeTest_RenderComponent_WithIdentifier *c1;
+  __block CKTreeNodeTest_RenderComponent_WithIdentifier *c2;
+  auto const results = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^CKComponent *{
+    c1 = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@1];
+    c2 = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@2];
+    return [CKFlexboxComponent
+            newWithView:{}
+            size:{}
+            style:{.alignItems = CKFlexboxAlignItemsStretch}
+            children:{
+              {c1},
+              {c2},
+            }];
+  });
+
+  // Simulate a props update which *reorders* the children.
+  __block CKTreeNodeTest_RenderComponent_WithIdentifier *c1SecondGen;
+  __block CKTreeNodeTest_RenderComponent_WithIdentifier *c2SecondGen;
+  auto const results2 = CKBuildComponent(results.scopeRoot, {}, ^CKComponent *{
+    c1SecondGen = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@1];
+    c2SecondGen = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@2];
+    return [CKFlexboxComponent
+            newWithView:{}
+            size:{}
+            style:{.alignItems = CKFlexboxAlignItemsStretch}
+            children:{
+              {c2SecondGen},
+              {c1SecondGen},
+            }];
+  });
+
+  // Make sure each component retreive its correct state even after reorder.
+  XCTAssertEqual(c1.scopeHandle.state, c1SecondGen.scopeHandle.state);
+  XCTAssertEqual(c2.scopeHandle.state, c2SecondGen.scopeHandle.state);
+}
+
+- (void)test_componentIdentifierOnCKRenderTreeNodeWithChildren_withRemovingComponents {
+  // Simulate first component tree creation
+  __block CKTreeNodeTest_RenderComponent_WithIdentifier *c1;
+  __block CKTreeNodeTest_RenderComponent_WithIdentifier *c2;
+  __block CKTreeNodeTest_RenderComponent_WithIdentifier *c3;
+  auto const results = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^CKComponent *{
+    c1 = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@1];
+    c2 = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@2];
+    c3 = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@3];
+    return [CKFlexboxComponent
+            newWithView:{}
+            size:{}
+            style:{.alignItems = CKFlexboxAlignItemsStretch}
+            children:{
+              {c1},
+              {c2},
+              {c3},
+            }];
+  });
+
+  // Simulate a props update which *removes* c2 from the hierarchy.
+  __block CKTreeNodeTest_RenderComponent_WithIdentifier *c1SecondGen;
+  __block CKTreeNodeTest_RenderComponent_WithIdentifier *c3SecondGen;
+  auto const results2 = CKBuildComponent(results.scopeRoot, {}, ^CKComponent *{
+    c1SecondGen = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@1];
+    c3SecondGen = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@3];
+    return [CKFlexboxComponent
+            newWithView:{}
+            size:{}
+            style:{.alignItems = CKFlexboxAlignItemsStretch}
+            children:{
+              {c1SecondGen},
+              {c3SecondGen},
+            }];
+  });
+
+  // Make sure each component retreive its correct state even after reorder.
+  XCTAssertEqual(c1.scopeHandle.state, c1SecondGen.scopeHandle.state);
+  XCTAssertEqual(c3.scopeHandle.state, c3SecondGen.scopeHandle.state);
+}
+
 
 #pragma mark - State
 
@@ -589,3 +675,33 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 }
 @end
 
+@implementation CKTreeNodeTest_RenderComponent_WithIdentifier
+{
+  id<NSObject> _identifier;
+}
+
++ (instancetype)newWithIdentifier:(id<NSObject>)identifier
+{
+  auto const c = [super new];
+  if (c) {
+    c->_identifier = identifier;
+  }
+  return c;
+}
+
+- (id<NSObject>)componentIdentifier
+{
+  return _identifier;
+}
+
+- (CKComponent *)render:(id)state
+{
+  return [CKComponent new];
+}
+
++ (id)initialStateWithComponent:(CKTreeNodeTest_RenderComponent_WithIdentifier *)component
+{
+  return component->_identifier;
+}
+
+@end

@@ -113,4 +113,9 @@
   return {};
 }
 
+- (id)componentIdentifier
+{
+  return nil;
+}
+
 @end

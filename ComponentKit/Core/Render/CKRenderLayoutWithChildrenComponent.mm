@@ -50,4 +50,9 @@
 
 - (void)didReuseComponent:(id<CKRenderComponentProtocol>)component {}
 
+- (id)componentIdentifier
+{
+  return nil;
+}
+
 @end

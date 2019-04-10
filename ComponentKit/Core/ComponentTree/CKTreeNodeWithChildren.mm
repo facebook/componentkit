@@ -12,31 +12,51 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKEqualityHashHelpers.h>
 
 #include <tuple>
 
 #import "CKMutex.h"
 
+typedef std::tuple<Class, id<NSObject>> CKTreeNodeClassType;
+
 struct CKTreeNodeComparator {
   bool operator() (const CKTreeNodeComponentKey &lhs, const CKTreeNodeComponentKey &rhs) const
   {
-    return std::get<0>(lhs) == std::get<0>(rhs) && std::get<1>(lhs) == std::get<1>(rhs);
+    return std::get<0>(lhs) == std::get<0>(rhs) &&
+    std::get<1>(lhs) == std::get<1>(rhs) &&
+    CKObjectIsEqual(std::get<2>(lhs), std::get<2>(rhs));
   }
 };
 
 struct CKTreeNodeHasher {
   std::size_t operator() (const CKTreeNodeComponentKey &n) const
   {
-    return [std::get<0>(n) hash] ^ std::get<1>(n);
+    return [std::get<0>(n) hash] ^ std::get<1>(n) ^ [std::get<2>(n) hash];
   }
 };
 
-typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CKTreeNodeHasher, CKTreeNodeComparator> CKScopeNodeMap;
+struct CKClassTypeComparator {
+  bool operator() (const CKTreeNodeClassType &lhs, const CKTreeNodeClassType &rhs) const
+  {
+    return std::get<0>(lhs) == std::get<0>(rhs) && CKObjectIsEqual(std::get<1>(lhs), std::get<1>(rhs));
+  }
+};
+
+struct CKClassTypeHasher {
+  std::size_t operator() (const CKTreeNodeClassType &n) const
+  {
+    return [std::get<0>(n) hash] ^ [std::get<1>(n) hash];
+  }
+};
+
+typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CKTreeNodeHasher, CKTreeNodeComparator> CKNodeMap;
+typedef std::unordered_map<CKTreeNodeClassType, NSUInteger, CKClassTypeHasher, CKClassTypeComparator> CKClassTypeMap;
 
 @implementation CKTreeNodeWithChildren
 {
-  CKScopeNodeMap _children;
-  std::unordered_map<Class, NSUInteger> _classTypeIdentifier;
+  CKNodeMap _children;
+  CKClassTypeMap _classTypeMap;
 }
 
 - (std::vector<id<CKTreeNodeProtocol>>)children
@@ -63,8 +83,10 @@ typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CKTreeNodeHashe
 }
 
 - (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
+                                                   identifier:(id<NSObject>)identifier
 {
-  return std::make_tuple(componentClass, _classTypeIdentifier[componentClass]++);
+  auto const classKey = std::make_tuple(componentClass, identifier);
+  return std::make_tuple(componentClass, _classTypeMap[classKey]++, identifier);
 }
 
 - (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
