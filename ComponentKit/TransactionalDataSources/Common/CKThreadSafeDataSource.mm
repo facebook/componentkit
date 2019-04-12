@@ -266,6 +266,9 @@ static void *kWorkQueueKey = &kWorkQueueKey;
   dispatch_async(dispatch_get_main_queue(), ^{
     auto const appliedChanges = change.appliedChanges;
     // Announce 'invalidateController'.
+    for (CKComponentController *const componentController in change.invalidComponentControllers) {
+      [componentController invalidateController];
+    }
     for (NSIndexPath *const removedIndex in appliedChanges.removedIndexPaths) {
       CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
       CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);

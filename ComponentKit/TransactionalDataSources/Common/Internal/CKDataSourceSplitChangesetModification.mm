@@ -23,6 +23,7 @@
 #import "CKBuildComponent.h"
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
+#import "CKComponentControllerHelper.h"
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
@@ -31,6 +32,8 @@
 #import "CKDataSourceModificationHelper.h"
 #import "CKIndexSetDescription.h"
 #import "CKInvalidChangesetOperationType.h"
+
+using namespace CKComponentControllerHelper;
 
 @implementation CKDataSourceSplitChangesetModification
 {
@@ -67,6 +70,8 @@
   ? splitChangesetOptions.viewportBoundingSize
   : _viewport.size;
 
+  NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
+
   NSMutableArray *newSections = [NSMutableArray array];
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     [newSections addObject:[items mutableCopy]];
@@ -81,6 +86,7 @@
     const CKDataSourceSplitUpdateResult result =
     splitUpdatedItems(newSections,
                       updatedItems,
+                      invalidComponentControllers,
                       sizeRange,
                       configuration,
                       context,
@@ -121,6 +127,13 @@
       CKDataSourceItem *const oldItem = section[indexPath.item];
       CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
       [section replaceObjectAtIndex:indexPath.item withObject:item];
+      if (configuration.shouldInvalidateControllerBetweenComponentGenerations) {
+        for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
+                                                                                                       oldItem.scopeRoot,
+                                                                                                       &CKComponentControllerInvalidateEventPredicate)) {
+          [invalidComponentControllers addObject:componentController];
+        }
+      }
     }];
   }
 
@@ -348,7 +361,8 @@
   return [[CKDataSourceChange alloc] initWithState:newState
                                      previousState:oldState
                                     appliedChanges:appliedChanges
-                                 deferredChangeset:createDeferredChangeset(deferredInsertedItems, computeDeferredItems(sectionsForDeferredUpdatedItems))];
+                                 deferredChangeset:createDeferredChangeset(deferredInsertedItems, computeDeferredItems(sectionsForDeferredUpdatedItems))
+                       invalidComponentControllers:invalidComponentControllers];
 }
 
 - (NSDictionary *)userInfo
@@ -418,6 +432,7 @@ struct CKDataSourceSplitUpdateResult {
 
 static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSourceItem *> *> *sections,
                                                        NSDictionary<NSIndexPath *, id> *updatedItems,
+                                                       NSMutableArray<CKComponentController *> *invalidComponentControllers,
                                                        const CKSizeRange &sizeRange,
                                                        CKDataSourceConfiguration *configuration,
                                                        id<NSObject> context,
@@ -464,6 +479,13 @@ static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSou
         computedItems[indexPath] = newItem;
         initialUpdatedItems[indexPath] = updatedModel;
         contentSize = addSizeToSize(contentSize, [newItem rootLayout].size());
+        if (configuration.shouldInvalidateControllerBetweenComponentGenerations) {
+          for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                                         item.scopeRoot,
+                                                                                                         &CKComponentControllerInvalidateEventPredicate)) {
+            [invalidComponentControllers addObject:componentController];
+          }
+        }
       }
     }];
   }];

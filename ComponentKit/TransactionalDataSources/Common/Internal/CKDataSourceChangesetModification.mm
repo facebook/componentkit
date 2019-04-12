@@ -21,6 +21,7 @@
 #import "CKDataSourceAppliedChanges.h"
 #import "CKBuildComponent.h"
 #import "CKComponentControllerEvents.h"
+#import "CKComponentControllerHelper.h"
 #import "CKComponentEvents.h"
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"
@@ -30,6 +31,8 @@
 #import "CKDataSourceModificationHelper.h"
 #import "CKIndexSetDescription.h"
 #import "CKInvalidChangesetOperationType.h"
+
+using namespace CKComponentControllerHelper;
 
 @implementation CKDataSourceChangesetModification
 {
@@ -74,6 +77,8 @@
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
 
+  NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
+
   NSMutableArray *newSections = [NSMutableArray array];
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     [newSections addObject:[items mutableCopy]];
@@ -110,6 +115,13 @@
                                                                      context:context
                                                                     itemType:CKDataSourceChangesetModificationItemTypeUpdate];
     [section replaceObjectAtIndex:indexPath.item withObject:item];
+    if (configuration.shouldInvalidateControllerBetweenComponentGenerations) {
+      for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
+                                                                                                     oldItem.scopeRoot,
+                                                                                                     &CKComponentControllerInvalidateEventPredicate)) {
+        [invalidComponentControllers addObject:componentController];
+      }
+    }
   }];
 
   __block std::unordered_map<NSUInteger, std::map<NSUInteger, CKDataSourceItem *>> insertedItemsBySection;
@@ -290,7 +302,8 @@
   return [[CKDataSourceChange alloc] initWithState:newState
                                      previousState:oldState
                                     appliedChanges:appliedChanges
-                                 deferredChangeset:nil];
+                                 deferredChangeset:nil
+                       invalidComponentControllers:invalidComponentControllers];
 }
 
 - (CKDataSourceItem *)_buildDataSourceItemForPreviousRoot:(CKComponentScopeRoot *)previousRoot

@@ -17,11 +17,15 @@
 #import "CKDataSourceItemInternal.h"
 #import "CKDataSourceAppliedChanges.h"
 #import "CKBuildComponent.h"
+#import "CKComponentControllerEvents.h"
+#import "CKComponentControllerHelper.h"
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeRoot.h"
 #import "CKDataSourceModificationHelper.h"
+
+using namespace CKComponentControllerHelper;
 
 @implementation CKDataSourceReloadModification
 {
@@ -44,6 +48,7 @@
 
   NSMutableArray *newSections = [NSMutableArray array];
   NSMutableSet *updatedIndexPaths = [NSMutableSet set];
+  NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     NSMutableArray *newItems = [NSMutableArray array];
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
@@ -51,6 +56,13 @@
       // On reload, we would like avoid component reuse - by passing `ignoreComponentReuseOptimizations = YES`, we make sure that all the components will be recreated.
       CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, [item model], context, YES);
       [newItems addObject:newItem];
+      if (configuration.shouldInvalidateControllerBetweenComponentGenerations) {
+        for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                                       item.scopeRoot,
+                                                                                                       &CKComponentControllerInvalidateEventPredicate)) {
+          [invalidComponentControllers addObject:componentController];
+        }
+      }
      }];
     [newSections addObject:newItems];
   }];
@@ -71,7 +83,8 @@
   return [[CKDataSourceChange alloc] initWithState:newState
                                      previousState:oldState
                                     appliedChanges:appliedChanges
-                                 deferredChangeset:nil];
+                                 deferredChangeset:nil
+                       invalidComponentControllers:invalidComponentControllers];
 }
 
 - (NSDictionary *)userInfo

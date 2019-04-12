@@ -10,6 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class CKComponentController;
 @class CKDataSourceAppliedChanges;
 @class CKDataSourceChangeset;
 @class CKDataSourceState;
@@ -19,7 +20,8 @@
 - (instancetype)initWithState:(CKDataSourceState *)state
                 previousState:(CKDataSourceState *)previousState
                appliedChanges:(CKDataSourceAppliedChanges *)appliedChanges
-            deferredChangeset:(CKDataSourceChangeset *)deferredChangeset;
+            deferredChangeset:(CKDataSourceChangeset *)deferredChangeset
+  invalidComponentControllers:(NSArray<CKComponentController *> *)invalidComponentControllers;
 @property (nonatomic, strong, readonly) CKDataSourceState *state;
 @property (nonatomic, strong, readonly) CKDataSourceState *previousState;
 @property (nonatomic, strong, readonly) CKDataSourceAppliedChanges *appliedChanges;
@@ -30,4 +32,9 @@
  * changesets for the purpose of optimizing the performance of the initial render.
  */
 @property (nonatomic, strong, readonly) CKDataSourceChangeset *deferredChangeset;
+/**
+ Component controllers that are not presented in the new state.
+ */
+@property (nonatomic, strong, readonly) NSArray<CKComponentController *> *invalidComponentControllers;
+
 @end

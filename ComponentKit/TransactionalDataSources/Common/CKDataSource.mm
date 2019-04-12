@@ -312,6 +312,9 @@
   _state = newState;
 
   // Announce 'invalidateController'.
+  for (CKComponentController *componentController in change.invalidComponentControllers) {
+    [componentController invalidateController];
+  }
   for (NSIndexPath *removedIndex in [appliedChanges removedIndexPaths]) {
     CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
     CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);

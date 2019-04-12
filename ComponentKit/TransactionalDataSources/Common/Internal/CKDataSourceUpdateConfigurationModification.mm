@@ -17,11 +17,15 @@
 #import "CKDataSourceItemInternal.h"
 #import "CKDataSourceAppliedChanges.h"
 #import "CKBuildComponent.h"
+#import "CKComponentControllerEvents.h"
+#import "CKComponentControllerHelper.h"
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeRoot.h"
 #import "CKDataSourceModificationHelper.h"
+
+using namespace CKComponentControllerHelper;
 
 @implementation CKDataSourceUpdateConfigurationModification
 {
@@ -49,6 +53,7 @@
 
   NSMutableArray *newSections = [NSMutableArray array];
   NSMutableSet *updatedIndexPaths = [NSMutableSet set];
+  NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     NSMutableArray *newItems = [NSMutableArray array];
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
@@ -62,6 +67,13 @@
                                                boundsAnimation:[item boundsAnimation]];
       } else {
         newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, _configuration, [item model], context);
+        if (_configuration.shouldInvalidateControllerBetweenComponentGenerations) {
+          for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                                         item.scopeRoot,
+                                                                                                         &CKComponentControllerInvalidateEventPredicate)) {
+            [invalidComponentControllers addObject:componentController];
+          }
+        }
       }
       [newItems addObject:newItem];
     }];
@@ -84,7 +96,8 @@
   return [[CKDataSourceChange alloc] initWithState:newState
                                      previousState:oldState
                                     appliedChanges:appliedChanges
-                                 deferredChangeset:nil];
+                                 deferredChangeset:nil
+                       invalidComponentControllers:invalidComponentControllers];
 }
 
 - (NSDictionary *)userInfo
