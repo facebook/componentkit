@@ -27,7 +27,7 @@
 
 typedef struct {
   BOOL allowTapPassthrough;
-  BOOL invalidateRemovedControllers;
+  BOOL shouldInvalidateControllerBetweenComponentGenerations;
   BOOL embedInFlexbox;
   BOOL embedInTestComponent;
   id<CKAnalyticsListener> analyticsListener;
@@ -66,7 +66,7 @@ typedef struct {
                                                  analyticsListener:options.analyticsListener
                                                            options:{
                                                              .allowTapPassthrough = options.allowTapPassthrough,
-                                                             .invalidateRemovedControllers = options.invalidateRemovedControllers,
+                                                             .shouldInvalidateControllerBetweenComponentGenerations = options.shouldInvalidateControllerBetweenComponentGenerations,
                                                            }];
 }
 
@@ -173,7 +173,7 @@ typedef struct {
 {
   CKComponentHostingView *view = [[self class] hostingView:{
     .embedInTestComponent = YES,
-    .invalidateRemovedControllers = YES
+    .shouldInvalidateControllerBetweenComponentGenerations = YES,
   }];
 
   auto const testComponent = (CKEmbeddedTestComponent *)view.mountedLayout.component;
@@ -312,7 +312,7 @@ typedef struct {
                                                      analyticsListener:options.analyticsListener
                                                                options:{
                                                                  .allowTapPassthrough = options.allowTapPassthrough,
-                                                                 .invalidateRemovedControllers = options.invalidateRemovedControllers,
+                                                                 .shouldInvalidateControllerBetweenComponentGenerations = options.shouldInvalidateControllerBetweenComponentGenerations,
                                                                }];
 }
 

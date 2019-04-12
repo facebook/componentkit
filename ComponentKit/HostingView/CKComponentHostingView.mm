@@ -30,6 +30,7 @@
 #import "CKComponentSizeRangeProviding.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentControllerEvents.h"
+#import "CKComponentControllerHelper.h"
 #import "CKComponentEvents.h"
 #import "CKGlobalConfig.h"
 #import "CKComponentHostingContainerViewProvider.h"
@@ -64,7 +65,7 @@ struct CKComponentHostingViewInputs {
   BOOL _isSynchronouslyUpdatingComponent;
   BOOL _isMountingComponent;
   BOOL _allowTapPassthrough;
-  BOOL _invalidateRemovedControllers;
+  BOOL _shouldInvalidateControllerBetweenComponentGenerations;
 }
 @end
 
@@ -190,7 +191,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
 
-    _invalidateRemovedControllers = options.invalidateRemovedControllers;
+    _shouldInvalidateControllerBetweenComponentGenerations = options.shouldInvalidateControllerBetweenComponentGenerations;
 
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -274,7 +275,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 - (void)applyResult:(const CKBuildComponentResult &)result
 {
   CKAssertMainThread();
-  [self _applyResult:result];
+  [self _applyResult:result invalidComponentControllers:[self _invalidComponentControllersWithNewScopeRoot:result.scopeRoot
+                                                                                     fromPreviousScopeRoot:_pendingInputs.scopeRoot]];
   [self setNeedsLayout];
   [_delegate componentHostingViewDidInvalidateSize:self];
 }
@@ -375,6 +377,10 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
                                                                       return _componentProvider(inputs->model, inputs->context);
                                                                     }
                                                                     ));
+    const auto invalidComponentControllers = _shouldInvalidateControllerBetweenComponentGenerations
+    ? std::make_shared<const std::vector<CKComponentController *>>([self _invalidComponentControllersWithNewScopeRoot:result->scopeRoot
+                                                                                                fromPreviousScopeRoot:inputs->scopeRoot])
+    : nullptr;
     dispatch_async(dispatch_get_main_queue(), ^{
       if (!_componentNeedsUpdate) {
         // A synchronous update snuck in and took care of it for us.
@@ -385,7 +391,8 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
       // If the inputs haven't changed, apply the result; otherwise, retry.
       if (_pendingInputs == *inputs) {
         _scheduledAsynchronousComponentUpdate = NO;
-        [self _applyResult:*result];
+        const auto componentControllers = invalidComponentControllers != nullptr ? *invalidComponentControllers : std::vector<CKComponentController *> {};
+        [self _applyResult:*result invalidComponentControllers:componentControllers];
         [self setNeedsLayout];
         [_delegate componentHostingViewDidInvalidateSize:self];
       } else {
@@ -395,38 +402,17 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   });
 }
 
-- (void)_applyResult:(const CKBuildComponentResult &)result
+- (void)_applyResult:(const CKBuildComponentResult &)result invalidComponentControllers:(const std::vector<CKComponentController *> &)invalidComponentControllers
 {
-  if (_invalidateRemovedControllers) {
-    [self _invalidateControllersIfNeeded:result];
+  for (const auto componentController : invalidComponentControllers) {
+    [componentController invalidateController];
   }
-
   _pendingInputs.scopeRoot = result.scopeRoot;
   _pendingInputs.stateUpdates = {};
   _component = result.component;
   [_containerViewProvider setBoundsAnimation:result.boundsAnimation];
   [_containerViewProvider setComponent:result.component];
   _componentNeedsUpdate = NO;
-}
-
-- (void)_invalidateControllersIfNeeded:(const CKBuildComponentResult &)result
-{
-  if (_pendingInputs.scopeRoot == nil) {
-    return;
-  }
-
-  const auto oldControllers = [_pendingInputs.scopeRoot componentControllersMatchingPredicate:&CKComponentControllerInvalidateEventPredicate];
-  const auto newControllers = [result.scopeRoot componentControllersMatchingPredicate:&CKComponentControllerInvalidateEventPredicate];
-  const auto removedControllers = CK::Collection::difference(oldControllers,
-                                                             newControllers,
-                                                             [](const auto &lhs, const auto &rhs){
-                                                               return lhs == rhs;
-                                                             });
-
-  for (auto it = removedControllers.begin(); it != removedControllers.end(); it++) {
-    const auto controller = (CKComponentController *)*it;
-    [controller invalidateController];
-  }
 }
 
 - (void)_synchronouslyUpdateComponentIfNeeded
@@ -442,9 +428,11 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
   }
 
   _isSynchronouslyUpdatingComponent = YES;
-  [self _applyResult:CKBuildComponent(_pendingInputs.scopeRoot, _pendingInputs.stateUpdates, ^{
+  const auto result = CKBuildComponent(_pendingInputs.scopeRoot, _pendingInputs.stateUpdates, ^{
     return _componentProvider(_pendingInputs.model, _pendingInputs.context);
-  })];
+  });
+  [self _applyResult:result invalidComponentControllers:[self _invalidComponentControllersWithNewScopeRoot:result.scopeRoot
+                                                                                     fromPreviousScopeRoot:_pendingInputs.scopeRoot]];
   _isSynchronouslyUpdatingComponent = NO;
 }
 
@@ -452,6 +440,18 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
 - (void)_sendDidPrepareLayoutIfNeeded
 {
   CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedRootLayout);
+}
+
+- (std::vector<CKComponentController *>)_invalidComponentControllersWithNewScopeRoot:(CKComponentScopeRoot *)newRoot
+                                                               fromPreviousScopeRoot:(CKComponentScopeRoot *)previousRoot
+{
+  if (!previousRoot || !_shouldInvalidateControllerBetweenComponentGenerations) {
+    return {};
+  }
+  return
+  CKComponentControllerHelper::removedControllersFromPreviousScopeRootMatchingPredicate(newRoot,
+                                                                                        previousRoot,
+                                                                                        &CKComponentControllerInvalidateEventPredicate);
 }
 
 @end
