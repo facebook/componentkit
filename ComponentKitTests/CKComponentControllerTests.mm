@@ -17,11 +17,18 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentControllerEvents.h>
+#import <ComponentKit/CKComponentControllerHelper.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentHostingView.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
+
+using namespace CKComponentControllerHelper;
+
+// Used for testing component controller that doesn't have lifecycle methods implemented.
+@interface CKEmptyComponentController: CKComponentController
+@end
 
 @interface CKComponentControllerTests : XCTestCase <CKComponentProvider>
 @end
@@ -316,4 +323,95 @@
                 @"Expected component controller to get invalidation event");
 }
 
+- (void)testRemovedComponentControllersFromPreviousScopeRootMatchingPredicate
+{
+  // `CKLifecycleTestComponentController` has `invalidateController` implemented.
+  const auto componentController1 = [[CKLifecycleTestComponentController alloc] initWithComponent:nil];
+  const auto componentController2 = [[CKLifecycleTestComponentController alloc] initWithComponent:nil];
+
+  const auto previousScopeRoot =
+  [CKComponentScopeRoot
+   rootWithListener:nil
+   analyticsListener:nil
+   componentPredicates:{}
+   componentControllerPredicates:{&CKComponentControllerInvalidateEventPredicate}];
+  [previousScopeRoot registerComponentController:componentController1];
+  [previousScopeRoot registerComponentController:componentController2];
+  const auto newScopeRoot = [previousScopeRoot newRoot];
+  [newScopeRoot registerComponentController:componentController1];
+
+  // New scope root doesn't have `componentController2` registered.
+  const auto removedComponentControllers =
+  removedControllersFromPreviousScopeRootMatchingPredicate(newScopeRoot,
+                                                           previousScopeRoot,
+                                                           &CKComponentControllerInvalidateEventPredicate);
+  XCTAssertEqual(removedComponentControllers[0], componentController2);
+}
+
+- (void)testRemovedComponentControllersAreEmptyFromPreviousScopeRootMatchingPredicate
+{
+  // `CKLifecycleTestComponentController` has `invalidateController` implemented.
+  const auto componentController1 = [[CKLifecycleTestComponentController alloc] initWithComponent:nil];
+  const auto componentController2 = [[CKLifecycleTestComponentController alloc] initWithComponent:nil];
+
+  const auto previousScopeRoot =
+  [CKComponentScopeRoot
+   rootWithListener:nil
+   analyticsListener:nil
+   componentPredicates:{}
+   componentControllerPredicates:{&CKComponentControllerInvalidateEventPredicate}];
+  [previousScopeRoot registerComponentController:componentController1];
+  [previousScopeRoot registerComponentController:componentController2];
+  const auto newScopeRoot = [previousScopeRoot newRoot];
+  [newScopeRoot registerComponentController:componentController1];
+  [newScopeRoot registerComponentController:componentController2];
+
+  // Both component controllers are presented in new scope root.
+  const auto removedComponentControllers =
+  removedControllersFromPreviousScopeRootMatchingPredicate(newScopeRoot,
+                                                           previousScopeRoot,
+                                                           &CKComponentControllerInvalidateEventPredicate);
+  XCTAssertTrue(removedComponentControllers.empty());
+}
+
+- (void)testRemovedComponentControllersAreEmptyWhenPreviousScopeRootIsNil
+{
+  const auto scopeRoot =
+  [CKComponentScopeRoot
+   rootWithListener:nil
+   analyticsListener:nil
+   componentPredicates:{}
+   componentControllerPredicates:{&CKComponentControllerInvalidateEventPredicate}];
+
+  const auto removedComponentControllers =
+  removedControllersFromPreviousScopeRootMatchingPredicate(scopeRoot,
+                                                           nil,
+                                                           &CKComponentControllerInvalidateEventPredicate);
+  XCTAssertTrue(removedComponentControllers.empty());
+}
+
+- (void)testRemovedComponentControllersFromPreviousScopeRootNotMatchingPredicate
+{
+  const auto componentController = [[CKEmptyComponentController alloc] initWithComponent:nil];
+
+  const auto previousScopeRoot =
+  [CKComponentScopeRoot
+   rootWithListener:nil
+   analyticsListener:nil
+   componentPredicates:{}
+   componentControllerPredicates:{&CKComponentControllerInvalidateEventPredicate}];
+  [previousScopeRoot registerComponentController:componentController];
+  const auto newScopeRoot = [previousScopeRoot newRoot];
+
+  // `componentController` doesn't match predicate.
+  const auto removedComponentControllers =
+  removedControllersFromPreviousScopeRootMatchingPredicate(newScopeRoot,
+                                                           previousScopeRoot,
+                                                           &CKComponentControllerInvalidateEventPredicate);
+  XCTAssertTrue(removedComponentControllers.empty());
+}
+
+@end
+
+@implementation CKEmptyComponentController
 @end
