@@ -46,7 +46,8 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
    splitChangesetOptions:{}
    componentPredicates:{}
    componentControllerPredicates:{}
-   analyticsListener:nil];
+   analyticsListener:nil
+   shouldInvalidateControllerBetweenComponentGenerations:YES];
 
   NSMutableArray *sections = [NSMutableArray array];
   for (NSUInteger sectionIndex = 0; sectionIndex < numberOfSections; sectionIndex++) {

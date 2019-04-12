@@ -10,6 +10,7 @@
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentScope.h>
@@ -19,12 +20,16 @@
 #import <ComponentKit/CKDataSourceChange.h>
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceState.h>
+#import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 
 #import "CKDataSourceStateTestHelpers.h"
 #import "CKDataSourceUpdateStateModification.h"
 
-@interface CKStatefulTestComponent : CKComponent
+static NSString *const kTestStateForLifecycleComponent = @"kTestStateForLifecycleComponent";
+
+@interface CKStatefulTestComponent : CKCompositeComponent
 @property (nonatomic, readonly) NSString *state;
+@property (nonatomic, readonly) CKLifecycleTestComponent *lifecycleComponent;
 @end
 
 @implementation CKStatefulTestComponent
@@ -32,9 +37,13 @@
 + (instancetype)new
 {
   CKComponentScope scope(self);
-  CKStatefulTestComponent *c = [super new];
+  CKLifecycleTestComponent *lifecycleComponent = [scope.state() isEqual:kTestStateForLifecycleComponent]
+  ? [CKLifecycleTestComponent newWithView:{} size:{}]
+  : nil;
+  const auto c = [super newWithComponent:lifecycleComponent ?: [CKComponent newWithView:{} size:{}]];
   if (c) {
     c->_state = scope.state();
+    c->_lifecycleComponent = lifecycleComponent;
   }
   return c;
 }
@@ -133,6 +142,30 @@
   [(CKStatefulTestComponent *)[[[change state] objectAtIndexPath:ip] rootLayout].component() state];
 
   XCTAssertEqualObjects(updatedComponentState, @"hello world");
+}
+
+- (void)testReturnsInvalidComponentControllers
+{
+  const auto originalState = CKDataSourceTestState([self class], self, 1, 1);
+
+  const auto ip = [NSIndexPath indexPathForItem:0 inSection:0];
+  [[[originalState objectAtIndexPath:ip] rootLayout].component()
+   updateState:^(NSString *state){return kTestStateForLifecycleComponent;}
+   mode:CKUpdateModeSynchronous];
+
+  auto updateStateModification = [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingStateUpdates];
+  auto change = [updateStateModification changeFromState:originalState];
+
+  const auto componentController = ((CKStatefulTestComponent *)[[change.state objectAtIndexPath:ip] rootLayout].component()).lifecycleComponent.controller;
+  [[[change.state objectAtIndexPath:ip] rootLayout].component()
+   updateState:^(NSString *state){return @"";}
+   mode:CKUpdateModeSynchronous];
+
+  updateStateModification = [[CKDataSourceUpdateStateModification alloc] initWithStateUpdates:_pendingStateUpdates];
+  change = [updateStateModification changeFromState:change.state];
+
+  XCTAssertEqual(change.invalidComponentControllers.firstObject, componentController,
+                 @"Invalid component controller should be returned because component is removed from hierarchy.");
 }
 
 @end

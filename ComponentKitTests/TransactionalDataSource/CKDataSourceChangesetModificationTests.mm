@@ -13,6 +13,7 @@
 #include <stdlib.h>
 
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKDataSourceAppliedChanges.h>
@@ -21,22 +22,30 @@
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceChangesetModification.h>
 #import <ComponentKit/CKDataSourceState.h>
+#import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 #import <ComponentKitTestHelpers/NSIndexSetExtensions.h>
 
 #import "CKDataSourceStateTestHelpers.h"
 
-@interface CKModelExposingComponent : CKComponent
+static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycleComponent";
+
+@interface CKModelExposingComponent : CKCompositeComponent
 + (instancetype)newWithModel:(id)model;
 @property (nonatomic, strong, readonly) id model;
+@property (nonatomic, strong, readonly) CKLifecycleTestComponent *lifecycleComponent;
 @end
 
 @implementation CKModelExposingComponent
 
 + (instancetype)newWithModel:(id)model
 {
-  CKModelExposingComponent *c = [super new];
+  CKLifecycleTestComponent *lifecycleComponent = [model isEqual:kTestModelForLifecycleComponent]
+  ? [CKLifecycleTestComponent newWithView:{} size:{}]
+  : nil;
+  const auto c = [super newWithComponent:lifecycleComponent ?: [CKComponent newWithView:{} size:{}]];
   if (c) {
     c->_model = model;
+    c->_lifecycleComponent = lifecycleComponent;
   }
   return c;
 }
@@ -122,6 +131,39 @@
 
   auto c = (CKModelExposingComponent *)[[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] rootLayout].component();
   XCTAssertEqualObjects(c.model, @"updated");
+}
+
+- (void)testUpdateReturnsInvalidComponentControllers
+{
+  const auto originalState = CKDataSourceTestState([self class], nil, 1, 0);
+  const auto ip = [NSIndexPath indexPathForItem:0 inSection:0];
+  auto changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withInsertedItems:@{ip: kTestModelForLifecycleComponent}]
+   build];
+  auto change =
+  [[[CKDataSourceChangesetModification alloc]
+    initWithChangeset:changeset
+    stateListener:nil
+    userInfo:nil]
+   changeFromState:originalState];
+
+  const auto componentController =
+  ((CKModelExposingComponent *)[[change.state objectAtIndexPath:ip] rootLayout].component()).lifecycleComponent.controller;
+
+  changeset =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withUpdatedItems:@{ip: @""}]
+   build];
+  change =
+  [[[CKDataSourceChangesetModification alloc]
+    initWithChangeset:changeset
+    stateListener:nil
+    userInfo:nil]
+   changeFromState:change.state];
+
+  XCTAssertEqual(change.invalidComponentControllers.firstObject, componentController,
+                 @"Invalid component controller should be returned because component is removed from hierarchy.");
 }
 
 - (void)testAppliesRemovedItemsThenInsertedItems
