@@ -14,6 +14,7 @@
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKDataSource.h>
@@ -21,6 +22,7 @@
 #import <ComponentKit/CKDataSourceChange.h>
 #import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
+#import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceListener.h>
 #import <ComponentKit/CKDataSourceState.h>
@@ -29,6 +31,8 @@
 #import <ComponentKit/CKDataSourceChangesetModification.h>
 
 #import "CKDataSourceStateTestHelpers.h"
+
+static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateControllerContext";
 
 @interface CKDataSourceTests : XCTestCase <CKComponentProvider, CKDataSourceAsyncListener>
 @end
@@ -44,6 +48,9 @@
 
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
 {
+  if ([context isEqual:kTestInvalidateControllerContext]) {
+    return [CKComponent newWithView:{} size:{}];
+  }
   return [CKLifecycleTestComponent new];
 }
 
@@ -282,6 +289,31 @@
       [dataSource hash];
     });
   }
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
+    return controller.calledInvalidateController;
+  }));
+}
+
+- (void)testDataSourceRemovingComponentTriggersInvalidateOnMainThread
+{
+  [self _testRemovingComponentTriggersInvalidateOnMainThreadWithDataSourceClass:[CKDataSource class]];
+}
+
+- (void)testThreadSafeDataSourceRemovingComponentTriggersInvalidateOnMainThread
+{
+  [self _testRemovingComponentTriggersInvalidateOnMainThreadWithDataSourceClass:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testRemovingComponentTriggersInvalidateOnMainThreadWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  id<CKDataSourceProtocol> dataSource = CKComponentTestDataSource(dataSourceClass, [self class], self);
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state != nil;
+  });
+  const auto controller = (CKLifecycleTestComponentController *)[[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component().controller;
+  [dataSource updateConfiguration:[_state.configuration copyWithContext:kTestInvalidateControllerContext sizeRange:{}]
+                             mode:CKUpdateModeSynchronous
+                         userInfo:@{}];
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
     return controller.calledInvalidateController;
   }));

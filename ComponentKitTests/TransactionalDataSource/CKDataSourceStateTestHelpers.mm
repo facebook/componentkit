@@ -64,11 +64,18 @@ id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> d
                                                    Class<CKComponentProvider> provider,
                                                    id<CKDataSourceListener> listener)
 {
-  id<CKDataSourceProtocol> ds =
-  [[(Class)dataSourceClass alloc] initWithConfiguration:
-   [[CKDataSourceConfiguration alloc] initWithComponentProvider:provider
-                                                                              context:nil
-                                                                            sizeRange:{}]];
+  const auto configuration =
+  [[CKDataSourceConfiguration alloc]
+   initWithComponentProvider:provider
+   context:nil
+   sizeRange:{}
+   buildComponentConfig:{}
+   splitChangesetOptions:{}
+   componentPredicates:{}
+   componentControllerPredicates:{}
+   analyticsListener:nil
+   shouldInvalidateControllerBetweenComponentGenerations:YES];
+  id<CKDataSourceProtocol> ds = [[(Class)dataSourceClass alloc] initWithConfiguration:configuration];
   [ds addListener:listener];
 
   CKDataSourceChangeset *insertion =
