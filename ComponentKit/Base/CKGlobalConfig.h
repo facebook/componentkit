@@ -14,6 +14,9 @@ struct CKGlobalConfig {
   /** Can be used to trigger asserts for Render components even if there is no Render component in the tree */
   BOOL forceBuildRenderTreeInDebug = NO;
   int64_t yogaMeasureCacheSize = INT64_MAX;
+  /** Used for testing performance implication of calling `invalidateController` between component generations */
+  BOOL shouldInvalidateControllerBetweenComponentGenerationsInDataSource = NO;
+  BOOL shouldInvalidateControllerBetweenComponentGenerationsInHostingView = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();
