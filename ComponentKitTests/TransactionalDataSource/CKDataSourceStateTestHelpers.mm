@@ -35,8 +35,7 @@ static CKDataSourceItem *item(CKDataSourceConfiguration *configuration, id<CKCom
 CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
                                          id<CKComponentStateListener> listener,
                                          NSUInteger numberOfSections,
-                                         NSUInteger numberOfItemsPerSection,
-                                         BOOL parallelBuildAndLayout)
+                                         NSUInteger numberOfItemsPerSection)
 {
   CKDataSourceConfiguration *configuration =
   [[CKDataSourceConfiguration alloc]
