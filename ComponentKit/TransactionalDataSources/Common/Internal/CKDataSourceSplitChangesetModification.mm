@@ -549,12 +549,10 @@ static CKDataSourceChangeset *createDeferredChangeset(NSDictionary<NSIndexPath *
   if (insertedItems.count == 0 && updatedItems.count == 0) {
     return nil;
   }
-  return [[CKDataSourceChangeset alloc] initWithUpdatedItems:updatedItems
-                                                removedItems:nil
-                                             removedSections:nil
-                                                  movedItems:nil
-                                            insertedSections:nil
-                                               insertedItems:insertedItems];
+  return [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+            withUpdatedItems:updatedItems]
+           withInsertedItems:insertedItems]
+          build];
 }
 
 static BOOL contentSizeOverflowsViewport(CGSize contentSize, CGPoint contentOffset, CGSize viewportSize, CKDataSourceLayoutAxis layoutAxis)
