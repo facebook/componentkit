@@ -53,6 +53,7 @@
 - (void)didLayoutComponent:(CKComponent *)component {}
 
 - (id<CKSystraceListener>)systraceListener { return nil; }
+- (id<CKDebugAnalyticsListener>)debugAnalyticsListener { return nil; }
 
 - (BOOL)shouldCollectMountInformationForRootComponent:(CKComponent *)component { return NO; }
 

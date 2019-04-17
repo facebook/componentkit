@@ -194,6 +194,19 @@ namespace CKRender {
       parentHasStateUpdate = YES;
     }
 
+#if DEBUG
+    // Gather information about component that can converted to CKRenderComponent and can be reused.
+    if (params.buildTrigger == BuildTrigger::StateUpdate && !parentHasStateUpdate) {
+      if (!CK::Collection::contains(params.treeNodeDirtyIds, node.nodeIdentifier)) {
+        params.canBeReusedNodes->insert({node.nodeIdentifier, {
+          .parentNodeIdentifier = parent.nodeIdentifier,
+          .klass = component.class,
+          .parentKlass = parent.component.class,
+        }});
+      }
+    }
+#endif
+
     if (childComponent) {
       [childComponent buildComponentTree:node
                           previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]

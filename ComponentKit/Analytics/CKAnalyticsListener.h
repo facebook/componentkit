@@ -12,6 +12,7 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/ComponentMountContext.h>
+#import <ComponentKit/CKTreeNodeProtocol.h>
 
 @protocol CKTreeNodeProtocol;
 
@@ -63,6 +64,14 @@
 - (void)willBlockThreadOnGeneratingItemLayout;
 - (void)didBlockThreadOnGeneratingItemLayout;
 
+@end
+
+@protocol CKDebugAnalyticsListener <NSObject>
+
+- (void)canReuseNodes:(std::shared_ptr<CKTreeNodeReuseMap>)nodes
+    previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+         newScopeRoot:(CKComponentScopeRoot *)newScopeRoot
+            component:(id<CKComponentProtocol>)component;
 @end
 
 /**
@@ -149,5 +158,10 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
  Provides a systrace listener. Can be nil if systrace is not enabled.
  */
 - (id<CKSystraceListener>)systraceListener;
+
+/**
+ Provides a debug analytics listener listener. Can be nil.
+ */
+- (id<CKDebugAnalyticsListener>)debugAnalyticsListener;
 
 @end

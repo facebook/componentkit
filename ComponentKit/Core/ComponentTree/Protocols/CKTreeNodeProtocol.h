@@ -17,6 +17,17 @@
 
 @protocol CKSystraceListener;
 
+/*
+ Will be used to gather information reagrding reused components during debug only.
+ */
+struct CKTreeNodeReuseInfo {
+  CKTreeNodeIdentifier parentNodeIdentifier;
+  Class klass;
+  Class parentKlass;
+};
+
+typedef std::unordered_map<CKTreeNodeIdentifier, CKTreeNodeReuseInfo> CKTreeNodeReuseMap;
+
 /**
  Params struct for the `buildComponentTree:` method.
  **/
@@ -40,11 +51,16 @@ struct CKBuildComponentTreeParams {
   // The trigger for initiating a new generation
   BuildTrigger buildTrigger;
 
-  /** The current systrace listener. Can be nil if systrace is not enabled. */
+  // The current systrace listener. Can be nil if systrace is not enabled.
   id<CKSystraceListener> systraceListener;
 
   // When enabled, all the comopnents will be regenerated (no component reuse optimiztions).
   BOOL ignoreComponentReuseOptimizations = NO;
+
+#if DEBUG
+  // Will be used to gather information reagrding reused components during debug only.
+  std::shared_ptr<CKTreeNodeReuseMap> canBeReusedNodes = std::make_shared<CKTreeNodeReuseMap>();
+#endif
 };
 
 @protocol CKTreeNodeWithChildrenProtocol;

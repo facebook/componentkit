@@ -89,22 +89,30 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 
   // Build the component tree if we have a render component in the hierarchy.
   if (threadScope.newScopeRoot.hasRenderComponentInTree) {
-    CKTreeNodeDirtyIds treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger);
+    CKBuildComponentTreeParams params = {
+      .scopeRoot = threadScope.newScopeRoot,
+      .previousScopeRoot = previousRoot,
+      .stateUpdates = stateUpdates,
+      .treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger),
+      .buildTrigger = buildTrigger,
+      .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
+      .ignoreComponentReuseOptimizations = ignoreComponentReuseOptimizations,
+      .systraceListener = threadScope.systraceListener,
+    };
 
     // Build the component tree from the render function.
     [component buildComponentTree:threadScope.newScopeRoot.rootNode.node()
                    previousParent:previousRoot.rootNode.node()
-                           params:{
-                             .scopeRoot = threadScope.newScopeRoot,
-                             .previousScopeRoot = previousRoot,
-                             .stateUpdates = stateUpdates,
-                             .treeNodeDirtyIds = treeNodeDirtyIds,
-                             .buildTrigger = buildTrigger,
-                             .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
-                             .ignoreComponentReuseOptimizations = ignoreComponentReuseOptimizations,
-                             .systraceListener = threadScope.systraceListener,
-                           }
+                           params:params
              parentHasStateUpdate:NO];
+
+#if DEBUG
+    auto debugAnalyticsListener = [previousRoot.analyticsListener debugAnalyticsListener];
+    [debugAnalyticsListener canReuseNodes:params.canBeReusedNodes
+                        previousScopeRoot:previousRoot
+                             newScopeRoot:threadScope.newScopeRoot
+                                component:component];
+#endif
   }
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;
