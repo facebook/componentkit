@@ -341,6 +341,9 @@
 		23F25B69212C251D00BB0A3F /* CKRenderHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23F25B5C212C251D00BB0A3F /* CKRenderHelpers.mm */; };
 		23F25B6A212C251D00BB0A3F /* CKRenderHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 23F25B67212C251D00BB0A3F /* CKRenderHelpers.h */; };
 		23F25B6B212C251D00BB0A3F /* CKRenderHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 23F25B67212C251D00BB0A3F /* CKRenderHelpers.h */; };
+		23F949F522689F7700E590A2 /* CKAnalyticsListenerSpy.h in Headers */ = {isa = PBXBuildFile; fileRef = 23F949F322689F7600E590A2 /* CKAnalyticsListenerSpy.h */; };
+		23F949F622689F7700E590A2 /* CKAnalyticsListenerSpy.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23F949F422689F7700E590A2 /* CKAnalyticsListenerSpy.mm */; };
+		23F949FB2268ABE400E590A2 /* CKAnalyticsListenerSpy.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23F949F422689F7700E590A2 /* CKAnalyticsListenerSpy.mm */; };
 		23FE1F092020A7160036F727 /* CKComponentViewManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23FE1F072020A7160036F727 /* CKComponentViewManagerTests.mm */; };
 		23FE1F0A2020A7160036F727 /* CKComponentLayoutTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23FE1F082020A7160036F727 /* CKComponentLayoutTests.mm */; };
 		23FEC59F203B30DA0068E09D /* CKTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 23FEC590203B30DA0068E09D /* CKTreeNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -830,7 +833,6 @@
 		D0B47D9E1CBDA9AC00BB33CE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D871CBDA24900BB33CE /* UIKit.framework */; };
 		D0B47D9F1CBDA9B600BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
 		D0B47DA01CBDA9C200BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
-		D602CB7F222D861900BF308F /* CKAnalyticsListenerSpy.mm in Sources */ = {isa = PBXBuildFile; fileRef = D602CB7E222D861900BF308F /* CKAnalyticsListenerSpy.mm */; };
 		D616A2BD20BED2D100695472 /* CKComponentTreeDiff.mm in Sources */ = {isa = PBXBuildFile; fileRef = D616A2BB20BED2D100695472 /* CKComponentTreeDiff.mm */; };
 		D616A2BE20BED2D100695472 /* CKComponentTreeDiff.mm in Sources */ = {isa = PBXBuildFile; fileRef = D616A2BB20BED2D100695472 /* CKComponentTreeDiff.mm */; };
 		D616A2BF20BED2D100695472 /* CKComponentTreeDiff.h in Headers */ = {isa = PBXBuildFile; fileRef = D616A2BC20BED2D100695472 /* CKComponentTreeDiff.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -864,7 +866,6 @@
 		D657401321051C6F00FD8AAB /* CKIndexTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = D657401021051C6E00FD8AAB /* CKIndexTransform.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D657401421051C6F00FD8AAB /* CKIndexTransform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D657401121051C6E00FD8AAB /* CKIndexTransform.mm */; };
 		D657401521051C6F00FD8AAB /* CKIndexTransform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D657401121051C6E00FD8AAB /* CKIndexTransform.mm */; };
-		D67FE134222DD4790099ED6D /* CKAnalyticsListenerSpy.mm in Sources */ = {isa = PBXBuildFile; fileRef = D602CB7E222D861900BF308F /* CKAnalyticsListenerSpy.mm */; };
 		D68927F7225B6090009DBBD9 /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D68927EC225B5B29009DBBD9 /* CKLinkable.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D68927F8225B6091009DBBD9 /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D68927EC225B5B29009DBBD9 /* CKLinkable.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D6A2652120AC333F00B7B499 /* CKIndexSetDescription.mm in Sources */ = {isa = PBXBuildFile; fileRef = D63F9F8220AAF487003F3887 /* CKIndexSetDescription.mm */; };
@@ -1092,6 +1093,8 @@
 		23EF1D6120936B54004C95BE /* CKRenderTreeNodeWithChild.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderTreeNodeWithChild.h; sourceTree = "<group>"; };
 		23F25B5C212C251D00BB0A3F /* CKRenderHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRenderHelpers.mm; sourceTree = "<group>"; };
 		23F25B67212C251D00BB0A3F /* CKRenderHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderHelpers.h; sourceTree = "<group>"; };
+		23F949F322689F7600E590A2 /* CKAnalyticsListenerSpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAnalyticsListenerSpy.h; sourceTree = "<group>"; };
+		23F949F422689F7700E590A2 /* CKAnalyticsListenerSpy.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnalyticsListenerSpy.mm; sourceTree = "<group>"; };
 		23FE1F072020A7160036F727 /* CKComponentViewManagerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewManagerTests.mm; sourceTree = "<group>"; };
 		23FE1F082020A7160036F727 /* CKComponentLayoutTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentLayoutTests.mm; sourceTree = "<group>"; };
 		23FEC590203B30DA0068E09D /* CKTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTreeNode.h; sourceTree = "<group>"; };
@@ -1495,8 +1498,6 @@
 		D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D0B47D971CBDA97400BB33CE /* CKComponentSnapshotTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentSnapshotTestCase.h; sourceTree = "<group>"; };
 		D0B47D981CBDA97400BB33CE /* CKComponentSnapshotTestCase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentSnapshotTestCase.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		D602CB7D222D861900BF308F /* CKAnalyticsListenerSpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAnalyticsListenerSpy.h; sourceTree = "<group>"; };
-		D602CB7E222D861900BF308F /* CKAnalyticsListenerSpy.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnalyticsListenerSpy.mm; sourceTree = "<group>"; };
 		D616A2BB20BED2D100695472 /* CKComponentTreeDiff.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentTreeDiff.mm; sourceTree = "<group>"; };
 		D616A2BC20BED2D100695472 /* CKComponentTreeDiff.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKComponentTreeDiff.h; sourceTree = "<group>"; };
 		D62122E4223855B7008F3473 /* CKAnimationSpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAnimationSpy.h; sourceTree = "<group>"; };
@@ -1728,6 +1729,8 @@
 		A273801B1AFD144100E6F222 /* ComponentKitTestHelpers */ = {
 			isa = PBXGroup;
 			children = (
+				23F949F322689F7600E590A2 /* CKAnalyticsListenerSpy.h */,
+				23F949F422689F7700E590A2 /* CKAnalyticsListenerSpy.mm */,
 				C1B53821212EAE6A00E13477 /* CKEmbeddedTestComponent.h */,
 				C1B53822212EAE6A00E13477 /* CKEmbeddedTestComponent.mm */,
 				7F98F58A1F67F2F600436978 /* CKLifecycleTestComponent.h */,
@@ -1819,8 +1822,6 @@
 				18644AE01B3CB8E60028AF87 /* StatefulViews */,
 				A27436F51AE94FCA00832359 /* TransactionalDataSource */,
 				D64F6548210F58560083EE75 /* CKSubclassOverridesSelectorTests.mm */,
-				D602CB7D222D861900BF308F /* CKAnalyticsListenerSpy.h */,
-				D602CB7E222D861900BF308F /* CKAnalyticsListenerSpy.mm */,
 				D63A926D2224857D00E7CC91 /* CKOptionalTests.mm */,
 				D62D6DBB2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm */,
 				D62122E4223855B7008F3473 /* CKAnimationSpy.h */,
@@ -2673,6 +2674,7 @@
 				D6B0AE0120AAFB1000A31FDF /* NSIndexSetExtensions.h in Headers */,
 				C1B53823212EAE6A00E13477 /* CKEmbeddedTestComponent.h in Headers */,
 				A27380341AFD172500E6F222 /* CKTestActionComponent.h in Headers */,
+				23F949F522689F7700E590A2 /* CKAnalyticsListenerSpy.h in Headers */,
 				7FA099141F66F36800B81EED /* CKComponentLifecycleTestHelper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3439,6 +3441,7 @@
 				03F1ABCC1D2B2A9B00867584 /* CKComponentActionTests.mm in Sources */,
 				2D7A98261DB56D8D0064FC6D /* CKDataSourceChangesetVerificationTests.mm in Sources */,
 				03F1ABCD1D2B2A9B00867584 /* CKComponentAccessibilityTests.mm in Sources */,
+				23F949FB2268ABE400E590A2 /* CKAnalyticsListenerSpy.mm in Sources */,
 				03F1ABCF1D2B2A9B00867584 /* CKDataSourceConfigurationTests.mm in Sources */,
 				03F1ABD01D2B2A9B00867584 /* CKComponentControllerTests.mm in Sources */,
 				03F1ABD11D2B2A9B00867584 /* CKComponentScopeTests.mm in Sources */,
@@ -3465,7 +3468,6 @@
 				03F1ABEA1D2B2A9B00867584 /* CKDataSourceChangesetTests.mm in Sources */,
 				03F1ABEB1D2B2A9B00867584 /* CKDataSourceUpdateConfigurationModificationTests.mm in Sources */,
 				03F1ABEC1D2B2A9B00867584 /* CKComponentViewAttributeTests.mm in Sources */,
-				D67FE134222DD4790099ED6D /* CKAnalyticsListenerSpy.mm in Sources */,
 				824416C31E44E34800904340 /* CKDetectDuplicateComponentTests.mm in Sources */,
 				03F1ABED1D2B2A9B00867584 /* CKStatefulViewComponentControllerTests.mm in Sources */,
 				03F1ABEE1D2B2A9B00867584 /* CKDataSourceStateUpdateTests.mm in Sources */,
@@ -3488,6 +3490,7 @@
 				D657400821013CBF00FD8AAB /* CKChangesetHelpers.mm in Sources */,
 				7F98F58D1F67F2F600436978 /* CKLifecycleTestComponent.mm in Sources */,
 				A273801F1AFD144100E6F222 /* CKTestActionComponent.mm in Sources */,
+				23F949F622689F7700E590A2 /* CKAnalyticsListenerSpy.mm in Sources */,
 				3E9D6724215E39530019429E /* CKRenderComponentTestHelpers.mm in Sources */,
 				2D8270F61E3F72DE008C1A26 /* CKTestRunLoopRunning.mm in Sources */,
 				D6B0AE0220AAFB1000A31FDF /* NSIndexSetExtensions.mm in Sources */,
@@ -3530,7 +3533,6 @@
 				497824751BC570E000F29081 /* CKCollectionViewDataSourceTests.mm in Sources */,
 				A22FE3061AF2CF0C00EC30B8 /* CKStateExposingComponent.mm in Sources */,
 				B342DC721AC23EA900ACAC53 /* CKComponentFlexibleSizeRangeProviderTests.mm in Sources */,
-				D602CB7F222D861900BF308F /* CKAnalyticsListenerSpy.mm in Sources */,
 				B761C8B11CB36FA200CDD03F /* CKDataSourceAppliedChangesTests.mm in Sources */,
 				B342DC7B1AC23EA900ACAC53 /* CKComponentSizeTests.mm in Sources */,
 				824416C21E44E34600904340 /* CKDetectDuplicateComponentTests.mm in Sources */,

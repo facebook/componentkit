@@ -21,8 +21,8 @@
 #import <ComponentKit/CKComponentHostingViewDelegate.h>
 #import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKComponentHostingViewInternal.h>
+#import <ComponentKitTestHelpers/CKAnalyticsListenerSpy.h>
 
-#import "CKAnalyticsListenerSpy.h"
 #import "CKComponentHostingViewTestModel.h"
 
 typedef struct {

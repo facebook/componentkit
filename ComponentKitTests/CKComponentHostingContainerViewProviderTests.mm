@@ -11,8 +11,8 @@
 #import <XCTest/XCTest.h>
 
 #import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
+#import <ComponentKitTestHelpers/CKAnalyticsListenerSpy.h>
 
-#import "CKAnalyticsListenerSpy.h"
 #import "CKComponent.h"
 #import "CKComponentFlexibleSizeRangeProvider.h"
 #import "CKComponentHostingContainerViewProvider.h"

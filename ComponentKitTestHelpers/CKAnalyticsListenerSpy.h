@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
   NSInteger _willMountComponentHitCount;
   NSInteger _didMountComponentHitCount;
 }
+
++ (instancetype)newWithDebugAnalyticsListener:(id<CKDebugAnalyticsListener>)debugAnalyticsListener;
 @end
 
 NS_ASSUME_NONNULL_END
