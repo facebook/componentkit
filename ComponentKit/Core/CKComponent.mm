@@ -57,6 +57,10 @@ struct CKComponentMountInfo {
   /** Only non-null while mounted. */
   std::unique_ptr<CKComponentMountInfo> _mountInfo;
 
+#if DEBUG
+  __weak id<CKTreeNodeProtocol> _treeNode;
+#endif
+
 #if CK_ASSERTIONS_ENABLED
   BOOL leafComponentOnARenderTree;
 #endif
@@ -149,6 +153,21 @@ struct CKComponentMountInfo {
   CKAssertMainThread();
   return _mountInfo ? _mountInfo->viewContext : CKComponentViewContext();
 }
+
+#if DEBUG
+// These two methods are in DEBUG only in order to save memory.
+// Once we build the component tree (by calling `buildComponentTree:`) by default,
+// we can swap the the scopeHandle ref with the treeNode one.
+- (void)acquireTreeNode:(id<CKTreeNodeProtocol>)treeNode
+{
+  _treeNode = treeNode;
+}
+
+- (id<CKTreeNodeProtocol>)treeNode
+{
+  return _treeNode;
+}
+#endif
 
 #pragma mark - ComponentTree
 

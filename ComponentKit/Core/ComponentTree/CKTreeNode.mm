@@ -90,6 +90,10 @@
 
     // Set the link between the tree node and the scope handle.
     [_handle setTreeNodeIdentifier:_nodeIdentifier];
+
+#if DEBUG
+    [component acquireTreeNode:self];
+#endif
   }
   return self;
 }

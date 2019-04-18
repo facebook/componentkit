@@ -90,6 +90,18 @@ struct CKBuildComponentTreeParams {
 /** Returns true if the component requires scope handle */
 + (BOOL)requiresScopeHandle;
 
+#if DEBUG
+// These two methods are in DEBUG only in order to save memory.
+// Once we build the component tree (by calling `buildComponentTree:`) by default,
+// we can swap the the scopeHandle ref with the treeNode one.
+
+/** Ask the component to acquire a tree node. */
+- (void)acquireTreeNode:(id<CKTreeNodeProtocol>)treeNode;
+
+/** Reference to the component's tree node. */
+- (id<CKTreeNodeProtocol>)treeNode;
+#endif
+
 @end
 
 /**
