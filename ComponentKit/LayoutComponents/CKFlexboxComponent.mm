@@ -12,10 +12,8 @@
 
 #import <ComponentKit/CKComponentPerfScope.h>
 #import <ComponentKit/CKMacros.h>
-#import <ComponentKit/CKGlobalConfig.h>
 
 #import "yoga/Yoga.h"
-#import "yoga/Yoga-internal.h"
 
 #import "CKComponent+Yoga.h"
 #import "CKComponentInternal.h"
@@ -81,11 +79,6 @@ template class std::vector<CKFlexboxComponentChild>;
     component->_usesDeepYogaTrees = usesDeepYogaTrees;
   }
   return component;
-}
-
-+ (void)initialize
-{
-  YGSetUsedCachedEntries((size_t) CKReadGlobalConfig().yogaMeasureCacheSize);
 }
 
 - (std::vector<CKComponent *>)renderChildren:(id)state
