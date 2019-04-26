@@ -71,17 +71,6 @@ struct CKComponentHostingViewInputs {
 
 @implementation CKComponentHostingView
 
-static id<CKAnalyticsListener> sDefaultAnalyticsListener;
-
-// Default analytics listener is only set/read from main queue to avoid dealing with concurrency
-// This should happen very rarely, ideally once per app run, so using main for that is ok
-+ (void)setDefaultAnalyticsListener:(id<CKAnalyticsListener>) defaultListener
-{
-  CKAssertMainThread();
-  CKAssertNil(sDefaultAnalyticsListener, @"Default analytics listener already exists - you shouldn't set it more then once!");
-  sDefaultAnalyticsListener = defaultListener;
-}
-
 #pragma mark - Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -175,7 +164,7 @@ static id<CKAnalyticsListener> sDefaultAnalyticsListener;
     _sizeRangeProvider = sizeRangeProvider;
 
     _pendingInputs = {
-      .scopeRoot = CKComponentScopeRootWithPredicates(self, analyticsListener ?: sDefaultAnalyticsListener, componentPredicates, componentControllerPredicates)
+      .scopeRoot = CKComponentScopeRootWithPredicates(self, (analyticsListener ?: CKReadGlobalConfig().defaultAnalyticsListener), componentPredicates, componentControllerPredicates)
     };
 
     _allowTapPassthrough = options.allowTapPassthrough;

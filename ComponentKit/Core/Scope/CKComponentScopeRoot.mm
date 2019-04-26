@@ -17,11 +17,8 @@
 #import "CKComponentControllerProtocol.h"
 #import "CKComponentScopeFrameInternal.h"
 #import "CKInternalHelpers.h"
-#import "CKThreadLocalComponentScope.h"
-
-#if DEBUG
 #import "CKGlobalConfig.h"
-#endif
+#import "CKThreadLocalComponentScope.h"
 
 typedef std::unordered_map<CKComponentPredicate, NSHashTable<id<CKComponentProtocol>> *> _CKRegisteredComponentsMap;
 typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComponentControllerProtocol>> *> _CKRegisteredComponentControllerMap;
@@ -66,14 +63,15 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
    componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
 {
   if (self = [super init]) {
+    auto const globalConfig = CKReadGlobalConfig();
     _listener = listener;
-    _analyticsListener = analyticsListener;
+    _analyticsListener = analyticsListener ?: globalConfig.defaultAnalyticsListener;
     _globalIdentifier = globalIdentifier;
     _rootFrame = [[CKComponentScopeFrame alloc] initWithHandle:nil];
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
 #if DEBUG
-    _hasRenderComponentInTree = CKReadGlobalConfig().forceBuildRenderTreeInDebug;
+    _hasRenderComponentInTree = globalConfig.forceBuildRenderTreeInDebug;
 #endif
   }
   return self;
