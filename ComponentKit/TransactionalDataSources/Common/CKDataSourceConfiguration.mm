@@ -15,6 +15,8 @@
 #import "CKGlobalConfig.h"
 #import "CKMacros.h"
 
+static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return nil; }
+
 @implementation CKDataSourceConfiguration
 {
   CKSizeRange _sizeRange;
@@ -105,6 +107,8 @@ shouldInvalidateControllerBetweenComponentGenerations:CKReadGlobalConfig().shoul
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
 shouldInvalidateControllerBetweenComponentGenerations:(BOOL)shouldInvalidateControllerBetweenComponentGenerations
 {
+  componentProvider = componentProvider ?: nilProvider;
+  
   return [self initWithComponentProviderClass:Nil
                        componentProviderBlock:^(id<NSObject> m, id<NSObject> c){ return componentProvider(m, c); }
                                       context:context

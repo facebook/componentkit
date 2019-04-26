@@ -46,6 +46,8 @@ struct CKComponentHostingViewInputs {
   };
 };
 
+static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return nil; }
+
 @interface CKComponentHostingView () <CKComponentDebugReflowListener>
 {
   CKComponentProviderBlock _componentProvider;
@@ -143,6 +145,8 @@ struct CKComponentHostingViewInputs {
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                                       options:(const CKComponentHostingViewOptions &)options
 {
+  componentProvider = componentProvider ?: nilProvider;
+  
   auto const p = ^(id<NSObject> m, id<NSObject> c) { return componentProvider(m, c); };
   return [self initWithComponentProviderBlock:p
                             sizeRangeProvider:sizeRangeProvider
