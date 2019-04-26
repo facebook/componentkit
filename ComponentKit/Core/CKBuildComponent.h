@@ -17,6 +17,8 @@
 @class CKComponentScopeRoot;
 @class CKComponent;
 
+struct CKBuildComponentTreeParams;
+
 // Collection of events that trigger a new component generation.
 enum class BuildTrigger {
   NewTree,
@@ -68,3 +70,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         CKComponent *(^componentFactory)(void),
                                         CKBuildComponentConfig config = {},
                                         BOOL ignoreComponentReuseOptimizations = NO);
+
+#if DEBUG
+void CKDidBuildComponentTree(const CKBuildComponentTreeParams &params, id<CKComponentProtocol> component);
+#endif

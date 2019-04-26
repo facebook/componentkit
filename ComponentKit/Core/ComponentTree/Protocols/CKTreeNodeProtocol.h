@@ -24,6 +24,7 @@ struct CKTreeNodeReuseInfo {
   CKTreeNodeIdentifier parentNodeIdentifier;
   Class klass;
   Class parentKlass;
+  NSUInteger reuseCounter;
 };
 
 typedef std::unordered_map<CKTreeNodeIdentifier, CKTreeNodeReuseInfo> CKTreeNodeReuseMap;

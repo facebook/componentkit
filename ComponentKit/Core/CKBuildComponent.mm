@@ -19,8 +19,8 @@
 #import "CKComponentSubclass.h"
 #import "CKRenderHelpers.h"
 #import "CKRenderTreeNodeWithChildren.h"
-#import "CKTreeNodeProtocol.h"
 #import "CKThreadLocalComponentScope.h"
+#import "CKTreeNodeProtocol.h"
 
 namespace CKBuildComponentHelpers {
   auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> BuildTrigger
@@ -107,11 +107,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
              parentHasStateUpdate:NO];
 
 #if DEBUG
-    auto debugAnalyticsListener = [previousRoot.analyticsListener debugAnalyticsListener];
-    [debugAnalyticsListener canReuseNodes:params.canBeReusedNodes
-                        previousScopeRoot:previousRoot
-                             newScopeRoot:threadScope.newScopeRoot
-                                component:component];
+    CKDidBuildComponentTree(params, component);
 #endif
   }
 
@@ -124,3 +120,17 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
     .boundsAnimation = CKBuildComponentHelpers::boundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot),
   };
 }
+
+#if DEBUG
+void CKDidBuildComponentTree(const CKBuildComponentTreeParams &params, id<CKComponentProtocol> component)
+{
+  // Save the new nodes on the root node.
+  params.scopeRoot.rootNode.canBeReusedNodes = params.canBeReusedNodes;
+  // Notify the debug listener.
+  auto debugAnalyticsListener = [params.scopeRoot.analyticsListener debugAnalyticsListener];
+  [debugAnalyticsListener canReuseNodes:params.canBeReusedNodes
+                      previousScopeRoot:params.previousScopeRoot
+                           newScopeRoot:params.scopeRoot
+                              component:component];
+}
+#endif
