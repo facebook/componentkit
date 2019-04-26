@@ -18,11 +18,21 @@
 
 CKComponentViewClass::CKComponentViewClass() noexcept : factory(nil) {}
 
+static CKComponentViewFactoryBlock viewFactoryFromViewClass(Class viewClass) noexcept
+{
+  CKCAssert([viewClass isSubclassOfClass:[UIView class]], @"%@ is not a subclass of UIView", viewClass);
+  // Passing a nil `viewClass` is unexpected. We should return a nil view factory and treat this as a viewless component.
+  // Otherwise nil will be returned by view factory and it will crash.
+  if (viewClass) {
+    return ^{ return [[viewClass alloc] init]; };
+  } else {
+    return nil;
+  }
+}
+
 CKComponentViewClass::CKComponentViewClass(Class viewClass) noexcept :
 identifier(class_getName(viewClass)),
-factory(^{ return [[viewClass alloc] init]; }) {
-  CKCAssert([viewClass isSubclassOfClass:[UIView class]], @"%@ is not a subclass of UIView", viewClass);
-}
+factory(viewFactoryFromViewClass(viewClass)) {}
 
 static CKComponentViewReuseBlock blockFromSEL(SEL sel) noexcept
 {
@@ -37,11 +47,11 @@ static CKComponentViewReuseBlock blockFromSEL(SEL sel) noexcept
 
 CKComponentViewClass::CKComponentViewClass(Class viewClass, SEL enter, SEL leave) noexcept :
 identifier(std::string(class_getName(viewClass)) + "-" + sel_getName(enter) + "-" + sel_getName(leave)),
-factory(^{return [[viewClass alloc] init];}),
+factory(viewFactoryFromViewClass(viewClass)),
 didEnterReusePool(blockFromSEL(enter)),
 willLeaveReusePool(blockFromSEL(leave)) {}
 
-CKComponentViewClass::CKComponentViewClass(UIView *(*fact)(void),
+CKComponentViewClass::CKComponentViewClass(CKComponentViewFactoryFunc fact,
                                            void (^enter)(UIView *),
                                            void (^leave)(UIView *)) noexcept
 : identifier(CKStringFromPointer((const void *)fact)), factory(^UIView*(void) {return fact();}), didEnterReusePool(enter), willLeaveReusePool(leave)
@@ -49,7 +59,7 @@ CKComponentViewClass::CKComponentViewClass(UIView *(*fact)(void),
 }
 
 CKComponentViewClass::CKComponentViewClass(const std::string &i,
-                                           UIView *(^fact)(void),
+                                           CKComponentViewFactoryBlock fact,
                                            void (^enter)(UIView *),
                                            void (^leave)(UIView *)) noexcept
 : identifier(i), factory(fact), didEnterReusePool(enter), willLeaveReusePool(leave)
