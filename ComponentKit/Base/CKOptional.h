@@ -232,6 +232,24 @@ public:
   }
 
   /**
+   Transforms a value wrapped inside the Optional, e.g.:
+
+   @code
+   auto toNSString(int x) -> NSString *;
+   Optional<int> x = ...
+   NSString *s = x.mapToPtr(toNSString); // nil if the x was empty
+
+   @param f function-like object that will be invoked if the Optional contains the value. Must return a pointer type.
+
+   @return The result of calling `f` with the wrapped value if the Optional was not empty, or a null pointer otherwise.
+   */
+  template <typename F>
+  auto mapToPtr(F&& f) const -> decltype(f(std::declval<T>())) {
+    return match(
+                 [&](const T& value) { return f(value); }, []() { return nullptr; });
+  }
+
+  /**
    Transforms a value wrapped inside the Optional using a function that itself returns an Optional, "flattening" the
    final result, e.g.:
 

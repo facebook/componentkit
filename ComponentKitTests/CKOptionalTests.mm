@@ -126,4 +126,19 @@ struct HasOptional {
   XCTAssertEqual(z, 2);
 }
 
+static auto toNSString(int x) -> NSString * {
+  return [NSString stringWithFormat:@"%d", x];
+}
+
+- (void)test_MappingToPointer
+{
+  auto const x = Optional<int>{2};
+
+  XCTAssertEqualObjects(x.mapToPtr(toNSString), @"2");
+
+  auto const y = Optional<int>{};
+
+  XCTAssertNil(y.mapToPtr(toNSString));
+}
+
 @end
