@@ -29,7 +29,10 @@
 - (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
                                buildTrigger:(BuildTrigger)buildTrigger
                                stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates {}
-- (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component {}
+
+- (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
+                              buildTrigger:(BuildTrigger)buildTrigger
+                                 component:(CKComponent *)component {}
 
 - (void)willMountComponentTreeWithRootComponent:(CKComponent *)component
 {

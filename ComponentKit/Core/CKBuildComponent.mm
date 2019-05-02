@@ -113,7 +113,9 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;
 
-  [analyticsListener didBuildComponentTreeWithScopeRoot:newScopeRoot component:component];
+  [analyticsListener didBuildComponentTreeWithScopeRoot:newScopeRoot
+                                           buildTrigger:buildTrigger
+                                              component:component];
   return {
     .component = component,
     .scopeRoot = newScopeRoot,
