@@ -80,6 +80,8 @@ constexpr None none;
  */
 template <typename T>
 class Optional final {
+  static_assert(!std::is_pointer<T>::value, "Pointers are already optional");
+
 public:
   using ValueType = T;
 
