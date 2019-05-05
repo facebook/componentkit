@@ -98,7 +98,7 @@
 		03B8B4D21D2A346F00EDFF59 /* CKComponentRootView.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B411CBD926700BB33CE /* CKComponentRootView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4D31D2A346F00EDFF59 /* CKCollectionViewDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B131CBD926700BB33CE /* CKCollectionViewDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4D41D2A346F00EDFF59 /* CKWeakObjectContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B9B1CBD926700BB33CE /* CKWeakObjectContainer.h */; };
-		03B8B4D51D2A346F00EDFF59 /* CKDataSourceInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B6C1CBD926700BB33CE /* CKDataSourceInternal.h */; };
+		03B8B4D51D2A346F00EDFF59 /* CKDataSourceInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B6C1CBD926700BB33CE /* CKDataSourceInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B4D61D2A346F00EDFF59 /* CKDataSourceUpdateStateModification.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B801CBD926700BB33CE /* CKDataSourceUpdateStateModification.h */; };
 		03B8B4D81D2A346F00EDFF59 /* CKComponentProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B331CBD926700BB33CE /* CKComponentProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B4D91D2A346F00EDFF59 /* CKComponentAnnouncerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B191CBD926700BB33CE /* CKComponentAnnouncerBase.h */; };
@@ -772,7 +772,7 @@
 		D0B47D3E1CBD948E00BB33CE /* CKDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B631CBD926700BB33CE /* CKDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D3F1CBD948E00BB33CE /* CKDataSourceAppliedChanges.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B651CBD926700BB33CE /* CKDataSourceAppliedChanges.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D421CBD948E00BB33CE /* CKDataSourceConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B6A1CBD926700BB33CE /* CKDataSourceConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47D431CBD948E00BB33CE /* CKDataSourceInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B6C1CBD926700BB33CE /* CKDataSourceInternal.h */; };
+		D0B47D431CBD948E00BB33CE /* CKDataSourceInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B6C1CBD926700BB33CE /* CKDataSourceInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D441CBD948E00BB33CE /* CKDataSourceItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B6D1CBD926700BB33CE /* CKDataSourceItem.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D451CBD948E00BB33CE /* CKDataSourceItemInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B6F1CBD926700BB33CE /* CKDataSourceItemInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D461CBD948E00BB33CE /* CKDataSourceListener.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B701CBD926700BB33CE /* CKDataSourceListener.h */; settings = {ATTRIBUTES = (Public, ); }; };

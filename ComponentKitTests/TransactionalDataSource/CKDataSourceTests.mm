@@ -17,12 +17,12 @@
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentSubclass.h>
-#import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceAppliedChanges.h>
 #import <ComponentKit/CKDataSourceChange.h>
 #import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
 #import <ComponentKit/CKDataSourceConfigurationInternal.h>
+#import <ComponentKit/CKDataSourceInternal.h>
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceListener.h>
 #import <ComponentKit/CKDataSourceState.h>
@@ -448,6 +448,43 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
   });
   const auto isValid = [dataSource verifyChange:change];
   XCTAssertFalse(isValid, @"Change should not be valid since state has changed.");
+}
+
+- (void)testAsyncModificationIsNotProcessedWhenWorkQueueIsPaused
+{
+  const auto dataSource = (CKDataSource *)CKComponentTestDataSource([CKDataSource class], [self class], self);
+  [dataSource applyChangeset:[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] build]
+                        mode:CKUpdateModeAsynchronous
+                    userInfo:nil];
+  _barrierForQueue(dataSource.workQueue);
+  XCTAssertEqual(_willGenerateChangeCounter, 1);
+  [dataSource pauseWorkQueue];
+  [dataSource applyChangeset:[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] build]
+                        mode:CKUpdateModeAsynchronous
+                    userInfo:nil];
+  _barrierForQueue(dataSource.workQueue);
+  XCTAssertEqual(_willGenerateChangeCounter, 1);
+}
+
+- (void)testAsyncModificationIsProcessedWhenWorkQueueIsResumed
+{
+  const auto dataSource = (CKDataSource *)CKComponentTestDataSource([CKDataSource class], [self class], self);
+  [dataSource pauseWorkQueue];
+  [dataSource applyChangeset:[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] build]
+                        mode:CKUpdateModeAsynchronous
+                    userInfo:nil];
+  _barrierForQueue(dataSource.workQueue);
+  XCTAssertEqual(_willGenerateChangeCounter, 0);
+  [dataSource resumeWorkQueue];
+  _barrierForQueue(dataSource.workQueue);
+  XCTAssertEqual(_willGenerateChangeCounter, 1);
+}
+
+#pragma mark - Helper
+
+static void _barrierForQueue(dispatch_queue_t queue)
+{
+  dispatch_sync(queue, ^{});
 }
 
 #pragma mark - Listener
