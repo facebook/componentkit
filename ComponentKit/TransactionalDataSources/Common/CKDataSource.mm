@@ -53,6 +53,8 @@
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
   dispatch_queue_t _workQueue;
+  BOOL _isWorkQueuePaused;
+  BOOL _isWorkQueueBusy; // YES when `workQueue` is processing asynchronous modification.
   
   CKDataSourceViewport _viewport;
   CK::Mutex _viewportLock;
@@ -203,6 +205,22 @@
   return change.previousState == _state;
 }
 
+- (void)pauseWorkQueue
+{
+  CKAssertMainThread();
+  _isWorkQueuePaused = YES;
+}
+
+- (void)resumeWorkQueue
+{
+  CKAssertMainThread();
+  if (!_isWorkQueuePaused) {
+    return;
+  }
+  _isWorkQueuePaused = NO;
+  [self _startAsynchronousModificationIfNeeded];
+}
+
 - (void)setViewport:(CKDataSourceViewport)viewport
 {
   if (!_changesetSplittingEnabled) {
@@ -270,6 +288,9 @@
 {
   CKAssertMainThread();
 
+  if (_isWorkQueuePaused || _isWorkQueueBusy) {
+    return;
+  }
   id<CKDataSourceStateModifying> modification = _pendingAsynchronousModifications.firstObject;
   if (_pendingAsynchronousModifications.count > 0) {
     CKDataSourceModificationPair *modificationPair =
@@ -277,6 +298,7 @@
      initWithModification:modification
      state:_state];
 
+    _isWorkQueueBusy = YES;
     dispatch_block_t block = blockUsingDataSourceQOS(^{
       [self _applyModificationPair:modificationPair];
     }, [modification qos]);
@@ -407,6 +429,7 @@
                           changes:[change appliedChanges]];
 
   dispatch_async(dispatch_get_main_queue(), ^{
+    _isWorkQueueBusy = NO;
     // If the first object in _pendingAsynchronousModifications is not still the modification,
     // it may have been canceled; don't apply it.
     if ([_pendingAsynchronousModifications firstObject] == modificationPair.modification && self->_state == modificationPair.state) {
