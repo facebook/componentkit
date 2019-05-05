@@ -198,7 +198,9 @@
 - (BOOL)verifyChange:(CKDataSourceChange *)change
 {
   CKAssertMainThread();
-  return change.previousState == _state && _pendingAsynchronousModifications.count == 0;
+  // We don't check `_pendingAsynchronousModifications` here because we want pre-computed `CKDataSourceChange`
+  // to have higher chance to be applied. Asynchronous modifications will be re-applied anyway if they fail.
+  return change.previousState == _state;
 }
 
 - (void)setViewport:(CKDataSourceViewport)viewport

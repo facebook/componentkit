@@ -387,31 +387,6 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
   XCTAssertEqualObjects(_state, newState, @"State should remain the same.");
 }
 
-- (void)testDataSourceApplyingPrecomputedChangeWhenThereIsPendingModification
-{
-  const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource([CKDataSource class], [self class], self);
-  const auto insertion =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
-    withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
-   build];
-  const auto modification =
-  [[CKDataSourceChangesetModification alloc]
-   initWithChangeset:insertion
-   stateListener:nil userInfo:@{}];
-  const auto oldState = _state;
-  const auto change1 = [modification changeFromState:oldState];
-  [dataSource reloadWithMode:CKUpdateModeAsynchronous userInfo:@{}];
-  const auto isApplied1 = [dataSource applyChange:change1];
-  XCTAssertEqualObjects(_state, oldState, @"State is not changed but calling `applyChange` should fail because of pending modification.");
-  XCTAssertFalse(isApplied1, @"Applying change to datasource should fail.");
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _state != oldState;
-  });
-  const auto change2 = [modification changeFromState:_state];
-  const auto isApplied2 = [dataSource applyChange:change2];
-  XCTAssertTrue(isApplied2, @"Re-applying change should succeed once the pending modification finishes processing.");
-}
-
 - (void)testDataSourceVerifyingPrecomputedChange
 {
   [self _testVerifyingPrecomputedChange:[CKDataSource class]];
@@ -473,30 +448,6 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
   });
   const auto isValid = [dataSource verifyChange:change];
   XCTAssertFalse(isValid, @"Change should not be valid since state has changed.");
-}
-
-- (void)testDataSourceVerifyingPrecomputedChangeWhenThereIsPendingModification
-{
-  const auto dataSource = (id<CKDataSourceProtocol, CKDataSourceProtocolInternal>)CKComponentTestDataSource([CKDataSource class], [self class], self);
-  const auto insertion =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
-    withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
-   build];
-  const auto modification =
-  [[CKDataSourceChangesetModification alloc]
-   initWithChangeset:insertion
-   stateListener:nil userInfo:@{}];
-  const auto oldState = _state;
-  const auto change1 = [modification changeFromState:oldState];
-  [dataSource reloadWithMode:CKUpdateModeAsynchronous userInfo:@{}];
-  const auto isValid1 = [dataSource verifyChange:change1];
-  XCTAssertFalse(isValid1, @"Change should not be valid since there is pending modificaiton.");
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _state != oldState;
-  });
-  const auto change2 = [modification changeFromState:_state];
-  const auto isValid2 = [dataSource verifyChange:change2];
-  XCTAssertTrue(isValid2, @"Change should be valid since pending modification finishes processing.");
 }
 
 #pragma mark - Listener
