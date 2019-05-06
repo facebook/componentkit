@@ -31,9 +31,6 @@
  @see CKComponentProvider
  @see CKComponentSizeRangeProviding
  */
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
-
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
 
@@ -43,14 +40,24 @@
  @param analyticsListener listener conforming to AnalyticsListener will be used to get component lifecycle callbacks for logging
  @see CKComponentProvider
  @see CKComponentSizeRangeProviding
+*/
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                            sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
+
+/**
+ This method is deprecated. Please use initWithComponentProviderFunc:sizeRangeProvider:
+ */
+- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
+                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
+
+/**
+ This method is deprecated. Please use initWithComponentProviderFunc:sizeRangeProvider:analyticsListener:
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
 
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
-                            sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
 
 /** Updates the model used to render the component. */
 - (void)updateModel:(id<NSObject>)model mode:(CKUpdateMode)mode;
