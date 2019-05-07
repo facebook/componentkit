@@ -351,6 +351,19 @@ extern const struct CKStackComponentLayoutExtraKeys {
                       style:(const CKFlexboxComponentStyle &)style
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children;
 
+/**
+ @param view A view configuration, or {} for no view.
+ @param size A size, or {} for the default size.
+ @param style Specifies how children are laid out.
+ @param children A vector of children components.
+ @param usesDeepYogaTrees A flag to enable deep yoga trees.
+ */
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
+                      size:(const CKComponentSize &)size
+                     style:(const CKFlexboxComponentStyle &)style
+                  children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
+         usesDeepYogaTrees:(BOOL)usesDeepYogaTrees;
+
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
