@@ -34,6 +34,10 @@
 
 @end
 
+@interface EnqueueOnDealloc: NSObject
++ (instancetype)newWithPool:(CKStatefulViewReusePool *)pool;
+@end
+
 @implementation CKStatefulViewReusePoolTests
 
 - (void)testDequeueingFromEmptyPoolReturnsNil
@@ -350,7 +354,45 @@
   XCTAssertTrue(dequeuedView == nil, @"Expected dequeued view to be nil");
 }
 
+- (void)test_WhenPurgingPendingPoolLeadsToEnqueueing_DoesNotCrash {
+  for (auto i = 0; i < 10000; i++) {
+    auto pool = [CKStatefulViewReusePool new];
+    auto eod = [EnqueueOnDealloc newWithPool:pool];
+    [pool enqueueStatefulView:[CKTestStatefulView new]
+           forControllerClass:[CKTestStatefulViewComponentController class]
+                      context:nil
+           mayRelinquishBlock:^{
+             // Capturing what would be the only strong reference to eod when the block runs.
+             // This will cause eod to be released after the block returns.
+             (void)eod.class;
+             return YES;
+           }];
+    eod = nil;
+  }
+}
+
 @end
 
 @implementation CKOtherStatefulViewComponentController
+@end
+
+@implementation EnqueueOnDealloc {
+  CKStatefulViewReusePool *_pool;
+}
+
++ (instancetype)newWithPool:(CKStatefulViewReusePool *)pool {
+  auto obj = [super new];
+  obj->_pool = pool;
+  return obj;
+}
+
+- (void)dealloc {
+  [_pool enqueueStatefulView:[CKTestStatefulView new]
+          forControllerClass:[CKTestStatefulViewComponentController class]
+                     context:nil
+          mayRelinquishBlock:^{
+                       return YES;
+                     }];
+}
+
 @end
