@@ -32,6 +32,7 @@
 
 - (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
                               buildTrigger:(BuildTrigger)buildTrigger
+                              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                                  component:(CKComponent *)component {}
 
 - (void)willMountComponentTreeWithRootComponent:(CKComponent *)component

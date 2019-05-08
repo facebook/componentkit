@@ -115,6 +115,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 
   [analyticsListener didBuildComponentTreeWithScopeRoot:newScopeRoot
                                            buildTrigger:buildTrigger
+                                           stateUpdates:stateUpdates
                                               component:component];
   return {
     .component = component,
