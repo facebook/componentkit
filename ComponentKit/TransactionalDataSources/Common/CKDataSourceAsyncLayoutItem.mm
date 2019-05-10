@@ -64,20 +64,13 @@
 
 - (void)beginLayout
 {
-  if (!_hasStartedLayout) {
-    _hasStartedLayout = YES;
-    dispatch_async(_queue, blockUsingDataSourceQOS(^{
-      /*
-       Ideally this would just use an os_unfair_lock on iOS 10+, but that would require us doing a dance
-       around verioning here, and that's a bit more complicated than we want to handle for an initial test of
-       parallel row rendering. If this is successful we potentially could follow up with that.
-       */
-      {
-        std::lock_guard<std::mutex> l(_waitOnLayoutMutex);
-        auto item = CKBuildDataSourceItem(_previousRoot, _stateUpdateMap, _sizeRange, _configuration, _model, _context);
-        _item = item;
-      }
+  if (!_hasStartedLayout.exchange(YES)) {
+   _waitOnLayoutMutex.lock();
+   dispatch_async(_queue, blockUsingDataSourceQOS(^{
+      auto item = CKBuildDataSourceItem(_previousRoot, _stateUpdateMap, _sizeRange, _configuration, _model, _context);
+      _item = item;
       _isFinished = YES;
+      _waitOnLayoutMutex.unlock();
     }, _qos));
   }
 }
@@ -97,14 +90,10 @@
   if (_isFinished == YES) {
     return _item;
   } else {
-    CKDataSourceItem *item;
-    {
-      [_systraceListener willBlockThreadOnGeneratingItemLayout];
-      std::lock_guard<std::mutex> l(_waitOnLayoutMutex);
-      [_systraceListener didBlockThreadOnGeneratingItemLayout];
-      item = _item;
-    }
-    return item;
+    [_systraceListener willBlockThreadOnGeneratingItemLayout];
+    std::lock_guard<std::mutex> l(_waitOnLayoutMutex);
+    [_systraceListener didBlockThreadOnGeneratingItemLayout];
+    return _item;
   }
 }
 
