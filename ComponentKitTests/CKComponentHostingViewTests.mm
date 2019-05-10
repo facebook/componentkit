@@ -295,6 +295,51 @@ typedef struct {
   XCTAssertEqual(_analyticsListenerSpy->_didCollectAnimationsHitCount, 1);
 }
 
+- (void)test_LayoutAndGenerationOfComponentAreOnMainThreadWhenAsyncUpdateIsTriggeredOnNonFixedSizeHostingView
+{
+  const auto hostingView =
+  [[CKComponentHostingView alloc]
+   initWithComponentProviderFunc:[](id<NSObject> m, id<NSObject>){ return CKComponentWithHostingViewTestModel(m); }
+   sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
+   analyticsListener:_analyticsListenerSpy];
+  [hostingView updateModel:nil mode:CKUpdateModeAsynchronous];
+  [hostingView layoutIfNeeded];
+  XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 1);
+  XCTAssertEqual(_analyticsListenerSpy->_didMountComponentHitCount, 1);
+}
+
+- (void)test_LayoutAndGenerationOfComponentAreNotOnMainThreadWhenAsyncUpdateIsTriggeredOnFixedSizeHostingView
+{
+  const auto hostingView =
+  [[CKComponentHostingView alloc]
+   initWithComponentProviderFunc:[](id<NSObject> m, id<NSObject>){ return CKComponentWithHostingViewTestModel(m); }
+   size:CGSizeMake(100, 100)
+   analyticsListener:_analyticsListenerSpy];
+  [hostingView updateModel:nil mode:CKUpdateModeAsynchronous];
+  [hostingView layoutIfNeeded];
+  XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 0);
+  XCTAssertEqual(_analyticsListenerSpy->_didMountComponentHitCount, 0);
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    [hostingView layoutIfNeeded];
+    return _analyticsListenerSpy->_didLayoutComponentTreeHitCount == 1
+    && _analyticsListenerSpy->_didMountComponentHitCount == 1;
+  }));
+}
+
+- (void)test_LayoutAndGenerationOfComponentAreOnMainThreadWhenSyncUpdateIsTriggeredOnFixedSizeHostingView
+{
+  const auto hostingView =
+  [[CKComponentHostingView alloc]
+   initWithComponentProviderFunc:[](id<NSObject> m, id<NSObject>){ return CKComponentWithHostingViewTestModel(m); }
+   size:CGSizeMake(100, 100)
+   analyticsListener:_analyticsListenerSpy];
+  [hostingView updateModel:nil mode:CKUpdateModeSynchronous];
+  [hostingView layoutIfNeeded];
+  XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 1);
+  XCTAssertEqual(_analyticsListenerSpy->_didMountComponentHitCount, 1);
+}
+
 @end
 
 @interface CKComponentHostingViewTests_ComponentProviderFunction : CKComponentHostingViewTests
