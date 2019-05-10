@@ -119,6 +119,11 @@ void CKComponentAttachControllerAttachComponentRootLayout(
   return CKGetAttachStateForView(((UIView *)_scopeIdentifierToAttachedViewMap[@(scopeIdentifier)]));
 }
 
+- (id<CKComponentRootLayoutProvider>)layoutProviderForScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
+{
+  return [_scopeIdentifierToLayoutProvider objectForKey:@(scopeIdentifier)];
+}
+
 #pragma mark - Attach helpers
 
 - (void)_detachComponentLayoutWithScopeIdentifier:(NSNumber *)scopeIdentifier

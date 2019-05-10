@@ -42,6 +42,11 @@
 
 @end
 
+struct CKComponentTestAttachResult {
+  CKComponent *component;
+  id<CKComponentRootLayoutProvider> layoutProvider;
+};
+
 @interface CKComponentAttachControllerTests : XCTestCase
 @end
 
@@ -50,65 +55,23 @@
 - (void)testAttachingAndDetachingComponentLayoutOnViewResultsInCorrectAttachState
 {
   auto const attachController = [CKComponentAttachController new];
-  [self _testAttachingAndDetachingComponentLayoutOnViewResultsInCorrectAttachStateWithAttachController:attachController];
+  auto const view = [UIView new];
+  CKComponentScopeRootIdentifier scopeIdentifier = 0x5C09E;
+
+  [self _attachWithAttachController:attachController scopeIdentifier:scopeIdentifier view:view];
+  [attachController detachComponentLayoutWithScopeIdentifier:scopeIdentifier];
+  XCTAssertNil([attachController attachStateForScopeIdentifier:scopeIdentifier]);
 }
 
 - (void)testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetachedWithAttachController
 {
   auto const attachController = [CKComponentAttachController new];
-  [self _testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetachedWithAttachController:attachController];
-}
-
-- (void)_testAttachingAndDetachingComponentLayoutOnViewResultsInCorrectAttachStateWithAttachController:(CKComponentAttachController *)attachController
-{
-  UIView *view = [UIView new];
-  CKComponent *component = [CKComponent new];
+  auto const view = [UIView new];
   CKComponentScopeRootIdentifier scopeIdentifier = 0x5C09E;
-
-  CKComponentAttachControllerAttachComponentRootLayout(
-      attachController,
-      {.layoutProvider =
-        [[CKComponentRootLayoutTestProvider alloc]
-         initWithRootLayout:CKComponentRootLayout {{component, {0, 0}}}],
-       .scopeIdentifier = scopeIdentifier,
-       .boundsAnimation = {},
-       .view = view,
-       .analyticsListener = nil});
-  CKComponentAttachState *attachState = [attachController attachStateForScopeIdentifier:scopeIdentifier];
-  XCTAssertEqualObjects(attachState.mountedComponents, [NSSet setWithObject:component]);
-  XCTAssertEqual(attachState.scopeIdentifier, scopeIdentifier);
-
-  [attachController detachComponentLayoutWithScopeIdentifier:scopeIdentifier];
-  attachState = [attachController attachStateForScopeIdentifier:scopeIdentifier];
-  XCTAssertNil(attachState);
-}
-
-- (void)_testAttachingOneComponentLayoutAfterAnotherToViewResultsInTheFirstOneBeingDetachedWithAttachController:(CKComponentAttachController *)attachController
-{
-  UIView *view = [UIView new];
-  CKComponent *component = [CKComponent new];
-  CKComponentScopeRootIdentifier scopeIdentifier = 0x5C09E;
-  CKComponentAttachControllerAttachComponentRootLayout(
-      attachController,
-      {.layoutProvider =
-        [[CKComponentRootLayoutTestProvider alloc]
-         initWithRootLayout:CKComponentRootLayout {{component, {0, 0}}}],
-       .scopeIdentifier = scopeIdentifier,
-       .boundsAnimation = {},
-       .view = view,
-       .analyticsListener = nil});
-
-  CKComponent *component2 = [CKComponent new];
   CKComponentScopeRootIdentifier scopeIdentifier2 = 0x5C09E2;
-  CKComponentAttachControllerAttachComponentRootLayout(
-      attachController,
-      {.layoutProvider =
-        [[CKComponentRootLayoutTestProvider alloc]
-         initWithRootLayout:CKComponentRootLayout {{component2, {0, 0}}}],
-       .scopeIdentifier = scopeIdentifier2,
-       .boundsAnimation = {},
-       .view = view,
-       .analyticsListener = nil});
+
+  [self _attachWithAttachController:attachController scopeIdentifier:scopeIdentifier view:view];
+  const auto attachResult2 = [self _attachWithAttachController:attachController scopeIdentifier:scopeIdentifier2 view:view];
 
   // the first component is now detached
   CKComponentAttachState *attachState = [attachController attachStateForScopeIdentifier:scopeIdentifier];
@@ -116,7 +79,7 @@
 
   // the second component is attached
   CKComponentAttachState *attachState2 = [attachController attachStateForScopeIdentifier:scopeIdentifier2];
-  XCTAssertEqualObjects(attachState2.mountedComponents, [NSSet setWithObject:component2]);
+  XCTAssertEqualObjects(attachState2.mountedComponents, [NSSet setWithObject:attachResult2.component]);
   XCTAssertEqual(attachState2.scopeIdentifier, scopeIdentifier2);
 }
 
@@ -158,6 +121,57 @@
                                                                    .analyticsListener = spy});
 
   XCTAssertEqual(spy->_didCollectAnimationsHitCount, 1);
+}
+
+- (void)testDetachingAllComponents
+{
+  const auto attachController = [CKComponentAttachController new];
+  const auto view1 = [UIView new];
+  const auto view2 = [UIView new];
+  CKComponentScopeRootIdentifier scopeIdentifier1 = 1;
+  CKComponentScopeRootIdentifier scopeIdentifier2 = 2;
+
+  // Just for keeping a strong reference for `layoutProvider` in `attachResult` so that
+  // `attachController` can hold a non-nil weak reference when component is attached.
+  __unused const auto attachResult1 = [self _attachWithAttachController:attachController scopeIdentifier:scopeIdentifier1 view:view1];
+  __unused const auto attachResult2 = [self _attachWithAttachController:attachController scopeIdentifier:scopeIdentifier2 view:view2];
+
+  XCTAssertNotNil([attachController layoutProviderForScopeIdentifier:scopeIdentifier1]);
+  XCTAssertNotNil([attachController layoutProviderForScopeIdentifier:scopeIdentifier2]);
+
+  [attachController detachAll];
+  XCTAssertNil([attachController attachStateForScopeIdentifier:scopeIdentifier1]);
+  XCTAssertNil([attachController attachStateForScopeIdentifier:scopeIdentifier2]);
+  XCTAssertNil([attachController layoutProviderForScopeIdentifier:scopeIdentifier1]);
+  XCTAssertNil([attachController layoutProviderForScopeIdentifier:scopeIdentifier2]);
+}
+
+#pragma mark - Helpers
+
+- (CKComponentTestAttachResult)_attachWithAttachController:(CKComponentAttachController *)attachController
+                                           scopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
+                                                      view:(UIView *)view
+{
+  CKComponent *component = [CKComponent new];
+  id<CKComponentRootLayoutProvider> layoutProvider = [[CKComponentRootLayoutTestProvider alloc]
+                                                      initWithRootLayout:CKComponentRootLayout {{component, {0, 0}}}];
+
+  CKComponentAttachControllerAttachComponentRootLayout(attachController,
+                                                       {
+                                                         .layoutProvider = layoutProvider,
+                                                         .scopeIdentifier = scopeIdentifier,
+                                                         .boundsAnimation = {},
+                                                         .view = view,
+                                                         .analyticsListener = nil,
+                                                       });
+  CKComponentAttachState *attachState = [attachController attachStateForScopeIdentifier:scopeIdentifier];
+  XCTAssertEqualObjects(attachState.mountedComponents, [NSSet setWithObject:component]);
+  XCTAssertEqual(attachState.scopeIdentifier, scopeIdentifier);
+
+  return {
+    .component = component,
+    .layoutProvider = layoutProvider,
+  };
 }
 
 @end

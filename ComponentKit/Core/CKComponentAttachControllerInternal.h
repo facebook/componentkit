@@ -14,6 +14,8 @@
 #import <ComponentKit/CKComponentAttachController.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 
+@protocol CKComponentRootLayoutProvider;
+
 /** This is exposed for unit tests. */
 @interface CKComponentAttachState : NSObject
 
@@ -34,6 +36,7 @@ void CKComponentAttachStateSetRootLayout(CKComponentAttachState *const self, con
 @interface CKComponentAttachController ()
 
 - (CKComponentAttachState *)attachStateForScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier;
+- (id<CKComponentRootLayoutProvider>)layoutProviderForScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier;
 
 @end
 
