@@ -101,8 +101,15 @@ void CKComponentAttachControllerAttachComponentRootLayout(
 - (void)detachComponentLayoutWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
 {
   CKAssertMainThread();
-  [self _detachComponentLayoutFromView:[_scopeIdentifierToAttachedViewMap objectForKey:@(scopeIdentifier)]];
-  [_scopeIdentifierToLayoutProvider removeObjectForKey:@(scopeIdentifier)];
+  [self _detachComponentLayoutWithScopeIdentifier:@(scopeIdentifier)];
+}
+
+- (void)detachAll
+{
+  CKAssertMainThread();
+  for (NSNumber *const scopeIdentifier in _scopeIdentifierToAttachedViewMap.allKeys) {
+    [self _detachComponentLayoutWithScopeIdentifier:scopeIdentifier];
+  }
 }
 
 #pragma mark - Internal API
@@ -113,6 +120,12 @@ void CKComponentAttachControllerAttachComponentRootLayout(
 }
 
 #pragma mark - Attach helpers
+
+- (void)_detachComponentLayoutWithScopeIdentifier:(NSNumber *)scopeIdentifier
+{
+  [self _detachComponentLayoutFromView:[_scopeIdentifierToAttachedViewMap objectForKey:scopeIdentifier]];
+  [_scopeIdentifierToLayoutProvider removeObjectForKey:scopeIdentifier];
+}
 
 - (void)_detachComponentLayoutFromView:(UIView *)view
 {

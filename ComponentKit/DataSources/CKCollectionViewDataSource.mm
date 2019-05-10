@@ -275,6 +275,8 @@ static void attachToCell(CKCollectionViewDataSourceCell *cell,
   auto const previousState = _currentState;
   [_announcer dataSource:self willChangeState:previousState];
   _currentState = state;
+
+  [_attachController detachAll];
   [_componentDataSource removeListener:self];
   _componentDataSource = [[CKDataSource alloc] initWithState:state];
   [_componentDataSource addListener:self];

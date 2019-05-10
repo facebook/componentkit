@@ -33,6 +33,11 @@
  */
 - (void)detachComponentLayoutWithScopeIdentifier:(CKComponentScopeRootIdentifier)identifier;
 
+/**
+ Detach all previously attached components.
+ */
+- (void)detachAll;
+
 @end
 
 /**
