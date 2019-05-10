@@ -644,7 +644,6 @@ static CKDataSource *dataSourceWithSplitChangesetOptions(Class<CKComponentProvid
    initWithComponentProvider:componentProvider
    context:nil
    sizeRange:{}
-   buildComponentConfig:{}
    splitChangesetOptions:splitChangesetOptions
    componentPredicates:{}
    componentControllerPredicates:{}

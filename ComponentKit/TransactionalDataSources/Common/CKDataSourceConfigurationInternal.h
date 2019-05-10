@@ -65,7 +65,6 @@ struct CKDataSourceSplitChangesetOptions {
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-                     buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                     splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
@@ -74,7 +73,6 @@ struct CKDataSourceSplitChangesetOptions {
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                                       context:(id<NSObject>)context
                                     sizeRange:(const CKSizeRange &)sizeRange
-                         buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                         splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
@@ -86,7 +84,6 @@ struct CKDataSourceSplitChangesetOptions {
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-                     buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                     splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
@@ -96,7 +93,6 @@ shouldInvalidateControllerBetweenComponentGenerations:(BOOL)shouldInvalidateCont
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                                       context:(id<NSObject>)context
                                     sizeRange:(const CKSizeRange &)sizeRange
-                         buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
                         splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
@@ -111,7 +107,6 @@ shouldInvalidateControllerBetweenComponentGenerations:(BOOL)shouldInvalidateCont
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates;
 
-- (const CKBuildComponentConfig &)buildComponentConfig;
 - (const CKDataSourceSplitChangesetOptions &)splitChangesetOptions;
 
 @end

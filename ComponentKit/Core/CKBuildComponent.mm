@@ -74,7 +74,6 @@ namespace CKBuildComponentHelpers {
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        CKBuildComponentConfig config,
                                         BOOL ignoreComponentReuseOptimizations)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");

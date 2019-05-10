@@ -42,7 +42,6 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
    initWithComponentProvider:provider
    context:@"context"
    sizeRange:{{100, 100}, {100, 100}}
-   buildComponentConfig:{}
    splitChangesetOptions:{}
    componentPredicates:{}
    componentControllerPredicates:{}
@@ -70,7 +69,6 @@ id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> d
    initWithComponentProvider:provider
    context:nil
    sizeRange:{}
-   buildComponentConfig:{}
    splitChangesetOptions:{}
    componentPredicates:{}
    componentControllerPredicates:{}

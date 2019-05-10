@@ -419,7 +419,7 @@
   });
 
   auto ignoreComponentReuseOptimizationsIsOn = YES;
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, {}, ignoreComponentReuseOptimizationsIsOn);
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, ignoreComponentReuseOptimizationsIsOn);
   // Verify no component have been reused.
   XCTAssertFalse(c1.didReuseComponent);
   XCTAssertFalse(c2.didReuseComponent);
@@ -441,7 +441,7 @@
   auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory);
 
   auto ignoreComponentReuseOptimizationsIsOn = YES;
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, {}, componentFactory, {}, ignoreComponentReuseOptimizationsIsOn);
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, {}, componentFactory, ignoreComponentReuseOptimizationsIsOn);
   // Verify no component have been reused.
   XCTAssertFalse(c1.didReuseComponent);
   XCTAssertFalse(c2.didReuseComponent);
