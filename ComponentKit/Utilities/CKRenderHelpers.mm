@@ -126,11 +126,11 @@ namespace CKRenderInternal {
         }
         // We fallback to the props update optimization in the follwing case:
         // - The component is not dirty, but the parent has a state update.
-        return (params.enableFasterPropsUpdates && CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params));
+        return (CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params));
       }
     }
     // Props update branch:
-    else if (params.buildTrigger == BuildTrigger::PropsUpdate && params.enableFasterPropsUpdates) {
+    else if (params.buildTrigger == BuildTrigger::PropsUpdate) {
       return CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params);
     }
 
@@ -140,15 +140,11 @@ namespace CKRenderInternal {
   static auto willBuildComponentTreeWithSingleChild(id<CKTreeNodeProtocol> node,
                                                     id<CKTreeNodeComponentProtocol> component,
                                                     const CKBuildComponentTreeParams &params) -> void {
-    auto const scopeRoot = params.scopeRoot;
-
     // Context support
     CKComponentContextHelper::willBuildComponentTree(component);
 
     // Faster Props updates and context support
-    if (params.enableFasterPropsUpdates) {
-      scopeRoot.rootNode.willBuildComponentTree(node);
-    }
+    params.scopeRoot.rootNode.willBuildComponentTree(node);
 
     // Systrace logging
     [params.systraceListener willBuildComponent:component.class];
@@ -157,15 +153,11 @@ namespace CKRenderInternal {
   static auto didBuildComponentTreeWithSingleChild(id<CKTreeNodeProtocol> node,
                                                    id<CKTreeNodeComponentProtocol> component,
                                                    const CKBuildComponentTreeParams &params) -> void {
-    auto const scopeRoot = params.scopeRoot;
-
     // Context support
     CKComponentContextHelper::didBuildComponentTree(component);
 
     // Props updates and context support
-    if (params.enableFasterPropsUpdates) {
-      scopeRoot.rootNode.didBuildComponentTree(node);
-    }
+    params.scopeRoot.rootNode.didBuildComponentTree(node);
 
     // Systrace logging
     [params.systraceListener didBuildComponent:component.class];

@@ -27,7 +27,6 @@
 
 @implementation CKRenderComponentTests
 {
-  CKBuildComponentConfig _config;
   CKTestRenderComponent *_c;
   CKComponentScopeRoot *_scopeRoot;
 }
@@ -41,10 +40,8 @@
 
 - (void)setUpForFasterStateUpdates:(CKComponent *(^)(void))componentFactory
 {
-  _config = {};
-
   // New Tree Creation.
-  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, _config);
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory);
 
   _c = (CKTestRenderComponent *)buildResults.component;
   _scopeRoot = buildResults.scopeRoot;
@@ -53,37 +50,14 @@
 
 - (void)setUpForFasterPropsUpdates:(CKComponent *(^)(void))componentFactory
 {
-  _config = {.enableFasterPropsUpdates = YES};
-
   // New Tree Creation.
-  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, _config);
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory);
   _c = (CKTestRenderComponent *)buildResults.component;
   _scopeRoot = buildResults.scopeRoot;
   XCTAssertEqual(_c.renderCalledCounter, 1);
 }
 
 #pragma mark - State updates
-
-- (void)test_fasterStateUpdate_componentIsNotBeingReused_onPropsUpdate
-{
-  [self setUpForFasterStateUpdates];
-
-  // Simulate props update.
-  CKThreadLocalComponentScope threadScope(_scopeRoot, {});
-  auto const c2 = [CKTestRenderComponent new];
-  CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
-  [c2 buildComponentTree:scopeRoot2.rootNode.node()
-          previousParent:_scopeRoot.rootNode.node()
-                  params:{
-                    .scopeRoot = scopeRoot2,
-                    .stateUpdates = {},
-                    .treeNodeDirtyIds = {},
-                    .buildTrigger = BuildTrigger::PropsUpdate,
-                  }
-    parentHasStateUpdate:NO];
-
-  [self verifyComponentIsNotBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:scopeRoot2];
-}
 
 - (void)test_fasterStateUpdate_componentIsBeingReused_onStateUpdateOnADifferentComponentBranch
 {
@@ -104,7 +78,6 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {100, 101}, // Use a random id that represents a fake state update on a different branch.
                     .buildTrigger = BuildTrigger::StateUpdate,
-                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:NO];
 
@@ -122,7 +95,7 @@
   CKThreadLocalComponentScope threadScope(_scopeRoot, {});
   CKComponentScopeRoot *scopeRoot2 = threadScope.newScopeRoot;
 
-  auto const c2 = [CKTestRenderComponent new];
+  auto const c2 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
   [c2 buildComponentTree:scopeRoot2.rootNode.node()
           previousParent:_scopeRoot.rootNode.node()
                   params:{
@@ -131,7 +104,6 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {100}, // Use a random id that represents a state update on a fake parent.
                     .buildTrigger = BuildTrigger::StateUpdate,
-                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:YES];
 
@@ -165,7 +137,6 @@
                       _c.scopeHandle.treeNodeIdentifier
                     },
                     .buildTrigger = BuildTrigger::StateUpdate,
-                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:NO];
 
@@ -201,7 +172,6 @@
                       _c.scopeHandle.treeNodeIdentifier
                     },
                     .buildTrigger = BuildTrigger::StateUpdate,
-                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:NO];
 
@@ -232,7 +202,6 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::PropsUpdate,
-                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:NO];
 
@@ -264,7 +233,6 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::PropsUpdate,
-                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:NO];
 
@@ -296,7 +264,6 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {100}, // Use a random id that represents a state update on a fake parent.
                     .buildTrigger = BuildTrigger::StateUpdate,
-                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:YES];
 
@@ -326,7 +293,6 @@
                     .stateUpdates = {},
                     .treeNodeDirtyIds = {},
                     .buildTrigger = BuildTrigger::StateUpdate,
-                    .enableFasterPropsUpdates = _config.enableFasterPropsUpdates,
                   }
     parentHasStateUpdate:NO];
 
@@ -357,7 +323,7 @@
     return c2;
   };
 
-  auto const buildResults = CKBuildComponent(_scopeRoot, {}, componentFactory, _config);
+  auto const buildResults = CKBuildComponent(_scopeRoot, {}, componentFactory);
 
   // The components are equal, but the node id is dirty - hence, we cannot reuse the previous component.
   [self verifyComponentIsNotBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:buildResults.scopeRoot];
@@ -368,10 +334,6 @@
 
 - (void)test_parentHasStateUpdatePropagatedCorrectly
 {
-  CKBuildComponentConfig config = {
-    .enableFasterPropsUpdates = YES,
-  };
-
   // Build new tree
   __block CKTestRenderComponent *c;
   __block CKCompositeComponentWithScopeAndState *rootComponent;
@@ -382,7 +344,7 @@
     return rootComponent;
   };
 
-  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, config);
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory);
   XCTAssertFalse(c.childComponent.parentHasStateUpdate);
 
   // Simulate a state update on the root.
@@ -401,16 +363,12 @@
     return rootComponent2;
   };
 
-  CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory2, config);
+  CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory2);
   XCTAssertTrue(c2.childComponent.parentHasStateUpdate);
 }
 
 - (void)test_registerComponentsAndControllersInScopeRootAfterReuse
 {
-  CKBuildComponentConfig config = {
-    .enableFasterPropsUpdates = YES,
-  };
-
   // Build new tree with siblings `CKTestRenderComponent` components.
   __block CKTestRenderComponent *c1;
   __block CKTestRenderComponent *c2;
@@ -422,7 +380,7 @@
 
   // Build scope root with predicates.
   auto const scopeRoot = CKComponentScopeRootWithPredicates(nil, nil, {&CKComponentRenderTestsPredicate}, {&CKComponentControllerRenderTestsPredicate});
-  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory, config);
+  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory);
   // Verify components and controllers registration in the scope root.
   [self verifyComponentsAndControllersAreRegisteredInScopeRoot:buildResults.scopeRoot components:{c1.childComponent, c2.childComponent}];
 
@@ -432,7 +390,7 @@
     return @2;
   });
 
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, config);
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory);
   // Verify c1 has been reused
   XCTAssertTrue(c1.didReuseComponent);
   // Verify components and controllers registration in the scope root.
@@ -452,7 +410,7 @@
 
   // Build scope root with predicates.
   auto const scopeRoot = CKComponentScopeRootWithPredicates(nil, nil, {}, {});
-  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory, _config);
+  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory);
 
   // Simulate a state update on c2.
   CKComponentStateUpdateMap stateUpdates;
@@ -461,7 +419,7 @@
   });
 
   auto ignoreComponentReuseOptimizationsIsOn = YES;
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, _config, ignoreComponentReuseOptimizationsIsOn);
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, {}, ignoreComponentReuseOptimizationsIsOn);
   // Verify no component have been reused.
   XCTAssertFalse(c1.didReuseComponent);
   XCTAssertFalse(c2.didReuseComponent);
@@ -469,10 +427,6 @@
 
 - (void)test_componentIsNotBeingReusedOnAPropsUpdate_WhenIgnoreComponentReuseOptimizationsIsOn
 {
-  CKBuildComponentConfig config = {
-    .enableFasterPropsUpdates = YES,
-  };
-
   // Build new tree with siblings `CKTestRenderComponent` components.
   __block CKTestRenderComponent *c1;
   __block CKTestRenderComponent *c2;
@@ -484,10 +438,10 @@
 
   // Build scope root with predicates.
   auto const scopeRoot = CKComponentScopeRootWithPredicates(nil, nil, {}, {});
-  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory, config);
+  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory);
 
   auto ignoreComponentReuseOptimizationsIsOn = YES;
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, {}, componentFactory, config, ignoreComponentReuseOptimizationsIsOn);
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, {}, componentFactory, {}, ignoreComponentReuseOptimizationsIsOn);
   // Verify no component have been reused.
   XCTAssertFalse(c1.didReuseComponent);
   XCTAssertFalse(c2.didReuseComponent);

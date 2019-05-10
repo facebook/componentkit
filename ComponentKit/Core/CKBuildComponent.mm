@@ -79,7 +79,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
-  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates, buildTrigger, config.enableFasterPropsUpdates);
+  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates, buildTrigger);
 
   auto const analyticsListener = [previousRoot analyticsListener];
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
@@ -95,7 +95,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
       .stateUpdates = stateUpdates,
       .treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger),
       .buildTrigger = buildTrigger,
-      .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
       .ignoreComponentReuseOptimizations = ignoreComponentReuseOptimizations,
       .systraceListener = threadScope.systraceListener,
     };
