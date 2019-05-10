@@ -49,6 +49,7 @@ typedef NS_ENUM(NSUInteger, CKDataSourceChangesetModificationItemType) {
 @property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;
 
 - (void)setItemGenerator:(id<CKDataSourceChangesetModificationItemGenerator>)itemGenerator;
+- (BOOL)shouldSortInsertedItems;
 
 @end
 

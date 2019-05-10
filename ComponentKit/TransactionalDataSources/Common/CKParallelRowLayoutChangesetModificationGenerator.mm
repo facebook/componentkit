@@ -66,6 +66,11 @@
   return item;
 }
 
+- (BOOL)shouldSortInsertedItems
+{
+  return YES;
+}
+
 @end
 
 @implementation CKParallelRowLayoutChangesetModificationGenerator

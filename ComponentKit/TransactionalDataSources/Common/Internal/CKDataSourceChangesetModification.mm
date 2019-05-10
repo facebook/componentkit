@@ -66,6 +66,11 @@ using namespace CKComponentControllerHelper;
   return self;
 }
 
+- (BOOL)shouldSortInsertedItems
+{
+  return NO;
+}
+
 - (void)setItemGenerator:(id<CKDataSourceChangesetModificationItemGenerator>)itemGenerator
 {
   _itemGenerator = itemGenerator;
@@ -247,9 +252,17 @@ using namespace CKComponentControllerHelper;
   };
 
   NSDictionary<NSIndexPath *, id> *const insertedItems = [_changeset insertedItems];
-  [insertedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
-    insertedItemsBySection[indexPath.section][indexPath.item] = buildItem(model);
-  }];
+  if ([self shouldSortInsertedItems]) {
+    NSArray *sortedKeys = [[insertedItems allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    for (NSIndexPath *indexPath in sortedKeys) {
+      id model = insertedItems[indexPath];
+      insertedItemsBySection[indexPath.section][indexPath.item] = buildItem(model);
+    }
+  } else {
+    [insertedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
+      insertedItemsBySection[indexPath.section][indexPath.item] = buildItem(model);
+    }];
+  }
 
   for (const auto &sectionIt : insertedItemsBySection) {
     NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
