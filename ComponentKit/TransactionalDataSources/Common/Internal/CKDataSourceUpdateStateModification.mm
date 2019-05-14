@@ -66,12 +66,10 @@ using namespace CKComponentControllerHelper;
         [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
         CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], stateUpdatesForItem->second, sizeRange, configuration, [item model], context);
         [newItems addObject:newItem];
-        if (configuration.shouldInvalidateControllerBetweenComponentGenerations) {
-          for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
-                                                                                                         item.scopeRoot,
-                                                                                                         &CKComponentControllerInvalidateEventPredicate)) {
-            [invalidComponentControllers addObject:componentController];
-          }
+        for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                                       item.scopeRoot,
+                                                                                                       &CKComponentControllerInvalidateEventPredicate)) {
+          [invalidComponentControllers addObject:componentController];
         }
       }
     }];

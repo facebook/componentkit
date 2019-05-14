@@ -78,31 +78,9 @@ struct CKDataSourceSplitChangesetOptions {
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
 
-/**
- These initializers are used in tests for passing values are not depending on global config.
- */
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id<NSObject>)context
-                                sizeRange:(const CKSizeRange &)sizeRange
-                    splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-                      componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-            componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-shouldInvalidateControllerBetweenComponentGenerations:(BOOL)shouldInvalidateControllerBetweenComponentGenerations;
-
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
-                                      context:(id<NSObject>)context
-                                    sizeRange:(const CKSizeRange &)sizeRange
-                        splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-                          componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-                componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-shouldInvalidateControllerBetweenComponentGenerations:(BOOL)shouldInvalidateControllerBetweenComponentGenerations;
-
 - (instancetype)copyWithContext:(id<NSObject>)context sizeRange:(const CKSizeRange &)sizeRange;
 
 @property (nonatomic, readonly, strong) id<CKAnalyticsListener> analyticsListener;
-@property (nonatomic, readonly, assign) BOOL shouldInvalidateControllerBetweenComponentGenerations;
 
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates;

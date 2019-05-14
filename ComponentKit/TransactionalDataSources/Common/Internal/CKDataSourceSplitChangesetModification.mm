@@ -127,12 +127,10 @@ using namespace CKComponentControllerHelper;
       CKDataSourceItem *const oldItem = section[indexPath.item];
       CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
       [section replaceObjectAtIndex:indexPath.item withObject:item];
-      if (configuration.shouldInvalidateControllerBetweenComponentGenerations) {
-        for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
-                                                                                                       oldItem.scopeRoot,
-                                                                                                       &CKComponentControllerInvalidateEventPredicate)) {
-          [invalidComponentControllers addObject:componentController];
-        }
+      for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
+                                                                                                     oldItem.scopeRoot,
+                                                                                                     &CKComponentControllerInvalidateEventPredicate)) {
+        [invalidComponentControllers addObject:componentController];
       }
     }];
   }
@@ -479,12 +477,10 @@ static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSou
         computedItems[indexPath] = newItem;
         initialUpdatedItems[indexPath] = updatedModel;
         contentSize = addSizeToSize(contentSize, [newItem rootLayout].size());
-        if (configuration.shouldInvalidateControllerBetweenComponentGenerations) {
-          for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
-                                                                                                         item.scopeRoot,
-                                                                                                         &CKComponentControllerInvalidateEventPredicate)) {
-            [invalidComponentControllers addObject:componentController];
-          }
+        for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                                       item.scopeRoot,
+                                                                                                       &CKComponentControllerInvalidateEventPredicate)) {
+          [invalidComponentControllers addObject:componentController];
         }
       }
     }];

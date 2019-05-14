@@ -54,24 +54,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                            analyticsListener:nil];
 }
 
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                                  context:(id<NSObject>)context
-                                sizeRange:(const CKSizeRange &)sizeRange
-                    splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-                      componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-            componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-{
-  return [self initWithComponentProvider:componentProvider
-                                 context:context
-                               sizeRange:sizeRange
-                   splitChangesetOptions:splitChangesetOptions
-                     componentPredicates:componentPredicates
-           componentControllerPredicates:componentControllerPredicates
-                       analyticsListener:analyticsListener
-shouldInvalidateControllerBetweenComponentGenerations:CKReadGlobalConfig().shouldInvalidateControllerBetweenComponentGenerationsInDataSource];
-}
-
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                                       context:(id<NSObject>)context
                                     sizeRange:(const CKSizeRange &)sizeRange
@@ -79,25 +61,6 @@ shouldInvalidateControllerBetweenComponentGenerations:CKReadGlobalConfig().shoul
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-{
-  return [self initWithComponentProviderFunc:componentProvider
-                                     context:context
-                                   sizeRange:sizeRange
-                       splitChangesetOptions:splitChangesetOptions
-                         componentPredicates:componentPredicates
-               componentControllerPredicates:componentControllerPredicates
-                           analyticsListener:analyticsListener
-shouldInvalidateControllerBetweenComponentGenerations:CKReadGlobalConfig().shouldInvalidateControllerBetweenComponentGenerationsInDataSource];
-}
-
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
-                                      context:(id<NSObject>)context
-                                    sizeRange:(const CKSizeRange &)sizeRange
-                        splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-                          componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-                componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-shouldInvalidateControllerBetweenComponentGenerations:(BOOL)shouldInvalidateControllerBetweenComponentGenerations
 {
   componentProvider = componentProvider ?: nilProvider;
 
@@ -108,8 +71,7 @@ shouldInvalidateControllerBetweenComponentGenerations:(BOOL)shouldInvalidateCont
                         splitChangesetOptions:splitChangesetOptions
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
-                            analyticsListener:analyticsListener
-shouldInvalidateControllerBetweenComponentGenerations:shouldInvalidateControllerBetweenComponentGenerations];
+                            analyticsListener:analyticsListener];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -119,7 +81,6 @@ shouldInvalidateControllerBetweenComponentGenerations:shouldInvalidateController
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-shouldInvalidateControllerBetweenComponentGenerations:(BOOL)shouldInvalidateControllerBetweenComponentGenerations
 {
   auto const pb = ^(id<NSObject> m, id<NSObject> c){ return [componentProvider componentForModel:m context:c]; };
   return [self initWithComponentProviderClass:componentProvider
@@ -129,8 +90,7 @@ shouldInvalidateControllerBetweenComponentGenerations:(BOOL)shouldInvalidateCont
                         splitChangesetOptions:splitChangesetOptions
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
-                            analyticsListener:analyticsListener
-shouldInvalidateControllerBetweenComponentGenerations:shouldInvalidateControllerBetweenComponentGenerations];
+                            analyticsListener:analyticsListener];
 }
 
 - (instancetype)initWithComponentProviderClass:(Class<CKComponentProvider>)componentProviderClass
@@ -141,7 +101,6 @@ shouldInvalidateControllerBetweenComponentGenerations:shouldInvalidateController
                            componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                  componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                              analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-shouldInvalidateControllerBetweenComponentGenerations:(BOOL)shouldInvalidateControllerBetweenComponentGenerations
 {
   if (self = [super init]) {
     _componentProviderClass = componentProviderClass;
@@ -152,7 +111,6 @@ shouldInvalidateControllerBetweenComponentGenerations:(BOOL)shouldInvalidateCont
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
     _splitChangesetOptions = splitChangesetOptions;
-    _shouldInvalidateControllerBetweenComponentGenerations = shouldInvalidateControllerBetweenComponentGenerations;
   }
   return self;
 }
@@ -166,8 +124,7 @@ shouldInvalidateControllerBetweenComponentGenerations:(BOOL)shouldInvalidateCont
                                                      splitChangesetOptions:_splitChangesetOptions
                                                        componentPredicates:_componentPredicates
                                              componentControllerPredicates:_componentControllerPredicates
-                                                         analyticsListener:_analyticsListener
-                     shouldInvalidateControllerBetweenComponentGenerations:_shouldInvalidateControllerBetweenComponentGenerations];
+                                                         analyticsListener:_analyticsListener];
 }
 
 - (const CKDataSourceSplitChangesetOptions &)splitChangesetOptions

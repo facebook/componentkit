@@ -67,7 +67,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   BOOL _isSynchronouslyUpdatingComponent;
   BOOL _isMountingComponent;
   BOOL _allowTapPassthrough;
-  BOOL _shouldInvalidateControllerBetweenComponentGenerations;
 
   CK::Optional<CGSize> _size;
 }
@@ -207,8 +206,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
     _componentNeedsUpdate = YES;
     _requestedUpdateMode = CKUpdateModeSynchronous;
-
-    _shouldInvalidateControllerBetweenComponentGenerations = options.shouldInvalidateControllerBetweenComponentGenerations;
 
     [CKComponentDebugController registerReflowListener:self];
   }
@@ -415,10 +412,9 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                                                                                   {size, size},
                                                                                   inputs->scopeRoot.analyticsListener));
     });
-    const auto invalidComponentControllers = _shouldInvalidateControllerBetweenComponentGenerations
-    ? std::make_shared<const std::vector<CKComponentController *>>([self _invalidComponentControllersWithNewScopeRoot:result->scopeRoot
-                                                                                                fromPreviousScopeRoot:inputs->scopeRoot])
-    : nullptr;
+    const auto invalidComponentControllers =
+    std::make_shared<const std::vector<CKComponentController *>>([self _invalidComponentControllersWithNewScopeRoot:result->scopeRoot
+                                                                                              fromPreviousScopeRoot:inputs->scopeRoot]);
     dispatch_async(dispatch_get_main_queue(), ^{
       if (!_componentNeedsUpdate) {
         // A synchronous update snuck in and took care of it for us.
@@ -493,7 +489,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 - (std::vector<CKComponentController *>)_invalidComponentControllersWithNewScopeRoot:(CKComponentScopeRoot *)newRoot
                                                                fromPreviousScopeRoot:(CKComponentScopeRoot *)previousRoot
 {
-  if (!previousRoot || !_shouldInvalidateControllerBetweenComponentGenerations) {
+  if (!previousRoot) {
     return {};
   }
   return

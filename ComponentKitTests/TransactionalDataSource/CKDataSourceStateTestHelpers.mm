@@ -45,8 +45,7 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
    splitChangesetOptions:{}
    componentPredicates:{}
    componentControllerPredicates:{}
-   analyticsListener:nil
-   shouldInvalidateControllerBetweenComponentGenerations:YES];
+   analyticsListener:nil];
 
   NSMutableArray *sections = [NSMutableArray array];
   for (NSUInteger sectionIndex = 0; sectionIndex < numberOfSections; sectionIndex++) {
@@ -72,8 +71,7 @@ id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> d
    splitChangesetOptions:{}
    componentPredicates:{}
    componentControllerPredicates:{}
-   analyticsListener:nil
-   shouldInvalidateControllerBetweenComponentGenerations:YES];
+   analyticsListener:nil];
   id<CKDataSourceProtocol> ds = [[(Class)dataSourceClass alloc] initWithConfiguration:configuration];
   [ds addListener:listener];
 

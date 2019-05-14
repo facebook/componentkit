@@ -24,7 +24,6 @@
 struct CKComponentHostingViewOptions {
   /// If set to YES, allows taps to pass though this hosting view to views behind it. Default NO.
   BOOL allowTapPassthrough;
-  BOOL shouldInvalidateControllerBetweenComponentGenerations = CKReadGlobalConfig().shouldInvalidateControllerBetweenComponentGenerationsInHostingView;
 };
 
 @interface CKComponentHostingView () <CKComponentHostingViewProtocol, CKComponentStateListener>

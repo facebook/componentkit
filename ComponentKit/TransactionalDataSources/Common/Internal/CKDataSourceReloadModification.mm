@@ -56,12 +56,10 @@ using namespace CKComponentControllerHelper;
       // On reload, we would like avoid component reuse - by passing `ignoreComponentReuseOptimizations = YES`, we make sure that all the components will be recreated.
       CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, [item model], context, YES);
       [newItems addObject:newItem];
-      if (configuration.shouldInvalidateControllerBetweenComponentGenerations) {
-        for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
-                                                                                                       item.scopeRoot,
-                                                                                                       &CKComponentControllerInvalidateEventPredicate)) {
-          [invalidComponentControllers addObject:componentController];
-        }
+      for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                                     item.scopeRoot,
+                                                                                                     &CKComponentControllerInvalidateEventPredicate)) {
+        [invalidComponentControllers addObject:componentController];
       }
      }];
     [newSections addObject:newItems];

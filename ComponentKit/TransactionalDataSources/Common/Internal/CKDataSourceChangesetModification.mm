@@ -120,12 +120,10 @@ using namespace CKComponentControllerHelper;
                                                                      context:context
                                                                     itemType:CKDataSourceChangesetModificationItemTypeUpdate];
     [section replaceObjectAtIndex:indexPath.item withObject:item];
-    if (configuration.shouldInvalidateControllerBetweenComponentGenerations) {
-      for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
-                                                                                                     oldItem.scopeRoot,
-                                                                                                     &CKComponentControllerInvalidateEventPredicate)) {
-        [invalidComponentControllers addObject:componentController];
-      }
+    for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
+                                                                                                   oldItem.scopeRoot,
+                                                                                                   &CKComponentControllerInvalidateEventPredicate)) {
+      [invalidComponentControllers addObject:componentController];
     }
   }];
 
