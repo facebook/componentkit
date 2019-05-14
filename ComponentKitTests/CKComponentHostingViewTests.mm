@@ -298,7 +298,10 @@ typedef struct {
   [[CKComponentHostingView alloc]
    initWithComponentProviderFunc:[](id<NSObject> m, id<NSObject>){ return CKComponentWithHostingViewTestModel(m); }
    sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
-   analyticsListener:_analyticsListenerSpy];
+   componentPredicates:{}
+   componentControllerPredicates:{}
+   analyticsListener:_analyticsListenerSpy
+   options:{}];
   [hostingView updateModel:nil mode:CKUpdateModeAsynchronous];
   [hostingView layoutIfNeeded];
   XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 1);
@@ -311,7 +314,10 @@ typedef struct {
   [[CKComponentHostingView alloc]
    initWithComponentProviderFunc:[](id<NSObject> m, id<NSObject>){ return CKComponentWithHostingViewTestModel(m); }
    size:CGSizeMake(100, 100)
-   analyticsListener:_analyticsListenerSpy];
+   componentPredicates:{}
+   componentControllerPredicates:{}
+   analyticsListener:_analyticsListenerSpy
+   options:{}];
   [hostingView updateModel:nil mode:CKUpdateModeAsynchronous];
   [hostingView layoutIfNeeded];
   XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 0);
@@ -330,7 +336,10 @@ typedef struct {
   [[CKComponentHostingView alloc]
    initWithComponentProviderFunc:[](id<NSObject> m, id<NSObject>){ return CKComponentWithHostingViewTestModel(m); }
    size:CGSizeMake(100, 100)
-   analyticsListener:_analyticsListenerSpy];
+   componentPredicates:{}
+   componentControllerPredicates:{}
+   analyticsListener:_analyticsListenerSpy
+   options:{}];
   [hostingView updateModel:nil mode:CKUpdateModeSynchronous];
   [hostingView layoutIfNeeded];
   XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 1);

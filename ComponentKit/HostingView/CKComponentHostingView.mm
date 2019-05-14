@@ -86,38 +86,31 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 {
   return [self initWithComponentProvider:componentProvider
                        sizeRangeProvider:sizeRangeProvider
-                       analyticsListener:nil];
-}
-
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
-                            sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-{
-  return [self initWithComponentProviderFunc:componentProvider
-                           sizeRangeProvider:sizeRangeProvider
-                           analyticsListener:nil];
-}
-
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-{
-  return [self initWithComponentProvider:componentProvider
-                       sizeRangeProvider:sizeRangeProvider
                      componentPredicates:{}
            componentControllerPredicates:{}
-                       analyticsListener:analyticsListener
+                       analyticsListener:nil
                                  options:{}];
 }
 
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
 {
   return [self initWithComponentProviderFunc:componentProvider
                            sizeRangeProvider:sizeRangeProvider
                          componentPredicates:{}
                componentControllerPredicates:{}
-                           analyticsListener:analyticsListener
+                           analyticsListener:nil
+                                     options:{}];
+}
+
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                                         size:(CGSize)size
+{
+  return [self initWithComponentProviderFunc:componentProvider
+                                        size:size
+                         componentPredicates:{}
+               componentControllerPredicates:{}
+                           analyticsListener:nil
                                      options:{}];
 }
 
@@ -147,7 +140,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                                       options:(const CKComponentHostingViewOptions &)options
 {
   componentProvider = componentProvider ?: nilProvider;
-  
+
   auto const p = ^(id<NSObject> m, id<NSObject> c) { return componentProvider(m, c); };
   return [self initWithComponentProviderBlock:p
                             sizeRangeProvider:sizeRangeProvider
@@ -159,15 +152,17 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                                          size:(CGSize)size
-{
-  return [self initWithComponentProviderFunc:componentProvider size:size analyticsListener:nil];
-}
-
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
-                                         size:(CGSize)size
+                          componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+                componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                                      options:(const CKComponentHostingViewOptions &)options
 {
-  if (self = [self initWithComponentProviderFunc:componentProvider sizeRangeProvider:nil analyticsListener:analyticsListener]) {
+  if (self = [self initWithComponentProviderFunc:componentProvider
+                               sizeRangeProvider:nil
+                             componentPredicates:componentPredicates
+                   componentControllerPredicates:componentControllerPredicates
+                               analyticsListener:analyticsListener
+                                         options:options]) {
     _size = size;
     // In the case of non-fixed size hosting view, `_hasScheduledSyncUpdate` should return `YES` when hosting view
     // is created so that calling `sizeThatFits:` and `layoutSubviews` will return expected result with component generated

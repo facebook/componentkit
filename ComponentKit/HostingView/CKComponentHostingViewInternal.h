@@ -21,6 +21,8 @@
 
 #import <unordered_set>
 
+@protocol CKAnalyticsListener;
+
 struct CKComponentHostingViewOptions {
   /// If set to YES, allows taps to pass though this hosting view to views behind it. Default NO.
   BOOL allowTapPassthrough;
@@ -49,6 +51,13 @@ struct CKComponentHostingViewOptions {
 
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
+                          componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+                componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
+                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+                                      options:(const CKComponentHostingViewOptions &)options;
+
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                                         size:(CGSize)size
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
