@@ -54,11 +54,6 @@ struct CKBuildComponentTreeParams {
 
   // When enabled, all the comopnents will be regenerated (no component reuse optimiztions).
   BOOL ignoreComponentReuseOptimizations = NO;
-
-#if DEBUG
-  // Will be used to gather information reagrding reused components during debug only.
-  std::shared_ptr<CKTreeNodeReuseMap> canBeReusedNodes = std::make_shared<CKTreeNodeReuseMap>();
-#endif
 };
 
 @protocol CKTreeNodeWithChildrenProtocol;

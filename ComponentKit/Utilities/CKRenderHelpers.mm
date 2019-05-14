@@ -173,16 +173,18 @@ namespace CKRenderInternal {
     CK::Optional<CKTreeNodeReuseInfo> previousReuseInfo = CK::none;
     if (params.buildTrigger != BuildTrigger::NewTree) {
       auto const previousCanBeReusedNodes = (params.previousScopeRoot.rootNode.canBeReusedNodes);
-      auto const it = previousCanBeReusedNodes->find(node.nodeIdentifier);
-      if (it != previousCanBeReusedNodes->end()){
-        previousReuseInfo = it->second;
+      if (previousCanBeReusedNodes != nullptr) {
+        auto const it = previousCanBeReusedNodes->find(node.nodeIdentifier);
+        if (it != previousCanBeReusedNodes->end()){
+          previousReuseInfo = it->second;
+        }
       }
     }
 
     // Gather information about component that can converted to CKRenderComponent and can be reused.
     if (params.buildTrigger == BuildTrigger::StateUpdate && !parentHasStateUpdate) {
       if (!CK::Collection::contains(params.treeNodeDirtyIds, node.nodeIdentifier)) {
-        params.canBeReusedNodes->insert({node.nodeIdentifier, {
+        params.scopeRoot.rootNode.canBeReusedNodes->insert({node.nodeIdentifier, {
           .parentNodeIdentifier = parent.nodeIdentifier,
           .klass = component.class,
           .parentKlass = parent.component.class,
@@ -194,7 +196,7 @@ namespace CKRenderInternal {
 
     // Insert the previous node if needed.
     previousReuseInfo.apply([&](const CKTreeNodeReuseInfo &info){
-      params.canBeReusedNodes->insert({node.nodeIdentifier, info});
+      params.scopeRoot.rootNode.canBeReusedNodes->insert({node.nodeIdentifier, info});
     });
   }
 #endif

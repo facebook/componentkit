@@ -125,13 +125,12 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 #if DEBUG
 void CKDidBuildComponentTree(const CKBuildComponentTreeParams &params, id<CKComponentProtocol> component)
 {
-  // Save the new nodes on the root node.
-  params.scopeRoot.rootNode.canBeReusedNodes = params.canBeReusedNodes;
   // Notify the debug listener.
-  auto debugAnalyticsListener = [params.scopeRoot.analyticsListener debugAnalyticsListener];
-  [debugAnalyticsListener canReuseNodes:params.canBeReusedNodes
+  auto const newScopeRoot = params.scopeRoot;
+  auto debugAnalyticsListener = [newScopeRoot.analyticsListener debugAnalyticsListener];
+  [debugAnalyticsListener canReuseNodes:newScopeRoot.rootNode.canBeReusedNodes
                       previousScopeRoot:params.previousScopeRoot
-                           newScopeRoot:params.scopeRoot
+                           newScopeRoot:newScopeRoot
                               component:component];
 }
 #endif
