@@ -161,6 +161,8 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
       // Detach all the component layouts for items being deleted
       [self _detachComponentLayoutForRemovedItemsAtIndexPaths:[changes removedIndexPaths]
                                                       inState:previousState];
+      [self _detachComponentLayoutForRemovedSections:[changes removedSections]
+                                                      inState:previousState];
       // Update current state
       _currentState = state;
     } completion:^(BOOL finished){
@@ -179,6 +181,16 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
     CKComponentScopeRootIdentifier identifier = [[[state objectAtIndexPath:indexPath] scopeRoot] globalIdentifier];
     [_attachController detachComponentLayoutWithScopeIdentifier:identifier];
   }
+}
+
+- (void)_detachComponentLayoutForRemovedSections:(NSIndexSet *)removedSections inState:(CKDataSourceState *)state
+{
+  [removedSections enumerateIndexesUsingBlock:^(NSUInteger section, BOOL *stop) {
+    [state enumerateObjectsInSectionAtIndex:section
+                                 usingBlock:^(CKDataSourceItem *item, NSIndexPath *indexPath, BOOL *stop2) {
+      [_attachController detachComponentLayoutWithScopeIdentifier:[[item scopeRoot] globalIdentifier]];
+    }];
+  }];
 }
 
 #pragma mark - State
