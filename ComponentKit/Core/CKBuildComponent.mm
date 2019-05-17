@@ -21,6 +21,7 @@
 #import "CKRenderTreeNodeWithChildren.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKTreeNodeProtocol.h"
+#import "CKGlobalConfig.h"
 
 namespace CKBuildComponentHelpers {
   auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> BuildTrigger
@@ -96,6 +97,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
       .buildTrigger = buildTrigger,
       .ignoreComponentReuseOptimizations = ignoreComponentReuseOptimizations,
       .systraceListener = threadScope.systraceListener,
+      .enableLayoutCache = CKReadGlobalConfig().enableLayoutCacheInRender,
     };
 
     // Build the component tree from the render function.

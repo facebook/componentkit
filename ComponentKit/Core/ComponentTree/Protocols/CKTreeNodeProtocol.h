@@ -54,6 +54,9 @@ struct CKBuildComponentTreeParams {
 
   // When enabled, all the comopnents will be regenerated (no component reuse optimiztions).
   BOOL ignoreComponentReuseOptimizations = NO;
+  
+  // When enabled, we will cache the layout in render components and reuse it during a component reuse. */
+  BOOL enableLayoutCache = NO;
 };
 
 @protocol CKTreeNodeWithChildrenProtocol;
