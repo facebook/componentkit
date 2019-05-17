@@ -23,6 +23,7 @@ struct CKTestChildRenderComponentProps {
 
 @interface CKTestChildRenderComponent : CKRenderComponent
 @property (nonatomic, assign) BOOL parentHasStateUpdate;
+@property (nonatomic, assign) NSUInteger computeCalledCounter;
 + (instancetype)newWithProps:(const CKTestChildRenderComponentProps &)props;
 @end
 

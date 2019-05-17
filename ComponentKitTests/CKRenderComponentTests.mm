@@ -21,6 +21,7 @@
 
 #import "CKTreeNodeWithChild.h"
 #import "CKTreeNodeWithChildren.h"
+#import "CKRenderHelpers.h"
 
 @interface CKRenderComponentTests : XCTestCase
 @end
@@ -447,6 +448,109 @@
   XCTAssertFalse(c2.didReuseComponent);
 }
 
+- (void)test_layoutIsNotBeingReusedOnComponentReuse_WhenLayoutCacheIsOff
+{
+  auto const enableLayoutCache = NO;
+  CKSizeRange sizeRange = {{100,100}, {100,100}};
+
+  // Simulate build component
+  CKTestRenderComponent *c1;
+  auto previousRoot = CKComponentScopeRootWithPredicates(nil, nil, {}, {});
+  auto scopeRoot = previousRoot.newRoot;
+  {
+    CKThreadLocalComponentScope threadScope(scopeRoot, {});
+    c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
+    SimulateBuildComponentTree(scopeRoot, previousRoot, BuildTrigger::NewTree, c1, enableLayoutCache);
+    CKComputeRootComponentLayout(c1, sizeRange).layout();
+  }
+
+  // Simulate Props Updates
+  CKTestRenderComponent *c2;
+  previousRoot = scopeRoot;
+  scopeRoot = previousRoot.newRoot;
+  {
+    CKThreadLocalComponentScope threadScope(scopeRoot, {});
+    c2 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
+    SimulateBuildComponentTree(scopeRoot, previousRoot, BuildTrigger::PropsUpdate, c2, enableLayoutCache);
+    CKComputeRootComponentLayout(c2, sizeRange);
+  }
+
+  // Verify there was a component reuse;
+  XCTAssertEqual(c1.childComponent, c2.childComponent);
+  XCTAssertTrue(c2.didReuseComponent);
+  // No layout cache, which means we computed layout for the child component twice.
+  XCTAssertEqual(c1.childComponent.computeCalledCounter, 2);
+}
+
+- (void)test_layoutIsBeingReusedOnComponentReuse_WhenLayoutCacheIsOn
+{
+  auto const enableLayoutCache = YES;
+  CKSizeRange sizeRange = {{100,100}, {100,100}};
+
+  // Simulate build component
+  CKTestRenderComponent *c1;
+  auto previousRoot = CKComponentScopeRootWithPredicates(nil, nil, {}, {});
+  auto scopeRoot = previousRoot.newRoot;
+  {
+    CKThreadLocalComponentScope threadScope(scopeRoot, {});
+    c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
+    SimulateBuildComponentTree(scopeRoot, previousRoot, BuildTrigger::NewTree, c1, enableLayoutCache);
+    CKComputeRootComponentLayout(c1, sizeRange).layout();
+  }
+
+  // Simulate Props Updates
+  CKTestRenderComponent *c2;
+  previousRoot = scopeRoot;
+  scopeRoot = previousRoot.newRoot;
+  {
+    CKThreadLocalComponentScope threadScope(scopeRoot, {});
+    c2 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
+    SimulateBuildComponentTree(scopeRoot, previousRoot, BuildTrigger::PropsUpdate, c2, enableLayoutCache);
+    CKComputeRootComponentLayout(c2, sizeRange);
+  }
+
+  // Verify there was a component reuse;
+  XCTAssertEqual(c1.childComponent, c2.childComponent);
+  XCTAssertTrue(c2.didReuseComponent);
+  // Layout cache is on, we should compute the layout for the reused component once.
+  XCTAssertEqual(c1.childComponent.computeCalledCounter, 1);
+}
+
+- (void)test_layoutIsNotBeingReusedOnComponentReuse_WhenLayoutCacheIsOnButSizeRangeIsDifferent
+{
+  auto const enableLayoutCache = YES;
+  CKSizeRange sizeRange1 = {{100,100}, {100,100}};
+  CKSizeRange sizeRange2 = {{200,200}, {200,200}};
+
+  // Simulate build component
+  CKTestRenderComponent *c1;
+  auto previousRoot = CKComponentScopeRootWithPredicates(nil, nil, {}, {});
+  auto scopeRoot = previousRoot.newRoot;
+  {
+    CKThreadLocalComponentScope threadScope(scopeRoot, {});
+    c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
+    SimulateBuildComponentTree(scopeRoot, previousRoot, BuildTrigger::NewTree, c1, enableLayoutCache);
+    CKComputeRootComponentLayout(c1, sizeRange1).layout();
+  }
+
+  // Simulate Props Updates
+  CKTestRenderComponent *c2;
+  previousRoot = scopeRoot;
+  scopeRoot = previousRoot.newRoot;
+  {
+    CKThreadLocalComponentScope threadScope(scopeRoot, {});
+    c2 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
+    SimulateBuildComponentTree(scopeRoot, previousRoot, BuildTrigger::PropsUpdate, c2, enableLayoutCache);
+    CKComputeRootComponentLayout(c2, sizeRange2);
+  }
+
+  // Verify there was a component reuse;
+  XCTAssertEqual(c1.childComponent, c2.childComponent);
+  XCTAssertTrue(c2.didReuseComponent);
+  // Layout cache is on, but the size constraint is different - we should compute the layout for the reused component twice.
+  XCTAssertEqual(c1.childComponent.computeCalledCounter, 2);
+}
+
 #pragma mark - Helpers
 
 // Filters `CKTestChildRenderComponent` components.
@@ -509,6 +613,27 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
     children:{
       { c }
     }]];
+}
+
+static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
+                                       CKComponentScopeRoot *previousScopeRoot,
+                                       BuildTrigger buildTrigger,
+                                       CKComponent *component,
+                                       BOOL enableLayoutCache) {
+  CKBuildComponentTreeParams params = {
+    .scopeRoot = scopeRoot,
+    .previousScopeRoot = previousScopeRoot,
+    .stateUpdates = {},
+    .treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousScopeRoot, {}, buildTrigger),
+    .buildTrigger = buildTrigger,
+    .enableLayoutCache = enableLayoutCache,
+  };
+
+  // Build the component tree from the render function.
+  [component buildComponentTree:scopeRoot.rootNode.node()
+                 previousParent:previousScopeRoot.rootNode.node()
+                         params:params
+           parentHasStateUpdate:NO];
 }
 
 @end
