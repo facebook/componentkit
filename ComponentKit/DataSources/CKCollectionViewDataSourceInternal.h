@@ -23,6 +23,11 @@
 @property (nonatomic, readonly, strong) CKDataSource *componentDataSource;
 
 /**
+ Allow tap passthrough root view of collection view cells.
+ */
+- (void)setAllowTapPassthroughForCells:(BOOL)allowTapPassthroughForCells;
+
+/**
  Set a new `CKDataSourceState` and reload data of the underlying collection view.
  A new instance of `componentDataSource` will be created.
  */

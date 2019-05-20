@@ -23,8 +23,10 @@ typedef UIView *(^CKComponentRootViewHitTestHook)(UIView *rootView, CGPoint poin
 
 @interface CKComponentRootView () <CKInspectableView>
 
-- (instancetype)initWithFrame:(CGRect)frame
-          allowTapPassthrough:(BOOL)allowTapPassthrough;
+/**
+ Allow tap passthrough the root view.
+ */
+- (void)setAllowTapPassthrough:(BOOL)allowTapPassthrough;
 
 /**
  Exposes the ability to supplement the hitTest for the root view used in each CKComponentHostingView or

@@ -32,4 +32,14 @@
   [_rootView setFrame:CGRectMake(0, 0, size.width, size.height)];
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+  UIView *hitView = [super hitTest:point withEvent:event];
+  // `hitTest` should purely rely on `CKComponentRootView`.
+  if (hitView == self || hitView == self.contentView) {
+    return nil;
+  }
+  return hitView;
+}
+
 @end

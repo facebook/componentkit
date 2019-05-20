@@ -20,14 +20,10 @@
 
 static NSMutableArray *hitTestHooks;
 
-- (instancetype)initWithFrame:(CGRect)frame
-          allowTapPassthrough:(BOOL)allowTapPassthrough
+- (void)setAllowTapPassthrough:(BOOL)allowTapPassthrough
 {
-  self = [super initWithFrame:frame];
-  if (self) {
-    _allowTapPassthrough = allowTapPassthrough;
-  }
-  return self;
+  CKAssertMainThread();
+  _allowTapPassthrough = allowTapPassthrough;
 }
 
 + (void)addHitTestHook:(CKComponentRootViewHitTestHook)hook

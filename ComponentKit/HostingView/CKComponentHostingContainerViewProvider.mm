@@ -161,9 +161,10 @@ private:
             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
           allowTapPassthrough:(BOOL)allowTapPassthrough
 {
-  if (self = [super initWithFrame:frame allowTapPassthrough:allowTapPassthrough]) {
+  if (self = [super initWithFrame:frame]) {
     _analyticsListener = analyticsListener;
     _sizeRangeProvider = sizeRangeProvider;
+    [self setAllowTapPassthrough:allowTapPassthrough];
   }
   return self;
 }

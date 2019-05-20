@@ -18,7 +18,7 @@
 #import "CKDataSourceAppliedChanges.h"
 #import "CKDataSourceInternal.h"
 #import "CKCollectionViewDataSourceInternal.h"
-#import "CKComponentRootView.h"
+#import "CKComponentRootViewInternal.h"
 #import "CKComponentLayout.h"
 #import "CKComponentAttachController.h"
 #import "CKComponentBoundsAnimation+UICollectionView.h"
@@ -33,6 +33,7 @@
   CKComponentAttachController *_attachController;
   NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *_cellToItemMap;
   CKCollectionViewDataSourceListenerAnnouncer *_announcer;
+  BOOL _allowTapPassthroughForCells;
 }
 @end
 
@@ -239,6 +240,7 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
   CKCollectionViewDataSourceCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:kReuseIdentifier forIndexPath:indexPath];
+  [cell.rootView setAllowTapPassthrough:_allowTapPassthroughForCells];
   attachToCell(cell, [_currentState objectAtIndexPath:indexPath], _attachController, _cellToItemMap);
   return cell;
 }
@@ -276,6 +278,12 @@ static void attachToCell(CKCollectionViewDataSourceCell *cell,
 }
 
 #pragma mark - Internal
+
+- (void)setAllowTapPassthroughForCells:(BOOL)allowTapPassthroughForCells
+{
+  CKAssertMainThread();
+  _allowTapPassthroughForCells = allowTapPassthroughForCells;
+}
 
 - (void)setState:(CKDataSourceState *)state
 {
