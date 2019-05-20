@@ -5,6 +5,16 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentSubclass.h>
 
+auto CK::AnimationComponentFor::build() const -> CKAnimationComponent * {
+  return
+  [CKAnimationComponent
+   newWithComponent:_component
+   options:{
+     .animationOnInitialMount = _animationOnInitialMount,
+     .animationOnFinalUnmount = _animationOnFinalUnmount
+   }];
+}
+
 @implementation CKAnimationComponent {
   CKAnimationComponentOptions _options;
 }

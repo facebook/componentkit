@@ -1,7 +1,8 @@
 // Copyright 2004-present Facebook. All Rights Reserved.
 
-#import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKAnimation.h>
 #import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKMacros.h>
 
 struct CKAnimationComponentOptions {
   /* Animation that will be applied to the component when it is first mounted. Optional. */
@@ -41,3 +42,37 @@ struct CKAnimationComponentOptions {
                          options:(CKAnimationComponentOptions)options;
 
 @end
+
+namespace CK {
+  struct AnimationComponentFor {
+    AnimationComponentFor(CKComponent *component) :_component(component) {}
+
+    template <typename A>
+    auto &onInitialMount(A a)
+    {
+      static_assert(A::type == Animation::Type::initial, "Animation on initial mount should come from CK::Animation::Initial namespace");
+      _animationOnInitialMount = a.toCA();
+      return *this;
+    };
+
+    template <typename A>
+    auto &onFinalUnmount(A a)
+    {
+      static_assert(A::type == Animation::Type::final, "Animation on final unmount should come from CK::Animation::Final namespace");
+      _animationOnFinalUnmount = a.toCA();
+      return *this;
+    }
+
+    auto build() const -> CKAnimationComponent *;
+
+    operator CKComponent *() const
+    {
+      return build();
+    }
+
+  private:
+    CKComponent *_component;
+    CAAnimation *_animationOnInitialMount;
+    CAAnimation *_animationOnFinalUnmount;
+  };
+}
