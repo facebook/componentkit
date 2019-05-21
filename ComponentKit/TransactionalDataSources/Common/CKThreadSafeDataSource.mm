@@ -62,7 +62,7 @@ static void *kWorkQueueKey = &kWorkQueueKey;
 {
   CKAssertNotNil(state, @"Initial state is required");
   CKAssertNotNil(state.configuration, @"Configuration is required");
-  CKAssert(!state.configuration.splitChangesetOptions.enabled, @"CKThreadSafeDataSource doesn't support `splitChangesetOptions`");
+  CKAssert(!state.configuration.options.splitChangesetOptions.enabled, @"CKThreadSafeDataSource doesn't support `splitChangesetOptions`");
   if (self = [super init]) {
     _state = state;
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];

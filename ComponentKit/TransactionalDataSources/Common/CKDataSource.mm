@@ -81,7 +81,7 @@
 
     _workQueue = dispatch_queue_create("org.componentkit.CKDataSource", DISPATCH_QUEUE_SERIAL);
     _pendingAsynchronousModifications = [NSMutableArray array];
-    _changesetSplittingEnabled = configuration.splitChangesetOptions.enabled;
+    _changesetSplittingEnabled = configuration.options.splitChangesetOptions.enabled;
     [CKComponentDebugController registerReflowListener:self];
   }
   return self;

@@ -64,7 +64,7 @@ using namespace CKComponentControllerHelper;
   CKDataSourceConfiguration *configuration = [oldState configuration];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
-  const auto splitChangesetOptions = [configuration splitChangesetOptions];
+  const auto splitChangesetOptions = [configuration options].splitChangesetOptions;
   const BOOL enableChangesetSplitting = splitChangesetOptions.enabled;
   const CGSize viewportSize = (_viewport.size.width == 0.0 || _viewport.size.height == 0.0)
   ? splitChangesetOptions.viewportBoundingSize

@@ -22,7 +22,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   CKSizeRange _sizeRange;
   std::unordered_set<CKComponentPredicate> _componentPredicates;
   std::unordered_set<CKComponentControllerPredicate> _componentControllerPredicates;
-  CKDataSourceSplitChangesetOptions _splitChangesetOptions;
+  CKDataSourceOptions _options;
   CKComponentProviderBlock _componentProviderBlock;
   // These are preserved only for the purposes of equality checking
   Class _componentProviderClass;
@@ -35,7 +35,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   return [self initWithComponentProvider:componentProvider
                                  context:context
                                sizeRange:sizeRange
-                   splitChangesetOptions:{}
+                                 options:{}
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil];
@@ -48,7 +48,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   return [self initWithComponentProviderFunc:componentProvider
                                      context:context
                                    sizeRange:sizeRange
-                       splitChangesetOptions:{}
+                                     options:{}
                          componentPredicates:{}
                componentControllerPredicates:{}
                            analyticsListener:nil];
@@ -57,7 +57,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                                       context:(id<NSObject>)context
                                     sizeRange:(const CKSizeRange &)sizeRange
-                        splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
+                                      options:(const CKDataSourceOptions &)options
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -68,7 +68,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                        componentProviderBlock:^(id<NSObject> m, id<NSObject> c){ return componentProvider(m, c); }
                                       context:context
                                     sizeRange:sizeRange
-                        splitChangesetOptions:splitChangesetOptions
+                                      options:options
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
                             analyticsListener:analyticsListener];
@@ -77,7 +77,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-                    splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
+                                  options:(const CKDataSourceOptions &)options
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -87,7 +87,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                        componentProviderBlock:pb
                                       context:context
                                     sizeRange:sizeRange
-                        splitChangesetOptions:splitChangesetOptions
+                                      options:options
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
                             analyticsListener:analyticsListener];
@@ -97,7 +97,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                         componentProviderBlock:(CKComponentProviderBlock)componentProviderBlock
                                        context:(id<NSObject>)context
                                      sizeRange:(const CKSizeRange &)sizeRange
-                         splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
+                                       options:(const CKDataSourceOptions &)options
                            componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                  componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                              analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -110,7 +110,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
-    _splitChangesetOptions = splitChangesetOptions;
+    _options = options;
   }
   return self;
 }
@@ -121,15 +121,15 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                                                     componentProviderBlock:_componentProviderBlock
                                                                    context:context
                                                                  sizeRange:sizeRange
-                                                     splitChangesetOptions:_splitChangesetOptions
+                                                                   options:_options
                                                        componentPredicates:_componentPredicates
                                              componentControllerPredicates:_componentControllerPredicates
                                                          analyticsListener:_analyticsListener];
 }
 
-- (const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
+- (const CKDataSourceOptions &)options
 {
-  return _splitChangesetOptions;
+  return _options;
 }
 
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates

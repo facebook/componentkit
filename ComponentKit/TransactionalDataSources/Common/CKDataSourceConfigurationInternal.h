@@ -51,6 +51,10 @@ struct CKDataSourceSplitChangesetOptions {
   CKDataSourceLayoutAxis layoutAxis = CKDataSourceLayoutAxisVertical;
 };
 
+struct CKDataSourceOptions {
+  CKDataSourceSplitChangesetOptions splitChangesetOptions;
+};
+
 @interface CKDataSourceConfiguration ()
 
 /**
@@ -65,7 +69,7 @@ struct CKDataSourceSplitChangesetOptions {
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-                    splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
+                                  options:(const CKDataSourceOptions &)options
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
@@ -73,7 +77,7 @@ struct CKDataSourceSplitChangesetOptions {
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                                       context:(id<NSObject>)context
                                     sizeRange:(const CKSizeRange &)sizeRange
-                        splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
+                                      options:(const CKDataSourceOptions &)options
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener;
@@ -85,6 +89,6 @@ struct CKDataSourceSplitChangesetOptions {
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates;
 - (const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates;
 
-- (const CKDataSourceSplitChangesetOptions &)splitChangesetOptions;
+- (const CKDataSourceOptions &)options;
 
 @end
