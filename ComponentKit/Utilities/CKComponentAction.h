@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKComponentViewAttribute.h>
 #import <ComponentKit/CKComponentActionInternal.h>
+#import <ComponentKit/CKRenderContext.h>
 #import <objc/runtime.h>
 
 #pragma once
@@ -194,6 +195,13 @@ public:
 
   void send(CKComponent *sender, T... args) const
   { this->send(sender, defaultBehavior(), args...); };
+
+  void send(CK::RenderContext context, T... args) const
+  {
+    CKCAssertNotNil(context._component, @"RenderContext contains nil component");
+    this->send((CKComponent *)context._component, defaultBehavior(), args...);
+  };
+
   void send(CKComponent *sender, CKComponentActionSendBehavior behavior, T... args) const
   {
     if (_variant == CKActionVariant::Block) {

@@ -10,6 +10,9 @@
 
 @protocol CKComponentProtocol;
 
+template<typename...>
+class CKAction;
+
 namespace CK {
   class RenderContext {
     id<CKComponentProtocol> _component;
@@ -20,5 +23,8 @@ namespace CK {
 
     template <typename Component>
     friend inline auto component(const RenderContext &context) -> Component;
+
+    template<typename...>
+    friend class ::CKAction;
   };
 }
