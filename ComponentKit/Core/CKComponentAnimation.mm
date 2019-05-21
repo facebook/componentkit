@@ -29,7 +29,13 @@ static CKComponentAnimationHooks hooksForCAAnimation(CKComponent *component, CAA
   return {
     .didRemount = [^(id context){
       CALayer *layer = layerPath ? [component.viewForAnimation valueForKeyPath:layerPath] : component.viewForAnimation.layer;
-      CKCAssertNotNil(layer, @"%@ has no mounted layer at key path %@, so it cannot be animated", [component class], layerPath);
+      if (auto const lp = layerPath) {
+        CKCAssertWithCategory(layer != nil, [component class],
+                              @"%@ has no mounted layer at key path %@, so it cannot be animated", [component class], lp);
+      } else {
+        CKCAssertWithCategory(layer != nil, [component class],
+                              @"%@ has no mounted layer, so it cannot be animated", [component class]);
+      }
       NSString *key = [[NSUUID UUID] UUIDString];
       auto const animationAddTime = [layer convertTime:CACurrentMediaTime() fromLayer:nil];
       copiedAnimation.beginTime += animationAddTime;
@@ -52,8 +58,8 @@ static CKComponentAnimationHooks hooksForFinalUnmountAnimation(const CKComponent
   return CKComponentAnimationHooks {
     .willRemount = ^() {
       const auto viewForAnimation = [component viewForAnimation];
-      CKCAssert(viewForAnimation, @"Can't animate component without a view. "
-                "Check if %@ has a view.", [component class]);
+      CKCAssertWithCategory(viewForAnimation != nil, [component class],
+                            @"Can't animate component without a view. Check if %@ has a view.", [component class]);
       const auto snapshotView = [viewForAnimation snapshotViewAfterScreenUpdates:NO];
       snapshotView.frame = [viewForAnimation convertRect:viewForAnimation.bounds toView:hostView];
       snapshotView.userInteractionEnabled = NO;
