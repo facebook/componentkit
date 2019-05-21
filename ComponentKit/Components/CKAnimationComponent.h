@@ -50,7 +50,7 @@ namespace CK {
     template <typename A>
     auto &onInitialMount(A a)
     {
-      static_assert(A::type == Animation::Type::initial, "Animation on initial mount should come from CK::Animation::Initial namespace");
+      static_assert(A::type == Animation::Type::initial, "Animation on initial mount should have *From suffix, e.g. CK::Animation::alphaFrom(0)");
       _animationOnInitialMount = a.toCA();
       return *this;
     };
@@ -58,7 +58,7 @@ namespace CK {
     template <typename A>
     auto &onFinalUnmount(A a)
     {
-      static_assert(A::type == Animation::Type::final, "Animation on final unmount should come from CK::Animation::Final namespace");
+      static_assert(A::type == Animation::Type::final, "Animation on final unmount should have *To suffix, e.g. CK::Animation::alphaTo(0)");
       _animationOnFinalUnmount = a.toCA();
       return *this;
     }

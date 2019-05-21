@@ -37,10 +37,10 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 - (void)testInitialAnimationsKeyPaths
 {
   auto const animations = std::array<CAPropertyAnimation *, 4>{
-    objCForceCast<CAPropertyAnimation>(Initial::alpha().toCA()),
-    objCForceCast<CAPropertyAnimation>(Initial::translationY().toCA()),
-    objCForceCast<CAPropertyAnimation>(Initial::backgroundColor().toCA()),
-    objCForceCast<CAPropertyAnimation>(Initial::borderColor().toCA()),
+    objCForceCast<CAPropertyAnimation>(alphaFrom(0).toCA()),
+    objCForceCast<CAPropertyAnimation>(translationYFrom(0).toCA()),
+    objCForceCast<CAPropertyAnimation>(backgroundColorFrom(UIColor.blackColor).toCA()),
+    objCForceCast<CAPropertyAnimation>(borderColorFrom(UIColor.blackColor).toCA()),
   };
 
   auto const expectedKeyPaths = std::array<const char *, 4>{
@@ -56,10 +56,10 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 - (void)testFinalAnimationsKeyPaths
 {
   auto const animations = std::array<CAPropertyAnimation *, 4>{
-    objCForceCast<CAPropertyAnimation>(Final::alpha().toCA()),
-    objCForceCast<CAPropertyAnimation>(Final::translationY().toCA()),
-    objCForceCast<CAPropertyAnimation>(Final::backgroundColor().toCA()),
-    objCForceCast<CAPropertyAnimation>(Final::borderColor().toCA()),
+    objCForceCast<CAPropertyAnimation>(alphaTo(0).toCA()),
+    objCForceCast<CAPropertyAnimation>(translationYTo(0).toCA()),
+    objCForceCast<CAPropertyAnimation>(backgroundColorTo(UIColor.blackColor).toCA()),
+    objCForceCast<CAPropertyAnimation>(borderColorTo(UIColor.blackColor).toCA()),
   };
 
   auto const expectedKeyPaths = std::array<const char *, 4>{
@@ -75,11 +75,11 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 - (void)testChangeAnimationsKeyPaths
 {
   auto const animations = std::array<CAPropertyAnimation *, 5>{
-    objCForceCast<CAPropertyAnimation>(Change::alpha().toCA()),
-    objCForceCast<CAPropertyAnimation>(Change::translationY().toCA()),
-    objCForceCast<CAPropertyAnimation>(Change::backgroundColor().toCA()),
-    objCForceCast<CAPropertyAnimation>(Change::borderColor().toCA()),
-    objCForceCast<CAPropertyAnimation>(Change::position().toCA()),
+    objCForceCast<CAPropertyAnimation>(alpha().toCA()),
+    objCForceCast<CAPropertyAnimation>(translationY().toCA()),
+    objCForceCast<CAPropertyAnimation>(backgroundColor().toCA()),
+    objCForceCast<CAPropertyAnimation>(borderColor().toCA()),
+    objCForceCast<CAPropertyAnimation>(position().toCA()),
   };
 
   auto const expectedKeyPaths = std::array<const char *, 5>{
@@ -102,58 +102,58 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)testSettingScalarFromValue
 {
-  auto a = objCForceCast<CABasicAnimation>(Initial::alpha().from(0).toCA());
+  auto a = objCForceCast<CABasicAnimation>(alphaFrom(0).toCA());
 
   XCTAssertEqualObjects(a.fromValue, @(0));
 }
 
 - (void)testSettingUIColorFromValueForInitialAnimation
 {
-  auto a = objCForceCast<CABasicAnimation>(Initial::backgroundColor().from(UIColor.blueColor).toCA());
+  auto a = objCForceCast<CABasicAnimation>(backgroundColorFrom(UIColor.blueColor).toCA());
 
   XCTAssertEqualObjects(a.fromValue, (id)UIColor.blueColor.CGColor);
 }
 
 - (void)test_WhenDurationIsNotSet_ItIsZero
 {
-  XCTAssertEqual(Initial::alpha().toCA().duration, 0);
-  XCTAssertEqual(Initial::backgroundColor().toCA().duration, 0);
+  XCTAssertEqual(alphaFrom(0).toCA().duration, 0);
+  XCTAssertEqual(backgroundColorFrom(UIColor.blackColor).toCA().duration, 0);
 }
 
 - (void)testSettingDuration
 {
-  XCTAssertEqual(Initial::alpha().withDuration(0.25).toCA().duration, 0.25);
-  XCTAssertEqual(Initial::backgroundColor().withDuration(0.25).toCA().duration, 0.25);
+  XCTAssertEqual(alphaFrom(0).withDuration(0.25).toCA().duration, 0.25);
+  XCTAssertEqual(backgroundColorFrom(UIColor.blackColor).withDuration(0.25).toCA().duration, 0.25);
 }
 
 - (void)testSettingDelay
 {
-  XCTAssertEqual(Initial::alpha().withDelay(0.25).toCA().beginTime, 0.25);
-  XCTAssertEqual(Initial::backgroundColor().withDelay(0.25).toCA().beginTime, 0.25);
+  XCTAssertEqual(alphaFrom(0).withDelay(0.25).toCA().beginTime, 0.25);
+  XCTAssertEqual(backgroundColorFrom(UIColor.blackColor).withDelay(0.25).toCA().beginTime, 0.25);
 }
 
 - (void)test_WhenTimingFunctionIsNotSet_UsesLinear
 {
-  XCTAssertEqualObjects(Initial::alpha().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
-  XCTAssertEqualObjects(Initial::backgroundColor().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
+  XCTAssertEqualObjects(alphaFrom(0).toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
+  XCTAssertEqualObjects(backgroundColorFrom(UIColor.blackColor).toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
 }
 
 - (void)testSettingTimingFunction
 {
-  XCTAssertEqualObjects(Initial::alpha().easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
-  XCTAssertEqualObjects(Initial::backgroundColor().easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
-  XCTAssertEqualObjects(Initial::alpha().easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
-  XCTAssertEqualObjects(Initial::backgroundColor().easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
+  XCTAssertEqualObjects(alphaFrom(0).easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
+  XCTAssertEqualObjects(backgroundColorFrom(UIColor.blackColor).easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
+  XCTAssertEqualObjects(alphaFrom(0).easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
+  XCTAssertEqualObjects(backgroundColorFrom(UIColor.blackColor).easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
 }
 
 - (void)testSettingTimingFunctionWithDuration
 {
-  auto a1 = Initial::alpha().easeIn(0.25).toCA();
+  auto a1 = alphaFrom(0).easeIn(0.25).toCA();
 
   XCTAssertEqual(a1.duration, 0.25);
   XCTAssertEqualObjects(a1.timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
 
-  auto a2 = Initial::backgroundColor().easeIn(0.25).toCA();
+  auto a2 = backgroundColorFrom(UIColor.blackColor).easeIn(0.25).toCA();
 
   XCTAssertEqual(a2.duration, 0.25);
   XCTAssertEqualObjects(a2.timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
@@ -161,8 +161,8 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)testAlwaysUsesBackwardsFillMode
 {
-  XCTAssertEqualObjects(Initial::alpha().toCA().fillMode, kCAFillModeBackwards);
-  XCTAssertEqualObjects(Initial::backgroundColor().toCA().fillMode, kCAFillModeBackwards);
+  XCTAssertEqualObjects(alphaFrom(0).toCA().fillMode, kCAFillModeBackwards);
+  XCTAssertEqualObjects(backgroundColorFrom(UIColor.blackColor).toCA().fillMode, kCAFillModeBackwards);
 }
 
 @end
@@ -174,58 +174,58 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)testSettingScalarToValueForFinalAnimation
 {
-  auto a = objCForceCast<CABasicAnimation>(Final::alpha().to(0).toCA());
+  auto a = objCForceCast<CABasicAnimation>(alphaTo(0).toCA());
 
   XCTAssertEqualObjects(a.toValue, @(0));
 }
 
 - (void)testSettingUIColorToValueForFinalAnimation
 {
-  auto a = objCForceCast<CABasicAnimation>(Final::backgroundColor().to(UIColor.blueColor).toCA());
+  auto a = objCForceCast<CABasicAnimation>(backgroundColorTo(UIColor.blueColor).toCA());
 
   XCTAssertEqualObjects(a.toValue, (id)UIColor.blueColor.CGColor);
 }
 
 - (void)test_WhenDurationIsNotSet_ItIsZero
 {
-  XCTAssertEqual(Final::alpha().toCA().duration, 0);
-  XCTAssertEqual(Final::backgroundColor().toCA().duration, 0);
+  XCTAssertEqual(alphaTo(0).toCA().duration, 0);
+  XCTAssertEqual(backgroundColorTo(UIColor.blackColor).toCA().duration, 0);
 }
 
 - (void)testSettingDuration
 {
-  XCTAssertEqual(Final::alpha().withDuration(0.25).toCA().duration, 0.25);
-  XCTAssertEqual(Final::backgroundColor().withDuration(0.25).toCA().duration, 0.25);
+  XCTAssertEqual(alphaTo(0).withDuration(0.25).toCA().duration, 0.25);
+  XCTAssertEqual(backgroundColorTo(UIColor.blackColor).withDuration(0.25).toCA().duration, 0.25);
 }
 
 - (void)testSettingDelay
 {
-  XCTAssertEqual(Final::alpha().withDelay(0.25).toCA().beginTime, 0.25);
-  XCTAssertEqual(Final::backgroundColor().withDelay(0.25).toCA().beginTime, 0.25);
+  XCTAssertEqual(alphaTo(0).withDelay(0.25).toCA().beginTime, 0.25);
+  XCTAssertEqual(backgroundColorTo(UIColor.blackColor).withDelay(0.25).toCA().beginTime, 0.25);
 }
 
 - (void)test_WhenTimingFunctionIsNotSet_UsesLinear
 {
-  XCTAssertEqualObjects(Final::alpha().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
-  XCTAssertEqualObjects(Final::backgroundColor().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
+  XCTAssertEqualObjects(alphaTo(0).toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
+  XCTAssertEqualObjects(backgroundColorTo(UIColor.blackColor).toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
 }
 
 - (void)testSettingTimingFunction
 {
-  XCTAssertEqualObjects(Final::alpha().easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
-  XCTAssertEqualObjects(Final::backgroundColor().easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
-  XCTAssertEqualObjects(Final::alpha().easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
-  XCTAssertEqualObjects(Final::backgroundColor().easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
+  XCTAssertEqualObjects(alphaTo(0).easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
+  XCTAssertEqualObjects(backgroundColorTo(UIColor.blackColor).easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
+  XCTAssertEqualObjects(alphaTo(0).easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
+  XCTAssertEqualObjects(backgroundColorTo(UIColor.blackColor).easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
 }
 
 - (void)testSettingTimingFunctionWithDuration
 {
-  auto a1 = Final::alpha().easeIn(0.25).toCA();
+  auto a1 = alphaTo(0).easeIn(0.25).toCA();
 
   XCTAssertEqual(a1.duration, 0.25);
   XCTAssertEqualObjects(a1.timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
 
-  auto a2 = Final::backgroundColor().easeIn(0.25).toCA();
+  auto a2 = backgroundColorTo(UIColor.blackColor).easeIn(0.25).toCA();
 
   XCTAssertEqual(a2.duration, 0.25);
   XCTAssertEqualObjects(a2.timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
@@ -233,8 +233,8 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)testAlwaysUsesForwardsFillMode
 {
-  XCTAssertEqualObjects(Final::alpha().toCA().fillMode, kCAFillModeForwards);
-  XCTAssertEqualObjects(Final::backgroundColor().toCA().fillMode, kCAFillModeForwards);
+  XCTAssertEqualObjects(alphaTo(0).toCA().fillMode, kCAFillModeForwards);
+  XCTAssertEqualObjects(backgroundColorTo(UIColor.blackColor).toCA().fillMode, kCAFillModeForwards);
 }
 
 @end
@@ -246,39 +246,39 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)test_WhenDurationIsNotSet_ItIsZero
 {
-  auto a = Change::alpha().toCA();
+  auto a = alpha().toCA();
 
   XCTAssertEqual(a.duration, 0);
 }
 
 - (void)testSettingDuration
 {
-  auto a = Change::alpha().withDuration(0.25).toCA();
+  auto a = alpha().withDuration(0.25).toCA();
 
   XCTAssertEqual(a.duration, 0.25);
 }
 
 - (void)testSettingDelay
 {
-  auto a = Change::alpha().withDelay(0.25).toCA();
+  auto a = alpha().withDelay(0.25).toCA();
 
   XCTAssertEqual(a.beginTime, 0.25);
 }
 
 - (void)test_WhenTimingFunctionIsNotSet_UsesLinear
 {
-  XCTAssertEqualObjects(Change::alpha().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
+  XCTAssertEqualObjects(alpha().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
 }
 
 - (void)testSettingTimingFunction
 {
-  XCTAssertEqualObjects(Change::alpha().easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
-  XCTAssertEqualObjects(Change::alpha().easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
+  XCTAssertEqualObjects(alpha().easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
+  XCTAssertEqualObjects(alpha().easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
 }
 
 - (void)testSettingTimingFunctionWithDuration
 {
-  auto a = Change::alpha().easeIn(0.25).toCA();
+  auto a = alpha().easeIn(0.25).toCA();
 
   XCTAssertEqual(a.duration, 0.25);
   XCTAssertEqualObjects(a.timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
@@ -293,7 +293,7 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)testComposingAnimations
 {
-  auto group = objCForceCast<CAAnimationGroup>(parallel(Initial::alpha(), Initial::translationY()).toCA());
+  auto group = objCForceCast<CAAnimationGroup>(parallel(alphaFrom(0), translationYFrom(0)).toCA());
 
   XCTAssertEqual(group.animations.count, 2);
   auto a1 = objCForceCast<CAPropertyAnimation>(group.animations[0]);
@@ -304,39 +304,39 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)test_WhenDurationIsNotSet_ItIsZero
 {
-  auto a = parallel(Initial::alpha(), Initial::translationY()).toCA();
+  auto a = parallel(alphaFrom(0), translationYFrom(0)).toCA();
 
   XCTAssertEqual(a.duration, 0);
 }
 
 - (void)testSettingDuration
 {
-  auto a = parallel(Initial::alpha(), Initial::translationY()).withDuration(0.25).toCA();
+  auto a = parallel(alphaFrom(0), translationYFrom(0)).withDuration(0.25).toCA();
 
   XCTAssertEqual(a.duration, 0.25);
 }
 
 - (void)testSettingDelay
 {
-  auto a = parallel(Initial::alpha(), Initial::translationY()).withDelay(0.25).toCA();
+  auto a = parallel(alphaFrom(0), translationYFrom(0)).withDelay(0.25).toCA();
 
   XCTAssertEqual(a.beginTime, 0.25);
 }
 
 - (void)test_WhenTimingFunctionIsNotSet_UsesLinear
 {
-  XCTAssertEqualObjects(parallel(Initial::alpha(), Initial::translationY()).toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
+  XCTAssertEqualObjects(parallel(alphaFrom(0), translationYFrom(0)).toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
 }
 
 - (void)testSettingTimingFunction
 {
-  XCTAssertEqualObjects(parallel(Initial::alpha(), Initial::translationY()).easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
-  XCTAssertEqualObjects(parallel(Initial::alpha(), Initial::translationY()).easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
+  XCTAssertEqualObjects(parallel(alphaFrom(0), translationYFrom(0)).easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
+  XCTAssertEqualObjects(parallel(alphaFrom(0), translationYFrom(0)).easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
 }
 
 - (void)testSettingTimingFunctionWithDuration
 {
-  auto a = parallel(Initial::alpha(), Initial::translationY()).easeIn(0.25).toCA();
+  auto a = parallel(alphaFrom(0), translationYFrom(0)).easeIn(0.25).toCA();
 
   XCTAssertEqual(a.duration, 0.25);
   XCTAssertEqualObjects(a.timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
@@ -344,7 +344,7 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)test_WhenComposingInitialAnimations_UsesBackwardsFillMode
 {
-  auto a = parallel(Initial::alpha(), Initial::translationY()).toCA();
+  auto a = parallel(alphaFrom(0), translationYFrom(0)).toCA();
 
   XCTAssertEqualObjects(a.fillMode, kCAFillModeBackwards);
 }
@@ -358,7 +358,7 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)testComposingAnimations
 {
-  auto group = objCForceCast<CAAnimationGroup>(sequence(Initial::alpha(), Initial::translationY()).toCA());
+  auto group = objCForceCast<CAAnimationGroup>(sequence(alphaFrom(0), translationYFrom(0)).toCA());
 
   XCTAssertEqual(group.animations.count, 2);
   auto a1 = objCForceCast<CAPropertyAnimation>(group.animations[0]);
@@ -369,7 +369,7 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)testSecondAnimationStartsAfterFirst
 {
-  auto group = objCForceCast<CAAnimationGroup>(sequence(Initial::alpha(), Initial::translationY()).toCA());
+  auto group = objCForceCast<CAAnimationGroup>(sequence(alphaFrom(0), translationYFrom(0)).toCA());
 
   XCTAssertEqual(group.animations.count, 2);
   auto a1 = objCForceCast<CAPropertyAnimation>(group.animations[0]);
@@ -380,39 +380,39 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)test_DurationIsEqualToSumOfComposedAnimationDurations
 {
-  XCTAssertEqual(sequence(Initial::alpha(), Initial::translationY()).toCA().duration, 0.5);
-  XCTAssertEqual(sequence(Initial::alpha().withDuration(0.5), Initial::translationY()).toCA().duration, 0.75);
-  XCTAssertEqual(sequence(Initial::alpha(), Initial::translationY().withDuration(0.5)).toCA().duration, 0.75);
+  XCTAssertEqual(sequence(alphaFrom(0), translationYFrom(0)).toCA().duration, 0.5);
+  XCTAssertEqual(sequence(alphaFrom(0).withDuration(0.5), translationYFrom(0)).toCA().duration, 0.75);
+  XCTAssertEqual(sequence(alphaFrom(0), translationYFrom(0).withDuration(0.5)).toCA().duration, 0.75);
 }
 
 - (void)testSettingDelay
 {
-  auto a = sequence(Initial::alpha(), Initial::translationY()).withDelay(0.25).toCA();
+  auto a = sequence(alphaFrom(0), translationYFrom(0)).withDelay(0.25).toCA();
 
   XCTAssertEqual(a.beginTime, 0.25);
 }
 
 - (void)test_WhenTimingFunctionIsNotSet_UsesLinear
 {
-  XCTAssertEqualObjects(sequence(Initial::alpha(), Initial::translationY()).toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
+  XCTAssertEqualObjects(sequence(alphaFrom(0), translationYFrom(0)).toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
 }
 
 - (void)testSettingTimingFunction
 {
-  XCTAssertEqualObjects(sequence(Initial::alpha(), Initial::translationY()).easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
-  XCTAssertEqualObjects(sequence(Initial::alpha(), Initial::translationY()).easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
+  XCTAssertEqualObjects(sequence(alphaFrom(0), translationYFrom(0)).easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
+  XCTAssertEqualObjects(sequence(alphaFrom(0), translationYFrom(0)).easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
 }
 
 - (void)testSettingTimingFunctionWithDuration
 {
-  auto a = sequence(Initial::alpha(), Initial::translationY()).easeIn().toCA();
+  auto a = sequence(alphaFrom(0), translationYFrom(0)).easeIn().toCA();
 
   XCTAssertEqualObjects(a.timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
 }
 
 - (void)test_WhenComposingInitialAnimations_UsesBackwardsFillMode
 {
-  auto a = sequence(Initial::alpha(), Initial::translationY()).toCA();
+  auto a = sequence(alphaFrom(0), translationYFrom(0)).toCA();
 
   XCTAssertEqualObjects(a.fillMode, kCAFillModeBackwards);
 }

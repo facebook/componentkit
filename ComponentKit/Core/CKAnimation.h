@@ -147,9 +147,9 @@ namespace CK {
       /**
        Specifies the initial value for the animated property.
 
-       @param v the initial value
+       @param from the initial value
        */
-      auto &from(V v) { _from = v; return *this; }
+      BasicInitial(V from) :_from(from) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *
@@ -177,9 +177,9 @@ namespace CK {
       /**
        Specifies the final value for the animated property.
 
-       @param v the final value
+       @param to the final value
        */
-      auto &to(V v) { _to = v; return *this; }
+      BasicFinal(V to) :_to(to) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *
@@ -226,9 +226,9 @@ namespace CK {
       /**
        Specifies the initial value for the animated property.
 
-       @param c the initial value
+       @param from the initial value
        */
-      auto &from(UIColor *c) { _from = c; return *this; }
+      BasicInitial(UIColor *from) :_from(from) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *
@@ -256,9 +256,9 @@ namespace CK {
       /**
        Specifies the final value for the animated property.
 
-       @param c the final value
+       @param to the final value
        */
-      auto &to(UIColor *c) { _to = c; return *this; }
+      BasicFinal(UIColor *to) :_to(to) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *
@@ -346,40 +346,34 @@ namespace CK {
     extern const char _backgroundColor[];
     extern const char _borderColor[];
 
-    namespace Initial {
-      /// Returns an object that can be used to configure an initial animation of the opacity.
-      auto alpha() -> BasicInitial<CGFloat, _opacity>;
-      /// Returns an object that can be used to configure an initial animation of the relative translation along the Y axis.
-      auto translationY() -> BasicInitial<CGFloat, _transformTranslationY>;
-      /// Returns an object that can be used to configure an initial animation of the background color.
-      auto backgroundColor() -> BasicInitial<UIColor *, _backgroundColor>;
-      /// Returns an object that can be used to configure an initial animation of the border color.
-      auto borderColor() -> BasicInitial<UIColor *, _borderColor>;
-    }
+    /// Returns an object that can be used to configure an initial animation of the opacity.
+    auto alphaFrom(CGFloat from) -> BasicInitial<CGFloat, _opacity>;
+    /// Returns an object that can be used to configure an initial animation of the relative translation along the Y axis.
+    auto translationYFrom(CGFloat from) -> BasicInitial<CGFloat, _transformTranslationY>;
+    /// Returns an object that can be used to configure an initial animation of the background color.
+    auto backgroundColorFrom(UIColor *from) -> BasicInitial<UIColor *, _backgroundColor>;
+    /// Returns an object that can be used to configure an initial animation of the border color.
+    auto borderColorFrom(UIColor *from) -> BasicInitial<UIColor *, _borderColor>;
 
-    namespace Final {
-      /// Returns an object that can be used to configure a final animation of the opacity.
-      auto alpha() -> BasicFinal<CGFloat, _opacity>;
-      /// Returns an object that can be used to configure a final animation of the relative translation along the Y axis.
-      auto translationY() -> BasicFinal<CGFloat, _transformTranslationY>;
-      /// Returns an object that can be used to configure a final animation of the background color.
-      auto backgroundColor() -> BasicFinal<UIColor *, _backgroundColor>;
-      /// Returns an object that can be used to configure a final animation of the border color.
-      auto borderColor() -> BasicFinal<UIColor *, _borderColor>;
-    }
+    /// Returns an object that can be used to configure a final animation of the opacity.
+    auto alphaTo(CGFloat to) -> BasicFinal<CGFloat, _opacity>;
+    /// Returns an object that can be used to configure a final animation of the relative translation along the Y axis.
+    auto translationYTo(CGFloat to) -> BasicFinal<CGFloat, _transformTranslationY>;
+    /// Returns an object that can be used to configure a final animation of the background color.
+    auto backgroundColorTo(UIColor *to) -> BasicFinal<UIColor *, _backgroundColor>;
+    /// Returns an object that can be used to configure a final animation of the border color.
+    auto borderColorTo(UIColor *to) -> BasicFinal<UIColor *, _borderColor>;
 
-    namespace Change {
-      /// Returns an object that can be used to configure a change animation of the opacity.
-      auto alpha() -> BasicChange<CGFloat, _opacity>;
-      /// Returns an object that can be used to configure a change animation of the relative translation along the Y axis.
-      auto translationY() -> BasicChange<CGFloat, _transformTranslationY>;
-      /// Returns an object that can be used to configure a change animation of the absolute position.
-      auto position() -> BasicChange<CGPoint, _position>;
-      /// Returns an object that can be used to configure a change animation of the background color.
-      auto backgroundColor() -> BasicChange<UIColor *, _backgroundColor>;
-      /// Returns an object that can be used to configure a change animation of the border color.
-      auto borderColor() -> BasicChange<UIColor *, _borderColor>;
-    }
+    /// Returns an object that can be used to configure a change animation of the opacity.
+    auto alpha() -> BasicChange<CGFloat, _opacity>;
+    /// Returns an object that can be used to configure a change animation of the relative translation along the Y axis.
+    auto translationY() -> BasicChange<CGFloat, _transformTranslationY>;
+    /// Returns an object that can be used to configure a change animation of the absolute position.
+    auto position() -> BasicChange<CGPoint, _position>;
+    /// Returns an object that can be used to configure a change animation of the background color.
+    auto backgroundColor() -> BasicChange<UIColor *, _backgroundColor>;
+    /// Returns an object that can be used to configure a change animation of the border color.
+    auto borderColor() -> BasicChange<UIColor *, _borderColor>;
 
     /**
      Returns an animation that runs given animations in parallel.
