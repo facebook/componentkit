@@ -155,7 +155,7 @@ namespace CK {
       auto toCA() const -> CAAnimation *
       {
         auto const a = [CABasicAnimation animationWithKeyPath:@(KeyPath)];
-        a.fromValue = _from.mapToPtr([](const V &v){ return @(v); });
+        a.fromValue = @(_from);
         this->applyTimingTo(a);
         a.fillMode = kCAFillModeBackwards;
         return a;
@@ -164,7 +164,7 @@ namespace CK {
       operator CAAnimation *() const { return toCA(); }
 
     private:
-      Optional<V> _from;
+      V _from;
     };
 
     /**
@@ -185,7 +185,7 @@ namespace CK {
       auto toCA() const -> CAAnimation *
       {
         auto const a = [CABasicAnimation animationWithKeyPath:@(KeyPath)];
-        a.toValue = _to.mapToPtr([](const V &v){ return @(v); });
+        a.toValue = @(_to);
         this->applyTimingTo(a);
         a.fillMode = kCAFillModeForwards;
         return a;
@@ -194,7 +194,7 @@ namespace CK {
       operator CAAnimation *() const { return toCA(); }
 
     private:
-      Optional<V> _to;
+      V _to;
     };
 
     /**
@@ -387,8 +387,8 @@ namespace CK {
      @note  Only animations of the same type can grouped, i.e.
 
      @code
-     parallel(Initial::alpha().from(0), Initial::translationY().from(-40)) // OK
-     parallel(Final::alpha().to(0), Initial::translationY().from(-40)) // Error, can't group final and initial animation
+     parallel(alphaFrom(0), translationYFrom(-40)) // OK
+     parallel(alphaTo(0), translationYFrom(-40)) // Error, can't group final and initial animation
      */
     template <typename A1, typename A2>
     auto parallel(A1 a1, A2 a2) { return Parallel<A1, A2>{ a1, a2 }; }
@@ -406,8 +406,8 @@ namespace CK {
      @note  Only animations of the same type can grouped, i.e.
 
      @code
-     sequence(Initial::alpha().from(0), Initial::translationY().from(-40)) // OK
-     sequence(Final::alpha().to(0), Initial::translationY().from(-40)) // Error, can't group final and initial animation
+     sequence(alphaFrom(0), translationYFrom(-40)) // OK
+     sequence(alphaTo(0), translationYFrom(-40)) // Error, can't group final and initial animation
      */
     template <typename A1, typename A2>
     auto sequence(A1 a1, A2 a2) { return Sequence<A1, A2>{ a1, a2 }; }
