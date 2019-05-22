@@ -61,7 +61,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   BOOL _componentNeedsUpdate;
   CKUpdateMode _requestedUpdateMode;
 
-  CKComponentRootLayout _mountedRootLayout;
+  CK::Optional<CKComponentRootLayout> _mountedRootLayout;
 
   BOOL _scheduledAsynchronousComponentUpdate;
   BOOL _isSynchronouslyUpdatingComponent;
@@ -196,7 +196,14 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     const CGSize size = self.bounds.size;
 
     [self _synchronouslyUpdateComponentIfNeeded];
-    if (_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size)) {
+    const auto mountedComponent = _mountedRootLayout.mapToPtr([](const auto &rootLayout){
+      return rootLayout.component();
+    });
+    // We shouldn't layout component if there is no `_mountedRootLayout` even though sizes are different.
+    const auto shouldLayoutComponent = _mountedRootLayout.map([&](const auto &rootLayout) {
+      return !CGSizeEqualToSize(rootLayout.size(), size);
+    }).valueOr(NO);
+    if (mountedComponent != _component || shouldLayoutComponent) {
       auto const rootLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener);
       [self _applyRootLayout:rootLayout];
     }
@@ -252,7 +259,9 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 - (CKComponentLayout)mountedLayout
 {
-  return _mountedRootLayout.layout();
+  return _mountedRootLayout.map([](const auto &rootLayout) {
+    return rootLayout.layout();
+  }).valueOr({});
 }
 
 - (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider
@@ -419,7 +428,9 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 - (void)_sendDidPrepareLayoutIfNeeded
 {
-  CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, _mountedRootLayout);
+  _mountedRootLayout.apply([&](const auto &rootLayout) {
+    CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, rootLayout);
+  });
 }
 
 - (std::vector<CKComponentController *>)_invalidComponentControllersWithNewScopeRoot:(CKComponentScopeRoot *)newRoot
