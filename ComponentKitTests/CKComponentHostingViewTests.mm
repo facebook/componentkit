@@ -31,6 +31,8 @@ typedef struct {
   BOOL embedInTestComponent;
   id<CKAnalyticsListener> analyticsListener;
   id<CKComponentSizeRangeProviding> sizeRangeProvider;
+  CK::Optional<CGSize> initialSize;
+  BOOL shouldUpdateModelAfterCreation = YES;
 } CKComponentHostingViewConfiguration;
 
 @interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate>
@@ -50,9 +52,11 @@ typedef struct {
                       embedInFlexbox:options.embedInFlexbox
                       embedInTestComponent:options.embedInTestComponent];
   auto const view = [self makeHostingView:options];
-  view.bounds = CGRectMake(0, 0, 100, 100);
-  [view updateModel:model mode:CKUpdateModeSynchronous];
-  [view layoutIfNeeded];
+  if (options.shouldUpdateModelAfterCreation) {
+    view.bounds = CGRectMake(0, 0, 100, 100);
+    [view updateModel:model mode:CKUpdateModeSynchronous];
+    [view layoutIfNeeded];
+  }
   return view;
 }
 
@@ -65,6 +69,7 @@ typedef struct {
                                                  analyticsListener:options.analyticsListener
                                                            options:{
                                                              .allowTapPassthrough = options.allowTapPassthrough,
+                                                             .initialSize = options.initialSize,
                                                            }];
 }
 
@@ -292,6 +297,50 @@ typedef struct {
   XCTAssertEqual(_analyticsListenerSpy->_didCollectAnimationsHitCount, 1);
 }
 
+- (void)test_LayoutAndGenerationOfComponentAreOnMainThreadWhenAsyncUpdateIsTriggeredWithoutInitialSize
+{
+  const auto hostingView = [[self class] hostingView:{
+    .analyticsListener = _analyticsListenerSpy,
+    .shouldUpdateModelAfterCreation = NO,
+  }];
+  [hostingView updateModel:nil mode:CKUpdateModeAsynchronous];
+  [hostingView layoutIfNeeded];
+  XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 1);
+  XCTAssertEqual(_analyticsListenerSpy->_didMountComponentHitCount, 1);
+}
+
+- (void)test_LayoutAndGenerationOfComponentAreNotOnMainThreadWhenAsyncUpdateIsTriggeredWithInitialSize
+{
+  const auto hostingView = [[self class] hostingView:{
+    .analyticsListener = _analyticsListenerSpy,
+    .shouldUpdateModelAfterCreation = NO,
+    .initialSize = CGSizeMake(100, 100),
+  }];
+  [hostingView updateModel:nil mode:CKUpdateModeAsynchronous];
+  [hostingView layoutIfNeeded];
+  XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 0);
+  XCTAssertEqual(_analyticsListenerSpy->_didMountComponentHitCount, 0);
+
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    [hostingView layoutIfNeeded];
+    return _analyticsListenerSpy->_didLayoutComponentTreeHitCount == 1
+    && _analyticsListenerSpy->_didMountComponentHitCount == 1;
+  }));
+}
+
+- (void)test_LayoutAndGenerationOfComponentAreOnMainThreadWhenSyncUpdateIsTriggeredWithInitialSize
+{
+  const auto hostingView = [[self class] hostingView:{
+    .analyticsListener = _analyticsListenerSpy,
+    .shouldUpdateModelAfterCreation = NO,
+    .initialSize = CGSizeMake(100, 100),
+  }];
+  [hostingView updateModel:nil mode:CKUpdateModeSynchronous];
+  [hostingView layoutIfNeeded];
+  XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 1);
+  XCTAssertEqual(_analyticsListenerSpy->_didMountComponentHitCount, 1);
+}
+
 @end
 
 @interface CKComponentHostingViewTests_ComponentProviderFunction : CKComponentHostingViewTests
@@ -309,6 +358,7 @@ typedef struct {
                                                      analyticsListener:options.analyticsListener
                                                                options:{
                                                                  .allowTapPassthrough = options.allowTapPassthrough,
+                                                                 .initialSize = options.initialSize,
                                                                }];
 }
 
