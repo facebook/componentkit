@@ -127,6 +127,15 @@ public:
 #endif
   }
 
+  CKAction<T...>(CKComponentScopeHandle *handle, SEL selector) noexcept : CKActionBase(handle, selector)
+  {
+#if DEBUG
+    std::vector<const char *> typeEncodings;
+    CKActionTypeVectorBuild(typeEncodings, CKActionTypelist<T...>{});
+    _CKTypedComponentDebugCheckComponentScopeHandle(handle, selector, typeEncodings);
+#endif
+  }
+
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
   CKAction(SEL selector) noexcept : CKActionBase(selector) {};
 

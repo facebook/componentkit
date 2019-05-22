@@ -51,6 +51,7 @@ class CKActionBase {
   CKActionBase(id target, SEL selector) noexcept;
 
   CKActionBase(const CKComponentScope &scope, SEL selector) noexcept;
+  CKActionBase(CKComponentScopeHandle *handle, SEL selector) noexcept;
 
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
   CKActionBase(SEL selector) noexcept;
@@ -142,6 +143,7 @@ public:
 
 #if DEBUG
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
+void _CKTypedComponentDebugCheckComponentScopeHandle(CKComponentScopeHandle *handle, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 void _CKTypedComponentDebugCheckComponent(Class<CKComponentProtocol> componentClass, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 #endif

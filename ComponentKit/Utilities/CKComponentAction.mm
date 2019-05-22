@@ -24,6 +24,29 @@
 void CKActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKActionTypelist<> &list) noexcept { }
 void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) noexcept { }
 
+static auto createScopeIdentifierAndResponderGenerator(CKComponentScopeHandle *handle,
+                                                       SEL selector) ->
+std::pair<CKScopedResponderUniqueIdentifier, CKResponderGenerationBlock>
+{
+  const auto scopedResponder = handle.scopedResponder;
+  const auto responderKey = [scopedResponder keyForHandle:handle];
+  return {
+    [handle globalIdentifier],
+    ^id(void) {
+
+      /**
+       At one point in the history of ComponentKit, it was possible for a CKScopeResponder to
+       return a "stale" target for an action. This was often caused by retain cycles, or,
+       "old" component hierarchies with prolonged lifecycles.
+
+       To prevent this from happening in the future we now provide a key which gives the
+       scopeResponder the wisdom to ignore older generations.
+       */
+      return [scopedResponder responderForKey:responderKey];
+    }
+  };
+}
+
 #pragma mark - CKActionBase
 
 bool CKActionBase::operator==(const CKActionBase& rhs) const
@@ -64,28 +87,18 @@ CKActionBase::CKActionBase() noexcept : _target(nil), _scopeIdentifierAndRespond
 
 CKActionBase::CKActionBase(id target, SEL selector) noexcept : _target(target), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::TargetSelector), _selector(selector) {};
 
+
 CKActionBase::CKActionBase(const CKComponentScope &scope, SEL selector) noexcept : _target(nil), _block(NULL), _variant(CKActionVariant::Responder), _selector(selector)
 {
   const auto handle = scope.scopeHandle();
-  CKCAssert(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
+  CKCAssertNotNil(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
+  _scopeIdentifierAndResponderGenerator = createScopeIdentifierAndResponderGenerator(handle, selector);
+}
 
-  const auto scopedResponder = handle.scopedResponder;
-  const auto responderKey = [scopedResponder keyForHandle:handle];
-  _scopeIdentifierAndResponderGenerator = {
-    [handle globalIdentifier],
-    ^id(void) {
-
-      /**
-       At one point in the history of ComponentKit, it was possible for a CKScopeResponder to
-       return a "stale" target for an action. This was often caused by retain cycles, or,
-       "old" component hierarchies with prolonged lifecycles.
-
-       To prevent this from happening in the future we now provide a key which gives the
-       scopeResponder the wisdom to ignore older generations.
-       */
-      return [scopedResponder responderForKey:responderKey];
-    }
-  };
+CKActionBase::CKActionBase(CKComponentScopeHandle *handle, SEL selector) noexcept : _target(nil), _block(NULL), _variant(CKActionVariant::Responder), _selector(selector)
+{
+  CKCAssertNotNil(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
+  _scopeIdentifierAndResponderGenerator = createScopeIdentifierAndResponderGenerator(handle, selector);
 };
 
 CKActionBase::CKActionBase(SEL selector) noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::RawSelector), _selector(selector) {};
@@ -380,12 +393,15 @@ BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, Method method, const
 #if DEBUG
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
 {
-  CKComponentScopeHandle *const scopeHandle = scope.scopeHandle();
+  _CKTypedComponentDebugCheckComponentScopeHandle(scope.scopeHandle(), selector, typeEncodings);
+}
 
+void _CKTypedComponentDebugCheckComponentScopeHandle(CKComponentScopeHandle *handle, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
+{
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
-  const Class klass = scopeHandle.componentClass;
+  const Class klass = handle.componentClass;
 
   _CKTypedComponentDebugCheckComponent(klass, selector, typeEncodings);
 }
