@@ -34,16 +34,6 @@
                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
 
 /**
- Create a fixed size hosting view. A fixed size hosting view could have better performance because it doesn't need to
- calculate the size of hosting view based on its component. Component layout could also be done on the background thread
- when there is a fixed size.
- @param componentProvider provider function. @see CKComponentProviderFunc
- @param size a fixed size that will be used for hosting view.
- */
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
-                                         size:(CGSize)size;
-
-/**
  This method is deprecated. Please use initWithComponentProviderFunc:sizeRangeProvider:
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider

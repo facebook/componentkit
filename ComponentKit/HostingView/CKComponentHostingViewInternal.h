@@ -56,13 +56,6 @@ struct CKComponentHostingViewOptions {
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                                       options:(const CKComponentHostingViewOptions &)options;
 
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
-                                         size:(CGSize)size
-                          componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-                componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                                      options:(const CKComponentHostingViewOptions &)options;
-
 @property (nonatomic, strong, readonly) UIView *containerView;
 
 /** Applies a result from a component built outside the hosting view. Main thread only. */

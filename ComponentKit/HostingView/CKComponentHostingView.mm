@@ -67,8 +67,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   BOOL _isSynchronouslyUpdatingComponent;
   BOOL _isMountingComponent;
   BOOL _allowTapPassthrough;
-
-  CK::Optional<CGSize> _size;
 }
 @end
 
@@ -97,17 +95,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 {
   return [self initWithComponentProviderFunc:componentProvider
                            sizeRangeProvider:sizeRangeProvider
-                         componentPredicates:{}
-               componentControllerPredicates:{}
-                           analyticsListener:nil
-                                     options:{}];
-}
-
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
-                                         size:(CGSize)size
-{
-  return [self initWithComponentProviderFunc:componentProvider
-                                        size:size
                          componentPredicates:{}
                componentControllerPredicates:{}
                            analyticsListener:nil
@@ -148,31 +135,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                 componentControllerPredicates:componentControllerPredicates
                             analyticsListener:analyticsListener
                                       options:options];
-}
-
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
-                                         size:(CGSize)size
-                          componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-                componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                                      options:(const CKComponentHostingViewOptions &)options
-{
-  if (self = [self initWithComponentProviderFunc:componentProvider
-                               sizeRangeProvider:nil
-                             componentPredicates:componentPredicates
-                   componentControllerPredicates:componentControllerPredicates
-                               analyticsListener:analyticsListener
-                                         options:options]) {
-    _size = size;
-    // In the case of non-fixed size hosting view, `_hasScheduledSyncUpdate` should return `YES` when hosting view
-    // is created so that calling `sizeThatFits:` and `layoutSubviews` will return expected result with component generated
-    // on the main thread.
-    // When there is a fixed size for hosting view, we set `_componentNeedsUpdate` to `NO` here so that triggering
-    // async update won't be discarded. @see `_setNeedsUpdateWithMode`.
-    _componentNeedsUpdate = NO;
-    self.frame = CGRectMake(0, 0, size.width, size.height);
-  }
-  return self;
 }
 
 - (instancetype)initWithComponentProviderBlock:(CKComponentProviderBlock)componentProvider
@@ -232,15 +194,9 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     _isMountingComponent = YES;
     self.containerView.frame = self.bounds;
     const CGSize size = self.bounds.size;
-    _size.apply([&](const auto s) {
-      CKAssert(CGSizeEqualToSize(size, s), @"Size of hosting view doesn't match the fixed size that is passed from constructor");
-    });
 
     [self _synchronouslyUpdateComponentIfNeeded];
-    // Layout component only when hosting view doesn't have fixed size or update mode is sync.
-    BOOL shouldLayoutComponent = !_size.hasValue() || _requestedUpdateMode == CKUpdateModeSynchronous;
-    if (shouldLayoutComponent &&
-        (_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size))) {
+    if (_mountedRootLayout.component() != _component || !CGSizeEqualToSize(_mountedRootLayout.size(), size)) {
       auto const rootLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener);
       [self _applyRootLayout:rootLayout];
     }
@@ -252,10 +208,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 - (CGSize)sizeThatFits:(CGSize)size
 {
   CKAssertMainThread();
-  if (_size.hasValue()) {
-    CKAssert(NO, @"sizeThatFits: shouldn't be called when hosting view has a fixed size.");
-    return _size.valueOr(CGSizeZero);
-  }
   [self _synchronouslyUpdateComponentIfNeeded];
   return [self.containerView sizeThatFits:size];
 }
@@ -399,14 +351,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                                                                       return _componentProvider(inputs->model, inputs->context);
                                                                     }
                                                                     ));
-    // Layout will only be calculated for async update in background thread only if hosting view has fixed size.
-    // When a fixed size is available, we could safely use this fixed size as size constraints for component without
-    // worrying about the size of hosting view is being changed on main thread.
-    const auto rootLayout = _size.mapToPtr([&](const auto size) {
-      return std::make_shared<CKComponentRootLayout>(CKComputeRootComponentLayout(result->component,
-                                                                                  {size, size},
-                                                                                  inputs->scopeRoot.analyticsListener));
-    });
     const auto invalidComponentControllers =
     std::make_shared<const std::vector<CKComponentController *>>([self _invalidComponentControllersWithNewScopeRoot:result->scopeRoot
                                                                                               fromPreviousScopeRoot:inputs->scopeRoot]);
@@ -422,9 +366,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
         _scheduledAsynchronousComponentUpdate = NO;
         const auto componentControllers = invalidComponentControllers != nullptr ? *invalidComponentControllers : std::vector<CKComponentController *> {};
         [self _applyResult:*result invalidComponentControllers:componentControllers];
-        if (rootLayout != nullptr) {
-          [self _applyRootLayout:*rootLayout];
-        }
         [self setNeedsLayout];
         [_delegate componentHostingViewDidInvalidateSize:self];
       } else {
