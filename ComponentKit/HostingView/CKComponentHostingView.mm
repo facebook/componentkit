@@ -68,6 +68,8 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   BOOL _isMountingComponent;
   BOOL _allowTapPassthrough;
   BOOL _enableBackgroundLayout;
+
+  CK::Optional<CGSize> _initialSize;
 }
 @end
 
@@ -163,7 +165,11 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
      allowTapPassthrough:_allowTapPassthrough];
     [self addSubview:self.containerView];
 
-    _componentNeedsUpdate = YES;
+    _initialSize = options.initialSize;
+    _initialSize.apply([&](const auto initialSize) {
+      self.frame = {CGPointZero, initialSize};
+    });
+    _componentNeedsUpdate = !_initialSize.hasValue();
     _requestedUpdateMode = CKUpdateModeSynchronous;
 
     [CKComponentDebugController registerReflowListener:self];
@@ -218,6 +224,10 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 {
   CKAssertMainThread();
   [self _synchronouslyUpdateComponentIfNeeded];
+  if (!_component) {
+    // This could only happen when `initialSize` is specified.
+    return _initialSize.valueOr(CGSizeZero);
+  }
   return [self.containerView sizeThatFits:size];
 }
 

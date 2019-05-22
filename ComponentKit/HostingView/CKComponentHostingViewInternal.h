@@ -18,6 +18,7 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKInspectableView.h>
+#import <ComponentKit/CKOptional.h>
 
 #import <unordered_set>
 
@@ -28,6 +29,9 @@ struct CKComponentHostingViewOptions {
   BOOL allowTapPassthrough;
   /// Layout will be calculated in background thread when async update is scheduled.
   BOOL enableBackgroundLayout = CKReadGlobalConfig().enableBackgroundLayoutInHostingView;
+  /// A initial size that will be used for hosting view before first generation of component is created.
+  /// Specifying a initial size enables the ability to handle the first model/context update asynchronously.
+  CK::Optional<CGSize> initialSize;
 };
 
 @interface CKComponentHostingView () <CKComponentHostingViewProtocol, CKComponentStateListener>
