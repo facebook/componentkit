@@ -19,6 +19,8 @@ struct CKGlobalConfig {
   BOOL forceBuildRenderTreeInDebug = NO;
   /** If enabled, we will cache the layout in render components and reuse it during a component reuse. */
   BOOL enableLayoutCacheInRender = NO;
+  /** Layout will be calculated in background thread when async update is scheduled in hosting view. */
+  BOOL enableBackgroundLayoutInHostingView = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();
