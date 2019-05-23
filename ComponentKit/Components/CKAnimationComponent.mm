@@ -5,22 +5,47 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentSubclass.h>
 
-auto CK::AnimationComponentFor::build() const -> CKAnimationComponent * {
-  return
-  [CKAnimationComponent
-   newWithComponent:_component
-   options:{
-     .animationOnInitialMount = _animationOnInitialMount,
-     .animationOnFinalUnmount = _animationOnFinalUnmount
-   }];
-}
+@interface CKAnimationComponent ()
+
++ (instancetype)newWithComponent:(CKComponent *)component
+         animationOnInitialMount:(CAAnimation *)animationOnInitialMount
+           animationOnFinalMount:(CAAnimation *)animationOnFinalUnmount;
+
+@end
 
 @implementation CKAnimationComponent {
-  CKAnimationComponentOptions _options;
+  CAAnimation * _animationOnInitialMount;
+  CAAnimation * _animationOnFinalUnmount;
 }
 
 + (instancetype)newWithComponent:(CKComponent *)component
-                         options:(CKAnimationComponentOptions)options
+                  onInitialMount:(CK::Animation::Initial)initial
+{
+  return [self newWithComponent:component
+        animationOnInitialMount:initial.toCA()
+          animationOnFinalMount:nil];
+}
+
++ (instancetype)newWithComponent:(CKComponent *)component
+                  onFinalUnmount:(CK::Animation::Final)final
+{
+  return [self newWithComponent:component
+        animationOnInitialMount:nil
+          animationOnFinalMount:final.toCA()];
+}
+
++ (instancetype)newWithComponent:(CKComponent *)component
+                  onInitialMount:(CK::Animation::Initial)initial
+                  onFinalUnmount:(CK::Animation::Final)final
+{
+  return [self newWithComponent:component
+        animationOnInitialMount:initial.toCA()
+          animationOnFinalMount:final.toCA()];
+}
+
++ (instancetype)newWithComponent:(CKComponent *)component
+         animationOnInitialMount:(CAAnimation *)animationOnInitialMount
+           animationOnFinalMount:(CAAnimation *)animationOnFinalUnmount
 {
   if (component == nil) {
     return nil;
@@ -30,13 +55,14 @@ auto CK::AnimationComponentFor::build() const -> CKAnimationComponent * {
   auto const c = component.viewConfiguration.viewClass().hasView()
                      ? [super newWithComponent:component]
                      : [super newWithView:{[UIView class]} component:component];
-  c->_options = std::move(options);
+  c->_animationOnInitialMount = animationOnInitialMount;
+  c->_animationOnFinalUnmount = animationOnFinalUnmount;
   return c;
 }
 
 - (std::vector<CKComponentAnimation>)animationsOnInitialMount
 {
-  if (auto const a = _options.animationOnInitialMount) {
+  if (auto const a = _animationOnInitialMount) {
     return {
       {self, a}
     };
@@ -46,7 +72,7 @@ auto CK::AnimationComponentFor::build() const -> CKAnimationComponent * {
 
 - (std::vector<CKComponentFinalUnmountAnimation>)animationsOnFinalUnmount
 {
-  if (auto const a = _options.animationOnFinalUnmount) {
+  if (auto const a = _animationOnFinalUnmount) {
     return {
       {self, a}
     };
