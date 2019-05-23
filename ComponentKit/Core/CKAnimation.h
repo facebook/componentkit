@@ -137,6 +137,27 @@ namespace CK {
     };
 
     /**
+     A type that any initial animation can be implicitly converted to.
+     */
+    struct Initial {
+      auto toCA() const { return _anim; }
+
+    private:
+      template <typename V, const char *KeyPath>
+      friend struct BasicInitial;
+
+      template <typename A1, typename A2>
+      friend struct Sequence;
+
+      template <typename A1, typename A2>
+      friend struct Parallel;
+
+      explicit Initial(CAAnimation *anim) :_anim(anim) {}
+
+      CAAnimation *_anim;
+    };
+
+    /**
      Represents an initial animation that animates from a specified `from` value to the current value of
      the property.
      */
@@ -163,8 +184,31 @@ namespace CK {
 
       operator CAAnimation *() const { return toCA(); }
 
+      operator Initial() const { return Initial{toCA()}; }
+
     private:
       V _from;
+    };
+
+    /**
+     A type that any final animation can be implicitly converted to.
+     */
+    struct Final {
+      auto toCA() const { return _anim; }
+
+    private:
+      template <typename V, const char *KeyPath>
+      friend struct BasicFinal;
+
+      template <typename A1, typename A2>
+      friend struct Sequence;
+
+      template <typename A1, typename A2>
+      friend struct Parallel;
+
+      explicit Final(CAAnimation *anim) :_anim(anim) {}
+
+      CAAnimation *_anim;
     };
 
     /**
@@ -192,6 +236,8 @@ namespace CK {
       }
 
       operator CAAnimation *() const { return toCA(); }
+
+      operator Final() const { return Final{toCA()}; }
 
     private:
       V _to;
@@ -242,6 +288,8 @@ namespace CK {
 
       operator CAAnimation *() const { return toCA(); }
 
+      operator Initial() const { return Initial{toCA()}; }
+
     private:
       UIColor *_from;
     };
@@ -272,6 +320,8 @@ namespace CK {
 
       operator CAAnimation *() const { return toCA(); }
 
+      operator Final() const { return Final{toCA()}; }
+
     private:
       UIColor *_to;
     };
@@ -300,6 +350,9 @@ namespace CK {
       }
 
       operator CAAnimation *() const { return toCA(); }
+
+      using Any = std::conditional_t<type == Type::initial, Initial, std::conditional_t<type == Type::final, Final, void>>;
+      operator Any() const { return Any{toCA()}; }
 
     private:
       A1 _a1;
@@ -334,6 +387,9 @@ namespace CK {
       }
 
       operator CAAnimation *() const { return toCA(); }
+
+      using Any = std::conditional_t<type == Type::initial, Initial, std::conditional_t<type == Type::final, Final, void>>;
+      operator Any() const { return Any{toCA()}; }
 
     private:
       A1 _a1;
