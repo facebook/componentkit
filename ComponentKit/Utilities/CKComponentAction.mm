@@ -95,8 +95,9 @@ CKActionBase::CKActionBase(const CKComponentScope &scope, SEL selector) noexcept
   _scopeIdentifierAndResponderGenerator = createScopeIdentifierAndResponderGenerator(handle, selector);
 }
 
-CKActionBase::CKActionBase(CKComponentScopeHandle *handle, SEL selector) noexcept : _target(nil), _block(NULL), _variant(CKActionVariant::Responder), _selector(selector)
+CKActionBase::CKActionBase(SEL selector,  id<CKTreeNodeComponentProtocol> component) noexcept : _target(nil), _block(NULL), _variant(CKActionVariant::Responder), _selector(selector)
 {
+  auto const handle = component.scopeHandle;
   CKCAssertNotNil(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
   _scopeIdentifierAndResponderGenerator = createScopeIdentifierAndResponderGenerator(handle, selector);
 };

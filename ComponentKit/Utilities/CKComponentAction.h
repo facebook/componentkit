@@ -13,6 +13,7 @@
 #import <ComponentKit/CKComponentViewAttribute.h>
 #import <ComponentKit/CKComponentActionInternal.h>
 #import <ComponentKit/CKRenderContext.h>
+#import <ComponentKit/CKTreeNodeProtocol.h>
 #import <objc/runtime.h>
 
 #pragma once
@@ -127,12 +128,13 @@ public:
 #endif
   }
 
-  CKAction<T...>(CKComponentScopeHandle *handle, SEL selector) noexcept : CKActionBase(handle, selector)
+  // Changing the order of the params here, as otherwise it confuses this constructor with the target one.
+  CKAction<T...>(SEL selector, id<CKTreeNodeComponentProtocol> component) noexcept : CKActionBase(selector, component)
   {
 #if DEBUG
     std::vector<const char *> typeEncodings;
     CKActionTypeVectorBuild(typeEncodings, CKActionTypelist<T...>{});
-    _CKTypedComponentDebugCheckComponentScopeHandle(handle, selector, typeEncodings);
+    _CKTypedComponentDebugCheckComponentScopeHandle(component.scopeHandle, selector, typeEncodings);
 #endif
   }
 
@@ -145,6 +147,13 @@ public:
    */
   static CKAction<T...> actionFromBlock(void(^block)(CKComponent *, T...)) {
     return CKAction<T...>(block);
+  }
+
+  /**
+   Construct an action from a Render component.
+   */
+  static CKAction<T...> actionForRenderComponent(id<CKTreeNodeComponentProtocol> component, SEL selector) {
+    return CKAction<T...>(selector, component);
   }
 
   /** Like actionFromBlock, but allows passing a block that doesn't take a sender component. */
