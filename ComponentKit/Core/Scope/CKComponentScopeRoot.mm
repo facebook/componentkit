@@ -71,7 +71,7 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
 #if DEBUG
-    _hasRenderComponentInTree = globalConfig.forceBuildRenderTreeInDebug;
+    _hasRenderComponentInTree = globalConfig.alwaysBuildRenderTreeInDebug;
 #endif
   }
   return self;

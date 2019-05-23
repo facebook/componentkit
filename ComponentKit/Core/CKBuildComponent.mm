@@ -88,7 +88,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   auto const component = componentFactory();
 
   // Build the component tree if we have a render component in the hierarchy.
-  if (threadScope.newScopeRoot.hasRenderComponentInTree) {
+  if (threadScope.newScopeRoot.hasRenderComponentInTree || CKReadGlobalConfig().alwaysBuildRenderTree) {
     CKBuildComponentTreeParams params = {
       .scopeRoot = threadScope.newScopeRoot,
       .previousScopeRoot = previousRoot,
