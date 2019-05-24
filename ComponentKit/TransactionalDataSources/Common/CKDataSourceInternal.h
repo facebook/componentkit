@@ -20,16 +20,4 @@
  */
 @property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
 
-/**
- Pause work queue of `CKDataSource`.
- Further asynchronous modifications will not be processed immediately until it's resumed.
- */
-- (void)pauseWorkQueue;
-
-/**
- Resume work queue of `CKDataSource`.
- Start processing pending asynchronous modifications.
- */
-- (void)resumeWorkQueue;
-
 @end

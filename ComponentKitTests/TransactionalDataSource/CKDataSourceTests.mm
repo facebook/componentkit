@@ -450,43 +450,6 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
   XCTAssertFalse(isValid, @"Change should not be valid since state has changed.");
 }
 
-- (void)testAsyncModificationIsNotProcessedWhenWorkQueueIsPaused
-{
-  const auto dataSource = (CKDataSource *)CKComponentTestDataSource([CKDataSource class], [self class], self);
-  [dataSource applyChangeset:[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] build]
-                        mode:CKUpdateModeAsynchronous
-                    userInfo:nil];
-  _barrierForQueue(dataSource.workQueue);
-  XCTAssertEqual(_willGenerateChangeCounter, 1);
-  [dataSource pauseWorkQueue];
-  [dataSource applyChangeset:[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] build]
-                        mode:CKUpdateModeAsynchronous
-                    userInfo:nil];
-  _barrierForQueue(dataSource.workQueue);
-  XCTAssertEqual(_willGenerateChangeCounter, 1);
-}
-
-- (void)testAsyncModificationIsProcessedWhenWorkQueueIsResumed
-{
-  const auto dataSource = (CKDataSource *)CKComponentTestDataSource([CKDataSource class], [self class], self);
-  [dataSource pauseWorkQueue];
-  [dataSource applyChangeset:[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] build]
-                        mode:CKUpdateModeAsynchronous
-                    userInfo:nil];
-  _barrierForQueue(dataSource.workQueue);
-  XCTAssertEqual(_willGenerateChangeCounter, 0);
-  [dataSource resumeWorkQueue];
-  _barrierForQueue(dataSource.workQueue);
-  XCTAssertEqual(_willGenerateChangeCounter, 1);
-}
-
-#pragma mark - Helper
-
-static void _barrierForQueue(dispatch_queue_t queue)
-{
-  dispatch_sync(queue, ^{});
-}
-
 #pragma mark - Listener
 
 - (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
