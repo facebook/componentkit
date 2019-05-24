@@ -71,7 +71,7 @@ namespace CK {
      Represents the timing information an animations.
      */
     template <typename Derived>
-    struct Timing {
+    struct TimingBuilder {
       /**
        Specifies the duration of the animation.
 
@@ -144,13 +144,13 @@ namespace CK {
 
     private:
       template <typename V, const char *KeyPath>
-      friend struct BasicInitial;
+      friend struct InitialBuilder;
 
       template <typename A1, typename A2>
-      friend struct Sequence;
+      friend struct SequenceBuilder;
 
       template <typename A1, typename A2>
-      friend struct Parallel;
+      friend struct ParallelBuilder;
 
       explicit Initial(CAAnimation *anim) :_anim(anim) {}
 
@@ -162,7 +162,7 @@ namespace CK {
      the property.
      */
     template <typename V, const char *KeyPath>
-    struct BasicInitial: Timing<BasicInitial<V, KeyPath>> {
+    struct InitialBuilder: TimingBuilder<InitialBuilder<V, KeyPath>> {
       static constexpr auto type = Type::initial;
 
       /**
@@ -170,7 +170,7 @@ namespace CK {
 
        @param from the initial value
        */
-      BasicInitial(V from) :_from(from) {}
+      InitialBuilder(V from) :_from(from) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *
@@ -198,13 +198,13 @@ namespace CK {
 
     private:
       template <typename V, const char *KeyPath>
-      friend struct BasicFinal;
+      friend struct FinalBuilder;
 
       template <typename A1, typename A2>
-      friend struct Sequence;
+      friend struct SequenceBuilder;
 
       template <typename A1, typename A2>
-      friend struct Parallel;
+      friend struct ParallelBuilder;
 
       explicit Final(CAAnimation *anim) :_anim(anim) {}
 
@@ -215,7 +215,7 @@ namespace CK {
      Represents a final animation that animates from the current value of the property to the specified `to` value.
      */
     template <typename V, const char *KeyPath>
-    struct BasicFinal: Timing<BasicFinal<V, KeyPath>> {
+    struct FinalBuilder: TimingBuilder<FinalBuilder<V, KeyPath>> {
       static constexpr auto type = Type::final;
 
       /**
@@ -223,7 +223,7 @@ namespace CK {
 
        @param to the final value
        */
-      BasicFinal(V to) :_to(to) {}
+      FinalBuilder(V to) :_to(to) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *
@@ -247,7 +247,7 @@ namespace CK {
      Represents a change animation that animates between the previous and the current value of the property.
      */
     template <typename V, const char *KeyPath>
-    struct BasicChange: Timing<BasicChange<V, KeyPath>> {
+    struct ChangeBuilder: TimingBuilder<ChangeBuilder<V, KeyPath>> {
       static constexpr auto type = Type::change;
 
       /// Returns a Core Animation animation corresponding to this animation.
@@ -266,7 +266,7 @@ namespace CK {
      the property.
      */
     template <const char *KeyPath>
-    struct BasicInitial<UIColor *, KeyPath>: Timing<BasicInitial<UIColor *, KeyPath>> {
+    struct InitialBuilder<UIColor *, KeyPath>: TimingBuilder<InitialBuilder<UIColor *, KeyPath>> {
       static constexpr auto type = Type::initial;
 
       /**
@@ -274,7 +274,7 @@ namespace CK {
 
        @param from the initial value
        */
-      BasicInitial(UIColor *from) :_from(from) {}
+      InitialBuilder(UIColor *from) :_from(from) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *
@@ -298,7 +298,7 @@ namespace CK {
      Represents a final animation that animates from the current value of the property to the specified `to` value.
      */
     template <const char *KeyPath>
-    struct BasicFinal<UIColor *, KeyPath>: Timing<BasicFinal<UIColor *, KeyPath>> {
+    struct FinalBuilder<UIColor *, KeyPath>: TimingBuilder<FinalBuilder<UIColor *, KeyPath>> {
       static constexpr auto type = Type::final;
 
       /**
@@ -306,7 +306,7 @@ namespace CK {
 
        @param to the final value
        */
-      BasicFinal(UIColor *to) :_to(to) {}
+      FinalBuilder(UIColor *to) :_to(to) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *
@@ -330,11 +330,11 @@ namespace CK {
      Represents group of animations that run in parallel.
      */
     template <typename A1, typename A2>
-    struct Parallel: Timing<Parallel<A1, A2>> {
+    struct ParallelBuilder: TimingBuilder<ParallelBuilder<A1, A2>> {
       static_assert(A1::type == A2::type, "Grouped animations must have the same type");
       static constexpr auto type = A1::type;
 
-      Parallel(A1 a1, A2 a2)
+      ParallelBuilder(A1 a1, A2 a2)
       : _a1(std::move(a1)), _a2(std::move(a2)) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
@@ -363,11 +363,11 @@ namespace CK {
      Represents group of animations that run one after the other.
      */
     template <typename A1, typename A2>
-    struct Sequence: SequenceTiming<Sequence<A1, A2>> {
+    struct SequenceBuilder: SequenceTiming<SequenceBuilder<A1, A2>> {
       static_assert(A1::type == A2::type, "Grouped animations must have the same type");
       static constexpr auto type = A1::type;
 
-      Sequence(A1 a1, A2 a2)
+      SequenceBuilder(A1 a1, A2 a2)
       : _a1(std::move(a1)), _a2(std::move(a2)) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
@@ -403,33 +403,33 @@ namespace CK {
     extern const char _borderColor[];
 
     /// Returns an object that can be used to configure an initial animation of the opacity.
-    auto alphaFrom(CGFloat from) -> BasicInitial<CGFloat, _opacity>;
+    auto alphaFrom(CGFloat from) -> InitialBuilder<CGFloat, _opacity>;
     /// Returns an object that can be used to configure an initial animation of the relative translation along the Y axis.
-    auto translationYFrom(CGFloat from) -> BasicInitial<CGFloat, _transformTranslationY>;
+    auto translationYFrom(CGFloat from) -> InitialBuilder<CGFloat, _transformTranslationY>;
     /// Returns an object that can be used to configure an initial animation of the background color.
-    auto backgroundColorFrom(UIColor *from) -> BasicInitial<UIColor *, _backgroundColor>;
+    auto backgroundColorFrom(UIColor *from) -> InitialBuilder<UIColor *, _backgroundColor>;
     /// Returns an object that can be used to configure an initial animation of the border color.
-    auto borderColorFrom(UIColor *from) -> BasicInitial<UIColor *, _borderColor>;
+    auto borderColorFrom(UIColor *from) -> InitialBuilder<UIColor *, _borderColor>;
 
     /// Returns an object that can be used to configure a final animation of the opacity.
-    auto alphaTo(CGFloat to) -> BasicFinal<CGFloat, _opacity>;
+    auto alphaTo(CGFloat to) -> FinalBuilder<CGFloat, _opacity>;
     /// Returns an object that can be used to configure a final animation of the relative translation along the Y axis.
-    auto translationYTo(CGFloat to) -> BasicFinal<CGFloat, _transformTranslationY>;
+    auto translationYTo(CGFloat to) -> FinalBuilder<CGFloat, _transformTranslationY>;
     /// Returns an object that can be used to configure a final animation of the background color.
-    auto backgroundColorTo(UIColor *to) -> BasicFinal<UIColor *, _backgroundColor>;
+    auto backgroundColorTo(UIColor *to) -> FinalBuilder<UIColor *, _backgroundColor>;
     /// Returns an object that can be used to configure a final animation of the border color.
-    auto borderColorTo(UIColor *to) -> BasicFinal<UIColor *, _borderColor>;
+    auto borderColorTo(UIColor *to) -> FinalBuilder<UIColor *, _borderColor>;
 
     /// Returns an object that can be used to configure a change animation of the opacity.
-    auto alpha() -> BasicChange<CGFloat, _opacity>;
+    auto alpha() -> ChangeBuilder<CGFloat, _opacity>;
     /// Returns an object that can be used to configure a change animation of the relative translation along the Y axis.
-    auto translationY() -> BasicChange<CGFloat, _transformTranslationY>;
+    auto translationY() -> ChangeBuilder<CGFloat, _transformTranslationY>;
     /// Returns an object that can be used to configure a change animation of the absolute position.
-    auto position() -> BasicChange<CGPoint, _position>;
+    auto position() -> ChangeBuilder<CGPoint, _position>;
     /// Returns an object that can be used to configure a change animation of the background color.
-    auto backgroundColor() -> BasicChange<UIColor *, _backgroundColor>;
+    auto backgroundColor() -> ChangeBuilder<UIColor *, _backgroundColor>;
     /// Returns an object that can be used to configure a change animation of the border color.
-    auto borderColor() -> BasicChange<UIColor *, _borderColor>;
+    auto borderColor() -> ChangeBuilder<UIColor *, _borderColor>;
 
     /**
      Returns an animation that runs given animations in parallel.
@@ -447,7 +447,7 @@ namespace CK {
      parallel(alphaTo(0), translationYFrom(-40)) // Error, can't group final and initial animation
      */
     template <typename A1, typename A2>
-    auto parallel(A1 a1, A2 a2) { return Parallel<A1, A2>{ a1, a2 }; }
+    auto parallel(A1 a1, A2 a2) { return ParallelBuilder<A1, A2>{ a1, a2 }; }
 
     /**
      Returns an animation that runs given animations one after the other.
@@ -466,6 +466,6 @@ namespace CK {
      sequence(alphaTo(0), translationYFrom(-40)) // Error, can't group final and initial animation
      */
     template <typename A1, typename A2>
-    auto sequence(A1 a1, A2 a2) { return Sequence<A1, A2>{ a1, a2 }; }
+    auto sequence(A1 a1, A2 a2) { return SequenceBuilder<A1, A2>{ a1, a2 }; }
   }
 }

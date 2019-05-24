@@ -30,18 +30,18 @@ const char Animation::_position[] = "position";
 const char Animation::_backgroundColor[] = "backgroundColor";
 const char Animation::_borderColor[] = "borderColor";
 
-auto Animation::alphaFrom(CGFloat from) -> BasicInitial<CGFloat, _opacity> { return {from}; }
-auto Animation::translationYFrom(CGFloat from) -> BasicInitial<CGFloat, _transformTranslationY> { return {from}; }
-auto Animation::backgroundColorFrom(UIColor *from) -> BasicInitial<UIColor *, _backgroundColor> { return {from}; }
-auto Animation::borderColorFrom(UIColor *from) -> BasicInitial<UIColor *, _borderColor> { return {from}; }
+auto Animation::alphaFrom(CGFloat from) -> InitialBuilder<CGFloat, _opacity> { return {from}; }
+auto Animation::translationYFrom(CGFloat from) -> InitialBuilder<CGFloat, _transformTranslationY> { return {from}; }
+auto Animation::backgroundColorFrom(UIColor *from) -> InitialBuilder<UIColor *, _backgroundColor> { return {from}; }
+auto Animation::borderColorFrom(UIColor *from) -> InitialBuilder<UIColor *, _borderColor> { return {from}; }
 
-auto Animation::alphaTo(CGFloat to) -> BasicFinal<CGFloat, _opacity> { return {to}; }
-auto Animation::translationYTo(CGFloat to) -> BasicFinal<CGFloat, _transformTranslationY> { return {to}; }
-auto Animation::backgroundColorTo(UIColor *to) -> BasicFinal<UIColor *, _backgroundColor> { return {to}; }
-auto Animation::borderColorTo(UIColor *to) -> BasicFinal<UIColor *, _borderColor> { return {to}; }
+auto Animation::alphaTo(CGFloat to) -> FinalBuilder<CGFloat, _opacity> { return {to}; }
+auto Animation::translationYTo(CGFloat to) -> FinalBuilder<CGFloat, _transformTranslationY> { return {to}; }
+auto Animation::backgroundColorTo(UIColor *to) -> FinalBuilder<UIColor *, _backgroundColor> { return {to}; }
+auto Animation::borderColorTo(UIColor *to) -> FinalBuilder<UIColor *, _borderColor> { return {to}; }
 
-auto Animation::alpha() -> BasicChange<CGFloat, _opacity> { return {}; }
-auto Animation::translationY() -> BasicChange<CGFloat, _transformTranslationY> { return {}; }
-auto Animation::position() -> BasicChange<CGPoint, _position> { return {}; };
-auto Animation::backgroundColor() -> BasicChange<UIColor *, _backgroundColor> { return {}; }
-auto Animation::borderColor() -> BasicChange<UIColor *, _borderColor> { return {}; }
+auto Animation::alpha() -> ChangeBuilder<CGFloat, _opacity> { return {}; }
+auto Animation::translationY() -> ChangeBuilder<CGFloat, _transformTranslationY> { return {}; }
+auto Animation::position() -> ChangeBuilder<CGPoint, _position> { return {}; };
+auto Animation::backgroundColor() -> ChangeBuilder<UIColor *, _backgroundColor> { return {}; }
+auto Animation::borderColor() -> ChangeBuilder<UIColor *, _borderColor> { return {}; }
