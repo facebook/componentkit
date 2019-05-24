@@ -13,7 +13,7 @@
 #import <ComponentKit/CKComponentViewAttribute.h>
 #import <ComponentKit/CKComponentActionInternal.h>
 #import <ComponentKit/CKRenderContext.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKRenderComponentProtocol.h>
 #import <objc/runtime.h>
 
 #pragma once
@@ -129,7 +129,7 @@ public:
   }
 
   // Changing the order of the params here, as otherwise it confuses this constructor with the target one.
-  CKAction<T...>(SEL selector, id<CKTreeNodeComponentProtocol> component) noexcept : CKActionBase(selector, component)
+  CKAction<T...>(SEL selector, id<CKRenderComponentProtocol> component) noexcept : CKActionBase(selector, component)
   {
 #if DEBUG
     std::vector<const char *> typeEncodings;
@@ -152,7 +152,7 @@ public:
   /**
    Construct an action from a Render component.
    */
-  static CKAction<T...> actionForRenderComponent(id<CKTreeNodeComponentProtocol> component, SEL selector) {
+  static CKAction<T...> actionForRenderComponent(id<CKRenderComponentProtocol> component, SEL selector) {
     return CKAction<T...>(selector, component);
   }
 

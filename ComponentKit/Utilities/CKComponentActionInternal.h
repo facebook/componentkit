@@ -15,7 +15,7 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKRenderComponentProtocol.h>
 
 #import <type_traits>
 
@@ -52,7 +52,7 @@ class CKActionBase {
   CKActionBase(id target, SEL selector) noexcept;
 
   CKActionBase(const CKComponentScope &scope, SEL selector) noexcept;
-  CKActionBase(SEL selector, id<CKTreeNodeComponentProtocol> component) noexcept;
+  CKActionBase(SEL selector, id<CKRenderComponentProtocol> component) noexcept;
 
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
   CKActionBase(SEL selector) noexcept;
