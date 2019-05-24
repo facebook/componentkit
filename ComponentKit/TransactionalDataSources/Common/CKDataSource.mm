@@ -103,6 +103,12 @@
   }
 }
 
+- (CKDataSourceState *)state
+{
+  CKAssertMainThread();
+  return _state;
+}
+
 - (void)setChangesetModificationGenerator:(id<CKDataSourceChangesetModificationGenerator>)changesetModificationGenerator
 {
   CKAssertMainThread();
