@@ -54,7 +54,12 @@
   CKComponentScope s(self);
   auto const c = component.viewConfiguration.viewClass().hasView()
                      ? [super newWithComponent:component]
-                     : [super newWithView:{[UIView class]} component:component];
+                     : [super newWithView:{
+                       [UIView class],
+                       {
+                         {@selector(setUserInteractionEnabled:), @NO}
+                       }
+                     } component:component];
   c->_animationOnInitialMount = animationOnInitialMount;
   c->_animationOnFinalUnmount = animationOnFinalUnmount;
   return c;
