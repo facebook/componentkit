@@ -143,7 +143,6 @@ namespace CK {
       auto toCA() const { return _anim; }
 
     private:
-      template <typename V>
       friend struct InitialBuilder;
 
       template <typename A1, typename A2>
@@ -161,8 +160,7 @@ namespace CK {
      Represents an initial animation that animates from a specified `from` value to the current value of
      the property.
      */
-    template <typename V>
-    struct InitialBuilder: TimingBuilder<InitialBuilder<V>> {
+    struct InitialBuilder: TimingBuilder<InitialBuilder> {
       static constexpr auto type = Type::initial;
 
       /**
@@ -170,13 +168,13 @@ namespace CK {
 
        @param from the initial value
        */
-      InitialBuilder(V from, __unsafe_unretained NSString *keyPath) :_from(from), _keyPath(keyPath) {}
+      InitialBuilder(id from, __unsafe_unretained NSString *keyPath) :_from(from), _keyPath(keyPath) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *
       {
         auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
-        a.fromValue = @(_from);
+        a.fromValue = _from;
         this->applyTimingTo(a);
         a.fillMode = kCAFillModeBackwards;
         return a;
@@ -187,7 +185,7 @@ namespace CK {
       operator Initial() const { return Initial{toCA()}; }
 
     private:
-      V _from;
+      id _from;
       __unsafe_unretained NSString *_keyPath;
     };
 
@@ -198,7 +196,6 @@ namespace CK {
       auto toCA() const { return _anim; }
 
     private:
-      template <typename V>
       friend struct FinalBuilder;
 
       template <typename A1, typename A2>
@@ -215,8 +212,7 @@ namespace CK {
     /**
      Represents a final animation that animates from the current value of the property to the specified `to` value.
      */
-    template <typename V>
-    struct FinalBuilder: TimingBuilder<FinalBuilder<V>> {
+    struct FinalBuilder: TimingBuilder<FinalBuilder> {
       static constexpr auto type = Type::final;
 
       /**
@@ -224,13 +220,13 @@ namespace CK {
 
        @param to the final value
        */
-      FinalBuilder(V to, __unsafe_unretained NSString *keyPath) :_to(to), _keyPath(keyPath) {}
+      FinalBuilder(id to, __unsafe_unretained NSString *keyPath) :_to(to), _keyPath(keyPath) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *
       {
         auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
-        a.toValue = @(_to);
+        a.toValue = _to;
         this->applyTimingTo(a);
         a.fillMode = kCAFillModeForwards;
         return a;
@@ -241,7 +237,7 @@ namespace CK {
       operator Final() const { return Final{toCA()}; }
 
     private:
-      V _to;
+      id _to;
       __unsafe_unretained NSString *_keyPath;
     };
 
@@ -264,73 +260,6 @@ namespace CK {
       operator CAAnimation *() const { return toCA(); }
 
     private:
-      __unsafe_unretained NSString *_keyPath;
-    };
-
-    /**
-     Represents an initial animation that animates from a specified `from` value to the current value of
-     the property.
-     */
-    template<>
-    struct InitialBuilder<UIColor *>: TimingBuilder<InitialBuilder<UIColor *>> {
-      static constexpr auto type = Type::initial;
-
-      /**
-       Specifies the initial value for the animated property.
-
-       @param from the initial value
-       */
-      InitialBuilder(UIColor *from, __unsafe_unretained NSString *keyPath) :_from(from), _keyPath(keyPath) {}
-
-      /// Returns a Core Animation animation corresponding to this animation.
-      auto toCA() const -> CAAnimation *
-      {
-        auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
-        a.fromValue = (id)_from.CGColor;
-        this->applyTimingTo(a);
-        a.fillMode = kCAFillModeBackwards;
-        return a;
-      }
-
-      operator CAAnimation *() const { return toCA(); }
-
-      operator Initial() const { return Initial{toCA()}; }
-
-    private:
-      UIColor *_from;
-      __unsafe_unretained NSString *_keyPath;
-    };
-
-    /**
-     Represents a final animation that animates from the current value of the property to the specified `to` value.
-     */
-    template <>
-    struct FinalBuilder<UIColor *>: TimingBuilder<FinalBuilder<UIColor *>> {
-      static constexpr auto type = Type::final;
-
-      /**
-       Specifies the final value for the animated property.
-
-       @param to the final value
-       */
-      FinalBuilder(UIColor *to, __unsafe_unretained NSString *keyPath) :_to(to), _keyPath(keyPath) {}
-
-      /// Returns a Core Animation animation corresponding to this animation.
-      auto toCA() const -> CAAnimation *
-      {
-        auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
-        a.toValue = (id)_to.CGColor;
-        this->applyTimingTo(a);
-        a.fillMode = kCAFillModeForwards;
-        return a;
-      }
-
-      operator CAAnimation *() const { return toCA(); }
-
-      operator Final() const { return Final{toCA()}; }
-
-    private:
-      UIColor *_to;
       __unsafe_unretained NSString *_keyPath;
     };
 
@@ -405,22 +334,22 @@ namespace CK {
     };
 
     /// Returns an object that can be used to configure an initial animation of the opacity.
-    auto alphaFrom(CGFloat from) -> InitialBuilder<CGFloat>;
+    auto alphaFrom(CGFloat from) -> InitialBuilder;
     /// Returns an object that can be used to configure an initial animation of the relative translation along the Y axis.
-    auto translationYFrom(CGFloat from) -> InitialBuilder<CGFloat>;
+    auto translationYFrom(CGFloat from) -> InitialBuilder;
     /// Returns an object that can be used to configure an initial animation of the background color.
-    auto backgroundColorFrom(UIColor *from) -> InitialBuilder<UIColor *>;
+    auto backgroundColorFrom(UIColor *from) -> InitialBuilder;
     /// Returns an object that can be used to configure an initial animation of the border color.
-    auto borderColorFrom(UIColor *from) -> InitialBuilder<UIColor *>;
+    auto borderColorFrom(UIColor *from) -> InitialBuilder;
 
     /// Returns an object that can be used to configure a final animation of the opacity.
-    auto alphaTo(CGFloat to) -> FinalBuilder<CGFloat>;
+    auto alphaTo(CGFloat to) -> FinalBuilder;
     /// Returns an object that can be used to configure a final animation of the relative translation along the Y axis.
-    auto translationYTo(CGFloat to) -> FinalBuilder<CGFloat>;
+    auto translationYTo(CGFloat to) -> FinalBuilder;
     /// Returns an object that can be used to configure a final animation of the background color.
-    auto backgroundColorTo(UIColor *to) -> FinalBuilder<UIColor *>;
+    auto backgroundColorTo(UIColor *to) -> FinalBuilder;
     /// Returns an object that can be used to configure a final animation of the border color.
-    auto borderColorTo(UIColor *to) -> FinalBuilder<UIColor *>;
+    auto borderColorTo(UIColor *to) -> FinalBuilder;
 
     /// Returns an object that can be used to configure a change animation of the opacity.
     auto alpha() -> ChangeBuilder;

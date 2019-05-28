@@ -24,15 +24,18 @@ auto Animation::functionToCA(Function f) -> CAMediaTimingFunction *
   }
 }
 
-auto Animation::alphaFrom(CGFloat from) -> InitialBuilder<CGFloat> { return {from, @"opacity"}; }
-auto Animation::translationYFrom(CGFloat from) -> InitialBuilder<CGFloat> { return {from, @"transform.translation.y"}; }
-auto Animation::backgroundColorFrom(UIColor *from) -> InitialBuilder<UIColor *> { return {from, @"backgroundColor"}; }
-auto Animation::borderColorFrom(UIColor *from) -> InitialBuilder<UIColor *> { return {from, @"borderColor"}; }
+static auto animatedValueAsId(CGFloat f) -> id { return @(f); }
+static auto animatedValueAsId(UIColor *c) -> id { return (id)c.CGColor; }
 
-auto Animation::alphaTo(CGFloat to) -> FinalBuilder<CGFloat> { return {to, @"opacity"}; }
-auto Animation::translationYTo(CGFloat to) -> FinalBuilder<CGFloat> { return {to, @"transform.translation.y"}; }
-auto Animation::backgroundColorTo(UIColor *to) -> FinalBuilder<UIColor *> { return {to, @"backgroundColor"}; }
-auto Animation::borderColorTo(UIColor *to) -> FinalBuilder<UIColor *> { return {to, @"borderColor"}; }
+auto Animation::alphaFrom(CGFloat from) -> InitialBuilder { return {animatedValueAsId(from), @"opacity"}; }
+auto Animation::translationYFrom(CGFloat from) -> InitialBuilder { return {animatedValueAsId(from), @"transform.translation.y"}; }
+auto Animation::backgroundColorFrom(UIColor *from) -> InitialBuilder { return {animatedValueAsId(from), @"backgroundColor"}; }
+auto Animation::borderColorFrom(UIColor *from) -> InitialBuilder { return {animatedValueAsId(from), @"borderColor"}; }
+
+auto Animation::alphaTo(CGFloat to) -> FinalBuilder { return {animatedValueAsId(to), @"opacity"}; }
+auto Animation::translationYTo(CGFloat to) -> FinalBuilder { return {animatedValueAsId(to), @"transform.translation.y"}; }
+auto Animation::backgroundColorTo(UIColor *to) -> FinalBuilder { return {animatedValueAsId(to), @"backgroundColor"}; }
+auto Animation::borderColorTo(UIColor *to) -> FinalBuilder { return {animatedValueAsId(to), @"borderColor"}; }
 
 auto Animation::alpha() -> ChangeBuilder { return {@"opacity"}; }
 auto Animation::translationY() -> ChangeBuilder { return {@"transform.translation.y"}; }
