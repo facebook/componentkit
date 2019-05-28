@@ -24,24 +24,18 @@ auto Animation::functionToCA(Function f) -> CAMediaTimingFunction *
   }
 }
 
-const char Animation::_opacity[] = "opacity";
-const char Animation::_transformTranslationY[] = "transform.translation.y";
-const char Animation::_position[] = "position";
-const char Animation::_backgroundColor[] = "backgroundColor";
-const char Animation::_borderColor[] = "borderColor";
+auto Animation::alphaFrom(CGFloat from) -> InitialBuilder<CGFloat> { return {from, @"opacity"}; }
+auto Animation::translationYFrom(CGFloat from) -> InitialBuilder<CGFloat> { return {from, @"transform.translation.y"}; }
+auto Animation::backgroundColorFrom(UIColor *from) -> InitialBuilder<UIColor *> { return {from, @"backgroundColor"}; }
+auto Animation::borderColorFrom(UIColor *from) -> InitialBuilder<UIColor *> { return {from, @"borderColor"}; }
 
-auto Animation::alphaFrom(CGFloat from) -> InitialBuilder<CGFloat, _opacity> { return {from}; }
-auto Animation::translationYFrom(CGFloat from) -> InitialBuilder<CGFloat, _transformTranslationY> { return {from}; }
-auto Animation::backgroundColorFrom(UIColor *from) -> InitialBuilder<UIColor *, _backgroundColor> { return {from}; }
-auto Animation::borderColorFrom(UIColor *from) -> InitialBuilder<UIColor *, _borderColor> { return {from}; }
+auto Animation::alphaTo(CGFloat to) -> FinalBuilder<CGFloat> { return {to, @"opacity"}; }
+auto Animation::translationYTo(CGFloat to) -> FinalBuilder<CGFloat> { return {to, @"transform.translation.y"}; }
+auto Animation::backgroundColorTo(UIColor *to) -> FinalBuilder<UIColor *> { return {to, @"backgroundColor"}; }
+auto Animation::borderColorTo(UIColor *to) -> FinalBuilder<UIColor *> { return {to, @"borderColor"}; }
 
-auto Animation::alphaTo(CGFloat to) -> FinalBuilder<CGFloat, _opacity> { return {to}; }
-auto Animation::translationYTo(CGFloat to) -> FinalBuilder<CGFloat, _transformTranslationY> { return {to}; }
-auto Animation::backgroundColorTo(UIColor *to) -> FinalBuilder<UIColor *, _backgroundColor> { return {to}; }
-auto Animation::borderColorTo(UIColor *to) -> FinalBuilder<UIColor *, _borderColor> { return {to}; }
-
-auto Animation::alpha() -> ChangeBuilder<CGFloat, _opacity> { return {}; }
-auto Animation::translationY() -> ChangeBuilder<CGFloat, _transformTranslationY> { return {}; }
-auto Animation::position() -> ChangeBuilder<CGPoint, _position> { return {}; };
-auto Animation::backgroundColor() -> ChangeBuilder<UIColor *, _backgroundColor> { return {}; }
-auto Animation::borderColor() -> ChangeBuilder<UIColor *, _borderColor> { return {}; }
+auto Animation::alpha() -> ChangeBuilder { return {@"opacity"}; }
+auto Animation::translationY() -> ChangeBuilder { return {@"transform.translation.y"}; }
+auto Animation::position() -> ChangeBuilder { return {@"position"}; };
+auto Animation::backgroundColor() -> ChangeBuilder { return {@"backgroundColor"}; }
+auto Animation::borderColor() -> ChangeBuilder { return {@"borderColor"}; }
