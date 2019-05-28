@@ -341,10 +341,10 @@ BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, Method method, const
     // ref types get '^' prefixed to them. Since C++ would implicitly
     // use pass-by-ref or pass-by-value based the called function, we
     // treat a mismatch between ref & copy as valid.
-    if (*methodEncoding == '^') {
+    if (methodEncoding != NULL && *methodEncoding == '^') {
       methodEncoding++;
     }
-    if (*typeEncoding == '^') {
+    if (typeEncoding != NULL && *typeEncoding == '^') {
       typeEncoding++;
     }
 
