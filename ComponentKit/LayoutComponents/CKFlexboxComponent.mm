@@ -601,6 +601,10 @@ static void applyPositionToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension 
 
 static void applyPaddingToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension value)
 {
+  if (value.isDefined() == false) {
+    return;
+  }
+  
   CKRelativeDimension dimension = value.dimension();
   switch (dimension.type()) {
     case CKRelativeDimension::Type::PERCENT:
