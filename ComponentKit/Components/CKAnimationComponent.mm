@@ -5,6 +5,9 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentSubclass.h>
 
+@interface CKAnimationComponentPassthroughView: UIView
+@end
+
 @interface CKAnimationComponent ()
 
 + (instancetype)newWithComponent:(CKComponent *)component
@@ -54,12 +57,7 @@
   CKComponentScope s(self);
   auto const c = component.viewConfiguration.viewClass().hasView()
                      ? [super newWithComponent:component]
-                     : [super newWithView:{
-                       [UIView class],
-                       {
-                         {@selector(setUserInteractionEnabled:), @NO}
-                       }
-                     } component:component];
+                     : [super newWithView:{[CKAnimationComponentPassthroughView class]} component:component];
   c->_animationOnInitialMount = animationOnInitialMount;
   c->_animationOnFinalUnmount = animationOnFinalUnmount;
   return c;
@@ -83,6 +81,16 @@
     };
   }
   return {};
+}
+
+@end
+
+@implementation CKAnimationComponentPassthroughView
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+  auto const v = [super hitTest:point withEvent:event];
+  return v == self ? nil : v;
 }
 
 @end
