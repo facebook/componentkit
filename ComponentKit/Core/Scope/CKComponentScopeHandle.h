@@ -45,9 +45,6 @@
                        componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot
                                    parent:(CKComponentScopeHandle *)parent;
 
-/** Creates a new, but identical, instance of the scope handle that will be reacquired due to a scope collision. */
-- (instancetype)newHandleToBeReacquiredDueToScopeCollision;
-
 /** Enqueues a state update to be applied to the scope with the given mode. */
 - (void)updateState:(id (^)(id))updateBlock
            metadata:(const CKStateUpdateMetadata &)metadata

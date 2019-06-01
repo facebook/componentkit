@@ -122,18 +122,6 @@
                                                    parent:parent];
 }
 
-- (instancetype)newHandleToBeReacquiredDueToScopeCollision
-{
-  return [[CKComponentScopeHandle alloc] initWithListener:_listener
-                                         globalIdentifier:_globalIdentifier
-                                           rootIdentifier:_rootIdentifier
-                                           componentClass:_componentClass
-                                                    state:_state
-                                               controller:_controller
-                                          scopedResponder:_scopedResponder
-                                                   parent:_parent];
-}
-
 - (id<CKComponentControllerProtocol>)controller
 {
   CKAssert(_resolved, @"Requesting controller from scope handle before resolution. The controller will be nil.");
