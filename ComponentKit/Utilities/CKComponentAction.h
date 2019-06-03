@@ -156,6 +156,15 @@ public:
     return CKAction<T...>(selector, component);
   }
 
+  /**
+  Constructs an action for a controller from a render context.
+  */
+  static CKAction<T...> actionForController(CK::RenderContext context, SEL selector) {
+    id<CKRenderComponentProtocol> component = (id)context._component;
+    CKCAssert([context._component conformsToProtocol:@protocol(CKRenderComponentProtocol)], @"RenderContext contains non render component");
+    return CKAction<T...>(selector, component);
+  }
+
   /** Like actionFromBlock, but allows passing a block that doesn't take a sender component. */
   static CKAction<T...> actionFromSenderlessBlock(void (^block)(T...)) {
     if (!block) {
