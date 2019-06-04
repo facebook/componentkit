@@ -22,11 +22,11 @@
 @class CKComponent;
 
 typedef id (^CKResponderGenerationBlock)(void);
-typedef NS_ENUM(NSInteger, CKComponentActionSendBehavior) {
+typedef NS_ENUM(NSInteger, CKActionSendBehavior) {
   /** Starts searching at the sender's next responder. Usually this is what you want to prevent infinite loops. */
-  CKComponentActionSendBehaviorStartAtSenderNextResponder,
+  CKActionSendBehaviorStartAtSenderNextResponder,
   /** If the sender itself responds to the action, invoke the action on the sender. */
-  CKComponentActionSendBehaviorStartAtSender,
+  CKActionSendBehaviorStartAtSender,
 };
 
 class _CKTypedComponentDebugInitialTarget;
@@ -62,7 +62,7 @@ class CKActionBase {
   ~CKActionBase() {};
 
   id initialTarget(CKComponent *sender) const;
-  CKComponentActionSendBehavior defaultBehavior() const;
+  CKActionSendBehavior defaultBehavior() const;
 
   bool operator==(const CKActionBase& rhs) const;
 
@@ -161,7 +161,7 @@ struct CKActionInfo {
 CKActionInfo CKActionFind(SEL selector, id target) noexcept;
 
 template<typename... T>
-static void CKComponentActionSendResponderChain(SEL selector, id target, CKComponent *sender, T... args) {
+static void CKActionSendResponderChain(SEL selector, id target, CKComponent *sender, T... args) {
 
   const CKActionInfo info = CKActionFind(selector, target);
   if (!info.responder) {

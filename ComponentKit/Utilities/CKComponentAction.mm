@@ -61,11 +61,11 @@ bool CKActionBase::operator==(const CKActionBase& rhs) const
           && _block == rhs._block);
 }
 
-CKComponentActionSendBehavior CKActionBase::defaultBehavior() const
+CKActionSendBehavior CKActionBase::defaultBehavior() const
 {
   return (_variant == CKActionVariant::RawSelector
-          ? CKComponentActionSendBehaviorStartAtSenderNextResponder
-          : CKComponentActionSendBehaviorStartAtSender);
+          ? CKActionSendBehaviorStartAtSenderNextResponder
+          : CKActionSendBehaviorStartAtSender);
 };
 
 id CKActionBase::initialTarget(CKComponent *sender) const
@@ -176,22 +176,22 @@ CKActionInfo CKActionFind(SEL selector, id target) noexcept
 
 #pragma mark - Legacy Send Functions
 
-void CKComponentActionSend(const CKAction<> &action, CKComponent *sender)
+void CKActionSend(const CKAction<> &action, CKComponent *sender)
 {
   action.send(sender);
 }
 
-void CKComponentActionSend(const CKAction<> &action, CKComponent *sender, CKComponentActionSendBehavior behavior)
+void CKActionSend(const CKAction<> &action, CKComponent *sender, CKActionSendBehavior behavior)
 {
   action.send(sender, behavior);
 }
 
-void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context)
+void CKActionSend(const CKAction<id> &action, CKComponent *sender, id context)
 {
   action.send(sender, action.defaultBehavior(), context);
 }
 
-void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
+void CKActionSend(const CKAction<id> &action, CKComponent *sender, id context, CKActionSendBehavior behavior)
 {
   action.send(sender, behavior, context);
 }
@@ -286,7 +286,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKAction<UIEvent 
   CKComponent *const sendingComponent = CKMountedComponentForView(sender);
   for (const auto &action : copiedActions) {
     // If the action can be handled by the sender itself, send it there instead of looking up the chain.
-    action.send(sendingComponent, CKComponentActionSendBehaviorStartAtSender, event);
+    action.send(sendingComponent, CKActionSendBehaviorStartAtSender, event);
   }
 }
 
@@ -474,7 +474,7 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {
 
 - (BOOL)ck_send
 {
-  _ck_action.send(CKMountedComponentForView(_ck_view), CKComponentActionSendBehaviorStartAtSender);
+  _ck_action.send(CKMountedComponentForView(_ck_view), CKActionSendBehaviorStartAtSender);
   return YES;
 }
 

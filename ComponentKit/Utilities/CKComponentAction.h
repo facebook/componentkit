@@ -229,7 +229,7 @@ public:
     this->send((CKComponent *)context._component, defaultBehavior(), args...);
   };
 
-  void send(CKComponent *sender, CKComponentActionSendBehavior behavior, T... args) const
+  void send(CKComponent *sender, CKActionSendBehavior behavior, T... args) const
   {
     if (_variant == CKActionVariant::Block) {
       void (^block)(CKComponent *sender, T... args) = (void (^)(CKComponent *sender, T... args))_block;
@@ -237,15 +237,15 @@ public:
       return;
     }
     const id target = initialTarget(sender);
-    const id responder = behavior == CKComponentActionSendBehaviorStartAtSender ? target : [target nextResponder];
-    CKComponentActionSendResponderChain(selector(), responder, sender, args...);
+    const id responder = behavior == CKActionSendBehaviorStartAtSender ? target : [target nextResponder];
+    CKActionSendResponderChain(selector(), responder, sender, args...);
   };
 
   bool operator==(const CKAction<T...> &rhs) const noexcept {
     return isEqual(rhs);
   };
 
-  friend void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context);
+  friend void CKActionSend(const CKAction<id> &action, CKComponent *sender, id context);
 };
 
 BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector,
@@ -265,12 +265,12 @@ extern template class CKAction<id>;
  @param action The action to send up the responder chain.
  @param sender The component sending the action. Traversal starts from the component itself, then its next responder.
  @param context An optional context-dependent second parameter to the component action.
- @param behavior An enum specifies how to send the action. @see CKComponentActionSendBehavior
+ @param behavior An enum specifies how to send the action. @see CKActionSendBehavior
  */
-void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior);
-void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context);
-void CKComponentActionSend(const CKAction<> &action, CKComponent *sender, CKComponentActionSendBehavior behavior);
-void CKComponentActionSend(const CKAction<> &action, CKComponent *sender);
+void CKActionSend(const CKAction<id> &action, CKComponent *sender, id context, CKActionSendBehavior behavior);
+void CKActionSend(const CKAction<id> &action, CKComponent *sender, id context);
+void CKActionSend(const CKAction<> &action, CKComponent *sender, CKActionSendBehavior behavior);
+void CKActionSend(const CKAction<> &action, CKComponent *sender);
 
 /**
  Returns a view attribute that configures a component that creates a UIControl to send the given CKComponentAction.

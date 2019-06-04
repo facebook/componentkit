@@ -192,7 +192,7 @@
   UIView *rootView = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil).mountedComponents;
 
-  CKComponentActionSend(@selector(testAction:context:), innerComponent, nil);
+  CKActionSend(@selector(testAction:context:), innerComponent, nil);
 
   XCTAssert(actionSender == innerComponent, @"Sender should be inner component");
 
@@ -218,9 +218,9 @@
 
   id context = @"context";
 
-  CKComponentActionSend(@selector(testAction:context:), innerComponent, context);
+  CKActionSend(@selector(testAction:context:), innerComponent, context);
 
-  XCTAssert(actionContext == context, @"Context should match what was passed to CKComponentActionSend");
+  XCTAssert(actionContext == context, @"Context should match what was passed to CKActionSend");
 
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
@@ -249,7 +249,7 @@
   CKAction<id, id> action = { @selector(testAction2:context1:context2:) };
   action.send(innerComponent, context, context2);
 
-  XCTAssert(actionContext == context && actionContext2 == context2, @"Contexts should match what was passed to CKComponentActionSend");
+  XCTAssert(actionContext == context && actionContext2 == context2, @"Contexts should match what was passed to CKActionSend");
 
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
@@ -276,7 +276,7 @@
   CKAction<int> action = { @selector(testPrimitive:integer:) };
   action.send(innerComponent, integer);
 
-  XCTAssert(actionInteger == integer, @"Contexts should match what was passed to CKComponentActionSend");
+  XCTAssert(actionInteger == integer, @"Contexts should match what was passed to CKActionSend");
 
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
@@ -299,7 +299,7 @@
   CKAction<const std::vector<std::string> &> action = { @selector(testCppArgumentAction:vector:) };
   action.send(innerComponent, cppThing);
   
-  XCTAssert(actionVec == cppThing, @"Contexts should match what was passed to CKComponentActionSend");
+  XCTAssert(actionVec == cppThing, @"Contexts should match what was passed to CKActionSend");
   
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
@@ -324,7 +324,7 @@
   CKAction<> action = { @selector(testNoArgumentAction:) };
   action.send(innerComponent);
 
-  XCTAssert(calledNoArgumentBlock, @"Contexts should match what was passed to CKComponentActionSend");
+  XCTAssert(calledNoArgumentBlock, @"Contexts should match what was passed to CKActionSend");
 
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
@@ -349,7 +349,7 @@
   CKAction<id> action = { @selector(testNoArgumentAction:) };
   action.send(innerComponent, @"hello");
 
-  XCTAssert(calledNoArgumentBlock, @"Contexts should match what was passed to CKComponentActionSend");
+  XCTAssert(calledNoArgumentBlock, @"Contexts should match what was passed to CKActionSend");
 
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
@@ -392,7 +392,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
     value = b;
   }, expectedValue).send(innerComponent);
 
-  XCTAssert(actionContext == context && actionContext2 == context2 && value == expectedValue, @"Contexts should match what was passed to CKComponentActionSend");
+  XCTAssert(actionContext == context && actionContext2 == context2 && value == expectedValue, @"Contexts should match what was passed to CKActionSend");
 
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
@@ -422,7 +422,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
   CKAction<id, id, id> promotedAction = CKAction<id, id>::promotedFrom<id>(action);
   promotedAction.send(innerComponent, context, context2, @"rick");
   
-  XCTAssert(actionContext == context && actionContext2 == context2, @"Contexts should match what was passed to CKComponentActionSend");
+  XCTAssert(actionContext == context && actionContext2 == context2, @"Contexts should match what was passed to CKActionSend");
   
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
@@ -452,7 +452,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
   UIView *rootView = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil).mountedComponents;
 
-  CKComponentActionSend(@selector(testAction:context:), innerComponent, nullptr);
+  CKActionSend(@selector(testAction:context:), innerComponent, nullptr);
 
   XCTAssertTrue(outerReceivedTestAction, @"Outer component should have received action sent by inner component");
   XCTAssertFalse(innerReceivedTestAction, @"Inner component should not have received action sent from it");
@@ -485,7 +485,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
   UIView *rootView = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil).mountedComponents;
 
-  CKComponentActionSend(@selector(testAction:context:), innerComponent, nil, CKComponentActionSendBehaviorStartAtSender);
+  CKActionSend(@selector(testAction:context:), innerComponent, nil, CKActionSendBehaviorStartAtSender);
 
   XCTAssertFalse(outerReceivedTestAction, @"Outer component should not have received action since inner component did");
   XCTAssertTrue(innerReceivedTestAction, @"Inner component should have received action");
@@ -507,7 +507,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
    component:innerComponent];
 
   CKAction<id> action { outerComponent, @selector(testAction:context:) };
-  action.send(innerComponent, CKComponentActionSendBehaviorStartAtSender, @"hello");
+  action.send(innerComponent, CKActionSendBehaviorStartAtSender, @"hello");
 
   XCTAssertTrue(calledBlock, @"Outer component should have received the action, even though the components are not mounted.");
 }

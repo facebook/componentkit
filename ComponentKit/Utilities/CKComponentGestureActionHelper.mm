@@ -143,7 +143,7 @@ void CKUnsetComponentActionForGestureRecognizer(UIGestureRecognizer *gRecognizer
   auto mountedView = CKMountedComponentForView(recognizer.view);
   if (mountedView) {
     // If the action can be handled by the sender itself, send it there instead of looking up the chain.
-    CKComponentGestureGetAction(recognizer).send(mountedView, CKComponentActionSendBehaviorStartAtSender, recognizer);
+    CKComponentGestureGetAction(recognizer).send(mountedView, CKActionSendBehaviorStartAtSender, recognizer);
   }
 }
 
