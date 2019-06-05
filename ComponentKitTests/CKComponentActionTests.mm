@@ -14,7 +14,7 @@
 #import <ComponentKitTestHelpers/CKTestActionComponent.h>
 
 #import <ComponentKit/CKBuildComponent.h>
-#import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKAction.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentInternal.h>

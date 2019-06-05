@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/ComponentUtilities.h>
-#import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKAction.h>
 
 struct CKComponentViewConfiguration;
 

@@ -52,7 +52,7 @@
 #import <ComponentKit/CKRatioLayoutComponent.h>
 #import <ComponentKit/CKStaticLayoutComponent.h>
 //Utilities
-#import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKAction.h>
 #import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKComponentGestureActions.h>
 #import <ComponentKit/CKContainerWrapper.h>

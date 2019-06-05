@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKAction.h>
 
 UIGestureRecognizer *CKRecognizerForAction(UIView *view, CKAction<UIGestureRecognizer *> action);
 

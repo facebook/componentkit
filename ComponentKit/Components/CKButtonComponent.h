@@ -13,7 +13,7 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKComponent.h>
-#import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKAction.h>
 #import <ComponentKit/CKContainerWrapper.h>
 
 template <typename V>
