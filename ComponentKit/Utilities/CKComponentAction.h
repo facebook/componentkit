@@ -9,4 +9,4 @@
  */
 
 // this is a temporary file to help with the migration from `CKComponentAction.h` to `CKAction.h`.
-#import "CKAction.h"
+#import <ComponentKit/CKAction.h>
