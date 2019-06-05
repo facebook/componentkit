@@ -161,8 +161,13 @@ public:
   */
   static CKAction<T...> actionForController(CK::RenderContext context, SEL selector) {
     id<CKRenderComponentProtocol> component = (id)context._component;
+#if DEBUG
     CKCAssert([context._component conformsToProtocol:@protocol(CKRenderComponentProtocol)], @"RenderContext contains non render component");
-    return CKAction<T...>(selector, component);
+    std::vector<const char *> typeEncodings;
+    CKActionTypeVectorBuild(typeEncodings, CKActionTypelist<T...>{});
+    _CKTypedComponentDebugCheckComponentScopeHandle(component.scopeHandle, selector, typeEncodings);
+#endif
+    return CKAction<T...>(component.scopeHandle.controller, selector);
   }
 
   /** Like actionFromBlock, but allows passing a block that doesn't take a sender component. */
