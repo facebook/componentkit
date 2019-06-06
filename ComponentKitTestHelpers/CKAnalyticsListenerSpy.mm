@@ -56,7 +56,10 @@
   _didCollectAnimationsHitCount++;
 }
 
-- (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component { _willLayoutComponentTreeHitCount++; }
+- (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component buildTrigger:(CK::Optional<BuildTrigger>)buildTrigger
+{
+  _willLayoutComponentTreeHitCount++;
+}
 - (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component { _didLayoutComponentTreeHitCount++; }
 
 - (void)willBuildComponent:(Class)componentClass {}

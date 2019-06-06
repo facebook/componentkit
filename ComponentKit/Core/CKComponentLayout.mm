@@ -140,7 +140,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    CK::Optional<BuildTrigger> buildTrigger,
                                                    std::unordered_set<CKComponentPredicate> predicates)
 {
-  [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent];
+  [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent buildTrigger:buildTrigger];
   LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectDuplicateComponent(layout);
