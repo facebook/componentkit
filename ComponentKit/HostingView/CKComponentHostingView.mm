@@ -203,7 +203,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     self.containerView.frame = self.bounds;
     const CGSize size = self.bounds.size;
 
-    [self _synchronouslyUpdateComponentIfNeeded];
+    auto const buildTrigger = [self _synchronouslyUpdateComponentIfNeeded];
     const auto mountedComponent = _mountedRootLayout.mapToPtr([](const auto &rootLayout){
       return rootLayout.component();
     });
@@ -212,7 +212,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
       return !CGSizeEqualToSize(rootLayout.size(), size);
     }).valueOr(NO);
     if (mountedComponent != _component || shouldLayoutComponent) {
-      auto const rootLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener);
+      auto const rootLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, buildTrigger);
       [self _applyRootLayout:rootLayout];
     }
     [_containerViewProvider mount];
@@ -379,7 +379,8 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     const auto rootLayout = _enableBackgroundLayout
     ? std::make_shared<CKComponentRootLayout>(CKComputeRootComponentLayout(result->component,
                                                                            {size, size},
-                                                                           inputs->scopeRoot.analyticsListener))
+                                                                           inputs->scopeRoot.analyticsListener,
+                                                                           result->buildTrigger))
     : nullptr;
     dispatch_async(dispatch_get_main_queue(), ^{
       if (!_componentNeedsUpdate) {
@@ -427,16 +428,16 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   [_containerViewProvider setRootLayout:rootLayout];
 }
 
-- (void)_synchronouslyUpdateComponentIfNeeded
+- (CK::Optional<BuildTrigger>)_synchronouslyUpdateComponentIfNeeded
 {
   if (_componentNeedsUpdate == NO || _requestedUpdateMode == CKUpdateModeAsynchronous) {
-    return;
+    return CK::none;
   }
 
   if (_isSynchronouslyUpdatingComponent) {
     CKFailAssert(@"CKComponentHostingView is not re-entrant. This is called by -layoutSubviews, so ensure "
                  "that there is nothing that is triggering a nested call to -layoutSubviews.");
-    return;
+    return CK::none;
   }
 
   _isSynchronouslyUpdatingComponent = YES;
@@ -446,6 +447,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   [self _applyResult:result invalidComponentControllers:[self _invalidComponentControllersWithNewScopeRoot:result.scopeRoot
                                                                                      fromPreviousScopeRoot:_pendingInputs.scopeRoot]];
   _isSynchronouslyUpdatingComponent = NO;
+  return result.buildTrigger;
 }
 
 

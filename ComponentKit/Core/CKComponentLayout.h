@@ -16,9 +16,11 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentAnimationPredicates.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKEqualityHashHelpers.h>
+#import <ComponentKit/CKOptional.h>
 #import <ComponentKit/CKSizeRange.h>
 
 @class CKComponent;
@@ -132,6 +134,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener = nil,
+                                                   CK::Optional<BuildTrigger> buildTrigger = CK::none,
                                                    std::unordered_set<CKComponentPredicate> predicates = CKComponentAnimationPredicates());
 
 /**

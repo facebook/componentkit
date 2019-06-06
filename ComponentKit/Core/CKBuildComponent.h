@@ -12,7 +12,6 @@
 
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
-#import <ComponentKit/CKComponentLayout.h>
 
 @class CKComponentScopeRoot;
 @class CKComponent;
@@ -45,6 +44,7 @@ struct CKBuildComponentResult {
   CKComponent *component;
   CKComponentScopeRoot *scopeRoot;
   CKComponentBoundsAnimation boundsAnimation;
+  BuildTrigger buildTrigger;
 };
 
 /**

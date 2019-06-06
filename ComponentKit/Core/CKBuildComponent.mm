@@ -121,6 +121,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
     .component = component,
     .scopeRoot = newScopeRoot,
     .boundsAnimation = CKBuildComponentHelpers::boundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot),
+    .buildTrigger = buildTrigger,
   };
 }
 

@@ -10,6 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKDataSourceProtocol.h>
 #import <ComponentKit/CKDataSourceStateModifying.h>
 

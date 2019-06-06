@@ -137,6 +137,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener,
+                                                   CK::Optional<BuildTrigger> buildTrigger,
                                                    std::unordered_set<CKComponentPredicate> predicates)
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent];
