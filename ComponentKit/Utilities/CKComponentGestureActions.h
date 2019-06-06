@@ -15,7 +15,7 @@
 #import <ComponentKit/CKComponentGestureActionHelper.h>
 
 /**
- Returns a view attribute that creates and configures a tap gesture recognizer to send the given CKComponentAction.
+ Returns a view attribute that creates and configures a tap gesture recognizer to send the given CKAction.
 
  @param action Sent up the responder chain when a tap occurs. Sender is the component that created the view.
  Context is the gesture recognizer. May be NULL, in which case no action will be sent.
@@ -23,7 +23,7 @@
 CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKAction<UIGestureRecognizer *> action);
 
 /**
- Returns a view attribute that creates and configures a pan gesture recognizer to send the given CKComponentAction.
+ Returns a view attribute that creates and configures a pan gesture recognizer to send the given CKAction.
 
  @param action Sent up the responder chain when a pan occurs. Sender is the component that created the view.
  Context is the gesture recognizer. May be NULL, in which case no action will be sent.
@@ -31,7 +31,7 @@ CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKAction<UIGestureR
 CKComponentViewAttributeValue CKComponentPanGestureAttribute(CKAction<UIGestureRecognizer *> action);
 
 /**
- Returns a view attribute that creates and configures a long press gesture recognizer to send the given CKComponentAction.
+ Returns a view attribute that creates and configures a long press gesture recognizer to send the given CKAction.
 
  @param action Sent up the responder chain when a long press occurs. Sender is the component that created the view.
  Context is the gesture recognizer. May be NULL, in which case no action will be sent.

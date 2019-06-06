@@ -170,10 +170,10 @@
 }
 @end
 
-@interface CKComponentActionTests : XCTestCase
+@interface CKActionTests : XCTestCase
 @end
 
-@implementation CKComponentActionTests
+@implementation CKActionTests
 
 - (void)testSendActionIncludesSenderComponent
 {

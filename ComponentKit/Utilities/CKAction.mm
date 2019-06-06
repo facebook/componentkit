@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKComponentAction.h"
+#import "CKAction.h"
 
 #import <unordered_map>
 #import <vector>
