@@ -59,7 +59,7 @@ static NSString *const oscarWilde = @"Oscar Wilde";
           [UIView class],
           {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}
         }
-        size:{.height = 1/[UIScreen mainScreen].scale}]}
+        size:{.height = 1 / [UIScreen mainScreen].scale}]}
     }]];
   if (c) {
     c->_overlay = overlay;
@@ -74,7 +74,7 @@ static NSString *const oscarWilde = @"Oscar Wilde";
 
 - (void)didTap
 {
-  [self updateState:^(NSNumber *oldState){
+  [self updateState:^(NSNumber *oldState) {
     return [oldState boolValue] ? @NO : @YES;
   } mode:CKUpdateModeSynchronous];
 }
