@@ -74,17 +74,15 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)testChangeAnimationsKeyPaths
 {
-  auto const animations = std::array<CAPropertyAnimation *, 5>{
+  auto const animations = std::array<CAPropertyAnimation *, 4>{
     objCForceCast<CAPropertyAnimation>(alpha().toCA()),
-    objCForceCast<CAPropertyAnimation>(translationY().toCA()),
     objCForceCast<CAPropertyAnimation>(backgroundColor().toCA()),
     objCForceCast<CAPropertyAnimation>(borderColor().toCA()),
     objCForceCast<CAPropertyAnimation>(position().toCA()),
   };
 
-  auto const expectedKeyPaths = std::array<const char *, 5>{
+  auto const expectedKeyPaths = std::array<const char *, 4>{
     "opacity",
-    "transform.translation.y",
     "backgroundColor",
     "borderColor",
     "position"

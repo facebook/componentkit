@@ -335,26 +335,44 @@ namespace CK {
 
     /// Returns an object that can be used to configure an initial animation of the opacity.
     auto alphaFrom(CGFloat from) -> InitialBuilder;
+    /// Returns an object that can be used to configure an initial animation of the relative translation along the X axis.
+    auto translationXFrom(CGFloat from) -> InitialBuilder;
     /// Returns an object that can be used to configure an initial animation of the relative translation along the Y axis.
     auto translationYFrom(CGFloat from) -> InitialBuilder;
     /// Returns an object that can be used to configure an initial animation of the background color.
     auto backgroundColorFrom(UIColor *from) -> InitialBuilder;
     /// Returns an object that can be used to configure an initial animation of the border color.
     auto borderColorFrom(UIColor *from) -> InitialBuilder;
+    /// Returns an object that can be used to configure an initial animation of the scale along the X axis.
+    auto scaleXFrom(CGFloat from) -> InitialBuilder;
+    /// Returns an object that can be used to configure an initial animation of the scale along the Y axis.
+    auto scaleYFrom(CGFloat from) -> InitialBuilder;
+    /// Returns an object that can be used to configure an initial animation of the scale along all 3 axes.
+    auto scaleFrom(CGFloat from) -> InitialBuilder;
+    /// Returns an object that can be used to configure an initial animation of the rotation around the Z axis.
+    auto rotationFrom(CGFloat from) -> InitialBuilder;
 
     /// Returns an object that can be used to configure a final animation of the opacity.
     auto alphaTo(CGFloat to) -> FinalBuilder;
+    /// Returns an object that can be used to configure a final animation of the relative translation along the X axis.
+    auto translationXTo(CGFloat to) -> FinalBuilder;
     /// Returns an object that can be used to configure a final animation of the relative translation along the Y axis.
     auto translationYTo(CGFloat to) -> FinalBuilder;
     /// Returns an object that can be used to configure a final animation of the background color.
     auto backgroundColorTo(UIColor *to) -> FinalBuilder;
     /// Returns an object that can be used to configure a final animation of the border color.
     auto borderColorTo(UIColor *to) -> FinalBuilder;
+    /// Returns an object that can be used to configure an final animation of the scale along the X axis.
+    auto scaleXTo(CGFloat to) -> FinalBuilder;
+    /// Returns an object that can be used to configure an final animation of the scale along the Y axis.
+    auto scaleYTo(CGFloat to) -> FinalBuilder;
+    /// Returns an object that can be used to configure an final animation of the scale along all 3 axes.
+    auto scaleTo(CGFloat to) -> FinalBuilder;
+    /// Returns an object that can be used to configure an final animation of the rotation around the Z axis.
+    auto rotationTo(CGFloat to) -> FinalBuilder;
 
     /// Returns an object that can be used to configure a change animation of the opacity.
     auto alpha() -> ChangeBuilder;
-    /// Returns an object that can be used to configure a change animation of the relative translation along the Y axis.
-    auto translationY() -> ChangeBuilder;
     /// Returns an object that can be used to configure a change animation of the absolute position.
     auto position() -> ChangeBuilder;
     /// Returns an object that can be used to configure a change animation of the background color.
