@@ -191,7 +191,32 @@ CKComponentContextContents CKComponentContextHelper::fetchAll()
   if (!v) {
     return {};
   }
+
   return {
     .objects = [v->_dictionary copy],
   };
+}
+
+NSMutableDictionary<Class, id>* CKComponentInitialValuesContext::setInitialValues(NSDictionary<Class, id> *objects)
+{
+  CKComponentContextValue *const v = contextValue(YES);
+  // Save the old values.
+  auto const oldObjects = v->_dictionary;
+  // Copy the new values.
+  v->_dictionary = [objects mutableCopy];
+  // Move the old values back to the main storage.
+  for (id key in oldObjects) {
+    v->_dictionary[key] = oldObjects[key];
+  }
+  return oldObjects;
+}
+
+void CKComponentInitialValuesContext::cleanInitialValues(NSMutableDictionary<Class, id> *oldObjects)
+{
+  CKComponentContextValue *const v = contextValue(NO);
+  if (!v) {
+    return;
+  }
+  v->_dictionary = oldObjects;
+  clearContextValueIfEmpty(v);
 }

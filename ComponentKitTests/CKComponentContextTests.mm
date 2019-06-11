@@ -263,6 +263,65 @@
   XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, nil);
 }
 
+#pragma mark - Initial Values
+
+- (void)testInitialValues
+{
+  // Verify the value is nil at first.
+  XCTAssertNil(CKComponentContext<NSObject>::get());
+  // Set initial values and make sure the value is available.
+  NSObject *o = [[NSObject alloc] init];
+  NSDictionary<Class, id> *initialValues = @{[NSObject class] : o};
+  {
+    CKComponentInitialValuesContext initialValuesContext(initialValues);
+    XCTAssertEqualObjects(CKComponentContext<NSObject>::get(), o);
+  }
+  // Verify the values have been cleaned.
+  XCTAssertNil(CKComponentContext<NSObject>::get());
+}
+
+- (void)testInitialValuesWithOvrride
+{
+  // Set initial values and make sure the value is available.
+  NSObject *o = [[NSObject alloc] init];
+  NSDictionary<Class, id> *initialValues = @{[NSObject class] : o};
+  {
+    CKComponentInitialValuesContext initialValuesContext(initialValues);
+    XCTAssertEqualObjects(CKComponentContext<NSObject>::get(), o);
+    // Push context with the same key
+    {
+      NSObject *o2 = [[NSObject alloc] init];
+      CKComponentContext<NSObject> context(o2);
+      XCTAssertEqualObjects(CKComponentContext<NSObject>::get(), o2);
+    }
+    // Check that the initial value is being fetched correctly.
+    XCTAssertEqualObjects(CKComponentContext<NSObject>::get(), o);
+  }
+  // Verify the values have been cleaned.
+  XCTAssertNil(CKComponentContextHelper::fetchAll().objects);
+}
+
+- (void)testFetchAllForInitialValues
+{
+  NSObject *o = [[NSObject alloc] init];
+  NSDictionary<Class, id> *initialValues = @{[NSObject class] : o};
+  {
+    // Set initial values
+    CKComponentInitialValuesContext initialValuesContext(initialValues);
+    {
+      // Push context
+      NSString *s = @"1";
+      CKComponentContext<NSString> context(s);
+      NSDictionary *expectedValue = @{[NSObject class]: o, [NSString class]: s};
+      XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValue);
+    }
+    // Verify the initial values are being fetched correctly.
+    XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, initialValues);
+  }
+  // Verify the values have been cleaned.
+  XCTAssertNil(CKComponentContextHelper::fetchAll().objects);
+}
+
 @end
 
 @interface CKComponentConstContextTests : XCTestCase
