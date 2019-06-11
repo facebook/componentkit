@@ -47,11 +47,11 @@ The quote mark is created here:
   // A semi-transparent end quote (") symbol placed below the quote.
   [CKInsetComponent
    ... (omitted) ...],
-  .alignSelf = CKStackLayoutAlignSelfEnd, // Right aligned
+  .alignSelf = CKFlexboxAlignSelfEnd, // Right aligned
 }
 {% endhighlight %}
 
-Delete everything (including the curly braces), so that the `CKStackLayoutComponent` only has a single child. Run the app again and the quote mark is gone!
+Delete everything (including the curly braces), so that the `CKFlexboxComponent` only has a single child. Run the app again and the quote mark is gone!
 
 <img src="/static/images/quote-after.png" width="250" height="431" alt="FrostedQuoteComponent screenshot with quote mark removed">
 
