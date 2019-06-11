@@ -8,9 +8,11 @@ Using Objective-C++ in ComponentKit offers some serious wins in syntax. However 
 Here again is a generic article component:
 
 {% highlight objc %}
-[CKStackLayoutComponent 
- newWithStyle:{
-  .direction = CKStackLayoutComponentDirectionVertical,
+[CKFlexboxComponent
+ newWithView:{}
+ size:{}
+ style:{
+  .direction = CKFlexboxDirectionColumn,
  } 
  children:{
    {[HeaderComponent newWithArticle:article]},
@@ -23,23 +25,25 @@ Here's what it might look like in pure Objective-C:
 
 {: .redhighlight }
 {% highlight objc %}
-[CKStackLayoutComponent newWithStyle:[[CKStackLayoutComponentStyle alloc] initWithDirection:CKStackLayoutComponentDirectionVertical
-                                                                             justifyContent:CKStackLayoutComponentJustifyContentStart
-                                                                                 alignItems:CKStackLayoutComponentAlignItemsStart
-                                                                                    spacing:0]
-                            children:@[
-  [CKStackLayoutComponentChild childWithComponent:[HeaderComponent newWithArticle:article]
-                                       topPadding:0
-                                      leftPadding:0
-                                    bottomPadding:0],
-  [CKStackLayoutComponentChild childWithComponent:[MessageComponent newWithArticle:article]
-                                       topPadding:0
-                                      leftPadding:0
-                                    bottomPadding:0],
-  [CKStackLayoutComponentChild childWithComponent:[FooterComponent newWithArticle:article]
-                                       topPadding:0
-                                      leftPadding:0
-                                    bottomPadding:0]
+[CKFlexboxComponent newWithView:[[UIView alloc] init]
+                           size:CGSizeZero
+                          style:[[CKFlexboxComponentStyle alloc] initWithDirection:CKFlexboxDirectionColumn
+                                                                    justifyContent:CKFlexboxJustifyContentStart
+                                                                        alignItems:CKFlexboxAlignItemsStart
+                                                                           spacing:0.0]
+                       children:@[
+  [CKFlexboxComponentChild childWithComponent:[HeaderComponent newWithArticle:article]
+                                   topPadding:0
+                                  leftPadding:0
+                                bottomPadding:0],
+  [CKFlexboxComponentChild childWithComponent:[MessageComponent newWithArticle:article]
+                                   topPadding:0
+                                  leftPadding:0
+                                bottomPadding:0],
+  [CKFlexboxComponentChild childWithComponent:[FooterComponent newWithArticle:article]
+                                   topPadding:0
+                                  leftPadding:0
+                                bottomPadding:0]
 ]];
 {% endhighlight %}
 
