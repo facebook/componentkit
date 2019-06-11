@@ -50,7 +50,7 @@ Here is a really tangled-up `+new` method that is hard to read, understand, or m
   }
 
   return [self newWithComponent:
-          [CKStackLayoutComponent
+          [CKFlexboxComponent
            newWithChildren:{
              header,
              message,
@@ -66,7 +66,7 @@ Instead, split out logic into separate components:
 {
   // Note how there are NO local variables here at all.
   return [self newWithComponent:
-          [CKStackLayoutComponent
+          [CKFlexboxComponent
            newWithChildren:{
              [ArticleHeaderComponent
               newWithArticle:article
