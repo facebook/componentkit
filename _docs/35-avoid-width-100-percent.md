@@ -19,6 +19,6 @@ Avoid doing this:
 @end
 {% endhighlight %}
 
-Instead, favor an approach using `size:{}` and requiring the parent of `ArtistComponent` to specify its width. For example, if the parent is a `CKStackLayoutComponent`, use `CKStackLayoutAlignItemsStretch` to stretch the component to full width.
+Instead, favor an approach using `size:{}` and requiring the parent of `ArtistComponent` to specify its width. For example, if the parent is a `CKFlexboxComponent`, use `CKFlexboxAlignItemsStretch` to stretch the component to full width.
 
 This keeps components reusable in situations where you don't want them to be 100% of the parent's width.
