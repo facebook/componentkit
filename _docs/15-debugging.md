@@ -47,7 +47,7 @@ This includes layout information like position and size. It is designed to be an
 ~~~
 For View: <UIView: 0x7b249f70; frame = (0 0; 320 355.5); gestureRecognizers = <NSArray: 0x7b544aa0>; layer = <CALayer: 0x7b249fe0>>
 <InteractiveQuoteComponent: 0x7ae6f710>, Position: {0, 0}, Size: {320, 355.5}
-| <CKStackLayoutComponent: 0x7ae6f670>, Position: {0, 0}, Size: {320, 355.5}
+| <CKFlexboxComponent: 0x7ae6f670>, Position: {0, 0}, Size: {320, 355.5}
 | | <MonochromeQuoteComponent: 0x7ae6f380>, Position: {0, 0}, Size: {320, 355}
 | | | <QuoteBackgroundComponent: 0x7ae6f330>, Position: {0, 0}, Size: {320, 355}
 | | | | <CKBackgroundLayoutComponent: 0x7ae6f2e0>, Position: {0, 0}, Size: {320, 355}
@@ -55,7 +55,7 @@ For View: <UIView: 0x7b249f70; frame = (0 0; 320 355.5); gestureRecognizers = <N
 | | | | | <CKInsetComponent: 0x7ae6d6c0>, Position: {0, 0}, Size: {320, 355}
 | | | | | | <CKBackgroundLayoutComponent: 0x7ae6d670>, Position: {0, 40}, Size: {280, 275}
 | | | | | | | <CKComponent: 0x7ae6d620>, Position: {0, 0}, Size: {280, 275}
-| | | | | | | <CKStackLayoutComponent: 0x7ae6d4b0>, Position: {0, 0}, Size: {280, 275}
+| | | | | | | <CKFlexboxComponent: 0x7ae6d4b0>, Position: {0, 0}, Size: {280, 275}
 | | | | | | | | <CKComponent: 0x7ae6b500>, Position: {10, 0}, Size: {20, 40}
 | | | | | | | | <CKInsetComponent: 0x7ae6d450>, Position: {30, 0}, Size: {250, 275}
 | | | | | | | | | <CKLabelComponent: 0x7ae6d400>, Position: {20, 50}, Size: {210, 175}
