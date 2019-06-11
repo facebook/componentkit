@@ -11,10 +11,10 @@ Avoid creating sub-components in `static` helper functions.
                     subtitle:(NSString *)subtitle
 {
   return [super newWithComponent:
-          [CKStackLayoutComponent
+          [CKFlexboxComponent
            newWithView:{}
            size:{}
-           style:{.alignItems = CKStackLayoutAlignItemsStretch}
+           style:{.alignItems = CKFlexboxAlignItemsStretch}
            children:{
              {textComponent(title, [UIFont boldSystemFontOfSize:17])},
              {textComponent(subtitle, [UIFont systemFontOfSize:15])},
@@ -43,10 +43,10 @@ Instead, break out a separate `CKCompositeComponent`. This keeps components read
                     subtitle:(NSString *)subtitle
 {
   return [super newWithComponent:
-          [CKStackLayoutComponent
+          [CKFlexboxComponent
            newWithView:{}
            size:{}
-           style:{.alignItems = CKStackLayoutAlignItemsStretch}
+           style:{.alignItems = CKFlexboxAlignItemsStretch}
            children:{
              {[AETextComponent
                newWithString:title
