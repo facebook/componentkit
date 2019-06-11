@@ -25,7 +25,7 @@ Avoid excessive branching in component code; it hurts readability.
   }
 
   return [super newWithComponent:
-          [CKStackLayoutComponent
+          [CKFlexboxComponent
            newWithView:{}
            size:{}
            style:{}
@@ -45,7 +45,7 @@ If you find yourself branching too much, consider separating your component into
 + (instancetype)newWithArticle:(Article *)article
 {
   return [super newWithComponent:
-          [CKStackLayoutComponent
+          [CKFlexboxComponent
            newWithView:{}
            size:{}
            style:{}
