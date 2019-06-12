@@ -334,12 +334,12 @@ namespace CKRender {
     return node;
   }
 
-  auto buildComponentTreeWithMultiChild(id<CKRenderWithChildrenComponentProtocol> component,
-                                        id<CKTreeNodeWithChildrenProtocol> parent,
-                                        id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                        const CKBuildComponentTreeParams &params,
-                                        BOOL parentHasStateUpdate,
-                                        BOOL isBridgeComponent) -> id<CKTreeNodeProtocol>
+  auto buildComponentTreeWithChildren(id<CKRenderWithChildrenComponentProtocol> component,
+                                      id<CKTreeNodeWithChildrenProtocol> parent,
+                                      id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                      const CKBuildComponentTreeParams &params,
+                                      BOOL parentHasStateUpdate,
+                                      BOOL isBridgeComponent) -> id<CKTreeNodeProtocol>
   {
     auto const node = [[CKRenderTreeNodeWithChildren alloc]
                        initWithComponent:component

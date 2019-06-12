@@ -94,12 +94,12 @@ namespace CKRender {
           when they are being created they don't mark the `hasRenderComponentInTree` flag in the thread local store as well.
           Default value is `NO`.
    */
-  auto buildComponentTreeWithMultiChild(id<CKRenderWithChildrenComponentProtocol> component,
-                                        id<CKTreeNodeWithChildrenProtocol> parent,
-                                        id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                        const CKBuildComponentTreeParams &params,
-                                        BOOL parentHasStateUpdate,
-                                        BOOL isBridgeComponent = NO) -> id<CKTreeNodeProtocol>;
+  auto buildComponentTreeWithChildren(id<CKRenderWithChildrenComponentProtocol> component,
+                                      id<CKTreeNodeWithChildrenProtocol> parent,
+                                      id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                      const CKBuildComponentTreeParams &params,
+                                      BOOL parentHasStateUpdate,
+                                      BOOL isBridgeComponent = NO) -> id<CKTreeNodeProtocol>;
 
   /**
    Builds a leaf node for a leaf component in the tree.

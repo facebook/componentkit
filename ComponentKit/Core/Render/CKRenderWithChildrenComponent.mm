@@ -39,7 +39,7 @@
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
-  auto const node = CKRender::buildComponentTreeWithMultiChild(self, parent, previousParent, params, parentHasStateUpdate);
+  auto const node = CKRender::buildComponentTreeWithChildren(self, parent, previousParent, params, parentHasStateUpdate);
   auto const viewConfiguration = [self viewConfigurationWithState:node.state];
   if (!viewConfiguration.isDefaultConfiguration()) {
     [self setViewConfiguration:viewConfiguration];
