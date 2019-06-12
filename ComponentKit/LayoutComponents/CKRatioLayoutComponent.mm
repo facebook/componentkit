@@ -32,7 +32,7 @@
   if (ratio <= 0 || component == nil) {
     return nil;
   }
-  CKComponentPerfScope prefScope(self);
+  CKComponentPerfScope perfScope(self);
   CKRatioLayoutComponent *c = [self newWithView:{} size:size];
   if (c) {
     c->_ratio = ratio;

@@ -26,7 +26,7 @@
  Example usage:
  + (instancetype)newWithModel:(Model *)model
  {
-    CKComponentPerfScope prefScope(self);
+    CKComponentPerfScope perfScope(self);
     return [super newWithComponent:...];
  }
  */

@@ -58,7 +58,7 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
   if (component == nil) {
     return nil;
   }
-  CKComponentPerfScope prefScope(self);
+  CKComponentPerfScope perfScope(self);
   CKInsetComponent *c = [super newWithView:view size:{}];
   if (c) {
     c->_insets = insets;

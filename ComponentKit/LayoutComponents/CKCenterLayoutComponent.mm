@@ -28,7 +28,7 @@
                                   child:(CKComponent *)child
                                    size:(const CKComponentSize &)size
 {
-  CKComponentPerfScope prefScope(self);
+  CKComponentPerfScope perfScope(self);
   CKCenterLayoutComponent *c = [super newWithView:{} size:size];
   if (c) {
     c->_centeringOptions = centeringOptions;

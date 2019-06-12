@@ -28,7 +28,7 @@
   if (component == nil) {
     return nil;
   }
-  CKComponentPerfScope prefScope(self);
+  CKComponentPerfScope perfScope(self);
   CKBackgroundLayoutComponent *c = [super newWithView:{} size:{}];
   if (c) {
     c->_component = component;

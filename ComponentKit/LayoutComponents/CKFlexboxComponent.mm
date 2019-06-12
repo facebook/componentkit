@@ -71,7 +71,7 @@ template class std::vector<CKFlexboxComponentChild>;
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
           usesDeepYogaTrees:(BOOL)usesDeepYogaTrees
 {
-  CKComponentPerfScope prefScope(self);
+  CKComponentPerfScope perfScope(self);
   auto const component = [super newWithView:view size:size];
   if (component) {
     component->_style = style;
