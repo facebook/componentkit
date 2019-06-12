@@ -27,8 +27,6 @@
 struct CKComponentHostingViewOptions {
   /// If set to YES, allows taps to pass though this hosting view to views behind it. Default NO.
   BOOL allowTapPassthrough;
-  /// Layout will be calculated in background thread when async update is scheduled.
-  BOOL enableBackgroundLayout = CKReadGlobalConfig().enableBackgroundLayoutInHostingView;
   /// A initial size that will be used for hosting view before first generation of component is created.
   /// Specifying a initial size enables the ability to handle the first model/context update asynchronously.
   CK::Optional<CGSize> initialSize;

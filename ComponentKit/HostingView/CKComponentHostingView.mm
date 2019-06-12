@@ -67,7 +67,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   BOOL _isSynchronouslyUpdatingComponent;
   BOOL _isMountingComponent;
   BOOL _allowTapPassthrough;
-  BOOL _enableBackgroundLayout;
 
   CK::Optional<CGSize> _initialSize;
 }
@@ -155,7 +154,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     };
 
     _allowTapPassthrough = options.allowTapPassthrough;
-    _enableBackgroundLayout = options.enableBackgroundLayout;
     _containerViewProvider =
     [[CKComponentHostingContainerViewProvider alloc]
      initWithFrame:CGRectZero
@@ -363,7 +361,9 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   }
 
   const auto inputs = std::make_shared<const CKComponentHostingViewInputs>(_pendingInputs);
-  const auto size = self.bounds.size;
+  // We only layout component in background thread for first generation of component when there is an initial size.
+  const auto shouldLayoutComponent = _initialSize.hasValue() && !_component;
+  const auto size = _initialSize.valueOr(self.bounds.size);
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     const auto result =
     std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
@@ -376,7 +376,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     const auto invalidComponentControllers =
     std::make_shared<const std::vector<CKComponentController *>>([self _invalidComponentControllersWithNewScopeRoot:result->scopeRoot
                                                                                               fromPreviousScopeRoot:inputs->scopeRoot]);
-    const auto rootLayout = _enableBackgroundLayout
+    const auto rootLayout = shouldLayoutComponent
     ? std::make_shared<CKComponentRootLayout>(CKComputeRootComponentLayout(result->component,
                                                                            {size, size},
                                                                            inputs->scopeRoot.analyticsListener,
@@ -396,11 +396,16 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
         [self _applyResult:*result invalidComponentControllers:componentControllers];
         // Layout will be applied if the size of hosting view is not changed during layout calculation in backgorund.
         // Otherwise layout will be re-calculated on the main thread in `layoutSubviews`.
+        BOOL didApplyLayout = NO;
         if (rootLayout != nullptr && CGSizeEqualToSize(self.bounds.size, size)) {
           [self _applyRootLayout:*rootLayout];
+          didApplyLayout = YES;
         }
         [self setNeedsLayout];
-        [_delegate componentHostingViewDidInvalidateSize:self];
+        // We don't need to notify size change if we calculated component layout based on initial size.
+        if (!didApplyLayout) {
+          [_delegate componentHostingViewDidInvalidateSize:self];
+        }
       } else {
         [self _scheduleAsynchronousUpdate];
       }
