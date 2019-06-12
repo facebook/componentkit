@@ -146,9 +146,9 @@ namespace CKRenderInternal {
     return NO;
   }
 
-  static auto willBuildComponentTreeWithSingleChild(id<CKTreeNodeProtocol> node,
-                                                    id<CKTreeNodeComponentProtocol> component,
-                                                    const CKBuildComponentTreeParams &params) -> void {
+  static auto willBuildComponentTreeWithChild(id<CKTreeNodeProtocol> node,
+                                              id<CKTreeNodeComponentProtocol> component,
+                                              const CKBuildComponentTreeParams &params) -> void {
     // Context support
     CKComponentContextHelper::willBuildComponentTree(component);
 
@@ -159,9 +159,9 @@ namespace CKRenderInternal {
     [params.systraceListener willBuildComponent:component.class];
   }
 
-  static auto didBuildComponentTreeWithSingleChild(id<CKTreeNodeProtocol> node,
-                                                   id<CKTreeNodeComponentProtocol> component,
-                                                   const CKBuildComponentTreeParams &params) -> void {
+  static auto didBuildComponentTreeWithChild(id<CKTreeNodeProtocol> node,
+                                             id<CKTreeNodeComponentProtocol> component,
+                                             const CKBuildComponentTreeParams &params) -> void {
     // Context support
     CKComponentContextHelper::didBuildComponentTree(component);
 
@@ -276,14 +276,14 @@ namespace CKRender {
     }
   }
 
-  auto buildComponentTreeWithSingleChild(id<CKRenderWithChildComponentProtocol> component,
-                                         __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                                         id<CKTreeNodeWithChildrenProtocol> parent,
-                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                         const CKBuildComponentTreeParams &params,
-                                         BOOL parentHasStateUpdate,
-                                         BOOL isBridgeComponent,
-                                         CKRenderDidReuseComponentBlock didReuseBlock) -> id<CKTreeNodeProtocol>
+  auto buildComponentTreeWithChild(id<CKRenderWithChildComponentProtocol> component,
+                                   __strong id<CKTreeNodeComponentProtocol> *childComponent,
+                                   id<CKTreeNodeWithChildrenProtocol> parent,
+                                   id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                   const CKBuildComponentTreeParams &params,
+                                   BOOL parentHasStateUpdate,
+                                   BOOL isBridgeComponent,
+                                   CKRenderDidReuseComponentBlock didReuseBlock) -> id<CKTreeNodeProtocol>
   {
     CKCAssert(component, @"component cannot be nil");
 
@@ -295,12 +295,12 @@ namespace CKRender {
                        stateUpdates:params.stateUpdates];
 
     if (!isBridgeComponent) {
-      CKRenderInternal::willBuildComponentTreeWithSingleChild(node, component, params);
+      CKRenderInternal::willBuildComponentTreeWithChild(node, component, params);
     }
 
     // Faster state/props optimizations require previous parent.
     if (!isBridgeComponent && CKRenderInternal::reusePreviousComponentForSingleChild(node, component, childComponent, parent, previousParent, params, parentHasStateUpdate, didReuseBlock)) {
-      CKRenderInternal::didBuildComponentTreeWithSingleChild(node, component, params);
+      CKRenderInternal::didBuildComponentTreeWithChild(node, component, params);
       return node;
     }
 
@@ -328,7 +328,7 @@ namespace CKRender {
 
     if (!isBridgeComponent) {
       [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
-      CKRenderInternal::didBuildComponentTreeWithSingleChild(node, component, params);
+      CKRenderInternal::didBuildComponentTreeWithChild(node, component, params);
     }
 
     return node;

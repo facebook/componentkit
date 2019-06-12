@@ -71,7 +71,7 @@
 
 #pragma mark - CKRenderTreeNodeWithChildren
 
-- (void)test_childForComponentKey_onCKRenderTreeNodeWithChildren_withSingleChild {
+- (void)test_childForComponentKey_onCKRenderTreeNodeWithChildren_withChild {
   // Simulate first component tree creation
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKRenderTreeNodeWithChildren *root1 = [[CKRenderTreeNodeWithChildren alloc] init];
@@ -95,7 +95,7 @@
   XCTAssertTrue(verifyChildToParentConnection(root2, childNode2, component2));
 }
 
-- (void)test_nodeIdentifier_onCKRenderTreeNodeWithChildren_betweenGenerations_withSingleChild {
+- (void)test_nodeIdentifier_onCKRenderTreeNodeWithChildren_betweenGenerations_withChild {
   // Simulate first component tree creation
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKRenderTreeNodeWithChildren *root1 = [[CKRenderTreeNodeWithChildren alloc] init];

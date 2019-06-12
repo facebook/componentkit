@@ -73,14 +73,14 @@ namespace CKRender {
           Default value is `NO`.
    @param didReuseBlock Will be called in case that the component from the previous generation has been reused.
    */
-  auto buildComponentTreeWithSingleChild(id<CKRenderWithChildComponentProtocol> component,
-                                         __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                                         id<CKTreeNodeWithChildrenProtocol> parent,
-                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                         const CKBuildComponentTreeParams &params,
-                                         BOOL parentHasStateUpdate,
-                                         BOOL isBridgeComponent = NO,
-                                         CKRenderDidReuseComponentBlock didReuseBlock = nil) -> id<CKTreeNodeProtocol>;
+  auto buildComponentTreeWithChild(id<CKRenderWithChildComponentProtocol> component,
+                                   __strong id<CKTreeNodeComponentProtocol> *childComponent,
+                                   id<CKTreeNodeWithChildrenProtocol> parent,
+                                   id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                   const CKBuildComponentTreeParams &params,
+                                   BOOL parentHasStateUpdate,
+                                   BOOL isBridgeComponent = NO,
+                                   CKRenderDidReuseComponentBlock didReuseBlock = nil) -> id<CKTreeNodeProtocol>;
 
   /**
    Builds a component tree for the input *render* component having children components.
