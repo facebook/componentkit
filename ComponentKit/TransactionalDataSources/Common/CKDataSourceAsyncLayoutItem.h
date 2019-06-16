@@ -29,8 +29,7 @@
  */
 @interface CKDataSourceAsyncLayoutItem : CKDataSourceItem
 
-- (instancetype)initWithQueue:(dispatch_queue_t)queue
-                          qos:(CKDataSourceQOS)qos
+- (instancetype)initWithQueue:(NSOperationQueue *)queue
                  previousRoot:(CKComponentScopeRoot *)previousRoot
                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                     sizeRange:(const CKSizeRange &)sizeRange

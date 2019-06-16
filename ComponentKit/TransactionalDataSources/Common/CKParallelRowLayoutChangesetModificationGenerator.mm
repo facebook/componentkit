@@ -16,6 +16,7 @@
 #import "CKDataSourceModificationHelper.h"
 #import "CKDataSourceQOSHelper.h"
 
+
 @interface CKParallelRowLayoutChangesetModification : CKDataSourceChangesetModification <CKDataSourceChangesetModificationItemGenerator>
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
@@ -28,8 +29,18 @@
 
 @implementation CKParallelRowLayoutChangesetModification
 {
-  dispatch_queue_t _workQueue;
-  CKDataSourceQOS _workQos;
+  NSOperationQueue *_queue;
+}
+
+static NSOperationQualityOfService _operationQosFromDataSourceQOS(CKDataSourceQOS qos) {
+  switch (qos) {
+    case CKDataSourceQOSUserInteractive:
+      return NSOperationQualityOfServiceUserInteractive;
+    case CKDataSourceQOSUserInitiated:
+      return NSOperationQualityOfServiceUserInitiated;
+    case CKDataSourceQOSDefault:
+      return NSOperationQualityOfServiceUtility;
+  }
 }
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
@@ -39,8 +50,10 @@
                         workQueue:(dispatch_queue_t)workQueue
 {
   if (self = [super initWithChangeset:changeset stateListener:stateListener userInfo:userInfo qos:qos]) {
-    _workQueue = workQueue;
-    _workQos = qos;
+    _queue = [NSOperationQueue new];
+    _queue.underlyingQueue = workQueue;
+    _queue.qualityOfService = _operationQosFromDataSourceQOS(qos);
+    _queue.maxConcurrentOperationCount = [NSProcessInfo processInfo].activeProcessorCount - 1;
     [self setItemGenerator:self];
   }
   return self;
@@ -54,8 +67,7 @@
                                                  context:(id)context
                                                 itemType:(CKDataSourceChangesetModificationItemType)itemType
 {
-  auto item = [[CKDataSourceAsyncLayoutItem alloc] initWithQueue:_workQueue
-                                                             qos:_workQos
+  auto item = [[CKDataSourceAsyncLayoutItem alloc] initWithQueue:_queue
                                                     previousRoot:previousRoot
                                                     stateUpdates:stateUpdates
                                                        sizeRange:sizeRange

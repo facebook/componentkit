@@ -20,9 +20,9 @@
 
 @implementation CKDataSourceAsyncLayoutItem
 {
+  std::atomic<BOOL> _hasScheduledLayout;
   std::atomic<BOOL> _hasStartedLayout;
-  dispatch_queue_t _queue;
-  CKDataSourceQOS _qos;
+  NSOperationQueue *_queue;
 
   std::atomic<BOOL> _isFinished;
   std::mutex _waitOnLayoutMutex;
@@ -37,8 +37,7 @@
   id _context;
 }
 
-- (instancetype)initWithQueue:(dispatch_queue_t)queue
-                          qos:(CKDataSourceQOS)qos
+- (instancetype)initWithQueue:(NSOperationQueue *)queue
                  previousRoot:(CKComponentScopeRoot *)previousRoot
                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                     sizeRange:(const CKSizeRange &)sizeRange
@@ -48,9 +47,9 @@
 {
   if(self = [self initWithModel:model scopeRoot:previousRoot]) {
     _isFinished = NO;
+    _hasScheduledLayout = NO;
     _hasStartedLayout = NO;
     _queue = queue;
-    _qos = qos;
     _previousRoot = previousRoot;
     _stateUpdateMap = stateUpdates;
     _sizeRange = sizeRange;
@@ -64,14 +63,15 @@
 
 - (void)beginLayout
 {
-  if (!_hasStartedLayout.exchange(YES)) {
-   _waitOnLayoutMutex.lock();
-   dispatch_async(_queue, blockUsingDataSourceQOS(^{
-      auto item = CKBuildDataSourceItem(_previousRoot, _stateUpdateMap, _sizeRange, _configuration, _model, _context);
-      _item = item;
-      _isFinished = YES;
-      _waitOnLayoutMutex.unlock();
-    }, _qos));
+  if (!_hasStartedLayout && !_hasScheduledLayout.exchange(YES)) {
+    [_queue addOperationWithBlock:^{
+      if(!_hasStartedLayout.exchange(YES)) {
+        std::lock_guard<std::mutex> l(_waitOnLayoutMutex);
+        auto item = CKBuildDataSourceItem(_previousRoot, _stateUpdateMap, _sizeRange, _configuration, _model, _context);
+        _item = item;
+        _isFinished = YES;
+      }
+    }];
   }
 }
 
@@ -88,6 +88,11 @@
 - (CKDataSourceItem *)_getItemSync
 {
   if (_isFinished == YES) {
+    return _item;
+  } else if(!_hasStartedLayout.exchange(YES)) {
+    auto item = CKBuildDataSourceItem(_previousRoot, _stateUpdateMap, _sizeRange, _configuration, _model, _context);
+    _item = item;
+    _isFinished = YES;
     return _item;
   } else {
     [_systraceListener willBlockThreadOnGeneratingItemLayout];
