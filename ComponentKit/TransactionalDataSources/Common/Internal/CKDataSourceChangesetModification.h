@@ -51,6 +51,7 @@ typedef NS_ENUM(NSUInteger, CKDataSourceChangesetModificationItemType) {
 
 - (void)setItemGenerator:(id<CKDataSourceChangesetModificationItemGenerator>)itemGenerator;
 - (BOOL)shouldSortInsertedItems;
+- (BOOL)shouldSortUpdatedItems;
 
 @end
 

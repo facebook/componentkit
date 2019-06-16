@@ -71,6 +71,11 @@ using namespace CKComponentControllerHelper;
   return NO;
 }
 
+- (BOOL)shouldSortUpdatedItems
+{
+  return NO;
+}
+
 - (void)setItemGenerator:(id<CKDataSourceChangesetModificationItemGenerator>)itemGenerator
 {
   _itemGenerator = itemGenerator;
@@ -91,16 +96,15 @@ using namespace CKComponentControllerHelper;
 
   // Update items
   NSDictionary<NSIndexPath *, id> *const updatedItems = [_changeset updatedItems];
-  [updatedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
-    if (indexPath.section >= newSections.count) {
-      CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeUpdate),
-                           @"Invalid section: %lu (>= %lu). Changeset: %@, user info: %@, state: %@",
-                           (unsigned long)indexPath.section,
-                           (unsigned long)newSections.count,
-                           _changeset,
-                           _userInfo,
-                           oldState);
-    }
+  void(^processUpdatedItem)(NSIndexPath *indexPath, id model) = ^(NSIndexPath *indexPath, id model) {if (indexPath.section >= newSections.count) {
+    CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeUpdate),
+                         @"Invalid section: %lu (>= %lu). Changeset: %@, user info: %@, state: %@",
+                         (unsigned long)indexPath.section,
+                         (unsigned long)newSections.count,
+                         _changeset,
+                         _userInfo,
+                         oldState);
+  }
     NSMutableArray *const section = newSections[indexPath.section];
     if (indexPath.item >= section.count) {
       CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeUpdate),
@@ -125,7 +129,18 @@ using namespace CKComponentControllerHelper;
                                                                                                    &CKComponentControllerInvalidateEventPredicate)) {
       [invalidComponentControllers addObject:componentController];
     }
-  }];
+  };
+  if ([self shouldSortUpdatedItems]) {
+    NSArray *sortedKeys = [[updatedItems allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    for (NSIndexPath *indexPath in sortedKeys) {
+      id model = updatedItems[indexPath];
+      processUpdatedItem(indexPath, model);
+    }
+  } else {
+    [updatedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, id model, BOOL *stop) {
+      processUpdatedItem(indexPath, model);
+    }];
+  }
 
   __block std::unordered_map<NSUInteger, std::map<NSUInteger, CKDataSourceItem *>> insertedItemsBySection;
   __block std::unordered_map<NSUInteger, NSMutableIndexSet *> removedItemsBySection;
