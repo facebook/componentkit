@@ -71,6 +71,11 @@
   return YES;
 }
 
+- (BOOL)shouldSortUpdatedItems
+{
+  return YES;
+}
+
 @end
 
 @implementation CKParallelRowLayoutChangesetModificationGenerator
