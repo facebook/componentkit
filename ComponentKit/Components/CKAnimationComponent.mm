@@ -1,19 +1,12 @@
 // Copyright 2004-present Facebook. All Rights Reserved.
 
 #import "CKAnimationComponent.h"
+#import "CKAnimationComponent+Internal.h"
 
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentSubclass.h>
 
 @interface CKAnimationComponentPassthroughView: UIView
-@end
-
-@interface CKAnimationComponent ()
-
-+ (instancetype)newWithComponent:(CKComponent *)component
-         animationOnInitialMount:(CAAnimation *)animationOnInitialMount
-           animationOnFinalMount:(CAAnimation *)animationOnFinalUnmount;
-
 @end
 
 @implementation CKAnimationComponent {
@@ -26,7 +19,7 @@
 {
   return [self newWithComponent:component
         animationOnInitialMount:initial.toCA()
-          animationOnFinalMount:nil];
+        animationOnFinalUnmount:nil];
 }
 
 + (instancetype)newWithComponent:(CKComponent *)component
@@ -34,7 +27,7 @@
 {
   return [self newWithComponent:component
         animationOnInitialMount:nil
-          animationOnFinalMount:final.toCA()];
+        animationOnFinalUnmount:final.toCA()];
 }
 
 + (instancetype)newWithComponent:(CKComponent *)component
@@ -43,12 +36,12 @@
 {
   return [self newWithComponent:component
         animationOnInitialMount:initial.toCA()
-          animationOnFinalMount:final.toCA()];
+        animationOnFinalUnmount:final.toCA()];
 }
 
 + (instancetype)newWithComponent:(CKComponent *)component
          animationOnInitialMount:(CAAnimation *)animationOnInitialMount
-           animationOnFinalMount:(CAAnimation *)animationOnFinalUnmount
+         animationOnFinalUnmount:(CAAnimation *)animationOnFinalUnmount
 {
   if (component == nil) {
     return nil;
