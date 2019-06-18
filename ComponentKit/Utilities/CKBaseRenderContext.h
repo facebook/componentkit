@@ -14,15 +14,17 @@ template<typename...>
 class CKAction;
 
 namespace CK {
-  class RenderContext {
+  class BaseRenderContext {
+
+  protected:
     id<CKComponentProtocol> _component;
 
   public:
-    RenderContext(const id<CKComponentProtocol> component): _component(component) {}
-    RenderContext(): _component(nullptr) {}
+    BaseRenderContext(const id<CKComponentProtocol> component): _component(component) {}
+    BaseRenderContext(): _component(nullptr) {}
 
     template <typename Component>
-    friend inline auto component(const RenderContext &context) -> Component;
+    friend inline auto component(const BaseRenderContext &context) -> Component;
 
     template<typename...>
     friend class ::CKAction;
