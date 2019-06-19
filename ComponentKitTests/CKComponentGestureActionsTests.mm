@@ -50,7 +50,7 @@
 
   attr.first.applicator(view, attr.second);
   UITapGestureRecognizer *recognizer = [view.gestureRecognizers firstObject];
-  XCTAssertEqual([recognizer ck_componentAction].selector(), @selector(test), @"Expected ck_componentAction to be set on the GR");
+  XCTAssertEqual(CKComponentGestureGetAction(recognizer).selector(), @selector(test), @"Expected ck_componentAction to be set on the GR");
 
   attr.first.unapplicator(view, attr.second);
 }
@@ -62,7 +62,7 @@
   CKFakeActionComponent *fakeParentComponent = [CKFakeActionComponent new];
   [[[mockComponent stub] andReturn:fakeParentComponent] nextResponder];
   [[[mockComponent stub] andReturn:fakeParentComponent] targetForAction:[OCMArg anySelector] withSender:[OCMArg any]];
-  view.ck_component = mockComponent;
+  CKSetMountedComponentForView(view, mockComponent);
 
   CKComponentViewAttributeValue attr = CKComponentTapGestureAttribute(@selector(test:));
   attr.first.applicator(view, attr.second);
@@ -109,7 +109,7 @@
   CKFakeActionComponent *fakeParentComponent = [CKFakeActionComponent new];
   [[[mockComponent stub] andReturn:fakeParentComponent] nextResponder];
   [[[mockComponent stub] andReturn:fakeParentComponent] targetForAction:[OCMArg anySelector] withSender:[OCMArg any]];
-  view.ck_component = mockComponent;
+  CKSetMountedComponentForView(view, mockComponent);
 
   CKComponentViewAttributeValue attr = CKComponentGestureAttribute([UIPanGestureRecognizer class], nullptr, @selector(test:), {@selector(gestureRecognizerShouldBegin:)});
   attr.first.applicator(view, attr.second);
@@ -129,7 +129,7 @@
   CKFakeActionComponent *fakeParentComponent = [CKFakeActionComponent new];
   [[[mockComponent stub] andReturn:fakeParentComponent] nextResponder];
   [[[mockComponent stub] andReturn:fakeParentComponent] targetForAction:[OCMArg anySelector] withSender:[OCMArg any]];
-  view.ck_component = mockComponent;
+  CKSetMountedComponentForView(view, mockComponent);
 
   CKComponentViewAttributeValue attr = CKComponentGestureAttribute([UIPanGestureRecognizer class], nullptr, @selector(test:));
   attr.first.applicator(view, attr.second);
@@ -163,7 +163,7 @@
 
   attr2.first.applicator(view, attr2.second);
   UITapGestureRecognizer *recognizer = [view.gestureRecognizers firstObject];
-  XCTAssert([recognizer ck_componentAction] == action2, @"Expected ck_componentAction to be set on the GR");
+  XCTAssert(CKComponentGestureGetAction(recognizer) == action2, @"Expected ck_componentAction to be set on the GR");
   attr2.first.unapplicator(view, attr2.second);
 }
 

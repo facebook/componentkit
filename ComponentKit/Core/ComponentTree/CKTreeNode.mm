@@ -45,7 +45,8 @@
     _component = component;
 
     Class componentClass = [component class];
-    _componentKey = [parent createComponentKeyForChildWithClass:componentClass];
+    _componentKey = [self createComponentKeyForComponent:component parent:parent componentClass:componentClass];
+
     CKTreeNode *previousNode = [previousParent childForComponentKey:_componentKey];
 
     if (previousNode) {
@@ -89,6 +90,10 @@
 
     // Set the link between the tree node and the scope handle.
     [_handle setTreeNodeIdentifier:_nodeIdentifier];
+
+#if DEBUG
+    [component acquireTreeNode:self];
+#endif
   }
   return self;
 }
@@ -124,6 +129,13 @@
   // For CKComponent, we bridge a `nil` initial state to `CKTreeNodeEmptyState`.
   // The base initializer will create a scope handle for the component only if the initial state is different than `CKTreeNodeEmptyState`.
   return [[component class] initialState] ?: [CKTreeNodeEmptyState emptyState];
+}
+
+- (CKTreeNodeComponentKey)createComponentKeyForComponent:(id<CKTreeNodeComponentProtocol>)component
+                                                  parent:(id<CKTreeNodeWithChildrenProtocol>)parent
+                                          componentClass:(Class<CKTreeNodeComponentProtocol>)componentClass
+{
+  return [parent createComponentKeyForChildWithClass:componentClass identifier:nil];
 }
 
 // For non-render comopnents, we don't need to check this code as the comopnent creates its scope handle.

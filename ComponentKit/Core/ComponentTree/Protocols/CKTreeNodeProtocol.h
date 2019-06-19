@@ -17,6 +17,18 @@
 
 @protocol CKSystraceListener;
 
+/*
+ Will be used to gather information reagrding reused components during debug only.
+ */
+struct CKTreeNodeReuseInfo {
+  CKTreeNodeIdentifier parentNodeIdentifier;
+  Class klass;
+  Class parentKlass;
+  NSUInteger reuseCounter;
+};
+
+typedef std::unordered_map<CKTreeNodeIdentifier, CKTreeNodeReuseInfo> CKTreeNodeReuseMap;
+
 /**
  Params struct for the `buildComponentTree:` method.
  **/
@@ -34,17 +46,17 @@ struct CKBuildComponentTreeParams {
   // @discussion "Dirty nodes" are used to implement optimizations as faster state updates and faster props updates.
   const CKTreeNodeDirtyIds &treeNodeDirtyIds;
 
-  //  Enable faster props updates optimization for render components.
-  BOOL enableFasterPropsUpdates = NO;
-
-  // Enable view configuration with state for render components.
-  BOOL enableViewConfigurationWithState = NO;
-
   // The trigger for initiating a new generation
   BuildTrigger buildTrigger;
 
-  /** The current systrace listener. Can be nil if systrace is not enabled. */
+  // The current systrace listener. Can be nil if systrace is not enabled.
   id<CKSystraceListener> systraceListener;
+
+  // When enabled, all the comopnents will be regenerated (no component reuse optimiztions).
+  BOOL ignoreComponentReuseOptimizations = NO;
+  
+  // When enabled, we will cache the layout in render components and reuse it during a component reuse. */
+  BOOL enableLayoutCache = NO;
 };
 
 @protocol CKTreeNodeWithChildrenProtocol;
@@ -74,6 +86,18 @@ struct CKBuildComponentTreeParams {
 /** Returns true if the component requires scope handle */
 + (BOOL)requiresScopeHandle;
 
+#if DEBUG
+// These two methods are in DEBUG only in order to save memory.
+// Once we build the component tree (by calling `buildComponentTree:`) by default,
+// we can swap the the scopeHandle ref with the treeNode one.
+
+/** Ask the component to acquire a tree node. */
+- (void)acquireTreeNode:(id<CKTreeNodeProtocol>)treeNode;
+
+/** Reference to the component's tree node. */
+- (id<CKTreeNodeProtocol>)treeNode;
+#endif
+
 @end
 
 /**
@@ -102,6 +126,11 @@ struct CKBuildComponentTreeParams {
 /** This method should be called after a node has been reused */
 - (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
 
+/** This method will called during the tree node creation in order to provide the component key based on the parent */
+- (CKTreeNodeComponentKey)createComponentKeyForComponent:(id<CKTreeNodeComponentProtocol>)component
+                                                  parent:(id<CKTreeNodeWithChildrenProtocol>)parent
+                                          componentClass:(Class<CKTreeNodeComponentProtocol>)componentClass;
+
 #if DEBUG
 /** Returns a multi-line string describing this node and its children nodes */
 - (NSString *)debugDescription;
@@ -126,7 +155,8 @@ struct CKBuildComponentTreeParams {
 - (id<CKTreeNodeProtocol>)childForComponentKey:(const CKTreeNodeComponentKey &)key;
 
 /** Creates a component key for a child node according to its component class; this method is being called once during the component tree creation */
-- (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass;
+- (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
+                                                   identifier:(id<NSObject>)identifier;
 
 /** Save a child node in the parent node according to its component key; this method is being called once during the component tree creation */
 - (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;

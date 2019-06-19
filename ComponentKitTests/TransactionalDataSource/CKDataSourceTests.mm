@@ -14,18 +14,25 @@
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentSubclass.h>
-#import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceAppliedChanges.h>
+#import <ComponentKit/CKDataSourceChange.h>
 #import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
+#import <ComponentKit/CKDataSourceConfigurationInternal.h>
+#import <ComponentKit/CKDataSourceInternal.h>
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceListener.h>
 #import <ComponentKit/CKDataSourceState.h>
 #import <ComponentKit/CKThreadSafeDataSource.h>
+#import <ComponentKit/CKDataSourceProtocolInternal.h>
+#import <ComponentKit/CKDataSourceChangesetModification.h>
 
 #import "CKDataSourceStateTestHelpers.h"
+
+static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateControllerContext";
 
 @interface CKDataSourceTests : XCTestCase <CKComponentProvider, CKDataSourceAsyncListener>
 @end
@@ -41,6 +48,9 @@
 
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
 {
+  if ([context isEqual:kTestInvalidateControllerContext]) {
+    return [CKComponent newWithView:{} size:{}];
+  }
   return [CKLifecycleTestComponent new];
 }
 
@@ -284,6 +294,161 @@
   }));
 }
 
+- (void)testDataSourceRemovingComponentTriggersInvalidateOnMainThread
+{
+  [self _testRemovingComponentTriggersInvalidateOnMainThreadWithDataSourceClass:[CKDataSource class]];
+}
+
+- (void)testThreadSafeDataSourceRemovingComponentTriggersInvalidateOnMainThread
+{
+  [self _testRemovingComponentTriggersInvalidateOnMainThreadWithDataSourceClass:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testRemovingComponentTriggersInvalidateOnMainThreadWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  id<CKDataSourceProtocol> dataSource = CKComponentTestDataSource(dataSourceClass, [self class], self);
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state != nil;
+  });
+  const auto controller = (CKLifecycleTestComponentController *)[[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component().controller;
+  [dataSource updateConfiguration:[_state.configuration copyWithContext:kTestInvalidateControllerContext sizeRange:{}]
+                             mode:CKUpdateModeSynchronous
+                         userInfo:@{}];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
+    return controller.calledInvalidateController;
+  }));
+}
+
+- (void)testDataSourceApplyingPrecomputedChange
+{
+  [self _testApplyingPrecomputedChange:[CKDataSource class]];
+}
+
+- (void)testThreadSafeDataSourceApplyingPrecomputedChange
+{
+  [self _testApplyingPrecomputedChange:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testApplyingPrecomputedChange:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, [self class], self);
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state != nil;
+  });
+  const auto insertion =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
+   build];
+  const auto modification =
+  [[CKDataSourceChangesetModification alloc]
+   initWithChangeset:insertion
+   stateListener:nil userInfo:@{}];
+  const auto change = [modification changeFromState:_state];
+  const auto isApplied = [dataSource applyChange:change];
+  XCTAssertTrue(isApplied, @"Change should be applied to datasource successfully.");
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state == change.state;
+  }));
+}
+
+- (void)testDataSourceApplyingPrecomputedChangeAfterStateIsChanged
+{
+  [self _testApplyingPrecomputedChangeAfterStateIsChanged:[CKDataSource class]];
+}
+
+- (void)testThreadSafeDataSourceApplyingPrecomputedChangeAfterStateIsChanged
+{
+  [self _testApplyingPrecomputedChangeAfterStateIsChanged:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testApplyingPrecomputedChangeAfterStateIsChanged:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, [self class], self);
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state != nil;
+  });
+  const auto insertion =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
+   build];
+  const auto modification =
+  [[CKDataSourceChangesetModification alloc]
+   initWithChangeset:insertion
+   stateListener:nil userInfo:@{}];
+  const auto oldState = _state;
+  const auto change = [modification changeFromState:oldState];
+  [dataSource reloadWithMode:CKUpdateModeSynchronous userInfo:@{}];
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state != oldState;
+  }); 
+  const auto newState = _state;
+  const auto isApplied = [dataSource applyChange:change];
+  XCTAssertFalse(isApplied, @"Applying change to datasource should fail.");
+  XCTAssertEqualObjects(_state, newState, @"State should remain the same.");
+}
+
+- (void)testDataSourceVerifyingPrecomputedChange
+{
+  [self _testVerifyingPrecomputedChange:[CKDataSource class]];
+}
+
+- (void)testThreadSafeDataSourceVerifyingPrecomputedChange
+{
+  [self _testVerifyingPrecomputedChange:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testVerifyingPrecomputedChange:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, [self class], self);
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state != nil;
+  });
+  const auto insertion =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
+   build];
+  const auto modification =
+  [[CKDataSourceChangesetModification alloc]
+   initWithChangeset:insertion
+   stateListener:nil userInfo:@{}];
+  const auto change = [modification changeFromState:_state];
+  const auto isValid = [dataSource verifyChange:change];
+  XCTAssertTrue(isValid, @"Change should be valid.");
+}
+
+- (void)testDataSourceVerifyingPrecomputedChangeAfterStateIsChanged
+{
+  [self _testVerifyingPrecomputedChangeAfterStateIsChanged:[CKDataSource class]];
+}
+
+- (void)testThreadSafeDataSourceVerifyingPrecomputedChangeAfterStateIsChanged
+{
+  [self _testVerifyingPrecomputedChangeAfterStateIsChanged:[CKThreadSafeDataSource class]];
+}
+
+- (void)_testVerifyingPrecomputedChangeAfterStateIsChanged:(Class<CKDataSourceProtocol>)dataSourceClass
+{
+  const auto dataSource = (id<CKDataSourceProtocol, CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, [self class], self);
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state != nil;
+  });
+  const auto insertion =
+  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+    withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
+   build];
+  const auto modification =
+  [[CKDataSourceChangesetModification alloc]
+   initWithChangeset:insertion
+   stateListener:nil userInfo:@{}];
+  const auto oldState = _state;
+  const auto change = [modification changeFromState:oldState];
+  [dataSource reloadWithMode:CKUpdateModeSynchronous userInfo:@{}];
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state != oldState;
+  });
+  const auto isValid = [dataSource verifyChange:change];
+  XCTAssertFalse(isValid, @"Change should not be valid since state has changed.");
+}
 
 #pragma mark - Listener
 

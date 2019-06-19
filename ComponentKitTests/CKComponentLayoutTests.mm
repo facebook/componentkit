@@ -127,7 +127,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
   const auto p = CKComponentPredicate {[](const auto c){
     return [c isKindOfClass:[ComponentMatchingPredicate1 class]];
   }};
-  const auto l = CKComputeRootComponentLayout([CKCompositeComponent newWithComponent:matchingComponent], sizeRange, nil, {p});
+  const auto l = CKComputeRootComponentLayout([CKCompositeComponent newWithComponent:matchingComponent], sizeRange, nil, CK::none, {p});
 
   const auto expected = std::vector<CKComponent *> {matchingComponent};
   XCTAssert(l.componentsMatchingPredicate(p) == expected);
@@ -143,7 +143,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
                                                          matchingComponent,
                                                          [ComponentMatchingPredicate2 new],
                                                          ]);
-  const auto l = CKComputeRootComponentLayout(root, sizeRange, nil, {
+  const auto l = CKComputeRootComponentLayout(root, sizeRange, nil, CK::none, {
     p,
     CKComponentPredicate {[](const auto c){ return [c isKindOfClass:[ComponentMatchingPredicate2 class]]; }},
   });
@@ -155,7 +155,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 - (void)test_IgnoresNilComponentsEvenIfTheyMatchPredicate
 {
   const auto p = CKComponentPredicate {[](const auto c){ return YES; }};
-  const auto l = CKComputeRootComponentLayout([CKCompositeComponent newWithComponent:nil], sizeRange, nil, {p});
+  const auto l = CKComputeRootComponentLayout([CKCompositeComponent newWithComponent:nil], sizeRange, nil, CK::none, {p});
 
   XCTAssert(l.componentsMatchingPredicate(p) == std::vector<CKComponent *> {});
 }

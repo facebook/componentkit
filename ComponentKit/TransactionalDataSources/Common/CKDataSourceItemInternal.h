@@ -18,4 +18,11 @@
                          scopeRoot:(CKComponentScopeRoot *)scopeRoot
                    boundsAnimation:(CKComponentBoundsAnimation)boundsAnimation;
 
+/**
+ Internal interface for items which are manually going to manage the creation
+ of their root layout.
+ */
+- (instancetype)initWithModel:(id)model
+                    scopeRoot:(CKComponentScopeRoot *)scopeRoot;
+
 @end

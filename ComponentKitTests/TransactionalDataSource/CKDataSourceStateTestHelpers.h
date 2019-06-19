@@ -19,8 +19,7 @@
 CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
                                          id<CKComponentStateListener> listener,
                                          NSUInteger numberOfSections,
-                                         NSUInteger numberOfItemsPerSection,
-                                         BOOL parallelBuildAndLayout = NO);
+                                         NSUInteger numberOfItemsPerSection);
 
 /** Returns a data source with one item and one section. */
 id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> dataSourceClass,

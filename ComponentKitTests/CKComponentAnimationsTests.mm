@@ -42,11 +42,6 @@
 @end
 
 const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
-const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
-  CKComponentHasAnimationsOnInitialMountPredicate,
-  CKComponentHasAnimationsFromPreviousComponentPredicate,
-  CKComponentHasAnimationsOnFinalUnmountPredicate,
-};
 
 @implementation CKComponentAnimationsTests_LayoutDiffing
 
@@ -57,7 +52,7 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
     return [CKCompositeComponent newWithComponent:[ComponentWithInitialMountAnimations new]];
   });
   const auto c = CK::objCForceCast<CKCompositeComponent>(bcr.component);
-  const auto l = CKComputeRootComponentLayout(c, sizeRange, nil, animationPredicates);
+  const auto l = CKComputeRootComponentLayout(c, sizeRange, nil);
 
   const auto diff = CK::animatedComponentsBetweenLayouts(l, {});
 
@@ -72,11 +67,11 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
   const auto bcr = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     return [CKCompositeComponent newWithComponent:[ComponentWithInitialMountAnimations new]];
   });
-  const auto l = CKComputeRootComponentLayout(bcr.component, sizeRange, nil, animationPredicates);
+  const auto l = CKComputeRootComponentLayout(bcr.component, sizeRange, nil);
   const auto bcr2 = CKBuildComponent(bcr.scopeRoot, {}, ^{
     return [CKCompositeComponent newWithComponent:[ComponentWithInitialMountAnimations new]];
   });
-  const auto l2 = CKComputeRootComponentLayout(bcr2.component, sizeRange, nil, animationPredicates);
+  const auto l2 = CKComputeRootComponentLayout(bcr2.component, sizeRange, nil);
 
   const auto diff = CK::animatedComponentsBetweenLayouts(l2, l);
 
@@ -89,12 +84,12 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
     return [CKCompositeComponent newWithComponent:[ComponentWithAnimationsFromPreviousComponent new]];
   });
   const auto c = CK::objCForceCast<CKCompositeComponent>(bcr.component);
-  const auto l = CKComputeRootComponentLayout(c, sizeRange, nil, animationPredicates);
+  const auto l = CKComputeRootComponentLayout(c, sizeRange, nil);
   const auto bcr2 = CKBuildComponent(bcr.scopeRoot, {}, ^{
     return [CKCompositeComponent newWithComponent:[ComponentWithAnimationsFromPreviousComponent new]];
   });
   const auto c2 = CK::objCForceCast<CKCompositeComponent>(bcr2.component);
-  const auto l2 = CKComputeRootComponentLayout(c2, sizeRange, nil, animationPredicates);
+  const auto l2 = CKComputeRootComponentLayout(c2, sizeRange, nil);
 
   const auto diff = CK::animatedComponentsBetweenLayouts(l2, l);
 
@@ -109,7 +104,7 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
   const auto bcr = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     return [CKCompositeComponent newWithComponent:[ComponentWithAnimationsFromPreviousComponent new]];
   });
-  const auto l = CKComputeRootComponentLayout(bcr.component, sizeRange, nil, animationPredicates);
+  const auto l = CKComputeRootComponentLayout(bcr.component, sizeRange, nil);
 
   const auto diff = CK::animatedComponentsBetweenLayouts(l, l);
 
@@ -123,14 +118,14 @@ const auto animationPredicates = std::unordered_set<CKComponentPredicate> {
     c = [ComponentWithAnimationOnFinalUnmount new];
     return [CKCompositeComponent newWithComponent:[CompositeComponentWithScope newWithComponent:c]];
   });
-  const auto l = CKComputeRootComponentLayout(bcr.component, sizeRange, nil, animationPredicates);
+  const auto l = CKComputeRootComponentLayout(bcr.component, sizeRange, nil);
   const auto bcr2 = CKBuildComponent(bcr.scopeRoot, {}, ^{
     // Compared to the previous tree there are two components that have disappeared: CompositeComponentWithScope and
     // ComponentWithDisappearAnimation. However, we should get only the latter in ComponentTreeDiff::disappearedComponents
     // since the former doesn't define any disappear animation.
     return [CKCompositeComponent newWithComponent:[CKComponent new]];
   });
-  const auto l2 = CKComputeRootComponentLayout(bcr2.component, sizeRange, nil, animationPredicates);
+  const auto l2 = CKComputeRootComponentLayout(bcr2.component, sizeRange, nil);
 
   const auto diff = CK::animatedComponentsBetweenLayouts(l2, l);
 

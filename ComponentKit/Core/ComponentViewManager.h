@@ -20,7 +20,7 @@
 #import <ComponentKit/CKComponentViewAttribute.h>
 
 @class CKComponent;
-class CKComponentViewConfiguration;
+struct CKComponentViewConfiguration;
 
 typedef void (^CKOptimisticViewMutationTeardown)(UIView *v);
 

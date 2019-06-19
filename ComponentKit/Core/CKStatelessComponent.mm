@@ -10,20 +10,6 @@
 
 #import "CKStatelessComponent.h"
 
-@interface CKStatelessComponentContext ()
-@property(nonatomic, assign, readonly) BOOL allocateCKStatelessComponent;
-@end
-@implementation CKStatelessComponentContext
-+ (instancetype)newWithAllocateCKStatelessComponent:(BOOL)allocateCKStatelessComponent
-{
-  CKStatelessComponentContext * const c = [super new];
-  if (c != nil) {
-    c->_allocateCKStatelessComponent = allocateCKStatelessComponent;
-  }
-  return c;
-}
-@end
-
 @implementation CKStatelessComponent
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view component:(CKComponent *)component identifier:(NSString *)identifier
@@ -47,21 +33,15 @@
 CKComponent *CKCreateStatelessComponent(NS_RELEASES_ARGUMENT CKComponent *component, const char *debugIdentifier) NS_RETURNS_RETAINED
 {
 #if CK_ASSERTIONS_ENABLED
+  if (component == nil) {
+    return nil;
+  }
   return
   [CKStatelessComponent
    newWithView:{}
    component:component
    identifier:[NSString stringWithCString:debugIdentifier encoding:NSUTF8StringEncoding]];
 #else
-  const BOOL allocateCKStatelessComponent = CKComponentContext<CKStatelessComponentContext>::get().allocateCKStatelessComponent;
-  if (allocateCKStatelessComponent) {
-    return
-    [CKStatelessComponent
-     newWithView:{}
-     component:component
-     identifier:[NSString stringWithCString:debugIdentifier encoding:NSUTF8StringEncoding]];
-  } else {
-    return component;
-  }
+  return component;
 #endif
 }

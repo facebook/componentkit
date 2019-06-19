@@ -17,12 +17,16 @@
 #import "CKDataSourceItemInternal.h"
 #import "CKDataSourceAppliedChanges.h"
 #import "CKBuildComponent.h"
+#import "CKComponentControllerEvents.h"
+#import "CKComponentControllerHelper.h"
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
 #import "CKComponentScopeHandle.h"
 #import "CKComponentScopeRoot.h"
 #import "CKDataSourceModificationHelper.h"
+
+using namespace CKComponentControllerHelper;
 
 @implementation CKDataSourceUpdateStateModification
 {
@@ -42,10 +46,10 @@
   CKDataSourceConfiguration *configuration = [oldState configuration];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
-  const auto animationPredicates = CKComponentAnimationPredicates();
 
   NSMutableArray *newSections = [NSMutableArray array];
   NSMutableSet *updatedIndexPaths = [NSMutableSet set];
+  NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
   __block CKComponentScopeRootIdentifier globalIdentifier = 0;
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     NSMutableArray *newItems = [NSMutableArray array];
@@ -60,8 +64,13 @@
           globalIdentifier = stateUpdate->first.globalIdentifier;
         }
         [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
-        CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], stateUpdatesForItem->second, sizeRange, configuration, [item model], context, animationPredicates);
+        CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], stateUpdatesForItem->second, sizeRange, configuration, [item model], context);
         [newItems addObject:newItem];
+        for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                                       item.scopeRoot,
+                                                                                                       &CKComponentControllerInvalidateEventPredicate)) {
+          [invalidComponentControllers addObject:componentController];
+        }
       }
     }];
     [newSections addObject:newItems];
@@ -81,8 +90,10 @@
                                                        userInfo:@{@"updatedComponentIdentifier":@(globalIdentifier)}];
 
   return [[CKDataSourceChange alloc] initWithState:newState
+                                     previousState:oldState
                                     appliedChanges:appliedChanges
-                                 deferredChangeset:nil];
+                                 deferredChangeset:nil
+                       invalidComponentControllers:invalidComponentControllers];
 }
 
 - (NSDictionary *)userInfo

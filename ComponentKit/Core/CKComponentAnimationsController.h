@@ -28,26 +28,45 @@ namespace CK {
     }
   };
 
+  using PendingAnimationsByComponentMap = std::unordered_map<CKComponent *, std::vector<CKPendingComponentAnimation>, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
+
+  struct PendingAnimations final {
+    PendingAnimations(PendingAnimationsByComponentMap animationsOnInitialMount,
+                      PendingAnimationsByComponentMap animationsFromPreviousComponent,
+                      PendingAnimationsByComponentMap animationsOnFinalUnmount):
+    _animationsOnInitialMount(std::move(animationsOnInitialMount)),
+    _animationsFromPreviousComponent(std::move(animationsFromPreviousComponent)),
+    _animationsOnFinalUnmount(std::move(animationsOnFinalUnmount)) {}
+
+    const auto &animationsOnInitialMount() const { return _animationsOnInitialMount; }
+    const auto &animationsFromPreviousComponent() const { return _animationsFromPreviousComponent; }
+    const auto &animationsOnFinalUnmount() const { return _animationsOnFinalUnmount; }
+
+  private:
+    PendingAnimationsByComponentMap _animationsOnInitialMount = {};
+    PendingAnimationsByComponentMap _animationsFromPreviousComponent = {};
+    PendingAnimationsByComponentMap _animationsOnFinalUnmount = {};
+  };
+
+  auto collectPendingAnimations(const CKComponentAnimations &animations) -> PendingAnimations;
+
   class ComponentAnimationsController final {
   public:
-    ComponentAnimationsController(CKComponentAnimations animations)
-    : _animations(std::move(animations)),
+    ComponentAnimationsController() :
     _appliedAnimationsOnInitialMount(std::make_shared<AppliedAnimationsByComponentMap>()),
     _appliedAnimationsFromPreviousComponent(std::make_shared<AppliedAnimationsByComponentMap>()),
     _appliedAnimationsOnFinalUnmount(std::make_shared<AppliedAnimationsByComponentMap>()) {};
 
-    void collectPendingAnimations();
-
     template <typename TransactionProvider>
-    void applyPendingAnimations(TransactionProvider& transactionProvider)
+    void applyPendingAnimations(const PendingAnimations &pendingAnimations, TransactionProvider& transactionProvider)
     {
-      applyPendingAnimations(_pendingAnimationsOnInitialMount,
+      applyPendingAnimations(pendingAnimations.animationsOnInitialMount(),
                              _appliedAnimationsOnInitialMount,
                              transactionProvider);
-      applyPendingAnimations(_pendingAnimationsFromPreviousComponent,
+      applyPendingAnimations(pendingAnimations.animationsFromPreviousComponent(),
                              _appliedAnimationsFromPreviousComponent,
                              transactionProvider);
-      applyPendingAnimations(_pendingAnimationsOnFinalUnmount,
+      applyPendingAnimations(pendingAnimations.animationsOnFinalUnmount(),
                              _appliedAnimationsOnFinalUnmount,
                              transactionProvider);
     }
@@ -55,7 +74,6 @@ namespace CK {
     void cleanupAppliedAnimationsForComponent(CKComponent *const c);
 
   private:
-    using PendingAnimationsByComponentMap = std::unordered_map<CKComponent *, std::vector<CKPendingComponentAnimation>, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
     using AppliedAnimationsByComponentMap = std::unordered_map<CKComponent *, CKAppliedComponentAnimationMap, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
 
     template <typename TransactionProvider>
@@ -86,21 +104,26 @@ namespace CK {
         const auto appliedAnimation = CKAppliedComponentAnimation {animation, animation.didRemount(pa.context)};
         animationsForComponent.insert({animationID, appliedAnimation});
       }, [pa, c, animationID, animations](){
-        auto &animationsForComponent = (*animations)[c];
+        const auto animationsForComponentIt = animations->find(c);
+        if (animationsForComponentIt == animations->end()) {
+          // If we wound up here, this means the animation was cleaned up already via
+          // cleanupAppliedAnimationsForComponent()
+          return;
+        }
+        auto &animationsForComponent = animationsForComponentIt->second;
         const auto it = animationsForComponent.find(animationID);
         if (it == animationsForComponent.end()) { return; }
         pa.animation.cleanup(it->second.context);
         animationsForComponent.erase(it);
+        if (animationsForComponent.empty()) {
+          animations->erase(c);
+        }
       });
     }
 
     static auto cleanupAppliedAnimationsForComponent(AppliedAnimationsByComponentMap &aas,
                                                      CKComponent *const c);
 
-    const CKComponentAnimations _animations;
-    PendingAnimationsByComponentMap _pendingAnimationsOnInitialMount = {};
-    PendingAnimationsByComponentMap _pendingAnimationsFromPreviousComponent = {};
-    PendingAnimationsByComponentMap _pendingAnimationsOnFinalUnmount = {};
     // Ownership will be shared with transaction completions which can outlive the controller
     std::shared_ptr<AppliedAnimationsByComponentMap> _appliedAnimationsOnInitialMount;
     std::shared_ptr<AppliedAnimationsByComponentMap> _appliedAnimationsFromPreviousComponent;

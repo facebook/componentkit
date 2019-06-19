@@ -16,15 +16,20 @@
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
+#import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKInspectableView.h>
+#import <ComponentKit/CKOptional.h>
 
 #import <unordered_set>
+
+@protocol CKAnalyticsListener;
 
 struct CKComponentHostingViewOptions {
   /// If set to YES, allows taps to pass though this hosting view to views behind it. Default NO.
   BOOL allowTapPassthrough;
-  // If set to YES, invalidates controllers that are removed whilst the hosting view remains alive. Default NO.
-  BOOL invalidateRemovedControllers;
+  /// A initial size that will be used for hosting view before first generation of component is created.
+  /// Specifying a initial size enables the ability to handle the first model/context update asynchronously.
+  CK::Optional<CGSize> initialSize;
 };
 
 @interface CKComponentHostingView () <CKComponentHostingViewProtocol, CKComponentStateListener>
@@ -57,23 +62,7 @@ struct CKComponentHostingViewOptions {
 
 @property (nonatomic, strong, readonly) UIView *containerView;
 
-/** Updates the list of state updates to be processed on the current scope root. Main thread only. */
-- (void)updateStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates mode:(CKUpdateMode)mode;
-
 /** Applies a result from a component built outside the hosting view. Main thread only. */
 - (void)applyResult:(const CKBuildComponentResult &)result;
-
-/**
- Function for setting default analytics listener that will be used if CKComponentHostingView doesn't have one
-
- @param defaultListener Analytics listener to be used if CKComponentHostingView don't inject one
-
- @warning This method is affined to the main thread and should only be called from it.
-          You shouldn't set analytics listener more then once - this will cause a confusion on which one is used.
-          If you want to pass a custom analytics listener to a particular hosting view, please use
-           initWithComponentProvider:sizeRangeProvider:analyticsListener: to create it
- */
-
-+ (void)setDefaultAnalyticsListener:(id<CKAnalyticsListener>)defaultListener;
 
 @end

@@ -36,8 +36,9 @@
 }
 
 - (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
+                                                   identifier:(id<NSObject>)identifier
 {
-  return std::make_tuple(componentClass, 0);
+  return std::make_tuple(componentClass, 0, identifier);
 }
 
 - (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey

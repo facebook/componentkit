@@ -23,6 +23,7 @@
 #import "CKBuildComponent.h"
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
+#import "CKComponentControllerHelper.h"
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScopeFrame.h"
@@ -31,6 +32,8 @@
 #import "CKDataSourceModificationHelper.h"
 #import "CKIndexSetDescription.h"
 #import "CKInvalidChangesetOperationType.h"
+
+using namespace CKComponentControllerHelper;
 
 @implementation CKDataSourceSplitChangesetModification
 {
@@ -61,12 +64,13 @@
   CKDataSourceConfiguration *configuration = [oldState configuration];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
-  const auto animationPredicates = CKComponentAnimationPredicates();
-  const auto splitChangesetOptions = [configuration splitChangesetOptions];
+  const auto splitChangesetOptions = [configuration options].splitChangesetOptions;
   const BOOL enableChangesetSplitting = splitChangesetOptions.enabled;
   const CGSize viewportSize = (_viewport.size.width == 0.0 || _viewport.size.height == 0.0)
   ? splitChangesetOptions.viewportBoundingSize
   : _viewport.size;
+
+  NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
 
   NSMutableArray *newSections = [NSMutableArray array];
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
@@ -82,10 +86,10 @@
     const CKDataSourceSplitUpdateResult result =
     splitUpdatedItems(newSections,
                       updatedItems,
+                      invalidComponentControllers,
                       sizeRange,
                       configuration,
                       context,
-                      animationPredicates,
                       _changeset,
                       _userInfo,
                       oldState,
@@ -121,8 +125,13 @@
                              oldState);
       }
       CKDataSourceItem *const oldItem = section[indexPath.item];
-      CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context, animationPredicates);
+      CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
       [section replaceObjectAtIndex:indexPath.item withObject:item];
+      for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
+                                                                                                     oldItem.scopeRoot,
+                                                                                                     &CKComponentControllerInvalidateEventPredicate)) {
+        [invalidComponentControllers addObject:componentController];
+      }
     }];
   }
 
@@ -213,10 +222,38 @@
 
   // Remove sections
   NSIndexSet *const removedSections = [_changeset removedSections];
-  [newSections removeObjectsAtIndexes:removedSections];
-  [sectionsForDeferredUpdatedItems removeObjectsAtIndexes:removedSections];
+  if ([removedSections count] > 0) {
+    [newSections removeObjectsAtIndexes:removedSections];
+    [sectionsForDeferredUpdatedItems removeObjectsAtIndexes:removedSections];
+  }
 
   // Insert sections
+
+  // Quick validation to make sure the locations specified by indexes do not exceed the bounds of the receiving array.
+  if ([[_changeset insertedSections] count] > 0 &&
+      ([[_changeset insertedSections] firstIndex] > newSections.count)) {
+    CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertSection),
+                         @"Invalid first index location: %lu (> %lu) while processing inserted sections. Changeset: %@, user info: %@, state: %@",
+                         (unsigned long)[[_changeset insertedSections] firstIndex],
+                         (unsigned long)newSections.count,
+                         CK::changesetDescription(_changeset),
+                         _userInfo,
+                         oldState);
+  }
+#ifdef CK_ASSERTIONS_ENABLED
+    // Deep validation of the indexes we are going to insert for better logging.
+  auto const invalidInsertedSectionsIndexes = CK::invalidIndexesForInsertionInArray(newSections, [_changeset insertedSections]);
+  if (invalidInsertedSectionsIndexes.count) {
+  CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertSection),
+                       @"%@ for range: %@ in sections: %@. Changeset: %@, user info: %@, state: %@",
+                       CK::indexSetDescription(invalidInsertedSectionsIndexes, @"Invalid indexes", 0),
+                       NSStringFromRange({0, newSections.count}),
+                       newSections,
+                       CK::changesetDescription(_changeset),
+                       _userInfo,
+                       oldState);
+  }
+#endif
   [newSections insertObjects:emptyMutableArrays([[_changeset insertedSections] count]) atIndexes:[_changeset insertedSections]];
   if (sectionsForDeferredUpdatedItems != nil) {
     [sectionsForDeferredUpdatedItems insertObjects:emptyMutableArrays([[_changeset insertedSections] count]) atIndexes:[_changeset insertedSections]];
@@ -231,8 +268,7 @@
                                  sizeRange,
                                  configuration,
                                  model,
-                                 context,
-                                 animationPredicates);
+                                 context);
   };
 
   NSDictionary<NSIndexPath *, id> *const insertedItems = [_changeset insertedItems];
@@ -321,8 +357,10 @@
                                                        userInfo:_userInfo];
 
   return [[CKDataSourceChange alloc] initWithState:newState
+                                     previousState:oldState
                                     appliedChanges:appliedChanges
-                                 deferredChangeset:createDeferredChangeset(deferredInsertedItems, computeDeferredItems(sectionsForDeferredUpdatedItems))];
+                                 deferredChangeset:createDeferredChangeset(deferredInsertedItems, computeDeferredItems(sectionsForDeferredUpdatedItems))
+                       invalidComponentControllers:invalidComponentControllers];
 }
 
 - (NSDictionary *)userInfo
@@ -392,10 +430,10 @@ struct CKDataSourceSplitUpdateResult {
 
 static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSourceItem *> *> *sections,
                                                        NSDictionary<NSIndexPath *, id> *updatedItems,
+                                                       NSMutableArray<CKComponentController *> *invalidComponentControllers,
                                                        const CKSizeRange &sizeRange,
                                                        CKDataSourceConfiguration *configuration,
                                                        id<NSObject> context,
-                                                       const std::unordered_set<CKComponentPredicate> &layoutPredicates,
                                                        CKDataSourceChangeset *changeset,
                                                        NSDictionary *userInfo,
                                                        CKDataSourceState *oldState,
@@ -435,10 +473,15 @@ static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSou
         // *increases* the size of the item such that it is now outside the viewport. In this
         // scenario, we over-render, which is not a problem since that is not a regression over
         // the original behavior.
-        CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, updatedModel, context, layoutPredicates);
+        CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, updatedModel, context);
         computedItems[indexPath] = newItem;
         initialUpdatedItems[indexPath] = updatedModel;
         contentSize = addSizeToSize(contentSize, [newItem rootLayout].size());
+        for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                                       item.scopeRoot,
+                                                                                                       &CKComponentControllerInvalidateEventPredicate)) {
+          [invalidComponentControllers addObject:componentController];
+        }
       }
     }];
   }];
@@ -502,12 +545,10 @@ static CKDataSourceChangeset *createDeferredChangeset(NSDictionary<NSIndexPath *
   if (insertedItems.count == 0 && updatedItems.count == 0) {
     return nil;
   }
-  return [[CKDataSourceChangeset alloc] initWithUpdatedItems:updatedItems
-                                                removedItems:nil
-                                             removedSections:nil
-                                                  movedItems:nil
-                                            insertedSections:nil
-                                               insertedItems:insertedItems];
+  return [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+            withUpdatedItems:updatedItems]
+           withInsertedItems:insertedItems]
+          build];
 }
 
 static BOOL contentSizeOverflowsViewport(CGSize contentSize, CGPoint contentOffset, CGSize viewportSize, CKDataSourceLayoutAxis layoutAxis)

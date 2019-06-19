@@ -13,6 +13,7 @@
 #include <stdlib.h>
 
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKDataSourceAppliedChanges.h>
@@ -20,22 +21,28 @@
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceReloadModification.h>
 #import <ComponentKit/CKDataSourceState.h>
+#import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 
 #import "CKDataSourceStateTestHelpers.h"
 
 // Some tests manipulate this to simulate global singleton state changing.
 static u_int32_t globalState = 0;
+static u_int32_t lifecycleComponentState = 1;
 
-@interface CKTestGlobalStateComponent : CKComponent
+@interface CKTestGlobalStateComponent : CKCompositeComponent
 @property (nonatomic, readonly) u_int32_t globalStateAtTimeOfCreation;
+@property (nonatomic, readonly) CKLifecycleTestComponent *lifecycleComponent;
 @end
 
 @implementation CKTestGlobalStateComponent
 + (instancetype)new
 {
-  CKTestGlobalStateComponent *c = [super newWithView:{} size:{}];
+  CKLifecycleTestComponent *lifecycleComponent =
+  globalState == lifecycleComponentState ? [CKLifecycleTestComponent newWithView:{} size:{}] : nil;
+  const auto c = [super newWithComponent:lifecycleComponent ?: [CKComponent newWithView:{} size:{}]];
   if (c) {
     c->_globalStateAtTimeOfCreation = globalState;
+    c->_lifecycleComponent = lifecycleComponent;
   }
   return c;
 }
@@ -96,6 +103,21 @@ static u_int32_t globalState = 0;
   CKTestGlobalStateComponent *component = (CKTestGlobalStateComponent *)[item rootLayout].component();
 
   XCTAssertEqual(component.globalStateAtTimeOfCreation, newGlobalState);
+}
+
+- (void)testReturnsInvalidComponentControllers
+{
+  globalState = lifecycleComponentState;
+  const auto originalState = CKDataSourceTestState([self class], nil, 1, 1);
+  const auto item = [originalState objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+  const auto componentController = ((CKTestGlobalStateComponent *)[item rootLayout].component()).lifecycleComponent.controller;
+
+  globalState = 0;
+  const auto reloadModification = [[CKDataSourceReloadModification alloc] initWithUserInfo:nil];
+  const auto change = [reloadModification changeFromState:originalState];
+
+  XCTAssertEqual(change.invalidComponentControllers.firstObject, componentController,
+                 @"Invalid component controller should be returned because component is removed from hierarchy.");
 }
 
 @end

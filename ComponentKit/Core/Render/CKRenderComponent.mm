@@ -17,11 +17,19 @@
 #import "CKInternalHelpers.h"
 #import "CKRenderHelpers.h"
 #import "CKTreeNode.h"
+#import "CKGlobalConfig.h"
 
+struct CKRenderLayoutCache {
+  CKSizeRange constrainedSize;
+  CGSize parentSize;
+  CKComponentLayout childLayout;
+};
 
 @implementation CKRenderComponent
 {
   CKComponent *_childComponent;
+  std::shared_ptr<CKRenderLayoutCache> _cachedLayout;
+  BOOL _enableLayoutCache;
 }
 
 #if DEBUG
@@ -62,12 +70,20 @@
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
-  auto const node = CKRender::buildComponentTreeWithSingleChild(self, &_childComponent, parent, previousParent, params, parentHasStateUpdate);
-  if (params.enableViewConfigurationWithState) {
-    auto const viewConfiguration = [self viewConfigurationWithState:node.state];
-    if (!viewConfiguration.isDefaultConfiguration()) {
-      [self setViewConfiguration:viewConfiguration];
-    }
+  // Layout cache feature.
+  _enableLayoutCache = params.enableLayoutCache;
+  CKRenderDidReuseComponentBlock didReuseBlock = nil;
+  if (_enableLayoutCache) {
+    didReuseBlock =^(id<CKRenderComponentProtocol> reusedComponent){
+      CKRenderComponent *c = (CKRenderComponent *)reusedComponent;
+      self->_cachedLayout = c->_cachedLayout;
+    };
+  }
+  // Build the component tree.
+  auto const node = CKRender::buildComponentTreeWithChild(self, &_childComponent, parent, previousParent, params, parentHasStateUpdate, NO, didReuseBlock);
+  auto const viewConfiguration = [self viewConfigurationWithState:node.state];
+  if (!viewConfiguration.isDefaultConfiguration()) {
+    [self setViewConfiguration:viewConfiguration];
   }
 }
 
@@ -80,7 +96,23 @@
            "(component=%@)", size.description(), _childComponent);
 
   if (_childComponent) {
-    auto const l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];
+    CKComponentLayout l;
+    if (_enableLayoutCache) {
+      if (_cachedLayout != nullptr &&
+          CGSizeEqualToSize(parentSize, _cachedLayout->parentSize) &&
+          constrainedSize == _cachedLayout->constrainedSize) {
+        l = _cachedLayout->childLayout;
+      } else {
+        l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];
+        _cachedLayout = std::make_shared<CKRenderLayoutCache>(CKRenderLayoutCache{
+          .constrainedSize = constrainedSize,
+          .parentSize = parentSize,
+          .childLayout = l,
+        });
+      }
+    } else {
+      l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];
+    }
     return {self, l.size, {{{0,0}, l}}};
   }
   return [super computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
@@ -113,6 +145,11 @@
 - (CKComponentViewConfiguration)viewConfigurationWithState:(id)state
 {
   return {};
+}
+
+- (id)componentIdentifier
+{
+  return nil;
 }
 
 @end

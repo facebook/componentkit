@@ -15,9 +15,23 @@
 
 @implementation CKDataSourceItem
 {
+  BOOL _hasRootLayoutAndBoundsAnimation;
   CKComponentRootLayout _rootLayout;
   id _model;
   CKComponentScopeRoot *_scopeRoot;
+}
+
+@synthesize boundsAnimation = _boundsAnimation;
+
+- (instancetype)initWithModel:(id)model
+                    scopeRoot:(CKComponentScopeRoot *)scopeRoot
+{
+  if (self = [super init]) {
+    _model = model;
+    _scopeRoot = scopeRoot;
+    _hasRootLayoutAndBoundsAnimation = NO;
+  }
+  return self;
 }
 
 - (instancetype)initWithRootLayout:(const CKComponentRootLayout &)rootLayout
@@ -25,17 +39,23 @@
                          scopeRoot:(CKComponentScopeRoot *)scopeRoot
                    boundsAnimation:(CKComponentBoundsAnimation)boundsAnimation
 {
-  if (self = [super init]) {
-    _rootLayout = rootLayout;
-    _model = model;
-    _scopeRoot = scopeRoot;
+  if (self = [self initWithModel:model scopeRoot:scopeRoot]) {
     _boundsAnimation = boundsAnimation;
+    _rootLayout = rootLayout;
+    _hasRootLayoutAndBoundsAnimation = YES;
   }
   return self;
 }
 
+- (CKComponentBoundsAnimation)boundsAnimation
+{
+  CKAssert(_hasRootLayoutAndBoundsAnimation, @"When using the initializer without giving a layout you must override this method");
+  return _boundsAnimation;
+}
+
 - (const CKComponentRootLayout &)rootLayout
 {
+  CKAssert(_hasRootLayoutAndBoundsAnimation, @"When using the initializer without giving a layout you must override this method");
   return _rootLayout;
 }
 

@@ -11,7 +11,7 @@
 #import "CKComponentLifecycleTestHelper.h"
 
 #import <ComponentKit/CKBuildComponent.h>
-#import <ComponentKit/CKComponentDataSourceAttachController.h>
+#import <ComponentKit/CKComponentAttachController.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
@@ -33,7 +33,7 @@
   CKComponentLifecycleTestHelperState _state;
   CKComponentRootLayout _rootLayout;
   UIView *_mountedView;
-  CKComponentDataSourceAttachController *_componentDataSourceAttachController;
+  CKComponentAttachController *_componentAttachController;
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
@@ -42,7 +42,7 @@
   if (self = [super init]) {
     _componentProvider = componentProvider;
     _sizeRangeProvider = sizeRangeProvider;
-    _componentDataSourceAttachController = [CKComponentDataSourceAttachController new];
+    _componentAttachController = [CKComponentAttachController new];
   }
   return self;
 }
@@ -91,8 +91,8 @@
 {
   CKAssertMainThread();
   _mountedView = view;
-  CKComponentDataSourceAttachControllerAttachComponentRootLayout(
-      _componentDataSourceAttachController,
+  CKComponentAttachControllerAttachComponentRootLayout(
+      _componentAttachController,
       {.layoutProvider = self,
        .scopeIdentifier = _state.scopeRoot.globalIdentifier,
        .boundsAnimation = _state.boundsAnimation,
@@ -104,7 +104,7 @@
 {
   CKAssertMainThread();
   _mountedView = nil;
-  [_componentDataSourceAttachController detachComponentLayoutWithScopeIdentifier:_state.scopeRoot.globalIdentifier];
+  [_componentAttachController detachComponentLayoutWithScopeIdentifier:_state.scopeRoot.globalIdentifier];
 }
 
 - (const CKComponentLifecycleTestHelperState &)state

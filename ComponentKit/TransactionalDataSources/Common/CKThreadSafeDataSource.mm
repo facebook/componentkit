@@ -32,7 +32,14 @@
 #import "CKDataSourceUpdateStateModification.h"
 #import "CKMutex.h"
 
-@interface CKThreadSafeDataSource () <CKComponentStateListener, CKComponentDebugReflowListener>
+#if CK_ASSERTIONS_ENABLED
+static void *kWorkQueueKey = &kWorkQueueKey;
+#define CKAssertWorkQueue() CKAssert(dispatch_get_specific(kWorkQueueKey) == kWorkQueueKey, @"This method must be called on the work queue")
+#else
+#define CKAssertWorkQueue()
+#endif
+
+@interface CKThreadSafeDataSource () <CKComponentDebugReflowListener>
 {
   CKDataSourceState *_state;
 
@@ -48,22 +55,24 @@
 
 - (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
 {
-  return [self initWithConfiguration:configuration state:nil];
+  return [self initWithState:[[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]]];
 }
 
-- (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
-                                state:(CKDataSourceState *)state
+- (instancetype)initWithState:(CKDataSourceState *)state
 {
-  CKAssertNotNil(configuration, @"Configuration is required");
-  CKAssertNil(configuration.workQueue, @"CKThreadSafeDataSource doesn't support `workQueue`");
-  CKAssert(!configuration.applyModificationsOnWorkQueue, @"CKThreadSafeDataSource doesn't support `applyModificationsOnWorkQueue`");
-  CKAssert(!configuration.splitChangesetOptions.enabled, @"CKThreadSafeDataSource doesn't support `splitChangesetOptions`");
+  CKAssertNotNil(state, @"Initial state is required");
+  CKAssertNotNil(state.configuration, @"Configuration is required");
+  CKAssert(!state.configuration.options.splitChangesetOptions.enabled, @"CKThreadSafeDataSource doesn't support `splitChangesetOptions`");
   if (self = [super init]) {
-    _state = state ?: [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
+    _state = state;
     _announcer = [[CKDataSourceListenerAnnouncer alloc] init];
     _workQueue = dispatch_queue_create("org.componentkit.CKThreadSafeDataSource", DISPATCH_QUEUE_SERIAL);
 
     [CKComponentDebugController registerReflowListener:self];
+
+#if CK_ASSERTIONS_ENABLED
+    dispatch_queue_set_specific(_workQueue, kWorkQueueKey, kWorkQueueKey, NULL);
+#endif
   }
   return self;
 }
@@ -145,17 +154,37 @@
   }
 }
 
+- (BOOL)applyChange:(CKDataSourceChange *)change
+{
+  __block BOOL isApplied = NO;
+  dispatch_sync(_workQueue, ^{
+    if (_state != change.previousState) {
+      return;
+    }
+    [self _applyChange:change];
+    isApplied = YES;
+  });
+  return isApplied;
+}
+
+- (BOOL)verifyChange:(CKDataSourceChange *)change
+{
+  __block BOOL isValid = NO;
+  dispatch_sync(_workQueue, ^{
+    isValid = _state == change.previousState;
+  });
+  return isValid;
+}
+
 - (void)setViewport:(CKDataSourceViewport)viewport {}
 
 - (void)addListener:(id<CKDataSourceListener>)listener
 {
-  CKAssertMainThread();
   [_announcer addListener:listener];
 }
 
 - (void)removeListener:(id<CKDataSourceListener>)listener
 {
-  CKAssertMainThread();
   [_announcer removeListener:listener];
 }
 
@@ -228,6 +257,8 @@
 
 - (void)_applyChange:(CKDataSourceChange *)change
 {
+  CKAssertWorkQueue();
+  
   auto const previousState = _state;
   auto const newState = change.state;
   _state = newState;
@@ -235,6 +266,9 @@
   dispatch_async(dispatch_get_main_queue(), ^{
     auto const appliedChanges = change.appliedChanges;
     // Announce 'invalidateController'.
+    for (CKComponentController *const componentController in change.invalidComponentControllers) {
+      [componentController invalidateController];
+    }
     for (NSIndexPath *const removedIndex in appliedChanges.removedIndexPaths) {
       CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
       CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);

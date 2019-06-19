@@ -12,6 +12,8 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/ComponentMountContext.h>
+#import <ComponentKit/CKOptional.h>
+#import <ComponentKit/CKTreeNodeProtocol.h>
 
 @protocol CKTreeNodeProtocol;
 
@@ -56,6 +58,21 @@
 - (void)willCheckShouldComponentUpdate:(CKComponent *)component;
 - (void)didCheckShouldComponentUpdate:(CKComponent *)component;
 
+/**
+ Called before/after we block on the main thread because we're not yet finished
+ generating the component on a background thread.
+ */
+- (void)willBlockThreadOnGeneratingItemLayout;
+- (void)didBlockThreadOnGeneratingItemLayout;
+
+@end
+
+@protocol CKDebugAnalyticsListener <NSObject>
+
+- (void)canReuseNodes:(std::shared_ptr<CKTreeNodeReuseMap>)nodes
+    previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+         newScopeRoot:(CKComponentScopeRoot *)newScopeRoot
+            component:(id<CKComponentProtocol>)component;
 @end
 
 /**
@@ -64,7 +81,7 @@
 @protocol CKAnalyticsListener <NSObject>
 
 /**
- Called before the component tree creation
+ Called before the component tree creation.
 
  @param scopRoot Scope root for component tree. Use that to identify tree between will/didBuild.
  @param buildTrigger The build trigger (new tree, state update, props updates) for this component tree creation.
@@ -75,12 +92,47 @@
                                stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
 /**
- Called after the component tree creation
+ Called after the component tree creation.
 
  @param scopRoot Scope root for component tree. Use that to identify tree between will/didBuild
+ @param buildTrigger The build trigger (new tree, state update, props updates) for this component tree creation.
+ @param stateUpdates The state updates map for the component tree creation.
  @param component Root component for created tree
  */
-- (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot component:(CKComponent *)component;
+- (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
+                              buildTrigger:(BuildTrigger)buildTrigger
+                              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                                 component:(CKComponent *)component;
+
+/**
+ Called before component tree layout.
+
+ @param component The root component that was laid out.
+ @param buildTrigger The build trigger that caused the layout computaion
+                     Can be CK::none, in case that the layout was computed due to a re-layout measurment.
+
+ @discussion Please not that this callback can be called on the same component from different threads in undefined order, for instance:
+ ThreadA, willLayout Component1
+ ThreadB, willLayout Component1
+ ThreadA, didLayout Component1
+ ThreadB, didLayout Component1
+ To identify matching will/didLayout events between callbacks, please use Thread id and Component id
+ */
+- (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component buildTrigger:(CK::Optional<BuildTrigger>)buildTrigger;
+
+/**
+ Called after component tree layout.
+
+ @param component The root component that was laid out.
+
+ @discussion Please not that this callback can be called on the same component from different threads in undefined order, for instance:
+ ThreadA, willLayout Component1
+ ThreadB, willLayout Component1
+ ThreadA, didLayout Component1
+ ThreadB, didLayout Component1
+ To identify matching will/didLayout events between callbacks, please use Thread id and Component id
+*/
+- (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component;
 
 /**
  Called before/after mounting a component tree
@@ -108,22 +160,6 @@
 - (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component;
 - (void)didCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component;
 
-/**
- Called before/after component tree layout
-
- @param component Root component for laid out tree
-
- @discussion Please not that this callback can be called on the same component from different threads in undefined order, for instance:
-             ThreadA, willLayout Component1
-             ThreadB, willLayout Component1
-             ThreadA, didLayout Component1
-             ThreadB, didLayout Component1
-             To identify matching will/didLayout events between callbacks, please use Thread id and Component id
- */
-
-- (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component;
-- (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component;
-
 /** Render Components **/
 
 /**
@@ -142,5 +178,10 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
  Provides a systrace listener. Can be nil if systrace is not enabled.
  */
 - (id<CKSystraceListener>)systraceListener;
+
+/**
+ Provides a debug analytics listener listener. Can be nil.
+ */
+- (id<CKDebugAnalyticsListener>)debugAnalyticsListener;
 
 @end

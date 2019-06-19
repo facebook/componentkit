@@ -19,6 +19,7 @@
 #import "ComponentLayoutContext.h"
 #import "ComponentUtilities.h"
 #import "CKAnalyticsListener.h"
+#import "CKComponentEvents.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKDetectDuplicateComponent.h"
@@ -71,7 +72,8 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
                                                     UIView *view,
                                                     NSSet *previouslyMountedComponents,
                                                     CKComponent *supercomponent,
-                                                    id<CKAnalyticsListener> analyticsListener)
+                                                    id<CKAnalyticsListener> analyticsListener,
+                                                    BOOL isUpdate)
 {
   struct MountItem {
     const CKComponentLayout &layout;
@@ -88,7 +90,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
   std::stack<MountItem> stack;
   CK::Component::MountAnalyticsContext mountAnalyticsContext;
   auto const mountAnalyticsContextPointer = [analyticsListener shouldCollectMountInformationForRootComponent:layout.component] ? &mountAnalyticsContext : nullptr;
-  stack.push({layout, MountContext::RootContext(view, mountAnalyticsContextPointer), supercomponent, NO});
+  stack.push({layout, MountContext::RootContext(view, mountAnalyticsContextPointer, isUpdate), supercomponent, NO});
   NSMutableSet *mountedComponents = [NSMutableSet set];
 
   layout.component.rootComponentMountedView = view;
@@ -135,9 +137,10 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener,
+                                                   CK::Optional<BuildTrigger> buildTrigger,
                                                    std::unordered_set<CKComponentPredicate> predicates)
 {
-  [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent];
+  [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent buildTrigger:buildTrigger];
   LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectDuplicateComponent(layout);

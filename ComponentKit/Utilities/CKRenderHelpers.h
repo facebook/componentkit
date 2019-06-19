@@ -20,6 +20,8 @@
 @class CKRenderComponent;
 @class CKRenderTreeNodeWithChild;
 
+using CKRenderDidReuseComponentBlock = void(^)(id<CKRenderComponentProtocol>);
+
 namespace CKRender {
   /**
    Builds a component tree for a component having a child component that has been already initialized.
@@ -69,16 +71,16 @@ namespace CKRender {
    @param isBridgeComponent Flag used to mark components that are not "real" render components;
           when they are being created they don't mark the `hasRenderComponentInTree` flag in the thread local store as well.
           Default value is `NO`.
-   @param didReuseComponent Out parameter used if the component got reused as optimization outcome when building the component tree.
+   @param didReuseBlock Will be called in case that the component from the previous generation has been reused.
    */
-  auto buildComponentTreeWithSingleChild(id<CKRenderWithChildComponentProtocol> component,
-                                         __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                                         id<CKTreeNodeWithChildrenProtocol> parent,
-                                         id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                         const CKBuildComponentTreeParams &params,
-                                         BOOL parentHasStateUpdate,
-                                         BOOL isBridgeComponent = NO,
-                                         BOOL *didReuseComponent = nullptr) -> id<CKTreeNodeProtocol>;
+  auto buildComponentTreeWithChild(id<CKRenderWithChildComponentProtocol> component,
+                                   __strong id<CKTreeNodeComponentProtocol> *childComponent,
+                                   id<CKTreeNodeWithChildrenProtocol> parent,
+                                   id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                   const CKBuildComponentTreeParams &params,
+                                   BOOL parentHasStateUpdate,
+                                   BOOL isBridgeComponent = NO,
+                                   CKRenderDidReuseComponentBlock didReuseBlock = nil) -> id<CKTreeNodeProtocol>;
 
   /**
    Builds a component tree for the input *render* component having children components.
@@ -92,12 +94,12 @@ namespace CKRender {
           when they are being created they don't mark the `hasRenderComponentInTree` flag in the thread local store as well.
           Default value is `NO`.
    */
-  auto buildComponentTreeWithMultiChild(id<CKRenderWithChildrenComponentProtocol> component,
-                                        id<CKTreeNodeWithChildrenProtocol> parent,
-                                        id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                        const CKBuildComponentTreeParams &params,
-                                        BOOL parentHasStateUpdate,
-                                        BOOL isBridgeComponent = NO) -> id<CKTreeNodeProtocol>;
+  auto buildComponentTreeWithChildren(id<CKRenderWithChildrenComponentProtocol> component,
+                                      id<CKTreeNodeWithChildrenProtocol> parent,
+                                      id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                      const CKBuildComponentTreeParams &params,
+                                      BOOL parentHasStateUpdate,
+                                      BOOL isBridgeComponent = NO) -> id<CKTreeNodeProtocol>;
 
   /**
    Builds a leaf node for a leaf component in the tree.

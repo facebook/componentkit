@@ -19,25 +19,31 @@ namespace CK {
     return CKPendingComponentAnimation {a, a.willRemount()};
   }
 
-  void ComponentAnimationsController::collectPendingAnimations()
+  auto collectPendingAnimations(const CKComponentAnimations &animations) -> PendingAnimations
   {
-    CKCAssert(_appliedAnimationsOnInitialMount->empty(),
-              @"Instances of CK::ComponentAnimationsController can't be reused.");
-
-    std::transform(_animations.animationsOnInitialMount().begin(),
-                   _animations.animationsOnInitialMount().end(),
-                   std::inserter(_pendingAnimationsOnInitialMount, _pendingAnimationsOnInitialMount.begin()),
+    auto pendingAnimationsOnInitialMount = PendingAnimationsByComponentMap {};
+    std::transform(animations.animationsOnInitialMount().begin(),
+                   animations.animationsOnInitialMount().end(),
+                   std::inserter(pendingAnimationsOnInitialMount, pendingAnimationsOnInitialMount.begin()),
                    [](const auto &kv){ return std::make_pair(kv.first, map(kv.second, makePendingAnimation)); });
 
-    std::transform(_animations.animationsFromPreviousComponent().begin(),
-                   _animations.animationsFromPreviousComponent().end(),
-                   std::inserter(_pendingAnimationsFromPreviousComponent, _pendingAnimationsFromPreviousComponent.begin()),
+    auto pendingAnimationsFromPreviousComponent = PendingAnimationsByComponentMap {};
+    std::transform(animations.animationsFromPreviousComponent().begin(),
+                   animations.animationsFromPreviousComponent().end(),
+                   std::inserter(pendingAnimationsFromPreviousComponent, pendingAnimationsFromPreviousComponent.begin()),
                    [](const auto &kv){ return std::make_pair(kv.first, map(kv.second, makePendingAnimation)); });
 
-    std::transform(_animations.animationsOnFinalUnmount().begin(),
-                   _animations.animationsOnFinalUnmount().end(),
-                   std::inserter(_pendingAnimationsOnFinalUnmount, _pendingAnimationsOnFinalUnmount.begin()),
+    auto pendingAnimationsOnFinalUnmount = PendingAnimationsByComponentMap {};
+    std::transform(animations.animationsOnFinalUnmount().begin(),
+                   animations.animationsOnFinalUnmount().end(),
+                   std::inserter(pendingAnimationsOnFinalUnmount, pendingAnimationsOnFinalUnmount.begin()),
                    [](const auto &kv) { return std::make_pair(kv.first, map(kv.second, makePendingAnimation)); });
+
+    return {
+      pendingAnimationsOnInitialMount,
+      pendingAnimationsFromPreviousComponent,
+      pendingAnimationsOnFinalUnmount
+    };
   }
 
   auto ComponentAnimationsController::cleanupAppliedAnimationsForComponent(AppliedAnimationsByComponentMap &aas, CKComponent *const c)

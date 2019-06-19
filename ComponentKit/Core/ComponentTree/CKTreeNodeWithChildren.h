@@ -8,8 +8,8 @@
  *
  */
 
-#import "CKTreeNode.h"
-#import "CKTreeNodeProtocol.h"
+#import <ComponentKit/CKTreeNode.h>
+#import <ComponentKit/CKTreeNodeProtocol.h>
 
 /**
  This object represents a node with children in the component tree.

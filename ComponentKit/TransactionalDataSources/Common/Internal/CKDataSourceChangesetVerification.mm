@@ -152,8 +152,9 @@ CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changes
   }
   // Moved items
   const auto sectionIdxTransform =
-  std::make_shared<const CK::CompositeIndexTransform>(std::make_unique<const CK::RemovalIndexTransform>(changeset.removedSections),
-                                                      std::make_unique<const CK::InsertionIndexTransform>(changeset.insertedSections));
+  CK::makeCompositeIndexTransform(CK::RemovalIndexTransform(changeset.removedSections),
+                                  CK::InsertionIndexTransform(changeset.insertedSections));
+  
   [changeset.movedItems enumerateKeysAndObjectsUsingBlock:^(NSIndexPath * _Nonnull fromIndexPath, NSIndexPath * _Nonnull toIndexPath, BOOL * _Nonnull stop) {
     const BOOL fromIndexPathSectionInvalid = fromIndexPath.section >= originalSectionCounts.count;
     const BOOL toIndexPathSectionInvalid = toIndexPath.section >= sectionCounts.count;
@@ -163,18 +164,23 @@ CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changes
       *stop = YES;
     } else {
       const BOOL fromIndexPathItemInvalid = fromIndexPath.item >= [originalSectionCounts[fromIndexPath.section] integerValue];
-      const BOOL toIndexPathItemInvalid = ((fromIndexPath.section == toIndexPath.section)
-                                           ? toIndexPath.item >= [sectionCounts[toIndexPath.section] integerValue]
-                                           : toIndexPath.item > [sectionCounts[toIndexPath.section] integerValue]);
+      originalSectionCounts[fromIndexPath.section] = @([originalSectionCounts[fromIndexPath.section] integerValue] - 1);
+      const auto fromSectionIdxAfterUpdate = sectionIdxTransform.applyToIndex(fromIndexPath.section);
+      if (fromSectionIdxAfterUpdate != NSNotFound) {
+        sectionCounts[fromSectionIdxAfterUpdate] = @([sectionCounts[fromSectionIdxAfterUpdate] integerValue] - 1);
+      }
+      const auto originalSectionIdx = sectionIdxTransform.applyInverseToIndex(toIndexPath.section);
+      const auto movingToJustInsertedSection = (originalSectionIdx == NSNotFound);
+      if (!movingToJustInsertedSection) {
+        originalSectionCounts[originalSectionIdx] = @([originalSectionCounts[originalSectionIdx] integerValue] + 1);
+      }
+      const auto toIndexPathItemInvalid = toIndexPath.item > [sectionCounts[toIndexPath.section] integerValue];
+      sectionCounts[toIndexPath.section] = @([sectionCounts[toIndexPath.section] integerValue] + 1);
       if (fromIndexPathItemInvalid || toIndexPathItemInvalid) {
         invalidSection = fromIndexPathItemInvalid ? fromIndexPath.section : toIndexPath.section;
         invalidItem = fromIndexPathItemInvalid ? fromIndexPath.row : toIndexPath.row;
         invalidChangeFound = YES;
         *stop = YES;
-      } else {
-        originalSectionCounts[fromIndexPath.section] = @([originalSectionCounts[fromIndexPath.section] integerValue] - 1);
-        const auto originalSectionIdx = sectionIdxTransform->applyInverseToIndex(toIndexPath.section);
-        originalSectionCounts[originalSectionIdx] = @([originalSectionCounts[originalSectionIdx] integerValue] + 1);
       }
     }
   }];

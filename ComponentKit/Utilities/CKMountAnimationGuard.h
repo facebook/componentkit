@@ -13,8 +13,8 @@
 /** Used by CKComponent internally to block animations when configuring a new or recycled view */
 class CKMountAnimationGuard {
 public:
-  CKMountAnimationGuard(CKComponent *oldComponent, CKComponent *newComponent, const CK::Component::MountContext &ctx)
-  : didBlockAnimations(blockAnimationsIfNeeded(oldComponent, newComponent, ctx)) {}
+  CKMountAnimationGuard(CKComponent *oldComponent, CKComponent *newComponent, const CK::Component::MountContext &ctx, const CKComponentViewConfiguration &viewConfig)
+  : didBlockAnimations(blockAnimationsIfNeeded(oldComponent, newComponent, ctx, viewConfig)) {}
 
   ~CKMountAnimationGuard()
   {
@@ -30,12 +30,13 @@ private:
   CKMountAnimationGuard &operator=(const CKMountAnimationGuard&) = delete;
 
   static BOOL blockAnimationsIfNeeded(CKComponent *oldComponent, CKComponent *newComponent,
-                                      const CK::Component::MountContext &ctx)
+                                      const CK::Component::MountContext &ctx,
+                                      const CKComponentViewConfiguration &viewConfig)
   {
     if ([CATransaction disableActions]) {
       return NO; // Already blocked
     }
-    if (shouldBlockAnimations(oldComponent, newComponent, ctx)) {
+    if (shouldBlockAnimations(oldComponent, newComponent, ctx, viewConfig)) {
       [CATransaction setDisableActions:YES];
       return YES;
     }
@@ -43,10 +44,15 @@ private:
   }
 
   static BOOL shouldBlockAnimations(CKComponent *oldComponent, CKComponent *newComponent,
-                                    const CK::Component::MountContext &ctx)
+                                    const CK::Component::MountContext &ctx,
+                                    const CKComponentViewConfiguration &viewConfig)
   {
     // If the context explicitly tells us to block animations, do it.
     if (ctx.shouldBlockAnimations) {
+      return YES;
+    }
+
+    if (viewConfig.blockImplicitAnimations()) {
       return YES;
     }
 

@@ -41,8 +41,3 @@
  Always pass __func__ as an identifier
  */
 CKComponent *CKCreateStatelessComponent(NS_RELEASES_ARGUMENT CKComponent *component, const char *debugIdentifier) NS_RETURNS_RETAINED;
-
-/** Context to push flag whether to allocate stateless components instances */
-@interface CKStatelessComponentContext: NSObject
-+ (instancetype)newWithAllocateCKStatelessComponent:(BOOL)allocateCKStatelessComponent;
-@end

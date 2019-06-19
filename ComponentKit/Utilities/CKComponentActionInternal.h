@@ -15,17 +15,18 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
+#import <ComponentKit/CKRenderComponentProtocol.h>
 
 #import <type_traits>
 
 @class CKComponent;
 
 typedef id (^CKResponderGenerationBlock)(void);
-typedef NS_ENUM(NSInteger, CKComponentActionSendBehavior) {
+typedef NS_ENUM(NSInteger, CKActionSendBehavior) {
   /** Starts searching at the sender's next responder. Usually this is what you want to prevent infinite loops. */
-  CKComponentActionSendBehaviorStartAtSenderNextResponder,
+  CKActionSendBehaviorStartAtSenderNextResponder,
   /** If the sender itself responds to the action, invoke the action on the sender. */
-  CKComponentActionSendBehaviorStartAtSender,
+  CKActionSendBehaviorStartAtSender,
 };
 
 class _CKTypedComponentDebugInitialTarget;
@@ -51,6 +52,7 @@ class CKActionBase {
   CKActionBase(id target, SEL selector) noexcept;
 
   CKActionBase(const CKComponentScope &scope, SEL selector) noexcept;
+  CKActionBase(SEL selector, id<CKRenderComponentProtocol> component) noexcept;
 
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
   CKActionBase(SEL selector) noexcept;
@@ -60,7 +62,7 @@ class CKActionBase {
   ~CKActionBase() {};
 
   id initialTarget(CKComponent *sender) const;
-  CKComponentActionSendBehavior defaultBehavior() const;
+  CKActionSendBehavior defaultBehavior() const;
 
   bool operator==(const CKActionBase& rhs) const;
 
@@ -142,6 +144,7 @@ public:
 
 #if DEBUG
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
+void _CKTypedComponentDebugCheckComponentScopeHandle(CKComponentScopeHandle *handle, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 void _CKTypedComponentDebugCheckComponent(Class<CKComponentProtocol> componentClass, SEL selector, const std::vector<const char *> &typeEncodings) noexcept;
 #endif
@@ -158,7 +161,7 @@ struct CKActionInfo {
 CKActionInfo CKActionFind(SEL selector, id target) noexcept;
 
 template<typename... T>
-static void CKComponentActionSendResponderChain(SEL selector, id target, CKComponent *sender, T... args) {
+static void CKActionSendResponderChain(SEL selector, id target, CKComponent *sender, T... args) {
 
   const CKActionInfo info = CKActionFind(selector, target);
   if (!info.responder) {

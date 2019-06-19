@@ -10,12 +10,31 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKDataSourceProtocol.h>
 #import <ComponentKit/CKDataSourceStateModifying.h>
 
 @class CKDataSourceChangeset;
+@class CKDataSourceItem;
 
 @protocol CKComponentStateListener;
+
+typedef NS_ENUM(NSUInteger, CKDataSourceChangesetModificationItemType) {
+  CKDataSourceChangesetModificationItemTypeInsert,
+  CKDataSourceChangesetModificationItemTypeUpdate,
+};
+
+@protocol CKDataSourceChangesetModificationItemGenerator
+
+- (CKDataSourceItem *)buildDataSourceItemForPreviousRoot:(CKComponentScopeRoot *)previousRoot
+                                            stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                                               sizeRange:(const CKSizeRange &)sizeRange
+                                           configuration:(CKDataSourceConfiguration *)configuration
+                                                   model:(id)model
+                                                 context:(id)context
+                                                itemType:(CKDataSourceChangesetModificationItemType)itemType;
+
+@end
 
 @interface CKDataSourceChangesetModification : NSObject <CKDataSourceStateModifying>
 
@@ -29,6 +48,10 @@
                               qos:(CKDataSourceQOS)qos;
 
 @property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;
+
+- (void)setItemGenerator:(id<CKDataSourceChangesetModificationItemGenerator>)itemGenerator;
+- (BOOL)shouldSortInsertedItems;
+- (BOOL)shouldSortUpdatedItems;
 
 @end
 

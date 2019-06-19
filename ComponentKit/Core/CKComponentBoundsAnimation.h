@@ -53,6 +53,9 @@ struct CKComponentBoundsAnimation {
   void (^completion)();
 };
 
+auto operator ==(const CKComponentBoundsAnimation &lhs, const CKComponentBoundsAnimation &rhs) -> bool;
+auto operator !=(const CKComponentBoundsAnimation &lhs, const CKComponentBoundsAnimation &rhs) -> bool;
+
 /**
  Wraps the given block in the correct UIView animation block for a given bounds animation.
  If duration is zero, wraps [UIView +performWithoutAnimation:].

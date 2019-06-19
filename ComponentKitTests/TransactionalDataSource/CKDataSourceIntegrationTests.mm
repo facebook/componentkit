@@ -11,6 +11,8 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 
+#import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
+
 #import "CKComponent.h"
 #import "CKComponentProvider.h"
 #import "CKComponentScope.h"
@@ -166,10 +168,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        initWithComponentProvider:(id)self
                                        context:nil
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
-                                       buildComponentConfig:{}
-                                       splitChangesetOptions:{}
-                                       workQueue:nil
-                                       applyModificationsOnWorkQueue:NO
+                                       options:{}
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
                                        analyticsListener:nil];
@@ -345,12 +344,17 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
       build] mode:CKUpdateModeSynchronous userInfo:nil];
 
     CKDataSourceIntegrationTestComponentController * controller =
-      (CKDataSourceIntegrationTestComponentController*) self.components.lastObject.controller;
+    (CKDataSourceIntegrationTestComponentController*) self.components.lastObject.controller;
     callbacks = controller.callbacks;
 
     // We clean everything to ensure dataSource receives deallocation happens when autorelease pool is destroyed
     self.dataSource = nil;
   }
+
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return callbacks.count > 0;
+  });
+
   XCTAssertEqualObjects(callbacks, (@[NSStringFromSelector(@selector(invalidateController))]));
 }
 

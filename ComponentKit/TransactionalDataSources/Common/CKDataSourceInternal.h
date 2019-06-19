@@ -3,7 +3,7 @@
  *  All rights reserved.
  *
  *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  *
  */
@@ -19,5 +19,10 @@
  You may dispatch_suspend this queue (but be sure to resume it later).
  */
 @property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
+
+/**
+ Current state of CKDataSource. This is main thread affined.
+ */
+@property (nonatomic, strong, readonly) CKDataSourceState *state;
 
 @end

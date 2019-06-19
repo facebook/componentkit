@@ -24,8 +24,7 @@ class CKThreadLocalComponentScope {
 public:
   CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                               const CKComponentStateUpdateMap &updates,
-                              BuildTrigger trigger = BuildTrigger::NewTree,
-                              BOOL enableFasterPropsUpdates = NO);
+                              BuildTrigger trigger = BuildTrigger::NewTree);
   ~CKThreadLocalComponentScope();
 
   /** Returns nullptr if there isn't a current scope */
@@ -47,9 +46,6 @@ public:
   
   /** Build trigger of the corsposnding component creation */
   BuildTrigger buildTrigger;
-
-  /** Enable faster props updates optimization for render components. */
-  BOOL enableFasterPropsUpdates = NO;
 
 private:
   CKThreadLocalComponentScope *const previousScope;

@@ -10,6 +10,7 @@
 
 #import "CKFlexboxComponent.h"
 
+#import <ComponentKit/CKComponentPerfScope.h>
 #import <ComponentKit/CKMacros.h>
 
 #import "yoga/Yoga.h"
@@ -70,6 +71,7 @@ template class std::vector<CKFlexboxComponentChild>;
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
           usesDeepYogaTrees:(BOOL)usesDeepYogaTrees
 {
+  CKComponentPerfScope perfScope(self);
   auto const component = [super newWithView:view size:size];
   if (component) {
     component->_style = style;
@@ -599,6 +601,10 @@ static void applyPositionToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension 
 
 static void applyPaddingToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension value)
 {
+  if (value.isDefined() == false) {
+    return;
+  }
+  
   CKRelativeDimension dimension = value.dimension();
   switch (dimension.type()) {
     case CKRelativeDimension::Type::PERCENT:

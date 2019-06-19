@@ -97,6 +97,7 @@ struct PoolKeyHasher {
   std::unordered_map<std::pair<__unsafe_unretained Class, id>, FBStatefulReusePoolItem, PoolKeyHasher> _pool;
   std::unordered_map<std::pair<__unsafe_unretained Class, id>, FBStatefulReusePoolItem, PoolKeyHasher> _pendingPool;
   BOOL _enqueuedPendingPurge;
+  BOOL _clearingPendingPool;
 }
 
 + (instancetype)sharedPool
@@ -141,8 +142,18 @@ struct PoolKeyHasher {
   CKAssertNotNil(controllerClass, @"Must provide a controller class");
   CKAssertNotNil(mayRelinquishBlock, @"Must provide a relinquish block");
 
-  FBStatefulReusePoolItem &poolItem = _pendingPool[std::make_pair(controllerClass, context)];
-  poolItem.addEntry({view, mayRelinquishBlock});
+  auto const addEntry = ^{
+    auto &poolItem = _pendingPool[std::make_pair(controllerClass, context)];
+    poolItem.addEntry({view, mayRelinquishBlock});
+  };
+  if (!_clearingPendingPool) {
+    addEntry();
+  } else {
+    // Using this function instead of dispatch_async to make sure there are no ordering issues with regard to enqueueing
+    // the pending purge below.
+    CKDispatchMainDefaultMode(addEntry);
+  }
+
   if (_enqueuedPendingPurge) {
     return;
   }
@@ -165,7 +176,9 @@ struct PoolKeyHasher {
     FBStatefulReusePoolItem &poolItem = _pool[it.first];
     poolItem.absorbPendingPool(it.second, maximumPoolSize);
   }
+  _clearingPendingPool = YES;
   _pendingPool.clear();
+  _clearingPendingPool = NO;
 }
 
 @end

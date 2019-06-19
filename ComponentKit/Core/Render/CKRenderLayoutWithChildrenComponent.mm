@@ -28,7 +28,7 @@
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
-  CKRender::buildComponentTreeWithMultiChild(self, parent, previousParent, params, parentHasStateUpdate, YES);
+  CKRender::buildComponentTreeWithChildren(self, parent, previousParent, params, parentHasStateUpdate, YES);
 }
 
 #pragma mark - CKRenderComponentProtocol
@@ -49,5 +49,10 @@
 }
 
 - (void)didReuseComponent:(id<CKRenderComponentProtocol>)component {}
+
+- (id)componentIdentifier
+{
+  return nil;
+}
 
 @end

@@ -35,18 +35,14 @@ static CKDataSourceItem *item(CKDataSourceConfiguration *configuration, id<CKCom
 CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
                                          id<CKComponentStateListener> listener,
                                          NSUInteger numberOfSections,
-                                         NSUInteger numberOfItemsPerSection,
-                                         BOOL parallelBuildAndLayout)
+                                         NSUInteger numberOfItemsPerSection)
 {
   CKDataSourceConfiguration *configuration =
   [[CKDataSourceConfiguration alloc]
    initWithComponentProvider:provider
    context:@"context"
    sizeRange:{{100, 100}, {100, 100}}
-   buildComponentConfig:{}
-   splitChangesetOptions:{}
-   workQueue:nil
-   applyModificationsOnWorkQueue:NO
+   options:{}
    componentPredicates:{}
    componentControllerPredicates:{}
    analyticsListener:nil];
@@ -67,11 +63,16 @@ id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> d
                                                    Class<CKComponentProvider> provider,
                                                    id<CKDataSourceListener> listener)
 {
-  id<CKDataSourceProtocol> ds =
-  [[(Class)dataSourceClass alloc] initWithConfiguration:
-   [[CKDataSourceConfiguration alloc] initWithComponentProvider:provider
-                                                                              context:nil
-                                                                            sizeRange:{}]];
+  const auto configuration =
+  [[CKDataSourceConfiguration alloc]
+   initWithComponentProvider:provider
+   context:nil
+   sizeRange:{}
+   options:{}
+   componentPredicates:{}
+   componentControllerPredicates:{}
+   analyticsListener:nil];
+  id<CKDataSourceProtocol> ds = [[(Class)dataSourceClass alloc] initWithConfiguration:configuration];
   [ds addListener:listener];
 
   CKDataSourceChangeset *insertion =

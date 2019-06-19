@@ -48,7 +48,7 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
   return f;
 }
 
-/** 
+/**
  This method is never invoked, and is used to provide a dummy method signature to the forwarding system if our
  normal fast-path forwarding doesn't work because the component has been unmounted.
  */
@@ -72,7 +72,7 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
   // component actions.
   SEL selector = anInvocation.selector;
   if (selectorInList(selector, _selectors)) {
-    CKComponent *responder = _view.ck_component;
+    CKComponent *responder = CKMountedComponentForView(_view);
     id target = [responder targetForAction:selector withSender:responder];
     if (!target) {
       CKFailAssert(@"Delegate method is being called on an unmounted component's view: %@ selector:%@", _view, NSStringFromSelector(selector));
@@ -91,7 +91,7 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
     return sig;
   }
   if (selectorInList(aSelector, _selectors)) {
-    CKComponent *responder = _view.ck_component;
+    CKComponent *responder = CKMountedComponentForView(_view);
     id target = [responder targetForAction:aSelector withSender:responder];
     // We must return a non-nil method signature even if there is no real method signature to return, or we will just
     // crash in the forwarding system. This ensures the forwardInvocation: call above is called.
@@ -102,7 +102,7 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
 
 - (id)forwardingTargetForSelector:(SEL)aSelector
 {
-  CKComponent *responder = _view.ck_component;
+  CKComponent *responder = CKMountedComponentForView(_view);
   return [responder targetForAction:aSelector withSender:responder];
 }
 
@@ -113,18 +113,14 @@ static BOOL selectorInList(SEL selector, const CKComponentForwardedSelectors &se
 
 @end
 
-@implementation NSObject (CKComponentDelegateForwarder)
-
 static const char kCKComponentDelegateProxyKey = ' ';
 
-- (CKComponentDelegateForwarder *)ck_delegateProxy
+auto CKDelegateProxyForObject(NSObject *obj) -> CKComponentDelegateForwarder *
 {
-  return objc_getAssociatedObject(self, &kCKComponentDelegateProxyKey);
+  return objc_getAssociatedObject(obj, &kCKComponentDelegateProxyKey);
 }
 
-- (void)ck_setDelegateProxy:(CKComponentDelegateForwarder *)delegateProxy
+auto CKSetDelegateProxyForObject(NSObject *obj, CKComponentDelegateForwarder *delegateProxy) -> void
 {
-  objc_setAssociatedObject(self, &kCKComponentDelegateProxyKey, delegateProxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  objc_setAssociatedObject(obj, &kCKComponentDelegateProxyKey, delegateProxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
-@end

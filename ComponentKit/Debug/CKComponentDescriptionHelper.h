@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "CKComponentLayout.h"
+#import <ComponentKit/CKComponentLayout.h>
 
 NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept;
 

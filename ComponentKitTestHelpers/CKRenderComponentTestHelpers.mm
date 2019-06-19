@@ -13,6 +13,7 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
@@ -98,6 +99,14 @@
 {
   [super buildComponentTree:parent previousParent:previousParent params:params parentHasStateUpdate:parentHasStateUpdate];
   _parentHasStateUpdate = parentHasStateUpdate;
+}
+
+- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+                          restrictedToSize:(const CKComponentSize &)size
+                      relativeToParentSize:(CGSize)parentSize
+{
+  _computeCalledCounter++;
+  return [super computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
 }
 
 @end

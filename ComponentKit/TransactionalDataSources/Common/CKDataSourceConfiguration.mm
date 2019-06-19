@@ -12,15 +12,17 @@
 #import "CKDataSourceConfigurationInternal.h"
 
 #import "CKEqualityHashHelpers.h"
+#import "CKGlobalConfig.h"
 #import "CKMacros.h"
+
+static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return nil; }
 
 @implementation CKDataSourceConfiguration
 {
   CKSizeRange _sizeRange;
   std::unordered_set<CKComponentPredicate> _componentPredicates;
   std::unordered_set<CKComponentControllerPredicate> _componentControllerPredicates;
-  CKBuildComponentConfig _buildComponentConfig;
-  CKDataSourceSplitChangesetOptions _splitChangesetOptions;
+  CKDataSourceOptions _options;
   CKComponentProviderBlock _componentProviderBlock;
   // These are preserved only for the purposes of equality checking
   Class _componentProviderClass;
@@ -33,10 +35,7 @@
   return [self initWithComponentProvider:componentProvider
                                  context:context
                                sizeRange:sizeRange
-                    buildComponentConfig:{}
-                   splitChangesetOptions:{}
-                               workQueue:nil
-           applyModificationsOnWorkQueue:NO
+                                 options:{}
                      componentPredicates:{}
            componentControllerPredicates:{}
                        analyticsListener:nil];
@@ -49,22 +48,36 @@
   return [self initWithComponentProviderFunc:componentProvider
                                      context:context
                                    sizeRange:sizeRange
-                        buildComponentConfig:{}
-                       splitChangesetOptions:{}
-                                   workQueue:nil
-               applyModificationsOnWorkQueue:NO
+                                     options:{}
                          componentPredicates:{}
                componentControllerPredicates:{}
                            analyticsListener:nil];
 }
 
+- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+                                      context:(id<NSObject>)context
+                                    sizeRange:(const CKSizeRange &)sizeRange
+                                      options:(const CKDataSourceOptions &)options
+                          componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
+                componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
+                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
+{
+  componentProvider = componentProvider ?: nilProvider;
+
+  return [self initWithComponentProviderClass:Nil
+                       componentProviderBlock:^(id<NSObject> m, id<NSObject> c){ return componentProvider(m, c); }
+                                      context:context
+                                    sizeRange:sizeRange
+                                      options:options
+                          componentPredicates:componentPredicates
+                componentControllerPredicates:componentControllerPredicates
+                            analyticsListener:analyticsListener];
+}
+
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange
-                     buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
-                    splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-                                workQueue:(dispatch_queue_t)workQueue
-            applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
+                                  options:(const CKDataSourceOptions &)options
                       componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
             componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -74,34 +87,7 @@
                        componentProviderBlock:pb
                                       context:context
                                     sizeRange:sizeRange
-                         buildComponentConfig:buildComponentConfig
-                        splitChangesetOptions:splitChangesetOptions
-                                    workQueue:workQueue
-                applyModificationsOnWorkQueue:applyModificationsOnWorkQueue
-                          componentPredicates:componentPredicates
-                componentControllerPredicates:componentControllerPredicates
-                            analyticsListener:analyticsListener];
-}
-
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
-                                      context:(id<NSObject>)context
-                                    sizeRange:(const CKSizeRange &)sizeRange
-                         buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
-                        splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-                                    workQueue:(dispatch_queue_t)workQueue
-                applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
-                          componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-                componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                            analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-{
-  return [self initWithComponentProviderClass:Nil
-                       componentProviderBlock:^(id<NSObject> m, id<NSObject> c){ return componentProvider(m, c); }
-                                      context:context
-                                    sizeRange:sizeRange
-                         buildComponentConfig:buildComponentConfig
-                        splitChangesetOptions:splitChangesetOptions
-                                    workQueue:workQueue
-                applyModificationsOnWorkQueue:applyModificationsOnWorkQueue
+                                      options:options
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
                             analyticsListener:analyticsListener];
@@ -111,10 +97,7 @@
                         componentProviderBlock:(CKComponentProviderBlock)componentProviderBlock
                                        context:(id<NSObject>)context
                                      sizeRange:(const CKSizeRange &)sizeRange
-                          buildComponentConfig:(const CKBuildComponentConfig &)buildComponentConfig
-                         splitChangesetOptions:(const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-                                     workQueue:(dispatch_queue_t)workQueue
-                 applyModificationsOnWorkQueue:(BOOL)applyModificationsOnWorkQueue
+                                       options:(const CKDataSourceOptions &)options
                            componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                  componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
                              analyticsListener:(id<CKAnalyticsListener>)analyticsListener
@@ -127,10 +110,7 @@
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
-    _buildComponentConfig = buildComponentConfig;
-    _splitChangesetOptions = splitChangesetOptions;
-    _workQueue = workQueue;
-    _applyModificationsOnWorkQueue = applyModificationsOnWorkQueue;
+    _options = options;
   }
   return self;
 }
@@ -141,23 +121,15 @@
                                                     componentProviderBlock:_componentProviderBlock
                                                                    context:context
                                                                  sizeRange:sizeRange
-                                                      buildComponentConfig:_buildComponentConfig
-                                                     splitChangesetOptions:_splitChangesetOptions
-                                                                 workQueue:_workQueue
-                                             applyModificationsOnWorkQueue:_applyModificationsOnWorkQueue
+                                                                   options:_options
                                                        componentPredicates:_componentPredicates
                                              componentControllerPredicates:_componentControllerPredicates
                                                          analyticsListener:_analyticsListener];
 }
 
-- (const CKBuildComponentConfig &)buildComponentConfig
+- (const CKDataSourceOptions &)options
 {
-  return _buildComponentConfig;
-}
-
-- (const CKDataSourceSplitChangesetOptions &)splitChangesetOptions
-{
-  return _splitChangesetOptions;
+  return _options;
 }
 
 - (const std::unordered_set<CKComponentPredicate> &)componentPredicates

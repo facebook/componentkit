@@ -11,9 +11,9 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/ComponentUtilities.h>
-#import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKAction.h>
 
-class CKComponentViewConfiguration;
+struct CKComponentViewConfiguration;
 
 typedef NSString *(^CKAccessibilityLazyTextBlock)();
 

@@ -14,50 +14,42 @@
 #import <ComponentKit/CKComponentAnimationsController.h>
 
 namespace CK {
-  template <typename AnimationsController>
+  template <typename TransactionProvider = CATransactionProvider>
   class AnimationApplicator final {
   public:
-    // Ownership is shared with the test code
-    using ControllerFactoryFunction = std::function<std::shared_ptr<AnimationsController>(const CKComponentAnimations &)>;
     using MountPerformerBlock = NSSet<CKComponent *> *(^)(void);
 
-    AnimationApplicator(ControllerFactoryFunction controllerFactory)
-    :_controllerFactory(std::move(controllerFactory)) {}
+    AnimationApplicator(std::unique_ptr<TransactionProvider> transactionProvider = std::make_unique<TransactionProvider>())
+    : _transactionProvider(std::move(transactionProvider)){}
 
-    auto runAnimationsWhenMounting(const CKComponentAnimations &as, const MountPerformerBlock p)
+    auto runAnimationsWhenMounting(const CKComponentAnimations &animations, const MountPerformerBlock mountPerformer)
     {
-      if (as.isEmpty()) {
-        p();
+      if (animations.isEmpty()) {
+        mountPerformer();
         return;
       }
 
-      auto previousController = _animationsController;
-      _animationsController = _controllerFactory(as);
-      _animationsController->collectPendingAnimations();
+      const auto pendingAnimations = collectPendingAnimations(animations);
 
-      const auto unmountedComponents = p();
+      const auto unmountedComponents = mountPerformer();
 
-      if (previousController != nil) {
-        for (CKComponent *c in unmountedComponents) {
-          previousController->cleanupAppliedAnimationsForComponent(c);
-        }
+      for (CKComponent *c in unmountedComponents) {
+        _animationsController.cleanupAppliedAnimationsForComponent(c);
       }
 
-      const auto tp = CATransactionProvider();
-      _animationsController->applyPendingAnimations(tp);
+      _animationsController = ComponentAnimationsController{};
+      _animationsController.applyPendingAnimations(pendingAnimations, *_transactionProvider);
     }
 
   private:
-    std::shared_ptr<AnimationsController> _animationsController;
-    ControllerFactoryFunction _controllerFactory;
+    ComponentAnimationsController _animationsController;
+    std::unique_ptr<TransactionProvider> _transactionProvider;
   };
 
   struct AnimationApplicatorFactory final {
     static auto make()
     {
-      return std::make_unique<AnimationApplicator<ComponentAnimationsController>>([](const CKComponentAnimations &as){
-        return std::make_unique<ComponentAnimationsController>(as);
-      });
+      return std::make_unique<AnimationApplicator<>>();
     }
   };
 }

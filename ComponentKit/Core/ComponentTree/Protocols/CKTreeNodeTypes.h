@@ -16,6 +16,6 @@
 /** Unique identifier for tree nodes. */
 typedef int32_t CKTreeNodeIdentifier;
 /** A key between a tree ndoe to its parent */
-typedef std::tuple<Class, NSUInteger> CKTreeNodeComponentKey;
+typedef std::tuple<Class, NSUInteger, id<NSObject>> CKTreeNodeComponentKey;
 /** unordered_set of all the "dirty" tree nodes' identifiers; "dirty" means node on a state update branch. */
 typedef std::unordered_set<CKTreeNodeIdentifier> CKTreeNodeDirtyIds;

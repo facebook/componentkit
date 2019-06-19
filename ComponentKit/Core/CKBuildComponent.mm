@@ -19,8 +19,9 @@
 #import "CKComponentSubclass.h"
 #import "CKRenderHelpers.h"
 #import "CKRenderTreeNodeWithChildren.h"
-#import "CKTreeNodeProtocol.h"
 #import "CKThreadLocalComponentScope.h"
+#import "CKTreeNodeProtocol.h"
+#import "CKGlobalConfig.h"
 
 namespace CKBuildComponentHelpers {
   auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> BuildTrigger
@@ -30,16 +31,55 @@ namespace CKBuildComponentHelpers {
     }
     return BuildTrigger::NewTree;
   }
+
+  /**
+   Computes and returns the bounds animations for the transition from a prior generation's scope root.
+   */
+  static auto boundsAnimationFromPreviousScopeRoot(CKComponentScopeRoot *newRoot,
+                                                   CKComponentScopeRoot *previousRoot) -> CKComponentBoundsAnimation
+  {
+    NSMapTable *const scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
+    [previousRoot
+     enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
+     block:^(id<CKComponentProtocol> component) {
+       CKComponent *oldComponent = (CKComponent *)component;
+       id scopeFrameToken = [oldComponent scopeFrameToken];
+       if (scopeFrameToken) {
+         [scopeFrameTokenToOldComponent setObject:oldComponent forKey:scopeFrameToken];
+       }
+     }];
+
+    __block CKComponentBoundsAnimation boundsAnimation {};
+    [newRoot
+     enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
+     block:^(id<CKComponentProtocol> component) {
+       CKComponent *newComponent = (CKComponent *)component;
+       id scopeFrameToken = [newComponent scopeFrameToken];
+       if (scopeFrameToken) {
+         CKComponent *oldComponent = [scopeFrameTokenToOldComponent objectForKey:scopeFrameToken];
+         if (oldComponent) {
+           auto const ba = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
+           if (ba.duration != 0) {
+             boundsAnimation = ba;
+#if CK_ASSERTIONS_ENABLED
+             boundsAnimation.component = newComponent;
+#endif
+           }
+         }
+       }
+     }];
+    return boundsAnimation;
+  }
 }
 
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        CKBuildComponentConfig config)
+                                        BOOL ignoreComponentReuseOptimizations)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
-  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates, buildTrigger, config.enableFasterPropsUpdates);
+  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates, buildTrigger);
 
   auto const analyticsListener = [previousRoot analyticsListener];
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
@@ -48,31 +88,52 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   auto const component = componentFactory();
 
   // Build the component tree if we have a render component in the hierarchy.
-  if (threadScope.newScopeRoot.hasRenderComponentInTree) {
-    CKTreeNodeDirtyIds treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger);
+  if (threadScope.newScopeRoot.hasRenderComponentInTree || CKReadGlobalConfig().alwaysBuildRenderTree) {
+    CKBuildComponentTreeParams params = {
+      .scopeRoot = threadScope.newScopeRoot,
+      .previousScopeRoot = previousRoot,
+      .stateUpdates = stateUpdates,
+      .treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger),
+      .buildTrigger = buildTrigger,
+      .ignoreComponentReuseOptimizations = ignoreComponentReuseOptimizations,
+      .systraceListener = threadScope.systraceListener,
+      .enableLayoutCache = CKReadGlobalConfig().enableLayoutCacheInRender,
+    };
 
     // Build the component tree from the render function.
     [component buildComponentTree:threadScope.newScopeRoot.rootNode.node()
                    previousParent:previousRoot.rootNode.node()
-                           params:{
-                             .scopeRoot = threadScope.newScopeRoot,
-                             .previousScopeRoot = previousRoot,
-                             .stateUpdates = stateUpdates,
-                             .treeNodeDirtyIds = treeNodeDirtyIds,
-                             .buildTrigger = buildTrigger,
-                             .enableFasterPropsUpdates = config.enableFasterPropsUpdates,
-                             .enableViewConfigurationWithState = config.enableViewConfigurationWithState,
-                             .systraceListener = threadScope.systraceListener,
-                           }
+                           params:params
              parentHasStateUpdate:NO];
+
+#if DEBUG
+    CKDidBuildComponentTree(params, component);
+#endif
   }
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;
 
-  [analyticsListener didBuildComponentTreeWithScopeRoot:newScopeRoot component:component];
+  [analyticsListener didBuildComponentTreeWithScopeRoot:newScopeRoot
+                                           buildTrigger:buildTrigger
+                                           stateUpdates:stateUpdates
+                                              component:component];
   return {
     .component = component,
     .scopeRoot = newScopeRoot,
-    .boundsAnimation = CKComponentBoundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot),
+    .boundsAnimation = CKBuildComponentHelpers::boundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot),
+    .buildTrigger = buildTrigger,
   };
 }
+
+#if DEBUG
+void CKDidBuildComponentTree(const CKBuildComponentTreeParams &params, id<CKComponentProtocol> component)
+{
+  // Notify the debug listener.
+  auto const newScopeRoot = params.scopeRoot;
+  auto debugAnalyticsListener = [newScopeRoot.analyticsListener debugAnalyticsListener];
+  [debugAnalyticsListener canReuseNodes:newScopeRoot.rootNode.canBeReusedNodes
+                      previousScopeRoot:params.previousScopeRoot
+                           newScopeRoot:newScopeRoot
+                              component:component];
+}
+#endif

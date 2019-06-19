@@ -52,10 +52,8 @@ static CKComponentContextValue *contextValue(BOOL create)
     threadDictionary[kThreadDictionaryKey] = contextValue;
     // Props updates support.
     CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
-    // Save the existing scope root, but only if `enableFasterPropsUpdates` is enabled.
-    if (currentScope != nullptr &&
-        currentScope->enableFasterPropsUpdates &&
-        currentScope->newScopeRoot) {
+    // Save the existing scope root.
+    if (currentScope != nullptr && currentScope->newScopeRoot) {
       contextValue->_scopeRoot = currentScope->newScopeRoot;
     } else {
       contextValue->_scopeRoot = nil;
@@ -149,7 +147,7 @@ void CKComponentContextHelper::didBuildComponentTree(id component)
   if (renderDictionary) {
     CKCAssert(!v->_stack.empty(), @"The stack cannot be empty if there is a render dictionary in the cache");
     CKCAssert(v->_dictionary == renderDictionary, @"The current store is different than the renderDictionary");
-    
+
     // Update the pointer to the latest render dictionary
     if (!v->_stack.empty()) {
       // Retrieve the previous value from the stack.
@@ -193,7 +191,32 @@ CKComponentContextContents CKComponentContextHelper::fetchAll()
   if (!v) {
     return {};
   }
+
   return {
     .objects = [v->_dictionary copy],
   };
+}
+
+NSMutableDictionary<Class, id>* CKComponentInitialValuesContext::setInitialValues(NSDictionary<Class, id> *objects)
+{
+  CKComponentContextValue *const v = contextValue(YES);
+  // Save the old values.
+  auto const oldObjects = v->_dictionary;
+  // Copy the new values.
+  v->_dictionary = [objects mutableCopy];
+  // Move the old values back to the main storage.
+  for (id key in oldObjects) {
+    v->_dictionary[key] = oldObjects[key];
+  }
+  return oldObjects;
+}
+
+void CKComponentInitialValuesContext::cleanInitialValues(NSMutableDictionary<Class, id> *oldObjects)
+{
+  CKComponentContextValue *const v = contextValue(NO);
+  if (!v) {
+    return;
+  }
+  v->_dictionary = oldObjects;
+  clearContextValueIfEmpty(v);
 }

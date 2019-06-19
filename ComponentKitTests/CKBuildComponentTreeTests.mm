@@ -68,6 +68,7 @@
   CKComponent *c2 = [CKComponent newWithView:{} size:{}];
   [c2 buildComponentTree:root2 previousParent:root params:{
     .scopeRoot = scopeRoot2,
+    .previousScopeRoot = scopeRoot,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::PropsUpdate,
     .treeNodeDirtyIds = {},
@@ -112,6 +113,7 @@
   CKRenderComponent *renderComponent2 = [CKComponentTreeTestComponent_Render newWithComponent:c2];
   [renderComponent2 buildComponentTree:root2 previousParent:root params:{
     .scopeRoot = scopeRoot2,
+    .previousScopeRoot = scopeRoot,
     .stateUpdates = {},
     .buildTrigger = BuildTrigger::PropsUpdate,
     .treeNodeDirtyIds = {},

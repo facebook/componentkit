@@ -16,19 +16,24 @@
 #import "CKDataSourceItem.h"
 #import "CKDataSourceState.h"
 #import "CKDataSourceAppliedChanges.h"
-#import "CKComponentRootView.h"
+#import "CKDataSourceInternal.h"
+#import "CKCollectionViewDataSourceInternal.h"
+#import "CKComponentRootViewInternal.h"
 #import "CKComponentLayout.h"
-#import "CKComponentDataSourceAttachController.h"
+#import "CKComponentAttachController.h"
 #import "CKComponentBoundsAnimation+UICollectionView.h"
 #import "CKComponentControllerEvents.h"
+#import "CKCollectionViewDataSourceListenerAnnouncer.h"
 
 @interface CKCollectionViewDataSource () <UICollectionViewDataSource, CKDataSourceListener>
 {
   CKDataSource *_componentDataSource;
   __weak id<CKSupplementaryViewDataSource> _supplementaryViewDataSource;
   CKDataSourceState *_currentState;
-  CKComponentDataSourceAttachController *_attachController;
+  CKComponentAttachController *_attachController;
   NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *_cellToItemMap;
+  CKCollectionViewDataSourceListenerAnnouncer *_announcer;
+  BOOL _allowTapPassthroughForCells;
 }
 @end
 
@@ -48,11 +53,18 @@
     _collectionView.dataSource = self;
     [_collectionView registerClass:[CKCollectionViewDataSourceCell class] forCellWithReuseIdentifier:kReuseIdentifier];
 
-    _attachController = [CKComponentDataSourceAttachController new];
+    _attachController = [CKComponentAttachController new];
     _supplementaryViewDataSource = supplementaryViewDataSource;
     _cellToItemMap = [NSMapTable weakToStrongObjectsMapTable];
+    _announcer = [CKCollectionViewDataSourceListenerAnnouncer new];
   }
   return self;
+}
+
+- (CKDataSourceState *)currentState
+{
+  CKAssertMainThread();
+  return _currentState;
 }
 
 #pragma mark - Changeset application
@@ -67,14 +79,14 @@
 }
 
 static void applyChangesToCollectionView(UICollectionView *collectionView,
-                                         CKComponentDataSourceAttachController *attachController,
+                                         CKComponentAttachController *attachController,
                                          NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *cellToItemMap,
                                          CKDataSourceState *currentState,
                                          CKDataSourceAppliedChanges *changes)
 {
   [changes.updatedIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, BOOL *stop) {
     if (CKCollectionViewDataSourceCell *cell = (CKCollectionViewDataSourceCell *) [collectionView cellForItemAtIndexPath:indexPath]) {
-      attachToCell(cell, [currentState objectAtIndexPath:indexPath], attachController, cellToItemMap);
+      attachToCell(cell, [currentState objectAtIndexPath:indexPath], attachController, cellToItemMap, YES);
     }
   }];
   [collectionView deleteItemsAtIndexPaths:[changes.removedIndexPaths allObjects]];
@@ -94,6 +106,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
                   withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
 {
+  [_announcer dataSourceWillBeginUpdates:self];
   const BOOL changesIncludeNonUpdates = (changes.removedIndexPaths.count ||
                                          changes.insertedIndexPaths.count ||
                                          changes.movedIndexPaths.count ||
@@ -114,7 +127,9 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
     void (^applyUpdatedState)(CKDataSourceState *) = ^(CKDataSourceState *updatedState) {
       [_collectionView performBatchUpdates:^{
         _currentState = updatedState;
-      } completion:^(BOOL finished) {}];
+      } completion:^(BOOL finished) {
+        [_announcer dataSourceDidEndUpdates:self didModifyPreviousState:previousState withState:state byApplyingChanges:changes];
+      }];
     };
 
     // We only apply the bounds animation if we found one with a duration.
@@ -137,7 +152,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
         CKDataSourceItem *item = [state objectAtIndexPath:indexPath];
         CKCollectionViewDataSourceCell *cell = (CKCollectionViewDataSourceCell *)[_collectionView cellForItemAtIndexPath:indexPath];
         if (cell) {
-          attachToCell(cell, item, _attachController, _cellToItemMap);
+          attachToCell(cell, item, _attachController, _cellToItemMap, YES);
         }
       }
     }, nil);
@@ -147,9 +162,13 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
       // Detach all the component layouts for items being deleted
       [self _detachComponentLayoutForRemovedItemsAtIndexPaths:[changes removedIndexPaths]
                                                       inState:previousState];
+      [self _detachComponentLayoutForRemovedSections:[changes removedSections]
+                                                      inState:previousState];
       // Update current state
       _currentState = state;
-    } completion:NULL];
+    } completion:^(BOOL finished){
+      [_announcer dataSourceDidEndUpdates:self didModifyPreviousState:previousState withState:state byApplyingChanges:changes];
+    }];
   }
 }
 
@@ -163,6 +182,16 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
     CKComponentScopeRootIdentifier identifier = [[[state objectAtIndexPath:indexPath] scopeRoot] globalIdentifier];
     [_attachController detachComponentLayoutWithScopeIdentifier:identifier];
   }
+}
+
+- (void)_detachComponentLayoutForRemovedSections:(NSIndexSet *)removedSections inState:(CKDataSourceState *)state
+{
+  [removedSections enumerateIndexesUsingBlock:^(NSUInteger section, BOOL *stop) {
+    [state enumerateObjectsInSectionAtIndex:section
+                                 usingBlock:^(CKDataSourceItem *item, NSIndexPath *indexPath, BOOL *stop2) {
+      [_attachController detachComponentLayoutWithScopeIdentifier:[[item scopeRoot] globalIdentifier]];
+    }];
+  }];
 }
 
 #pragma mark - State
@@ -211,6 +240,7 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
   CKCollectionViewDataSourceCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:kReuseIdentifier forIndexPath:indexPath];
+  [cell.rootView setAllowTapPassthrough:_allowTapPassthroughForCells];
   attachToCell(cell, [_currentState objectAtIndexPath:indexPath], _attachController, _cellToItemMap);
   return cell;
 }
@@ -232,17 +262,56 @@ static NSString *const kReuseIdentifier = @"com.component_kit.collection_view_da
 
 static void attachToCell(CKCollectionViewDataSourceCell *cell,
                          CKDataSourceItem *item,
-                         CKComponentDataSourceAttachController *attachController,
-                         NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *cellToItemMap)
+                         CKComponentAttachController *attachController,
+                         NSMapTable<UICollectionViewCell *, CKDataSourceItem *> *cellToItemMap,
+                         BOOL isUpdate = NO)
 {
-  CKComponentDataSourceAttachControllerAttachComponentRootLayout(
+  CKComponentAttachControllerAttachComponentRootLayout(
       attachController,
       {.layoutProvider = item,
        .scopeIdentifier = item.scopeRoot.globalIdentifier,
        .boundsAnimation = item.boundsAnimation,
        .view = cell.rootView,
-       .analyticsListener = item.scopeRoot.analyticsListener});
+       .analyticsListener = item.scopeRoot.analyticsListener,
+       .isUpdate = isUpdate});
   [cellToItemMap setObject:item forKey:cell];
+}
+
+#pragma mark - Internal
+
+- (void)setAllowTapPassthroughForCells:(BOOL)allowTapPassthroughForCells
+{
+  CKAssertMainThread();
+  _allowTapPassthroughForCells = allowTapPassthroughForCells;
+}
+
+- (void)setState:(CKDataSourceState *)state
+{
+  CKAssertMainThread();
+  if (_currentState == state) {
+    return;
+  }
+
+  auto const previousState = _currentState;
+  [_announcer dataSource:self willChangeState:previousState];
+  _currentState = state;
+
+  [_attachController detachAll];
+  [_componentDataSource removeListener:self];
+  _componentDataSource = [[CKDataSource alloc] initWithState:state];
+  [_componentDataSource addListener:self];
+  [_collectionView reloadData];
+  [_announcer dataSource:self didChangeState:previousState withState:state];
+}
+
+- (void)addListener:(id<CKCollectionViewDataSourceListener>)listener
+{
+  [_announcer addListener:listener];
+}
+
+- (void)removeListener:(id<CKCollectionViewDataSourceListener>)listener
+{
+  [_announcer removeListener:listener];
 }
 
 @end

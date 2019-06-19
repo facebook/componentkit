@@ -13,19 +13,9 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKComponentController.h>
-#import <ComponentKit/CKComponentEvents.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceItemInternal.h>
-
-auto CKComponentAnimationPredicates() -> std::unordered_set<CKComponentPredicate>
-{
-  return {
-    CKComponentHasAnimationsOnInitialMountPredicate,
-    CKComponentHasAnimationsFromPreviousComponentPredicate,
-    CKComponentHasAnimationsOnFinalUnmountPredicate,
-  };
-}
 
 CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
@@ -33,7 +23,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         CKDataSourceConfiguration *configuration,
                                         id model,
                                         id context,
-                                        const std::unordered_set<CKComponentPredicate> &layoutPredicates)
+                                        BOOL ignoreComponentReuseOptimizations)
 {
   auto const componentProvider = [configuration componentProvider];
   const auto componentFactory = ^{
@@ -42,11 +32,11 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
   const CKBuildComponentResult result = CKBuildComponent(previousRoot,
                                                          stateUpdates,
                                                          componentFactory,
-                                                         configuration.buildComponentConfig);
+                                                         ignoreComponentReuseOptimizations);
   const auto rootLayout = CKComputeRootComponentLayout(result.component,
                                                        sizeRange,
                                                        result.scopeRoot.analyticsListener,
-                                                       layoutPredicates);
+                                                       result.buildTrigger);
   return [[CKDataSourceItem alloc] initWithRootLayout:rootLayout
                                                 model:model
                                             scopeRoot:result.scopeRoot

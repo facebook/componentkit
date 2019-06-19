@@ -24,6 +24,8 @@
 class CKComponentDebugConfiguration;
 
 typedef void (^CKComponentViewReuseBlock)(UIView *);
+typedef UIView *(^CKComponentViewFactoryBlock)(void);
+typedef UIView *(*CKComponentViewFactoryFunc)(void);
 
 struct CKComponentViewClass {
 
@@ -54,7 +56,7 @@ struct CKComponentViewClass {
    @param didEnterReusePool Executed after a view has been hidden for future reuse.
    @param willLeaveReusePool Executed just before a view is revealed after being reused.
    */
-  CKComponentViewClass(UIView *(*factory)(void),
+  CKComponentViewClass(CKComponentViewFactoryFunc factory,
                        CKComponentViewReuseBlock didEnterReusePool = nil,
                        CKComponentViewReuseBlock willLeaveReusePool = nil) noexcept;
 
@@ -71,11 +73,11 @@ struct CKComponentViewClass {
 
 private:
   CKComponentViewClass(const std::string &ident,
-                       UIView *(^factory)(void),
+                       CKComponentViewFactoryBlock factory,
                        CKComponentViewReuseBlock didEnterReusePool = nil,
                        CKComponentViewReuseBlock willLeaveReusePool = nil) noexcept;
   std::string identifier;
-  UIView *(^factory)(void);
+  CKComponentViewFactoryBlock factory;
   CKComponentViewReuseBlock didEnterReusePool;
   CKComponentViewReuseBlock willLeaveReusePool;
   friend class CK::Component::ViewReuseUtilities;
@@ -107,7 +109,8 @@ struct CKComponentViewConfiguration {
 
   CKComponentViewConfiguration(CKComponentViewClass &&cls,
                                CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs,
-                               CKComponentAccessibilityContext &&accessibilityCtx) noexcept;
+                               CKComponentAccessibilityContext &&accessibilityCtx,
+                               bool blockImplicitAnimations = false) noexcept;
 
   ~CKComponentViewConfiguration();
   bool operator==(const CKComponentViewConfiguration &other) const noexcept;
@@ -116,6 +119,7 @@ struct CKComponentViewConfiguration {
   std::shared_ptr<const CKViewComponentAttributeValueMap> attributes() const noexcept;
   const CKComponentAccessibilityContext &accessibilityContext() const noexcept;
   BOOL isDefaultConfiguration() const;
+  bool blockImplicitAnimations() const noexcept;
 
 private:
   struct Repr {
@@ -123,6 +127,7 @@ private:
     std::shared_ptr<const CKViewComponentAttributeValueMap> attributes;
     CKComponentAccessibilityContext accessibilityContext;
     CK::Component::PersistentAttributeShape attributeShape;
+    bool blockImplicitAnimations;
   };
 
   static std::shared_ptr<const Repr> singletonViewConfiguration();

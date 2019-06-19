@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKComponentAction.h"
+#import "CKAction.h"
 
 #import <unordered_map>
 #import <vector>
@@ -24,6 +24,29 @@
 void CKActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKActionTypelist<> &list) noexcept { }
 void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) noexcept { }
 
+static auto createScopeIdentifierAndResponderGenerator(CKComponentScopeHandle *handle,
+                                                       SEL selector) ->
+std::pair<CKScopedResponderUniqueIdentifier, CKResponderGenerationBlock>
+{
+  const auto scopedResponder = handle.scopedResponder;
+  const auto responderKey = [scopedResponder keyForHandle:handle];
+  return {
+    [handle globalIdentifier],
+    ^id(void) {
+
+      /**
+       At one point in the history of ComponentKit, it was possible for a CKScopeResponder to
+       return a "stale" target for an action. This was often caused by retain cycles, or,
+       "old" component hierarchies with prolonged lifecycles.
+
+       To prevent this from happening in the future we now provide a key which gives the
+       scopeResponder the wisdom to ignore older generations.
+       */
+      return [scopedResponder responderForKey:responderKey];
+    }
+  };
+}
+
 #pragma mark - CKActionBase
 
 bool CKActionBase::operator==(const CKActionBase& rhs) const
@@ -38,11 +61,11 @@ bool CKActionBase::operator==(const CKActionBase& rhs) const
           && _block == rhs._block);
 }
 
-CKComponentActionSendBehavior CKActionBase::defaultBehavior() const
+CKActionSendBehavior CKActionBase::defaultBehavior() const
 {
   return (_variant == CKActionVariant::RawSelector
-          ? CKComponentActionSendBehaviorStartAtSenderNextResponder
-          : CKComponentActionSendBehaviorStartAtSender);
+          ? CKActionSendBehaviorStartAtSenderNextResponder
+          : CKActionSendBehaviorStartAtSender);
 };
 
 id CKActionBase::initialTarget(CKComponent *sender) const
@@ -64,28 +87,19 @@ CKActionBase::CKActionBase() noexcept : _target(nil), _scopeIdentifierAndRespond
 
 CKActionBase::CKActionBase(id target, SEL selector) noexcept : _target(target), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::TargetSelector), _selector(selector) {};
 
+
 CKActionBase::CKActionBase(const CKComponentScope &scope, SEL selector) noexcept : _target(nil), _block(NULL), _variant(CKActionVariant::Responder), _selector(selector)
 {
   const auto handle = scope.scopeHandle();
-  CKCAssert(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
+  CKCAssertNotNil(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
+  _scopeIdentifierAndResponderGenerator = createScopeIdentifierAndResponderGenerator(handle, selector);
+}
 
-  const auto scopedResponder = handle.scopedResponder;
-  const auto responderKey = [scopedResponder keyForHandle:handle];
-  _scopeIdentifierAndResponderGenerator = {
-    [handle globalIdentifier],
-    ^id(void) {
-
-      /** 
-       At one point in the history of ComponentKit, it was possible for a CKScopeResponder to
-       return a "stale" target for an action. This was often caused by retain cycles, or,
-       "old" component hierarchies with prolonged lifecycles.
-       
-       To prevent this from happening in the future we now provide a key which gives the 
-       scopeResponder the wisdom to ignore older generations.
-       */
-      return [scopedResponder responderForKey:responderKey];
-    }
-  };
+CKActionBase::CKActionBase(SEL selector, id<CKRenderComponentProtocol> component) noexcept : _target(nil), _block(NULL), _variant(CKActionVariant::Responder), _selector(selector)
+{
+  auto const handle = component.scopeHandle;
+  CKCAssertNotNil(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
+  _scopeIdentifierAndResponderGenerator = createScopeIdentifierAndResponderGenerator(handle, selector);
 };
 
 CKActionBase::CKActionBase(SEL selector) noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::RawSelector), _selector(selector) {};
@@ -140,41 +154,44 @@ CKActionInfo CKActionFind(SEL selector, id target) noexcept
     id forwardingTarget = [responder forwardingTargetForSelector:selector];
     if (!forwardingTarget || forwardingTarget == responder) {
       // Bail, the object they're asking us to message will just crash if the method is invoked on them
-      CKCFailAssert(@"Forwarding target failed for action:%@ %@", target, NSStringFromSelector(selector));
+      CKCFailAssertWithCategory(NSStringFromSelector(selector),
+                                @"Forwarding target failed for action: %@ %@",
+                                NSStringFromSelector(selector),
+                                target);
       return {};
     }
-    
+
     responder = forwardingTarget;
     CKCAssert(![responder isProxy],
               @"NSProxy can't be a responder for target-selector CKAction. Please use a block action instead.");
     imp = [responder methodForSelector:selector];
   }
-  
+
   CKCAssert(imp != nil,
             @"IMP not found for selector => SEL: %@ | target: %@",
             NSStringFromSelector(selector), [target class]);
-  
+
   return {imp, responder};
 }
 
 #pragma mark - Legacy Send Functions
 
-void CKComponentActionSend(const CKAction<> &action, CKComponent *sender)
+void CKActionSend(const CKAction<> &action, CKComponent *sender)
 {
   action.send(sender);
 }
 
-void CKComponentActionSend(const CKAction<> &action, CKComponent *sender, CKComponentActionSendBehavior behavior)
+void CKActionSend(const CKAction<> &action, CKComponent *sender, CKActionSendBehavior behavior)
 {
   action.send(sender, behavior);
 }
 
-void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context)
+void CKActionSend(const CKAction<id> &action, CKComponent *sender, id context)
 {
   action.send(sender, action.defaultBehavior(), context);
 }
 
-void CKComponentActionSend(const CKAction<id> &action, CKComponent *sender, id context, CKComponentActionSendBehavior behavior)
+void CKActionSend(const CKAction<id> &action, CKComponent *sender, id context, CKActionSendBehavior behavior)
 {
   action.send(sender, behavior, context);
 }
@@ -266,10 +283,10 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKAction<UIEvent 
   CKCAssertNotNil(list, @"Forwarder should always find an action list installed by applicator");
   // Protect against mutation-during-enumeration by copying the list of actions to send:
   const std::vector<CKAction<UIEvent *>> copiedActions = list->_actions[_controlEvents];
-  CKComponent *const sendingComponent = sender.ck_component;
+  CKComponent *const sendingComponent = CKMountedComponentForView(sender);
   for (const auto &action : copiedActions) {
     // If the action can be handled by the sender itself, send it there instead of looking up the chain.
-    action.send(sendingComponent, CKComponentActionSendBehaviorStartAtSender, event);
+    action.send(sendingComponent, CKActionSendBehaviorStartAtSender, event);
   }
 }
 
@@ -295,7 +312,7 @@ BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, Method method, const
   if (selector == NULL) {
     return NO;
   }
-  
+
   if (typeEncodings.size() + 3 < method_getNumberOfArguments(method)) {
     CKCFailAssert(@"Expected action method %@ to take less than %llu arguments, but it supports %llu", NSStringFromSelector(selector), (unsigned long long)typeEncodings.size(), (unsigned long long)method_getNumberOfArguments(method) - 3);
     return NO;
@@ -324,10 +341,10 @@ BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, Method method, const
     // ref types get '^' prefixed to them. Since C++ would implicitly
     // use pass-by-ref or pass-by-value based the called function, we
     // treat a mismatch between ref & copy as valid.
-    if (*methodEncoding == '^') {
+    if (methodEncoding != NULL && *methodEncoding == '^') {
       methodEncoding++;
     }
-    if (*typeEncoding == '^') {
+    if (typeEncoding != NULL && *typeEncoding == '^') {
       typeEncoding++;
     }
 
@@ -370,19 +387,22 @@ BOOL checkMethodSignatureAgainstTypeEncodings(SEL selector, Method method, const
       return NO;
     }
   }
-  
+
   return YES;
 }
 
 #if DEBUG
 void _CKTypedComponentDebugCheckComponentScope(const CKComponentScope &scope, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
 {
-  CKComponentScopeHandle *const scopeHandle = scope.scopeHandle();
+  _CKTypedComponentDebugCheckComponentScopeHandle(scope.scopeHandle(), selector, typeEncodings);
+}
 
+void _CKTypedComponentDebugCheckComponentScopeHandle(CKComponentScopeHandle *handle, SEL selector, const std::vector<const char *> &typeEncodings) noexcept
+{
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
-  const Class klass = scopeHandle.componentClass;
+  const Class klass = handle.componentClass;
 
   _CKTypedComponentDebugCheckComponent(klass, selector, typeEncodings);
 }
@@ -454,7 +474,7 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {
 
 - (BOOL)ck_send
 {
-  _ck_action.send(_ck_view.ck_component, CKComponentActionSendBehaviorStartAtSender);
+  _ck_action.send(CKMountedComponentForView(_ck_view), CKActionSendBehaviorStartAtSender);
   return YES;
 }
 

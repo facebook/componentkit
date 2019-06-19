@@ -48,11 +48,10 @@
     [currentScope->newScopeRoot registerComponent:component];
     return handle;
   }
-  CKCAssertNil([component.class controllerClass] &&
-               ![component conformsToProtocol:@protocol(CKRenderComponentProtocol)]
-                , @"%@ has a controller but no scope! "
-               "Make sure you construct your scope(self) before constructing the component or CKComponentTestRootScope "
-               "at the start of the test.", [component class]);
+  CKAssertWithCategory([component.class controllerClass] == Nil || [component conformsToProtocol:@protocol(CKRenderComponentProtocol)],
+    NSStringFromClass([component class]),
+    @"Component has a controller but no scope! Make sure you construct your scope(self) "
+    "before constructing the component or CKComponentTestRootScope at the start of the test.");
 
   return nil;
 }
@@ -121,18 +120,6 @@
                                                controller:_controller
                                           scopedResponder:_scopedResponder
                                                    parent:parent];
-}
-
-- (instancetype)newHandleToBeReacquiredDueToScopeCollision
-{
-  return [[CKComponentScopeHandle alloc] initWithListener:_listener
-                                         globalIdentifier:_globalIdentifier
-                                           rootIdentifier:_rootIdentifier
-                                           componentClass:_componentClass
-                                                    state:_state
-                                               controller:_controller
-                                          scopedResponder:_scopedResponder
-                                                   parent:_parent];
 }
 
 - (id<CKComponentControllerProtocol>)controller
@@ -209,15 +196,18 @@
   // _acquiredComponent may be nil if a component scope was declared before an early return. In that case, the scope
   // handle will not be acquired, and we should avoid creating a component controller for the nil component.
   if (!_controller && _acquiredComponent) {
-    CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
-    CKAssert(currentScope != nullptr, @"Current scope should never be null here. Thread-local stack is corrupted.");
-
     const Class<CKComponentControllerProtocol> controllerClass = [_acquiredComponent.class controllerClass];
     if (controllerClass) {
       // The compiler is not happy when I don't explicitly cast as (Class)
       // See: http://stackoverflow.com/questions/21699755/create-an-instance-from-a-class-that-conforms-to-a-protocol
       _controller = [[(Class)controllerClass alloc] initWithComponent:_acquiredComponent];
-      [currentScope->newScopeRoot registerComponentController:_controller];
+
+      CKThreadLocalComponentScope *const currentScope = CKThreadLocalComponentScope::currentScope();
+      if (currentScope) {
+        [currentScope->newScopeRoot registerComponentController:_controller];
+      } else {
+        CKFailAssert(@"Current scope should never be null here. Thread-local stack is corrupted.");
+      }
     }
   }
   _resolved = YES;
@@ -226,7 +216,6 @@
 - (CKScopedResponder *)scopedResponder
 {
   if (!_scopedResponder) {
-    CKAssertFalse(_resolved);
     _scopedResponder = [CKScopedResponder new];
     [_scopedResponder addHandleToChain:self];
   }

@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKAction.h>
 #import <vector>
 
 #import <ComponentKit/CKComponentDelegateForwarder.h>

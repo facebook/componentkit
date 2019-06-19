@@ -12,7 +12,7 @@
 #import "CKComponentRootViewInternal.h"
 
 #import "CKAssert.h"
-#import "CKComponentDataSourceAttachControllerInternal.h"
+#import "CKComponentAttachControllerInternal.h"
 
 @implementation CKComponentRootView {
   BOOL _allowTapPassthrough;
@@ -20,14 +20,10 @@
 
 static NSMutableArray *hitTestHooks;
 
-- (instancetype)initWithFrame:(CGRect)frame
-          allowTapPassthrough:(BOOL)allowTapPassthrough
+- (void)setAllowTapPassthrough:(BOOL)allowTapPassthrough
 {
-  self = [super initWithFrame:frame];
-  if (self) {
-    _allowTapPassthrough = allowTapPassthrough;
-  }
-  return self;
+  CKAssertMainThread();
+  _allowTapPassthrough = allowTapPassthrough;
 }
 
 + (void)addHitTestHook:(CKComponentRootViewHitTestHook)hook
@@ -69,8 +65,8 @@ static NSMutableArray *hitTestHooks;
 {
   // It's weird to reach into ck_attachState here. ck_attachState should probably be refactored
   // to simply be a concrete method on this class, instead of a category.
-  CKComponentDataSourceAttachState *const attachState = self.ck_attachState;
-  return attachState ? CKComponentDataSourceAttachStateRootLayout(attachState).layout() : CKComponentLayout();
+  CKComponentAttachState *const attachState = CKGetAttachStateForView(self);
+  return attachState ? CKComponentAttachStateRootLayout(attachState).layout() : CKComponentLayout();
 }
 
 @end

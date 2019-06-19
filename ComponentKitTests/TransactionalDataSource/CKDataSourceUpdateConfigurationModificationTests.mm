@@ -13,20 +13,26 @@
 #include <stdlib.h>
 
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKDataSourceAppliedChanges.h>
 #import <ComponentKit/CKDataSourceChange.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
+#import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceState.h>
+#import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 
 #import "CKDataSourceStateTestHelpers.h"
 #import "CKDataSourceUpdateConfigurationModification.h"
 
-@interface CKTestContextComponent : CKComponent
+static NSString *const kTestContextForLifecycleComponent = @"kTestContextForLifecycleComponent";
+
+@interface CKTestContextComponent : CKCompositeComponent
 @property (nonatomic, strong, readonly) id<NSObject> context;
+@property (nonatomic, strong, readonly) CKLifecycleTestComponent *lifecycleComponent;
 + (instancetype)newWithContext:(id<NSObject>)context;
 @end
 
@@ -34,9 +40,13 @@
 
 + (instancetype)newWithContext:(id<NSObject>)context
 {
-  CKTestContextComponent *c = [super newWithView:{} size:{}];
+  CKLifecycleTestComponent *lifecycleComponent = [context isEqual:kTestContextForLifecycleComponent]
+  ? [CKLifecycleTestComponent newWithView:{} size:{}]
+  : nil;
+  const auto c = [super newWithComponent:lifecycleComponent ?: [CKComponent newWithView:{} size:{}]];
   if (c) {
     c->_context = context;
+    c->_lifecycleComponent = lifecycleComponent;
   }
   return c;
 }
@@ -156,6 +166,26 @@
   CKDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];
   CKDataSourceItem *item = [[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
   XCTAssertTrue(CGSizeEqualToSize([item rootLayout].size(), CGSizeMake(50, 50)));
+}
+
+- (void)testReturnsInvalidComponentControllers
+{
+  const auto originalState = CKDataSourceTestState([self class], nil, 1, 1);
+  const auto oldConfiguration = [originalState configuration];
+  auto newConfiguration = [oldConfiguration copyWithContext:kTestContextForLifecycleComponent sizeRange:oldConfiguration.sizeRange];
+  auto change =
+  [[[CKDataSourceUpdateConfigurationModification alloc]
+    initWithConfiguration:newConfiguration userInfo:nil]
+   changeFromState:originalState];
+
+  const auto componentController = ((CKTestContextComponent *)[[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].rootLayout.component()).lifecycleComponent.controller;
+
+  change =
+  [[[CKDataSourceUpdateConfigurationModification alloc]
+    initWithConfiguration:oldConfiguration userInfo:nil]
+   changeFromState:change.state];
+  XCTAssertEqual(change.invalidComponentControllers.firstObject, componentController,
+                 @"Invalid component controller should be returned because component is removed from hierarchy.");
 }
 
 @end

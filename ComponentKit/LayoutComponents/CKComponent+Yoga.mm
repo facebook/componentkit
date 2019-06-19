@@ -22,6 +22,7 @@ YGConfigRef ckYogaDefaultConfig()
   return defaultConfig;
 }
 
+CK_LINKABLE(CKComponent_Yoga)
 @implementation CKComponent (Yoga)
 
 - (BOOL)isYogaBasedLayout
@@ -46,6 +47,7 @@ YGConfigRef ckYogaDefaultConfig()
 
 @end
 
+CK_LINKABLE(CKCompositeComponent_Yoga)
 @implementation CKCompositeComponent (Yoga)
 
 - (BOOL)isYogaBasedLayout

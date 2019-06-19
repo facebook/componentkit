@@ -16,7 +16,6 @@
 #import <ComponentKit/CKAutoSizedImageComponent.h>
 #import <ComponentKit/CKNetworkImageComponent.h>
 #import <ComponentKit/CKNetworkImageDownloading.h>
-#import <ComponentKit/CKMemoizingComponent.h>
 //Core
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAnimation.h>
@@ -53,7 +52,7 @@
 #import <ComponentKit/CKRatioLayoutComponent.h>
 #import <ComponentKit/CKStaticLayoutComponent.h>
 //Utilities
-#import <ComponentKit/CKComponentAction.h>
+#import <ComponentKit/CKAction.h>
 #import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKComponentGestureActions.h>
 #import <ComponentKit/CKContainerWrapper.h>
