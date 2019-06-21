@@ -1,0 +1,392 @@
+/* ComponentKit CSS */
+
+body, h1, h2, h3, h4 {
+  font-family: 'San Francisco', -apple-system, BlinkMacSystemFont,
+  '.SFNSText-Regular', 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+}
+
+td {
+    vertical-align: top;
+}
+
+h1:first-child, h2:first-child, h3:first-child, h4:first-child {
+    margin-top: 0;
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: 500;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.3em;
+}
+
+h4 {
+    font-size: 1.1em;
+}
+
+p, ul, ol {
+    margin:  0 0 1em 0;
+}
+
+h2.projectTitle {
+  font-size: 54px;
+  line-height: 120%;
+  font-weight: 200;
+  margin-bottom: 20px;
+  color: white;
+  text-align: left;
+}
+
+.homeContainer {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  background-color: #25C6DA;
+  color: #F6F7F9;
+  height: 400px;
+  padding-bottom: 30px;
+  justify-content: space-around;
+}
+
+.homeContainer .projectLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+}
+
+.homeContainer .inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.blockContent {
+  text-align: left;
+}
+
+code {
+    letter-spacing: 0.02em;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+p code, span code, li code {
+    border: 1px solid rgb(220, 220, 220);
+    background-color: rgba(90, 140, 140, 0.1);
+}
+
+code.highlight, code.redhighlight {
+    font-size: 13px;
+    line-height: 20px;
+    padding: 0 10px 20px 10px;
+}
+
+.highlighttable {
+    margin-left: 10px;
+    margin-bottom: 20px;
+    margin-right: 10px;
+    border-collapse: separate !important;
+}
+
+.highlighttable .highlight, .highlighttable .redhighlight {
+    padding: 0;
+}
+
+code.highlighttable {
+    padding-right: 10px;
+    margin: 0;
+    padding-left: 2px;
+    font-size: 12px;
+    display: block;
+    line-height: 20px;
+    white-space: pre;
+    color: hsl(210, 100%, 8%);
+}
+
+code.highlight, code.redhighlight, .highlighttable {
+    overflow-x: scroll;
+    display: block;
+    padding: 0;
+    font-size: 13px;
+    border: 1px solid rgb(220, 220, 220);
+    padding: 5px 10px;
+    box-sizing: border-box;
+    border-radius: 3;
+}
+
+code.highlight, code.highlighttable {
+    border-left: 4px solid hsl(99, 100%, 42%);
+    background-color: rgba(90, 140, 140, 0.1);
+}
+
+code.redhighlight {
+    border-left: 4px solid hsl(347, 100%, 50%);
+    background-color: rgba(180, 80, 80, 0.1);
+}
+
+
+code.highlight, code.redhighlight {
+    width: 100%;
+    white-space: pre;
+}
+
+.lineno {
+    color: rgb(214, 139, 0);
+}
+
+.lineno::after {
+    content: ';';
+    font-size: 0;
+}
+
+.highlight + .highlight + .highlight,
+.highlighttable + .highlight + .highlight,
+.redhighlight + .redhighlight + .redhighlight
+.highlighttable + .redhighlight + .redhighlight {
+    margin-top: -20px;
+}
+
+
+ul, ol {
+    list-style-position: outside;
+}
+
+
+a {
+    text-decoration: none;
+    color: #1C9BC7;
+}
+
+nav.toc a {
+    color: #444;
+}
+nav.toc a.active {
+    color: #1C9BC7;
+}
+
+.toc .toggleNav .navGroup .navGroupCategoryTitle {
+  line-height: 2em;
+}
+
+.toc .toggleNav ul li.navListItemActive a {
+  color: #1C9BC7;
+}
+
+a.hash-link {
+  color: #ccc;
+}
+
+a.hash-link:hover {
+    color: #1C9BC7;
+}
+
+.width {
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.headerWrapper {
+  max-width: 100%;
+}
+
+.componentkit-header {
+    background-image: url(componentkit-hero-logo.png);
+    background-size: 660px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    height: 280px;
+}
+
+.button {
+  border: 1px solid #FFFFFF;
+  color: white;
+}
+
+.button:hover {
+  border: 1px solid #343331;
+}
+
+.btn-primary .buttonWrapper .button {
+  background-color: #20AECF;
+  border: 1px solid #1D9CC8;
+  border-radius: 3px;
+  color: #ffffff;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover .buttonWrapper .button {
+  color: #343331;
+  background-color: white;
+  border: 1px solid white;
+}
+
+section.content {
+    padding: 20px 0;
+}
+
+section.content article ul li,
+section.content article ol li {
+  margin-bottom: 0.5em;
+}
+
+
+section.content article img {
+    display: block;
+    margin: 1em auto;
+}
+
+section.content article blockquote {
+    border-left: 4px solid hsl(19, 100%, 42%);
+    padding: 5px 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+section.content article blockquote p {
+    margin: 0;
+}
+
+section.content article blockquote p:first-child {
+    float: left;
+    margin-right: 5px;
+    color: hsl(19, 100%, 42%);
+}
+
+section.content article blockquote p {
+    font-style: italic;
+}
+
+section.content article blockquote small:before {
+    content: '\2014 \00A0';
+}
+
+section.content article.withtoc {
+    position: relative;
+}
+
+section.content article .read-more {
+  font-weight: bold;
+  text-align: right;
+}
+
+section.content article hr.blogpostend {
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+section.content aside .fb-like {
+    top: 4px;
+    left: 4px;
+}
+
+nav.toc {
+    font-size: 14px;
+    line-height: 18px;
+    margin-bottom: 20px;
+}
+
+nav.toc h3 {
+    margin: 0.5em 0;
+    padding-top: 0.5em;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 40px;
+}
+
+nav.toc section:first-child h3 {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+nav.toc ul {
+   list-style: none;
+   margin: 0;
+   padding-left: 0;
+}
+
+nav.toc ul li {
+    line-height: 15px;
+}
+
+footer {
+    padding: 5px 0;
+    padding-bottom: 10px;
+    font-size: 13px;
+    text-align: right;
+}
+
+.right {
+    float: right;
+}
+
+.right a {
+    color: #cd4e34;
+    padding: 0 5px;
+}
+
+.hash {
+    margin-left: 3px;
+    visibility: hidden;
+}
+
+*:hover > .hash {
+    visibility: visible;
+}
+
+.hashref {
+    position: absolute;
+    top: -60px;
+    left: 0;
+}
+
+.note {
+    padding: 10px;
+    border-radius: 3px;
+    background-color: #EFF7FF;
+    border: 1px solid #CCDDFF;
+    border-left: 4px solid rgb(0, 169, 210);
+    margin-bottom: 20px;
+}
+
+.note p:before {
+    content: "NOTE:";
+    font-weight: bold;
+}
+
+.note p {
+    margin-bottom: 0px;
+}
+
+.note-important {
+    padding: 10px;
+    border-radius: 3px;
+    background-color: #FFCCCC;
+    border: 1px solid #FF8899;
+    border-left: 4px solid rgb(255, 80, 100);
+    margin-bottom: 20px;
+}
+
+.note-important p:before {
+    content: "IMPORTANT:";
+    font-weight: bold;
+}
+
+.note-important p {
+    margin-bottom: 0px;
+}
