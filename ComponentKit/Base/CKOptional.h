@@ -121,12 +121,12 @@ public:
     return *this;
   }
 
-  auto operator=(const Optional& other) -> Optional {
+  auto operator=(const Optional& other) -> Optional& {
     assign(other);
     return *this;
   }
 
-  auto operator=(Optional&& other) -> Optional {
+  auto operator=(Optional&& other) -> Optional& {
     assign(std::move(other));
     return *this;
   }
@@ -167,10 +167,19 @@ public:
    of invoking nm otherwise.
    */
   template <typename ValueMatcher, typename NoneMatcher>
-  auto match(ValueMatcher&& vm, NoneMatcher&& nm) const
+  auto match(ValueMatcher&& vm, NoneMatcher&& nm) const&
   -> decltype(vm(std::declval<T>())) {
     if (hasValue()) {
       return vm(forceUnwrap());
+    }
+    return nm();
+  }
+
+  template <typename ValueMatcher, typename NoneMatcher>
+  auto match(ValueMatcher&& vm, NoneMatcher&& nm) &&
+  -> decltype(vm(std::declval<T>())) {
+    if (hasValue()) {
+      return vm(std::move(*this).forceUnwrap());
     }
     return nm();
   }
@@ -189,8 +198,13 @@ public:
    Note: you are not allowed to return anything from value handler in apply.
    */
   template <typename ValueMatcher>
-  auto apply(ValueMatcher&& vm) const -> void {
+  auto apply(ValueMatcher&& vm) const& -> void {
     match(std::forward<ValueMatcher>(vm), []() {});
+  }
+
+  template <typename ValueMatcher>
+  auto apply(ValueMatcher&& vm) && -> void {
+    std::move(*this).match(std::forward<ValueMatcher>(vm), []() {});
   }
 
   /**
@@ -308,14 +322,14 @@ public:
   }
 
   auto valueOr(const T& dflt) && -> T {
-    return match(
-                 [](const T& value) { return std::move(value); },
+    return std::move(*this).match(
+                 [](T&& value) { return std::move(value); },
                  [&]() { return dflt; });
   }
 
   auto valueOr(T&& dflt) && -> T {
-    return match(
-                 [](const T& value) { return std::move(value); },
+    return std::move(*this).match(
+                 [](T&& value) { return std::move(value); },
                  [&]() { return std::forward<T>(dflt); });
   }
 
@@ -330,12 +344,12 @@ public:
    */
   template <typename F, typename = std::enable_if_t<std::is_convertible<F, std::function<T()>>::value>>
   auto valueOr(F&& defaultProvider) const& -> T {
-    return match([](const T& value) { return value; }, [&]() { return defaultProvider(); });
+    return match([](const T& value) { return value; }, defaultProvider);
   }
 
   template <typename F, typename = std::enable_if_t<std::is_convertible<F, std::function<T()>>::value>>
   auto valueOr(F&& defaultProvider) && -> T {
-    return match([](const T& value) { return std::move(value); }, [&]() { return defaultProvider(); });
+    return std::move(*this).match([](T&& value) { return std::move(value); }, defaultProvider);
   }
 
   /**
@@ -394,8 +408,8 @@ private:
     if (this == &other) {
       return;
     }
-    other.match(
-                [&](const T& value) {
+    std::move(other).match(
+                [&](T&& value) {
                   assign(std::move(value));
                   other.clear();
                 },

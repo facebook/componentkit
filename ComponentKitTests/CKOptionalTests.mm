@@ -142,3 +142,186 @@ static auto toNSString(int x) -> NSString * {
 }
 
 @end
+
+static int numCopies = 0;
+static int numMoves = 0;
+
+struct CopyMoveTracker {
+  CopyMoveTracker() {}
+
+  CopyMoveTracker(const CopyMoveTracker &other)
+  {
+    numCopies += 1;
+  }
+
+  auto operator =(const CopyMoveTracker &) -> CopyMoveTracker &
+  {
+    numCopies += 1;
+    return *this;
+  }
+
+  CopyMoveTracker(CopyMoveTracker &&other)
+  {
+    numMoves += 1;
+  }
+
+  auto operator =(CopyMoveTracker &&) -> CopyMoveTracker &
+  {
+    numMoves += 1;
+    return *this;
+  }
+};
+
+@interface CKOptionalTests_CopiesAndMoves: XCTestCase
+@end
+
+@implementation CKOptionalTests_CopiesAndMoves
+
+- (void)setUp
+{
+  [super setUp];
+  numCopies = 0;
+  numMoves = 0;
+}
+
+- (void)test_CopyConstruction
+{
+  auto const x = Optional<CopyMoveTracker>{CopyMoveTracker {}};
+
+  auto const y = x;
+
+  XCTAssertEqual(numCopies, 1);
+}
+
+- (void)test_Matching
+{
+  auto const x = Optional<CopyMoveTracker>{CopyMoveTracker {}};
+
+  x.match([](const CopyMoveTracker &){}, [](){});
+
+  XCTAssertEqual(numCopies, 0);
+}
+
+- (void)test_Mapping
+{
+  auto const x = Optional<CopyMoveTracker>{CopyMoveTracker {}};
+
+  x.map([](const CopyMoveTracker &){ return 0; });
+
+  XCTAssertEqual(numCopies, 0);
+}
+
+- (void)test_WhenMapping_ReturnValueIsMoved
+{
+  auto const x = Optional<CopyMoveTracker>{CopyMoveTracker {}}; // Move
+
+  __unused auto const y = x.map([](const CopyMoveTracker &){
+    return CopyMoveTracker {};
+  }); // Move when constructing the resulting optional
+
+  XCTAssertEqual(numCopies, 0);
+  XCTAssertEqual(numMoves, 2);
+}
+
+- (void)test_WhenHasValue_ValueOrCopiesValueOut
+{
+  auto const x = Optional<CopyMoveTracker>{CopyMoveTracker {}}; // Move
+
+  __unused auto const y = x.valueOr({}); // Copy the value out of the optional
+
+  XCTAssertEqual(numCopies, 1);
+  XCTAssertEqual(numMoves, 1);
+}
+
+- (void)test_WhenEmpty_ValueOrMovesDefaultValue
+{
+  Optional<CopyMoveTracker> const x = none;
+
+  __unused auto const y = x.valueOr({}); // Move
+
+  XCTAssertEqual(numCopies, 0);
+  XCTAssertEqual(numMoves, 1);
+}
+
+static auto returnsOptional() -> Optional<CopyMoveTracker> { return CopyMoveTracker {}; }
+static auto returnsNone() -> Optional<CopyMoveTracker> { return none; }
+
+- (void)test_WhenMatchingOnRValueAndHasValue_MovesValueOut
+{
+  __unused auto const y = returnsOptional() // Move
+  .match([](CopyMoveTracker &&t){
+    return std::move(t); // Move
+  }, [](){ return CopyMoveTracker {}; });
+
+  XCTAssertEqual(numCopies, 0);
+  XCTAssertEqual(numMoves, 2);
+}
+
+- (void)test_WhenRValueHasValue_ValueOrMovesValueOut
+{
+  __unused auto const x = returnsOptional() // Move + Move
+    .valueOr({});
+
+  XCTAssertEqual(numCopies, 0);
+  XCTAssertEqual(numMoves, 2);
+
+  auto const dflt = CopyMoveTracker {};
+
+  __unused auto const y = returnsOptional() // Move + Move
+    .valueOr(dflt);
+
+  XCTAssertEqual(numCopies, 0);
+  XCTAssertEqual(numMoves, 4);
+
+  __unused auto const z = returnsOptional() // Move + Move
+    .valueOr([](){ return CopyMoveTracker {}; });
+
+  XCTAssertEqual(numCopies, 0);
+  XCTAssertEqual(numMoves, 6);
+}
+
+- (void)test_WhenRValueEmpty_ValueOrMovesDefaultValue
+{
+  __unused auto const x = returnsNone()
+    .valueOr({}); // Move
+
+  XCTAssertEqual(numCopies, 0);
+  XCTAssertEqual(numMoves, 1);
+
+  __unused auto const z = returnsNone()
+    .valueOr([](){ return CopyMoveTracker {}; }); // RVO
+
+  XCTAssertEqual(numCopies, 0);
+  XCTAssertEqual(numMoves, 1);
+}
+
+- (void)test_WhenRValueEmpty_ValueOrCopiesDefaultValue
+{
+  auto const dflt = CopyMoveTracker {};
+  __unused auto const x = returnsNone()
+    .valueOr(dflt); // Copy
+
+  XCTAssertEqual(numCopies, 1);
+  XCTAssertEqual(numMoves, 0);
+}
+
+- (void)test_WhenAssigningFromRValue_MovesValueOut
+{
+  Optional<CopyMoveTracker> x = none;
+
+  x = returnsOptional(); // Move + Move assign
+
+  XCTAssertEqual(numCopies, 0);
+  XCTAssertEqual(numMoves, 2);
+}
+
+- (void)test_WhenApplyingRValue_MovesValueOut
+{
+  auto x = CopyMoveTracker{};
+  returnsOptional() // Move
+    .apply([&](CopyMoveTracker &&t){ x = std::move(t); }); // Move assign
+
+  XCTAssertEqual(numMoves, 2);
+}
+
+@end
