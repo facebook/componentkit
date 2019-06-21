@@ -37,6 +37,12 @@
 + (instancetype)newWithComponent:(CKComponent *)component;
 @end
 
+@interface CKTreeNodeTest_RenderComponent_NoInitialState : CKRenderComponent
+@end
+
+@interface CKTreeNodeTest_RenderWithChildrenComponent_NoInitialState : CKRenderWithChildrenComponent
+@end
+
 @interface CKTreeNodeTest_Component_WithState : CKComponent
 @end
 
@@ -317,19 +323,19 @@
 
   // Simulate first component tree creation
   CKRenderTreeNodeWithChildren *root1 = [[CKRenderTreeNodeWithChildren alloc] init];
-  auto const component1 = [CKTreeNodeTest_Component_WithState newWithView:{} size:{}];
-  CKTreeNode *childNode = [[CKTreeNode alloc] initWithComponent:component1
-                                                         parent:root1
-                                                 previousParent:nil
-                                                      scopeRoot:threadScope.newScopeRoot
-                                                   stateUpdates:{}];
+  auto const component1 = [CKTreeNodeTest_RenderComponent_WithState newWithView:{} size:{}];
+  CKTreeNode *childNode = [[CKRenderTreeNodeWithChild alloc] initWithComponent:component1
+                                                                        parent:root1
+                                                                previousParent:nil
+                                                                     scopeRoot:threadScope.newScopeRoot
+                                                                  stateUpdates:{}];
 
   // Verify that the initial state is correct.
   XCTAssertTrue([childNode.state isEqualToNumber:[[component1 class] initialState]]);
 
   // Simulate a component tree creation due to a state update
   CKRenderTreeNodeWithChildren *root2 = [[CKRenderTreeNodeWithChildren alloc] init];
-  auto const component2 = [CKTreeNodeTest_Component_WithState newWithView:{} size:{}];
+  auto const component2 = [CKTreeNodeTest_RenderComponent_WithState newWithView:{} size:{}];
 
   // Simulate a state update
   auto const newState = @2;
@@ -338,87 +344,99 @@
   stateUpdates[scopeHandle].push_back(^(id){
     return newState;
   });
-  CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
-                                                          parent:root2
-                                                  previousParent:root1
-                                                       scopeRoot:[threadScope.newScopeRoot newRoot]
-                                                    stateUpdates:stateUpdates];
+  CKTreeNode *childNode2 = [[CKRenderTreeNodeWithChild alloc] initWithComponent:component2
+                                                                         parent:root2
+                                                                 previousParent:root1
+                                                                      scopeRoot:[threadScope.newScopeRoot newRoot]
+                                                                   stateUpdates:stateUpdates];
 
   XCTAssertTrue([childNode2.state isEqualToNumber:newState]);
 }
 
 - (void)test_nonNil_initialState_onCKTreeNode_withCKComponentSubclass
 {
-  auto const c = [CKTreeNodeTest_Component_WithState new];
-  [self _test_nonNil_initialState_withComponent:c andNodeClass:[CKTreeNode class]];
+  __block CKComponent *c;
+  buildComponent(^CKComponent*{
+    c = [CKTreeNodeTest_Component_WithState new];
+    // Using flexbox here to add a render component to the hierarchy, which forces buildComponentTree:
+    return [CKFlexboxComponent
+            newWithView:{}
+            size:{}
+            style:{}
+            children:{
+              {c},
+              {[CKTreeNodeTest_RenderComponent_WithNilState new]},
+            }];
+  });
+  [self _test_nonNil_initialState_withComponent:c];
 }
 
 - (void)test_emptyInitialState_onCKTreeNode_withCKComponentSubclass
 {
-  auto const c = [CKComponent new];
-  [self _test_emptyInitialState_withComponent:c andNodeClass:[CKTreeNode class]];
+  auto const c = buildComponent(^{ return [CKComponent new]; });
+  [self _test_emptyInitialState_withComponent:c];
 }
 
 - (void)test_nonNil_initialState_onCKRenderTreeNode_withCKRenderComponent
 {
-  auto const c = [CKTreeNodeTest_RenderComponent_WithState new];
-  [self _test_nonNil_initialState_withComponent:c andNodeClass:[CKRenderTreeNodeWithChild class]];
+  auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderComponent_WithState new]; });
+  [self _test_nonNil_initialState_withComponent:c];
 }
 
 - (void)test_nonNil_initialState_onCKRenderTreeNode_withCKRenderWithChildrenComponent
 {
-  auto const c = [CKTreeNodeTest_RenderWithChildrenComponent_WithState new];
-  [self _test_nonNil_initialState_withComponent:c andNodeClass:[CKRenderTreeNodeWithChild class]];
+  auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderWithChildrenComponent_WithState new]; });
+  [self _test_nonNil_initialState_withComponent:c];
 }
 
 - (void)test_emptyInitialState_onCKRenderTreeNode_withCKRenderComponent
 {
-  auto const c = [CKRenderComponent new];
-  [self _test_emptyInitialState_withComponent:c andNodeClass:[CKRenderTreeNodeWithChild class]];
+  auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderComponent_NoInitialState new]; });
+  [self _test_emptyInitialState_withComponent:c];
 }
 
 - (void)test_emptyInitialState_onCKRenderTreeNode_withCKRenderWithChildrenComponent
 {
-  auto const c = [CKRenderWithChildrenComponent new];
-  [self _test_emptyInitialState_withComponent:c andNodeClass:[CKRenderTreeNodeWithChild class]];
+  auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderWithChildrenComponent_NoInitialState new]; });
+  [self _test_emptyInitialState_withComponent:c];
 }
 
 - (void)test_initialStateFromPtops_onCKRenderTreeNode_withCKRenderWithChildrenComponent
 {
   id prop = @1;
-  auto const c = [CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps newWithProp:prop];
-  [self _test_initialState_withComponent:c initialState:prop andNodeClass:[CKRenderTreeNodeWithChild class]];
+  auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps newWithProp:prop]; });
+  [self _test_initialState_withComponent:c initialState:prop];
 }
 
 - (void)test_initialStateFromPtops_onCKRenderTreeNode_withCKRenderComponent
 {
   id prop = @1;
-  auto const c = [CKTreeNodeTest_RenderComponent_WithStateFromProps newWithProp:prop];
-  [self _test_initialState_withComponent:c initialState:prop andNodeClass:[CKRenderTreeNodeWithChild class]];
+  auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderComponent_WithStateFromProps newWithProp:prop]; });
+  [self _test_initialState_withComponent:c initialState:prop];
 }
 
 - (void)test_nilInitialState_onCKRenderTreeNode_withCKRenderWithChildrenComponent
 {
   // Make sure CKRenderWithChildrenComponent supports nil initial state from prop.
   id prop = nil;
-  auto const c = [CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps newWithProp:prop];
-  [self _test_initialState_withComponent:c initialState:prop andNodeClass:[CKRenderTreeNodeWithChild class]];
+  auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps newWithProp:prop]; });
+  [self _test_initialState_withComponent:c initialState:prop];
 
   // Make sure CKRenderWithChildrenComponent supports nil initial.
-  auto const c2 = [CKTreeNodeTest_RenderWithChildrenComponent_WithNilState new];
-  [self _test_initialState_withComponent:c2 initialState:nil andNodeClass:[CKRenderTreeNodeWithChild class]];
+  auto const c2 = buildComponent(^{ return [CKTreeNodeTest_RenderWithChildrenComponent_WithNilState new]; });
+  [self _test_initialState_withComponent:c2 initialState:nil];
 }
 
 - (void)test_nilInitialState_onCKRenderTreeNode_withCKRenderComponent
 {
   // Make sure CKRenderComponent supports nil initial state from prop.
   id prop = nil;
-  auto const c = [CKTreeNodeTest_RenderComponent_WithStateFromProps newWithProp:prop];
-  [self _test_initialState_withComponent:c initialState:nil andNodeClass:[CKRenderTreeNodeWithChild class]];
+  auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderComponent_WithStateFromProps newWithProp:prop]; });
+  [self _test_initialState_withComponent:c initialState:nil];
 
   // Make sure CKRenderWithChildrenComponent supports nil initial.
-  auto const c2 = [CKTreeNodeTest_RenderComponent_WithNilState new];
-  [self _test_initialState_withComponent:c2 initialState:nil andNodeClass:[CKRenderTreeNodeWithChild class]];
+  auto const c2 = buildComponent(^{ return [CKTreeNodeTest_RenderComponent_WithNilState new]; });
+  [self _test_initialState_withComponent:c2 initialState:nil];
 }
 
 #pragma mark - CKTreeNodeWithChild
@@ -477,52 +495,21 @@
 
 #pragma mark - Helpers
 
-- (void)_test_emptyInitialState_withComponent:(CKComponent *)c andNodeClass:(Class<CKTreeNodeProtocol>)nodeClass
+- (void)_test_emptyInitialState_withComponent:(CKComponent *)c
 {
-  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
-
-  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
-  CKTreeNode *node = [[(Class)nodeClass alloc]
-                      initWithComponent:c
-                      parent:root
-                      previousParent:nil
-                      scopeRoot:threadScope.newScopeRoot
-                      stateUpdates:{}];
-
-  XCTAssertNil(node.state);
-  XCTAssertNil(node.handle);
+  XCTAssertNil(c.scopeHandle.state);
 }
 
-- (void)_test_nonNil_initialState_withComponent:(CKComponent *)c andNodeClass:(Class<CKTreeNodeProtocol>)nodeClass
+- (void)_test_nonNil_initialState_withComponent:(CKComponent *)c
 {
-  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
-
-  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
-  CKTreeNode *node = [[(Class)nodeClass alloc]
-                      initWithComponent:c
-                      parent:root
-                      previousParent:nil
-                      scopeRoot:threadScope.newScopeRoot
-                      stateUpdates:{}];
-
-  XCTAssertEqual([[c class] initialState], node.state);
-  XCTAssertNotNil(node.handle);
+  XCTAssertEqual([[c class] initialState], c.scopeHandle.state);
+  XCTAssertNotNil(c.scopeHandle);
 }
 
-- (void)_test_initialState_withComponent:(CKComponent *)c initialState:(id)initialState andNodeClass:(Class<CKTreeNodeProtocol>)nodeClass
+- (void)_test_initialState_withComponent:(CKComponent *)c initialState:(id)initialState
 {
-  CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
-
-  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
-  CKTreeNode *node = [[(Class)nodeClass alloc]
-                      initWithComponent:c
-                      parent:root
-                      previousParent:nil
-                      scopeRoot:threadScope.newScopeRoot
-                      stateUpdates:{}];
-
-  XCTAssertEqual(initialState, node.state);
-  XCTAssertNotNil(node.handle);
+  XCTAssertEqual(initialState, c.scopeHandle.state);
+  XCTAssertNotNil(c.scopeHandle);
 }
 
 static BOOL verifyChildToParentConnection(id<CKTreeNodeWithChildrenProtocol> parentNode, CKTreeNode *childNode, CKComponent *c) {
@@ -567,6 +554,15 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
   }
 }
 
+static CKComponent* buildComponent(CKComponent*(^block)()) {
+  __block CKComponent *c;
+  CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^CKComponent *{
+    c = block();
+    return c;
+  });
+  return c;
+}
+
 @end
 
 #pragma mark - Helper Classes
@@ -576,6 +572,12 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 {
   return @1;
 }
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
+                       size:(const CKComponentSize &)size
+{
+  CKComponentScope scope(self);
+  return [super newWithView:view size:size];
+}
 @end
 
 @implementation CKTreeNodeTest_RenderWithChildrenComponent_WithState
@@ -583,12 +585,23 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 {
   return @1;
 }
+- (std::vector<CKComponent *>)renderChildren:(id)state
+{
+  return {
+    [CKComponent new],
+    [CKComponent new],
+  };
+}
 @end
 
 @implementation CKTreeNodeTest_RenderComponent_WithState
 + (id)initialState
 {
   return @1;
+}
+- (CKComponent *)render:(id)state
+{
+  return [CKComponent new];
 }
 @end
 
@@ -610,6 +623,14 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 {
   return c->_prop;
 }
+
+- (std::vector<CKComponent *>)renderChildren:(id)state
+{
+  return {
+    [CKComponent new],
+    [CKComponent new],
+  };
+}
 @end
 
 @implementation CKTreeNodeTest_RenderComponent_WithStateFromProps
@@ -630,6 +651,11 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 {
   return c->_prop;
 }
+
+- (CKComponent *)render:(id)state
+{
+  return [CKComponent new];
+}
 @end
 
 @implementation CKTreeNodeTest_RenderWithChildrenComponent_WithNilState
@@ -637,12 +663,24 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 {
   return nil;
 }
+- (std::vector<CKComponent *>)renderChildren:(id)state
+{
+  return {
+    [CKComponent new],
+    [CKComponent new],
+  };
+}
 @end
 
 @implementation CKTreeNodeTest_RenderComponent_WithNilState
 + (id)initialState
 {
   return nil;
+}
+
+- (CKComponent *)render:(id)state
+{
+  return [CKComponent new];
 }
 @end
 
@@ -704,4 +742,21 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
   return component->_identifier;
 }
 
+@end
+
+@implementation CKTreeNodeTest_RenderComponent_NoInitialState
+- (CKComponent *)render:(id)state
+{
+  return [CKComponent new];
+}
+@end
+
+@implementation CKTreeNodeTest_RenderWithChildrenComponent_NoInitialState
+- (std::vector<CKComponent *>)renderChildren:(id)state
+{
+  return {
+    [CKComponent new],
+    [CKComponent new],
+  };
+}
 @end
