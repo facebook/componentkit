@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[55],{128:function(o){o.exports={title:"Animation",id:"animation",description:"ComponentKit exposes three ways to perform animations on a component.",source:"/mnt/btrfs/trunk-hg-fbobjc-fbsource-56958473-1561289466/fbobjc/VendorLib/ComponentKit-public/website/docs/animation.md",permalink:"/docs/animation"}}}]);
