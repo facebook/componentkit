@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[98],{39:function(o){o.exports={permalink:"/support",source:"/mnt/btrfs/trunk-hg-fbobjc-fbsource-56958443-1561289716/fbobjc/VendorLib/ComponentKit-public/website/pages/support.js"}}}]);

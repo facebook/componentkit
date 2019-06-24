@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>CKComponent() Category Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">ComponentKit </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Facebook</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/mountedView">mountedView</option>
+		
+		<option value="//api/name/rootComponentMountedView">rootComponentMountedView</option>
+		
+		<option value="//api/name/scopeEnumeratorProvider">scopeEnumeratorProvider</option>
+		
+		<option value="//api/name/scopeFrameToken">scopeFrameToken</option>
+		
+		<option value="//api/name/scopeHandle">scopeHandle</option>
+		
+		<option value="//api/name/size">size</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Class Methods">
+		
+		<option value="//api/name/newRenderComponentWithView:size:">+ newRenderComponentWithView:size:</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/childrenDidMount:">- childrenDidMount:</option>
+		
+		<option value="//api/name/mountInContext:size:children:supercomponent:systraceListener:">- mountInContext:size:children:supercomponent:systraceListener:</option>
+		
+		<option value="//api/name/setViewConfiguration:">- setViewConfiguration:</option>
+		
+		<option value="//api/name/unmount">- unmount</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">CKComponent() Category Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Conforms to</th>
+	<td>CKTreeNodeComponentProtocol</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>CKComponentInternal.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/mountInContext:size:children:supercomponent:systraceListener:" title="mountInContext:size:children:supercomponent:systraceListener:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/mountInContext:size:children:supercomponent:systraceListener:">&ndash;&nbsp;mountInContext:size:children:supercomponent:systraceListener:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Mounts the component in the given context:
+- Stores references to the supercomponent and superview for -nextResponder and -viewConfiguration.
+- Creates or updates a controller for this component, if one should exist.
+- If this component has a view, creates or recycles a view by fetching one from the given MountContext, and:
+   - Unmounts the view&rsquo;s previous component (if any).
+   - Applies attributes to the view.
+   - Stores a reference to the view in _mountedView (for -viewContext, transient view state, and -unmount).
+   - Stores a reference back to this component using CKSetMountedComponentForView. (This sets up a
+     retain cycle which must be torn down in -unmount.)</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (CK : : Component : : MountResult)mountInContext:(const CK : : Component : : MountContext &amp;)<em>context</em> size:(const CGSize)<em>size</em> children:(std : : shared_ptr&lt;conststd::vector&lt;CKComponentLayoutChild&gt; &gt;)<em>children</em> supercomponent:(CKComponent *)<em>supercomponent</em> systraceListener:(id&lt;CKSystraceListener&gt;)<em>systraceListener</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>context</code></th>
+						<td><p>The component&rsquo;s content should be positioned within the given view at the given position.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>size</code></th>
+						<td><p>The size for this component</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>children</code></th>
+						<td><p>The positioned children for this component. Normally this parameter is ignored.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>supercomponent</code></th>
+						<td><p>This component&rsquo;s parent component</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>systraceListener</code></th>
+						<td><p>The current systrace listener - will be nil if systrace is not enabled.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An updated mount context. In most cases, this is just be the passed-in context. If a view was created, this is
+used to specify that subcomponents should be mounted inside the view.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Override this if your component wants to perform a custom mounting action, but this should be very rare!</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/newRenderComponentWithView:size:" title="newRenderComponentWithView:size:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/newRenderComponentWithView:size:">+&nbsp;newRenderComponentWithView:size:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>For internal use only; don&rsquo;t use this initializer.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (instancetype)newRenderComponentWithView:(const CKComponentViewConfiguration &amp;)<em>view</em> size:(const CKComponentSize &amp;)<em>size</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>view</code></th>
+						<td><p>A struct describing the view for this component. Pass {} to specify that no view should be created.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>size</code></th>
+						<td><p>A size constraint that should apply to this component. Pass {} to specify no size constraint.</p>
+
+<p>This initializer will not try to acquire the scope handle from the thread local store.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setViewConfiguration:" title="setViewConfiguration:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setViewConfiguration:">&ndash;&nbsp;setViewConfiguration:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>For internal use only; don&rsquo;t use this directly.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setViewConfiguration:(const CKComponentViewConfiguration &amp;)<em>viewConfiguration</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/unmount" title="unmount"></a>
+	<h3 class="method-title"><code><a href="#//api/name/unmount">&ndash;&nbsp;unmount</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Unmounts the component:
+- Clears the references to supercomponent and superview.
+- If the component has a <em>mountedView:
+   - Clears the view&rsquo;s reference back to this component using CKSetMountedComponentForView().
+   - Clears </em>mountedView.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)unmount</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/childrenDidMount:" title="childrenDidMount:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/childrenDidMount:">&ndash;&nbsp;childrenDidMount:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called when the component and all its children have been mounted.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)childrenDidMount:(id&lt;CKSystraceListener&gt;)<em>systraceListener</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>systraceListener</code></th>
+						<td><p>The current systrace listener - will be nil if systrace is not enabled.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/rootComponentMountedView" title="rootComponentMountedView"></a>
+	<h3 class="method-title"><code><a href="#//api/name/rootComponentMountedView">&nbsp;&nbsp;rootComponentMountedView</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Used to get the root component in the responder chain; don&rsquo;t touch this.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, weak) UIView *rootComponentMountedView</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/scopeFrameToken" title="scopeFrameToken"></a>
+	<h3 class="method-title"><code><a href="#//api/name/scopeFrameToken">&nbsp;&nbsp;scopeFrameToken</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>For internal use only; don&rsquo;t touch this.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) id&lt;NSObject&gt; scopeFrameToken</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/size" title="size"></a>
+	<h3 class="method-title"><code><a href="#//api/name/size">&nbsp;&nbsp;size</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The size that was passed into the component; don&rsquo;t touch this.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, assign, readonly) CKComponentSize size</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/scopeEnumeratorProvider" title="scopeEnumeratorProvider"></a>
+	<h3 class="method-title"><code><a href="#//api/name/scopeEnumeratorProvider">&nbsp;&nbsp;scopeEnumeratorProvider</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Used to get the scope root enumerator; during component creation only</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) id&lt;CKComponentScopeEnumeratorProvider&gt; scopeEnumeratorProvider</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/mountedView" title="mountedView"></a>
+	<h3 class="method-title"><code><a href="#//api/name/mountedView">&nbsp;&nbsp;mountedView</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>If the component owns its own view and is mounted, returns it.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) UIView *mountedView</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/scopeHandle" title="scopeHandle"></a>
+	<h3 class="method-title"><code><a href="#//api/name/scopeHandle">&nbsp;&nbsp;scopeHandle</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>For internal use only; don&rsquo;t touch this.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2019 Facebook. All rights reserved. Updated: 2019-06-24</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
