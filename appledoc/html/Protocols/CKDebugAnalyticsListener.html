@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>CKDebugAnalyticsListener Protocol Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">ComponentKit </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Facebook</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/canReuseNode:parentNode:scopeRoot:">- canReuseNode:parentNode:scopeRoot:</option>
+		
+		<option value="//api/name/canReuseNodes:previousScopeRoot:newScopeRoot:component:">- canReuseNodes:previousScopeRoot:newScopeRoot:component:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">CKDebugAnalyticsListener Protocol Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Conforms to</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>CKAnalyticsListener.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/canReuseNode:parentNode:scopeRoot:" title="canReuseNode:parentNode:scopeRoot:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/canReuseNode:parentNode:scopeRoot:">&ndash;&nbsp;canReuseNode:parentNode:scopeRoot:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Will be called for every non-render component that can be reused.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)canReuseNode:(id&lt;CKTreeNodeProtocol&gt;)<em>node</em> parentNode:(id&lt;CKTreeNodeProtocol&gt;)<em>parentNode</em> scopeRoot:(CKComponentScopeRoot *)<em>scopeRoot</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/canReuseNodes:previousScopeRoot:newScopeRoot:component:" title="canReuseNodes:previousScopeRoot:newScopeRoot:component:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/canReuseNodes:previousScopeRoot:newScopeRoot:component:">&ndash;&nbsp;canReuseNodes:previousScopeRoot:newScopeRoot:component:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Will be called at the end of component generation with all the information regarding what component can be reused.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)canReuseNodes:(std : : shared_ptr&lt;CKTreeNodeReuseMap&gt;)<em>nodes</em> previousScopeRoot:(CKComponentScopeRoot *)<em>previousScopeRoot</em> newScopeRoot:(CKComponentScopeRoot *)<em>newScopeRoot</em> component:(id&lt;CKComponentProtocol&gt;)<em>component</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2019 Facebook. All rights reserved. Updated: 2019-06-26</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
