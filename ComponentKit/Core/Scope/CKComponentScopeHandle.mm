@@ -43,6 +43,10 @@
     return nil;
   }
 
+  // `handleForComponent` is being called for every non-render component from the base constructor of `CKComponent`.
+  // We can rely on this infomration to increase the `componentAllocations` counter.
+  currentScope->componentAllocations++;
+
   CKComponentScopeHandle *handle = currentScope->stack.top().frame.handle;
   if ([handle acquireFromComponent:component]) {
     [currentScope->newScopeRoot registerComponent:component];

@@ -35,7 +35,7 @@ CKThreadLocalComponentScope *CKThreadLocalComponentScope::currentScope() noexcep
 CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                                                          const CKComponentStateUpdateMap &updates,
                                                          BuildTrigger trigger)
-: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), systraceListener(previousScopeRoot.analyticsListener.systraceListener), buildTrigger(trigger), previousScope(CKThreadLocalComponentScope::currentScope())
+: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), systraceListener(previousScopeRoot.analyticsListener.systraceListener), buildTrigger(trigger), previousScope(CKThreadLocalComponentScope::currentScope()), componentAllocations(0)
 {
   stack.push({[newScopeRoot rootFrame], [previousScopeRoot rootFrame]});
   keys.push({});
@@ -55,5 +55,8 @@ void CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree()
   CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
   if (currentScope != nullptr) {
     currentScope->newScopeRoot.hasRenderComponentInTree = YES;
+    // `markCurrentScopeWithRenderComponentInTree` is being called for every render component from the base constructor of `CKComponent`.
+    // We can rely on this infomration to increase the `componentAllocations` counter.
+    currentScope->componentAllocations++;
   }
 }
