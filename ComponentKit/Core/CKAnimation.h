@@ -242,6 +242,26 @@ namespace CK {
     };
 
     /**
+     A type that any change animation can be implicitly converted to.
+     */
+    struct Change {
+      auto toCA() const { return _anim; }
+
+    private:
+      friend struct ChangeBuilder;
+
+      template <typename A1, typename A2>
+      friend struct SequenceBuilder;
+
+      template <typename A1, typename A2>
+      friend struct ParallelBuilder;
+
+      explicit Change(CAAnimation *anim) :_anim(anim) {}
+
+      CAAnimation *_anim;
+    };
+
+    /**
      Represents a change animation that animates between the previous and the current value of the property.
      */
     struct ChangeBuilder: TimingBuilder<ChangeBuilder> {
@@ -258,6 +278,8 @@ namespace CK {
       }
 
       operator CAAnimation *() const { return toCA(); }
+
+      operator Change() const { return Change{toCA()}; }
 
     private:
       __unsafe_unretained NSString *_keyPath;
@@ -288,7 +310,7 @@ namespace CK {
 
       operator CAAnimation *() const { return toCA(); }
 
-      using Any = std::conditional_t<type == Type::initial, Initial, std::conditional_t<type == Type::final, Final, void>>;
+      using Any = std::conditional_t<type == Type::initial, Initial, std::conditional_t<type == Type::final, Final, Change>>;
       operator Any() const { return Any{toCA()}; }
 
     private:
@@ -325,7 +347,7 @@ namespace CK {
 
       operator CAAnimation *() const { return toCA(); }
 
-      using Any = std::conditional_t<type == Type::initial, Initial, std::conditional_t<type == Type::final, Final, void>>;
+      using Any = std::conditional_t<type == Type::initial, Initial, std::conditional_t<type == Type::final, Final, Change>>;
       operator Any() const { return Any{toCA()}; }
 
     private:
