@@ -39,6 +39,6 @@ class CKComponentTestRootScope {
   };
 
  private:
-  CKThreadLocalComponentScope _threadLocalComponentScope;
   CKThreadLocalComponentScope *_previousThreadLocalComponentScope;
+  CKThreadLocalComponentScope _threadLocalComponentScope;
 };
