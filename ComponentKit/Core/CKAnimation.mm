@@ -24,6 +24,31 @@ auto Animation::functionToCA(Function f) -> CAMediaTimingFunction *
   }
 }
 
+auto Animation::InitialBuilder::toCA() const -> CAAnimation *
+{
+  auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
+  a.fromValue = _from;
+  this->applyTimingTo(a);
+  a.fillMode = kCAFillModeBackwards;
+  return a;
+}
+
+auto Animation::FinalBuilder::toCA() const -> CAAnimation *
+{
+  auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
+  a.toValue = _to;
+  this->applyTimingTo(a);
+  a.fillMode = kCAFillModeForwards;
+  return a;
+}
+
+auto Animation::ChangeBuilder::toCA() const -> CAAnimation *
+{
+  auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
+  this->applyTimingTo(a);
+  return a;
+}
+
 static auto animatedValueAsId(CGFloat f) -> id { return @(f); }
 static auto animatedValueAsId(UIColor *c) -> id { return (id)c.CGColor; }
 

@@ -171,14 +171,7 @@ namespace CK {
       InitialBuilder(id from, __unsafe_unretained NSString *keyPath) :_from(from), _keyPath(keyPath) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
-      auto toCA() const -> CAAnimation *
-      {
-        auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
-        a.fromValue = _from;
-        this->applyTimingTo(a);
-        a.fillMode = kCAFillModeBackwards;
-        return a;
-      }
+      auto toCA() const -> CAAnimation *;
 
       operator CAAnimation *() const { return toCA(); }
 
@@ -223,15 +216,8 @@ namespace CK {
       FinalBuilder(id to, __unsafe_unretained NSString *keyPath) :_to(to), _keyPath(keyPath) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
-      auto toCA() const -> CAAnimation *
-      {
-        auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
-        a.toValue = _to;
-        this->applyTimingTo(a);
-        a.fillMode = kCAFillModeForwards;
-        return a;
-      }
-
+      auto toCA() const -> CAAnimation *;
+      
       operator CAAnimation *() const { return toCA(); }
 
       operator Final() const { return Final{toCA()}; }
@@ -270,13 +256,8 @@ namespace CK {
       ChangeBuilder(__unsafe_unretained NSString *keyPath) :_keyPath(keyPath) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
-      auto toCA() const -> CAAnimation *
-      {
-        auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
-        this->applyTimingTo(a);
-        return a;
-      }
-
+      auto toCA() const -> CAAnimation *;
+      
       operator CAAnimation *() const { return toCA(); }
 
       operator Change() const { return Change{toCA()}; }
