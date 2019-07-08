@@ -46,6 +46,9 @@ auto Animation::ChangeBuilder::toCA() const -> CAAnimation *
 {
   auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
   this->applyTimingTo(a);
+  if (delay > 0) {
+    a.fillMode = kCAFillModeBackwards;
+  }
   return a;
 }
 

@@ -282,6 +282,16 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
   XCTAssertEqualObjects(a.timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
 }
 
+- (void)test_WhenDelayIsNotSet_UsesDefaultFillMode
+{
+  XCTAssertEqualObjects(alpha().toCA().fillMode, kCAFillModeRemoved);
+}
+
+- (void)test_WhenDelayIsSet_UsesBackwardsFillMode
+{
+  XCTAssertEqualObjects(alpha().withDelay(0.25).toCA().fillMode, kCAFillModeBackwards);
+}
+
 @end
 
 @interface CKAnimationTests_Parallel : XCTestCase
@@ -414,6 +424,5 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
   XCTAssertEqualObjects(a.fillMode, kCAFillModeBackwards);
 }
-
 
 @end
