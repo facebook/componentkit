@@ -141,6 +141,18 @@ static auto toNSString(int x) -> NSString * {
   XCTAssertNil(y.mapToPtr(toNSString));
 }
 
+struct ConvertibleToInt {
+  int i;
+  operator int() const { return int{i}; }
+};
+
+- (void)test_InitialisingFromConvertible
+{
+  Optional<int> x = ConvertibleToInt{42};
+
+  XCTAssertEqual(x, 42);
+}
+
 @end
 
 static int numCopies = 0;
@@ -189,6 +201,15 @@ struct CopyMoveTracker {
   auto const x = Optional<CopyMoveTracker>{CopyMoveTracker {}};
 
   auto const y = x;
+
+  XCTAssertEqual(numCopies, 1);
+}
+
+- (void)test_CopyConstructionFromValue
+{
+  auto const x = CopyMoveTracker{};
+
+  __unused auto const y = Optional<CopyMoveTracker>{x};
 
   XCTAssertEqual(numCopies, 1);
 }

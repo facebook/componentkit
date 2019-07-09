@@ -90,11 +90,9 @@ public:
   Optional(const None&) noexcept {}
 
   // Constructs an Optional that contains a value
-  Optional(const T& value) noexcept {
-    construct(value);
-  }
-  Optional(T&& value) noexcept {
-    construct(std::move(value));
+  template <typename U = ValueType, typename = std::enable_if_t<std::is_convertible<U, T>::value>>
+  Optional(U&& value) noexcept {
+    construct(std::forward<U>(value));
   }
 
   Optional(const Optional& other) {
@@ -392,10 +390,13 @@ private:
                          const Optional<U>& lhs,
                          const Optional<U>& rhs) noexcept -> bool;
 
-  template <typename... Args>
-  void construct(Args&&... args) {
-    const void* ptr = &_storage.value;
-    new (const_cast<void*>(ptr)) T(std::forward<Args>(args)...);
+  void construct(const T& value) {
+    new (std::addressof(_storage.value)) T{value};
+    _storage.hasValue = true;
+  }
+
+  void construct(T&& value) {
+    new (std::addressof(_storage.value)) T{std::move(value)};
     _storage.hasValue = true;
   }
 
