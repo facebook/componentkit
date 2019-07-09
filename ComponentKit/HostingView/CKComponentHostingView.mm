@@ -69,6 +69,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   BOOL _allowTapPassthrough;
 
   CK::Optional<CGSize> _initialSize;
+  BOOL _shouldReload;
 }
 @end
 
@@ -267,6 +268,13 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   [_delegate componentHostingViewDidInvalidateSize:self];
 }
 
+- (void)reloadWithMode:(CKUpdateMode)mode
+{
+  CKAssertMainThread();
+  _shouldReload = YES;
+  [self _setNeedsUpdateWithMode:mode];
+}
+
 - (CKComponentLayout)mountedLayout
 {
   return _mountedRootLayout.map([](const auto &rootLayout) {
@@ -364,6 +372,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   // We only layout component in background thread for first generation of component when there is an initial size.
   const auto shouldLayoutComponent = _initialSize.hasValue() && !_component;
   const auto size = _initialSize.valueOr(self.bounds.size);
+  const auto ignoreComponentReuseOptimizations = _shouldReload;
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     const auto result =
     std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
@@ -371,8 +380,8 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                                                                     inputs->stateUpdates,
                                                                     ^{
                                                                       return _componentProvider(inputs->model, inputs->context);
-                                                                    }
-                                                                    ));
+                                                                    },
+                                                                    ignoreComponentReuseOptimizations));
     const auto invalidComponentControllers =
     std::make_shared<const std::vector<CKComponentController *>>([self _invalidComponentControllersWithNewScopeRoot:result->scopeRoot
                                                                                               fromPreviousScopeRoot:inputs->scopeRoot]);
@@ -392,6 +401,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
       // If the inputs haven't changed, apply the result; otherwise, retry.
       if (_pendingInputs == *inputs) {
         _scheduledAsynchronousComponentUpdate = NO;
+        _shouldReload = NO;
         const auto componentControllers = invalidComponentControllers != nullptr ? *invalidComponentControllers : std::vector<CKComponentController *> {};
         [self _applyResult:*result invalidComponentControllers:componentControllers];
         // Layout will be applied if the size of hosting view is not changed during layout calculation in backgorund.
@@ -445,10 +455,12 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     return CK::none;
   }
 
+  const auto ignoreComponentReuseOptimizations = _shouldReload;
+  _shouldReload = NO;
   _isSynchronouslyUpdatingComponent = YES;
   const auto result = CKBuildComponent(_pendingInputs.scopeRoot, _pendingInputs.stateUpdates, ^{
     return _componentProvider(_pendingInputs.model, _pendingInputs.context);
-  });
+  }, ignoreComponentReuseOptimizations);
   [self _applyResult:result invalidComponentControllers:[self _invalidComponentControllersWithNewScopeRoot:result.scopeRoot
                                                                                      fromPreviousScopeRoot:_pendingInputs.scopeRoot]];
   _isSynchronouslyUpdatingComponent = NO;

@@ -65,4 +65,10 @@ struct CKComponentHostingViewOptions {
 /** Applies a result from a component built outside the hosting view. Main thread only. */
 - (void)applyResult:(const CKBuildComponentResult &)result;
 
+/**
+ Calling this method will re-generate the underlying component hierarchy without component reuse.
+ Use case could be reloading a hosting view when `CKComponentConstContext` should be updated.
+ */
+- (void)reloadWithMode:(CKUpdateMode)mode;
+
 @end
