@@ -19,23 +19,19 @@
 - (instancetype)initWithColor:(UIColor *)color
                          size:(const CKComponentSize &)size
 {
-  if (self = [super init]) {
-    _color = color;
-    _size = size;
-  }
-  return self;
+  return [self initWithColor:color
+                        size:size
+                 wrapperType:CKComponentHostingViewWrapperTypeNone];
 }
 
 - (instancetype)initWithColor:(UIColor *)color
                          size:(const CKComponentSize &)size
-               embedInFlexbox:(BOOL)embedInFlexbox
-         embedInTestComponent:(BOOL)embedInTestComponent
+                  wrapperType:(CKComponentHostingViewWrapperType)wrapperType
 {
   if (self = [super init]) {
     _color = color;
     _size = size;
-    _embedInFlexbox = embedInFlexbox;
-    _embedInTestComponent = embedInTestComponent;
+    _wrapperType = wrapperType;
   }
   return self;
 }
@@ -44,24 +40,34 @@
 
 CKComponent *CKComponentWithHostingViewTestModel(CKComponentHostingViewTestModel *model)
 {
-  if (model.embedInTestComponent) {
-    return [CKEmbeddedTestComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [model color]}}} size:[model size]];
-  }
-  
-  if (model.embedInFlexbox) {
-    return [CKFlexboxComponent
-            newWithView:{}
-            size:{}
-            style:{}
-            children:{
-              {
-                .component = [CKLifecycleTestComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [model color]}}}
-                                                              size:[model size]],
-                .sizeConstraints = model.size
-              }
-            }];
-  } else {
-    return [CKLifecycleTestComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [model color]}}}
-                                            size:[model size]];
+  switch(model.wrapperType) {
+    case CKComponentHostingViewWrapperTypeTestComponent: {
+      return
+      [CKEmbeddedTestComponent
+       newWithView:{[UIView class], {{@selector(setBackgroundColor:), [model color]}}}
+       size:[model size]];
+    }
+    case CKComponentHostingViewWrapperTypeFlexbox: {
+      return
+      [CKFlexboxComponent
+       newWithView:{}
+       size:{}
+       style:{}
+       children:{
+         {
+           .component =
+           [CKLifecycleTestComponent
+            newWithView:{[UIView class], {{@selector(setBackgroundColor:), [model color]}}}
+            size:[model size]],
+           .sizeConstraints = model.size
+         }
+       }];
+    }
+    case CKComponentHostingViewWrapperTypeNone: {
+      return
+      [CKLifecycleTestComponent
+       newWithView:{[UIView class], {{@selector(setBackgroundColor:), [model color]}}}
+       size:[model size]];
+    }
   }
 }

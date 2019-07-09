@@ -27,8 +27,7 @@
 
 typedef struct {
   BOOL allowTapPassthrough;
-  BOOL embedInFlexbox;
-  BOOL embedInTestComponent;
+  CKComponentHostingViewWrapperType wrapperType;
   id<CKAnalyticsListener> analyticsListener;
   id<CKComponentSizeRangeProviding> sizeRangeProvider;
   CK::Optional<CGSize> initialSize;
@@ -49,8 +48,7 @@ typedef struct {
   auto const model = [[CKComponentHostingViewTestModel alloc]
                       initWithColor:[UIColor orangeColor]
                       size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))
-                      embedInFlexbox:options.embedInFlexbox
-                      embedInTestComponent:options.embedInTestComponent];
+                      wrapperType:options.wrapperType];
   auto const view = [self makeHostingView:options];
   if (options.shouldUpdateModelAfterCreation) {
     view.bounds = CGRectMake(0, 0, 100, 100);
@@ -175,7 +173,7 @@ typedef struct {
 - (void)testComponentControllerReceivesInvalidateEventDuringDeallocationEvenWhenParentIsStillPresent
 {
   CKComponentHostingView *view = [[self class] hostingView:{
-    .embedInTestComponent = YES,
+    .wrapperType = CKComponentHostingViewWrapperTypeTestComponent,
   }];
 
   auto const testComponent = (CKEmbeddedTestComponent *)view.mountedLayout.component;
@@ -204,7 +202,7 @@ typedef struct {
   // properly below...
   CKComponentHostingView *view = [[self class] hostingView:{
     .allowTapPassthrough = YES,
-    .embedInFlexbox = YES,
+    .wrapperType = CKComponentHostingViewWrapperTypeFlexbox,
   }];
 
   [view layoutIfNeeded];
@@ -224,7 +222,7 @@ typedef struct {
   // while still allowing the host to grow. This allows us to do our hit testing
   // properly below...
   CKComponentHostingView *view = [[self class] hostingView:{
-    .embedInFlexbox = YES,
+    .wrapperType = CKComponentHostingViewWrapperTypeFlexbox,
   }];
 
   [view layoutIfNeeded];

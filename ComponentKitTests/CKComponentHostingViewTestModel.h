@@ -14,6 +14,12 @@
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKComponentSize.h>
 
+typedef NS_ENUM(NSUInteger, CKComponentHostingViewWrapperType) {
+  CKComponentHostingViewWrapperTypeNone,
+  CKComponentHostingViewWrapperTypeFlexbox,
+  CKComponentHostingViewWrapperTypeTestComponent,
+};
+
 @interface CKComponentHostingViewTestModel : NSObject
 
 - (instancetype)initWithColor:(UIColor *)color
@@ -21,18 +27,13 @@
 
 - (instancetype)initWithColor:(UIColor *)color
                          size:(const CKComponentSize &)size
-               embedInFlexbox:(BOOL)embedInFlexbox
-         embedInTestComponent:(BOOL)embedInTestComponent;
+                  wrapperType:(CKComponentHostingViewWrapperType)wrapperType;
 
 - (instancetype)init CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @property (nonatomic, strong, readonly) UIColor *color;
-
 @property (nonatomic, readonly) CKComponentSize size;
-
-@property (nonatomic, readonly) BOOL embedInFlexbox;
-
-@property (nonatomic, readonly) BOOL embedInTestComponent;
+@property (nonatomic, readonly) CKComponentHostingViewWrapperType wrapperType;
 
 @end
 
