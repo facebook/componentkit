@@ -63,6 +63,9 @@ CKComponent *CKComponentWithHostingViewTestModel(CKComponentHostingViewTestModel
          }
        }];
     }
+    case CKComponentHostingViewWrapperTypeRenderComponent: {
+      return [CKRenderLifecycleTestComponent new];
+    }
     case CKComponentHostingViewWrapperTypeNone: {
       return
       [CKLifecycleTestComponent

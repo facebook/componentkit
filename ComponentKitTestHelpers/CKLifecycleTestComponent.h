@@ -10,6 +10,7 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentController.h>
+#import <ComponentKit/CKRenderComponent.h>
 
 struct CKLifecycleMethodCounts {
   NSUInteger willMount;
@@ -52,4 +53,10 @@ struct CKLifecycleMethodCounts {
 + (void)setShouldEarlyReturnNew:(BOOL)shouldEarlyReturnNew;
 - (CKLifecycleTestComponentController *)controller;
 - (void)updateStateToIncludeNewAttribute;
+@end
+
+@interface CKRenderLifecycleTestComponent : CKRenderComponent
+
+@property (nonatomic, assign, readonly) BOOL isRenderFunctionCalled;
+
 @end

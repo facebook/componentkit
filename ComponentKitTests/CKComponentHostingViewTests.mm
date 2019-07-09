@@ -268,6 +268,40 @@ typedef struct {
   XCTAssertEqual(_analyticsListenerSpy->_willLayoutComponentTreeHitCount, 3);
 }
 
+- (void)testUpdateModel_ComponentIsReused
+{
+  CKComponentHostingView *view = [[self class] hostingView:{
+    .analyticsListener = _analyticsListenerSpy,
+    .wrapperType = CKComponentHostingViewWrapperTypeRenderComponent,
+  }];
+  const auto c1 = (CKRenderLifecycleTestComponent *)view.mountedLayout.component;
+  XCTAssertTrue(c1.isRenderFunctionCalled);
+
+  [view updateModel:[[CKComponentHostingViewTestModel alloc]
+                     initWithColor:nil
+                     size:{}
+                     wrapperType:CKComponentHostingViewWrapperTypeRenderComponent]
+               mode:CKUpdateModeSynchronous];
+  [view layoutIfNeeded];
+  const auto c2 = (CKRenderLifecycleTestComponent *)view.mountedLayout.component;
+  XCTAssertFalse(c2.isRenderFunctionCalled);
+}
+
+- (void)testReload_ComponentIsNotReused
+{
+  CKComponentHostingView *view = [[self class] hostingView:{
+    .analyticsListener = _analyticsListenerSpy,
+    .wrapperType = CKComponentHostingViewWrapperTypeRenderComponent,
+  }];
+  const auto c1 = (CKRenderLifecycleTestComponent *)view.mountedLayout.component;
+  XCTAssertTrue(c1.isRenderFunctionCalled);
+
+  [view reloadWithMode:CKUpdateModeSynchronous];
+  [view layoutIfNeeded];
+  const auto c2 = (CKRenderLifecycleTestComponent *)view.mountedLayout.component;
+  XCTAssertTrue(c2.isRenderFunctionCalled);
+}
+
 #pragma mark - CKComponentHostingViewDelegate
 
 - (void)componentHostingViewDidInvalidateSize:(CKComponentHostingView *)hostingView

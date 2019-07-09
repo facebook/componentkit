@@ -171,3 +171,18 @@ static BOOL _shouldEarlyReturnNew = NO;
 }
 
 @end
+
+@implementation CKRenderLifecycleTestComponent
+
+- (CKComponent *)render:(id)state
+{
+  _isRenderFunctionCalled = YES;
+  return [CKLifecycleTestComponent newWithView:{} size:{}];
+}
+
+- (BOOL)shouldComponentUpdate:(id<CKRenderComponentProtocol>)component
+{
+  return NO;
+}
+
+@end
