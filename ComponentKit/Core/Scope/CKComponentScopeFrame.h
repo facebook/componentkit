@@ -47,4 +47,8 @@ struct CKComponentScopeFramePair {
 + (void)didBuildComponentTreeWithNode:(id<CKTreeNodeProtocol>)node;
 + (void)didReuseRenderWithTreeNode:(id<CKTreeNodeProtocol>)node;
 
+#if DEBUG
+- (NSArray<NSString *> *)debugDescriptionComponents;
+#endif
+
 @end

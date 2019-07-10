@@ -15,7 +15,7 @@
 #import "CKTreeNodeWithChild.h"
 #import "CKComponentProtocol.h"
 #import "CKComponentControllerProtocol.h"
-#import "CKComponentScopeFrameInternal.h"
+#import "CKComponentScopeFrame.h"
 #import "CKInternalHelpers.h"
 #import "CKGlobalConfig.h"
 #import "CKThreadLocalComponentScope.h"
