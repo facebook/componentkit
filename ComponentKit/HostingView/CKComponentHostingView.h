@@ -18,7 +18,7 @@
 @protocol CKComponentSizeRangeProviding;
 
 /** A view that renders a single component. */
-@interface CKComponentHostingView : UIView
+@interface CKComponentHostingView<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> : UIView
 
 /** Notified when the view's ideal size (measured by -sizeThatFits:) may have changed. */
 @property (nonatomic, weak) id<CKComponentHostingViewDelegate> delegate;
@@ -30,7 +30,7 @@
  @see CKComponentProvider
  @see CKComponentSizeRangeProviding
  */
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+- (instancetype)initWithComponentProviderFunc:(CKComponent *(*)(ModelType model, ContextType context))componentProvider
                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
 
 /**
@@ -40,10 +40,10 @@
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
 
 /** Updates the model used to render the component. */
-- (void)updateModel:(id<NSObject>)model mode:(CKUpdateMode)mode;
+- (void)updateModel:(ModelType)model mode:(CKUpdateMode)mode;
 
 /** Updates the context used to render the component. */
-- (void)updateContext:(id<NSObject>)context mode:(CKUpdateMode)mode;
+- (void)updateContext:(ContextType)context mode:(CKUpdateMode)mode;
 
 /** Appearance events to be funneled to the component tree. */
 - (void)hostingViewWillAppear;
