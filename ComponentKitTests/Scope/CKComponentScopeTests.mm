@@ -326,53 +326,6 @@
   }
 }
 
-#pragma mark - Component Scope Parent Reference
-
-- (void)testBrandNewChildScopeHandleGetsReferenceToParent
-{
-  const auto root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  {
-    CKThreadLocalComponentScope threadScope(root1, {});
-    {
-      CKComponentScope scope1([CKCompositeComponent class]);
-      const auto expectedParentHandle = threadScope.stack.top().frame.handle;
-      {
-        CKComponentScope scope2([CKCompositeComponent class]);
-        const auto childScopeHandle = threadScope.stack.top().frame.handle;
-        XCTAssertEqualObjects(childScopeHandle.parent, expectedParentHandle);
-      }
-    }
-  }
-}
-
-- (void)testNewGenerationOfScopeHandleGetsReferenceToNewParent
-{
-  const auto root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  CKComponentScopeRoot *root2;
-  {
-    CKThreadLocalComponentScope threadScope(root1, {});
-    {
-      CKComponentScope scope1([CKCompositeComponent class]);
-      {
-        CKComponentScope scope2([CKCompositeComponent class]);
-      }
-    }
-    root2 = threadScope.newScopeRoot;
-  }
-  {
-    CKThreadLocalComponentScope threadScope(root2, {});
-    {
-      CKComponentScope scope1([CKCompositeComponent class]);
-      const auto expectedParentHandle = threadScope.stack.top().frame.handle;
-      {
-        CKComponentScope scope2([CKCompositeComponent class]);
-        const auto childScopeHandle = threadScope.stack.top().frame.handle;
-        XCTAssertEqualObjects(childScopeHandle.parent, expectedParentHandle);
-      }
-    }
-  }
-}
-
 #pragma mark - Component Scope Handle Global Identifier
 
 - (void)testComponentScopeHandleGlobalIdentifierIsAcquiredFromPreviousComponentScopeOneLevelDown

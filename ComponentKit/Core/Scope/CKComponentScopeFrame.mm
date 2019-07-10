@@ -93,13 +93,11 @@ namespace std {
   CKComponentScopeHandle *newHandle =
   existingChildFrameOfEquivalentPreviousFrame
   ? [existingChildFrameOfEquivalentPreviousFrame.handle newHandleWithStateUpdates:stateUpdates
-                                                               componentScopeRoot:newRoot
-                                                                           parent:pair.frame.handle]
+                                                               componentScopeRoot:newRoot]
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                       rootIdentifier:newRoot.globalIdentifier
                                       componentClass:componentClass
-                                        initialState:(initialStateCreator ? initialStateCreator() : [componentClass initialState])
-                                              parent:pair.frame.handle];
+                                        initialState:(initialStateCreator ? initialStateCreator() : [componentClass initialState])];
 
   CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
   pair.frame->_children.insert({stateScopeKey, newChild});
