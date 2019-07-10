@@ -545,7 +545,7 @@ static CKDataSourceChangeset *createDeferredChangeset(NSDictionary<NSIndexPath *
   if (insertedItems.count == 0 && updatedItems.count == 0) {
     return nil;
   }
-  return [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  return [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
             withUpdatedItems:updatedItems]
            withInsertedItems:insertedItems]
           build];

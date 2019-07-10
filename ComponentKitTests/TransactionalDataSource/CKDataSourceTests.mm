@@ -89,7 +89,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
   [ds addListener:self];
 
   CKDataSourceChangeset *insertion =
-  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];
@@ -133,7 +133,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
   [ds addListener:self];
 
   CKDataSourceChangeset *insertion =
-  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];
@@ -336,7 +336,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
     return _state != nil;
   });
   const auto insertion =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];
   const auto modification =
@@ -368,7 +368,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
     return _state != nil;
   });
   const auto insertion =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];
   const auto modification =
@@ -404,7 +404,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
     return _state != nil;
   });
   const auto insertion =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];
   const auto modification =
@@ -433,7 +433,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
     return _state != nil;
   });
   const auto insertion =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];
   const auto modification =

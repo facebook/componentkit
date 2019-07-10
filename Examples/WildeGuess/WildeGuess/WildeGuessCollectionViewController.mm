@@ -69,7 +69,7 @@
                                                              configuration:configuration];
   // Insert the initial section
   CKDataSourceChangeset *initialChangeset =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
   [_dataSource applyChangeset:initialChangeset mode:CKUpdateModeAsynchronous userInfo:nil];
@@ -85,7 +85,7 @@
     [items setObject:quotes[i] forKey:[NSIndexPath indexPathForRow:position + i inSection:0]];
   }
   CKDataSourceChangeset *changeset =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withInsertedItems:items]
    build];
   [_dataSource applyChangeset:changeset mode:CKUpdateModeAsynchronous userInfo:nil];

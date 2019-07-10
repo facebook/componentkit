@@ -60,19 +60,19 @@
 
 - (void)testChangesetIsEmpty
 {
-  XCTAssertTrue([[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] build].isEmpty);
+  XCTAssertTrue([[CKDataSourceChangesetBuilder dataSourceChangeset] build].isEmpty);
 
-  XCTAssertFalse([[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  XCTAssertFalse([[[CKDataSourceChangesetBuilder dataSourceChangeset]
                    withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0] : @"A"}] build].isEmpty);
-  XCTAssertFalse([[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  XCTAssertFalse([[[CKDataSourceChangesetBuilder dataSourceChangeset]
                    withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:1 inSection:0]]] build].isEmpty);
-  XCTAssertFalse([[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  XCTAssertFalse([[[CKDataSourceChangesetBuilder dataSourceChangeset]
                    withRemovedSections:[NSIndexSet indexSetWithIndex:2]] build].isEmpty);
-  XCTAssertFalse([[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  XCTAssertFalse([[[CKDataSourceChangesetBuilder dataSourceChangeset]
                    withUpdatedItems:@{[NSIndexPath indexPathForItem:2 inSection:0] : [NSIndexPath indexPathForItem:3 inSection:0]}] build].isEmpty);
-  XCTAssertFalse([[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  XCTAssertFalse([[[CKDataSourceChangesetBuilder dataSourceChangeset]
                    withInsertedSections:[NSIndexSet indexSetWithIndex:1]] build].isEmpty);
-  XCTAssertFalse([[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  XCTAssertFalse([[[CKDataSourceChangesetBuilder dataSourceChangeset]
                    withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:1] : @"C"}] build].isEmpty);
 }
 
