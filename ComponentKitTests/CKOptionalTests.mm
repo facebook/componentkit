@@ -153,6 +153,16 @@ struct ConvertibleToInt {
   XCTAssertEqual(x, 42);
 }
 
+- (void)test_AssigningFromConvertible
+{
+  Optional<int> x = ConvertibleToInt{42};
+  auto const c = ConvertibleToInt{43};
+
+  x = c;
+
+  XCTAssertEqual(x, 43);
+}
+
 @end
 
 static int numCopies = 0;

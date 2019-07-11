@@ -113,9 +113,9 @@ public:
     return *this;
   }
 
-  template <typename Arg>
-  auto operator=(Arg&& arg) -> Optional& {
-    assign(std::forward<Arg>(arg));
+  template <typename U = ValueType, typename = std::enable_if_t<std::is_convertible<U, T>::value>>
+  auto operator=(U&& value) -> Optional& {
+    assign(std::forward<U>(value));
     return *this;
   }
 
@@ -417,19 +417,12 @@ private:
                 [this]() { clear(); });
   }
 
-  void assign(const T& newValue) {
+  template <typename U = ValueType, typename = std::enable_if_t<std::is_convertible<U, T>::value>>
+  void assign(U&& newValue) {
     if (hasValue()) {
-      _storage.value = newValue;
+      _storage.value = std::forward<U>(newValue);
     } else {
-      construct(newValue);
-    }
-  }
-
-  void assign(T&& newValue) {
-    if (hasValue()) {
-      _storage.value = std::move(newValue);
-    } else {
-      construct(std::move(newValue));
+      construct(std::forward<U>(newValue));
     }
   }
 
