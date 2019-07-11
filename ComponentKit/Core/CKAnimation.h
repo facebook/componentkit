@@ -38,10 +38,10 @@ namespace CK {
     auto functionToCA(Function f) -> CAMediaTimingFunction *;
 
     /**
-     Represents the timing information for a sequence of two animations.
+     Represents the timing information for types of animations which have their durations calculated automatically.
      */
     template <typename Derived>
-    struct SequenceTiming {
+    struct TimingBuilderWithoutDuration {
       /**
        Specifies the delay after which the animation will start.
 
@@ -266,11 +266,26 @@ namespace CK {
       __unsafe_unretained NSString *_keyPath;
     };
 
+    template <typename A1, typename A2, bool ShouldHaveDuration>
+    struct ParallelBuilderBase {};
+
+    template <typename A1, typename A2>
+    struct ParallelBuilderBase<A1, A2, false> {
+      template <typename Derived>
+      using Type = TimingBuilderWithoutDuration<Derived>;
+    };
+
+    template <typename A1, typename A2>
+    struct ParallelBuilderBase<A1, A2, true> {
+      template <typename Derived>
+      using Type = TimingBuilder<Derived>;
+    };
+
     /**
      Represents group of animations that run in parallel.
      */
     template <typename A1, typename A2>
-    struct ParallelBuilder: TimingBuilder<ParallelBuilder<A1, A2>> {
+    struct ParallelBuilder: ParallelBuilderBase<A1, A2, std::is_base_of<TimingBuilder<A1>, A1>::value && std::is_base_of<TimingBuilder<A2>, A2>::value>:: template Type<ParallelBuilder<A1, A2>> {
       static_assert(A1::type == A2::type, "Grouped animations must have the same type");
       static constexpr auto type = A1::type;
 
@@ -303,7 +318,7 @@ namespace CK {
      Represents group of animations that run one after the other.
      */
     template <typename A1, typename A2>
-    struct SequenceBuilder: SequenceTiming<SequenceBuilder<A1, A2>> {
+    struct SequenceBuilder: TimingBuilderWithoutDuration<SequenceBuilder<A1, A2>> {
       static_assert(A1::type == A2::type, "Grouped animations must have the same type");
       static constexpr auto type = A1::type;
 
