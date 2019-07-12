@@ -42,6 +42,29 @@ auto Animation::FinalBuilder::toCA() const -> CAAnimation *
   return a;
 }
 
+auto Animation::SpringChangeBuilder::toCA() const -> CAAnimation *
+{
+  auto const a = [CASpringAnimation animationWithKeyPath:_keyPath];
+  this->applyTimingTo(a);
+  if (delay > 0) {
+    a.fillMode = kCAFillModeBackwards;
+  }
+  _damping.apply([a](CGFloat d){ a.damping = d; });
+  _initialVelocity.apply([a](CGFloat iv){ a.initialVelocity = iv; });
+  _mass.apply([a](CGFloat m){ a.mass = m; });
+  _stiffness.apply([a](CGFloat s){ a.stiffness = s; });
+  a.duration = a.settlingDuration;
+  return a;
+}
+
+auto Animation::ChangeBuilder::usingSpring() const -> SpringChangeBuilder
+{
+  auto spring = SpringChangeBuilder{_keyPath};
+  spring.delay = delay;
+  spring.function = function;
+  return spring;
+}
+
 auto Animation::ChangeBuilder::toCA() const -> CAAnimation *
 {
   auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];

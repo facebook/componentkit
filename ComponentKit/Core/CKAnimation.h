@@ -238,6 +238,8 @@ namespace CK {
     private:
       friend struct ChangeBuilder;
 
+      friend struct SpringChangeBuilder;
+
       template <typename A1, typename A2>
       friend struct SequenceBuilder;
 
@@ -249,6 +251,65 @@ namespace CK {
       CAAnimation *_anim;
     };
 
+    struct SpringChangeBuilder: TimingBuilderWithoutDuration<SpringChangeBuilder> {
+      static constexpr auto type = Type::change;
+
+      SpringChangeBuilder(__unsafe_unretained NSString *keyPath) :_keyPath(keyPath) {}
+
+      /**
+       Defines how the spring’s motion should be damped due to the forces of friction.
+
+       @discussion
+       The default value of the damping property is 10. Reducing this value reduces the energy loss with each
+       oscillation. Increasing the value increases the energy loss with each duration: there will be fewer and smaller
+       oscillations.
+       */
+      auto &withDamping(CGFloat d) { _damping = d; return *this; }
+
+      /**
+       The initial velocity of the object attached to the spring.
+
+       @discussion
+       Defaults to 0, which represents an unmoving object. Negative values represent the object moving away from the
+       spring attachment point, positive values represent the object moving towards the spring attachment point.
+       */
+      auto &withInitialVelocity(CGFloat iv) { _initialVelocity = iv; return *this; }
+
+      /**
+       The mass of the object attached to the end of the spring.
+
+       @discussion
+       The default mass is 1. Increasing this value will increase the spring effect: the attached object will be subject
+       to more oscillations and greater overshoot. Decreasing the mass will reduce the spring effect: there will be
+       fewer oscillations and a reduced overshoot.
+       */
+      auto &withMass(CGFloat m) { _mass = m; return *this; }
+
+      /**
+       The spring stiffness coefficient.
+
+       @discussion
+       The default stiffness coefficient is 100. Increasing the stiffness reduces the number of oscillations and will
+       reduce the duration. Decreasing the stiffness increases the the number of oscillations and will increase the
+       duration.
+       */
+      auto &withStiffness(CGFloat s) { _stiffness = s; return *this; }
+
+      /// Returns a Core Animation animation corresponding to this animation.
+      auto toCA() const -> CAAnimation *;
+
+      operator CAAnimation *() const { return toCA(); }
+
+      operator Change() const { return Change{toCA()}; }
+
+    private:
+      __unsafe_unretained NSString *_keyPath;
+      Optional<CGFloat> _damping;
+      Optional<CGFloat> _initialVelocity;
+      Optional<CGFloat> _mass;
+      Optional<CGFloat> _stiffness;
+    };
+
     /**
      Represents a change animation that animates between the previous and the current value of the property.
      */
@@ -256,6 +317,9 @@ namespace CK {
       static constexpr auto type = Type::change;
 
       ChangeBuilder(__unsafe_unretained NSString *keyPath) :_keyPath(keyPath) {}
+
+      /// Makes this animation apply a spring-like force to the animated property.
+      auto usingSpring() const -> SpringChangeBuilder;
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *;

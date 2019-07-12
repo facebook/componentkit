@@ -441,3 +441,106 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 }
 
 @end
+
+@interface CKAnimationTests_Spring : XCTestCase
+@end
+
+@implementation CKAnimationTests_Spring
+
+- (void)testSpringBuilderBuildsSpringAnimation
+{
+  XCTAssertEqualObjects(alpha().usingSpring().withDelay(0.25).toCA().class, [CASpringAnimation class]);
+}
+
+- (void)testChangeAnimationsKeyPaths
+{
+  auto const animations = std::array<CAPropertyAnimation *, 4>{
+    objCForceCast<CAPropertyAnimation>(alpha().usingSpring().toCA()),
+    objCForceCast<CAPropertyAnimation>(backgroundColor().usingSpring().toCA()),
+    objCForceCast<CAPropertyAnimation>(borderColor().usingSpring().toCA()),
+    objCForceCast<CAPropertyAnimation>(position().usingSpring().toCA()),
+  };
+
+  auto const expectedKeyPaths = std::array<const char *, 4>{
+    "opacity",
+    "backgroundColor",
+    "borderColor",
+    "position"
+  };
+
+  checkKeyPathsForAnimations(self, animations, expectedKeyPaths);
+}
+
+- (void)testSettingDelay
+{
+  XCTAssertEqual(alpha().usingSpring().withDelay(0.25).toCA().beginTime, 0.25);
+}
+
+- (void)test_WhenTimingFunctionIsNotSet_UsesLinear
+{
+  XCTAssertEqualObjects(alpha().usingSpring().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]);
+}
+
+- (void)testSettingTimingFunction
+{
+  XCTAssertEqualObjects(alpha().easeIn().usingSpring().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
+  XCTAssertEqualObjects(alpha().easeOut().usingSpring().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
+}
+
+- (void)test_WhenDelayIsNotSet_UsesDefaultFillMode
+{
+  XCTAssertEqualObjects(alpha().usingSpring().toCA().fillMode, kCAFillModeRemoved);
+}
+
+- (void)test_WhenDelayIsSet_UsesBackwardsFillMode
+{
+  XCTAssertEqualObjects(alpha().usingSpring().withDelay(0.25).toCA().fillMode, kCAFillModeBackwards);
+}
+
+- (void)testDurationIsEqualToSettlingDuration
+{
+  auto const a = objCForceCast<CASpringAnimation>(alpha().usingSpring().toCA());
+
+  XCTAssertEqual(a.duration, a.settlingDuration);
+}
+
+- (void)testSettingDamping
+{
+  auto const a = objCForceCast<CASpringAnimation>(alpha().usingSpring().withDamping(20).toCA());
+
+  XCTAssertEqual(a.damping, 20);
+}
+
+- (void)testSettingInitialVelocity
+{
+  auto const a = objCForceCast<CASpringAnimation>(alpha().usingSpring().withInitialVelocity(1).toCA());
+
+  XCTAssertEqual(a.initialVelocity, 1);
+}
+
+- (void)testSettingMass
+{
+  auto const a = objCForceCast<CASpringAnimation>(alpha().usingSpring().withMass(2).toCA());
+
+  XCTAssertEqual(a.mass, 2);
+}
+
+- (void)testSettingStiffness
+{
+  auto const a = objCForceCast<CASpringAnimation>(alpha().usingSpring().withStiffness(200).toCA());
+
+  XCTAssertEqual(a.stiffness, 200);
+}
+
+- (void)testDurationIsSetAfterSettingSpringParams
+{
+  auto spring = alpha().usingSpring();
+  auto const defaultSpringCA = objCForceCast<CASpringAnimation>(spring.toCA());
+  spring.withDamping(20);
+
+  auto const customSpringCA = objCForceCast<CASpringAnimation>(spring.toCA());
+
+  XCTAssertNotEqual(customSpringCA.duration, defaultSpringCA.duration);
+}
+
+@end
