@@ -10,14 +10,21 @@
 
 #import "CKComponentDescriptionHelper.h"
 
-#import "CKComponent.h"
+#import <ComponentKit/CKStatelessComponent.h>
 
 static NSString *componentDescriptionOrClass(CKComponent *component)
 {
   return [component description] ?: NSStringFromClass([component class]);
 }
 
-NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept
+/* This functions prints only the class, or in case of Stateless component, the description that will help us identify the Spec */
+static NSString *componentCompactDescription(CKComponent *component)
+{
+  return [component isMemberOfClass:[CKStatelessComponent class]] ? [component description]: NSStringFromClass([component class]);
+}
+
+
+static NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace, BOOL nested, BOOL compactDescription) noexcept
 {
   NSMutableString *const description = [NSMutableString string];
   [componentBacktrace enumerateObjectsWithOptions:NSEnumerationReverse
@@ -26,10 +33,23 @@ NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBackt
                                          if (depth != 0) {
                                            [description appendString:@"\n"];
                                          }
-                                         [description appendString:[@"" stringByPaddingToLength:depth withString:@" " startingAtIndex:0]];
-                                         [description appendString:componentDescriptionOrClass(component)];
+                                         if (nested) {
+                                           [description appendString:[@"" stringByPaddingToLength:depth withString:@" " startingAtIndex:0]];
+                                         }
+                                         NSString *componentDescription = compactDescription ? componentCompactDescription(component) : componentDescriptionOrClass(component);
+                                         [description appendString:componentDescription];
                                        }];
   return description;
+}
+
+NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept
+{
+  return CKComponentBacktraceDescription(componentBacktrace, YES, NO);
+}
+
+NSString *CKComponentBacktraceStackDescription(NSArray<CKComponent *> *componentBacktrace) noexcept
+{
+  return CKComponentBacktraceDescription(componentBacktrace, NO, YES);
 }
 
 NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKComponentLayoutChild>> children) noexcept

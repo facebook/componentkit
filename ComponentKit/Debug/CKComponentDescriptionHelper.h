@@ -13,6 +13,7 @@
 #import <ComponentKit/CKComponentLayout.h>
 
 NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept;
+NSString *CKComponentBacktraceStackDescription(NSArray<CKComponent *> *componentBacktrace) noexcept;
 
 NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKComponentLayoutChild>> children) noexcept;
 

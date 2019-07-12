@@ -249,6 +249,11 @@ struct CKComponentMountInfo {
   }
 }
 
+- (NSString *)backtraceStackDescription
+{
+  return CKComponentBacktraceStackDescription(generateComponentBacktrace(self));
+}
+
 - (void)unmount
 {
   CKAssertMainThread();

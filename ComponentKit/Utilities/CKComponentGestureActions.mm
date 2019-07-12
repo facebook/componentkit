@@ -18,6 +18,8 @@
 #import "CKComponent+UIView.h"
 #import "CKInternalHelpers.h"
 
+#import <ComponentKit/CKComponentInternal.h>
+
 CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKAction<UIGestureRecognizer *> action)
 {
   return CKComponentGestureAttribute([UITapGestureRecognizer class], nullptr, action);
@@ -72,7 +74,18 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
           // This will retain it
           CKSetDelegateProxyForObject(gestureRecognizer, proxy);
         }
-        [view addGestureRecognizer:gestureRecognizer];
+        
+        @try {
+          [view addGestureRecognizer:gestureRecognizer];
+        }
+        @catch (NSException *ex) {
+          CKComponent *mountedComponent = CKMountedComponentForView(view);
+          NSString *fatalMsg = @"View does not have a mountedComponent";
+          if (mountedComponent) {
+            fatalMsg = [mountedComponent backtraceStackDescription];
+          }
+          CKCFatalWithCategory(mountedComponent.class, @"%@ while mounting \n%@", ex, fatalMsg);
+        }
       },
       ^(UIView *view, id value){
         UIGestureRecognizer *recognizer = CKRecognizerForAction(view, blockAction);
