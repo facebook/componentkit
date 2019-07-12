@@ -13,6 +13,47 @@
 #import <ComponentKit/CKComponentContextHelper.h>
 
 /**
+ Provides a way to implicitly pass parameters to child components. Items are keyed by class.
+
+ CKComponentContext values are NOT expected to change between component generations. This is an optimization to allow better component reuse.
+
+ Using CKComponentMutableContext can affect component reuse, which could make components' creation slower.
+ By using CKComponentContext, the infrasturctue can reuse components safley and make the component creation faster.
+ Unless your component context value is expeted to change, you should ALWAYS use CKComponentContext.
+
+ Example usage:
+
+ {
+ CKComponentContext<CKFoo> c(foo);
+ // Any components created while c is in scope will be able to read its value
+ // by calling CKComponentContext<CKFoo>::get().
+ }
+
+ @warning Context should be used sparingly. Prefer explicitly passing parameters instead.
+ */
+template<typename T>
+class CKComponentContext {
+public:
+  /**
+   Fetches an object from the context dictionary.
+   You may only call this from inside +new. If you want access to something from context later, store it in an ivar.
+   @example CKFoo *foo = CKComponentMutableContext<CKFoo>::get();
+   */
+  static T *get() { return CKComponentContextHelper::fetchConst([T class]); }
+
+  CKComponentContext(T *object) : _previousState(CKComponentContextHelper::store([T class], object)) {}
+  ~CKComponentContext() { CKComponentContextHelper::restore(_previousState); }
+
+private:
+  const CKComponentContextPreviousState _previousState;
+
+  CKComponentContext(const CKComponentContext&) = delete;
+  CKComponentContext &operator=(const CKComponentContext&) = delete;
+};
+
+/**
+ Similar to CKComponentContext, but allows context values between generations. This could affect perf.
+
  Provides a way to implicitly pass parameters to child components. Items are keyed by class. Example usage:
 
  {
@@ -33,7 +74,7 @@
  }
 
  @warning Context should be used sparingly. Prefer explicitly passing parameters instead.
- @warning If you have to use context, consider using CKComponentConstContext instead. CKComponentMutableContext makes component reuse more difficult.
+ @warning If you have to use context, consider using CKComponentContext instead. CKComponentMutableContext makes component reuse more difficult.
  */
 template<typename T>
 class CKComponentMutableContext {
@@ -41,7 +82,7 @@ public:
   /**
    Fetches an object from the context dictionary.
    You may only call this from inside +new. If you want access to something from context later, store it in an ivar.
-   @example CKFoo *foo = CKComponentMutableContext<CKFoo>::get();
+   @example CKFoo *foo = CKComponentContext<CKFoo>::get();
    */
   static T *get() { return CKComponentContextHelper::fetch([T class]); }
 
@@ -53,41 +94,4 @@ private:
 
   CKComponentMutableContext(const CKComponentMutableContext&) = delete;
   CKComponentMutableContext &operator=(const CKComponentMutableContext&) = delete;
-};
-
-/**
- CKComponentConstContext is similar to CKComponentMutableContext, but for context values that are NOT expected to change.
-
- Using CKComponentContext can affect component reuse, which could make components' creation slower.
- By using CKComponentConstContext, the infrasturctue can reuse components safley and make the component creation faster.
- Unless your component context value is expeted to change, you should ALWAYS use CKComponentConstContext.
-
- Example usage:
-
- {
- CKComponentConstContext<CKFoo> c(foo);
- // Any components created while c is in scope will be able to read its value
- // by calling CKComponentConstContext<CKFoo>::get().
- }
-
- @warning Context should be used sparingly. Prefer explicitly passing parameters instead.
- */
-template<typename T>
-class CKComponentConstContext {
-public:
-  /**
-   Fetches an object from the context dictionary.
-   You may only call this from inside +new. If you want access to something from context later, store it in an ivar.
-   @example CKFoo *foo = CKComponentConstContext<CKFoo>::get();
-   */
-  static T *get() { return CKComponentContextHelper::fetchConst([T class]); }
-
-  CKComponentConstContext(T *object) : _previousState(CKComponentContextHelper::store([T class], object)) {}
-  ~CKComponentConstContext() { CKComponentContextHelper::restore(_previousState); }
-
-private:
-  const CKComponentContextPreviousState _previousState;
-
-  CKComponentConstContext(const CKComponentConstContext&) = delete;
-  CKComponentConstContext &operator=(const CKComponentConstContext&) = delete;
 };

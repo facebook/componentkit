@@ -32,10 +32,10 @@
 @property (nonatomic, assign) std::vector<CKComponent *>children;
 @end
 
-@interface CKComponentContextTests : XCTestCase
+@interface CKComponentMutableContextTests : XCTestCase
 @end
 
-@implementation CKComponentContextTests
+@implementation CKComponentMutableContextTests
 
 - (void)testEstablishingAComponentContextAllowsYouToFetchIt
 {
@@ -324,32 +324,32 @@
 
 @end
 
-@interface CKComponentConstContextTests : XCTestCase
+@interface CKComponentContextTests : XCTestCase
 @end
 
-@implementation CKComponentConstContextTests
+@implementation CKComponentContextTests
 
 - (void)testEstablishingAComponentContextAllowsYouToFetchIt
 {
   NSObject *o = [[NSObject alloc] init];
-  CKComponentConstContext<NSObject> context(o);
+  CKComponentContext<NSObject> context(o);
 
-  NSObject *o2 = CKComponentConstContext<NSObject>::get();
+  NSObject *o2 = CKComponentContext<NSObject>::get();
   XCTAssertTrue(o == o2);
 }
 
 - (void)testFetchingAnObjectThatHasNotBeenEstablishedWithGetReturnsNil
 {
-  XCTAssertNil(CKComponentConstContext<NSObject>::get(), @"Expected to return nil without throwing");
+  XCTAssertNil(CKComponentContext<NSObject>::get(), @"Expected to return nil without throwing");
 }
 
 - (void)testComponentContextCleansUpWhenItGoesOutOfScope
 {
   {
     NSObject *o = [[NSObject alloc] init];
-    CKComponentConstContext<NSObject> context(o);
+    CKComponentContext<NSObject> context(o);
   }
-  XCTAssertNil(CKComponentConstContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
+  XCTAssertNil(CKComponentContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
 }
 
 - (void)testComponentContextDoesntCleansUpWhenItGoesOutOfScopeIfThereIsRenderComponentInSubtree
@@ -358,59 +358,59 @@
   CKComponent *component = [CKComponent new];
 
   {
-    CKComponentConstContext<NSObject> context(o);
+    CKComponentContext<NSObject> context(o);
     // This makes sure that the context values will leave after the context object goes out of scope.
     CKComponentContextHelper::didCreateRenderComponent(component);
   }
 
   CKComponentContextHelper::willBuildComponentTree(component);
-  NSObject *o2 = CKComponentConstContext<NSObject>::get();
+  NSObject *o2 = CKComponentContext<NSObject>::get();
   XCTAssertTrue(o == o2);
 
   CKComponentContextHelper::didBuildComponentTree(component);
-  XCTAssertNil(CKComponentConstContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
+  XCTAssertNil(CKComponentContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
 }
 
 - (void)testNestedComponentContextChangesValueAndRestoresItAfterGoingOutOfScope
 {
   NSObject *outer = [[NSObject alloc] init];
-  CKComponentConstContext<NSObject> outerContext(outer);
+  CKComponentContext<NSObject> outerContext(outer);
   {
     NSObject *inner = [[NSObject alloc] init];
-    CKComponentConstContext<NSObject> innerContext(inner);
-    XCTAssertTrue(CKComponentConstContext<NSObject>::get() == inner);
+    CKComponentContext<NSObject> innerContext(inner);
+    XCTAssertTrue(CKComponentContext<NSObject>::get() == inner);
   }
-  XCTAssertTrue(CKComponentConstContext<NSObject>::get() == outer);
+  XCTAssertTrue(CKComponentContext<NSObject>::get() == outer);
 }
 
 - (void)testTriplyNestedComponentContextWithNilMiddleValueCorrectlyRestoresOuterValue
 {
   // This tests an obscure edge case with restoring values for context as we pop scopes.
   NSObject *outer = [[NSObject alloc] init];
-  CKComponentConstContext<NSObject> outerContext(outer);
+  CKComponentContext<NSObject> outerContext(outer);
   {
-    CKComponentConstContext<NSObject> middleContext(nil);
-    XCTAssertTrue(CKComponentConstContext<NSObject>::get() == nil);
+    CKComponentContext<NSObject> middleContext(nil);
+    XCTAssertTrue(CKComponentContext<NSObject>::get() == nil);
     {
       NSObject *inner = [[NSObject alloc] init];
-      CKComponentConstContext<NSObject> innerContext(inner);
-      XCTAssertTrue(CKComponentConstContext<NSObject>::get() == inner);
+      CKComponentContext<NSObject> innerContext(inner);
+      XCTAssertTrue(CKComponentContext<NSObject>::get() == inner);
     }
   }
-  XCTAssertTrue(CKComponentConstContext<NSObject>::get() == outer);
+  XCTAssertTrue(CKComponentContext<NSObject>::get() == outer);
 }
 
 - (void)testFetchingAllComponentContextItemsReturnsObjects
 {
   NSObject *o = [[NSObject alloc] init];
-  CKComponentConstContext<NSObject> context(o);
+  CKComponentContext<NSObject> context(o);
   const CKComponentContextContents contents = CKComponentContextHelper::fetchAll();
   XCTAssertEqualObjects(contents.objects, @{[NSObject class]: o});
 }
 
 - (void)testFetchingAllComponentContextItemsTwiceReturnsEqualContents
 {
-  CKComponentConstContext<NSObject> context([[NSObject alloc] init]);
+  CKComponentContext<NSObject> context([[NSObject alloc] init]);
   const CKComponentContextContents contents1 = CKComponentContextHelper::fetchAll();
   const CKComponentContextContents contents2 = CKComponentContextHelper::fetchAll();
   XCTAssertTrue(contents1 == contents2);
@@ -418,9 +418,9 @@
 
 - (void)testFetchingAllComponentContextItemsBeforeAndAfterModificationReturnsUnequalContents
 {
-  CKComponentConstContext<NSObject> context1([[NSObject alloc] init]);
+  CKComponentContext<NSObject> context1([[NSObject alloc] init]);
   const CKComponentContextContents contents1 = CKComponentContextHelper::fetchAll();
-  CKComponentConstContext<NSObject> context2([[NSObject alloc] init]);
+  CKComponentContext<NSObject> context2([[NSObject alloc] init]);
   const CKComponentContextContents contents2 = CKComponentContextHelper::fetchAll();
   XCTAssertTrue(contents1 != contents2);
 }
@@ -433,7 +433,7 @@
   CKComponent *component1;
 
   {
-    CKComponentConstContext<NSObject> context1(o1);
+    CKComponentContext<NSObject> context1(o1);
     XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
 
     // Simulate creation of render component.
@@ -447,7 +447,7 @@
   XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
 
   {
-    CKComponentConstContext<NSObject> context1(o2);
+    CKComponentContext<NSObject> context1(o2);
     // Make sure we get the latest value from the current store.
     XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o2});
   }
