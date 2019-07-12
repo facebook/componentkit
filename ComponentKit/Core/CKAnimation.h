@@ -10,6 +10,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import <algorithm>
+
 #import <ComponentKit/CKOptional.h>
 
 @class CAAnimation;
@@ -281,6 +283,22 @@ namespace CK {
       using Type = TimingBuilder<Derived>;
     };
 
+    // If ParallelBuilder inherits from TimingBuilder (i.e. allows to set the duration explicitly), the duration from
+    // TimingBuilder will be used.
+    template <typename ParallelBuilder, std::enable_if_t<std::is_base_of<TimingBuilder<ParallelBuilder>, ParallelBuilder>::value, int> = 0>
+    auto durationForParallelGroup(const ParallelBuilder &pb) -> CFTimeInterval
+    {
+      return pb.duration.valueOr(0);
+    }
+
+    // If ParallelBuilder inherits from TimingBuilderWithoutDuration (i.e. doesn't allow to set the duration explicitly)
+    // the maximum duration among the two composed animations will be used.
+    template <typename ParallelBuilder, std::enable_if_t<std::is_base_of<TimingBuilderWithoutDuration<ParallelBuilder>, ParallelBuilder>::value, int> = 0>
+    auto durationForParallelGroup(const ParallelBuilder &pb) -> CFTimeInterval
+    {
+      return std::max(pb._a1.toCA().duration, pb._a2.toCA().duration);
+    }
+
     /**
      Represents group of animations that run in parallel.
      */
@@ -298,9 +316,10 @@ namespace CK {
         auto const g = [CAAnimationGroup new];
         g.animations = @[_a1.toCA(), _a2.toCA()];
         this->applyTimingTo(g);
-        if (type == Type::initial) {
+        if (type == Type::initial || type == Type::change) {
           g.fillMode = kCAFillModeBackwards;
         }
+        g.duration = durationForParallelGroup(*this);
         return g;
       }
 
@@ -310,6 +329,9 @@ namespace CK {
       operator Any() const { return Any{toCA()}; }
 
     private:
+      template <typename ParallelBuilder, std::enable_if_t<std::is_base_of<TimingBuilderWithoutDuration<ParallelBuilder>, ParallelBuilder>::value, int>>
+      friend auto durationForParallelGroup(const ParallelBuilder &) -> CFTimeInterval;
+
       A1 _a1;
       A2 _a2;
     };
@@ -406,6 +428,13 @@ namespace CK {
 
      @note  You don't have to specify durations for the individual animations if they all have the same duration.
      Instead, this duration can be specified once for the whole group.
+
+     @note  If one of the composed animations has its duration calculated automatically (e.g. a sequence animation), the
+     resulting animation will also have its duration calculated automatically and it cannot be set explicitly.
+
+     @code
+     parallel(alpha(), position()).withDuration(0.5) // OK
+     parallel(alpha(), sequence(position(), backgroundColor())).withDuration(0.5) // Error, sequence animation determines the duration
 
      @note  Only animations of the same type can grouped, i.e.
 

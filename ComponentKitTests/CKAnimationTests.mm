@@ -357,6 +357,21 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
   XCTAssertEqualObjects(a.fillMode, kCAFillModeBackwards);
 }
 
+- (void)test_WhenComposingChangeAnimations_UsesBackwardsFillMode
+{
+  auto a = parallel(alpha(), position()).toCA();
+
+  XCTAssertEqualObjects(a.fillMode, kCAFillModeBackwards);
+}
+
+- (void)test_WhenDurationCannotBeSetExternally_DurationIsMaxDurationOfComposedAnimations
+{
+  auto a = parallel(alpha().withDuration(0.5), sequence(position().withDuration(0.3), backgroundColor())).toCA();
+
+  auto const expected = 0.3 + 0.25; // Explicit for position + implicit for background color > 0.5 for alpha
+  XCTAssertEqual(a.duration, expected);
+}
+
 @end
 
 @interface CKAnimationTests_Sequence : XCTestCase
