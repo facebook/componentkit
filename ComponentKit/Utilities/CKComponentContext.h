@@ -39,7 +39,7 @@ public:
    You may only call this from inside +new. If you want access to something from context later, store it in an ivar.
    @example CKFoo *foo = CKComponentMutableContext<CKFoo>::get();
    */
-  static T *get() { return CKComponentContextHelper::fetchConst([T class]); }
+  static T *get() { return CKComponentContextHelper::fetch([T class]); }
 
   CKComponentContext(T *object) : _previousState(CKComponentContextHelper::store([T class], object)) {}
   ~CKComponentContext() { CKComponentContextHelper::restore(_previousState); }
@@ -84,7 +84,7 @@ public:
    You may only call this from inside +new. If you want access to something from context later, store it in an ivar.
    @example CKFoo *foo = CKComponentContext<CKFoo>::get();
    */
-  static T *get() { return CKComponentContextHelper::fetch([T class]); }
+  static T *get() { return CKComponentContextHelper::fetchMutable([T class]); }
 
   CKComponentMutableContext(T *object) : _previousState(CKComponentContextHelper::store([T class], object)) {}
   ~CKComponentMutableContext() { CKComponentContextHelper::restore(_previousState); }

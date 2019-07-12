@@ -29,7 +29,7 @@ struct CKComponentContextHelper {
   static CKComponentContextPreviousState store(id key, id object);
   static void restore(const CKComponentContextPreviousState &storeResult);
   static id fetch(id key); // Fetch value from CKComponentContext.
-  static id fetchConst(id key); // Fetch value from CKComponentConstContext.
+  static id fetchMutable(id key); // Fetch value from CKComponentMutableContext.
 
   /** Creates a backup of the existing store, in the renderToDictionary map */
   static void didCreateRenderComponent(id component);

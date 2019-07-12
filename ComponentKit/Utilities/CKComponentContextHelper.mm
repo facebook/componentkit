@@ -163,7 +163,7 @@ void CKComponentContextHelper::didBuildComponentTree(id component)
   }
 }
 
-id CKComponentContextHelper::fetch(id key)
+id CKComponentContextHelper::fetchMutable(id key)
 {
   CKComponentContextValue *const v = contextValue(NO);
   if (v) {
@@ -176,7 +176,7 @@ id CKComponentContextHelper::fetch(id key)
   return nil;
 }
 
-id CKComponentContextHelper::fetchConst(id key)
+id CKComponentContextHelper::fetch(id key)
 {
   CKComponentContextValue *const v = contextValue(NO);
   if (v) {

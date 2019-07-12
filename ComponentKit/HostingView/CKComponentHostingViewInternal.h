@@ -67,7 +67,7 @@ struct CKComponentHostingViewOptions {
 
 /**
  Calling this method will re-generate the underlying component hierarchy without component reuse.
- Use case could be reloading a hosting view when `CKComponentConstContext` should be updated.
+ Use case could be reloading a hosting view when `CKComponentContext` should be updated.
  */
 - (void)reloadWithMode:(CKUpdateMode)mode;
 
