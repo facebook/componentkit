@@ -16,47 +16,47 @@
  Provides a way to implicitly pass parameters to child components. Items are keyed by class. Example usage:
 
  {
-   CKComponentContext<CKFoo> c(foo);
+   CKComponentMutableContext<CKFoo> c(foo);
    // Any components created while c is in scope will be able to read its value
-   // by calling CKComponentContext<CKFoo>::get().
+   // by calling CKComponentMutableContext<CKFoo>::get().
  }
 
  You may nest contexts with the same class, in which case the innermost context defines the value when fetched:
 
  {
-   CKComponentContext<CKFoo> c1(foo1);
+   CKComponentMutableContext<CKFoo> c1(foo1);
    {
-     CKComponentContext<CKFoo> c2(foo2);
-     // CKComponentContext<CKFoo>::get() will return foo2 here
+     CKComponentMutableContext<CKFoo> c2(foo2);
+     // CKComponentMutableContext<CKFoo>::get() will return foo2 here
    }
-   // CKComponentContext<CKFoo>::get() will return foo1 here
+   // CKComponentMutableContext<CKFoo>::get() will return foo1 here
  }
 
  @warning Context should be used sparingly. Prefer explicitly passing parameters instead.
- @warning If you have to use context, consider using CKComponentConstContext instead. CKComponentContext makes component reuse more difficult.
+ @warning If you have to use context, consider using CKComponentConstContext instead. CKComponentMutableContext makes component reuse more difficult.
  */
 template<typename T>
-class CKComponentContext {
+class CKComponentMutableContext {
 public:
   /**
    Fetches an object from the context dictionary.
    You may only call this from inside +new. If you want access to something from context later, store it in an ivar.
-   @example CKFoo *foo = CKComponentContext<CKFoo>::get();
+   @example CKFoo *foo = CKComponentMutableContext<CKFoo>::get();
    */
   static T *get() { return CKComponentContextHelper::fetch([T class]); }
 
-  CKComponentContext(T *object) : _previousState(CKComponentContextHelper::store([T class], object)) {}
-  ~CKComponentContext() { CKComponentContextHelper::restore(_previousState); }
+  CKComponentMutableContext(T *object) : _previousState(CKComponentContextHelper::store([T class], object)) {}
+  ~CKComponentMutableContext() { CKComponentContextHelper::restore(_previousState); }
 
 private:
   const CKComponentContextPreviousState _previousState;
 
-  CKComponentContext(const CKComponentContext&) = delete;
-  CKComponentContext &operator=(const CKComponentContext&) = delete;
+  CKComponentMutableContext(const CKComponentMutableContext&) = delete;
+  CKComponentMutableContext &operator=(const CKComponentMutableContext&) = delete;
 };
 
 /**
- CKComponentConstContext is similar to CKComponentContext, but for context values that are NOT expected to change.
+ CKComponentConstContext is similar to CKComponentMutableContext, but for context values that are NOT expected to change.
 
  Using CKComponentContext can affect component reuse, which could make components' creation slower.
  By using CKComponentConstContext, the infrasturctue can reuse components safley and make the component creation faster.

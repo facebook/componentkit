@@ -40,24 +40,24 @@
 - (void)testEstablishingAComponentContextAllowsYouToFetchIt
 {
   NSObject *o = [[NSObject alloc] init];
-  CKComponentContext<NSObject> context(o);
+  CKComponentMutableContext<NSObject> context(o);
 
-  NSObject *o2 = CKComponentContext<NSObject>::get();
+  NSObject *o2 = CKComponentMutableContext<NSObject>::get();
   XCTAssertTrue(o == o2);
 }
 
 - (void)testFetchingAnObjectThatHasNotBeenEstablishedWithGetReturnsNil
 {
-  XCTAssertNil(CKComponentContext<NSObject>::get(), @"Expected to return nil without throwing");
+  XCTAssertNil(CKComponentMutableContext<NSObject>::get(), @"Expected to return nil without throwing");
 }
 
 - (void)testComponentContextCleansUpWhenItGoesOutOfScope
 {
   {
     NSObject *o = [[NSObject alloc] init];
-    CKComponentContext<NSObject> context(o);
+    CKComponentMutableContext<NSObject> context(o);
   }
-  XCTAssertNil(CKComponentContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
+  XCTAssertNil(CKComponentMutableContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
 }
 
 - (void)testComponentContextDoesntCleansUpWhenItGoesOutOfScopeIfThereIsRenderComponentInSubtree
@@ -66,35 +66,35 @@
   CKComponent *component = [CKComponent new];
 
   {
-    CKComponentContext<NSObject> context(o);
+    CKComponentMutableContext<NSObject> context(o);
     // This makes sure that the context values will leave after the context object goes out of scope.
     CKComponentContextHelper::didCreateRenderComponent(component);
   }
 
   CKComponentContextHelper::willBuildComponentTree(component);
-  NSObject *o2 = CKComponentContext<NSObject>::get();
+  NSObject *o2 = CKComponentMutableContext<NSObject>::get();
   XCTAssertTrue(o == o2);
 
   CKComponentContextHelper::didBuildComponentTree(component);
-  XCTAssertNil(CKComponentContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
+  XCTAssertNil(CKComponentMutableContext<NSObject>::get(), @"Expected getting NSObject to return nil as its scope is closed");
 }
 
 - (void)testNestedComponentContextChangesValueAndRestoresItAfterGoingOutOfScope
 {
   NSObject *outer = [[NSObject alloc] init];
-  CKComponentContext<NSObject> outerContext(outer);
+  CKComponentMutableContext<NSObject> outerContext(outer);
   {
     NSObject *inner = [[NSObject alloc] init];
-    CKComponentContext<NSObject> innerContext(inner);
-    XCTAssertTrue(CKComponentContext<NSObject>::get() == inner);
+    CKComponentMutableContext<NSObject> innerContext(inner);
+    XCTAssertTrue(CKComponentMutableContext<NSObject>::get() == inner);
   }
-  XCTAssertTrue(CKComponentContext<NSObject>::get() == outer);
+  XCTAssertTrue(CKComponentMutableContext<NSObject>::get() == outer);
 }
 
 - (void)testSameContextInSiblingComponentsWithRenderInTheTree
 {
   NSNumber *n0 = @0;
-  
+
   //                +--------+
   //                |push(n0)|
   //                |  Root  |
@@ -117,20 +117,20 @@
   // |        |     |        |    |        |
   // |        |     |        |    |        |
   // +--------+     +--------+    +--------+
-  
+
   __block CKContextTestRenderComponent *c1;
   __block CKContextTestRenderComponent *c2;
   __block CKContextTestRenderComponent *c3;
   auto const componentFactory = ^{
-    CKComponentContext<NSNumber> context(n0);
+    CKComponentMutableContext<NSNumber> context(n0);
     c1 = [CKContextTestRenderComponent new];
     c2 = [CKContextTestRenderComponent new];
     c3 = [CKContextTestRenderComponent new];
     return [CKContextTestWithChildrenComponent newWithChildren:{c1,c2,c3}];
   };
-  
+
   auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory);
-  
+
   XCTAssertTrue(n0 == c1.child.objectFromContext);
   XCTAssertTrue(n0 == c2.child.objectFromContext);
   XCTAssertTrue(n0 == c3.child.objectFromContext);
@@ -170,7 +170,7 @@
   __block CKContextTestRenderComponent *c2;
   __block CKContextTestRenderComponent *c3;
   auto const componentFactory = ^{
-    CKComponentContext<NSNumber> context(n0);
+    CKComponentMutableContext<NSNumber> context(n0);
     c1 = [CKContextTestRenderComponent newWithContextObject:n1];
     c2 = [CKContextTestRenderComponent newWithContextObject:n2];
     c3 = [CKContextTestRenderComponent newWithContextObject:n3];
@@ -191,30 +191,30 @@
 {
   // This tests an obscure edge case with restoring values for context as we pop scopes.
   NSObject *outer = [[NSObject alloc] init];
-  CKComponentContext<NSObject> outerContext(outer);
+  CKComponentMutableContext<NSObject> outerContext(outer);
   {
-    CKComponentContext<NSObject> middleContext(nil);
-    XCTAssertTrue(CKComponentContext<NSObject>::get() == nil);
+    CKComponentMutableContext<NSObject> middleContext(nil);
+    XCTAssertTrue(CKComponentMutableContext<NSObject>::get() == nil);
     {
       NSObject *inner = [[NSObject alloc] init];
-      CKComponentContext<NSObject> innerContext(inner);
-      XCTAssertTrue(CKComponentContext<NSObject>::get() == inner);
+      CKComponentMutableContext<NSObject> innerContext(inner);
+      XCTAssertTrue(CKComponentMutableContext<NSObject>::get() == inner);
     }
   }
-  XCTAssertTrue(CKComponentContext<NSObject>::get() == outer);
+  XCTAssertTrue(CKComponentMutableContext<NSObject>::get() == outer);
 }
 
 - (void)testFetchingAllComponentContextItemsReturnsObjects
 {
   NSObject *o = [[NSObject alloc] init];
-  CKComponentContext<NSObject> context(o);
+  CKComponentMutableContext<NSObject> context(o);
   const CKComponentContextContents contents = CKComponentContextHelper::fetchAll();
   XCTAssertEqualObjects(contents.objects, @{[NSObject class]: o});
 }
 
 - (void)testFetchingAllComponentContextItemsTwiceReturnsEqualContents
 {
-  CKComponentContext<NSObject> context([[NSObject alloc] init]);
+  CKComponentMutableContext<NSObject> context([[NSObject alloc] init]);
   const CKComponentContextContents contents1 = CKComponentContextHelper::fetchAll();
   const CKComponentContextContents contents2 = CKComponentContextHelper::fetchAll();
   XCTAssertTrue(contents1 == contents2);
@@ -222,9 +222,9 @@
 
 - (void)testFetchingAllComponentContextItemsBeforeAndAfterModificationReturnsUnequalContents
 {
-  CKComponentContext<NSObject> context1([[NSObject alloc] init]);
+  CKComponentMutableContext<NSObject> context1([[NSObject alloc] init]);
   const CKComponentContextContents contents1 = CKComponentContextHelper::fetchAll();
-  CKComponentContext<NSObject> context2([[NSObject alloc] init]);
+  CKComponentMutableContext<NSObject> context2([[NSObject alloc] init]);
   const CKComponentContextContents contents2 = CKComponentContextHelper::fetchAll();
   XCTAssertTrue(contents1 != contents2);
 }
@@ -237,7 +237,7 @@
   CKComponent *component1;
 
   {
-    CKComponentContext<NSObject> context1(o1);
+    CKComponentMutableContext<NSObject> context1(o1);
     XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
 
     // Simulate creation of render component.
@@ -251,7 +251,7 @@
   XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
 
   {
-    CKComponentContext<NSObject> context1(o2);
+    CKComponentMutableContext<NSObject> context1(o2);
     // Make sure we get the latest value from the current store.
     XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o2});
   }
@@ -268,16 +268,16 @@
 - (void)testInitialValues
 {
   // Verify the value is nil at first.
-  XCTAssertNil(CKComponentContext<NSObject>::get());
+  XCTAssertNil(CKComponentMutableContext<NSObject>::get());
   // Set initial values and make sure the value is available.
   NSObject *o = [[NSObject alloc] init];
   NSDictionary<Class, id> *initialValues = @{[NSObject class] : o};
   {
     CKComponentInitialValuesContext initialValuesContext(initialValues);
-    XCTAssertEqualObjects(CKComponentContext<NSObject>::get(), o);
+    XCTAssertEqualObjects(CKComponentMutableContext<NSObject>::get(), o);
   }
   // Verify the values have been cleaned.
-  XCTAssertNil(CKComponentContext<NSObject>::get());
+  XCTAssertNil(CKComponentMutableContext<NSObject>::get());
 }
 
 - (void)testInitialValuesWithOvrride
@@ -287,15 +287,15 @@
   NSDictionary<Class, id> *initialValues = @{[NSObject class] : o};
   {
     CKComponentInitialValuesContext initialValuesContext(initialValues);
-    XCTAssertEqualObjects(CKComponentContext<NSObject>::get(), o);
+    XCTAssertEqualObjects(CKComponentMutableContext<NSObject>::get(), o);
     // Push context with the same key
     {
       NSObject *o2 = [[NSObject alloc] init];
-      CKComponentContext<NSObject> context(o2);
-      XCTAssertEqualObjects(CKComponentContext<NSObject>::get(), o2);
+      CKComponentMutableContext<NSObject> context(o2);
+      XCTAssertEqualObjects(CKComponentMutableContext<NSObject>::get(), o2);
     }
     // Check that the initial value is being fetched correctly.
-    XCTAssertEqualObjects(CKComponentContext<NSObject>::get(), o);
+    XCTAssertEqualObjects(CKComponentMutableContext<NSObject>::get(), o);
   }
   // Verify the values have been cleaned.
   XCTAssertNil(CKComponentContextHelper::fetchAll().objects);
@@ -311,7 +311,7 @@
     {
       // Push context
       NSString *s = @"1";
-      CKComponentContext<NSString> context(s);
+      CKComponentMutableContext<NSString> context(s);
       NSDictionary *expectedValue = @{[NSObject class]: o, [NSString class]: s};
       XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, expectedValue);
     }
@@ -467,7 +467,7 @@
 
 + (instancetype)new
 {
-  id objectFromContext = CKComponentContext<NSNumber>::get();
+  id objectFromContext = CKComponentMutableContext<NSNumber>::get();
   auto const c = [super new];
   if (c) {
     c->_objectFromContext = objectFromContext;
@@ -480,10 +480,10 @@
 + (instancetype)newWithContextObject:(NSNumber *)object
 {
   // Read the existing value from context.
-  NSNumber *objectFromContext = CKComponentContext<NSNumber>::get();
-  
+  NSNumber *objectFromContext = CKComponentMutableContext<NSNumber>::get();
+
   // Override push new context with the same key
-  CKComponentContext<NSNumber> context(object);
+  CKComponentMutableContext<NSNumber> context(object);
   auto const c = [super new];
   if (c) {
     c->_objectFromContext = objectFromContext;
