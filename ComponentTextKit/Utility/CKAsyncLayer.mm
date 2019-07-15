@@ -208,7 +208,7 @@
 
 #pragma mark - Drawing
 
-/// this method exists to provide an override point for ASDisplayNodeAsyncLayer where it can use its asyncDelegate in place
+/// this method exists to provide an override point for CKAsyncLayer where it can use its drawingDelegate in place
 /// of self for this implementation
 + (void)drawAsyncLayerInContext:(CGContextRef)context parameters:(NSObject *)parameters
 {

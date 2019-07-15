@@ -106,7 +106,7 @@ static const UIEdgeInsets padding = {2, 4, 1.5, 4};
 
 @implementation CALayer (CKHighlightOverlayLayerSupport)
 
-// ASHighlightOverlayLayer compatibility
+// CKHighlightOverlayLayer compatibility
 static NSString *kAllowsHighlightDrawingKey = @"allows_highlight_drawing";
 
 - (BOOL)ck_allowsHighlightDrawing
