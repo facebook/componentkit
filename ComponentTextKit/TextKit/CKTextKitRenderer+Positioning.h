@@ -17,12 +17,12 @@ typedef void (^ck_text_component_index_block_t)(NSUInteger characterIndex,
 /**
  Measure options are used to specify which type of line height measurement to use.
 
- ASTextNodeRendererMeasureOptionLineHeight is faster and will give the height from the baseline to the next line.
+ CKTextKitRendererMeasureOptionLineHeight is faster and will give the height from the baseline to the next line.
 
- ASTextNodeRendererMeasureOptionCapHeight is a more nuanced measure of the glyphs in the given range that attempts to
+ CKTextKitRendererMeasureOptionCapHeight is a more nuanced measure of the glyphs in the given range that attempts to
  produce a visually balanced rectangle above and below the glyphs to produce nice looking text highlights.
 
- ASTextNodeRendererMeasureOptionBlock uses the cap height option to generate each glyph index, but combines all but the
+ CKTextKitRendererMeasureOptionBlock uses the cap height option to generate each glyph index, but combines all but the
  first and last line rect into a single block.  Looks nice for multiline selection.
  */
 typedef NS_ENUM(NSUInteger, CKTextKitRendererMeasureOption) {

@@ -108,8 +108,7 @@ namespace CK {
        in your application, no matter how many different text elements you may be drawing.  The maximum cost factor
        should be tuned based on which artifacts you're storing in this cache.  If you are storing raster buffers then it
        should likely be a couple MB.  If you are storing renderers it's a good idea to have it related to the visible
-       length of the string (as a proxy for number of glyph artifacts).  For an example of usage please see ASTextNode
-       or CKTextComponent.
+       length of the string (as a proxy for number of glyph artifacts).  For an example of usage please see CKTextComponent.
        */
       struct Cache {
       private:
