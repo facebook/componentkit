@@ -22,6 +22,7 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKTreeNodeProtocol.h"
 #import "CKGlobalConfig.h"
+#import "CKComponentCreationValidation.h"
 
 namespace CKBuildComponentHelpers {
   auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> BuildTrigger
@@ -85,6 +86,9 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
                                             buildTrigger:buildTrigger
                                             stateUpdates:stateUpdates];
+#if CK_ASSERTIONS_ENABLED
+  const CKComponentContext<CKComponentCreationValidationContext> validationContext([CKComponentCreationValidationContext new]);
+#endif
   auto const component = componentFactory();
 
   // Build the component tree if we have a render component in the hierarchy.

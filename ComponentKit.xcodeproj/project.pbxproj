@@ -480,6 +480,8 @@
 		72A275CB219E145E00C1837F /* CKGlobalConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 72A275C8219E145E00C1837F /* CKGlobalConfig.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		72A275CC219E145E00C1837F /* CKGlobalConfig.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72A275C9219E145E00C1837F /* CKGlobalConfig.mm */; };
 		72A275CD219E145E00C1837F /* CKGlobalConfig.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72A275C9219E145E00C1837F /* CKGlobalConfig.mm */; };
+		72AE129C22D7707400E1C27D /* CKComponentCreationValidation.h in Headers */ = {isa = PBXBuildFile; fileRef = 72AE129A22D7707400E1C27D /* CKComponentCreationValidation.h */; };
+		72AE129D22D7707400E1C27D /* CKComponentCreationValidation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72AE129B22D7707400E1C27D /* CKComponentCreationValidation.mm */; };
 		72C410632241659F0025D6B5 /* CKComponentAttachController.h in Headers */ = {isa = PBXBuildFile; fileRef = 72C410602241659E0025D6B5 /* CKComponentAttachController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		72C410642241659F0025D6B5 /* CKComponentAttachController.h in Headers */ = {isa = PBXBuildFile; fileRef = 72C410602241659E0025D6B5 /* CKComponentAttachController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		72C410652241659F0025D6B5 /* CKComponentAttachController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72C410612241659E0025D6B5 /* CKComponentAttachController.mm */; };
@@ -1175,6 +1177,8 @@
 		7279B64320E2801D00A50F6E /* CKDataSourceQOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceQOS.h; sourceTree = "<group>"; };
 		72A275C8219E145E00C1837F /* CKGlobalConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKGlobalConfig.h; sourceTree = "<group>"; };
 		72A275C9219E145E00C1837F /* CKGlobalConfig.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKGlobalConfig.mm; sourceTree = "<group>"; };
+		72AE129A22D7707400E1C27D /* CKComponentCreationValidation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKComponentCreationValidation.h; sourceTree = "<group>"; };
+		72AE129B22D7707400E1C27D /* CKComponentCreationValidation.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentCreationValidation.mm; sourceTree = "<group>"; };
 		72C410602241659E0025D6B5 /* CKComponentAttachController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentAttachController.h; sourceTree = "<group>"; };
 		72C410612241659E0025D6B5 /* CKComponentAttachController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAttachController.mm; sourceTree = "<group>"; };
 		72C410622241659E0025D6B5 /* CKComponentAttachControllerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentAttachControllerInternal.h; sourceTree = "<group>"; };
@@ -2085,6 +2089,8 @@
 				D0B47AFE1CBD926700BB33CE /* ComponentViewManager.mm */,
 				D0B47AFF1CBD926700BB33CE /* ComponentViewReuseUtilities.h */,
 				D0B47B001CBD926700BB33CE /* ComponentViewReuseUtilities.mm */,
+				72AE129A22D7707400E1C27D /* CKComponentCreationValidation.h */,
+				72AE129B22D7707400E1C27D /* CKComponentCreationValidation.mm */,
 				D0B47B011CBD926700BB33CE /* Scope */,
 			);
 			path = Core;
@@ -2731,6 +2737,7 @@
 				D0B47CF31CBD948E00BB33CE /* CKComponentController.h in Headers */,
 				23B65AC7213FF9300049FFAC /* CKRenderWithChildrenComponent.h in Headers */,
 				D0B47D2B1CBD948E00BB33CE /* CKComponentHostingView.h in Headers */,
+				72AE129C22D7707400E1C27D /* CKComponentCreationValidation.h in Headers */,
 				D0B47CE51CBD948E00BB33CE /* CKComponentAccessibility.h in Headers */,
 				D6A0CF8722844556000CC4D0 /* CKAnimation.h in Headers */,
 				7F47ECDF218A254300AD4E55 /* CKDispatch.h in Headers */,
@@ -3642,6 +3649,7 @@
 				237E8941213FFC6D00793B4D /* CKRenderLayoutWithChildrenComponent.mm in Sources */,
 				D0B47C921CBD943400BB33CE /* CKComponentViewConfiguration.mm in Sources */,
 				D0B47C931CBD943400BB33CE /* CKComponent+UIView.mm in Sources */,
+				72AE129D22D7707400E1C27D /* CKComponentCreationValidation.mm in Sources */,
 				D0B47C941CBD943400BB33CE /* CKCompositeComponent.mm in Sources */,
 				D0B47C951CBD943400BB33CE /* CKDimension.mm in Sources */,
 				D0B47C961CBD943400BB33CE /* CKSizeRange.mm in Sources */,

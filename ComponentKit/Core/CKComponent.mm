@@ -39,6 +39,7 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKComponentScopeRoot.h"
 #import "CKRenderHelpers.h"
+#import "CKComponentCreationValidation.h"
 
 CGFloat const kCKComponentParentDimensionUndefined = NAN;
 CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndefined, kCKComponentParentDimensionUndefined};
@@ -103,6 +104,7 @@ struct CKComponentMountInfo {
                         size:(const CKComponentSize &)size
 {
   if (self = [super init]) {
+    CKValidateComponentCreation();
     _scopeHandle = [CKComponentScopeHandle handleForComponent:self];
     _viewConfiguration = view;
     _size = size;
@@ -114,6 +116,7 @@ struct CKComponentMountInfo {
                                        size:(const CKComponentSize &)size
 {
   if (self = [super init]) {
+    CKValidateComponentCreation();
     // Mark render component in the scope root.
     CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree();
     CKComponentContextHelper::didCreateRenderComponent(self);
