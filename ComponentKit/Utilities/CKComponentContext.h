@@ -16,6 +16,7 @@
  Provides a way to implicitly pass parameters to child components. Items are keyed by class.
 
  CKComponentContext values are NOT expected to change between component generations. This is an optimization to allow better component reuse.
+ If your context values need to be changed between component generations, take a look on CKComponentMutableContext.
 
  Using CKComponentMutableContext can affect component reuse, which could make components' creation slower.
  By using CKComponentContext, the infrasturctue can reuse components safley and make the component creation faster.
@@ -24,9 +25,20 @@
  Example usage:
 
  {
- CKComponentContext<CKFoo> c(foo);
- // Any components created while c is in scope will be able to read its value
- // by calling CKComponentContext<CKFoo>::get().
+    CKComponentContext<CKFoo> c(foo);
+    // Any components created while c is in scope will be able to read its value
+    // by calling CKComponentContext<CKFoo>::get().
+ }
+
+ You may nest contexts with the same class, in which case the innermost context defines the value when fetched:
+
+ {
+    CKComponentContext<CKFoo> c1(foo1);
+    {
+      CKComponentContext<CKFoo> c2(foo2);
+      // CKComponentContext<CKFoo>::get() will return foo2 here
+    }
+    // CKComponentContext<CKFoo>::get() will return foo1 here
  }
 
  @warning Context should be used sparingly. Prefer explicitly passing parameters instead.
@@ -37,7 +49,7 @@ public:
   /**
    Fetches an object from the context dictionary.
    You may only call this from inside +new. If you want access to something from context later, store it in an ivar.
-   @example CKFoo *foo = CKComponentMutableContext<CKFoo>::get();
+   @example CKFoo *foo = CKComponentContext<CKFoo>::get();
    */
   static T *get() { return CKComponentContextHelper::fetch([T class]); }
 
@@ -52,9 +64,11 @@ private:
 };
 
 /**
- Similar to CKComponentContext, but allows context values between generations. This could affect perf.
+ Similar to CKComponentContext, but allows context values **changes** between generations. This could affect perf.
 
- Provides a way to implicitly pass parameters to child components. Items are keyed by class. Example usage:
+ Provides a way to implicitly pass parameters to child components. Items are keyed by class.
+
+ Example usage:
 
  {
    CKComponentMutableContext<CKFoo> c(foo);
@@ -82,7 +96,7 @@ public:
   /**
    Fetches an object from the context dictionary.
    You may only call this from inside +new. If you want access to something from context later, store it in an ivar.
-   @example CKFoo *foo = CKComponentContext<CKFoo>::get();
+   @example CKFoo *foo = CKComponentMutableContext<CKFoo>::get();
    */
   static T *get() { return CKComponentContextHelper::fetchMutable([T class]); }
 
