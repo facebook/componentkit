@@ -87,7 +87,7 @@
     scopeRoot.rootNode.registerNode(self, parent);
 
     // Set the link between the tree node and the scope handle.
-    [_handle setTreeNodeIdentifier:_nodeIdentifier];
+    [_handle setTreeNode:self];
 
 #if DEBUG
     [component acquireTreeNode:self];

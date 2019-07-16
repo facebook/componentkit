@@ -180,12 +180,13 @@
   _acquiredComponent = component;
 }
 
-- (void)setTreeNodeIdentifier:(CKTreeNodeIdentifier)treeNodeIdentifier
+- (void)setTreeNode:(id<CKTreeNodeProtocol>)treeNode
 {
   CKAssertWithCategory(_treeNodeIdentifier == 0,
                        NSStringFromClass([_acquiredComponent class]),
                        @"_treeNodeIdentifier cannot be set twice");
-  _treeNodeIdentifier = treeNodeIdentifier;
+  _treeNodeIdentifier = treeNode.nodeIdentifier;
+  _treeNode = treeNode;
 }
 
 - (void)resolve

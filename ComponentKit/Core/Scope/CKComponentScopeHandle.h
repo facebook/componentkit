@@ -57,8 +57,8 @@
 /** Acquire component, assert if the scope handle is wrong */
 - (void)forceAcquireFromComponent:(id<CKComponentProtocol>)component;
 
-/** Set the tree node identifier of the acquired component. May only be called *before* resolution. */
-- (void)setTreeNodeIdentifier:(CKTreeNodeIdentifier)treeNodeIdentifier;
+/** Set the tree node of the acquired component. May only be called *before* resolution. */
+- (void)setTreeNode:(id<CKTreeNodeProtocol>)treeNode;
 
 /**
  Should not be called until after handleForComponent:. The controller will assert (if assertions are compiled), and
@@ -72,6 +72,7 @@
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
 @property (nonatomic, readonly, weak) id<CKComponentProtocol> acquiredComponent;
 @property (nonatomic, assign, readonly) CKTreeNodeIdentifier treeNodeIdentifier;
+@property (nonatomic, weak, readonly) id<CKTreeNodeProtocol> treeNode;
 
 /**
  Provides a responder corresponding with this scope handle. The controller will assert if called before resolution.
