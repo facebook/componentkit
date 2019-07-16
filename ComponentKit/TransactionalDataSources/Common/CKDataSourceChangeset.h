@@ -16,7 +16,7 @@
 /** A helper object that allows you to build changesets. */
 @interface CKDataSourceChangesetBuilder<__covariant ModelType> : NSObject
 
-+ (instancetype)transactionalComponentDataSourceChangeset;
++ (instancetype)dataSourceChangeset;
 - (instancetype)withUpdatedItems:(NSDictionary<NSIndexPath *, ModelType> *)updatedItems;
 - (instancetype)withRemovedItems:(NSSet *)removedItems;
 - (instancetype)withRemovedSections:(NSIndexSet *)removedSections;

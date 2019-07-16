@@ -67,9 +67,7 @@
     [_queue addOperationWithBlock:^{
       if(!_hasStartedLayout.exchange(YES)) {
         std::lock_guard<std::mutex> l(_waitOnLayoutMutex);
-        auto item = CKBuildDataSourceItem(_previousRoot, _stateUpdateMap, _sizeRange, _configuration, _model, _context);
-        _item = item;
-        _isFinished = YES;
+        [self _buildDataSourceItem];
       }
     }];
   }
@@ -90,16 +88,21 @@
   if (_isFinished == YES) {
     return _item;
   } else if(!_hasStartedLayout.exchange(YES)) {
-    auto item = CKBuildDataSourceItem(_previousRoot, _stateUpdateMap, _sizeRange, _configuration, _model, _context);
-    _item = item;
-    _isFinished = YES;
-    return _item;
+    return [self _buildDataSourceItem];
   } else {
     [_systraceListener willBlockThreadOnGeneratingItemLayout];
     std::lock_guard<std::mutex> l(_waitOnLayoutMutex);
     [_systraceListener didBlockThreadOnGeneratingItemLayout];
     return _item;
   }
+}
+
+- (CKDataSourceItem *)_buildDataSourceItem
+{
+  auto item = CKBuildDataSourceItem(_previousRoot, _stateUpdateMap, _sizeRange, _configuration, _model, _context);
+  _item = item;
+  _isFinished = YES;
+  return _item;
 }
 
 - (BOOL)hasFinishedComputingLayout

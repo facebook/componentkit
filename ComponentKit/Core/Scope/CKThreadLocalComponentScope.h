@@ -47,6 +47,9 @@ public:
   /** Build trigger of the corsposnding component creation */
   BuildTrigger buildTrigger;
 
+  /** Component Allocations */
+  NSUInteger componentAllocations;
+
 private:
   CKThreadLocalComponentScope *const previousScope;
 };

@@ -90,11 +90,9 @@ public:
   Optional(const None&) noexcept {}
 
   // Constructs an Optional that contains a value
-  Optional(const T& value) noexcept {
-    construct(value);
-  }
-  Optional(T&& value) noexcept {
-    construct(std::move(value));
+  template <typename U = ValueType, typename = std::enable_if_t<std::is_convertible<U, T>::value>>
+  Optional(U&& value) noexcept {
+    construct(std::forward<U>(value));
   }
 
   Optional(const Optional& other) {
@@ -115,18 +113,18 @@ public:
     return *this;
   }
 
-  template <typename Arg>
-  auto operator=(Arg&& arg) -> Optional& {
-    assign(std::forward<Arg>(arg));
+  template <typename U = ValueType, typename = std::enable_if_t<std::is_convertible<U, T>::value>>
+  auto operator=(U&& value) -> Optional& {
+    assign(std::forward<U>(value));
     return *this;
   }
 
-  auto operator=(const Optional& other) -> Optional {
+  auto operator=(const Optional& other) -> Optional& {
     assign(other);
     return *this;
   }
 
-  auto operator=(Optional&& other) -> Optional {
+  auto operator=(Optional&& other) -> Optional& {
     assign(std::move(other));
     return *this;
   }
@@ -167,10 +165,19 @@ public:
    of invoking nm otherwise.
    */
   template <typename ValueMatcher, typename NoneMatcher>
-  auto match(ValueMatcher&& vm, NoneMatcher&& nm) const
+  auto match(ValueMatcher&& vm, NoneMatcher&& nm) const&
   -> decltype(vm(std::declval<T>())) {
     if (hasValue()) {
       return vm(forceUnwrap());
+    }
+    return nm();
+  }
+
+  template <typename ValueMatcher, typename NoneMatcher>
+  auto match(ValueMatcher&& vm, NoneMatcher&& nm) &&
+  -> decltype(vm(std::declval<T>())) {
+    if (hasValue()) {
+      return vm(std::move(*this).forceUnwrap());
     }
     return nm();
   }
@@ -189,8 +196,13 @@ public:
    Note: you are not allowed to return anything from value handler in apply.
    */
   template <typename ValueMatcher>
-  auto apply(ValueMatcher&& vm) const -> void {
+  auto apply(ValueMatcher&& vm) const& -> void {
     match(std::forward<ValueMatcher>(vm), []() {});
+  }
+
+  template <typename ValueMatcher>
+  auto apply(ValueMatcher&& vm) && -> void {
+    std::move(*this).match(std::forward<ValueMatcher>(vm), []() {});
   }
 
   /**
@@ -308,14 +320,14 @@ public:
   }
 
   auto valueOr(const T& dflt) && -> T {
-    return match(
-                 [](const T& value) { return std::move(value); },
+    return std::move(*this).match(
+                 [](T&& value) { return std::move(value); },
                  [&]() { return dflt; });
   }
 
   auto valueOr(T&& dflt) && -> T {
-    return match(
-                 [](const T& value) { return std::move(value); },
+    return std::move(*this).match(
+                 [](T&& value) { return std::move(value); },
                  [&]() { return std::forward<T>(dflt); });
   }
 
@@ -330,12 +342,12 @@ public:
    */
   template <typename F, typename = std::enable_if_t<std::is_convertible<F, std::function<T()>>::value>>
   auto valueOr(F&& defaultProvider) const& -> T {
-    return match([](const T& value) { return value; }, [&]() { return defaultProvider(); });
+    return match([](const T& value) { return value; }, defaultProvider);
   }
 
   template <typename F, typename = std::enable_if_t<std::is_convertible<F, std::function<T()>>::value>>
   auto valueOr(F&& defaultProvider) && -> T {
-    return match([](const T& value) { return std::move(value); }, [&]() { return defaultProvider(); });
+    return std::move(*this).match([](T&& value) { return std::move(value); }, defaultProvider);
   }
 
   /**
@@ -378,10 +390,13 @@ private:
                          const Optional<U>& lhs,
                          const Optional<U>& rhs) noexcept -> bool;
 
-  template <typename... Args>
-  void construct(Args&&... args) {
-    const void* ptr = &_storage.value;
-    new (const_cast<void*>(ptr)) T(std::forward<Args>(args)...);
+  void construct(const T& value) {
+    new (std::addressof(_storage.value)) T{value};
+    _storage.hasValue = true;
+  }
+
+  void construct(T&& value) {
+    new (std::addressof(_storage.value)) T{std::move(value)};
     _storage.hasValue = true;
   }
 
@@ -394,27 +409,20 @@ private:
     if (this == &other) {
       return;
     }
-    other.match(
-                [&](const T& value) {
+    std::move(other).match(
+                [&](T&& value) {
                   assign(std::move(value));
                   other.clear();
                 },
                 [this]() { clear(); });
   }
 
-  void assign(const T& newValue) {
+  template <typename U = ValueType, typename = std::enable_if_t<std::is_convertible<U, T>::value>>
+  void assign(U&& newValue) {
     if (hasValue()) {
-      _storage.value = newValue;
+      _storage.value = std::forward<U>(newValue);
     } else {
-      construct(newValue);
-    }
-  }
-
-  void assign(T&& newValue) {
-    if (hasValue()) {
-      _storage.value = std::move(newValue);
-    } else {
-      construct(std::move(newValue));
+      construct(std::forward<U>(newValue));
     }
   }
 

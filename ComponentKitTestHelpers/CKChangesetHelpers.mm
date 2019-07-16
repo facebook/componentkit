@@ -41,7 +41,7 @@ static auto makeIndexPathsByIndexPathDictionary(const CK::ChangesetParams::Index
 
 auto CK::makeChangeset(const CK::ChangesetParams &params) -> CKDataSourceChangeset *
 {
-  return [[[[[[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  return [[[[[[[[CKDataSourceChangesetBuilder dataSourceChangeset]
                 withUpdatedItems:makeItemsByIndexPathDictionary(params.updatedItems)]
                withRemovedItems:makeIndexPathSet(params.removedItems)]
               withRemovedSections:CK::makeIndexSet(params.removedSections)]

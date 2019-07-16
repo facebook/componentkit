@@ -67,7 +67,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
   CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 1);
   NSDictionary *userInfo = @{@"foo": @"bar"};
   CKDataSourceChangesetModification *changesetModification =
-  [[CKDataSourceChangesetModification alloc] initWithChangeset:[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] build]
+  [[CKDataSourceChangesetModification alloc] initWithChangeset:[[CKDataSourceChangesetBuilder dataSourceChangeset] build]
                                                                        stateListener:nil
                                                                             userInfo:userInfo];
   CKDataSourceChange *change = [changesetModification changeFromState:originalState];
@@ -78,7 +78,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 {
   CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 0, 0);
   CKDataSourceChangeset *changeset =
-  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1, [NSIndexPath indexPathForItem:1 inSection:0]: @2}]
    build];
@@ -95,7 +95,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 {
   CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 2, 2);
   CKDataSourceChangeset *changeset =
-  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]]
     withRemovedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
@@ -120,7 +120,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 {
   CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 1);
   CKDataSourceChangeset *changeset =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @"updated"}]
    build];
   CKDataSourceChangesetModification *changesetModification =
@@ -138,7 +138,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
   const auto originalState = CKDataSourceTestState([self class], nil, 1, 0);
   const auto ip = [NSIndexPath indexPathForItem:0 inSection:0];
   auto changeset =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withInsertedItems:@{ip: kTestModelForLifecycleComponent}]
    build];
   auto change =
@@ -152,7 +152,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
   ((CKModelExposingComponent *)[[change.state objectAtIndexPath:ip] rootLayout].component()).lifecycleComponent.controller;
 
   changeset =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withUpdatedItems:@{ip: @""}]
    build];
   change =
@@ -170,7 +170,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 {
   CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 2);
   CKDataSourceChangeset *changeset =
-  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withInsertedItems:@{[NSIndexPath indexPathForItem:1 inSection:0]: @2}]
     withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]]
    build];
@@ -193,7 +193,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 {
   CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 3);
   CKDataSourceChangeset *changeset =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withMovedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:2 inSection:0]}]
    build];
   CKDataSourceChangesetModification *changesetModification =
@@ -220,7 +220,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 {
   CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 2, 2);
   CKDataSourceChangeset *changeset =
-  [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withMovedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:1],
                      [NSIndexPath indexPathForItem:0 inSection:1]: [NSIndexPath indexPathForItem:0 inSection:0]}]
    build];
@@ -247,7 +247,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 {
   CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 4);
   CKDataSourceChangeset *changeset =
-  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withMovedItems:@{[NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0] }]
     withRemovedItems:[NSSet setWithArray:@[[NSIndexPath indexPathForItem:1 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0]]]]
    build];

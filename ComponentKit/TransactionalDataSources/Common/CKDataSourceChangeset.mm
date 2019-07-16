@@ -95,7 +95,7 @@
   NSDictionary *_insertedItems;
 }
 
-+ (instancetype)transactionalComponentDataSourceChangeset { return [[self alloc] init]; }
++ (instancetype)dataSourceChangeset { return [[self alloc] init]; }
 - (instancetype)withUpdatedItems:(NSDictionary *)updatedItems { _updatedItems = updatedItems; return self;}
 - (instancetype)withRemovedItems:(NSSet *)removedItems { _removedItems = removedItems; return self; }
 - (instancetype)withRemovedSections:(NSIndexSet *)removedSections { _removedSections = removedSections; return self; }

@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKComponentScopeFrameInternal.h"
+#import "CKComponentScopeFrame.h"
 
 #import <algorithm>
 #import <unordered_map>
@@ -93,13 +93,11 @@ namespace std {
   CKComponentScopeHandle *newHandle =
   existingChildFrameOfEquivalentPreviousFrame
   ? [existingChildFrameOfEquivalentPreviousFrame.handle newHandleWithStateUpdates:stateUpdates
-                                                               componentScopeRoot:newRoot
-                                                                           parent:pair.frame.handle]
+                                                               componentScopeRoot:newRoot]
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                       rootIdentifier:newRoot.globalIdentifier
                                       componentClass:componentClass
-                                        initialState:(initialStateCreator ? initialStateCreator() : [componentClass initialState])
-                                              parent:pair.frame.handle];
+                                        initialState:(initialStateCreator ? initialStateCreator() : [componentClass initialState])];
 
   CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
   pair.frame->_children.insert({stateScopeKey, newChild});
@@ -180,32 +178,6 @@ namespace std {
 - (size_t)childrenSize
 {
   return _children.size();
-}
-
-- (void)copyChildrenFrom:(CKComponentScopeFrame *)other
-{
-  if (other == nil) {
-    return;
-  }
-  _children = other->_children;
-}
-
-- (std::vector<CKComponent *>)allAcquiredComponentsInDescendants
-{
-  std::vector<CKComponent *> result;
-  for (const auto &pair : _children) {
-    [pair.second collectAllAquiredComponentsInto:result];
-  }
-  return result;
-}
-
-// Recursively gather all children into a shared mutable vector
-- (void)collectAllAquiredComponentsInto:(std::vector<CKComponent *> &)components
-{
-  components.push_back(self.handle.acquiredComponent);
-  for (const auto &pair : _children) {
-    [pair.second collectAllAquiredComponentsInto:components];
-  }
 }
 
 #if DEBUG

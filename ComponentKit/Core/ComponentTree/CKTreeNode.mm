@@ -61,8 +61,7 @@
       // In case we already had a component tree before.
       if (previousNode) {
         _handle = [previousNode.handle newHandleWithStateUpdates:stateUpdates
-                                              componentScopeRoot:scopeRoot
-                                                          parent:parent.handle];
+                                              componentScopeRoot:scopeRoot];
       } else {
         // We need a scope handle only if the component has a controller or an initial state.
         id initialState = [self initialStateWithComponent:component];
@@ -72,8 +71,7 @@
           _handle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
                                                       rootIdentifier:scopeRoot.globalIdentifier
                                                       componentClass:componentClass
-                                                        initialState:initialState
-                                                              parent:parent.handle];
+                                                        initialState:initialState];
         }
       }
 

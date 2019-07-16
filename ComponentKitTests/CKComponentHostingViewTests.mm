@@ -27,8 +27,7 @@
 
 typedef struct {
   BOOL allowTapPassthrough;
-  BOOL embedInFlexbox;
-  BOOL embedInTestComponent;
+  CKComponentHostingViewWrapperType wrapperType;
   id<CKAnalyticsListener> analyticsListener;
   id<CKComponentSizeRangeProviding> sizeRangeProvider;
   CK::Optional<CGSize> initialSize;
@@ -49,8 +48,7 @@ typedef struct {
   auto const model = [[CKComponentHostingViewTestModel alloc]
                       initWithColor:[UIColor orangeColor]
                       size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))
-                      embedInFlexbox:options.embedInFlexbox
-                      embedInTestComponent:options.embedInTestComponent];
+                      wrapperType:options.wrapperType];
   auto const view = [self makeHostingView:options];
   if (options.shouldUpdateModelAfterCreation) {
     view.bounds = CGRectMake(0, 0, 100, 100);
@@ -175,7 +173,7 @@ typedef struct {
 - (void)testComponentControllerReceivesInvalidateEventDuringDeallocationEvenWhenParentIsStillPresent
 {
   CKComponentHostingView *view = [[self class] hostingView:{
-    .embedInTestComponent = YES,
+    .wrapperType = CKComponentHostingViewWrapperTypeTestComponent,
   }];
 
   auto const testComponent = (CKEmbeddedTestComponent *)view.mountedLayout.component;
@@ -204,7 +202,7 @@ typedef struct {
   // properly below...
   CKComponentHostingView *view = [[self class] hostingView:{
     .allowTapPassthrough = YES,
-    .embedInFlexbox = YES,
+    .wrapperType = CKComponentHostingViewWrapperTypeFlexbox,
   }];
 
   [view layoutIfNeeded];
@@ -224,7 +222,7 @@ typedef struct {
   // while still allowing the host to grow. This allows us to do our hit testing
   // properly below...
   CKComponentHostingView *view = [[self class] hostingView:{
-    .embedInFlexbox = YES,
+    .wrapperType = CKComponentHostingViewWrapperTypeFlexbox,
   }];
 
   [view layoutIfNeeded];
@@ -268,6 +266,40 @@ typedef struct {
   [view updateModel:nil mode:CKUpdateModeSynchronous];
   [view sizeThatFits:constrainedSize];
   XCTAssertEqual(_analyticsListenerSpy->_willLayoutComponentTreeHitCount, 3);
+}
+
+- (void)testUpdateModel_ComponentIsReused
+{
+  CKComponentHostingView *view = [[self class] hostingView:{
+    .analyticsListener = _analyticsListenerSpy,
+    .wrapperType = CKComponentHostingViewWrapperTypeRenderComponent,
+  }];
+  const auto c1 = (CKRenderLifecycleTestComponent *)view.mountedLayout.component;
+  XCTAssertTrue(c1.isRenderFunctionCalled);
+
+  [view updateModel:[[CKComponentHostingViewTestModel alloc]
+                     initWithColor:nil
+                     size:{}
+                     wrapperType:CKComponentHostingViewWrapperTypeRenderComponent]
+               mode:CKUpdateModeSynchronous];
+  [view layoutIfNeeded];
+  const auto c2 = (CKRenderLifecycleTestComponent *)view.mountedLayout.component;
+  XCTAssertFalse(c2.isRenderFunctionCalled);
+}
+
+- (void)testReload_ComponentIsNotReused
+{
+  CKComponentHostingView *view = [[self class] hostingView:{
+    .analyticsListener = _analyticsListenerSpy,
+    .wrapperType = CKComponentHostingViewWrapperTypeRenderComponent,
+  }];
+  const auto c1 = (CKRenderLifecycleTestComponent *)view.mountedLayout.component;
+  XCTAssertTrue(c1.isRenderFunctionCalled);
+
+  [view reloadWithMode:CKUpdateModeSynchronous];
+  [view layoutIfNeeded];
+  const auto c2 = (CKRenderLifecycleTestComponent *)view.mountedLayout.component;
+  XCTAssertTrue(c2.isRenderFunctionCalled);
 }
 
 #pragma mark - CKComponentHostingViewDelegate

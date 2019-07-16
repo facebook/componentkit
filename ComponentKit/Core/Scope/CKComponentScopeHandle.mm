@@ -43,6 +43,10 @@
     return nil;
   }
 
+  // `handleForComponent` is being called for every non-render component from the base constructor of `CKComponent`.
+  // We can rely on this infomration to increase the `componentAllocations` counter.
+  currentScope->componentAllocations++;
+
   CKComponentScopeHandle *handle = currentScope->stack.top().frame.handle;
   if ([handle acquireFromComponent:component]) {
     [currentScope->newScopeRoot registerComponent:component];
@@ -60,7 +64,6 @@
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class)componentClass
                     initialState:(id)initialState
-                          parent:(CKComponentScopeHandle *)parent
 {
   static int32_t nextGlobalIdentifier = 0;
   return [self initWithListener:listener
@@ -69,8 +72,7 @@
                  componentClass:componentClass
                           state:initialState
                      controller:nil  // Controllers are built on resolution of the handle.
-                scopedResponder:nil  // Scoped responders are created lazily. Once they exist, we use that reference for future handles.
-                         parent:parent];
+                scopedResponder:nil];  // Scoped responders are created lazily. Once they exist, we use that reference for future handles.
 }
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -80,7 +82,6 @@
                            state:(id)state
                       controller:(id<CKComponentControllerProtocol>)controller
                  scopedResponder:(CKScopedResponder *)scopedResponder
-                          parent:(CKComponentScopeHandle *)parent
 {
   if (self = [super init]) {
     _listener = listener;
@@ -89,7 +90,6 @@
     _componentClass = componentClass;
     _state = state;
     _controller = controller;
-    _parent = parent;
 
     _scopedResponder = scopedResponder;
     [scopedResponder addHandleToChain:self];
@@ -99,7 +99,6 @@
 
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                        componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot
-                                   parent:(CKComponentScopeHandle *)parent
 {
   id updatedState = _state;
   const auto pendingUpdatesIt = stateUpdates.find(self);
@@ -118,8 +117,7 @@
                                            componentClass:_componentClass
                                                     state:updatedState
                                                controller:_controller
-                                          scopedResponder:_scopedResponder
-                                                   parent:parent];
+                                          scopedResponder:_scopedResponder];
 }
 
 - (id<CKComponentControllerProtocol>)controller

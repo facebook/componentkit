@@ -76,7 +76,7 @@ id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> d
   [ds addListener:listener];
 
   CKDataSourceChangeset *insertion =
-  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
    build];

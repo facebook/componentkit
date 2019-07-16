@@ -24,3 +24,9 @@ __attribute__((unavailable("Not the designated initializer")))
 #endif // CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE
 
 #define CK_ARRAY_COUNT(x) sizeof(x) / sizeof(x[0])
+
+#if defined(__has_attribute) && __has_attribute(noescape)
+#define CK_NOESCAPE __attribute__((noescape))
+#else
+#define CK_NOESCAPE
+#endif // defined(__has_attribute) && __has_attribute(noescape)

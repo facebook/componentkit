@@ -199,6 +199,12 @@ namespace CKRenderInternal {
           .parentKlass = parent.component.class,
           .reuseCounter = 1 + previousReuseInfo.map(&CKTreeNodeReuseInfo::reuseCounter).valueOr(0),
         }});
+
+        // Notify the debug listener.
+        [params.scopeRoot.analyticsListener.debugAnalyticsListener
+         canReuseNode:node
+         parentNode:parent
+         scopeRoot:params.scopeRoot];
         return;
       }
     }

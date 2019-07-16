@@ -16,7 +16,6 @@
 #import "CKDataSourceModificationHelper.h"
 #import "CKDataSourceQOSHelper.h"
 
-
 @interface CKParallelRowLayoutChangesetModification : CKDataSourceChangesetModification <CKDataSourceChangesetModificationItemGenerator>
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
@@ -53,7 +52,8 @@ static NSOperationQualityOfService _operationQosFromDataSourceQOS(CKDataSourceQO
     _queue = [NSOperationQueue new];
     _queue.underlyingQueue = workQueue;
     _queue.qualityOfService = _operationQosFromDataSourceQOS(qos);
-    _queue.maxConcurrentOperationCount = [NSProcessInfo processInfo].activeProcessorCount - 1;
+    NSUInteger maxConcurrentOperationCount = [NSProcessInfo processInfo].activeProcessorCount - 1;
+    _queue.maxConcurrentOperationCount = maxConcurrentOperationCount > 0 ?: 1;
     [self setItemGenerator:self];
   }
   return self;

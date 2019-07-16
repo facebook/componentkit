@@ -102,4 +102,7 @@
 /** For internal use only; don't touch this. */
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
 
+/** For internal debug use only; don't touch this. */
+- (NSString *)backtraceStackDescription;
+
 @end

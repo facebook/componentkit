@@ -35,7 +35,7 @@
 
 - (CKComponent *)render:(id)state
 {
-  CKComponentContext<NSNumber> context(@1);
+  CKComponentMutableContext<NSNumber> context(@1);
   _renderCalledCounter++;
   _childComponent = [CKTestChildRenderComponent newWithProps:{
     .shouldUseComponentContext = _shouldUseComponentContext,
@@ -71,7 +71,7 @@
   auto const c = [super new];
   if (c) {
     if (props.shouldUseComponentContext) {
-      c->_value = CKComponentContext<NSNumber>::get();
+      c->_value = CKComponentMutableContext<NSNumber>::get();
     }
   }
   return c;

@@ -198,7 +198,7 @@ using namespace CKComponentControllerHelper;
                            oldState);
     }
     const auto section = static_cast<NSMutableArray *>(newSections[it.first]);
-#ifdef CK_ASSERTIONS_ENABLED
+#if CK_ASSERTIONS_ENABLED
     const auto invalidIndexes = CK::invalidIndexesForRemovalFromArray(section, it.second);
     if (invalidIndexes.count > 0) {
       CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeRemoveRow),
@@ -233,7 +233,7 @@ using namespace CKComponentControllerHelper;
                          _userInfo,
                          oldState);
   }
-#ifdef CK_ASSERTIONS_ENABLED
+#if CK_ASSERTIONS_ENABLED
     // Deep validation of the indexes we are going to insert for better logging.
   auto const invalidInsertedSectionsIndexes = CK::invalidIndexesForInsertionInArray(newSections, [_changeset insertedSections]);
   if (invalidInsertedSectionsIndexes.count) {
@@ -295,7 +295,7 @@ using namespace CKComponentControllerHelper;
                            _userInfo,
                            oldState);
     }
-#ifdef CK_ASSERTIONS_ENABLED
+#if CK_ASSERTIONS_ENABLED
     const auto sectionItems = static_cast<NSArray *>([newSections objectAtIndex:sectionIt.first]);
     const auto invalidIndexes = CK::invalidIndexesForInsertionInArray(sectionItems, indexes);
     if (invalidIndexes.count > 0) {
@@ -379,7 +379,6 @@ static NSArray *emptyMutableArrays(NSUInteger count)
 
 @end
 
-#ifdef CK_ASSERTIONS_ENABLED
 namespace CK {
   auto invalidIndexesForInsertionInArray(NSArray *const a, NSIndexSet *const is) -> NSIndexSet *
   {
@@ -405,4 +404,3 @@ namespace CK {
     return r;
   }
 }
-#endif

@@ -37,13 +37,11 @@
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class<CKComponentProtocol>)componentClass
-                    initialState:(id)initialState
-                          parent:(CKComponentScopeHandle *)parent;
+                    initialState:(id)initialState;
 
 /** Creates a new instance of the scope handle that incorporates the given state updates. */
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                       componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot
-                                   parent:(CKComponentScopeHandle *)parent;
+                       componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot;
 
 /** Enqueues a state update to be applied to the scope with the given mode. */
 - (void)updateState:(id (^)(id))updateBlock
@@ -73,7 +71,6 @@
 @property (nonatomic, strong, readonly) id state;
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
 @property (nonatomic, readonly, weak) id<CKComponentProtocol> acquiredComponent;
-@property (nonatomic, weak, readonly) CKComponentScopeHandle *parent;
 @property (nonatomic, assign, readonly) CKTreeNodeIdentifier treeNodeIdentifier;
 
 /**

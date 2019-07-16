@@ -24,6 +24,57 @@ auto Animation::functionToCA(Function f) -> CAMediaTimingFunction *
   }
 }
 
+auto Animation::InitialBuilder::toCA() const -> CAAnimation *
+{
+  auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
+  a.fromValue = _from;
+  this->applyTimingTo(a);
+  a.fillMode = kCAFillModeBackwards;
+  return a;
+}
+
+auto Animation::FinalBuilder::toCA() const -> CAAnimation *
+{
+  auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
+  a.toValue = _to;
+  this->applyTimingTo(a);
+  a.fillMode = kCAFillModeForwards;
+  return a;
+}
+
+auto Animation::SpringChangeBuilder::toCA() const -> CAAnimation *
+{
+  auto const a = [CASpringAnimation animationWithKeyPath:_keyPath];
+  this->applyTimingTo(a);
+  if (delay > 0) {
+    a.fillMode = kCAFillModeBackwards;
+  }
+  _damping.apply([a](CGFloat d){ a.damping = d; });
+  _initialVelocity.apply([a](CGFloat iv){ a.initialVelocity = iv; });
+  _mass.apply([a](CGFloat m){ a.mass = m; });
+  _stiffness.apply([a](CGFloat s){ a.stiffness = s; });
+  a.duration = a.settlingDuration;
+  return a;
+}
+
+auto Animation::ChangeBuilder::usingSpring() const -> SpringChangeBuilder
+{
+  auto spring = SpringChangeBuilder{_keyPath};
+  spring.delay = delay;
+  spring.function = function;
+  return spring;
+}
+
+auto Animation::ChangeBuilder::toCA() const -> CAAnimation *
+{
+  auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
+  this->applyTimingTo(a);
+  if (delay > 0) {
+    a.fillMode = kCAFillModeBackwards;
+  }
+  return a;
+}
+
 static auto animatedValueAsId(CGFloat f) -> id { return @(f); }
 static auto animatedValueAsId(UIColor *c) -> id { return (id)c.CGColor; }
 

@@ -10,6 +10,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import <algorithm>
+
 #import <ComponentKit/CKOptional.h>
 
 @class CAAnimation;
@@ -38,10 +40,10 @@ namespace CK {
     auto functionToCA(Function f) -> CAMediaTimingFunction *;
 
     /**
-     Represents the timing information for a sequence of two animations.
+     Represents the timing information for types of animations which have their durations calculated automatically.
      */
     template <typename Derived>
-    struct SequenceTiming {
+    struct TimingBuilderWithoutDuration {
       /**
        Specifies the delay after which the animation will start.
 
@@ -171,14 +173,7 @@ namespace CK {
       InitialBuilder(id from, __unsafe_unretained NSString *keyPath) :_from(from), _keyPath(keyPath) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
-      auto toCA() const -> CAAnimation *
-      {
-        auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
-        a.fromValue = _from;
-        this->applyTimingTo(a);
-        a.fillMode = kCAFillModeBackwards;
-        return a;
-      }
+      auto toCA() const -> CAAnimation *;
 
       operator CAAnimation *() const { return toCA(); }
 
@@ -223,15 +218,8 @@ namespace CK {
       FinalBuilder(id to, __unsafe_unretained NSString *keyPath) :_to(to), _keyPath(keyPath) {}
 
       /// Returns a Core Animation animation corresponding to this animation.
-      auto toCA() const -> CAAnimation *
-      {
-        auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
-        a.toValue = _to;
-        this->applyTimingTo(a);
-        a.fillMode = kCAFillModeForwards;
-        return a;
-      }
-
+      auto toCA() const -> CAAnimation *;
+      
       operator CAAnimation *() const { return toCA(); }
 
       operator Final() const { return Final{toCA()}; }
@@ -242,6 +230,87 @@ namespace CK {
     };
 
     /**
+     A type that any change animation can be implicitly converted to.
+     */
+    struct Change {
+      auto toCA() const { return _anim; }
+
+    private:
+      friend struct ChangeBuilder;
+
+      friend struct SpringChangeBuilder;
+
+      template <typename A1, typename A2>
+      friend struct SequenceBuilder;
+
+      template <typename A1, typename A2>
+      friend struct ParallelBuilder;
+
+      explicit Change(CAAnimation *anim) :_anim(anim) {}
+
+      CAAnimation *_anim;
+    };
+
+    struct SpringChangeBuilder: TimingBuilderWithoutDuration<SpringChangeBuilder> {
+      static constexpr auto type = Type::change;
+
+      SpringChangeBuilder(__unsafe_unretained NSString *keyPath) :_keyPath(keyPath) {}
+
+      /**
+       Defines how the spring’s motion should be damped due to the forces of friction.
+
+       @discussion
+       The default value of the damping property is 10. Reducing this value reduces the energy loss with each
+       oscillation. Increasing the value increases the energy loss with each duration: there will be fewer and smaller
+       oscillations.
+       */
+      auto &withDamping(CGFloat d) { _damping = d; return *this; }
+
+      /**
+       The initial velocity of the object attached to the spring.
+
+       @discussion
+       Defaults to 0, which represents an unmoving object. Negative values represent the object moving away from the
+       spring attachment point, positive values represent the object moving towards the spring attachment point.
+       */
+      auto &withInitialVelocity(CGFloat iv) { _initialVelocity = iv; return *this; }
+
+      /**
+       The mass of the object attached to the end of the spring.
+
+       @discussion
+       The default mass is 1. Increasing this value will increase the spring effect: the attached object will be subject
+       to more oscillations and greater overshoot. Decreasing the mass will reduce the spring effect: there will be
+       fewer oscillations and a reduced overshoot.
+       */
+      auto &withMass(CGFloat m) { _mass = m; return *this; }
+
+      /**
+       The spring stiffness coefficient.
+
+       @discussion
+       The default stiffness coefficient is 100. Increasing the stiffness reduces the number of oscillations and will
+       reduce the duration. Decreasing the stiffness increases the the number of oscillations and will increase the
+       duration.
+       */
+      auto &withStiffness(CGFloat s) { _stiffness = s; return *this; }
+
+      /// Returns a Core Animation animation corresponding to this animation.
+      auto toCA() const -> CAAnimation *;
+
+      operator CAAnimation *() const { return toCA(); }
+
+      operator Change() const { return Change{toCA()}; }
+
+    private:
+      __unsafe_unretained NSString *_keyPath;
+      Optional<CGFloat> _damping;
+      Optional<CGFloat> _initialVelocity;
+      Optional<CGFloat> _mass;
+      Optional<CGFloat> _stiffness;
+    };
+
+    /**
      Represents a change animation that animates between the previous and the current value of the property.
      */
     struct ChangeBuilder: TimingBuilder<ChangeBuilder> {
@@ -249,25 +318,56 @@ namespace CK {
 
       ChangeBuilder(__unsafe_unretained NSString *keyPath) :_keyPath(keyPath) {}
 
-      /// Returns a Core Animation animation corresponding to this animation.
-      auto toCA() const -> CAAnimation *
-      {
-        auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
-        this->applyTimingTo(a);
-        return a;
-      }
+      /// Makes this animation apply a spring-like force to the animated property.
+      auto usingSpring() const -> SpringChangeBuilder;
 
+      /// Returns a Core Animation animation corresponding to this animation.
+      auto toCA() const -> CAAnimation *;
+      
       operator CAAnimation *() const { return toCA(); }
+
+      operator Change() const { return Change{toCA()}; }
 
     private:
       __unsafe_unretained NSString *_keyPath;
     };
 
+    template <typename A1, typename A2, bool ShouldHaveDuration>
+    struct ParallelBuilderBase {};
+
+    template <typename A1, typename A2>
+    struct ParallelBuilderBase<A1, A2, false> {
+      template <typename Derived>
+      using Type = TimingBuilderWithoutDuration<Derived>;
+    };
+
+    template <typename A1, typename A2>
+    struct ParallelBuilderBase<A1, A2, true> {
+      template <typename Derived>
+      using Type = TimingBuilder<Derived>;
+    };
+
+    // If ParallelBuilder inherits from TimingBuilder (i.e. allows to set the duration explicitly), the duration from
+    // TimingBuilder will be used.
+    template <typename ParallelBuilder, std::enable_if_t<std::is_base_of<TimingBuilder<ParallelBuilder>, ParallelBuilder>::value, int> = 0>
+    auto durationForParallelGroup(const ParallelBuilder &pb) -> CFTimeInterval
+    {
+      return pb.duration.valueOr(0);
+    }
+
+    // If ParallelBuilder inherits from TimingBuilderWithoutDuration (i.e. doesn't allow to set the duration explicitly)
+    // the maximum duration among the two composed animations will be used.
+    template <typename ParallelBuilder, std::enable_if_t<std::is_base_of<TimingBuilderWithoutDuration<ParallelBuilder>, ParallelBuilder>::value, int> = 0>
+    auto durationForParallelGroup(const ParallelBuilder &pb) -> CFTimeInterval
+    {
+      return std::max(pb._a1.toCA().duration, pb._a2.toCA().duration);
+    }
+
     /**
      Represents group of animations that run in parallel.
      */
     template <typename A1, typename A2>
-    struct ParallelBuilder: TimingBuilder<ParallelBuilder<A1, A2>> {
+    struct ParallelBuilder: ParallelBuilderBase<A1, A2, std::is_base_of<TimingBuilder<A1>, A1>::value && std::is_base_of<TimingBuilder<A2>, A2>::value>:: template Type<ParallelBuilder<A1, A2>> {
       static_assert(A1::type == A2::type, "Grouped animations must have the same type");
       static constexpr auto type = A1::type;
 
@@ -280,18 +380,22 @@ namespace CK {
         auto const g = [CAAnimationGroup new];
         g.animations = @[_a1.toCA(), _a2.toCA()];
         this->applyTimingTo(g);
-        if (type == Type::initial) {
+        if (type == Type::initial || type == Type::change) {
           g.fillMode = kCAFillModeBackwards;
         }
+        g.duration = durationForParallelGroup(*this);
         return g;
       }
 
       operator CAAnimation *() const { return toCA(); }
 
-      using Any = std::conditional_t<type == Type::initial, Initial, std::conditional_t<type == Type::final, Final, void>>;
+      using Any = std::conditional_t<type == Type::initial, Initial, std::conditional_t<type == Type::final, Final, Change>>;
       operator Any() const { return Any{toCA()}; }
 
     private:
+      template <typename ParallelBuilder, std::enable_if_t<std::is_base_of<TimingBuilderWithoutDuration<ParallelBuilder>, ParallelBuilder>::value, int>>
+      friend auto durationForParallelGroup(const ParallelBuilder &) -> CFTimeInterval;
+
       A1 _a1;
       A2 _a2;
     };
@@ -300,7 +404,7 @@ namespace CK {
      Represents group of animations that run one after the other.
      */
     template <typename A1, typename A2>
-    struct SequenceBuilder: SequenceTiming<SequenceBuilder<A1, A2>> {
+    struct SequenceBuilder: TimingBuilderWithoutDuration<SequenceBuilder<A1, A2>> {
       static_assert(A1::type == A2::type, "Grouped animations must have the same type");
       static constexpr auto type = A1::type;
 
@@ -325,7 +429,7 @@ namespace CK {
 
       operator CAAnimation *() const { return toCA(); }
 
-      using Any = std::conditional_t<type == Type::initial, Initial, std::conditional_t<type == Type::final, Final, void>>;
+      using Any = std::conditional_t<type == Type::initial, Initial, std::conditional_t<type == Type::final, Final, Change>>;
       operator Any() const { return Any{toCA()}; }
 
     private:
@@ -388,6 +492,13 @@ namespace CK {
 
      @note  You don't have to specify durations for the individual animations if they all have the same duration.
      Instead, this duration can be specified once for the whole group.
+
+     @note  If one of the composed animations has its duration calculated automatically (e.g. a sequence animation), the
+     resulting animation will also have its duration calculated automatically and it cannot be set explicitly.
+
+     @code
+     parallel(alpha(), position()).withDuration(0.5) // OK
+     parallel(alpha(), sequence(position(), backgroundColor())).withDuration(0.5) // Error, sequence animation determines the duration
 
      @note  Only animations of the same type can grouped, i.e.
 

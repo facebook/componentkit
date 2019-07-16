@@ -204,7 +204,7 @@
 
   [dataSource applyChangeset:initialInsertionChangeset(1, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
   CKDataSourceChangeset *const updateChangeset =
-  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withUpdatedItems:@{
                        [NSIndexPath indexPathForRow:0 inSection:0]: sizeValue(10, 30),
                        }]
@@ -229,7 +229,7 @@
 
   [dataSource applyChangeset:initialInsertionChangeset(1, {.width = 10, .height = 40}) mode:CKUpdateModeSynchronous userInfo:nil];
   CKDataSourceChangeset *const updateChangeset =
-  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withUpdatedItems:@{
                         [NSIndexPath indexPathForRow:0 inSection:0]: sizeValue(10, 10),
                         }]
@@ -258,7 +258,7 @@
 
   [dataSource applyChangeset:initialInsertionChangeset(1, {.width = 10, .height = 40}) mode:CKUpdateModeSynchronous userInfo:nil];
   CKDataSourceChangeset *const removalChangeset =
-  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForRow:0 inSection:0]]]
     withInsertedItems:@{
                         [NSIndexPath indexPathForRow:0 inSection:0]: sizeValue(10, 20),
@@ -425,7 +425,7 @@
 
   CKDataSourceChangeset *const updateWithRemovalChangeset =
   [[[[CKDataSourceChangesetBuilder
-     transactionalComponentDataSourceChangeset]
+     dataSourceChangeset]
     withUpdatedItems:@{[NSIndexPath indexPathForItem:3 inSection:0]: [NSValue valueWithCGSize:{.width = 10, .height = 10}]}]
    withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:3 inSection:0]]]
    build];
@@ -465,7 +465,7 @@
 
   CKDataSourceChangeset *const updateWithRemovalChangeset =
   [[[[CKDataSourceChangesetBuilder
-      transactionalComponentDataSourceChangeset]
+      dataSourceChangeset]
      withUpdatedItems:@{[NSIndexPath indexPathForItem:3 inSection:0]: [NSValue valueWithCGSize:{.width = 10, .height = 10}]}]
     withRemovedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
@@ -505,7 +505,7 @@
 
   CKDataSourceChangeset *const updateWithRemovalChangeset =
   [[[[CKDataSourceChangesetBuilder
-      transactionalComponentDataSourceChangeset]
+      dataSourceChangeset]
      withUpdatedItems:@{[NSIndexPath indexPathForItem:2 inSection:0]: [NSValue valueWithCGSize:{.width = 10, .height = 10}]}]
     withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]]
    build];
@@ -550,7 +550,7 @@
   [dataSource addListener:self];
 
   CKDataSourceChangeset *const insertionChangeset =
-  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]]
     withInsertedItems:@{
                         [NSIndexPath indexPathForItem:0 inSection:0]: [NSValue valueWithCGSize:{.width = 10, .height = 10}],
@@ -564,7 +564,7 @@
 
   CKDataSourceChangeset *const updateWithRemovalChangeset =
   [[[[CKDataSourceChangesetBuilder
-      transactionalComponentDataSourceChangeset]
+      dataSourceChangeset]
      withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:1]: [NSValue valueWithCGSize:{.width = 10, .height = 10}]}]
     withRemovedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
@@ -607,7 +607,7 @@
   [dataSource addListener:self];
 
   CKDataSourceChangeset *const insertionChangeset =
-  [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]]
     withInsertedItems:@{
                         [NSIndexPath indexPathForItem:0 inSection:0]: [NSValue valueWithCGSize:{.width = 10, .height = 10}],
@@ -621,7 +621,7 @@
 
   CKDataSourceChangeset *const updateWithInsertionChangeset =
   [[[[CKDataSourceChangesetBuilder
-      transactionalComponentDataSourceChangeset]
+      dataSourceChangeset]
      withInsertedItems:@{[NSIndexPath indexPathForItem:1 inSection:1]: [NSValue valueWithCGSize:{.width = 10, .height = 10}]}]
      withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:1]: [NSValue valueWithCGSize:{.width = 10, .height = 10}]}]
    build];
@@ -657,7 +657,7 @@ static CKDataSourceChangeset *initialInsertionChangeset(NSUInteger itemCount, CG
   for (NSUInteger i = 0; i < itemCount; i++) {
     items[[NSIndexPath indexPathForItem:i inSection:0]] = [NSValue valueWithCGSize:size];
   }
-  return [[[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset]
+  return [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
             withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
            withInsertedItems:items]
           build];
@@ -669,7 +669,7 @@ static CKDataSourceChangeset *tailInsertionChangeset(NSRange range, CGSize size)
   for (NSUInteger i = 0; i < range.length; i++) {
     items[[NSIndexPath indexPathForItem:i + range.location inSection:0]] = [NSValue valueWithCGSize:size];
   }
-  return [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] withInsertedItems:items] build];
+  return [[[CKDataSourceChangesetBuilder dataSourceChangeset] withInsertedItems:items] build];
 }
 
 static CKDataSourceChangeset *updateChangeset(NSRange range, CGSize size)
@@ -678,7 +678,7 @@ static CKDataSourceChangeset *updateChangeset(NSRange range, CGSize size)
   for (NSUInteger i = 0; i < range.length; i++) {
     items[[NSIndexPath indexPathForItem:i + range.location inSection:0]] = [NSValue valueWithCGSize:size];
   }
-  return [[[CKDataSourceChangesetBuilder transactionalComponentDataSourceChangeset] withUpdatedItems:items] build];
+  return [[[CKDataSourceChangesetBuilder dataSourceChangeset] withUpdatedItems:items] build];
 }
 
 static CKDataSourceAppliedChanges *expectedAppliedChangesForInsertion(NSRange range)
