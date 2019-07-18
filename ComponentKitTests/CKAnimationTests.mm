@@ -426,13 +426,6 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
   XCTAssertEqualObjects(sequence(alphaFrom(0), translationYFrom(0)).easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
 }
 
-- (void)testSettingTimingFunctionWithDuration
-{
-  auto a = sequence(alphaFrom(0), translationYFrom(0)).easeIn().toCA();
-
-  XCTAssertEqualObjects(a.timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
-}
-
 - (void)test_WhenComposingInitialAnimations_UsesBackwardsFillMode
 {
   auto a = sequence(alphaFrom(0), translationYFrom(0)).toCA();

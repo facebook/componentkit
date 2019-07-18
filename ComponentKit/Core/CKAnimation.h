@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 
 #import <algorithm>
+#import <array>
 
 #import <ComponentKit/CKOptional.h>
 
@@ -26,18 +27,19 @@ namespace CK {
     };
 
     /**
-    Represents one segment of a function that defines the pacing of an animation as a timing curve.
+     Represents one segment of a function that defines the pacing of an animation as a timing curve.
      */
-    enum class Function {
-      /// Linear pacing, which causes an animation to occur evenly over its duration.
-      linear,
-      /// Ease-in pacing, which causes an animation to begin slowly and then speed up as it progresses.
-      easeIn,
-      /// Ease-out pacing, which causes an animation to begin quickly and then slow down as it progresses.
-      easeOut
-    };
+    struct TimingCurve {
+      using ControlPoint = std::array<float, 2>;
 
-    auto functionToCA(Function f) -> CAMediaTimingFunction *;
+      static auto fromCA(NSString *name) -> TimingCurve;
+
+      auto toCA() const -> CAMediaTimingFunction *;
+
+    private:
+      ControlPoint p1;
+      ControlPoint p2;
+    };
 
     /**
      Represents the timing information for types of animations which have their durations calculated automatically.
@@ -51,22 +53,22 @@ namespace CK {
        */
       auto &withDelay(CFTimeInterval t) { delay = t; return static_cast<Derived &>(*this); }
       /// Sets ease-in pacing for the animation
-      auto &easeIn() { function = Function::easeIn; return static_cast<Derived &>(*this); }
+      auto &easeIn() { curve = TimingCurve::fromCA(kCAMediaTimingFunctionEaseIn); return static_cast<Derived &>(*this); }
       /// Sets ease-out pacing for the animation
-      auto &easeOut() { function = Function::easeOut; return static_cast<Derived &>(*this); }
+      auto &easeOut() { curve = TimingCurve::fromCA(kCAMediaTimingFunctionEaseOut); return static_cast<Derived &>(*this); }
 
     protected:
       auto applyTimingTo(CAAnimation *a) const
       {
         a.beginTime = delay;
-        a.timingFunction = functionToCA(function);
+        a.timingFunction = curve.toCA();
       }
 
     public:
       /// Delay after which the animation will start
       CFTimeInterval delay = 0;
-      /// Function that defines the pacing of the animation
-      Function function = Function::linear;
+      /// Curve that defines the pacing of the animation
+      TimingCurve curve = TimingCurve::fromCA(kCAMediaTimingFunctionLinear);
     };
 
     /**
@@ -97,7 +99,7 @@ namespace CK {
        */
       auto &easeIn(Optional<CFTimeInterval> t = none)
       {
-        function = Function::easeIn;
+        curve = TimingCurve::fromCA(kCAMediaTimingFunctionEaseIn);
         t.apply([this](CFTimeInterval _t){ duration = _t; });
         return static_cast<Derived &>(*this);
       }
@@ -111,7 +113,7 @@ namespace CK {
        */
       auto &easeOut(Optional<CFTimeInterval> t = none)
       {
-        function = Function::easeOut;
+        curve = TimingCurve::fromCA(kCAMediaTimingFunctionEaseOut);
         t.apply([this](CFTimeInterval _t){ duration = _t; });
         return static_cast<Derived &>(*this);
       }
@@ -121,7 +123,7 @@ namespace CK {
       {
         duration.apply([a](const CFTimeInterval &t){ a.duration = t; });
         a.beginTime = delay;
-        a.timingFunction = functionToCA(function);
+        a.timingFunction = curve.toCA();
       }
 
     public:
@@ -134,8 +136,8 @@ namespace CK {
       Optional<CFTimeInterval> duration;
       /// Delay after which the animation will start
       CFTimeInterval delay = 0;
-      /// Function that defines the pacing of the animation
-      Function function = Function::linear;
+      /// Curve that defines the pacing of the animation
+      TimingCurve curve = TimingCurve::fromCA(kCAMediaTimingFunctionLinear);
     };
 
     /**

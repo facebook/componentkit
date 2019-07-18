@@ -12,16 +12,20 @@
 
 using namespace CK;
 
-auto Animation::functionToCA(Function f) -> CAMediaTimingFunction *
+auto Animation::TimingCurve::fromCA(NSString *name) -> TimingCurve
 {
-  switch (f) {
-    case Function::easeOut:
-      return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    case Function::easeIn:
-      return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-    case Function::linear:
-      return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-  }
+  auto c = TimingCurve{};
+  auto const f = [CAMediaTimingFunction functionWithName:name];
+
+  [f getControlPointAtIndex:1 values:c.p1.data()];
+  [f getControlPointAtIndex:2 values:c.p2.data()];
+
+  return c;
+}
+
+auto Animation::TimingCurve::toCA() const -> CAMediaTimingFunction *
+{
+  return [CAMediaTimingFunction functionWithControlPoints:p1[0] :p1[1] :p2[0] :p2[1]];
 }
 
 auto Animation::InitialBuilder::toCA() const -> CAAnimation *
@@ -61,7 +65,7 @@ auto Animation::ChangeBuilder::usingSpring() const -> SpringChangeBuilder
 {
   auto spring = SpringChangeBuilder{_keyPath};
   spring.delay = delay;
-  spring.function = function;
+  spring.curve = curve;
   return spring;
 }
 
