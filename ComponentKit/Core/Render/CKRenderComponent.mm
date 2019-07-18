@@ -36,11 +36,11 @@ struct CKRenderLayoutCache {
 + (void)initialize
 {
   if (self != [CKRenderComponent class]) {
-    CKAssert(!CKSubclassOverridesSelector([CKRenderComponent class], self, @selector(computeLayoutThatFits:)),
+    CKAssert(!CKSubclassOverridesInstanceMethod([CKRenderComponent class], self, @selector(computeLayoutThatFits:)),
              @"%@ overrides -computeLayoutThatFits: which is not allowed. "
              "Consider subclassing CKRenderWithChildrenComponent directly if you need to perform custom layout.",
              self);
-    CKAssert(!CKSubclassOverridesSelector([CKRenderComponent class], self, @selector(layoutThatFits:parentSize:)),
+    CKAssert(!CKSubclassOverridesInstanceMethod([CKRenderComponent class], self, @selector(layoutThatFits:parentSize:)),
              @"%@ overrides -layoutThatFits:parentSize: which is not allowed. "
              "Consider subclassing CKRenderWithChildrenComponent directly if you need to perform custom layout.",
              self);

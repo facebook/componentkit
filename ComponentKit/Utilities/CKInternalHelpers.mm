@@ -12,13 +12,29 @@
 
 #import <objc/runtime.h>
 
-BOOL CKSubclassOverridesSelector(Class superclass, Class subclass, SEL selector) noexcept
+BOOL CKSubclassOverridesInstanceMethod(Class superclass, Class subclass, SEL selector) noexcept
 {
   if (![subclass isSubclassOfClass:superclass]) {
     return NO;
   }
   Method superclassMethod = class_getInstanceMethod(superclass, selector);
   Method subclassMethod = class_getInstanceMethod(subclass, selector);
+  IMP superclassIMP = superclassMethod ? method_getImplementation(superclassMethod) : NULL;
+  IMP subclassIMP = subclassMethod ? method_getImplementation(subclassMethod) : NULL;
+  if (superclassIMP == NULL) {
+    return NO;
+  }
+
+  return (superclassIMP != subclassIMP);
+}
+
+BOOL CKSubclassOverridesClassMethod(Class superclass, Class subclass, SEL selector) noexcept
+{
+  if (![subclass isSubclassOfClass:superclass]) {
+    return NO;
+  }
+  Method superclassMethod = class_getClassMethod(superclass, selector);
+  Method subclassMethod = class_getClassMethod(subclass, selector);
   IMP superclassIMP = superclassMethod ? method_getImplementation(superclassMethod) : NULL;
   IMP subclassIMP = subclassMethod ? method_getImplementation(subclassMethod) : NULL;
   if (superclassIMP == NULL) {

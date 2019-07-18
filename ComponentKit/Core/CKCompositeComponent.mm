@@ -32,11 +32,11 @@
 + (void)initialize
 {
   if (self != [CKCompositeComponent class]) {
-    CKAssert(!CKSubclassOverridesSelector([CKCompositeComponent class], self, @selector(computeLayoutThatFits:)),
+    CKAssert(!CKSubclassOverridesInstanceMethod([CKCompositeComponent class], self, @selector(computeLayoutThatFits:)),
              @"%@ overrides -computeLayoutThatFits: which is not allowed. "
              "Consider subclassing CKComponent directly if you need to perform custom layout.",
              self);
-    CKAssert(!CKSubclassOverridesSelector([CKCompositeComponent class], self, @selector(layoutThatFits:parentSize:)),
+    CKAssert(!CKSubclassOverridesInstanceMethod([CKCompositeComponent class], self, @selector(layoutThatFits:parentSize:)),
              @"%@ overrides -layoutThatFits:parentSize: which is not allowed. "
              "Consider subclassing CKComponent directly if you need to perform custom layout.",
              self);

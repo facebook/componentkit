@@ -12,7 +12,8 @@
 
 #import <UIKit/UIKit.h>
 
-BOOL CKSubclassOverridesSelector(Class superclass, Class subclass, SEL selector) noexcept;
+BOOL CKSubclassOverridesInstanceMethod(Class superclass, Class subclass, SEL selector) noexcept;
+BOOL CKSubclassOverridesClassMethod(Class superclass, Class subclass, SEL selector) noexcept;
 
 std::string CKStringFromPointer(const void *ptr) noexcept;
 

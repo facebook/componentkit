@@ -14,35 +14,89 @@
 
 @interface Subclass: NSObject
 - (void)method;
++ (void)classMethod;
 @end
 
-@interface CKSubclassOverridesSelectorTests : XCTestCase
+@interface CKSubclassOverridesSelectorMethodTests : XCTestCase
 @end
 
-@implementation CKSubclassOverridesSelectorTests
+@implementation CKSubclassOverridesSelectorMethodTests
 
-- (void)test_WhenSuperclassIsNil_DoesNotConsiderAsOverride
+- (void)test_InstanceMethod_WhenSuperclassIsNil_DoesNotConsiderAsOverride
 {
-  XCTAssertFalse(CKSubclassOverridesSelector(Nil, [NSObject class], @selector(description)));
+  XCTAssertFalse(CKSubclassOverridesInstanceMethod(Nil, [NSObject class], @selector(description)));
 }
 
-- (void)test_WhenSubclassIsNil_DoesNotConsiderAsOverride
+- (void)test_InstanceMethod_WhenSubclassIsNil_DoesNotConsiderAsOverride
 {
-  XCTAssertFalse(CKSubclassOverridesSelector([NSObject class], Nil, @selector(description)));
+  XCTAssertFalse(CKSubclassOverridesInstanceMethod([NSObject class], Nil, @selector(description)));
 }
 
-- (void)test_IfSuperclassDoesNotImplementSelector_DoesNotConsiderAsOverride
+- (void)test_InstanceMethod_IfSuperclassDoesNotImplementSelector_DoesNotConsiderAsOverride
 {
-  XCTAssertFalse(CKSubclassOverridesSelector([NSObject class], [Subclass class], @selector(method)));
+  XCTAssertFalse(CKSubclassOverridesInstanceMethod([NSObject class], [Subclass class], @selector(method)));
 }
 
-- (void)test_IfClassesAreNotRelated_DoesNotConsiderAsOverride
+- (void)test_InstanceMethod_IfClassesAreNotRelated_DoesNotConsiderAsOverride
 {
-  XCTAssertFalse(CKSubclassOverridesSelector([NSObject class], [NSProxy class], @selector(description)));
+  XCTAssertFalse(CKSubclassOverridesInstanceMethod([NSObject class], [NSProxy class], @selector(description)));
+}
+
+- (void)test_InstanceMethod_IfSubclassDoesNotOverrideMethod_DoesNotConsiderAsOverride
+{
+  XCTAssertFalse(CKSubclassOverridesInstanceMethod([NSObject class], [Subclass class], @selector(isEqual:)));
+}
+
+- (void)test_InstanceMethod_IfSubclassOverridesMethod_DoesConsiderAsOverride
+{
+  XCTAssertTrue(CKSubclassOverridesInstanceMethod([NSObject class], [Subclass class], @selector(description)));
+}
+
+- (void)test_ClassMethod_WhenSuperclassIsNil_DoesNotConsiderAsOverride
+{
+  XCTAssertFalse(CKSubclassOverridesClassMethod(Nil, [NSObject class], @selector(description)));
+}
+
+- (void)test_ClassMethod_WhenSubclassIsNil_DoesNotConsiderAsOverride
+{
+  XCTAssertFalse(CKSubclassOverridesClassMethod([NSObject class], Nil, @selector(description)));
+}
+
+- (void)test_ClassMethod_IfSuperclassDoesNotImplementSelector_DoesNotConsiderAsOverride
+{
+  XCTAssertFalse(CKSubclassOverridesClassMethod([NSObject class], [Subclass class], @selector(classMethod)));
+}
+
+- (void)test_ClassMethod_IfClassesAreNotRelated_DoesNotConsiderAsOverride
+{
+  XCTAssertFalse(CKSubclassOverridesClassMethod([NSObject class], [NSProxy class], @selector(description)));
+}
+
+- (void)test_ClassMethod_IfSubclassDoesNotOverrideMethod_DoesNotConsiderAsOverride
+{
+  XCTAssertFalse(CKSubclassOverridesClassMethod([NSObject class], [Subclass class], @selector(load)));
+}
+
+- (void)test_ClassMethod_IfSubclassOverridesMethod_DoesConsiderAsOverride
+{
+  XCTAssertTrue(CKSubclassOverridesClassMethod([NSObject class], [Subclass class], @selector(debugDescription)));
 }
 
 @end
 
 @implementation Subclass
+
 - (void)method {}
++ (void)classMethod {}
+
+- (NSString *)description
+{
+  return @"";
+}
+
++ (NSString *)debugDescription
+{
+  return @"";
+}
+
 @end

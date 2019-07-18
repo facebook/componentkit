@@ -20,7 +20,7 @@
 
 BOOL CKComponentBoundsAnimationPredicate(id<CKComponentProtocol> component)
 {
-  return CKSubclassOverridesSelector([CKComponent class], [component class], @selector(boundsAnimationFromPreviousComponent:));
+  return CKSubclassOverridesInstanceMethod([CKComponent class], [component class], @selector(boundsAnimationFromPreviousComponent:));
 }
 
 /** Filter components that their controllers override the 'didPrepareLayout:ForComponent:' method. */
@@ -29,24 +29,24 @@ BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id<CKComponent
   const Class<CKComponentControllerProtocol> controllerClass = [[component class] controllerClass];
   return
   controllerClass
-  && CKSubclassOverridesSelector([CKComponentController class],
+  && CKSubclassOverridesInstanceMethod([CKComponentController class],
                                  controllerClass,
                                  @selector(didPrepareLayout:forComponent:));
 }
 
 auto CKComponentHasAnimationsOnInitialMountPredicate(id<CKComponentProtocol> const c) -> BOOL
 {
-  return CKSubclassOverridesSelector([CKComponent class], [c class], @selector(animationsOnInitialMount));
+  return CKSubclassOverridesInstanceMethod([CKComponent class], [c class], @selector(animationsOnInitialMount));
 }
 
 auto CKComponentHasAnimationsFromPreviousComponentPredicate(id<CKComponentProtocol> const c) -> BOOL
 {
-  return CKSubclassOverridesSelector([CKComponent class], [c class], @selector(animationsFromPreviousComponent:));
+  return CKSubclassOverridesInstanceMethod([CKComponent class], [c class], @selector(animationsFromPreviousComponent:));
 }
 
 auto CKComponentHasAnimationsOnFinalUnmountPredicate(id<CKComponentProtocol> const c) -> BOOL
 {
-  return CKSubclassOverridesSelector([CKComponent class], [c class], @selector(animationsOnFinalUnmount));
+  return CKSubclassOverridesInstanceMethod([CKComponent class], [c class], @selector(animationsOnFinalUnmount));
 }
 
 void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot, const CKComponentRootLayout &layout)

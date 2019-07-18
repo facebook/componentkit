@@ -71,7 +71,7 @@ struct CKComponentMountInfo {
 + (void)initialize
 {
   if (self != [CKComponent class]) {
-    CKAssert(!CKSubclassOverridesSelector([CKComponent class], self, @selector(layoutThatFits:parentSize:)),
+    CKAssert(!CKSubclassOverridesInstanceMethod([CKComponent class], self, @selector(layoutThatFits:parentSize:)),
              @"%@ overrides -layoutThatFits:parentSize: which is not allowed. Override -computeLayoutThatFits: "
              "or -computeLayoutThatFits:restrictedToSize:relativeToParentSize: instead.",
              self);
@@ -445,9 +445,9 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   const auto &it = cache->find(componentClass);
   if (it == cache->end()) {
     BOOL hasAnimations = NO;
-    if (CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
-        CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnInitialMount)) ||
-        CKSubclassOverridesSelector([CKComponent class], componentClass, @selector(animationsOnFinalUnmount))) {
+    if (CKSubclassOverridesInstanceMethod([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
+        CKSubclassOverridesInstanceMethod([CKComponent class], componentClass, @selector(animationsOnInitialMount)) ||
+        CKSubclassOverridesInstanceMethod([CKComponent class], componentClass, @selector(animationsOnFinalUnmount))) {
       hasAnimations = YES;
     }
     cache->insert({componentClass, hasAnimations});

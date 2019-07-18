@@ -16,17 +16,17 @@
 
 BOOL CKComponentControllerAppearanceEventPredicate(id<CKComponentControllerProtocol> controller)
 {
-  return CKSubclassOverridesSelector([CKComponentController class], [controller class], @selector(componentTreeWillAppear));
+  return CKSubclassOverridesInstanceMethod([CKComponentController class], [controller class], @selector(componentTreeWillAppear));
 }
 
 BOOL CKComponentControllerDisappearanceEventPredicate(id<CKComponentControllerProtocol> controller)
 {
-  return CKSubclassOverridesSelector([CKComponentController class], [controller class], @selector(componentTreeDidDisappear));
+  return CKSubclassOverridesInstanceMethod([CKComponentController class], [controller class], @selector(componentTreeDidDisappear));
 }
 
 BOOL CKComponentControllerInvalidateEventPredicate(id<CKComponentControllerProtocol> controller)
 {
-  return CKSubclassOverridesSelector([CKComponentController class], [controller class], @selector(invalidateController));
+  return CKSubclassOverridesInstanceMethod([CKComponentController class], [controller class], @selector(invalidateController));
 }
 
 void CKComponentScopeRootAnnounceControllerAppearance(CKComponentScopeRoot *scopeRoot)
