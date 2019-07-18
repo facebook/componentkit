@@ -12,7 +12,6 @@
 
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
-#import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
@@ -32,14 +31,14 @@ static CKDataSourceItem *item(CKDataSourceConfiguration *configuration, id<CKCom
   return [[CKDataSourceItem alloc] initWithRootLayout:layout model:model scopeRoot:result.scopeRoot boundsAnimation:result.boundsAnimation];
 }
 
-CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
+CKDataSourceState *CKDataSourceTestState(CKComponentProviderFunc provider,
                                          id<CKComponentStateListener> listener,
                                          NSUInteger numberOfSections,
                                          NSUInteger numberOfItemsPerSection)
 {
   CKDataSourceConfiguration *configuration =
   [[CKDataSourceConfiguration alloc]
-   initWithComponentProvider:provider
+   initWithComponentProviderFunc:provider
    context:@"context"
    sizeRange:{{100, 100}, {100, 100}}
    options:{}
@@ -60,12 +59,12 @@ CKDataSourceState *CKDataSourceTestState(Class<CKComponentProvider> provider,
 }
 
 id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> dataSourceClass,
-                                                   Class<CKComponentProvider> provider,
+                                                   CKComponentProviderFunc provider,
                                                    id<CKDataSourceListener> listener)
 {
   const auto configuration =
   [[CKDataSourceConfiguration alloc]
-   initWithComponentProvider:provider
+   initWithComponentProviderFunc:provider
    context:nil
    sizeRange:{}
    options:{}

@@ -58,10 +58,10 @@
 
   // Size configuration
   const CKSizeRange sizeRange = [_sizeRangeProvider sizeRangeForBoundingSize:self.collectionView.bounds.size];
-  CKDataSourceConfiguration *configuration =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                       context:context
-                                                     sizeRange:sizeRange];
+  CKDataSourceConfiguration *configuration = [[CKDataSourceConfiguration<Quote *, QuoteContext *> alloc]
+      initWithComponentProviderFunc:WildeGuessComponentProvider
+                            context:context
+                          sizeRange:sizeRange];
 
   // Create the data source
   _dataSource = [[CKCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
@@ -116,7 +116,7 @@
 
 #pragma mark - CKComponentProvider
 
-+ (CKComponent *)componentForModel:(Quote *)quote context:(QuoteContext *)context
+static CKComponent *WildeGuessComponentProvider(Quote *quote, QuoteContext *context)
 {
   return [InteractiveQuoteComponent
           newWithQuote:quote

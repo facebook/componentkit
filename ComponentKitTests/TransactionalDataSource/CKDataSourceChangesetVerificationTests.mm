@@ -44,7 +44,7 @@
   CKDataSourceChangeset *changeset =
   [[CKDataSourceChangesetBuilder dataSourceChangeset]
    build];
-  
+
   [self assertEqualChangesetInfoWith:kChangeSetValid target:CKIsValidChangesetForState(changeset, state, nil)];
 }
 
@@ -65,7 +65,7 @@
   CKDataSourceChangeset *changeset =
   [[CKDataSourceChangesetBuilder dataSourceChangeset]
    build];
-  
+
   [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
 }
 
@@ -604,7 +604,7 @@
 
 - (void)test_WhenVerifyingMovesWithSectionRemoval_ValidatesFromIndexPathsAgainstOriginalState
 {
-  const auto state = CKDataSourceTestState(Nil, nil, 2, 20);
+  const auto state = CKDataSourceTestState(nullptr, nil, 2, 20);
   const auto changeset = CK::makeChangeset({
     .removedSections = {
       0,
@@ -622,7 +622,7 @@
 
 - (void)test_WhenVerifyingMovesWithSectionInsertion_ValidatesFromIndexPathsAgainstOriginalState
 {
-  const auto state = CKDataSourceTestState(Nil, nil, 1, 20);
+  const auto state = CKDataSourceTestState(nullptr, nil, 1, 20);
   const auto changeset = CK::makeChangeset({
     .movedItems = {
       {{0, 1}, {1, 9}},
@@ -640,7 +640,7 @@
 
 - (void)test_WhenVerifyingMovesWithBothSectionInsertionsAndRemovals_ValidatesFromIndexPathsAgainstOriginalState
 {
-  const auto state = CKDataSourceTestState(Nil, nil, 2, 20);
+  const auto state = CKDataSourceTestState(nullptr, nil, 2, 20);
   const auto changeset = CK::makeChangeset({
     .removedSections = {
       0,
@@ -661,7 +661,7 @@
 
 - (void)test_WhenVerifyingMovesToNewSection_ValidatesToIndexPathsAgainstFinalState
 {
-  const auto state = CKDataSourceTestState(Nil, nil, 2, 2);
+  const auto state = CKDataSourceTestState(nullptr, nil, 2, 2);
   const auto changeset = CK::makeChangeset({
     .movedItems = {
       {{0, 0}, {1, 0}},
@@ -677,7 +677,7 @@
 
 - (void)test_WhenVerifyingMovesWithinSection_ValidatesToIndexPathsAgainstFinalState
 {
-  const auto state = CKDataSourceTestState(Nil, nil, 1, 7);
+  const auto state = CKDataSourceTestState(nullptr, nil, 1, 7);
   const auto changeset = CK::makeChangeset({
     .updatedItems = {
       {{0, 0}, @"Upd"},
@@ -706,7 +706,7 @@
 
 - (void)test_WhenVerifyingMovesFromDeletedSection
 {
-  const auto state = CKDataSourceTestState(Nil, nil, 2, 2);
+  const auto state = CKDataSourceTestState(nullptr, nil, 2, 2);
   const auto changeset = CK::makeChangeset({
     .movedItems = {
       {{0, 0}, {0, 0}},
@@ -722,7 +722,7 @@
 
 - (void)test_WhenVerifyingMovesWithinSection
 {
-  const auto state = CKDataSourceTestState(Nil, nil, 1, 20);
+  const auto state = CKDataSourceTestState(nullptr, nil, 1, 20);
   const auto changeset = CK::makeChangeset({
     .movedItems = {
       {{0, 0}, {0, 19}},
@@ -775,7 +775,7 @@
 
 - (void)test_WhenApplyingPendingModificationsWithMoves_TreatsToIndexPathsAsSpecifiedAfterSectionRemovalsAndInsertions
 {
-  const auto state = CKDataSourceTestState(Nil, nil, 5, 1);
+  const auto state = CKDataSourceTestState(nullptr, nil, 5, 1);
   const auto pendingChangeset = CK::makeChangeset({
     .removedSections = {
       0, 2
@@ -833,7 +833,7 @@
                        [NSIndexPath indexPathForItem:1 inSection:-1]: @"A",
                        }]
    build];
-  
+
   CKInvalidChangesetInfo target = { CKInvalidChangesetOperationTypeUpdate, -1, 1 };
   [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:target];
 }
@@ -854,7 +854,7 @@
                        [NSIndexPath indexPathForItem:-1 inSection:0]: @"A",
                        }]
    build];
-  
+
   CKInvalidChangesetInfo target = { CKInvalidChangesetOperationTypeUpdate, 0, -1 };
   [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:target];
 }
@@ -875,7 +875,7 @@
                         [NSIndexPath indexPathForItem:3 inSection:0]: @"A",
                         }]
    build];
-  
+
   CKInvalidChangesetInfo target = { CKInvalidChangesetOperationTypeInsertRow, 0, 3 };
   [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:target];
 }
@@ -918,7 +918,7 @@
                         [NSIndexPath indexPathForItem:0 inSection:1]: @"A",
                         }]
    build];
-  
+
   CKInvalidChangesetInfo target = { CKInvalidChangesetOperationTypeInsertRow, 1, 0 };
   [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:target];
 }
@@ -1136,7 +1136,7 @@
                         [NSIndexPath indexPathForItem:1 inSection:1]: @"B2",
                         }]
    build];
-  
+
   [self assertEqualChangesetInfoWith:CKIsValidChangesetForState(changeset, state, nil) target:kChangeSetValid];
 }
 

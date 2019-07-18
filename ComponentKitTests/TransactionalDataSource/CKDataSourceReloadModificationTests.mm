@@ -48,19 +48,19 @@ static u_int32_t lifecycleComponentState = 1;
 }
 @end
 
-@interface CKDataSourceReloadModificationTests : XCTestCase <CKComponentProvider>
+@interface CKDataSourceReloadModificationTests : XCTestCase
 @end
 
 @implementation CKDataSourceReloadModificationTests
 
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 {
   return [CKTestGlobalStateComponent new];
 }
 
 - (void)testAppliedChangesIncludesUpdatedIndexPathsForEveryItem
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 5, 5);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 5, 5);
 
   CKDataSourceReloadModification *reloadModification =
   [[CKDataSourceReloadModification alloc] initWithUserInfo:nil];
@@ -81,7 +81,7 @@ static u_int32_t lifecycleComponentState = 1;
 
 - (void)testAppliedChangesIncludesUserInfo
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 1);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 1);
   NSDictionary *userInfo = @{@"foo": @"bar"};
   CKDataSourceReloadModification *reloadModification =
   [[CKDataSourceReloadModification alloc] initWithUserInfo:userInfo];
@@ -91,7 +91,7 @@ static u_int32_t lifecycleComponentState = 1;
 
 - (void)testActuallyRegeneratesComponents
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 1);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 1);
   CKDataSourceReloadModification *reloadModification =
   [[CKDataSourceReloadModification alloc] initWithUserInfo:nil];
 
@@ -108,7 +108,7 @@ static u_int32_t lifecycleComponentState = 1;
 - (void)testReturnsInvalidComponentControllers
 {
   globalState = lifecycleComponentState;
-  const auto originalState = CKDataSourceTestState([self class], nil, 1, 1);
+  const auto originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 1);
   const auto item = [originalState objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
   const auto componentController = ((CKTestGlobalStateComponent *)[item rootLayout].component()).lifecycleComponent.controller;
 

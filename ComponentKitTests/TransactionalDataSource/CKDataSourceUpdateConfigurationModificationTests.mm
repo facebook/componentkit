@@ -53,35 +53,19 @@ static NSString *const kTestContextForLifecycleComponent = @"kTestContextForLife
 
 @end
 
-/** Vends CKCompositeComponents instead of CKTestContextComponents */
-@interface CKAlternateComponentProvider : NSObject <CKComponentProvider>
-@end
-
-@implementation CKAlternateComponentProvider
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
-{
-  return [CKCompositeComponent newWithComponent:[CKComponent new]];
-}
-@end
-
-@interface CKDataSourceUpdateConfigurationModificationTests : XCTestCase <CKComponentProvider>
+@interface CKDataSourceUpdateConfigurationModificationTests : XCTestCase
 @end
 
 @implementation CKDataSourceUpdateConfigurationModificationTests
 
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
-{
-  return [CKTestContextComponent newWithContext:context];
-}
-
 - (void)testAppliedChangesExposesNewConfiguration
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 5, 5);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 5, 5);
 
   CKDataSourceConfiguration *newConfiguration =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                       context:@"some updated context"
-                                                     sizeRange:{{100, 100}, {100, 100}}];
+      [[CKDataSourceConfiguration alloc] initWithComponentProviderFunc:ComponentProvider
+                                                               context:@"some updated context"
+                                                             sizeRange:{{100, 100}, {100, 100}}];
 
   CKDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
@@ -93,7 +77,7 @@ static NSString *const kTestContextForLifecycleComponent = @"kTestContextForLife
 
 - (void)testAppliedChangesIncludesUpdatedIndexPathsForEveryItem
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 5, 5);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 5, 5);
 
   CKDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:[originalState configuration] userInfo:nil];
@@ -114,7 +98,7 @@ static NSString *const kTestContextForLifecycleComponent = @"kTestContextForLife
 
 - (void)testAppliedChangesIncludesUserInfo
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 1);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 1);
   NSDictionary *userInfo = @{@"foo": @"bar"};
   CKDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:[originalState configuration] userInfo:userInfo];
@@ -124,12 +108,12 @@ static NSString *const kTestContextForLifecycleComponent = @"kTestContextForLife
 
 - (void)testReturnsComponentsWithUpdatedComponentProvider
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 1);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 1);
   CKDataSourceConfiguration *oldConfiguration = [originalState configuration];
   CKDataSourceConfiguration *newConfiguration =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKAlternateComponentProvider class]
-                                                                             context:[oldConfiguration context]
-                                                                           sizeRange:[oldConfiguration sizeRange]];
+  [[CKDataSourceConfiguration alloc] initWithComponentProviderFunc:AlternateComponentProvider
+                                                           context:[oldConfiguration context]
+                                                         sizeRange:[oldConfiguration sizeRange]];
   CKDataSourceUpdateConfigurationModification *updateConfigurationModification =
   [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
   CKDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];
@@ -139,14 +123,14 @@ static NSString *const kTestContextForLifecycleComponent = @"kTestContextForLife
 
 - (void)testReturnsComponentsWithUpdatedContext
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 1);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 1);
   CKDataSourceConfiguration *oldConfiguration = [originalState configuration];
   CKDataSourceConfiguration *newConfiguration =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                       context:@"some new context"
-                                                     sizeRange:[oldConfiguration sizeRange]];
+      [[CKDataSourceConfiguration alloc] initWithComponentProviderFunc:ComponentProvider
+                                                               context:@"some new context"
+                                                             sizeRange:[oldConfiguration sizeRange]];
   CKDataSourceUpdateConfigurationModification *updateConfigurationModification =
-  [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
+      [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
   CKDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];
   CKDataSourceItem *item = [[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
   CKTestContextComponent *component = (CKTestContextComponent *)[item rootLayout].component();
@@ -155,14 +139,14 @@ static NSString *const kTestContextForLifecycleComponent = @"kTestContextForLife
 
 - (void)testReturnsComponentsWithUpdatedSizeRange
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 1);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 1);
   CKDataSourceConfiguration *oldConfiguration = [originalState configuration];
   CKDataSourceConfiguration *newConfiguration =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                       context:[oldConfiguration context]
-                                                     sizeRange:{{50, 50}, {50, 50}}];
+      [[CKDataSourceConfiguration alloc] initWithComponentProviderFunc:ComponentProvider
+                                                               context:[oldConfiguration context]
+                                                             sizeRange:{{50, 50}, {50, 50}}];
   CKDataSourceUpdateConfigurationModification *updateConfigurationModification =
-  [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
+      [[CKDataSourceUpdateConfigurationModification alloc] initWithConfiguration:newConfiguration userInfo:nil];
   CKDataSourceChange *change = [updateConfigurationModification changeFromState:originalState];
   CKDataSourceItem *item = [[change state] objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
   XCTAssertTrue(CGSizeEqualToSize([item rootLayout].size(), CGSizeMake(50, 50)));
@@ -170,7 +154,7 @@ static NSString *const kTestContextForLifecycleComponent = @"kTestContextForLife
 
 - (void)testReturnsInvalidComponentControllers
 {
-  const auto originalState = CKDataSourceTestState([self class], nil, 1, 1);
+  const auto originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 1);
   const auto oldConfiguration = [originalState configuration];
   auto newConfiguration = [oldConfiguration copyWithContext:kTestContextForLifecycleComponent sizeRange:oldConfiguration.sizeRange];
   auto change =
@@ -186,6 +170,16 @@ static NSString *const kTestContextForLifecycleComponent = @"kTestContextForLife
    changeFromState:change.state];
   XCTAssertEqual(change.invalidComponentControllers.firstObject, componentController,
                  @"Invalid component controller should be returned because component is removed from hierarchy.");
+}
+
+static CKComponent *AlternateComponentProvider(id<NSObject> model, id<NSObject> context)
+{
+  return [CKCompositeComponent newWithComponent:[CKComponent new]];
+}
+
+static CKComponent *ComponentProvider(id<NSObject> _, id<NSObject> context)
+{
+  return [CKTestContextComponent newWithContext:context];
 }
 
 @end

@@ -14,7 +14,7 @@
 #import <ComponentKit/CKDimension.h>
 
 /** Immutable value object that configures a data source */
-@interface CKDataSourceConfiguration : NSObject
+@interface CKDataSourceConfiguration<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> : NSObject
 
 /**
  @param componentProvider See @protocol(CKComponentProvider)
@@ -25,11 +25,11 @@
                                   context:(id<NSObject>)context
                                 sizeRange:(const CKSizeRange &)sizeRange;
 
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+- (instancetype)initWithComponentProviderFunc:(CKComponent *(*)(ModelType model, ContextType context))componentProvider
                                       context:(id<NSObject>)context
                                     sizeRange:(const CKSizeRange &)sizeRange;
 
-@property (nonatomic, strong, readonly) id<NSObject> context;
+@property (nonatomic, strong, readonly) ContextType context;
 
 - (const CKSizeRange &)sizeRange;
 - (CKComponentProviderBlock)componentProvider;

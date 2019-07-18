@@ -50,7 +50,7 @@
   self.mockCollectionView = [OCMockObject niceMockForClass:[UICollectionView class]];
 
   CKDataSourceConfiguration *config = [[CKDataSourceConfiguration alloc]
-                                       initWithComponentProvider:nil
+                                       initWithComponentProviderFunc:nullptr
                                        context:nil
                                        sizeRange:CKSizeRange()];
 
@@ -64,7 +64,7 @@
 {
   NSIndexPath *indexPath = [NSIndexPath indexPathForItem:3 inSection:4];
   NSString *viewKind = @"foo";
-  
+
   [[self.mockSupplementaryViewDataSource expect] collectionView:self.mockCollectionView viewForSupplementaryElementOfKind:viewKind atIndexPath:indexPath];
   [self.dataSource collectionView:self.mockCollectionView viewForSupplementaryElementOfKind:viewKind atIndexPath:indexPath];
 }
@@ -96,7 +96,7 @@
   auto const spy = [CKCollectionViewDataSourceSpy new];
   [self.dataSource addListener:spy];
 
-  id configuration = [[CKDataSourceConfiguration alloc] initWithComponentProvider:nil context:nil sizeRange:{}];
+  id configuration = [[CKDataSourceConfiguration alloc] initWithComponentProviderFunc:nullptr context:nil sizeRange:{}];
   id newState = [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
 
   [self.dataSource setState:newState];

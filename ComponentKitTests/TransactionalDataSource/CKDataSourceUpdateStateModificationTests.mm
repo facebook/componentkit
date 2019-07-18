@@ -50,7 +50,7 @@ static NSString *const kTestStateForLifecycleComponent = @"kTestStateForLifecycl
 
 @end
 
-@interface CKDataSourceUpdateStateModificationTests : XCTestCase <CKComponentProvider, CKComponentStateListener>
+@interface CKDataSourceUpdateStateModificationTests : XCTestCase <CKComponentStateListener>
 @end
 
 @implementation CKDataSourceUpdateStateModificationTests
@@ -58,7 +58,7 @@ static NSString *const kTestStateForLifecycleComponent = @"kTestStateForLifecycl
   CKComponentStateUpdatesMap _pendingStateUpdates;
 }
 
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 {
   return [CKStatefulTestComponent new];
 }
@@ -80,7 +80,7 @@ static NSString *const kTestStateForLifecycleComponent = @"kTestStateForLifecycl
 
 - (void)testAppliedChangesIncludesUpdatedIndexPathForAffectedComponent
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], self, 1, 5);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, self, 1, 5);
 
   NSIndexPath *ip = [NSIndexPath indexPathForItem:2 inSection:0];
   CKDataSourceItem *item = [originalState objectAtIndexPath:ip];
@@ -107,7 +107,7 @@ static NSString *const kTestStateForLifecycleComponent = @"kTestStateForLifecycl
 
 - (void)testExposesComponentWithNewState
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], self, 1, 1);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, self, 1, 1);
 
   NSIndexPath *ip = [NSIndexPath indexPathForItem:0 inSection:0];
   CKDataSourceItem *item = [originalState objectAtIndexPath:ip];
@@ -126,7 +126,7 @@ static NSString *const kTestStateForLifecycleComponent = @"kTestStateForLifecycl
 
 - (void)testCoalescesMultipleStateUpdates
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], self, 1, 1);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, self, 1, 1);
 
   NSIndexPath *ip = [NSIndexPath indexPathForItem:0 inSection:0];
   CKDataSourceItem *item = [originalState objectAtIndexPath:ip];
@@ -146,7 +146,7 @@ static NSString *const kTestStateForLifecycleComponent = @"kTestStateForLifecycl
 
 - (void)testReturnsInvalidComponentControllers
 {
-  const auto originalState = CKDataSourceTestState([self class], self, 1, 1);
+  const auto originalState = CKDataSourceTestState(ComponentProvider, self, 1, 1);
 
   const auto ip = [NSIndexPath indexPathForItem:0 inSection:0];
   [[[originalState objectAtIndexPath:ip] rootLayout].component()

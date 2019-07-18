@@ -34,7 +34,7 @@
 
 static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateControllerContext";
 
-@interface CKDataSourceTests : XCTestCase <CKComponentProvider, CKDataSourceAsyncListener>
+@interface CKDataSourceTests : XCTestCase <CKDataSourceAsyncListener>
 @end
 
 @implementation CKDataSourceTests
@@ -46,7 +46,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
   CKDataSourceState *_state;
 }
 
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 {
   if ([context isEqual:kTestInvalidateControllerContext]) {
     return [CKComponent newWithView:{} size:{}];
@@ -81,11 +81,10 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
 
 - (void)_testSynchronouslyInsertingItemsAnnouncesInsertionWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  id<CKDataSourceProtocol> ds =
-  [[(Class)dataSourceClass alloc] initWithConfiguration:
-   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                        context:nil
-                                                      sizeRange:{}]];
+  id<CKDataSourceProtocol> ds = [[(Class)dataSourceClass alloc]
+      initWithConfiguration:[[CKDataSourceConfiguration alloc] initWithComponentProviderFunc:ComponentProvider
+                                                                                     context:nil
+                                                                                   sizeRange:{}]];
   [ds addListener:self];
 
   CKDataSourceChangeset *insertion =
@@ -125,11 +124,10 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
 
 - (void)_testAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronouslyWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  id<CKDataSourceProtocol> ds =
-  [[(Class)dataSourceClass alloc] initWithConfiguration:
-   [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                        context:nil
-                                                      sizeRange:{}]];
+  id<CKDataSourceProtocol> ds = [[(Class)dataSourceClass alloc]
+      initWithConfiguration:[[CKDataSourceConfiguration alloc] initWithComponentProviderFunc:ComponentProvider
+                                                                                     context:nil
+                                                                                   sizeRange:{}]];
   [ds addListener:self];
 
   CKDataSourceChangeset *insertion =
@@ -168,15 +166,12 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
 
 - (void)_testUpdatingConfigurationAnnouncesUpdateWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  id<CKDataSourceProtocol> ds = CKComponentTestDataSource(dataSourceClass, [self class], self);
+  id<CKDataSourceProtocol> ds = CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
 
-  CKDataSourceConfiguration *config =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[self class]
-                                                       context:@"new context"
-                                                     sizeRange:{}];
-  [ds updateConfiguration:config
-                     mode:CKUpdateModeSynchronous
-                 userInfo:nil];
+  CKDataSourceConfiguration *config = [[CKDataSourceConfiguration alloc] initWithComponentProviderFunc:ComponentProvider
+                                                                                               context:@"new context"
+                                                                                             sizeRange:{}];
+  [ds updateConfiguration:config mode:CKUpdateModeSynchronous userInfo:nil];
 
   CKDataSourceAppliedChanges *expectedAppliedChanges =
   [[CKDataSourceAppliedChanges alloc] initWithUpdatedIndexPaths:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]
@@ -208,7 +203,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
 
 - (void)_testReloadingAnnouncesUpdateWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  id<CKDataSourceProtocol> ds = CKComponentTestDataSource(dataSourceClass, [self class], self);
+  id<CKDataSourceProtocol> ds = CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
   [ds reloadWithMode:CKUpdateModeSynchronous userInfo:nil];
 
   CKDataSourceAppliedChanges *expectedAppliedChanges =
@@ -230,7 +225,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
 
 - (void)testDataSourceSynchronousReloadCancelsPreviousAsynchronousReload
 {
-  id<CKDataSourceProtocol> ds = CKComponentTestDataSource([CKDataSource class], [self class], self);
+  id<CKDataSourceProtocol> ds = CKComponentTestDataSource([CKDataSource class], ComponentProvider, self);
 
   // The initial asynchronous reload should be canceled by the immediately subsequent synchronous reload.
   // We then request *another* async reload so that we can wait for it to complete and assert that the initial
@@ -280,7 +275,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
     // We dispatch empty operation on Data Source to background so that
     // DataSource deallocation is also triggered on background.
     // CKLifecycleTestComponent will assert if it receives an invalidation not on the main thread,
-    id<CKDataSourceProtocol> dataSource = CKComponentTestDataSource(dataSourceClass, [self class], self);
+    id<CKDataSourceProtocol> dataSource = CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
     CKRunRunLoopUntilBlockIsTrue(^BOOL{
       return _state != nil;
     });
@@ -306,7 +301,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
 
 - (void)_testRemovingComponentTriggersInvalidateOnMainThreadWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  id<CKDataSourceProtocol> dataSource = CKComponentTestDataSource(dataSourceClass, [self class], self);
+  id<CKDataSourceProtocol> dataSource = CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _state != nil;
   });
@@ -331,7 +326,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
 
 - (void)_testApplyingPrecomputedChange:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, [self class], self);
+  const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _state != nil;
   });
@@ -363,7 +358,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
 
 - (void)_testApplyingPrecomputedChangeAfterStateIsChanged:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, [self class], self);
+  const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _state != nil;
   });
@@ -380,7 +375,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
   [dataSource reloadWithMode:CKUpdateModeSynchronous userInfo:@{}];
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _state != oldState;
-  }); 
+  });
   const auto newState = _state;
   const auto isApplied = [dataSource applyChange:change];
   XCTAssertFalse(isApplied, @"Applying change to datasource should fail.");
@@ -399,7 +394,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
 
 - (void)_testVerifyingPrecomputedChange:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, [self class], self);
+  const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _state != nil;
   });
@@ -428,7 +423,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
 
 - (void)_testVerifyingPrecomputedChangeAfterStateIsChanged:(Class<CKDataSourceProtocol>)dataSourceClass
 {
-  const auto dataSource = (id<CKDataSourceProtocol, CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, [self class], self);
+  const auto dataSource = (id<CKDataSourceProtocol, CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _state != nil;
   });

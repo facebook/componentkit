@@ -21,19 +21,19 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CKDataSourceStateTests : XCTestCase <CKComponentProvider>
+@interface CKDataSourceStateTests : XCTestCase
 @end
 
 @implementation CKDataSourceStateTests
 
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+static CKComponent *ComponentProvider(id<NSObject> _, id<NSObject> __)
 {
   return [CKComponent new];
 }
 
 - (void)testEnumeratingState
 {
-  CKDataSourceState *state = CKDataSourceTestState([self class], nil, 2, 2);
+  CKDataSourceState *state = CKDataSourceTestState(ComponentProvider, nil, 2, 2);
   NSMutableArray *models = [NSMutableArray array];
   NSMutableArray *indexPaths = [NSMutableArray array];
   [state enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSIndexPath *indexPath, BOOL *stop){
@@ -53,7 +53,7 @@
 
 - (void)testEnumeratingStateInSection
 {
-  CKDataSourceState *state = CKDataSourceTestState([self class], nil, 2, 2);
+  CKDataSourceState *state = CKDataSourceTestState(ComponentProvider, nil, 2, 2);
   NSMutableArray *models = [NSMutableArray array];
   NSMutableArray *indexPaths = [NSMutableArray array];
   [state enumerateObjectsInSectionAtIndex:0 usingBlock:^(CKDataSourceItem *item, NSIndexPath *indexPath, BOOL *stop){
@@ -71,7 +71,7 @@
 
 - (void)testStoppingEnumeration
 {
-  CKDataSourceState *state = CKDataSourceTestState([self class], nil, 2, 2);
+  CKDataSourceState *state = CKDataSourceTestState(ComponentProvider, nil, 2, 2);
   NSMutableArray *models = [NSMutableArray array];
   NSMutableArray *indexPaths = [NSMutableArray array];
   [state enumerateObjectsInSectionAtIndex:0 usingBlock:^(CKDataSourceItem *item, NSIndexPath *indexPath, BOOL *stop){
@@ -90,38 +90,53 @@
 
 - (void)testStateEquality
 {
-  CKDataSourceItem *firstItem = [[CKDataSourceItem alloc] initWithRootLayout:{} model:@"model" scopeRoot:nil boundsAnimation:{}];
+  CKDataSourceItem *firstItem = [[CKDataSourceItem alloc] initWithRootLayout:{}
+                                                                       model:@"model"
+                                                                   scopeRoot:nil
+                                                             boundsAnimation:{}];
   CKDataSourceConfiguration *firstConfiguration =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceStateTests class]
-                                                                             context:@"context"
-                                                                           sizeRange:CKSizeRange()];
-  CKDataSourceState *firstState = [[CKDataSourceState alloc] initWithConfiguration:firstConfiguration sections:@[@[firstItem]]];
+      [[CKDataSourceConfiguration alloc] initWithComponentProviderFunc:ComponentProvider
+                                                               context:@"context"
+                                                             sizeRange:CKSizeRange()];
+  CKDataSourceState *firstState = [[CKDataSourceState alloc] initWithConfiguration:firstConfiguration
+                                                                          sections:@[ @[ firstItem ] ]];
 
-  CKDataSourceItem *secondItem = [[CKDataSourceItem alloc] initWithRootLayout:{} model:@"model" scopeRoot:nil boundsAnimation:{}];
+  CKDataSourceItem *secondItem = [[CKDataSourceItem alloc] initWithRootLayout:{}
+                                                                        model:@"model"
+                                                                    scopeRoot:nil
+                                                              boundsAnimation:{}];
   CKDataSourceConfiguration *secondConfiguration =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceStateTests class]
-                                                                             context:@"context"
-                                                                           sizeRange:CKSizeRange()];
-  CKDataSourceState *secondState = [[CKDataSourceState alloc] initWithConfiguration:secondConfiguration sections:@[@[secondItem]]];
+      [[CKDataSourceConfiguration alloc] initWithComponentProviderFunc:ComponentProvider
+                                                               context:@"context"
+                                                             sizeRange:CKSizeRange()];
+  CKDataSourceState *secondState = [[CKDataSourceState alloc] initWithConfiguration:secondConfiguration
+                                                                           sections:@[ @[ secondItem ] ]];
 
   XCTAssertEqualObjects(firstState, secondState);
 }
 
-- (void)testNonEqualStates
-{
-  CKDataSourceItem *firstItem = [[CKDataSourceItem alloc] initWithRootLayout:{} model:@"model" scopeRoot:nil boundsAnimation:{}];
+- (void)testNonEqualStates {
+  CKDataSourceItem *firstItem = [[CKDataSourceItem alloc] initWithRootLayout:{}
+                                                                       model:@"model"
+                                                                   scopeRoot:nil
+                                                             boundsAnimation:{}];
   CKDataSourceConfiguration *firstConfiguration =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceStateTests class]
-                                                                             context:@"context"
-                                                                           sizeRange:CKSizeRange()];
-  CKDataSourceState *firstState = [[CKDataSourceState alloc] initWithConfiguration:firstConfiguration sections:@[@[firstItem]]];
+      [[CKDataSourceConfiguration alloc] initWithComponentProviderFunc:ComponentProvider
+                                                               context:@"context"
+                                                             sizeRange:CKSizeRange()];
+  CKDataSourceState *firstState = [[CKDataSourceState alloc] initWithConfiguration:firstConfiguration
+                                                                          sections:@[ @[ firstItem ] ]];
 
-  CKDataSourceItem *secondItem = [[CKDataSourceItem alloc] initWithRootLayout:{} model:@"model2" scopeRoot:nil boundsAnimation:{}];
+  CKDataSourceItem *secondItem = [[CKDataSourceItem alloc] initWithRootLayout:{}
+                                                                        model:@"model2"
+                                                                    scopeRoot:nil
+                                                              boundsAnimation:{}];
   CKDataSourceConfiguration *secondConfiguration =
-  [[CKDataSourceConfiguration alloc] initWithComponentProvider:[CKDataSourceStateTests class]
-                                                                             context:@"context"
-                                                                           sizeRange:CKSizeRange()];
-  CKDataSourceState *secondState = [[CKDataSourceState alloc] initWithConfiguration:secondConfiguration sections:@[@[secondItem]]];
+      [[CKDataSourceConfiguration alloc] initWithComponentProviderFunc:ComponentProvider
+                                                               context:@"context"
+                                                             sizeRange:CKSizeRange()];
+  CKDataSourceState *secondState = [[CKDataSourceState alloc] initWithConfiguration:secondConfiguration
+                                                                           sections:@[ @[ secondItem ] ]];
 
   XCTAssertNotEqualObjects(firstState, secondState);
 }
@@ -132,16 +147,17 @@
 @end
 
 @implementation CKDataSourceStateTests_Description
+
 - (void)test_WhenStateIsEmpty_CompactDescriptionIsJustBraces
 {
-  const auto state = CKDataSourceTestState([CKDataSourceStateTests class], nil, 0, 0);
+  const auto state = CKDataSourceTestState(ComponentProvider, nil, 0, 0);
 
   XCTAssertEqualObjects(state.description, @"{}");
 }
 
 - (void)test_CompactDescriptionFormat
 {
-  const auto state = CKDataSourceTestState([CKDataSourceStateTests class], nil, 2, 2);
+  const auto state = CKDataSourceTestState(ComponentProvider, nil, 2, 2);
 
   const auto expected = @"\
 {\n\

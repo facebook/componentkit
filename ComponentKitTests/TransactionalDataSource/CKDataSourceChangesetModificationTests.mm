@@ -52,19 +52,19 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 
 @end
 
-@interface CKDataSourceChangesetModificationTests : XCTestCase <CKComponentProvider>
+@interface CKDataSourceChangesetModificationTests : XCTestCase
 @end
 
 @implementation CKDataSourceChangesetModificationTests
 
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject>)
 {
   return [CKModelExposingComponent newWithModel:model];
 }
 
 - (void)testAppliedChangesIncludesUserInfo
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 1);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 1);
   NSDictionary *userInfo = @{@"foo": @"bar"};
   CKDataSourceChangesetModification *changesetModification =
   [[CKDataSourceChangesetModification alloc] initWithChangeset:[[CKDataSourceChangesetBuilder dataSourceChangeset] build]
@@ -76,7 +76,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 
 - (void)testInsertingSectionAndItemsInEmptyStateExposesNewItems
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 0, 0);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 0, 0);
   CKDataSourceChangeset *changeset =
   [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
@@ -93,7 +93,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 
 - (void)testAppliesRemovedItemsThenRemovedSections
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 2, 2);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 2, 2);
   CKDataSourceChangeset *changeset =
   [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForItem:0 inSection:1]]]
@@ -118,7 +118,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 
 - (void)testUpdateGeneratesNewComponent
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 1);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 1);
   CKDataSourceChangeset *changeset =
   [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @"updated"}]
@@ -135,7 +135,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 
 - (void)testUpdateReturnsInvalidComponentControllers
 {
-  const auto originalState = CKDataSourceTestState([self class], nil, 1, 0);
+  const auto originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 0);
   const auto ip = [NSIndexPath indexPathForItem:0 inSection:0];
   auto changeset =
   [[[CKDataSourceChangesetBuilder dataSourceChangeset]
@@ -168,7 +168,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 
 - (void)testAppliesRemovedItemsThenInsertedItems
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 2);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 2);
   CKDataSourceChangeset *changeset =
   [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withInsertedItems:@{[NSIndexPath indexPathForItem:1 inSection:0]: @2}]
@@ -191,7 +191,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 
 - (void)testMoveItem
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 3);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 3);
   CKDataSourceChangeset *changeset =
   [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withMovedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:2 inSection:0]}]
@@ -218,7 +218,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 
 - (void)testSwapItemsWithMoves
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 2, 2);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 2, 2);
   CKDataSourceChangeset *changeset =
   [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withMovedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: [NSIndexPath indexPathForItem:0 inSection:1],
@@ -245,7 +245,7 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
 
 - (void)testMoveWithRemovals
 {
-  CKDataSourceState *originalState = CKDataSourceTestState([self class], nil, 1, 4);
+  CKDataSourceState *originalState = CKDataSourceTestState(ComponentProvider, nil, 1, 4);
   CKDataSourceChangeset *changeset =
   [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
      withMovedItems:@{[NSIndexPath indexPathForItem:3 inSection:0] : [NSIndexPath indexPathForItem:0 inSection:0] }]
