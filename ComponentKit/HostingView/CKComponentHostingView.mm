@@ -320,6 +320,13 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   [self _setNeedsUpdateWithMode:CKUpdateModeAsynchronous];
 }
 
+- (void)didReceiveReflowComponentsRequestWithTreeNodeIdentifier:(CKTreeNodeIdentifier)treeNodeIdentifier
+{
+  if (_pendingInputs.scopeRoot.rootNode.parentForNodeIdentifier(treeNodeIdentifier) != nil) {
+    [self _setNeedsUpdateWithMode:CKUpdateModeSynchronous];
+  }
+}
+
 #pragma mark - Private
 
 - (BOOL)_hasScheduledSyncUpdate

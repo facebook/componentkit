@@ -135,8 +135,22 @@ static std::mutex reflowMutex;
 
 + (void)reflowComponents
 {
+  [self enumerateListeners:^(id<CKComponentDebugReflowListener> listener) {
+    [listener didReceiveReflowComponentsRequest];
+  }];
+}
+
++ (void)reflowComponentsWithTreeNodeIdentifier:(CKTreeNodeIdentifier)treeNodeIdentifier
+{
+  [self enumerateListeners:^(id<CKComponentDebugReflowListener> listener) {
+    [listener didReceiveReflowComponentsRequestWithTreeNodeIdentifier:treeNodeIdentifier];
+  }];
+}
+
++ (void)enumerateListeners:(void(^)(id<CKComponentDebugReflowListener>))block
+{
   if (![NSThread isMainThread]) {
-    dispatch_async(dispatch_get_main_queue(), ^{ [self reflowComponents]; });
+    dispatch_async(dispatch_get_main_queue(), ^{ [self enumerateListeners:block]; });
     return;
   }
   NSArray<id<CKComponentDebugReflowListener>> *copiedListeners;
@@ -145,7 +159,7 @@ static std::mutex reflowMutex;
     copiedListeners = [reflowListeners allObjects];
   }
   for (id<CKComponentDebugReflowListener> listener in copiedListeners) {
-    [listener didReceiveReflowComponentsRequest];
+    block(listener);
   }
 }
 

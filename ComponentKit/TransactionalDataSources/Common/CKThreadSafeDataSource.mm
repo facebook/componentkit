@@ -19,6 +19,7 @@
 #import "CKComponentSubclass.h"
 #import "CKDataSourceAppliedChanges.h"
 #import "CKDataSourceChange.h"
+#import "CKDataSourceChangeset.h"
 #import "CKDataSourceChangesetModification.h"
 #import "CKDataSourceChangesetVerification.h"
 #import "CKDataSourceConfigurationInternal.h"
@@ -214,6 +215,25 @@ static void *kWorkQueueKey = &kWorkQueueKey;
 - (void)didReceiveReflowComponentsRequest
 {
   [self reloadWithMode:CKUpdateModeAsynchronous userInfo:nil];
+}
+
+- (void)didReceiveReflowComponentsRequestWithTreeNodeIdentifier:(CKTreeNodeIdentifier)treeNodeIdentifier
+{
+  __block NSIndexPath *ip = nil;
+  __block id model = nil;
+  dispatch_sync(_workQueue, ^{
+    [_state enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSIndexPath *indexPath, BOOL *stop) {
+      if (item.scopeRoot.rootNode.parentForNodeIdentifier(treeNodeIdentifier) != nil) {
+        ip = indexPath;
+        model = item.model;
+        *stop = YES;
+      }
+    }];
+  });
+  if (ip != nil) {
+    const auto changeset = [[[CKDataSourceChangesetBuilder dataSourceChangeset] withUpdatedItems:@{ip: model}] build];
+    [self applyChangeset:changeset mode:CKUpdateModeSynchronous userInfo:@{}];
+  }
 }
 
 #pragma mark - Internal

@@ -17,6 +17,7 @@
 
 @protocol CKComponentDebugReflowListener
 - (void)didReceiveReflowComponentsRequest;
+- (void)didReceiveReflowComponentsRequestWithTreeNodeIdentifier:(CKTreeNodeIdentifier)treeNodeIdentifier;
 @end
 
 /**
@@ -40,6 +41,11 @@
  This is automatically triggered when changing debug mode, to ensure that debug views are added or removed.
  */
 + (void)reflowComponents;
+
+/**
+ Only reflow component tree that contains the tree node identifier.
+ */
++ (void)reflowComponentsWithTreeNodeIdentifier:(CKTreeNodeIdentifier)treeNodeIdentifier;
 
 /**
  Registers an object that will be notified when +reflowComponents is called. The listener is weakly held and will
