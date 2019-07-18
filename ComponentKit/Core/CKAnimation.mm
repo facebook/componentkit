@@ -14,18 +14,19 @@ using namespace CK;
 
 auto Animation::TimingCurve::fromCA(NSString *name) -> TimingCurve
 {
-  auto c = TimingCurve{};
   auto const f = [CAMediaTimingFunction functionWithName:name];
 
-  [f getControlPointAtIndex:1 values:c.p1.data()];
-  [f getControlPointAtIndex:2 values:c.p2.data()];
+  auto p1 = ControlPoint{};
+  auto p2 = ControlPoint{};
+  [f getControlPointAtIndex:1 values:p1.data()];
+  [f getControlPointAtIndex:2 values:p2.data()];
 
-  return c;
+  return {p1, p2};
 }
 
 auto Animation::TimingCurve::toCA() const -> CAMediaTimingFunction *
 {
-  return [CAMediaTimingFunction functionWithControlPoints:p1[0] :p1[1] :p2[0] :p2[1]];
+  return [CAMediaTimingFunction functionWithControlPoints:_p1[0] :_p1[1] :_p2[0] :_p2[1]];
 }
 
 auto Animation::InitialBuilder::toCA() const -> CAAnimation *

@@ -342,6 +342,23 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
   XCTAssertEqualObjects(parallel(alphaFrom(0), translationYFrom(0)).easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
 }
 
+- (void)testSettingCustomTimingFunction
+{
+  auto const expectedPoint1 = TimingCurve::ControlPoint{0.14, 1.0};
+  auto const expectedPoint2 = TimingCurve::ControlPoint{0.34, 1.0};
+
+  auto const f = parallel(alphaFrom(0), translationYFrom(0))
+                     .timingCurveWithControlPoints(expectedPoint1, expectedPoint2)
+                     .toCA()
+                     .timingFunction;
+
+  TimingCurve::ControlPoint point1, point2;
+  [f getControlPointAtIndex:1 values:point1.data()];
+  [f getControlPointAtIndex:2 values:point2.data()];
+  XCTAssert(point1 == expectedPoint1);
+  XCTAssert(point2 == expectedPoint2);
+}
+
 - (void)testSettingTimingFunctionWithDuration
 {
   auto a = parallel(alphaFrom(0), translationYFrom(0)).easeIn(0.25).toCA();
@@ -424,6 +441,23 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 {
   XCTAssertEqualObjects(sequence(alphaFrom(0), translationYFrom(0)).easeIn().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]);
   XCTAssertEqualObjects(sequence(alphaFrom(0), translationYFrom(0)).easeOut().toCA().timingFunction, [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]);
+}
+
+- (void)testSettingCustomTimingFunction
+{
+  auto const expectedPoint1 = TimingCurve::ControlPoint{0.14, 1.0};
+  auto const expectedPoint2 = TimingCurve::ControlPoint{0.34, 1.0};
+
+  auto const f = sequence(alphaFrom(0), translationYFrom(0))
+                     .timingCurveWithControlPoints(expectedPoint1, expectedPoint2)
+                     .toCA()
+                     .timingFunction;
+
+  TimingCurve::ControlPoint point1, point2;
+  [f getControlPointAtIndex:1 values:point1.data()];
+  [f getControlPointAtIndex:2 values:point2.data()];
+  XCTAssert(point1 == expectedPoint1);
+  XCTAssert(point2 == expectedPoint2);
 }
 
 - (void)test_WhenComposingInitialAnimations_UsesBackwardsFillMode

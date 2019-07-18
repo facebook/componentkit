@@ -32,13 +32,15 @@ namespace CK {
     struct TimingCurve {
       using ControlPoint = std::array<float, 2>;
 
+      TimingCurve(ControlPoint p1, ControlPoint p2) :_p1(p1), _p2(p2) {}
+
       static auto fromCA(NSString *name) -> TimingCurve;
 
       auto toCA() const -> CAMediaTimingFunction *;
 
     private:
-      ControlPoint p1;
-      ControlPoint p2;
+      ControlPoint _p1;
+      ControlPoint _p2;
     };
 
     /**
@@ -56,6 +58,12 @@ namespace CK {
       auto &easeIn() { curve = TimingCurve::fromCA(kCAMediaTimingFunctionEaseIn); return static_cast<Derived &>(*this); }
       /// Sets ease-out pacing for the animation
       auto &easeOut() { curve = TimingCurve::fromCA(kCAMediaTimingFunctionEaseOut); return static_cast<Derived &>(*this); }
+      /// Sets custom curve for the pacing of the animation
+      auto &timingCurveWithControlPoints(TimingCurve::ControlPoint p1, TimingCurve::ControlPoint p2)
+      {
+        curve = TimingCurve{p1, p2};
+        return static_cast<Derived &>(*this);
+      };
 
     protected:
       auto applyTimingTo(CAAnimation *a) const
@@ -117,6 +125,13 @@ namespace CK {
         t.apply([this](CFTimeInterval _t){ duration = _t; });
         return static_cast<Derived &>(*this);
       }
+
+      /// Sets custom curve for the pacing of the animation
+      auto &timingCurveWithControlPoints(TimingCurve::ControlPoint p1, TimingCurve::ControlPoint p2)
+      {
+        curve = TimingCurve{p1, p2};
+        return static_cast<Derived &>(*this);
+      };
 
     protected:
       auto applyTimingTo(CAAnimation *a) const
@@ -221,7 +236,7 @@ namespace CK {
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *;
-      
+
       operator CAAnimation *() const { return toCA(); }
 
       operator Final() const { return Final{toCA()}; }
@@ -325,7 +340,7 @@ namespace CK {
 
       /// Returns a Core Animation animation corresponding to this animation.
       auto toCA() const -> CAAnimation *;
-      
+
       operator CAAnimation *() const { return toCA(); }
 
       operator Change() const { return Change{toCA()}; }
