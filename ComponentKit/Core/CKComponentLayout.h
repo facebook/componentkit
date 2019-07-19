@@ -24,6 +24,7 @@
 #import <ComponentKit/CKSizeRange.h>
 
 @class CKComponent;
+@class CKComponentController;
 @class CKComponentScopeRoot;
 
 @protocol CKAnalyticsListener;
@@ -67,6 +68,7 @@ struct CKComponentLayoutChild {
 };
 
 struct CKComponentRootLayout {
+  /** Layout cache for components that have controller. */
   using ComponentLayoutCache = std::unordered_map<CKComponent *, CKComponentLayout, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
   using ComponentsByPredicateMap = std::unordered_map<CKComponentPredicate, std::vector<CKComponent *>>;
 
@@ -77,7 +79,7 @@ struct CKComponentRootLayout {
   : _layout(std::move(layout)), _layoutCache(std::move(layoutCache)), _componentsByPredicate(std::move(componentsByPredicate)) {}
 
   /**
-   This method returns a CKComponentLayout from the cache.
+   This method returns a CKComponentLayout from the cache for the component if it has a controller.
    @param component The component to look for the layout with.
    */
   auto cachedLayoutForScopedComponent(CKComponent *const scopedComponent) const
@@ -91,6 +93,8 @@ struct CKComponentRootLayout {
     const auto it = _componentsByPredicate.find(p);
     return it != _componentsByPredicate.end() ? it->second : std::vector<CKComponent *> {};
   }
+
+  void enumerateComponentControllers(void(^block)(CKComponentController *, CKComponent *)) const;
 
   const auto &layout() const { return _layout; }
   auto component() const { return _layout.component; }

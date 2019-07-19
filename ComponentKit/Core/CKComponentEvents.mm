@@ -68,3 +68,14 @@ void CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths(id<NSFastEnumera
     CKComponentSendDidPrepareLayoutForComponent(item.scopeRoot, item.rootLayout);
   }
 }
+
+void CKComponentUpdateComponentForComponentControllerWithIndexPaths(id<NSFastEnumeration> indexPaths,
+                                                                    CKDataSourceState *state)
+{
+  for (NSIndexPath *indexPath in indexPaths) {
+    CKDataSourceItem *item = [state objectAtIndexPath:indexPath];
+    item.rootLayout.enumerateComponentControllers(^(CKComponentController *controller, CKComponent *component) {
+      controller.component = component;
+    });
+  }
+}

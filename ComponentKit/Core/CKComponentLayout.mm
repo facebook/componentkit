@@ -182,3 +182,11 @@ void CKComponentLayout::enumerateLayouts(const std::function<void(const CKCompon
     child.layout.enumerateLayouts(f);
   }
 }
+
+void CKComponentRootLayout::enumerateComponentControllers(void(^block)(CKComponentController *, CKComponent *)) const
+{
+  for (const auto &it : _layoutCache) {
+    const auto &component = it.first;
+    block(component.controller, component);
+  }
+}
