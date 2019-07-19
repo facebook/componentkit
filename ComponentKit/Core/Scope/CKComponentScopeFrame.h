@@ -21,12 +21,14 @@
 @protocol CKTreeNodeComponentProtocol;
 @protocol CKTreeNodeProtocol;
 
+@protocol CKComponentScopeFrameProtocol;
+
 struct CKComponentScopeFramePair {
-  CKComponentScopeFrame *frame;
-  CKComponentScopeFrame *equivalentPreviousFrame;
+  id<CKComponentScopeFrameProtocol> frame;
+  id<CKComponentScopeFrameProtocol> previousFrame;
 };
 
-@interface CKComponentScopeFrame : NSObject
+@protocol CKComponentScopeFrameProtocol
 
 + (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
                                       newRoot:(CKComponentScopeRoot *)newRoot
@@ -35,8 +37,6 @@ struct CKComponentScopeFramePair {
                                          keys:(const std::vector<id<NSObject>> &)keys
                           initialStateCreator:(id (^)(void))initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
-
-- (instancetype)initWithHandle:(CKComponentScopeHandle *)handle;
 
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
 
@@ -50,5 +50,13 @@ struct CKComponentScopeFramePair {
 #if DEBUG
 - (NSArray<NSString *> *)debugDescriptionComponents;
 #endif
+
+@end
+
+@interface CKComponentScopeFrame : NSObject <CKComponentScopeFrameProtocol>
+
+@property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
+
+- (instancetype)initWithHandle:(CKComponentScopeHandle *)handle;
 
 @end

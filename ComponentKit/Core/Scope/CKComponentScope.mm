@@ -46,7 +46,7 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
                                                               keys:_threadLocalScope->keys.top()
                                                initialStateCreator:initialStateCreator
                                                       stateUpdates:_threadLocalScope->stateUpdates];
-    _threadLocalScope->stack.push({.frame = childPair.frame, .equivalentPreviousFrame = childPair.equivalentPreviousFrame});
+    _threadLocalScope->stack.push({.frame = childPair.frame, .previousFrame = childPair.previousFrame});
     _scopeHandle = childPair.frame.handle;
     _threadLocalScope->keys.push({});
   }

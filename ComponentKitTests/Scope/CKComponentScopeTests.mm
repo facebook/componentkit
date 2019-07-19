@@ -75,16 +75,16 @@
 {
   CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKThreadLocalComponentScope threadScope(root, {});
-  XCTAssertEqualObjects(CKThreadLocalComponentScope::currentScope()->stack.top().equivalentPreviousFrame, root.rootFrame);
+  XCTAssertEqualObjects(CKThreadLocalComponentScope::currentScope()->stack.top().previousFrame, root.rootFrame);
 }
 
 - (void)testThreadLocalComponentScopePushesChildComponentScope
 {
   CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKThreadLocalComponentScope threadScope(root, {});
-  CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
+  id<CKComponentScopeFrameProtocol> rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
   CKComponentScope scope([CKCompositeComponent class]);
-  CKComponentScopeFrame *currentFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
+  id<CKComponentScopeFrameProtocol> currentFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
   XCTAssertTrue(currentFrame != rootFrame);
 }
 
@@ -112,7 +112,7 @@
 {
   CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKThreadLocalComponentScope threadScope(root, {});
-  CKComponentScopeFrame *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
+  id<CKComponentScopeFrameProtocol> rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
   {
     CKComponentScope scope([CKCompositeComponent class], @"moose");
     XCTAssertTrue(CKThreadLocalComponentScope::currentScope()->stack.top().frame != rootFrame);
@@ -132,7 +132,7 @@
     CKThreadLocalComponentScope threadScope(previousRoot, {});
     newRoot = threadScope.newScopeRoot;
     CKComponentScope scope([CKCompositeComponent class], @"moose");
-    CKComponentScopeFrame *f1 = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
+    id<CKComponentScopeFrameProtocol> f1 = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
     
     // Create render component.
     CKTreeNode *node = [[CKTreeNode alloc] initWithComponent:[CKRenderComponent new]
@@ -143,7 +143,7 @@
     [CKComponentScopeFrame willBuildComponentTreeWithTreeNode:node];
     
     XCTAssertTrue(CKThreadLocalComponentScope::currentScope()->stack.top().frame != f1);
-    CKComponentScopeFrame *f2 = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
+    id<CKComponentScopeFrameProtocol> f2 = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
     {
       // Create child component
       CKComponentScope innerScope([CKComponent class], @"macaque", ^{
