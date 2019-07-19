@@ -144,6 +144,12 @@ static BOOL _shouldEarlyReturnNew = NO;
   _calledComponentTreeDidDisappear = YES;
 }
 
+- (void)willUpdateComponent
+{
+  [super willUpdateComponent];
+  _calledWillUpdateComponent = YES;
+}
+
 - (void)didUpdateComponent
 {
   [super didUpdateComponent];

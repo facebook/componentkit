@@ -18,6 +18,7 @@
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentControllerEvents.h>
 #import <ComponentKit/CKComponentControllerHelper.h>
+#import <ComponentKit/CKComponentControllerInternal.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentSubclass.h>
@@ -409,6 +410,39 @@ using namespace CKComponentControllerHelper;
                                                            previousScopeRoot,
                                                            &CKComponentControllerInvalidateEventPredicate);
   XCTAssertTrue(removedComponentControllers.empty());
+}
+
+- (void)testDidUpdateComponentIsCalledOnMountIfCommponentIsNotUpdatedWithSetter
+{
+  const auto component1 = [CKLifecycleTestComponent new];
+  const auto component2 = [CKLifecycleTestComponent new];
+  const auto controller = [[CKLifecycleTestComponentController alloc] initWithComponent:component1];
+  XCTAssertEqual(controller.calledWillUpdateComponent, 0);
+  XCTAssertEqual(controller.calledDidUpdateComponent, 0);
+  [controller componentWillMount:component2];
+  XCTAssertEqual(controller.calledWillUpdateComponent, 1);
+  XCTAssertEqual(controller.calledDidUpdateComponent, 0);
+  [controller componentDidMount:component2];
+  XCTAssertEqual(controller.calledWillUpdateComponent, 1);
+  XCTAssertEqual(controller.calledDidUpdateComponent, 1);
+}
+
+- (void)testDidUpdateComponentIsCalledOnMountIfCommponentIsUpdatedWithSetter
+{
+  const auto component1 = [CKLifecycleTestComponent new];
+  const auto component2 = [CKLifecycleTestComponent new];
+  const auto controller = [[CKLifecycleTestComponentController alloc] initWithComponent:component1];
+  XCTAssertEqual(controller.calledWillUpdateComponent, 0);
+  XCTAssertEqual(controller.calledDidUpdateComponent, 0);
+  controller.component = component2;
+  XCTAssertEqual(controller.calledWillUpdateComponent, 1);
+  XCTAssertEqual(controller.calledDidUpdateComponent, 0);
+  [controller componentWillMount:component2];
+  XCTAssertEqual(controller.calledWillUpdateComponent, 1);
+  XCTAssertEqual(controller.calledDidUpdateComponent, 0);
+  [controller componentDidMount:component2];
+  XCTAssertEqual(controller.calledWillUpdateComponent, 1);
+  XCTAssertEqual(controller.calledDidUpdateComponent, 1);
 }
 
 @end
