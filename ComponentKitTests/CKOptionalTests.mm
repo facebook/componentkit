@@ -163,6 +163,11 @@ struct ConvertibleToInt {
   XCTAssertEqual(x, 43);
 }
 
+- (void)compileTimeChecks
+{
+  static_assert(std::is_trivially_destructible<Optional<CGFloat>>::value, "Optional must propagate trivial destructor");
+}
+
 @end
 
 static int numCopies = 0;

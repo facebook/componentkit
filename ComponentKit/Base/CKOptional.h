@@ -44,6 +44,45 @@ struct None {
  */
 constexpr None none;
 
+namespace OptionalDetail {
+  template <typename T, bool = std::is_trivially_destructible<T>::value>
+  struct Storage {
+    union {
+      char emptyState;
+      T value;
+    };
+    bool hasValue;
+
+    Storage() : hasValue{false} {}
+    ~Storage() {
+      clear();
+    }
+
+    void clear() {
+      if (!hasValue) {
+        return;
+      }
+      hasValue = false;
+      value.~T();
+    }
+  };
+
+  template <typename T>
+  struct Storage<T, true /* is_trivially_destructible */> {
+    union {
+      char emptyState;
+      T value;
+    };
+    bool hasValue;
+
+    Storage() : hasValue{false} {}
+
+    void clear() {
+      hasValue = false;
+    }
+  };
+}
+
 /**
  `Optional` class allows you to add an "empty state" value to any type `T`, similar to `nil` value for pointers.
  Instead of using an otherwise perfectly ordinary value to signify the absence of the value, like `NSNotFound` or
@@ -451,47 +490,7 @@ private:
     _storage.clear();
   }
 
-  struct StorageTriviallyDestructible {
-    union {
-      char emptyState;
-      T value;
-    };
-    bool hasValue;
-
-    StorageTriviallyDestructible() : hasValue{false} {}
-
-    void clear() {
-      hasValue = false;
-    }
-  };
-
-  struct StorageNonTriviallyDestructible {
-    union {
-      char emptyState;
-      T value;
-    };
-    bool hasValue;
-
-    StorageNonTriviallyDestructible() : hasValue{false} {}
-    ~StorageNonTriviallyDestructible() {
-      clear();
-    }
-
-    void clear() {
-      if (!hasValue) {
-        return;
-      }
-      hasValue = false;
-      value.~T();
-    }
-  };
-
-  using Storage = typename std::conditional<
-  std::is_trivially_destructible<T>::value,
-  StorageTriviallyDestructible,
-  StorageNonTriviallyDestructible>::type;
-
-  Storage _storage;
+  OptionalDetail::Storage<T> _storage;
 };
 
 /**
