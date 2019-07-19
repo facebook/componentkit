@@ -345,6 +345,9 @@
     CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
     CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
   }
+  if (newState.configuration.options.updateComponentInControllerAfterBuild) {
+    CKComponentUpdateComponentForComponentControllerWithIndexPaths(appliedChanges.finalUpdatedIndexPaths, newState);
+  }
 
   [_announcer componentDataSource:self
            didModifyPreviousState:previousState

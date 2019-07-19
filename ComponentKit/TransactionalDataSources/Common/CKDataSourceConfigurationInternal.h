@@ -13,6 +13,7 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKDataSourceQOS.h>
 #import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKGlobalConfig.h>
 
 #import <unordered_set>
 
@@ -53,6 +54,11 @@ struct CKDataSourceSplitChangesetOptions {
 
 struct CKDataSourceOptions {
   CKDataSourceSplitChangesetOptions splitChangesetOptions;
+  /**
+   `componentController.component` will be updated right after commponent build if this is enabled.
+   This is only for running expeirment in ComponentKit. Please DO NOT USE.
+   */
+  BOOL updateComponentInControllerAfterBuild = CKReadGlobalConfig().updateComponentInControllerAfterBuild;
 };
 
 @interface CKDataSourceConfiguration ()
