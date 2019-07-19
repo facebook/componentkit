@@ -35,6 +35,7 @@ namespace CK {
       TimingCurve(ControlPoint p1, ControlPoint p2) :_p1(p1), _p2(p2) {}
 
       static auto fromCA(NSString *name) -> TimingCurve;
+      static auto fromCA(CAMediaTimingFunction *f) -> TimingCurve;
 
       auto toCA() const -> CAMediaTimingFunction *;
 
@@ -59,6 +60,8 @@ namespace CK {
       /// Sets ease-out pacing for the animation
       auto &easeOut() { curve = TimingCurve::fromCA(kCAMediaTimingFunctionEaseOut); return static_cast<Derived &>(*this); }
       /// Sets custom curve for the pacing of the animation
+      auto &timingCurve(TimingCurve c) { curve = c; return static_cast<Derived &>(*this); }
+
       auto &timingCurveWithControlPoints(TimingCurve::ControlPoint p1, TimingCurve::ControlPoint p2)
       {
         curve = TimingCurve{p1, p2};
@@ -127,6 +130,8 @@ namespace CK {
       }
 
       /// Sets custom curve for the pacing of the animation
+      auto &timingCurve(TimingCurve c) { curve = c; return static_cast<Derived &>(*this); }
+
       auto &timingCurveWithControlPoints(TimingCurve::ControlPoint p1, TimingCurve::ControlPoint p2)
       {
         curve = TimingCurve{p1, p2};

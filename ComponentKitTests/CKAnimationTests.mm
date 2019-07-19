@@ -344,6 +344,16 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 
 - (void)testSettingCustomTimingFunction
 {
+  auto const expectedFunc = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+  auto const c = TimingCurve::fromCA(expectedFunc);
+
+  auto const func = parallel(alphaFrom(0), translationYFrom(0)).timingCurve(c).toCA().timingFunction;
+
+  XCTAssertEqualObjects(func, expectedFunc);
+}
+
+- (void)testSettingCustomTimingFunctionUsingControlPoints
+{
   auto const expectedPoint1 = TimingCurve::ControlPoint{0.14, 1.0};
   auto const expectedPoint2 = TimingCurve::ControlPoint{0.34, 1.0};
 
@@ -444,6 +454,16 @@ static auto checkKeyPathsForAnimations(XCTestCase *self,
 }
 
 - (void)testSettingCustomTimingFunction
+{
+  auto const expectedFunc = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+  auto const c = TimingCurve::fromCA(expectedFunc);
+
+  auto const func = sequence(alphaFrom(0), translationYFrom(0)).timingCurve(c).toCA().timingFunction;
+
+  XCTAssertEqualObjects(func, expectedFunc);
+}
+
+- (void)testSettingCustomTimingFunctionUsingControlPoints
 {
   auto const expectedPoint1 = TimingCurve::ControlPoint{0.14, 1.0};
   auto const expectedPoint2 = TimingCurve::ControlPoint{0.34, 1.0};
