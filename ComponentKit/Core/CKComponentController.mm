@@ -57,6 +57,15 @@ static NSString *componentStateName(CKComponentControllerState state)
   return self;
 }
 
+- (void)setComponent:(CKComponent *)component
+{
+  if (component != _component) {
+    [self willUpdateComponent];
+    _component = component;
+    _updatingComponent = YES;
+  }
+}
+
 - (void)willMount {}
 - (void)didMount {}
 - (void)willRemount {}
