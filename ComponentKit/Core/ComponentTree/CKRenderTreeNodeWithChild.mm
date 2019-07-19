@@ -13,21 +13,17 @@
 
 @implementation CKRenderTreeNodeWithChild
 
-- (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component
+- (instancetype)initWithComponent:(id<CKRenderComponentProtocol>)component
+                           parent:(id<CKTreeNodeWithChildrenProtocol>)parent
+                   previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                        scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                     stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  return [[component class] initialStateWithComponent:component];
-}
-
-- (BOOL)componentRequiresScopeHandle:(Class<CKTreeNodeComponentProtocol>)componentClass
-{
-  return [componentClass requiresScopeHandle];
-}
-
-- (CKTreeNodeComponentKey)createComponentKeyForComponent:(id<CKRenderComponentProtocol>)component
-                                                  parent:(id<CKTreeNodeWithChildrenProtocol>)parent
-                                          componentClass:(Class<CKTreeNodeComponentProtocol>)componentClass
-{
-  return [parent createComponentKeyForChildWithClass:componentClass identifier:[component componentIdentifier]];
+  return [super initWithRenderComponent:component
+                                 parent:parent
+                         previousParent:previousParent
+                              scopeRoot:scopeRoot
+                           stateUpdates:stateUpdates];
 }
 
 @end

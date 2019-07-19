@@ -117,19 +117,8 @@ struct CKBuildComponentTreeParams {
 /** Returns the componeny key according to its current owner */
 - (const CKTreeNodeComponentKey &)componentKey;
 
-/** Returns the initial state of the component */
-- (id)initialStateWithComponent:(id<CKTreeNodeComponentProtocol>)component;
-
-/** Returns whether component requires a scope handle */
-- (BOOL)componentRequiresScopeHandle:(Class<CKTreeNodeComponentProtocol>)component;
-
 /** This method should be called after a node has been reused */
 - (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
-
-/** This method will called during the tree node creation in order to provide the component key based on the parent */
-- (CKTreeNodeComponentKey)createComponentKeyForComponent:(id<CKTreeNodeComponentProtocol>)component
-                                                  parent:(id<CKTreeNodeWithChildrenProtocol>)parent
-                                          componentClass:(Class<CKTreeNodeComponentProtocol>)componentClass;
 
 #if DEBUG
 /** Returns a multi-line string describing this node and its children nodes */

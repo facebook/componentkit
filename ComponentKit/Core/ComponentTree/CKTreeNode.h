@@ -25,10 +25,18 @@
  */
 @interface CKTreeNode: NSObject <CKTreeNodeProtocol>
 
+/** Non-render initializer. */
 - (instancetype)initWithComponent:(id<CKTreeNodeComponentProtocol>)component
                            parent:(id<CKTreeNodeWithChildrenProtocol>)parent
                    previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
+
+/** Render initializer. */
+- (instancetype)initWithRenderComponent:(id<CKRenderComponentProtocol>)component
+                                 parent:(id<CKTreeNodeWithChildrenProtocol>)parent
+                         previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                              scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                           stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
 @end

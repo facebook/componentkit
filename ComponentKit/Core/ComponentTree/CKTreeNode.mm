@@ -33,62 +33,93 @@
   CKTreeNodeComponentKey _componentKey;
 }
 
+// Base initializer
+- (instancetype)initWithPreviousNode:(id<CKTreeNodeProtocol>)previousNode
+                              handle:(CKComponentScopeHandle *)handle
+{
+  static int32_t nextGlobalIdentifier = 0;
+  if (self = [super init]) {
+    _handle = handle;
+    _nodeIdentifier = previousNode ? previousNode.nodeIdentifier : OSAtomicIncrement32(&nextGlobalIdentifier);
+    // Set the link between the tree node and the scope handle.
+    [handle setTreeNode:self];
+  }
+  return self;
+}
+
+// Non-Render initializer
 - (instancetype)initWithComponent:(id<CKTreeNodeComponentProtocol>)component
                            parent:(id<CKTreeNodeWithChildrenProtocol>)parent
                    previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  static int32_t nextGlobalIdentifier = 0;
-
-  if (self = [super init]) {
+  auto const componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
+  auto const previousNode = [previousParent childForComponentKey:componentKey];
+  // For non-render components, the scope handle will be aquired from the component's base initializer.
+  if (self = [self initWithPreviousNode:previousNode handle:component.scopeHandle]) {
     _component = component;
-
-    Class componentClass = [component class];
-    _componentKey = [self createComponentKeyForComponent:component parent:parent componentClass:componentClass];
-
-    CKTreeNode *previousNode = [previousParent childForComponentKey:_componentKey];
-
-    if (previousNode) {
-      _nodeIdentifier = previousNode.nodeIdentifier;
-    } else {
-      _nodeIdentifier = OSAtomicIncrement32(&nextGlobalIdentifier);
-    }
-
-    if (component.scopeHandle) {
-      _handle = component.scopeHandle;
-    } else {
-      // In case we already had a component tree before.
-      if (previousNode) {
-        _handle = [previousNode.handle newHandleWithStateUpdates:stateUpdates
-                                              componentScopeRoot:scopeRoot];
-      } else {
-        // We need a scope handle only if the component has a controller or an initial state.
-        id initialState = [self initialStateWithComponent:component];
-        if (initialState != [CKTreeNodeEmptyState emptyState] ||
-            [componentClass controllerClass] ||
-            [self componentRequiresScopeHandle:componentClass]) {
-          _handle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
-                                                      rootIdentifier:scopeRoot.globalIdentifier
-                                                      componentClass:componentClass
-                                                        initialState:initialState];
-        }
-      }
-
-      if (_handle) {
-        [component acquireScopeHandle:_handle];
-        [scopeRoot registerComponent:component];
-        [_handle resolve];
-      }
-    }
-
+    _componentKey = componentKey;
     // Set the link between the parent and the child.
     [parent setChild:self forComponentKey:_componentKey];
+    // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
     scopeRoot.rootNode.registerNode(self, parent);
+#if DEBUG
+    [component acquireTreeNode:self];
+#endif
+  }
+  return self;
+}
 
-    // Set the link between the tree node and the scope handle.
-    [_handle setTreeNode:self];
+// Render initializer
+- (instancetype)initWithRenderComponent:(id<CKRenderComponentProtocol>)component
+                                 parent:(id<CKTreeNodeWithChildrenProtocol>)parent
+                         previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                              scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                           stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+{
+  Class componentClass = [component class];
+  auto const componentKey = [parent createComponentKeyForChildWithClass:componentClass identifier:[component componentIdentifier]];
+  auto const previousNode = [previousParent childForComponentKey:componentKey];
 
+  // For Render Layout components, the component might have a scope handle already.
+  CKComponentScopeHandle *handle = component.scopeHandle;
+  if (handle == nil) {
+    // If there is a previous node, we just duplicate the scope handle.
+    if (previousNode) {
+      handle = [previousNode.handle newHandleWithStateUpdates:stateUpdates
+                                           componentScopeRoot:scopeRoot];
+    } else {
+      // The component needs a scope handle in few cases:
+      // 1. Has an initial state
+      // 2. Has a controller
+      // 3. Returns `YES` from `requiresScopeHandle`
+      id initialState = [componentClass initialStateWithComponent:component];
+      if (initialState != [CKTreeNodeEmptyState emptyState] ||
+          [componentClass controllerClass] ||
+          [componentClass requiresScopeHandle]) {
+        handle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
+                                                   rootIdentifier:scopeRoot.globalIdentifier
+                                                   componentClass:componentClass
+                                                     initialState:initialState];
+      }
+    }
+
+    // Finalize the node/scope regsitration.
+    if (handle) {
+      [component acquireScopeHandle:handle];
+      [scopeRoot registerComponent:component];
+      [handle resolve];
+    }
+  }
+
+  if (self = [self initWithPreviousNode:previousNode handle:component.scopeHandle]) {
+    _component = component;
+    _componentKey = componentKey;
+    // Set the link between the parent and the child.
+    [parent setChild:self forComponentKey:_componentKey];
+    // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
+    scopeRoot.rootNode.registerNode(self, parent);
 #if DEBUG
     [component acquireTreeNode:self];
 #endif
@@ -120,26 +151,6 @@
       [scopeRoot registerComponentController:controller];
     }
   }
-}
-
-- (id)initialStateWithComponent:(id<CKTreeNodeComponentProtocol>)component
-{
-  // For CKComponent, we bridge a `nil` initial state to `CKTreeNodeEmptyState`.
-  // The base initializer will create a scope handle for the component only if the initial state is different than `CKTreeNodeEmptyState`.
-  return [[component class] initialState] ?: [CKTreeNodeEmptyState emptyState];
-}
-
-- (CKTreeNodeComponentKey)createComponentKeyForComponent:(id<CKTreeNodeComponentProtocol>)component
-                                                  parent:(id<CKTreeNodeWithChildrenProtocol>)parent
-                                          componentClass:(Class<CKTreeNodeComponentProtocol>)componentClass
-{
-  return [parent createComponentKeyForChildWithClass:componentClass identifier:nil];
-}
-
-// For non-render comopnents, we don't need to check this code as the comopnent creates its scope handle.
-- (BOOL)componentRequiresScopeHandle:(Class<CKTreeNodeComponentProtocol>)componentClass
-{
-  return NO;
 }
 
 #if DEBUG
