@@ -166,6 +166,8 @@ struct ConvertibleToInt {
 - (void)compileTimeChecks
 {
   static_assert(std::is_trivially_destructible<Optional<CGFloat>>::value, "Optional must propagate trivial destructor");
+  static_assert(std::is_trivially_copyable<Optional<CGFloat>>::value && std::is_trivially_copy_constructible<Optional<CGFloat>>::value, "Optional must propagate trivial copy constructor");
+  static_assert(std::is_trivially_move_constructible<Optional<CGFloat>>::value, "Optional must propagate trivial move constructor");
 }
 
 @end

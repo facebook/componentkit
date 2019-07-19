@@ -45,7 +45,7 @@ struct None {
 constexpr None none;
 
 namespace OptionalDetail {
-  template <typename T, bool = std::is_trivially_destructible<T>::value>
+  template <typename T, bool = std::is_trivially_destructible<T>::value, bool = std::is_trivially_copyable<T>::value>
   struct Storage {
     union {
       char emptyState;
@@ -54,6 +54,47 @@ namespace OptionalDetail {
     bool hasValue;
 
     Storage() : hasValue{false} {}
+
+    Storage(const Storage &other) : Storage() {
+      if (other.hasValue) {
+        construct(other.value);
+      }
+    }
+
+    Storage(Storage &&other) : Storage() {
+      if (other.hasValue) {
+        construct(std::move(other.value));
+        other.clear();
+      }
+    }
+
+    auto operator =(const Storage &other) -> Storage & {
+      if (other.hasValue) {
+        if (hasValue) {
+          value = other.value;
+        } else {
+          construct(other.value);
+        }
+      } else {
+        clear();
+      }
+      return *this;
+    }
+
+    auto operator =(Storage &&other) -> Storage & {
+      if (other.hasValue) {
+        if (hasValue) {
+          value = std::move(other.value);
+        } else {
+          construct(std::move(other.value));
+          other.clear();
+        }
+      } else {
+        clear();
+      }
+      return *this;
+    }
+
     ~Storage() {
       clear();
     }
@@ -65,10 +106,17 @@ namespace OptionalDetail {
       hasValue = false;
       value.~T();
     }
+
+  private:
+    template<typename U = T>
+    void construct(U&& otherValue) {
+      new (std::addressof(value)) T{std::forward<U>(otherValue)};
+      hasValue = true;
+    }
   };
 
   template <typename T>
-  struct Storage<T, true /* is_trivially_destructible */> {
+  struct Storage<T, true /* is_trivially_destructible */, true /* is_trivially_copyable */> {
     union {
       char emptyState;
       T value;
@@ -76,6 +124,7 @@ namespace OptionalDetail {
     bool hasValue;
 
     Storage() : hasValue{false} {}
+    Storage(const Storage &) = default;
 
     void clear() {
       hasValue = false;
@@ -134,18 +183,8 @@ public:
     construct(std::forward<U>(value));
   }
 
-  Optional(const Optional& other) {
-    if (other.hasValue()) {
-      construct(other.forceUnwrap());
-    }
-  }
-
-  Optional(Optional&& other) {
-    if (other.hasValue()) {
-      construct(std::move(other.forceUnwrap()));
-      other.clear();
-    }
-  }
+  Optional(const Optional &) = default;
+  Optional(Optional &&) = default;
 
   auto operator=(None) noexcept -> Optional& {
     clear();
@@ -158,15 +197,8 @@ public:
     return *this;
   }
 
-  auto operator=(const Optional& other) -> Optional& {
-    assign(other);
-    return *this;
-  }
-
-  auto operator=(Optional&& other) -> Optional& {
-    assign(std::move(other));
-    return *this;
-  }
+  auto operator=(const Optional&) -> Optional& = default;
+  auto operator=(Optional&&) -> Optional& = default;
 
   auto hasValue() const noexcept -> bool {
     return _storage.hasValue;
@@ -437,23 +469,6 @@ private:
   void construct(T&& value) {
     new (std::addressof(_storage.value)) T{std::move(value)};
     _storage.hasValue = true;
-  }
-
-  void assign(const Optional& other) {
-    other.match(
-                [this](const T& value) { assign(value); }, [this]() { clear(); });
-  }
-
-  void assign(Optional&& other) {
-    if (this == &other) {
-      return;
-    }
-    std::move(other).match(
-                [&](T&& value) {
-                  assign(std::move(value));
-                  other.clear();
-                },
-                [this]() { clear(); });
   }
 
   template <typename U = ValueType, typename = std::enable_if_t<std::is_convertible<U, T>::value>>
