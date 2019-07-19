@@ -20,22 +20,6 @@
 
 typedef std::tuple<Class, id<NSObject>> CKTreeNodeClassType;
 
-struct CKTreeNodeComparator {
-  bool operator() (const CKTreeNodeComponentKey &lhs, const CKTreeNodeComponentKey &rhs) const
-  {
-    return std::get<0>(lhs) == std::get<0>(rhs) &&
-    std::get<1>(lhs) == std::get<1>(rhs) &&
-    CKObjectIsEqual(std::get<2>(lhs), std::get<2>(rhs));
-  }
-};
-
-struct CKTreeNodeHasher {
-  std::size_t operator() (const CKTreeNodeComponentKey &n) const
-  {
-    return [std::get<0>(n) hash] ^ std::get<1>(n) ^ [std::get<2>(n) hash];
-  }
-};
-
 struct CKClassTypeComparator {
   bool operator() (const CKTreeNodeClassType &lhs, const CKTreeNodeClassType &rhs) const
   {
@@ -50,7 +34,7 @@ struct CKClassTypeHasher {
   }
 };
 
-typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CKTreeNodeHasher, CKTreeNodeComparator> CKNodeMap;
+typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CKTreeNodeComponentKeyHasher, CKTreeNodeComponentKeyComparator> CKNodeMap;
 typedef std::unordered_map<CKTreeNodeClassType, NSUInteger, CKClassTypeHasher, CKClassTypeComparator> CKClassTypeMap;
 
 @implementation CKTreeNodeWithChildren
