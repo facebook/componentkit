@@ -27,6 +27,20 @@ inline uint64_t CKHashCombine(const uint64_t upper, const uint64_t lower) {
   return b;
 }
 
+// fnv-1 hash function
+inline uint64_t CKHashCString(const char *str)
+{
+  uint64_t retval = 0;
+  unsigned char *s = (unsigned char *)str;
+  
+  while (*s) {
+    retval *= (uint64_t)0x100000001b3ULL;
+    retval ^= (uint64_t)*s++;
+  }
+  
+  return retval;
+}
+
 #if __LP64__
 inline size_t CKHash64ToNative(uint64_t key) {
   return key;
