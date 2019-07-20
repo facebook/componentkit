@@ -25,7 +25,7 @@
 #import "CKComponent+UIView.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentViewConfiguration.h"
-
+#import "CKGlobalConfig.h"
 
 using namespace CK::Component;
 
@@ -114,7 +114,7 @@ UIView *ViewReusePool::viewForClass(const CKComponentViewClass &viewClass, UIVie
 {
   if (position == pool.end()) {
     UIView *v = viewClass.createView();
-    CKCAssertNotNil(v, @"Expected non-nil view to be created for view class %s", viewClass.getIdentifier().c_str());
+    CKCAssertNotNil(v, @"Expected non-nil view to be created for view class %s", viewClass.getIdentifierDescription().c_str());
     [container addSubview:v];
     pool.push_back(v);
     position = pool.end();
@@ -146,6 +146,11 @@ void ViewReusePool::reset(CK::Component::MountAnalyticsContext *mountAnalyticsCo
 
 const char kComponentViewReusePoolMapAssociatedObjectKey = ' ';
 
+ViewReusePoolMap::ViewReusePoolMap()
+{
+  usingStringIdentifier = CKReadGlobalConfig().enableComponentViewClassIdentifier == false;
+}
+
 ViewReusePoolMap &ViewReusePoolMap::viewReusePoolMapForView(UIView *v)
 {
   CKComponentViewReusePoolMapWrapper *wrapper = objc_getAssociatedObject(v, &kComponentViewReusePoolMapAssociatedObjectKey);
@@ -158,8 +163,14 @@ ViewReusePoolMap &ViewReusePoolMap::viewReusePoolMapForView(UIView *v)
 
 void ViewReusePoolMap::reset(UIView *container, CK::Component::MountAnalyticsContext *mountAnalyticsContext)
 {
-  for (auto &it : map) {
-    it.second.reset(mountAnalyticsContext);
+  if (usingStringIdentifier) {
+    for (auto &it : mapWithStringIdentifier) {
+      it.second.reset(mountAnalyticsContext);
+    }
+  } else {
+    for (auto &it : map) {
+      it.second.reset(mountAnalyticsContext);
+    }
   }
 
   // Now we need to ensure that the ordering of container.subviews matches vendedViews.
@@ -211,16 +222,28 @@ UIView *ViewReusePoolMap::viewForConfiguration(Class componentClass,
   if (!config.viewClass().hasView()) {
     return nil;
   }
-
-  const Component::ViewKey key = {
-    componentClass,
-    config.viewClass().getIdentifier(),
-    config.rep->attributeShape
-  };
-  // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
-  UIView *v = map[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
-  vendedViews.push_back(v);
-  return v;
+  
+  if (usingStringIdentifier) {
+    const Component::ViewKeyWithStringIdentifier key = {
+      componentClass,
+      config.viewClass().getStringIdentifier(),
+      config.rep->attributeShape
+    };
+    // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
+    UIView *v = mapWithStringIdentifier[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
+    vendedViews.push_back(v);
+    return v;
+  } else {
+    const Component::ViewKey key = {
+      componentClass,
+      config.viewClass().getIdentifier(),
+      config.rep->attributeShape
+    };
+    // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
+    UIView *v = map[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
+    vendedViews.push_back(v);
+    return v;
+  }
 }
 
 UIView *ViewManager::viewForConfiguration(Class componentClass,
