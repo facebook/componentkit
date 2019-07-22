@@ -445,6 +445,55 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   XCTAssertFalse(isValid, @"Change should not be valid since state has changed.");
 }
 
+- (void)testDataSourceComponentInControllerIsNotUpdatedAfterComponentBuild
+{
+  [self _testUpdateComponentInController:[CKDataSource class] updateComponentInControllerAfterBuild:NO];
+}
+
+- (void)testThreadSafeDataSourceComponentInControllerIsNotUpdatedAfterComponentBuild
+{
+  [self _testUpdateComponentInController:[CKThreadSafeDataSource class] updateComponentInControllerAfterBuild:NO];
+}
+
+- (void)testDataSourceComponentInControllerIsUpdatedAfterComponentBuild
+{
+  [self _testUpdateComponentInController:[CKDataSource class] updateComponentInControllerAfterBuild:YES];
+}
+
+- (void)testThreadSafeDataSourceComponentInControllerIsUpdatedAfterComponentBuild
+{
+  [self _testUpdateComponentInController:[CKThreadSafeDataSource class] updateComponentInControllerAfterBuild:YES];
+}
+
+- (void)_testUpdateComponentInController:(Class<CKDataSourceProtocol>)dataSourceClass
+   updateComponentInControllerAfterBuild:(BOOL)updateComponentInControllerAfterBuild
+{
+  const auto dataSource = (id<CKDataSourceProtocol, CKDataSourceProtocolInternal>)
+  CKComponentTestDataSource(dataSourceClass,
+                            ComponentProvider,
+                            self,
+                            {.updateComponentInControllerAfterBuild = updateComponentInControllerAfterBuild});
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state != nil;
+  });
+  const auto componentController = [_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].rootLayout.component().controller;
+  const auto component = componentController.component;
+  const auto update =
+  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
+    withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
+   build];
+  const auto oldState = _state;
+  [dataSource applyChangeset:update mode:CKUpdateModeSynchronous userInfo:@{}];
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _state != oldState;
+  });
+  if (updateComponentInControllerAfterBuild) {
+    XCTAssertNotEqual(componentController.component, component);
+  } else {
+    XCTAssertEqual(componentController.component, component);
+  }
+}
+
 #pragma mark - Listener
 
 - (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource

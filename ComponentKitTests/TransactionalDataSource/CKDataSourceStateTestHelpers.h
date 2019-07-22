@@ -11,6 +11,8 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKComponentEvents.h>
+#import <ComponentKit/CKDataSourceConfigurationInternal.h>
 
 @class CKDataSourceState;
 @protocol CKComponentStateListener;
@@ -25,6 +27,7 @@ CKDataSourceState *CKDataSourceTestState(CKComponentProviderFunc provider,
 /** Returns a data source with one item and one section. */
 id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> dataSourceClass,
                                                    CKComponentProviderFunc provider,
-                                                   id<CKDataSourceListener> listener);
+                                                   id<CKDataSourceListener> listener,
+                                                   CKDataSourceOptions options = {});
 
 NSSet *CKTestIndexPaths(NSUInteger numberOfSections, NSUInteger numberOfItemsPerSection);

@@ -60,14 +60,15 @@ CKDataSourceState *CKDataSourceTestState(CKComponentProviderFunc provider,
 
 id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> dataSourceClass,
                                                    CKComponentProviderFunc provider,
-                                                   id<CKDataSourceListener> listener)
+                                                   id<CKDataSourceListener> listener,
+                                                   CKDataSourceOptions options)
 {
   const auto configuration =
   [[CKDataSourceConfiguration alloc]
    initWithComponentProviderFunc:provider
    context:nil
    sizeRange:{}
-   options:{}
+   options:options
    componentPredicates:{}
    componentControllerPredicates:{}
    analyticsListener:nil];
