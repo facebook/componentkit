@@ -12,7 +12,6 @@
 
 #import "CKBuildComponent.h"
 #import "CKRenderHelpers.h"
-#import "CKRenderTreeNodeWithChildren.h"
 #import "CKComponentInternal.h"
 
 @implementation CKRenderWithChildrenComponent

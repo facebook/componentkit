@@ -18,15 +18,14 @@
 #import <ComponentKit/CKOptional.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKTreeNodeWithChild.h>
-#import <ComponentKit/CKRenderTreeNodeWithChild.h>
-#import <ComponentKit/CKRenderTreeNodeWithChildren.h>
+#import <ComponentKit/CKTreeNodeWithChildren.h>
 
 namespace CKRenderInternal {
   // Reuse the previous component generation and its component tree and notify the previous component about it.
   static auto reusePreviousComponent(id<CKRenderComponentProtocol> component,
                                      __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                                     CKRenderTreeNodeWithChild *node,
-                                     CKRenderTreeNodeWithChild *previousNode,
+                                     CKTreeNodeWithChild *node,
+                                     CKTreeNodeWithChild *previousNode,
                                      const CKBuildComponentTreeParams &params,
                                      CKRenderDidReuseComponentBlock didReuseBlock) -> void {
     auto const reusedChild = previousNode.child;
@@ -40,7 +39,7 @@ namespace CKRenderInternal {
     // Update the scope frame of the reuse of this component in order to transfer the render scope frame.
     [CKComponentScopeFrame didReuseRenderWithTreeNode:node];
 
-    auto const prevChildComponent = [(CKRenderTreeNodeWithChild *)previousNode child].component;
+    auto const prevChildComponent = [(CKTreeNodeWithChild *)previousNode child].component;
 
     if (childComponent != nullptr) {
       // Link the previous child component to the the new component.
@@ -61,12 +60,12 @@ namespace CKRenderInternal {
   // Reuse the previous component generation and its component tree and notify the previous component about it.
   static auto reusePreviousComponent(id<CKRenderComponentProtocol> component,
                                      __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                                     CKRenderTreeNodeWithChild *node,
+                                     CKTreeNodeWithChild *node,
                                      id<CKTreeNodeWithChildrenProtocol> parent,
                                      id<CKTreeNodeWithChildrenProtocol> previousParent,
                                      const CKBuildComponentTreeParams &params,
                                      CKRenderDidReuseComponentBlock didReuseBlock) -> BOOL {
-    auto const previousNode = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
+    auto const previousNode = (CKTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
     if (previousNode) {
       CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousNode, params, didReuseBlock);
       return YES;
@@ -77,12 +76,12 @@ namespace CKRenderInternal {
   // Check if shouldComponentUpdate returns `NO`; if it does, reuse the previous component generation and its component tree and notify the previous component about it.
   static auto reusePreviousComponentIfComponentsAreEqual(id<CKRenderComponentProtocol> component,
                                                          __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                                                         CKRenderTreeNodeWithChild *node,
+                                                         CKTreeNodeWithChild *node,
                                                          id<CKTreeNodeWithChildrenProtocol> parent,
                                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
                                                          const CKBuildComponentTreeParams &params,
                                                          CKRenderDidReuseComponentBlock didReuseBlock) -> BOOL {
-    auto const previousNode = (CKRenderTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
+    auto const previousNode = (CKTreeNodeWithChild *)[previousParent childForComponentKey:node.componentKey];
     auto const previousComponent = (id<CKRenderComponentProtocol>)previousNode.component;
     // If there is no previous compononet, there is nothing to reuse.
     if (previousComponent) {
@@ -102,7 +101,7 @@ namespace CKRenderInternal {
     return NO;
   }
 
-  static auto reusePreviousComponentForSingleChild(CKRenderTreeNodeWithChild *node,
+  static auto reusePreviousComponentForSingleChild(CKTreeNodeWithChild *node,
                                                    id<CKRenderWithChildComponentProtocol> component,
                                                    __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                                    id<CKTreeNodeWithChildrenProtocol> parent,
@@ -293,8 +292,8 @@ namespace CKRender {
   {
     CKCAssert(component, @"component cannot be nil");
 
-    auto const node = [[CKRenderTreeNodeWithChild alloc]
-                       initWithComponent:component
+    auto const node = [[CKTreeNodeWithChild alloc]
+                       initWithRenderComponent:component
                        parent:parent
                        previousParent:previousParent
                        scopeRoot:params.scopeRoot
@@ -347,8 +346,8 @@ namespace CKRender {
                                       BOOL parentHasStateUpdate,
                                       BOOL isBridgeComponent) -> id<CKTreeNodeProtocol>
   {
-    auto const node = [[CKRenderTreeNodeWithChildren alloc]
-                       initWithComponent:component
+    auto const node = [[CKTreeNodeWithChildren alloc]
+                       initWithRenderComponent:component
                        parent:parent
                        previousParent:previousParent
                        scopeRoot:params.scopeRoot

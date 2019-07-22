@@ -18,7 +18,7 @@
 @protocol CKRenderWithChildrenComponentProtocol;
 
 @class CKRenderComponent;
-@class CKRenderTreeNodeWithChild;
+@class CKTreeNodeWithChild;
 
 using CKRenderDidReuseComponentBlock = void(^)(id<CKRenderComponentProtocol>);
 

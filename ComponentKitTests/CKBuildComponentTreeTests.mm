@@ -22,8 +22,8 @@
 #import "CKComponentInternal.h"
 #import "CKButtonComponent.h"
 #import "CKTreeNode.h"
-#import "CKRenderTreeNodeWithChild.h"
-#import "CKRenderTreeNodeWithChildren.h"
+#import "CKTreeNodeWithChild.h"
+#import "CKTreeNodeWithChildren.h"
 #import "CKComponentScopeRootFactory.h"
 #import "CKThreadLocalComponentScope.h"
 
@@ -97,13 +97,13 @@
   verifyChildToParentConnection(root, singleChildNode, renderComponent);
 
   // Check the next level of the tree
-  if ([singleChildNode isKindOfClass:[CKRenderTreeNodeWithChild class]]) {
-    CKRenderTreeNodeWithChildren *parentNode = (CKRenderTreeNodeWithChildren *)singleChildNode;
+  if ([singleChildNode isKindOfClass:[CKTreeNodeWithChild class]]) {
+    CKTreeNodeWithChildren *parentNode = (CKTreeNodeWithChildren *)singleChildNode;
     XCTAssertEqual(parentNode.children.size(), 1);
     CKTreeNode *componentNode = parentNode.children[0];
     verifyChildToParentConnection(parentNode, componentNode, c);
   } else {
-    XCTFail(@"singleChildNode has to be CKRenderTreeNodeWithChild as it has a child.");
+    XCTFail(@"singleChildNode has to be CKTreeNodeWithChild as it has a child.");
   }
 
   // Simulate a second tree creation.
@@ -127,7 +127,7 @@
 {
   CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
   auto const scopeRoot = threadScope.newScopeRoot;
-  CKRenderTreeNodeWithChildren *root = [[CKRenderTreeNodeWithChildren alloc] init];
+  CKTreeNodeWithChildren *root = [[CKTreeNodeWithChildren alloc] init];
   CKComponent *c10 = [CKComponent newWithView:{} size:{}];
   CKComponent *c11 = [CKComponent newWithView:{} size:{}];
   CKRenderWithChildrenComponent *renderWithChidlrenComponent = [CKTestRenderWithChildrenComponent newWithChildren:{c10, c11}];
@@ -145,12 +145,12 @@
   // Verify that the child component has 2 children nodes.
   CKTreeNode *childNode = root.children[0];
   // Check the next level of the tree
-  if ([childNode isKindOfClass:[CKRenderTreeNodeWithChildren class]]) {
-    CKRenderTreeNodeWithChildren *parentNode = (CKRenderTreeNodeWithChildren *)childNode;
+  if ([childNode isKindOfClass:[CKTreeNodeWithChildren class]]) {
+    CKTreeNodeWithChildren *parentNode = (CKTreeNodeWithChildren *)childNode;
     XCTAssertEqual(parentNode.children.size(), 2);
     XCTAssertTrue(verifyComponentsInNode(parentNode, @[c10, c11]));
   } else {
-    XCTFail(@"childNode has to be CKRenderTreeNodeWithChildren as it has children.");
+    XCTFail(@"childNode has to be CKTreeNodeWithChildren as it has children.");
   }
 
   // Simulate a second tree creation.
@@ -282,8 +282,8 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
   for (auto const childNode : node.children) {
     // We add the child identifier + its level in the tree.
     [identifiers addObject:[NSString stringWithFormat:@"%d-%d",childNode.nodeIdentifier, level]];
-    if ([childNode isKindOfClass:[CKRenderTreeNodeWithChildren class]]) {
-      treeChildrenIdentifiers((CKRenderTreeNodeWithChildren *)childNode, identifiers, level+1);
+    if ([childNode isKindOfClass:[CKTreeNodeWithChildren class]]) {
+      treeChildrenIdentifiers((CKTreeNodeWithChildren *)childNode, identifiers, level+1);
     }
   }
 }
