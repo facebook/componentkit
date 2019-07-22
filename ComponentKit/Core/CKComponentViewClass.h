@@ -27,10 +27,10 @@ struct CKComponentViewClassIdentifier {
   };
   
   CKComponentViewClassIdentifier() noexcept
-    : ptr1(nullptr), ptr2(nullptr), ptr3(nullptr) {}
+    : ptr1(nullptr), ptr2(nullptr), ptr3(nullptr), identifierType(EMPTY_IDENTIFIER) {}
 
   CKComponentViewClassIdentifier(CKComponentViewClassIdentifier &&other) noexcept
-  : ptr1(other.ptr1), ptr2(other.ptr2), ptr3(std::exchange(other.ptr3, nullptr)), identifierType(other.identifierType) {}
+  : ptr1(other.ptr1), ptr2(other.ptr2), ptr3(std::exchange(other.ptr3, nullptr)), identifierType(std::exchange(other.identifierType, EMPTY_IDENTIFIER)) {}
 
   CKComponentViewClassIdentifier(const CKComponentViewClassIdentifier &other) noexcept
     : ptr1(other.ptr1), ptr2(other.ptr2), ptr3(other.identifierType == STRING_BASED_IDENTIFIER ? strdup((const char *)other.ptr3) : other.ptr3), identifierType(other.identifierType)
