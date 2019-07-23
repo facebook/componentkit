@@ -25,8 +25,6 @@ std::string CKComponentViewClassIdentifier::description() const
       return std::string(((const char *)this->ptr1)) + "-" + (const char *)this->ptr2 + "-" + (const char *)this->ptr3;
     case FUNCTION_BASED_IDENTIFIER:
       return CKStringFromPointer((const void *)this->ptr1);
-    case STRING_BASED_IDENTIFIER:
-      return (const char *)this->ptr1;
   }
 }
 
@@ -91,24 +89,6 @@ CKComponentViewClass::CKComponentViewClass(CKComponentViewFactoryFunc fact,
   } else {
     usingStringIdentifier = true;
     stringIdentifier = CKStringFromPointer((const void *)fact);
-  }
-}
-
-CKComponentViewClass::CKComponentViewClass(const std::string &i,
-                                           CKComponentViewFactoryBlock fact,
-                                           void (^enter)(UIView *),
-                                           void (^leave)(UIView *)) noexcept
-: factory(fact), didEnterReusePool(enter), willLeaveReusePool(leave)
-{
-#if DEBUG
-  CKCAssertNil(objc_getClass(i.c_str()), @"You may not use a class name as the identifier; it would conflict with "
-               "the constructor variant that takes a viewClass.");
-#endif
-  if (CKReadGlobalConfig().enableComponentViewClassIdentifier) {
-    identifier = { i.c_str() };
-  } else {
-    usingStringIdentifier = true;
-    stringIdentifier = i;
   }
 }
 

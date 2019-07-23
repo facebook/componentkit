@@ -22,87 +22,22 @@ struct CKComponentViewClassIdentifier {
   enum IdentifierType : char {
     EMPTY_IDENTIFIER,
     CLASS_BASED_IDENTIFIER,
-    FUNCTION_BASED_IDENTIFIER,
-    STRING_BASED_IDENTIFIER
+    FUNCTION_BASED_IDENTIFIER
   };
   
   CKComponentViewClassIdentifier() noexcept
     : ptr1(nullptr), ptr2(nullptr), ptr3(nullptr), identifierType(EMPTY_IDENTIFIER) {}
 
-  CKComponentViewClassIdentifier(CKComponentViewClassIdentifier &&other) noexcept
-  : ptr1(other.ptr1), ptr2(other.ptr2), ptr3(std::exchange(other.ptr3, nullptr)), identifierType(std::exchange(other.identifierType, EMPTY_IDENTIFIER)) {}
-
-  CKComponentViewClassIdentifier(const CKComponentViewClassIdentifier &other) noexcept
-    : ptr1(other.ptr1), ptr2(other.ptr2), ptr3(other.identifierType == STRING_BASED_IDENTIFIER ? strdup((const char *)other.ptr3) : other.ptr3), identifierType(other.identifierType)
-  {
-  }
-
-  CKComponentViewClassIdentifier(const char *stringIdentifier) noexcept
-    : ptr1(nullptr), ptr2(nullptr), ptr3(strdup(stringIdentifier)), identifierType(STRING_BASED_IDENTIFIER) {}
-  
   CKComponentViewClassIdentifier(Class viewClass, SEL enter = NULL, SEL leave = NULL) noexcept
     : ptr1(class_getName(viewClass)), ptr2(sel_getName(enter)), ptr3(sel_getName(leave)), identifierType(CLASS_BASED_IDENTIFIER) {}
   
   CKComponentViewClassIdentifier(UIView *(*fact)(void), SEL enter = NULL, SEL leave = NULL) noexcept
     : ptr1((void*)(fact)), ptr2(sel_getName(enter)), ptr3(sel_getName(leave)), identifierType(FUNCTION_BASED_IDENTIFIER) {}
   
-  ~CKComponentViewClassIdentifier()
-  {
-    if (this->identifierType == STRING_BASED_IDENTIFIER) {
-      free(const_cast<char *>((char *)this->ptr3));
-    }
-  }
-  
   std::string description() const;
   
-  CKComponentViewClassIdentifier& operator=(const CKComponentViewClassIdentifier& other) noexcept {
-    if (this != &other) {
-      if (identifierType == STRING_BASED_IDENTIFIER) {
-        free(const_cast<char *>((char *)this->ptr3));
-      }
-      
-      identifierType = other.identifierType;
-      ptr1 = other.ptr1;
-      ptr2 = other.ptr2;
-      
-      if (other.identifierType == STRING_BASED_IDENTIFIER) {
-        ptr3 = strdup((const char *)other.ptr3);
-      } else {
-        ptr3 = other.ptr3;
-      }
-    }
-    return *this;
-  }
-  
-  CKComponentViewClassIdentifier& operator=(CKComponentViewClassIdentifier&& other) noexcept {
-    if (this != &other) {
-      if (identifierType == STRING_BASED_IDENTIFIER) {
-        free(const_cast<char *>((char *)this->ptr3));
-      }
-      
-      identifierType = other.identifierType;
-      ptr1 = other.ptr1;
-      ptr2 = other.ptr2;
-      ptr3 = std::exchange(other.ptr3, nullptr);
-    }
-    return *this;
-  }
-  
   bool operator==(const CKComponentViewClassIdentifier &other) const noexcept {
-    if (identifierType != other.identifierType) {
-      return false;
-    }
-    if (identifierType == STRING_BASED_IDENTIFIER) {
-      if (ptr3 == other.ptr3) {
-        return true;
-      }
-      else if (ptr3 == nullptr || other.ptr3 == nullptr) {
-        return false;
-      }
-      return strcmp((const char *)ptr3, (const char *)other.ptr3) == 0;
-    } else {
-      return other.ptr1 == ptr1 && other.ptr2 == ptr2 && other.ptr3 == ptr3;
-    }
+    return identifierType == other.identifierType && other.ptr1 == ptr1 && other.ptr2 == ptr2 && other.ptr3 == ptr3;
   }
   
   bool operator!=(const CKComponentViewClassIdentifier &other) const noexcept {
@@ -110,13 +45,7 @@ struct CKComponentViewClassIdentifier {
   }
     
   size_t hash() const noexcept {
-    if (identifierType == STRING_BASED_IDENTIFIER) {
-      return CKHash64ToNative(CKHashCString((const char *)this->ptr3));
-    } else {
-      return CKHash64ToNative(identifierType == STRING_BASED_IDENTIFIER
-        ? std::hash<uint64_t>()((uint64_t)this->ptr3)
-        : CKHashCombine(std::hash<uint64_t>()((uint64_t)this->ptr1), (uint64_t)this->ptr2));
-    }
+    return CKHash64ToNative(CKHashCombine(std::hash<uint64_t>()((uint64_t)this->ptr1), (uint64_t)this->ptr2));
   }
   
 private:
@@ -221,10 +150,6 @@ struct CKComponentViewClass {
   }
   
 private:
-  CKComponentViewClass(const std::string &ident,
-                       CKComponentViewFactoryBlock factory,
-                       CKComponentViewReuseBlock didEnterReusePool = nil,
-                       CKComponentViewReuseBlock willLeaveReusePool = nil) noexcept;
   
   bool usingStringIdentifier;
   std::string stringIdentifier;
