@@ -12,6 +12,7 @@
 
 #include <tuple>
 #include <unordered_set>
+#include <unordered_map>
 
 #import <ComponentKit/CKEqualityHashHelpers.h>
 #import <ComponentKit/ComponentUtilities.h>
