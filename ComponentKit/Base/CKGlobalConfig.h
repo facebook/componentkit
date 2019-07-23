@@ -18,7 +18,7 @@ struct CKGlobalConfig {
   /** If enabled, CKBuildComponent will always build the component tree (CKTreeNode), even if there is no Render component in the tree*/
   BOOL alwaysBuildRenderTree = NO;
   /** Same as above, but only in DEBUG configuration */
-  BOOL alwaysBuildRenderTreeInDebug = NO;
+  BOOL alwaysBuildRenderTreeInDebug = YES;
   /** If enabled, we will cache the layout in render components and reuse it during a component reuse. */
   BOOL enableLayoutCacheInRender = NO;
   /**
