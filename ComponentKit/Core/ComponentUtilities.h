@@ -73,10 +73,7 @@ namespace CK {
   template<typename Func>
   auto map(id<NSFastEnumeration> collection, CK_NOESCAPE Func &&func) -> std::vector<decltype(func(std::declval<id>()))>
   {
-    return CK::mapWithIndex(collection, ^decltype(func(std::declval<id>()))(id obj,
-                                                                            NSUInteger idx) {
-      return func(obj);
-    });
+    return mapWithIndex(collection, [&func](id obj, NSUInteger) { return func(obj); });
   }
 
   template <typename T, typename Func>
