@@ -346,7 +346,7 @@
     CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
   }
   if (newState.configuration.options.updateComponentInControllerAfterBuild) {
-    CKComponentUpdateComponentForComponentControllerWithIndexPaths(appliedChanges.finalUpdatedIndexPaths, newState);
+    CKComponentUpdateComponentForComponentControllerWithIndexPaths(appliedChanges.finalUpdatedIndexPaths.allValues, newState);
   }
 
   [_announcer componentDataSource:self
