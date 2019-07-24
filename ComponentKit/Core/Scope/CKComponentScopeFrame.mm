@@ -88,17 +88,17 @@ namespace std {
   stateScopeKey = {componentClass, identifier, keys, stateKeyCounter};
 
   // Get the child from the previous equivalent scope frame.
-  CKComponentScopeFrame *existingChildFrameOfPreviousFrame;
+  CKComponentScopeFrame *childFrameOfPreviousFrame;
   if (previousFrame) {
     const auto &previousFrameChildren = previousFrame->_children;
     const auto it = previousFrameChildren.find(stateScopeKey);
-    existingChildFrameOfPreviousFrame = (it == previousFrameChildren.end()) ? nil : it->second;
+    childFrameOfPreviousFrame = (it == previousFrameChildren.end()) ? nil : it->second;
   }
 
   CKComponentScopeHandle *newHandle =
-  existingChildFrameOfPreviousFrame
-  ? [existingChildFrameOfPreviousFrame.handle newHandleWithStateUpdates:stateUpdates
-                                                     componentScopeRoot:newRoot]
+  childFrameOfPreviousFrame
+  ? [childFrameOfPreviousFrame.handle newHandleWithStateUpdates:stateUpdates
+                                             componentScopeRoot:newRoot]
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                       rootIdentifier:newRoot.globalIdentifier
                                       componentClass:componentClass
@@ -106,7 +106,7 @@ namespace std {
 
   CKComponentScopeFrame *newChild = [[CKComponentScopeFrame alloc] initWithHandle:newHandle];
   frame->_children.insert({stateScopeKey, newChild});
-  return {.frame = newChild, .previousFrame = existingChildFrameOfPreviousFrame};
+  return {.frame = newChild, .previousFrame = childFrameOfPreviousFrame};
 }
 
 + (void)willBuildComponentTreeWithTreeNode:(id<CKTreeNodeProtocol>)node
@@ -126,11 +126,11 @@ namespace std {
   CKAssert(previousFrame == nil || previousFrame.class == [CKComponentScopeFrame class], @"previousFrame should be CKComponentScopeFrame instead of %@", previousFrame.class);
 
   // Get the frame from the previous generation if it exists.
-  CKComponentScopeFrame *existingChildFrameOfPreviousFrame;
+  CKComponentScopeFrame *childFrameOfPreviousFrame;
   if (previousFrame) {
     const auto &previousFrameChildren = previousFrame->_children;
     const auto it = previousFrameChildren.find(stateScopeKey);
-    existingChildFrameOfPreviousFrame = (it == previousFrameChildren.end()) ? nil : it->second;
+    childFrameOfPreviousFrame = (it == previousFrameChildren.end()) ? nil : it->second;
   }
 
   // Create a scope frame for the render component children.
@@ -138,7 +138,7 @@ namespace std {
   // Push the new scope frame to the parent frame's children.
   frame->_children.insert({stateScopeKey, newFrame});
   // Push the new pair into the thread local.
-  threadLocalScope->stack.push({.frame = newFrame, .previousFrame = existingChildFrameOfPreviousFrame});
+  threadLocalScope->stack.push({.frame = newFrame, .previousFrame = childFrameOfPreviousFrame});
 }
 
 + (void)didBuildComponentTreeWithNode:(id<CKTreeNodeProtocol>)node
@@ -170,16 +170,16 @@ namespace std {
   CKAssert(previousFrame == nil || previousFrame.class == [CKComponentScopeFrame class], @"previousFrame should be CKComponentScopeFrame instead of %@", previousFrame.class);
 
   // Get the frame from the previous generation if it exists.
-  CKComponentScopeFrame *existingChildFrameOfPreviousFrame;
+  CKComponentScopeFrame *childFrameOfPreviousFrame;
   if (previousFrame) {
     const auto &previousFrameChildren = previousFrame->_children;
     const auto it = previousFrameChildren.find(stateScopeKey);
-    existingChildFrameOfPreviousFrame = (it == previousFrameChildren.end()) ? nil : it->second;
+    childFrameOfPreviousFrame = (it == previousFrameChildren.end()) ? nil : it->second;
   }
   
   // Transfer the previous frame into the parent from the new generation.
-  if (existingChildFrameOfPreviousFrame) {
-    frame->_children.insert({stateScopeKey, existingChildFrameOfPreviousFrame});
+  if (childFrameOfPreviousFrame) {
+    frame->_children.insert({stateScopeKey, childFrameOfPreviousFrame});
   }
 }
 
