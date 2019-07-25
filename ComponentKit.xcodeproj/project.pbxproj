@@ -320,6 +320,10 @@
 		23B65AD2213FF9300049FFAC /* CKRenderLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 23B65AC0213FF9300049FFAC /* CKRenderLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23B65AD3213FF9300049FFAC /* CKRenderWithChildrenComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23B65AC1213FF9300049FFAC /* CKRenderWithChildrenComponent.mm */; };
 		23B65AD4213FF9300049FFAC /* CKRenderWithChildrenComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23B65AC1213FF9300049FFAC /* CKRenderWithChildrenComponent.mm */; };
+		23D1B14122D638F600453EC7 /* CKScopeTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D1B13F22D638F600453EC7 /* CKScopeTreeNode.h */; };
+		23D1B14222D638F600453EC7 /* CKScopeTreeNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D1B13F22D638F600453EC7 /* CKScopeTreeNode.h */; };
+		23D1B14322D638F600453EC7 /* CKScopeTreeNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23D1B14022D638F600453EC7 /* CKScopeTreeNode.mm */; };
+		23D1B14422D638F600453EC7 /* CKScopeTreeNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23D1B14022D638F600453EC7 /* CKScopeTreeNode.mm */; };
 		23D26A4822440C5B0087350C /* CKCollectionViewDataSourceListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D26A4722440C5B0087350C /* CKCollectionViewDataSourceListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23D26A5522440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23D26A5322440E7C0087350C /* CKCollectionViewDataSourceListenerAnnouncer.mm */; };
 		23D26A5622440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D26A5422440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h */; };
@@ -1086,6 +1090,8 @@
 		23B65ABE213FF9300049FFAC /* CKRenderComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRenderComponent.mm; sourceTree = "<group>"; };
 		23B65AC0213FF9300049FFAC /* CKRenderLayoutComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderLayoutComponent.h; sourceTree = "<group>"; };
 		23B65AC1213FF9300049FFAC /* CKRenderWithChildrenComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRenderWithChildrenComponent.mm; sourceTree = "<group>"; };
+		23D1B13F22D638F600453EC7 /* CKScopeTreeNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKScopeTreeNode.h; sourceTree = "<group>"; };
+		23D1B14022D638F600453EC7 /* CKScopeTreeNode.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKScopeTreeNode.mm; sourceTree = "<group>"; };
 		23D26A4722440C5B0087350C /* CKCollectionViewDataSourceListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewDataSourceListener.h; sourceTree = "<group>"; };
 		23D26A5322440E7C0087350C /* CKCollectionViewDataSourceListenerAnnouncer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCollectionViewDataSourceListenerAnnouncer.mm; sourceTree = "<group>"; };
 		23D26A5422440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewDataSourceListenerAnnouncer.h; sourceTree = "<group>"; };
@@ -1680,6 +1686,8 @@
 				23EF1D3F209365B9004C95BE /* CKTreeNodeWithChildren.mm */,
 				239F2CFA21E8F26F00580F93 /* CKRootTreeNode.h */,
 				239F2CFB21E8F26F00580F93 /* CKRootTreeNode.mm */,
+				23D1B13F22D638F600453EC7 /* CKScopeTreeNode.h */,
+				23D1B14022D638F600453EC7 /* CKScopeTreeNode.mm */,
 			);
 			path = ComponentTree;
 			sourceTree = "<group>";
@@ -2580,6 +2588,7 @@
 				60D7B3BE20FC90500011AB3B /* YGFloatOptional.h in Headers */,
 				03B8B5291D2A346F00EDFF59 /* CKStaticLayoutComponent.h in Headers */,
 				2D03A6611D3869C700E4F890 /* CKDetectDuplicateComponent.h in Headers */,
+				23D1B14222D638F600453EC7 /* CKScopeTreeNode.h in Headers */,
 				60D7B3CA20FC90500011AB3B /* Yoga.h in Headers */,
 				03B8B52B1D2A346F00EDFF59 /* CKComponentBoundsAnimation.h in Headers */,
 				03B8B52C1D2A346F00EDFF59 /* CKCollectionViewDataSourceCell.h in Headers */,
@@ -2717,6 +2726,7 @@
 				D0B47D4F1CBD948E00BB33CE /* CKDataSourceUpdateStateModification.h in Headers */,
 				7203EB85216FF35E00109F4A /* CKDataSourceProtocol.h in Headers */,
 				D0B47D271CBD948E00BB33CE /* CKComponentProvider.h in Headers */,
+				23D1B14122D638F600453EC7 /* CKScopeTreeNode.h in Headers */,
 				D0B47D161CBD948E00BB33CE /* CKComponentAnnouncerBase.h in Headers */,
 				D0B47CF61CBD948E00BB33CE /* CKComponentLayout.h in Headers */,
 				D0B47D3F1CBD948E00BB33CE /* CKDataSourceAppliedChanges.h in Headers */,
@@ -3331,6 +3341,7 @@
 				60D7B3D020FC90500011AB3B /* YGNodePrint.cpp in Sources */,
 				237E8942213FFC6D00793B4D /* CKRenderLayoutWithChildrenComponent.mm in Sources */,
 				03B8B47E1D2A346F00EDFF59 /* CKSizeRange.mm in Sources */,
+				23D1B14422D638F600453EC7 /* CKScopeTreeNode.mm in Sources */,
 				7268B5512241A7E400F68A37 /* CKComponentHostingContainerViewProvider.mm in Sources */,
 				03B8B47F1D2A346F00EDFF59 /* ComponentLayoutContext.mm in Sources */,
 				03B8B4801D2A346F00EDFF59 /* ComponentViewManager.mm in Sources */,
@@ -3699,6 +3710,7 @@
 				60D7B3CF20FC90500011AB3B /* YGNodePrint.cpp in Sources */,
 				D0B47CBF1CBD943400BB33CE /* CKDataSourceItem.mm in Sources */,
 				D0B47CC01CBD943400BB33CE /* CKDataSourceListenerAnnouncer.mm in Sources */,
+				23D1B14322D638F600453EC7 /* CKScopeTreeNode.mm in Sources */,
 				D0B47CC11CBD943400BB33CE /* CKDataSourceState.mm in Sources */,
 				D63F21D820C20559007604F4 /* CKComponentAnimationsController.mm in Sources */,
 				D0B47CC21CBD943400BB33CE /* CKDataSourceChange.m in Sources */,

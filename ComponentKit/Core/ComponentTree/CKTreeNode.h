@@ -25,6 +25,10 @@
  */
 @interface CKTreeNode: NSObject <CKTreeNodeProtocol>
 
+/** Base initializer */
+- (instancetype)initWithPreviousNode:(id<CKTreeNodeProtocol>)previousNode
+                              handle:(CKComponentScopeHandle *)handle;
+
 /** Non-render initializer. */
 - (instancetype)initWithComponent:(id<CKTreeNodeComponentProtocol>)component
                            parent:(id<CKTreeNodeWithChildrenProtocol>)parent
