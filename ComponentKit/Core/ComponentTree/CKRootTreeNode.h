@@ -10,6 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKComponentScopeFrame.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKTreeNodeTypes.h>
@@ -28,7 +29,7 @@ public:
   bool isEmpty();
 
   /** access the internal node */
-  id<CKTreeNodeWithChildrenProtocol> node();
+  id<CKTreeNodeWithChildrenProtocol, CKComponentScopeFrameProtocol> node();
 
   /** Mark the top render component in the stack as dirty */
   void markTopRenderComponentAsDirtyForPropsUpdates();
@@ -49,7 +50,7 @@ public:
 
 private:
   /** the root node of the component tree */
-  id<CKTreeNodeWithChildrenProtocol> _node;
+  id<CKTreeNodeWithChildrenProtocol, CKComponentScopeFrameProtocol> _node;
   /** A map between a tree node identifier to its parent node. */
   std::unordered_map<CKTreeNodeIdentifier, id<CKTreeNodeProtocol>> _nodesToParentNodes;
   /**

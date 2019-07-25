@@ -16,6 +16,7 @@
 #import <ComponentKit/CKAssert.h>
 
 #import "CKComponentScopeRoot.h"
+#import "CKScopeTreeNode.h"
 
 static pthread_key_t _threadKey() noexcept
 {
@@ -34,10 +35,15 @@ CKThreadLocalComponentScope *CKThreadLocalComponentScope::currentScope() noexcep
 
 CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                                                          const CKComponentStateUpdateMap &updates,
+                                                         BOOL unifyComponentTrees,
                                                          BuildTrigger trigger)
-: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), systraceListener(previousScopeRoot.analyticsListener.systraceListener), buildTrigger(trigger), componentAllocations(0), previousScope(CKThreadLocalComponentScope::currentScope())
+: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), systraceListener(previousScopeRoot.analyticsListener.systraceListener), buildTrigger(trigger), componentAllocations(0), unifyComponentTrees(unifyComponentTrees), previousScope(CKThreadLocalComponentScope::currentScope()) 
 {
-  stack.push({[newScopeRoot rootFrame], [previousScopeRoot rootFrame]});
+  if (unifyComponentTrees) {
+    stack.push({newScopeRoot.rootNode.node(), previousScopeRoot.rootNode.node()});
+  } else {
+    stack.push({[newScopeRoot rootFrame], [previousScopeRoot rootFrame]});
+  }
   keys.push({});
   pthread_setspecific(_threadKey(), this);
 }

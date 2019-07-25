@@ -15,6 +15,7 @@
 #import "CKComponentScopeHandle.h"
 #import "CKComponentScopeRoot.h"
 #import "CKThreadLocalComponentScope.h"
+#import "CKScopeTreeNode.h"
 
 CKComponentScope::~CKComponentScope()
 {
@@ -39,13 +40,16 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
 
     [_threadLocalScope->systraceListener willBuildComponent:componentClass];
 
-    const auto childPair = [CKComponentScopeFrame childPairForPair:_threadLocalScope->stack.top()
-                                                           newRoot:_threadLocalScope->newScopeRoot
-                                                    componentClass:componentClass
-                                                        identifier:identifier
-                                                              keys:_threadLocalScope->keys.top()
-                                               initialStateCreator:initialStateCreator
-                                                      stateUpdates:_threadLocalScope->stateUpdates];
+    Class<CKComponentScopeFrameProtocol> frameClass = _threadLocalScope->unifyComponentTrees
+    ? [CKScopeTreeNode class]
+    : [CKComponentScopeFrame class];
+    const auto childPair = [frameClass childPairForPair:_threadLocalScope->stack.top()
+                                                newRoot:_threadLocalScope->newScopeRoot
+                                         componentClass:componentClass
+                                             identifier:identifier
+                                                   keys:_threadLocalScope->keys.top()
+                                    initialStateCreator:initialStateCreator
+                                           stateUpdates:_threadLocalScope->stateUpdates];
     _threadLocalScope->stack.push({.frame = childPair.frame, .previousFrame = childPair.previousFrame});
     _scopeHandle = childPair.frame.handle;
     _threadLocalScope->keys.push({});

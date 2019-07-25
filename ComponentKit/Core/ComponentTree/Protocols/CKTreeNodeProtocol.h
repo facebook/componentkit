@@ -55,8 +55,11 @@ struct CKBuildComponentTreeParams {
   // When enabled, all the comopnents will be regenerated (no component reuse optimiztions).
   BOOL ignoreComponentReuseOptimizations = NO;
   
-  // When enabled, we will cache the layout in render components and reuse it during a component reuse. */
+  // When enabled, we will cache the layout in render components and reuse it during a component reuse.
   BOOL enableLayoutCache = NO;
+
+  // Merge Tree Nodes and Scope Frames 
+  BOOL unifyComponentTrees = NO;
 };
 
 @protocol CKTreeNodeWithChildrenProtocol;
@@ -120,6 +123,10 @@ struct CKBuildComponentTreeParams {
 /** This method should be called after a node has been reused */
 - (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
 
+/** This method should be called on nodes that have been created from CKComponentScope */
+- (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
+             toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
+            scopeRoot:(CKComponentScopeRoot *)scopeRoot;
 #if DEBUG
 /** Returns a multi-line string describing this node and its children nodes */
 - (NSString *)debugDescription;

@@ -127,6 +127,22 @@
   return self;
 }
 
+- (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
+             toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
+            scopeRoot:(CKComponentScopeRoot *)scopeRoot
+{
+  auto const componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
+  _component = component;
+  _componentKey = componentKey;
+  // Set the link between the parent and the child.
+  [parent setChild:self forComponentKey:_componentKey];
+  // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
+  scopeRoot.rootNode.registerNode(self, parent);
+#if DEBUG
+  [component acquireTreeNode:self];
+#endif
+}
+
 - (id)state
 {
   return _handle.state;

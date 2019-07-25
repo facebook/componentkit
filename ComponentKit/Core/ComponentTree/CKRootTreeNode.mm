@@ -11,9 +11,11 @@
 #import "CKRootTreeNode.h"
 
 #import "CKTreeNodeWithChildren.h"
+#import "CKScopeTreeNode.h"
 #import "CKRenderHelpers.h"
 
-CKRootTreeNode::CKRootTreeNode(): _node([CKTreeNodeWithChildren new]) {};
+
+CKRootTreeNode::CKRootTreeNode(): _node([CKScopeTreeNode new]) {};
 
 void CKRootTreeNode::registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProtocol> parent) {
   CKCAssert(parent != nil, @"Cannot register a nil parent node");
@@ -35,7 +37,7 @@ bool CKRootTreeNode::isEmpty() {
   return _node.childrenSize == 0;
 }
 
-id<CKTreeNodeWithChildrenProtocol> CKRootTreeNode::node() {
+id<CKTreeNodeWithChildrenProtocol, CKComponentScopeFrameProtocol> CKRootTreeNode::node() {
   return _node;
 }
 

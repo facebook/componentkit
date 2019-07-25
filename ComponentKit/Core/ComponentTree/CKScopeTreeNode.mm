@@ -205,7 +205,8 @@ namespace std {
     return;
   }
 
-  CKAssert(!threadLocalScope->stack.empty() && threadLocalScope->stack.top().frame.handle == node.handle, @"frame.handle is not equal to node.handle");
+  // The scope handle should be nil here, as we create a scope node for the render component to own its scope frame children. 
+  CKAssert(!threadLocalScope->stack.empty() && threadLocalScope->stack.top().frame.handle == nil, @"frame.handle is not equal to nil");
   // Pop the top element of the stack.
   threadLocalScope->stack.pop();
 }

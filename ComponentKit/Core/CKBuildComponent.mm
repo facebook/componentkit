@@ -79,8 +79,13 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         BOOL ignoreComponentReuseOptimizations)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
+  auto const globalConfig = CKReadGlobalConfig();
+  
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
-  CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates, buildTrigger);
+  CKThreadLocalComponentScope threadScope(previousRoot,
+                                          stateUpdates,
+                                          globalConfig.unifyComponentTrees,
+                                          buildTrigger);
 
   auto const analyticsListener = [previousRoot analyticsListener];
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
@@ -92,7 +97,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   auto const component = componentFactory();
 
   // Build the component tree if we have a render component in the hierarchy.
-  if (threadScope.newScopeRoot.hasRenderComponentInTree || CKReadGlobalConfig().alwaysBuildRenderTree) {
+  if (threadScope.newScopeRoot.hasRenderComponentInTree || globalConfig.alwaysBuildRenderTree) {
     CKBuildComponentTreeParams params = {
       .scopeRoot = threadScope.newScopeRoot,
       .previousScopeRoot = previousRoot,
@@ -101,7 +106,8 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
       .buildTrigger = buildTrigger,
       .ignoreComponentReuseOptimizations = ignoreComponentReuseOptimizations,
       .systraceListener = threadScope.systraceListener,
-      .enableLayoutCache = CKReadGlobalConfig().enableLayoutCacheInRender,
+      .enableLayoutCache = globalConfig.enableLayoutCacheInRender,
+      .unifyComponentTrees = threadScope.unifyComponentTrees,
     };
 
     // Build the component tree from the render function.

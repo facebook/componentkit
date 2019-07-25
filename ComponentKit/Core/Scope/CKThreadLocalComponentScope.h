@@ -17,6 +17,8 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeFrame.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
+#import <ComponentKit/CKGlobalConfig.h>
+#import <ComponentKit/CKTreeNodeProtocol.h>
 
 @protocol CKSystraceListener;
 
@@ -24,6 +26,7 @@ class CKThreadLocalComponentScope {
 public:
   CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                               const CKComponentStateUpdateMap &updates,
+                              BOOL unifyComponentTrees = NO,
                               BuildTrigger trigger = BuildTrigger::NewTree);
   ~CKThreadLocalComponentScope();
 
@@ -49,6 +52,9 @@ public:
 
   /** Component Allocations */
   NSUInteger componentAllocations;
+
+  /** Merge Tree Nodes and Scope Frames */
+  BOOL unifyComponentTrees;
 
 private:
   CKThreadLocalComponentScope *const previousScope;
