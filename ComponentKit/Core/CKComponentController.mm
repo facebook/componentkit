@@ -181,7 +181,9 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 - (void)component:(CKComponent *)component willRelinquishView:(UIView *)view
 {
-  if (component == _component) {
+  // When `controller.component` is updated after component build, we should also check `_updatingComponent` to cover
+  // the case where we are trying to unmount the current mounted from view.
+  if (component == _component || _updatingComponent) {
     CKAssert(view == _view, @"Didn't expect to be relinquishing view %@ when _view is %@", view, _view);
     [self _relinquishView];
   }
