@@ -26,6 +26,13 @@
  Will be used only when systrace is enabled.
  */
 @protocol CKSystraceListener <NSObject>
+
+/**
+ Start/End a block trace in systrace.
+ */
+- (void)willStartBlockTrace:(const char *const)blockName;
+- (void)didStartBlockTrace:(const char *const)blockName;
+
 /**
  Called before/after building a scoped component.
 

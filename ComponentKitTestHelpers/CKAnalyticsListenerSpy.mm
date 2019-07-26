@@ -71,6 +71,9 @@
 - (void)willLayoutComponent:(CKComponent *)component {}
 - (void)didLayoutComponent:(CKComponent *)component {}
 
+- (void)willStartBlockTrace:(const char *const)blockName {}
+- (void)didStartBlockTrace:(const char *const)blockName {}
+
 - (id<CKSystraceListener>)systraceListener { return nil; }
 - (id<CKDebugAnalyticsListener>)debugAnalyticsListener { return _debugAnalyticsListener; }
 
