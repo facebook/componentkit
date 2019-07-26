@@ -102,7 +102,7 @@ struct CKBoxedValue {
   CKBoxedValue(std::nullptr_t v) noexcept : __actual(nil) {};
 
   // Any objects go here
-  CKBoxedValue(id obj) noexcept : __actual(obj) {};
+  CKBoxedValue(__attribute((ns_consumed)) id obj) noexcept : __actual(obj) {};
 
   // Define conversions for common Apple types
   CKBoxedValue(CGRect v) noexcept : __actual([NSValue valueWithCGRect:v]) {};
