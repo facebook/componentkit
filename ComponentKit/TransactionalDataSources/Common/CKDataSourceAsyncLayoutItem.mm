@@ -13,6 +13,7 @@
 #import "CKDataSourceQOSHelper.h"
 #import "CKAnalyticsListener.h"
 #import "CKDataSourceModificationHelper.h"
+#import "CKSystraceScope.h"
 
 #import <ComponentKit/CKComponentLayout.h>
 
@@ -90,9 +91,8 @@
   } else if(!_hasStartedLayout.exchange(YES)) {
     return [self _buildDataSourceItem];
   } else {
-    [_systraceListener willBlockThreadOnGeneratingItemLayout];
+    CKSystraceScope s("Components.blockOnGeneratingLayout");
     std::lock_guard<std::mutex> l(_waitOnLayoutMutex);
-    [_systraceListener didBlockThreadOnGeneratingItemLayout];
     return _item;
   }
 }
