@@ -65,7 +65,7 @@ namespace OptionalDetail {
     uint64_t hasValue;
   };
 
-  template <typename T, bool = std::is_trivially_destructible<T>::value, bool = std::is_trivially_copyable<T>::value>
+  template <typename T, bool = std::is_trivially_destructible<T>::value, bool = std::is_trivially_copyable<T>::value, bool = std::is_default_constructible<T>::value>
   struct Storage: HasValue<sizeof(T)> {
     static constexpr auto HasValueSize = sizeof(HasValue<sizeof(T)>);
 
@@ -137,7 +137,7 @@ namespace OptionalDetail {
   };
 
   template <typename T>
-  struct Storage<T, true /* is_trivially_destructible */, true /* is_trivially_copyable */> : HasValue<sizeof(T)> {
+  struct Storage<T, true /* is_trivially_destructible */, true /* is_trivially_copyable */, false /* is_default_constructible */> : HasValue<sizeof(T)> {
     static constexpr auto HasValueSize = sizeof(HasValue<sizeof(T)>);
 
     union {
@@ -146,6 +146,20 @@ namespace OptionalDetail {
     };
 
     Storage() : HasValue<sizeof(T)>{false} {}
+    Storage(const Storage &) = default;
+
+    void clear() {
+      this->hasValue = false;
+    }
+  };
+
+  template <typename T>
+  struct Storage<T, true, true, true>: HasValue<sizeof(T)> {
+    static constexpr auto HasValueSize = sizeof(HasValue<sizeof(T)>);
+
+    T value;
+
+    constexpr Storage() : HasValue<sizeof(T)>{false}, value{} {}
     Storage(const Storage &) = default;
 
     void clear() {
