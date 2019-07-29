@@ -27,19 +27,19 @@ static NSString *componentCompactDescription(CKComponent *component)
 static NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace, BOOL nested, BOOL compactDescription) noexcept
 {
   NSMutableString *const description = [NSMutableString string];
-  [componentBacktrace enumerateObjectsWithOptions:NSEnumerationReverse
-                                       usingBlock:^(CKComponent * _Nonnull component, NSUInteger index, BOOL * _Nonnull stop) {
-                                         const NSInteger depth = componentBacktrace.count - index - 1;
-                                         if (depth != 0) {
-                                           [description appendString:@"\n"];
-                                         }
-                                         if (nested) {
-                                           [description appendString:[@"" stringByPaddingToLength:depth withString:@" " startingAtIndex:0]];
-                                         }
-                                         NSString *componentDescription = compactDescription ? componentCompactDescription(component) : componentDescriptionOrClass(component);
-                                         [description appendString:componentDescription];
-                                       }];
-  return description;
+    for (NSInteger index = [componentBacktrace count] - 1; index >= 0; index--) {
+      const NSInteger depth = componentBacktrace.count - index - 1;
+      if (depth != 0) {
+        [description appendString:@"\n"];
+      }
+      const auto component = componentBacktrace[index];
+      if (nested) {
+        [description appendString:[@"" stringByPaddingToLength:depth withString:@" " startingAtIndex:0]];
+      }
+      NSString *componentDescription = compactDescription ? componentCompactDescription(component) : componentDescriptionOrClass(component);
+      [description appendString:componentDescription];
+    }
+    return description;
 }
 
 NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept
