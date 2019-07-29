@@ -45,15 +45,36 @@ struct None {
 constexpr None none;
 
 namespace OptionalDetail {
+  template <unsigned ValueSize>
+  struct HasValue {
+    bool hasValue;
+  };
+
+  template <>
+  struct HasValue<4> {
+    uint32_t hasValue;
+  };
+
+  template <>
+  struct HasValue<8> {
+    uint64_t hasValue;
+  };
+
+  template <>
+  struct HasValue<16> {
+    uint64_t hasValue;
+  };
+
   template <typename T, bool = std::is_trivially_destructible<T>::value, bool = std::is_trivially_copyable<T>::value>
-  struct Storage {
+  struct Storage: HasValue<sizeof(T)> {
+    static constexpr auto HasValueSize = sizeof(HasValue<sizeof(T)>);
+
     union {
       char emptyState;
       T value;
     };
-    bool hasValue;
 
-    Storage() : hasValue{false} {}
+    Storage() : HasValue<sizeof(T)>{false} {}
 
     Storage(const Storage &other) : Storage() {
       if (other.hasValue) {
@@ -70,7 +91,7 @@ namespace OptionalDetail {
 
     auto operator =(const Storage &other) -> Storage & {
       if (other.hasValue) {
-        if (hasValue) {
+        if (this->hasValue) {
           value = other.value;
         } else {
           construct(other.value);
@@ -83,7 +104,7 @@ namespace OptionalDetail {
 
     auto operator =(Storage &&other) -> Storage & {
       if (other.hasValue) {
-        if (hasValue) {
+        if (this->hasValue) {
           value = std::move(other.value);
         } else {
           construct(std::move(other.value));
@@ -100,10 +121,10 @@ namespace OptionalDetail {
     }
 
     void clear() {
-      if (!hasValue) {
+      if (!this->hasValue) {
         return;
       }
-      hasValue = false;
+      this->hasValue = false;
       value.~T();
     }
 
@@ -111,23 +132,24 @@ namespace OptionalDetail {
     template<typename U = T>
     void construct(U&& otherValue) {
       new (std::addressof(value)) T{std::forward<U>(otherValue)};
-      hasValue = true;
+      this->hasValue = true;
     }
   };
 
   template <typename T>
-  struct Storage<T, true /* is_trivially_destructible */, true /* is_trivially_copyable */> {
+  struct Storage<T, true /* is_trivially_destructible */, true /* is_trivially_copyable */> : HasValue<sizeof(T)> {
+    static constexpr auto HasValueSize = sizeof(HasValue<sizeof(T)>);
+
     union {
       char emptyState;
       T value;
     };
-    bool hasValue;
 
-    Storage() : hasValue{false} {}
+    Storage() : HasValue<sizeof(T)>{false} {}
     Storage(const Storage &) = default;
 
     void clear() {
-      hasValue = false;
+      this->hasValue = false;
     }
   };
 }

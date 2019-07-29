@@ -163,11 +163,19 @@ struct ConvertibleToInt {
   XCTAssertEqual(x, 43);
 }
 
+struct SixteenBytes {
+  uint64_t x;
+  uint64_t y;
+};
+
 - (void)compileTimeChecks
 {
   static_assert(std::is_trivially_destructible<Optional<CGFloat>>::value, "Optional must propagate trivial destructor");
   static_assert(std::is_trivially_copyable<Optional<CGFloat>>::value && std::is_trivially_copy_constructible<Optional<CGFloat>>::value, "Optional must propagate trivial copy constructor");
   static_assert(std::is_trivially_move_constructible<Optional<CGFloat>>::value, "Optional must propagate trivial move constructor");
+  static_assert(OptionalDetail::Storage<uint32_t>::HasValueSize == sizeof(uint32_t), "When wrapping the type of size 4, Optional storage must use the flag of the same size");
+  static_assert(OptionalDetail::Storage<uint64_t>::HasValueSize == sizeof(uint64_t), "When wrapping the type of size 8, Optional storage must use the flag of the same size");
+  static_assert(OptionalDetail::Storage<SixteenBytes>::HasValueSize == sizeof(uint64_t), "When wrapping the type of size 16, Optional storage must use the flag of size 8");
 }
 
 @end
