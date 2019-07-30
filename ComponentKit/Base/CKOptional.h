@@ -561,6 +561,54 @@ private:
   OptionalDetail::Storage<T> _storage;
 };
 
+
+/**
+ Running apply function on multiple optionals, where the provided function will
+ only be executed if all the passed optionals are not none
+ 
+ auto v = std::vector<int> {};
+ 
+ apply([&](const int &x, const int &y){
+ v.push_back(x);
+ v.push_back(y);
+ }, x, y);
+ 
+ @param vm  function-like object that will be invoked if the Optional contains the value.
+ 
+ Note: you are not allowed to return anything from value handler in apply.
+ */
+template <typename F, typename T, typename S>
+auto apply(F &&f, const Optional<T> &opt1, const Optional<S> &opt2) -> void {
+  opt1.apply([&](const T &value1){
+    opt2.apply([&](const S &value2){
+      f(value1, value2);
+    });
+  });
+}
+
+/**
+ Running apply function on multiple optionals, where the provided function will
+ only be executed if all the passed optionals are not none
+ 
+ auto v = std::vector<int> {};
+ 
+ apply([&](const int &x, const int &y, const int &z){
+ v.push_back(x);
+ v.push_back(y);
+ v.push_back(z);
+ }, x, y, z);
+ 
+ @param vm  function-like object that will be invoked if the Optional contains the value.
+ 
+ Note: you are not allowed to return anything from value handler in apply.
+ */
+template <typename F, typename T, typename S, typename... Ts>
+auto apply(F &&f, const Optional<T> &opt1, const Optional<S> &opt2, const Optional<Ts> &... opts) -> void {
+  opt1.apply([&](const T &value1){
+    apply([&](const S &value2, Ts... ts){ f(value1, value2, ts...); }, opt2, opts...);
+  });
+}
+  
 /**
  You can compare Optionals of the same type:
 

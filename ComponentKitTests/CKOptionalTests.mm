@@ -383,4 +383,34 @@ static auto returnsNone() -> Optional<CopyMoveTracker> { return none; }
   XCTAssertEqual(numMoves, 2);
 }
 
+- (void)test_WhenApplyingMultipleNonEmptyOptionals_CallbackIsCalled
+{
+  auto result = -1;
+  CK::apply([&](int one, int two, int three){
+    result = one + two + three;
+  }, Optional<int>(1), Optional<int>(2), Optional<int>(3));
+  
+  XCTAssertEqual(result, 6);
+}
+
+- (void)test_WhenApplyingMultipleOptionalsAndOneOfThemIsNone_CallbackIsNotCalled
+{
+  auto result = -1;
+  const Optional<int> intNone = none;
+  
+  CK::apply([&](int one, int two, int three){
+    result = one + two + three;
+  }, Optional<int>(1), intNone, Optional<int>(3));
+  
+  CK::apply([&](int one, int two, int three){
+    result = one + two + three;
+  }, intNone, Optional<int>(2), Optional<int>(3));
+  
+  CK::apply([&](int one, int two, int three){
+    result = one + two + three;
+  }, Optional<int>(1), Optional<int>(2), intNone);
+  
+  XCTAssertEqual(result, -1);
+}
+
 @end
