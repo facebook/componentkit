@@ -141,6 +141,19 @@ static auto toNSString(int x) -> NSString * {
   XCTAssertNil(y.mapToPtr(toNSString));
 }
 
+struct TypeWithPointer {
+  NSString *title;
+};
+
+- (void)test_MappingToPointer_PointerToMember
+{
+  Optional<TypeWithPointer> const a = TypeWithPointer { @"John Doe" };
+  Optional<TypeWithPointer> const b = TypeWithPointer { nil };
+  
+  XCTAssertEqualObjects(a.mapToPtr(&TypeWithPointer::title), @"John Doe");
+  XCTAssertNil(b.mapToPtr(&TypeWithPointer::title));
+}
+
 struct ConvertibleToInt {
   int i;
   operator int() const { return int{i}; }
