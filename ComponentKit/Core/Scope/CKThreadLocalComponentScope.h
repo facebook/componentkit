@@ -26,7 +26,7 @@ class CKThreadLocalComponentScope {
 public:
   CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                               const CKComponentStateUpdateMap &updates,
-                              BOOL unifyComponentTrees = NO,
+                              CKUnifyComponentTreeConfig unifyComponentTreeConfig = {},
                               BuildTrigger trigger = BuildTrigger::NewTree);
   ~CKThreadLocalComponentScope();
 
@@ -54,7 +54,7 @@ public:
   NSUInteger componentAllocations;
 
   /** Merge Tree Nodes and Scope Frames */
-  BOOL unifyComponentTrees;
+  CKUnifyComponentTreeConfig unifyComponentTreeConfig;
 
 private:
   CKThreadLocalComponentScope *const previousScope;

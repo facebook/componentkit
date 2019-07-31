@@ -13,6 +13,7 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
+#import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKTreeNodeTypes.h>
 
 @protocol CKSystraceListener;
@@ -58,8 +59,8 @@ struct CKBuildComponentTreeParams {
   // When enabled, we will cache the layout in render components and reuse it during a component reuse.
   BOOL enableLayoutCache = NO;
 
-  // Merge Tree Nodes and Scope Frames 
-  BOOL unifyComponentTrees = NO;
+  // Merge Tree Nodes and Scope Frames
+  CKUnifyComponentTreeConfig unifyComponentTreeConfig;
 };
 
 @protocol CKTreeNodeWithChildrenProtocol;

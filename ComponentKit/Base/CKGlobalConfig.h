@@ -10,7 +10,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKAnalyticsListener.h>
+@protocol CKAnalyticsListener;
+
+struct CKUnifyComponentTreeConfig {
+  /** If enabled, CKComponentScope and CKTreeNode will use the same nodes. */
+  BOOL enable = NO;
+};
 
 struct CKGlobalConfig {
   /** Default analytics listener which will be used in cased that no other listener is provided */
@@ -28,8 +33,8 @@ struct CKGlobalConfig {
   BOOL updateComponentInControllerAfterBuild = NO;
   /** If enabled CKComponentViewClass will use CKComponentViewClassIdentifier instead of strings for the cache key */
   BOOL enableComponentViewClassIdentifier = NO;
-  /** If enabled, CKComponentScope and CKTreeNode will use the same nodes. */
-  BOOL unifyComponentTrees = NO;
+  /** Component Tree Unification config */
+  CKUnifyComponentTreeConfig unifyComponentTreeConfig;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

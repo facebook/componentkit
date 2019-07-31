@@ -40,7 +40,7 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
 
     [_threadLocalScope->systraceListener willBuildComponent:componentClass];
 
-    Class<CKComponentScopeFrameProtocol> frameClass = _threadLocalScope->unifyComponentTrees
+    Class<CKComponentScopeFrameProtocol> frameClass = _threadLocalScope->unifyComponentTreeConfig.enable
     ? [CKScopeTreeNode class]
     : [CKComponentScopeFrame class];
     const auto childPair = [frameClass childPairForPair:_threadLocalScope->stack.top()

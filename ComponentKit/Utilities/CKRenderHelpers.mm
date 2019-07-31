@@ -39,7 +39,7 @@ namespace CKRenderInternal {
     params.scopeRoot.rootNode.registerNode(reusedChild, node);
 
     // Update the scope frame of the reuse of this component in order to transfer the render scope frame.
-    if (params.unifyComponentTrees) {
+    if (params.unifyComponentTreeConfig.enable) {
       [CKScopeTreeNode didReuseRenderWithTreeNode:node];
     } else {
       [CKComponentScopeFrame didReuseRenderWithTreeNode:node];
@@ -341,7 +341,7 @@ namespace CKRender {
 
     if (!isBridgeComponent) {
       // Update the scope frame of the reuse of this component in order to transfer the render scope frame.
-      if (params.unifyComponentTrees) {
+      if (params.unifyComponentTreeConfig.enable) {
         [CKScopeTreeNode willBuildComponentTreeWithTreeNode:node];
       } else {
         [CKComponentScopeFrame willBuildComponentTreeWithTreeNode:node];
@@ -362,7 +362,7 @@ namespace CKRender {
     }
 
     if (!isBridgeComponent) {
-      if (params.unifyComponentTrees) {
+      if (params.unifyComponentTreeConfig.enable) {
         [CKScopeTreeNode didBuildComponentTreeWithNode:node];
       } else {
         [CKComponentScopeFrame didBuildComponentTreeWithNode:node];

@@ -85,7 +85,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
   CKThreadLocalComponentScope threadScope(previousRoot,
                                           stateUpdates,
-                                          globalConfig.unifyComponentTrees,
+                                          globalConfig.unifyComponentTreeConfig,
                                           buildTrigger);
 
   auto const analyticsListener = [previousRoot analyticsListener];
@@ -108,7 +108,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
       .ignoreComponentReuseOptimizations = ignoreComponentReuseOptimizations,
       .systraceListener = threadScope.systraceListener,
       .enableLayoutCache = globalConfig.enableLayoutCacheInRender,
-      .unifyComponentTrees = threadScope.unifyComponentTrees,
+      .unifyComponentTreeConfig = threadScope.unifyComponentTreeConfig,
     };
 
     // Build the component tree from the render function.

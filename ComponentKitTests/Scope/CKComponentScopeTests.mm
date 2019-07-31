@@ -58,7 +58,7 @@
 @interface CKComponentScopeTests : XCTestCase
 {
   @package
-  BOOL _unifyComponentTrees;
+  CKUnifyComponentTreeConfig _unifyComponentTrees;
 }
 @end
 
@@ -790,7 +790,7 @@ static BOOL testComponentControllerProtocolPredicate(id<CKComponentControllerPro
 @implementation CKComponentScopeWithTreeNodeTests
 - (void)setUp
 {
-  _unifyComponentTrees = YES;
+  _unifyComponentTrees = {.enable = YES};
 }
 
 - (void)testThreadLocalComponentScopeStoresTheProvidedFrameAsTheEquivalentPreviousFrame

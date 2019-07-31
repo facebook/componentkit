@@ -35,11 +35,11 @@ CKThreadLocalComponentScope *CKThreadLocalComponentScope::currentScope() noexcep
 
 CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                                                          const CKComponentStateUpdateMap &updates,
-                                                         BOOL unifyComponentTrees,
+                                                         CKUnifyComponentTreeConfig unifyComponentTreeConfig,
                                                          BuildTrigger trigger)
-: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), systraceListener(previousScopeRoot.analyticsListener.systraceListener), buildTrigger(trigger), componentAllocations(0), unifyComponentTrees(unifyComponentTrees), previousScope(CKThreadLocalComponentScope::currentScope()) 
+: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), systraceListener(previousScopeRoot.analyticsListener.systraceListener), buildTrigger(trigger), componentAllocations(0), unifyComponentTreeConfig(unifyComponentTreeConfig), previousScope(CKThreadLocalComponentScope::currentScope())
 {
-  if (unifyComponentTrees) {
+  if (unifyComponentTreeConfig.enable) {
     stack.push({newScopeRoot.rootNode.node(), previousScopeRoot.rootNode.node()});
   } else {
     stack.push({[newScopeRoot rootFrame], [previousScopeRoot rootFrame]});
