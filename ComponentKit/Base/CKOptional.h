@@ -281,6 +281,15 @@ public:
   }
 
   template <typename ValueMatcher, typename NoneMatcher>
+  auto match(ValueMatcher&& vm, NoneMatcher&& nm) &
+  -> decltype(vm(std::declval<T &>())) {
+    if (hasValue()) {
+      return vm(forceUnwrap());
+    }
+    return nm();
+  }
+
+  template <typename ValueMatcher, typename NoneMatcher>
   auto match(ValueMatcher&& vm, NoneMatcher&& nm) &&
   -> decltype(vm(std::declval<T>())) {
     if (hasValue()) {
@@ -304,6 +313,11 @@ public:
    */
   template <typename ValueMatcher>
   auto apply(ValueMatcher&& vm) const& -> void {
+    match(std::forward<ValueMatcher>(vm), []() {});
+  }
+
+  template <typename ValueMatcher>
+  auto apply(ValueMatcher&& vm) & -> void {
     match(std::forward<ValueMatcher>(vm), []() {});
   }
 

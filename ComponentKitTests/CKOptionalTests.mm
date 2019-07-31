@@ -176,6 +176,17 @@ struct ConvertibleToInt {
   XCTAssertEqual(x, 43);
 }
 
+static void increment(int &i) { i += 1; }
+
+- (void)test_MutatingApply
+{
+  Optional<int> o = 42;
+
+  o.apply(increment);
+
+  XCTAssertEqual(o, 43);
+}
+
 struct SixteenBytes {
   uint64_t x;
   uint64_t y;
