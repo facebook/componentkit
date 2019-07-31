@@ -22,6 +22,7 @@
 #import "CKTreeNodeWithChild.h"
 #import "CKTreeNodeWithChildren.h"
 #import "CKRenderHelpers.h"
+#import "CKScopeTreeNode.h"
 
 @interface CKRenderComponentTests : XCTestCase
 @end

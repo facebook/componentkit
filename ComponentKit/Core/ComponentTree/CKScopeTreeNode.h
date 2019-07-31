@@ -8,16 +8,15 @@
  *
  */
 
-#import <ComponentKit/CKTreeNode.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
-#import <ComponentKit/CKComponentScopeFrame.h>
+#import <ComponentKit/CKScopeTreeNodeProtocol.h>
+
+#import "CKTreeNode.h"
 
 /**
  This object is a bridge between CKComponentScope and CKTreeNode.
 
  It represents a node with children in the component tree.
- Each non-render component with CKComponentScope will have this node.
  */
-@interface CKScopeTreeNode : CKTreeNode <CKTreeNodeWithChildrenProtocol, CKComponentScopeFrameProtocol>
-
+@interface CKScopeTreeNode : CKTreeNode <CKScopeTreeNodeProtocol>
 @end
+

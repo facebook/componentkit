@@ -18,41 +18,6 @@
 static NSUInteger const kParentBaseKey = 0;
 static NSUInteger const kOwnerBaseKey = 1;
 
-static bool keyVectorsEqual(const std::vector<id<NSObject>> &a, const std::vector<id<NSObject>> &b)
-{
-  if (a.size() != b.size()) {
-    return false;
-  }
-  return std::equal(a.begin(), a.end(), b.begin(), [](id<NSObject> x, id<NSObject> y){
-    return CKObjectIsEqual(x, y); // be pedantic and use a lambda here becuase BOOL != bool
-  });
-}
-
-struct CKScopeNodeKey {
-  CKTreeNodeComponentKey nodeKey;
-  std::vector<id<NSObject>> keys;
-
-  bool operator==(const CKScopeNodeKey &v) const {
-    return std::get<0>(this->nodeKey) == std::get<0>(v.nodeKey) &&
-    std::get<1>(this->nodeKey) == std::get<1>(v.nodeKey) &&
-    CKObjectIsEqual(std::get<2>(this->nodeKey), std::get<2>(v.nodeKey)) &&
-    keyVectorsEqual(this->keys, v.keys);
-  }
-};
-
-namespace std {
-  template <>
-  struct hash<CKScopeNodeKey> {
-    size_t operator ()(CKScopeNodeKey k) const {
-      // Note we just use k.keys.size() for the hash of keys. Otherwise we'd have to enumerate over each item and
-      // call [NSObject -hash] on it and incorporate every element into the overall hash somehow.
-      auto const nodeKey = k.nodeKey;
-      NSUInteger subhashes[] = { [std::get<0>(nodeKey) hash], std::get<1>(nodeKey), [std::get<2>(nodeKey) hash], k.keys.size() };
-      return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
-    }
-  };
-}
-
 @implementation CKScopeTreeNode
 {
   std::unordered_map<CKScopeNodeKey, id<CKTreeNodeProtocol>> _children;
@@ -116,6 +81,30 @@ namespace std {
   }
 }
 
+#pragma mark - CKScopeTreeNodeProtocol
+
+- (CKScopeNodeKey)createScopeNodeKeyForComponentClass:(Class<CKComponentProtocol>)componentClass
+                                           identifier:(id)identifier
+                                                 keys:(const std::vector<id<NSObject>> &)keys
+{
+  // Create **owner** based key counter.
+  auto const keyCounter = ownerKeyCounter(componentClass, identifier, _keyToCounterMap);
+  // Update the stateKey with the class key counter to make sure we don't have collisions.
+  return {std::make_tuple(componentClass, keyCounter, identifier), keys};
+}
+
+- (id<CKScopeTreeNodeProtocol>)childForScopeNodeKey:(const CKScopeNodeKey &)scopeNodeKey
+{
+  // Get the child from the previous equivalent node.
+  const auto it = _children.find(scopeNodeKey);
+  return (it == _children.end()) ? nil : (id<CKScopeTreeNodeProtocol>)it->second;
+}
+
+- (void)setChild:(id<CKScopeTreeNodeProtocol>)child forKey:(const CKScopeNodeKey &)key
+{
+  _children[key] = child;
+}
+
 #pragma mark - CKComponentScopeFrameProtocol
 
 + (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
@@ -126,25 +115,17 @@ namespace std {
                           initialStateCreator:(id (^)(void))initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  CKScopeTreeNode *frame = (CKScopeTreeNode *)pair.frame;
-  CKScopeTreeNode *previousFrame = (CKScopeTreeNode *)pair.previousFrame;
+  id<CKScopeTreeNodeProtocol> frame = (id<CKScopeTreeNodeProtocol>)pair.frame;
+  id<CKScopeTreeNodeProtocol> previousFrame = (id<CKScopeTreeNodeProtocol>)pair.previousFrame;
 
   CKAssertNotNil(frame, @"Must have frame");
-  CKAssert(frame.class == [CKScopeTreeNode class], @"frame should be CKScopeTreeNode instead of %@", frame.class);
-  CKAssert(previousFrame == nil || previousFrame.class == [CKScopeTreeNode class], @"previousFrame should be CKScopeTreeNode instead of %@", previousFrame.class);
+  CKAssert([frame conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"frame should conform to id<CKScopeTreeNodeProtocol> instead of %@", frame.class);
+  CKAssert(previousFrame == nil || [previousFrame conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"previousFrame should conform to id<CKScopeTreeNodeProtocol> instead of %@", previousFrame.class);
 
-  // Create **owner** based key counter.
-  auto const keyCounter = ownerKeyCounter(componentClass, identifier, frame->_keyToCounterMap);
-  // Update the stateKey with the class key counter to make sure we don't have collisions.
-  CKScopeNodeKey stateKey = {std::make_tuple(componentClass, keyCounter, identifier), keys};
-
+  // Generate key inside the new parent
+  CKScopeNodeKey stateKey = [frame createScopeNodeKeyForComponentClass:componentClass identifier:identifier keys:keys];
   // Get the child from the previous equivalent node.
-  CKScopeTreeNode *existingChildNodeOfPreviousNode;
-  if (previousFrame) {
-    const auto &previousNodeChildren = previousFrame->_children;
-    const auto it = previousNodeChildren.find(stateKey);
-    existingChildNodeOfPreviousNode = (it == previousNodeChildren.end()) ? nil : (CKScopeTreeNode *)it->second;
-  }
+  CKScopeTreeNode *existingChildNodeOfPreviousNode = [previousFrame childForScopeNodeKey:stateKey];
 
   // Create new handle.
   CKComponentScopeHandle *newHandle = existingChildNodeOfPreviousNode
@@ -160,7 +141,7 @@ namespace std {
                                handle:newHandle];
 
   // Insert the new node to its parent map.
-  frame->_children.insert({stateKey, newChild});
+  [frame setChild:newChild forKey:stateKey];
   return {.frame = newChild, .previousFrame = existingChildNodeOfPreviousNode};
 }
 
@@ -181,8 +162,8 @@ namespace std {
   CKScopeTreeNode *frame = (CKScopeTreeNode *)pair.frame;
   CKScopeTreeNode *previousFrame = (CKScopeTreeNode *)pair.previousFrame;
 
-  CKAssert(frame.class == [CKScopeTreeNode class], @"frame should be CKScopeTreeNode instead of %@", frame.class);
-  CKAssert(previousFrame == nil || previousFrame.class == [CKScopeTreeNode class], @"previousFrame should be CKScopeTreeNode instead of %@", previousFrame.class);
+  CKAssert([frame conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"frame should conform to id<CKScopeTreeNodeProtocol> instead of %@", frame.class);
+  CKAssert(previousFrame == nil || [previousFrame conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"previousFrame should conform to id<CKScopeTreeNodeProtocol> instead of %@", previousFrame.class);
 
   if (previousFrame) {
     const auto &previousFrameChildren = previousFrame->_children;
@@ -228,8 +209,8 @@ namespace std {
   CKScopeTreeNode *frame = (CKScopeTreeNode *)pair.frame;
   CKScopeTreeNode *previousFrame = (CKScopeTreeNode *)pair.previousFrame;
 
-  CKAssert(frame.class == [CKScopeTreeNode class], @"frame should be CKScopeTreeNode instead of %@", frame.class);
-  CKAssert(previousFrame == nil || previousFrame.class == [CKScopeTreeNode class], @"previousFrame should be CKScopeTreeNode instead of %@", previousFrame.class);
+  CKAssert([frame conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"frame should conform to id<CKScopeTreeNodeProtocol> instead of %@", frame.class);
+  CKAssert(previousFrame == nil || [previousFrame conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"previousFrame should conform to id<CKScopeTreeNodeProtocol> instead of %@", previousFrame.class);
 
   if (previousFrame) {
     const auto &previousFrameChildren = previousFrame->_children;

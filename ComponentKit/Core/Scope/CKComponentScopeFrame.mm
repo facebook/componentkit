@@ -23,16 +23,6 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKTreeNodeProtocol.h"
 
-static bool keyVectorsEqual(const std::vector<id<NSObject>> &a, const std::vector<id<NSObject>> &b)
-{
-  if (a.size() != b.size()) {
-    return false;
-  }
-  return std::equal(a.begin(), a.end(), b.begin(), [](id<NSObject> x, id<NSObject> y){
-    return CKObjectIsEqual(x, y); // be pedantic and use a lambda here becuase BOOL != bool
-  });
-}
-
 struct CKStateScopeKey {
   Class __unsafe_unretained componentClass;
   id identifier;
@@ -42,7 +32,7 @@ struct CKStateScopeKey {
   bool operator==(const CKStateScopeKey &v) const {
     return (CKObjectIsEqual(this->componentClass, v.componentClass)
             && CKObjectIsEqual(this->identifier, v.identifier)
-            && keyVectorsEqual(this->keys, v.keys)
+            && CKKeyVectorsEqual(this->keys, v.keys)
             && this->stateKeyCounter == v.stateKeyCounter);
   }
 };

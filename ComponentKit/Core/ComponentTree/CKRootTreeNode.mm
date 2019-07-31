@@ -10,10 +10,9 @@
 
 #import "CKRootTreeNode.h"
 
+#import "CKRenderHelpers.h"
 #import "CKTreeNodeWithChildren.h"
 #import "CKScopeTreeNode.h"
-#import "CKRenderHelpers.h"
-
 
 CKRootTreeNode::CKRootTreeNode(): _node([CKScopeTreeNode new]) {};
 
@@ -37,7 +36,7 @@ bool CKRootTreeNode::isEmpty() {
   return _node.childrenSize == 0;
 }
 
-id<CKTreeNodeWithChildrenProtocol, CKComponentScopeFrameProtocol> CKRootTreeNode::node() {
+id<CKScopeTreeNodeProtocol> CKRootTreeNode::node() {
   return _node;
 }
 

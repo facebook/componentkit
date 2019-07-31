@@ -20,7 +20,6 @@
 @protocol CKComponentProtocol;
 @protocol CKTreeNodeComponentProtocol;
 @protocol CKTreeNodeProtocol;
-
 @protocol CKComponentScopeFrameProtocol;
 
 struct CKComponentScopeFramePair {

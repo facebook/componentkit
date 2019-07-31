@@ -251,3 +251,15 @@ inline BOOL CKCompareObjectEquality(id object, id comparisonObject, CKEqualityCo
   }
   return comparisonBlock(object, comparisonObject);
 }
+
+/** Correctly equates two vectors of keys (scope state key) */
+inline bool CKKeyVectorsEqual(const std::vector<id<NSObject>> &a, const std::vector<id<NSObject>> &b)
+{
+  if (a.size() != b.size()) {
+    return false;
+  }
+  return std::equal(a.begin(), a.end(), b.begin(), [](id<NSObject> x, id<NSObject> y){
+    return CKObjectIsEqual(x, y); // be pedantic and use a lambda here becuase BOOL != bool
+  });
+}
+

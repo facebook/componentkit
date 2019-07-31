@@ -23,6 +23,7 @@
 #import "CKTreeNodeWithChildren.h"
 #import "CKGlobalConfig.h"
 #import "CKComponentCreationValidation.h"
+#import "CKScopeTreeNodeProtocol.h"
 
 namespace CKBuildComponentHelpers {
   auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> BuildTrigger

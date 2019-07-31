@@ -26,6 +26,7 @@
 #import "CKTreeNodeWithChildren.h"
 #import "CKComponentScopeRootFactory.h"
 #import "CKThreadLocalComponentScope.h"
+#import "CKScopeTreeNode.h"
 
 /** An helper class that inherits from 'CKRenderComponent'; render the component from the initializer */
 @interface CKComponentTreeTestComponent_Render : CKRenderComponent
