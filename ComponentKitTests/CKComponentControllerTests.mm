@@ -434,7 +434,7 @@ using namespace CKComponentControllerHelper;
   const auto controller = [[CKLifecycleTestComponentController alloc] initWithComponent:component1];
   XCTAssertEqual(controller.calledWillUpdateComponent, 0);
   XCTAssertEqual(controller.calledDidUpdateComponent, 0);
-  controller.component = component2;
+  controller.latestComponent = component2;
   XCTAssertEqual(controller.calledWillUpdateComponent, 1);
   XCTAssertEqual(controller.calledDidUpdateComponent, 0);
   [controller componentWillMount:component2];

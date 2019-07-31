@@ -47,6 +47,7 @@ static NSString *componentStateName(CKComponentControllerState state)
 {
   CKComponentControllerState _state;
   BOOL _updatingComponent;
+  __weak CKComponent *_component;
 }
 
 - (instancetype)initWithComponent:(CKComponent *)component
@@ -57,13 +58,18 @@ static NSString *componentStateName(CKComponentControllerState state)
   return self;
 }
 
-- (void)setComponent:(CKComponent *)component
+- (void)setLatestComponent:(CKComponent *)latestComponent
 {
-  if (component != _component) {
+  if (latestComponent != _latestComponent) {
     [self willUpdateComponent];
-    _component = component;
+    _latestComponent = latestComponent;
     _updatingComponent = YES;
   }
+}
+
+- (CKComponent *)component
+{
+  return _latestComponent ?: _component;
 }
 
 - (void)willMount {}
@@ -85,10 +91,16 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 - (void)willStartUpdateToComponent:(CKComponent *)component
 {
-  if (component != _component) {
-    [self willUpdateComponent];
+  // We need to check `_updatingComponent` so that `willUpdateComponent` will be triggered if `_latestComponent`
+  // is not updated after component build.
+  if (!_updatingComponent) {
+    if (component != _component) {
+      [self willUpdateComponent];
+      _component = component;
+      _updatingComponent = YES;
+    }
+  } else {
     _component = component;
-    _updatingComponent = YES;
   }
 }
 

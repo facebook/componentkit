@@ -75,7 +75,7 @@ void CKComponentUpdateComponentForComponentControllerWithIndexPaths(id<NSFastEnu
   for (NSIndexPath *indexPath in indexPaths) {
     CKDataSourceItem *item = [state objectAtIndexPath:indexPath];
     item.rootLayout.enumerateComponentControllers(^(CKComponentController *controller, CKComponent *component) {
-      controller.component = component;
+      controller.latestComponent = component;
     });
   }
 }

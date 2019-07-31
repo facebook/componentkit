@@ -14,7 +14,12 @@
 
 @interface CKComponentController ()
 
-@property (nonatomic, weak) CKComponent *component;
+/**
+ The latest generation of component. This makes sure `self.component` is always
+ referring to the latest generation of component when components are managed by
+ `CKDataSource`.
+ */
+@property (nonatomic, weak) CKComponent *latestComponent;
 
 - (void)componentWillMount:(CKComponent *)component;
 - (void)componentDidMount:(CKComponent *)component;
