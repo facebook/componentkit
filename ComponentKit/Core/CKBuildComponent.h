@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
+#import <ComponentKit/CKGlobalConfig.h>
 
 @class CKComponentScopeRoot;
 @class CKComponent;
@@ -55,11 +56,13 @@ struct CKBuildComponentResult {
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
  @param ignoreComponentReuseOptimizations When enabled, all the comopnents will be regenerated (no component reuse optimiztions).
+ @param unifyComponentTreeConfig Tree unification config.
  */
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        BOOL ignoreComponentReuseOptimizations = NO);
+                                        BOOL ignoreComponentReuseOptimizations = NO,
+                                        CKUnifyComponentTreeConfig unifyComponentTreeConfig = {});
 
 #if DEBUG
 void CKDidBuildComponentTree(const CKBuildComponentTreeParams &params, id<CKComponentProtocol> component);

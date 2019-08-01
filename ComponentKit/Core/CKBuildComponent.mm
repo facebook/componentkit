@@ -21,7 +21,6 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKTreeNodeProtocol.h"
 #import "CKTreeNodeWithChildren.h"
-#import "CKGlobalConfig.h"
 #import "CKComponentCreationValidation.h"
 #import "CKScopeTreeNodeProtocol.h"
 
@@ -77,7 +76,8 @@ namespace CKBuildComponentHelpers {
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        BOOL ignoreComponentReuseOptimizations)
+                                        BOOL ignoreComponentReuseOptimizations,
+                                        CKUnifyComponentTreeConfig unifyComponentTreeConfig)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const globalConfig = CKReadGlobalConfig();
@@ -85,7 +85,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
   CKThreadLocalComponentScope threadScope(previousRoot,
                                           stateUpdates,
-                                          globalConfig.unifyComponentTreeConfig,
+                                          unifyComponentTreeConfig,
                                           buildTrigger);
 
   auto const analyticsListener = [previousRoot analyticsListener];
@@ -108,7 +108,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
       .ignoreComponentReuseOptimizations = ignoreComponentReuseOptimizations,
       .systraceListener = threadScope.systraceListener,
       .enableLayoutCache = globalConfig.enableLayoutCacheInRender,
-      .unifyComponentTreeConfig = threadScope.unifyComponentTreeConfig,
+      .unifyComponentTreeConfig = unifyComponentTreeConfig,
     };
 
     // Build the component tree from the render function.
