@@ -552,6 +552,115 @@
   XCTAssertEqual(c1.childComponent.computeCalledCounter, 2);
 }
 
+- (void)test_scopeFramePreserveStateDuringComponentReuse
+{
+  // CKComponentScopeFrame
+  [self __test_scopeFramePreserveStateDuringComponentReuse:{
+    .enable = NO,
+    .useRenderNodes = NO,
+    .useSingleChildScopeNodeForCompositeComponent = NO,
+  }];
+}
+
+- (void)test_scopeTreeNodePreserveStateDuringComponentReuse
+{
+  // CKComponentScopeTreeNode
+  [self __test_scopeFramePreserveStateDuringComponentReuse:{
+    .enable = YES,
+    .useRenderNodes = NO,
+    .useSingleChildScopeNodeForCompositeComponent = NO,
+  }];
+}
+
+- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithRenderNode
+{
+  // CKComponentScopeTreeNode & CKRenderTreeNode
+  [self __test_scopeFramePreserveStateDuringComponentReuse:{
+    .enable = YES,
+    .useRenderNodes = YES,
+    .useSingleChildScopeNodeForCompositeComponent = NO,
+  }];
+}
+
+- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithScopeTreeNodeWithChild
+{
+  // CKComponentScopeTreeNode & CKComponentScopeTreeNodeWithChild
+  [self __test_scopeFramePreserveStateDuringComponentReuse:{
+    .enable = YES,
+    .useRenderNodes = NO,
+    .useSingleChildScopeNodeForCompositeComponent = YES,
+  }];
+}
+
+- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithRenderNodeAndScopeTreeNodeWithChild
+{
+  // CKComponentScopeTreeNode & CKRenderTreeNode & CKComponentScopeTreeNodeWithChild
+  [self __test_scopeFramePreserveStateDuringComponentReuse:{
+    .enable = YES,
+    .useRenderNodes = YES,
+    .useSingleChildScopeNodeForCompositeComponent = YES,
+  }];
+}
+
+- (void)__test_scopeFramePreserveStateDuringComponentReuse:(CKUnifyComponentTreeConfig)config
+{
+  // Build new tree with siblings `CKTestRenderWithNonRenderWithStateChildComponent` components.
+  // Each `CKTestRenderWithNonRenderWithStateChildComponent` has non-render component with state.
+  __block CKTestRenderWithNonRenderWithStateChildComponent *c1;
+  __block CKTestRenderWithNonRenderWithStateChildComponent *c2;
+  auto const componentFactory = ^{
+    c1 = [CKTestRenderWithNonRenderWithStateChildComponent new];
+    c2 = [CKTestRenderWithNonRenderWithStateChildComponent new];
+    return [CKTestRenderWithChildrenComponent newWithChildren:{c1, c2}];
+  };
+
+  // Build first component generation:
+  auto const scopeRoot = CKComponentScopeRootWithPredicates(nil, nil, {}, {});
+  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory, NO, config);
+
+  // Simulate state update on c1.childComponent
+  NSNumber *newState1 = @10;
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[c1.childComponent.scopeHandle].push_back(^(id){ return newState1; });
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, NO, config);
+  // Verify `c2.childComponent` gets the correct new state
+  XCTAssertEqual(newState1, c1.childComponent.scopeHandle.state);
+  // Verify c2 was reused
+  XCTAssertTrue(c2.didReuseComponent);
+  // Verify c1 wasn't reused
+  XCTAssertFalse(c1.didReuseComponent);
+
+  // Simulate state update on c2.childComponent
+  NSNumber *newState2 = @20;
+  CKComponentStateUpdateMap stateUpdates2;
+  stateUpdates2[c2.childComponent.scopeHandle].push_back(^(id){ return newState2;});
+
+  auto const buildResults3 = CKBuildComponent(buildResults2.scopeRoot, stateUpdates2, componentFactory, NO, config);
+  // Verify `c2.childComponent` gets the correct new state
+  XCTAssertEqual(newState2, c2.childComponent.scopeHandle.state);
+  // Verify c1 was reused
+  XCTAssertTrue(c1.didReuseComponent);
+  // Verify c2 wasn't reused
+  XCTAssertFalse(c2.didReuseComponent);
+  // Verify `c1.childComponent` preserves its state during component reuse
+  XCTAssertEqual(newState1, c1.childComponent.scopeHandle.state);
+
+  // Simulate state update on c1.childComponent
+  NSNumber *newState3 = @30;
+  CKComponentStateUpdateMap stateUpdates3;
+  stateUpdates3[c1.childComponent.scopeHandle].push_back(^(id){ return newState3;});
+
+  auto const buildResults4 = CKBuildComponent(buildResults3.scopeRoot, stateUpdates3, componentFactory, NO, config);
+  // Verify `c1.childComponent` gets the correct new state
+  XCTAssertEqual(newState3, c1.childComponent.scopeHandle.state);
+  // Verify c2 was reused
+  XCTAssertTrue(c2.didReuseComponent);
+  // Verify c1 wasn't reused
+  XCTAssertFalse(c1.didReuseComponent);
+  // Verify `c2.childComponent` preserves its state during component reuse
+  XCTAssertEqual(newState2, c2.childComponent.scopeHandle.state);
+}
+
 #pragma mark - Helpers
 
 // Filters `CKTestChildRenderComponent` components.

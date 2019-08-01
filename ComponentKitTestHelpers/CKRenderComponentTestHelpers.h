@@ -45,6 +45,12 @@ struct CKTestRenderComponentProps {
 @interface CKCompositeComponentWithScopeAndState : CKCompositeComponent
 @end
 
+// Render component with CKCompositeComponentWithScopeAndState child
+@interface CKTestRenderWithNonRenderWithStateChildComponent : CKRenderComponent
+@property (nonatomic, assign) BOOL didReuseComponent;
+@property (nonatomic, strong) CKCompositeComponentWithScopeAndState *childComponent;
+@end
+
 // An helper class that inherits from 'CKRenderWithChildrenComponent'; render the component froms the initializer
 @interface CKTestRenderWithChildrenComponent : CKRenderWithChildrenComponent
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;

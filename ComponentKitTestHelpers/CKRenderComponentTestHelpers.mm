@@ -124,6 +124,21 @@
 }
 @end
 
+@implementation CKTestRenderWithNonRenderWithStateChildComponent
+- (CKComponent *)render:(id)state
+{
+  _childComponent = [CKCompositeComponentWithScopeAndState
+                     newWithComponent:[CKComponent new]];
+  return _childComponent;
+}
+
+- (void)didReuseComponent:(CKTestRenderWithNonRenderWithStateChildComponent *)component
+{
+  _didReuseComponent = YES;
+  _childComponent = component->_childComponent;
+}
+@end
+
 @implementation CKTestRenderWithChildrenComponent
 {
   std::vector<CKComponent *> _children;
