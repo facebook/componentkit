@@ -8,17 +8,14 @@
  *
  */
 
-#import <ComponentKit/CKTreeNode.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
+#import "CKScopeTreeNode.h"
 
 /**
- This object represents a node with a single child in the component tree.
+ This object is a bridge between CKComponentScope and CKTreeNode.
 
- Each component with a single child will have CKTreeNodeWithChild.
+ It represents a node for single child node in the component tree.
  */
-
-@interface CKTreeNodeWithChild : CKTreeNode <CKTreeNodeWithChildProtocol>
-
+@interface CKScopeTreeNodeWithChild : CKScopeTreeNode <CKTreeNodeWithChildProtocol>
 @property (nonatomic, strong) id<CKTreeNodeProtocol> child;
-
 @end
+

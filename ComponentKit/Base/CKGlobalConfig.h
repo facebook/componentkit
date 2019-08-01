@@ -15,6 +15,8 @@
 struct CKUnifyComponentTreeConfig {
   /** If enabled, CKComponentScope and CKTreeNode will use the same nodes. */
   BOOL enable = NO;
+  /** If enabled, CKScopeTreeNodeWithChild will be in use instead of CKScopeTreeNode for composite component */
+  BOOL useSingleChildScopeNodeForCompositeComponent = NO;
 };
 
 struct CKGlobalConfig {
