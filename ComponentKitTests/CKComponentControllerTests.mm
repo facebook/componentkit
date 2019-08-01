@@ -123,7 +123,7 @@ using namespace CKComponentControllerHelper;
   [componentLifecycleTestController attachToView:view];
 
   CKLifecycleTestComponent *fooComponent = (CKLifecycleTestComponent *)state.componentLayout.component;
-  XCTAssertTrue(fooComponent.controller.calledDidAcquireView, @"Expected mounting to acquire view");
+  XCTAssertTrue(fooComponent.controller.counts.didAcquireView > 0, @"Expected mounting to acquire view");
   XCTAssertNotNil(fooComponent.controller.view, @"Expected mounting to acquire view");
 }
 
@@ -140,10 +140,10 @@ using namespace CKComponentControllerHelper;
   [componentLifecycleTestController attachToView:view];
 
   CKLifecycleTestComponent *fooComponent = (CKLifecycleTestComponent *)state.componentLayout.component;
-  XCTAssertFalse(fooComponent.controller.calledWillRelinquishView, @"Did not expect view to be released before detach");
+  XCTAssertFalse(fooComponent.controller.counts.willRelinquishView > 0, @"Did not expect view to be released before detach");
 
   [componentLifecycleTestController detachFromView];
-  XCTAssertTrue(fooComponent.controller.calledWillRelinquishView, @"Expected detach to call release view");
+  XCTAssertTrue(fooComponent.controller.counts.willRelinquishView > 0, @"Expected detach to call release view");
   XCTAssertNil(fooComponent.controller.view, @"Expected detach to release view");
 }
 
@@ -160,17 +160,121 @@ using namespace CKComponentControllerHelper;
   [componentLifecycleTestController attachToView:view];
 
   CKLifecycleTestComponent *fooComponent = (CKLifecycleTestComponent *)state.componentLayout.component;
-  XCTAssertTrue(fooComponent.controller.calledDidAcquireView, @"Expected mounting to acquire view");
+  XCTAssertTrue(fooComponent.controller.counts.didAcquireView > 0, @"Expected mounting to acquire view");
   XCTAssertNotNil(fooComponent.controller.view, @"Expected mounting to acquire view");
   UIView *originalView = fooComponent.controller.view;
 
-  fooComponent.controller.calledDidAcquireView = NO; // reset
+  fooComponent.controller.counts = {}; // reset
 
   [fooComponent updateStateToIncludeNewAttribute];
-  XCTAssertTrue(fooComponent.controller.calledWillRelinquishView, @"Expected state update to relinquish old view");
-  XCTAssertTrue(fooComponent.controller.calledDidAcquireView, @"Expected state update to relinquish old view");
+  XCTAssertTrue(fooComponent.controller.counts.willRelinquishView > 0, @"Expected state update to relinquish old view");
+  XCTAssertTrue(fooComponent.controller.counts.didAcquireView > 0, @"Expected state update to relinquish old view");
   XCTAssertTrue(originalView != fooComponent.controller.view, @"Expected different view");
 }
+
+- (void)testThatAttachingWithDifferentViewRelinquishesOldViewAndAcquiresNewOne
+{
+  const auto componentLifecycleTestController =
+  [[CKComponentLifecycleTestHelper alloc]
+   initWithComponentProvider:[self class]
+   sizeRangeProvider:nil];
+  const auto state =
+  [componentLifecycleTestController
+   prepareForUpdateWithModel:nil
+   constrainedSize:{{0,0}, {100, 100}}
+   context:nil];
+  [componentLifecycleTestController updateWithState:state];
+
+  const auto view1 = [UIView new];
+  [componentLifecycleTestController attachToView:view1];
+
+  const auto fooComponent = (CKLifecycleTestComponent *)state.componentLayout.component;
+
+  // Attaching first view should only trigger `didAcquireView` because there is no previous view
+  // to be relinquished.
+  XCTAssertEqual(fooComponent.controller.counts.willRelinquishView, 0);
+  XCTAssertEqual(fooComponent.controller.counts.didAcquireView, 1);
+
+  const auto view2 = [UIView new];
+  [componentLifecycleTestController attachToView:view2];
+
+  // Attaching second view should trigger both `willRelinquishView` and `didAcquireView` because
+  // we need to relinquish the previous view it acquired.
+  XCTAssertEqual(fooComponent.controller.counts.willRelinquishView, 1);
+  XCTAssertEqual(fooComponent.controller.counts.didAcquireView, 2);
+}
+
+- (void)testThatAttachingWithDifferentViewAfterUpdatingStateRelinquishesOldViewAndAcquiresNewOne
+{
+  const auto componentLifecycleTestController =
+  [[CKComponentLifecycleTestHelper alloc]
+   initWithComponentProvider:[self class]
+   sizeRangeProvider:nil];
+  const auto state =
+  [componentLifecycleTestController
+   prepareForUpdateWithModel:nil
+   constrainedSize:{{0,0}, {100, 100}}
+   context:nil];
+  [componentLifecycleTestController updateWithState:state];
+
+  const auto view1 = [UIView new];
+  [componentLifecycleTestController attachToView:view1];
+
+  const auto fooComponent = (CKLifecycleTestComponent *)state.componentLayout.component;
+
+  // Attaching first view should only trigger `didAcquireView` because there is no previous view
+  // to be relinquished.
+  XCTAssertEqual(fooComponent.controller.counts.willRelinquishView, 0);
+  XCTAssertEqual(fooComponent.controller.counts.didAcquireView, 1);
+
+  [fooComponent updateState:^id(id currentState) {
+    return @NO;
+  } mode:CKUpdateModeSynchronous];
+
+  const auto view2 = [UIView new];
+  [componentLifecycleTestController attachToView:view2];
+
+  // Attaching second view should trigger both `willRelinquishView` and `didAcquireView` because
+  // we need to relinquish the previous view it acquired.
+  XCTAssertEqual(fooComponent.controller.counts.willRelinquishView, 1);
+  XCTAssertEqual(fooComponent.controller.counts.didAcquireView, 2);
+}
+
+- (void)testThatAttachingWithSameViewAfterUpdatingStateDoesNotRelinquishesOldView
+{
+  const auto componentLifecycleTestController =
+  [[CKComponentLifecycleTestHelper alloc]
+   initWithComponentProvider:[self class]
+   sizeRangeProvider:nil];
+  const auto state =
+  [componentLifecycleTestController
+   prepareForUpdateWithModel:nil
+   constrainedSize:{{0,0}, {100, 100}}
+   context:nil];
+  [componentLifecycleTestController updateWithState:state];
+
+  const auto view = [UIView new];
+  [componentLifecycleTestController attachToView:view];
+
+  const auto fooComponent = (CKLifecycleTestComponent *)state.componentLayout.component;
+
+  // Attaching first view should only trigger `didAcquireView` because there is no previous view
+  // to be relinquished.
+  XCTAssertEqual(fooComponent.controller.counts.willRelinquishView, 0);
+  XCTAssertEqual(fooComponent.controller.counts.didAcquireView, 1);
+
+  [fooComponent updateState:^id(id currentState) {
+    return @NO;
+  } mode:CKUpdateModeSynchronous];
+
+  [componentLifecycleTestController attachToView:view];
+
+  // Attaching the same view should not trigger `willRelinquishView` or `didAcquireView` after
+  // state of component is updated.
+  XCTAssertEqual(fooComponent.controller.counts.willRelinquishView, 0);
+  XCTAssertEqual(fooComponent.controller.counts.didAcquireView, 1);
+}
+
 
 - (void)testThatResponderChainIsInOrderComponentThenControllerThenRootView
 {

@@ -43,7 +43,7 @@
   [componentLifecycleTestController attachToView:view];
   CKLifecycleTestComponentController *controller = (CKLifecycleTestComponentController *)state.componentLayout.component.controller;
   const CKLifecycleMethodCounts actual = controller.counts;
-  const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1};
+  const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .didAcquireView = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
 }
 
@@ -63,7 +63,7 @@
 
   CKLifecycleTestComponentController *controller = (CKLifecycleTestComponentController *)state.componentLayout.component.controller;
   const CKLifecycleMethodCounts actual = controller.counts;
-  const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1};
+  const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1, .willRelinquishView = 1, .didAcquireView = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
 }
 
@@ -84,7 +84,7 @@
 
   CKLifecycleTestComponentController *controller = (CKLifecycleTestComponentController *)component.controller;
   const CKLifecycleMethodCounts actual = controller.counts;
-  const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willRemount = 1, .didRemount = 1};
+  const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willRemount = 1, .didRemount = 1, .willRelinquishView = 1, .didAcquireView = 2};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
 }
 
@@ -106,7 +106,7 @@
   CKLifecycleTestComponentController *controller = (CKLifecycleTestComponentController *)component.controller;
   {
     const CKLifecycleMethodCounts actual = controller.counts;
-    const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1};
+    const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1, .willRelinquishView = 1, .didAcquireView = 1};
     XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
   }
 
@@ -121,7 +121,7 @@
   [componentLifecycleTestController attachToView:view];
   {
     const CKLifecycleMethodCounts actual = controller.counts;
-    const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1};
+    const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .didAcquireView = 1};
     XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
   }
 }

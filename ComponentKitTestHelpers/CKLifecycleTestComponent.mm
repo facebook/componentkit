@@ -123,13 +123,13 @@ static BOOL _shouldEarlyReturnNew = NO;
 - (void)componentDidAcquireView
 {
   [super componentDidAcquireView];
-  _calledDidAcquireView = YES;
+  _counts.didAcquireView++;
 }
 
 - (void)componentWillRelinquishView
 {
   [super componentWillRelinquishView];
-  _calledWillRelinquishView = YES;
+  _counts.willRelinquishView++;
 }
 
 - (void)componentTreeWillAppear

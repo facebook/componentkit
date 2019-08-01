@@ -19,25 +19,27 @@ struct CKLifecycleMethodCounts {
   NSUInteger didRemount;
   NSUInteger willUnmount;
   NSUInteger didUnmount;
+  NSUInteger willRelinquishView;
+  NSUInteger didAcquireView;
   
   NSString *description() const
   {
-    return [NSString stringWithFormat:@"willMount:%lu didMount:%lu willRemount:%lu didRemount:%lu willUnmount:%lu didUnmount:%lu",
+    return [NSString stringWithFormat:@"willMount:%lu didMount:%lu willRemount:%lu didRemount:%lu willUnmount:%lu didUnmount:%lu willRelinquishView:%lu didAcquireView:%lu",
             (unsigned long)willMount, (unsigned long)didMount, (unsigned long)willRemount,
-            (unsigned long)didRemount, (unsigned long)willUnmount, (unsigned long)didUnmount];
+            (unsigned long)didRemount, (unsigned long)willUnmount, (unsigned long)didUnmount,
+            (unsigned long)willRelinquishView, (unsigned long)didAcquireView];
   }
   
   bool operator==(const CKLifecycleMethodCounts &other) const
   {
     return willMount == other.willMount && didMount == other.didMount
     && willRemount == other.willRemount && didRemount == other.didRemount
-    && willUnmount == other.willUnmount && didUnmount == other.didUnmount;
+    && willUnmount == other.willUnmount && didUnmount == other.didUnmount
+    && willRelinquishView == other.willRelinquishView && didAcquireView == other.didAcquireView;
   }
 };
 
 @interface CKLifecycleTestComponentController : CKComponentController
-@property (nonatomic, assign) BOOL calledDidAcquireView;
-@property (nonatomic, assign) BOOL calledWillRelinquishView;
 @property (nonatomic, assign) BOOL calledComponentTreeWillAppear;
 @property (nonatomic, assign) BOOL calledComponentTreeDidDisappear;
 @property (nonatomic, assign) BOOL calledWillUpdateComponent;
