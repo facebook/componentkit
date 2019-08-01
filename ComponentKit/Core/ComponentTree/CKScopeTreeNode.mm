@@ -20,7 +20,6 @@ static NSUInteger const kOwnerBaseKey = 1;
 
 @implementation CKScopeTreeNode
 {
-  std::unordered_map<CKScopeNodeKey, id<CKTreeNodeProtocol>> _children;
   CKTreeNodeKeyToCounter _keyToCounterMap;
 }
 

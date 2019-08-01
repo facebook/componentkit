@@ -8,21 +8,13 @@
  *
  */
 
-#import <ComponentKit/CKScopeTreeNodeProtocol.h>
-
-#import "CKTreeNode.h"
-
-@protocol CKTreeNodeProtocol;
+#import "CKScopeTreeNodeWithChild.h"
 
 /**
  This object is a bridge between CKComponentScope and CKTreeNode.
 
- It represents a node with children in the component tree.
+ It represents a node for CKRenderComponent component in the component tree.
  */
-@interface CKScopeTreeNode : CKTreeNode <CKScopeTreeNodeProtocol>
-{
-  @package
-  std::unordered_map<CKScopeNodeKey, id<CKTreeNodeProtocol>> _children;
-}
+@interface CKRenderTreeNode : CKScopeTreeNodeWithChild
+- (void)didReuseNode:(CKRenderTreeNode *)node;
 @end
-

@@ -27,6 +27,7 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKBuildComponent.h"
 #import "CKScopeTreeNodeWithChild.h"
+#import "CKRenderTreeNode.h"
 
 static BOOL verifyChildToParentConnection(id<CKTreeNodeWithChildrenProtocol> parentNode, CKTreeNode *childNode, CKComponent *c) {
   auto const componentKey = [childNode componentKey];
@@ -583,6 +584,18 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 - (id<CKTreeNodeWithChildProtocol>)newTreeNodeWithChild
 {
   return [CKScopeTreeNodeWithChild new];
+}
+
+@end
+
+@interface CKRenderTreeNodeTests : CKTreeNodeWithChildTests
+@end
+
+@implementation CKRenderTreeNodeTests
+
+- (id<CKTreeNodeWithChildProtocol>)newTreeNodeWithChild
+{
+  return [CKRenderTreeNode new];
 }
 
 @end

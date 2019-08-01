@@ -21,13 +21,57 @@
 #import <ComponentKit/CKTreeNodeWithChildren.h>
 
 #import "CKScopeTreeNode.h"
+#import "CKRenderTreeNode.h"
 
 namespace CKRenderInternal {
+
+  namespace ScopeEvents {
+
+    static auto willBuildComponentTree(id<CKTreeNodeProtocol> node, const CKBuildComponentTreeParams &params) {
+      // Update the scope frame of the reuse of this component in order to transfer the render scope frame.
+      if (params.unifyComponentTreeConfig.enable) {
+        // if `useRenderNodes` equals to 'YES', the base constructor of the `CKRenderTreeNode` will push itself to the stack.
+        if (!params.unifyComponentTreeConfig.useRenderNodes) {
+          [CKScopeTreeNode willBuildComponentTreeWithTreeNode:node];
+        }
+      } else {
+        [CKComponentScopeFrame willBuildComponentTreeWithTreeNode:node];
+      }
+    }
+
+    static auto didBuildComponentTree(id<CKTreeNodeProtocol> node, const CKBuildComponentTreeParams &params) {
+      if (params.unifyComponentTreeConfig.enable) {
+        if (params.unifyComponentTreeConfig.useRenderNodes) {
+          [CKRenderTreeNode didBuildComponentTreeWithNode:node];
+        } else {
+          [CKScopeTreeNode didBuildComponentTreeWithNode:node];
+        }
+      } else {
+        [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
+      }
+    }
+
+    static auto didReuseNode(id<CKTreeNodeWithChildProtocol> node,
+                             id<CKTreeNodeWithChildProtocol> previousNode,
+                             const CKBuildComponentTreeParams &params) {
+      // Update the scope frame of the reuse of this component in order to transfer the render scope frame.
+      if (params.unifyComponentTreeConfig.enable) {
+        if (params.unifyComponentTreeConfig.useRenderNodes) {
+          [(CKRenderTreeNode *)node didReuseNode:(CKRenderTreeNode *)previousNode];
+        } else {
+          [CKScopeTreeNode didReuseRenderWithTreeNode:node];
+        }
+      } else {
+        [CKComponentScopeFrame didReuseRenderWithTreeNode:node];
+      }
+    }
+  }
+
   // Reuse the previous component generation and its component tree and notify the previous component about it.
   static auto reusePreviousComponent(id<CKRenderComponentProtocol> component,
                                      __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                                     CKTreeNodeWithChild *node,
-                                     CKTreeNodeWithChild *previousNode,
+                                     id<CKTreeNodeWithChildProtocol> node,
+                                     id<CKTreeNodeWithChildProtocol> previousNode,
                                      const CKBuildComponentTreeParams &params,
                                      CKRenderDidReuseComponentBlock didReuseBlock) -> void {
     auto const reusedChild = previousNode.child;
@@ -38,14 +82,10 @@ namespace CKRenderInternal {
     // Update the new parent in the new scope root
     params.scopeRoot.rootNode.registerNode(reusedChild, node);
 
-    // Update the scope frame of the reuse of this component in order to transfer the render scope frame.
-    if (params.unifyComponentTreeConfig.enable) {
-      [CKScopeTreeNode didReuseRenderWithTreeNode:node];
-    } else {
-      [CKComponentScopeFrame didReuseRenderWithTreeNode:node];
-    }
+    // Update the scope frame of the reuse of this node.
+    ScopeEvents::didReuseNode(node, previousNode, params);
 
-    auto const prevChildComponent = [(CKTreeNodeWithChild *)previousNode child].component;
+    auto const prevChildComponent = [(id<CKTreeNodeWithChildProtocol>)previousNode child].component;
 
     if (childComponent != nullptr) {
       // Link the previous child component to the the new component.
@@ -316,12 +356,21 @@ namespace CKRender {
     }
 
     if (node == nil) {
-      node = [[CKTreeNodeWithChild alloc]
-              initWithRenderComponent:component
-              parent:parent
-              previousParent:previousParent
-              scopeRoot:params.scopeRoot
-              stateUpdates:params.stateUpdates];
+      if (!isBridgeComponent && params.unifyComponentTreeConfig.useRenderNodes) {
+        node = [[CKRenderTreeNode alloc]
+                initWithRenderComponent:component
+                parent:parent
+                previousParent:previousParent
+                scopeRoot:params.scopeRoot
+                stateUpdates:params.stateUpdates];
+      } else {
+        node = [[CKTreeNodeWithChild alloc]
+                initWithRenderComponent:component
+                parent:parent
+                previousParent:previousParent
+                scopeRoot:params.scopeRoot
+                stateUpdates:params.stateUpdates];
+      }
     }
 
     if (!isBridgeComponent) {
@@ -329,7 +378,7 @@ namespace CKRender {
     }
 
     // Faster state/props optimizations require previous parent.
-    if (!isBridgeComponent && CKRenderInternal::reusePreviousComponentForSingleChild((CKTreeNodeWithChild *)node, component, childComponent, parent, previousParent, params, parentHasStateUpdate, didReuseBlock)) {
+    if (!isBridgeComponent && CKRenderInternal::reusePreviousComponentForSingleChild((id<CKTreeNodeWithChildProtocol>)node, component, childComponent, parent, previousParent, params, parentHasStateUpdate, didReuseBlock)) {
       CKRenderInternal::didBuildComponentTreeWithChild(node, component, params);
       return node;
     }
@@ -340,12 +389,7 @@ namespace CKRender {
     }
 
     if (!isBridgeComponent) {
-      // Update the scope frame of the reuse of this component in order to transfer the render scope frame.
-      if (params.unifyComponentTreeConfig.enable) {
-        [CKScopeTreeNode willBuildComponentTreeWithTreeNode:node];
-      } else {
-        [CKComponentScopeFrame willBuildComponentTreeWithTreeNode:node];
-      }
+      CKRenderInternal::ScopeEvents::willBuildComponentTree(node, params);
     }
 
     auto const child = [component render:node.state];
@@ -362,11 +406,7 @@ namespace CKRender {
     }
 
     if (!isBridgeComponent) {
-      if (params.unifyComponentTreeConfig.enable) {
-        [CKScopeTreeNode didBuildComponentTreeWithNode:node];
-      } else {
-        [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
-      }
+      CKRenderInternal::ScopeEvents::didBuildComponentTree(node, params);
       CKRenderInternal::didBuildComponentTreeWithChild(node, component, params);
     }
 
