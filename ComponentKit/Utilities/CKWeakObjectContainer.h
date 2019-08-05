@@ -8,14 +8,12 @@
  *
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#import <Foundation/Foundation.h>
+
+__BEGIN_DECLS
 
 extern void ck_objc_setNonatomicAssociatedWeakObject(id container, void *key, id value);
 extern void ck_objc_setAssociatedWeakObject(id container, void *key, id value);
 extern id ck_objc_getAssociatedWeakObject(id container, void *key);
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS

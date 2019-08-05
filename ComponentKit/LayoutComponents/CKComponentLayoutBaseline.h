@@ -15,10 +15,8 @@
  e.g. @{kCKComponentLayoutExtraBaselineKey : 20}
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
+
 extern NSString *const kCKComponentLayoutExtraBaselineKey;
-#ifdef __cplusplus
-}
-#endif
+
+__END_DECLS
