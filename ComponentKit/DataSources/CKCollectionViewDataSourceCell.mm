@@ -11,18 +11,26 @@
 #import "CKCollectionViewDataSourceCell.h"
 
 #import "CKComponentRootView.h"
+#import "CKDelayedNonNull.h"
 
-@implementation CKCollectionViewDataSourceCell
+@implementation CKCollectionViewDataSourceCell {
+  CK::DelayedNonNull<CKComponentRootView *> _rootView;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
   if (self = [super initWithFrame:frame]) {
     // Ideally we could simply cause the cell's existing contentView to be of type CKComponentRootView.
     // Alas the only way to do this is via private API (_contentViewClass) so we are forced to add a subview.
-    _rootView = [[CKComponentRootView alloc] initWithFrame:CGRectZero];
+    _rootView = CK::makeNonNull([[CKComponentRootView alloc] initWithFrame:CGRectZero]);
     [[self contentView] addSubview:_rootView];
   }
   return self;
+}
+
+- (CK::NonNull<CKComponentRootView *>)rootView
+{
+  return _rootView;
 }
 
 - (void)layoutSubviews

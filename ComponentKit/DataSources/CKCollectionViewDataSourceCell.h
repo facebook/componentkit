@@ -10,8 +10,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import <ComponentKit/CKNonNull.h>
+
 @class CKComponentRootView;
 
 @interface CKCollectionViewDataSourceCell : UICollectionViewCell
-@property (nonatomic, strong, readonly) CKComponentRootView *rootView;
+@property (nonatomic, assign, readonly) CK::NonNull<CKComponentRootView *> rootView;
 @end

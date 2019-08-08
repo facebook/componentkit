@@ -37,7 +37,7 @@
 		03B8B4841D2A346F00EDFF59 /* CKComponentScopeHandle.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B071CBD926700BB33CE /* CKComponentScopeHandle.mm */; };
 		03B8B4851D2A346F00EDFF59 /* CKComponentScopeRoot.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B091CBD926700BB33CE /* CKComponentScopeRoot.mm */; };
 		03B8B4861D2A346F00EDFF59 /* CKThreadLocalComponentScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B0D1CBD926700BB33CE /* CKThreadLocalComponentScope.mm */; };
-		03B8B4881D2A346F00EDFF59 /* CKCollectionViewDataSourceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.m */; };
+		03B8B4881D2A346F00EDFF59 /* CKCollectionViewDataSourceCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.mm */; };
 		03B8B4891D2A346F00EDFF59 /* CKCollectionViewDataSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B141CBD926700BB33CE /* CKCollectionViewDataSource.mm */; };
 		03B8B48A1D2A346F00EDFF59 /* CKComponentBoundsAnimation+UICollectionView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B161CBD926700BB33CE /* CKComponentBoundsAnimation+UICollectionView.mm */; };
 		03B8B48B1D2A346F00EDFF59 /* CKComponentAnnouncerBase.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B1A1CBD926700BB33CE /* CKComponentAnnouncerBase.mm */; };
@@ -661,7 +661,7 @@
 		D0B47C9C1CBD943400BB33CE /* CKComponentScopeHandle.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B071CBD926700BB33CE /* CKComponentScopeHandle.mm */; };
 		D0B47C9D1CBD943400BB33CE /* CKComponentScopeRoot.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B091CBD926700BB33CE /* CKComponentScopeRoot.mm */; };
 		D0B47C9E1CBD943400BB33CE /* CKThreadLocalComponentScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B0D1CBD926700BB33CE /* CKThreadLocalComponentScope.mm */; };
-		D0B47CA01CBD943400BB33CE /* CKCollectionViewDataSourceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.m */; };
+		D0B47CA01CBD943400BB33CE /* CKCollectionViewDataSourceCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.mm */; };
 		D0B47CA11CBD943400BB33CE /* CKCollectionViewDataSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B141CBD926700BB33CE /* CKCollectionViewDataSource.mm */; };
 		D0B47CA21CBD943400BB33CE /* CKComponentBoundsAnimation+UICollectionView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B161CBD926700BB33CE /* CKComponentBoundsAnimation+UICollectionView.mm */; };
 		D0B47CA31CBD943400BB33CE /* CKComponentAnnouncerBase.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B1A1CBD926700BB33CE /* CKComponentAnnouncerBase.mm */; };
@@ -1393,7 +1393,7 @@
 		D0B47B0C1CBD926700BB33CE /* CKThreadLocalComponentScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKThreadLocalComponentScope.h; sourceTree = "<group>"; };
 		D0B47B0D1CBD926700BB33CE /* CKThreadLocalComponentScope.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKThreadLocalComponentScope.mm; sourceTree = "<group>"; };
 		D0B47B111CBD926700BB33CE /* CKCollectionViewDataSourceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewDataSourceCell.h; sourceTree = "<group>"; };
-		D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKCollectionViewDataSourceCell.m; sourceTree = "<group>"; };
+		D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCollectionViewDataSourceCell.mm; sourceTree = "<group>"; };
 		D0B47B131CBD926700BB33CE /* CKCollectionViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewDataSource.h; sourceTree = "<group>"; };
 		D0B47B141CBD926700BB33CE /* CKCollectionViewDataSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCollectionViewDataSource.mm; sourceTree = "<group>"; };
 		D0B47B151CBD926700BB33CE /* CKComponentBoundsAnimation+UICollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKComponentBoundsAnimation+UICollectionView.h"; sourceTree = "<group>"; };
@@ -2178,7 +2178,7 @@
 			isa = PBXGroup;
 			children = (
 				D0B47B111CBD926700BB33CE /* CKCollectionViewDataSourceCell.h */,
-				D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.m */,
+				D0B47B121CBD926700BB33CE /* CKCollectionViewDataSourceCell.mm */,
 				D0B47B131CBD926700BB33CE /* CKCollectionViewDataSource.h */,
 				D0B47B141CBD926700BB33CE /* CKCollectionViewDataSource.mm */,
 				23D26A4722440C5B0087350C /* CKCollectionViewDataSourceListener.h */,
@@ -3419,7 +3419,7 @@
 				03B8B4841D2A346F00EDFF59 /* CKComponentScopeHandle.mm in Sources */,
 				03B8B4851D2A346F00EDFF59 /* CKComponentScopeRoot.mm in Sources */,
 				03B8B4861D2A346F00EDFF59 /* CKThreadLocalComponentScope.mm in Sources */,
-				03B8B4881D2A346F00EDFF59 /* CKCollectionViewDataSourceCell.m in Sources */,
+				03B8B4881D2A346F00EDFF59 /* CKCollectionViewDataSourceCell.mm in Sources */,
 				D616A2BE20BED2D100695472 /* CKComponentTreeDiff.mm in Sources */,
 				B1E3067E1E8B0EAA004864CF /* CKBuildComponent.mm in Sources */,
 				72C410662241659F0025D6B5 /* CKComponentAttachController.mm in Sources */,
@@ -3738,7 +3738,7 @@
 				D0B47C9C1CBD943400BB33CE /* CKComponentScopeHandle.mm in Sources */,
 				D0B47C9D1CBD943400BB33CE /* CKComponentScopeRoot.mm in Sources */,
 				D0B47C9E1CBD943400BB33CE /* CKThreadLocalComponentScope.mm in Sources */,
-				D0B47CA01CBD943400BB33CE /* CKCollectionViewDataSourceCell.m in Sources */,
+				D0B47CA01CBD943400BB33CE /* CKCollectionViewDataSourceCell.mm in Sources */,
 				D0B47CA11CBD943400BB33CE /* CKCollectionViewDataSource.mm in Sources */,
 				7262D3AE225CE0A200BA991E /* CKComponentControllerHelper.mm in Sources */,
 				60D7B3BB20FC90500011AB3B /* YGNode.cpp in Sources */,
