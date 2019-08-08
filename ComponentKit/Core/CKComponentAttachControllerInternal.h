@@ -13,17 +13,18 @@
 #import <ComponentKit/CKAnimationApplicator.h>
 #import <ComponentKit/CKComponentAttachController.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
+#import <ComponentKit/CKNonNull.h>
 
 @protocol CKComponentRootLayoutProvider;
 
 /** This is exposed for unit tests. */
 @interface CKComponentAttachState : NSObject
 
-@property (nonatomic, strong, readonly) NSSet *mountedComponents;
+@property (nonatomic, assign, readonly) CK::NonNull<NSSet *> mountedComponents;
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier scopeIdentifier;
 
 - (instancetype)initWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
-                      mountedComponents:(NSSet *)mountedComponents
+                      mountedComponents:(CK::NonNull<NSSet *>)mountedComponents
                     animationApplicator:(const std::shared_ptr<CK::AnimationApplicator<>> &)animationApplicator;
 
 - (const std::shared_ptr<CK::AnimationApplicator<>> &)animationApplicator;

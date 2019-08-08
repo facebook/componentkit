@@ -15,6 +15,7 @@
 #import "CKComponentAttachController.h"
 #import "CKComponentAttachControllerInternal.h"
 #import "CKDataSourceItem.h"
+#import "CKDelayedNonNull.h"
 
 @implementation CKComponentAttachController
 {
@@ -174,7 +175,9 @@ static CKComponentAttachState *mountComponentLayoutInView(const CKComponentRootL
   animationApplicator = oldAttachState != nil ? oldAttachState.animationApplicator : CK::AnimationApplicatorFactory::make();
   animationApplicator->runAnimationsWhenMounting(animations, mountPerformer);
 
-  const auto attachState = [[CKComponentAttachState alloc] initWithScopeIdentifier:scopeIdentifier mountedComponents:newMountedComponents animationApplicator:animationApplicator];
+  const auto attachState = [[CKComponentAttachState alloc] initWithScopeIdentifier:scopeIdentifier
+                                                                 mountedComponents:CK::makeNonNull(newMountedComponents)
+                                                               animationApplicator:animationApplicator];
   CKComponentAttachStateSetRootLayout(attachState, rootLayout);
   return attachState;
 }
@@ -198,17 +201,17 @@ static void tearDownAttachStateFromViews(NSArray *views)
   CKComponentRootLayout _rootLayout;
   // The ownership isn't really shared with anyone, this is just to get copying the pointer in and out of the attach state easier
   std::shared_ptr<CK::AnimationApplicator<>> _animationApplicator;
+  CK::DelayedNonNull<NSSet *> _mountedComponents;
 }
 
 - (instancetype)initWithScopeIdentifier:(CKComponentScopeRootIdentifier)scopeIdentifier
-                      mountedComponents:(NSSet *)mountedComponents
+                      mountedComponents:(CK::NonNull<NSSet *>)mountedComponents
                     animationApplicator:(const std::shared_ptr<CK::AnimationApplicator<>> &)animationApplicator
 {
   self = [super init];
   if (self) {
-    CKAssertNotNil(mountedComponents, @"");
     _scopeIdentifier = scopeIdentifier;
-    _mountedComponents = [mountedComponents copy];
+    _mountedComponents = CK::makeNonNull([mountedComponents copy]);
     _animationApplicator = animationApplicator;
   }
   return self;
@@ -227,6 +230,11 @@ void CKComponentAttachStateSetRootLayout(CKComponentAttachState *const self, con
 - (const std::shared_ptr<CK::AnimationApplicator<>> &)animationApplicator
 {
   return _animationApplicator;
+}
+
+- (CK::NonNull<NSSet *>)mountedComponents
+{
+  return _mountedComponents;
 }
 
 @end

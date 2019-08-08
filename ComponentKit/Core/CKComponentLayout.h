@@ -20,6 +20,7 @@
 #import <ComponentKit/CKComponentAnimationPredicates.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKEqualityHashHelpers.h>
+#import <ComponentKit/CKNonNull.h>
 #import <ComponentKit/CKOptional.h>
 #import <ComponentKit/CKSizeRange.h>
 
@@ -107,7 +108,7 @@ private:
 };
 
 struct CKMountComponentLayoutResult {
-  NSSet *mountedComponents;
+  CK::NonNull<NSSet *> mountedComponents;
   NSSet *unmountedComponents;
 };
 

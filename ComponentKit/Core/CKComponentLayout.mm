@@ -91,7 +91,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
   CK::Component::MountAnalyticsContext mountAnalyticsContext;
   auto const mountAnalyticsContextPointer = [analyticsListener shouldCollectMountInformationForRootComponent:layout.component] ? &mountAnalyticsContext : nullptr;
   stack.push({layout, MountContext::RootContext(view, mountAnalyticsContextPointer, isUpdate), supercomponent, NO});
-  NSMutableSet *mountedComponents = [NSMutableSet set];
+  auto const mountedComponents = CK::makeNonNull([NSMutableSet set]);
 
   layout.component.rootComponentMountedView = view;
 
