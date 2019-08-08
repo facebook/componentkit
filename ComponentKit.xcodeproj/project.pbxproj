@@ -891,6 +891,8 @@
 		D68927F8225B6091009DBBD9 /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D68927EC225B5B29009DBBD9 /* CKLinkable.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D68A9E3D22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D68A9E3E22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D69F137622E6FE3F00984709 /* CKDelayedNonNull.h in Headers */ = {isa = PBXBuildFile; fileRef = D69F137522E6FE3F00984709 /* CKDelayedNonNull.h */; };
+		D69F137722E6FE3F00984709 /* CKDelayedNonNull.h in Headers */ = {isa = PBXBuildFile; fileRef = D69F137522E6FE3F00984709 /* CKDelayedNonNull.h */; };
 		D6A0CF8722844556000CC4D0 /* CKAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D6A0CF8522844556000CC4D0 /* CKAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6A0CF8822844556000CC4D0 /* CKAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D6A0CF8522844556000CC4D0 /* CKAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6A0CF8922844556000CC4D0 /* CKAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6A0CF8622844556000CC4D0 /* CKAnimation.mm */; };
@@ -1561,6 +1563,7 @@
 		D657401121051C6E00FD8AAB /* CKIndexTransform.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKIndexTransform.mm; sourceTree = "<group>"; };
 		D68927EC225B5B29009DBBD9 /* CKLinkable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKLinkable.h; sourceTree = "<group>"; };
 		D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKDelayedInitialisationWrapper.h; sourceTree = "<group>"; };
+		D69F137522E6FE3F00984709 /* CKDelayedNonNull.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKDelayedNonNull.h; sourceTree = "<group>"; };
 		D6A0CF8522844556000CC4D0 /* CKAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAnimation.h; sourceTree = "<group>"; };
 		D6A0CF8622844556000CC4D0 /* CKAnimation.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnimation.mm; sourceTree = "<group>"; };
 		D6A0CF9522844811000CC4D0 /* CKAnimationTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnimationTests.mm; sourceTree = "<group>"; };
@@ -2040,6 +2043,7 @@
 				72A275C9219E145E00C1837F /* CKGlobalConfig.mm */,
 				D68927EC225B5B29009DBBD9 /* CKLinkable.h */,
 				D60C2D9B22B9743D001F502B /* CKNonNull.h */,
+				D69F137522E6FE3F00984709 /* CKDelayedNonNull.h */,
 				D63A9262222482BD00E7CC91 /* CKOptional.h */,
 			);
 			path = Base;
@@ -2647,6 +2651,7 @@
 				23770A3022EB46EB00858140 /* CKRenderTreeNode.h in Headers */,
 				7FB5C1ED1F865BF300D2726B /* CKComponentDescriptionHelper.h in Headers */,
 				03B8B5311D2A346F00EDFF59 /* CKInsetComponent.h in Headers */,
+				D69F137722E6FE3F00984709 /* CKDelayedNonNull.h in Headers */,
 				23FEC5A0203B30DA0068E09D /* CKTreeNode.h in Headers */,
 				03B8B5321D2A346F00EDFF59 /* CKUpdateMode.h in Headers */,
 				23309AA92045C61000833BDB /* CKTreeNodeProtocol.h in Headers */,
@@ -2874,6 +2879,7 @@
 				23D26A5622440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h in Headers */,
 				D0B47CFC1CBD948E00BB33CE /* CKComponentSize.h in Headers */,
 				72A275CA219E145E00C1837F /* CKGlobalConfig.h in Headers */,
+				D69F137622E6FE3F00984709 /* CKDelayedNonNull.h in Headers */,
 				60D7B3A920FC90500011AB3B /* Utils.h in Headers */,
 				D63D380520BF3B4C0081D7A9 /* CKCasting.h in Headers */,
 				D0B47CEA1CBD948E00BB33CE /* ComponentKit.h in Headers */,
