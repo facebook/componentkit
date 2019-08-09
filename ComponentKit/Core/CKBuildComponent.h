@@ -62,7 +62,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
                                         BOOL ignoreComponentReuseOptimizations = NO,
-                                        CKUnifyComponentTreeConfig unifyComponentTreeConfig = {});
+                                        CKUnifyComponentTreeConfig unifyComponentTreeConfig = CKReadGlobalConfig().unifyComponentTreeConfig);
 
 #if DEBUG
 void CKDidBuildComponentTree(const CKBuildComponentTreeParams &params, id<CKComponentProtocol> component);
