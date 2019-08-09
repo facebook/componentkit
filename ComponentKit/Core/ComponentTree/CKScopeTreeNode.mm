@@ -123,12 +123,12 @@ static NSUInteger const kOwnerBaseKey = 1;
 
   // Generate key inside the new parent
   CKScopeNodeKey stateKey = [frame createScopeNodeKeyForComponentClass:componentClass identifier:identifier keys:keys];
-  // Get the child from the previous equivalent node.
-  CKScopeTreeNode *existingChildNodeOfPreviousNode = [previousFrame childForScopeNodeKey:stateKey];
+  // Get the child from the previous equivalent frame.
+  CKScopeTreeNode *childFrameOfPreviousFrame = [previousFrame childForScopeNodeKey:stateKey];
 
   // Create new handle.
-  CKComponentScopeHandle *newHandle = existingChildNodeOfPreviousNode
-  ? [existingChildNodeOfPreviousNode.handle newHandleWithStateUpdates:stateUpdates componentScopeRoot:newRoot]
+  CKComponentScopeHandle *newHandle = childFrameOfPreviousFrame
+  ? [childFrameOfPreviousFrame.handle newHandleWithStateUpdates:stateUpdates componentScopeRoot:newRoot]
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                       rootIdentifier:newRoot.globalIdentifier
                                       componentClass:componentClass
@@ -136,12 +136,12 @@ static NSUInteger const kOwnerBaseKey = 1;
 
   // Create new node.
   CKScopeTreeNode *newChild = [[CKScopeTreeNode alloc]
-                               initWithPreviousNode:existingChildNodeOfPreviousNode
+                               initWithPreviousNode:childFrameOfPreviousFrame
                                handle:newHandle];
 
   // Insert the new node to its parent map.
   [frame setChild:newChild forKey:stateKey];
-  return {.frame = newChild, .previousFrame = existingChildNodeOfPreviousNode};
+  return {.frame = newChild, .previousFrame = childFrameOfPreviousFrame};
 }
 
 + (void)willBuildComponentTreeWithTreeNode:(id<CKTreeNodeProtocol>)node
@@ -157,19 +157,13 @@ static NSUInteger const kOwnerBaseKey = 1;
   // Get the frame from the previous generation if it exists.
   CKComponentScopeFramePair &pair = threadLocalScope->stack.top();
 
-  CKScopeTreeNode *childFrameOfPreviousFrame;
   CKScopeTreeNode *frame = (CKScopeTreeNode *)pair.frame;
   CKScopeTreeNode *previousFrame = (CKScopeTreeNode *)pair.previousFrame;
 
   CKAssert([frame conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"frame should conform to id<CKScopeTreeNodeProtocol> instead of %@", frame.class);
   CKAssert(previousFrame == nil || [previousFrame conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"previousFrame should conform to id<CKScopeTreeNodeProtocol> instead of %@", previousFrame.class);
 
-  if (previousFrame) {
-    const auto &previousFrameChildren = previousFrame->_children;
-    const auto it = previousFrameChildren.find(stateKey);
-    childFrameOfPreviousFrame = (it == previousFrameChildren.end()) ? nil : (CKScopeTreeNode *)it->second;
-  }
-
+  CKScopeTreeNode *childFrameOfPreviousFrame = [previousFrame childForScopeNodeKey:stateKey];
   // Create a scope frame for the render component children.
   CKScopeTreeNode *newFrame = [[CKScopeTreeNode alloc] init];
   // Push the new scope frame to the parent frame's children.
@@ -204,20 +198,14 @@ static NSUInteger const kOwnerBaseKey = 1;
   // Get the frame from the previous generation if it exists.
   CKComponentScopeFramePair &pair = threadLocalScope->stack.top();
 
-  CKScopeTreeNode *childFrameOfPreviousFrame;
   CKScopeTreeNode *frame = (CKScopeTreeNode *)pair.frame;
   CKScopeTreeNode *previousFrame = (CKScopeTreeNode *)pair.previousFrame;
 
   CKAssert([frame conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"frame should conform to id<CKScopeTreeNodeProtocol> instead of %@", frame.class);
   CKAssert(previousFrame == nil || [previousFrame conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"previousFrame should conform to id<CKScopeTreeNodeProtocol> instead of %@", previousFrame.class);
 
-  if (previousFrame) {
-    const auto &previousFrameChildren = previousFrame->_children;
-    const auto it = previousFrameChildren.find(stateKey);
-    childFrameOfPreviousFrame = (it == previousFrameChildren.end()) ? nil : (CKScopeTreeNode *)it->second;
-  }
-
   // Transfer the previous frame into the parent from the new generation.
+  CKScopeTreeNode *childFrameOfPreviousFrame = [previousFrame childForScopeNodeKey:stateKey];
   if (childFrameOfPreviousFrame) {
     frame->_children.insert({stateKey, childFrameOfPreviousFrame});
   }
