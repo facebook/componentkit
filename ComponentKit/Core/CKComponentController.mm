@@ -69,7 +69,7 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 - (CKComponent *)component
 {
-  return _latestComponent ?: _component;
+  return _component ?: _latestComponent;
 }
 
 - (void)willMount {}

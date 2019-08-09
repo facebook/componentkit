@@ -468,29 +468,37 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)_testUpdateComponentInController:(Class<CKDataSourceProtocol>)dataSourceClass
    updateComponentInControllerAfterBuild:(BOOL)updateComponentInControllerAfterBuild
 {
-  const auto dataSource = (id<CKDataSourceProtocol, CKDataSourceProtocolInternal>)
-  CKComponentTestDataSource(dataSourceClass,
-                            ComponentProvider,
-                            self,
-                            {.updateComponentInControllerAfterBuild = updateComponentInControllerAfterBuild});
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _state != nil;
-  });
-  const auto componentController = [_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].rootLayout.component().controller;
-  const auto component = componentController.component;
-  const auto update =
-  [[[CKDataSourceChangesetBuilder dataSourceChangeset]
-    withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
-   build];
-  const auto oldState = _state;
-  [dataSource applyChangeset:update mode:CKUpdateModeSynchronous userInfo:@{}];
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _state != oldState;
-  });
+  CKComponentController *componentController = nil;
+  // Autorelease pool is needed here to make sure `oldState` is deallocated so that weak reference of component
+  // in `CKComponentController` is nil.
+  @autoreleasepool {
+    const auto dataSource = (id<CKDataSourceProtocol, CKDataSourceProtocolInternal>)
+    CKComponentTestDataSource(dataSourceClass,
+                              ComponentProvider,
+                              self,
+                              {.updateComponentInControllerAfterBuild = updateComponentInControllerAfterBuild});
+    CKRunRunLoopUntilBlockIsTrue(^BOOL{
+      return _state != nil;
+    });
+    componentController = [_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].rootLayout.component().controller;
+    const auto update =
+    [[[CKDataSourceChangesetBuilder dataSourceChangeset]
+      withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
+     build];
+    auto oldState = _state;
+    [dataSource applyChangeset:update mode:CKUpdateModeSynchronous userInfo:@{}];
+    CKRunRunLoopUntilBlockIsTrue(^BOOL{
+      return _state != oldState;
+    });
+    oldState = nil;
+  }
   if (updateComponentInControllerAfterBuild) {
-    XCTAssertNotEqual(componentController.component, component);
+    // `latestComponent` is updated so `componentController.component` returns the latest generation of component even
+    // after `oldState` is deallocated.
+    XCTAssertNotEqual(componentController.component, nil);
   } else {
-    XCTAssertEqual(componentController.component, component);
+    // `latestComponent` is not updated so `componentController.component` is nil because `oldState` is deallocated.
+    XCTAssertEqual(componentController.component, nil);
   }
 }
 
