@@ -14,9 +14,11 @@
 #import <unordered_map>
 
 #import "CKThreadLocalComponentScope.h"
+#import "CKGlobalConfig.h"
 
 static NSUInteger const kParentBaseKey = 0;
 static NSUInteger const kOwnerBaseKey = 1;
+static BOOL useVector = CKReadGlobalConfig().unifyComponentTreeConfig.useVector;
 
 @implementation CKScopeTreeNode
 {
@@ -28,9 +30,18 @@ static NSUInteger const kOwnerBaseKey = 1;
 - (std::vector<id<CKTreeNodeProtocol>>)children
 {
   std::vector<id<CKTreeNodeProtocol>> children;
-  for (auto const &child : _children) {
-    if (std::get<1>(child.first.nodeKey) % 2 == kParentBaseKey) {
-      children.push_back(child.second);
+  if (useVector) {
+    for (auto const &child : _childrenVector) {
+      auto childStateKey = std::get<0>(child);
+      if (std::get<1>(childStateKey.nodeKey) % 2 == kParentBaseKey) {
+        children.push_back(std::get<1>(child));
+      }
+    }
+  } else {
+    for (auto const &child : _children) {
+      if (std::get<1>(child.first.nodeKey) % 2 == kParentBaseKey) {
+        children.push_back(child.second);
+      }
     }
   }
   return children;
@@ -38,12 +49,26 @@ static NSUInteger const kOwnerBaseKey = 1;
 
 - (size_t)childrenSize
 {
-  return _children.size();
+  if (useVector) {
+    return _childrenVector.size();
+  } else {
+    return _children.size();
+  }
 }
 
 - (CKTreeNode *)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
   CKScopeNodeKey stateKey = {key};
+  if (useVector) {
+    for (auto const &child : _childrenVector) {
+      auto childStateKey = std::get<0>(child);
+      if (childStateKey == stateKey) {
+        return std::get<1>(child);
+      }
+    }
+    return nil;
+  }
+
   auto const it = _children.find(stateKey);
   if (it != _children.end()) {
     return it->second;
@@ -55,13 +80,27 @@ static NSUInteger const kOwnerBaseKey = 1;
                                                    identifier:(id<NSObject>)identifier
 {
   // Create **parent** based key counter.
-  auto const keyCounter = parentKeyCounter(componentClass, identifier, _keyToCounterMap);
+  NSUInteger keyCounter = kParentBaseKey;
+  if (useVector) {
+    for (auto const &child : _childrenVector) {
+      auto childNodeKey = std::get<0>(child).nodeKey;
+      if (std::get<0>(childNodeKey) == componentClass && CKObjectIsEqual(std::get<2>(childNodeKey), identifier)) {
+        keyCounter += 2;
+      }
+    }
+  } else {
+    keyCounter = parentKeyCounter(componentClass, identifier, _keyToCounterMap);
+  }
   return std::make_tuple(componentClass, keyCounter, identifier);
 }
 
 - (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
 {
-  _children[{componentKey}] = child;
+  if (useVector) {
+    _childrenVector.push_back({{componentKey}, child});
+  } else {
+    _children[{componentKey}] = child;
+  }
 }
 
 - (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
@@ -73,9 +112,18 @@ static NSUInteger const kOwnerBaseKey = 1;
   }
 
   [super didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
-  for (auto const &child : _children) {
-    if (std::get<1>(child.first.nodeKey) % 2 == kParentBaseKey) {
-      [child.second didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
+  if (useVector) {
+    for (auto const &child : _childrenVector) {
+      auto childStateKey = std::get<0>(child);
+      if (std::get<1>(childStateKey.nodeKey) % 2 == kParentBaseKey) {
+        [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
+      }
+    }
+  } else {
+    for (auto const &child : _children) {
+      if (std::get<1>(child.first.nodeKey) % 2 == kParentBaseKey) {
+        [child.second didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
+      }
     }
   }
 }
@@ -87,13 +135,32 @@ static NSUInteger const kOwnerBaseKey = 1;
                                                  keys:(const std::vector<id<NSObject>> &)keys
 {
   // Create **owner** based key counter.
-  auto const keyCounter = ownerKeyCounter(componentClass, identifier, _keyToCounterMap);
+  NSUInteger keyCounter = kOwnerBaseKey;
+  if (useVector) {
+    for (auto const &child : _childrenVector) {
+      auto childNodeKey = std::get<0>(child).nodeKey;
+      if (std::get<0>(childNodeKey) == componentClass && CKObjectIsEqual(std::get<2>(childNodeKey), identifier)) {
+        keyCounter += 2;
+      }
+    }
+  } else {
+    keyCounter = ownerKeyCounter(componentClass, identifier, _keyToCounterMap);
+  }
   // Update the stateKey with the class key counter to make sure we don't have collisions.
   return {std::make_tuple(componentClass, keyCounter, identifier), keys};
 }
 
 - (id<CKScopeTreeNodeProtocol>)childForScopeNodeKey:(const CKScopeNodeKey &)scopeNodeKey
 {
+  if (useVector) {
+    for (auto const &child : _childrenVector) {
+      auto childStateKey = std::get<0>(child);
+      if (childStateKey == scopeNodeKey) {
+        return (id<CKScopeTreeNodeProtocol>)std::get<1>(child);
+      }
+    }
+    return nil;
+  }
   // Get the child from the previous equivalent node.
   const auto it = _children.find(scopeNodeKey);
   return (it == _children.end()) ? nil : (id<CKScopeTreeNodeProtocol>)it->second;
@@ -101,7 +168,11 @@ static NSUInteger const kOwnerBaseKey = 1;
 
 - (void)setChild:(id<CKScopeTreeNodeProtocol>)child forKey:(const CKScopeNodeKey &)key
 {
-  _children[key] = child;
+  if (useVector) {
+    _childrenVector.push_back({key,child});
+  } else {
+    _children[key] = child;
+  }
 }
 
 #pragma mark - CKComponentScopeFrameProtocol
@@ -167,7 +238,7 @@ static NSUInteger const kOwnerBaseKey = 1;
   // Create a scope frame for the render component children.
   CKScopeTreeNode *newFrame = [[CKScopeTreeNode alloc] init];
   // Push the new scope frame to the parent frame's children.
-  frame->_children.insert({stateKey, newFrame});
+  [frame setChild:newFrame forKey:stateKey];
   // Push the new pair into the thread local.
   threadLocalScope->stack.push({.frame = newFrame, .previousFrame = childFrameOfPreviousFrame});
 }
@@ -207,7 +278,7 @@ static NSUInteger const kOwnerBaseKey = 1;
   // Transfer the previous frame into the parent from the new generation.
   CKScopeTreeNode *childFrameOfPreviousFrame = [previousFrame childForScopeNodeKey:stateKey];
   if (childFrameOfPreviousFrame) {
-    frame->_children.insert({stateKey, childFrameOfPreviousFrame});
+    [frame setChild:childFrameOfPreviousFrame forKey:stateKey];
   }
 }
 
