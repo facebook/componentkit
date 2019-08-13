@@ -18,11 +18,16 @@
 
 static NSUInteger const kParentBaseKey = 0;
 static NSUInteger const kOwnerBaseKey = 1;
-static BOOL useVector = CKReadGlobalConfig().unifyComponentTreeConfig.useVector;
+static BOOL useVector = NO;
 
 @implementation CKScopeTreeNode
 {
   CKTreeNodeKeyToCounter _keyToCounterMap;
+}
+
++ (void)initialize
+{
+  useVector = CKReadGlobalConfig().unifyComponentTreeConfig.useVector;
 }
 
 #pragma mark - CKTreeNodeWithChildrenProtocol
