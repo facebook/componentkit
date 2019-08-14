@@ -27,7 +27,9 @@ static BOOL useVector = NO;
 
 + (void)initialize
 {
-  useVector = CKReadGlobalConfig().unifyComponentTreeConfig.useVector;
+  if (self == [CKScopeTreeNode class]) {
+    useVector = CKReadGlobalConfig().unifyComponentTreeConfig.useVector;
+  }
 }
 
 #pragma mark - CKTreeNodeWithChildrenProtocol
