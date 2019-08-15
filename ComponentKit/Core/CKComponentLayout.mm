@@ -19,6 +19,7 @@
 #import "ComponentLayoutContext.h"
 #import "ComponentUtilities.h"
 #import "CKAnalyticsListener.h"
+#import "CKComponentCreationValidation.h"
 #import "CKComponentEvents.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
@@ -142,6 +143,11 @@ CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent buildTrigger:buildTrigger];
   LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
+
+#if CK_ASSERTIONS_ENABLED
+  const CKComponentContext<CKComponentCreationValidationContext> validationContext([CKComponentCreationValidationContext new]);
+#endif
+  
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectDuplicateComponent(layout);
   auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};
