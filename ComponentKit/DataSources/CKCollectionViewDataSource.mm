@@ -101,7 +101,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
 
 #pragma mark - CKDataSourceListener
 
-- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+- (void)componentDataSource:(CKDataSource *)dataSource
      didModifyPreviousState:(CKDataSourceState *)previousState
                   withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
@@ -172,7 +172,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
   }
 }
 
-- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+- (void)componentDataSource:(CKDataSource *)dataSource
  willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset {}
 
 - (void)_detachComponentLayoutForRemovedItemsAtIndexPaths:(NSSet *)removedIndexPaths

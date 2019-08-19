@@ -10,11 +10,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class CKDataSource;
 @class CKDataSourceAppliedChanges;
 @class CKDataSourceChangeset;
 @class CKDataSourceState;
 
-@protocol CKDataSourceProtocol;
 @protocol CKDataSourceListener
 
 /**
@@ -26,7 +26,7 @@
         CKDataSourceChangeset objects).
  */
 
-- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+- (void)componentDataSource:(CKDataSource *)dataSource
      didModifyPreviousState:(CKDataSourceState *)previousState
                   withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes;
@@ -37,7 +37,7 @@
  @param dataSource The sending data source.
  @param deferredChangeset The deferred changeset that is about to be applied.
  */
-- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+- (void)componentDataSource:(CKDataSource *)dataSource
  willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset;
 
 @end
@@ -53,7 +53,7 @@
  @param userInfo Additional information that was passed with modification
  */
 
-- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo;
+- (void)componentDataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo;
 
 /**
  Announced on the background thread when the data source will generate new state.
@@ -61,7 +61,7 @@
  @param dataSource The sending data source
  @param userInfo Additional information that was passed with modification
  */
-- (void)componentDataSourceWillGenerateNewState:(id<CKDataSourceProtocol>)dataSource
+- (void)componentDataSourceWillGenerateNewState:(CKDataSource *)dataSource
                                        userInfo:(NSDictionary *)userInfo;
 
 /**
@@ -71,7 +71,7 @@
  @param newState The state that the data source has just generated and will schedule for applying.
  @param changes The changes that ar going to be applied.
  */
-- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+- (void)componentDataSource:(CKDataSource *)dataSource
         didGenerateNewState:(CKDataSourceState *)newState
                     changes:(CKDataSourceAppliedChanges *)changes;
 

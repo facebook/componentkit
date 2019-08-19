@@ -105,7 +105,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 
 #pragma mark - CKDataSourceListener
 
-- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+- (void)componentDataSource:(CKDataSource *)dataSource
      didModifyPreviousState:(CKDataSourceState *)previousState
                   withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
@@ -113,7 +113,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   _state = state;
 }
 
-- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+- (void)componentDataSource:(CKDataSource *)dataSource
  willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset
 {
 }

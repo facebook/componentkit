@@ -724,7 +724,7 @@ static NSValue *sizeValue(CGFloat width, CGFloat height)
 
 #pragma mark - CKDataSourceListener
 
-- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+- (void)componentDataSource:(CKDataSource *)dataSource
      didModifyPreviousState:(CKDataSourceState *)previousState
                   withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
@@ -733,7 +733,7 @@ static NSValue *sizeValue(CGFloat width, CGFloat height)
   _currentDataSourceState = state;
 }
 
-- (void)componentDataSource:(id<CKDataSourceProtocol>)dataSource
+- (void)componentDataSource:(CKDataSource *)dataSource
  willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset {}
 
 @end
