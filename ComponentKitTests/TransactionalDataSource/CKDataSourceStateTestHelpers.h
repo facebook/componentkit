@@ -12,12 +12,12 @@
 
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentEvents.h>
+#import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceConfigurationInternal.h>
 
 @class CKDataSourceState;
 @protocol CKComponentStateListener;
 @protocol CKDataSourceListener;
-@protocol CKDataSourceProtocol;
 
 CKDataSourceState *CKDataSourceTestState(CKComponentProviderFunc provider,
                                          id<CKComponentStateListener> listener,
@@ -25,9 +25,8 @@ CKDataSourceState *CKDataSourceTestState(CKComponentProviderFunc provider,
                                          NSUInteger numberOfItemsPerSection);
 
 /** Returns a data source with one item and one section. */
-id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> dataSourceClass,
-                                                   CKComponentProviderFunc provider,
-                                                   id<CKDataSourceListener> listener,
-                                                   CKDataSourceOptions options = {});
+CKDataSource *CKComponentTestDataSource(CKComponentProviderFunc provider,
+                                        id<CKDataSourceListener> listener,
+                                        CKDataSourceOptions options = {});
 
 NSSet *CKTestIndexPaths(NSUInteger numberOfSections, NSUInteger numberOfItemsPerSection);

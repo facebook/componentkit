@@ -29,7 +29,7 @@
 
 @implementation CKDataSourceStateUpdateTests
 {
-  id<CKDataSourceProtocol> _dataSource;
+  CKDataSource *_dataSource;
   CKDataSourceState *_state;
 }
 
@@ -40,12 +40,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 
 - (void)testSynchronousStateUpdateResultsInUpdatedComponent
 {
-  [self _testSynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:[CKDataSource class]];
-}
-
-- (void)_testSynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
-{
-  _dataSource = CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
+  _dataSource = CKComponentTestDataSource(ComponentProvider, self);
   NSString *const newState = @"new state";
   [self _updateStates:@[newState] mode:CKUpdateModeSynchronous];
 
@@ -57,12 +52,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 
 - (void)testMultipleSynchronousStateUpdatesAreCoalesced
 {
-  [self _testMultipleSynchronousStateUpdatesAreCoalescedWithDataSourceClass:[CKDataSource class]];
-}
-
-- (void)_testMultipleSynchronousStateUpdatesAreCoalescedWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
-{
-  _dataSource = CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
+  _dataSource = CKComponentTestDataSource(ComponentProvider, self);
   NSArray<id> *const newStates = @[@1, @2, @3];
   [self _updateStates:newStates mode:CKUpdateModeSynchronous];
 
@@ -73,12 +63,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 
 - (void)testAsynchronousStateUpdateResultsInUpdatedComponent
 {
-  [self _testAsynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:[CKDataSource class]];
-}
-
-- (void)_testAsynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
-{
-  _dataSource = CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
+  _dataSource = CKComponentTestDataSource(ComponentProvider, self);
   NSString *const newState = @"new state";
   [self _updateStates:@[newState] mode:CKUpdateModeAsynchronous];
 
@@ -89,12 +74,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 
 - (void)testStateUpdatesAreProcessedInTheOrderTheyWereEnqueued
 {
-  [self _testStateUpdatesAreProcessedInTheOrderTheyWereEnqueuedWithDataSourceClass:[CKDataSource class]];
-}
-
-- (void)_testStateUpdatesAreProcessedInTheOrderTheyWereEnqueuedWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
-{
-  _dataSource = CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
+  _dataSource = CKComponentTestDataSource(ComponentProvider, self);
   NSArray<id> *const newStates = @[@"NewState", @"NewStateUpdate1", @"NewStateUpdate1Update2"];
   [self _updateStates:newStates mode:CKUpdateModeSynchronous];
 

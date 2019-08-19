@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKDataSourceProtocol.h>
+#import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceStateModifying.h>
 
 @class CKDataSourceChangeset;

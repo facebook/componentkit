@@ -58,10 +58,9 @@ CKDataSourceState *CKDataSourceTestState(CKComponentProviderFunc provider,
   return [[CKDataSourceState alloc] initWithConfiguration:configuration sections:sections];
 }
 
-id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> dataSourceClass,
-                                                   CKComponentProviderFunc provider,
-                                                   id<CKDataSourceListener> listener,
-                                                   CKDataSourceOptions options)
+CKDataSource *CKComponentTestDataSource(CKComponentProviderFunc provider,
+                                        id<CKDataSourceListener> listener,
+                                        CKDataSourceOptions options)
 {
   const auto configuration =
   [[CKDataSourceConfiguration alloc]
@@ -72,7 +71,7 @@ id<CKDataSourceProtocol> CKComponentTestDataSource(Class<CKDataSourceProtocol> d
    componentPredicates:{}
    componentControllerPredicates:{}
    analyticsListener:nil];
-  id<CKDataSourceProtocol> ds = [[(Class)dataSourceClass alloc] initWithConfiguration:configuration];
+  const auto ds = [[CKDataSource alloc] initWithConfiguration:configuration];
   [ds addListener:listener];
 
   CKDataSourceChangeset *insertion =
