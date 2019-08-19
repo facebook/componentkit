@@ -19,7 +19,6 @@
 #import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceState.h>
-#import <ComponentKit/CKThreadSafeDataSource.h>
 #import <ComponentKit/CKDataSourceListener.h>
 
 #import "CKStateExposingComponent.h"
@@ -44,11 +43,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   [self _testSynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:[CKDataSource class]];
 }
 
-- (void)testSynchronousStateUpdateResultsInUpdatedComponentWithThreadSafeDataSource
-{
-  [self _testSynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:[CKThreadSafeDataSource class]];
-}
-
 - (void)_testSynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
   _dataSource = CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
@@ -64,11 +58,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)testMultipleSynchronousStateUpdatesAreCoalesced
 {
   [self _testMultipleSynchronousStateUpdatesAreCoalescedWithDataSourceClass:[CKDataSource class]];
-}
-
-- (void)testMultipleSynchronousStateUpdatesAreCoalescedWithThreadSafeDataSource
-{
-  [self _testMultipleSynchronousStateUpdatesAreCoalescedWithDataSourceClass:[CKThreadSafeDataSource class]];
 }
 
 - (void)_testMultipleSynchronousStateUpdatesAreCoalescedWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
@@ -87,11 +76,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   [self _testAsynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:[CKDataSource class]];
 }
 
-- (void)testAsynchronousStateUpdateResultsInUpdatedComponentWithThreadSafeDataSource
-{
-  [self _testAsynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:[CKThreadSafeDataSource class]];
-}
-
 - (void)_testAsynchronousStateUpdateResultsInUpdatedComponentWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
   _dataSource = CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
@@ -106,11 +90,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)testStateUpdatesAreProcessedInTheOrderTheyWereEnqueued
 {
   [self _testStateUpdatesAreProcessedInTheOrderTheyWereEnqueuedWithDataSourceClass:[CKDataSource class]];
-}
-
-- (void)testStateUpdatesAreProcessedInTheOrderTheyWereEnqueuedWithThreadSafeDataSource
-{
-  [self _testStateUpdatesAreProcessedInTheOrderTheyWereEnqueuedWithDataSourceClass:[CKThreadSafeDataSource class]];
 }
 
 - (void)_testStateUpdatesAreProcessedInTheOrderTheyWereEnqueuedWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
@@ -143,8 +122,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 
 - (void)_updateStates:(NSArray<id> *)states mode:(CKUpdateMode)mode
 {
-  // We need to wait until the first changeset is applied becuase CKThreadSafeDataSource always dispatch_async
-  // `componentDataSource:didModifyPreviousState` to the main queue in order to maintain the sequence of modifications.
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _state != nil;
   });

@@ -26,7 +26,6 @@
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceListener.h>
 #import <ComponentKit/CKDataSourceState.h>
-#import <ComponentKit/CKThreadSafeDataSource.h>
 #import <ComponentKit/CKDataSourceProtocolInternal.h>
 #import <ComponentKit/CKDataSourceChangesetModification.h>
 
@@ -74,11 +73,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   [self _testSynchronouslyInsertingItemsAnnouncesInsertionWithDataSourceClass:[CKDataSource class]];
 }
 
-- (void)testThreadSafeDataSourceSynchronouslyInsertingItemsAnnouncesInsertion
-{
-  [self _testSynchronouslyInsertingItemsAnnouncesInsertionWithDataSourceClass:[CKThreadSafeDataSource class]];
-}
-
 - (void)_testSynchronouslyInsertingItemsAnnouncesInsertionWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
   id<CKDataSourceProtocol> ds = [[(Class)dataSourceClass alloc]
@@ -115,11 +109,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)testDataSourceAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronously
 {
   [self _testAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronouslyWithDataSourceClass:[CKDataSource class]];
-}
-
-- (void)testThreadSafeDataSourceAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronously
-{
-  [self _testAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronouslyWithDataSourceClass:[CKThreadSafeDataSource class]];
 }
 
 - (void)_testAsynchronouslyInsertingItemsAnnouncesInsertionAsynchronouslyWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
@@ -159,11 +148,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   [self _testUpdatingConfigurationAnnouncesUpdateWithDataSourceClass:[CKDataSource class]];
 }
 
-- (void)testThreadSafeDataSourceUpdatingConfigurationAnnouncesUpdate
-{
-  [self _testUpdatingConfigurationAnnouncesUpdateWithDataSourceClass:[CKThreadSafeDataSource class]];
-}
-
 - (void)_testUpdatingConfigurationAnnouncesUpdateWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
   id<CKDataSourceProtocol> ds = CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
@@ -194,11 +178,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)testDataSourceReloadingAnnouncesUpdate
 {
   [self _testReloadingAnnouncesUpdateWithDataSourceClass:[CKDataSource class]];
-}
-
-- (void)testThreadSafeDataSourceReloadingAnnouncesUpdate
-{
-  [self _testReloadingAnnouncesUpdateWithDataSourceClass:[CKThreadSafeDataSource class]];
 }
 
 - (void)_testReloadingAnnouncesUpdateWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
@@ -263,11 +242,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   [self _testDeallocatingDataSourceTriggersInvalidateOnMainThreadWithDataSourceClass:[CKDataSource class]];
 }
 
-- (void)testThreadSafeDataSourceDeallocatingDataSourceTriggersInvalidateOnMainThread
-{
-  [self _testDeallocatingDataSourceTriggersInvalidateOnMainThreadWithDataSourceClass:[CKThreadSafeDataSource class]];
-}
-
 - (void)_testDeallocatingDataSourceTriggersInvalidateOnMainThreadWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
   CKLifecycleTestComponentController *controller = nil;
@@ -294,11 +268,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   [self _testRemovingComponentTriggersInvalidateOnMainThreadWithDataSourceClass:[CKDataSource class]];
 }
 
-- (void)testThreadSafeDataSourceRemovingComponentTriggersInvalidateOnMainThread
-{
-  [self _testRemovingComponentTriggersInvalidateOnMainThreadWithDataSourceClass:[CKThreadSafeDataSource class]];
-}
-
 - (void)_testRemovingComponentTriggersInvalidateOnMainThreadWithDataSourceClass:(Class<CKDataSourceProtocol>)dataSourceClass
 {
   id<CKDataSourceProtocol> dataSource = CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
@@ -317,11 +286,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)testDataSourceApplyingPrecomputedChange
 {
   [self _testApplyingPrecomputedChange:[CKDataSource class]];
-}
-
-- (void)testThreadSafeDataSourceApplyingPrecomputedChange
-{
-  [self _testApplyingPrecomputedChange:[CKThreadSafeDataSource class]];
 }
 
 - (void)_testApplyingPrecomputedChange:(Class<CKDataSourceProtocol>)dataSourceClass
@@ -349,11 +313,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)testDataSourceApplyingPrecomputedChangeAfterStateIsChanged
 {
   [self _testApplyingPrecomputedChangeAfterStateIsChanged:[CKDataSource class]];
-}
-
-- (void)testThreadSafeDataSourceApplyingPrecomputedChangeAfterStateIsChanged
-{
-  [self _testApplyingPrecomputedChangeAfterStateIsChanged:[CKThreadSafeDataSource class]];
 }
 
 - (void)_testApplyingPrecomputedChangeAfterStateIsChanged:(Class<CKDataSourceProtocol>)dataSourceClass
@@ -387,11 +346,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   [self _testVerifyingPrecomputedChange:[CKDataSource class]];
 }
 
-- (void)testThreadSafeDataSourceVerifyingPrecomputedChange
-{
-  [self _testVerifyingPrecomputedChange:[CKThreadSafeDataSource class]];
-}
-
 - (void)_testVerifyingPrecomputedChange:(Class<CKDataSourceProtocol>)dataSourceClass
 {
   const auto dataSource = (id<CKDataSourceProtocolInternal>)CKComponentTestDataSource(dataSourceClass, ComponentProvider, self);
@@ -414,11 +368,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)testDataSourceVerifyingPrecomputedChangeAfterStateIsChanged
 {
   [self _testVerifyingPrecomputedChangeAfterStateIsChanged:[CKDataSource class]];
-}
-
-- (void)testThreadSafeDataSourceVerifyingPrecomputedChangeAfterStateIsChanged
-{
-  [self _testVerifyingPrecomputedChangeAfterStateIsChanged:[CKThreadSafeDataSource class]];
 }
 
 - (void)_testVerifyingPrecomputedChangeAfterStateIsChanged:(Class<CKDataSourceProtocol>)dataSourceClass
@@ -450,19 +399,9 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   [self _testUpdateComponentInController:[CKDataSource class] updateComponentInControllerAfterBuild:NO];
 }
 
-- (void)testThreadSafeDataSourceComponentInControllerIsNotUpdatedAfterComponentBuild
-{
-  [self _testUpdateComponentInController:[CKThreadSafeDataSource class] updateComponentInControllerAfterBuild:NO];
-}
-
 - (void)testDataSourceComponentInControllerIsUpdatedAfterComponentBuild
 {
   [self _testUpdateComponentInController:[CKDataSource class] updateComponentInControllerAfterBuild:YES];
-}
-
-- (void)testThreadSafeDataSourceComponentInControllerIsUpdatedAfterComponentBuild
-{
-  [self _testUpdateComponentInController:[CKThreadSafeDataSource class] updateComponentInControllerAfterBuild:YES];
 }
 
 - (void)_testUpdateComponentInController:(Class<CKDataSourceProtocol>)dataSourceClass
