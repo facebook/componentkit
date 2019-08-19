@@ -56,7 +56,6 @@
   dispatch_queue_t _workQueue;
   
   CKDataSourceViewport _viewport;
-  CK::Mutex _viewportLock;
   BOOL _changesetSplittingEnabled;
   id<CKDataSourceChangesetModificationGenerator> _changesetModificationGenerator;
 }
@@ -212,10 +211,10 @@
 
 - (void)setViewport:(CKDataSourceViewport)viewport
 {
+  CKAssertMainThread();
   if (!_changesetSplittingEnabled) {
     return;
   }
-  CK::MutexLocker l(_viewportLock);
   _viewport = viewport;
 }
 
@@ -451,16 +450,11 @@
                                                          isDeferredChangeset:(BOOL)isDeferredChangeset
 {
   if (!isDeferredChangeset && _changesetSplittingEnabled) {
-    CKDataSourceViewport viewport;
-    {
-      CK::MutexLocker l(_viewportLock);
-      viewport = _viewport;
-    }
     return
     [[CKDataSourceSplitChangesetModification alloc] initWithChangeset:changeset
                                                         stateListener:self
                                                              userInfo:userInfo
-                                                             viewport:viewport
+                                                             viewport:_viewport
                                                                   qos:qos];
   } else if(_changesetModificationGenerator) {
     return [_changesetModificationGenerator changesetGenerationModificationForChangeset:changeset
