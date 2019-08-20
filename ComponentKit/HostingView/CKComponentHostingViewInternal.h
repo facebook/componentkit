@@ -32,7 +32,7 @@ struct CKComponentHostingViewOptions {
   CK::Optional<CGSize> initialSize;
 };
 
-@interface CKComponentHostingView () <CKComponentHostingViewProtocol, CKComponentStateListener>
+@interface CKComponentHostingView<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> () <CKComponentHostingViewProtocol, CKComponentStateListener>
 
 /**
  @param componentProvider  provider conforming to CKComponentProvider protocol.
@@ -53,7 +53,7 @@ struct CKComponentHostingViewOptions {
                         analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                                   options:(const CKComponentHostingViewOptions &)options;
 
-- (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
+- (instancetype)initWithComponentProviderFunc:(CKComponent *(*)(ModelType model, ContextType context))componentProvider
                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
