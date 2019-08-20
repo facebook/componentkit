@@ -32,6 +32,25 @@ auto Animation::TimingCurve::toCA() const -> CAMediaTimingFunction *
   return [CAMediaTimingFunction functionWithControlPoints:_p1[0] :_p1[1] :_p2[0] :_p2[1]];
 }
 
+auto Animation::SpringInitialBuilder::toCA() const -> CAAnimation *
+{
+  auto const a = [CASpringAnimation animationWithKeyPath:_keyPath];
+  a.fromValue = _from;
+  this->applyTimingTo(a);
+  a.fillMode = kCAFillModeBackwards;
+  this->applySpringTo(a);
+  a.duration = a.settlingDuration;
+  return a;
+}
+
+auto Animation::InitialBuilder::usingSpring() const -> SpringInitialBuilder
+{
+  auto spring = SpringInitialBuilder{_from, _keyPath};
+  spring.delay = delay;
+  spring.curve = curve;
+  return spring;
+}
+
 auto Animation::InitialBuilder::toCA() const -> CAAnimation *
 {
   auto const a = [CABasicAnimation animationWithKeyPath:_keyPath];
@@ -57,10 +76,7 @@ auto Animation::SpringChangeBuilder::toCA() const -> CAAnimation *
   if (delay > 0) {
     a.fillMode = kCAFillModeBackwards;
   }
-  _damping.apply([a](CGFloat d){ a.damping = d; });
-  _initialVelocity.apply([a](CGFloat iv){ a.initialVelocity = iv; });
-  _mass.apply([a](CGFloat m){ a.mass = m; });
-  _stiffness.apply([a](CGFloat s){ a.stiffness = s; });
+  this->applySpringTo(a);
   a.duration = a.settlingDuration;
   return a;
 }
