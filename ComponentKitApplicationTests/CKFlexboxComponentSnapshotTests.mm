@@ -1305,6 +1305,52 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
+- (void)testMarginOnFlexbox
+{
+  CKFlexboxComponent *c =
+  [CKFlexboxComponent
+   newWithView:kLightGrayBackgroundView
+   size:{}
+   style:{
+     .direction = CKFlexboxDirectionColumn,
+     .margin = {
+       .top = 10,
+       .start = 30,
+       .end = 10,
+       .bottom = 20,
+     },
+   }
+   children:{
+     {
+       [CKFlexboxComponent
+        newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}}
+        size:{}
+        style:{
+          .direction = CKFlexboxDirectionRow,
+          .margin = {
+            .top = 10,
+            .start = 30,
+            .end = 10,
+            .bottom = 20,
+          },
+        }
+        children:{
+          {
+            [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50, 50}],
+          },
+          {
+            [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50, 50}],
+          },
+        }
+        usesDeepYogaTrees:_usesDeepYogaTrees]
+     },
+   }
+   usesDeepYogaTrees:_usesDeepYogaTrees];
+  
+  static CKSizeRange kSize = {{0,0}, {INFINITY, INFINITY}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
 - (void)testStandardMargins
 {
   CKFlexboxComponent *c =
