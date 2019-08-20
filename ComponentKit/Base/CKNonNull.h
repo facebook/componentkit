@@ -38,7 +38,8 @@ public:
   auto operator =(const Ptr &) -> RelaxedNonNull & = delete;
 
   // Implicit conversion to nullable
-  operator Ptr () const & { return _ptr; }
+  template <typename U, typename = std::enable_if_t<std::is_convertible<Ptr, U>::value>>
+  operator U () const & { return _ptr; }
   operator Ptr &&() && { return std::move(_ptr); }
 
   // Passthrough

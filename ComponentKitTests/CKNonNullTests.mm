@@ -70,6 +70,21 @@ using namespace CK;
   XCTAssertEqualObjects(set, nnms);
 }
 
+struct ConstructibleFromNullablePtrToBase {
+  ConstructibleFromNullablePtrToBase(NSObject *o) : obj(o) {}
+
+  NSObject *obj;
+};
+
+- (void)test_ImplicitConversionToConstructibleFromNullable
+{
+  auto s = makeNonNull([NSSet set]);
+
+  ConstructibleFromNullablePtrToBase c = s;
+
+  XCTAssertEqual(c.obj, s);
+}
+
 - (void)compileTimeChecks
 {
   auto nn = makeNonNull([NSObject new]);
