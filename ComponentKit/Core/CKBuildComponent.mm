@@ -107,6 +107,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
       .buildTrigger = buildTrigger,
       .ignoreComponentReuseOptimizations = ignoreComponentReuseOptimizations,
       .systraceListener = threadScope.systraceListener,
+      .debugAnalyticsListener = analyticsListener.debugAnalyticsListener,
       .enableLayoutCache = globalConfig.enableLayoutCacheInRender,
       .unifyComponentTreeConfig = unifyComponentTreeConfig,
     };
@@ -117,9 +118,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                            params:params
              parentHasStateUpdate:NO];
 
-#if DEBUG
-    CKDidBuildComponentTree(params, component);
-#endif
   }
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;
@@ -135,16 +133,3 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
     .buildTrigger = buildTrigger,
   };
 }
-
-#if DEBUG
-void CKDidBuildComponentTree(const CKBuildComponentTreeParams &params, id<CKComponentProtocol> component)
-{
-  // Notify the debug listener.
-  auto const newScopeRoot = params.scopeRoot;
-  auto debugAnalyticsListener = [newScopeRoot.analyticsListener debugAnalyticsListener];
-  [debugAnalyticsListener canReuseNodes:newScopeRoot.rootNode.canBeReusedNodes
-                      previousScopeRoot:params.previousScopeRoot
-                           newScopeRoot:newScopeRoot
-                              component:component];
-}
-#endif

@@ -217,49 +217,6 @@ namespace CKRenderInternal {
     [params.systraceListener didBuildComponent:component.class];
   }
 
-#if DEBUG
-  static auto gatherReuseNodeInformation(id<CKTreeNodeComponentProtocol> component,
-                                         id<CKTreeNodeProtocol> node,
-                                         id<CKTreeNodeWithChildrenProtocol> parent,
-                                         const CKBuildComponentTreeParams &params,
-                                         BOOL parentHasStateUpdate) {
-    // Find the previous reuse node if it exists.
-    CK::Optional<CKTreeNodeReuseInfo> previousReuseInfo = CK::none;
-    if (params.buildTrigger != BuildTrigger::NewTree) {
-      auto const previousCanBeReusedNodes = (params.previousScopeRoot.rootNode.canBeReusedNodes);
-      if (previousCanBeReusedNodes != nullptr) {
-        auto const it = previousCanBeReusedNodes->find(node.nodeIdentifier);
-        if (it != previousCanBeReusedNodes->end()){
-          previousReuseInfo = it->second;
-        }
-      }
-    }
-
-    // Gather information about component that can converted to CKRenderComponent and can be reused.
-    if (params.buildTrigger == BuildTrigger::StateUpdate && !parentHasStateUpdate) {
-      if (!CK::Collection::contains(params.treeNodeDirtyIds, node.nodeIdentifier)) {
-        params.scopeRoot.rootNode.canBeReusedNodes->insert({node.nodeIdentifier, {
-          .parentNodeIdentifier = parent.nodeIdentifier,
-          .klass = component.class,
-          .parentKlass = parent.component.class,
-          .reuseCounter = 1 + previousReuseInfo.map(&CKTreeNodeReuseInfo::reuseCounter).valueOr(0),
-        }});
-
-        // Notify the debug listener.
-        [params.scopeRoot.analyticsListener.debugAnalyticsListener
-         canReuseNode:node
-         parentNode:parent
-         scopeRoot:params.scopeRoot];
-        return;
-      }
-    }
-
-    // Insert the previous node if needed.
-    previousReuseInfo.apply([&](const CKTreeNodeReuseInfo &info){
-      params.scopeRoot.rootNode.canBeReusedNodes->insert({node.nodeIdentifier, info});
-    });
-  }
-#endif
 }
 
 namespace CKRender {
@@ -290,9 +247,14 @@ namespace CKRender {
       parentHasStateUpdate = YES;
     }
 
-#if DEBUG
-    CKRenderInternal::gatherReuseNodeInformation(component, node, parent, params, parentHasStateUpdate);
-#endif
+    // Report information to `debugAnalyticsListener`.
+    if (auto debugAnalyticsListener = params.debugAnalyticsListener) {
+      [debugAnalyticsListener didBuildComponentTreeWithPrecomputedChild:component
+                                                                   node:node
+                                                                 parent:parent
+                                                                 params:params
+                                                   parentHasStateUpdate:parentHasStateUpdate];
+    }
 
     if (childComponent) {
       [childComponent buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)node

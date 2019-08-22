@@ -26,7 +26,7 @@
   return self;
 }
 
-- (const CKTreeNodeReuseMap &)reusedNodesMaps
+- (CKTreeNodeReuseMap &)reusedNodesMaps
 {
   return _reusedNodesMaps;
 }

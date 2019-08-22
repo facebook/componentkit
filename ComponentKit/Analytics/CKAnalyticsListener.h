@@ -24,19 +24,13 @@
 @protocol CKDebugAnalyticsListener <NSObject>
 
 /**
- Will be called for every non-render component that can be reused.
+ Will be called for every component with pre-computed child (CKCompositeComponent for example) during the component tree creation.
  */
-- (void)canReuseNode:(id<CKTreeNodeProtocol>)node
-          parentNode:(id<CKTreeNodeProtocol>)parentNode
-           scopeRoot:(CKComponentScopeRoot *)scopeRoot;
-
-/**
- Will be called at the end of component generation with all the information regarding what component can be reused.
- */
-- (void)canReuseNodes:(std::shared_ptr<CKTreeNodeReuseMap>)nodes
-    previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
-         newScopeRoot:(CKComponentScopeRoot *)newScopeRoot
-            component:(id<CKComponentProtocol>)component;
+- (void)didBuildComponentTreeWithPrecomputedChild:(id<CKTreeNodeComponentProtocol>)component
+                                             node:(id<CKTreeNodeProtocol>)node
+                                           parent:(id<CKTreeNodeWithChildrenProtocol>)parent
+                                           params:(const CKBuildComponentTreeParams &)params
+                             parentHasStateUpdate:(BOOL)parentHasStateUpdate;
 @end
 
 /**

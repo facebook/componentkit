@@ -45,11 +45,6 @@ public:
   /** Called after a render component generates its children */
   void didBuildComponentTree(id<CKTreeNodeProtocol>node);
 
-#if DEBUG
-  /** Will be used to gather information reagrding reused components during debug only. */
-  std::shared_ptr<CKTreeNodeReuseMap> canBeReusedNodes = std::make_shared<CKTreeNodeReuseMap>();
-#endif
-
 private:
   /** the root node of the component tree */
   id<CKScopeTreeNodeProtocol> _node;

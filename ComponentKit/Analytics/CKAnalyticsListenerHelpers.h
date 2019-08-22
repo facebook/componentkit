@@ -16,7 +16,7 @@
 // Wrapper class around the data that is coming from CKDebugAnalyticsListener
 @interface CKComponentReuseWrapper : NSObject
 - (instancetype)initWithReusedNodes:(const CKTreeNodeReuseMap &)reusedNodesMaps;
-- (const CKTreeNodeReuseMap &)reusedNodesMaps;
+- (CKTreeNodeReuseMap &)reusedNodesMaps;
 - (NSUInteger)canBeReusedCounter:(CKTreeNodeIdentifier)nodeIdentifier;
 @end
 
