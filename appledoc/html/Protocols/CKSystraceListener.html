@@ -60,8 +60,6 @@
 	
 	<optgroup label="Instance Methods">
 		
-		<option value="//api/name/willBlockThreadOnGeneratingItemLayout">- willBlockThreadOnGeneratingItemLayout</option>
-		
 		<option value="//api/name/willBuildComponent:">- willBuildComponent:</option>
 		
 		<option value="//api/name/willCheckShouldComponentUpdate:">- willCheckShouldComponentUpdate:</option>
@@ -69,6 +67,8 @@
 		<option value="//api/name/willLayoutComponent:">- willLayoutComponent:</option>
 		
 		<option value="//api/name/willMountComponent:">- willMountComponent:</option>
+		
+		<option value="//api/name/willStartBlockTrace:">- willStartBlockTrace:</option>
 		
 	</optgroup>
 	
@@ -94,7 +94,7 @@
 	<td>NSObject</td>
 </tr><tr>
 	<th>Declared in</th>
-	<td>CKAnalyticsListener.h</td>
+	<td>CKSystraceListener.h</td>
 </tr>
 						</tbody></table></div>
 					
@@ -104,9 +104,7 @@
 					<div class="section section-overview">
 						<a title="Overview" name="overview"></a>
 						<h2 class="subtitle subtitle-overview">Overview</h2>
-						<p>This protocol is being used by the infrastructure to collect data of the components' life cycles.</p>
-
-<p>Will be used only when systrace is enabled.</p>
+						<p>This protocol is being used by the infrastructure to collect data into systrace if enabled.</p>
 					</div>
 					
 					
@@ -122,6 +120,47 @@
 
 						<div class="task-list">
 							<div class="section-method">
+	<a name="//api/name/willStartBlockTrace:" title="willStartBlockTrace:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/willStartBlockTrace:">&ndash;&nbsp;willStartBlockTrace:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Start/End a block trace in systrace.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)willStartBlockTrace:(const char *const)<em>blockName</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKSystraceListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/willBuildComponent:" title="willBuildComponent:"></a>
 	<h3 class="method-title"><code><a href="#//api/name/willBuildComponent:">&ndash;&nbsp;willBuildComponent:</a></code>
 <span class="task-item-suffix">required method</span></h3>
@@ -161,7 +200,7 @@
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+				<p><code class="declared-in-ref">CKSystraceListener.h</code></p>
 			</div>
 			
 			
@@ -207,7 +246,7 @@
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+				<p><code class="declared-in-ref">CKSystraceListener.h</code></p>
 			</div>
 			
 			
@@ -253,7 +292,7 @@
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+				<p><code class="declared-in-ref">CKSystraceListener.h</code></p>
 			</div>
 			
 			
@@ -299,49 +338,7 @@
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/willBlockThreadOnGeneratingItemLayout" title="willBlockThreadOnGeneratingItemLayout"></a>
-	<h3 class="method-title"><code><a href="#//api/name/willBlockThreadOnGeneratingItemLayout">&ndash;&nbsp;willBlockThreadOnGeneratingItemLayout</a></code>
-<span class="task-item-suffix">required method</span></h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>Called before/after we block on the main thread because we&rsquo;re not yet finished
-generating the component on a background thread.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (void)willBlockThreadOnGeneratingItemLayout</code></div>
-
-		    
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+				<p><code class="declared-in-ref">CKSystraceListener.h</code></p>
 			</div>
 			
 			
@@ -362,7 +359,7 @@ generating the component on a background thread.</p>
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2019 Facebook. All rights reserved. Updated: 2019-07-18</p>
+						<p class="copyright">Copyright &copy; 2019 Facebook. All rights reserved. Updated: 2019-08-27</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
