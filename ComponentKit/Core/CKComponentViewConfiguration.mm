@@ -28,6 +28,8 @@ std::shared_ptr<const CKComponentViewConfiguration::Repr> CKComponentViewConfigu
 CKComponentViewConfiguration::CKComponentViewConfiguration() noexcept
   :rep(singletonViewConfiguration()) {}
 
+CKComponentViewConfiguration::CKComponentViewConfiguration(CKComponentViewClass &&cls) noexcept : CKComponentViewConfiguration(std::move(cls), {}) {}
+
 // Prefer overloaded constructors to default arguments to prevent code bloat; with default arguments
 // the compiler must insert initialization of each default value inline at the callsite.
 CKComponentViewConfiguration::CKComponentViewConfiguration(

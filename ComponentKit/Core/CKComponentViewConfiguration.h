@@ -35,8 +35,10 @@ struct CKComponentViewConfiguration {
 
   CKComponentViewConfiguration() noexcept;
 
+  CKComponentViewConfiguration(CKComponentViewClass &&cls) noexcept;
+
   CKComponentViewConfiguration(CKComponentViewClass &&cls,
-                               CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs = {}) noexcept;
+                               CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs) noexcept;
 
   CKComponentViewConfiguration(CKComponentViewClass &&cls,
                                CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs,
