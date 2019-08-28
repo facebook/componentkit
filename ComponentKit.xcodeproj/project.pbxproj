@@ -840,6 +840,10 @@
 		D0B47D9E1CBDA9AC00BB33CE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D871CBDA24900BB33CE /* UIKit.framework */; };
 		D0B47D9F1CBDA9B600BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
 		D0B47DA01CBDA9C200BB33CE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
+		D427E8192314A888004F22BD /* CKStatelessComponentContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */; };
+		D427E81A2314A888004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D427E81B2314A890004F22BD /* CKStatelessComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D427E8182314A888004F22BD /* CKStatelessComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D427E81C2314A893004F22BD /* CKStatelessComponentContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */; };
 		D4F1FAC322940023002932E7 /* CKBaseRenderContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F1FAC222940023002932E7 /* CKBaseRenderContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4F1FAD22294066F002932E7 /* CKBaseRenderContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F1FAC222940023002932E7 /* CKBaseRenderContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D60C2D9C22B9743D001F502B /* CKNonNull.h in Headers */ = {isa = PBXBuildFile; fileRef = D60C2D9B22B9743D001F502B /* CKNonNull.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -1525,6 +1529,8 @@
 		D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D0B47D971CBDA97400BB33CE /* CKComponentSnapshotTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentSnapshotTestCase.h; sourceTree = "<group>"; };
 		D0B47D981CBDA97400BB33CE /* CKComponentSnapshotTestCase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKComponentSnapshotTestCase.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKStatelessComponentContext.mm; sourceTree = "<group>"; };
+		D427E8182314A888004F22BD /* CKStatelessComponentContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStatelessComponentContext.h; sourceTree = "<group>"; };
 		D4F1FAC222940023002932E7 /* CKBaseRenderContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKBaseRenderContext.h; sourceTree = "<group>"; };
 		D60C2D9B22B9743D001F502B /* CKNonNull.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKNonNull.h; sourceTree = "<group>"; };
 		D60C2DA822B98355001F502B /* CKNonNullTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKNonNullTests.mm; sourceTree = "<group>"; };
@@ -2057,6 +2063,8 @@
 		D0B47AD41CBD926700BB33CE /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				D427E8182314A888004F22BD /* CKStatelessComponentContext.h */,
+				D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */,
 				23FEC58F203B30DA0068E09D /* ComponentTree */,
 				23B65AB8213FF9300049FFAC /* Render */,
 				238695671FE0571D00D4DAE2 /* CKComponentProtocol.h */,
@@ -2651,6 +2659,7 @@
 				7268B54F2241A7E400F68A37 /* CKComponentHostingContainerViewProvider.h in Headers */,
 				03B8B53C1D2A346F00EDFF59 /* CKComponentAnimationHooks.h in Headers */,
 				03B8B53D1D2A346F00EDFF59 /* ComponentMountContext.h in Headers */,
+				D427E81B2314A890004F22BD /* CKStatelessComponentContext.h in Headers */,
 				03B8B53E1D2A346F00EDFF59 /* CKAsyncLayer.h in Headers */,
 				23770A2822EB426B00858140 /* CKScopeTreeNodeWithChild.h in Headers */,
 				72A275CB219E145E00C1837F /* CKGlobalConfig.h in Headers */,
@@ -2770,6 +2779,7 @@
 				D63F9F8120AAF31A003F3887 /* CKIndexSetDescription.h in Headers */,
 				D0B47D3C1CBD948E00BB33CE /* CKStatefulViewComponentController.h in Headers */,
 				231039BE2142908700422B0E /* CKRenderComponentInternal.h in Headers */,
+				D427E81A2314A888004F22BD /* CKStatelessComponentContext.h in Headers */,
 				60EFF4B42113555C00CA7C68 /* CKStatelessComponent.h in Headers */,
 				D0B47CEF1CBD948E00BB33CE /* CKComponent.h in Headers */,
 				23032C1822A6913900D1862B /* CKAction.h in Headers */,
@@ -3398,6 +3408,7 @@
 				03B8B4881D2A346F00EDFF59 /* CKCollectionViewDataSourceCell.mm in Sources */,
 				D616A2BE20BED2D100695472 /* CKComponentTreeDiff.mm in Sources */,
 				B1E3067E1E8B0EAA004864CF /* CKBuildComponent.mm in Sources */,
+				D427E81C2314A893004F22BD /* CKStatelessComponentContext.mm in Sources */,
 				72C410662241659F0025D6B5 /* CKComponentAttachController.mm in Sources */,
 				03B8B4891D2A346F00EDFF59 /* CKCollectionViewDataSource.mm in Sources */,
 				03B8B48A1D2A346F00EDFF59 /* CKComponentBoundsAnimation+UICollectionView.mm in Sources */,
@@ -3775,6 +3786,7 @@
 				D0B47CCB1CBD943400BB33CE /* CKComponentGestureActions.mm in Sources */,
 				D0B47CCC1CBD943400BB33CE /* CKEqualityHashHelpers.mm in Sources */,
 				237E82BB21B011F000794571 /* CKComponentPerfScope.mm in Sources */,
+				D427E8192314A888004F22BD /* CKStatelessComponentContext.mm in Sources */,
 				D0B47CCD1CBD943400BB33CE /* CKInternalHelpers.mm in Sources */,
 				03DED2BE2226015900CD63FF /* CKDataSourceSplitChangesetModification.mm in Sources */,
 				D0B47CCE1CBD943400BB33CE /* CKOptimisticViewMutations.mm in Sources */,

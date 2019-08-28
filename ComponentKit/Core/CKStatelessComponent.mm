@@ -9,6 +9,7 @@
  */
 
 #import "CKStatelessComponent.h"
+#import "CKStatelessComponentContext.h"
 
 @implementation CKStatelessComponent
 
@@ -42,6 +43,13 @@ CKComponent *CKCreateStatelessComponent(NS_RELEASES_ARGUMENT CKComponent *compon
    component:component
    identifier:[NSString stringWithCString:debugIdentifier encoding:NSUTF8StringEncoding]];
 #else
-  return component;
+  if (component != nil && [CKComponentContext<CKStatelessComponentContext>::get() shouldAllocateComponent]) {
+    return [CKStatelessComponent
+     newWithView:{}
+     component:component
+     identifier:[NSString stringWithCString:debugIdentifier encoding:NSUTF8StringEncoding]];
+  } else {
+    return component;
+  }
 #endif
 }
