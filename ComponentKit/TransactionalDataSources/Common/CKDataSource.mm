@@ -53,6 +53,7 @@
   CKComponentStateUpdatesMap _pendingAsynchronousStateUpdates;
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
+  BOOL _shouldPauseStateUpdates;
   dispatch_queue_t _workQueue;
   
   CKDataSourceViewport _viewport;
@@ -230,6 +231,21 @@
   [_announcer removeListener:listener];
 }
 
+- (void)setShouldPauseStateUpdates:(BOOL)shouldPauseStateUpdates
+{
+  CKAssertMainThread();
+  _shouldPauseStateUpdates = shouldPauseStateUpdates;
+  if (!_shouldPauseStateUpdates) {
+    [self _processStateUpdates];
+  }
+}
+
+- (BOOL)shouldPauseStateUpdates
+{
+  CKAssertMainThread();
+  return _shouldPauseStateUpdates;
+}
+
 #pragma mark - State Listener
 
 - (void)componentScopeHandle:(CKComponentScopeHandle *)handle
@@ -384,6 +400,10 @@
 - (void)_processStateUpdates
 {
   CKAssertMainThread();
+  if (_shouldPauseStateUpdates) {
+    return;
+  }
+
   CKDataSourceUpdateStateModification *const asyncStateUpdateModification = [self _consumePendingAsynchronousStateUpdates];
   if (asyncStateUpdateModification != nil) {
     [self _enqueueModification:asyncStateUpdateModification];

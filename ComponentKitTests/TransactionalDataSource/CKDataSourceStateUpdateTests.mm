@@ -16,7 +16,7 @@
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentProvider.h>
-#import <ComponentKit/CKDataSource.h>
+#import <ComponentKit/CKDataSourceInternal.h>
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceState.h>
 #import <ComponentKit/CKDataSourceListener.h>
@@ -81,6 +81,17 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return [self _isEqualState:newStates.lastObject];
   }));
+}
+
+- (void)testStateUpdatesAreNotProcessedIfShouldPauseStateUpdatesIsYes
+{
+  _dataSource = CKComponentTestDataSource(ComponentProvider, self);
+  _dataSource.shouldPauseStateUpdates = YES;
+  const auto state1 = _dataSource.state;
+  [self _updateStates:@[@"Test"] mode:CKUpdateModeSynchronous];
+  XCTAssertEqual(_dataSource.state, state1);
+  _dataSource.shouldPauseStateUpdates = NO;
+  XCTAssertNotEqual(_dataSource.state, state1);
 }
 
 #pragma mark - CKDataSourceListener

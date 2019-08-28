@@ -27,6 +27,12 @@
 @property (nonatomic, strong, readonly) CKDataSourceState *state;
 
 /**
+ State updates that are triggered after this flag is set to YES won't be processed until
+ it's set to NO again. This is main thread affined.
+ */
+@property (nonatomic, assign) BOOL shouldPauseStateUpdates;
+
+/**
  @param state initial state of dataSource, pass `nil` for an empty state.
  */
 - (instancetype)initWithState:(CKDataSourceState *)state;
