@@ -122,7 +122,7 @@
 
 - (void)test_WhenComponentBlocksImplicitAnimations_BoundsAnimationIsNotApplied
 {
-  auto const f = ^{
+  auto const f = ^CKComponent *{
     return [CKComponent newWithView:{
       [CKBoundsAnimationRecordingView class],
       {},
