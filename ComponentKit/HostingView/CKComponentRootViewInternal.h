@@ -29,6 +29,11 @@ typedef UIView *(^CKComponentRootViewHitTestHook)(UIView *rootView, CGPoint poin
 - (void)setAllowTapPassthrough:(BOOL)allowTapPassthrough;
 
 /**
+ Called before root view is pushed into `CK::Component::RootViewPool`.
+ */
+- (void)willEnterViewPool NS_REQUIRES_SUPER;
+
+/**
  Exposes the ability to supplement the hitTest for the root view used in each CKComponentHostingView or
  UICollectionViewCell within a CKCollectionViewDataSource.
 

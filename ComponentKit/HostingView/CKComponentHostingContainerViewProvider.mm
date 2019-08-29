@@ -169,6 +169,15 @@ private:
   return self;
 }
 
+- (void)willEnterViewPool
+{
+  [super willEnterViewPool];
+  _analyticsListener = nil;
+  _sizeRangeProvider = nil;
+  _component = nil;
+  _sizeCache = none;
+}
+
 - (void)setComponent:(CKComponent *)component
 {
   CKAssertMainThread();

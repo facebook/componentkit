@@ -26,6 +26,11 @@ static NSMutableArray *hitTestHooks;
   _allowTapPassthrough = allowTapPassthrough;
 }
 
+- (void)willEnterViewPool
+{
+  // Subclass should override this to release resource.
+}
+
 + (void)addHitTestHook:(CKComponentRootViewHitTestHook)hook
 {
   CKAssertMainThread();
