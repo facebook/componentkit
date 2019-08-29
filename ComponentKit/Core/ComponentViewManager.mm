@@ -146,6 +146,28 @@ void ViewReusePool::reset(CK::Component::MountAnalyticsContext *mountAnalyticsCo
 
 const char kComponentViewReusePoolMapAssociatedObjectKey = ' ';
 
+void ViewReusePool::hideAll(UIView *view, MountAnalyticsContext *mountAnalyticsContext)
+{
+  CKComponentViewReusePoolMapWrapper *wrapper = objc_getAssociatedObject(view, &kComponentViewReusePoolMapAssociatedObjectKey);
+  if (!wrapper) {
+    return;
+  }
+  const auto hide = [&](ViewReusePool &viewReusePool) {
+    viewReusePool.position = viewReusePool.pool.begin();
+    viewReusePool.reset(mountAnalyticsContext);
+  };
+  auto &viewReusePoolMap = wrapper->_viewReusePoolMap;
+  if (viewReusePoolMap.usingStringIdentifier) {
+    for (auto &it : viewReusePoolMap.mapWithStringIdentifier) {
+      hide(it.second);
+    }
+  } else {
+    for (auto &it : viewReusePoolMap.map) {
+      hide(it.second);
+    }
+  }
+}
+
 ViewReusePoolMap::ViewReusePoolMap()
 {
   usingStringIdentifier = CKReadGlobalConfig().enableComponentViewClassIdentifier == false;

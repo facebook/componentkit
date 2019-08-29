@@ -152,6 +152,9 @@ namespace CK {
       void reset(MountAnalyticsContext *mountAnalyticsContext);
 
       UIView *viewForClass(const CKComponentViewClass &viewClass, UIView *container, MountAnalyticsContext *mountAnalyticsContext);
+
+      /** Hide all views in viewpool of `view` and trigger `didHide` of descendant. */
+      static void hideAll(UIView *view, MountAnalyticsContext *mountAnalyticsContext);
     private:
       std::vector<UIView *> pool;
       /** Points to the next view in pool that has *not* yet been vended. */
@@ -173,6 +176,8 @@ namespace CK {
                                    const CKComponentViewConfiguration &config,
                                    UIView *container,
                                    MountAnalyticsContext *mountAnalyticsContext);
+
+      friend void ViewReusePool::hideAll(UIView *view, MountAnalyticsContext *mountAnalyticsContext);
     private:
       bool usingStringIdentifier;
       std::unordered_map<ViewKey, ViewReusePool> map;

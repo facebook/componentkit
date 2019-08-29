@@ -13,8 +13,10 @@
 #import "ComponentViewManager.h"
 #import "ComponentViewReuseUtilities.h"
 
+#import <ComponentKit/CKCasting.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKCompositeComponent.h>
 
 using CK::Component::ViewManager;
 
@@ -24,6 +26,12 @@ using CK::Component::ViewManager;
 /** Overrides all subview related methods *except* addSubview: to throw. */
 @interface CKAddSubviewOnlyView : UIView
 @property (nonatomic, assign) NSUInteger numberOfSubviewsAdded;
+@end
+
+/** View provides `didEnterReusePool` callback */
+@interface CKTestReusableView : UIView
+@property (nonatomic, readonly, assign) BOOL isDidEnterReusePoolCalled;
+- (void)didEnterReusePool;
 @end
 
 @implementation CKComponentViewManagerTests
@@ -168,6 +176,65 @@ static UIView *imageViewFactory()
   XCTAssertTrue([subview isKindOfClass:[UIImageView class]], @"Expected +newView to vend a UIImageView");
 }
 
+- (void)testThatViewsInViewPoolAreHiddenAndDidHideIsCalledInDescendantAfterHideAllIsCalledOnRootView
+{
+  CKComponent *childComponent =
+  [CKComponent
+   newWithView:{{[CKTestReusableView class], @selector(didEnterReusePool), nil}}
+   size:{}];
+  CKComponent *component =
+  [CKCompositeComponent
+   newWithView:{{[CKTestReusableView class], @selector(didEnterReusePool), nil}}
+   component:childComponent];
+
+  UIView *container = [[UIView alloc] init];
+  CK::Component::ViewReuseUtilities::mountingInRootView(container);
+  {
+    ViewManager m1(container);
+    const auto subview = m1.viewForConfiguration([component class], [component viewConfiguration]);
+    {
+      ViewManager m2(subview);
+      m2.viewForConfiguration([childComponent class], [childComponent viewConfiguration]);
+    }
+  }
+
+  // All subviews should be visible after view manager is reset
+  NSInteger numberOfViewsVisible = 0;
+  checkSubviewsAreHidden(container, NO, &numberOfViewsVisible);
+  XCTAssertEqual(numberOfViewsVisible, 2);
+
+  CK::Component::ViewReusePool::hideAll(container, nullptr);
+  // Only views in the view pool of `container` are hidden since there is no need to `setHidden` for their descendant.
+  NSInteger numberOfViewsHidden = 0;
+  checkSubviewsAreHidden(container, YES, &numberOfViewsHidden);
+  XCTAssertEqual(numberOfViewsHidden, 1);
+
+  // Although `setHidden` is not needed to be called on all descendant, calling `didEnterReusePool` is necessary
+  // because we need to notify all views in the hierarchy that they did enter reuse pool.
+  XCTAssertTrue(isDidEnterReusePoolIsCalledOnDescendant(container));
+}
+
+static void checkSubviewsAreHidden(UIView *view, BOOL isHidden, NSInteger *numberOfViewsMatched)
+{
+  for (UIView *subview in view.subviews) {
+    if (subview.isHidden == isHidden) {
+      (*numberOfViewsMatched)++;
+    }
+    checkSubviewsAreHidden(subview, isHidden, numberOfViewsMatched);
+  }
+}
+
+static BOOL isDidEnterReusePoolIsCalledOnDescendant(UIView *view)
+{
+  for (UIView *subview in view.subviews) {
+    const auto reusableView = CK::objCForceCast<CKTestReusableView>(subview);
+    if (!reusableView.isDidEnterReusePoolCalled) {
+      return NO;
+    }
+  }
+  return YES;
+}
+
 @end
 
 @implementation CKAddSubviewOnlyView
@@ -206,6 +273,15 @@ static UIView *imageViewFactory()
 - (void)insertSubview:(UIView *)view atIndex:(NSInteger)index
 {
   [NSException raise:NSGenericException format:@"Unexpected %@", NSStringFromSelector(_cmd)];
+}
+
+@end
+
+@implementation CKTestReusableView
+
+- (void)didEnterReusePool
+{
+  _isDidEnterReusePoolCalled = YES;
 }
 
 @end
