@@ -9,13 +9,15 @@
  */
 
 #import <Foundation/Foundation.h>
+
+#import <ComponentKit/CKCategorizable.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentRootLayoutProvider.h>
 
 struct CKComponentRootLayout;
 @class CKComponentScopeRoot;
 
-@interface CKDataSourceItem : NSObject <CKComponentRootLayoutProvider>
+@interface CKDataSourceItem : NSObject <CKComponentRootLayoutProvider, CKCategorizable>
 
 /** The model used to compute the layout */
 @property (nonatomic, strong, readonly) id model;

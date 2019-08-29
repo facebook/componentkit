@@ -11,6 +11,7 @@
 #import "CKDataSourceItem.h"
 #import "CKDataSourceItemInternal.h"
 
+#import "CKComponent.h"
 #import "CKComponentLayout.h"
 
 @implementation CKDataSourceItem
@@ -62,6 +63,24 @@
 - (NSString *)description
 {
   return [NSString stringWithFormat:@"%@ - model:%@", [super description], _model];
+}
+
+#pragma mark - CKCategorizable
+
+- (CK::NonNull<NSString *>)ck_category
+{
+  const auto component = self.rootLayout.component();
+  if (!component) {
+    return CKDefaultCategory;
+  }
+  NSString *modelCategory = nil;
+  // In the case where `model` is generic, we delegate categorization to `model` if it implements `CKCategorizable`.
+  if ([_model respondsToSelector:@selector(ck_category)]) {
+    modelCategory = ((id<CKCategorizable>)_model).ck_category;
+  } else if (_model) {
+    modelCategory = NSStringFromClass([_model class]);
+  }
+  return CK::makeNonNull([NSString stringWithFormat:@"%@-%@", modelCategory, NSStringFromClass(component.class)]);
 }
 
 @end

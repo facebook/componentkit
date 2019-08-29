@@ -464,6 +464,8 @@
 		7221BA522172AED200969D41 /* CKDataSourceQOSHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 7221BA4B2172AED200969D41 /* CKDataSourceQOSHelper.h */; };
 		7221BA562172B07200969D41 /* CKDataSourceQOSHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7221BA552172B07200969D41 /* CKDataSourceQOSHelper.mm */; };
 		7221BA572172B07200969D41 /* CKDataSourceQOSHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7221BA552172B07200969D41 /* CKDataSourceQOSHelper.mm */; };
+		722A1C3422FDA1B2009A5B22 /* CKCategorizable.h in Headers */ = {isa = PBXBuildFile; fileRef = 722A1C3322FDA1B1009A5B22 /* CKCategorizable.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		722A1C3522FDA1BD009A5B22 /* CKCategorizable.h in Headers */ = {isa = PBXBuildFile; fileRef = 722A1C3322FDA1B1009A5B22 /* CKCategorizable.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		725772102241AC5C0069285E /* CKComponentHostingContainerViewProviderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7257720F2241AC5C0069285E /* CKComponentHostingContainerViewProviderTests.mm */; };
 		725772112241AC5C0069285E /* CKComponentHostingContainerViewProviderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7257720F2241AC5C0069285E /* CKComponentHostingContainerViewProviderTests.mm */; };
 		7259D5762099E53000451280 /* CKDataSourceModificationHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 72C575542099C6E400FF603E /* CKDataSourceModificationHelper.h */; };
@@ -1195,6 +1197,7 @@
 		721AAE4F214F19B600B9EE8A /* CKComponentRootLayoutProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentRootLayoutProvider.h; sourceTree = "<group>"; };
 		7221BA4B2172AED200969D41 /* CKDataSourceQOSHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceQOSHelper.h; sourceTree = "<group>"; };
 		7221BA552172B07200969D41 /* CKDataSourceQOSHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceQOSHelper.mm; sourceTree = "<group>"; };
+		722A1C3322FDA1B1009A5B22 /* CKCategorizable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCategorizable.h; sourceTree = "<group>"; };
 		7257720F2241AC5C0069285E /* CKComponentHostingContainerViewProviderTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentHostingContainerViewProviderTests.mm; sourceTree = "<group>"; };
 		7262D391225CE02E00BA991E /* CKComponentControllerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentControllerHelper.h; sourceTree = "<group>"; };
 		7262D3AD225CE0A200BA991E /* CKComponentControllerHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentControllerHelper.mm; sourceTree = "<group>"; };
@@ -2073,6 +2076,7 @@
 				D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */,
 				23FEC58F203B30DA0068E09D /* ComponentTree */,
 				23B65AB8213FF9300049FFAC /* Render */,
+				722A1C3322FDA1B1009A5B22 /* CKCategorizable.h */,
 				238695671FE0571D00D4DAE2 /* CKComponentProtocol.h */,
 				238695661FE0571D00D4DAE2 /* CKComponentControllerProtocol.h */,
 				40AB33C71FC39196005D3CE9 /* CKStateUpdateMetadata.h */,
@@ -2669,6 +2673,7 @@
 				03B8B53C1D2A346F00EDFF59 /* CKComponentAnimationHooks.h in Headers */,
 				03B8B53D1D2A346F00EDFF59 /* ComponentMountContext.h in Headers */,
 				D427E81B2314A890004F22BD /* CKStatelessComponentContext.h in Headers */,
+				722A1C3522FDA1BD009A5B22 /* CKCategorizable.h in Headers */,
 				03B8B53E1D2A346F00EDFF59 /* CKAsyncLayer.h in Headers */,
 				23770A2822EB426B00858140 /* CKScopeTreeNodeWithChild.h in Headers */,
 				72A275CB219E145E00C1837F /* CKGlobalConfig.h in Headers */,
@@ -2801,6 +2806,7 @@
 				D6A0CF8722844556000CC4D0 /* CKAnimation.h in Headers */,
 				7F47ECDF218A254300AD4E55 /* CKDispatch.h in Headers */,
 				D68927F7225B6090009DBBD9 /* CKLinkable.h in Headers */,
+				722A1C3422FDA1B2009A5B22 /* CKCategorizable.h in Headers */,
 				D0B47D2D1CBD948E00BB33CE /* CKComponentHostingViewInternal.h in Headers */,
 				B1EF8FE81DD1562B00E74F43 /* CKComponentActionInternal.h in Headers */,
 				D64CC1A520DE655100DBE8D3 /* CKAnimationApplicator.h in Headers */,
