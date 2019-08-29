@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKComponentRootView.h>
 #import <ComponentKit/CKInspectableView.h>
+#import <ComponentKit/CKNonNull.h>
 
 /**
  @param rootView The CKComponentRootView instance being hit-tested.
@@ -44,5 +45,28 @@ typedef UIView *(^CKComponentRootViewHitTestHook)(UIView *rootView, CGPoint poin
 
 /** Returns an array of all registered hit test hooks. */
 + (NSArray *)hitTestHooks;
+
+@end
+
+/**
+ This should be implemented for object that hosts a `CKComponentRootView`.
+ A `CKComponentRootViewHost` provides categorization and read/write access of root view.
+ */
+@protocol CKComponentRootViewHost <NSObject>
+
+/**
+ Category of root view. This can be used as category for `CK::Component::RootViewPool`.
+ */
+@property (nonatomic, copy) NSString *rootViewCategory;
+
+/**
+ The underlying `CKComponentRootView`.
+ */
+@property (nonatomic, strong) CKComponentRootView *rootView;
+
+/**
+ Create a new root view which will be attached to this `CKComponentRootViewHost`.
+ */
+- (CK::NonNull<CKComponentRootView *>)createRootView;
 
 @end

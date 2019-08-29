@@ -171,7 +171,7 @@
 		03B8B5371D2A346F00EDFF59 /* CKEqualityHashHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B911CBD926700BB33CE /* CKEqualityHashHelpers.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B5381D2A346F00EDFF59 /* CKMountAnimationGuard.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B951CBD926700BB33CE /* CKMountAnimationGuard.h */; };
 		03B8B5391D2A346F00EDFF59 /* CKTextComponentViewInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47C4C1CBD92C200BB33CE /* CKTextComponentViewInternal.h */; };
-		03B8B53A1D2A346F00EDFF59 /* CKComponentRootViewInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B431CBD926700BB33CE /* CKComponentRootViewInternal.h */; };
+		03B8B53A1D2A346F00EDFF59 /* CKComponentRootViewInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B431CBD926700BB33CE /* CKComponentRootViewInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		03B8B53B1D2A346F00EDFF59 /* CKComponentContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B881CBD926700BB33CE /* CKComponentContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B53C1D2A346F00EDFF59 /* CKComponentAnimationHooks.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AD91CBD926700BB33CE /* CKComponentAnimationHooks.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03B8B53D1D2A346F00EDFF59 /* ComponentMountContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47AFB1CBD926700BB33CE /* ComponentMountContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -765,7 +765,7 @@
 		D0B47D2C1CBD948E00BB33CE /* CKComponentHostingViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B3F1CBD926700BB33CE /* CKComponentHostingViewDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D2D1CBD948E00BB33CE /* CKComponentHostingViewInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B401CBD926700BB33CE /* CKComponentHostingViewInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D2E1CBD948E00BB33CE /* CKComponentRootView.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B411CBD926700BB33CE /* CKComponentRootView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D0B47D2F1CBD948E00BB33CE /* CKComponentRootViewInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B431CBD926700BB33CE /* CKComponentRootViewInternal.h */; };
+		D0B47D2F1CBD948E00BB33CE /* CKComponentRootViewInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B431CBD926700BB33CE /* CKComponentRootViewInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D0B47D301CBD948E00BB33CE /* CKComponentSizeRangeProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B441CBD926700BB33CE /* CKComponentSizeRangeProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D311CBD948E00BB33CE /* CKBackgroundLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B471CBD926700BB33CE /* CKBackgroundLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B47D321CBD948E00BB33CE /* CKCenterLayoutComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B47B491CBD926700BB33CE /* CKCenterLayoutComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };

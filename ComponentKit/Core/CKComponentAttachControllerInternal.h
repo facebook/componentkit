@@ -43,3 +43,16 @@ void CKComponentAttachStateSetRootLayout(CKComponentAttachState *const self, con
 
 auto CKGetAttachStateForView(UIView *view) -> CKComponentAttachState *;
 auto CKSetAttachStateForView(UIView *view, CKComponentAttachState *attachState) -> void;
+
+/**
+ Update root view host according to given root view category by trying to retrieve a root view from root view pool
+ of `attachController`. `rootView` and `rootViewCategory` of root view host will be updated if the given `rootViewCategory`
+ is different from the existing `rootViewCategory`.
+ @param rootViewHost The host of root view that its root view can be replaced based on its category.
+ @param rootViewCategory Category of the root view which will be used for retrieving a root view from root view pool.
+ @param attahController The `CKComponentAttachController` that is used for detaching components from the existing
+ root view if it's going to be replaced.
+ */
+auto CKUpdateComponentRootViewHost(CK::NonNull<id<CKComponentRootViewHost>> rootViewHost,
+                                   CK::NonNull<NSString *> rootViewCategory,
+                                   CK::NonNull<CKComponentAttachController *> attachController) -> void;
