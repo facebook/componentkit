@@ -44,6 +44,9 @@
                          mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext
 {
   _didMountComponentHitCount++;
+  if (const auto mc = mountAnalyticsContext) {
+    _viewAllocationsCount += mc->viewAllocations;
+  }
 }
 
 - (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component
@@ -77,7 +80,7 @@
 - (id<CKSystraceListener>)systraceListener { return nil; }
 - (id<CKDebugAnalyticsListener>)debugAnalyticsListener { return _debugAnalyticsListener; }
 
-- (BOOL)shouldCollectMountInformationForRootComponent:(CKComponent *)component { return NO; }
+- (BOOL)shouldCollectMountInformationForRootComponent:(CKComponent *)component { return YES; }
 
 - (void)didReuseNode:(id<CKTreeNodeProtocol>)node inScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot {}
 

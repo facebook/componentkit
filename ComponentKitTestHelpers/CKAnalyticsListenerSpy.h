@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
   NSInteger _didCollectAnimationsHitCount;
   NSInteger _willMountComponentHitCount;
   NSInteger _didMountComponentHitCount;
+  NSInteger _viewAllocationsCount;
 }
 
 + (instancetype)newWithDebugAnalyticsListener:(id<CKDebugAnalyticsListener>)debugAnalyticsListener;

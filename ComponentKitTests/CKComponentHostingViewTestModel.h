@@ -19,6 +19,7 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewWrapperType) {
   CKComponentHostingViewWrapperTypeFlexbox,
   CKComponentHostingViewWrapperTypeTestComponent,
   CKComponentHostingViewWrapperTypeRenderComponent,
+  CKComponentHostingViewWrapperTypeDeepViewHierarchy,
 };
 
 @interface CKComponentHostingViewTestModel : NSObject

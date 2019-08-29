@@ -38,6 +38,22 @@
 
 @end
 
+static CKComponent *componentWithDeepViewHierarchy(NSInteger viewLevel)
+{
+  if (viewLevel == 0) {
+    return nil;
+  }
+  return
+  [CKFlexboxComponent
+   newWithView:{[UIImageView class]}
+   size:{}
+   style:{}
+   children:{
+     {componentWithDeepViewHierarchy(viewLevel - 1)},
+     {componentWithDeepViewHierarchy(viewLevel - 1)},
+   }];
+}
+
 CKComponent *CKComponentWithHostingViewTestModel(CKComponentHostingViewTestModel *model)
 {
   switch(model.wrapperType) {
@@ -71,6 +87,9 @@ CKComponent *CKComponentWithHostingViewTestModel(CKComponentHostingViewTestModel
       [CKLifecycleTestComponent
        newWithView:{[UIView class], {{@selector(setBackgroundColor:), [model color]}}}
        size:[model size]];
+    }
+    case CKComponentHostingViewWrapperTypeDeepViewHierarchy: {
+      return componentWithDeepViewHierarchy(4);
     }
   }
 }

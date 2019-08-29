@@ -21,6 +21,8 @@
 #import <ComponentKit/CKComponentHostingViewDelegate.h>
 #import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKComponentHostingViewInternal.h>
+#import <ComponentKit/CKOptional.h>
+#import <ComponentKit/ComponentRootViewPool.h>
 #import <ComponentKitTestHelpers/CKAnalyticsListenerSpy.h>
 
 #import "CKComponentHostingViewTestModel.h"
@@ -32,6 +34,7 @@ typedef struct {
   id<CKComponentSizeRangeProviding> sizeRangeProvider;
   CK::Optional<CGSize> initialSize;
   BOOL shouldUpdateModelAfterCreation = YES;
+  CK::Optional<CK::Component::RootViewPool> rootViewPool = CK::none;
 } CKComponentHostingViewConfiguration;
 
 @interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate>
@@ -68,7 +71,21 @@ typedef struct {
                                                            options:{
                                                              .allowTapPassthrough = options.allowTapPassthrough,
                                                              .initialSize = options.initialSize,
+                                                             .rootViewPool = options.rootViewPool,
                                                            }];
+}
+
+/// Used to identify component provider class / function
++ (NSString *)componentProviderIdentifier
+{
+  return [NSString stringWithFormat:@"%p", [CKComponentHostingViewTests class]];
+}
+
++ (CK::NonNull<NSString *>)rootViewCategory
+{
+  return CK::makeNonNull([NSString stringWithFormat:@"%@-%@",
+                          NSStringFromClass([CKComponentHostingView class]),
+                          [self componentProviderIdentifier]]);
 }
 
 + (CKComponent *)componentForModel:(CKComponentHostingViewTestModel *)model context:(id<NSObject>)context
@@ -373,7 +390,95 @@ typedef struct {
   XCTAssertEqual(_analyticsListenerSpy->_didMountComponentHitCount, 1);
 }
 
+- (void)test_RootViewPool_RootViewIsPushedToRootViewPoolWhenHostingViewIsDeallocated
+{
+  auto rootViewPool = CK::Component::RootViewPool();
+  const auto rootViewCategory = [[self class] rootViewCategory];
+  XCTAssertNil(rootViewPool.popRootViewWithCategory(rootViewCategory));
+
+  UIView *rootView = nil;
+  @autoreleasepool { // Make sure hosting view is deallocated at the end of scope
+    auto hostingView = [[self class] hostingView:{
+      .rootViewPool = rootViewPool,
+      .wrapperType = CKComponentHostingViewWrapperTypeDeepViewHierarchy,
+    }];
+    rootView = hostingView.containerView;
+    hostingView = nil;
+  }
+  XCTAssertEqual(rootView, (UIView *)rootViewPool.popRootViewWithCategory(rootViewCategory));
+}
+
+- (void)test_RootViewPool_RootViewIsReusedFromRootViewPoolWhenCategoriesAreTheSame
+{
+  auto rootViewPool = CK::Component::RootViewPool();
+  const auto rootViewCategory = [[self class] rootViewCategory];
+
+  UIView *rootView = nil;
+  @autoreleasepool { // Make sure hosting view is deallocated at the end of scope
+    auto hostingView = [[self class] hostingView:{
+      .rootViewPool = rootViewPool,
+      .wrapperType = CKComponentHostingViewWrapperTypeDeepViewHierarchy,
+    }];
+    rootView = hostingView.containerView;
+    hostingView = nil;
+  }
+
+  auto hostingView = [[self class] hostingView:{
+    .rootViewPool = rootViewPool,
+    .wrapperType = CKComponentHostingViewWrapperTypeDeepViewHierarchy,
+  }];
+  XCTAssertEqual(rootView, hostingView.containerView);
+}
+
+- (void)test_MountPerformanceWithRootViewPoolEnabled
+{
+  [self measureBlock:^{
+    CK::Optional<NSInteger> viewAllocationsCount;
+    auto rootViewPool = CK::Component::RootViewPool();
+    for (int i = 0; i < 10; i++) {
+      @autoreleasepool {
+        const auto hostingView = [[self class] hostingView:{
+          .analyticsListener = _analyticsListenerSpy,
+          .rootViewPool = rootViewPool,
+          .wrapperType = CKComponentHostingViewWrapperTypeDeepViewHierarchy,
+        }];
+        [hostingView updateModel:nil mode:CKUpdateModeSynchronous];
+        [hostingView layoutIfNeeded];
+      }
+      viewAllocationsCount.match([&](const auto v) {
+        XCTAssertEqual(v, _analyticsListenerSpy->_viewAllocationsCount);
+      }, [&]() {
+        viewAllocationsCount = _analyticsListenerSpy->_viewAllocationsCount;
+      });
+    }
+  }];
+}
+
+- (void)test_MountPerformanceWithRootViewPoolDisabled
+{
+  [self measureBlock:^{
+    NSInteger viewAllocationsCount = 0;
+    for (int i = 0; i < 10; i++) {
+      @autoreleasepool {
+        const auto hostingView = [[self class] hostingView:{
+          .analyticsListener = _analyticsListenerSpy,
+          .wrapperType = CKComponentHostingViewWrapperTypeDeepViewHierarchy,
+        }];
+        [hostingView updateModel:nil mode:CKUpdateModeSynchronous];
+        [hostingView layoutIfNeeded];
+      }
+      XCTAssertGreaterThan(_analyticsListenerSpy->_viewAllocationsCount, viewAllocationsCount);
+      viewAllocationsCount = _analyticsListenerSpy->_viewAllocationsCount;
+    }
+  }];
+}
+
 @end
+
+static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<NSObject> context)
+{
+  return CKComponentWithHostingViewTestModel(model);
+}
 
 @interface CKComponentHostingViewTests_ComponentProviderFunction : CKComponentHostingViewTests
 @end
@@ -382,8 +487,7 @@ typedef struct {
 
 + (CKComponentHostingView *)makeHostingView:(const CKComponentHostingViewConfiguration &)options
 {
-  auto const p = [](id<NSObject> m, id<NSObject>){ return CKComponentWithHostingViewTestModel(m); };
-  return [[CKComponentHostingView alloc] initWithComponentProviderFunc:p
+  return [[CKComponentHostingView alloc] initWithComponentProviderFunc:CKComponentTestComponentProviderFunc
                                                      sizeRangeProvider:options.sizeRangeProvider ?: [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
                                                    componentPredicates:{}
                                          componentControllerPredicates:{}
@@ -391,7 +495,13 @@ typedef struct {
                                                                options:{
                                                                  .allowTapPassthrough = options.allowTapPassthrough,
                                                                  .initialSize = options.initialSize,
+                                                                 .rootViewPool = options.rootViewPool,
                                                                }];
+}
+
++ (NSString *)componentProviderIdentifier
+{
+  return [NSString stringWithFormat:@"%p", CKComponentTestComponentProviderFunc];
 }
 
 @end
