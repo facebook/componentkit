@@ -115,6 +115,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     return [componentProvider componentForModel:m context:c];
   };
   return [self initWithComponentProviderBlock:p
+                  componentProviderIdentifier:[NSString stringWithFormat:@"%p", componentProvider]
                             sizeRangeProvider:sizeRangeProvider
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
@@ -133,6 +134,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
   auto const p = ^(id<NSObject> m, id<NSObject> c) { return componentProvider(m, c); };
   return [self initWithComponentProviderBlock:p
+                  componentProviderIdentifier:[NSString stringWithFormat:@"%p", componentProvider]
                             sizeRangeProvider:sizeRangeProvider
                           componentPredicates:componentPredicates
                 componentControllerPredicates:componentControllerPredicates
@@ -141,6 +143,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 }
 
 - (instancetype)initWithComponentProviderBlock:(CKComponentProviderBlock)componentProvider
+                   componentProviderIdentifier:(NSString *)componentProviderIdentifier
                              sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
                            componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
                  componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
@@ -161,7 +164,13 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
      scopeIdentifier:_pendingInputs.scopeRoot.globalIdentifier
      analyticsListener:_pendingInputs.scopeRoot.analyticsListener
      sizeRangeProvider:sizeRangeProvider
-     allowTapPassthrough:_allowTapPassthrough];
+     allowTapPassthrough:_allowTapPassthrough
+     rootViewPoolOptions:options.rootViewPool.map([&](const auto rootViewPool) {
+      return CKComponentHostingViewRootViewPoolOptions {
+        .rootViewCategory = CK::makeNonNull([NSString stringWithFormat:@"%@-%@", NSStringFromClass(self.class), componentProviderIdentifier]),
+        .rootViewPool = rootViewPool,
+      };
+     })];
     [self addSubview:self.containerView];
 
     _initialSize = options.initialSize;

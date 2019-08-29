@@ -43,7 +43,8 @@
    sizeRangeProvider:
    [CKComponentFlexibleSizeRangeProvider
     providerWithFlexibility:CKComponentSizeRangeFlexibilityNone]
-   allowTapPassthrough:NO];
+   allowTapPassthrough:NO
+   rootViewPoolOptions:CK::none];
 
   const auto result = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, _analyticsListener),
                                        {},

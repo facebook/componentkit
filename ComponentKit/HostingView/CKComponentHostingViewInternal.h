@@ -19,6 +19,7 @@
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKInspectableView.h>
 #import <ComponentKit/CKOptional.h>
+#import <ComponentKit/ComponentRootViewPool.h>
 
 #import <unordered_set>
 
@@ -30,6 +31,8 @@ struct CKComponentHostingViewOptions {
   /// A initial size that will be used for hosting view before first generation of component is created.
   /// Specifying a initial size enables the ability to handle the first model/context update asynchronously.
   CK::Optional<CGSize> initialSize;
+  /// A root view pool that hosting view can retrieve its container view from.
+  CK::Optional<CK::Component::RootViewPool> rootViewPool;
 };
 
 @interface CKComponentHostingView<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> () <CKComponentHostingViewProtocol, CKComponentStateListener>
