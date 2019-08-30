@@ -248,12 +248,12 @@ namespace CKRender {
     }
 
     // Report information to `debugAnalyticsListener`.
-    if (auto debugAnalyticsListener = params.debugAnalyticsListener) {
-      [debugAnalyticsListener didBuildComponentTreeWithPrecomputedChild:component
-                                                                   node:node
-                                                                 parent:parent
-                                                                 params:params
-                                                   parentHasStateUpdate:parentHasStateUpdate];
+    if (params.shouldCollectTreeNodeCreationInformation) {
+      [params.scopeRoot.analyticsListener didBuildTreeNodeForPrecomputedChild:component
+                                                                         node:node
+                                                                       parent:parent
+                                                                       params:params
+                                                         parentHasStateUpdate:parentHasStateUpdate];
     }
 
     if (childComponent) {

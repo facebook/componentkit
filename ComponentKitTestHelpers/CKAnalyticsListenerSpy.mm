@@ -13,18 +13,6 @@
 #import <ComponentKit/CKComponentScopeRoot.h>
 
 @implementation CKAnalyticsListenerSpy
-{
-  id<CKDebugAnalyticsListener> _debugAnalyticsListener;
-}
-
-+ (instancetype)newWithDebugAnalyticsListener:(id<CKDebugAnalyticsListener>)debugAnalyticsListener
-{
-  auto const a = [super new];
-  if (a) {
-    a->_debugAnalyticsListener = debugAnalyticsListener;
-  }
-  return a;
-}
 
 - (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
                                buildTrigger:(BuildTrigger)buildTrigger
@@ -78,7 +66,13 @@
 - (void)didStartBlockTrace:(const char *const)blockName {}
 
 - (id<CKSystraceListener>)systraceListener { return nil; }
-- (id<CKDebugAnalyticsListener>)debugAnalyticsListener { return _debugAnalyticsListener; }
+- (BOOL)shouldCollectTreeNodeCreationInformation:(CKComponentScopeRoot *)scopeRoot { return NO; }
+
+- (void)didBuildTreeNodeForPrecomputedChild:(id<CKTreeNodeComponentProtocol>)component
+                                       node:(id<CKTreeNodeProtocol>)node
+                                     parent:(id<CKTreeNodeWithChildrenProtocol>)parent
+                                     params:(const CKBuildComponentTreeParams &)params
+                       parentHasStateUpdate:(BOOL)parentHasStateUpdate {}
 
 - (BOOL)shouldCollectMountInformationForRootComponent:(CKComponent *)component { return YES; }
 

@@ -21,18 +21,6 @@
 @class CKComponent;
 @class CKComponentScopeRoot;
 
-@protocol CKDebugAnalyticsListener <NSObject>
-
-/**
- Will be called for every component with pre-computed child (CKCompositeComponent for example) during the component tree creation.
- */
-- (void)didBuildComponentTreeWithPrecomputedChild:(id<CKTreeNodeComponentProtocol>)component
-                                             node:(id<CKTreeNodeProtocol>)node
-                                           parent:(id<CKTreeNodeWithChildrenProtocol>)parent
-                                           params:(const CKBuildComponentTreeParams &)params
-                             parentHasStateUpdate:(BOOL)parentHasStateUpdate;
-@end
-
 /**
  This protocol is being used by the infrastructure to collect data about the component tree life cycle.
  */
@@ -138,8 +126,17 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
 - (id<CKSystraceListener>)systraceListener;
 
 /**
- Provides a debug analytics listener listener. Can be nil.
+ If returns true, `didBuildTreeNodeForPrecomputedChild` will be called for non-render component during the component tree creation.
  */
-- (id<CKDebugAnalyticsListener>)debugAnalyticsListener;
+- (BOOL)shouldCollectTreeNodeCreationInformation:(CKComponentScopeRoot *)scopeRoot;
+
+/**
+ Will be called for every component with pre-computed child (CKCompositeComponent for example) during the component tree creation.
+ */
+- (void)didBuildTreeNodeForPrecomputedChild:(id<CKTreeNodeComponentProtocol>)component
+                                       node:(id<CKTreeNodeProtocol>)node
+                                     parent:(id<CKTreeNodeWithChildrenProtocol>)parent
+                                     params:(const CKBuildComponentTreeParams &)params
+                       parentHasStateUpdate:(BOOL)parentHasStateUpdate;
 
 @end

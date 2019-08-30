@@ -54,8 +54,8 @@ struct CKBuildComponentTreeParams {
   // The current systrace listener. Can be nil if systrace is not enabled.
   id<CKSystraceListener> systraceListener;
 
-  // The current debug listener. Can be nil.
-  id<CKDebugAnalyticsListener> debugAnalyticsListener;
+  // Collect tree node information for logging.
+  BOOL shouldCollectTreeNodeCreationInformation;
 
   // When enabled, all the comopnents will be regenerated (no component reuse optimiztions).
   BOOL ignoreComponentReuseOptimizations = NO;
