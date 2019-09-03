@@ -112,47 +112,23 @@ struct CKComponentViewClass {
   
   bool operator==(const CKComponentViewClass &other) const noexcept
   {
-    if (usingStringIdentifier) {
-      return other.stringIdentifier == stringIdentifier;
-    } else {
-      return other.identifier == identifier;
-    }
+    return other.identifier == identifier;
   }
   
   bool operator!=(const CKComponentViewClass &other) const noexcept
   {
-    if (usingStringIdentifier) {
-      return other.stringIdentifier != stringIdentifier;
-    } else {
-      return other.identifier != identifier;
-    }
+    return other.identifier != identifier;
   }
   
   const CKComponentViewClassIdentifier &getIdentifier() const noexcept { return identifier; }
-  const std::string &getStringIdentifier() const noexcept { return stringIdentifier; }
-  
-  const std::string getIdentifierDescription() const noexcept
-  {
-    if (usingStringIdentifier) {
-      return stringIdentifier;
-    } else {
-      return identifier.description();
-    }
-  }
   
   size_t hash() const
   {
-    if (usingStringIdentifier) {
-      return std::hash<std::string>()(stringIdentifier);
-    } else {
-      return std::hash<CKComponentViewClassIdentifier>()(identifier);
-    }
+    return std::hash<CKComponentViewClassIdentifier>()(identifier);
   }
   
 private:
   
-  bool usingStringIdentifier;
-  std::string stringIdentifier;
   CKComponentViewClassIdentifier identifier;
   UIView *(^factory)(void);
   CKComponentViewReuseBlock didEnterReusePool;

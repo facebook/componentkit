@@ -37,8 +37,6 @@ struct CKGlobalConfig {
    This is only for running expeirment in ComponentKit. Please DO NOT USE.
    */
   BOOL updateComponentInControllerAfterBuild = NO;
-  /** If enabled CKComponentViewClass will use CKComponentViewClassIdentifier instead of strings for the cache key */
-  BOOL enableComponentViewClassIdentifier = NO;
   /** Component Tree Unification config */
   CKUnifyComponentTreeConfig unifyComponentTreeConfig;
 };

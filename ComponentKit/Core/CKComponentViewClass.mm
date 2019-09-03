@@ -51,19 +51,14 @@ static CKComponentViewFactoryBlock viewFactoryFromViewClass(Class viewClass) noe
   }
 }
 
-CKComponentViewClass::CKComponentViewClass() noexcept : usingStringIdentifier(CKReadGlobalConfig().enableComponentViewClassIdentifier == false), factory(nil)
+CKComponentViewClass::CKComponentViewClass() noexcept : factory(nil)
 {
 }
 
 CKComponentViewClass::CKComponentViewClass(Class viewClass) noexcept :
 factory(viewFactoryFromViewClass(viewClass))
 {
-  if (CKReadGlobalConfig().enableComponentViewClassIdentifier) {
-    identifier = { viewClass };
-  } else {
-    usingStringIdentifier = true;
-    stringIdentifier = std::string(class_getName(viewClass));
-  }
+  identifier = { viewClass };
 }
 
 CKComponentViewClass::CKComponentViewClass(Class viewClass, SEL enter, SEL leave) noexcept :
@@ -71,12 +66,7 @@ factory(viewFactoryFromViewClass(viewClass)),
 didEnterReusePool(blockFromSEL(enter)),
 willLeaveReusePool(blockFromSEL(leave))
 {
-  if (CKReadGlobalConfig().enableComponentViewClassIdentifier) {
-    identifier = { viewClass, enter, leave };
-  } else {
-    usingStringIdentifier = true;
-    stringIdentifier = std::string(class_getName(viewClass)) + "-" + sel_getName(enter) + "-" + sel_getName(leave);
-  }
+  identifier = { viewClass, enter, leave };
 }
 
 CKComponentViewClass::CKComponentViewClass(CKComponentViewFactoryFunc fact,
@@ -84,12 +74,7 @@ CKComponentViewClass::CKComponentViewClass(CKComponentViewFactoryFunc fact,
                                            void (^leave)(UIView *)) noexcept
 : factory(^UIView*(void) {return fact();}), didEnterReusePool(enter), willLeaveReusePool(leave)
 {
-  if (CKReadGlobalConfig().enableComponentViewClassIdentifier) {
-    identifier = { fact };
-  } else {
-    usingStringIdentifier = true;
-    stringIdentifier = CKStringFromPointer((const void *)fact);
-  }
+  identifier = { fact };
 }
 
 UIView *CKComponentViewClass::createView() const

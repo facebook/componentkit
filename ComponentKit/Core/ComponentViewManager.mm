@@ -114,7 +114,7 @@ UIView *ViewReusePool::viewForClass(const CKComponentViewClass &viewClass, UIVie
 {
   if (position == pool.end()) {
     UIView *v = viewClass.createView();
-    CKCAssertNotNil(v, @"Expected non-nil view to be created for view class %s", viewClass.getIdentifierDescription().c_str());
+    CKCAssertNotNil(v, @"Expected non-nil view to be created for view class %s", viewClass.getIdentifier().description().c_str());
     [container addSubview:v];
     pool.push_back(v);
     position = pool.end();
@@ -168,10 +168,7 @@ void ViewReusePool::hideAll(UIView *view, MountAnalyticsContext *mountAnalyticsC
   }
 }
 
-ViewReusePoolMap::ViewReusePoolMap()
-{
-  usingStringIdentifier = CKReadGlobalConfig().enableComponentViewClassIdentifier == false;
-}
+ViewReusePoolMap::ViewReusePoolMap() {}
 
 ViewReusePoolMap &ViewReusePoolMap::viewReusePoolMapForView(UIView *v)
 {
@@ -245,27 +242,15 @@ UIView *ViewReusePoolMap::viewForConfiguration(Class componentClass,
     return nil;
   }
   
-  if (usingStringIdentifier) {
-    const Component::ViewKeyWithStringIdentifier key = {
-      componentClass,
-      config.viewClass().getStringIdentifier(),
-      config.rep->attributeShape
-    };
-    // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
-    UIView *v = mapWithStringIdentifier[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
-    vendedViews.push_back(v);
-    return v;
-  } else {
-    const Component::ViewKey key = {
-      componentClass,
-      config.viewClass().getIdentifier(),
-      config.rep->attributeShape
-    };
-    // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
-    UIView *v = map[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
-    vendedViews.push_back(v);
-    return v;
-  }
+  const Component::ViewKey key = {
+    componentClass,
+    config.viewClass().getIdentifier(),
+    config.rep->attributeShape
+  };
+  // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
+  UIView *v = map[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
+  vendedViews.push_back(v);
+  return v;
 }
 
 UIView *ViewManager::viewForConfiguration(Class componentClass,
