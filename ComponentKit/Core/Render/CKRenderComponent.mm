@@ -28,7 +28,7 @@ struct CKRenderLayoutCache {
 @implementation CKRenderComponent
 {
   CKComponent *_childComponent;
-  std::shared_ptr<CKRenderLayoutCache> _cachedLayout;
+  CKRenderLayoutCache _cachedLayout;
   BOOL _enableLayoutCache;
 }
 
@@ -98,17 +98,17 @@ struct CKRenderLayoutCache {
   if (_childComponent) {
     CKComponentLayout l;
     if (_enableLayoutCache) {
-      if (_cachedLayout != nullptr &&
-          CGSizeEqualToSize(parentSize, _cachedLayout->parentSize) &&
-          constrainedSize == _cachedLayout->constrainedSize) {
-        l = _cachedLayout->childLayout;
+      if (_cachedLayout.childLayout.component != nil &&
+          CGSizeEqualToSize(parentSize, _cachedLayout.parentSize) &&
+          constrainedSize == _cachedLayout.constrainedSize) {
+        l = _cachedLayout.childLayout;
       } else {
         l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];
-        _cachedLayout = std::make_shared<CKRenderLayoutCache>(CKRenderLayoutCache{
+        _cachedLayout = {
           .constrainedSize = constrainedSize,
           .parentSize = parentSize,
           .childLayout = l,
-        });
+        };
       }
     } else {
       l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];
