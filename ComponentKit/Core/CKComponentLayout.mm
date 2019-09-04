@@ -145,7 +145,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
   LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
 
 #if CK_ASSERTIONS_ENABLED
-  const CKComponentContext<CKComponentCreationValidationContext> validationContext([CKComponentCreationValidationContext new]);
+  const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
 #endif
   
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);

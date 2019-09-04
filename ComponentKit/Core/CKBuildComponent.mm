@@ -93,7 +93,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                             buildTrigger:buildTrigger
                                             stateUpdates:stateUpdates];
 #if CK_ASSERTIONS_ENABLED
-  const CKComponentContext<CKComponentCreationValidationContext> validationContext([CKComponentCreationValidationContext new]);
+  const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceBuild]);
 #endif
   auto const component = componentFactory();
 

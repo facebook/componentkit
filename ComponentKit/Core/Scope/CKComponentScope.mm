@@ -66,6 +66,9 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
     _scopeHandle = childPair.frame.handle;
     _threadLocalScope->keys.push({});
   }
+  CKCAssertWithCategory(_threadLocalScope != nullptr,
+                        NSStringFromClass(componentClass),
+                        @"Component with scope must be created inside component provider function.");
 }
 
 id CKComponentScope::state(void) const noexcept

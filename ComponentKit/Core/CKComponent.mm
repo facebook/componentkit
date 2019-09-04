@@ -116,7 +116,7 @@ struct CKComponentMountInfo {
                                        size:(const CKComponentSize &)size
 {
   if (self = [super init]) {
-    CKValidateComponentCreation();
+    CKValidateRenderComponentCreation();
     // Mark render component in the scope root.
     CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree();
     CKComponentContextHelper::didCreateRenderComponent(self);
