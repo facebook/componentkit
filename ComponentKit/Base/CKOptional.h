@@ -343,7 +343,7 @@ public:
     using U = decltype(f(std::declval<T>()));
     return match(
                  [&](const T& value) { return Optional<U>{f(value)}; },
-                 []() { return none; });
+                 []() { return Optional<U>{}; });
   }
 
   /**
@@ -359,9 +359,10 @@ public:
    */
   template <typename F>
   auto map(F&& f) const -> Optional<MemberType<F>> {
+    using U = MemberType<F>;
     return match(
-                 [&](const T& value) { return Optional<MemberType<F>>{value.*f}; },
-                 []() { return none; });
+                 [&](const T& value) { return Optional<U>{value.*f}; },
+                 []() { return Optional<U>{}; });
   }
 
   /**
@@ -381,16 +382,16 @@ public:
     return match(
                  [&](const T& value) { return f(value); }, []() { return nullptr; });
   }
-  
+
   /**
    Transforms a value wrapped inside the Optional, e.g.:
-   
+
    @code
    Optional<Props> x = ...
    NSString *s = x.mapToPtr(&Props::title); // nil if the x was empty
-   
+
    @param f pointer-to-member function that will be invoked if the Optional contains the value.
-   
+
    @return The result of calling `f` with the wrapped value if the Optional was not empty, or a null pointer otherwise.
    */
   template <typename F>
@@ -416,7 +417,9 @@ public:
   auto flatMap(F&& f) const
   -> Optional<typename decltype(f(std::declval<T>()))::ValueType> {
     return match(
-                 [&](const T& value) { return f(value); }, []() { return none; });
+                 [&](const T& value) { return f(value); }, []() {
+                   return Optional<typename decltype(f(std::declval<T>()))::ValueType>{};
+                 });
   }
 
   /**
@@ -435,9 +438,10 @@ public:
    */
   template <typename F>
   auto flatMap(F&& f) const -> Optional<typename MemberType<F>::ValueType> {
+    using U = typename MemberType<F>::ValueType;
     return match(
-                 [&](const T& value) { return Optional<typename MemberType<F>::ValueType>{value.*f}; },
-                 []() { return none; });
+                 [&](const T& value) { return Optional<U>{value.*f}; },
+                 []() { return Optional<U>{}; });
   }
 
   /**
@@ -579,16 +583,16 @@ private:
 /**
  Running apply function on multiple optionals, where the provided function will
  only be executed if all the passed optionals are not none
- 
+
  auto v = std::vector<int> {};
- 
+
  apply([&](const int &x, const int &y){
  v.push_back(x);
  v.push_back(y);
  }, x, y);
- 
+
  @param vm  function-like object that will be invoked if the Optional contains the value.
- 
+
  Note: you are not allowed to return anything from value handler in apply.
  */
 template <typename F, typename T, typename S>
@@ -603,17 +607,17 @@ auto apply(F &&f, const Optional<T> &opt1, const Optional<S> &opt2) -> void {
 /**
  Running apply function on multiple optionals, where the provided function will
  only be executed if all the passed optionals are not none
- 
+
  auto v = std::vector<int> {};
- 
+
  apply([&](const int &x, const int &y, const int &z){
  v.push_back(x);
  v.push_back(y);
  v.push_back(z);
  }, x, y, z);
- 
+
  @param vm  function-like object that will be invoked if the Optional contains the value.
- 
+
  Note: you are not allowed to return anything from value handler in apply.
  */
 template <typename F, typename T, typename S, typename... Ts>
@@ -622,7 +626,7 @@ auto apply(F &&f, const Optional<T> &opt1, const Optional<S> &opt2, const Option
     apply([&](const S &value2, Ts... ts){ f(value1, value2, ts...); }, opt2, opts...);
   });
 }
-  
+
 /**
  You can compare Optionals of the same type:
 
