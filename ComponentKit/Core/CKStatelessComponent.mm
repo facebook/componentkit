@@ -33,23 +33,19 @@
 
 CKComponent *CKCreateStatelessComponent(NS_RELEASES_ARGUMENT CKComponent *component, const char *debugIdentifier) NS_RETURNS_RETAINED
 {
+  if (component) {
 #if CK_ASSERTIONS_ENABLED
-  if (component == nil) {
-    return nil;
-  }
-  return
-  [CKStatelessComponent
-   newWithView:{}
-   component:component
-   identifier:[NSString stringWithCString:debugIdentifier encoding:NSUTF8StringEncoding]];
+    auto const shouldAllocateComponent = YES;
 #else
-  if (component != nil && [CKComponentContext<CKStatelessComponentContext>::get() shouldAllocateComponent]) {
-    return [CKStatelessComponent
-     newWithView:{}
-     component:component
-     identifier:[NSString stringWithCString:debugIdentifier encoding:NSUTF8StringEncoding]];
-  } else {
-    return component;
-  }
+    auto const shouldAllocateComponent = [CKComponentContext<CKStatelessComponentContext>::get() shouldAllocateComponent];
 #endif
+    if (shouldAllocateComponent) {
+      return
+      [CKStatelessComponent
+       newWithView:{}
+       component:component
+       identifier:[NSString stringWithCString:debugIdentifier encoding:NSUTF8StringEncoding]];
+    }
+  }
+  return component;
 }
