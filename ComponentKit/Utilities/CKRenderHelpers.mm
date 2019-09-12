@@ -336,6 +336,43 @@ namespace CKRender {
     return node;
   }
 
+  auto buildComponentTreeForRenderLayoutComponentWithChildren(id<CKRenderWithChildrenComponentProtocol> component,
+                                                              id<CKTreeNodeWithChildrenProtocol> parent,
+                                                              id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                                              const CKBuildComponentTreeParams &params,
+                                                              BOOL parentHasStateUpdate) -> id<CKTreeNodeProtocol>
+  {
+    id<CKTreeNodeWithChildrenProtocol> node = (id<CKTreeNodeWithChildrenProtocol>)component.scopeHandle.treeNode;
+    [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
+    if (node == nil) {
+      node = [[CKTreeNodeWithChildren alloc]
+              initWithRenderComponent:component
+              parent:parent
+              previousParent:previousParent
+              scopeRoot:params.scopeRoot
+              stateUpdates:params.stateUpdates];
+    }
+
+
+    // Update the `parentHasStateUpdate` param for Faster state/props updates.
+    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
+      parentHasStateUpdate = YES;
+    }
+
+    auto const children = [component renderChildren:node.state];
+    auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
+    for (auto const child : children) {
+      if (child) {
+        [child buildComponentTree:node
+                   previousParent:previousParentForChild
+                           params:params
+             parentHasStateUpdate:parentHasStateUpdate];
+      }
+    }
+
+    return node;
+  }
+
   auto buildComponentTreeForRenderComponent(id<CKRenderWithChildComponentProtocol> component,
                                             __strong id<CKTreeNodeComponentProtocol> *childComponent,
                                             id<CKTreeNodeWithChildrenProtocol> parent,
@@ -400,27 +437,16 @@ namespace CKRender {
                                       id<CKTreeNodeWithChildrenProtocol> parent,
                                       id<CKTreeNodeWithChildrenProtocol> previousParent,
                                       const CKBuildComponentTreeParams &params,
-                                      BOOL parentHasStateUpdate,
-                                      BOOL isBridgeComponent) -> id<CKTreeNodeProtocol>
+                                      BOOL parentHasStateUpdate) -> id<CKTreeNodeProtocol>
   {
-    id<CKTreeNodeWithChildrenProtocol> node;
-    // Bridge components might have a scope - hence might have tree node already.
-    if (isBridgeComponent) {
-      node = (id<CKTreeNodeWithChildrenProtocol>)component.scopeHandle.treeNode;
-      [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
-    }
-    if (node == nil) {
-      node = [[CKTreeNodeWithChildren alloc]
-              initWithRenderComponent:component
-              parent:parent
-              previousParent:previousParent
-              scopeRoot:params.scopeRoot
-              stateUpdates:params.stateUpdates];
-    }
+    id<CKTreeNodeWithChildrenProtocol> node = [[CKTreeNodeWithChildren alloc]
+                                               initWithRenderComponent:component
+                                               parent:parent
+                                               previousParent:previousParent
+                                               scopeRoot:params.scopeRoot
+                                               stateUpdates:params.stateUpdates];
 
-    if (!isBridgeComponent) {
-      CKComponentContextHelper::willBuildComponentTree(component);
-    }
+    CKComponentContextHelper::willBuildComponentTree(component);
 
     // Update the `parentHasStateUpdate` param for Faster state/props updates.
     if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
@@ -438,9 +464,7 @@ namespace CKRender {
       }
     }
 
-    if (!isBridgeComponent) {
-      CKComponentContextHelper::didBuildComponentTree(component);
-    }
+    CKComponentContextHelper::didBuildComponentTree(component);
 
     return node;
   }
