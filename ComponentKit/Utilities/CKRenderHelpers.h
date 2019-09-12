@@ -24,7 +24,7 @@ using CKRenderDidReuseComponentBlock = void(^)(id<CKRenderComponentProtocol>);
 
 namespace CKRender {
   /**
-   Builds a component tree for a component having a child component that has been already initialized.
+   Build component tree for a component with child component that has been initialized.
    This should be called when a component, on initialization, receives its child component from the outside and it's not meant to be converted to a render component.
 
    @param component The component at the head of the component tree.
@@ -43,7 +43,7 @@ namespace CKRender {
 
 
   /**
-   Builds a component tree for a component having children components that have been already initialized.
+   Build component tree for a components with children components that have been initialized.
    This should be called when a component receives its children components as a prop and it's not meant to be converted to a render component.
 
    @param component The component at the head of the component tree.
@@ -59,8 +59,24 @@ namespace CKRender {
                                                  id<CKTreeNodeWithChildrenProtocol> previousParent,
                                                  const CKBuildComponentTreeParams &params,
                                                  BOOL parentHasStateUpdate) -> void;
+
   /**
-   Builds a component tree for the input *render* component having a child component.
+   Build component tree for render layout components (CKRenderLayoutComponent).
+
+   @param component The component at the head of the component tree.
+   @param parent The current parent tree node of the component in input.
+   @param previousParent The previous generation of the parent tree node of the component in input.
+   @param params Collection of parameters to use to properly setup build component tree step.
+   @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
+   */
+  auto buildComponentTreeForRenderLayoutComponent(id<CKRenderWithChildComponentProtocol> component,
+                                                  id<CKTreeNodeWithChildrenProtocol> parent,
+                                                  id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                                  const CKBuildComponentTreeParams &params,
+                                                  BOOL parentHasStateUpdate) -> id<CKTreeNodeProtocol>;
+
+  /**
+   Build component tree for *render* components.
 
    @param component The *render* component at the head of the component tree.
    @param childComponent The child component owned by the component in input.
@@ -68,19 +84,15 @@ namespace CKRender {
    @param previousParent The previous generation of the parent tree node of the component in input.
    @param params Collection of parameters to use to properly setup build component tree step.
    @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
-   @param isBridgeComponent Flag used to mark components that are not "real" render components;
-          when they are being created they don't mark the `hasRenderComponentInTree` flag in the thread local store as well.
-          Default value is `NO`.
    @param didReuseBlock Will be called in case that the component from the previous generation has been reused.
    */
-  auto buildComponentTreeWithChild(id<CKRenderWithChildComponentProtocol> component,
-                                   __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                                   id<CKTreeNodeWithChildrenProtocol> parent,
-                                   id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                   const CKBuildComponentTreeParams &params,
-                                   BOOL parentHasStateUpdate,
-                                   BOOL isBridgeComponent = NO,
-                                   CKRenderDidReuseComponentBlock didReuseBlock = nil) -> id<CKTreeNodeProtocol>;
+  auto buildComponentTreeForRenderComponent(id<CKRenderWithChildComponentProtocol> component,
+                                            __strong id<CKTreeNodeComponentProtocol> *childComponent,
+                                            id<CKTreeNodeWithChildrenProtocol> parent,
+                                            id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                            const CKBuildComponentTreeParams &params,
+                                            BOOL parentHasStateUpdate,
+                                            CKRenderDidReuseComponentBlock didReuseBlock = nil) -> id<CKTreeNodeProtocol>;
 
   /**
    Builds a component tree for the input *render* component having children components.

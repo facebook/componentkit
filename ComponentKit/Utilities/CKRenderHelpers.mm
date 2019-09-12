@@ -300,47 +300,72 @@ namespace CKRender {
     }
   }
 
-  auto buildComponentTreeWithChild(id<CKRenderWithChildComponentProtocol> component,
-                                   __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                                   id<CKTreeNodeWithChildrenProtocol> parent,
-                                   id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                   const CKBuildComponentTreeParams &params,
-                                   BOOL parentHasStateUpdate,
-                                   BOOL isBridgeComponent,
-                                   CKRenderDidReuseComponentBlock didReuseBlock) -> id<CKTreeNodeProtocol>
+  auto buildComponentTreeForRenderLayoutComponent(id<CKRenderWithChildComponentProtocol> component,
+                                                  id<CKTreeNodeWithChildrenProtocol> parent,
+                                                  id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                                  const CKBuildComponentTreeParams &params,
+                                                  BOOL parentHasStateUpdate) -> id<CKTreeNodeProtocol>
   {
     CKCAssert(component, @"component cannot be nil");
-    id<CKTreeNodeWithChildrenProtocol> node;
-    // Bridge components might have a scope - hence might have tree node already.
-    if (isBridgeComponent) {
-      node = (id<CKTreeNodeWithChildrenProtocol>)component.scopeHandle.treeNode;
+    id<CKTreeNodeWithChildrenProtocol> node = (id<CKTreeNodeWithChildrenProtocol>)component.scopeHandle.treeNode;
+    if (node == nil) {
+      node = [[CKTreeNodeWithChild alloc]
+              initWithRenderComponent:component
+              parent:parent
+              previousParent:previousParent
+              scopeRoot:params.scopeRoot
+              stateUpdates:params.stateUpdates];
+    } else {
       [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
     }
 
-    if (node == nil) {
-      if (!isBridgeComponent && params.unifyComponentTreeConfig.useRenderNodes) {
-        node = [[CKRenderTreeNode alloc]
-                initWithRenderComponent:component
-                parent:parent
-                previousParent:previousParent
-                scopeRoot:params.scopeRoot
-                stateUpdates:params.stateUpdates];
-      } else {
-        node = [[CKTreeNodeWithChild alloc]
-                initWithRenderComponent:component
-                parent:parent
-                previousParent:previousParent
-                scopeRoot:params.scopeRoot
-                stateUpdates:params.stateUpdates];
-      }
+    // Update the `parentHasStateUpdate` param for Faster state/props updates.
+    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
+      parentHasStateUpdate = YES;
     }
 
-    if (!isBridgeComponent) {
-      CKRenderInternal::willBuildComponentTreeWithChild(node, component, params);
+    auto const child = [component render:node.state];
+    if (child) {
+      // Call build component tree on the child component.
+      [child buildComponentTree:node
+                 previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
+                         params:params
+           parentHasStateUpdate:parentHasStateUpdate];
     }
+
+    return node;
+  }
+
+  auto buildComponentTreeForRenderComponent(id<CKRenderWithChildComponentProtocol> component,
+                                            __strong id<CKTreeNodeComponentProtocol> *childComponent,
+                                            id<CKTreeNodeWithChildrenProtocol> parent,
+                                            id<CKTreeNodeWithChildrenProtocol> previousParent,
+                                            const CKBuildComponentTreeParams &params,
+                                            BOOL parentHasStateUpdate,
+                                            CKRenderDidReuseComponentBlock didReuseBlock) -> id<CKTreeNodeProtocol>
+  {
+    CKCAssert(component, @"component cannot be nil");
+    id<CKTreeNodeWithChildrenProtocol> node;
+    if (params.unifyComponentTreeConfig.useRenderNodes) {
+      node = [[CKRenderTreeNode alloc]
+              initWithRenderComponent:component
+              parent:parent
+              previousParent:previousParent
+              scopeRoot:params.scopeRoot
+              stateUpdates:params.stateUpdates];
+    } else {
+      node = [[CKTreeNodeWithChild alloc]
+              initWithRenderComponent:component
+              parent:parent
+              previousParent:previousParent
+              scopeRoot:params.scopeRoot
+              stateUpdates:params.stateUpdates];
+    }
+
+    CKRenderInternal::willBuildComponentTreeWithChild(node, component, params);
 
     // Faster state/props optimizations require previous parent.
-    if (!isBridgeComponent && CKRenderInternal::reusePreviousComponentForSingleChild((id<CKTreeNodeWithChildProtocol>)node, component, childComponent, parent, previousParent, params, parentHasStateUpdate, didReuseBlock)) {
+    if (CKRenderInternal::reusePreviousComponentForSingleChild((id<CKTreeNodeWithChildProtocol>)node, component, childComponent, parent, previousParent, params, parentHasStateUpdate, didReuseBlock)) {
       CKRenderInternal::didBuildComponentTreeWithChild(node, component, params);
       return node;
     }
@@ -350,9 +375,7 @@ namespace CKRender {
       parentHasStateUpdate = YES;
     }
 
-    if (!isBridgeComponent) {
-      CKRenderInternal::ScopeEvents::willBuildComponentTree(node, params);
-    }
+    CKRenderInternal::ScopeEvents::willBuildComponentTree(node, params);
 
     auto const child = [component render:node.state];
     if (child) {
@@ -367,10 +390,8 @@ namespace CKRender {
            parentHasStateUpdate:parentHasStateUpdate];
     }
 
-    if (!isBridgeComponent) {
-      CKRenderInternal::ScopeEvents::didBuildComponentTree(node, params);
-      CKRenderInternal::didBuildComponentTreeWithChild(node, component, params);
-    }
+    CKRenderInternal::ScopeEvents::didBuildComponentTree(node, params);
+    CKRenderInternal::didBuildComponentTreeWithChild(node, component, params);
 
     return node;
   }
