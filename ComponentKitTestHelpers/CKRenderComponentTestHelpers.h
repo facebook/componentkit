@@ -14,7 +14,7 @@
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKit/CKRenderComponent.h>
-#import <ComponentKit/CKRenderWithChildrenComponent.h>
+#import <ComponentKit/CKRenderLayoutWithChildrenComponent.h>
 
 // Leaf render component with component controller.
 struct CKTestChildRenderComponentProps {
@@ -51,8 +51,8 @@ struct CKTestRenderComponentProps {
 @property (nonatomic, strong) CKCompositeComponentWithScopeAndState *childComponent;
 @end
 
-// An helper class that inherits from 'CKRenderWithChildrenComponent'; render the component froms the initializer
-@interface CKTestRenderWithChildrenComponent : CKRenderWithChildrenComponent
+// An helper class that inherits from 'CKRenderLayoutWithChildrenComponent'; render the component froms the initializer
+@interface CKTestRenderWithChildrenComponent : CKRenderLayoutWithChildrenComponent
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
 @end
 

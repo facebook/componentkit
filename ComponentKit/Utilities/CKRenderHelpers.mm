@@ -433,42 +433,6 @@ namespace CKRender {
     return node;
   }
 
-  auto buildComponentTreeWithChildren(id<CKRenderWithChildrenComponentProtocol> component,
-                                      id<CKTreeNodeWithChildrenProtocol> parent,
-                                      id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                      const CKBuildComponentTreeParams &params,
-                                      BOOL parentHasStateUpdate) -> id<CKTreeNodeProtocol>
-  {
-    id<CKTreeNodeWithChildrenProtocol> node = [[CKTreeNodeWithChildren alloc]
-                                               initWithRenderComponent:component
-                                               parent:parent
-                                               previousParent:previousParent
-                                               scopeRoot:params.scopeRoot
-                                               stateUpdates:params.stateUpdates];
-
-    CKComponentContextHelper::willBuildComponentTree(component);
-
-    // Update the `parentHasStateUpdate` param for Faster state/props updates.
-    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
-      parentHasStateUpdate = YES;
-    }
-
-    auto const children = [component renderChildren:node.state];
-    auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
-    for (auto const child : children) {
-      if (child) {
-        [child buildComponentTree:node
-                   previousParent:previousParentForChild
-                           params:params
-             parentHasStateUpdate:parentHasStateUpdate];
-      }
-    }
-
-    CKComponentContextHelper::didBuildComponentTree(component);
-
-    return node;
-  }
-
   auto buildComponentTreeForLeafComponent(id<CKTreeNodeComponentProtocol> component,
                                           id<CKTreeNodeWithChildrenProtocol> parent,
                                           id<CKTreeNodeWithChildrenProtocol> previousParent,

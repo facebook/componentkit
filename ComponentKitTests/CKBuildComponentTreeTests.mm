@@ -18,7 +18,7 @@
 #import "CKComponent.h"
 #import "CKCompositeComponent.h"
 #import "CKRenderComponent.h"
-#import "CKRenderWithChildrenComponent.h"
+#import "CKRenderLayoutWithChildrenComponent.h"
 #import "CKComponentInternal.h"
 #import "CKButtonComponent.h"
 #import "CKTreeNode.h"
@@ -122,7 +122,7 @@
   XCTAssertTrue(areTreesEqual(root, root2));
 }
 
-#pragma mark - CKRenderWithChildrenComponent
+#pragma mark - CKRenderLayoutWithChildrenComponent
 
 - (void)test_buildComponentTree_onCKRenderWithChildrenComponent
 {
@@ -131,7 +131,7 @@
   CKTreeNodeWithChildren *root = [[CKTreeNodeWithChildren alloc] init];
   CKComponent *c10 = [CKComponent newWithView:{} size:{}];
   CKComponent *c11 = [CKComponent newWithView:{} size:{}];
-  CKRenderWithChildrenComponent *renderWithChidlrenComponent = [CKTestRenderWithChildrenComponent newWithChildren:{c10, c11}];
+  auto renderWithChidlrenComponent = [CKTestRenderWithChildrenComponent newWithChildren:{c10, c11}];
   [renderWithChidlrenComponent buildComponentTree:root previousParent:nil params:{
     .scopeRoot = scopeRoot,
     .previousScopeRoot = nil,
@@ -159,7 +159,7 @@
   auto const root2 = scopeRoot2.rootNode.node();
   CKComponent *c20 = [CKComponent newWithView:{} size:{}];
   CKComponent *c21 = [CKComponent newWithView:{} size:{}];
-  CKRenderWithChildrenComponent *renderWithChidlrenComponent2 = [CKTestRenderWithChildrenComponent newWithChildren:{c20, c21}];
+  auto renderWithChidlrenComponent2 = [CKTestRenderWithChildrenComponent newWithChildren:{c20, c21}];
   [renderWithChidlrenComponent2 buildComponentTree:root2 previousParent:root params:{
     .scopeRoot = scopeRoot2,
     .previousScopeRoot = scopeRoot,

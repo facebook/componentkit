@@ -17,8 +17,8 @@
 
 #import "CKComponent.h"
 #import "CKCompositeComponent.h"
-#import "CKRenderWithChildrenComponent.h"
 #import "CKRenderComponent.h"
+#import "CKRenderLayoutWithChildrenComponent.h"
 #import "CKComponentInternal.h"
 #import "CKButtonComponent.h"
 #import "CKTreeNode.h"
@@ -93,27 +93,23 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 @interface CKTreeNodeTest_RenderComponent_NoInitialState : CKRenderComponent
 @end
 
-@interface CKTreeNodeTest_RenderWithChildrenComponent_NoInitialState : CKRenderWithChildrenComponent
+@interface CKTreeNodeTest_RenderWithChildrenComponent_NoInitialState : CKRenderLayoutWithChildrenComponent
 @end
 
 @interface CKTreeNodeTest_Component_WithState : CKComponent
 @end
 
-@interface CKTreeNodeTest_RenderWithChildrenComponent_WithState : CKRenderWithChildrenComponent
+@interface CKTreeNodeTest_RenderWithChildrenComponent_WithState : CKRenderLayoutWithChildrenComponent
 @end
 
 @interface CKTreeNodeTest_RenderComponent_WithState : CKRenderComponent
-@end
-
-@interface CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps : CKRenderWithChildrenComponent
-+ (instancetype)newWithProp:(id)prop;
 @end
 
 @interface CKTreeNodeTest_RenderComponent_WithStateFromProps : CKRenderComponent
 + (instancetype)newWithProp:(id)prop;
 @end
 
-@interface CKTreeNodeTest_RenderWithChildrenComponent_WithNilState : CKRenderWithChildrenComponent
+@interface CKTreeNodeTest_RenderWithChildrenComponent_WithNilState : CKRenderLayoutWithChildrenComponent
 @end
 
 @interface CKTreeNodeTest_RenderComponent_WithNilState : CKRenderComponent
@@ -307,48 +303,17 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
   [self _test_nonNil_initialState_withComponent:c];
 }
 
-- (void)test_nonNil_initialState_onCKRenderTreeNode_withCKRenderWithChildrenComponent
-{
-  auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderWithChildrenComponent_WithState new]; });
-  [self _test_nonNil_initialState_withComponent:c];
-}
-
 - (void)test_emptyInitialState_onCKRenderTreeNode_withCKRenderComponent
 {
   auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderComponent_NoInitialState new]; });
   [self _test_emptyInitialState_withComponent:c];
 }
 
-- (void)test_emptyInitialState_onCKRenderTreeNode_withCKRenderWithChildrenComponent
-{
-  auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderWithChildrenComponent_NoInitialState new]; });
-  [self _test_emptyInitialState_withComponent:c];
-}
-
-- (void)test_initialStateFromPtops_onCKRenderTreeNode_withCKRenderWithChildrenComponent
-{
-  id prop = @1;
-  auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps newWithProp:prop]; });
-  [self _test_initialState_withComponent:c initialState:prop];
-}
-
-- (void)test_initialStateFromPtops_onCKRenderTreeNode_withCKRenderComponent
+- (void)test_initialStateFromProps_onCKRenderTreeNode_withCKRenderComponent
 {
   id prop = @1;
   auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderComponent_WithStateFromProps newWithProp:prop]; });
   [self _test_initialState_withComponent:c initialState:prop];
-}
-
-- (void)test_nilInitialState_onCKRenderTreeNode_withCKRenderWithChildrenComponent
-{
-  // Make sure CKRenderWithChildrenComponent supports nil initial state from prop.
-  id prop = nil;
-  auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps newWithProp:prop]; });
-  [self _test_initialState_withComponent:c initialState:prop];
-
-  // Make sure CKRenderWithChildrenComponent supports nil initial.
-  auto const c2 = buildComponent(^{ return [CKTreeNodeTest_RenderWithChildrenComponent_WithNilState new]; });
-  [self _test_initialState_withComponent:c2 initialState:nil];
 }
 
 - (void)test_nilInitialState_onCKRenderTreeNode_withCKRenderComponent
@@ -358,7 +323,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
   auto const c = buildComponent(^{ return [CKTreeNodeTest_RenderComponent_WithStateFromProps newWithProp:prop]; });
   [self _test_initialState_withComponent:c initialState:nil];
 
-  // Make sure CKRenderWithChildrenComponent supports nil initial.
+  // Make sure CKRenderLayoutWithChildrenComponent supports nil initial.
   auto const c2 = buildComponent(^{ return [CKTreeNodeTest_RenderComponent_WithNilState new]; });
   [self _test_initialState_withComponent:c2 initialState:nil];
 }
@@ -637,34 +602,6 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 - (CKComponent *)render:(id)state
 {
   return [CKComponent new];
-}
-@end
-
-@implementation CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps
-{
-  id _prop;
-}
-
-+ (instancetype)newWithProp:(id)prop
-{
-  auto const c = [super new];
-  if (c) {
-    c->_prop = prop;
-  }
-  return c;
-}
-
-+ (id)initialStateWithComponent:(CKTreeNodeTest_RenderWithChildrenComponent_WithStateFromProps *)c
-{
-  return c->_prop;
-}
-
-- (std::vector<CKComponent *>)renderChildren:(id)state
-{
-  return {
-    [CKComponent new],
-    [CKComponent new],
-  };
 }
 @end
 
