@@ -82,7 +82,7 @@
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
-  CKRender::buildComponentTreeWithPrecomputedChild(self, _component, parent, previousParent, params, parentHasStateUpdate);
+  CKRender::ComponentTree::NonRender::build(self, _component, parent, previousParent, params, parentHasStateUpdate);
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize

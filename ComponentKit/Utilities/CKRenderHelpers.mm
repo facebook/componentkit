@@ -220,233 +220,243 @@ namespace CKRenderInternal {
 }
 
 namespace CKRender {
-  auto buildComponentTreeWithPrecomputedChild(id<CKTreeNodeComponentProtocol> component,
-                                              id<CKTreeNodeComponentProtocol> childComponent,
-                                              id<CKTreeNodeWithChildrenProtocol> parent,
-                                              id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                              const CKBuildComponentTreeParams &params,
-                                              BOOL parentHasStateUpdate) -> void
-  {
-    CKCAssert(component, @"component cannot be nil");
+  namespace ComponentTree {
+    namespace NonRender {
+      auto build(id<CKTreeNodeComponentProtocol> component,
+                 id<CKTreeNodeComponentProtocol> childComponent,
+                 id<CKTreeNodeWithChildrenProtocol> parent,
+                 id<CKTreeNodeWithChildrenProtocol> previousParent,
+                 const CKBuildComponentTreeParams &params,
+                 BOOL parentHasStateUpdate) -> void
+      {
+        CKCAssert(component, @"component cannot be nil");
 
-    // Check if the component already have tree node (Tree Unification Mode).
-    auto node = component.scopeHandle.treeNode;
-    if (node) {
-      [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
-    } else {
-      node = [[CKTreeNodeWithChild alloc]
-              initWithComponent:component
-              parent:parent
-              previousParent:previousParent
-              scopeRoot:params.scopeRoot
-              stateUpdates:params.stateUpdates];
-    }
+        // Check if the component already have tree node (Tree Unification Mode).
+        auto node = component.scopeHandle.treeNode;
+        if (node) {
+          [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
+        } else {
+          node = [[CKTreeNodeWithChild alloc]
+                  initWithComponent:component
+                  parent:parent
+                  previousParent:previousParent
+                  scopeRoot:params.scopeRoot
+                  stateUpdates:params.stateUpdates];
+        }
 
-    // Update the `parentHasStateUpdate` param for Faster state/props updates.
-    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
-      parentHasStateUpdate = YES;
-    }
+        // Update the `parentHasStateUpdate` param for Faster state/props updates.
+        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
+          parentHasStateUpdate = YES;
+        }
 
-    // Report information to `debugAnalyticsListener`.
-    if (params.shouldCollectTreeNodeCreationInformation) {
-      [params.scopeRoot.analyticsListener didBuildTreeNodeForPrecomputedChild:component
-                                                                         node:node
-                                                                       parent:parent
-                                                                       params:params
-                                                         parentHasStateUpdate:parentHasStateUpdate];
-    }
+        // Report information to `debugAnalyticsListener`.
+        if (params.shouldCollectTreeNodeCreationInformation) {
+          [params.scopeRoot.analyticsListener didBuildTreeNodeForPrecomputedChild:component
+                                                                             node:node
+                                                                           parent:parent
+                                                                           params:params
+                                                             parentHasStateUpdate:parentHasStateUpdate];
+        }
 
-    if (childComponent) {
-      [childComponent buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)node
-                          previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
-                                  params:params
-                    parentHasStateUpdate:parentHasStateUpdate];
-    }
-  }
-
-  auto buildComponentTreeWithPrecomputedChildren(id<CKTreeNodeComponentProtocol> component,
-                                                 std::vector<id<CKTreeNodeComponentProtocol>> childrenComponents,
-                                                 id<CKTreeNodeWithChildrenProtocol> parent,
-                                                 id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                                 const CKBuildComponentTreeParams &params,
-                                                 BOOL parentHasStateUpdate) -> void
-  {
-    CKCAssert(component, @"component cannot be nil");
-    // Check if the component already have tree node (Tree Unification Mode).
-    auto node = component.scopeHandle.treeNode;
-    if (node) {
-      [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
-    } else {
-      node = [[CKTreeNodeWithChildren alloc]
-              initWithComponent:component
-              parent:parent
-              previousParent:previousParent
-              scopeRoot:params.scopeRoot
-              stateUpdates:params.stateUpdates];
-    }
-
-    // Update the `parentHasStateUpdate` param for Faster state/props updates.
-    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
-      parentHasStateUpdate = YES;
-    }
-
-    for (auto const childComponent : childrenComponents) {
-      if (childComponent) {
-        [childComponent buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)node
-                            previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
-                                    params:params
-                      parentHasStateUpdate:parentHasStateUpdate];
+        if (childComponent) {
+          [childComponent buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)node
+                              previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
+                                      params:params
+                        parentHasStateUpdate:parentHasStateUpdate];
+        }
       }
-    }
-  }
 
-  auto buildComponentTreeForRenderLayoutComponent(id<CKRenderWithChildComponentProtocol> component,
-                                                  id<CKTreeNodeWithChildrenProtocol> parent,
-                                                  id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                                  const CKBuildComponentTreeParams &params,
-                                                  BOOL parentHasStateUpdate) -> id<CKTreeNodeProtocol>
-  {
-    CKCAssert(component, @"component cannot be nil");
-    id<CKTreeNodeWithChildrenProtocol> node = (id<CKTreeNodeWithChildrenProtocol>)component.scopeHandle.treeNode;
-    if (node == nil) {
-      node = [[CKTreeNodeWithChild alloc]
-              initWithRenderComponent:component
-              parent:parent
-              previousParent:previousParent
-              scopeRoot:params.scopeRoot
-              stateUpdates:params.stateUpdates];
-    } else {
-      [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
-    }
+      auto buildWithChildren(id<CKTreeNodeComponentProtocol> component,
+                             std::vector<id<CKTreeNodeComponentProtocol>> childrenComponents,
+                             id<CKTreeNodeWithChildrenProtocol> parent,
+                             id<CKTreeNodeWithChildrenProtocol> previousParent,
+                             const CKBuildComponentTreeParams &params,
+                             BOOL parentHasStateUpdate) -> void
+      {
+        CKCAssert(component, @"component cannot be nil");
+        // Check if the component already have tree node (Tree Unification Mode).
+        auto node = component.scopeHandle.treeNode;
+        if (node) {
+          [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
+        } else {
+          node = [[CKTreeNodeWithChildren alloc]
+                  initWithComponent:component
+                  parent:parent
+                  previousParent:previousParent
+                  scopeRoot:params.scopeRoot
+                  stateUpdates:params.stateUpdates];
+        }
 
-    // Update the `parentHasStateUpdate` param for Faster state/props updates.
-    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
-      parentHasStateUpdate = YES;
-    }
+        // Update the `parentHasStateUpdate` param for Faster state/props updates.
+        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
+          parentHasStateUpdate = YES;
+        }
 
-    auto const child = [component render:node.state];
-    if (child) {
-      // Call build component tree on the child component.
-      [child buildComponentTree:node
-                 previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
-                         params:params
-           parentHasStateUpdate:parentHasStateUpdate];
-    }
-
-    return node;
-  }
-
-  auto buildComponentTreeForRenderLayoutComponentWithChildren(id<CKRenderWithChildrenComponentProtocol> component,
-                                                              id<CKTreeNodeWithChildrenProtocol> parent,
-                                                              id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                                              const CKBuildComponentTreeParams &params,
-                                                              BOOL parentHasStateUpdate) -> id<CKTreeNodeProtocol>
-  {
-    id<CKTreeNodeWithChildrenProtocol> node = (id<CKTreeNodeWithChildrenProtocol>)component.scopeHandle.treeNode;
-    [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
-    if (node == nil) {
-      node = [[CKTreeNodeWithChildren alloc]
-              initWithRenderComponent:component
-              parent:parent
-              previousParent:previousParent
-              scopeRoot:params.scopeRoot
-              stateUpdates:params.stateUpdates];
-    }
-
-
-    // Update the `parentHasStateUpdate` param for Faster state/props updates.
-    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
-      parentHasStateUpdate = YES;
-    }
-
-    auto const children = [component renderChildren:node.state];
-    auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
-    for (auto const child : children) {
-      if (child) {
-        [child buildComponentTree:node
-                   previousParent:previousParentForChild
-                           params:params
-             parentHasStateUpdate:parentHasStateUpdate];
+        for (auto const childComponent : childrenComponents) {
+          if (childComponent) {
+            [childComponent buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)node
+                                previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
+                                        params:params
+                          parentHasStateUpdate:parentHasStateUpdate];
+          }
+        }
       }
     }
 
-    return node;
-  }
+    namespace RenderLayout {
+      auto build(id<CKRenderWithChildComponentProtocol> component,
+                 id<CKTreeNodeWithChildrenProtocol> parent,
+                 id<CKTreeNodeWithChildrenProtocol> previousParent,
+                 const CKBuildComponentTreeParams &params,
+                 BOOL parentHasStateUpdate) -> id<CKTreeNodeProtocol>
+      {
+        CKCAssert(component, @"component cannot be nil");
+        id<CKTreeNodeWithChildrenProtocol> node = (id<CKTreeNodeWithChildrenProtocol>)component.scopeHandle.treeNode;
+        if (node == nil) {
+          node = [[CKTreeNodeWithChild alloc]
+                  initWithRenderComponent:component
+                  parent:parent
+                  previousParent:previousParent
+                  scopeRoot:params.scopeRoot
+                  stateUpdates:params.stateUpdates];
+        } else {
+          [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
+        }
 
-  auto buildComponentTreeForRenderComponent(id<CKRenderWithChildComponentProtocol> component,
-                                            __strong id<CKTreeNodeComponentProtocol> *childComponent,
-                                            id<CKTreeNodeWithChildrenProtocol> parent,
-                                            id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                            const CKBuildComponentTreeParams &params,
-                                            BOOL parentHasStateUpdate,
-                                            CKRenderDidReuseComponentBlock didReuseBlock) -> id<CKTreeNodeProtocol>
-  {
-    CKCAssert(component, @"component cannot be nil");
-    id<CKTreeNodeWithChildrenProtocol> node;
-    if (params.unifyComponentTreeConfig.useRenderNodes) {
-      node = [[CKRenderTreeNode alloc]
-              initWithRenderComponent:component
-              parent:parent
-              previousParent:previousParent
-              scopeRoot:params.scopeRoot
-              stateUpdates:params.stateUpdates];
-    } else {
-      node = [[CKTreeNodeWithChild alloc]
-              initWithRenderComponent:component
-              parent:parent
-              previousParent:previousParent
-              scopeRoot:params.scopeRoot
-              stateUpdates:params.stateUpdates];
-    }
+        // Update the `parentHasStateUpdate` param for Faster state/props updates.
+        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
+          parentHasStateUpdate = YES;
+        }
 
-    CKRenderInternal::willBuildComponentTreeWithChild(node, component, params);
+        auto const child = [component render:node.state];
+        if (child) {
+          // Call build component tree on the child component.
+          [child buildComponentTree:node
+                     previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
+                             params:params
+               parentHasStateUpdate:parentHasStateUpdate];
+        }
 
-    // Faster state/props optimizations require previous parent.
-    if (CKRenderInternal::reusePreviousComponentForSingleChild((id<CKTreeNodeWithChildProtocol>)node, component, childComponent, parent, previousParent, params, parentHasStateUpdate, didReuseBlock)) {
-      CKRenderInternal::didBuildComponentTreeWithChild(node, component, params);
-      return node;
-    }
-
-    // Update the `parentHasStateUpdate` param for Faster state/props updates.
-    if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
-      parentHasStateUpdate = YES;
-    }
-
-    CKRenderInternal::ScopeEvents::willBuildComponentTree(node, params);
-
-    auto const child = [component render:node.state];
-    if (child) {
-      if (childComponent != nullptr) {
-        // Set the link between the parent to its child.
-        *childComponent = child;
+        return node;
       }
-      // Call build component tree on the child component.
-      [child buildComponentTree:node
-                 previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
-                         params:params
-           parentHasStateUpdate:parentHasStateUpdate];
+
+      auto buildWithChildren(id<CKRenderWithChildrenComponentProtocol> component,
+                             id<CKTreeNodeWithChildrenProtocol> parent,
+                             id<CKTreeNodeWithChildrenProtocol> previousParent,
+                             const CKBuildComponentTreeParams &params,
+                             BOOL parentHasStateUpdate) -> id<CKTreeNodeProtocol>
+      {
+        id<CKTreeNodeWithChildrenProtocol> node = (id<CKTreeNodeWithChildrenProtocol>)component.scopeHandle.treeNode;
+        [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
+        if (node == nil) {
+          node = [[CKTreeNodeWithChildren alloc]
+                  initWithRenderComponent:component
+                  parent:parent
+                  previousParent:previousParent
+                  scopeRoot:params.scopeRoot
+                  stateUpdates:params.stateUpdates];
+        }
+
+
+        // Update the `parentHasStateUpdate` param for Faster state/props updates.
+        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
+          parentHasStateUpdate = YES;
+        }
+
+        auto const children = [component renderChildren:node.state];
+        auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
+        for (auto const child : children) {
+          if (child) {
+            [child buildComponentTree:node
+                       previousParent:previousParentForChild
+                               params:params
+                 parentHasStateUpdate:parentHasStateUpdate];
+          }
+        }
+
+        return node;
+      }
     }
 
-    CKRenderInternal::ScopeEvents::didBuildComponentTree(node, params);
-    CKRenderInternal::didBuildComponentTreeWithChild(node, component, params);
+    namespace Render {
+      auto build(id<CKRenderWithChildComponentProtocol> component,
+                 __strong id<CKTreeNodeComponentProtocol> *childComponent,
+                 id<CKTreeNodeWithChildrenProtocol> parent,
+                 id<CKTreeNodeWithChildrenProtocol> previousParent,
+                 const CKBuildComponentTreeParams &params,
+                 BOOL parentHasStateUpdate,
+                 CKRenderDidReuseComponentBlock didReuseBlock) -> id<CKTreeNodeProtocol>
+      {
+        CKCAssert(component, @"component cannot be nil");
+        id<CKTreeNodeWithChildrenProtocol> node;
+        if (params.unifyComponentTreeConfig.useRenderNodes) {
+          node = [[CKRenderTreeNode alloc]
+                  initWithRenderComponent:component
+                  parent:parent
+                  previousParent:previousParent
+                  scopeRoot:params.scopeRoot
+                  stateUpdates:params.stateUpdates];
+        } else {
+          node = [[CKTreeNodeWithChild alloc]
+                  initWithRenderComponent:component
+                  parent:parent
+                  previousParent:previousParent
+                  scopeRoot:params.scopeRoot
+                  stateUpdates:params.stateUpdates];
+        }
 
-    return node;
-  }
+        CKRenderInternal::willBuildComponentTreeWithChild(node, component, params);
 
-  auto buildComponentTreeForLeafComponent(id<CKTreeNodeComponentProtocol> component,
-                                          id<CKTreeNodeWithChildrenProtocol> parent,
-                                          id<CKTreeNodeWithChildrenProtocol> previousParent,
-                                          const CKBuildComponentTreeParams &params) -> void {
-    auto node = component.scopeHandle.treeNode;
-    if (node) {
-      [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
-    } else {
-      node = [[CKTreeNode alloc]
-              initWithComponent:component
-              parent:parent
-              previousParent:previousParent
-              scopeRoot:params.scopeRoot
-              stateUpdates:params.stateUpdates];
+        // Faster state/props optimizations require previous parent.
+        if (CKRenderInternal::reusePreviousComponentForSingleChild((id<CKTreeNodeWithChildProtocol>)node, component, childComponent, parent, previousParent, params, parentHasStateUpdate, didReuseBlock)) {
+          CKRenderInternal::didBuildComponentTreeWithChild(node, component, params);
+          return node;
+        }
+
+        // Update the `parentHasStateUpdate` param for Faster state/props updates.
+        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, previousParent, params)) {
+          parentHasStateUpdate = YES;
+        }
+
+        CKRenderInternal::ScopeEvents::willBuildComponentTree(node, params);
+
+        auto const child = [component render:node.state];
+        if (child) {
+          if (childComponent != nullptr) {
+            // Set the link between the parent to its child.
+            *childComponent = child;
+          }
+          // Call build component tree on the child component.
+          [child buildComponentTree:node
+                     previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]
+                             params:params
+               parentHasStateUpdate:parentHasStateUpdate];
+        }
+
+        CKRenderInternal::ScopeEvents::didBuildComponentTree(node, params);
+        CKRenderInternal::didBuildComponentTreeWithChild(node, component, params);
+
+        return node;
+      }
+    }
+
+    namespace Leaf {
+      auto build(id<CKTreeNodeComponentProtocol> component,
+                 id<CKTreeNodeWithChildrenProtocol> parent,
+                 id<CKTreeNodeWithChildrenProtocol> previousParent,
+                 const CKBuildComponentTreeParams &params) -> void {
+        auto node = component.scopeHandle.treeNode;
+        if (node) {
+          [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
+        } else {
+          node = [[CKTreeNode alloc]
+                  initWithComponent:component
+                  parent:parent
+                  previousParent:previousParent
+                  scopeRoot:params.scopeRoot
+                  stateUpdates:params.stateUpdates];
+        }
+      }
     }
   }
 

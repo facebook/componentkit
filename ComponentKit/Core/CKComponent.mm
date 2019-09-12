@@ -183,7 +183,7 @@ struct CKComponentMountInfo {
   leafComponentOnARenderTree = YES;
 #endif
   // In this case this is a leaf component, which means we don't need to continue the recursion as it has no children.
-  CKRender::buildComponentTreeForLeafComponent(self, parent, previousParent, params);
+  CKRender::ComponentTree::Leaf::build(self, parent, previousParent, params);
 }
 
 #pragma mark - Mounting and Unmounting

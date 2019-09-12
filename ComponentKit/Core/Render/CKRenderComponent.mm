@@ -80,7 +80,7 @@ struct CKRenderLayoutCache {
     };
   }
   // Build the component tree.
-  auto const node = CKRender::buildComponentTreeForRenderComponent(self, &_childComponent, parent, previousParent, params, parentHasStateUpdate, didReuseBlock);
+  auto const node = CKRender::ComponentTree::Render::build(self, &_childComponent, parent, previousParent, params, parentHasStateUpdate, didReuseBlock);
   auto const viewConfiguration = [self viewConfigurationWithState:node.state];
   if (!viewConfiguration.isDefaultConfiguration()) {
     [self setViewConfiguration:viewConfiguration];
