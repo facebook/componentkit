@@ -886,6 +886,8 @@
 		D657401321051C6F00FD8AAB /* CKIndexTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = D657401021051C6E00FD8AAB /* CKIndexTransform.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D657401421051C6F00FD8AAB /* CKIndexTransform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D657401121051C6E00FD8AAB /* CKIndexTransform.mm */; };
 		D657401521051C6F00FD8AAB /* CKIndexTransform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D657401121051C6E00FD8AAB /* CKIndexTransform.mm */; };
+		D666EF9B232AD35000291474 /* CKPropBitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = D666EF90232AD35000291474 /* CKPropBitmap.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D666EF9C232AD35000291474 /* CKPropBitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = D666EF90232AD35000291474 /* CKPropBitmap.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D68927F7225B6090009DBBD9 /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D68927EC225B5B29009DBBD9 /* CKLinkable.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D68927F8225B6091009DBBD9 /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D68927EC225B5B29009DBBD9 /* CKLinkable.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D68A9E3D22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -1559,6 +1561,7 @@
 		D657400721013CBF00FD8AAB /* CKChangesetHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKChangesetHelpers.h; sourceTree = "<group>"; };
 		D657401021051C6E00FD8AAB /* CKIndexTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKIndexTransform.h; sourceTree = "<group>"; };
 		D657401121051C6E00FD8AAB /* CKIndexTransform.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKIndexTransform.mm; sourceTree = "<group>"; };
+		D666EF90232AD35000291474 /* CKPropBitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKPropBitmap.h; sourceTree = "<group>"; };
 		D68927EC225B5B29009DBBD9 /* CKLinkable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKLinkable.h; sourceTree = "<group>"; };
 		D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKDelayedInitialisationWrapper.h; sourceTree = "<group>"; };
 		D69F137522E6FE3F00984709 /* CKDelayedNonNull.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKDelayedNonNull.h; sourceTree = "<group>"; };
@@ -2042,6 +2045,7 @@
 				D60C2D9B22B9743D001F502B /* CKNonNull.h */,
 				D69F137522E6FE3F00984709 /* CKDelayedNonNull.h */,
 				D63A9262222482BD00E7CC91 /* CKOptional.h */,
+				D666EF90232AD35000291474 /* CKPropBitmap.h */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -2524,6 +2528,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D666EF9C232AD35000291474 /* CKPropBitmap.h in Headers */,
 				A2A89C3C2011C110009D0377 /* CKInspectableView.h in Headers */,
 				9092AE9C1DFA4853009878B2 /* CKAvailability.h in Headers */,
 				A29D85791D80D37F00913E60 /* CKComponentContextHelper.h in Headers */,
@@ -2764,6 +2769,7 @@
 				51A92FB7224CDBE9007A6702 /* CKComponentGestureActionHelper.h in Headers */,
 				6DAC628C1F83DEB900536113 /* CKComponentScopeEnumeratorProvider.h in Headers */,
 				7F6BAF6A1F1F6E5200600828 /* CKFlexboxComponent.h in Headers */,
+				D666EF9B232AD35000291474 /* CKPropBitmap.h in Headers */,
 				906125EA1DFA49E600EE18ED /* CKAvailability.h in Headers */,
 				A243B52E1D79A40800E6C393 /* CKComponentContextHelper.h in Headers */,
 				A1A849D922CE1AAD00407744 /* CKComponentViewClass.h in Headers */,
