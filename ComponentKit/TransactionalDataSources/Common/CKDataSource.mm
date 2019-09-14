@@ -54,6 +54,7 @@
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
   BOOL _shouldPauseStateUpdates;
+  BOOL _isBackgroundMode;
   dispatch_queue_t _workQueue;
   
   CKDataSourceViewport _viewport;
@@ -246,6 +247,18 @@
   return _shouldPauseStateUpdates;
 }
 
+- (void)setIsBackgroundMode:(BOOL)isBackgroundMode
+{
+  CKAssertMainThread();
+  _isBackgroundMode = isBackgroundMode;
+}
+
+- (BOOL)isBackgroundMode
+{
+  CKAssertMainThread();
+  return _isBackgroundMode;
+}
+
 #pragma mark - State Listener
 
 - (void)componentScopeHandle:(CKComponentScopeHandle *)handle
@@ -318,7 +331,7 @@
 
     dispatch_block_t block = blockUsingDataSourceQOS(^{
       [self _applyModificationPair:modificationPair];
-    }, [modification qos]);
+    }, [modification qos], _isBackgroundMode);
 
     dispatch_async(_workQueue, block);
   }

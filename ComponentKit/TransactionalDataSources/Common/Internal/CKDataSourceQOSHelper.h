@@ -12,5 +12,4 @@
 
 #import <ComponentKit/CKDataSourceQOS.h>
 
-qos_class_t qosClassFromDataSourceQOS(CKDataSourceQOS qos);
-dispatch_block_t blockUsingDataSourceQOS(dispatch_block_t block, CKDataSourceQOS qos);
+dispatch_block_t blockUsingDataSourceQOS(dispatch_block_t block, CKDataSourceQOS qos, BOOL isBackgroundMode = NO);

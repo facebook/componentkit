@@ -10,7 +10,7 @@
 
 #import "CKDataSourceQOSHelper.h"
 
-qos_class_t qosClassFromDataSourceQOS(CKDataSourceQOS qos)
+static qos_class_t qosClassFromDataSourceQOS(CKDataSourceQOS qos)
 {
   switch (qos) {
     case CKDataSourceQOSUserInteractive:
@@ -22,14 +22,19 @@ qos_class_t qosClassFromDataSourceQOS(CKDataSourceQOS qos)
   }
 }
 
-dispatch_block_t blockUsingDataSourceQOS(dispatch_block_t block, CKDataSourceQOS qos)
+dispatch_block_t blockUsingDataSourceQOS(dispatch_block_t block, CKDataSourceQOS qos, BOOL isBackgroundMode)
 {
   switch (qos) {
     case CKDataSourceQOSUserInteractive:
     case CKDataSourceQOSUserInitiated:
       return dispatch_block_create_with_qos_class(DISPATCH_BLOCK_ENFORCE_QOS_CLASS, qosClassFromDataSourceQOS(qos), 0, block);
     case CKDataSourceQOSDefault:
-      /// If the desired QOS is the default there is no need to enforce it by dispatching async on the _workQueue defined QOS.
-      return block;
+      if (isBackgroundMode) {
+        /// We should enforce the block to be executed with `QOS_CLASS_BACKGROUND` if background mode is on.
+        return dispatch_block_create_with_qos_class(DISPATCH_BLOCK_ENFORCE_QOS_CLASS, QOS_CLASS_BACKGROUND, 0, block);
+      } else {
+        /// If the desired QOS is the default there is no need to enforce it by dispatching async on the _workQueue defined QOS.
+        return block;
+      }
   }
 }

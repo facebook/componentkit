@@ -33,6 +33,13 @@
 @property (nonatomic, assign) BOOL shouldPauseStateUpdates;
 
 /**
+ `CKDataSourceQoSDefault` will be mapped to a lower QoS class when this is set to `YES`.
+ This means applying changeset with default QoS or processing state update is affected when this is set to `YES`.
+ This is main thread affined.
+ */
+@property (nonatomic, assign) BOOL isBackgroundMode;
+
+/**
  @param state initial state of dataSource, pass `nil` for an empty state.
  */
 - (instancetype)initWithState:(CKDataSourceState *)state;
