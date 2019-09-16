@@ -60,6 +60,7 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 - (void)setLatestComponent:(CKComponent *)latestComponent
 {
+  CKAssertMainThread();
   if (latestComponent != _latestComponent) {
     [self willUpdateComponent];
     _latestComponent = latestComponent;
@@ -69,6 +70,7 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 - (CKComponent *)component
 {
+  CKAssertMainThread();
   return _component ?: _latestComponent;
 }
 
