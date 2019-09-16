@@ -23,7 +23,7 @@
 
 + (instancetype)contextAllocatingComponent
 {
-  return [[self class] initWithShouldAllocateComponent:YES];
+  return [[self alloc] initWithShouldAllocateComponent:YES];
 }
 
 @end
