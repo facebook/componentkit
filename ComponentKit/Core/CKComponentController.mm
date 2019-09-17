@@ -48,12 +48,18 @@ static NSString *componentStateName(CKComponentControllerState state)
   CKComponentControllerState _state;
   BOOL _updatingComponent;
   __weak CKComponent *_component;
+#if CK_ASSERTIONS_ENABLED
+  __weak NSThread *_initializationThread;
+#endif
 }
 
 - (instancetype)initWithComponent:(CKComponent *)component
 {
   if (self = [super init]) {
     _component = component;
+#if CK_ASSERTIONS_ENABLED
+    _initializationThread = [NSThread currentThread];
+#endif
   }
   return self;
 }
@@ -70,7 +76,11 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 - (CKComponent *)component
 {
-  CKAssertMainThread();
+#if CK_ASSERTIONS_ENABLED
+  if (_initializationThread != [NSThread currentThread]) {
+    CKAssertMainThread();
+  }
+#endif
   return _component ?: _latestComponent;
 }
 
