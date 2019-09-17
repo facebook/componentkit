@@ -49,14 +49,14 @@
 {
   CKDataSourceState *_state;
   CKDataSourceListenerAnnouncer *_announcer;
-  
+
   CKComponentStateUpdatesMap _pendingAsynchronousStateUpdates;
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
   BOOL _shouldPauseStateUpdates;
   BOOL _isBackgroundMode;
   dispatch_queue_t _workQueue;
-  
+
   CKDataSourceViewport _viewport;
   BOOL _changesetSplittingEnabled;
   id<CKDataSourceChangesetModificationGenerator> _changesetModificationGenerator;
@@ -373,7 +373,8 @@
     CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
     CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
   }
-  if (newState.configuration.options.updateComponentInControllerAfterBuild) {
+
+  if (newState.configuration.options.updateComponentInControllerAfterBuild.valueOr(NO)) {
     CKComponentUpdateComponentForComponentControllerWithIndexPaths(appliedChanges.finalUpdatedIndexPaths.allValues, newState);
   }
 

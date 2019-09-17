@@ -111,6 +111,10 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     _componentControllerPredicates = componentControllerPredicates;
     _analyticsListener = analyticsListener;
     _options = options;
+    // Set a default value from the global config.
+    if (!options.updateComponentInControllerAfterBuild.hasValue()) {
+      _options.updateComponentInControllerAfterBuild = CKReadGlobalConfig().updateComponentInControllerAfterBuild;
+    }
   }
   return self;
 }

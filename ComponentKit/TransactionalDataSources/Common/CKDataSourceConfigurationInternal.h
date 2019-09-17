@@ -13,7 +13,7 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKDataSourceQOS.h>
 #import <ComponentKit/CKBuildComponent.h>
-#import <ComponentKit/CKGlobalConfig.h>
+#import <ComponentKit/CKOptional.h>
 
 #import <unordered_set>
 
@@ -58,7 +58,7 @@ struct CKDataSourceOptions {
    `componentController.component` will be updated right after commponent build if this is enabled.
    This is only for running expeirment in ComponentKit. Please DO NOT USE.
    */
-  BOOL updateComponentInControllerAfterBuild = CKReadGlobalConfig().updateComponentInControllerAfterBuild;
+  CK::Optional<BOOL> updateComponentInControllerAfterBuild = CK::none;
 };
 
 @interface CKDataSourceConfiguration ()
