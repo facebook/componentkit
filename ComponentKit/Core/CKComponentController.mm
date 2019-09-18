@@ -78,7 +78,9 @@ static NSString *componentStateName(CKComponentControllerState state)
 {
 #if CK_ASSERTIONS_ENABLED
   if (_initializationThread != [NSThread currentThread]) {
-    CKAssertMainThread();
+    CKAssertWithCategory([NSThread isMainThread],
+                         NSStringFromClass(self.class),
+                         @"`self.component` must be called on the main thread");
   }
 #endif
   return _component ?: _latestComponent;
