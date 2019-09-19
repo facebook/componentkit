@@ -113,11 +113,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
     };
 
     // Build the component tree from the render function.
-    [component buildComponentTree:threadScope.newScopeRoot.rootNode.node()
-                   previousParent:previousRoot.rootNode.node()
-                           params:params
-             parentHasStateUpdate:NO];
-
+    CKRender::ComponentTree::Root::build(component, params);
   }
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;

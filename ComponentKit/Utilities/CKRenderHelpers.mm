@@ -458,6 +458,17 @@ namespace CKRender {
         }
       }
     }
+    namespace Root {
+      auto build(id<CKTreeNodeComponentProtocol> component, const CKBuildComponentTreeParams &params) -> void {
+        auto const rootNode = params.scopeRoot.rootNode.node();
+
+        // Build the component tree from the render function.
+        [component buildComponentTree:rootNode
+                       previousParent:params.previousScopeRoot.rootNode.node()
+                               params:params
+                 parentHasStateUpdate:NO];
+      }
+    }
   }
 
   auto componentHasStateUpdate(id<CKTreeNodeProtocol> node,

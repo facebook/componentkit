@@ -132,6 +132,16 @@ namespace CKRender {
                  id<CKTreeNodeWithChildrenProtocol> previousParent,
                  const CKBuildComponentTreeParams &params) -> void;
     }
+
+    /**
+     Builds the component tree from a root component.
+
+     @param component The root component of the tree.
+     @param params Collection of parameters to use to properly setup build component tree step.
+     */
+    namespace Root {
+      auto build(id<CKTreeNodeComponentProtocol> component, const CKBuildComponentTreeParams &params) -> void;
+    }
   }
 
 
