@@ -43,4 +43,6 @@
                               scopeRoot:(CKComponentScopeRoot *)scopeRoot
                            stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
+@property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
+
 @end

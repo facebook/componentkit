@@ -21,6 +21,7 @@
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKMutex.h>
+#import <ComponentKit/CKTreeNodeProtocol.h>
 
 #import "CKAssert.h"
 #import "CKComponent+UIView.h"
@@ -57,6 +58,10 @@ struct CKComponentMountInfo {
 
   /** Only non-null while mounted. */
   std::unique_ptr<CKComponentMountInfo> _mountInfo;
+
+  /** Component tree */
+  CKTreeNodeComponentKey _componentKey;
+  CKTreeNodeIdentifier _nodeIdentifier;
 
 #if DEBUG
   __weak id<CKTreeNodeProtocol> _treeNode;
@@ -500,5 +505,66 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
 {
   return _mountInfo ? _mountInfo->view : nil;
 }
+
+#pragma mark - CKTreeNodeProtocol
+
+- (CKTreeNodeIdentifier)nodeIdentifier
+{
+  return _nodeIdentifier;
+}
+
+- (id<CKTreeNodeComponentProtocol>)component
+{
+  return self;
+}
+
+- (CKComponentScopeHandle *)scopeHandle
+{
+  return _scopeHandle;
+}
+
+- (id)state
+{
+  return _scopeHandle.state;
+}
+
+- (const CKTreeNodeComponentKey &)componentKey
+{
+  return _componentKey;
+}
+
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+{
+  auto const parent = previousScopeRoot.rootNode.parentForNodeIdentifier(_nodeIdentifier);
+  CKAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");
+  scopeRoot.rootNode.registerNode(self, parent);
+  if (_scopeHandle) {
+    // Register the reused comopnent in the new scope root.
+    [scopeRoot registerComponent:self];
+    auto const controller = _scopeHandle.controller;
+    if (controller) {
+      // Register the controller in the new scope root.
+      [scopeRoot registerComponentController:controller];
+    }
+  }
+}
+
+- (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component toParent:(id<CKTreeNodeWithChildrenProtocol>)parent scopeRoot:(CKComponentScopeRoot *)scopeRoot {}
+
+#if DEBUG
+/** Returns a multi-line string describing this node and its children nodes */
+- (NSString *)debugDescription
+{
+  return [[self debugDescriptionNodes] componentsJoinedByString:@"\n"];
+}
+
+- (NSArray<NSString *> *)debugDescriptionNodes
+{
+  return @[[NSString stringWithFormat:@"- %@ %d - %@",
+            [self class],
+            _nodeIdentifier,
+            self]];
+}
+#endif
 
 @end

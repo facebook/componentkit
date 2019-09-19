@@ -69,15 +69,11 @@ struct CKBuildComponentTreeParams {
 
 @protocol CKTreeNodeWithChildrenProtocol;
 
-
 /**
  The component that is hosted by a `CKTreeNodeProtocol`.
  It represents the component holding the the scope handle, capable of building a component tree (CKTreeNode).
  */
-@protocol CKTreeNodeComponentProtocol<CKComponentProtocol>
-
-/** Reference to the component's scope handle. */
-- (CKComponentScopeHandle *)scopeHandle;
+@protocol CKTreeNodeComponentProtocol<CKComponentProtocol, CKTreeNodeProtocol>
 
 /** Ask the component to acquire a scope handle. */
 - (void)acquireScopeHandle:(CKComponentScopeHandle *)scopeHandle;
@@ -115,9 +111,9 @@ struct CKBuildComponentTreeParams {
 
 @protocol CKTreeNodeProtocol <NSObject>
 
-@property (nonatomic, strong, readonly) id<CKTreeNodeComponentProtocol> component;
-@property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
-@property (nonatomic, assign, readonly) CKTreeNodeIdentifier nodeIdentifier;
+- (id<CKTreeNodeComponentProtocol>)component;
+- (CKComponentScopeHandle *)scopeHandle;
+- (CKTreeNodeIdentifier)nodeIdentifier;
 
 /** Returns the component's state */
 - (id)state;
