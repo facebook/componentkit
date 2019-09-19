@@ -259,7 +259,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 
   // Simulate a state update
   auto const newState = @2;
-  auto const scopeHandle = childNode.handle;
+  auto const scopeHandle = childNode.scopeHandle;
   CKComponentStateUpdateMap stateUpdates;
   stateUpdates[scopeHandle].push_back(^(id){
     return newState;

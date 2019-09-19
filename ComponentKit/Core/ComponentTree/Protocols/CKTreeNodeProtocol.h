@@ -116,7 +116,7 @@ struct CKBuildComponentTreeParams {
 @protocol CKTreeNodeProtocol <NSObject>
 
 @property (nonatomic, strong, readonly) id<CKTreeNodeComponentProtocol> component;
-@property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
+@property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
 @property (nonatomic, assign, readonly) CKTreeNodeIdentifier nodeIdentifier;
 
 /** Returns the component's state */

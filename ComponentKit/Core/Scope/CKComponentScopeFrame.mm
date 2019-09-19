@@ -87,7 +87,7 @@ namespace std {
 
   CKComponentScopeHandle *newHandle =
   childFrameOfPreviousFrame
-  ? [childFrameOfPreviousFrame.handle newHandleWithStateUpdates:stateUpdates
+  ? [childFrameOfPreviousFrame.scopeHandle newHandleWithStateUpdates:stateUpdates
                                              componentScopeRoot:newRoot]
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                       rootIdentifier:newRoot.globalIdentifier
@@ -124,7 +124,7 @@ namespace std {
   }
 
   // Create a scope frame for the render component children.
-  CKComponentScopeFrame *newFrame = [[CKComponentScopeFrame alloc] initWithHandle:node.handle];
+  CKComponentScopeFrame *newFrame = [[CKComponentScopeFrame alloc] initWithHandle:node.scopeHandle];
   // Push the new scope frame to the parent frame's children.
   frame->_children.insert({stateScopeKey, newFrame});
   // Push the new pair into the thread local.
@@ -138,7 +138,7 @@ namespace std {
     return;
   }
 
-  CKAssert(!threadLocalScope->stack.empty() && threadLocalScope->stack.top().frame.handle == node.handle, @"frame.handle is not equal to node.handle");
+  CKAssert(!threadLocalScope->stack.empty() && threadLocalScope->stack.top().frame.scopeHandle == node.scopeHandle, @"frame.scopeHandle is not equal to node.scopeHandle");
   // Pop the top element of the stack.
   threadLocalScope->stack.pop();
 }
@@ -176,7 +176,7 @@ namespace std {
 - (instancetype)initWithHandle:(CKComponentScopeHandle *)handle
 {
   if (self = [super init]) {
-    _handle = handle;
+    _scopeHandle = handle;
   }
   return self;
 }

@@ -27,7 +27,7 @@
 
 /** Base initializer */
 - (instancetype)initWithPreviousNode:(id<CKTreeNodeProtocol>)previousNode
-                              handle:(CKComponentScopeHandle *)handle;
+                         scopeHandle:(CKComponentScopeHandle *)scopeHandle;
 
 /** Non-render initializer. */
 - (instancetype)initWithComponent:(id<CKTreeNodeComponentProtocol>)component

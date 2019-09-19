@@ -37,7 +37,7 @@ CKComponentScope::~CKComponentScope()
     [_scopeHandle resolve];
 
     if (_threadLocalScope->systraceListener) {
-      auto const componentClass = _threadLocalScope->stack.top().frame.handle.componentClass;
+      auto const componentClass = _threadLocalScope->stack.top().frame.scopeHandle.componentClass;
       [_threadLocalScope->systraceListener didBuildComponent:componentClass];
     }
 
@@ -63,7 +63,7 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
                                     initialStateCreator:initialStateCreator
                                            stateUpdates:_threadLocalScope->stateUpdates];
     _threadLocalScope->stack.push({.frame = childPair.frame, .previousFrame = childPair.previousFrame});
-    _scopeHandle = childPair.frame.handle;
+    _scopeHandle = childPair.frame.scopeHandle;
     _threadLocalScope->keys.push({});
   }
   CKCAssertWithCategory(_threadLocalScope != nullptr,

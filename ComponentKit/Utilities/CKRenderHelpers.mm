@@ -464,7 +464,7 @@ namespace CKRender {
                                id<CKTreeNodeWithChildrenProtocol> previousParent,
                                const CKBuildComponentTreeParams &params) -> BOOL {
     if (previousParent && params.buildTrigger == BuildTrigger::StateUpdate) {
-      auto const scopeHandle = node.handle;
+      auto const scopeHandle = node.scopeHandle;
       if (scopeHandle != nil) {
         auto const stateUpdateBlock = params.stateUpdates.find(scopeHandle);
         return stateUpdateBlock != params.stateUpdates.end();

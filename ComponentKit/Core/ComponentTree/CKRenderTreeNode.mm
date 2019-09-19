@@ -16,9 +16,9 @@
 
 // Base initializer
 - (instancetype)initWithPreviousNode:(id<CKTreeNodeProtocol>)previousNode
-                              handle:(CKComponentScopeHandle *)handle
+                         scopeHandle:(CKComponentScopeHandle *)scopeHandle
 {
-  if (self = [super initWithPreviousNode:previousNode handle:handle]) {
+  if (self = [super initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
     auto const threadLocalScope = CKThreadLocalComponentScope::currentScope();
     if (threadLocalScope != nullptr) {
       CKAssert(previousNode == nil || [previousNode conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"previousNode should conform to id<CKScopeTreeNodeProtocol>, but its class %@ does not.", previousNode.class);

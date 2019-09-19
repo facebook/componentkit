@@ -37,7 +37,7 @@ struct CKComponentScopeFramePair {
                           initialStateCreator:(id (^)(void))initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
-@property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
+@property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
 
 - (size_t)childrenSize;
 
@@ -54,7 +54,7 @@ struct CKComponentScopeFramePair {
 
 @interface CKComponentScopeFrame : NSObject <CKComponentScopeFrameProtocol>
 
-@property (nonatomic, strong, readonly) CKComponentScopeHandle *handle;
+@property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
 
 - (instancetype)initWithHandle:(CKComponentScopeHandle *)handle;
 

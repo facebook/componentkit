@@ -24,7 +24,7 @@
 
 @interface CKTreeNode ()
 @property (nonatomic, strong, readwrite) id<CKTreeNodeComponentProtocol> component;
-@property (nonatomic, strong, readwrite) CKComponentScopeHandle *handle;
+@property (nonatomic, strong, readwrite) CKComponentScopeHandle *scopeHandle;
 @property (nonatomic, assign, readwrite) CKTreeNodeIdentifier nodeIdentifier;
 @end
 
@@ -35,14 +35,14 @@
 
 // Base initializer
 - (instancetype)initWithPreviousNode:(id<CKTreeNodeProtocol>)previousNode
-                              handle:(CKComponentScopeHandle *)handle
+                         scopeHandle:(CKComponentScopeHandle *)scopeHandle
 {
   static int32_t nextGlobalIdentifier = 0;
   if (self = [super init]) {
-    _handle = handle;
+    _scopeHandle = scopeHandle;
     _nodeIdentifier = previousNode ? previousNode.nodeIdentifier : OSAtomicIncrement32(&nextGlobalIdentifier);
     // Set the link between the tree node and the scope handle.
-    [handle setTreeNode:self];
+    [scopeHandle setTreeNode:self];
   }
   return self;
 }
@@ -57,7 +57,7 @@
   auto const componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
   auto const previousNode = [previousParent childForComponentKey:componentKey];
   // For non-render components, the scope handle will be aquired from the component's base initializer.
-  if (self = [self initWithPreviousNode:previousNode handle:component.scopeHandle]) {
+  if (self = [self initWithPreviousNode:previousNode scopeHandle:component.scopeHandle]) {
     _component = component;
     _componentKey = componentKey;
     // Set the link between the parent and the child.
@@ -83,12 +83,12 @@
   auto const previousNode = [previousParent childForComponentKey:componentKey];
 
   // For Render Layout components, the component might have a scope handle already.
-  CKComponentScopeHandle *handle = component.scopeHandle;
-  if (handle == nil) {
+  CKComponentScopeHandle *scopeHandle = component.scopeHandle;
+  if (scopeHandle == nil) {
     // If there is a previous node, we just duplicate the scope handle.
     if (previousNode) {
-      handle = [previousNode.handle newHandleWithStateUpdates:stateUpdates
-                                           componentScopeRoot:scopeRoot];
+      scopeHandle = [previousNode.scopeHandle newHandleWithStateUpdates:stateUpdates
+                                                     componentScopeRoot:scopeRoot];
     } else {
       // The component needs a scope handle in few cases:
       // 1. Has an initial state
@@ -98,22 +98,22 @@
       if (initialState != [CKTreeNodeEmptyState emptyState] ||
           [componentClass controllerClass] ||
           [componentClass requiresScopeHandle]) {
-        handle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
-                                                   rootIdentifier:scopeRoot.globalIdentifier
-                                                   componentClass:componentClass
-                                                     initialState:initialState];
+        scopeHandle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
+                                                        rootIdentifier:scopeRoot.globalIdentifier
+                                                        componentClass:componentClass
+                                                          initialState:initialState];
       }
     }
 
     // Finalize the node/scope regsitration.
-    if (handle) {
-      [component acquireScopeHandle:handle];
+    if (scopeHandle) {
+      [component acquireScopeHandle:scopeHandle];
       [scopeRoot registerComponent:component];
-      [handle resolve];
+      [scopeHandle resolve];
     }
   }
 
-  if (self = [self initWithPreviousNode:previousNode handle:component.scopeHandle]) {
+  if (self = [self initWithPreviousNode:previousNode scopeHandle:component.scopeHandle]) {
     _component = component;
     _componentKey = componentKey;
     // Set the link between the parent and the child.
@@ -145,7 +145,7 @@
 
 - (id)state
 {
-  return _handle.state;
+  return _scopeHandle.state;
 }
 
 - (const CKTreeNodeComponentKey &)componentKey
@@ -158,10 +158,10 @@
   auto const parent = previousScopeRoot.rootNode.parentForNodeIdentifier(_nodeIdentifier);
   CKAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");
   scopeRoot.rootNode.registerNode(self, parent);
-  if (_handle) {
+  if (_scopeHandle) {
     // Register the reused comopnent in the new scope root.
     [scopeRoot registerComponent:_component];
-    auto const controller = _handle.controller;
+    auto const controller = _scopeHandle.controller;
     if (controller) {
       // Register the controller in the new scope root.
       [scopeRoot registerComponentController:controller];

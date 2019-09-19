@@ -114,7 +114,7 @@ static BOOL useVector = NO;
 {
   // In case that CKComponentScope was created, but not acquired from the component (for example: early nil return) ,
   // the component was never linked to the scope handle/tree node, hence, we should stop the recursion here.
-  if (self.handle.acquiredComponent == nil) {
+  if (self.scopeHandle.acquiredComponent == nil) {
     return;
   }
 
@@ -206,7 +206,7 @@ static BOOL useVector = NO;
 
   // Create new handle.
   CKComponentScopeHandle *newHandle = childFrameOfPreviousFrame
-  ? [childFrameOfPreviousFrame.handle newHandleWithStateUpdates:stateUpdates componentScopeRoot:newRoot]
+  ? [childFrameOfPreviousFrame.scopeHandle newHandleWithStateUpdates:stateUpdates componentScopeRoot:newRoot]
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                       rootIdentifier:newRoot.globalIdentifier
                                       componentClass:componentClass
@@ -215,7 +215,7 @@ static BOOL useVector = NO;
   // Create new node.
   CKScopeTreeNode *newChild = [[CKScopeTreeNode alloc]
                                initWithPreviousNode:childFrameOfPreviousFrame
-                               handle:newHandle];
+                               scopeHandle:newHandle];
 
   // Insert the new node to its parent map.
   [frame setChild:newChild forKey:stateKey];
@@ -258,7 +258,7 @@ static BOOL useVector = NO;
   }
 
   // The scope handle should be nil here, as we create a scope node for the render component to own its scope frame children. 
-  CKAssert(!threadLocalScope->stack.empty() && threadLocalScope->stack.top().frame.handle == nil, @"frame.handle is not equal to nil");
+  CKAssert(!threadLocalScope->stack.empty() && threadLocalScope->stack.top().frame.scopeHandle == nil, @"frame.scopeHandle is not equal to nil");
   // Pop the top element of the stack.
   threadLocalScope->stack.pop();
 }
