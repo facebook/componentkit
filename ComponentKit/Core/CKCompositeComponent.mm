@@ -20,12 +20,6 @@
 #import "CKComponentSubclass.h"
 #import "CKRenderHelpers.h"
 
-@interface CKCompositeComponent ()
-{
-  CKComponent *_component;
-}
-@end
-
 @implementation CKCompositeComponent
 
 #if DEBUG
@@ -57,7 +51,7 @@
 
   CKCompositeComponent *c = [super newWithView:view size:{}];
   if (c) {
-    c->_component = component;
+    c->_child = component;
   }
   return c;
 }
@@ -69,12 +63,12 @@
 
 - (NSString *)description
 {
-  return CKComponentDescriptionWithChildren([super description], [NSArray arrayWithObjects:_component, nil]);
+  return CKComponentDescriptionWithChildren([super description], [NSArray arrayWithObjects:_child, nil]);
 }
 
 - (CKComponent *)component
 {
-  return _component;
+  return _child;
 }
 
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
@@ -82,7 +76,7 @@
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
-  CKRender::ComponentTree::NonRender::build(self, _component, parent, previousParent, params, parentHasStateUpdate);
+  CKRender::ComponentTree::NonRender::build(self, _child, parent, previousParent, params, parentHasStateUpdate);
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
@@ -91,16 +85,16 @@
 {
   CKAssert(size == CKComponentSize(),
            @"CKCompositeComponent only passes size {} to the super class initializer, but received size %@ "
-           "(component=%@)", size.description(), _component);
+           "(component=%@)", size.description(), _child);
 
-  CKComponentLayout l = [_component layoutThatFits:constrainedSize parentSize:parentSize];
+  CKComponentLayout l = [_child layoutThatFits:constrainedSize parentSize:parentSize];
   return {self, l.size, {{{0,0}, l}}};
 }
 
 - (UIView *)viewForAnimation
 {
   // Delegate to the wrapped component's viewForAnimation if we don't have one.
-  return [super viewForAnimation] ?: [_component viewForAnimation];
+  return [super viewForAnimation] ?: [_child viewForAnimation];
 }
 
 @end

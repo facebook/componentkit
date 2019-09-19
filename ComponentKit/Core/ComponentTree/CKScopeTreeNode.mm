@@ -63,7 +63,7 @@ static BOOL useVector = NO;
   }
 }
 
-- (CKTreeNode *)childForComponentKey:(const CKTreeNodeComponentKey &)key
+- (id<CKTreeNodeProtocol>)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
   CKScopeNodeKey stateKey = {key};
   if (useVector) {
@@ -101,7 +101,7 @@ static BOOL useVector = NO;
   return std::make_tuple(componentClass, keyCounter, identifier);
 }
 
-- (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
+- (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
 {
   if (useVector) {
     _childrenVector.push_back({{componentKey}, child});

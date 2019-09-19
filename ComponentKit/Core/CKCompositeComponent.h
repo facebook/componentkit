@@ -9,6 +9,7 @@
  */
 
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKSingleChildComponent.h>
 
 /**
  CKCompositeComponent allows you to hide your implementation details and avoid subclassing layout components like
@@ -23,7 +24,7 @@
 
  @warning Overriding -layoutThatFits:parentSize: or -computeLayoutThatFits: is **not allowed** for any subclass.
  */
-@interface CKCompositeComponent<__covariant CKComponentStateType:id> : CKComponent
+@interface CKCompositeComponent<__covariant CKComponentStateType:id> : CKSingleChildComponent
 
 /** Calls the initializer with {} for view. */
 + (instancetype)newWithComponent:(__attribute__((ns_consumed)) CKComponent *)component;

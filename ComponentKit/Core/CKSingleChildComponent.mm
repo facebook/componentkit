@@ -8,13 +8,30 @@
  *
  */
 
-#import "CKScopeTreeNodeWithChild.h"
+#import "CKSingleChildComponent.h"
 
-@implementation CKScopeTreeNodeWithChild
+#import "CKComponentInternal.h"
+#import "CKComponentSubclass.h"
+
+@implementation CKSingleChildComponent
+
+@synthesize child = _child;
+
+#pragma mark - CKTreeNodeWithChildrenProtocol
+
+- (std::vector<id<CKTreeNodeProtocol>>)children
+{
+  return {_child.component};
+}
+
+- (size_t)childrenSize
+{
+  return _child.component ? 1 : 0;
+}
 
 - (id<CKTreeNodeProtocol>)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
-  if (std::get<0>(key) == [_child.component class]) {
+  if (std::get<0>(key) == [_child class]) {
     return _child;
   }
   return nil;
@@ -26,16 +43,24 @@
   return std::make_tuple(componentClass, 0, identifier);
 }
 
-- (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
-{
-  CKAssert(_child == nil || [_child class] == [child class], @"[_child class]: %@ is different than [child class]: %@", [_child class], [child class]);
-  _child = child;
-}
+- (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey {}
+
 
 - (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 {
   [super didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
   [_child didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
 }
+
+#if DEBUG
+- (NSArray<NSString *> *)debugDescriptionNodes
+{
+  NSMutableArray<NSString *> *debugDescriptionNodes = [NSMutableArray arrayWithArray:[super debugDescriptionNodes]];
+  for (NSString *s in [_child debugDescriptionNodes]) {
+    [debugDescriptionNodes addObject:[@"  " stringByAppendingString:s]];
+  }
+  return debugDescriptionNodes;
+}
+#endif
 
 @end

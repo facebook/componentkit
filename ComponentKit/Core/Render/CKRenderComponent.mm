@@ -27,7 +27,6 @@ struct CKRenderLayoutCache {
 
 @implementation CKRenderComponent
 {
-  CKComponent *_childComponent;
   CKRenderLayoutCache _cachedLayout;
   BOOL _enableLayoutCache;
 }
@@ -80,7 +79,7 @@ struct CKRenderLayoutCache {
     };
   }
   // Build the component tree.
-  auto const node = CKRender::ComponentTree::Render::build(self, &_childComponent, parent, previousParent, params, parentHasStateUpdate, didReuseBlock);
+  auto const node = CKRender::ComponentTree::Render::build(self, &_child, parent, previousParent, params, parentHasStateUpdate, didReuseBlock);
   auto const viewConfiguration = [self viewConfigurationWithState:node.state];
   if (!viewConfiguration.isDefaultConfiguration()) {
     [self setViewConfiguration:viewConfiguration];
@@ -93,9 +92,9 @@ struct CKRenderLayoutCache {
 {
   CKAssert(size == CKComponentSize(),
            @"CKRenderComponent only passes size {} to the super class initializer, but received size %@ "
-           "(component=%@)", size.description(), _childComponent);
+           "(component=%@)", size.description(), _child);
 
-  if (_childComponent) {
+  if (_child) {
     CKComponentLayout l;
     if (_enableLayoutCache) {
       if (_cachedLayout.childLayout.component != nil &&
@@ -103,7 +102,7 @@ struct CKRenderLayoutCache {
           constrainedSize == _cachedLayout.constrainedSize) {
         l = _cachedLayout.childLayout;
       } else {
-        l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];
+        l = [_child layoutThatFits:constrainedSize parentSize:parentSize];
         _cachedLayout = {
           .constrainedSize = constrainedSize,
           .parentSize = parentSize,
@@ -111,7 +110,7 @@ struct CKRenderLayoutCache {
         };
       }
     } else {
-      l = [_childComponent layoutThatFits:constrainedSize parentSize:parentSize];
+      l = [_child layoutThatFits:constrainedSize parentSize:parentSize];
     }
     return {self, l.size, {{{0,0}, l}}};
   }
@@ -120,7 +119,7 @@ struct CKRenderLayoutCache {
 
 - (CKComponent *)childComponent
 {
-  return _childComponent;
+  return _child;
 }
 
 #pragma mark - CKRenderComponentProtocol

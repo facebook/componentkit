@@ -24,7 +24,7 @@
 @interface CKContextTestRenderComponent<T> : CKRenderComponent
 + (instancetype)newWithContextObject:(NSNumber *)object;
 @property (nonatomic, strong) id<NSObject> objectFromContext;
-@property (nonatomic, strong) CKContextTestComponent *child;
+@property (nonatomic, strong) CKContextTestComponent *childTest;
 @end
 
 @interface CKContextTestWithChildrenComponent : CKRenderLayoutWithChildrenComponent
@@ -131,9 +131,9 @@
 
   auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory);
 
-  XCTAssertTrue(n0 == c1.child.objectFromContext);
-  XCTAssertTrue(n0 == c2.child.objectFromContext);
-  XCTAssertTrue(n0 == c3.child.objectFromContext);
+  XCTAssertTrue(n0 == c1.childTest.objectFromContext);
+  XCTAssertTrue(n0 == c2.childTest.objectFromContext);
+  XCTAssertTrue(n0 == c3.childTest.objectFromContext);
 }
 
 - (void)testSameContextInSiblingComponentsAndOverrideContextWithRenderInTheTree
@@ -182,9 +182,9 @@
   XCTAssertTrue(n0 == c1.objectFromContext);
   XCTAssertTrue(n0 == c2.objectFromContext);
   XCTAssertTrue(n0 == c3.objectFromContext);
-  XCTAssertTrue(n1 == c1.child.objectFromContext);
-  XCTAssertTrue(n2 == c2.child.objectFromContext);
-  XCTAssertTrue(n3 == c3.child.objectFromContext);
+  XCTAssertTrue(n1 == c1.childTest.objectFromContext);
+  XCTAssertTrue(n2 == c2.childTest.objectFromContext);
+  XCTAssertTrue(n3 == c3.childTest.objectFromContext);
 }
 
 - (void)testTriplyNestedComponentContextWithNilMiddleValueCorrectlyRestoresOuterValue
@@ -493,8 +493,8 @@
 
 - (CKComponent *)render:(id)state
 {
-  _child = [CKContextTestComponent new];
-  return _child;
+  _childTest = [CKContextTestComponent new];
+  return _childTest;
 }
 @end
 

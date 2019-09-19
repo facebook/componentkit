@@ -85,7 +85,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 
 @interface CKTreeNodeTest_RenderComponent_WithChild : CKRenderComponent
 {
-  CKComponent *_child;
+  CKComponent *_childComponent;
 }
 + (instancetype)newWithComponent:(CKComponent *)component;
 @end
@@ -669,7 +669,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 {
   auto const c = [super new];
   if (c) {
-    c->_child = component;
+    c->_childComponent = component;
   }
   return c;
 }
@@ -681,7 +681,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 
 - (CKComponent *)render:(id)state
 {
-  return _child;
+  return _childComponent;
 }
 @end
 

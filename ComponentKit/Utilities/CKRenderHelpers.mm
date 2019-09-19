@@ -305,6 +305,7 @@ namespace CKRender {
 
     namespace RenderLayout {
       auto build(id<CKRenderWithChildComponentProtocol> component,
+                 __strong id<CKTreeNodeComponentProtocol> *childComponent,
                  id<CKTreeNodeWithChildrenProtocol> parent,
                  id<CKTreeNodeWithChildrenProtocol> previousParent,
                  const CKBuildComponentTreeParams &params,
@@ -330,6 +331,10 @@ namespace CKRender {
 
         auto const child = [component render:node.state];
         if (child) {
+          if (childComponent != nullptr) {
+            // Set the link between the parent to its child.
+            *childComponent = child;
+          }
           // Call build component tree on the child component.
           [child buildComponentTree:node
                      previousParent:(id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]]

@@ -10,6 +10,7 @@
 
 
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKSingleChildComponent.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
 
 /**
@@ -21,7 +22,7 @@
  The main difference between CKRenderComponent and CKRenderLayoutComponent is that by subclassing CKRenderLayoutComponent the component tree (CKTreeNode)
  won't be created from CKBuildComponent unless there is a CKRenderComponent in the tree. We use this component to bridge non-render components into the render world.
  */
-@interface CKRenderLayoutComponent : CKComponent <CKRenderWithChildComponentProtocol>
+@interface CKRenderLayoutComponent : CKSingleChildComponent <CKRenderWithChildComponentProtocol>
 
 /**
  Returns a child component that needs to be rendered from this component.

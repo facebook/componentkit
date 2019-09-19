@@ -68,12 +68,14 @@ namespace CKRender {
        Build component tree for render layout components (CKRenderLayoutComponent).
 
        @param component The component at the head of the component tree.
+       @param childComponent The child component owned by the component in input.
        @param parent The current parent tree node of the component in input.
        @param previousParent The previous generation of the parent tree node of the component in input.
        @param params Collection of parameters to use to properly setup build component tree step.
        @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
        */
       auto build(id<CKRenderWithChildComponentProtocol> component,
+                 __strong id<CKTreeNodeComponentProtocol> *childComponent,
                  id<CKTreeNodeWithChildrenProtocol> parent,
                  id<CKTreeNodeWithChildrenProtocol> previousParent,
                  const CKBuildComponentTreeParams &params,

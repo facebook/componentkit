@@ -57,7 +57,7 @@ typedef std::unordered_map<CKTreeNodeClassType, NSUInteger, CKClassTypeHasher, C
   return _children.size();
 }
 
-- (CKTreeNode *)childForComponentKey:(const CKTreeNodeComponentKey &)key
+- (id<CKTreeNodeProtocol>)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
   auto const it = _children.find(key);
   if (it != _children.end()) {
@@ -73,7 +73,7 @@ typedef std::unordered_map<CKTreeNodeClassType, NSUInteger, CKClassTypeHasher, C
   return std::make_tuple(componentClass, _classTypeMap[classKey]++, identifier);
 }
 
-- (void)setChild:(CKTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
+- (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
 {
   _children[componentKey] = child;
 }
