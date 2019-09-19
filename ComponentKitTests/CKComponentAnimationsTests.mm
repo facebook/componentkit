@@ -17,10 +17,14 @@
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentAnimations.h>
-#import <ComponentKit/CKCompositeComponentInternal.h>
+#import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 
 #import "CKComponentAnimationsEquality.h"
+
+@interface CKCompositeComponent()
+@property (nonatomic, strong) CKComponent *child;
+@end
 
 @interface CKComponentAnimationsTests_LayoutDiffing: XCTestCase
 @end
@@ -57,7 +61,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
   const auto diff = CK::animatedComponentsBetweenLayouts(l, {});
 
   const auto expectedDiff = CK::ComponentTreeDiff {
-    .appearedComponents = {c.component},
+    .appearedComponents = {c.child},
   };
   XCTAssert(diff == expectedDiff);
 }
@@ -94,7 +98,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
   const auto diff = CK::animatedComponentsBetweenLayouts(l2, l);
 
   const auto expectedDiff = CK::ComponentTreeDiff {
-    .updatedComponents = {{c.component, c2.component}},
+    .updatedComponents = {{c.child, c2.child}},
   };
   XCTAssert(diff == expectedDiff);
 }

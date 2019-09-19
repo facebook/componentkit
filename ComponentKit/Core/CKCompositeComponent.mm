@@ -16,7 +16,6 @@
 
 #import "CKInternalHelpers.h"
 #import "CKComponentInternal.h"
-#import "CKCompositeComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKRenderHelpers.h"
 
@@ -64,11 +63,6 @@
 - (NSString *)description
 {
   return CKComponentDescriptionWithChildren([super description], [NSArray arrayWithObjects:_child, nil]);
-}
-
-- (CKComponent *)component
-{
-  return _child;
 }
 
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
