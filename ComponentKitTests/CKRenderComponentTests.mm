@@ -602,6 +602,28 @@
   }];
 }
 
+- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithComponentsAsTheTree
+{
+  // Components as the tree
+  [self __test_scopeFramePreserveStateDuringComponentReuse:{
+    .enable = NO,
+    .useRenderNodes = NO,
+    .useSingleChildScopeNodeForCompositeComponent = NO,
+    .useComponentsAsTheTree = YES,
+  }];
+}
+
+- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithAllTheOptimizations
+{
+  // Components as the tree
+  [self __test_scopeFramePreserveStateDuringComponentReuse:{
+    .enable = YES,
+    .useRenderNodes = YES,
+    .useSingleChildScopeNodeForCompositeComponent = YES,
+    .useComponentsAsTheTree = YES,
+  }];
+}
+
 - (void)__test_scopeFramePreserveStateDuringComponentReuse:(CKUnifyComponentTreeConfig)config
 {
   // Build new tree with siblings `CKTestRenderWithNonRenderWithStateChildComponent` components.

@@ -21,6 +21,8 @@ struct CKUnifyComponentTreeConfig {
   BOOL useRenderNodes = NO;
   /** If enabled, CKScopeTreeNode will use vector instead of unordered_map */
   BOOL useVector = NO;
+  /** If enabled, the components we will be used as the tree nodes */
+  BOOL useComponentsAsTheTree = NO;
 };
 
 struct CKGlobalConfig {
