@@ -16,7 +16,7 @@
  Please DO NOT implement a new component that conforms to this protocol;
  your component should subclass either from `CKRenderComponent`.
  */
-@protocol CKRenderComponentProtocol <CKTreeNodeComponentProtocol>
+@protocol CKRenderComponentProtocol <CKTreeNodeComponentProtocol, CKTreeNodeWithChildrenProtocol>
 
 /*
  Override this method in order to provide an initialState which depends on the component's props.

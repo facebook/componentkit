@@ -92,6 +92,7 @@ namespace CKRender {
 
        */
       auto buildWithChildren(id<CKRenderWithChildrenComponentProtocol> component,
+                             std::vector<id<CKTreeNodeComponentProtocol>> *childrenComponents,
                              id<CKTreeNodeWithChildrenProtocol> parent,
                              id<CKTreeNodeWithChildrenProtocol> previousParent,
                              const CKBuildComponentTreeParams &params,

@@ -346,6 +346,7 @@ namespace CKRender {
       }
 
       auto buildWithChildren(id<CKRenderWithChildrenComponentProtocol> component,
+                             std::vector<id<CKTreeNodeComponentProtocol>> *childrenComponents,
                              id<CKTreeNodeWithChildrenProtocol> parent,
                              id<CKTreeNodeWithChildrenProtocol> previousParent,
                              const CKBuildComponentTreeParams &params,
@@ -369,6 +370,9 @@ namespace CKRender {
         }
 
         auto const children = [component renderChildren:node.state];
+        if (childrenComponents != nullptr) {
+          *childrenComponents = children;
+        }
         auto const previousParentForChild = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
         for (auto const child : children) {
           if (child) {
