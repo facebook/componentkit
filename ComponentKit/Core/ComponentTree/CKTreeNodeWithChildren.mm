@@ -34,7 +34,7 @@ struct CKClassTypeHasher {
   }
 };
 
-typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CKTreeNodeComponentKeyHasher, CKTreeNodeComponentKeyComparator> CKNodeMap;
+typedef std::unordered_map<CKTreeNodeComponentKey, CKTreeNode *, CK::TreeNode::hasher, CK::TreeNode::comparator> CKNodeMap;
 typedef std::unordered_map<CKTreeNodeClassType, NSUInteger, CKClassTypeHasher, CKClassTypeComparator> CKClassTypeMap;
 
 @implementation CKTreeNodeWithChildren

@@ -289,6 +289,8 @@
 		23309AA92045C61000833BDB /* CKTreeNodeProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 23309AA32045C5F300833BDB /* CKTreeNodeProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23452D0F22735D910008ACB1 /* CKAnalyticsListenerHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 23824A5222720FEC00B559F3 /* CKAnalyticsListenerHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23452D1A22735D990008ACB1 /* CKAnalyticsListenerHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23824A5D22720FEC00B559F3 /* CKAnalyticsListenerHelpers.mm */; };
+		2361E8E32330F7AD00F8890D /* CKTreeNodeTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2361E8D82330F7AC00F8890D /* CKTreeNodeTypes.mm */; };
+		2361E8E42330F7AD00F8890D /* CKTreeNodeTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2361E8D82330F7AC00F8890D /* CKTreeNodeTypes.mm */; };
 		23629B4A203C2D66007F765D /* CKBuildComponentTreeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23629B3F203C2D65007F765D /* CKBuildComponentTreeTests.mm */; };
 		23770A1122EB205E00858140 /* CKSystraceScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23770A0522EB205E00858140 /* CKSystraceScope.mm */; };
 		23770A1222EB205E00858140 /* CKSystraceScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23770A0522EB205E00858140 /* CKSystraceScope.mm */; };
@@ -1098,6 +1100,7 @@
 		2327614622EB069F007FF24A /* CKSystraceListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKSystraceListener.h; sourceTree = "<group>"; };
 		23309AA22045C5F300833BDB /* CKRenderComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderComponentProtocol.h; sourceTree = "<group>"; };
 		23309AA32045C5F300833BDB /* CKTreeNodeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTreeNodeProtocol.h; sourceTree = "<group>"; };
+		2361E8D82330F7AC00F8890D /* CKTreeNodeTypes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTreeNodeTypes.mm; sourceTree = "<group>"; };
 		23629B3F203C2D65007F765D /* CKBuildComponentTreeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKBuildComponentTreeTests.mm; sourceTree = "<group>"; };
 		23770A0522EB205E00858140 /* CKSystraceScope.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSystraceScope.mm; sourceTree = "<group>"; };
 		23770A1022EB205E00858140 /* CKSystraceScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKSystraceScope.h; sourceTree = "<group>"; };
@@ -1691,6 +1694,7 @@
 				23309AA22045C5F300833BDB /* CKRenderComponentProtocol.h */,
 				23309AA32045C5F300833BDB /* CKTreeNodeProtocol.h */,
 				23EA313921A2E57400FEC59C /* CKTreeNodeTypes.h */,
+				2361E8D82330F7AC00F8890D /* CKTreeNodeTypes.mm */,
 				23789B1A22E7639A005505FC /* CKScopeTreeNodeProtocol.h */,
 			);
 			path = Protocols;
@@ -3469,6 +3473,7 @@
 				039297BC224EA649003B033E /* CKComponentAnimationPredicates.mm in Sources */,
 				7F47ECE6218A27FA00AD4E55 /* CKDispatch.mm in Sources */,
 				03B8B4AA1D2A346F00EDFF59 /* CKDataSourceChange.m in Sources */,
+				2361E8E42330F7AD00F8890D /* CKTreeNodeTypes.mm in Sources */,
 				03B8B4AB1D2A346F00EDFF59 /* CKDataSourceChangesetModification.mm in Sources */,
 				2D640D5E1DB7FD7800271CB4 /* CKInvalidChangesetOperationType.mm in Sources */,
 				03B8B4AC1D2A346F00EDFF59 /* CKDataSourceReloadModification.mm in Sources */,
@@ -3835,6 +3840,7 @@
 				D0B47CDA1CBD943400BB33CE /* CKTextKitRenderer+Positioning.mm in Sources */,
 				D0B47CDB1CBD943400BB33CE /* CKTextKitRenderer+TextChecking.mm in Sources */,
 				7F47ECE0218A254300AD4E55 /* CKDispatch.mm in Sources */,
+				2361E8E32330F7AD00F8890D /* CKTreeNodeTypes.mm in Sources */,
 				D0B47CDC1CBD943400BB33CE /* CKTextKitRenderer.mm in Sources */,
 				D0B47CDD1CBD943400BB33CE /* CKTextKitRendererCache.mm in Sources */,
 				D0B47CDE1CBD943400BB33CE /* CKTextKitShadower.mm in Sources */,
