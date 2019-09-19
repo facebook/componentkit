@@ -234,7 +234,7 @@ namespace CKRender {
         // Check if the component already have tree node (Tree Unification Mode).
         auto node = component.scopeHandle.treeNode;
         if (node) {
-          [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
+          [node linkComponent:component toParent:parent previousParent:previousParent params:params];
         } else {
           node = [[CKTreeNodeWithChild alloc]
                   initWithComponent:component
@@ -277,7 +277,7 @@ namespace CKRender {
         // Check if the component already have tree node (Tree Unification Mode).
         auto node = component.scopeHandle.treeNode;
         if (node) {
-          [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
+          [node linkComponent:component toParent:parent previousParent:previousParent params:params];
         } else {
           node = [[CKTreeNodeWithChildren alloc]
                   initWithComponent:component
@@ -321,7 +321,7 @@ namespace CKRender {
                   scopeRoot:params.scopeRoot
                   stateUpdates:params.stateUpdates];
         } else {
-          [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
+          [node linkComponent:component toParent:parent previousParent:previousParent params:params];
         }
 
         // Update the `parentHasStateUpdate` param for Faster state/props updates.
@@ -353,7 +353,7 @@ namespace CKRender {
                              BOOL parentHasStateUpdate) -> id<CKTreeNodeProtocol>
       {
         id<CKTreeNodeWithChildrenProtocol> node = (id<CKTreeNodeWithChildrenProtocol>)component.scopeHandle.treeNode;
-        [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
+        [node linkComponent:component toParent:parent previousParent:previousParent params:params];
         if (node == nil) {
           node = [[CKTreeNodeWithChildren alloc]
                   initWithRenderComponent:component
@@ -456,7 +456,7 @@ namespace CKRender {
                  const CKBuildComponentTreeParams &params) -> void {
         auto node = component.scopeHandle.treeNode;
         if (node) {
-          [node linkComponent:component toParent:parent scopeRoot:params.scopeRoot];
+          [node linkComponent:component toParent:parent previousParent:previousParent params:params];
         } else {
           node = [[CKTreeNode alloc]
                   initWithComponent:component

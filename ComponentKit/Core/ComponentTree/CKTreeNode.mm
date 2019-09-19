@@ -41,8 +41,6 @@
   if (self = [super init]) {
     _scopeHandle = scopeHandle;
     _nodeIdentifier = previousNode ? previousNode.nodeIdentifier : OSAtomicIncrement32(&nextGlobalIdentifier);
-    // Set the link between the tree node and the scope handle.
-    [scopeHandle setTreeNode:self];
   }
   return self;
 }
@@ -56,14 +54,17 @@
 {
   auto const componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
   auto const previousNode = [previousParent childForComponentKey:componentKey];
+  auto const scopeHandle = component.scopeHandle;
   // For non-render components, the scope handle will be aquired from the component's base initializer.
-  if (self = [self initWithPreviousNode:previousNode scopeHandle:component.scopeHandle]) {
+  if (self = [self initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
     _component = component;
     _componentKey = componentKey;
     // Set the link between the parent and the child.
     [parent setChild:self forComponentKey:_componentKey];
     // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
     scopeRoot.rootNode.registerNode(self, parent);
+    // Set the link between the tree node and the scope handle.
+    [scopeHandle setTreeNode:self];
 #if DEBUG
     [component acquireTreeNode:self];
 #endif
@@ -120,6 +121,8 @@
     [parent setChild:self forComponentKey:_componentKey];
     // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
     scopeRoot.rootNode.registerNode(self, parent);
+    // Set the link between the tree node and the scope handle.
+    [scopeHandle setTreeNode:self];
 #if DEBUG
     [component acquireTreeNode:self];
 #endif
@@ -129,7 +132,8 @@
 
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
              toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
-            scopeRoot:(CKComponentScopeRoot *)scopeRoot
+       previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+               params:(const CKBuildComponentTreeParams &)params
 {
   auto const componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
   _component = component;
@@ -137,7 +141,9 @@
   // Set the link between the parent and the child.
   [parent setChild:self forComponentKey:_componentKey];
   // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
-  scopeRoot.rootNode.registerNode(self, parent);
+  params.scopeRoot.rootNode.registerNode(self, parent);
+  // Set the link between the tree node and the scope handle.
+  [component.scopeHandle setTreeNode:self];
 #if DEBUG
   [component acquireTreeNode:self];
 #endif

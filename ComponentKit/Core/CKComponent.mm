@@ -533,6 +533,11 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
   return _componentKey;
 }
 
+- (void)setComponentKey:(const CKTreeNodeComponentKey &)key
+{
+  _componentKey = key;
+}
+
 - (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 {
   auto const parent = previousScopeRoot.rootNode.parentForNodeIdentifier(_nodeIdentifier);
@@ -549,7 +554,25 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
   }
 }
 
-- (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component toParent:(id<CKTreeNodeWithChildrenProtocol>)parent scopeRoot:(CKComponentScopeRoot *)scopeRoot {}
+- (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
+             toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
+       previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+               params:(const CKBuildComponentTreeParams &)params
+{
+  static int32_t nextGlobalIdentifier = 0;
+  if (CK::TreeNode::isKeyEmpty(_componentKey)) {
+    _componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
+  }
+  auto const previousNode = [previousParent childForComponentKey:_componentKey];
+  _nodeIdentifier = previousNode ? previousNode.nodeIdentifier : OSAtomicIncrement32(&nextGlobalIdentifier);
+  // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
+  params.scopeRoot.rootNode.registerNode(self, parent);
+  // Set the link between the tree node and the scope handle.
+  [_scopeHandle setTreeNode:self];
+#if DEBUG
+  [component acquireTreeNode:self];
+#endif
+}
 
 #if DEBUG
 /** Returns a multi-line string describing this node and its children nodes */

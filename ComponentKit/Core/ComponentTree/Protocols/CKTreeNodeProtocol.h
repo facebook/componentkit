@@ -127,7 +127,9 @@ struct CKBuildComponentTreeParams {
 /** This method should be called on nodes that have been created from CKComponentScope */
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
              toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
-            scopeRoot:(CKComponentScopeRoot *)scopeRoot;
+       previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+               params:(const CKBuildComponentTreeParams &)params;
+
 #if DEBUG
 /** Returns a multi-line string describing this node and its children nodes */
 - (NSString *)debugDescription;
