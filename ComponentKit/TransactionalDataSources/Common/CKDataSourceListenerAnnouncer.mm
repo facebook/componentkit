@@ -24,7 +24,7 @@
   CK::Component::AnnouncerHelper::removeListener(self, _cmd, listener);
 }
 
-- (void)componentDataSource:(CKDataSource *)dataSource
+- (void)dataSource:(CKDataSource *)dataSource
      didModifyPreviousState:(CKDataSourceState *)previousState
                   withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
@@ -32,25 +32,24 @@
   CK::Component::AnnouncerHelper::call(self, _cmd, dataSource, previousState, state, changes);
 }
 
-- (void)componentDataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo
+- (void)dataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo
 {
   CK::Component::AnnouncerHelper::callOptional(self, _cmd, dataSource, userInfo);
 }
 
-- (void)componentDataSourceWillGenerateNewState:(CKDataSource *)dataSource
-                                       userInfo:(NSDictionary *)userInfo
+- (void)dataSource:(CKDataSource *)dataSource willGenerateNewStateWithUserInfo:(NSDictionary *)userInfo
 {
   CK::Component::AnnouncerHelper::callOptional(self, _cmd, dataSource, userInfo);
 }
 
-- (void)componentDataSource:(CKDataSource *)dataSource
+- (void)dataSource:(CKDataSource *)dataSource
         didGenerateNewState:(CKDataSourceState *)newState
                     changes:(CKDataSourceAppliedChanges *)changes
 {
   CK::Component::AnnouncerHelper::callOptional(self, _cmd, dataSource, newState, changes);
 }
 
-- (void)componentDataSource:(CKDataSource *)dataSource
+- (void)dataSource:(CKDataSource *)dataSource
  willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset
 {
   CK::Component::AnnouncerHelper::call(self, _cmd, dataSource, deferredChangeset);

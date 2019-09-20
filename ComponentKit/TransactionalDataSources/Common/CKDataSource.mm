@@ -353,7 +353,7 @@
 
 - (void)_synchronouslyApplyModification:(id<CKDataSourceStateModifying>)modification
 {
-  [_announcer componentDataSource:self willSyncApplyModificationWithUserInfo:[modification userInfo]];
+  [_announcer dataSource:self willSyncApplyModificationWithUserInfo:[modification userInfo]];
   [self _synchronouslyApplyChange:[modification changeFromState:_state] qos:modification.qos];
 }
 
@@ -378,10 +378,7 @@
     CKComponentUpdateComponentForComponentControllerWithIndexPaths(appliedChanges.finalUpdatedIndexPaths.allValues, newState);
   }
 
-  [_announcer componentDataSource:self
-           didModifyPreviousState:previousState
-                        withState:newState
-                byApplyingChanges:appliedChanges];
+  [_announcer dataSource:self didModifyPreviousState:previousState withState:newState byApplyingChanges:appliedChanges];
 
   // Announce 'didPrepareLayoutForComponent:'.
   CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths([[appliedChanges finalUpdatedIndexPaths] allValues], newState);
@@ -390,7 +387,7 @@
   // Handle deferred changeset (if there is one)
   auto const deferredChangeset = [change deferredChangeset];
   if (deferredChangeset != nil) {
-    [_announcer componentDataSource:self willApplyDeferredChangeset:deferredChangeset];
+    [_announcer dataSource:self willApplyDeferredChangeset:deferredChangeset];
     id<CKDataSourceStateModifying> const modification =
     [self _changesetGenerationModificationForChangeset:deferredChangeset
                                               userInfo:[appliedChanges userInfo]
@@ -457,14 +454,12 @@
 
 - (void)_applyModificationPair:(CKDataSourceModificationPair *)modificationPair
 {
-  [_announcer componentDataSourceWillGenerateNewState:self userInfo:modificationPair.modification.userInfo];
+  [_announcer dataSource:self willGenerateNewStateWithUserInfo:modificationPair.modification.userInfo];
   CKDataSourceChange *change;
   @autoreleasepool {
     change = [modificationPair.modification changeFromState:modificationPair.state];
   }
-  [_announcer componentDataSource:self
-              didGenerateNewState:[change state]
-                          changes:[change appliedChanges]];
+  [_announcer dataSource:self didGenerateNewState:[change state] changes:[change appliedChanges]];
 
   dispatch_async(dispatch_get_main_queue(), ^{
     // If the first object in _pendingAsynchronousModifications is not still the modification,

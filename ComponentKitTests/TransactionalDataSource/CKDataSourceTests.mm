@@ -359,7 +359,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 
 #pragma mark - Listener
 
-- (void)componentDataSource:(CKDataSource *)dataSource
+- (void)dataSource:(CKDataSource *)dataSource
      didModifyPreviousState:(CKDataSourceState *)previousState
                   withState:(CKDataSourceState *)state
           byApplyingChanges:(CKDataSourceAppliedChanges *)changes
@@ -368,22 +368,22 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   [_announcedChanges addObject:changes];
 }
 
-- (void)componentDataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo
+- (void)dataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo
 {
   _syncModificationStartCounter++;
 }
 
-- (void)componentDataSourceWillGenerateNewState:(CKDataSource *)dataSource userInfo:(NSDictionary *)userInfo
+- (void)dataSource:(CKDataSource *)dataSource willGenerateNewStateWithUserInfo:(NSDictionary *)userInfo
 {
   _willGenerateChangeCounter++;
 }
 
-- (void)componentDataSource:(CKDataSource *)dataSource didGenerateNewState:(CKDataSourceState *)newState changes:(CKDataSourceAppliedChanges *)changes
+- (void)dataSource:(CKDataSource *)dataSource didGenerateNewState:(CKDataSourceState *)newState changes:(CKDataSourceAppliedChanges *)changes
 {
   _didGenerateChangeCounter++;
 }
 
-- (void)componentDataSource:(CKDataSource *)dataSource
+- (void)dataSource:(CKDataSource *)dataSource
  willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset {}
 
 @end

@@ -22,14 +22,11 @@
  @param dataSource The sending data source.
  @param previousState The state that the data source was previously exposing.
  @param newState The state that the data source currently has. Always use this to get new state instead of relying on dataSource.state
- @param changes The changes that were applied (which may correspond to multiple 
+ @param changes The changes that were applied (which may correspond to multiple
         CKDataSourceChangeset objects).
  */
 
-- (void)componentDataSource:(CKDataSource *)dataSource
-     didModifyPreviousState:(CKDataSourceState *)previousState
-                  withState:(CKDataSourceState *)state
-          byApplyingChanges:(CKDataSourceAppliedChanges *)changes;
+- (void)dataSource:(CKDataSource *)dataSource didModifyPreviousState:(CKDataSourceState *)previousState withState:(CKDataSourceState *)state byApplyingChanges:(CKDataSourceAppliedChanges *)changes;
 
 /**
  Announced when the data source is about to apply a deferred changeset -- this only occurs if changeset
@@ -37,8 +34,7 @@
  @param dataSource The sending data source.
  @param deferredChangeset The deferred changeset that is about to be applied.
  */
-- (void)componentDataSource:(CKDataSource *)dataSource
- willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset;
+- (void)dataSource:(CKDataSource *)dataSource willApplyDeferredChangeset:(CKDataSourceChangeset *)deferredChangeset;
 
 @end
 
@@ -53,7 +49,7 @@
  @param userInfo Additional information that was passed with modification
  */
 
-- (void)componentDataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo;
+- (void)dataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo;
 
 /**
  Announced on the background thread when the data source will generate new state.
@@ -61,8 +57,7 @@
  @param dataSource The sending data source
  @param userInfo Additional information that was passed with modification
  */
-- (void)componentDataSourceWillGenerateNewState:(CKDataSource *)dataSource
-                                       userInfo:(NSDictionary *)userInfo;
+- (void)dataSource:(CKDataSource *)dataSource willGenerateNewStateWithUserInfo:(NSDictionary *)userInfo;
 
 /**
  Announced on the background thread when the data source has just generated new state.
@@ -71,8 +66,6 @@
  @param newState The state that the data source has just generated and will schedule for applying.
  @param changes The changes that ar going to be applied.
  */
-- (void)componentDataSource:(CKDataSource *)dataSource
-        didGenerateNewState:(CKDataSourceState *)newState
-                    changes:(CKDataSourceAppliedChanges *)changes;
+- (void)dataSource:(CKDataSource *)dataSource didGenerateNewState:(CKDataSourceState *)newState changes:(CKDataSourceAppliedChanges *)changes;
 
 @end
