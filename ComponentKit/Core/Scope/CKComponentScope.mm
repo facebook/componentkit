@@ -22,8 +22,7 @@
 static Class<CKComponentScopeFrameProtocol> getFrameClass(const CKUnifyComponentTreeConfig & unifyComponentTreeConfig,
                                                           Class __unsafe_unretained componentClass) {
   if (unifyComponentTreeConfig.enable) {
-    if (unifyComponentTreeConfig.useSingleChildScopeNodeForCompositeComponent &&
-        componentClass == [CKCompositeComponent class]) {
+    if (componentClass == [CKCompositeComponent class]) {
       return [CKScopeTreeNodeWithChild class];
     }
     return [CKScopeTreeNode class];

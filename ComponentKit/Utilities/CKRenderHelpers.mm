@@ -29,7 +29,7 @@ namespace CKRenderInternal {
 
     // Render nodes is on, only in case comopnents as a tree is off.
     static auto userRenderNodes(const CKBuildComponentTreeParams &params) {
-      return params.unifyComponentTreeConfig.useRenderNodes && !params.unifyComponentTreeConfig.useComponentsAsTheTree;
+      return !params.unifyComponentTreeConfig.useComponentsAsTheTree;
     }
 
     static auto willBuildComponentTree(id<CKTreeNodeProtocol> node, const CKBuildComponentTreeParams &params) {
@@ -438,7 +438,7 @@ namespace CKRender {
           node = component;
           [node linkComponent:component toParent:parent previousParent:previousParent params:params];
         } else {
-          if (params.unifyComponentTreeConfig.useRenderNodes) {
+          if (params.unifyComponentTreeConfig.enable) {
             node = [[CKRenderTreeNode alloc]
                     initWithRenderComponent:component
                     parent:parent

@@ -664,8 +664,6 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
   [super setUp];
   _unifyComponentTrees = {
     .enable = NO,
-    .useRenderNodes = NO,
-    .useSingleChildScopeNodeForCompositeComponent = NO,
     .useComponentsAsTheTree = YES,
   };
 }
@@ -677,8 +675,6 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
   [super setUp];
   _unifyComponentTrees = {
     .enable = YES,
-    .useRenderNodes = YES,
-    .useSingleChildScopeNodeForCompositeComponent = YES,
     .useComponentsAsTheTree = NO,
   };
 }
@@ -690,8 +686,6 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
   [super setUp];
   _unifyComponentTrees = {
     .enable = YES,
-    .useRenderNodes = YES,
-    .useSingleChildScopeNodeForCompositeComponent = YES,
     .useComponentsAsTheTree = YES,
   };
 }
@@ -704,8 +698,8 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
   // CKComponentScopeFrame
   [self __test_scopeFramePreserveStateDuringComponentReuse:{
     .enable = NO,
-    .useRenderNodes = NO,
-    .useSingleChildScopeNodeForCompositeComponent = NO,
+    .useVector = NO,
+    .useComponentsAsTheTree = NO,
   }];
 }
 
@@ -714,59 +708,37 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
   // CKComponentScopeTreeNode
   [self __test_scopeFramePreserveStateDuringComponentReuse:{
     .enable = YES,
-    .useRenderNodes = NO,
-    .useSingleChildScopeNodeForCompositeComponent = NO,
+    .useVector = NO,
+    .useComponentsAsTheTree = NO,
   }];
 }
 
-- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithRenderNode
+- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithVector
 {
-  // CKComponentScopeTreeNode & CKRenderTreeNode
+  // CKComponentScopeTreeNode & std::vector
   [self __test_scopeFramePreserveStateDuringComponentReuse:{
     .enable = YES,
-    .useRenderNodes = YES,
-    .useSingleChildScopeNodeForCompositeComponent = NO,
-  }];
-}
-
-- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithScopeTreeNodeWithChild
-{
-  // CKComponentScopeTreeNode & CKComponentScopeTreeNodeWithChild
-  [self __test_scopeFramePreserveStateDuringComponentReuse:{
-    .enable = YES,
-    .useRenderNodes = NO,
-    .useSingleChildScopeNodeForCompositeComponent = YES,
-  }];
-}
-
-- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithRenderNodeAndScopeTreeNodeWithChild
-{
-  // CKComponentScopeTreeNode & CKRenderTreeNode & CKComponentScopeTreeNodeWithChild
-  [self __test_scopeFramePreserveStateDuringComponentReuse:{
-    .enable = YES,
-    .useRenderNodes = YES,
-    .useSingleChildScopeNodeForCompositeComponent = YES,
+    .useVector = YES,
+    .useComponentsAsTheTree = NO,
   }];
 }
 
 - (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithComponentsAsTheTree
 {
-  // Components as the tree
+  // CKComponentScopeTreeNode & components as the tree
   [self __test_scopeFramePreserveStateDuringComponentReuse:{
-    .enable = NO,
-    .useRenderNodes = NO,
-    .useSingleChildScopeNodeForCompositeComponent = NO,
+    .enable = YES,
+    .useVector = NO,
     .useComponentsAsTheTree = YES,
   }];
 }
 
-- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithAllTheOptimizations
+- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithAll
 {
-  // Components as the tree
+  // CKComponentScopeTreeNode & std::vector & components as the tree
   [self __test_scopeFramePreserveStateDuringComponentReuse:{
     .enable = YES,
-    .useRenderNodes = YES,
-    .useSingleChildScopeNodeForCompositeComponent = YES,
+    .useVector = YES,
     .useComponentsAsTheTree = YES,
   }];
 }

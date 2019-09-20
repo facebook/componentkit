@@ -15,10 +15,6 @@
 struct CKUnifyComponentTreeConfig {
   /** If enabled, CKComponentScope and CKTreeNode will use the same nodes. */
   BOOL enable = NO;
-  /** If enabled, CKScopeTreeNodeWithChild will be in use instead of CKScopeTreeNode for composite component */
-  BOOL useSingleChildScopeNodeForCompositeComponent = NO;
-  /** If enabled, CKRenderTreeNode will be in use instead of CKTreeNodeWithChild */
-  BOOL useRenderNodes = NO;
   /** If enabled, CKScopeTreeNode will use vector instead of unordered_map */
   BOOL useVector = NO;
   /** If enabled, the components we will be used as the tree nodes */
