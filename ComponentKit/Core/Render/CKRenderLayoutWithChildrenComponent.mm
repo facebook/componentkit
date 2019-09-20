@@ -63,7 +63,9 @@
 {
   std::vector<id<CKTreeNodeProtocol>> children;
   for (auto const &child : _children) {
-    children.push_back(child);
+    if (child != nil) {
+      children.push_back(child);
+    }
   }
   return children;
 }
@@ -76,12 +78,14 @@
 - (id<CKTreeNodeProtocol>)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
   for (auto const &child : _children) {
-    auto componentKey = [child.component componentKey];
-    if (CK::TreeNode::areKeysEqual(componentKey, key)) {
-      return child;
-    }
-    if (CK::TreeNode::isKeyEmpty(componentKey)) {
-      break;
+    if (child != nil) {
+      auto componentKey = [child.component componentKey];
+      if (CK::TreeNode::areKeysEqual(componentKey, key)) {
+        return child;
+      }
+      if (CK::TreeNode::isKeyEmpty(componentKey)) {
+        break;
+      }
     }
   }
   return nil;
@@ -93,11 +97,13 @@
   // Create **parent** based key counter.
   NSUInteger keyCounter = 0;
   for (auto const &child : _children) {
-    auto childKey = child.componentKey;
-    if (std::get<0>(childKey) == componentClass && CKObjectIsEqual(std::get<2>(childKey), identifier)) {
-      keyCounter += 1;
-    } else if (CK::TreeNode::isKeyEmpty(childKey)) {
-      break;
+    if (child != nil) {
+      auto childKey = child.componentKey;
+      if (std::get<0>(childKey) == componentClass && CKObjectIsEqual(std::get<2>(childKey), identifier)) {
+        keyCounter += 1;
+      } else if (CK::TreeNode::isKeyEmpty(childKey)) {
+        break;
+      }
     }
   }
   return std::make_tuple(componentClass, keyCounter, identifier);

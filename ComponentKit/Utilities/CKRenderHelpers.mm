@@ -519,15 +519,17 @@ namespace CKRender {
       auto build(id<CKTreeNodeComponentProtocol> component, const CKBuildComponentTreeParams &params) -> void {
         auto const rootNode = params.scopeRoot.rootNode.node();
 
-        // Build the component tree from the render function.
-        [component buildComponentTree:rootNode
-                       previousParent:params.previousScopeRoot.rootNode.node()
-                               params:params
-                 parentHasStateUpdate:NO];
+        if (component) {
+          // Build the component tree from the render function.
+          [component buildComponentTree:rootNode
+                         previousParent:params.previousScopeRoot.rootNode.node()
+                                 params:params
+                   parentHasStateUpdate:NO];
 
-        // Link the root component to the root node.
-        if (params.unifyComponentTreeConfig.useComponentsAsTheTree) {
-          [rootNode setChild:component forComponentKey:component.componentKey];
+          // Link the root component to the root node.
+          if (params.unifyComponentTreeConfig.useComponentsAsTheTree) {
+            [rootNode setChild:component forComponentKey:component.componentKey];
+          }
         }
       }
     }
