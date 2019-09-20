@@ -56,3 +56,5 @@ struct CKComponentViewContext {
 - (id)nextResponder;
 
 @end
+
+#import <ComponentKit/ComponentBuilder.h>
