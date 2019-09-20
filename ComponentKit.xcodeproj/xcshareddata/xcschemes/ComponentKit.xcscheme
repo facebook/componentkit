@@ -58,6 +58,16 @@
                ReferencedContainer = "container:ComponentKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A1AB4F9C23350E45001F41DB"
+               BuildableName = "ComponentKitPerfTests.xctest"
+               BlueprintName = "ComponentKitPerfTests"
+               ReferencedContainer = "container:ComponentKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

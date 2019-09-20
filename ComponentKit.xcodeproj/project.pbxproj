@@ -541,11 +541,19 @@
 		906125EA1DFA49E600EE18ED /* CKAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 9092AE911DFA46D3009878B2 /* CKAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9092AE9C1DFA4853009878B2 /* CKAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 9092AE911DFA46D3009878B2 /* CKAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		994EF6FB1B1FD77700E2236F /* CKComponentDelegateAttributeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 994EF6FA1B1FD77700E2236F /* CKComponentDelegateAttributeTests.mm */; };
-		A17BB6BB22D9045800BBD44E /* CKComponentViewClassIdentifierTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A17BB6BA22D9045800BBD44E /* CKComponentViewClassIdentifierTests.mm */; };
 		A1A849D922CE1AAD00407744 /* CKComponentViewClass.h in Headers */ = {isa = PBXBuildFile; fileRef = A1A849CD22CE1AAD00407744 /* CKComponentViewClass.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A1A849DA22CE1AAD00407744 /* CKComponentViewClass.h in Headers */ = {isa = PBXBuildFile; fileRef = A1A849CD22CE1AAD00407744 /* CKComponentViewClass.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A1A849DB22CE1AAD00407744 /* CKComponentViewClass.mm in Sources */ = {isa = PBXBuildFile; fileRef = A1A849D822CE1AAD00407744 /* CKComponentViewClass.mm */; };
 		A1A849DC22CE1AAD00407744 /* CKComponentViewClass.mm in Sources */ = {isa = PBXBuildFile; fileRef = A1A849D822CE1AAD00407744 /* CKComponentViewClass.mm */; };
+		A1AB4FA523350E45001F41DB /* CKComponentBoundsAnimationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B342DC4B1AC23EA900ACAC53 /* CKComponentBoundsAnimationTests.mm */; };
+		A1AB4FE123350E45001F41DB /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47AB51CBD924100BB33CE /* ComponentKit.framework */; };
+		A1AB4FE223350E45001F41DB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D8B1CBDA25E00BB33CE /* CoreGraphics.framework */; };
+		A1AB4FE323350E45001F41DB /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4052302D1F7EE79C005D227B /* OCMock.framework */; };
+		A1AB4FE423350E45001F41DB /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D891CBDA25A00BB33CE /* QuartzCore.framework */; };
+		A1AB4FE523350E45001F41DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B47D871CBDA24900BB33CE /* UIKit.framework */; };
+		A1AB4FE623350E45001F41DB /* libComponentKitTestHelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */; };
+		A1AB4FE923350E45001F41DB /* OCMock.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4052302D1F7EE79C005D227B /* OCMock.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A1AB4FF023350E5C001F41DB /* CKComponentViewClassIdentifierPerfTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A1AB4FEF23350E5C001F41DB /* CKComponentViewClassIdentifierPerfTests.mm */; };
 		A2100E0D1AE9751500281861 /* CKDataSourceUpdateConfigurationModificationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2100E0C1AE9751500281861 /* CKDataSourceUpdateConfigurationModificationTests.mm */; };
 		A22FE3031AF2CEB000EC30B8 /* CKDataSourceStateUpdateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = A22FE3021AF2CEB000EC30B8 /* CKDataSourceStateUpdateTests.mm */; };
 		A22FE3061AF2CF0C00EC30B8 /* CKStateExposingComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = A22FE3051AF2CF0C00EC30B8 /* CKStateExposingComponent.mm */; };
@@ -947,6 +955,13 @@
 			remoteGlobalIDString = A27380191AFD144100E6F222;
 			remoteInfo = ComponentKitTestHelpers;
 		};
+		A1AB4F9E23350E45001F41DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A27380191AFD144100E6F222;
+			remoteInfo = ComponentKitTestHelpers;
+		};
 		B342DC941AC23ECB00ACAC53 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B3EECEBA1AC2366500BFC5DA /* Project object */;
@@ -1048,6 +1063,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				03F1AC021D2B2A9B00867584 /* OCMock.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1AB4FE823350E45001F41DB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A1AB4FE923350E45001F41DB /* OCMock.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1244,9 +1270,10 @@
 		824416B51E44E19300904340 /* CKDetectDuplicateComponentTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDetectDuplicateComponentTests.mm; sourceTree = "<group>"; };
 		9092AE911DFA46D3009878B2 /* CKAvailability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAvailability.h; sourceTree = "<group>"; };
 		994EF6FA1B1FD77700E2236F /* CKComponentDelegateAttributeTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentDelegateAttributeTests.mm; sourceTree = "<group>"; };
-		A17BB6BA22D9045800BBD44E /* CKComponentViewClassIdentifierTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewClassIdentifierTests.mm; sourceTree = "<group>"; };
 		A1A849CD22CE1AAD00407744 /* CKComponentViewClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentViewClass.h; sourceTree = "<group>"; };
 		A1A849D822CE1AAD00407744 /* CKComponentViewClass.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewClass.mm; sourceTree = "<group>"; };
+		A1AB4FED23350E45001F41DB /* ComponentKitPerfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ComponentKitPerfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1AB4FEF23350E5C001F41DB /* CKComponentViewClassIdentifierPerfTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewClassIdentifierPerfTests.mm; sourceTree = "<group>"; };
 		A2100E0C1AE9751500281861 /* CKDataSourceUpdateConfigurationModificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceUpdateConfigurationModificationTests.mm; sourceTree = "<group>"; };
 		A22FE3021AF2CEB000EC30B8 /* CKDataSourceStateUpdateTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceStateUpdateTests.mm; sourceTree = "<group>"; };
 		A22FE3041AF2CF0C00EC30B8 /* CKStateExposingComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStateExposingComponent.h; sourceTree = "<group>"; };
@@ -1618,6 +1645,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A1AB4FE023350E45001F41DB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1AB4FE123350E45001F41DB /* ComponentKit.framework in Frameworks */,
+				A1AB4FE223350E45001F41DB /* CoreGraphics.framework in Frameworks */,
+				A1AB4FE323350E45001F41DB /* OCMock.framework in Frameworks */,
+				A1AB4FE423350E45001F41DB /* QuartzCore.framework in Frameworks */,
+				A1AB4FE523350E45001F41DB /* UIKit.framework in Frameworks */,
+				A1AB4FE623350E45001F41DB /* libComponentKitTestHelpers.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A27380171AFD144100E6F222 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1787,6 +1827,14 @@
 			path = Analytics;
 			sourceTree = "<group>";
 		};
+		A1AB4F9123350D86001F41DB /* ComponentKitPerfTests */ = {
+			isa = PBXGroup;
+			children = (
+				A1AB4FEF23350E5C001F41DB /* CKComponentViewClassIdentifierPerfTests.mm */,
+			);
+			path = ComponentKitPerfTests;
+			sourceTree = "<group>";
+		};
 		A273801B1AFD144100E6F222 /* ComponentKitTestHelpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1867,7 +1915,6 @@
 				D64F4A7920DFEC3A00A0B169 /* CKComponentAnimationsEquality.mm */,
 				D6C3B06C20B71FFD0089F06A /* CKComponentAnimationsTests.mm */,
 				B342DC5D1AC23EA900ACAC53 /* CKComponentViewAttributeTests.mm */,
-				A17BB6BA22D9045800BBD44E /* CKComponentViewClassIdentifierTests.mm */,
 				B342DC5E1AC23EA900ACAC53 /* CKComponentViewContextTests.mm */,
 				B342DC601AC23EA900ACAC53 /* CKComponentViewReuseTests.mm */,
 				B342DC611AC23EA900ACAC53 /* CKDimensionTests.mm */,
@@ -1954,6 +2001,7 @@
 				D0B47AC21CBD926700BB33CE /* ComponentKit */,
 				D0B47C3F1CBD92C200BB33CE /* ComponentTextKit */,
 				B342DCBF1AC2443F00ACAC53 /* ComponentKitApplicationsTestsHost */,
+				A1AB4F9123350D86001F41DB /* ComponentKitPerfTests */,
 				B342DC411AC23E8200ACAC53 /* ComponentKitTests */,
 				B342DC8C1AC23EC300ACAC53 /* ComponentKitApplicationTests */,
 				B342DCAB1AC23F2A00ACAC53 /* ComponentTextKitApplicationTests */,
@@ -1976,6 +2024,7 @@
 				03B8B56A1D2A346F00EDFF59 /* ComponentKit.framework */,
 				03F1AC061D2B2A9B00867584 /* ComponentKitTestsAppleTV.xctest */,
 				03A98A721D2B2BFD00C5BAC2 /* libComponentKitTestHelpers.a */,
+				A1AB4FED23350E45001F41DB /* ComponentKitPerfTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3049,6 +3098,25 @@
 			productReference = 03F1AC061D2B2A9B00867584 /* ComponentKitTestsAppleTV.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		A1AB4F9C23350E45001F41DB /* ComponentKitPerfTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1AB4FEA23350E45001F41DB /* Build configuration list for PBXNativeTarget "ComponentKitPerfTests" */;
+			buildPhases = (
+				A1AB4F9F23350E45001F41DB /* Sources */,
+				A1AB4FE023350E45001F41DB /* Frameworks */,
+				A1AB4FE723350E45001F41DB /* Resources */,
+				A1AB4FE823350E45001F41DB /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A1AB4F9D23350E45001F41DB /* PBXTargetDependency */,
+			);
+			name = ComponentKitPerfTests;
+			productName = ComponentKitTests;
+			productReference = A1AB4FED23350E45001F41DB /* ComponentKitPerfTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		A27380191AFD144100E6F222 /* ComponentKitTestHelpers */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A273802F1AFD144200E6F222 /* Build configuration list for PBXNativeTarget "ComponentKitTestHelpers" */;
@@ -3215,6 +3283,7 @@
 			targets = (
 				D0B47AB41CBD924100BB33CE /* ComponentKit */,
 				A27380191AFD144100E6F222 /* ComponentKitTestHelpers */,
+				A1AB4F9C23350E45001F41DB /* ComponentKitPerfTests */,
 				B342DC3F1AC23E8200ACAC53 /* ComponentKitTests */,
 				B342DC8A1AC23EC300ACAC53 /* ComponentKitApplicationTests */,
 				B342DCA91AC23F2A00ACAC53 /* ComponentTextKitApplicationTests */,
@@ -3308,6 +3377,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		03F1AC001D2B2A9B00867584 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1AB4FE723350E45001F41DB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3582,6 +3658,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A1AB4F9F23350E45001F41DB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1AB4FA523350E45001F41DB /* CKComponentBoundsAnimationTests.mm in Sources */,
+				A1AB4FF023350E5C001F41DB /* CKComponentViewClassIdentifierPerfTests.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A27380161AFD144100E6F222 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3658,7 +3743,6 @@
 				D64CC1A820DE667100DBE8D3 /* CKAnimationApplicatorTests.mm in Sources */,
 				A27436F71AE94FE300832359 /* CKDataSourceReloadModificationTests.mm in Sources */,
 				B342DC731AC23EA900ACAC53 /* CKComponentGestureActionsTests.mm in Sources */,
-				A17BB6BB22D9045800BBD44E /* CKComponentViewClassIdentifierTests.mm in Sources */,
 				49FA174E1D182C1200EA8126 /* CKDataSourceIntegrationTests.mm in Sources */,
 				23629B4A203C2D66007F765D /* CKBuildComponentTreeTests.mm in Sources */,
 				60EFF4C121135DE500CA7C68 /* CKStatelessComponentTests.mm in Sources */,
@@ -3879,6 +3963,11 @@
 			target = A27380191AFD144100E6F222 /* ComponentKitTestHelpers */;
 			targetProxy = 035FD06F1D83238A00D28351 /* PBXContainerItemProxy */;
 		};
+		A1AB4F9D23350E45001F41DB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A27380191AFD144100E6F222 /* ComponentKitTestHelpers */;
+			targetProxy = A1AB4F9E23350E45001F41DB /* PBXContainerItemProxy */;
+		};
 		B342DC951AC23ECB00ACAC53 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B3EECEC11AC2366600BFC5DA /* ComponentKitApplicationsTestsHost */;
@@ -3981,6 +4070,34 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.componentkit.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+			};
+			name = Release;
+		};
+		A1AB4FEB23350E45001F41DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "ComponentKitPerfTests/ComponentKitPerfTests-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.componentkit.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A1AB4FEC23350E45001F41DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "ComponentKitPerfTests/ComponentKitPerfTests-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.componentkit.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -4302,6 +4419,15 @@
 			buildConfigurations = (
 				03F1AC041D2B2A9B00867584 /* Debug */,
 				03F1AC051D2B2A9B00867584 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1AB4FEA23350E45001F41DB /* Build configuration list for PBXNativeTarget "ComponentKitPerfTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1AB4FEB23350E45001F41DB /* Debug */,
+				A1AB4FEC23350E45001F41DB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

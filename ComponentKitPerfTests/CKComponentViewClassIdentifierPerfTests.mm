@@ -30,10 +30,10 @@
 @implementation test_abcdefghijklmnopqr
 @end
 
-@interface CKComponentViewClassTests : XCTestCase
+@interface CKComponentViewClassIdentifierPerfTests : XCTestCase
 @end
 
-@implementation CKComponentViewClassTests
+@implementation CKComponentViewClassIdentifierPerfTests
 
 - (void)testComponentViewClassInfo
 {
