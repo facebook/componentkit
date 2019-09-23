@@ -19,7 +19,7 @@
  Notes:
  The following methods will be called on CKSystraceListener:
  - (void)willStartBlockTrace:(const char *const)blockName;
- - (void)didStartBlockTrace:(const char *const)blockName;
+ - (void)didEndBlockTrace:(const char *const)blockName;
 
  Example usage:
  - (void)proccessImage

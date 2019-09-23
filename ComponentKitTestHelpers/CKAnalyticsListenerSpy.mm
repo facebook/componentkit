@@ -63,7 +63,7 @@
 - (void)didLayoutComponent:(CKComponent *)component {}
 
 - (void)willStartBlockTrace:(const char *const)blockName {}
-- (void)didStartBlockTrace:(const char *const)blockName {}
+- (void)didEndBlockTrace:(const char *const)blockName {}
 
 - (id<CKSystraceListener>)systraceListener { return nil; }
 - (BOOL)shouldCollectTreeNodeCreationInformation:(CKComponentScopeRoot *)scopeRoot { return NO; }

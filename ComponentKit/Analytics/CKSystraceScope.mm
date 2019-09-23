@@ -17,7 +17,7 @@
 
 CKSystraceScope::~CKSystraceScope()
 {
-  [_systraceListener didStartBlockTrace:_blockName];
+  [_systraceListener didEndBlockTrace:_blockName];
 }
 
 CKSystraceScope::CKSystraceScope(const char *const blockName) noexcept : _blockName(blockName)
