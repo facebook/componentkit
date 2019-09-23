@@ -114,7 +114,7 @@ static BOOL useVector = NO;
 {
   // In case that CKComponentScope was created, but not acquired from the component (for example: early nil return) ,
   // the component was never linked to the scope handle/tree node, hence, we should stop the recursion here.
-  if (self.scopeHandle.acquiredComponent == nil) {
+  if (self.component == nil) {
     return;
   }
 
