@@ -21,7 +21,7 @@
 
 - (void)removeListener:(id<CKCollectionViewDataSourceListener>)listener
 {
-  CK::Component::AnnouncerHelper::addListener(self, _cmd, listener);
+  CK::Component::AnnouncerHelper::removeListener(self, _cmd, listener);
 }
 
 - (void)dataSourceWillBeginUpdates:(CKCollectionViewDataSource *)dataSource
