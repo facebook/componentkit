@@ -21,6 +21,7 @@
 
 #import "CKMutex.h"
 #import "CKThreadLocalComponentScope.h"
+#import "CKRenderHelpers.h"
 
 @interface CKTreeNode ()
 @property (nonatomic, strong, readwrite) id<CKTreeNodeComponentProtocol> component;
@@ -86,32 +87,7 @@
   // For Render Layout components, the component might have a scope handle already.
   CKComponentScopeHandle *scopeHandle = component.scopeHandle;
   if (scopeHandle == nil) {
-    // If there is a previous node, we just duplicate the scope handle.
-    if (previousNode) {
-      scopeHandle = [previousNode.scopeHandle newHandleWithStateUpdates:stateUpdates
-                                                     componentScopeRoot:scopeRoot];
-    } else {
-      // The component needs a scope handle in few cases:
-      // 1. Has an initial state
-      // 2. Has a controller
-      // 3. Returns `YES` from `requiresScopeHandle`
-      id initialState = [componentClass initialStateWithComponent:component];
-      if (initialState != [CKTreeNodeEmptyState emptyState] ||
-          [componentClass controllerClass] ||
-          [componentClass requiresScopeHandle]) {
-        scopeHandle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
-                                                        rootIdentifier:scopeRoot.globalIdentifier
-                                                        componentClass:componentClass
-                                                          initialState:initialState];
-      }
-    }
-
-    // Finalize the node/scope regsitration.
-    if (scopeHandle) {
-      [component acquireScopeHandle:scopeHandle];
-      [scopeRoot registerComponent:component];
-      [scopeHandle resolve];
-    }
+    scopeHandle = CKRender::ScopeHandle::Render::create(component, componentClass, previousNode, scopeRoot, stateUpdates);
   }
 
   if (self = [self initWithPreviousNode:previousNode scopeHandle:component.scopeHandle]) {

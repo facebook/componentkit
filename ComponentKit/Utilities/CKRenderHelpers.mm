@@ -513,6 +513,47 @@ namespace CKRender {
     }
   }
 
+  namespace ScopeHandle {
+    namespace Render {
+      auto create(id<CKRenderComponentProtocol> component,
+                  Class componentClass,
+                  id<CKTreeNodeProtocol> previousNode,
+                  CKComponentScopeRoot *scopeRoot,
+                  const CKComponentStateUpdateMap &stateUpdates) -> CKComponentScopeHandle*
+      {
+        CKComponentScopeHandle *scopeHandle;
+        // If there is a previous node, we just duplicate the scope handle.
+        if (previousNode) {
+          scopeHandle = [previousNode.scopeHandle newHandleWithStateUpdates:stateUpdates
+                                                         componentScopeRoot:scopeRoot];
+        } else {
+          // The component needs a scope handle in few cases:
+          // 1. Has an initial state
+          // 2. Has a controller
+          // 3. Returns `YES` from `requiresScopeHandle`
+          id initialState = [componentClass initialStateWithComponent:component];
+          if (initialState != [CKTreeNodeEmptyState emptyState] ||
+              [componentClass controllerClass] ||
+              [componentClass requiresScopeHandle]) {
+            scopeHandle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
+                                                            rootIdentifier:scopeRoot.globalIdentifier
+                                                            componentClass:componentClass
+                                                              initialState:initialState];
+          }
+        }
+
+        // Finalize the node/scope regsitration.
+        if (scopeHandle) {
+          [component acquireScopeHandle:scopeHandle];
+          [scopeRoot registerComponent:component];
+          [scopeHandle resolve];
+        }
+
+        return scopeHandle;
+      }
+    }
+  }
+
   auto componentHasStateUpdate(id<CKTreeNodeProtocol> node,
                                id<CKTreeNodeWithChildrenProtocol> previousParent,
                                const CKBuildComponentTreeParams &params) -> BOOL {

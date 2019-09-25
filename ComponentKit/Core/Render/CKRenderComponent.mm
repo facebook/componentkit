@@ -159,39 +159,9 @@ struct CKRenderLayoutCache {
   Class componentClass = [component class];
   auto const componentKey = [parent createComponentKeyForChildWithClass:componentClass identifier:[component componentIdentifier]];
   auto const previousNode = [previousParent childForComponentKey:componentKey];
-  auto const scopeRoot = params.scopeRoot;
   [self setComponentKey:componentKey];
 
-  // For Render Layout components, the component might have a scope handle already.
-  CKComponentScopeHandle *scopeHandle = component.scopeHandle;
-  if (scopeHandle == nil) {
-    // If there is a previous node, we just duplicate the scope handle.
-    if (previousNode) {
-      scopeHandle = [previousNode.scopeHandle newHandleWithStateUpdates:params.stateUpdates
-                                                     componentScopeRoot:scopeRoot];
-    } else {
-      // The component needs a scope handle in few cases:
-      // 1. Has an initial state
-      // 2. Has a controller
-      // 3. Returns `YES` from `requiresScopeHandle`
-      id initialState = [componentClass initialStateWithComponent:component];
-      if (initialState != [CKTreeNodeEmptyState emptyState] ||
-          [componentClass controllerClass] ||
-          [componentClass requiresScopeHandle]) {
-        scopeHandle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
-                                                        rootIdentifier:scopeRoot.globalIdentifier
-                                                        componentClass:componentClass
-                                                          initialState:initialState];
-      }
-    }
-
-    // Finalize the node/scope regsitration.
-    if (scopeHandle) {
-      [component acquireScopeHandle:scopeHandle];
-      [scopeRoot registerComponent:component];
-      [scopeHandle resolve];
-    }
-  }
+  CKRender::ScopeHandle::Render::create(component, componentClass, previousNode, params.scopeRoot, params.stateUpdates);
 
   [super linkComponent:component toParent:parent previousParent:previousParent params:params];
 }
