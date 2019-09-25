@@ -73,7 +73,6 @@
 @property (nonatomic, weak, readonly) id<CKComponentStateListener> listener;
 @property (nonatomic, strong, readonly) id<CKAnalyticsListener> analyticsListener;
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier globalIdentifier;
-@property (nonatomic, strong, readonly) id<CKComponentScopeFrameProtocol> rootFrame;
 
 /** Render Support */
 @property (nonatomic, assign) BOOL hasRenderComponentInTree;

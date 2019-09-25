@@ -33,7 +33,6 @@
 		03B8B4801D2A346F00EDFF59 /* ComponentViewManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AFE1CBD926700BB33CE /* ComponentViewManager.mm */; };
 		03B8B4811D2A346F00EDFF59 /* ComponentViewReuseUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B001CBD926700BB33CE /* ComponentViewReuseUtilities.mm */; };
 		03B8B4821D2A346F00EDFF59 /* CKComponentScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B031CBD926700BB33CE /* CKComponentScope.mm */; };
-		03B8B4831D2A346F00EDFF59 /* CKComponentScopeFrame.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B051CBD926700BB33CE /* CKComponentScopeFrame.mm */; };
 		03B8B4841D2A346F00EDFF59 /* CKComponentScopeHandle.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B071CBD926700BB33CE /* CKComponentScopeHandle.mm */; };
 		03B8B4851D2A346F00EDFF59 /* CKComponentScopeRoot.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B091CBD926700BB33CE /* CKComponentScopeRoot.mm */; };
 		03B8B4861D2A346F00EDFF59 /* CKThreadLocalComponentScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B0D1CBD926700BB33CE /* CKThreadLocalComponentScope.mm */; };
@@ -665,7 +664,6 @@
 		D0B47C981CBD943400BB33CE /* ComponentViewManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47AFE1CBD926700BB33CE /* ComponentViewManager.mm */; };
 		D0B47C991CBD943400BB33CE /* ComponentViewReuseUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B001CBD926700BB33CE /* ComponentViewReuseUtilities.mm */; };
 		D0B47C9A1CBD943400BB33CE /* CKComponentScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B031CBD926700BB33CE /* CKComponentScope.mm */; };
-		D0B47C9B1CBD943400BB33CE /* CKComponentScopeFrame.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B051CBD926700BB33CE /* CKComponentScopeFrame.mm */; };
 		D0B47C9C1CBD943400BB33CE /* CKComponentScopeHandle.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B071CBD926700BB33CE /* CKComponentScopeHandle.mm */; };
 		D0B47C9D1CBD943400BB33CE /* CKComponentScopeRoot.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B091CBD926700BB33CE /* CKComponentScopeRoot.mm */; };
 		D0B47C9E1CBD943400BB33CE /* CKThreadLocalComponentScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = D0B47B0D1CBD926700BB33CE /* CKThreadLocalComponentScope.mm */; };
@@ -1418,7 +1416,6 @@
 		D0B47B021CBD926700BB33CE /* CKComponentScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentScope.h; sourceTree = "<group>"; };
 		D0B47B031CBD926700BB33CE /* CKComponentScope.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentScope.mm; sourceTree = "<group>"; };
 		D0B47B041CBD926700BB33CE /* CKComponentScopeFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentScopeFrame.h; sourceTree = "<group>"; };
-		D0B47B051CBD926700BB33CE /* CKComponentScopeFrame.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentScopeFrame.mm; sourceTree = "<group>"; };
 		D0B47B061CBD926700BB33CE /* CKComponentScopeHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentScopeHandle.h; sourceTree = "<group>"; };
 		D0B47B071CBD926700BB33CE /* CKComponentScopeHandle.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentScopeHandle.mm; sourceTree = "<group>"; };
 		D0B47B081CBD926700BB33CE /* CKComponentScopeRoot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentScopeRoot.h; sourceTree = "<group>"; };
@@ -2228,7 +2225,6 @@
 				D0B47B021CBD926700BB33CE /* CKComponentScope.h */,
 				D0B47B031CBD926700BB33CE /* CKComponentScope.mm */,
 				D0B47B041CBD926700BB33CE /* CKComponentScopeFrame.h */,
-				D0B47B051CBD926700BB33CE /* CKComponentScopeFrame.mm */,
 				D0B47B061CBD926700BB33CE /* CKComponentScopeHandle.h */,
 				D0B47B071CBD926700BB33CE /* CKComponentScopeHandle.mm */,
 				D0B47B081CBD926700BB33CE /* CKComponentScopeRoot.h */,
@@ -3509,7 +3505,6 @@
 				03B8B4811D2A346F00EDFF59 /* ComponentViewReuseUtilities.mm in Sources */,
 				03B8B4821D2A346F00EDFF59 /* CKComponentScope.mm in Sources */,
 				03DED2BF2226015900CD63FF /* CKDataSourceSplitChangesetModification.mm in Sources */,
-				03B8B4831D2A346F00EDFF59 /* CKComponentScopeFrame.mm in Sources */,
 				7F5A853B1F1F904C00238338 /* CKComponentControllerEvents.mm in Sources */,
 				03B8B4841D2A346F00EDFF59 /* CKComponentScopeHandle.mm in Sources */,
 				03B8B4851D2A346F00EDFF59 /* CKComponentScopeRoot.mm in Sources */,
@@ -3840,7 +3835,6 @@
 				23824A5F22720FEC00B559F3 /* CKAnalyticsListenerHelpers.mm in Sources */,
 				D63F9F8320AAF487003F3887 /* CKIndexSetDescription.mm in Sources */,
 				D0B47C9A1CBD943400BB33CE /* CKComponentScope.mm in Sources */,
-				D0B47C9B1CBD943400BB33CE /* CKComponentScopeFrame.mm in Sources */,
 				D0B47C9C1CBD943400BB33CE /* CKComponentScopeHandle.mm in Sources */,
 				D0B47C9D1CBD943400BB33CE /* CKComponentScopeRoot.mm in Sources */,
 				D0B47C9E1CBD943400BB33CE /* CKThreadLocalComponentScope.mm in Sources */,

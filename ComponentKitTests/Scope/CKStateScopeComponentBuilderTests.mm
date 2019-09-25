@@ -18,7 +18,6 @@
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentInternal.h>
-#import <ComponentKit/CKComponentScopeFrame.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
@@ -61,7 +60,7 @@
   CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
 
   CKComponent *(^block)(void) = ^CKComponent *{
-    XCTAssertEqualObjects(CKThreadLocalComponentScope::currentScope()->stack.top().previousFrame, root.rootFrame);
+    XCTAssertEqualObjects(CKThreadLocalComponentScope::currentScope()->stack.top().previousFrame, root.rootNode.node());
     return [CKComponent new];
   };
 

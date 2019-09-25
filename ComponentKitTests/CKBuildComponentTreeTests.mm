@@ -98,13 +98,13 @@
   verifyChildToParentConnection(root, singleChildNode, renderComponent);
 
   // Check the next level of the tree
-  if ([singleChildNode isKindOfClass:[CKTreeNodeWithChild class]]) {
-    CKTreeNodeWithChildren *parentNode = (CKTreeNodeWithChildren *)singleChildNode;
+  if ([singleChildNode conformsToProtocol:@protocol(CKTreeNodeWithChildProtocol)]) {
+    id<CKTreeNodeWithChildProtocol> parentNode = (id<CKTreeNodeWithChildProtocol>)singleChildNode;
     XCTAssertEqual(parentNode.children.size(), 1);
     CKTreeNode *componentNode = parentNode.children[0];
     verifyChildToParentConnection(parentNode, componentNode, c);
   } else {
-    XCTFail(@"singleChildNode has to be CKTreeNodeWithChild as it has a child.");
+    XCTFail(@"singleChildNode has to conform to CKTreeNodeWithChildProtocol as it has a child.");
   }
 
   // Simulate a second tree creation.

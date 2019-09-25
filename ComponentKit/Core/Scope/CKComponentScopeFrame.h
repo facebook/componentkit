@@ -14,7 +14,6 @@
 
 #import <vector>
 
-@class CKComponentScopeFrame;
 @class CKComponentScopeHandle;
 @class CKComponentScopeRoot;
 @protocol CKComponentProtocol;
@@ -49,13 +48,5 @@ struct CKComponentScopeFramePair {
 #if DEBUG
 - (NSArray<NSString *> *)debugDescriptionComponents;
 #endif
-
-@end
-
-@interface CKComponentScopeFrame : NSObject <CKComponentScopeFrameProtocol>
-
-@property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
-
-- (instancetype)initWithHandle:(CKComponentScopeHandle *)handle;
 
 @end

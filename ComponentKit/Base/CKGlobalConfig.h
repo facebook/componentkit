@@ -13,8 +13,6 @@
 @protocol CKAnalyticsListener;
 
 struct CKUnifyComponentTreeConfig {
-  /** If enabled, CKComponentScope and CKTreeNode will use the same nodes. */
-  BOOL enable = NO;
   /** If enabled, the components we will be used as the tree nodes */
   BOOL useComponentsAsTheTree = NO;
 };

@@ -27,13 +27,7 @@
 @interface CKRenderComponentTests : XCTestCase
 @end
 
-@interface CKRenderComponentWithTreeUnificationsTests : CKRenderComponentTests
-@end
-
 @interface CKRenderComponentComponentsAsTheTreeTests : CKRenderComponentTests
-@end
-
-@interface CKRenderComponentAllTests : CKRenderComponentTests
 @end
 
 @interface CKRenderComponentAndScopeTreeTests : XCTestCase
@@ -657,29 +651,6 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
 {
   [super setUp];
   _unifyComponentTrees = {
-    .enable = NO,
-    .useComponentsAsTheTree = YES,
-  };
-}
-@end
-
-@implementation CKRenderComponentWithTreeUnificationsTests
-- (void)setUp
-{
-  [super setUp];
-  _unifyComponentTrees = {
-    .enable = YES,
-    .useComponentsAsTheTree = NO,
-  };
-}
-@end
-
-@implementation CKRenderComponentAllTests
-- (void)setUp
-{
-  [super setUp];
-  _unifyComponentTrees = {
-    .enable = YES,
     .useComponentsAsTheTree = YES,
   };
 }
@@ -691,30 +662,17 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
 {
   // CKComponentScopeFrame
   [self __test_scopeFramePreserveStateDuringComponentReuse:{
-    .enable = NO,
     .useComponentsAsTheTree = NO,
   }];
 }
 
-- (void)test_scopeTreeNodePreserveStateDuringComponentReuse
+- (void)test_scopeFramePreserveStateDuringComponentReuseWithComponentsAsTrees
 {
-  // CKComponentScopeTreeNode
+  // CKComponentScopeFrame
   [self __test_scopeFramePreserveStateDuringComponentReuse:{
-    .enable = YES,
-    .useComponentsAsTheTree = NO,
-  }];
-}
-
-
-- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithComponentsAsTheTree
-{
-  // CKComponentScopeTreeNode & components as the tree
-  [self __test_scopeFramePreserveStateDuringComponentReuse:{
-    .enable = YES,
     .useComponentsAsTheTree = YES,
   }];
 }
-
 
 - (void)__test_scopeFramePreserveStateDuringComponentReuse:(CKUnifyComponentTreeConfig)config
 {

@@ -12,6 +12,16 @@
 
 @implementation CKScopeTreeNodeWithChild
 
+- (size_t)childrenSize
+{
+  return [super childrenSize] + (_child ? 1 : 0);
+}
+
+- (std::vector<id<CKTreeNodeProtocol>>)children
+{
+  return {_child};
+}
+
 - (id<CKTreeNodeProtocol>)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
   if (std::get<0>(key) == [_child.component class]) {

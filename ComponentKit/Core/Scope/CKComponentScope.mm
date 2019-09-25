@@ -19,15 +19,11 @@
 #import "CKScopeTreeNode.h"
 #import "CKScopeTreeNodeWithChild.h"
 
-static Class<CKComponentScopeFrameProtocol> getFrameClass(const CKUnifyComponentTreeConfig & unifyComponentTreeConfig,
-                                                          Class __unsafe_unretained componentClass) {
-  if (unifyComponentTreeConfig.enable) {
-    if (componentClass == [CKCompositeComponent class]) {
-      return [CKScopeTreeNodeWithChild class];
-    }
-    return [CKScopeTreeNode class];
+static Class<CKComponentScopeFrameProtocol> getFrameClass(Class __unsafe_unretained componentClass) {
+  if (componentClass == [CKCompositeComponent class]) {
+    return [CKScopeTreeNodeWithChild class];
   }
-  return [CKComponentScopeFrame class];
+  return [CKScopeTreeNode class];
 }
 
 CKComponentScope::~CKComponentScope()
@@ -53,7 +49,7 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
 
     [_threadLocalScope->systraceListener willBuildComponent:componentClass];
 
-    Class<CKComponentScopeFrameProtocol> frameClass = getFrameClass(_threadLocalScope->unifyComponentTreeConfig, componentClass);
+    Class<CKComponentScopeFrameProtocol> frameClass = getFrameClass(componentClass);
     const auto childPair = [frameClass childPairForPair:_threadLocalScope->stack.top()
                                                 newRoot:_threadLocalScope->newScopeRoot
                                          componentClass:componentClass

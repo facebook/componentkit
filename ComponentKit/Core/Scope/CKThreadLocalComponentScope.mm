@@ -39,11 +39,7 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *p
                                                          BuildTrigger trigger)
 : newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), systraceListener(previousScopeRoot.analyticsListener.systraceListener), buildTrigger(trigger), componentAllocations(0), unifyComponentTreeConfig(unifyComponentTreeConfig), previousScope(CKThreadLocalComponentScope::currentScope())
 {
-  if (unifyComponentTreeConfig.enable) {
-    stack.push({newScopeRoot.rootNode.node(), previousScopeRoot.rootNode.node()});
-  } else {
-    stack.push({[newScopeRoot rootFrame], [previousScopeRoot rootFrame]});
-  }
+  stack.push({newScopeRoot.rootNode.node(), previousScopeRoot.rootNode.node()});
   keys.push({});
   pthread_setspecific(_threadKey(), this);
 }

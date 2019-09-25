@@ -62,9 +62,6 @@
 }
 @end
 
-@interface CKComponentScopeWithTreeNodeTests : CKComponentScopeTests
-@end
-
 @implementation CKComponentScopeTests
 
 #pragma mark - Thread Local Component Scope
@@ -84,7 +81,7 @@
 {
   CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKThreadLocalComponentScope threadScope(root, {}, _unifyComponentTrees);
-  XCTAssertEqualObjects(CKThreadLocalComponentScope::currentScope()->stack.top().previousFrame, root.rootFrame);
+  XCTAssertEqualObjects(CKThreadLocalComponentScope::currentScope()->stack.top().previousFrame, root.rootNode.node());
 }
 
 - (void)testThreadLocalComponentScopePushesChildComponentScope
@@ -149,7 +146,7 @@
                                               previousParent:nil
                                                    scopeRoot:newRoot
                                                 stateUpdates:{}];
-    [CKComponentScopeFrame willBuildComponentTreeWithTreeNode:node];
+    [CKScopeTreeNode willBuildComponentTreeWithTreeNode:node];
     
     XCTAssertTrue(CKThreadLocalComponentScope::currentScope()->stack.top().frame != f1);
     id<CKComponentScopeFrameProtocol> f2 = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
@@ -164,7 +161,7 @@
       XCTAssertTrue(CKThreadLocalComponentScope::currentScope()->stack.top().frame != f2);
     }
     
-    [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
+    [CKScopeTreeNode didBuildComponentTreeWithNode:node];
   }
   
   // Simulate component creation whe the render one is being reused.
@@ -181,7 +178,7 @@
                                                    scopeRoot:newRoot2
                                                 stateUpdates:{}];
     
-    [CKComponentScopeFrame didReuseRenderWithTreeNode:node];
+    [CKScopeTreeNode didReuseRenderWithTreeNode:node];
   }
   
   // Simulate component creation with 3 a state update on the leaf and make sure it get the correct value.
@@ -204,7 +201,7 @@
                                               previousParent:newRoot2.rootNode.node()
                                                    scopeRoot:newRoot3
                                                 stateUpdates:stateUpdates];
-    [CKComponentScopeFrame willBuildComponentTreeWithTreeNode:node];
+    [CKScopeTreeNode willBuildComponentTreeWithTreeNode:node];
     {
       // Create child component
       CKComponentScope innerScope([CKComponent class], @"macaque", ^{
@@ -215,7 +212,7 @@
       XCTAssertTrue(stateFromScope == newState);
     }
     
-    [CKComponentScopeFrame didBuildComponentTreeWithNode:node];
+    [CKScopeTreeNode didBuildComponentTreeWithNode:node];
   }
 }
 
@@ -785,110 +782,6 @@ static BOOL testComponentControllerProtocolPredicate(id<CKComponentControllerPro
   XCTAssert(foundC1 && foundC2, @"Should have enumerated and found the input controllers");
 }
 
-@end
-
-@implementation CKComponentScopeWithTreeNodeTests
-- (void)setUp
-{
-  _unifyComponentTrees = {.enable = YES};
-}
-
-- (void)testThreadLocalComponentScopeStoresTheProvidedFrameAsTheEquivalentPreviousFrame
-{
-  CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  CKThreadLocalComponentScope threadScope(root, {}, _unifyComponentTrees);
-  XCTAssertEqualObjects(CKThreadLocalComponentScope::currentScope()->stack.top().previousFrame, root.rootNode.node());
-}
-
-- (void)testComponentScopeFramePreserveChildrenWithRenderComponent
-{
-  CKComponentScopeRoot *previousRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  CKComponentScopeRoot *newRoot;
-  CKComponentScopeHandle *innerComponentHandle;
-
-  // Simulate component creation with 3 components: CKCompositeComponent -> CKRenderComponent -> CKComponent
-  {
-    // Create root component
-    CKThreadLocalComponentScope threadScope(previousRoot, {}, _unifyComponentTrees);
-    newRoot = threadScope.newScopeRoot;
-    CKComponentScope scope([CKCompositeComponent class], @"moose");
-    id<CKComponentScopeFrameProtocol> f1 = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
-
-    // Create render component.
-    CKTreeNode *node = [[CKTreeNode alloc] initWithComponent:[CKRenderComponent new]
-                                                      parent:newRoot.rootNode.node()
-                                              previousParent:nil
-                                                   scopeRoot:newRoot
-                                                stateUpdates:{}];
-    [CKScopeTreeNode willBuildComponentTreeWithTreeNode:node];
-
-    XCTAssertTrue(CKThreadLocalComponentScope::currentScope()->stack.top().frame != f1);
-    id<CKComponentScopeFrameProtocol> f2 = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
-    {
-      // Create child component
-      CKComponentScope innerScope([CKComponent class], @"macaque", ^{
-        return @1;
-      });
-
-      innerComponentHandle = innerScope.scopeHandle();
-
-      XCTAssertTrue(CKThreadLocalComponentScope::currentScope()->stack.top().frame != f2);
-    }
-
-    [CKScopeTreeNode didBuildComponentTreeWithNode:node];
-  }
-
-  // Simulate component creation whe the render one is being reused.
-  CKComponentScopeRoot *newRoot2;
-  {
-    CKThreadLocalComponentScope threadScope(newRoot, {}, _unifyComponentTrees);
-    newRoot2 = threadScope.newScopeRoot;
-    CKComponentScope scope([CKCompositeComponent class], @"moose");
-
-    // Create render component.
-    CKTreeNode *node = [[CKTreeNode alloc] initWithComponent:[CKRenderComponent new]
-                                                      parent:newRoot2.rootNode.node()
-                                              previousParent:newRoot.rootNode.node()
-                                                   scopeRoot:newRoot2
-                                                stateUpdates:{}];
-
-    [CKScopeTreeNode didReuseRenderWithTreeNode:node];
-  }
-
-  // Simulate component creation with 3 a state update on the leaf and make sure it get the correct value.
-  CKComponentStateUpdateMap stateUpdates;
-  NSNumber *newState = @2;
-  stateUpdates[innerComponentHandle].push_back(^(id){
-    return newState;
-  });
-
-  CKComponentScopeRoot *newRoot3;
-  {
-    // Create root component
-    CKThreadLocalComponentScope threadScope(newRoot2, stateUpdates, _unifyComponentTrees);
-    newRoot3 = threadScope.newScopeRoot;
-    CKComponentScope scope([CKCompositeComponent class], @"moose");
-
-    // Create render component.
-    CKTreeNode *node = [[CKTreeNode alloc] initWithComponent:[CKRenderComponent new]
-                                                      parent:newRoot3.rootNode.node()
-                                              previousParent:newRoot2.rootNode.node()
-                                                   scopeRoot:newRoot3
-                                                stateUpdates:stateUpdates];
-    [CKScopeTreeNode willBuildComponentTreeWithTreeNode:node];
-    {
-      // Create child component
-      CKComponentScope innerScope([CKComponent class], @"macaque", ^{
-        return @1;
-      });
-
-      NSNumber *stateFromScope = innerScope.state();
-      XCTAssertTrue(stateFromScope == newState);
-    }
-
-    [CKScopeTreeNode didBuildComponentTreeWithNode:node];
-  }
-}
 @end
 
 @interface CKComponentScopeRootTests_RegistrationAndEnumeration: XCTestCase

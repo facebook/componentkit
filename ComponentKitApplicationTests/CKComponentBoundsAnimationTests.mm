@@ -14,7 +14,6 @@
 #import <ComponentKit/CKCasting.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentScope.h>
-#import <ComponentKit/CKComponentScopeFrame.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentSubclass.h>

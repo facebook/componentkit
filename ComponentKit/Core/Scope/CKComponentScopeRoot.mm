@@ -67,7 +67,6 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
     _listener = listener;
     _analyticsListener = analyticsListener ?: globalConfig.defaultAnalyticsListener;
     _globalIdentifier = globalIdentifier;
-    _rootFrame = [[CKComponentScopeFrame alloc] initWithHandle:nil];
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
 #if DEBUG
@@ -171,7 +170,10 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
 #if DEBUG
 - (NSString *)debugDescription
 {
-  return [[_rootFrame debugDescriptionComponents] componentsJoinedByString:@"\n"];
+  id node = _rootNode.node();
+  NSString *scopesTree = [[node debugDescriptionComponents] componentsJoinedByString:@"\n"];
+  NSString *nodesTree = [[node debugDescriptionNodes] componentsJoinedByString:@"\n"];
+  return [NSString stringWithFormat:@"Full Components Tree:\n%@\nScopes Components Tree:\n%@", nodesTree, scopesTree];
 }
 #endif
 
