@@ -587,6 +587,15 @@ class __attribute__((__may_alias__)) ComponentBuilderBase {
     return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::size)> &>(*this);
   }
 
+  /**
+   Specifies a size constraint that should apply to this component.
+   */
+  __attribute__((noinline)) auto &size(const CKComponentSize &s)
+  {
+    _size = s;
+    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::size)> &>(*this);
+  }
+
  protected:
   CKComponentViewClass _viewClass;
   CKViewComponentAttributeValueMap _attributes;
