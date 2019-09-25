@@ -22,8 +22,6 @@
 @interface CKScopeTreeNode : CKTreeNode <CKScopeTreeNodeProtocol>
 {
   @package
-  std::unordered_map<CKScopeNodeKey, id<CKTreeNodeProtocol>> _children;
-  std::vector<std::tuple<CKScopeNodeKey, id<CKTreeNodeProtocol>>> _childrenVector;
+  std::vector<std::tuple<CKScopeNodeKey, id<CKTreeNodeProtocol>>> _children;
 }
 @end
-

@@ -46,10 +46,8 @@
 {
   // Transfer the children vector from the reused node.
   _children = node->_children;
-  _childrenVector = node->_childrenVector;
 
   [CKRenderTreeNode didBuildComponentTreeWithNode:self];
 }
 
 @end
-

@@ -590,13 +590,10 @@ static BOOL CKComponentControllerRenderTestsPredicate(id<CKComponentControllerPr
                               scopeRoot:(CKComponentScopeRoot *)scopeRoot
                              scopeRoot2:(CKComponentScopeRoot *)scopeRoot2
 {
-  CKTreeNodeWithChild *childNode = (CKTreeNodeWithChild *)scopeRoot.rootNode.node().children[0];
-  CKTreeNodeWithChild *childNode2 = (CKTreeNodeWithChild *)scopeRoot2.rootNode.node().children[0];
   XCTAssertEqual(c.renderCalledCounter, 1);
   XCTAssertEqual(c2.renderCalledCounter, 1);
   XCTAssertFalse(c2.didReuseComponent);
   XCTAssertNotEqual(c.childComponent, c2.childComponent);
-  XCTAssertNotEqual(childNode.child, childNode2.child);
 }
 
 - (void)verifyComponentIsBeingReused:(CKTestRenderComponent *)c
@@ -604,13 +601,10 @@ static BOOL CKComponentControllerRenderTestsPredicate(id<CKComponentControllerPr
                            scopeRoot:(CKComponentScopeRoot *)scopeRoot
                           scopeRoot2:(CKComponentScopeRoot *)scopeRoot2
 {
-  id<CKTreeNodeWithChildProtocol> childNode = (id<CKTreeNodeWithChildProtocol>)scopeRoot.rootNode.node().children[0];
-  id<CKTreeNodeWithChildProtocol> childNode2 = (id<CKTreeNodeWithChildProtocol>)scopeRoot2.rootNode.node().children[0];
   XCTAssertEqual(c.renderCalledCounter, 1);
   XCTAssertEqual(c2.renderCalledCounter, 0);
   XCTAssertTrue(c2.didReuseComponent);
   XCTAssertEqual(c.childComponent, c2.childComponent);
-  XCTAssertEqual(childNode.child, childNode2.child);
 }
 
 - (void)verifyComponentsAndControllersAreRegisteredInScopeRoot:(CKComponentScopeRoot *)scopeRoot
@@ -698,7 +692,6 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
   // CKComponentScopeFrame
   [self __test_scopeFramePreserveStateDuringComponentReuse:{
     .enable = NO,
-    .useVector = NO,
     .useComponentsAsTheTree = NO,
   }];
 }
@@ -708,40 +701,20 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
   // CKComponentScopeTreeNode
   [self __test_scopeFramePreserveStateDuringComponentReuse:{
     .enable = YES,
-    .useVector = NO,
     .useComponentsAsTheTree = NO,
   }];
 }
 
-- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithVector
-{
-  // CKComponentScopeTreeNode & std::vector
-  [self __test_scopeFramePreserveStateDuringComponentReuse:{
-    .enable = YES,
-    .useVector = YES,
-    .useComponentsAsTheTree = NO,
-  }];
-}
 
 - (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithComponentsAsTheTree
 {
   // CKComponentScopeTreeNode & components as the tree
   [self __test_scopeFramePreserveStateDuringComponentReuse:{
     .enable = YES,
-    .useVector = NO,
     .useComponentsAsTheTree = YES,
   }];
 }
 
-- (void)test_scopeTreeNodePreserveStateDuringComponentReuseWithAll
-{
-  // CKComponentScopeTreeNode & std::vector & components as the tree
-  [self __test_scopeFramePreserveStateDuringComponentReuse:{
-    .enable = YES,
-    .useVector = YES,
-    .useComponentsAsTheTree = YES,
-  }];
-}
 
 - (void)__test_scopeFramePreserveStateDuringComponentReuse:(CKUnifyComponentTreeConfig)config
 {

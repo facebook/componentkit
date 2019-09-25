@@ -18,37 +18,18 @@
 
 static NSUInteger const kParentBaseKey = 0;
 static NSUInteger const kOwnerBaseKey = 1;
-static BOOL useVector = NO;
 
 @implementation CKScopeTreeNode
-{
-  CKTreeNodeKeyToCounter _keyToCounterMap;
-}
-
-+ (void)initialize
-{
-  if (self == [CKScopeTreeNode class]) {
-    useVector = CKReadGlobalConfig().unifyComponentTreeConfig.useVector;
-  }
-}
 
 #pragma mark - CKTreeNodeWithChildrenProtocol
 
 - (std::vector<id<CKTreeNodeProtocol>>)children
 {
   std::vector<id<CKTreeNodeProtocol>> children;
-  if (useVector) {
-    for (auto const &child : _childrenVector) {
-      auto childStateKey = std::get<0>(child);
-      if (std::get<1>(childStateKey.nodeKey) % 2 == kParentBaseKey) {
-        children.push_back(std::get<1>(child));
-      }
-    }
-  } else {
-    for (auto const &child : _children) {
-      if (std::get<1>(child.first.nodeKey) % 2 == kParentBaseKey) {
-        children.push_back(child.second);
-      }
+  for (auto const &child : _children) {
+    auto childStateKey = std::get<0>(child);
+    if (std::get<1>(childStateKey.nodeKey) % 2 == kParentBaseKey) {
+      children.push_back(std::get<1>(child));
     }
   }
   return children;
@@ -56,29 +37,17 @@ static BOOL useVector = NO;
 
 - (size_t)childrenSize
 {
-  if (useVector) {
-    return _childrenVector.size();
-  } else {
-    return _children.size();
-  }
+  return _children.size();
 }
 
 - (id<CKTreeNodeProtocol>)childForComponentKey:(const CKTreeNodeComponentKey &)key
 {
   CKScopeNodeKey stateKey = {key};
-  if (useVector) {
-    for (auto const &child : _childrenVector) {
-      auto childStateKey = std::get<0>(child);
-      if (childStateKey == stateKey) {
-        return std::get<1>(child);
-      }
+  for (auto const &child : _children) {
+    auto childStateKey = std::get<0>(child);
+    if (childStateKey == stateKey) {
+      return std::get<1>(child);
     }
-    return nil;
-  }
-
-  auto const it = _children.find(stateKey);
-  if (it != _children.end()) {
-    return it->second;
   }
   return nil;
 }
@@ -88,26 +57,18 @@ static BOOL useVector = NO;
 {
   // Create **parent** based key counter.
   NSUInteger keyCounter = kParentBaseKey;
-  if (useVector) {
-    for (auto const &child : _childrenVector) {
-      auto childNodeKey = std::get<0>(child).nodeKey;
-      if (std::get<0>(childNodeKey) == componentClass && CKObjectIsEqual(std::get<2>(childNodeKey), identifier)) {
-        keyCounter += 2;
-      }
+  for (auto const &child : _children) {
+    auto childNodeKey = std::get<0>(child).nodeKey;
+    if (std::get<0>(childNodeKey) == componentClass && CKObjectIsEqual(std::get<2>(childNodeKey), identifier)) {
+      keyCounter += 2;
     }
-  } else {
-    keyCounter = parentKeyCounter(componentClass, identifier, _keyToCounterMap);
   }
   return std::make_tuple(componentClass, keyCounter, identifier);
 }
 
 - (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
 {
-  if (useVector) {
-    _childrenVector.push_back({{componentKey}, child});
-  } else {
-    _children[{componentKey}] = child;
-  }
+  _children.push_back({{componentKey}, child});
 }
 
 - (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
@@ -119,18 +80,10 @@ static BOOL useVector = NO;
   }
 
   [super didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
-  if (useVector) {
-    for (auto const &child : _childrenVector) {
-      auto childStateKey = std::get<0>(child);
-      if (std::get<1>(childStateKey.nodeKey) % 2 == kParentBaseKey) {
-        [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
-      }
-    }
-  } else {
-    for (auto const &child : _children) {
-      if (std::get<1>(child.first.nodeKey) % 2 == kParentBaseKey) {
-        [child.second didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
-      }
+  for (auto const &child : _children) {
+    auto childStateKey = std::get<0>(child);
+    if (std::get<1>(childStateKey.nodeKey) % 2 == kParentBaseKey) {
+      [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
     }
   }
 }
@@ -143,15 +96,11 @@ static BOOL useVector = NO;
 {
   // Create **owner** based key counter.
   NSUInteger keyCounter = kOwnerBaseKey;
-  if (useVector) {
-    for (auto const &child : _childrenVector) {
-      auto childNodeKey = std::get<0>(child).nodeKey;
-      if (std::get<0>(childNodeKey) == componentClass && CKObjectIsEqual(std::get<2>(childNodeKey), identifier)) {
-        keyCounter += 2;
-      }
+  for (auto const &child : _children) {
+    auto childNodeKey = std::get<0>(child).nodeKey;
+    if (std::get<0>(childNodeKey) == componentClass && CKObjectIsEqual(std::get<2>(childNodeKey), identifier)) {
+      keyCounter += 2;
     }
-  } else {
-    keyCounter = ownerKeyCounter(componentClass, identifier, _keyToCounterMap);
   }
   // Update the stateKey with the class key counter to make sure we don't have collisions.
   return {std::make_tuple(componentClass, keyCounter, identifier), keys};
@@ -159,27 +108,18 @@ static BOOL useVector = NO;
 
 - (id<CKScopeTreeNodeProtocol>)childForScopeNodeKey:(const CKScopeNodeKey &)scopeNodeKey
 {
-  if (useVector) {
-    for (auto const &child : _childrenVector) {
-      auto childStateKey = std::get<0>(child);
-      if (childStateKey == scopeNodeKey) {
-        return (id<CKScopeTreeNodeProtocol>)std::get<1>(child);
-      }
+  for (auto const &child : _children) {
+    auto childStateKey = std::get<0>(child);
+    if (childStateKey == scopeNodeKey) {
+      return (id<CKScopeTreeNodeProtocol>)std::get<1>(child);
     }
-    return nil;
   }
-  // Get the child from the previous equivalent node.
-  const auto it = _children.find(scopeNodeKey);
-  return (it == _children.end()) ? nil : (id<CKScopeTreeNodeProtocol>)it->second;
+  return nil;
 }
 
 - (void)setChild:(id<CKScopeTreeNodeProtocol>)child forKey:(const CKScopeNodeKey &)key
 {
-  if (useVector) {
-    _childrenVector.push_back({key,child});
-  } else {
-    _children[key] = child;
-  }
+  _children.push_back({key,child});
 }
 
 #pragma mark - CKComponentScopeFrameProtocol
@@ -257,7 +197,7 @@ static BOOL useVector = NO;
     return;
   }
 
-  // The scope handle should be nil here, as we create a scope node for the render component to own its scope frame children. 
+  // The scope handle should be nil here, as we create a scope node for the render component to own its scope frame children.
   CKAssert(!threadLocalScope->stack.empty() && threadLocalScope->stack.top().frame.scopeHandle == nil, @"frame.scopeHandle is not equal to nil");
   // Pop the top element of the stack.
   threadLocalScope->stack.pop();
@@ -291,33 +231,16 @@ static BOOL useVector = NO;
 
 #pragma mark - Helpers
 
-static NSUInteger parentKeyCounter(id<CKComponentProtocol> componentClass,
-                                  id<NSObject> identifier,
-                                  CKTreeNodeKeyToCounter &keyToCounterMap) {
-  
-  // Create key to retrive the counter of the CKScopeNodeKey (in case of identical key, we increment it to avoid collisions).
-  CKTreeNodeComponentKey componentKey = std::make_tuple(componentClass, kParentBaseKey, identifier);
-  // We use even numbers to represent **parent** based keys (0,2,4,..).
-  return (keyToCounterMap[componentKey]++) * 2;
-}
-
-static NSUInteger ownerKeyCounter(id<CKComponentProtocol> componentClass,
-                                  id<NSObject> identifier,
-                                  CKTreeNodeKeyToCounter &keyToCounterMap) {
-  // Create key to retrive the counter of the CKScopeNodeKey (in case of identical key, we incrment it to avoid collisions).
-  CKTreeNodeComponentKey componentKey = std::make_tuple(componentClass, kOwnerBaseKey, identifier);
-  // We use odd numbers to represent **owner** based keys (1,3,5,..).
-  return (keyToCounterMap[componentKey]++) * 2 + 1;
-}
-
 #if DEBUG
 // Iterate threw the nodes according to the **parent** based key
 - (NSArray<NSString *> *)debugDescriptionNodes
 {
   NSMutableArray<NSString *> *debugDescriptionNodes = [NSMutableArray arrayWithArray:[super debugDescriptionNodes]];
   for (auto const &child : _children) {
-    if (std::get<1>(child.first.nodeKey) % 2 == kParentBaseKey) {
-      for (NSString *s in [child.second debugDescriptionNodes]) {
+    auto const scopeNodeKey = std::get<0>(child);
+    auto const childNode = std::get<1>(child);
+    if (std::get<1>(scopeNodeKey.nodeKey) % 2 == kParentBaseKey) {
+      for (NSString *s in [childNode debugDescriptionNodes]) {
         [debugDescriptionNodes addObject:[@"  " stringByAppendingString:s]];
       }
     }
@@ -330,15 +253,17 @@ static NSUInteger ownerKeyCounter(id<CKComponentProtocol> componentClass,
 {
   NSMutableArray<NSString *> *childrenDebugDescriptions = [NSMutableArray new];
   for (auto const &child : _children) {
-    if (std::get<1>(child.first.nodeKey) % 2 == kOwnerBaseKey) {
+    auto const scopeNodeKey = std::get<0>(child);
+    auto const childNode = std::get<1>(child);
+    if (std::get<1>(scopeNodeKey.nodeKey) % 2 == kOwnerBaseKey) {
       auto const description = [NSString stringWithFormat:@"- %@%@%@",
-                                NSStringFromClass(std::get<0>(child.first.nodeKey)),
-                                (std::get<2>(child.first.nodeKey)
-                                 ? [NSString stringWithFormat:@":%@", std::get<2>(child.first.nodeKey)]
+                                NSStringFromClass(std::get<0>(scopeNodeKey.nodeKey)),
+                                (std::get<2>(scopeNodeKey.nodeKey)
+                                 ? [NSString stringWithFormat:@":%@", std::get<2>(scopeNodeKey.nodeKey)]
                                  : @""),
-                                child.first.keys.empty() ? @"" : formatKeys(child.first.keys)];
+                                scopeNodeKey.keys.empty() ? @"" : formatKeys(scopeNodeKey.keys)];
       [childrenDebugDescriptions addObject:description];
-      for (NSString *s in [(id<CKComponentScopeFrameProtocol>)child.second debugDescriptionComponents]) {
+      for (NSString *s in [(id<CKComponentScopeFrameProtocol>)childNode debugDescriptionComponents]) {
         [childrenDebugDescriptions addObject:[@"  " stringByAppendingString:s]];
       }
     }
