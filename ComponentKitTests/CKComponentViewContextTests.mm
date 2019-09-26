@@ -81,7 +81,9 @@ static const CKSizeRange size = {{100, 100}, {100, 100}};
 
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
 {
-  return [CKComponent newWithView:{[UIImageView class]} size:{}];
+  return CK::ComponentBuilder()
+             .viewClass([UIImageView class])
+             .build();
 }
 
 @end
@@ -99,7 +101,10 @@ static const CKSizeRange size = {{100, 100}, {100, 100}};
 
 + (instancetype)new
 {
-  CKComponent *subcomponent = [CKComponent newWithView:{} size:{50, 50}];
+  CKComponent *subcomponent = CK::ComponentBuilder()
+                                  .width(50)
+                                  .height(50)
+                                  .build();
   CKNestedComponent *c =
   [super newWithComponent:
    [CKStaticLayoutComponent

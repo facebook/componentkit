@@ -35,7 +35,10 @@
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
 {
   const CGSize size = [(NSValue *)model CGSizeValue];
-  return [CKComponent newWithView:{} size:{size.width, size.height}];
+  return CK::ComponentBuilder()
+             .width(size.width)
+             .height(size.height)
+             .build();
 }
 
 - (void)setUp

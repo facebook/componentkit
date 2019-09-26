@@ -25,7 +25,9 @@
   const BOOL isLifecycleTestComponentHidden = [scope.state() boolValue];
   
   auto const lifecycleTestComponent = isLifecycleTestComponentHidden ? nil : [CKLifecycleTestComponent newWithView:view size:size];
-  auto const innerComponent = lifecycleTestComponent ?: [CKComponent newWithView:view size:size];
+  auto const innerComponent = lifecycleTestComponent ?: CK::ComponentBuilder()
+                                                            .size(size)
+                                                            .build();
   
   auto const c = [super newWithView:view component:innerComponent];
   if (c && lifecycleTestComponent) {

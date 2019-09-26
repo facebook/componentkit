@@ -27,12 +27,10 @@
   __block CKComponent *actionSender = nil;
   
   CKComponent *controlComponent =
-  [CKComponent
-   newWithView:{
-     [UIView class],
-     {CKComponentAccessibilityCustomActionsAttribute({{@"Test", @selector(testNoArgumentAction:)}})}
-   }
-   size:{}];
+  CK::ComponentBuilder()
+      .viewClass([UIView class])
+      .attribute(CKComponentAccessibilityCustomActionsAttribute({{@"Test", @selector(testNoArgumentAction:)}}))
+      .build();
   
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
@@ -60,16 +58,14 @@
   __block CKComponent *actionSender = nil;
   
   CKComponent *controlComponent =
-  [CKComponent
-   newWithView:{
-     [UIView class],
-     {CKComponentAccessibilityCustomActionsAttribute({
+  CK::ComponentBuilder()
+      .viewClass([UIView class])
+      .attribute(CKComponentAccessibilityCustomActionsAttribute({
        {@"Test", @selector(testAction:context:)},
        {@"Test 2", @selector(testAction:context:)},
        {@"Test 3", @selector(testAction:context:)},
-     })}
-   }
-   size:{}];
+     }))
+      .build();
   
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
@@ -94,15 +90,13 @@
   __block CKComponent *actionSender = nil;
   
   CKComponent *controlComponent =
-  [CKComponent
-   newWithView:{
-     [UIView class],
-     {CKComponentAccessibilityCustomActionsAttribute({
+  CK::ComponentBuilder()
+      .viewClass([UIView class])
+      .attribute(CKComponentAccessibilityCustomActionsAttribute({
        {@"Test", nullptr},
        {@"Test 2", @selector(testAction:context:)},
-     })}
-   }
-   size:{}];
+     }))
+      .build();
   
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent

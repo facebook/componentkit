@@ -63,12 +63,12 @@ static UIScrollView *findScrollView(UIView *v)
 {
   CKDetectScrollComponent *hierarchy =
   [CKDetectScrollComponent
-   newWithComponent:[CKComponent
-                     newWithView:{[UIScrollView class],
-                       {CKComponentDelegateAttribute(@selector(setDelegate:), {
+   newWithComponent:CK::ComponentBuilder()
+                        .viewClass([UIScrollView class])
+                        .attribute(CKComponentDelegateAttribute(@selector(setDelegate:), {
                          @selector(scrollViewDidScroll:),
-                       })}}
-                     size:{}]];
+                       }))
+                        .build()];
 
 
   CKComponentLayout layout = [hierarchy layoutThatFits:{} parentSize:{NAN, NAN}];
@@ -90,10 +90,10 @@ static UIScrollView *findScrollView(UIView *v)
 
   CKDetectScrollComponent *noScrollHierarchy =
   [CKDetectScrollComponent
-   newWithComponent:[CKComponent
-                     newWithView:{[UIScrollView class],
-                       {CKComponentDelegateAttribute(@selector(setDelegate:), {})}}
-                     size:{}]];
+   newWithComponent:CK::ComponentBuilder()
+                        .viewClass([UIScrollView class])
+                        .attribute(CKComponentDelegateAttribute(@selector(setDelegate:), {}))
+                        .build()];
 
   layout = [noScrollHierarchy layoutThatFits:{} parentSize:{NAN, NAN}];
 
@@ -112,12 +112,12 @@ static UIScrollView *findScrollView(UIView *v)
 {
   CKDetectScrollComponent *hierarchy =
   [CKDetectScrollComponent
-   newWithComponent:[CKComponent
-                     newWithView:{[UIScrollView class],
-                       {CKComponentDelegateAttribute(@selector(setDelegate:), {
+   newWithComponent:CK::ComponentBuilder()
+                        .viewClass([UIScrollView class])
+                        .attribute(CKComponentDelegateAttribute(@selector(setDelegate:), {
                          @selector(scrollViewDidScroll:),
-                       })}}
-                     size:{}]];
+                       }))
+                        .build()];
 
 
   CKComponentLayout layout = [hierarchy layoutThatFits:{} parentSize:{NAN, NAN}];

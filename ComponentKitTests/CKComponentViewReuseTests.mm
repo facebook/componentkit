@@ -44,16 +44,13 @@ static UIView *viewFactory()
 - (void)testThatRecyclingViewWithoutEnteringReusePoolDoesNotCallReuseBlocks
 {
   CKComponent *component =
-  [CKComponent
-   newWithView:{
-     {
+  CK::ComponentBuilder()
+      .viewClass({
        &viewFactory,
        ^(UIView *v){ XCTFail(@"Didn't expect to have didEnterReusePool called"); },
        ^(UIView *v){ XCTFail(@"Didn't expect to have willLeaveReusePool called"); }
-     },
-     {}
-   }
-   size:{}];
+     })
+      .build();
 
   UIView *container = [[UIView alloc] init];
   CK::Component::ViewReuseUtilities::mountingInRootView(container);
@@ -73,16 +70,13 @@ static UIView *viewFactory()
 {
   __block UIView *viewThatEnteredReusePool = nil;
   CKComponent *firstComponent =
-  [CKComponent
-   newWithView:{
-     {
+  CK::ComponentBuilder()
+      .viewClass({
        &viewFactory,
        ^(UIView *v){ viewThatEnteredReusePool = v; },
        ^(UIView *v){ XCTFail(@"Didn't expect to have willLeaveReusePool called"); }
-     },
-     {}
-   }
-   size:{}];
+     })
+      .build();
 
   UIView *container = [[UIView alloc] init];
   CK::Component::ViewReuseUtilities::mountingInRootView(container);
@@ -92,7 +86,9 @@ static UIView *viewFactory()
     createdView = m.viewForConfiguration([firstComponent class], [firstComponent viewConfiguration]);
   }
 
-  CKComponent *secondComponent = [CKComponent newWithView:{[UIImageView class], {}} size:{}];
+  CKComponent *secondComponent = CK::ComponentBuilder()
+                                     .viewClass([UIImageView class])
+                                     .build();
   {
     ViewManager m(container);
     (void)m.viewForConfiguration([secondComponent class], [secondComponent viewConfiguration]);
@@ -107,19 +103,16 @@ static UIView *viewFactory()
   __block UIView *viewThatEnteredReusePool = nil;
   __block BOOL calledWillLeaveReusePool = NO;
   CKComponent *firstComponent =
-  [CKComponent
-   newWithView:{
-     {
+  CK::ComponentBuilder()
+      .viewClass({
        &viewFactory,
        ^(UIView *v){ viewThatEnteredReusePool = v; },
        ^(UIView *v){
          XCTAssertTrue(v == viewThatEnteredReusePool, @"Expected %@ but got %@", viewThatEnteredReusePool, v);
          calledWillLeaveReusePool = YES;
        }
-     },
-     {}
-   }
-   size:{}];
+     })
+      .build();
 
   UIView *container = [[UIView alloc] init];
   CK::Component::ViewReuseUtilities::mountingInRootView(container);
@@ -128,7 +121,9 @@ static UIView *viewFactory()
     (void)m.viewForConfiguration([firstComponent class], [firstComponent viewConfiguration]);
   }
 
-  CKComponent *secondComponent = [CKComponent newWithView:{[UIImageView class]} size:{}];
+  CKComponent *secondComponent = CK::ComponentBuilder()
+                                     .viewClass([UIImageView class])
+                                     .build();
   {
     ViewManager m(container);
     (void)m.viewForConfiguration([secondComponent class], [secondComponent viewConfiguration]);
@@ -147,16 +142,13 @@ static UIView *viewFactory()
   __block UIView *viewThatEnteredReusePool = nil;
 
   CKComponent *innerComponent =
-  [CKComponent
-   newWithView:{
-     {
+  CK::ComponentBuilder()
+      .viewClass({
        &viewFactory,
        ^(UIView *v){ viewThatEnteredReusePool = v; },
        ^(UIView *v){ XCTFail(@"Didn't expect willLeaveReusePool"); }
-     },
-     {}
-   }
-   size:{}];
+     })
+      .build();
 
   CKComponent *firstComponent =
   [CKCompositeComponent
@@ -175,7 +167,9 @@ static UIView *viewFactory()
     }
   }
 
-  CKComponent *secondComponent = [CKComponent newWithView:{[UIImageView class]} size:{}];
+  CKComponent *secondComponent = CK::ComponentBuilder()
+                                     .viewClass([UIImageView class])
+                                     .build();
   {
     ViewManager m(container);
     (void)m.viewForConfiguration([secondComponent class], [secondComponent viewConfiguration]);
@@ -191,16 +185,13 @@ static UIView *viewFactory()
   __block UIView *viewThatEnteredReusePool = nil;
 
   CKComponent *innerComponent =
-  [CKComponent
-   newWithView:{
-     {
+  CK::ComponentBuilder()
+      .viewClass({
        &viewFactory,
        ^(UIView *v){ viewThatEnteredReusePool = v; },
        ^(UIView *v){ XCTFail(@"Didn't expect willLeaveReusePool"); }
-     },
-     {}
-   }
-   size:{}];
+     })
+      .build();
 
   CKComponent *firstComponent =
   [CKCompositeComponent
@@ -219,7 +210,9 @@ static UIView *viewFactory()
     }
   }
 
-  CKComponent *secondComponent = [CKComponent newWithView:{[UIImageView class]} size:{}];
+  CKComponent *secondComponent = CK::ComponentBuilder()
+                                     .viewClass([UIImageView class])
+                                     .build();
   {
     ViewManager m(container);
     (void)m.viewForConfiguration([secondComponent class], [secondComponent viewConfiguration]);
@@ -231,7 +224,8 @@ static UIView *viewFactory()
   CKComponent *thirdComponent =
   [CKCompositeComponent
    newWithView:{[UIView class], {}}
-   component:[CKComponent newWithView:{} size:{}]];
+   component:CK::ComponentBuilder()
+                 .build()];
   {
     ViewManager m(container);
     UIView *newestTopLevelView = m.viewForConfiguration([thirdComponent class], [thirdComponent viewConfiguration]);
@@ -276,20 +270,21 @@ static UIView *reuseAwareViewFactory()
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
 {
   if ([(NSNumber *)model boolValue]) {
-    return [CKComponent newWithView:{[UIView class]} size:{50, 50}];
+    return CK::ComponentBuilder()
+               .viewClass([UIView class])
+               .width(50)
+               .height(50)
+               .build();
   } else {
     return [CKViewInjectingComponent
             newWithComponent:
-            [CKComponent
-             newWithView:{
-               {
+            CK::ComponentBuilder()
+                .viewClass({
                  &reuseAwareViewFactory,
                  ^(UIView *v){ ((CKReuseAwareView *)v).inReusePool = YES; },
                  ^(UIView *v){ ((CKReuseAwareView *)v).inReusePool = NO; }
-               },
-               {}
-             }
-             size:{}]];
+               })
+                .build()];
   }
 }
 

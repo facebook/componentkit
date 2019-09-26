@@ -38,7 +38,9 @@ using CK::Component::ViewManager;
 
 - (void)testThatComponentViewManagerVendsRecycledView
 {
-  CKComponent *component = [CKComponent newWithView:{[UIView class], {}} size:{}];
+  CKComponent *component = CK::ComponentBuilder()
+                               .viewClass([UIView class])
+                               .build();
 
   UIView *container = [[UIView alloc] init];
   CK::Component::ViewReuseUtilities::mountingInRootView(container);
@@ -56,7 +58,9 @@ using CK::Component::ViewManager;
 
 - (void)testThatComponentViewManagerHidesViewIfItWasNotRecycled
 {
-  CKComponent *component = [CKComponent newWithView:{[UIView class], {}} size:{}];
+  CKComponent *component = CK::ComponentBuilder()
+                               .viewClass([UIView class])
+                               .build();
 
   UIView *container = [[UIView alloc] init];
   CK::Component::ViewReuseUtilities::mountingInRootView(container);
@@ -87,8 +91,12 @@ static NSArray *arrayByPerformingBlock(NSArray *array, id (^block)(id))
 
 - (void)testThatComponentViewManagerReordersViewsIfOrderSwapped
 {
-  CKComponent *imageView = [CKComponent newWithView:{[UIImageView class], {}} size:{}];
-  CKComponent *button = [CKComponent newWithView:{[UIButton class], {}} size:{}];
+  CKComponent *imageView = CK::ComponentBuilder()
+                               .viewClass([UIImageView class])
+                               .build();
+  CKComponent *button = CK::ComponentBuilder()
+                            .viewClass([UIButton class])
+                            .build();
   NSArray *actualClasses, *expectedClasses;
 
   UIView *container = [[UIView alloc] init];
@@ -114,8 +122,12 @@ static NSArray *arrayByPerformingBlock(NSArray *array, id (^block)(id))
 
 - (void)testThatComponentViewManagerDoesNotUnnecessarilyReorderViews
 {
-  CKComponent *imageView = [CKComponent newWithView:{[UIImageView class], {}} size:{}];
-  CKComponent *button = [CKComponent newWithView:{[UIButton class], {}} size:{}];
+  CKComponent *imageView = CK::ComponentBuilder()
+                               .viewClass([UIImageView class])
+                               .build();
+  CKComponent *button = CK::ComponentBuilder()
+                            .viewClass([UIButton class])
+                            .build();
 
   CKAddSubviewOnlyView *container = [[CKAddSubviewOnlyView alloc] init];
   CK::Component::ViewReuseUtilities::mountingInRootView(container);
@@ -135,9 +147,10 @@ static NSArray *arrayByPerformingBlock(NSArray *array, id (^block)(id))
 - (void)testThatGettingRecycledViewForComponentDoesNotRecycleViewWithDisjointAttributes
 {
   CKComponent *bgColorComponent =
-  [CKComponent newWithView:{[UIView class], {
-    {{@selector(setBackgroundColor:), [UIColor blueColor]}}
-  }} size:{}];
+  CK::ComponentBuilder()
+      .viewClass([UIView class])
+      .backgroundColor([UIColor blueColor])
+      .build();
 
   UIView *container = [[UIView alloc] init];
   CK::Component::ViewReuseUtilities::mountingInRootView(container);
@@ -149,9 +162,10 @@ static NSArray *arrayByPerformingBlock(NSArray *array, id (^block)(id))
   }
 
   CKComponent *alphaComponent =
-  [CKComponent newWithView:{[UIView class], {
-    {{@selector(setAlpha:), @0.5}}
-  }} size:{}];
+  CK::ComponentBuilder()
+      .viewClass([UIView class])
+      .alpha(0.5)
+      .build();
 
   {
     ViewManager m(container);
@@ -168,7 +182,9 @@ static UIView *imageViewFactory()
 - (void)testThatGettingViewForViewComponentWithNilViewClassCallsClassMethodNewView
 {
   CKComponentViewClass customClass(&imageViewFactory);
-  CKComponent *testComponent = [CKComponent newWithView:{std::move(customClass), {}} size:{}];
+  CKComponent *testComponent = CK::ComponentBuilder()
+                                   .viewClass(std::move(customClass))
+                                   .build();
   UIView *container = [[UIView alloc] init];
   CK::Component::ViewReuseUtilities::mountingInRootView(container);
   ViewManager m(container);
@@ -179,9 +195,9 @@ static UIView *imageViewFactory()
 - (void)testThatViewsInViewPoolAreHiddenAndDidHideIsCalledInDescendantAfterHideAllIsCalledOnRootView
 {
   CKComponent *childComponent =
-  [CKComponent
-   newWithView:{{[CKTestReusableView class], @selector(didEnterReusePool), nil}}
-   size:{}];
+  CK::ComponentBuilder()
+      .viewClass({[CKTestReusableView class], @selector(didEnterReusePool), nil})
+      .build();
   CKComponent *component =
   [CKCompositeComponent
    newWithView:{{[CKTestReusableView class], @selector(didEnterReusePool), nil}}

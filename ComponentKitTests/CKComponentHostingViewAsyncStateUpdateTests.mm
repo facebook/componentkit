@@ -28,12 +28,10 @@
 + (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
 {
   CKComponentScope scope([CKComponent class]);
-  return [CKComponent
-          newWithView:{
-            [UIView class],
-            {{@selector(setBackgroundColor:), scope.state() ?: [UIColor blackColor]}}
-          }
-          size:{}];
+  return CK::ComponentBuilder()
+             .viewClass([UIView class])
+             .backgroundColor(scope.state() ?: [UIColor blackColor])
+             .build();
 }
 
 - (void)testAsynchronouslyUpdatingStateOfComponentEventuallyUpdatesCorrespondingView

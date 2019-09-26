@@ -47,7 +47,8 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
 static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 {
   if ([context isEqual:kTestInvalidateControllerContext]) {
-    return [CKComponent newWithView:{} size:{}];
+    return CK::ComponentBuilder()
+               .build();
   }
   return [CKLifecycleTestComponent new];
 }

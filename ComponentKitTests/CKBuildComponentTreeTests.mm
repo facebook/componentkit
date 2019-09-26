@@ -52,7 +52,8 @@
 {
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   auto const root = scopeRoot.rootNode.node();
-  CKComponent *c = [CKComponent newWithView:{} size:{}];
+  CKComponent *c = CK::ComponentBuilder()
+                       .build();
   [c buildComponentTree:root previousParent:nil params:{
     .scopeRoot = scopeRoot,
     .stateUpdates = {},
@@ -66,7 +67,8 @@
   // Simulate a second tree creation.
   auto const scopeRoot2 = [scopeRoot newRoot];
   auto const root2 = scopeRoot2.rootNode.node();
-  CKComponent *c2 = [CKComponent newWithView:{} size:{}];
+  CKComponent *c2 = CK::ComponentBuilder()
+                        .build();
   [c2 buildComponentTree:root2 previousParent:root params:{
     .scopeRoot = scopeRoot2,
     .previousScopeRoot = scopeRoot,
@@ -83,7 +85,8 @@
 {
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   auto const root = scopeRoot.rootNode.node();
-  CKComponent *c = [CKComponent newWithView:{} size:{}];
+  CKComponent *c = CK::ComponentBuilder()
+                       .build();
   CKRenderComponent *renderComponent = [CKComponentTreeTestComponent_Render newWithComponent:c];
   [renderComponent buildComponentTree:root previousParent:nil params:{
     .scopeRoot = scopeRoot,
@@ -110,7 +113,8 @@
   // Simulate a second tree creation.
   auto const scopeRoot2 = [scopeRoot newRoot];
   auto const root2 = scopeRoot2.rootNode.node();
-  CKComponent *c2 = [CKComponent newWithView:{} size:{}];
+  CKComponent *c2 = CK::ComponentBuilder()
+                        .build();
   CKRenderComponent *renderComponent2 = [CKComponentTreeTestComponent_Render newWithComponent:c2];
   [renderComponent2 buildComponentTree:root2 previousParent:root params:{
     .scopeRoot = scopeRoot2,
@@ -129,8 +133,10 @@
   CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
   auto const scopeRoot = threadScope.newScopeRoot;
   CKTreeNodeWithChildren *root = [[CKTreeNodeWithChildren alloc] init];
-  CKComponent *c10 = [CKComponent newWithView:{} size:{}];
-  CKComponent *c11 = [CKComponent newWithView:{} size:{}];
+  CKComponent *c10 = CK::ComponentBuilder()
+                         .build();
+  CKComponent *c11 = CK::ComponentBuilder()
+                         .build();
   auto renderWithChidlrenComponent = [CKTestRenderWithChildrenComponent newWithChildren:{c10, c11}];
   [renderWithChidlrenComponent buildComponentTree:root previousParent:nil params:{
     .scopeRoot = scopeRoot,
@@ -157,8 +163,10 @@
   // Simulate a second tree creation.
   auto const scopeRoot2 = [scopeRoot newRoot];
   auto const root2 = scopeRoot2.rootNode.node();
-  CKComponent *c20 = [CKComponent newWithView:{} size:{}];
-  CKComponent *c21 = [CKComponent newWithView:{} size:{}];
+  CKComponent *c20 = CK::ComponentBuilder()
+                         .build();
+  CKComponent *c21 = CK::ComponentBuilder()
+                         .build();
   auto renderWithChidlrenComponent2 = [CKTestRenderWithChildrenComponent newWithChildren:{c20, c21}];
   [renderWithChidlrenComponent2 buildComponentTree:root2 previousParent:root params:{
     .scopeRoot = scopeRoot2,
@@ -186,7 +194,8 @@
   __block CKComponentTreeTestComponent_Render *c;
   __block CKCompositeComponentWithScopeAndState *rootComponent;
   auto const componentFactory = ^{
-    c = [CKComponentTreeTestComponent_Render newWithComponent:[CKComponent newWithView:{} size:{}]];
+    c = [CKComponentTreeTestComponent_Render newWithComponent:CK::ComponentBuilder()
+                                                                  .build()];
     rootComponent = [CKCompositeComponentWithScopeAndState
                      newWithComponent:c];
     return rootComponent;

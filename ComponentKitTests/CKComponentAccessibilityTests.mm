@@ -85,13 +85,16 @@ using namespace CK::Component::Accessibility;
 - (void)testAccessibilityContextItemsAreTransformedToViewPropertiesWhenEnabled
 {
   SetForceAccessibilityEnabled(YES);
-  CKComponent *testComponent = [CKComponent newWithView:{[UIView class], {}, {
+  CKComponent *testComponent = CK::ComponentBuilder()
+                                   .viewClass([UIView class])
+                                   .accessibilityContext({
     .isAccessibilityElement = @YES,
     .accessibilityLabel = ^{ return @"accessibleSuperman";},
     .accessibilityHint = ^{ return @"accessibleClark";},
     .accessibilityValue = ^{ return @"accessibleKent";},
     .accessibilityTraits = @(UIAccessibilityTraitButton | UIAccessibilityTraitImage),
-  }} size:{}];
+  })
+                                   .build();
 
   UIView *container = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([testComponent layoutThatFits:{} parentSize:{}], container, nil, nil).mountedComponents;
@@ -108,13 +111,16 @@ using namespace CK::Component::Accessibility;
 - (void)testAccessibilityContextItemsAreNotTransformedToViewPropertiesWhenDisabled
 {
   SetForceAccessibilityEnabled(NO);
-  CKComponent *testComponent = [CKComponent newWithView:{[UIView class], {}, {
+  CKComponent *testComponent = CK::ComponentBuilder()
+                                   .viewClass([UIView class])
+                                   .accessibilityContext({
     .isAccessibilityElement = @YES,
     .accessibilityLabel = ^{ return @"accessibleSuperman";},
     .accessibilityHint = ^{ return @"accessibleClark";},
     .accessibilityValue = ^{ return @"accessibleKent";},
     .accessibilityTraits = @(UIAccessibilityTraitButton | UIAccessibilityTraitImage),
-  }} size:{}];
+  })
+                                   .build();
 
   UIView *container = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([testComponent layoutThatFits:{} parentSize:{}], container, nil, nil).mountedComponents;

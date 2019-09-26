@@ -26,7 +26,9 @@
 
 - (void)testThatMountingComponentThatReturnsMountChildrenNoDoesNotMountItsChild
 {
-  CKComponent *viewComponent = [CKComponent newWithView:{[UIView class]} size:{}];
+  CKComponent *viewComponent = CK::ComponentBuilder()
+                                   .viewClass([UIView class])
+                                   .build();
   CKComponent *c = [CKDontMountChildrenComponent newWithChild:viewComponent];
 
   CKComponentLayout layout = [c layoutThatFits:{} parentSize:{NAN, NAN}];
@@ -45,7 +47,9 @@
 
 - (void)testMountingComponentAffectsResponderChain
 {
-  CKComponent *c = [CKComponent newWithView:{[UIView class]} size:{}];
+  CKComponent *c = CK::ComponentBuilder()
+                       .viewClass([UIView class])
+                       .build();
   CKComponentLayout layout = [c layoutThatFits:{} parentSize:{NAN, NAN}];
 
   UIView *container = [UIView new];
@@ -58,8 +62,12 @@
 
 - (void)testUnmounting
 {
-  CKComponent *a = [CKComponent newWithView:{[UIView class]} size:{}];
-  CKComponent *b = [CKComponent newWithView:{[UIView class]} size:{}];
+  CKComponent *a = CK::ComponentBuilder()
+                       .viewClass([UIView class])
+                       .build();
+  CKComponent *b = CK::ComponentBuilder()
+                       .viewClass([UIView class])
+                       .build();
 
   const CKComponentLayout layoutBoth = {a, CGSizeZero,
     {

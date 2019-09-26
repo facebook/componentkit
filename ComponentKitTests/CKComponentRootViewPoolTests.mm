@@ -73,7 +73,9 @@ using namespace CK::Component;
 
 - (void)testThatSubviewIsHiddenAfterRootViewIsPushedIntoPool
 {
-  const auto component = [CKComponent newWithView:{[UIView class]} size:{}];
+  const auto component = CK::ComponentBuilder()
+                             .viewClass([UIView class])
+                             .build();
   const auto rootView = [CKComponentRootView new];
   const auto category = CK::makeNonNull(@"Category");
   CK::Component::ViewReuseUtilities::mountingInRootView(rootView);

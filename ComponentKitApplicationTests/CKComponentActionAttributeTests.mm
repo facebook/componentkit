@@ -38,12 +38,10 @@
   __block CKComponent *actionSender = nil;
 
   CKComponent *controlComponent =
-  [CKComponent
-   newWithView:{
-     [UIButton class],
-     {CKComponentActionAttribute(@selector(testAction:context:))}
-   }
-   size:{}];
+  CK::ComponentBuilder()
+      .viewClass([UIButton class])
+      .onTouchUpInside(@selector(testAction:context:))
+      .build();
 
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
@@ -68,12 +66,10 @@
   __block BOOL receivedAction = NO;
 
   CKComponent *controlComponent =
-  [CKComponent
-   newWithView:{
-     [UIButton class],
-     {CKComponentActionAttribute(@selector(testAction:context:), UIControlEventValueChanged)}
-   }
-   size:{}];
+  CK::ComponentBuilder()
+      .viewClass([UIButton class])
+      .onControlEvents(UIControlEventValueChanged, @selector(testAction:context:))
+      .build();
 
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
@@ -98,16 +94,12 @@
   __block NSUInteger actionCount = 0;
 
   CKComponent *controlComponent =
-  [CKComponent
-   newWithView:{
-     [UIButton class],
-     {
-       CKComponentActionAttribute(@selector(testAction:context:), UIControlEventValueChanged),
-       CKComponentActionAttribute(@selector(testAction:context:), UIControlEventTouchUpInside),
-       CKComponentActionAttribute(@selector(testAction:context:), UIControlEventTouchDown),
-     }
-   }
-   size:{}];
+  CK::ComponentBuilder()
+      .viewClass([UIButton class])
+      .onControlEvents(UIControlEventValueChanged, @selector(testAction:context:))
+      .onTouchUpInside(@selector(testAction:context:))
+      .onControlEvents(UIControlEventTouchDown, @selector(testAction:context:))
+      .build();
 
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
@@ -136,12 +128,10 @@
   __block BOOL receivedAction = NO;
 
   CKComponent *controlComponent =
-  [CKComponent
-   newWithView:{
-     [UIButton class],
-     {CKComponentActionAttribute(@selector(testAction:context:))}
-   }
-   size:{}];
+  CK::ComponentBuilder()
+      .viewClass([UIButton class])
+      .onTouchUpInside(@selector(testAction:context:))
+      .build();
 
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
@@ -166,12 +156,10 @@
   __block BOOL receivedAction = NO;
 
   CKComponent *controlComponent =
-  [CKComponent
-   newWithView:{
-     [UIButton class],
-     {CKComponentActionAttribute(nullptr)}
-   }
-   size:{}];
+  CK::ComponentBuilder()
+      .viewClass([UIButton class])
+      .onTouchUpInside(nullptr)
+      .build();
 
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent

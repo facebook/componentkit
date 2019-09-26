@@ -101,7 +101,8 @@ static NSArray<CKComponent *>* createChildrenArray(BOOL scoped) {
     if (scoped) {
       [components addObject:[CKComponentLayoutTestComponent newWithView:{} size:{}]];
     } else {
-      [components addObject:[CKComponent newWithView:{} size:{}]];
+      [components addObject:CK::ComponentBuilder()
+                                .build()];
     }
   }
   return components;

@@ -39,7 +39,8 @@ static u_int32_t lifecycleComponentState = 1;
 {
   CKLifecycleTestComponent *lifecycleComponent =
   globalState == lifecycleComponentState ? [CKLifecycleTestComponent newWithView:{} size:{}] : nil;
-  const auto c = [super newWithComponent:lifecycleComponent ?: [CKComponent newWithView:{} size:{}]];
+  const auto c = [super newWithComponent:lifecycleComponent ?: CK::ComponentBuilder()
+                                                                   .build()];
   if (c) {
     c->_globalStateAtTimeOfCreation = globalState;
     c->_lifecycleComponent = lifecycleComponent;

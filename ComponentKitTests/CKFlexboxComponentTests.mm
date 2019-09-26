@@ -43,10 +43,22 @@
      .alignItems = CKFlexboxAlignItemsStart
    }
    children:{
-     { [CKComponent newWithView:{[UIView class]} size:{50,50}] },
-     { [CKComponent newWithView:{[UIView class]} size:{.width = 50}] },
-     { [CKComponent newWithView:{[UIView class]} size:{.height = 50}] },
-     { [CKComponent newWithView:{[UIView class]} size:{}] },
+     { CK::ComponentBuilder()
+           .viewClass([UIView class])
+           .width(50)
+           .height(50)
+           .build() },
+     { CK::ComponentBuilder()
+           .viewClass([UIView class])
+           .width(50)
+           .build() },
+     { CK::ComponentBuilder()
+           .viewClass([UIView class])
+           .height(50)
+           .build() },
+     { CK::ComponentBuilder()
+           .viewClass([UIView class])
+           .build() },
    }];
 
   YGNodeRef node = [component ygNode:{{300, 0}, {300, 300}}];
@@ -155,12 +167,24 @@
 {
   CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart}
     children:{
-      { [CKComponent newWithView:{[UIView class]} size:{}] },
-      { [CKComponent newWithView:{[UIView class]} size:{}], .alignSelf = CKFlexboxAlignSelfAuto },
-      { [CKComponent newWithView:{[UIView class]} size:{}], .alignSelf = CKFlexboxAlignSelfStart },
-      { [CKComponent newWithView:{[UIView class]} size:{}], .alignSelf = CKFlexboxAlignSelfEnd },
-      { [CKComponent newWithView:{[UIView class]} size:{}], .alignSelf = CKFlexboxAlignSelfStretch },
-      { [CKComponent newWithView:{[UIView class]} size:{}], .alignSelf = CKFlexboxAlignSelfCenter },
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build() },
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build(), .alignSelf = CKFlexboxAlignSelfAuto },
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build(), .alignSelf = CKFlexboxAlignSelfStart },
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build(), .alignSelf = CKFlexboxAlignSelfEnd },
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build(), .alignSelf = CKFlexboxAlignSelfStretch },
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build(), .alignSelf = CKFlexboxAlignSelfCenter },
     }];
   YGNodeRef node = [component ygNode:{{0, 0}, {0, 0}}];
 
@@ -182,10 +206,18 @@
 {
   CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart}
    children:{
-     { [CKComponent newWithView:{[UIView class]} size:{}] },
-     { [CKComponent newWithView:{[UIView class]} size:{}], .flexGrow = 1, .flexShrink = 0.5 },
-     { [CKComponent newWithView:{[UIView class]} size:{}], .flexShrink = 1 },
-     { [CKComponent newWithView:{[UIView class]} size:{}], .flexGrow = 0.5,},
+     { CK::ComponentBuilder()
+           .viewClass([UIView class])
+           .build() },
+     { CK::ComponentBuilder()
+           .viewClass([UIView class])
+           .build(), .flexGrow = 1, .flexShrink = 0.5 },
+     { CK::ComponentBuilder()
+           .viewClass([UIView class])
+           .build(), .flexShrink = 1 },
+     { CK::ComponentBuilder()
+           .viewClass([UIView class])
+           .build(), .flexGrow = 0.5,},
    }];
   YGNodeRef node = [component ygNode:{{0, 0}, {0, 0}}];
 
@@ -208,10 +240,18 @@
   CKFlexboxComponent *component = [CKFlexboxComponent newWithView:{} size:{}
     style:{.alignItems = CKFlexboxAlignItemsStart}
     children:{
-      { [CKComponent newWithView:{[UIView class]} size:{}] },
-      { [CKComponent newWithView:{[UIView class]} size:{}], .flexBasis = CKRelativeDimension::Auto(),},
-      { [CKComponent newWithView:{[UIView class]} size:{}], .flexBasis = 100 },
-      { [CKComponent newWithView:{[UIView class]} size:{}], .flexBasis = CKRelativeDimension::Percent(0.5)},
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build() },
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build(), .flexBasis = CKRelativeDimension::Auto(),},
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build(), .flexBasis = 100 },
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build(), .flexBasis = CKRelativeDimension::Percent(0.5)},
     }];
   YGNodeRef node = [component ygNode:{{0, 300}, {0, 300}}];
 
@@ -233,10 +273,18 @@
       .spacing = 5
     }
     children:{
-      { [CKComponent newWithView:{[UIView class]} size:{}], .spacingBefore = 15},
-      { [CKComponent newWithView:{[UIView class]} size:{}], .spacingAfter = 5},
-      { [CKComponent newWithView:{[UIView class]} size:{}], .spacingAfter = 5},
-      { [CKComponent newWithView:{[UIView class]} size:{}], .spacingBefore =-10, .spacingAfter = 10},
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build(), .spacingBefore = 15},
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build(), .spacingAfter = 5},
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build(), .spacingAfter = 5},
+      { CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .build(), .spacingBefore =-10, .spacingAfter = 10},
     }];
   YGNodeRef node = [component ygNode:{{0, 300}, {0, 300}}];
 
@@ -279,16 +327,30 @@
                           .spacing = 5
                         }
                         children:{
-                          { [CKCompositeComponent newWithComponent: [CKComponent newWithView:{[UIView class]} size:{}]], .spacingBefore = 15},
-                          { [CKComponent newWithView:{[UIView class]} size:{}], .spacingAfter = 5},
-                          { [CKComponent newWithView:{[UIView class]} size:{}], .spacingAfter = 5},
-                          { [CKComponent newWithView:{[UIView class]} size:{}], .spacingBefore =-10, .spacingAfter = 10},
+                          { [CKCompositeComponent newWithComponent: CK::ComponentBuilder()
+                                                                        .viewClass([UIView class])
+                                                                        .build()], .spacingBefore = 15},
+                          { CK::ComponentBuilder()
+                                .viewClass([UIView class])
+                                .build(), .spacingAfter = 5},
+                          { CK::ComponentBuilder()
+                                .viewClass([UIView class])
+                                .build(), .spacingAfter = 5},
+                          { CK::ComponentBuilder()
+                                .viewClass([UIView class])
+                                .build(), .spacingBefore =-10, .spacingAfter = 10},
                         }
                         usesDeepYogaTrees:usesDeepYogaTrees]]
        },
-       { [CKComponent newWithView:{[UIView class]} size:{}], .spacingAfter = 5},
-       { [CKComponent newWithView:{[UIView class]} size:{}], .spacingAfter = 5},
-       { [CKComponent newWithView:{[UIView class]} size:{}], .spacingBefore =-10, .spacingAfter = 10},
+       { CK::ComponentBuilder()
+             .viewClass([UIView class])
+             .build(), .spacingAfter = 5},
+       { CK::ComponentBuilder()
+             .viewClass([UIView class])
+             .build(), .spacingAfter = 5},
+       { CK::ComponentBuilder()
+             .viewClass([UIView class])
+             .build(), .spacingBefore =-10, .spacingAfter = 10},
      }
      usesDeepYogaTrees:usesDeepYogaTrees];
 

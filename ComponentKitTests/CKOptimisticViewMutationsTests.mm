@@ -26,7 +26,10 @@
 - (void)testOptimisticViewMutationIsTornDown
 {
   CKComponent *blueComponent =
-  [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{}];
+  CK::ComponentBuilder()
+      .viewClass([UIView class])
+      .backgroundColor([UIColor blueColor])
+      .build();
   CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
@@ -51,7 +54,10 @@
 - (void)testTwoSequentialOptimisticViewMutationsAreTornDown
 {
   CKComponent *blueComponent =
-  [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{}];
+  CK::ComponentBuilder()
+      .viewClass([UIView class])
+      .backgroundColor([UIColor blueColor])
+      .build();
   CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{

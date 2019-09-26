@@ -42,7 +42,8 @@ static NSString *const kTestModelForLifecycleComponent = @"kTestModelForLifecycl
   CKLifecycleTestComponent *lifecycleComponent = [model isEqual:kTestModelForLifecycleComponent]
   ? [CKLifecycleTestComponent newWithView:{} size:{}]
   : nil;
-  const auto c = [super newWithComponent:lifecycleComponent ?: [CKComponent newWithView:{} size:{}]];
+  const auto c = [super newWithComponent:lifecycleComponent ?: CK::ComponentBuilder()
+                                                                   .build()];
   if (c) {
     c->_model = model;
     c->_lifecycleComponent = lifecycleComponent;

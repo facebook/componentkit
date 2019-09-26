@@ -122,12 +122,10 @@
 - (void)test_WhenComponentBlocksImplicitAnimations_BoundsAnimationIsNotApplied
 {
   auto const f = ^CKComponent *{
-    return [CKComponent newWithView:{
-      [CKBoundsAnimationRecordingView class],
-      {},
-      {},
-      true /* blockImplicitAnimations */
-    } size:{}];
+    return CK::ComponentBuilder()
+               .viewClass([CKBoundsAnimationRecordingView class])
+               .blockImplicitAnimations(true)
+               .build();
   };
   auto const bcr1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, f);
   auto const l1 = [bcr1.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
@@ -175,7 +173,9 @@
             size:{}
             style:{.alignItems = CKFlexboxAlignItemsStretch}
             children:{
-              {[CKComponent newWithView:{[CKBoundsAnimationRecordingView class]} size:{}], .flexGrow = 1},
+              {CK::ComponentBuilder()
+                   .viewClass([CKBoundsAnimationRecordingView class])
+                   .build(), .flexGrow = 1},
             }];
   });
   const CKComponentLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
@@ -194,7 +194,9 @@
             size:{}
             style:{.alignItems = CKFlexboxAlignItemsStretch}
             children:{
-              {[CKComponent newWithView:{[CKBoundsAnimationRecordingView class]} size:{}], .flexGrow = 1},
+              {CK::ComponentBuilder()
+                   .viewClass([CKBoundsAnimationRecordingView class])
+                   .build(), .flexGrow = 1},
             }];
   });
   const CKComponentLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];

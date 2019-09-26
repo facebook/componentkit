@@ -40,7 +40,8 @@ static NSString *const kTestStateForLifecycleComponent = @"kTestStateForLifecycl
   CKLifecycleTestComponent *lifecycleComponent = [scope.state() isEqual:kTestStateForLifecycleComponent]
   ? [CKLifecycleTestComponent newWithView:{} size:{}]
   : nil;
-  const auto c = [super newWithComponent:lifecycleComponent ?: [CKComponent newWithView:{} size:{}]];
+  const auto c = [super newWithComponent:lifecycleComponent ?: CK::ComponentBuilder()
+                                                                   .build()];
   if (c) {
     c->_state = scope.state();
     c->_lifecycleComponent = lifecycleComponent;

@@ -47,22 +47,23 @@
 
 - (void)testThatMountingViewWithNSValueAttributeActuallyAppliesAttributeToView
 {
-  CKComponent *testComponent = [CKComponent newWithView:{[CKNSNumberView class], {
-      {@selector(setSelected:), @YES},
-      {CKComponentViewAttribute::LayerAttribute(@selector(setOpacity:)), @(0.5) },
-      {@selector(setTag:), @2},
-      {@selector(setPrimitiveChar:), @'D'},
-      {@selector(setPrimitiveShort:), @(short(1))},
-      {@selector(setPrimitiveInt:), @14},
-      {@selector(setPrimitiveInt32:), @9L},
-      {@selector(setPrimitiveInt64:), @5LL},
-      {@selector(setPrimitiveUChar:), [NSNumber numberWithUnsignedChar:'L']},
-      {@selector(setPrimitiveUShort:), [NSNumber numberWithUnsignedShort:23]},
-      {@selector(setPrimitiveUInt32:), @15UL},
-      {@selector(setPrimitiveUInt64:), @18ULL},
-      {@selector(setPrimitiveDouble:), @11.3},
-      {@selector(setPrimitiveFloat:), @21.1F},
-  }} size:{}];
+  CKComponent *testComponent = CK::ComponentBuilder()
+                                   .viewClass([CKNSNumberView class])
+                                   .attribute(@selector(setSelected:), @YES)
+                                   .attribute(CKComponentViewAttribute::LayerAttribute(@selector(setOpacity:)), @(0.5))
+                                   .attribute(@selector(setTag:), @2)
+                                   .attribute(@selector(setPrimitiveChar:), @'D')
+                                   .attribute(@selector(setPrimitiveShort:), @(short(1)))
+                                   .attribute(@selector(setPrimitiveInt:), @14)
+                                   .attribute(@selector(setPrimitiveInt32:), @9L)
+                                   .attribute(@selector(setPrimitiveInt64:), @5LL)
+                                   .attribute(@selector(setPrimitiveUChar:), [NSNumber numberWithUnsignedChar:'L'])
+                                   .attribute(@selector(setPrimitiveUShort:), [NSNumber numberWithUnsignedShort:23])
+                                   .attribute(@selector(setPrimitiveUInt32:), @15UL)
+                                   .attribute(@selector(setPrimitiveUInt64:), @18ULL)
+                                   .attribute(@selector(setPrimitiveDouble:), @11.3)
+                                   .attribute(@selector(setPrimitiveFloat:), @21.1F)
+                                   .build();
   CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
@@ -78,22 +79,23 @@
 
 - (void)testThatMountingViewWithPrimitiveAttributeActuallyAppliesAttributeToView
 {
-  CKComponent *testComponent = [CKComponent newWithView:{[CKNSNumberView class], {
-    {@selector(setSelected:), YES},
-    {CKComponentViewAttribute::LayerAttribute(@selector(setOpacity:)), @0.5},
-    {@selector(setTag:), 2},
-    {@selector(setPrimitiveChar:), 'D'},
-    {@selector(setPrimitiveShort:), short(1)},
-    {@selector(setPrimitiveInt:), 14},
-    {@selector(setPrimitiveInt32:), 9L},
-    {@selector(setPrimitiveInt64:), 5LL},
-    {@selector(setPrimitiveUChar:), (unsigned char)('L')},
-    {@selector(setPrimitiveUShort:), (ushort)(23)},
-    {@selector(setPrimitiveUInt32:), 15UL},
-    {@selector(setPrimitiveUInt64:), 18ULL},
-    {@selector(setPrimitiveDouble:), 11.3},
-    {@selector(setPrimitiveFloat:), 21.1F},
-  }} size:{}];
+  CKComponent *testComponent = CK::ComponentBuilder()
+                                   .viewClass([CKNSNumberView class])
+                                   .attribute(@selector(setSelected:), YES)
+                                   .attribute(CKComponentViewAttribute::LayerAttribute(@selector(setOpacity:)), @0.5)
+                                   .attribute(@selector(setTag:), 2)
+                                   .attribute(@selector(setPrimitiveChar:), 'D')
+                                   .attribute(@selector(setPrimitiveShort:), short(1))
+                                   .attribute(@selector(setPrimitiveInt:), 14)
+                                   .attribute(@selector(setPrimitiveInt32:), 9L)
+                                   .attribute(@selector(setPrimitiveInt64:), 5LL)
+                                   .attribute(@selector(setPrimitiveUChar:), (unsigned char)('L'))
+                                   .attribute(@selector(setPrimitiveUShort:), (ushort)(23))
+                                   .attribute(@selector(setPrimitiveUInt32:), 15UL)
+                                   .attribute(@selector(setPrimitiveUInt64:), 18ULL)
+                                   .attribute(@selector(setPrimitiveDouble:), 11.3)
+                                   .attribute(@selector(setPrimitiveFloat:), 21.1F)
+                                   .build();
   CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
@@ -110,10 +112,11 @@
 
 - (void)testThatRecyclingViewWithSameAttributeValueDoesNotReApplyAttributeToView
 {
-  CKComponent *testComponent1 = [CKComponent newWithView:{[CKSetterCounterView class], {
-    {@selector(setTitle:), @"Test"},
-    {@selector(setBackgroundColor:), [UIColor blueColor]},
-  }} size:{}];
+  CKComponent *testComponent1 = CK::ComponentBuilder()
+                                    .viewClass([CKSetterCounterView class])
+                                    .attribute(@selector(setTitle:), @"Test")
+                                    .backgroundColor([UIColor blueColor])
+                                    .build();
   CKComponentLifecycleTestHelper *componentLifecycleTestController1 = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                               sizeRangeProvider:nil];
   [componentLifecycleTestController1 updateWithState:{
@@ -123,11 +126,11 @@
   UIView *view = [UIView new];
   [componentLifecycleTestController1 attachToView:view];
 
-  CKComponent *testComponent2 = [CKComponent newWithView:{
-    [CKSetterCounterView class], {
-      {@selector(setTitle:), @"Test"},
-      {@selector(setBackgroundColor:), [UIColor redColor]},
-    }} size:{}];
+  CKComponent *testComponent2 = CK::ComponentBuilder()
+                                    .viewClass([CKSetterCounterView class])
+                                    .attribute(@selector(setTitle:), @"Test")
+                                    .backgroundColor([UIColor redColor])
+                                    .build();
   CKComponentLifecycleTestHelper *componentLifecycleTestController2 = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                               sizeRangeProvider:nil];
   [componentLifecycleTestController2 updateWithState:{
@@ -142,9 +145,10 @@
 
 - (void)testThatRecyclingViewWithDistinctAttributeValueDoesNotHideAndReShowView
 {
-  CKComponent *testComponent1 = [CKComponent newWithView:{[CKHidingCounterView class], {
-    {@selector(setBackgroundColor:), [UIColor blueColor]},
-  }} size:{}];
+  CKComponent *testComponent1 = CK::ComponentBuilder()
+                                    .viewClass([CKHidingCounterView class])
+                                    .backgroundColor([UIColor blueColor])
+                                    .build();
   CKComponentLifecycleTestHelper *componentLifecycleTestController1 = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController1 updateWithState:{
@@ -154,9 +158,10 @@
   UIView *view = [UIView new];
   [componentLifecycleTestController1 attachToView:view];
 
-  CKComponent *testComponent2 = [CKComponent newWithView:{[CKHidingCounterView class], {
-      {@selector(setBackgroundColor:), [UIColor redColor]},
-    }} size:{}];
+  CKComponent *testComponent2 = CK::ComponentBuilder()
+                                    .viewClass([CKHidingCounterView class])
+                                    .backgroundColor([UIColor redColor])
+                                    .build();
   CKComponentLifecycleTestHelper *componentLifecycleTestController2 = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController2 updateWithState:{
@@ -178,7 +183,10 @@
     [unappliedValues addObject:val];
   });
 
-  CKComponent *testComponent1 = [CKComponent newWithView:{[UIView class], {{attrWithUnapplicator, @1}}} size:{}];
+  CKComponent *testComponent1 = CK::ComponentBuilder()
+                                    .viewClass([UIView class])
+                                    .attribute(attrWithUnapplicator, @1)
+                                    .build();
 
   CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
@@ -192,7 +200,10 @@
   XCTAssertEqualObjects(appliedValues, [NSSet setWithObject:@1], @"Expected @1 to be applied");
   XCTAssertEqualObjects(unappliedValues, [NSSet set], @"Expected nothing to be unapplied");
 
-  CKComponent *testComponent2 = [CKComponent newWithView:{[UIView class], {{attrWithUnapplicator, @2}}} size:{}];
+  CKComponent *testComponent2 = CK::ComponentBuilder()
+                                    .viewClass([UIView class])
+                                    .attribute(attrWithUnapplicator, @2)
+                                    .build();
   [componentLifecycleTestController updateWithState:{
     .componentLayout = [testComponent2 layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
   }];
@@ -218,7 +229,10 @@
     }
   };
 
-  CKComponent *testComponent1 = [CKComponent newWithView:{[UIView class], {{attrWithUpdater, @1}}} size:{}];
+  CKComponent *testComponent1 = CK::ComponentBuilder()
+                                    .viewClass([UIView class])
+                                    .attribute(attrWithUpdater, @1)
+                                    .build();
 
   CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
@@ -232,7 +246,10 @@
   XCTAssertTrue(appliedValues.size() == 1 && [appliedValues[0] isEqual:@1], @"Expected @1 to be applied");
   XCTAssertEqual(updatedValues.size(), (size_t)0, @"Expected no updates yet");
 
-  CKComponent *testComponent2 = [CKComponent newWithView:{[UIView class], {{attrWithUpdater, @2}}} size:{}];
+  CKComponent *testComponent2 = CK::ComponentBuilder()
+                                    .viewClass([UIView class])
+                                    .attribute(attrWithUpdater, @2)
+                                    .build();
   [componentLifecycleTestController updateWithState:{
     .componentLayout = [testComponent2 layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
   }];
@@ -271,7 +288,10 @@
     }
   };
 
-  CKComponent *testComponent1 = [CKComponent newWithView:{[UIView class], {{attr, @1}}} size:{}];
+  CKComponent *testComponent1 = CK::ComponentBuilder()
+                                    .viewClass([UIView class])
+                                    .attribute(attr, @1)
+                                    .build();
 
   CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
                                                                                                                              sizeRangeProvider:nil];
@@ -287,7 +307,9 @@
   XCTAssertEqualObjects(unappliedValues, [NSSet set], @"Nothing should be unapplied yet");
   XCTAssertEqual(updateCount, 0u, @"Nothing should be updated");
 
-  CKComponent *testComponent2 = [CKComponent newWithView:{[UIView class], {}} size:{}];
+  CKComponent *testComponent2 = CK::ComponentBuilder()
+                                    .viewClass([UIView class])
+                                    .build();
   [componentLifecycleTestController updateWithState:{
     .componentLayout = [testComponent2 layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
   }];
