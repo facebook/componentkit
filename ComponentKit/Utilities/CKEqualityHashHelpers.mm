@@ -10,11 +10,6 @@
 
 #import "CKEqualityHashHelpers.h"
 
-#import <functional>
-#import <objc/runtime.h>
-#import <stdio.h>
-#import <string>
-
 
 NSUInteger CKIntegerArrayHash(const NSUInteger *subhashes, NSUInteger count)
 {

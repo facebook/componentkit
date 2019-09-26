@@ -9,12 +9,7 @@
  */
 
 #import "CKComponentGestureActions.h"
-#import "CKComponentGestureActionHelper.h"
 
-#import <vector>
-#import <objc/runtime.h>
-
-#import "CKAssert.h"
 #import "CKComponent+UIView.h"
 #import "CKInternalHelpers.h"
 

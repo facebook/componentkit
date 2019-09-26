@@ -11,8 +11,6 @@
 #import "CKComponentSize.h"
 #import "CKEqualityHashHelpers.h"
 
-#import <ComponentKit/CKAssert.h>
-
 CKComponentSize CKComponentSize::fromCGSize(CGSize size) noexcept
 {
   return {size.width, size.height};

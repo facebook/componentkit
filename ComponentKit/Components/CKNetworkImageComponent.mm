@@ -10,8 +10,6 @@
 
 #import "CKNetworkImageComponent.h"
 
-#import <Availability.h>
-
 @interface CKNetworkImageSpecifier : NSObject
 - (instancetype)initWithURL:(NSURL *)url
                defaultImage:(UIImage *)defaultImage

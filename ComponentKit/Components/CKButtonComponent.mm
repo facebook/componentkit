@@ -12,8 +12,6 @@
 
 #import <array>
 
-#import <ComponentKit/CKAssert.h>
-
 #import "CKInternalHelpers.h"
 #import "CKComponentSubclass.h"
 

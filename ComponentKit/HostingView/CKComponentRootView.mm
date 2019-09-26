@@ -11,7 +11,6 @@
 #import "CKComponentRootView.h"
 #import "CKComponentRootViewInternal.h"
 
-#import "CKAssert.h"
 #import "CKComponentAttachControllerInternal.h"
 
 @implementation CKComponentRootView {

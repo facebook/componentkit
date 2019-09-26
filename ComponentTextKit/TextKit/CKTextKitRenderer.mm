@@ -15,7 +15,6 @@
 #import <ComponentKit/CKTextKitContext.h>
 #import <ComponentKit/CKTextKitShadower.h>
 #import <ComponentKit/CKTextKitTailTruncater.h>
-#import <ComponentKit/CKTextKitTruncating.h>
 
 static NSCharacterSet *_defaultAvoidTruncationCharacterSet()
 {

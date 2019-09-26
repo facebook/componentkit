@@ -10,8 +10,6 @@
 
 #import "CKComponentAccessibility.h"
 
-#import <ComponentKit/CKAssert.h>
-
 #import "ComponentViewManager.h"
 #import "CKComponentViewConfiguration.h"
 

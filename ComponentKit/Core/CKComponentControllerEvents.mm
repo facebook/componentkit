@@ -12,7 +12,6 @@
 
 #import "CKInternalHelpers.h"
 #import "CKComponentController.h"
-#import "CKComponentControllerProtocol.h"
 
 BOOL CKComponentControllerAppearanceEventPredicate(id<CKComponentControllerProtocol> controller)
 {

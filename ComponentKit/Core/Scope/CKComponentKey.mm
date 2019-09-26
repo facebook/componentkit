@@ -10,8 +10,6 @@
 
 #import "CKComponentKey.h"
 
-#import "CKAssert.h"
-
 CKComponentKey::CKComponentKey(id<NSObject> key) noexcept
 : _threadLocalScope(CKThreadLocalComponentScope::currentScope()), _key(key)
 {

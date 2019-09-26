@@ -11,9 +11,7 @@
 #import "CKStaticLayoutComponent.h"
 
 #import <ComponentKit/CKComponentInternal.h>
-#import <ComponentKit/CKMacros.h>
 
-#import "ComponentUtilities.h"
 #import "CKComponentSubclass.h"
 
 @implementation CKStaticLayoutComponent

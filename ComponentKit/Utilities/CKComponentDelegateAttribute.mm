@@ -10,11 +10,6 @@
 
 #import "CKComponentDelegateAttribute.h"
 
-#import <vector>
-#import <objc/runtime.h>
-
-#import "CKAssert.h"
-#import "CKComponent+UIView.h"
 #import "CKComponentSubclass.h"
 
 CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL selector,

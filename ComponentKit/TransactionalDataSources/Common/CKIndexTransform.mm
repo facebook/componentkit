@@ -2,8 +2,6 @@
 
 #import "CKIndexTransform.h"
 
-#import <algorithm>
-
 auto CK::IndexTransform::applyOffsetToIndex(NSInteger index) const -> NSInteger
 {
   const auto maybeRangeOffsetForIdx = std::find_if(_rangeOffsets.begin(), _rangeOffsets.end(), [=](auto r) {

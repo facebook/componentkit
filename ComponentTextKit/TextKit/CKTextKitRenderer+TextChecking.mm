@@ -10,7 +10,6 @@
 
 #import "CKTextKitRenderer+TextChecking.h"
 
-#import <ComponentKit/CKTextKitAttributes.h>
 #import <ComponentKit/CKTextKitEntityAttribute.h>
 #import <ComponentKit/CKTextKitRenderer+Positioning.h>
 #import <ComponentKit/CKTextKitTailTruncater.h>

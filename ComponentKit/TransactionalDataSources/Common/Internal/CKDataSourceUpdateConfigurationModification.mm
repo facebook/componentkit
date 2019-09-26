@@ -16,13 +16,9 @@
 #import "CKDataSourceChange.h"
 #import "CKDataSourceItemInternal.h"
 #import "CKDataSourceAppliedChanges.h"
-#import "CKBuildComponent.h"
 #import "CKComponentControllerEvents.h"
 #import "CKComponentControllerHelper.h"
 #import "CKComponentLayout.h"
-#import "CKComponentProvider.h"
-#import "CKComponentScopeFrame.h"
-#import "CKComponentScopeRoot.h"
 #import "CKDataSourceModificationHelper.h"
 
 using namespace CKComponentControllerHelper;

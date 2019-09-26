@@ -13,8 +13,6 @@
 #import <ComponentKit/CKEqualityHashHelpers.h>
 #import <ComponentKit/CKMacros.h>
 
-#include <functional>
-
 NSString *const CKTextKitTruncationAttributeName = @"ck_truncation";
 NSString *const CKTextKitEntityAttributeName = @"ck_entity";
 

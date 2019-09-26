@@ -10,11 +10,6 @@
 
 #import "CKTreeNodeWithChild.h"
 
-#import <ComponentKit/CKComponent.h>
-#import <ComponentKit/CKComponentInternal.h>
-
-#include <tuple>
-
 @implementation CKTreeNodeWithChild
 
 - (std::vector<id<CKTreeNodeProtocol>>)children

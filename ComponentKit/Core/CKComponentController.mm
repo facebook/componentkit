@@ -11,8 +11,6 @@
 #import "CKComponentController.h"
 #import "CKComponentControllerInternal.h"
 
-#import <ComponentKit/CKAssert.h>
-
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 

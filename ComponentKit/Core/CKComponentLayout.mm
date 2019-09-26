@@ -11,10 +11,6 @@
 #import "CKComponentLayout.h"
 
 #import <stack>
-#import <unordered_map>
-
-#import <CoreGraphics/CoreGraphics.h>
-#import <UIKit/UIKit.h>
 
 #import "ComponentLayoutContext.h"
 #import "ComponentUtilities.h"

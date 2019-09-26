@@ -16,8 +16,6 @@
 #import "CKStatefulViewComponent.h"
 #import "CKStatefulViewReusePool.h"
 
-#import <objc/runtime.h>
-
 @implementation CKStatefulViewComponentController
 {
   UIView *_statefulView;

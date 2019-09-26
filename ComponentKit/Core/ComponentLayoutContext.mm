@@ -11,7 +11,6 @@
 #import "ComponentLayoutContext.h"
 
 #import <pthread.h>
-#import <stack>
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKComponent.h>

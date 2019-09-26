@@ -10,8 +10,6 @@
 
 #import "CKSizeRange.h"
 
-#import <functional>
-
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKEqualityHashHelpers.h>
 #import <ComponentKit/CKMacros.h>

@@ -10,7 +10,6 @@
 
 #import "CKAutoSizedImageComponent.h"
 
-#import "CKComponentSize.h"
 #import "CKImageComponent.h"
 
 @implementation CKAutoSizedImageComponent

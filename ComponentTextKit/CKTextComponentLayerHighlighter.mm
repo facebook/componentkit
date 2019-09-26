@@ -15,7 +15,6 @@
 #import <ComponentKit/CKHighlightOverlayLayer.h>
 
 #import <ComponentKit/CKTextKitRenderer+Positioning.h>
-#import <ComponentKit/CKTextKitRenderer.h>
 
 #import "CKTextComponentLayer.h"
 

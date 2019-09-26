@@ -10,9 +10,7 @@
 
 #import "CKRenderLayoutWithChildrenComponent.h"
 
-#import "CKBuildComponent.h"
 #import "CKRenderHelpers.h"
-#import "CKComponentInternal.h"
 
 @implementation CKRenderLayoutWithChildrenComponent
 {

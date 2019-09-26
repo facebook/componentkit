@@ -11,11 +11,8 @@
 #import "CKComponentViewAttribute.h"
 
 #import <objc/runtime.h>
-#import <unordered_map>
 
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKEqualityHashHelpers.h>
 #import <ComponentKit/CKMacros.h>
 
 /**

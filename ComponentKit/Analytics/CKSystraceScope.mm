@@ -11,9 +11,6 @@
 #import "CKSystraceScope.h"
 
 #import "CKAnalyticsListener.h"
-#import "CKComponentScopeRoot.h"
-#import "CKGlobalConfig.h"
-#import "CKThreadLocalComponentScope.h"
 
 CKSystraceScope::~CKSystraceScope()
 {

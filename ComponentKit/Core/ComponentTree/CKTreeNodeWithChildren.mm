@@ -10,14 +10,6 @@
 
 #import "CKTreeNodeWithChildren.h"
 
-#import <ComponentKit/CKComponent.h>
-#import <ComponentKit/CKComponentInternal.h>
-#import <ComponentKit/CKEqualityHashHelpers.h>
-
-#include <tuple>
-
-#import "CKMutex.h"
-
 typedef std::tuple<Class, id<NSObject>> CKTreeNodeClassType;
 
 struct CKClassTypeComparator {

@@ -10,9 +10,6 @@
 
 #import "CKTextComponent.h"
 
-#import <memory>
-#import <vector>
-
 #import <ComponentKit/CKComponentInternal.h>
 
 #import <ComponentKit/CKTextKitRenderer.h>

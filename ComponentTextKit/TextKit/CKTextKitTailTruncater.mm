@@ -8,8 +8,6 @@
  *
  */
 
-#import <ComponentKit/CKAssert.h>
-
 #import <ComponentKit/CKTextKitContext.h>
 #import <ComponentKit/CKTextKitTailTruncater.h>
 

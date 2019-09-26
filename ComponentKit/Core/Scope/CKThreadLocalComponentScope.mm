@@ -11,9 +11,6 @@
 #import "CKThreadLocalComponentScope.h"
 
 #import <pthread.h>
-#import <stack>
-
-#import <ComponentKit/CKAssert.h>
 
 #import "CKComponentScopeRoot.h"
 #import "CKScopeTreeNode.h"

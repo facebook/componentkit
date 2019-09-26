@@ -10,11 +10,6 @@
 
 #import "CKDataSourceModificationHelper.h"
 
-#import <ComponentKit/CKBuildComponent.h>
-#import <ComponentKit/CKComponentContext.h>
-#import <ComponentKit/CKComponentController.h>
-#import <ComponentKit/CKComponentProvider.h>
-#import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceItemInternal.h>
 
 CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,

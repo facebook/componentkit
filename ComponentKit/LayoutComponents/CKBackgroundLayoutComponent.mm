@@ -10,8 +10,6 @@
 
 #import "CKBackgroundLayoutComponent.h"
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentPerfScope.h>
 #import "CKComponentSubclass.h"

@@ -15,7 +15,6 @@
 
 #import "CKTextComponentLayer.h"
 #import "CKTextComponentLayerHighlighter.h"
-#import "CKTextComponentViewInternal.h"
 
 @implementation CKTextComponentViewControlTracker
 {

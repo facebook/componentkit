@@ -12,7 +12,6 @@
 
 #import "ComponentUtilities.h"
 #import "CKEqualityHashHelpers.h"
-#import "CKMacros.h"
 
 @implementation CKDataSourceAppliedChanges
 

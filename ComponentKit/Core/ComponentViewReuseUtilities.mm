@@ -11,7 +11,6 @@
 #import "ComponentViewReuseUtilities.h"
 
 #import <objc/runtime.h>
-#import <unordered_map>
 
 #import "CKAssert.h"
 #import "CKComponentViewConfiguration.h"

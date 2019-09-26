@@ -10,7 +10,6 @@
 
 #import "CKComponentAnimationsController.h"
 
-#import <ComponentKit/CKAssert.h>
 #import <ComponentKit/ComponentUtilities.h>
 
 namespace CK {

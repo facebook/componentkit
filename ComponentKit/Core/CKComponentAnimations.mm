@@ -13,10 +13,8 @@
 #import "CKCasting.h"
 #import "CKCollection.h"
 #import "CKComponentEvents.h"
-#import "CKComponentScopeRoot.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
-#import "CKInternalHelpers.h"
 
 namespace CK {
   static auto getScopeHandle(id<CKComponentProtocol> const c) {

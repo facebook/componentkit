@@ -18,7 +18,6 @@
 #import "CKComponentRootViewInternal.h"
 #import "CKComponentSizeRangeProviding.h"
 #import "CKDelayedNonNull.h"
-#import "CKOptional.h"
 
 using namespace CK;
 

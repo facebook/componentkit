@@ -11,7 +11,6 @@
 #import "CKComponentPerfScope.h"
 
 #import "CKAnalyticsListener.h"
-#import "CKComponentScopeRoot.h"
 #import "CKThreadLocalComponentScope.h"
 
 CKComponentPerfScope::~CKComponentPerfScope()

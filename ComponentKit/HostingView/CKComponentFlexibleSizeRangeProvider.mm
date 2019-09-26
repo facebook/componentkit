@@ -10,7 +10,6 @@
 
 #import "CKComponentFlexibleSizeRangeProvider.h"
 
-#import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
 
 @implementation CKComponentFlexibleSizeRangeProvider {

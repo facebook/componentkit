@@ -10,9 +10,7 @@
 
 #import "CKCompositeComponent.h"
 
-#import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKComponentDescriptionHelper.h>
-#import <ComponentKit/CKMacros.h>
 
 #import "CKInternalHelpers.h"
 #import "CKComponentInternal.h"

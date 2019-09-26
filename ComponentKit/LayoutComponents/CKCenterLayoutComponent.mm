@@ -14,7 +14,6 @@
 
 #import "CKInternalHelpers.h"
 #import "CKComponentSubclass.h"
-#import "ComponentUtilities.h"
 
 @implementation CKCenterLayoutComponent
 {

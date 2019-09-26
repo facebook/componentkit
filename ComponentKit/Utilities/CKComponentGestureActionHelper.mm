@@ -10,7 +10,6 @@
 
 #import "CKComponentGestureActionHelper.h"
 #import "CKComponentGestureActionsInternal.h"
-#import <ComponentKit/CKAction.h>
 #import "CKComponent+UIView.h"
 #import "CKMutex.h"
 
