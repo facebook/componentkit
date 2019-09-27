@@ -53,10 +53,23 @@
 /** Invoked immediately before the component relinquishes its view to be reused by other components. */
 - (void)componentWillRelinquishView NS_REQUIRES_SUPER;
 
-/** Corresponds to -willDisplayCell:for{Row|Item}AtIndexPath:. Not invoked for CKComponentHostingViews. */
+/**
+ As suggested in name, this lifecycle method will only be called when the entire component tree will appear on screen.
+ That means if a component tree has already appeared on screen and it's still visible, a component that is added to this
+ component tree hierarchy will not have this lifecycle method called.
+ NOTE:
+ - In the context of `UICollectionView`, this corresponds to `willDisplayCell:forItemAtIndexPath:`.
+ - In the context of `CKComponentHostingView`, this corresponds to `hostingViewWillAppear`.
+ */
 - (void)componentTreeWillAppear NS_REQUIRES_SUPER;
 
-/** Corresponds to -didEndDisplayingCell:for{Row|Item}AtIndexPath:. Not invoked for CKComponentHostingViews. */
+/**
+ As suggested in name, this lifecycle method will only be called when the entire component tree did disappear.
+ That means if a component is removed from its component tree hierarchy, this lifecycle method will not be called.
+ NOTE:
+ - In the context of `UICollectionView`, this corresponds to `didEndDisplayingCell:forItemAtIndexPath:`.
+ - In the context of `CKComponentHostingView`, this corresponds to `hostingViewDidDisappear`.
+ */
 - (void)componentTreeDidDisappear NS_REQUIRES_SUPER;
 
 /** Called on the main thread prior to controller deallocation **/
