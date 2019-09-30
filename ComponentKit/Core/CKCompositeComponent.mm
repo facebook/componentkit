@@ -65,6 +65,12 @@
   return CKComponentDescriptionWithChildren([super description], [NSArray arrayWithObjects:_child, nil]);
 }
 
+// CKCompositeComponent cannot have custom size and it uses its child layout
+- (CKComponentSize)size
+{
+  return [_child size];
+}
+
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                     params:(const CKBuildComponentTreeParams &)params
