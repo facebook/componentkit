@@ -232,7 +232,8 @@ static NSUInteger _globalApplyChangeCount = 0;
 
 static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
 {
-  return [CKComponent newWithView:{} size:{}];
+  return CK::ComponentBuilder()
+             .build();
 }
 
 #pragma mark - CKAnalyticsListener
