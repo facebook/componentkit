@@ -131,7 +131,7 @@
   CKComponentScopeRoot *previousRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKComponentScopeRoot *newRoot;
   CKComponentScopeHandle *innerComponentHandle;
-  
+
   // Simulate component creation with 3 components: CKCompositeComponent -> CKRenderComponent -> CKComponent
   {
     // Create root component
@@ -139,7 +139,7 @@
     newRoot = threadScope.newScopeRoot;
     CKComponentScope scope([CKCompositeComponent class], @"moose");
     id<CKComponentScopeFrameProtocol> f1 = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
-    
+
     // Create render component.
     CKTreeNode *node = [[CKTreeNode alloc] initWithComponent:[CKRenderComponent new]
                                                       parent:newRoot.rootNode.node()
@@ -147,7 +147,7 @@
                                                    scopeRoot:newRoot
                                                 stateUpdates:{}];
     [CKScopeTreeNode willBuildComponentTreeWithTreeNode:node];
-    
+
     XCTAssertTrue(CKThreadLocalComponentScope::currentScope()->stack.top().frame != f1);
     id<CKComponentScopeFrameProtocol> f2 = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
     {
@@ -155,46 +155,46 @@
       CKComponentScope innerScope([CKComponent class], @"macaque", ^{
         return @1;
       });
-      
+
       innerComponentHandle = innerScope.scopeHandle();
-      
+
       XCTAssertTrue(CKThreadLocalComponentScope::currentScope()->stack.top().frame != f2);
     }
-    
+
     [CKScopeTreeNode didBuildComponentTreeWithNode:node];
   }
-  
+
   // Simulate component creation whe the render one is being reused.
   CKComponentScopeRoot *newRoot2;
   {
     CKThreadLocalComponentScope threadScope(newRoot, {}, _unifyComponentTrees);
     newRoot2 = threadScope.newScopeRoot;
     CKComponentScope scope([CKCompositeComponent class], @"moose");
-    
+
     // Create render component.
     CKTreeNode *node = [[CKTreeNode alloc] initWithComponent:[CKRenderComponent new]
                                                       parent:newRoot2.rootNode.node()
                                               previousParent:newRoot.rootNode.node()
                                                    scopeRoot:newRoot2
                                                 stateUpdates:{}];
-    
+
     [CKScopeTreeNode didReuseRenderWithTreeNode:node];
   }
-  
+
   // Simulate component creation with 3 a state update on the leaf and make sure it get the correct value.
   CKComponentStateUpdateMap stateUpdates;
   NSNumber *newState = @2;
   stateUpdates[innerComponentHandle].push_back(^(id){
     return newState;
   });
-  
+
   CKComponentScopeRoot *newRoot3;
   {
     // Create root component
     CKThreadLocalComponentScope threadScope(newRoot2, stateUpdates);
     newRoot3 = threadScope.newScopeRoot;
     CKComponentScope scope([CKCompositeComponent class], @"moose");
-    
+
     // Create render component.
     CKTreeNode *node = [[CKTreeNode alloc] initWithComponent:[CKRenderComponent new]
                                                       parent:newRoot3.rootNode.node()
@@ -207,11 +207,11 @@
       CKComponentScope innerScope([CKComponent class], @"macaque", ^{
         return @1;
       });
-      
+
       NSNumber *stateFromScope = innerScope.state();
       XCTAssertTrue(stateFromScope == newState);
     }
-    
+
     [CKScopeTreeNode didBuildComponentTreeWithNode:node];
   }
 }
@@ -328,6 +328,21 @@
       CKComponentScope scope([CKCompositeComponent class], @"chamber", ^{ return @"door"; });
       id state = scope.state();
       XCTAssertEqualObjects(state, @"door");
+    }
+  }
+}
+
+#pragma mark - Test Component Scope Identifier
+
+- (void)testComponentScopeIdentifierIsSameAsScopeHandleGlobalIdentifier
+{
+  CKComponentScopeRoot *root1 = CKComponentScopeRootWithDefaultPredicates(nil, nil);
+  {
+    CKThreadLocalComponentScope threadScope(root1, {}, _unifyComponentTrees);
+    {
+      CKComponentScope scope([CKCompositeComponent class], @"macaque");
+      int32_t globalIdentifier = CKThreadLocalComponentScope::currentScope()->stack.top().frame.scopeHandle.globalIdentifier;
+      XCTAssertEqual(globalIdentifier, scope.identifier());
     }
   }
 }
@@ -511,18 +526,18 @@ static BOOL testComponentProtocolPredicate(id<CKComponentProtocol> component)
                                 componentPredicates:{&testComponentProtocolPredicate}
                                 componentControllerPredicates:{}];
   CKThreadLocalComponentScope threadScope(root, {}, _unifyComponentTrees);
-  
+
   TestComponentWithScopedProtocol *c = [TestComponentWithScopedProtocol new];
   [root registerComponent:c];
   [root registerComponent:c];
-  
+
   __block NSInteger numberOfComponents = 0;
   [root
    enumerateComponentsMatchingPredicate:&testComponentProtocolPredicate
    block:^(id<CKComponentProtocol> component) {
      ++numberOfComponents;
    }];
-  
+
   XCTAssert(numberOfComponents == 1, @"Should have deduplicate the component");
 }
 
@@ -692,18 +707,18 @@ static BOOL testComponentControllerProtocolPredicate(id<CKComponentControllerPro
                                 componentPredicates:{}
                                 componentControllerPredicates:{&testComponentControllerProtocolPredicate}];
   CKThreadLocalComponentScope threadScope(root, {}, _unifyComponentTrees);
-  
+
   TestComponentControllerWithScopedProtocol *c = [TestComponentControllerWithScopedProtocol new];
   [root registerComponentController:c];
   [root registerComponentController:c];
-  
+
   __block NSInteger numberOfComponentControllers = 0;
   [root
    enumerateComponentControllersMatchingPredicate:&testComponentControllerProtocolPredicate
    block:^(id<CKComponentControllerProtocol> componentController) {
      ++numberOfComponentControllers;
    }];
-  
+
   XCTAssert(numberOfComponentControllers == 1, @"Should have deduplicate the component controller");
 }
 
