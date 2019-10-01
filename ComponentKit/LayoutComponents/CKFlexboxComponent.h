@@ -255,6 +255,14 @@ struct CKFlexboxComponentStyle {
    The default is to follow the application's layout direction, but you can force a LTR or RTL layout by changing this.
    */
   CKLayoutDirection layoutDirection = CKLayoutDirectionApplicationDirection;
+  
+  /**
+   If set to YES and the child component is back by yoga, will reuse the child's yoga node and avoid allocating new one. This will in turn
+   make the yoga trees deeper.
+   
+   If set to NO, will allocate a yoga node for every single child even it is backed by yoga as well
+   */
+  BOOL useDeepYogaTrees = NO;
 };
 
 struct CKFlexboxComponentChild {
@@ -350,19 +358,6 @@ extern const struct CKStackComponentLayoutExtraKeys {
                        size:(const CKComponentSize &)size
                       style:(const CKFlexboxComponentStyle &)style
                    children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children;
-
-/**
- @param view A view configuration, or {} for no view.
- @param size A size, or {} for the default size.
- @param style Specifies how children are laid out.
- @param children A vector of children components.
- @param usesDeepYogaTrees A flag to enable deep yoga trees.
- */
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                      size:(const CKComponentSize &)size
-                     style:(const CKFlexboxComponentStyle &)style
-                  children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
-         usesDeepYogaTrees:(BOOL)usesDeepYogaTrees;
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;

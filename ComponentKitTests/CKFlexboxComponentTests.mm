@@ -18,23 +18,15 @@
 
 @interface CKFlexboxComponent (Test)
 
-- (BOOL)usesDeepYogaTrees;
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize;
 - (CKComponentLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize;
 
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size
-                      style:(const CKFlexboxComponentStyle &)style
-                   children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
-          usesDeepYogaTrees:(BOOL)usesDeepYogaTrees;
 @end
 
 @interface CKFlexboxComponentTests : XCTestCase
 @end
 
 @implementation CKFlexboxComponentTests
-{
-}
 
 - (void)testSizeTranslation
 {
@@ -307,13 +299,14 @@
 
 - (void)testSameLayoutIsCalculatedWithAndWithoutDeepYogaTrees
 {
-  CKComponentLayout(^buildComponentTreeAndComputeLayout)(BOOL) = ^CKComponentLayout(BOOL usesDeepYogaTrees) {
+  CKComponentLayout(^buildComponentTreeAndComputeLayout)(BOOL) = ^CKComponentLayout(BOOL useDeepYogaTrees) {
     CKFlexboxComponent *component =
     [CKFlexboxComponent
      newWithView:{} size:{}
      style:{
        .alignItems = CKFlexboxAlignItemsStart,
-       .spacing = 5
+       .spacing = 5,
+       .useDeepYogaTrees = useDeepYogaTrees,
      }
      children:{
        {
@@ -324,7 +317,8 @@
                         size:{}
                         style:{
                           .alignItems = CKFlexboxAlignItemsStart,
-                          .spacing = 5
+                          .spacing = 5,
+                          .useDeepYogaTrees = useDeepYogaTrees,
                         }
                         children:{
                           { [CKCompositeComponent newWithComponent: CK::ComponentBuilder()
@@ -339,8 +333,7 @@
                           { CK::ComponentBuilder()
                                 .viewClass([UIView class])
                                 .build(), .spacingBefore =-10, .spacingAfter = 10},
-                        }
-                        usesDeepYogaTrees:usesDeepYogaTrees]]
+                        }]]
        },
        { CK::ComponentBuilder()
              .viewClass([UIView class])
@@ -351,8 +344,7 @@
        { CK::ComponentBuilder()
              .viewClass([UIView class])
              .build(), .spacingBefore =-10, .spacingAfter = 10},
-     }
-     usesDeepYogaTrees:usesDeepYogaTrees];
+     }];
 
     const CKSizeRange kSize = {{500, 500}, {500, 500}};
     return [component layoutThatFits:kSize parentSize:kSize.max];
