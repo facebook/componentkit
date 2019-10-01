@@ -90,7 +90,7 @@
     scopeHandle = CKRender::ScopeHandle::Render::create(component, componentClass, previousNode, scopeRoot, stateUpdates);
   }
 
-  if (self = [self initWithPreviousNode:previousNode scopeHandle:component.scopeHandle]) {
+  if (self = [self initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
     _component = component;
     _componentKey = componentKey;
     // Set the link between the parent and the child.
