@@ -17,12 +17,6 @@ static NSString *componentDescriptionOrClass(CKComponent *component)
   return [component description] ?: NSStringFromClass([component class]);
 }
 
-/* This functions prints only the class, or in case of Stateless component, the description that will help us identify the Spec */
-static NSString *componentCompactDescription(CKComponent *component)
-{
-  return [component isMemberOfClass:[CKStatelessComponent class]] ? [component description]: NSStringFromClass([component class]);
-}
-
 
 static NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace, BOOL nested, BOOL compactDescription) noexcept
 {
@@ -36,10 +30,15 @@ static NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *compone
       if (nested) {
         [description appendString:[@"" stringByPaddingToLength:depth withString:@" " startingAtIndex:0]];
       }
-      NSString *componentDescription = compactDescription ? componentCompactDescription(component) : componentDescriptionOrClass(component);
+      NSString *componentDescription = compactDescription ? CKComponentCompactDescription(component) : componentDescriptionOrClass(component);
       [description appendString:componentDescription];
     }
     return description;
+}
+
+NSString *CKComponentCompactDescription(CKComponent *component)
+{
+  return [component isMemberOfClass:[CKStatelessComponent class]] ? [component description]: NSStringFromClass([component class]);
 }
 
 NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept

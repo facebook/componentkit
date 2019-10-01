@@ -12,6 +12,9 @@
 
 #import <ComponentKit/CKComponentLayout.h>
 
+/* This functions prints only the class, or in case of Stateless component, the description that will help us identify the Spec */
+NSString *CKComponentCompactDescription(CKComponent *component);
+
 NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept;
 NSString *CKComponentBacktraceStackDescription(NSArray<CKComponent *> *componentBacktrace) noexcept;
 

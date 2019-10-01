@@ -63,7 +63,7 @@ void CKDetectDuplicateComponent(const CKComponentLayout &layout) {
 #if CK_ASSERTIONS_ENABLED
   auto const info = CKFindDuplicateComponent(layout);
   if (info.component) {
-    CKCFailAssertWithCategory(NSStringFromClass([info.component class]),
+    CKCFailAssertWithCategory(CKComponentCompactDescription(info.component),
                               @"Duplicate component in the tree. Attempting to use %@ more than once in the component tree can lead to an incorrect and unexpected behavior\n"
                               @"Please make sure to create another instance of %@ if needed. \nComponent backtrace:\n%@",
                               [info.component class],
