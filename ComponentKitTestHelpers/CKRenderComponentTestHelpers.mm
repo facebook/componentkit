@@ -125,6 +125,11 @@
 @end
 
 @implementation CKTestRenderWithNonRenderWithStateChildComponent
++ (id)initialState
+{
+  return @1;
+}
+
 - (CKComponent *)render:(id)state
 {
   _childComponent = [CKCompositeComponentWithScopeAndState
