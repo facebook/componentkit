@@ -73,31 +73,13 @@
  */
 - (void)unmount;
 
-- (const CKComponentViewConfiguration &)viewConfiguration;
-
 - (id)nextResponderAfterController;
-
-/**
- Called when the component and all its children have been mounted.
-
- @param systraceListener The current systrace listener - will be nil if systrace is not enabled.
- */
-- (void)childrenDidMount:(id<CKSystraceListener>)systraceListener;
-
-/** Used to get the root component in the responder chain; don't touch this. */
-@property (nonatomic, weak) UIView *rootComponentMountedView;
-
-/** For internal use only; don't touch this. */
-@property (nonatomic, strong, readonly) id<NSObject> scopeFrameToken;
 
 /** The size that was passed into the component; don't touch this. */
 @property (nonatomic, assign, readonly) CKComponentSize size;
 
 /** Used to get the scope root enumerator; during component creation only */
 @property (nonatomic, strong, readonly) id<CKComponentScopeEnumeratorProvider> scopeEnumeratorProvider;
-
-/** If the component owns its own view and is mounted, returns it. */
-@property (nonatomic, readonly) UIView *mountedView;
 
 /** For internal use only; don't touch this. */
 - (void)setComponentKey:(const CKTreeNodeComponentKey &)key;

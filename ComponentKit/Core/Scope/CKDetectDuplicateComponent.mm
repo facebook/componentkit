@@ -15,14 +15,15 @@
 #import "CKAssert.h"
 #import "CKComponentDescriptionHelper.h"
 #import "CKComponentInternal.h"
+#import "CKMountable.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
-static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component,
-                                                          NSMapTable<CKComponent *, CKComponent *> *componentsToParentComponents)
+static NSArray<id<CKMountable>> *generateComponentBacktrace(id<CKMountable> component,
+                                                          NSMapTable<id<CKMountable>, id<CKMountable>> *componentsToParentComponents)
 {
-  NSMutableArray<CKComponent *> *componentBacktrace = [NSMutableArray arrayWithObject:component];
-  CKComponent *parentComponent = [componentsToParentComponents objectForKey:component];
+  NSMutableArray<id<CKMountable>> *componentBacktrace = [NSMutableArray arrayWithObject:component];
+  auto parentComponent = [componentsToParentComponents objectForKey:component];
   while (parentComponent) {
     [componentBacktrace addObject:parentComponent];
     parentComponent = [componentsToParentComponents objectForKey:parentComponent];
@@ -34,12 +35,12 @@ CKDuplicateComponentInfo CKFindDuplicateComponent(const CKComponentLayout &layou
 {
   std::queue<const CKComponentLayout> queue;
   NSMutableSet<id<NSObject>> *const previouslySeenComponent = [NSMutableSet new];
-  NSMapTable<CKComponent *, CKComponent *> *const componentsToParentComponents = [NSMapTable strongToStrongObjectsMapTable];
+  NSMapTable<id<CKMountable>, id<CKMountable>> *const componentsToParentComponents = [NSMapTable strongToStrongObjectsMapTable];
   queue.push(layout);
   while (!queue.empty()) {
     const auto componentLayout = queue.front();
     queue.pop();
-    CKComponent *const component = componentLayout.component;
+    auto const component = componentLayout.component;
     if (component && [previouslySeenComponent containsObject:component]) {
       return {
         .component = component,

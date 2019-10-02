@@ -117,7 +117,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
     return _state != nil;
   });
   CKDataSourceItem *const item = [_state objectAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-  CKComponent *const component = [item rootLayout].component();
+  CKComponent *const component = (CKComponent *)[item rootLayout].component();
   for (id state in states) {
     [component updateState:^(id oldState){return state;} mode:mode];
   }

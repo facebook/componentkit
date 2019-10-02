@@ -253,17 +253,17 @@ static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
 
 }
 
-- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component
+- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(id<CKMountable>)component
 {
 
 }
 
-- (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component
+- (void)didLayoutComponentTreeWithRootComponent:(id<CKMountable>)component
 {
 
 }
 
-- (void)didMountComponentTreeWithRootComponent:(CKComponent *)component
+- (void)didMountComponentTreeWithRootComponent:(id<CKMountable>)component
                          mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext
 {
 
@@ -294,17 +294,17 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
                                      params:(const CKBuildComponentTreeParams &)params
                        parentHasStateUpdate:(BOOL)parentHasStateUpdate {}
 
-- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component
+- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(id<CKMountable>)component
 {
 
 }
 
-- (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component buildTrigger:(CK::Optional<BuildTrigger>)buildTrigger
+- (void)willLayoutComponentTreeWithRootComponent:(id<CKMountable>)component buildTrigger:(CK::Optional<BuildTrigger>)buildTrigger
 {
 
 }
 
-- (void)willMountComponentTreeWithRootComponent:(CKComponent *)component
+- (void)willMountComponentTreeWithRootComponent:(id<CKMountable>)component
 {
 
 }

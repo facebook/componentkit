@@ -16,6 +16,7 @@
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKSystraceListener.h>
 
+@protocol CKMountable;
 @protocol CKTreeNodeProtocol;
 
 @class CKComponent;
@@ -64,7 +65,7 @@
  ThreadB, didLayout Component1
  To identify matching will/didLayout events between callbacks, please use Thread id and Component id
  */
-- (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component buildTrigger:(CK::Optional<BuildTrigger>)buildTrigger;
+- (void)willLayoutComponentTreeWithRootComponent:(id<CKMountable>)component buildTrigger:(CK::Optional<BuildTrigger>)buildTrigger;
 
 /**
  Called after component tree layout.
@@ -78,7 +79,7 @@
  ThreadB, didLayout Component1
  To identify matching will/didLayout events between callbacks, please use Thread id and Component id
 */
-- (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component;
+- (void)didLayoutComponentTreeWithRootComponent:(id<CKMountable>)component;
 
 /**
  Called before/after mounting a component tree
@@ -86,8 +87,8 @@
  @param component Root component for mounted tree
  */
 
-- (void)willMountComponentTreeWithRootComponent:(CKComponent *)component;
-- (void)didMountComponentTreeWithRootComponent:(CKComponent *)component
+- (void)willMountComponentTreeWithRootComponent:(id<CKMountable>)component;
+- (void)didMountComponentTreeWithRootComponent:(id<CKMountable>)component
                          mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext;
 
 /**
@@ -96,15 +97,15 @@
  If returns YES, an extra information will be collected during the mount process.
  The extra information will be provided back in `didMountComponentTreeWithRootComponent` callback.
  */
-- (BOOL)shouldCollectMountInformationForRootComponent:(CKComponent *)component;
+- (BOOL)shouldCollectMountInformationForRootComponent:(id<CKMountable>)component;
 
 /**
  Called before/after collecting animations from a component tree.
 
  @param component Root component for the tree that is about to be mounted.
  */
-- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component;
-- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component;
+- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(id<CKMountable>)component;
+- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(id<CKMountable>)component;
 
 /** Render Components **/
 

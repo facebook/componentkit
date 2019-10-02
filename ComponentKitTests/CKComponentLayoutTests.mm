@@ -125,19 +125,19 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 - (void)test_WhenInitialisedWithOnePredicate_ReturnsOnlyMatchingComponents
 {
   const auto matchingComponent = [ComponentMatchingPredicate1 new];
-  const auto p = CKComponentPredicate {[](const auto c){
+  const auto p = CKMountablePredicate {[](const auto c){
     return [c isKindOfClass:[ComponentMatchingPredicate1 class]];
   }};
   const auto l = CKComputeRootComponentLayout([CKCompositeComponent newWithComponent:matchingComponent], sizeRange, nil, CK::none, {p});
 
-  const auto expected = std::vector<CKComponent *> {matchingComponent};
+  const auto expected = std::vector<id<CKMountable>> {matchingComponent};
   XCTAssert(l.componentsMatchingPredicate(p) == expected);
 }
 
 - (void)test_WhenInitialisedWithMultiplePredicates_ReturnsOnlyMatchingComponents
 {
   const auto matchingComponent = [ComponentMatchingPredicate1 new];
-  const auto p = CKComponentPredicate {[](const auto c){
+  const auto p = CKMountablePredicate {[](const auto c){
     return [c isKindOfClass:[ComponentMatchingPredicate1 class]];
   }};
   const auto root = flexboxComponentWithScopedChildren(@[
@@ -146,18 +146,18 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
                                                          ]);
   const auto l = CKComputeRootComponentLayout(root, sizeRange, nil, CK::none, {
     p,
-    CKComponentPredicate {[](const auto c){ return [c isKindOfClass:[ComponentMatchingPredicate2 class]]; }},
+    CKMountablePredicate {[](const auto c){ return [c isKindOfClass:[ComponentMatchingPredicate2 class]]; }},
   });
 
-  const auto expected = std::vector<CKComponent *> {matchingComponent};
+  const auto expected = std::vector<id<CKMountable>> {matchingComponent};
   XCTAssert(l.componentsMatchingPredicate(p) == expected);
 }
 
 - (void)test_IgnoresNilComponentsEvenIfTheyMatchPredicate
 {
-  const auto p = CKComponentPredicate {[](const auto c){ return YES; }};
+  const auto p = CKMountablePredicate {[](const auto c){ return YES; }};
   const auto l = CKComputeRootComponentLayout([CKCompositeComponent newWithComponent:nil], sizeRange, nil, CK::none, {p});
 
-  XCTAssert(l.componentsMatchingPredicate(p) == std::vector<CKComponent *> {});
+  XCTAssert(l.componentsMatchingPredicate(p) == std::vector<id<CKMountable>> {});
 }
 @end

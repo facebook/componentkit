@@ -19,7 +19,7 @@
 #import "CKInternalHelpers.h"
 
 namespace CK {
-  static auto getScopeHandle(id<CKComponentProtocol> const c) {
+  static auto getScopeHandle(id<CKMountable> const c) {
     const auto scopeHandle = objCForceCast<CKComponent>(c).scopeHandle;
     CKCAssertNotNil(scopeHandle, @"Scope must be provided for component animation");
     return scopeHandle;

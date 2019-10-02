@@ -10,15 +10,16 @@
 
 #import "CKComponentDescriptionHelper.h"
 
+#import <ComponentKit/CKMountable.h>
 #import <ComponentKit/CKStatelessComponent.h>
 
-static NSString *componentDescriptionOrClass(CKComponent *component)
+static NSString *componentDescriptionOrClass(id<CKMountable> component)
 {
   return [component description] ?: NSStringFromClass([component class]);
 }
 
 
-static NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace, BOOL nested, BOOL compactDescription) noexcept
+static NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace, BOOL nested, BOOL compactDescription) noexcept
 {
   NSMutableString *const description = [NSMutableString string];
     for (NSInteger index = [componentBacktrace count] - 1; index >= 0; index--) {
@@ -36,17 +37,17 @@ static NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *compone
     return description;
 }
 
-NSString *CKComponentCompactDescription(CKComponent *component)
+NSString *CKComponentCompactDescription(id<CKMountable> component)
 {
   return [component isMemberOfClass:[CKStatelessComponent class]] ? [component description]: NSStringFromClass([component class]);
 }
 
-NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept
+NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept
 {
   return CKComponentBacktraceDescription(componentBacktrace, YES, NO);
 }
 
-NSString *CKComponentBacktraceStackDescription(NSArray<CKComponent *> *componentBacktrace) noexcept
+NSString *CKComponentBacktraceStackDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept
 {
   return CKComponentBacktraceDescription(componentBacktrace, NO, YES);
 }
@@ -58,7 +59,7 @@ NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKCom
     if (childIter != children->begin()) {
       [description appendString:@"\n"];
     }
-    CKComponent *child = childIter->layout.component;
+    id<CKMountable> child = childIter->layout.component;
     if (child) {
       [description appendString:componentDescriptionOrClass(child)];
     }

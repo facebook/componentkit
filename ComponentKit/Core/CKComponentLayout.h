@@ -29,6 +29,7 @@
 @class CKComponentScopeRoot;
 
 @protocol CKAnalyticsListener;
+@protocol CKMountable;
 
 struct CKComponentLayoutChild;
 
@@ -39,23 +40,15 @@ struct CKOffMainThreadDeleter {
 
 /** Represents the computed size of a component, as well as the computed sizes and positions of its children. */
 struct CKComponentLayout {
-  CKComponent *component;
+  id<CKMountable> component;
   CGSize size;
   std::shared_ptr<const std::vector<CKComponentLayoutChild>> children;
   NSDictionary *extra;
 
-  CKComponentLayout(CKComponent *c, CGSize s) noexcept
-  : component(c), size(s), children(emptyChildren()), extra(nil) {
-    CKCAssertNotNil(c, @"Nil components are not allowed");
-  };
+  CKComponentLayout(id<CKMountable> c, CGSize s) noexcept;
+  CKComponentLayout(id<CKMountable> c, CGSize s, std::vector<CKComponentLayoutChild> ch, NSDictionary *e = nil) noexcept;
 
-  CKComponentLayout(CKComponent *c, CGSize s, std::vector<CKComponentLayoutChild> ch, NSDictionary *e = nil) noexcept
-  : component(c), size(s), children(new std::vector<CKComponentLayoutChild>(std::move(ch)), CKOffMainThreadDeleter()), extra(e) {
-    CKCAssertNotNil(c, @"Nil components are not allowed");
-  };
-
-  CKComponentLayout() noexcept
-  : component(nil), size({0, 0}), children(emptyChildren()), extra(nil) {};
+  CKComponentLayout() noexcept;
 
   void enumerateLayouts(const std::function<void(const CKComponentLayout &)> &f) const;
 
@@ -71,7 +64,7 @@ struct CKComponentLayoutChild {
 struct CKComponentRootLayout {
   /** Layout cache for components that have controller. */
   using ComponentLayoutCache = std::unordered_map<CKComponent *, CKComponentLayout, CK::hash<CKComponent *>, CK::is_equal<CKComponent *>>;
-  using ComponentsByPredicateMap = std::unordered_map<CKComponentPredicate, std::vector<CKComponent *>>;
+  using ComponentsByPredicateMap = std::unordered_map<CKMountablePredicate, std::vector<id<CKMountable>>>;
 
   CKComponentRootLayout() {}
   explicit CKComponentRootLayout(CKComponentLayout layout)
@@ -89,10 +82,10 @@ struct CKComponentRootLayout {
     return it != _layoutCache.end() ? it->second : CKComponentLayout {};
   }
 
-  auto componentsMatchingPredicate(const CKComponentPredicate p) const
+  auto componentsMatchingPredicate(const CKMountablePredicate p) const
   {
     const auto it = _componentsByPredicate.find(p);
-    return it != _componentsByPredicate.end() ? it->second : std::vector<CKComponent *> {};
+    return it != _componentsByPredicate.end() ? it->second : std::vector<id<CKMountable>> {};
   }
 
   void enumerateComponentControllers(void(^block)(CKComponentController *, CKComponent *)) const;
@@ -136,11 +129,11 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
  @param sizeRange The size range to compute the component layout within.
  @param analyticsListener analytics listener used to log layout time.
  */
-CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
+CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener = nil,
                                                    CK::Optional<BuildTrigger> buildTrigger = CK::none,
-                                                   std::unordered_set<CKComponentPredicate> predicates = CKComponentAnimationPredicates());
+                                                   std::unordered_set<CKMountablePredicate> predicates = CKComponentAnimationPredicates());
 
 /**
  Safely computes the layout of the given component by guarding against nil components.
@@ -148,7 +141,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
  @param sizeRange The size range to compute the component layout within.
  @param parentSize The parent size of the component to compute the layout for.
  */
-CKComponentLayout CKComputeComponentLayout(CKComponent *component,
+CKComponentLayout CKComputeComponentLayout(id<CKMountable> component,
                                            const CKSizeRange &sizeRange,
                                            const CGSize parentSize);
 

@@ -13,10 +13,10 @@
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 
-#import <ComponentKit/CKArgumentPrecondition.h>
-#import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKArgumentPrecondition.h>
 #import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKComponentContextHelper.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKMacros.h>

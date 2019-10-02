@@ -12,11 +12,12 @@
 
 #import <ComponentKit/CKComponentLayout.h>
 
-/* This functions prints only the class, or in case of Stateless component, the description that will help us identify the Spec */
-NSString *CKComponentCompactDescription(CKComponent *component);
+@protocol CKMountable;
 
-NSString *CKComponentBacktraceDescription(NSArray<CKComponent *> *componentBacktrace) noexcept;
-NSString *CKComponentBacktraceStackDescription(NSArray<CKComponent *> *componentBacktrace) noexcept;
+/* This functions prints only the class, or in case of Stateless component, the description that will help us identify the Spec */
+NSString *CKComponentCompactDescription(id<CKMountable> component);
+NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept;
+NSString *CKComponentBacktraceStackDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept;
 
 NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKComponentLayoutChild>> children) noexcept;
 

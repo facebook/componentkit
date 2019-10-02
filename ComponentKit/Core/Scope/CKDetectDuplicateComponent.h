@@ -11,7 +11,8 @@
 #import <Foundation/Foundation.h>
 
 struct CKComponentLayout;
-@class CKComponent;
+
+@protocol CKMountable;
 
 /** Represents an info for a component that is being used more than once in a component tree */
 struct CKDuplicateComponentInfo {
@@ -19,7 +20,7 @@ struct CKDuplicateComponentInfo {
    The component that is being used more than once.
    @var CKComponent
    */
-  CKComponent *component;
+  id<CKMountable> component;
 
   /**
    The backtrace description starting from the component.

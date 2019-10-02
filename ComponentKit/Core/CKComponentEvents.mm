@@ -34,17 +34,17 @@ BOOL CKComponentDidPrepareLayoutForComponentToControllerPredicate(id<CKComponent
                                  @selector(didPrepareLayout:forComponent:));
 }
 
-auto CKComponentHasAnimationsOnInitialMountPredicate(id<CKComponentProtocol> const c) -> BOOL
+auto CKComponentHasAnimationsOnInitialMountPredicate(id<CKMountable> const c) -> BOOL
 {
   return CKSubclassOverridesInstanceMethod([CKComponent class], [c class], @selector(animationsOnInitialMount));
 }
 
-auto CKComponentHasAnimationsFromPreviousComponentPredicate(id<CKComponentProtocol> const c) -> BOOL
+auto CKComponentHasAnimationsFromPreviousComponentPredicate(id<CKMountable> const c) -> BOOL
 {
   return CKSubclassOverridesInstanceMethod([CKComponent class], [c class], @selector(animationsFromPreviousComponent:));
 }
 
-auto CKComponentHasAnimationsOnFinalUnmountPredicate(id<CKComponentProtocol> const c) -> BOOL
+auto CKComponentHasAnimationsOnFinalUnmountPredicate(id<CKMountable> const c) -> BOOL
 {
   return CKSubclassOverridesInstanceMethod([CKComponent class], [c class], @selector(animationsOnFinalUnmount));
 }

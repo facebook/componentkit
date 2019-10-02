@@ -59,7 +59,7 @@ static NSString *const indentString = @"| ";
 
 static void buildRecursiveDescriptionForView(NSMutableString *description,
                                              NSMutableSet<UIView *> *visitedViews,
-                                             NSMutableSet<CKComponent *> *visitedComponents,
+                                             NSMutableSet<id<CKMountable>> *visitedComponents,
                                              UIView *view,
                                              NSString *prefix)
 {
@@ -167,7 +167,7 @@ static const CKComponentLayout findLayoutForComponent(UIView *view, CKComponent 
 
 static void buildRecursiveDescriptionForLayout(NSMutableString *description,
                                                NSMutableSet<UIView *> *visitedViews,
-                                               NSMutableSet<CKComponent *> *visitedComponents,
+                                               NSMutableSet<id<CKMountable>> *visitedComponents,
                                                const CKComponentLayout &layout,
                                                CGPoint position,
                                                NSString *prefix)
@@ -175,7 +175,7 @@ static void buildRecursiveDescriptionForLayout(NSMutableString *description,
   if (layout.component == nil) {
     return;
   }
-  CKComponent *component = layout.component;
+  auto component = layout.component;
   if ([visitedComponents containsObject:component]) {
     return;
   }

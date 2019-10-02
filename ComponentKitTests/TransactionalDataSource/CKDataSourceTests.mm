@@ -341,7 +341,8 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
     const auto dataSource = CKComponentTestDataSource(ComponentProvider,
                                                       self,
                                                       {.updateComponentInControllerAfterBuild = updateComponentInControllerAfterBuild});
-    componentController = [_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].rootLayout.component().controller;
+    CKComponent *component = (CKComponent *)[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].rootLayout.component();
+    componentController = component.controller;
     const auto update =
     [[[CKDataSourceChangesetBuilder dataSourceChangeset]
       withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]

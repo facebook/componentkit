@@ -13,4 +13,4 @@
 #import <unordered_set>
 #import <ComponentKit/CKComponentScopeTypes.h>
 
-auto CKComponentAnimationPredicates() -> std::unordered_set<CKComponentPredicate>;
+auto CKComponentAnimationPredicates() -> std::unordered_set<CKMountablePredicate>;

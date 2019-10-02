@@ -17,14 +17,10 @@
 #import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentSize.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>
-
-struct CKComponentViewContext {
-  __kindof UIView *view;
-  CGRect frame;
-};
+#import <ComponentKit/CKMountable.h>
 
 /** A component is an immutable object that specifies how to configure a view, loosely inspired by React. */
-@interface CKComponent<__covariant CKComponentStateType:id> : NSObject <CKComponentProtocol>
+@interface CKComponent<__covariant CKComponentStateType:id> : NSObject <CKMountable, CKComponentProtocol>
 
 /**
  @param view A struct describing the view for this component. Pass {} to specify that no view should be created.

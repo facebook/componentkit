@@ -23,12 +23,12 @@
                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                                  component:(CKComponent *)component {}
 
-- (void)willMountComponentTreeWithRootComponent:(CKComponent *)component
+- (void)willMountComponentTreeWithRootComponent:(id<CKMountable>)component
 {
   _willMountComponentHitCount++;
 }
 
-- (void)didMountComponentTreeWithRootComponent:(CKComponent *)component
+- (void)didMountComponentTreeWithRootComponent:(id<CKMountable>)component
                          mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext
 {
   _didMountComponentHitCount++;
@@ -37,30 +37,30 @@
   }
 }
 
-- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component
+- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(id<CKMountable>)component
 {
   _willCollectAnimationsHitCount++;
 }
 
-- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(CKComponent *)component
+- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(id<CKMountable>)component
 {
   _didCollectAnimationsHitCount++;
 }
 
-- (void)willLayoutComponentTreeWithRootComponent:(CKComponent *)component buildTrigger:(CK::Optional<BuildTrigger>)buildTrigger
+- (void)willLayoutComponentTreeWithRootComponent:(id<CKMountable>)component buildTrigger:(CK::Optional<BuildTrigger>)buildTrigger
 {
   _willLayoutComponentTreeHitCount++;
 }
-- (void)didLayoutComponentTreeWithRootComponent:(CKComponent *)component { _didLayoutComponentTreeHitCount++; }
+- (void)didLayoutComponentTreeWithRootComponent:(id<CKMountable>)component { _didLayoutComponentTreeHitCount++; }
 
 - (void)willBuildComponent:(Class)componentClass {}
 - (void)didBuildComponent:(Class)componentClass {}
 
-- (void)willMountComponent:(CKComponent *)component {}
-- (void)didMountComponent:(CKComponent *)component {}
+- (void)willMountComponent:(id<CKMountable>)component {}
+- (void)didMountComponent:(id<CKMountable>)component {}
 
-- (void)willLayoutComponent:(CKComponent *)component {}
-- (void)didLayoutComponent:(CKComponent *)component {}
+- (void)willLayoutComponent:(id<CKMountable>)component {}
+- (void)didLayoutComponent:(id<CKMountable>)component {}
 
 - (void)willStartBlockTrace:(const char *const)blockName {}
 - (void)didEndBlockTrace:(const char *const)blockName {}

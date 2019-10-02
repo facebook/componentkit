@@ -60,7 +60,8 @@ static CKComponent *_leakyComponent;
                                                                                                 constrainedSize:sizeRange
                                                                                                         context:nil]];
   [_leakyComponent updateState:updateStackBlock mode:CKUpdateModeSynchronous];
-  return [self compareSnapshotOfComponent:[componentLifecycleTestController state].componentLayout.component
+  CKComponent *component = (CKComponent *)[componentLifecycleTestController state].componentLayout.component;
+  return [self compareSnapshotOfComponent:component
                                 sizeRange:sizeRange
                  referenceImagesDirectory:referenceImagesDirectory
                                identifier:identifier

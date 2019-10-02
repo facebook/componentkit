@@ -45,7 +45,8 @@
   XCTAssertEqualObjects(componentView.backgroundColor, [UIColor blackColor], @"Expected bg color to initially be black");
 
   const CKComponentLayout &layout = [hostingView mountedLayout];
-  [layout.component updateState:^(id oldState){ return [UIColor redColor]; } mode:CKUpdateModeAsynchronous];
+  CKComponent *c = (CKComponent *)layout.component;
+  [c updateState:^(id oldState){ return [UIColor redColor]; } mode:CKUpdateModeAsynchronous];
 
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^{
     [hostingView layoutIfNeeded];
@@ -64,8 +65,9 @@
   XCTAssertEqualObjects(componentView.backgroundColor, [UIColor blackColor], @"Expected bg color to initially be black");
 
   const CKComponentLayout &layout = [hostingView mountedLayout];
-  [layout.component updateState:^(id oldState){ return [UIColor redColor]; } mode:CKUpdateModeAsynchronous];
-  [layout.component updateState:^(id oldState){ return oldState; } mode:CKUpdateModeSynchronous];
+  CKComponent *c = (CKComponent *)layout.component;
+  [c updateState:^(id oldState){ return [UIColor redColor]; } mode:CKUpdateModeAsynchronous];
+  [c updateState:^(id oldState){ return oldState; } mode:CKUpdateModeSynchronous];
 
   [hostingView layoutIfNeeded];
   XCTAssertEqualObjects(componentView.backgroundColor, [UIColor redColor],

@@ -22,6 +22,7 @@ typedef std::unordered_map<CKComponentScopeHandle *, std::vector<id (^)(id)>> CK
 
 @protocol CKComponentProtocol;
 @protocol CKComponentControllerProtocol;
+@protocol CKMountable;
 
 /**
  Enumerator blocks allow a consumer to enumerate over all of the components or controllers that matched a predicate.
@@ -35,3 +36,4 @@ typedef void (^CKComponentControllerScopeEnumerator)(id<CKComponentControllerPro
  */
 using CKComponentPredicate = BOOL (*)(id<CKComponentProtocol>);
 using CKComponentControllerPredicate = BOOL (*)(id<CKComponentControllerProtocol>);
+using CKMountablePredicate = BOOL (*)(id<CKMountable>);

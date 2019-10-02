@@ -12,7 +12,7 @@
 
 #import <ComponentKit/CKComponentEvents.h>
 
-auto CKComponentAnimationPredicates() -> std::unordered_set<CKComponentPredicate>
+auto CKComponentAnimationPredicates() -> std::unordered_set<CKMountablePredicate>
 {
   return {
     CKComponentHasAnimationsOnInitialMountPredicate,

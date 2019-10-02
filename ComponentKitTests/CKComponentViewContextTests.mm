@@ -43,7 +43,7 @@ static const CKSizeRange size = {{100, 100}, {100, 100}};
                                                                                                     constrainedSize:size
                                                                                                             context:nil];
   [componentLifecycleTestController updateWithState:state];
-  CKComponent *component = state.componentLayout.component;
+  CKComponent *component = (CKComponent *)state.componentLayout.component;
 
   UIView *rootView = [[UIView alloc] initWithFrame:{{0,0}, size.max}];
   [componentLifecycleTestController attachToView:rootView];

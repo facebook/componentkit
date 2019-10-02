@@ -16,6 +16,7 @@
 
 #import "CKRenderHelpers.h"
 #import "CKComponent.h"
+#import "CKMountable.h"
 #import "CKCompositeComponent.h"
 #import "CKRenderComponent.h"
 #import "CKRenderLayoutWithChildrenComponent.h"
@@ -272,9 +273,9 @@ static BOOL verifyComponentsInNode(id<CKTreeNodeWithChildrenProtocol> parentNode
   // Verify that the root holds two components has its direct children
   NSMutableSet<CKComponent *> *componentsFromTheTree = [NSMutableSet set];
   for (auto const node : parentNode.children) {
-    [componentsFromTheTree addObject:node.component];
+    [componentsFromTheTree addObject:(CKComponent *)node.component];
   }
-  NSSet<CKComponent *> *componentsSet = [NSSet setWithArray:components];
+  NSSet<id<CKMountable>> *componentsSet = [NSSet setWithArray:components];
   return [componentsSet isEqualToSet:componentsFromTheTree];
 }
 

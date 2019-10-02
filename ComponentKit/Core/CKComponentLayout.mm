@@ -27,12 +27,25 @@
 
 using namespace CK::Component;
 
+CKComponentLayout::CKComponentLayout(id<CKMountable> c, CGSize s) noexcept
+: component(c), size(s), children(emptyChildren()), extra(nil) {
+  CKCAssertNotNil(c, @"Nil components are not allowed");
+};
+
+CKComponentLayout::CKComponentLayout(id<CKMountable> c, CGSize s, std::vector<CKComponentLayoutChild> ch, NSDictionary *e) noexcept
+: component(c), size(s), children(new std::vector<CKComponentLayoutChild>(std::move(ch)), CKOffMainThreadDeleter()), extra(e) {
+  CKCAssertNotNil(c, @"Nil components are not allowed");
+};
+
+CKComponentLayout::CKComponentLayout() noexcept
+: component(nil), size({0, 0}), children(emptyChildren()), extra(nil) {};
+
 static void _deleteComponentLayoutChild(void *target) noexcept
 {
   delete (std::vector<CKComponentLayoutChild> *)target;
 }
 
-static auto buildComponentsByPredicateMap(const CKComponentLayout &layout, const std::unordered_set<CKComponentPredicate> &predicates)
+static auto buildComponentsByPredicateMap(const CKComponentLayout &layout, const std::unordered_set<CKMountablePredicate> &predicates)
 {
   auto componentsByPredicate = CKComponentRootLayout::ComponentsByPredicateMap {};
   if (predicates.empty()) { return componentsByPredicate; }
@@ -79,7 +92,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
   struct MountItem {
     const CKComponentLayout &layout;
     MountContext mountContext;
-    CKComponent *supercomponent;
+    id<CKMountable> supercomponent;
     BOOL visited;
   };
 
@@ -135,11 +148,11 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
   return {mountedComponents, componentsToUnmount};
 }
 
-CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
+CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener,
                                                    CK::Optional<BuildTrigger> buildTrigger,
-                                                   std::unordered_set<CKComponentPredicate> predicates)
+                                                   std::unordered_set<CKMountablePredicate> predicates)
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent buildTrigger:buildTrigger];
   LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
@@ -153,7 +166,8 @@ CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
   auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};
   layout.enumerateLayouts([&](const auto &l){
     if (l.component.controller) {
-      layoutCache[l.component] = l;
+      // If we have a controller, it's CKComponent as `CKMountable` doesn't support controllers.
+      layoutCache[(CKComponent *)l.component] = l;
     }
   });
   const auto componentsByPredicate = buildComponentsByPredicateMap(layout, predicates);
@@ -165,7 +179,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(CKComponent *rootComponent,
   };
 }
 
-CKComponentLayout CKComputeComponentLayout(CKComponent *component,
+CKComponentLayout CKComputeComponentLayout(id<CKMountable> component,
                                            const CKSizeRange &sizeRange,
                                            const CGSize parentSize)
 {
