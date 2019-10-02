@@ -10,6 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKBuildComponentResult.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKGlobalConfig.h>
@@ -19,13 +20,6 @@
 
 struct CKBuildComponentTreeParams;
 
-// Collection of events that trigger a new component generation.
-enum class BuildTrigger {
-  NewTree,
-  StateUpdate,
-  PropsUpdate,
-};
-
 namespace CKBuildComponentHelpers {
   /**
    Depending on the scope root and the list of state updates the proper build trigger is derived.
@@ -34,19 +28,6 @@ namespace CKBuildComponentHelpers {
    */
   auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> BuildTrigger;
 }
-
-/**
- The results of a build operation.
-
- A bounds animations are returned in this method if a component in the hierarchy requested an animation from its prior
- state. These animations should be applied with CKComponentBoundsAnimationApply.
- */
-struct CKBuildComponentResult {
-  CKComponent *component;
-  CKComponentScopeRoot *scopeRoot;
-  CKComponentBoundsAnimation boundsAnimation;
-  BuildTrigger buildTrigger;
-};
 
 /**
  Used to construct a component hierarchy. This is necessary to configure the thread-local state so that components
