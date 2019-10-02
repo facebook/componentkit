@@ -39,14 +39,14 @@ namespace CKBuildComponentHelpers {
   static auto boundsAnimationFromPreviousScopeRoot(CKComponentScopeRoot *newRoot,
                                                    CKComponentScopeRoot *previousRoot) -> CKComponentBoundsAnimation
   {
-    NSMapTable *const scopeFrameTokenToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
+    NSMapTable *const uniqueIdentifierToOldComponent = [NSMapTable strongToStrongObjectsMapTable];
     [previousRoot
      enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
      block:^(id<CKComponentProtocol> component) {
        CKComponent *oldComponent = (CKComponent *)component;
-       id scopeFrameToken = [oldComponent scopeFrameToken];
-       if (scopeFrameToken) {
-         [scopeFrameTokenToOldComponent setObject:oldComponent forKey:scopeFrameToken];
+       id uniqueIdentifier = [oldComponent uniqueIdentifier];
+       if (uniqueIdentifier) {
+         [uniqueIdentifierToOldComponent setObject:oldComponent forKey:uniqueIdentifier];
        }
      }];
 
@@ -55,9 +55,9 @@ namespace CKBuildComponentHelpers {
      enumerateComponentsMatchingPredicate:&CKComponentBoundsAnimationPredicate
      block:^(id<CKComponentProtocol> component) {
        CKComponent *newComponent = (CKComponent *)component;
-       id scopeFrameToken = [newComponent scopeFrameToken];
-       if (scopeFrameToken) {
-         CKComponent *oldComponent = [scopeFrameTokenToOldComponent objectForKey:scopeFrameToken];
+       id uniqueIdentifier = [newComponent uniqueIdentifier];
+       if (uniqueIdentifier) {
+         CKComponent *oldComponent = [uniqueIdentifierToOldComponent objectForKey:uniqueIdentifier];
          if (oldComponent) {
            auto const ba = [newComponent boundsAnimationFromPreviousComponent:oldComponent];
            if (ba.duration != 0) {
@@ -81,7 +81,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const globalConfig = CKReadGlobalConfig();
-  
+
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
   CKThreadLocalComponentScope threadScope(previousRoot,
                                           stateUpdates,

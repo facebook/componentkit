@@ -134,7 +134,7 @@ struct CKComponentViewContext {
 
 
 /** Unique identifier of the component - can be nil */
-@property (nonatomic, strong, readonly) id<NSObject> scopeFrameToken;
+@property (nonatomic, strong, readonly) id<NSObject> uniqueIdentifier;
 
 /** Backward Compatibility */
 - (id<CKComponentControllerProtocol>)controller;

@@ -63,9 +63,9 @@ private:
     }
 
     // If we do have scope frame tokens for both the old and new components, but they don't match, block animation.
-    id oldScopeFrameToken = [oldComponent scopeFrameToken];
-    id newScopeFrameToken = [newComponent scopeFrameToken];
-    if (oldScopeFrameToken && newScopeFrameToken && ![oldScopeFrameToken isEqual:newScopeFrameToken]) {
+    id oldUniqueIdentifier = [oldComponent uniqueIdentifier];
+    id newUniqueIdentifier = [newComponent uniqueIdentifier];
+    if (oldUniqueIdentifier && newUniqueIdentifier && ![oldUniqueIdentifier isEqual:newUniqueIdentifier]) {
       return YES;
     }
 

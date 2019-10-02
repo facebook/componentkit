@@ -140,7 +140,7 @@
   XCTAssertFalse(barv.animatedLastBoundsChange);
 }
 
-- (void)testBoundsAnimationIsNotAppliedWhenViewRecycledForComponentWithDistinctScopeFrameToken
+- (void)testBoundsAnimationIsNotAppliedWhenViewRecycledForComponentWithDistinctUniqueIdentifier
 {
   UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
 
@@ -162,7 +162,7 @@
   CKUnmountComponents(secondMountedComponents);
 }
 
-- (void)testBoundsAnimationIsNotAppliedToChildrenWhenViewRecycledForComponentWithDistinctScopeFrameToken
+- (void)testBoundsAnimationIsNotAppliedToChildrenWhenViewRecycledForComponentWithDistinctUniqueIdentifier
 {
   UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
 

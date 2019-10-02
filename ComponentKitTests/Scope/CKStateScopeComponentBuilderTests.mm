@@ -115,7 +115,7 @@
   XCTAssertEqualObjects(component.state, [CKStateExposingComponent initialState]);
 }
 
-- (void)testStateScopeFrameIsNotFoundForComponentWhenClassNamesDoNotMatch
+- (void)testStatUniqueIdentifierIsNotFoundForComponentWhenClassNamesDoNotMatch
 {
   id state = @12345;
 
@@ -127,10 +127,10 @@
   };
 
   CKComponent *component = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, block).component;
-  XCTAssertNil(component.scopeFrameToken);
+  XCTAssertNil(component.uniqueIdentifier);
 }
 
-- (void)testStateScopeFrameIsNotFoundWhenAnotherComponentInTheSameScopeAcquiresItFirst
+- (void)testStateUniqueIdentifierIsNotFoundWhenAnotherComponentInTheSameScopeAcquiresItFirst
 {
   CKComponent __block *innerComponent = nil;
 
@@ -146,8 +146,8 @@
   };
 
   CKComponent *outerComponent = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, block).component;
-  XCTAssertNotNil(innerComponent.scopeFrameToken);
-  XCTAssertNil(outerComponent.scopeFrameToken);
+  XCTAssertNotNil(innerComponent.uniqueIdentifier);
+  XCTAssertNil(outerComponent.uniqueIdentifier);
 }
 
 @end
