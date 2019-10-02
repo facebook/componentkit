@@ -22,6 +22,7 @@
 #import "CKComponentAnimation.h"
 #import "CKComponentController.h"
 #import "CKComponentDebugController.h"
+#import "CKComponentGenerator.h"
 #import "CKComponentHostingViewDelegate.h"
 #import "CKComponentLayout.h"
 #import "CKComponentRootViewInternal.h"
@@ -36,30 +37,15 @@
 #import "CKComponentHostingContainerViewProvider.h"
 #import "CKOptional.h"
 
-struct CKComponentHostingViewInputs {
-  CKComponentScopeRoot *scopeRoot;
-  id<NSObject> model;
-  id<NSObject> context;
-  CKComponentStateUpdateMap stateUpdates;
-
-  bool operator==(const CKComponentHostingViewInputs &i) const {
-    return scopeRoot == i.scopeRoot && model == i.model && context == i.context && stateUpdates == i.stateUpdates;
-  };
-};
-
 static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return nil; }
 
-@interface CKComponentHostingView () <CKComponentDebugReflowListener>
+@interface CKComponentHostingView () <CKComponentDebugReflowListener, CKComponentGeneratorDelegate>
 {
-  CKComponentProviderBlock _componentProvider;
-
-  CKComponentHostingViewInputs _pendingInputs;
-
+  CKComponentGenerator *_componentGenerator;
   CKComponentHostingContainerViewProvider *_containerViewProvider;
 
   CKComponent *_component;
   BOOL _componentNeedsUpdate;
-  CKUpdateMode _requestedUpdateMode;
 
   CK::Optional<CKComponentRootLayout> _mountedRootLayout;
 
@@ -69,7 +55,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   BOOL _allowTapPassthrough;
 
   CK::Optional<CGSize> _initialSize;
-  BOOL _shouldReload;
 }
 @end
 
@@ -151,18 +136,22 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                                        options:(const CKComponentHostingViewOptions &)options
 {
   if (self = [super initWithFrame:CGRectZero]) {
-    _componentProvider = componentProvider;
-
-    _pendingInputs = {
-      .scopeRoot = CKComponentScopeRootWithPredicates(self, (analyticsListener ?: CKReadGlobalConfig().defaultAnalyticsListener), componentPredicates, componentControllerPredicates)
-    };
+    _componentGenerator =
+    [[CKComponentGenerator alloc]
+     initWithOptions:{
+       .delegate = CK::makeNonNull(self),
+       .componentProvider = CK::makeNonNull(componentProvider),
+       .componentPredicates = componentPredicates,
+       .componentControllerPredicates = componentControllerPredicates,
+       .analyticsListener = analyticsListener,
+     }];
 
     _allowTapPassthrough = options.allowTapPassthrough;
     _containerViewProvider =
     [[CKComponentHostingContainerViewProvider alloc]
      initWithFrame:CGRectZero
-     scopeIdentifier:_pendingInputs.scopeRoot.globalIdentifier
-     analyticsListener:_pendingInputs.scopeRoot.analyticsListener
+     scopeIdentifier:_componentGenerator.scopeRoot.globalIdentifier
+     analyticsListener:_componentGenerator.scopeRoot.analyticsListener
      sizeRangeProvider:sizeRangeProvider
      allowTapPassthrough:_allowTapPassthrough
      rootViewPoolOptions:options.rootViewPool.map([&](const auto rootViewPool) {
@@ -178,17 +167,10 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
       self.frame = {CGPointZero, initialSize};
     });
     _componentNeedsUpdate = !_initialSize.hasValue();
-    _requestedUpdateMode = CKUpdateModeSynchronous;
 
     [CKComponentDebugController registerReflowListener:self];
   }
   return self;
-}
-
-- (void)dealloc
-{
-  CKAssertMainThread(); // UIKit should guarantee this
-  CKComponentScopeRootAnnounceControllerInvalidation(_pendingInputs.scopeRoot);
 }
 
 - (UIView *)containerView
@@ -220,7 +202,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
       return !CGSizeEqualToSize(rootLayout.size(), size);
     }).valueOr(NO);
     if (mountedComponent != _component || shouldLayoutComponent) {
-      auto const rootLayout = CKComputeRootComponentLayout(_component, {size, size}, _pendingInputs.scopeRoot.analyticsListener, buildTrigger);
+      auto const rootLayout = CKComputeRootComponentLayout(_component, {size, size}, _componentGenerator.scopeRoot.analyticsListener, buildTrigger);
       [self _applyRootLayout:rootLayout];
     }
     [_containerViewProvider mount];
@@ -257,22 +239,22 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 - (void)updateModel:(id<NSObject>)model mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
-  _pendingInputs.model = model;
+  [_componentGenerator updateModel:model];
   [self _setNeedsUpdateWithMode:mode];
 }
 
 - (void)updateContext:(id<NSObject>)context mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
-  _pendingInputs.context = context;
+  [_componentGenerator updateContext:context];
   [self _setNeedsUpdateWithMode:mode];
 }
 
 - (void)applyResult:(const CKBuildComponentResult &)result
 {
   CKAssertMainThread();
-  [self _applyResult:result invalidComponentControllers:[self _invalidComponentControllersWithNewScopeRoot:result.scopeRoot
-                                                                                     fromPreviousScopeRoot:_pendingInputs.scopeRoot]];
+  _componentGenerator.scopeRoot = result.scopeRoot;
+  [self _applyResult:result];
   [self setNeedsLayout];
   [_delegate componentHostingViewDidInvalidateSize:self];
 }
@@ -280,7 +262,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 - (void)reloadWithMode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
-  _shouldReload = YES;
+  [_componentGenerator ignoreComponentReuseInNextGeneration];
   [self _setNeedsUpdateWithMode:mode];
 }
 
@@ -293,33 +275,19 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 - (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider
 {
-  return _pendingInputs.scopeRoot;
+  return _componentGenerator.scopeRoot;
 }
 
 #pragma mark - Appearance
 
 - (void)hostingViewWillAppear
 {
-  CKComponentScopeRootAnnounceControllerAppearance(_pendingInputs.scopeRoot);
+  CKComponentScopeRootAnnounceControllerAppearance(_componentGenerator.scopeRoot);
 }
 
 - (void)hostingViewDidDisappear
 {
-  CKComponentScopeRootAnnounceControllerDisappearance(_pendingInputs.scopeRoot);
-}
-
-#pragma mark - CKComponentStateListener
-
-- (void)componentScopeHandle:(CKComponentScopeHandle *)handle
-              rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-       didReceiveStateUpdate:(id (^)(id))stateUpdate
-                    metadata:(const CKStateUpdateMetadata)metadata
-                        mode:(CKUpdateMode)mode
-{
-  CKAssertMainThread();
-
-  _pendingInputs.stateUpdates[handle].push_back(stateUpdate);
-  [self _setNeedsUpdateWithMode:mode];
+  CKComponentScopeRootAnnounceControllerDisappearance(_componentGenerator.scopeRoot);
 }
 
 #pragma mark - CKComponentDebugController
@@ -331,7 +299,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 - (void)didReceiveReflowComponentsRequestWithTreeNodeIdentifier:(CKTreeNodeIdentifier)treeNodeIdentifier
 {
-  if (_pendingInputs.scopeRoot.rootNode.parentForNodeIdentifier(treeNodeIdentifier) != nil) {
+  if (_componentGenerator.scopeRoot.rootNode.parentForNodeIdentifier(treeNodeIdentifier) != nil) {
     [self _setNeedsUpdateWithMode:CKUpdateModeSynchronous];
   }
 }
@@ -340,7 +308,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 - (BOOL)_hasScheduledSyncUpdate
 {
-  return _componentNeedsUpdate && _requestedUpdateMode == CKUpdateModeSynchronous;
+  return _componentNeedsUpdate && !_scheduledAsynchronousComponentUpdate;
 }
 
 - (void)_setNeedsUpdateWithMode:(CKUpdateMode)mode
@@ -350,13 +318,13 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   }
 
   _componentNeedsUpdate = YES;
-  _requestedUpdateMode = mode;
 
   switch (mode) {
     case CKUpdateModeAsynchronous:
       [self _asynchronouslyUpdateComponentIfNeeded];
       break;
     case CKUpdateModeSynchronous:
+      _scheduledAsynchronousComponentUpdate = NO;
       [self setNeedsLayout];
       [_delegate componentHostingViewDidInvalidateSize:self];
       break;
@@ -372,80 +340,16 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
   // Wait until the end of the run loop so that if multiple async updates are triggered we don't thrash.
   dispatch_async(dispatch_get_main_queue(), ^{
-    [self _scheduleAsynchronousUpdate];
+    if (!_scheduledAsynchronousComponentUpdate) {
+      // A synchronous update was either scheduled or completed, so we can skip the async update.
+      return;
+    }
+    [_componentGenerator generateComponentAsynchronously];
   });
 }
 
-- (void)_scheduleAsynchronousUpdate
+- (void)_applyResult:(const CKBuildComponentResult &)result
 {
-  if (_requestedUpdateMode != CKUpdateModeAsynchronous) {
-    // A synchronous update was either scheduled or completed, so we can skip the async update.
-    _scheduledAsynchronousComponentUpdate = NO;
-    return;
-  }
-
-  const auto inputs = std::make_shared<const CKComponentHostingViewInputs>(_pendingInputs);
-  // We only layout component in background thread for first generation of component when there is an initial size.
-  const auto shouldLayoutComponent = _initialSize.hasValue() && !_component;
-  const auto size = _initialSize.valueOr(self.bounds.size);
-  const auto ignoreComponentReuseOptimizations = _shouldReload;
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    const auto result =
-    std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
-                                                                    inputs->scopeRoot,
-                                                                    inputs->stateUpdates,
-                                                                    ^{
-                                                                      return _componentProvider(inputs->model, inputs->context);
-                                                                    },
-                                                                    ignoreComponentReuseOptimizations));
-    const auto invalidComponentControllers =
-    std::make_shared<const std::vector<CKComponentController *>>([self _invalidComponentControllersWithNewScopeRoot:result->scopeRoot
-                                                                                              fromPreviousScopeRoot:inputs->scopeRoot]);
-    const auto rootLayout = shouldLayoutComponent
-    ? std::make_shared<CKComponentRootLayout>(CKComputeRootComponentLayout(result->component,
-                                                                           {size, size},
-                                                                           inputs->scopeRoot.analyticsListener,
-                                                                           result->buildTrigger))
-    : nullptr;
-    dispatch_async(dispatch_get_main_queue(), ^{
-      if (!_componentNeedsUpdate) {
-        // A synchronous update snuck in and took care of it for us.
-        _scheduledAsynchronousComponentUpdate = NO;
-        return;
-      }
-
-      // If the inputs haven't changed, apply the result; otherwise, retry.
-      if (_pendingInputs == *inputs) {
-        _scheduledAsynchronousComponentUpdate = NO;
-        _shouldReload = NO;
-        const auto componentControllers = invalidComponentControllers != nullptr ? *invalidComponentControllers : std::vector<CKComponentController *> {};
-        [self _applyResult:*result invalidComponentControllers:componentControllers];
-        // Layout will be applied if the size of hosting view is not changed during layout calculation in backgorund.
-        // Otherwise layout will be re-calculated on the main thread in `layoutSubviews`.
-        BOOL didApplyLayout = NO;
-        if (rootLayout != nullptr && CGSizeEqualToSize(self.bounds.size, size)) {
-          [self _applyRootLayout:*rootLayout];
-          didApplyLayout = YES;
-        }
-        [self setNeedsLayout];
-        // We don't need to notify size change if we calculated component layout based on initial size.
-        if (!didApplyLayout) {
-          [_delegate componentHostingViewDidInvalidateSize:self];
-        }
-      } else {
-        [self _scheduleAsynchronousUpdate];
-      }
-    });
-  });
-}
-
-- (void)_applyResult:(const CKBuildComponentResult &)result invalidComponentControllers:(const std::vector<CKComponentController *> &)invalidComponentControllers
-{
-  for (const auto componentController : invalidComponentControllers) {
-    [componentController invalidateController];
-  }
-  _pendingInputs.scopeRoot = result.scopeRoot;
-  _pendingInputs.stateUpdates = {};
   _component = result.component;
   [_containerViewProvider setBoundsAnimation:result.boundsAnimation];
   [_containerViewProvider setComponent:result.component];
@@ -461,7 +365,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 
 - (CK::Optional<BuildTrigger>)_synchronouslyUpdateComponentIfNeeded
 {
-  if (_componentNeedsUpdate == NO || _requestedUpdateMode == CKUpdateModeAsynchronous) {
+  if (!_componentNeedsUpdate || _scheduledAsynchronousComponentUpdate) {
     return CK::none;
   }
 
@@ -471,14 +375,9 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
     return CK::none;
   }
 
-  const auto ignoreComponentReuseOptimizations = _shouldReload;
-  _shouldReload = NO;
   _isSynchronouslyUpdatingComponent = YES;
-  const auto result = CKBuildComponent(_pendingInputs.scopeRoot, _pendingInputs.stateUpdates, ^{
-    return _componentProvider(_pendingInputs.model, _pendingInputs.context);
-  }, ignoreComponentReuseOptimizations);
-  [self _applyResult:result invalidComponentControllers:[self _invalidComponentControllersWithNewScopeRoot:result.scopeRoot
-                                                                                     fromPreviousScopeRoot:_pendingInputs.scopeRoot]];
+  const auto result = [_componentGenerator generateComponentSynchronously];
+  [self _applyResult:result];
   _isSynchronouslyUpdatingComponent = NO;
   return result.buildTrigger;
 }
@@ -487,20 +386,27 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
 - (void)_sendDidPrepareLayoutIfNeeded
 {
   _mountedRootLayout.apply([&](const auto &rootLayout) {
-    CKComponentSendDidPrepareLayoutForComponent(_pendingInputs.scopeRoot, rootLayout);
+    CKComponentSendDidPrepareLayoutForComponent(_componentGenerator.scopeRoot, rootLayout);
   });
 }
 
-- (std::vector<CKComponentController *>)_invalidComponentControllersWithNewScopeRoot:(CKComponentScopeRoot *)newRoot
-                                                               fromPreviousScopeRoot:(CKComponentScopeRoot *)previousRoot
+#pragma mark - CKComponentGeneratorDelegate
+
+- (BOOL)componentGeneratorShouldApplyAsynchronousGenerationResult:(CKComponentGenerator *)componentGenerator
 {
-  if (!previousRoot) {
-    return {};
-  }
-  return
-  CKComponentControllerHelper::removedControllersFromPreviousScopeRootMatchingPredicate(newRoot,
-                                                                                        previousRoot,
-                                                                                        &CKComponentControllerInvalidateEventPredicate);
+  return _componentNeedsUpdate;
+}
+
+- (void)componentGenerator:(CKComponentGenerator *)componentGenerator didAsynchronouslyGenerateComponentResult:(CKBuildComponentResult)result
+{
+  _scheduledAsynchronousComponentUpdate = NO;
+  [self _applyResult:result];
+  [self setNeedsLayout];
+}
+
+- (void)componentGenerator:(CKComponentGenerator *)componentGenerator didReceiveComponentStateUpdateWithMode:(CKUpdateMode)mode
+{
+  [self _setNeedsUpdateWithMode:mode];
 }
 
 @end

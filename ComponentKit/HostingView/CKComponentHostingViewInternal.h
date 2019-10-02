@@ -35,7 +35,7 @@ struct CKComponentHostingViewOptions {
   CK::Optional<CK::Component::RootViewPool> rootViewPool;
 };
 
-@interface CKComponentHostingView<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> () <CKComponentHostingViewProtocol, CKComponentStateListener>
+@interface CKComponentHostingView<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> () <CKComponentHostingViewProtocol>
 
 /**
  @param componentProvider  provider conforming to CKComponentProvider protocol.
