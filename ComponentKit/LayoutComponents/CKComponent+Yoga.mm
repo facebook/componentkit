@@ -10,6 +10,8 @@
 
 #import "CKComponent+Yoga.h"
 
+#import "CKComponentInternal.h"
+
 YGConfigRef ckYogaDefaultConfig()
 {
   static YGConfigRef defaultConfig;
@@ -27,6 +29,11 @@ CK_LINKABLE(CKComponent_Yoga)
 - (BOOL)isYogaBasedLayout
 {
   return NO;
+}
+
+- (CKComponentSize)nodeSize
+{
+  return [self size];
 }
 
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
@@ -52,6 +59,11 @@ CK_LINKABLE(CKCompositeComponent_Yoga)
 - (BOOL)isYogaBasedLayout
 {
   return _child.isYogaBasedLayout;
+}
+
+- (CKComponentSize)nodeSize
+{
+  return [_child nodeSize];
 }
 
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize

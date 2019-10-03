@@ -25,21 +25,28 @@ YGConfigRef ckYogaDefaultConfig();
 
 /**
  A flag that represents whether the component's layout is based on Yoga.
- 
+
  The default value is NO
  */
 - (BOOL)isYogaBasedLayout;
 
 /**
+ CKComponentSize of yoga node of the component. For CKComponent it is just it's size
+ that is passed in the constructor. For wrapper components, like CKCompositeComponent
+ it's the node size of it's child component
+ */
+- (CKComponentSize)nodeSize;
+
+/**
  A method that returns a new yoga node for a constained size.
- 
+
  By default returns a Yoga node with default configuration
  */
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize;
 
 /**
  A method to create a component layout instance from the given node and constrained size.
- 
+
  By default returns an empty layout
  */
 - (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize;
@@ -47,7 +54,7 @@ YGConfigRef ckYogaDefaultConfig();
 /**
  A flag that represents whether the component's layout sets a custom baseline value using the key
  [kCKComponentLayoutExtraBaselineKey] or not
- 
+
  The default value is NO
  */
 - (BOOL)usesCustomBaseline;

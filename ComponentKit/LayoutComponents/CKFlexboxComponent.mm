@@ -392,7 +392,12 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
       YGNodeSetBaselineFunc(childNode, useHeightAsBaselineFunction);
     }
 
-    applySizeAttributes(childNode, child, parentWidth, parentHeight);
+    // If deep yoga trees are on, we need to make
+    // sure we do not include CKCompositeSize as
+    // node size, as it will always we equal to {}
+    // and use it's child size instead
+    const auto nodeSize = _style.useDeepYogaTrees ? [child.component nodeSize] : [child.component size];
+    applySizeAttributes(childNode, child, nodeSize, parentWidth, parentHeight);
 
     YGNodeStyleSetFlexGrow(childNode, child.flexGrow);
     YGNodeStyleSetFlexShrink(childNode, child.flexShrink);
@@ -482,7 +487,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
   return stackNode;
 }
 
-static void applySizeAttributes(YGNodeRef node, CKFlexboxComponentChild child, CGFloat parentWidth, CGFloat parentHeight)
+static void applySizeAttributes(YGNodeRef node, CKFlexboxComponentChild child, CKComponentSize nodeSize, CGFloat parentWidth, CGFloat parentHeight)
 {
   const CKComponentSize childSize = child.sizeConstraints;
 
@@ -495,7 +500,7 @@ static void applySizeAttributes(YGNodeRef node, CKFlexboxComponentChild child, C
       break;
     case CKRelativeDimension::Type::AUTO:
       // Fall back to the component's width
-      const CGFloat width = [child.component size].width.resolve(YGUndefined, parentWidth);
+      const CGFloat width = nodeSize.width.resolve(YGUndefined, parentWidth);
       YGNodeStyleSetWidth(node, convertFloatToYogaRepresentation(width));
       break;
   }
@@ -509,7 +514,7 @@ static void applySizeAttributes(YGNodeRef node, CKFlexboxComponentChild child, C
       break;
     case CKRelativeDimension::Type::AUTO:
       // Fall back to the component's height
-      const CGFloat height = [child.component size].height.resolve(YGUndefined, parentHeight);
+      const CGFloat height = nodeSize.height.resolve(YGUndefined, parentHeight);
       YGNodeStyleSetHeight(node, convertFloatToYogaRepresentation(height));
       break;
   }
@@ -523,7 +528,7 @@ static void applySizeAttributes(YGNodeRef node, CKFlexboxComponentChild child, C
       break;
     case CKRelativeDimension::Type::AUTO:
       // Fall back to the component's constraint
-      const CGFloat minWidth = [child.component size].minWidth.resolve(YGUndefined, parentWidth);
+      const CGFloat minWidth = nodeSize.minWidth.resolve(YGUndefined, parentWidth);
       YGNodeStyleSetMinWidth(node, convertFloatToYogaRepresentation(minWidth));
       break;
   }
@@ -537,7 +542,7 @@ static void applySizeAttributes(YGNodeRef node, CKFlexboxComponentChild child, C
       break;
     case CKRelativeDimension::Type::AUTO:
       // Fall back to the component's constraint
-      const CGFloat maxWidth = [child.component size].maxWidth.resolve(YGUndefined, parentWidth);
+      const CGFloat maxWidth = nodeSize.maxWidth.resolve(YGUndefined, parentWidth);
       YGNodeStyleSetMaxWidth(node, convertFloatToYogaRepresentation(maxWidth));
       break;
   }
@@ -551,7 +556,7 @@ static void applySizeAttributes(YGNodeRef node, CKFlexboxComponentChild child, C
       break;
     case CKRelativeDimension::Type::AUTO:
       // Fall back to the component's constraint
-      const CGFloat minHeight = [child.component size].minHeight.resolve(YGUndefined, parentHeight);
+      const CGFloat minHeight = nodeSize.minHeight.resolve(YGUndefined, parentHeight);
       YGNodeStyleSetMinHeight(node, convertFloatToYogaRepresentation(minHeight));
       break;
   }
@@ -565,7 +570,7 @@ static void applySizeAttributes(YGNodeRef node, CKFlexboxComponentChild child, C
       break;
     case CKRelativeDimension::Type::AUTO:
       // Fall back to the component's constraint
-      const CGFloat maxHeight = [child.component size].maxHeight.resolve(YGUndefined, parentHeight);
+      const CGFloat maxHeight = nodeSize.maxHeight.resolve(YGUndefined, parentHeight);
       YGNodeStyleSetMaxHeight(node, convertFloatToYogaRepresentation(maxHeight));
       break;
   }
