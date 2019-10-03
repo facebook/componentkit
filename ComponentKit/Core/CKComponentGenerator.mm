@@ -154,6 +154,7 @@ struct CKComponentGeneratorInputs {
 - (void)setScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {
   CKAssertAffinedQueue();
+  _notifyInvalidateControllerEvents(_invalidComponentControllersBetweenScopeRoots(scopeRoot, _pendingInputs.scopeRoot));
   _pendingInputs.scopeRoot = scopeRoot;
 }
 
@@ -163,17 +164,7 @@ struct CKComponentGeneratorInputs {
 {
   CKAssertAffinedQueue();
 
-  const auto componentControllers = std::make_shared<std::vector<CKComponentController *>>(invalidComponentControllers);
-  const auto invalidateController = ^{
-    for (const auto componentController : *componentControllers) {
-      [componentController invalidateController];
-    }
-  };
-  if ([NSThread isMainThread]) {
-    invalidateController();
-  } else {
-    dispatch_async(dispatch_get_main_queue(), invalidateController);
-  }
+  _notifyInvalidateControllerEvents(invalidComponentControllers);
   _pendingInputs.scopeRoot = result.scopeRoot;
   _pendingInputs.stateUpdates = {};
 }
@@ -184,6 +175,21 @@ struct CKComponentGeneratorInputs {
     return [NSThread isMainThread];
   } else {
     return (dispatch_get_specific(kAffinedQueueKey) == kAffinedQueueKey);
+  }
+}
+
+static void _notifyInvalidateControllerEvents(const std::vector<CKComponentController *> &invalidComponentControllers)
+{
+  const auto componentControllers = std::make_shared<std::vector<CKComponentController *>>(invalidComponentControllers);
+  const auto invalidateControllers = ^{
+    for (const auto componentController : *componentControllers) {
+      [componentController invalidateController];
+    }
+  };
+  if ([NSThread isMainThread]) {
+    invalidateControllers();
+  } else {
+    dispatch_async(dispatch_get_main_queue(), invalidateControllers);
   }
 }
 
