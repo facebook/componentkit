@@ -54,13 +54,7 @@
 	
 	<optgroup label="Properties">
 		
-		<option value="//api/name/mountedView">mountedView</option>
-		
-		<option value="//api/name/rootComponentMountedView">rootComponentMountedView</option>
-		
 		<option value="//api/name/scopeEnumeratorProvider">scopeEnumeratorProvider</option>
-		
-		<option value="//api/name/scopeFrameToken">scopeFrameToken</option>
 		
 		<option value="//api/name/size">size</option>
 		
@@ -79,8 +73,6 @@
 	<optgroup label="Instance Methods">
 		
 		<option value="//api/name/backtraceStackDescription">- backtraceStackDescription</option>
-		
-		<option value="//api/name/childrenDidMount:">- childrenDidMount:</option>
 		
 		<option value="//api/name/mountInContext:size:children:supercomponent:systraceListener:">- mountInContext:size:children:supercomponent:systraceListener:</option>
 		
@@ -370,141 +362,6 @@ used to specify that subcomponents should be mounted inside the view.</p>
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/childrenDidMount:" title="childrenDidMount:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/childrenDidMount:">&ndash;&nbsp;childrenDidMount:</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>Called when the component and all its children have been mounted.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (void)childrenDidMount:(id&lt;CKSystraceListener&gt;)<em>systraceListener</em></code></div>
-
-		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>systraceListener</code></th>
-						<td><p>The current systrace listener - will be nil if systrace is not enabled.</p></td>
-					</tr>
-				
-				</table>
-			</div>
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/rootComponentMountedView" title="rootComponentMountedView"></a>
-	<h3 class="method-title"><code><a href="#//api/name/rootComponentMountedView">&nbsp;&nbsp;rootComponentMountedView</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>Used to get the root component in the responder chain; don&rsquo;t touch this.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>@property (nonatomic, weak) UIView *rootComponentMountedView</code></div>
-
-		    
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/scopeFrameToken" title="scopeFrameToken"></a>
-	<h3 class="method-title"><code><a href="#//api/name/scopeFrameToken">&nbsp;&nbsp;scopeFrameToken</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>For internal use only; don&rsquo;t touch this.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) id&lt;NSObject&gt; scopeFrameToken</code></div>
-
-		    
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
 	<a name="//api/name/size" title="size"></a>
 	<h3 class="method-title"><code><a href="#//api/name/size">&nbsp;&nbsp;size</a></code>
 </h3>
@@ -563,47 +420,6 @@ used to specify that subcomponents should be mounted inside the view.</p>
 		    
 
 			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) id&lt;CKComponentScopeEnumeratorProvider&gt; scopeEnumeratorProvider</code></div>
-
-		    
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/mountedView" title="mountedView"></a>
-	<h3 class="method-title"><code><a href="#//api/name/mountedView">&nbsp;&nbsp;mountedView</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>If the component owns its own view and is mounted, returns it.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) UIView *mountedView</code></div>
 
 		    
 			
@@ -724,7 +540,7 @@ used to specify that subcomponents should be mounted inside the view.</p>
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2019 Facebook. All rights reserved. Updated: 2019-09-30</p>
+						<p class="copyright">Copyright &copy; 2019 Facebook. All rights reserved. Updated: 2019-10-03</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>

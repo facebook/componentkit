@@ -78,13 +78,7 @@
 		
 		<option value="//api/name/canPerformAction:withSender:">- canPerformAction:withSender:</option>
 		
-		<option value="//api/name/computeLayoutThatFits:">- computeLayoutThatFits:</option>
-		
-		<option value="//api/name/computeLayoutThatFits:restrictedToSize:relativeToParentSize:">- computeLayoutThatFits:restrictedToSize:relativeToParentSize:</option>
-		
 		<option value="//api/name/controller">- controller</option>
-		
-		<option value="//api/name/layoutThatFits:parentSize:">- layoutThatFits:parentSize:</option>
 		
 		<option value="//api/name/nextResponder">- nextResponder</option>
 		
@@ -334,189 +328,6 @@ of the component&rsquo;s content. In this case, you should <strong>not</strong> 
 
 			
 
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/layoutThatFits:parentSize:" title="layoutThatFits:parentSize:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/layoutThatFits:parentSize:">&ndash;&nbsp;layoutThatFits:parentSize:</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>Call this on children components to compute their layouts within your implementation of -computeLayoutThatFits:.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (CKComponentLayout)layoutThatFits:(CKSizeRange)<em>constrainedSize</em> parentSize:(CGSize)<em>parentSize</em></code></div>
-
-		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>constrainedSize</code></th>
-						<td><p>Specifies a minimum and maximum size. The receiver must choose a size that is in this range.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>parentSize</code></th>
-						<td><p>The parent component&rsquo;s size. If the parent component does not have a final size in a given dimension,
-                   then it should be passed as kCKComponentParentDimensionUndefined (for example, if the parent&rsquo;s width
-                   depends on the child&rsquo;s size).</p></td>
-					</tr>
-				
-				</table>
-			</div>
-			
-
-			
-			<div class="method-subsection return">
-				<h4 class="method-subtitle parameter-title">Return Value</h4>
-				<p>A struct defining the layout of the receiver and its children.</p>
-			</div>
-			
-
-			
-
-			
-			<div class="method-subsection discussion-section">
-				<h4 class="method-subtitle">Discussion</h4>
-				<div class="warning"><p><strong>Warning:</strong> You may not override this method. Override -computeLayoutThatFits: instead.</p></div><div class="warning"><p><strong>Warning:</strong> In almost all cases, prefer the use of CKComputeComponentLayout in CKComponentLayout</p></div>
-			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/computeLayoutThatFits:" title="computeLayoutThatFits:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/computeLayoutThatFits:">&ndash;&nbsp;computeLayoutThatFits:</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>Override this method to compute your component&rsquo;s layout.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)<em>constrainedSize</em></code></div>
-
-		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>constrainedSize</code></th>
-						<td><p>A min and max size. This is computed as described in the description. The CKComponentLayout you
-                        return MUST have a size between these two sizes. This is enforced by assertion.</p></td>
-					</tr>
-				
-				</table>
-			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection discussion-section">
-				<h4 class="method-subtitle">Discussion</h4>
-				<p>Why do you need to override -computeLayoutThatFits: instead of -layoutThatFits:parentSize:?
-The base implementation of -layoutThatFits:parentSize: does the following for you:
-1. First, it uses the parentSize parameter to resolve the component&rsquo;s size (the one passed into -initWithView:size:).
-2. Then, it intersects the resolved size with the constrainedSize parameter. If the two don&rsquo;t intersect,
-    constrainedSize wins. This allows a component to always override its childrens' sizes when computing its layout.
-    (The analogy for UIView: you might return a certain size from -sizeThatFits:, but a parent view can always override
-    that size and set your frame to any size.)</p>
-			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/computeLayoutThatFits:restrictedToSize:relativeToParentSize:" title="computeLayoutThatFits:restrictedToSize:relativeToParentSize:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/computeLayoutThatFits:restrictedToSize:relativeToParentSize:">&ndash;&nbsp;computeLayoutThatFits:restrictedToSize:relativeToParentSize:</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>CKComponent&rsquo;s implementation of -layoutThatFits:parentSize: calls this method to resolve the component&rsquo;s size
-against parentSize, intersect it with constrainedSize, and call -computeLayoutThatFits: with the result.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)<em>constrainedSize</em> restrictedToSize:(const CKComponentSize &amp;)<em>size</em> relativeToParentSize:(CGSize)<em>parentSize</em></code></div>
-
-		    
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection discussion-section">
-				<h4 class="method-subtitle">Discussion</h4>
-				<p>In certain advanced cases, you may want to customize this logic. Overriding this method allows you to receive all
-three parameters and do the computation yourself.</p><div class="warning"><p><strong>Warning:</strong> Overriding this method should be done VERY rarely.</p></div>
-			</div>
 			
 
 			
@@ -914,10 +725,10 @@ identify equivalent components between trees.</p></div>
 they are composed of other components, return the animatable view of its descendant. As a rule of thumb:</p>
 
 <ol>
-<li>. CKComponent subclasses backed by a view will return the backing view</li>
-<li>. CKComponent subclasses not backed by a view will return nil</li>
-<li>. CKCompositeComponent subclasses backed by a view will return the backing view</li>
-<li>. CKCompositeComponent subclasses not backed by a view will return the animatable view of its descendant</li>
+<li>CKComponent subclasses backed by a view will return the backing view</li>
+<li>CKComponent subclasses not backed by a view will return nil</li>
+<li>CKCompositeComponent subclasses backed by a view will return the backing view</li>
+<li>CKCompositeComponent subclasses not backed by a view will return the animatable view of its descendant</li>
 </ol>
 
 
@@ -994,7 +805,7 @@ they are composed of other components, return the animatable view of its descend
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2019 Facebook. All rights reserved. Updated: 2019-09-30</p>
+						<p class="copyright">Copyright &copy; 2019 Facebook. All rights reserved. Updated: 2019-10-03</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
