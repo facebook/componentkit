@@ -132,7 +132,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener = nil,
-                                                   CK::Optional<BuildTrigger> buildTrigger = CK::none,
+                                                   CK::Optional<CKBuildTrigger> buildTrigger = CK::none,
                                                    std::unordered_set<CKMountablePredicate> predicates = CKComponentAnimationPredicates());
 
 /**

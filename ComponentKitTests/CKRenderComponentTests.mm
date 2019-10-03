@@ -86,7 +86,7 @@
     .previousScopeRoot = _scopeRoot,
     .stateUpdates = {},
     .treeNodeDirtyIds = {100, 101}, // Use a random id that represents a fake state update on a different branch.
-    .buildTrigger = BuildTrigger::StateUpdate,
+    .buildTrigger = CKBuildTrigger::StateUpdate,
     .unifyComponentTreeConfig = _unifyComponentTrees,
   });
 
@@ -153,7 +153,7 @@
     .treeNodeDirtyIds = {
       _c.scopeHandle.treeNodeIdentifier
     },
-    .buildTrigger = BuildTrigger::StateUpdate,
+    .buildTrigger = CKBuildTrigger::StateUpdate,
     .unifyComponentTreeConfig = _unifyComponentTrees,
   });
 
@@ -186,7 +186,7 @@
     .treeNodeDirtyIds = {
       _c.scopeHandle.treeNodeIdentifier
     },
-    .buildTrigger = BuildTrigger::StateUpdate,
+    .buildTrigger = CKBuildTrigger::StateUpdate,
     .unifyComponentTreeConfig = _unifyComponentTrees,
   });
 
@@ -214,7 +214,7 @@
     .previousScopeRoot = _scopeRoot,
     .stateUpdates = {},
     .treeNodeDirtyIds = {},
-    .buildTrigger = BuildTrigger::PropsUpdate,
+    .buildTrigger = CKBuildTrigger::PropsUpdate,
     .unifyComponentTreeConfig = _unifyComponentTrees,
   });
 
@@ -243,7 +243,7 @@
     .previousScopeRoot = _scopeRoot,
     .stateUpdates = {},
     .treeNodeDirtyIds = {},
-    .buildTrigger = BuildTrigger::PropsUpdate,
+    .buildTrigger = CKBuildTrigger::PropsUpdate,
     .unifyComponentTreeConfig = _unifyComponentTrees,
   });
 
@@ -309,7 +309,7 @@
     .previousScopeRoot = _scopeRoot,
     .stateUpdates = {},
     .treeNodeDirtyIds = {},
-    .buildTrigger = BuildTrigger::StateUpdate,
+    .buildTrigger = CKBuildTrigger::StateUpdate,
     .unifyComponentTreeConfig = _unifyComponentTrees,
   });
 
@@ -476,7 +476,7 @@
   {
     CKThreadLocalComponentScope threadScope(scopeRoot, {}, _unifyComponentTrees);
     c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
-    SimulateBuildComponentTree(scopeRoot, previousRoot, BuildTrigger::NewTree, c1, enableLayoutCache, _unifyComponentTrees);
+    SimulateBuildComponentTree(scopeRoot, previousRoot, CKBuildTrigger::NewTree, c1, enableLayoutCache, _unifyComponentTrees);
     CKComputeRootComponentLayout(c1, sizeRange).layout();
   }
 
@@ -487,7 +487,7 @@
   {
     CKThreadLocalComponentScope threadScope(scopeRoot, {}, _unifyComponentTrees);
     c2 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
-    SimulateBuildComponentTree(scopeRoot, previousRoot, BuildTrigger::PropsUpdate, c2, enableLayoutCache, _unifyComponentTrees);
+    SimulateBuildComponentTree(scopeRoot, previousRoot, CKBuildTrigger::PropsUpdate, c2, enableLayoutCache, _unifyComponentTrees);
     CKComputeRootComponentLayout(c2, sizeRange);
   }
 
@@ -510,7 +510,7 @@
   {
     CKThreadLocalComponentScope threadScope(scopeRoot, {}, _unifyComponentTrees);
     c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
-    SimulateBuildComponentTree(scopeRoot, previousRoot, BuildTrigger::NewTree, c1, enableLayoutCache, _unifyComponentTrees);
+    SimulateBuildComponentTree(scopeRoot, previousRoot, CKBuildTrigger::NewTree, c1, enableLayoutCache, _unifyComponentTrees);
     CKComputeRootComponentLayout(c1, sizeRange).layout();
   }
 
@@ -521,7 +521,7 @@
   {
     CKThreadLocalComponentScope threadScope(scopeRoot, {}, _unifyComponentTrees);
     c2 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
-    SimulateBuildComponentTree(scopeRoot, previousRoot, BuildTrigger::PropsUpdate, c2, enableLayoutCache, _unifyComponentTrees);
+    SimulateBuildComponentTree(scopeRoot, previousRoot, CKBuildTrigger::PropsUpdate, c2, enableLayoutCache, _unifyComponentTrees);
     CKComputeRootComponentLayout(c2, sizeRange);
   }
 
@@ -545,7 +545,7 @@
   {
     CKThreadLocalComponentScope threadScope(scopeRoot, {}, _unifyComponentTrees);
     c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
-    SimulateBuildComponentTree(scopeRoot, previousRoot, BuildTrigger::NewTree, c1, enableLayoutCache, _unifyComponentTrees);
+    SimulateBuildComponentTree(scopeRoot, previousRoot, CKBuildTrigger::NewTree, c1, enableLayoutCache, _unifyComponentTrees);
     CKComputeRootComponentLayout(c1, sizeRange1).layout();
   }
 
@@ -556,7 +556,7 @@
   {
     CKThreadLocalComponentScope threadScope(scopeRoot, {}, _unifyComponentTrees);
     c2 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
-    SimulateBuildComponentTree(scopeRoot, previousRoot, BuildTrigger::PropsUpdate, c2, enableLayoutCache, _unifyComponentTrees);
+    SimulateBuildComponentTree(scopeRoot, previousRoot, CKBuildTrigger::PropsUpdate, c2, enableLayoutCache, _unifyComponentTrees);
     CKComputeRootComponentLayout(c2, sizeRange2);
   }
 
@@ -627,7 +627,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
 
 static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
                                        CKComponentScopeRoot *previousScopeRoot,
-                                       BuildTrigger buildTrigger,
+                                       CKBuildTrigger buildTrigger,
                                        CKComponent *component,
                                        BOOL enableLayoutCache,
                                        CKUnifyComponentTreeConfig config) {

@@ -27,7 +27,7 @@ public:
   CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                               const CKComponentStateUpdateMap &updates,
                               CKUnifyComponentTreeConfig unifyComponentTreeConfig = {},
-                              BuildTrigger trigger = BuildTrigger::NewTree);
+                              CKBuildTrigger trigger = CKBuildTrigger::NewTree);
   ~CKThreadLocalComponentScope();
 
   /** Returns nullptr if there isn't a current scope */
@@ -48,7 +48,7 @@ public:
   id<CKSystraceListener> systraceListener;
   
   /** Build trigger of the corsposnding component creation */
-  BuildTrigger buildTrigger;
+  CKBuildTrigger buildTrigger;
 
   /** Component Allocations */
   NSUInteger componentAllocations;

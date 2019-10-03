@@ -151,7 +151,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener,
-                                                   CK::Optional<BuildTrigger> buildTrigger,
+                                                   CK::Optional<CKBuildTrigger> buildTrigger,
                                                    std::unordered_set<CKMountablePredicate> predicates)
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent buildTrigger:buildTrigger];
@@ -160,7 +160,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
 #if CK_ASSERTIONS_ENABLED
   const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
 #endif
-  
+
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectDuplicateComponent(layout);
   auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};

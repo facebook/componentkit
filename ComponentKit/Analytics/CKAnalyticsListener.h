@@ -35,7 +35,7 @@
  @param stateUpdates The state updates map for the component tree creation.
  */
 - (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
-                               buildTrigger:(BuildTrigger)buildTrigger
+                               buildTrigger:(CKBuildTrigger)buildTrigger
                                stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
 /**
@@ -47,7 +47,7 @@
  @param component Root component for created tree
  */
 - (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
-                              buildTrigger:(BuildTrigger)buildTrigger
+                              buildTrigger:(CKBuildTrigger)buildTrigger
                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                                  component:(CKComponent *)component;
 
@@ -65,7 +65,7 @@
  ThreadB, didLayout Component1
  To identify matching will/didLayout events between callbacks, please use Thread id and Component id
  */
-- (void)willLayoutComponentTreeWithRootComponent:(id<CKMountable>)component buildTrigger:(CK::Optional<BuildTrigger>)buildTrigger;
+- (void)willLayoutComponentTreeWithRootComponent:(id<CKMountable>)component buildTrigger:(CK::Optional<CKBuildTrigger>)buildTrigger;
 
 /**
  Called after component tree layout.

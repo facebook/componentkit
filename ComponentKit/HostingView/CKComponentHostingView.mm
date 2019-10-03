@@ -363,7 +363,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   [_containerViewProvider setRootLayout:rootLayout];
 }
 
-- (CK::Optional<BuildTrigger>)_synchronouslyUpdateComponentIfNeeded
+- (CK::Optional<CKBuildTrigger>)_synchronouslyUpdateComponentIfNeeded
 {
   if (!_componentNeedsUpdate || _scheduledAsynchronousComponentUpdate) {
     return CK::none;

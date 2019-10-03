@@ -239,14 +239,14 @@ static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
 #pragma mark - CKAnalyticsListener
 
 - (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
-                               buildTrigger:(BuildTrigger)buildTrigger
+                               buildTrigger:(CKBuildTrigger)buildTrigger
                                stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
   _buildComponentCount++;
 }
 
 - (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
-                              buildTrigger:(BuildTrigger)buildTrigger
+                              buildTrigger:(CKBuildTrigger)buildTrigger
                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                                  component:(CKComponent *)component
 {
@@ -299,7 +299,7 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 
 }
 
-- (void)willLayoutComponentTreeWithRootComponent:(id<CKMountable>)component buildTrigger:(CK::Optional<BuildTrigger>)buildTrigger
+- (void)willLayoutComponentTreeWithRootComponent:(id<CKMountable>)component buildTrigger:(CK::Optional<CKBuildTrigger>)buildTrigger
 {
 
 }

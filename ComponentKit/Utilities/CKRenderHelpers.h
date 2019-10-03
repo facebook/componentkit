@@ -185,5 +185,5 @@ namespace CKRender {
    */
   auto treeNodeDirtyIdsFor(CKComponentScopeRoot *previousRoot,
                            const CKComponentStateUpdateMap &stateUpdates,
-                           const BuildTrigger &buildTrigger) -> CKTreeNodeDirtyIds;
+                           const CKBuildTrigger &buildTrigger) -> CKTreeNodeDirtyIds;
 }

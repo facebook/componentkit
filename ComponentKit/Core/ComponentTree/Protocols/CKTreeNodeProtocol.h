@@ -49,7 +49,7 @@ struct CKBuildComponentTreeParams {
   const CKTreeNodeDirtyIds &treeNodeDirtyIds;
 
   // The trigger for initiating a new generation
-  BuildTrigger buildTrigger;
+  CKBuildTrigger buildTrigger;
 
   // The current systrace listener. Can be nil if systrace is not enabled.
   id<CKSystraceListener> systraceListener;

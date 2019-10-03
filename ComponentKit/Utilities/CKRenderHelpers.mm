@@ -159,7 +159,7 @@ namespace CKRenderInternal {
     }
 
     // State update branch:
-    if (params.buildTrigger == BuildTrigger::StateUpdate) {
+    if (params.buildTrigger == CKBuildTrigger::StateUpdate) {
       // Check if the tree node is not dirty (not in a branch of a state update).
       auto const dirtyNodeId = params.treeNodeDirtyIds.find(node.nodeIdentifier);
       if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
@@ -176,7 +176,7 @@ namespace CKRenderInternal {
       }
     }
     // Props update branch:
-    else if (params.buildTrigger == BuildTrigger::PropsUpdate) {
+    else if (params.buildTrigger == CKBuildTrigger::PropsUpdate) {
       return CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params, didReuseBlock);
     }
 
@@ -557,7 +557,7 @@ namespace CKRender {
   auto componentHasStateUpdate(id<CKTreeNodeProtocol> node,
                                id<CKTreeNodeWithChildrenProtocol> previousParent,
                                const CKBuildComponentTreeParams &params) -> BOOL {
-    if (previousParent && params.buildTrigger == BuildTrigger::StateUpdate) {
+    if (previousParent && params.buildTrigger == CKBuildTrigger::StateUpdate) {
       auto const scopeHandle = node.scopeHandle;
       if (scopeHandle != nil) {
         auto const stateUpdateBlock = params.stateUpdates.find(scopeHandle);
@@ -587,11 +587,11 @@ namespace CKRender {
 
   auto treeNodeDirtyIdsFor(CKComponentScopeRoot *previousRoot,
                            const CKComponentStateUpdateMap &stateUpdates,
-                           const BuildTrigger &buildTrigger) -> CKTreeNodeDirtyIds
+                           const CKBuildTrigger &buildTrigger) -> CKTreeNodeDirtyIds
   {
     CKTreeNodeDirtyIds treeNodesDirtyIds;
     // Compute the dirtyNodeIds in case of a state update only.
-    if (buildTrigger == BuildTrigger::StateUpdate) {
+    if (buildTrigger == CKBuildTrigger::StateUpdate) {
       for (auto const & stateUpdate : stateUpdates) {
         CKRender::markTreeNodeDirtyIdsFromNodeUntilRoot(stateUpdate.first.treeNodeIdentifier, previousRoot.rootNode, treeNodesDirtyIds);
       }

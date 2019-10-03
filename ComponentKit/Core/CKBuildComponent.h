@@ -26,7 +26,7 @@ namespace CKBuildComponentHelpers {
 
    @return The related build trigger given the in input parameters
    */
-  auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> BuildTrigger;
+  auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> CKBuildTrigger;
 }
 
 /**

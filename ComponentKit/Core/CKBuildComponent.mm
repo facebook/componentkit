@@ -25,12 +25,12 @@
 #import "CKScopeTreeNodeProtocol.h"
 
 namespace CKBuildComponentHelpers {
-  auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> BuildTrigger
+  auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> CKBuildTrigger
   {
     if (!scopeRoot.rootNode.isEmpty()) {
-      return (stateUpdates.size() > 0) ? BuildTrigger::StateUpdate : BuildTrigger::PropsUpdate;
+      return (stateUpdates.size() > 0) ? CKBuildTrigger::StateUpdate : CKBuildTrigger::PropsUpdate;
     }
-    return BuildTrigger::NewTree;
+    return CKBuildTrigger::NewTree;
   }
 
   /**

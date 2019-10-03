@@ -10,17 +10,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKBuildTrigger.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 
 @class CKComponent;
 @class CKComponentScopeRoot;
-
-// Collection of events that trigger a new component generation.
-enum class BuildTrigger {
-  NewTree,
-  StateUpdate,
-  PropsUpdate,
-};
 
 /**
  The results of a build operation.
@@ -32,5 +26,5 @@ struct CKBuildComponentResult {
   CKComponent *component;
   CKComponentScopeRoot *scopeRoot;
   CKComponentBoundsAnimation boundsAnimation;
-  BuildTrigger buildTrigger;
+  CKBuildTrigger buildTrigger;
 };
