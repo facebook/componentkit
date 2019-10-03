@@ -54,6 +54,13 @@ auto CK::Component::GlobalRootViewPool() -> RootViewPool &
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     globalRootViewPool = new RootViewPool();
+    [[NSNotificationCenter defaultCenter]
+     addObserverForName:UIApplicationDidReceiveMemoryWarningNotification
+     object:nil
+     queue:[NSOperationQueue mainQueue]
+     usingBlock:^(NSNotification * _Nonnull note) {
+       globalRootViewPool->clear();
+     }];
   });
   return *globalRootViewPool;
 }
