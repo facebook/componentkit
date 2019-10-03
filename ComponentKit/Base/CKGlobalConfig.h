@@ -33,6 +33,10 @@ struct CKGlobalConfig {
   BOOL updateComponentInControllerAfterBuild = NO;
   /** Component Tree Unification config */
   CKUnifyComponentTreeConfig unifyComponentTreeConfig;
+  /**
+   `CK::Component::GlobalRootViewPool` will be used in `CKComponentHostingView` when this is enabled.
+   */
+  BOOL enableGlobalRootViewPoolInHostingView = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();
