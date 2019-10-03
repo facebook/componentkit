@@ -402,6 +402,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   _scheduledAsynchronousComponentUpdate = NO;
   [self _applyResult:result];
   [self setNeedsLayout];
+  [_delegate componentHostingViewDidInvalidateSize:self];
 }
 
 - (void)componentGenerator:(CKComponentGenerator *)componentGenerator didReceiveComponentStateUpdateWithMode:(CKUpdateMode)mode

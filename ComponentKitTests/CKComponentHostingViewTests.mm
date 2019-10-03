@@ -165,6 +165,16 @@ typedef struct {
   XCTAssertTrue(_calledSizeDidInvalidate);
 }
 
+- (void)testInformsDelegateSizeIsInvalidatedOnAsynchronousUpdate
+{
+  CKComponentHostingView *view = [[self class] hostingView:{}];
+  view.delegate = self;
+  [view updateContext:@"foo" mode:CKUpdateModeAsynchronous];
+  XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _calledSizeDidInvalidate;
+  }));
+}
+
 - (void)testUpdateWithEmptyBoundsMountLayout
 {
   CKComponentHostingViewTestModel *model = [[CKComponentHostingViewTestModel alloc] initWithColor:[UIColor orangeColor] size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
