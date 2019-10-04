@@ -88,6 +88,12 @@
 @property (nonatomic, strong, readonly) UIView *view;
 
 /**
+ This returns the component that was last mounted. It can be `nil` if the latest generation hasn't been mounted.
+ NOTE: this is for code migration purpose, please DO NOT USE.
+ */
+- (ComponentType)lastMountedComponent;
+
+/**
  While the controller's component is mounted, returns its next responder. This is the first of:
  - The supercomponent of the controller's component;
  - The view the controller's component is mounted within, if it is the root component.

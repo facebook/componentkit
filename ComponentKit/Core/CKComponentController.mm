@@ -82,11 +82,13 @@ static NSString *componentStateName(CKComponentControllerState state)
                          NSStringFromClass(self.class),
                          @"`self.component` must be called on the main thread");
   }
-  CKWarnWithCategory(_component || !_latestComponent,
-                     NSStringFromClass(self.class),
-                     @"Accessing `self.component` while it's not mounted. This is a temporary message during code migration, please ignore.");
 #endif
   return _component ?: _latestComponent;
+}
+
+- (CKComponent *)lastMountedComponent
+{
+  return _component;
 }
 
 - (void)willMount {}
