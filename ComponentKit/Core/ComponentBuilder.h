@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentGestureActions.h>
+#import <ComponentKit/CKNonNull.h>
 #import <ComponentKit/CKPropBitmap.h>
 #import <ComponentKit/CKTransitions.h>
 #import <ComponentKit/CKOptional.h>
@@ -20,9 +21,13 @@
 namespace CK {
 namespace BuilderDetails {
 
-enum class ComponentBuilderBasePropId { context = 1 << 0, transitions = 1 << 1, viewClass = 1 << 2, viewConfig = 1 << 3, size = 1 << 4 };
+namespace BuilderBasePropId {
+  constexpr static auto context = 1ULL << 0;
+  constexpr static auto transitions = context << 1;
+  constexpr static auto __max = transitions;
+};
 
-template <typename PropsBitmapType, template <PropsBitmapType> class Derived, PropsBitmapType PropsBitmap>
+template <template <PropsBitmapType> class Derived, PropsBitmapType PropsBitmap>
 class __attribute__((__may_alias__)) BuilderBase {
   CK::ComponentSpecContext _context;
   id _key;
@@ -30,14 +35,10 @@ class __attribute__((__may_alias__)) BuilderBase {
   NS_RETURNS_RETAINED auto _buildComponentWithTransitionsIfNeeded() noexcept -> CKComponent *
   {
     const auto component = static_cast<Derived<PropsBitmap> &>(*this)._build();
-    switch (PropsBitmap) {
-      case 0:
-        return component;
-      case PropBitmap::withIds(ComponentBuilderBasePropId::transitions):
-        return CKComponentWithTransitions(component, _transitions);
-      default:
-        CKCFailAssert(@"Invalid bitmap: %u", PropsBitmap);
-        return nil;
+    if (PropBitmap::isSet(PropsBitmap, BuilderBasePropId::transitions)) {
+      return CKComponentWithTransitions(component, _transitions);
+    } else {
+      return component;
     }
   }
 
@@ -67,10 +68,10 @@ public:
 
    @param key The key to reference the component built.
    */
-  __attribute__((noinline)) auto &key(id key)
+  __attribute__((noinline)) auto &key(CK::RelaxedNonNull<id> key)
   {
     constexpr auto contextIsSet =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::context);
+        PropBitmap::isSet(PropsBitmap, BuilderBasePropId::context);
     static_assert(contextIsSet, "Cannot set 'key' without specifying 'context'");
 
     _key = key;
@@ -85,7 +86,7 @@ public:
   __attribute__((noinline)) auto &animationInitial(CK::Animation::Initial animationInitial)
   {
     _transitions.onInitialMount = std::move(animationInitial);
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::transitions)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | BuilderBasePropId::transitions> &>(*this);
   }
 
   /**
@@ -96,35 +97,27 @@ public:
   __attribute__((noinline)) auto &animationFinal(CK::Animation::Final animationFinal)
   {
     _transitions.onFinalUnmount = std::move(animationFinal);
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::transitions)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | BuilderBasePropId::transitions> &>(*this);
   }
 
 private:
   CKTransitions _transitions;
 };
 
-using ComponentBuilderBaseBitmapType = std::underlying_type_t<ComponentBuilderBasePropId>;
-
-template <ComponentBuilderBaseBitmapType>
-class ComponentBuilder;
-
+namespace ComponentBuilderBasePropId {
+  constexpr static auto viewClass = BuilderBasePropId::__max << 1;
+  constexpr static auto viewConfig = viewClass << 1;
+  constexpr static auto size = viewConfig << 1;
+  constexpr static auto __max = size;
 }
 
-using ComponentBuilderEmpty = BuilderDetails::ComponentBuilder<0>;
-using ComponentBuilderContext = BuilderDetails::ComponentBuilder<1>;
-
-auto ComponentBuilder() -> ComponentBuilderEmpty;
-auto ComponentBuilder(CK::ComponentSpecContext c) -> ComponentBuilderContext;
-
-namespace BuilderDetails {
-
-template <template <ComponentBuilderBaseBitmapType> class Derived, ComponentBuilderBaseBitmapType PropsBitmap>
-class __attribute__((__may_alias__)) ComponentBuilderBase : public BuilderBase<ComponentBuilderBaseBitmapType, Derived, PropsBitmap> {
+template <template <PropsBitmapType> class Derived, PropsBitmapType PropsBitmap>
+class __attribute__((__may_alias__)) ComponentBuilderBase : public BuilderBase<Derived, PropsBitmap> {
  protected:
   ComponentBuilderBase() = default;
 
   ComponentBuilderBase(CK::ComponentSpecContext context)
-    : BuilderBase<ComponentBuilderBaseBitmapType, Derived, PropsBitmap>{context} { }
+    : BuilderBase<Derived, PropsBitmap>{context} { }
 
   ComponentBuilderBase(const ComponentBuilderBase &) = default;
   auto operator=(const ComponentBuilderBase &) -> ComponentBuilderBase& = default;
@@ -142,7 +135,7 @@ public:
     static_assert(!viewClassOverridesExistingViewConfiguration,
                   "Setting 'viewClass' overrides existing view configuration");
     _viewClass = c;
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::viewClass)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::viewClass> &>(*this);
   }
 
   /**
@@ -157,7 +150,7 @@ public:
     static_assert(!viewClassOverridesExistingViewConfiguration,
                   "Setting 'viewClass' overrides existing view configuration");
     _viewClass = f;
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::viewClass)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::viewClass> &>(*this);
   }
 
   /**
@@ -170,7 +163,7 @@ public:
     static_assert(!viewClassOverridesExistingViewConfiguration,
                   "Setting 'viewClass' overrides existing view configuration");
     _viewClass = std::move(c);
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::viewClass)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::viewClass> &>(*this);
   }
 
   /**
@@ -191,7 +184,7 @@ public:
     static_assert(!viewConfigurationOverridesExistingViewClass,
                   "Setting view configuration overrides existing view class");
     _viewConfig = std::move(c);
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::viewConfig)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::viewConfig> &>(*this);
   }
 
   /**
@@ -615,7 +608,7 @@ public:
   auto &width(CKRelativeDimension w)
   {
     _size.width = w;
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::size)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
   /**
@@ -624,7 +617,7 @@ public:
   auto &width(CGFloat w)
   {
     _size.width = w;
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::size)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
   /**
@@ -633,7 +626,7 @@ public:
   auto &height(CKRelativeDimension h)
   {
     _size.height = h;
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::size)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
   /**
@@ -642,7 +635,7 @@ public:
   auto &height(CGFloat h)
   {
     _size.height = h;
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::size)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
   /**
@@ -651,7 +644,7 @@ public:
   auto &minWidth(CKRelativeDimension w)
   {
     _size.minWidth = w;
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::size)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
   /**
@@ -660,7 +653,7 @@ public:
   auto &minHeight(CKRelativeDimension h)
   {
     _size.minHeight = h;
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::size)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
   /**
@@ -669,7 +662,7 @@ public:
   auto &maxWidth(CKRelativeDimension w)
   {
     _size.maxWidth = w;
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::size)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
   /**
@@ -678,7 +671,7 @@ public:
   auto &maxHeight(CKRelativeDimension h)
   {
     _size.maxHeight = h;
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::size)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
   /**
@@ -687,7 +680,7 @@ public:
   __attribute__((noinline)) auto &size(CKComponentSize &&s)
   {
     _size = std::move(s);
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::size)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
   /**
@@ -696,7 +689,7 @@ public:
   __attribute__((noinline)) auto &size(const CKComponentSize &s)
   {
     _size = s;
-    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::size)> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
  protected:
@@ -708,6 +701,14 @@ public:
   CKComponentViewConfiguration _viewConfig;
   CKComponentSize _size;
 };
+
+template <PropsBitmapType = 0>
+class ComponentBuilder;
+
+}
+
+using ComponentBuilderEmpty = BuilderDetails::ComponentBuilder<>;
+using ComponentBuilderContext = BuilderDetails::ComponentBuilder<BuilderDetails::BuilderBasePropId::context>;
 
 /**
  Provides a fluent API for creating instances of @c CKComponent base class.
@@ -721,7 +722,31 @@ public:
  .height(100)
  .build()
  */
-template <ComponentBuilderBaseBitmapType PropsBitmap>
+auto ComponentBuilder() -> ComponentBuilderEmpty;
+
+/**
+ Provides a fluent API for creating instances of @c CKComponent base class.
+
+ @param context The spec context to use.
+
+ @note This factory overload is to be used when a key is required to reference the built component in a spec from the
+ `CK_ANIMATION` function.
+
+ @example A component that renders a red square:
+ @code
+ CK::ComponentBuilder(context)
+ .key(@"my_child")
+ .viewClass([UIView class])
+ .backgroundColor(UIColor.redColor)
+ .width(100)
+ .height(100)
+ .build()
+ */
+auto ComponentBuilder(CK::ComponentSpecContext c) -> ComponentBuilderContext;
+
+namespace BuilderDetails {
+
+template <PropsBitmapType PropsBitmap>
 class __attribute__((__may_alias__)) ComponentBuilder : public ComponentBuilderBase<ComponentBuilder, PropsBitmap> {
  public:
   __attribute__((noinline)) ~ComponentBuilder() = default;
@@ -734,7 +759,7 @@ private:
   friend auto CK::ComponentBuilder() -> ComponentBuilderEmpty;
   friend auto CK::ComponentBuilder(CK::ComponentSpecContext) -> ComponentBuilderContext;
 
-  template <typename PropsBitmapType, template <PropsBitmapType> class Derived, PropsBitmapType>
+  template <template <PropsBitmapType> class, PropsBitmapType>
   friend class BuilderBase;
 
   /**
@@ -744,30 +769,26 @@ private:
    */
   __attribute__((noinline)) NS_RETURNS_RETAINED auto _build() noexcept -> CKComponent *
   {
-    switch (PropsBitmap) {
-      case 0:
-        return [CKComponent newWithView:{} size:{}];
-      case PropBitmap::withIds(ComponentBuilderBasePropId::viewConfig):
-        return [CKComponent newWithView:this->_viewConfig size:{}];
-      case PropBitmap::withIds(ComponentBuilderBasePropId::viewClass):
-        return [CKComponent newWithView:{std::move(this->_viewClass),
-                                         std::move(this->_attributes),
-                                         std::move(this->_accessibilityCtx),
-                                         this->_blockImplicitAnimations}
-                                   size:{}];
-      case PropBitmap::withIds(ComponentBuilderBasePropId::size):
-        return [CKComponent newWithView:{} size:this->_size];
-      case PropBitmap::withIds(ComponentBuilderBasePropId::viewClass, ComponentBuilderBasePropId::size):
-        return [CKComponent newWithView:{std::move(this->_viewClass),
-                                         std::move(this->_attributes),
-                                         std::move(this->_accessibilityCtx),
-                                         this->_blockImplicitAnimations}
-                                   size:this->_size];
-      case PropBitmap::withIds(ComponentBuilderBasePropId::viewConfig, ComponentBuilderBasePropId::size):
-        return [CKComponent newWithView:this->_viewConfig size:this->_size];
-      default:
-        CKCFailAssert(@"Invalid bitmap: %u", PropsBitmap);
-        return nil;
+    if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig, ComponentBuilderBasePropId::size)) {
+      return [CKComponent newWithView:this->_viewConfig size:this->_size];
+    } else if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass, ComponentBuilderBasePropId::size)) {
+      return [CKComponent newWithView:{std::move(this->_viewClass),
+                                       std::move(this->_attributes),
+                                       std::move(this->_accessibilityCtx),
+                                       this->_blockImplicitAnimations}
+                                 size:this->_size];
+    } else if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig)) {
+      return [CKComponent newWithView:this->_viewConfig size:{}];
+    } else if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass)) {
+      return [CKComponent newWithView:{std::move(this->_viewClass),
+                                       std::move(this->_attributes),
+                                       std::move(this->_accessibilityCtx),
+                                       this->_blockImplicitAnimations}
+                                 size:{}];
+    } else if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::size)) {
+      return [CKComponent newWithView:{} size:this->_size];
+    } else {
+      return [CKComponent newWithView:{} size:{}];
     }
   }
 };

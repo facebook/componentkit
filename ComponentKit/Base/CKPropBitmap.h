@@ -14,11 +14,25 @@
 
 namespace CK {
 namespace BuilderDetails {
+
+using PropsBitmapType = unsigned long long;
+
 namespace PropBitmap {
 template <typename PropId, typename RawType = std::underlying_type_t<PropId>>
 static constexpr auto isSet(RawType bitmap, PropId prop) -> bool
 {
   return (bitmap & static_cast<RawType>(prop)) != 0;
+}
+
+static constexpr auto isSet(PropsBitmapType bitmap, PropsBitmapType prop) -> bool
+{
+  return (bitmap & prop) != 0;
+}
+
+template<typename ...PropsBitmapTypes>
+static constexpr auto isSet(PropsBitmapType bitmap, PropsBitmapType prop, PropsBitmapTypes... props) -> bool
+{
+  return isSet(bitmap, prop) && isSet(bitmap, props...);
 }
 
 template <typename PropId, typename RawType = std::underlying_type_t<PropId>>

@@ -9,13 +9,14 @@
  */
 
 #import <ComponentKit/CKBaseRenderContext.h>
+#import <ComponentKit/CKPropBitmap.h>
 
 @class CKComponent;
 
 namespace CK {
 
   namespace BuilderDetails {
-    template <typename PropsBitmapType, template <PropsBitmapType> class Derived, PropsBitmapType>
+    template <template <PropsBitmapType> class, PropsBitmapType>
     class BuilderBase;
   }
 
@@ -25,7 +26,7 @@ namespace CK {
     ComponentSpecContext(): BaseRenderContext{} {}
 
   private:
-    template <typename PropsBitmapType, template <PropsBitmapType> class Derived, PropsBitmapType>
+    template <template <BuilderDetails::PropsBitmapType> class, BuilderDetails::PropsBitmapType>
     friend class BuilderDetails::BuilderBase;
 
     void declareKey(id key, CKComponent *component) const {
