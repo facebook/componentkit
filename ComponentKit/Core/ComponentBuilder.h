@@ -13,17 +13,68 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentGestureActions.h>
 #import <ComponentKit/CKPropBitmap.h>
+#import <ComponentKit/CKTransitions.h>
 
 namespace CK {
 namespace BuilderDetails {
-enum class ComponentBuilderBasePropId { viewClass = 1 << 0, viewConfig = 1 << 1, size = 1 << 2 };
+enum class ComponentBuilderBasePropId { transitions = 1 << 0, viewClass = 1 << 1, viewConfig = 1 << 2, size = 1 << 3 };
 
 using ComponentBuilderBaseBitmapType = std::underlying_type_t<ComponentBuilderBasePropId>;
 
+template <typename PropsBitmapType, template <PropsBitmapType> class Derived, PropsBitmapType PropsBitmap>
+class __attribute__((__may_alias__)) BuilderBase {
+public:
+  __attribute__((noinline)) BuilderBase() = default;
+
+  /**
+   Creates a new component instance and optionally wrap it with an animation component.
+
+   @note  This method must @b not be called more than once on a given component builder instance.
+   */
+  __attribute__((noinline)) NS_RETURNS_RETAINED auto build() noexcept -> CKComponent *
+  {
+    const auto component = static_cast<Derived<PropsBitmap> &>(*this)._build();
+    switch (PropsBitmap) {
+      case 0:
+        return component;
+      case PropBitmap::withIds(ComponentBuilderBasePropId::transitions):
+         return CKComponentWithTransitions(component, _transitions);
+      default:
+         CKCFailAssert(@"Invalid bitmap: %u", PropsBitmap);
+         return nil;
+     }
+  }
+
+  /**
+   Specifies the animation on initial mount.
+
+   @param animationInitial The animation to trigger on initial mount.
+   */
+  __attribute__((noinline)) auto &animationInitial(CK::Animation::Initial animationInitial)
+  {
+    _transitions.onInitialMount = std::move(animationInitial);
+    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::transitions)> &>(*this);
+  }
+
+  /**
+   Specifies the animation on final unmount.
+
+   @param animationFinal The animation to trigger on final unmount.
+   */
+  __attribute__((noinline)) auto &animationFinal(CK::Animation::Final animationFinal)
+  {
+    _transitions.onFinalUnmount = std::move(animationFinal);
+    return reinterpret_cast<Derived<PropBitmap::set(PropsBitmap, ComponentBuilderBasePropId::transitions)> &>(*this);
+  }
+
+private:
+  CKTransitions _transitions;
+};
+
 template <template <ComponentBuilderBaseBitmapType> class Derived, ComponentBuilderBaseBitmapType PropsBitmap>
-class __attribute__((__may_alias__)) ComponentBuilderBase {
+class __attribute__((__may_alias__)) ComponentBuilderBase : public BuilderBase<ComponentBuilderBaseBitmapType, Derived, PropsBitmap> {
  public:
-  __attribute__((noinline)) ComponentBuilderBase() = default;
+  ComponentBuilderBase() = default;
   ComponentBuilderBase(const ComponentBuilderBase &) = delete;
 
   auto operator=(const ComponentBuilderBase &) = delete;
@@ -613,12 +664,17 @@ class __attribute__((__may_alias__)) ComponentBuilder : public ComponentBuilderB
 
   __attribute__((noinline)) ~ComponentBuilder() = default;
 
+private:
+
+  template <typename PropsBitmapType, template <PropsBitmapType> class Derived, PropsBitmapType>
+  friend class BuilderBase;
+
   /**
    Creates a new component instance with specified properties.
 
    @note  This method must @b not be called more than once on a given component builder instance.
    */
-  __attribute__((noinline)) NS_RETURNS_RETAINED auto build() noexcept -> CKComponent *
+  __attribute__((noinline)) NS_RETURNS_RETAINED auto _build() noexcept -> CKComponent *
   {
     switch (PropsBitmap) {
       case 0:
