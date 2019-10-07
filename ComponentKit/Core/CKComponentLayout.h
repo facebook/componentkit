@@ -17,7 +17,6 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKBuildComponent.h>
-#import <ComponentKit/CKComponentAnimationPredicates.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKEqualityHashHelpers.h>
 #import <ComponentKit/CKNonNull.h>
@@ -132,8 +131,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener = nil,
-                                                   CK::Optional<CKBuildTrigger> buildTrigger = CK::none,
-                                                   std::unordered_set<CKMountablePredicate> predicates = CKComponentAnimationPredicates());
+                                                   CK::Optional<CKBuildTrigger> buildTrigger = CK::none);
 
 /**
  Safely computes the layout of the given component by guarding against nil components.

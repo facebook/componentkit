@@ -45,10 +45,14 @@ static void _deleteComponentLayoutChild(void *target) noexcept
   delete (std::vector<CKComponentLayoutChild> *)target;
 }
 
-static auto buildComponentsByPredicateMap(const CKComponentLayout &layout, const std::unordered_set<CKMountablePredicate> &predicates)
+static auto buildComponentsByPredicateMap(const CKComponentLayout &layout)
 {
+  const auto predicates = std::unordered_set<CKMountablePredicate> {
+    CKComponentHasAnimationsOnInitialMountPredicate,
+    CKComponentHasAnimationsFromPreviousComponentPredicate,
+    CKComponentHasAnimationsOnFinalUnmountPredicate,
+  };
   auto componentsByPredicate = CKComponentRootLayout::ComponentsByPredicateMap {};
-  if (predicates.empty()) { return componentsByPredicate; }
 
   layout.enumerateLayouts([&](const auto &l){
     if (l.component == nil) { return; }
@@ -151,8 +155,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener,
-                                                   CK::Optional<CKBuildTrigger> buildTrigger,
-                                                   std::unordered_set<CKMountablePredicate> predicates)
+                                                   CK::Optional<CKBuildTrigger> buildTrigger)
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent buildTrigger:buildTrigger];
   LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
@@ -170,7 +173,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
       layoutCache[(CKComponent *)l.component] = l;
     }
   });
-  const auto componentsByPredicate = buildComponentsByPredicateMap(layout, predicates);
+  const auto componentsByPredicate = buildComponentsByPredicateMap(layout);
   [analyticsListener didLayoutComponentTreeWithRootComponent:rootComponent];
   return CKComponentRootLayout {
     layout,
