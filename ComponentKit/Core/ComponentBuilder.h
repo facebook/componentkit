@@ -14,18 +14,38 @@
 #import <ComponentKit/CKComponentGestureActions.h>
 #import <ComponentKit/CKPropBitmap.h>
 #import <ComponentKit/CKTransitions.h>
+#import <ComponentKit/CKOptional.h>
+#import <ComponentKit/CKComponentSpecContext.h>
 
 namespace CK {
 namespace BuilderDetails {
-enum class ComponentBuilderBasePropId { transitions = 1 << 0, viewClass = 1 << 1, viewConfig = 1 << 2, size = 1 << 3 };
 
-using ComponentBuilderBaseBitmapType = std::underlying_type_t<ComponentBuilderBasePropId>;
+enum class ComponentBuilderBasePropId { context = 1 << 0, transitions = 1 << 1, viewClass = 1 << 2, viewConfig = 1 << 3, size = 1 << 4 };
 
 template <typename PropsBitmapType, template <PropsBitmapType> class Derived, PropsBitmapType PropsBitmap>
 class __attribute__((__may_alias__)) BuilderBase {
-public:
-  __attribute__((noinline)) BuilderBase() = default;
+  CK::ComponentSpecContext _context;
+  id _key;
 
+  NS_RETURNS_RETAINED auto _buildComponentWithTransitionsIfNeeded() noexcept -> CKComponent *
+  {
+    const auto component = static_cast<Derived<PropsBitmap> &>(*this)._build();
+    switch (PropsBitmap) {
+      case 0:
+        return component;
+      case PropBitmap::withIds(ComponentBuilderBasePropId::transitions):
+        return CKComponentWithTransitions(component, _transitions);
+      default:
+        CKCFailAssert(@"Invalid bitmap: %u", PropsBitmap);
+        return nil;
+    }
+  }
+
+protected:
+  __attribute__((noinline)) BuilderBase() = default;
+  __attribute__((noinline)) BuilderBase(CK::ComponentSpecContext context) : _context(std::move(context)) { }
+
+public:
   /**
    Creates a new component instance and optionally wrap it with an animation component.
 
@@ -33,16 +53,28 @@ public:
    */
   __attribute__((noinline)) NS_RETURNS_RETAINED auto build() noexcept -> CKComponent *
   {
-    const auto component = static_cast<Derived<PropsBitmap> &>(*this)._build();
-    switch (PropsBitmap) {
-      case 0:
-        return component;
-      case PropBitmap::withIds(ComponentBuilderBasePropId::transitions):
-         return CKComponentWithTransitions(component, _transitions);
-      default:
-         CKCFailAssert(@"Invalid bitmap: %u", PropsBitmap);
-         return nil;
-     }
+    const auto component = _buildComponentWithTransitionsIfNeeded();
+    if (_key != nil) {
+      _context.declareKey(_key, component);
+    }
+    return component;
+  }
+
+  /**
+   Specifies the key for the component. This key is only meant to be used from specs.
+
+   @note Calling this method on a builder that wasn't created with a context will trigger a compilation error.
+
+   @param key The key to reference the component built.
+   */
+  __attribute__((noinline)) auto &key(id key)
+  {
+    constexpr auto contextIsSet =
+        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::context);
+    static_assert(contextIsSet, "Cannot set 'key' without specifying 'context'");
+
+    _key = key;
+    return reinterpret_cast<Derived<PropsBitmap> &>(*this);
   }
 
   /**
@@ -71,13 +103,33 @@ private:
   CKTransitions _transitions;
 };
 
+using ComponentBuilderBaseBitmapType = std::underlying_type_t<ComponentBuilderBasePropId>;
+
+template <ComponentBuilderBaseBitmapType>
+class ComponentBuilder;
+
+}
+
+using ComponentBuilderEmpty = BuilderDetails::ComponentBuilder<0>;
+using ComponentBuilderContext = BuilderDetails::ComponentBuilder<1>;
+
+auto ComponentBuilder() -> ComponentBuilderEmpty;
+auto ComponentBuilder(CK::ComponentSpecContext c) -> ComponentBuilderContext;
+
+namespace BuilderDetails {
+
 template <template <ComponentBuilderBaseBitmapType> class Derived, ComponentBuilderBaseBitmapType PropsBitmap>
 class __attribute__((__may_alias__)) ComponentBuilderBase : public BuilderBase<ComponentBuilderBaseBitmapType, Derived, PropsBitmap> {
- public:
+ protected:
   ComponentBuilderBase() = default;
-  ComponentBuilderBase(const ComponentBuilderBase &) = delete;
 
-  auto operator=(const ComponentBuilderBase &) = delete;
+  ComponentBuilderBase(CK::ComponentSpecContext context)
+    : BuilderBase<ComponentBuilderBaseBitmapType, Derived, PropsBitmap>{context} { }
+
+  ComponentBuilderBase(const ComponentBuilderBase &) = default;
+  auto operator=(const ComponentBuilderBase &) -> ComponentBuilderBase& = default;
+
+public:
 
   /**
    Specifies that the component should have a view of the given class. The class will be instantiated with UIView's
@@ -657,14 +709,30 @@ class __attribute__((__may_alias__)) ComponentBuilderBase : public BuilderBase<C
   CKComponentSize _size;
 };
 
+/**
+ Provides a fluent API for creating instances of @c CKComponent base class.
+
+ @example A component that renders a red square:
+ @code
+ CK::ComponentBuilder()
+ .viewClass([UIView class])
+ .backgroundColor(UIColor.redColor)
+ .width(100)
+ .height(100)
+ .build()
+ */
 template <ComponentBuilderBaseBitmapType PropsBitmap>
 class __attribute__((__may_alias__)) ComponentBuilder : public ComponentBuilderBase<ComponentBuilder, PropsBitmap> {
  public:
-  __attribute__((noinline)) ComponentBuilder() = default;
-
   __attribute__((noinline)) ~ComponentBuilder() = default;
 
 private:
+  __attribute__((noinline)) ComponentBuilder() = default;
+  __attribute__((noinline)) ComponentBuilder(CK::ComponentSpecContext context)
+    : ComponentBuilderBase<ComponentBuilder, PropsBitmap>{context} { }
+
+  friend auto CK::ComponentBuilder() -> ComponentBuilderEmpty;
+  friend auto CK::ComponentBuilder(CK::ComponentSpecContext) -> ComponentBuilderContext;
 
   template <typename PropsBitmapType, template <PropsBitmapType> class Derived, PropsBitmapType>
   friend class BuilderBase;
@@ -704,18 +772,4 @@ private:
   }
 };
 }
-
-/**
- Provides a fluent API for creating instances of @c CKComponent base class.
-
- @example A component that renders a red square:
- @code
- CK::ComponentBuilder()
-   .viewClass([UIView class])
-   .backgroundColor(UIColor.redColor)
-   .width(100)
-   .height(100)
-   .build()
- */
-using ComponentBuilder = BuilderDetails::ComponentBuilder<0>;
 }
