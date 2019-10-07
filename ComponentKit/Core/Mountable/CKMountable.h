@@ -62,8 +62,6 @@ struct CKComponentViewContext {
 /** If the component owns its own view and is mounted, returns it. */
 @property (nonatomic, readonly) UIView *mountedView;
 
-/** Backward Compatibility */
-- (UIView *)viewForAnimation;
 
 /**
  Mounts the component in the given context:
