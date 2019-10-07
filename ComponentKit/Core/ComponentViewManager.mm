@@ -157,14 +157,8 @@ void ViewReusePool::hideAll(UIView *view, MountAnalyticsContext *mountAnalyticsC
     viewReusePool.reset(mountAnalyticsContext);
   };
   auto &viewReusePoolMap = wrapper->_viewReusePoolMap;
-  if (viewReusePoolMap.usingStringIdentifier) {
-    for (auto &it : viewReusePoolMap.mapWithStringIdentifier) {
-      hide(it.second);
-    }
-  } else {
-    for (auto &it : viewReusePoolMap.map) {
-      hide(it.second);
-    }
+  for (auto &it : viewReusePoolMap.map) {
+    hide(it.second);
   }
 }
 
@@ -182,14 +176,8 @@ ViewReusePoolMap &ViewReusePoolMap::viewReusePoolMapForView(UIView *v)
 
 void ViewReusePoolMap::reset(UIView *container, CK::Component::MountAnalyticsContext *mountAnalyticsContext)
 {
-  if (usingStringIdentifier) {
-    for (auto &it : mapWithStringIdentifier) {
-      it.second.reset(mountAnalyticsContext);
-    }
-  } else {
-    for (auto &it : map) {
-      it.second.reset(mountAnalyticsContext);
-    }
+  for (auto &it : map) {
+    it.second.reset(mountAnalyticsContext);
   }
 
   // Now we need to ensure that the ordering of container.subviews matches vendedViews.

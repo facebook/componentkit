@@ -78,34 +78,6 @@ namespace CK {
         && other.attributeShape == attributeShape;
       }
     };
-    
-    struct ViewKeyWithStringIdentifier {
-      /**
-       Class of the CKComponent. Even if two different CKComponent classes have the same viewClassIdentifier, we don't
-       recycle views between them.
-       */
-      Class componentClass;
-      /**
-       This differentiates components that have the same componentClass but different view types.
-       */
-      std::string viewClassIdentifier;
-      /**
-       To recycle a view, its attribute identifiers must exactly match. Otherwise if you had an initial tree A:
-       <View backgroundColor=blue />
-       And an updated tree A':
-       <View alpha=0.5 />
-       And the view was recycled, the blue background color would persist incorrectly when recycling the view.
-       We could someday have the concept of a "resettable attribute" but for now, this is the simplest option.
-       */
-      PersistentAttributeShape attributeShape;
-      
-      bool operator==(const ViewKeyWithStringIdentifier &other) const
-      {
-        return other.componentClass == componentClass
-        && other.viewClassIdentifier == viewClassIdentifier
-        && other.attributeShape == attributeShape;
-      }
-    };
   }
 }
 
@@ -126,16 +98,6 @@ namespace std {
       return [k.componentClass hash]
               ^ hash<CKComponentViewClassIdentifier>()(k.viewClassIdentifier)
               ^ std::hash<CK::Component::PersistentAttributeShape>()(k.attributeShape);
-    }
-  };
-  
-  template <> struct hash<CK::Component::ViewKeyWithStringIdentifier>
-  {
-    size_t operator()(const CK::Component::ViewKeyWithStringIdentifier &k) const
-    {
-      return [k.componentClass hash]
-      ^ hash<std::string>()(k.viewClassIdentifier)
-      ^ std::hash<CK::Component::PersistentAttributeShape>()(k.attributeShape);
     }
   };
 }
@@ -179,9 +141,7 @@ namespace CK {
 
       friend void ViewReusePool::hideAll(UIView *view, MountAnalyticsContext *mountAnalyticsContext);
     private:
-      bool usingStringIdentifier;
       std::unordered_map<ViewKey, ViewReusePool> map;
-      std::unordered_map<ViewKeyWithStringIdentifier, ViewReusePool> mapWithStringIdentifier;
       std::vector<UIView *> vendedViews;
 
       ViewReusePoolMap(const ViewReusePoolMap&) = delete;
