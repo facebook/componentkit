@@ -28,6 +28,51 @@ extern CGSize const kCKComponentParentSizeUndefined;
 @interface CKComponent<__covariant CKComponentStateType:id> ()
 
 /**
+ Call this on children components to compute their layouts within your implementation of -computeLayoutThatFits:.
+
+ @warning You may not override this method. Override -computeLayoutThatFits: instead.
+ @warning In almost all cases, prefer the use of CKComputeComponentLayout in CKComponentLayout
+
+ @param constrainedSize Specifies a minimum and maximum size. The receiver must choose a size that is in this range.
+ @param parentSize The parent component's size. If the parent component does not have a final size in a given dimension,
+ then it should be passed as kCKComponentParentDimensionUndefined (for example, if the parent's width
+ depends on the child's size).
+
+ @return A struct defining the layout of the receiver and its children.
+ */
+- (CKComponentLayout)layoutThatFits:(CKSizeRange)constrainedSize
+                         parentSize:(CGSize)parentSize;
+
+/**
+ Override this method to compute your component's layout.
+
+ @discussion Why do you need to override -computeLayoutThatFits: instead of -layoutThatFits:parentSize:?
+ The base implementation of -layoutThatFits:parentSize: does the following for you:
+ 1. First, it uses the parentSize parameter to resolve the component's size (the one passed into -initWithView:size:).
+ 2. Then, it intersects the resolved size with the constrainedSize parameter. If the two don't intersect,
+ constrainedSize wins. This allows a component to always override its childrens' sizes when computing its layout.
+ (The analogy for UIView: you might return a certain size from -sizeThatFits:, but a parent view can always override
+ that size and set your frame to any size.)
+
+ @param constrainedSize A min and max size. This is computed as described in the description. The CKComponentLayout you
+ return MUST have a size between these two sizes. This is enforced by assertion.
+ */
+- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize;
+
+/**
+ CKComponent's implementation of -layoutThatFits:parentSize: calls this method to resolve the component's size
+ against parentSize, intersect it with constrainedSize, and call -computeLayoutThatFits: with the result.
+
+ In certain advanced cases, you may want to customize this logic. Overriding this method allows you to receive all
+ three parameters and do the computation yourself.
+
+ @warning Overriding this method should be done VERY rarely.
+ */
+- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+                          restrictedToSize:(const CKComponentSize &)size
+                      relativeToParentSize:(CGSize)parentSize;
+
+/**
  Called to get the component's initial state; the default implementation returns nil.
  @see CKComponentScopeFrame
  */
