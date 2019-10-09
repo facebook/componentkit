@@ -45,7 +45,8 @@
      .componentProvider = CK::makeNonNull(^(id<NSObject> m, id<NSObject> c) {
        modelVerified = model == m;
        contextVerified = context == c;
-       return [CKComponent newWithView:{} size:{}];
+       return CK::ComponentBuilder()
+                  .build();
      }),
    }];
   [componentGenerator updateModel:model];
@@ -141,7 +142,8 @@
 + (instancetype)new
 {
   CKComponentScope scope(self);
-  const auto c = [super newWithComponent:[CKComponent newWithView:{} size:{}]];
+  const auto c = [super newWithComponent:CK::ComponentBuilder()
+                                             .build()];
   if (c) {
     c->_state = scope.state();
   }
