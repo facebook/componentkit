@@ -24,7 +24,8 @@ namespace BuilderDetails {
 namespace BuilderBasePropId {
   constexpr static auto context = 1ULL << 0;
   constexpr static auto transitions = context << 1;
-  constexpr static auto __max = transitions;
+  constexpr static auto key = transitions << 1;
+  constexpr static auto __max = key;
 };
 
 template <template <PropsBitmapType> class Derived, PropsBitmapType PropsBitmap>
@@ -55,7 +56,7 @@ public:
   NS_RETURNS_RETAINED auto build() noexcept -> CKComponent *
   {
     const auto component = _buildComponentWithTransitionsIfNeeded();
-    if (_key != nil) {
+    if (PropBitmap::isSet(PropsBitmap, BuilderBasePropId::key)) {
       _context.declareKey(_key, component);
     }
     return component;
