@@ -104,25 +104,17 @@ private:
   CKTransitions _transitions;
 };
 
-namespace ComponentBuilderBasePropId {
+namespace ViewConfigBuilderPropId {
   constexpr static auto viewClass = BuilderBasePropId::__max << 1;
   constexpr static auto viewConfig = viewClass << 1;
-  constexpr static auto size = viewConfig << 1;
-  constexpr static auto __max = size;
+  constexpr static auto __max = viewConfig;
 }
 
 template <template <PropsBitmapType> class Derived, PropsBitmapType PropsBitmap>
-class __attribute__((__may_alias__)) ComponentBuilderBase : public BuilderBase<Derived, PropsBitmap> {
- protected:
-  ComponentBuilderBase() = default;
-
-  ComponentBuilderBase(CK::ComponentSpecContext context)
-    : BuilderBase<Derived, PropsBitmap>{context} { }
-
-  ComponentBuilderBase(const ComponentBuilderBase &) = default;
-  auto operator=(const ComponentBuilderBase &) -> ComponentBuilderBase& = default;
-
+class __attribute__((__may_alias__)) ViewConfigBuilderBase {
 public:
+  ViewConfigBuilderBase() = default;
+  ~ViewConfigBuilderBase() = default;
 
   /**
    Specifies that the component should have a view of the given class. The class will be instantiated with UIView's
@@ -131,11 +123,11 @@ public:
   __attribute__((noinline)) auto &viewClass(Class c)
   {
     constexpr auto viewClassOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!viewClassOverridesExistingViewConfiguration,
                   "Setting 'viewClass' overrides existing view configuration");
     _viewClass = c;
-    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::viewClass> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ViewConfigBuilderPropId::viewClass> &>(*this);
   }
 
   /**
@@ -146,11 +138,11 @@ public:
   __attribute__((noinline)) auto &viewClass(CKComponentViewFactoryFunc f)
   {
     constexpr auto viewClassOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!viewClassOverridesExistingViewConfiguration,
                   "Setting 'viewClass' overrides existing view configuration");
     _viewClass = f;
-    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::viewClass> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ViewConfigBuilderPropId::viewClass> &>(*this);
   }
 
   /**
@@ -159,32 +151,11 @@ public:
   __attribute__((noinline)) auto &viewClass(CKComponentViewClass c)
   {
     constexpr auto viewClassOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!viewClassOverridesExistingViewConfiguration,
                   "Setting 'viewClass' overrides existing view configuration");
     _viewClass = std::move(c);
-    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::viewClass> &>(*this);
-  }
-
-  /**
-   Specifies a complete view configuration which will be used to create a view for the component.
-
-   @param c A struct describing the view for this component.
-
-   @note Calling this method on a builder that already has a view class or any of the view properties set will trigger
-   a compilation error.
-
-   @note This method only accepts temporaries as its argument. If you need to pass an existing variable use
-   @c std::move().
-   */
-  __attribute__((noinline)) auto &view(CKComponentViewConfiguration &&c)
-  {
-    constexpr auto viewConfigurationOverridesExistingViewClass =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
-    static_assert(!viewConfigurationOverridesExistingViewClass,
-                  "Setting view configuration overrides existing view class");
-    _viewConfig = std::move(c);
-    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::viewConfig> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | ViewConfigBuilderPropId::viewClass> &>(*this);
   }
 
   /**
@@ -200,10 +171,10 @@ public:
   __attribute__((noinline)) auto &backgroundColor(NS_RELEASES_ARGUMENT UIColor *c)
   {
     constexpr auto backgroundColorOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!backgroundColorOverridesExistingViewConfiguration,
                   "Setting 'backgroundColor' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'backgroundColor' without setting 'viewClass' first");
     _attributes.insert({ @selector(setBackgroundColor:), c });
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -222,10 +193,10 @@ public:
   __attribute__((noinline)) auto &userInteractionEnabled(bool enabled)
   {
     constexpr auto userInteractionEnabledOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!userInteractionEnabledOverridesExistingViewConfiguration,
                   "Setting 'userInteractionEnabled' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'userInteractionEnabled' without setting 'viewClass' first");
     _attributes.insert({ @selector(setUserInteractionEnabled:), enabled });
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -244,10 +215,10 @@ public:
   __attribute__((noinline)) auto &clipsToBounds(bool clip)
   {
     constexpr auto clipsToBoundsOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!clipsToBoundsOverridesExistingViewConfiguration,
                   "Setting 'clipsToBounds' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'clipsToBounds' without setting 'viewClass' first");
     _attributes.insert({ @selector(setClipsToBounds:), clip });
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -267,9 +238,9 @@ public:
   __attribute__((noinline)) auto &alpha(CGFloat a)
   {
     constexpr auto alphaOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!alphaOverridesExistingViewConfiguration, "Setting 'alpha' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'alpha' without setting 'viewClass' first");
     _attributes.insert({ @selector(setAlpha:), a });
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -289,10 +260,10 @@ public:
   __attribute__((noinline)) auto &borderWidth(CGFloat w)
   {
     constexpr auto borderWidthOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!borderWidthOverridesExistingViewConfiguration,
                   "Setting 'borderWidth' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'borderWidth' without setting 'viewClass' first");
     _attributes.insert({ CKComponentViewAttribute::LayerAttribute(@selector(setBorderWidth:)), w });
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -311,10 +282,10 @@ public:
   __attribute__((noinline)) auto &borderColor(NS_RELEASES_ARGUMENT UIColor *c)
   {
     constexpr auto borderColorOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!borderColorOverridesExistingViewConfiguration,
                   "Setting 'borderColor' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'borderColor' without setting 'viewClass' first");
     _attributes.insert({ CKComponentViewAttribute::LayerAttribute(@selector(setBorderColor:)), (id)c.CGColor });
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -334,10 +305,10 @@ public:
   __attribute__((noinline)) auto &cornerRadius(CGFloat r)
   {
     constexpr auto cornerRadiusOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!cornerRadiusOverridesExistingViewConfiguration,
                   "Setting 'cornerRadius' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'cornerRadius' without setting 'viewClass' first");
     _attributes.insert({ CKComponentViewAttribute::LayerAttribute(@selector(setCornerRadius:)), r });
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -356,9 +327,9 @@ public:
   auto &onTap(CKAction<UIGestureRecognizer *> a)
   {
     constexpr auto onTapOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!onTapOverridesExistingViewConfiguration, "Setting 'onTap' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'onTap' without setting 'viewClass' first");
     _attributes.insert(CKComponentTapGestureAttribute(a));
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -379,10 +350,10 @@ public:
   __attribute__((noinline)) auto &attribute(SEL attr, NS_RELEASES_ARGUMENT id value)
   {
     constexpr auto attributeOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!attributeOverridesExistingViewConfiguration,
                   "Setting 'attribute' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'attribute' without setting 'viewClass' first");
     _attributes.insert({attr, value});
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -403,10 +374,10 @@ public:
   auto &attribute(const CKComponentViewAttribute &attr, const CKBoxedValue &value)
   {
     constexpr auto attributeOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!attributeOverridesExistingViewConfiguration,
                   "Setting 'attribute' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'attribute' without setting 'viewClass' first");
     _attributes.insert({attr, value});
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -426,10 +397,10 @@ public:
   auto &attribute(const CKComponentViewAttributeValue &v)
   {
     constexpr auto attributeOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!attributeOverridesExistingViewConfiguration,
                   "Setting 'attribute' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'attributeValue' without setting 'viewClass' first");
     _attributes.insert(v);
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -451,10 +422,10 @@ public:
   __attribute__((noinline)) auto &onTouchUpInside(SEL action)
   {
     constexpr auto onTouchUpInsideOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!onTouchUpInsideOverridesExistingViewConfiguration,
                   "Setting 'onTouchUpInside' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'onTouchUpInside' without setting 'viewClass' first");
     _attributes.insert(CKComponentActionAttribute(action));
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -475,10 +446,10 @@ public:
   __attribute__((noinline)) auto &onTouchUpInside(const CKAction<UIEvent *> &action)
   {
     constexpr auto onTouchUpInsideOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!onTouchUpInsideOverridesExistingViewConfiguration,
                   "Setting 'onTouchUpInside' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'onTouchUpInside' without setting 'viewClass' first");
     _attributes.insert(CKComponentActionAttribute(action));
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -501,10 +472,10 @@ public:
   __attribute__((noinline)) auto &onControlEvents(UIControlEvents events, SEL action)
   {
     constexpr auto onControlEventsOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!onControlEventsOverridesExistingViewConfiguration,
                   "Setting 'onControlEvents' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'onControlEvents' without setting 'viewClass' first");
     _attributes.insert(CKComponentActionAttribute(action, events));
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -526,10 +497,10 @@ public:
   __attribute__((noinline)) auto &onControlEvents(UIControlEvents events, const CKAction<UIEvent *> &action)
   {
     constexpr auto onControlEventsOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!onControlEventsOverridesExistingViewConfiguration,
                   "Setting 'onControlEvents' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'onControlEvents' without setting 'viewClass' first");
     _attributes.insert(CKComponentActionAttribute(action, events));
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -548,10 +519,10 @@ public:
   auto &attributes(CKViewComponentAttributeValueMap a)
   {
     constexpr auto attributesOverrideExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!attributesOverrideExistingViewConfiguration,
                   "Setting 'attributes' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'attributes' without setting 'viewClass' first");
     _attributes = std::move(a);
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -571,10 +542,10 @@ public:
   auto &accessibilityContext(CKComponentAccessibilityContext c)
   {
     constexpr auto accessibilityContextOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!accessibilityContextOverridesExistingViewConfiguration,
                   "Setting 'accessibilityContext' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'accessibilityContext' without setting 'viewClass' first");
     _accessibilityCtx = std::move(c);
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
@@ -593,13 +564,72 @@ public:
   auto &blockImplicitAnimations(bool b)
   {
     constexpr auto blockImplicitAnimationsOverridesExistingViewConfiguration =
-        PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig);
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
     static_assert(!blockImplicitAnimationsOverridesExistingViewConfiguration,
                   "Setting 'blockImplicitAnimations' overrides existing view configuration");
-    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass);
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'blockImplicitAnimations' without setting 'viewClass' first");
     _blockImplicitAnimations = b;
     return reinterpret_cast<Derived<PropsBitmap> &>(*this);
+  }
+
+protected:
+  CKComponentViewClass _viewClass;
+  CKViewComponentAttributeValueMap _attributes;
+  CKComponentAccessibilityContext _accessibilityCtx;
+  bool _blockImplicitAnimations;
+};
+
+template <PropsBitmapType PropsBitmap = 0>
+class __attribute__((__may_alias__)) ViewConfigBuilder : public ViewConfigBuilderBase<ViewConfigBuilder, PropsBitmap> {
+public:
+  auto build() noexcept -> CKComponentViewConfiguration {
+    return {
+      std::move(this->_viewClass),
+      std::move(this->_attributes),
+      std::move(this->_accessibilityCtx),
+      this->_blockImplicitAnimations
+    };
+  }
+};
+
+namespace ComponentBuilderBasePropId {
+  constexpr static auto size = ViewConfigBuilderPropId::__max << 1;
+  constexpr static auto __max = size;
+}
+
+template <template <PropsBitmapType> class Derived, PropsBitmapType PropsBitmap>
+class __attribute__((__may_alias__)) ComponentBuilderBase : public ViewConfigBuilderBase<Derived, PropsBitmap>, public BuilderBase<Derived, PropsBitmap> {
+ protected:
+  ComponentBuilderBase() = default;
+
+  ComponentBuilderBase(CK::ComponentSpecContext context)
+    : BuilderBase<Derived, PropsBitmap>{context} { }
+
+  ComponentBuilderBase(const ComponentBuilderBase &) = default;
+  auto operator=(const ComponentBuilderBase &) -> ComponentBuilderBase& = default;
+
+public:
+
+  /**
+   Specifies a complete view configuration which will be used to create a view for the component.
+
+   @param c A struct describing the view for this component.
+
+   @note Calling this method on a builder that already has a view class or any of the view properties set will trigger
+   a compilation error.
+
+   @note This method only accepts temporaries as its argument. If you need to pass an existing variable use
+   @c std::move().
+   */
+  __attribute__((noinline)) auto &view(CKComponentViewConfiguration &&c)
+  {
+    constexpr auto viewConfigurationOverridesExistingViewClass =
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
+    static_assert(!viewConfigurationOverridesExistingViewClass,
+                  "Setting view configuration overrides existing view class");
+    _viewConfig = std::move(c);
+    return reinterpret_cast<Derived<PropsBitmap | ViewConfigBuilderPropId::viewConfig> &>(*this);
   }
 
   /**
@@ -692,12 +722,7 @@ public:
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
   }
 
- protected:
-  CKComponentViewClass _viewClass;
-  CKViewComponentAttributeValueMap _attributes;
-  CKComponentAccessibilityContext _accessibilityCtx;
-  bool _blockImplicitAnimations;
-
+protected:
   CKComponentViewConfiguration _viewConfig;
   CKComponentSize _size;
 };
@@ -744,6 +769,8 @@ auto ComponentBuilder() -> ComponentBuilderEmpty;
  */
 auto ComponentBuilder(CK::ComponentSpecContext c) -> ComponentBuilderContext;
 
+using ViewConfig = BuilderDetails::ViewConfigBuilder<>;
+
 namespace BuilderDetails {
 
 template <PropsBitmapType PropsBitmap>
@@ -769,17 +796,17 @@ private:
    */
   __attribute__((noinline)) NS_RETURNS_RETAINED auto _build() noexcept -> CKComponent *
   {
-    if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig, ComponentBuilderBasePropId::size)) {
+    if (PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig, ComponentBuilderBasePropId::size)) {
       return [CKComponent newWithView:this->_viewConfig size:this->_size];
-    } else if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass, ComponentBuilderBasePropId::size)) {
+    } else if (PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass, ComponentBuilderBasePropId::size)) {
       return [CKComponent newWithView:{std::move(this->_viewClass),
                                        std::move(this->_attributes),
                                        std::move(this->_accessibilityCtx),
                                        this->_blockImplicitAnimations}
                                  size:this->_size];
-    } else if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewConfig)) {
+    } else if (PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig)) {
       return [CKComponent newWithView:this->_viewConfig size:{}];
-    } else if (PropBitmap::isSet(PropsBitmap, ComponentBuilderBasePropId::viewClass)) {
+    } else if (PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass)) {
       return [CKComponent newWithView:{std::move(this->_viewClass),
                                        std::move(this->_attributes),
                                        std::move(this->_accessibilityCtx),
