@@ -43,8 +43,8 @@ class __attribute__((__may_alias__)) BuilderBase {
   }
 
 protected:
-  __attribute__((noinline)) BuilderBase() = default;
-  __attribute__((noinline)) BuilderBase(CK::ComponentSpecContext context) : _context(std::move(context)) { }
+  BuilderBase() = default;
+  BuilderBase(CK::ComponentSpecContext context) : _context(std::move(context)) { }
 
 public:
   /**
@@ -52,7 +52,7 @@ public:
 
    @note  This method must @b not be called more than once on a given component builder instance.
    */
-  __attribute__((noinline)) NS_RETURNS_RETAINED auto build() noexcept -> CKComponent *
+  NS_RETURNS_RETAINED auto build() noexcept -> CKComponent *
   {
     const auto component = _buildComponentWithTransitionsIfNeeded();
     if (_key != nil) {
@@ -68,7 +68,7 @@ public:
 
    @param key The key to reference the component built.
    */
-  __attribute__((noinline)) auto &key(CK::RelaxedNonNull<id> key)
+  auto &key(CK::RelaxedNonNull<id> key)
   {
     constexpr auto contextIsSet =
         PropBitmap::isSet(PropsBitmap, BuilderBasePropId::context);
@@ -83,7 +83,7 @@ public:
 
    @param animationInitial The animation to trigger on initial mount.
    */
-  __attribute__((noinline)) auto &animationInitial(CK::Animation::Initial animationInitial)
+  auto &animationInitial(CK::Animation::Initial animationInitial)
   {
     _transitions.onInitialMount = std::move(animationInitial);
     return reinterpret_cast<Derived<PropsBitmap | BuilderBasePropId::transitions> &>(*this);
@@ -94,7 +94,7 @@ public:
 
    @param animationFinal The animation to trigger on final unmount.
    */
-  __attribute__((noinline)) auto &animationFinal(CK::Animation::Final animationFinal)
+  auto &animationFinal(CK::Animation::Final animationFinal)
   {
     _transitions.onFinalUnmount = std::move(animationFinal);
     return reinterpret_cast<Derived<PropsBitmap | BuilderBasePropId::transitions> &>(*this);
@@ -120,7 +120,7 @@ public:
    Specifies that the component should have a view of the given class. The class will be instantiated with UIView's
    designated initializer @c-initWithFrame:.
    */
-  __attribute__((noinline)) auto &viewClass(Class c)
+  auto &viewClass(Class c)
   {
     constexpr auto viewClassOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -135,7 +135,7 @@ public:
 
    @param f A pointer to a function that returns a new instance of a view.
    */
-  __attribute__((noinline)) auto &viewClass(CKComponentViewFactoryFunc f)
+  auto &viewClass(CKComponentViewFactoryFunc f)
   {
     constexpr auto viewClassOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -148,7 +148,7 @@ public:
   /**
    Specifies an arbitrary view class.
    */
-  __attribute__((noinline)) auto &viewClass(CKComponentViewClass c)
+  auto &viewClass(CKComponentViewClass c)
   {
     constexpr auto viewClassOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -168,7 +168,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  __attribute__((noinline)) auto &backgroundColor(NS_RELEASES_ARGUMENT UIColor *c)
+  auto &backgroundColor(NS_RELEASES_ARGUMENT UIColor *c)
   {
     constexpr auto backgroundColorOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -190,7 +190,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  __attribute__((noinline)) auto &userInteractionEnabled(bool enabled)
+  auto &userInteractionEnabled(bool enabled)
   {
     constexpr auto userInteractionEnabledOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -212,7 +212,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  __attribute__((noinline)) auto &clipsToBounds(bool clip)
+  auto &clipsToBounds(bool clip)
   {
     constexpr auto clipsToBoundsOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -235,7 +235,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  __attribute__((noinline)) auto &alpha(CGFloat a)
+  auto &alpha(CGFloat a)
   {
     constexpr auto alphaOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -257,7 +257,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  __attribute__((noinline)) auto &borderWidth(CGFloat w)
+  auto &borderWidth(CGFloat w)
   {
     constexpr auto borderWidthOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -279,7 +279,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  __attribute__((noinline)) auto &borderColor(NS_RELEASES_ARGUMENT UIColor *c)
+  auto &borderColor(NS_RELEASES_ARGUMENT UIColor *c)
   {
     constexpr auto borderColorOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -302,7 +302,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  __attribute__((noinline)) auto &cornerRadius(CGFloat r)
+  auto &cornerRadius(CGFloat r)
   {
     constexpr auto cornerRadiusOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -347,7 +347,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  __attribute__((noinline)) auto &attribute(SEL attr, NS_RELEASES_ARGUMENT id value)
+  auto &attribute(SEL attr, NS_RELEASES_ARGUMENT id value)
   {
     constexpr auto attributeOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -419,7 +419,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  __attribute__((noinline)) auto &onTouchUpInside(SEL action)
+  auto &onTouchUpInside(SEL action)
   {
     constexpr auto onTouchUpInsideOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -443,7 +443,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  __attribute__((noinline)) auto &onTouchUpInside(const CKAction<UIEvent *> &action)
+  auto &onTouchUpInside(const CKAction<UIEvent *> &action)
   {
     constexpr auto onTouchUpInsideOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -469,7 +469,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  __attribute__((noinline)) auto &onControlEvents(UIControlEvents events, SEL action)
+  auto &onControlEvents(UIControlEvents events, SEL action)
   {
     constexpr auto onControlEventsOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -494,7 +494,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  __attribute__((noinline)) auto &onControlEvents(UIControlEvents events, const CKAction<UIEvent *> &action)
+  auto &onControlEvents(UIControlEvents events, const CKAction<UIEvent *> &action)
   {
     constexpr auto onControlEventsOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -622,7 +622,7 @@ public:
    @note This method only accepts temporaries as its argument. If you need to pass an existing variable use
    @c std::move().
    */
-  __attribute__((noinline)) auto &view(CKComponentViewConfiguration &&c)
+  auto &view(CKComponentViewConfiguration &&c)
   {
     constexpr auto viewConfigurationOverridesExistingViewClass =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
@@ -707,7 +707,7 @@ public:
   /**
    Specifies a size constraint that should apply to this component.
    */
-  __attribute__((noinline)) auto &size(CKComponentSize &&s)
+  auto &size(CKComponentSize &&s)
   {
     _size = std::move(s);
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
@@ -716,7 +716,7 @@ public:
   /**
    Specifies a size constraint that should apply to this component.
    */
-  __attribute__((noinline)) auto &size(const CKComponentSize &s)
+  auto &size(const CKComponentSize &s)
   {
     _size = s;
     return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBasePropId::size> &>(*this);
@@ -776,11 +776,11 @@ namespace BuilderDetails {
 template <PropsBitmapType PropsBitmap>
 class __attribute__((__may_alias__)) ComponentBuilder : public ComponentBuilderBase<ComponentBuilder, PropsBitmap> {
  public:
-  __attribute__((noinline)) ~ComponentBuilder() = default;
+  ~ComponentBuilder() = default;
 
 private:
-  __attribute__((noinline)) ComponentBuilder() = default;
-  __attribute__((noinline)) ComponentBuilder(CK::ComponentSpecContext context)
+  ComponentBuilder() = default;
+  ComponentBuilder(CK::ComponentSpecContext context)
     : ComponentBuilderBase<ComponentBuilder, PropsBitmap>{context} { }
 
   friend auto CK::ComponentBuilder() -> ComponentBuilderEmpty;
@@ -794,7 +794,7 @@ private:
 
    @note  This method must @b not be called more than once on a given component builder instance.
    */
-  __attribute__((noinline)) NS_RETURNS_RETAINED auto _build() noexcept -> CKComponent *
+  NS_RETURNS_RETAINED auto _build() noexcept -> CKComponent *
   {
     if (PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig, ComponentBuilderBasePropId::size)) {
       return [CKComponent newWithView:this->_viewConfig size:this->_size];
