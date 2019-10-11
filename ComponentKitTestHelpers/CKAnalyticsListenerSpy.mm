@@ -16,12 +16,14 @@
 
 - (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
                                buildTrigger:(CKBuildTrigger)buildTrigger
-                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates {}
+                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+          enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations {}
 
 - (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
                               buildTrigger:(CKBuildTrigger)buildTrigger
                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                                 component:(CKComponent *)component {}
+                                 component:(CKComponent *)component
+        enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations {}
 
 - (void)willMountComponentTreeWithRootComponent:(id<CKMountable>)component
 {

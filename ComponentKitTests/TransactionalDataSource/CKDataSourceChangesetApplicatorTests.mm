@@ -241,6 +241,7 @@ static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
 - (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
                                buildTrigger:(CKBuildTrigger)buildTrigger
                                stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+          enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations
 {
   _buildComponentCount++;
 }
@@ -249,6 +250,7 @@ static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
                               buildTrigger:(CKBuildTrigger)buildTrigger
                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                                  component:(CKComponent *)component
+         enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations
 {
 
 }

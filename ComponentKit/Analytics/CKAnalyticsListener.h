@@ -33,10 +33,12 @@
  @param scopRoot Scope root for component tree. Use that to identify tree between will/didBuild.
  @param buildTrigger The build trigger (new tree, state update, props updates) for this component tree creation.
  @param stateUpdates The state updates map for the component tree creation.
+ @param enableComponentReuseOptimizations If `NO` any optimization for component reuse is turned off.
  */
 - (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
                                buildTrigger:(CKBuildTrigger)buildTrigger
-                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
+                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+          enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations;
 
 /**
  Called after the component tree creation.
@@ -45,11 +47,13 @@
  @param buildTrigger The build trigger (new tree, state update, props updates) for this component tree creation.
  @param stateUpdates The state updates map for the component tree creation.
  @param component Root component for created tree
+ @param enableComponentReuseOptimizations If `NO` any optimization for component reuse is turned off.
  */
 - (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
                               buildTrigger:(CKBuildTrigger)buildTrigger
                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                                 component:(CKComponent *)component;
+                                 component:(CKComponent *)component
+         enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations;
 
 /**
  Called before component tree layout.

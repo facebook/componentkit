@@ -91,7 +91,8 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   auto const analyticsListener = [previousRoot analyticsListener];
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
                                             buildTrigger:buildTrigger
-                                            stateUpdates:stateUpdates];
+                                            stateUpdates:stateUpdates
+                       enableComponentReuseOptimizations:enableComponentReuseOptimizations];
 #if CK_ASSERTIONS_ENABLED
   const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceBuild]);
 #endif
@@ -121,7 +122,8 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   [analyticsListener didBuildComponentTreeWithScopeRoot:newScopeRoot
                                            buildTrigger:buildTrigger
                                            stateUpdates:stateUpdates
-                                              component:component];
+                                              component:component
+                      enableComponentReuseOptimizations:enableComponentReuseOptimizations];
   return {
     .component = component,
     .scopeRoot = newScopeRoot,
