@@ -52,6 +52,12 @@
   [_child didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
 }
 
+- (UIView *)viewForAnimation
+{
+  // Delegate to the wrapped component's viewForAnimation if we don't have one.
+  return [super viewForAnimation] ?: [_child viewForAnimation];
+}
+
 #if DEBUG
 - (NSArray<NSString *> *)debugDescriptionNodes
 {
