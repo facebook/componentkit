@@ -62,6 +62,18 @@ using namespace CK::Component;
   XCTAssertNil(_rootViewPool.popRootViewWithCategory(category));
 }
 
+- (void)testThatReentrantMutationIsNotAllowedUponEnumeration
+{
+  @autoreleasepool {
+    auto rootView = [CKTestComponentRootView new];
+    const auto category = CK::makeNonNull(@"Category");
+    GlobalRootViewPool().pushRootViewWithCategory(CK::makeNonNull(rootView), category);
+    rootView = nil;
+  }
+  GlobalRootViewPool().clear(); // Reentrant mutation happens in `dealloc` of `CKTestComponentRootView`.
+  XCTAssertNil(GlobalRootViewPool().popRootViewWithCategory(CK::makeNonNull(@"Test")));
+}
+
 - (void)testThatWillEnterViewPoolIsCalledAfterRootViewIsPushIntoPool
 {
   const auto rootView = [CKTestComponentRootView new];
@@ -92,6 +104,12 @@ using namespace CK::Component;
 @end
 
 @implementation CKTestComponentRootView
+
+- (void)dealloc
+{
+  GlobalRootViewPool().pushRootViewWithCategory(CK::makeNonNull([CKComponentRootView new]),
+                                                CK::makeNonNull(@"Test"));
+}
 
 - (void)willEnterViewPool
 {
