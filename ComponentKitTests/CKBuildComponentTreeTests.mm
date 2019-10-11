@@ -202,7 +202,7 @@
     return rootComponent;
   };
 
-  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, {});
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory);
 
   // Simulate a state update on the root.
   CKComponentStateUpdateMap stateUpdates;
@@ -227,7 +227,7 @@
     return rootComponent;
   };
 
-  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, {});
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory);
   XCTAssertFalse(child1.hasReusedComponent);
 
   // Simulate a state update on child2 (child1 should be reused in this case).
@@ -236,7 +236,7 @@
     return @2;
   });
 
-  auto const buildResultsAfterStateUpdate = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, {});
+  auto const buildResultsAfterStateUpdate = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory);
   XCTAssertTrue(child1.hasReusedComponent);
 
 

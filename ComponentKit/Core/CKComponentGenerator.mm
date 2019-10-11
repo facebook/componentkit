@@ -28,10 +28,10 @@ struct CKComponentGeneratorInputs {
   id<NSObject> model;
   id<NSObject> context;
   CKComponentStateUpdateMap stateUpdates;
-  BOOL ignoreComponentReuse;
+  BOOL enableComponentReuse;
 
   bool operator==(const CKComponentGeneratorInputs &i) const {
-    return scopeRoot == i.scopeRoot && model == i.model && context == i.context && stateUpdates == i.stateUpdates && ignoreComponentReuse == i.ignoreComponentReuse;
+    return scopeRoot == i.scopeRoot && model == i.model && context == i.context && stateUpdates == i.stateUpdates && enableComponentReuse == i.enableComponentReuse;
   };
 };
 
@@ -96,11 +96,11 @@ struct CKComponentGeneratorInputs {
 {
   CKAssertAffinedQueue();
 
-  const auto ignoreComponentReuse = _pendingInputs.ignoreComponentReuse;
-  _pendingInputs.ignoreComponentReuse = NO;
+  const auto enableComponentReuse = _pendingInputs.enableComponentReuse;
+  _pendingInputs.enableComponentReuse = YES;
   const auto result = CKBuildComponent(_pendingInputs.scopeRoot, _pendingInputs.stateUpdates, ^{
     return _componentProvider(_pendingInputs.model, _pendingInputs.context);
-  }, ignoreComponentReuse);
+  }, enableComponentReuse);
   [self _applyResult:result invalidComponentControllers:_invalidComponentControllersBetweenScopeRoots(result.scopeRoot, _pendingInputs.scopeRoot)];
   return result;
 }
@@ -118,7 +118,7 @@ struct CKComponentGeneratorInputs {
                                                                     ^{
                                                                       return _componentProvider(inputs->model, inputs->context);
                                                                     },
-                                                                    inputs->ignoreComponentReuse));
+                                                                    inputs->enableComponentReuse));
     const auto invalidComponentControllers =
     std::make_shared<const std::vector<CKComponentController *>>(_invalidComponentControllersBetweenScopeRoots(result->scopeRoot, inputs->scopeRoot));
     dispatch_async(_affinedQueue, ^{
@@ -127,7 +127,7 @@ struct CKComponentGeneratorInputs {
       }
       // If the inputs haven't changed, apply the result; otherwise, retry.
       if (_pendingInputs == *inputs) {
-        _pendingInputs.ignoreComponentReuse = NO;
+        _pendingInputs.enableComponentReuse = YES;
         const auto componentControllers = invalidComponentControllers != nullptr ? *invalidComponentControllers : std::vector<CKComponentController *> {};
 
         [self _applyResult:*result invalidComponentControllers:componentControllers];
@@ -142,7 +142,7 @@ struct CKComponentGeneratorInputs {
 - (void)ignoreComponentReuseInNextGeneration
 {
   CKAssertAffinedQueue();
-  _pendingInputs.ignoreComponentReuse = YES;
+  _pendingInputs.enableComponentReuse = NO;
 }
 
 - (CKComponentScopeRoot *)scopeRoot

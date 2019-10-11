@@ -76,7 +76,7 @@ namespace CKBuildComponentHelpers {
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        BOOL ignoreComponentReuseOptimizations,
+                                        BOOL enableComponentReuseOptimizations,
                                         CKUnifyComponentTreeConfig unifyComponentTreeConfig)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
@@ -105,7 +105,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
       .stateUpdates = stateUpdates,
       .treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger),
       .buildTrigger = buildTrigger,
-      .ignoreComponentReuseOptimizations = ignoreComponentReuseOptimizations,
+      .enableComponentReuseOptimizations = enableComponentReuseOptimizations,
       .systraceListener = threadScope.systraceListener,
       .shouldCollectTreeNodeCreationInformation = [analyticsListener shouldCollectTreeNodeCreationInformation:previousRoot],
       .enableLayoutCache = globalConfig.enableLayoutCacheInRender,

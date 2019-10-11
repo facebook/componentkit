@@ -154,7 +154,7 @@ namespace CKRenderInternal {
     }
 
     // Check if the reuse components optimizations are off.
-    if (params.ignoreComponentReuseOptimizations) {
+    if (!params.enableComponentReuseOptimizations) {
       return NO;
     }
 

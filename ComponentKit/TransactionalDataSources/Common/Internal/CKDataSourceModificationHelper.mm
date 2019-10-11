@@ -24,7 +24,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         CKDataSourceConfiguration *configuration,
                                         id model,
                                         id context,
-                                        BOOL ignoreComponentReuseOptimizations)
+                                        BOOL enableComponentReuseOptimizations)
 {
   auto const componentProvider = [configuration componentProvider];
   const auto componentFactory = ^{
@@ -33,7 +33,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
   const CKBuildComponentResult result = CKBuildComponent(previousRoot,
                                                          stateUpdates,
                                                          componentFactory,
-                                                         ignoreComponentReuseOptimizations);
+                                                         enableComponentReuseOptimizations);
   const auto rootLayout = CKComputeRootComponentLayout(result.component,
                                                        sizeRange,
                                                        result.scopeRoot.analyticsListener,

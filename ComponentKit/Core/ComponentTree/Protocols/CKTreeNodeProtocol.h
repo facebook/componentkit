@@ -57,9 +57,9 @@ struct CKBuildComponentTreeParams {
   // Collect tree node information for logging.
   BOOL shouldCollectTreeNodeCreationInformation;
 
-  // When enabled, all the comopnents will be regenerated (no component reuse optimiztions).
-  BOOL ignoreComponentReuseOptimizations = NO;
-  
+  // When disabled, all the comopnents will be regenerated (no component reuse optimiztions). Enabled by default.
+  BOOL enableComponentReuseOptimizations = YES;
+
   // When enabled, we will cache the layout in render components and reuse it during a component reuse.
   BOOL enableLayoutCache = NO;
 

@@ -36,11 +36,11 @@ namespace CKBuildComponentHelpers {
  @param previousRoot The previous scope root that was associated with the cell. May be nil if no prior root is available
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
- @param ignoreComponentReuseOptimizations When enabled, all the comopnents will be regenerated (no component reuse optimiztions).
+ @param enableComponentReuseOptimizations If `NO`, all the comopnents will be regenerated (no component reuse optimiztions). `YES` by default.
  @param unifyComponentTreeConfig Tree unification config.
  */
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        BOOL ignoreComponentReuseOptimizations = NO,
+                                        BOOL enableComponentReuseOptimizations = YES,
                                         CKUnifyComponentTreeConfig unifyComponentTreeConfig = CKReadGlobalConfig().unifyComponentTreeConfig);

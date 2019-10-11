@@ -22,4 +22,4 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                         CKDataSourceConfiguration *configuration,
                                         id model,
                                         id context,
-                                        BOOL ignoreComponentReuseOptimizations = NO);
+                                        BOOL enableComponentReuseOptimizations = YES);
