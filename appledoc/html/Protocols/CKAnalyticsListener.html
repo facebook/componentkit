@@ -60,7 +60,7 @@
 	
 	<optgroup label="Instance Methods">
 		
-		<option value="//api/name/didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:">- didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:</option>
+		<option value="//api/name/didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:enableComponentReuseOptimizations:">- didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:enableComponentReuseOptimizations:</option>
 		
 		<option value="//api/name/didBuildTreeNodeForPrecomputedChild:node:parent:params:parentHasStateUpdate:">- didBuildTreeNodeForPrecomputedChild:node:parent:params:parentHasStateUpdate:</option>
 		
@@ -74,7 +74,7 @@
 		
 		<option value="//api/name/systraceListener">- systraceListener</option>
 		
-		<option value="//api/name/willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:">- willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:</option>
+		<option value="//api/name/willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:enableComponentReuseOptimizations:">- willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:enableComponentReuseOptimizations:</option>
 		
 		<option value="//api/name/willCollectAnimationsFromComponentTreeWithRootComponent:">- willCollectAnimationsFromComponentTreeWithRootComponent:</option>
 		
@@ -132,8 +132,8 @@
 
 						<div class="task-list">
 							<div class="section-method">
-	<a name="//api/name/willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:" title="willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:">&ndash;&nbsp;willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:</a></code>
+	<a name="//api/name/willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:enableComponentReuseOptimizations:" title="willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:enableComponentReuseOptimizations:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:enableComponentReuseOptimizations:">&ndash;&nbsp;willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:enableComponentReuseOptimizations:</a></code>
 <span class="task-item-suffix">required method</span></h3>
 
 	<div class="method-info">
@@ -148,7 +148,7 @@
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)<em>scopeRoot</em> buildTrigger:(CKBuildTrigger)<em>buildTrigger</em> stateUpdates:(const CKComponentStateUpdateMap &amp;)<em>stateUpdates</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)<em>scopeRoot</em> buildTrigger:(CKBuildTrigger)<em>buildTrigger</em> stateUpdates:(const CKComponentStateUpdateMap &amp;)<em>stateUpdates</em> enableComponentReuseOptimizations:(BOOL)<em>enableComponentReuseOptimizations</em></code></div>
 
 		    
 			
@@ -164,6 +164,11 @@
 					<tr>
 						<th scope="row" class="argument-name"><code>stateUpdates</code></th>
 						<td><p>The state updates map for the component tree creation.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>enableComponentReuseOptimizations</code></th>
+						<td><p>If <code>NO</code> any optimization for component reuse is turned off.</p></td>
 					</tr>
 				
 					<tr>
@@ -195,8 +200,8 @@
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:" title="didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:">&ndash;&nbsp;didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:</a></code>
+	<a name="//api/name/didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:enableComponentReuseOptimizations:" title="didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:enableComponentReuseOptimizations:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:enableComponentReuseOptimizations:">&ndash;&nbsp;didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:enableComponentReuseOptimizations:</a></code>
 <span class="task-item-suffix">required method</span></h3>
 
 	<div class="method-info">
@@ -211,7 +216,7 @@
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)<em>scopeRoot</em> buildTrigger:(CKBuildTrigger)<em>buildTrigger</em> stateUpdates:(const CKComponentStateUpdateMap &amp;)<em>stateUpdates</em> component:(CKComponent *)<em>component</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)<em>scopeRoot</em> buildTrigger:(CKBuildTrigger)<em>buildTrigger</em> stateUpdates:(const CKComponentStateUpdateMap &amp;)<em>stateUpdates</em> component:(CKComponent *)<em>component</em> enableComponentReuseOptimizations:(BOOL)<em>enableComponentReuseOptimizations</em></code></div>
 
 		    
 			
@@ -232,6 +237,11 @@
 					<tr>
 						<th scope="row" class="argument-name"><code>component</code></th>
 						<td><p>Root component for created tree</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>enableComponentReuseOptimizations</code></th>
+						<td><p>If <code>NO</code> any optimization for component reuse is turned off.</p></td>
 					</tr>
 				
 					<tr>
@@ -753,7 +763,7 @@ The extra information will be provided back in <code>didMountComponentTreeWithRo
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2019 Facebook. All rights reserved. Updated: 2019-10-03</p>
+						<p class="copyright">Copyright &copy; 2019 Facebook. All rights reserved. Updated: 2019-10-12</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
