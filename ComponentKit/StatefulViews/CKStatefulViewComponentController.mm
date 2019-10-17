@@ -16,7 +16,7 @@
 #import "CKStatefulViewComponent.h"
 #import "CKStatefulViewReusePool.h"
 
-#import <objc/runtime.h>
+#import "CKInternalHelpers.h"
 
 @implementation CKStatefulViewComponentController
 {
@@ -78,10 +78,8 @@
   [super didMount];
 
   NSAssert([[self component] isKindOfClass:[CKStatefulViewComponent class]], @"Component should be a stateful view component.");
-  NSAssert(
-    method_getImplementation(class_getInstanceMethod([CKStatefulViewComponentController class], @selector(statefulView))) ==
-    method_getImplementation(class_getInstanceMethod([self class], @selector(statefulView))),
-    @"Should not override the method -statefulView.");
+  NSAssert(!CKSubclassOverridesInstanceMethod([CKStatefulViewComponent class], self, @selector(statefulView)),
+           @"Should not override the method -statefulView.");
 
   if (_statefulView == nil) {
     _statefulViewContext = [[self class] contextForNewStatefulView:[self component]];
