@@ -81,16 +81,16 @@ using namespace CKComponentControllerHelper;
   _itemGenerator = itemGenerator;
 }
 
-- (CKDataSourceChange *)changeFromState:(CKDataSourceState *)oldState
+- (CKDataSourceChange *)changeFromState:(CKDataSourceState *)state
 {
-  CKDataSourceConfiguration *configuration = [oldState configuration];
+  CKDataSourceConfiguration *configuration = [state configuration];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
 
   NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
 
   NSMutableArray *newSections = [NSMutableArray array];
-  [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
+  [[state sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     [newSections addObject:[items mutableCopy]];
   }];
 
@@ -103,7 +103,7 @@ using namespace CKComponentControllerHelper;
                          (unsigned long)newSections.count,
                          _changeset,
                          _userInfo,
-                         oldState);
+                         state);
   }
     NSMutableArray *const section = newSections[indexPath.section];
     if (indexPath.item >= section.count) {
@@ -113,7 +113,7 @@ using namespace CKComponentControllerHelper;
                            (unsigned long)section.count,
                            _changeset,
                            _userInfo,
-                           oldState);
+                           state);
     }
     CKDataSourceItem *const oldItem = section[indexPath.item];
     CKDataSourceItem *const item = [self _buildDataSourceItemForPreviousRoot:[oldItem scopeRoot]
@@ -162,7 +162,7 @@ using namespace CKComponentControllerHelper;
                            (unsigned long)newSections.count,
                            CK::changesetDescription(_changeset),
                            _userInfo,
-                           oldState);
+                           state);
     }
     const auto fromSection = static_cast<NSArray *>(newSections[from.section]);
     if (from.item >= fromSection.count) {
@@ -172,7 +172,7 @@ using namespace CKComponentControllerHelper;
                            (unsigned long)fromSection.count,
                            CK::changesetDescription(_changeset),
                            _userInfo,
-                           oldState);
+                           state);
     }
     insertedItemsBySection[to.section][to.row] = fromSection[from.item];
   }];
@@ -195,7 +195,7 @@ using namespace CKComponentControllerHelper;
                            (unsigned long)newSections.count,
                            CK::changesetDescription(_changeset),
                            _userInfo,
-                           oldState);
+                           state);
     }
     const auto section = static_cast<NSMutableArray *>(newSections[it.first]);
 #if CK_ASSERTIONS_ENABLED
@@ -208,7 +208,7 @@ using namespace CKComponentControllerHelper;
                            (unsigned long)it.first,
                            CK::changesetDescription(_changeset),
                            _userInfo,
-                           oldState);
+                           state);
     }
 #endif
     [section removeObjectsAtIndexes:it.second];
@@ -231,7 +231,7 @@ using namespace CKComponentControllerHelper;
                          (unsigned long)newSections.count,
                          CK::changesetDescription(_changeset),
                          _userInfo,
-                         oldState);
+                         state);
   }
 #if CK_ASSERTIONS_ENABLED
     // Deep validation of the indexes we are going to insert for better logging.
@@ -244,7 +244,7 @@ using namespace CKComponentControllerHelper;
                        newSections,
                        CK::changesetDescription(_changeset),
                        _userInfo,
-                       oldState);
+                       state);
   }
 #endif
 
@@ -293,7 +293,7 @@ using namespace CKComponentControllerHelper;
                            (unsigned long)newSections.count,
                            CK::changesetDescription(_changeset),
                            _userInfo,
-                           oldState);
+                           state);
     }
 #if CK_ASSERTIONS_ENABLED
     const auto sectionItems = static_cast<NSArray *>([newSections objectAtIndex:sectionIt.first]);
@@ -306,7 +306,7 @@ using namespace CKComponentControllerHelper;
                            (unsigned long)sectionIt.first,
                            CK::changesetDescription(_changeset),
                            _userInfo,
-                           oldState);
+                           state);
     }
 #endif
     [[newSections objectAtIndex:sectionIt.first] insertObjects:items atIndexes:indexes];
@@ -326,7 +326,7 @@ using namespace CKComponentControllerHelper;
                                                        userInfo:_userInfo];
 
   return [[CKDataSourceChange alloc] initWithState:newState
-                                     previousState:oldState
+                                     previousState:state
                                     appliedChanges:appliedChanges
                                  deferredChangeset:nil
                        invalidComponentControllers:invalidComponentControllers];

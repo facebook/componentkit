@@ -40,16 +40,16 @@ using namespace CKComponentControllerHelper;
   return self;
 }
 
-- (CKDataSourceChange *)changeFromState:(CKDataSourceState *)oldState
+- (CKDataSourceChange *)changeFromState:(CKDataSourceState *)state
 {
-  CKDataSourceConfiguration *configuration = [oldState configuration];
+  CKDataSourceConfiguration *configuration = [state configuration];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
 
   NSMutableArray *newSections = [NSMutableArray array];
   NSMutableSet *updatedIndexPaths = [NSMutableSet set];
   NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
-  [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
+  [[state sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     NSMutableArray *newItems = [NSMutableArray array];
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
       [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
@@ -79,7 +79,7 @@ using namespace CKComponentControllerHelper;
                                                        userInfo:_userInfo];
 
   return [[CKDataSourceChange alloc] initWithState:newState
-                                     previousState:oldState
+                                     previousState:state
                                     appliedChanges:appliedChanges
                                  deferredChangeset:nil
                        invalidComponentControllers:invalidComponentControllers];

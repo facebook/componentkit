@@ -43,18 +43,18 @@ using namespace CKComponentControllerHelper;
   return self;
 }
 
-- (CKDataSourceChange *)changeFromState:(CKDataSourceState *)oldState
+- (CKDataSourceChange *)changeFromState:(CKDataSourceState *)state
 {
   id<NSObject> context = [_configuration context];
   const CKSizeRange sizeRange = [_configuration sizeRange];
 
   // If only the size range changed, we don't need to regenerate the component; we can simply re-layout the existing one.
-  const BOOL onlySizeRangeChanged = [_configuration hasSameComponentProviderAndContextAs:oldState.configuration];
+  const BOOL onlySizeRangeChanged = [_configuration hasSameComponentProviderAndContextAs:state.configuration];
 
   NSMutableArray *newSections = [NSMutableArray array];
   NSMutableSet *updatedIndexPaths = [NSMutableSet set];
   NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
-  [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
+  [[state sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     NSMutableArray *newItems = [NSMutableArray array];
     [items enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSUInteger itemIdx, BOOL *itemStop) {
       [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
@@ -92,7 +92,7 @@ using namespace CKComponentControllerHelper;
                                                        userInfo:_userInfo];
 
   return [[CKDataSourceChange alloc] initWithState:newState
-                                     previousState:oldState
+                                     previousState:state
                                     appliedChanges:appliedChanges
                                  deferredChangeset:nil
                        invalidComponentControllers:invalidComponentControllers];
