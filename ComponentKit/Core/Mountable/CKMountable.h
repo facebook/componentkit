@@ -25,6 +25,12 @@ struct CKComponentViewContext {
   CGRect frame;
 };
 
+struct CKMountInfo {
+  id<CKMountable> supercomponent;
+  UIView *view;
+  CKComponentViewContext viewContext;
+};
+
 @protocol CKMountable <NSObject>
 
 /**
@@ -62,6 +68,8 @@ struct CKComponentViewContext {
 /** If the component owns its own view and is mounted, returns it. */
 @property (nonatomic, readonly) UIView *mountedView;
 
+/** If the component is mounted, returns it. */
+@property (nonatomic, readonly) CKMountInfo mountInfo;
 
 /**
  Mounts the component in the given context:

@@ -45,19 +45,13 @@
 CGFloat const kCKComponentParentDimensionUndefined = NAN;
 CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndefined, kCKComponentParentDimensionUndefined};
 
-struct CKComponentMountInfo {
-  CKComponent *supercomponent;
-  UIView *view;
-  CKComponentViewContext viewContext;
-};
-
 @implementation CKComponent
 {
   CKComponentScopeHandle<CKComponentController *> *_scopeHandle;
   CKComponentViewConfiguration _viewConfiguration;
 
   /** Only non-null while mounted. */
-  std::unique_ptr<CKComponentMountInfo> _mountInfo;
+  std::unique_ptr<CKMountInfo> _mountInfo;
 
   /** Component tree */
   CKTreeNodeComponentKey _componentKey;
@@ -207,7 +201,7 @@ struct CKComponentMountInfo {
   const CKComponentViewConfiguration &viewConfiguration = CK::Component::Accessibility::IsAccessibilityEnabled() ? CK::Component::Accessibility::AccessibleViewConfiguration(_viewConfiguration) : _viewConfiguration;
 
   if (_mountInfo == nullptr) {
-    _mountInfo.reset(new CKComponentMountInfo());
+    _mountInfo.reset(new CKMountInfo());
   }
   _mountInfo->supercomponent = supercomponent;
 
@@ -391,7 +385,10 @@ struct CKComponentMountInfo {
 - (id)nextResponderAfterController
 {
   CKAssertMainThread();
-  return (_mountInfo ? _mountInfo->supercomponent : nil) ?: [self rootComponentMountedView];
+  if (_mountInfo && _mountInfo->supercomponent) {
+    return _mountInfo->supercomponent;
+  }
+  return [self rootComponentMountedView];
 }
 
 - (id)targetForAction:(SEL)action withSender:(id)sender
@@ -490,13 +487,12 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return currentScope->newScopeRoot;
 }
 
-static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component)
+static NSArray<id<CKMountable>> *generateComponentBacktrace(CKComponent *component)
 {
-  NSMutableArray<CKComponent *> *const componentBacktrace = [NSMutableArray arrayWithObject:component];
+  NSMutableArray<id<CKMountable>> *const componentBacktrace = [NSMutableArray arrayWithObject:component];
   while ([componentBacktrace lastObject]
-         && [componentBacktrace lastObject]->_mountInfo
-         && [componentBacktrace lastObject]->_mountInfo->supercomponent) {
-    [componentBacktrace addObject:[componentBacktrace lastObject]->_mountInfo->supercomponent];
+         && [componentBacktrace lastObject].mountInfo.supercomponent) {
+    [componentBacktrace addObject:[componentBacktrace lastObject].mountInfo.supercomponent];
   }
   return componentBacktrace;
 }
@@ -504,6 +500,14 @@ static NSArray<CKComponent *> *generateComponentBacktrace(CKComponent *component
 - (UIView *)mountedView
 {
   return _mountInfo ? _mountInfo->view : nil;
+}
+
+- (CKMountInfo)mountInfo
+{
+  if (_mountInfo) {
+    return *_mountInfo.get();
+  }
+  return {};
 }
 
 #pragma mark - CKTreeNodeProtocol
