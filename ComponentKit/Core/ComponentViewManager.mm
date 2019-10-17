@@ -22,10 +22,10 @@
 #import "ComponentUtilities.h"
 #import "ComponentViewReuseUtilities.h"
 #import "CKComponentInternal.h"
-#import "CKComponent+UIView.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentViewConfiguration.h"
 #import "CKGlobalConfig.h"
+#import "CKMountable+UIView.h"
 
 using namespace CK::Component;
 
@@ -207,12 +207,12 @@ void ViewReusePoolMap::reset(UIView *container, CK::Component::MountAnalyticsCon
         [container exchangeSubviewAtIndex:i withSubviewAtIndex:swapIndex];
       }
       CKCAssertWithCategory(swapIndex != NSNotFound,
-                            [CKMountedComponentForView(*nextVendedViewIt) class],
+                            [CKMountableForView(*nextVendedViewIt) class],
                             @"Expected to find subview %@ (component: %@) in %@ (component: %@)",
                             [*nextVendedViewIt class],
-                            [CKMountedComponentForView(*nextVendedViewIt) class],
+                            [CKMountableForView(*nextVendedViewIt) class],
                             [container class],
-                            [CKMountedComponentForView(container) class]);
+                            [CKMountableForView(container) class]);
     }
 
     ++nextVendedViewIt;
