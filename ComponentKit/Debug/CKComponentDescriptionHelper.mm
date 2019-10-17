@@ -80,3 +80,13 @@ NSString *CKComponentDescriptionWithChildren(NSString *description, NSArray *chi
   }
   return result;
 }
+
+NSArray<id<CKMountable>> *generateComponentBacktrace(id<CKMountable> component)
+{
+  NSMutableArray<id<CKMountable>> *const componentBacktrace = [NSMutableArray arrayWithObject:component];
+  while ([componentBacktrace lastObject]
+         && [componentBacktrace lastObject].mountInfo.supercomponent) {
+    [componentBacktrace addObject:[componentBacktrace lastObject].mountInfo.supercomponent];
+  }
+  return componentBacktrace;
+}

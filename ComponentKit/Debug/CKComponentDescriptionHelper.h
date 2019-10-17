@@ -20,6 +20,7 @@ NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBac
 NSString *CKComponentBacktraceStackDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept;
 
 NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKComponentLayoutChild>> children) noexcept;
+NSArray<id<CKMountable>> *generateComponentBacktrace(id<CKMountable> component);
 
 __BEGIN_DECLS
 

@@ -487,16 +487,6 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return currentScope->newScopeRoot;
 }
 
-static NSArray<id<CKMountable>> *generateComponentBacktrace(CKComponent *component)
-{
-  NSMutableArray<id<CKMountable>> *const componentBacktrace = [NSMutableArray arrayWithObject:component];
-  while ([componentBacktrace lastObject]
-         && [componentBacktrace lastObject].mountInfo.supercomponent) {
-    [componentBacktrace addObject:[componentBacktrace lastObject].mountInfo.supercomponent];
-  }
-  return componentBacktrace;
-}
-
 - (UIView *)mountedView
 {
   return _mountInfo ? _mountInfo->view : nil;

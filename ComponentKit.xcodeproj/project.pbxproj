@@ -309,6 +309,10 @@
 		2377A9CB23570A2200092BE2 /* CKMountable+UIView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2377A9BE23570A2200092BE2 /* CKMountable+UIView.h */; };
 		2377A9CC23570A2200092BE2 /* CKMountable+UIView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2377A9C923570A2200092BE2 /* CKMountable+UIView.mm */; };
 		2377A9CD23570A2200092BE2 /* CKMountable+UIView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2377A9C923570A2200092BE2 /* CKMountable+UIView.mm */; };
+		2377A9DE23570BE700092BE2 /* CKMountableComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2377A9D223570BE600092BE2 /* CKMountableComponent.mm */; };
+		2377A9DF23570BE700092BE2 /* CKMountableComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2377A9D223570BE600092BE2 /* CKMountableComponent.mm */; };
+		2377A9E023570BE700092BE2 /* CKMountableComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2377A9DD23570BE700092BE2 /* CKMountableComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2377A9E123570BE700092BE2 /* CKMountableComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2377A9DD23570BE700092BE2 /* CKMountableComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23789B1C22E7639A005505FC /* CKScopeTreeNodeProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 23789B1A22E7639A005505FC /* CKScopeTreeNodeProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23789B1D22E7639A005505FC /* CKScopeTreeNodeProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 23789B1A22E7639A005505FC /* CKScopeTreeNodeProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		237E82BB21B011F000794571 /* CKComponentPerfScope.mm in Sources */ = {isa = PBXBuildFile; fileRef = 237E82AF21B011EF00794571 /* CKComponentPerfScope.mm */; };
@@ -1166,6 +1170,8 @@
 		23770A2C22EB46EB00858140 /* CKRenderTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderTreeNode.h; sourceTree = "<group>"; };
 		2377A9BE23570A2200092BE2 /* CKMountable+UIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKMountable+UIView.h"; sourceTree = "<group>"; };
 		2377A9C923570A2200092BE2 /* CKMountable+UIView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CKMountable+UIView.mm"; sourceTree = "<group>"; };
+		2377A9D223570BE600092BE2 /* CKMountableComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKMountableComponent.mm; sourceTree = "<group>"; };
+		2377A9DD23570BE700092BE2 /* CKMountableComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMountableComponent.h; sourceTree = "<group>"; };
 		23789B1A22E7639A005505FC /* CKScopeTreeNodeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKScopeTreeNodeProtocol.h; sourceTree = "<group>"; };
 		237E82AF21B011EF00794571 /* CKComponentPerfScope.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentPerfScope.mm; sourceTree = "<group>"; };
 		237E82BA21B011F000794571 /* CKComponentPerfScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentPerfScope.h; sourceTree = "<group>"; };
@@ -1777,6 +1783,8 @@
 			isa = PBXGroup;
 			children = (
 				231E120C2341F3370055A438 /* CKMountable.h */,
+				2377A9DD23570BE700092BE2 /* CKMountableComponent.h */,
+				2377A9D223570BE600092BE2 /* CKMountableComponent.mm */,
 				2377A9BE23570A2200092BE2 /* CKMountable+UIView.h */,
 				2377A9C923570A2200092BE2 /* CKMountable+UIView.mm */,
 			);
@@ -2718,6 +2726,7 @@
 				03B8B5001D2A346F00EDFF59 /* CKDataSourceStateInternal.h in Headers */,
 				D6C713FA224CCA5800BADCC6 /* CKAnimationComponent.h in Headers */,
 				03B8B5021D2A346F00EDFF59 /* CKComponentGestureActionsInternal.h in Headers */,
+				2377A9E123570BE700092BE2 /* CKMountableComponent.h in Headers */,
 				03B8B5031D2A346F00EDFF59 /* CKOverlayLayoutComponent.h in Headers */,
 				60D7B3B620FC90500011AB3B /* YGNode.h in Headers */,
 				03B8B5041D2A346F00EDFF59 /* CKComponentGestureActions.h in Headers */,
@@ -3009,6 +3018,7 @@
 				2DCA4E721D889D0300AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */,
 				A2E5BDC21EB9303D00444CD9 /* CKComponentKey.h in Headers */,
 				D0B47D0C1CBD948E00BB33CE /* CKComponentScopeHandle.h in Headers */,
+				2377A9E023570BE700092BE2 /* CKMountableComponent.h in Headers */,
 				D0B47D021CBD948E00BB33CE /* CKDimension.h in Headers */,
 				D0B47D631CBD948E00BB33CE /* CKTextComponentLayerHighlighter.h in Headers */,
 				7F6BAF681F1F6E5200600828 /* CKComponentLayoutBaseline.h in Headers */,
@@ -3660,6 +3670,7 @@
 				03B8B4BA1D2A346F00EDFF59 /* CKTextComponent.mm in Sources */,
 				03B8B4BB1D2A346F00EDFF59 /* CKTextComponentLayer.mm in Sources */,
 				03B8B4BC1D2A346F00EDFF59 /* CKTextComponentLayerHighlighter.mm in Sources */,
+				2377A9DF23570BE700092BE2 /* CKMountableComponent.mm in Sources */,
 				03B8B4BD1D2A346F00EDFF59 /* CKTextComponentView.mm in Sources */,
 				60D7B3CE20FC90500011AB3B /* YGEnums.cpp in Sources */,
 				03B8B4BE1D2A346F00EDFF59 /* CKTextComponentViewControlTracker.mm in Sources */,
@@ -3906,6 +3917,7 @@
 				60D7B3AF20FC90500011AB3B /* YGLayout.cpp in Sources */,
 				237E8941213FFC6D00793B4D /* CKRenderLayoutWithChildrenComponent.mm in Sources */,
 				D0B47C921CBD943400BB33CE /* CKComponentViewConfiguration.mm in Sources */,
+				2377A9DE23570BE700092BE2 /* CKMountableComponent.mm in Sources */,
 				D0B47C931CBD943400BB33CE /* CKComponent+UIView.mm in Sources */,
 				72AE129D22D7707400E1C27D /* CKComponentCreationValidation.mm in Sources */,
 				D0B47C941CBD943400BB33CE /* CKCompositeComponent.mm in Sources */,
