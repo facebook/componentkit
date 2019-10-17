@@ -105,11 +105,10 @@ struct CKMountInfo {
  */
 - (void)childrenDidMount:(id<CKSystraceListener>)systraceListener;
 
-
 /** Unique identifier of the component - can be nil */
 @property (nonatomic, strong, readonly) id<NSObject> uniqueIdentifier;
 
 /** Backward Compatibility */
-- (id<CKComponentControllerProtocol>)controller;
+- (id)controller;
 
 @end
