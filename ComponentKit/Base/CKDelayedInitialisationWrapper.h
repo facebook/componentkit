@@ -46,6 +46,13 @@ struct DelayedInitialisationWrapper final {
     return *_value.unsafeValuePtrOrNull();
   }
 
+  operator T&() {
+    if (_value.hasValue() == false) {
+      CKCFatal(@"Expecting value to be set");
+    }
+    return *_value.unsafeValuePtrOrNull();
+  }
+
   // Can't return a reference to the optional storage since it stores T, not U.
   // Can't return a reference since this would be a reference to a stack allocated temporary of U.
   // => Return by value
