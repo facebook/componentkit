@@ -29,12 +29,12 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKScopeTreeNode.h"
 
-/** An helper class that inherits from 'CKRenderComponent'; render the component from the initializer */
+/** A helper class that inherits from 'CKRenderComponent'; render the component from the initializer */
 @interface CKComponentTreeTestComponent_Render : CKRenderComponent
 + (instancetype)newWithComponent:(CKComponent *)component;
 @end
 
-/** An helper class that inherits from 'CKRenderComponent' and render a random CKComponent */
+/** A helper class that inherits from 'CKRenderComponent' and render a random CKComponent */
 @interface CKComponentTreeTestComponent_RenderWithChild : CKRenderComponent
 @property (nonatomic, strong) CKCompositeComponentWithScopeAndState *childComponent;
 @property (nonatomic, assign) BOOL hasReusedComponent;

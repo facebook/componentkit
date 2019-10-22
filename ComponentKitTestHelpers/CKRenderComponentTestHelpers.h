@@ -51,7 +51,7 @@ struct CKTestRenderComponentProps {
 @property (nonatomic, strong) CKCompositeComponentWithScopeAndState *childComponent;
 @end
 
-// An helper class that inherits from 'CKRenderLayoutWithChildrenComponent'; render the component froms the initializer
+// A helper class that inherits from 'CKRenderLayoutWithChildrenComponent'; render the component froms the initializer
 @interface CKTestRenderWithChildrenComponent : CKRenderLayoutWithChildrenComponent
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
 @end
