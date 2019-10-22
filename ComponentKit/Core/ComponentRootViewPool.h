@@ -28,8 +28,6 @@ namespace CK {
     class RootViewPool {
       using ViewStorage = std::unordered_map<NSString *, std::vector<CKComponentRootView *>, hash<NSString *>, is_equal<NSString *>>;
       std::shared_ptr <ViewStorage> _rootViews;
-      /** This is used to prevent mutation of view pool upon enumeration(reentrant mutation) */
-      bool _locked = false;
     public:
       RootViewPool() : _rootViews(std::make_shared<ViewStorage>()) {};
 

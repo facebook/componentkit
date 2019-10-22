@@ -19,24 +19,12 @@ using namespace CK::Component;
 auto RootViewPool::clear() -> void
 {
   CKCAssertMainThread();
-  if (_locked) {
-    return;
-  }
-  // Upon clearing view pool, views are deallocated and it's possible that views will be added to view pool
-  // at this point and it will crash because we can't mutate view pool while enumerating the underlying vector.
-  // In order to prevent this from happening, we need to mark view pool as locked and ignore all mutations until it's unlocked.
-  _locked = true;
-  _rootViews->clear();
-  _locked = false;
+  _rootViews = std::make_shared<ViewStorage>();
 }
 
 auto RootViewPool::popRootViewWithCategory(CK::NonNull<NSString *> category) -> CKComponentRootView *
 {
   CKCAssertMainThread();
-  if (_locked) {
-    return nil;
-  }
-
   const auto it = _rootViews->find(category);
   if (it == _rootViews->end() || it->second.empty()) {
     return nil;
@@ -51,10 +39,6 @@ auto RootViewPool::pushRootViewWithCategory(CK::NonNull<CKComponentRootView *> r
                                             CK::NonNull<NSString *> category) -> void
 {
   CKCAssertMainThread();
-  if (_locked) {
-    return;
-  }
-
   // Before pushing `rootView` to the view pool, we need to hide all subviews of `rootView`.
   // This also makes sure lifecycle method `didEnterReusePool` is properly called.
   ViewReusePool::hideAll(rootView, nullptr);
