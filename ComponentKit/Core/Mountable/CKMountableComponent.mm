@@ -93,7 +93,6 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   }
   _mountInfo->supercomponent = supercomponent;
 
-
   UIView *v = context.viewManager->viewForConfiguration([self class], _viewConfiguration);
   if (v) {
     auto const currentMountedComponent = (CKMountableComponent *)CKMountableForView(v);
@@ -107,27 +106,14 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
       CKAssert(currentMountedComponent == self, @"");
     }
 
-    @try {
-      const CGPoint anchorPoint = v.layer.anchorPoint;
-      [v setCenter:context.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
-      [v setBounds:{v.bounds.origin, size}];
-    } @catch (NSException *exception) {
-      NSString *const componentBacktraceDescription =
-        CKComponentBacktraceDescription(generateComponentBacktrace(supercomponent));
-      NSString *const componentChildrenDescription = CKComponentChildrenDescription(children);
-      [NSException raise:exception.name
-                  format:@"%@ raised %@ during mount: %@\n backtrace:%@ children:%@", [self class], exception.name, exception.reason, componentBacktraceDescription, componentChildrenDescription];
-    }
-
+    CKSetViewPositionAndBounds(v, context, size, children, supercomponent, [self class]);
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
-
     return {.mountChildren = YES, .contextForChildren = context.childContextForSubview(v, NO)};
   } else {
     CKCAssertWithCategory(_mountInfo->view == nil, [self class],
                           @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
                           [self class], [_mountInfo->view class], CKComponentBacktraceDescription(generateComponentBacktrace(self)));
     _mountInfo->viewContext = {context.viewManager->view, {context.position, size}};
-
     return {.mountChildren = YES, .contextForChildren = context};
   }
 }

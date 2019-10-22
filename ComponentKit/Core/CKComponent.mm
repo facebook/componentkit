@@ -35,6 +35,7 @@
 #import "CKComponentViewConfiguration.h"
 #import "CKInternalHelpers.h"
 #import "CKMountAnimationGuard.h"
+#import "CKMountable+UIView.h"
 #import "CKWeakObjectContainer.h"
 #import "ComponentLayoutContext.h"
 #import "CKThreadLocalComponentScope.h"
@@ -226,17 +227,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
       CKAssert(currentMountedComponent == self, @"");
     }
 
-    @try {
-      const CGPoint anchorPoint = v.layer.anchorPoint;
-      [v setCenter:effectiveContext.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
-      [v setBounds:{v.bounds.origin, size}];
-    } @catch (NSException *exception) {
-      NSString *const componentBacktraceDescription =
-        CKComponentBacktraceDescription(generateComponentBacktrace(supercomponent));
-      NSString *const componentChildrenDescription = CKComponentChildrenDescription(children);
-      [NSException raise:exception.name
-                  format:@"%@ raised %@ during mount: %@\n backtrace:%@ children:%@", [self class], exception.name, exception.reason, componentBacktraceDescription, componentChildrenDescription];
-    }
+    CKSetViewPositionAndBounds(v, context, size, children, supercomponent, [self class]);
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
 

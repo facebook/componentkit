@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol CKMountable;
+#import <ComponentKit/CKMountable.h>
 
 #ifndef __cplusplus
 #error This file must be compiled as Obj-C++. If you are importing it, you must change your file extension to .mm.
@@ -21,3 +21,11 @@ id<CKMountable> CKMountableForView(UIView *view);
 
 /** This is for internal use by the framework only. */
 void CKSetMountableForView(UIView *view, id<CKMountable> component);
+
+/** This is a helper function whichs set the view position and bounds during mount */
+void CKSetViewPositionAndBounds(UIView *v,
+                                const CK::Component::MountContext &context,
+                                const CGSize size,
+                                std::shared_ptr<const std::vector<CKComponentLayoutChild> > children,
+                                id<CKMountable> supercomponent,
+                                Class<CKMountable> klass);
