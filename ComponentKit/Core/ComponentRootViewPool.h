@@ -20,16 +20,28 @@
 
 namespace CK {
   namespace Component {
-    
+
+    class ViewStorage {
+      using RootViews = std::unordered_map<NSString *, std::vector<CKComponentRootView *>, hash<NSString *>, is_equal<NSString *>>;
+      RootViews _rootViews;
+      /** This is used to prevent mutation of view pool upon enumeration(reentrant mutation) */
+      bool _locked;
+    public:
+      ViewStorage() : _rootViews({}), _locked(false) {};
+
+      auto push(CKComponentRootView *rootView, NonNull<NSString *> category) -> void;
+      auto pop(NonNull<NSString *> category) -> CKComponentRootView *;
+      auto clear() -> void;
+    };
+
     /**
      Root view pool stores a list of `CKComponentRootView` with category which could be reused when it's needed.
      All methods of `RootViewPool` are main thread affined.
      */
     class RootViewPool {
-      using ViewStorage = std::unordered_map<NSString *, std::vector<CKComponentRootView *>, hash<NSString *>, is_equal<NSString *>>;
-      std::shared_ptr <ViewStorage> _rootViews;
+      std::shared_ptr<ViewStorage> _viewStorage;
     public:
-      RootViewPool() : _rootViews(std::make_shared<ViewStorage>()) {};
+      RootViewPool() : _viewStorage(std::make_shared<ViewStorage>()) {};
 
       /**
        Pop a `CKComponentRootView` from view pool which matches the specified category.
@@ -42,7 +54,7 @@ namespace CK {
        All views in local view pools of this root view will be hidden.
        @see CK::Component:ViewReusePool
        */
-      auto pushRootViewWithCategory(NonNull<CKComponentRootView *> view,
+      auto pushRootViewWithCategory(NonNull<CKComponentRootView *> rootView,
                                     NonNull<NSString *> category) -> void;
 
       /**

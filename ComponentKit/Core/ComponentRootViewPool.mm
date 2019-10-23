@@ -16,17 +16,38 @@
 
 using namespace CK::Component;
 
-auto RootViewPool::clear() -> void
+auto ViewStorage::clear() -> void
 {
-  CKCAssertMainThread();
-  _rootViews = std::make_shared<ViewStorage>();
+  if (_locked) {
+    return;
+  }
+  // Upon clearing view pool, views are deallocated and it's possible that views will be added to view pool
+  // at this point and it will crash because we can't mutate view pool while enumerating the underlying vector.
+  // In order to prevent this from happening, we need to mark view pool as locked and ignore all mutations until it's unlocked.
+  _locked = true;
+  _rootViews.clear();
+  _locked = false;
 }
 
-auto RootViewPool::popRootViewWithCategory(CK::NonNull<NSString *> category) -> CKComponentRootView *
+auto ViewStorage::push(CKComponentRootView *rootView, NonNull<NSString *> category) -> void
 {
-  CKCAssertMainThread();
-  const auto it = _rootViews->find(category);
-  if (it == _rootViews->end() || it->second.empty()) {
+  if (_locked) {
+    return;
+  }
+  // Before pushing `rootView` to the view pool, we need to hide all subviews of `rootView`.
+  // This also makes sure lifecycle method `didEnterReusePool` is properly called.
+  ViewReusePool::hideAll(rootView, nullptr);
+  [rootView willEnterViewPool];
+  _rootViews[category].push_back(rootView);
+}
+
+auto ViewStorage::pop(NonNull<NSString *> category) -> CKComponentRootView *
+{
+  if (_locked) {
+    return nil;
+  }
+  const auto it = _rootViews.find(category);
+  if (it == _rootViews.end() || it->second.empty()) {
     return nil;
   } else {
     const auto rootView = it->second.back();
@@ -35,15 +56,23 @@ auto RootViewPool::popRootViewWithCategory(CK::NonNull<NSString *> category) -> 
   }
 }
 
+auto RootViewPool::clear() -> void
+{
+  CKCAssertMainThread();
+  _viewStorage->clear();
+}
+
+auto RootViewPool::popRootViewWithCategory(CK::NonNull<NSString *> category) -> CKComponentRootView *
+{
+  CKCAssertMainThread();
+  return _viewStorage->pop(category);
+}
+
 auto RootViewPool::pushRootViewWithCategory(CK::NonNull<CKComponentRootView *> rootView,
                                             CK::NonNull<NSString *> category) -> void
 {
   CKCAssertMainThread();
-  // Before pushing `rootView` to the view pool, we need to hide all subviews of `rootView`.
-  // This also makes sure lifecycle method `didEnterReusePool` is properly called.
-  ViewReusePool::hideAll(rootView, nullptr);
-  [rootView willEnterViewPool];
-  (*_rootViews)[category].push_back(rootView);
+  _viewStorage->push(rootView, category);
 }
 
 auto CK::Component::GlobalRootViewPool() -> RootViewPool &
