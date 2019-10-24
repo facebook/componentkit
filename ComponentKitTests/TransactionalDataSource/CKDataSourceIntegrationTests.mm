@@ -163,6 +163,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
 
   UICollectionViewController *collectionViewController = [[UICollectionViewController alloc]
                                    initWithCollectionViewLayout:flowLayout];
+  collectionViewController.view.frame = CGRectMake(0, 0, self.itemSize.width, self.itemSize.height);
 
   CKDataSourceConfiguration *config = [[CKDataSourceConfiguration alloc]
                                        initWithComponentProvider:(id)self
