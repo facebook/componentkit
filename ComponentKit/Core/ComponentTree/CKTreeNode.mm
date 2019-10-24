@@ -118,8 +118,10 @@
   [parent setChild:self forComponentKey:_componentKey];
   // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
   params.scopeRoot.rootNode.registerNode(self, parent);
-  // Set the link between the tree node and the scope handle.
-  [component.scopeHandle setTreeNode:self];
+  if (!params.unifyComponentTreeConfig.linkScopeTreeNodeToHandle) {
+    // Set the link between the tree node and the scope handle.
+    [component.scopeHandle setTreeNode:self];
+  }
 #if DEBUG
   [component acquireTreeNode:self];
 #endif

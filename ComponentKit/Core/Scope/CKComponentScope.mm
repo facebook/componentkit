@@ -18,6 +18,7 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKScopeTreeNode.h"
 #import "CKScopeTreeNodeWithChild.h"
+#import "CKTreeNodeProtocol.h"
 
 static Class<CKComponentScopeFrameProtocol> getFrameClass(Class __unsafe_unretained componentClass) {
   if (componentClass == [CKCompositeComponent class]) {
@@ -56,7 +57,8 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
                                              identifier:identifier
                                                    keys:_threadLocalScope->keys.top()
                                     initialStateCreator:initialStateCreator
-                                           stateUpdates:_threadLocalScope->stateUpdates];
+                                           stateUpdates:_threadLocalScope->stateUpdates
+                               unifyComponentTreeConfig:_threadLocalScope->unifyComponentTreeConfig];
     _threadLocalScope->stack.push({.frame = childPair.frame, .previousFrame = childPair.previousFrame});
     _scopeHandle = childPair.frame.scopeHandle;
     _threadLocalScope->keys.push({});

@@ -15,6 +15,8 @@
 struct CKUnifyComponentTreeConfig {
   /** If enabled, the components we will be used as the tree nodes */
   BOOL useComponentsAsTheTree = NO;
+  /** If enabled, the CKScopeTreeNode will link the new node to the corresponding handle. */
+  BOOL linkScopeTreeNodeToHandle = NO;
 };
 
 struct CKGlobalConfig {

@@ -13,8 +13,9 @@
 #import <algorithm>
 #import <unordered_map>
 
-#import "CKThreadLocalComponentScope.h"
 #import "CKGlobalConfig.h"
+#import "CKThreadLocalComponentScope.h"
+#import "CKTreeNodeProtocol.h"
 
 static NSUInteger const kParentBaseKey = 0;
 static NSUInteger const kOwnerBaseKey = 1;
@@ -131,6 +132,7 @@ static NSUInteger const kOwnerBaseKey = 1;
                                          keys:(const std::vector<id<NSObject>> &)keys
                           initialStateCreator:(id (^)(void))initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                     unifyComponentTreeConfig:(const CKUnifyComponentTreeConfig &)unifyComponentTreeConfig
 {
   id<CKScopeTreeNodeProtocol> frame = (id<CKScopeTreeNodeProtocol>)pair.frame;
   id<CKScopeTreeNodeProtocol> previousFrame = (id<CKScopeTreeNodeProtocol>)pair.previousFrame;
@@ -156,6 +158,11 @@ static NSUInteger const kOwnerBaseKey = 1;
   CKScopeTreeNode *newChild = [[CKScopeTreeNode alloc]
                                initWithPreviousNode:childFrameOfPreviousFrame
                                scopeHandle:newHandle];
+
+  if (unifyComponentTreeConfig.linkScopeTreeNodeToHandle) {
+    // Link the tree node to the scope handle.
+    [newHandle setTreeNode:newChild];
+  }
 
   // Insert the new node to its parent map.
   [frame setChild:newChild forKey:stateKey];

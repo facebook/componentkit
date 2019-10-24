@@ -11,7 +11,7 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
-
+#import <ComponentKit/CKTreeNodeProtocol.h>
 #import <vector>
 
 @class CKComponentScopeHandle;
@@ -34,7 +34,8 @@ struct CKComponentScopeFramePair {
                                    identifier:(id)identifier
                                          keys:(const std::vector<id<NSObject>> &)keys
                           initialStateCreator:(id (^)(void))initialStateCreator
-                                 stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
+                                 stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                     unifyComponentTreeConfig:(const CKUnifyComponentTreeConfig &)unifyComponentTreeConfig;
 
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
 
