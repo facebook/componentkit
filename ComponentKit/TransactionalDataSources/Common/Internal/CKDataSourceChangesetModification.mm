@@ -40,28 +40,25 @@ using namespace CKComponentControllerHelper;
   NSDictionary *_userInfo;
   CKDataSourceQOS _qos;
   __weak id<CKDataSourceChangesetModificationItemGenerator> _itemGenerator;
-}
-
-- (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
-                    stateListener:(id<CKComponentStateListener>)stateListener
-                         userInfo:(NSDictionary *)userInfo
-{
-  return [self initWithChangeset:changeset
-                   stateListener:stateListener
-                        userInfo:userInfo
-                             qos:CKDataSourceQOSDefault];
+  BOOL _shouldValidateChangeset;
 }
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
                               qos:(CKDataSourceQOS)qos
+          shouldValidateChangeset:(BOOL)shouldValidateChangeset
 {
   if (self = [super init]) {
     _changeset = changeset;
     _stateListener = stateListener;
     _userInfo = [userInfo copy];
     _qos = qos;
+#if CK_ASSERTIONS_ENABLED
+    _shouldValidateChangeset = YES;
+#else
+    _shouldValidateChangeset = shouldValidateChangeset;
+#endif
   }
   return self;
 }
@@ -96,15 +93,16 @@ using namespace CKComponentControllerHelper;
 
   // Update items
   NSDictionary<NSIndexPath *, id> *const updatedItems = [_changeset updatedItems];
-  void(^processUpdatedItem)(NSIndexPath *indexPath, id model) = ^(NSIndexPath *indexPath, id model) {if (indexPath.section >= newSections.count) {
-    CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeUpdate),
-                         @"Invalid section: %lu (>= %lu). Changeset: %@, user info: %@, state: %@",
-                         (unsigned long)indexPath.section,
-                         (unsigned long)newSections.count,
-                         _changeset,
-                         _userInfo,
-                         oldState);
-  }
+  void(^processUpdatedItem)(NSIndexPath *indexPath, id model) = ^(NSIndexPath *indexPath, id model) {
+    if (indexPath.section >= newSections.count) {
+      CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeUpdate),
+                           @"Invalid section: %lu (>= %lu). Changeset: %@, user info: %@, state: %@",
+                           (unsigned long)indexPath.section,
+                           (unsigned long)newSections.count,
+                           _changeset,
+                           _userInfo,
+                           oldState);
+    }
     NSMutableArray *const section = newSections[indexPath.section];
     if (indexPath.item >= section.count) {
       CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeUpdate),
@@ -198,19 +196,20 @@ using namespace CKComponentControllerHelper;
                            oldState);
     }
     const auto section = static_cast<NSMutableArray *>(newSections[it.first]);
-#if CK_ASSERTIONS_ENABLED
-    const auto invalidIndexes = CK::invalidIndexesForRemovalFromArray(section, it.second);
-    if (invalidIndexes.count > 0) {
-      CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeRemoveRow),
-                           @"%@ (>= %lu) in section: %lu. Changeset: %@, user info: %@, state: %@",
-                           CK::indexSetDescription(invalidIndexes, @"Invalid indexes", 0),
-                           (unsigned long)section.count,
-                           (unsigned long)it.first,
-                           CK::changesetDescription(_changeset),
-                           _userInfo,
-                           oldState);
+
+    if (_shouldValidateChangeset) {
+      const auto invalidIndexes = CK::invalidIndexesForRemovalFromArray(section, it.second);
+      if (invalidIndexes.count > 0) {
+        CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeRemoveRow),
+                             @"%@ (>= %lu) in section: %lu. Changeset: %@, user info: %@, state: %@",
+                             CK::indexSetDescription(invalidIndexes, @"Invalid indexes", 0),
+                             (unsigned long)section.count,
+                             (unsigned long)it.first,
+                             CK::changesetDescription(_changeset),
+                             _userInfo,
+                             oldState);
+      }
     }
-#endif
     [section removeObjectsAtIndexes:it.second];
   }
 
@@ -233,20 +232,20 @@ using namespace CKComponentControllerHelper;
                          _userInfo,
                          oldState);
   }
-#if CK_ASSERTIONS_ENABLED
+  if (_shouldValidateChangeset) {
     // Deep validation of the indexes we are going to insert for better logging.
-  auto const invalidInsertedSectionsIndexes = CK::invalidIndexesForInsertionInArray(newSections, [_changeset insertedSections]);
-  if (invalidInsertedSectionsIndexes.count) {
-  CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertSection),
-                       @"%@ for range: %@ in sections: %@. Changeset: %@, user info: %@, state: %@",
-                       CK::indexSetDescription(invalidInsertedSectionsIndexes, @"Invalid indexes", 0),
-                       NSStringFromRange({0, newSections.count}),
-                       newSections,
-                       CK::changesetDescription(_changeset),
-                       _userInfo,
-                       oldState);
+    auto const invalidInsertedSectionsIndexes = CK::invalidIndexesForInsertionInArray(newSections, [_changeset insertedSections]);
+    if (invalidInsertedSectionsIndexes.count) {
+    CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertSection),
+                         @"%@ for range: %@ in sections: %@. Changeset: %@, user info: %@, state: %@",
+                         CK::indexSetDescription(invalidInsertedSectionsIndexes, @"Invalid indexes", 0),
+                         NSStringFromRange({0, newSections.count}),
+                         newSections,
+                         CK::changesetDescription(_changeset),
+                         _userInfo,
+                         oldState);
+    }
   }
-#endif
 
   [newSections insertObjects:emptyMutableArrays([[_changeset insertedSections] count]) atIndexes:[_changeset insertedSections]];
 
@@ -295,20 +294,20 @@ using namespace CKComponentControllerHelper;
                            _userInfo,
                            oldState);
     }
-#if CK_ASSERTIONS_ENABLED
-    const auto sectionItems = static_cast<NSArray *>([newSections objectAtIndex:sectionIt.first]);
-    const auto invalidIndexes = CK::invalidIndexesForInsertionInArray(sectionItems, indexes);
-    if (invalidIndexes.count > 0) {
-      CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertRow),
-                           @"%@ for range: %@ in section: %lu. Changeset: %@, user info: %@, state: %@",
-                           CK::indexSetDescription(invalidIndexes, @"Invalid indexes", 0),
-                           NSStringFromRange({0, sectionItems.count}),
-                           (unsigned long)sectionIt.first,
-                           CK::changesetDescription(_changeset),
-                           _userInfo,
-                           oldState);
+    if (_shouldValidateChangeset) {
+      const auto sectionItems = static_cast<NSArray *>([newSections objectAtIndex:sectionIt.first]);
+      const auto invalidIndexes = CK::invalidIndexesForInsertionInArray(sectionItems, indexes);
+      if (invalidIndexes.count > 0) {
+        CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertRow),
+                             @"%@ for range: %@ in section: %lu. Changeset: %@, user info: %@, state: %@",
+                             CK::indexSetDescription(invalidIndexes, @"Invalid indexes", 0),
+                             NSStringFromRange({0, sectionItems.count}),
+                             (unsigned long)sectionIt.first,
+                             CK::changesetDescription(_changeset),
+                             _userInfo,
+                             oldState);
+      }
     }
-#endif
     [[newSections objectAtIndex:sectionIt.first] insertObjects:items atIndexes:indexes];
   }
 

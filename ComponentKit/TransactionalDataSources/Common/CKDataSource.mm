@@ -495,7 +495,8 @@
     [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
                                                    stateListener:self
                                                         userInfo:userInfo
-                                                             qos:qos];
+                                                             qos:qos
+                                         shouldValidateChangeset:NO];
   }
 }
 

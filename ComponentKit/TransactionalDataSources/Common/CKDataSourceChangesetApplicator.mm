@@ -102,7 +102,8 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
     [[CKDataSourceChangesetModification alloc]
      initWithChangeset:changeset
      stateListener:_dataSource
-     userInfo:userInfo];
+     userInfo:userInfo qos:qos
+     shouldValidateChangeset:NO];
     [modification setItemGenerator:self];
     @autoreleasepool {
       change = [modification changeFromState:_dataSourceState];

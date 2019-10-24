@@ -48,7 +48,7 @@ static NSOperationQualityOfService _operationQosFromDataSourceQOS(CKDataSourceQO
                               qos:(CKDataSourceQOS)qos
                         workQueue:(dispatch_queue_t)workQueue
 {
-  if (self = [super initWithChangeset:changeset stateListener:stateListener userInfo:userInfo qos:qos]) {
+  if (self = [super initWithChangeset:changeset stateListener:stateListener userInfo:userInfo qos:qos shouldValidateChangeset:NO]) {
     _queue = [NSOperationQueue new];
     _queue.underlyingQueue = workQueue;
     _queue.qualityOfService = _operationQosFromDataSourceQOS(qos);
