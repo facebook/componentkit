@@ -78,6 +78,10 @@
  */
 - (id<CKTreeNodeComponentProtocol>)render:(id)state;
 
+/**
+ Returns the computed child component, if there is one.
+ */
+- (id<CKTreeNodeComponentProtocol>)childComponent;
 @end
 
 /**

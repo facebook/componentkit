@@ -10,11 +10,13 @@
 
 #import "CKScopeTreeNodeWithChild.h"
 
+@protocol CKTreeNodeComponentProtocol;
+
 /**
  This object is a bridge between CKComponentScope and CKTreeNode.
 
  It represents a node for CKRenderComponent component in the component tree.
  */
 @interface CKRenderTreeNode : CKScopeTreeNodeWithChild
-- (void)didReuseNode:(CKRenderTreeNode *)node;
+- (void)didReuseNode:(CKRenderTreeNode *)node params:(const CKBuildComponentTreeParams &)params;
 @end

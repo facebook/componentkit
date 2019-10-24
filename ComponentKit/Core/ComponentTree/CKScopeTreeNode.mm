@@ -17,8 +17,8 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKTreeNodeProtocol.h"
 
-static NSUInteger const kParentBaseKey = 0;
-static NSUInteger const kOwnerBaseKey = 1;
+NSUInteger const kTreeNodeParentBaseKey = 0;
+NSUInteger const kTreeNodeOwnerBaseKey = 1;
 
 @implementation CKScopeTreeNode
 
@@ -29,7 +29,7 @@ static NSUInteger const kOwnerBaseKey = 1;
   std::vector<id<CKTreeNodeProtocol>> children;
   for (auto const &child : _children) {
     auto childStateKey = std::get<0>(child);
-    if (std::get<1>(childStateKey.nodeKey) % 2 == kParentBaseKey) {
+    if (std::get<1>(childStateKey.nodeKey) % 2 == kTreeNodeParentBaseKey) {
       children.push_back(std::get<1>(child));
     }
   }
@@ -57,7 +57,7 @@ static NSUInteger const kOwnerBaseKey = 1;
                                                    identifier:(id<NSObject>)identifier
 {
   // Create **parent** based key counter.
-  NSUInteger keyCounter = kParentBaseKey;
+  NSUInteger keyCounter = kTreeNodeParentBaseKey;
   for (auto const &child : _children) {
     auto childNodeKey = std::get<0>(child).nodeKey;
     if (std::get<0>(childNodeKey) == componentClass && CKObjectIsEqual(std::get<2>(childNodeKey), identifier)) {
@@ -83,7 +83,7 @@ static NSUInteger const kOwnerBaseKey = 1;
   [super didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
   for (auto const &child : _children) {
     auto childStateKey = std::get<0>(child);
-    if (std::get<1>(childStateKey.nodeKey) % 2 == kParentBaseKey) {
+    if (std::get<1>(childStateKey.nodeKey) % 2 == kTreeNodeParentBaseKey) {
       [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
     }
   }
@@ -96,7 +96,7 @@ static NSUInteger const kOwnerBaseKey = 1;
                                                  keys:(const std::vector<id<NSObject>> &)keys
 {
   // Create **owner** based key counter.
-  NSUInteger keyCounter = kOwnerBaseKey;
+  NSUInteger keyCounter = kTreeNodeOwnerBaseKey;
   for (auto const &child : _children) {
     auto childNodeKey = std::get<0>(child).nodeKey;
     if (std::get<0>(childNodeKey) == componentClass && CKObjectIsEqual(std::get<2>(childNodeKey), identifier)) {
@@ -246,7 +246,7 @@ static NSUInteger const kOwnerBaseKey = 1;
   for (auto const &child : _children) {
     auto const scopeNodeKey = std::get<0>(child);
     auto const childNode = std::get<1>(child);
-    if (std::get<1>(scopeNodeKey.nodeKey) % 2 == kParentBaseKey) {
+    if (std::get<1>(scopeNodeKey.nodeKey) % 2 == kTreeNodeParentBaseKey) {
       for (NSString *s in [childNode debugDescriptionNodes]) {
         [debugDescriptionNodes addObject:[@"  " stringByAppendingString:s]];
       }
@@ -262,7 +262,7 @@ static NSUInteger const kOwnerBaseKey = 1;
   for (auto const &child : _children) {
     auto const scopeNodeKey = std::get<0>(child);
     auto const childNode = std::get<1>(child);
-    if (std::get<1>(scopeNodeKey.nodeKey) % 2 == kOwnerBaseKey) {
+    if (std::get<1>(scopeNodeKey.nodeKey) % 2 == kTreeNodeOwnerBaseKey) {
       auto const description = [NSString stringWithFormat:@"- %@%@%@",
                                 NSStringFromClass(std::get<0>(scopeNodeKey.nodeKey)),
                                 (std::get<2>(scopeNodeKey.nodeKey)

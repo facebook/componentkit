@@ -33,6 +33,9 @@
 @interface CKRenderComponentComponentsAsTheTreeTests : CKRenderComponentTests
 @end
 
+@interface CKRenderComponentRenderNodesOnlyTests : CKRenderComponentTests
+@end
+
 @interface CKRenderComponentAndScopeTreeTests : XCTestCase
 @end
 
@@ -669,14 +672,23 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
 }
 @end
 
+@implementation CKRenderComponentRenderNodesOnlyTests
+- (void)setUp
+{
+  [super setUp];
+  _unifyComponentTrees = {
+    .linkScopeTreeNodeToHandle = YES,
+    .renderOnlyTreeNodes = YES,
+  };
+}
+@end
+
 @implementation CKRenderComponentAndScopeTreeTests
 
 - (void)test_scopeFramePreserveStateDuringComponentReuse
 {
   // CKComponentScopeFrame
-  [self __test_scopeFramePreserveStateDuringComponentReuse:{
-    .useComponentsAsTheTree = NO,
-  }];
+  [self __test_scopeFramePreserveStateDuringComponentReuse:{}];
 }
 
 - (void)test_scopeFramePreserveStateDuringComponentReuseWithComponentsAsTrees
@@ -695,12 +707,19 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
   }];
 }
 
+- (void)test_scopeFramePreserveStateDuringComponentReuseWithRenderNodesOnly
+{
+  // CKComponentScopeFrame
+  [self __test_scopeFramePreserveStateDuringComponentReuse:{
+    .linkScopeTreeNodeToHandle = YES,
+    .renderOnlyTreeNodes = YES,
+  }];
+}
+
 - (void)test_renderComponentPreserveStateDuringComponentReuse
 {
   // CKComponentScopeFrame
-  [self __test_renderComponentPreserveStateDuringComponentReuse:{
-    .useComponentsAsTheTree = NO,
-  }];
+  [self __test_renderComponentPreserveStateDuringComponentReuse:{}];
 }
 
 - (void)test_renderComponentPreserveStateDuringComponentReuseWithComponentsAsTrees
@@ -716,6 +735,15 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
   // CKComponentScopeFrame
   [self __test_renderComponentPreserveStateDuringComponentReuse:{
     .linkScopeTreeNodeToHandle = YES,
+  }];
+}
+
+- (void)test_renderComponentPreserveStateDuringComponentReuseWithWithRenderNodesOnly
+{
+  // CKComponentScopeFrame
+  [self __test_renderComponentPreserveStateDuringComponentReuse:{
+    .linkScopeTreeNodeToHandle = YES,
+    .renderOnlyTreeNodes = YES,
   }];
 }
 

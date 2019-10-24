@@ -54,4 +54,9 @@
   return nil;
 }
 
+- (id<CKTreeNodeComponentProtocol>)childComponent
+{
+  return _child;
+}
+
 @end

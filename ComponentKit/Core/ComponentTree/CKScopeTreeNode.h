@@ -12,6 +12,9 @@
 
 #import "CKTreeNode.h"
 
+extern NSUInteger const kTreeNodeParentBaseKey;
+extern NSUInteger const kTreeNodeOwnerBaseKey;
+
 @protocol CKTreeNodeProtocol;
 
 /**

@@ -79,7 +79,7 @@ namespace CKRender {
                  id<CKTreeNodeWithChildrenProtocol> parent,
                  id<CKTreeNodeWithChildrenProtocol> previousParent,
                  const CKBuildComponentTreeParams &params,
-                 BOOL parentHasStateUpdate) -> id<CKTreeNodeProtocol>;
+                 BOOL parentHasStateUpdate) -> void;
 
       /**
        Build component tree for layout render component with children components (CKRenderLayoutWithChildrenComponent).
@@ -96,7 +96,7 @@ namespace CKRender {
                              id<CKTreeNodeWithChildrenProtocol> parent,
                              id<CKTreeNodeWithChildrenProtocol> previousParent,
                              const CKBuildComponentTreeParams &params,
-                             BOOL parentHasStateUpdate) -> id<CKTreeNodeProtocol>;
+                             BOOL parentHasStateUpdate) -> void;
     }
 
     namespace Render {
@@ -165,11 +165,11 @@ namespace CKRender {
     }
   }
 
-
   /**
-   @return `YES` if the input node is part of a state update path. `NO` otherwise.
+   @return `YES` if the component of the node has a state update, `NO` otherwise.
    */
   auto componentHasStateUpdate(id<CKTreeNodeProtocol> node,
+                               id<CKTreeNodeComponentProtocol> component,
                                id<CKTreeNodeWithChildrenProtocol> previousParent,
                                const CKBuildComponentTreeParams &params) -> BOOL;
 

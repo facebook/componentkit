@@ -17,6 +17,8 @@ struct CKUnifyComponentTreeConfig {
   BOOL useComponentsAsTheTree = NO;
   /** If enabled, the CKScopeTreeNode will link the new node to the corresponding handle. */
   BOOL linkScopeTreeNodeToHandle = NO;
+  /** If enabled, only render components will get a tree node */
+  BOOL renderOnlyTreeNodes = NO;
 };
 
 struct CKGlobalConfig {
