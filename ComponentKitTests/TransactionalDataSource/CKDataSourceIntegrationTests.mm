@@ -136,7 +136,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
 {
   [super setUp];
 
-  self.itemSize = [[UIScreen mainScreen] bounds].size;
+  self.itemSize = CGSizeMake(320, 480);
 
   self.components = [NSMutableArray new];
   self.componentsDictionary = [NSMutableDictionary dictionary];
@@ -161,9 +161,10 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
   UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
   flowLayout.itemSize = self.itemSize;
 
-  UICollectionViewController *collectionViewController = [[UICollectionViewController alloc]
-                                   initWithCollectionViewLayout:flowLayout];
-  collectionViewController.view.frame = CGRectMake(0, 0, self.itemSize.width, self.itemSize.height);
+  UICollectionView *collectionView =
+  [[UICollectionView alloc]
+   initWithFrame:CGRectMake(0, 0, self.itemSize.width, self.itemSize.height)
+   collectionViewLayout:flowLayout];
 
   CKDataSourceConfiguration *config = [[CKDataSourceConfiguration alloc]
                                        initWithComponentProvider:(id)self
@@ -173,7 +174,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                        componentPredicates:{}
                                        componentControllerPredicates:{}
                                        analyticsListener:nil];
-  return [[CKCollectionViewDataSource alloc] initWithCollectionView:collectionViewController.collectionView
+  return [[CKCollectionViewDataSource alloc] initWithCollectionView:collectionView
                                                      supplementaryViewDataSource:nil
                                                                    configuration:config];
 }
