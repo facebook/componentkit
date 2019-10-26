@@ -20,7 +20,7 @@
  The main difference between CKRenderComponent and CKRenderLayoutWithChildrenComponent is that by subclassing CKRenderLayoutWithChildrenComponent the component tree (CKTreeNode)
  won't be created from CKBuildComponent unless there is a CKRenderComponent in the tree. We use this component to bridge non-render components into the render world.
  */
-@interface CKRenderLayoutWithChildrenComponent : CKComponent <CKRenderWithChildrenComponentProtocol, CKTreeNodeWithChildrenProtocol>
+@interface CKRenderLayoutWithChildrenComponent : CKComponent <CKRenderWithChildrenComponentProtocol>
 
 /*
  Returns a vector of 'CKComponent' children that will be rendered to the screen.

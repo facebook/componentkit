@@ -54,10 +54,6 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   /** Only non-null while mounted. */
   std::unique_ptr<CKMountInfo> _mountInfo;
 
-  /** Component tree */
-  CKTreeNodeComponentKey _componentKey;
-  CKTreeNodeIdentifier _nodeIdentifier;
-
 #if DEBUG
   __weak id<CKTreeNodeProtocol> _treeNode;
 #endif
@@ -491,88 +487,9 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return {};
 }
 
-#pragma mark - CKTreeNodeProtocol
-
-- (CKTreeNodeIdentifier)nodeIdentifier
-{
-  return _nodeIdentifier;
-}
-
-- (id<CKTreeNodeComponentProtocol>)component
-{
-  return self;
-}
-
-- (CKComponentScopeHandle *)scopeHandle
-{
-  return _scopeHandle;
-}
-
 - (id)state
 {
   return _scopeHandle.state;
 }
-
-- (const CKTreeNodeComponentKey &)componentKey
-{
-  return _componentKey;
-}
-
-- (void)setComponentKey:(const CKTreeNodeComponentKey &)key
-{
-  _componentKey = key;
-}
-
-- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
-{
-  auto const parent = previousScopeRoot.rootNode.parentForNodeIdentifier(_nodeIdentifier);
-  CKAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");
-  scopeRoot.rootNode.registerNode(self, parent);
-  if (_scopeHandle) {
-    // Register the reused comopnent in the new scope root.
-    [scopeRoot registerComponent:self];
-    auto const controller = _scopeHandle.controller;
-    if (controller) {
-      // Register the controller in the new scope root.
-      [scopeRoot registerComponentController:controller];
-    }
-  }
-}
-
-- (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
-             toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
-       previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
-               params:(const CKBuildComponentTreeParams &)params
-{
-  static int32_t nextGlobalIdentifier = 0;
-  if (CK::TreeNode::isKeyEmpty(_componentKey)) {
-    _componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
-  }
-  auto const previousNode = [previousParent childForComponentKey:_componentKey];
-  _nodeIdentifier = previousNode ? previousNode.nodeIdentifier : OSAtomicIncrement32(&nextGlobalIdentifier);
-  // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
-  params.scopeRoot.rootNode.registerNode(self, parent);
-  // Set the link between the tree node and the scope handle.
-  [_scopeHandle setTreeNode:self];
-#if DEBUG
-  [component acquireTreeNode:self];
-#endif
-}
-
-#if DEBUG
-/** Returns a multi-line string describing this node and its children nodes */
-- (NSString *)debugDescription
-{
-  return [[self debugDescriptionNodes] componentsJoinedByString:@"\n"];
-}
-
-- (NSArray<NSString *> *)debugDescriptionNodes
-{
-  return @[[NSString stringWithFormat:@"- %@ %d - %@",
-            [self class],
-            _nodeIdentifier,
-            self]];
-}
-#endif
 
 @end

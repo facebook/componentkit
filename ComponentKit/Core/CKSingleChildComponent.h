@@ -14,10 +14,12 @@
 #import <ComponentKit/CKTreeNodeProtocol.h>
 
 /** Infra components with single child should inherit from this one. Please DO NOT use it directly. */
-@interface CKSingleChildComponent : CKComponent <CKTreeNodeWithChildProtocol>
+@interface CKSingleChildComponent : CKComponent
 {
   // We need to access the iVar from `buildComponenTree:`, DO NOT use it otherwise.
   @package
   CKComponent *_child;
 }
+
+- (CKComponent *)child;
 @end

@@ -82,7 +82,7 @@
 @property (nonatomic, strong, readonly) id<CKComponentScopeEnumeratorProvider> scopeEnumeratorProvider;
 
 /** For internal use only; don't touch this. */
-- (void)setComponentKey:(const CKTreeNodeComponentKey &)key;
+@property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
 
 /** For internal debug use only; don't touch this. */
 - (NSString *)backtraceStackDescription;

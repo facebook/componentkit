@@ -73,7 +73,10 @@ struct CKBuildComponentTreeParams {
  The component that is hosted by a `CKTreeNodeProtocol`.
  It represents the component holding the the scope handle, capable of building a component tree (CKTreeNode).
  */
-@protocol CKTreeNodeComponentProtocol<CKComponentProtocol, CKTreeNodeProtocol>
+@protocol CKTreeNodeComponentProtocol<CKComponentProtocol>
+
+/** Reference to the component's scope handle. */
+- (CKComponentScopeHandle *)scopeHandle;
 
 /** Ask the component to acquire a scope handle. */
 - (void)acquireScopeHandle:(CKComponentScopeHandle *)scopeHandle;

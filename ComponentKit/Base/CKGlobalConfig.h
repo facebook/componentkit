@@ -13,8 +13,6 @@
 @protocol CKAnalyticsListener;
 
 struct CKUnifyComponentTreeConfig {
-  /** If enabled, the components we will be used as the tree nodes */
-  BOOL useComponentsAsTheTree = NO;
   /** If enabled, the CKScopeTreeNode will link the new node to the corresponding handle. */
   BOOL linkScopeTreeNodeToHandle = NO;
   /** If enabled, only render components will get a tree node */

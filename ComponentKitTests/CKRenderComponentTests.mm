@@ -30,9 +30,6 @@
 @interface CKRenderComponentLinkScopeToHandleTests : CKRenderComponentTests
 @end
 
-@interface CKRenderComponentComponentsAsTheTreeTests : CKRenderComponentTests
-@end
-
 @interface CKRenderComponentRenderNodesOnlyTests : CKRenderComponentTests
 @end
 
@@ -652,16 +649,6 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
 
 @end
 
-@implementation CKRenderComponentComponentsAsTheTreeTests
-- (void)setUp
-{
-  [super setUp];
-  _unifyComponentTrees = {
-    .useComponentsAsTheTree = YES,
-  };
-}
-@end
-
 @implementation CKRenderComponentLinkScopeToHandleTests
 - (void)setUp
 {
@@ -691,14 +678,6 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
   [self __test_scopeFramePreserveStateDuringComponentReuse:{}];
 }
 
-- (void)test_scopeFramePreserveStateDuringComponentReuseWithComponentsAsTrees
-{
-  // CKComponentScopeFrame
-  [self __test_scopeFramePreserveStateDuringComponentReuse:{
-    .useComponentsAsTheTree = YES,
-  }];
-}
-
 - (void)test_scopeFramePreserveStateDuringComponentReuseWithLinkScopeTreeNodeToHandle
 {
   // CKComponentScopeFrame
@@ -720,14 +699,6 @@ static void SimulateBuildComponentTree(CKComponentScopeRoot *scopeRoot,
 {
   // CKComponentScopeFrame
   [self __test_renderComponentPreserveStateDuringComponentReuse:{}];
-}
-
-- (void)test_renderComponentPreserveStateDuringComponentReuseWithComponentsAsTrees
-{
-  // CKComponentScopeFrame
-  [self __test_renderComponentPreserveStateDuringComponentReuse:{
-    .useComponentsAsTheTree = YES,
-  }];
 }
 
 - (void)test_renderComponentPreserveStateDuringComponentReuseWithLinkScopeTreeNodeToHandle

@@ -79,6 +79,12 @@ extern CGSize const kCKComponentParentSizeUndefined;
 + (CKComponentStateType)initialState;
 
 /**
+ Returns the component's state if available.
+ Can be aclled only *after* the component's creation is done.
+ */
+- (CKComponentStateType)state;
+
+/**
  Enqueue a change to the state.
 
  The state must be immutable since components themselves are. A possible use might be:

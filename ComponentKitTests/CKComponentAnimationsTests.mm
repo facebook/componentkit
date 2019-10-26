@@ -22,10 +22,6 @@
 
 #import "CKComponentAnimationsEquality.h"
 
-@interface CKCompositeComponent()
-@property (nonatomic, strong) CKComponent *child;
-@end
-
 @interface CKComponentAnimationsTests_LayoutDiffing: XCTestCase
 @end
 

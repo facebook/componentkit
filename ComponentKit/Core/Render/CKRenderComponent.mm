@@ -151,19 +151,4 @@ struct CKRenderLayoutCache {
   return nil;
 }
 
-- (void)linkComponent:(id<CKRenderComponentProtocol>)component
-             toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
-       previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
-               params:(const CKBuildComponentTreeParams &)params
-{
-  Class componentClass = [component class];
-  auto const componentKey = [parent createComponentKeyForChildWithClass:componentClass identifier:[component componentIdentifier]];
-  auto const previousNode = [previousParent childForComponentKey:componentKey];
-  [self setComponentKey:componentKey];
-
-  CKRender::ScopeHandle::Render::create(component, componentClass, previousNode, params.scopeRoot, params.stateUpdates);
-
-  [super linkComponent:component toParent:parent previousParent:previousParent params:params];
-}
-
 @end

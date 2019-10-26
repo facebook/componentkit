@@ -27,36 +27,14 @@ namespace CKRenderInternal {
 
   namespace ScopeEvents {
 
-    // Render nodes is on, only in case comopnents as a tree is off.
-    static auto userRenderNodes(const CKBuildComponentTreeParams &params) {
-      return !params.unifyComponentTreeConfig.useComponentsAsTheTree;
-    }
-
-    static auto willBuildComponentTree(id<CKTreeNodeProtocol> node, const CKBuildComponentTreeParams &params) {
-      // Update the scope frame of the reuse of this component in order to transfer the render scope frame.
-      // When `useRenderNodes` is on , the base constructor of the `CKRenderTreeNode` will push itself to the stack.
-      if (!userRenderNodes(params)) {
-        [CKScopeTreeNode willBuildComponentTreeWithTreeNode:node];
-      }
-    }
-
     static auto didBuildComponentTree(id<CKTreeNodeProtocol> node, const CKBuildComponentTreeParams &params) {
-      if (userRenderNodes(params)) {
-        [CKRenderTreeNode didBuildComponentTreeWithNode:node];
-      } else {
-        [CKScopeTreeNode didBuildComponentTreeWithNode:node];
-      }
+      [CKRenderTreeNode didBuildComponentTreeWithNode:node];
     }
 
     static auto didReuseNode(id<CKTreeNodeWithChildProtocol> node,
                              id<CKTreeNodeWithChildProtocol> previousNode,
                              const CKBuildComponentTreeParams &params) {
-      // Update the scope frame of the reuse of this component in order to transfer the render scope frame.
-      if (userRenderNodes(params)) {
-        [(CKRenderTreeNode *)node didReuseNode:(CKRenderTreeNode *)previousNode params:params];
-      } else {
-        [CKScopeTreeNode didReuseRenderWithTreeNode:node];
-      }
+      [(CKRenderTreeNode *)node didReuseNode:(CKRenderTreeNode *)previousNode params:params];
     }
   }
 
@@ -233,14 +211,8 @@ namespace CKRender {
       {
         CKCAssert(component, @"component cannot be nil");
 
-        id<CKTreeNodeProtocol> node;
-        if (params.unifyComponentTreeConfig.useComponentsAsTheTree) {
-          // Use the component as the node.
-          node = component;
-        } else {
-          // Check if the component already have tree node (Tree Unification Mode).
-          node = component.scopeHandle.treeNode;
-        }
+        // Check if the component already has a tree node.
+        id<CKTreeNodeProtocol> node = component.scopeHandle.treeNode;
 
         if (node) {
           [node linkComponent:component toParent:parent previousParent:previousParent params:params];
@@ -293,14 +265,8 @@ namespace CKRender {
       {
         CKCAssert(component, @"component cannot be nil");
 
-        id<CKTreeNodeProtocol> node;
-        if (params.unifyComponentTreeConfig.useComponentsAsTheTree) {
-          // Use the component as the node.
-          node = component;
-        } else {
-          // Check if the component already have tree node (Tree Unification Mode).
-          node = component.scopeHandle.treeNode;
-        }
+        // Check if the component already has a tree node.
+        id<CKTreeNodeProtocol> node = component.scopeHandle.treeNode;
 
         if (node) {
           [node linkComponent:component toParent:parent previousParent:previousParent params:params];
@@ -348,14 +314,8 @@ namespace CKRender {
       {
         CKCAssert(component, @"component cannot be nil");
 
-        id<CKTreeNodeWithChildrenProtocol> node;
-        if (params.unifyComponentTreeConfig.useComponentsAsTheTree) {
-          // Use the component as the node.
-          node = component;
-        } else {
-          // Check if the component already have tree node (Tree Unification Mode).
-          node = (id<CKTreeNodeWithChildrenProtocol>)component.scopeHandle.treeNode;
-        }
+        // Check if the component already has a tree node.
+        id<CKTreeNodeProtocol> node = component.scopeHandle.treeNode;
 
         if (node) {
           [node linkComponent:component toParent:parent previousParent:previousParent params:params];
@@ -403,14 +363,8 @@ namespace CKRender {
                              const CKBuildComponentTreeParams &params,
                              BOOL parentHasStateUpdate) -> void
       {
-        id<CKTreeNodeWithChildrenProtocol> node;
-        if (params.unifyComponentTreeConfig.useComponentsAsTheTree) {
-          // Use the component as the node.
-          node = component;
-        } else {
-          // Check if the component already have tree node (Tree Unification Mode).
-          node = (id<CKTreeNodeWithChildrenProtocol>)component.scopeHandle.treeNode;
-        }
+        // Check if the component already has a tree node.
+        id<CKTreeNodeProtocol> node = component.scopeHandle.treeNode;
 
         if (node) {
           [node linkComponent:component toParent:parent previousParent:previousParent params:params];
@@ -463,19 +417,13 @@ namespace CKRender {
                  CKRenderDidReuseComponentBlock didReuseBlock) -> id<CKTreeNodeProtocol>
       {
         CKCAssert(component, @"component cannot be nil");
-        id<CKTreeNodeWithChildrenProtocol> node;
-        if (params.unifyComponentTreeConfig.useComponentsAsTheTree) {
-          // Use the component as the node.
-          node = component;
-          [node linkComponent:component toParent:parent previousParent:previousParent params:params];
-        } else {
-          node = [[CKRenderTreeNode alloc]
-                  initWithRenderComponent:component
-                  parent:parent
-                  previousParent:previousParent
-                  scopeRoot:params.scopeRoot
-                  stateUpdates:params.stateUpdates];
-        }
+        id<CKTreeNodeWithChildrenProtocol> node = [[CKRenderTreeNode alloc]
+                                                   initWithRenderComponent:component
+                                                   parent:parent
+                                                   previousParent:previousParent
+                                                   scopeRoot:params.scopeRoot
+                                                   stateUpdates:params.stateUpdates];;
+
 
         CKRenderInternal::willBuildComponentTreeWithChild(node, component, params);
 
@@ -489,8 +437,6 @@ namespace CKRender {
         if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, component, previousParent, params)) {
           parentHasStateUpdate = YES;
         }
-
-        CKRenderInternal::ScopeEvents::willBuildComponentTree(node, params);
 
         auto const child = [component render:node.state];
         if (child) {
@@ -517,14 +463,7 @@ namespace CKRender {
                  id<CKTreeNodeWithChildrenProtocol> parent,
                  id<CKTreeNodeWithChildrenProtocol> previousParent,
                  const CKBuildComponentTreeParams &params) -> void {
-        id<CKTreeNodeProtocol> node;
-        if (params.unifyComponentTreeConfig.useComponentsAsTheTree) {
-          // Use the component as the node.
-          node = component;
-        } else {
-          node = component.scopeHandle.treeNode;
-        }
-
+        id<CKTreeNodeProtocol> node = component.scopeHandle.treeNode;
         if (node) {
           [node linkComponent:component toParent:parent previousParent:previousParent params:params];
         } else {
@@ -549,11 +488,6 @@ namespace CKRender {
                          previousParent:params.previousScopeRoot.rootNode.node()
                                  params:params
                    parentHasStateUpdate:NO];
-
-          // Link the root component to the root node.
-          if (params.unifyComponentTreeConfig.useComponentsAsTheTree) {
-            [rootNode setChild:component forComponentKey:component.componentKey];
-          }
         }
       }
     }
