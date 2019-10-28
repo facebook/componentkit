@@ -15,6 +15,7 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKStatelessComponent.h>
 
 using namespace CK::Component;
 
@@ -69,6 +70,14 @@ const CK::Component::LayoutContextStack &LayoutContext::currentStack()
   return componentValue().stack;
 }
 
+static auto componentClassString(CKComponent *component) -> NSString * {
+  if ([component isKindOfClass: [CKStatelessComponent class]]) {
+    return [[(CKStatelessComponent *)component identifier] stringByAppendingString:@" (CKStatelessComponent)"];
+  } else {
+    return NSStringFromClass([component class]);
+  }
+}
+
 NSString *LayoutContext::currentStackDescription()
 {
   const auto &stack = componentValue().stack;
@@ -79,7 +88,7 @@ NSString *LayoutContext::currentStackDescription()
       [s appendString:@"\n"];
     }
     [s appendString:[@"" stringByPaddingToLength:idx withString:@" " startingAtIndex:0]];
-    [s appendString:NSStringFromClass([c->component class])];
+    [s appendString:componentClassString(c->component)];
     [s appendString:@": "];
     [s appendString:c->sizeRange.description()];
     idx++;
@@ -90,7 +99,7 @@ NSString *LayoutContext::currentStackDescription()
 NSString *LayoutContext::currentRootComponentClassName()
 {
   const auto &stack = componentValue().stack;
-  return stack.empty() ? @"" : NSStringFromClass([stack[0]->component class]);
+  return stack.empty() ? @"" : componentClassString(stack[0]->component);
 }
 
 LayoutSystraceContext::LayoutSystraceContext(id<CKSystraceListener> listener) {
