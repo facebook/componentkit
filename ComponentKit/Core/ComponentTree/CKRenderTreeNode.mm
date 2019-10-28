@@ -29,7 +29,7 @@
   return self;
 }
 
-+ (void)didBuildComponentTreeWithNode:(id<CKTreeNodeProtocol>)node
++ (void)didBuildComponentTree:(id<CKTreeNodeProtocol>)node
 {
   auto const threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (threadLocalScope == nullptr) {
@@ -42,12 +42,10 @@
   threadLocalScope->stack.pop();
 }
 
-- (void)didReuseNode:(CKRenderTreeNode *)node params:(const CKBuildComponentTreeParams &)params
+- (void)didReuseRenderNode:(CKRenderTreeNode *)node params:(const CKBuildComponentTreeParams &)params
 {
   // Transfer the children vector from the reused node.
   _children = node->_children;
-
-  [CKRenderTreeNode didBuildComponentTreeWithNode:self];
 
   if (params.unifyComponentTreeConfig.renderOnlyTreeNodes) {
     for (auto const &child : _children) {

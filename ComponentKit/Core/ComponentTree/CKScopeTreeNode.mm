@@ -169,7 +169,6 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   return {.frame = newChild, .previousFrame = childFrameOfPreviousFrame};
 }
 
-
 #pragma mark - Helpers
 
 #if DEBUG
