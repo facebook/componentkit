@@ -41,11 +41,6 @@ struct CKComponentScopeFramePair {
 
 - (size_t)childrenSize;
 
-// Render support
-+ (void)willBuildComponentTreeWithTreeNode:(id<CKTreeNodeProtocol>)node;
-+ (void)didBuildComponentTreeWithNode:(id<CKTreeNodeProtocol>)node;
-+ (void)didReuseRenderWithTreeNode:(id<CKTreeNodeProtocol>)node;
-
 #if DEBUG
 - (NSArray<NSString *> *)debugDescriptionComponents;
 #endif

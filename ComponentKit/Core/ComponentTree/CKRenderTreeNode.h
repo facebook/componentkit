@@ -18,5 +18,6 @@
  It represents a node for CKRenderComponent component in the component tree.
  */
 @interface CKRenderTreeNode : CKScopeTreeNodeWithChild
++ (void)didBuildComponentTreeWithNode:(id<CKTreeNodeProtocol>)node;
 - (void)didReuseNode:(CKRenderTreeNode *)node params:(const CKBuildComponentTreeParams &)params;
 @end
