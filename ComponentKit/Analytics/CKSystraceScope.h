@@ -10,8 +10,9 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol CKSystraceListener;
+#import <ComponentKit/CKAsyncBlock.h>
 
+@protocol CKSystraceListener;
 
 /**
  Starts a block tracer when it is constructed and ends it when destructed.
@@ -31,6 +32,7 @@
 class CKSystraceScope {
 public:
   CKSystraceScope(const char *const blockName) noexcept;
+  CKSystraceScope(const CK::Analytics::AsyncBlock &asyncBlock) noexcept;
   ~CKSystraceScope();
 
 private:

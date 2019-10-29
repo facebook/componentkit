@@ -33,6 +33,7 @@
 #import "CKDataSourceStateModifying.h"
 #import "CKDataSourceUpdateConfigurationModification.h"
 #import "CKDataSourceUpdateStateModification.h"
+#import "CKSystraceScope.h"
 #import "CKMutex.h"
 
 @interface CKDataSourceModificationPair : NSObject
@@ -329,7 +330,9 @@
      initWithModification:modification
      state:_state];
 
+    auto const asyncModification = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::DataSourceWillStartModification);
     dispatch_block_t block = blockUsingDataSourceQOS(^{
+      CKSystraceScope modificationScope(asyncModification);
       [self _applyModificationPair:modificationPair];
     }, [modification qos], _isBackgroundMode);
 
@@ -461,7 +464,9 @@
   }
   [_announcer dataSource:self didGenerateNewState:[change state] changes:[change appliedChanges]];
 
+  auto const asyncApplyModification = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::DataSourceWillApplyModification);
   dispatch_async(dispatch_get_main_queue(), ^{
+    CKSystraceScope applyModificationScope(asyncApplyModification);
     // If the first object in _pendingAsynchronousModifications is not still the modification,
     // it may have been canceled; don't apply it.
     if ([_pendingAsynchronousModifications firstObject] == modificationPair.modification && self->_state == modificationPair.state) {

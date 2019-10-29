@@ -29,3 +29,10 @@ CKSystraceScope::CKSystraceScope(const char *const blockName) noexcept : _blockN
     _systraceListener = systraceListener;
   }
 }
+
+CKSystraceScope::CKSystraceScope(const CK::Analytics::AsyncBlock &asyncBlock) noexcept : _blockName(asyncBlock.name), _systraceListener(CKReadGlobalConfig().defaultAnalyticsListener.systraceListener)
+{
+  if (asyncBlock.didStartBlock != nullptr) {
+    asyncBlock.didStartBlock();
+  }
+}

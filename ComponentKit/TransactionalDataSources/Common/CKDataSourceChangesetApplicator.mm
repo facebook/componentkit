@@ -21,6 +21,7 @@
 #import <ComponentKit/CKDataSourceModificationHelper.h>
 #import <ComponentKit/CKDataSourceQOSHelper.h>
 #import <ComponentKit/CKDataSourceState.h>
+#import <ComponentKit/CKSystraceScope.h>
 
 static void *kQueueKey = &kQueueKey;
 static NSString *const kChangesetApplicatorIdUserInfoKey = @"CKDataSourceChangesetApplicator.Id";
@@ -81,7 +82,9 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
                    qos:(CKDataSourceQOS)qos
 {
   if (!_isRunningOnQueue()) {
+    auto const asyncSwitchToApply = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::ChangeSetApplicatorWillSwitchToApply);
     dispatch_async(_queue, blockUsingDataSourceQOS(^{
+      CKSystraceScope switchToApplyScope(asyncSwitchToApply);
       [self applyChangeset:changeset userInfo:userInfo qos:qos];
     }, qos));
     return;
@@ -113,7 +116,9 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
   _dataSourceState = change.state;
 
   NSUInteger pipelineId = _pipelineId;
+  auto const willVerifyChange = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::ChangeSetApplicatorWillVerifyChange);
   dispatch_async(dispatch_get_main_queue(), ^{
+    CKSystraceScope willVerifyChangeScope(willVerifyChange);
     const auto dataSource = self->_dataSource;
     if (!dataSource) {
       // We should stop processing changesets if `dataSource` is already deallocated.
@@ -121,7 +126,9 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
     }
     const auto isValid = [dataSource verifyChange:change];
     const auto newState = dataSource.state;
+    auto const willApplyChange = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::ChangeSetApplicatorWillApplyChange);
     dispatch_async(self->_queue, blockUsingDataSourceQOS(^{
+      CKSystraceScope willApplyChangeScope(willApplyChange);
       if (self->_pipelineId != pipelineId) {
         // We don't need to handle the result since the current pipeline was discarded.
         return;

@@ -416,6 +416,10 @@
 		6016FC2520A9BA2900440702 /* CKComponent+Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6016FC2620A9BA2900440702 /* CKComponent+Yoga.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */; };
 		6016FC2720A9BA2900440702 /* CKComponent+Yoga.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */; };
+		60508844236788B900060327 /* CKAsyncBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 60508838236788B900060327 /* CKAsyncBlock.h */; };
+		60508845236788B900060327 /* CKAsyncBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 60508838236788B900060327 /* CKAsyncBlock.h */; };
+		60508846236788B900060327 /* CKAsyncBlock.mm in Sources */ = {isa = PBXBuildFile; fileRef = 60508843236788B900060327 /* CKAsyncBlock.mm */; };
+		60508847236788B900060327 /* CKAsyncBlock.mm in Sources */ = {isa = PBXBuildFile; fileRef = 60508843236788B900060327 /* CKAsyncBlock.mm */; };
 		605A5B272142D89800B195AC /* CKRequired.h in Headers */ = {isa = PBXBuildFile; fileRef = 605A5B252142D89800B195AC /* CKRequired.h */; };
 		606E57E5215B84BF0080A274 /* ReferenceImages_IOS12_64 in Resources */ = {isa = PBXBuildFile; fileRef = 606E57DA215B84BF0080A274 /* ReferenceImages_IOS12_64 */; };
 		606E57E9215B8C410080A274 /* ReferenceImages_IOS12_64 in Resources */ = {isa = PBXBuildFile; fileRef = 606E57E8215B8C410080A274 /* ReferenceImages_IOS12_64 */; };
@@ -1231,6 +1235,8 @@
 		51A92FB6224CDBE9007A6702 /* CKComponentGestureActionHelper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentGestureActionHelper.mm; sourceTree = "<group>"; };
 		6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKComponent+Yoga.h"; sourceTree = "<group>"; };
 		6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CKComponent+Yoga.mm"; sourceTree = "<group>"; };
+		60508838236788B900060327 /* CKAsyncBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAsyncBlock.h; sourceTree = "<group>"; };
+		60508843236788B900060327 /* CKAsyncBlock.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAsyncBlock.mm; sourceTree = "<group>"; };
 		605A5B252142D89800B195AC /* CKRequired.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKRequired.h; sourceTree = "<group>"; };
 		606E57DA215B84BF0080A274 /* ReferenceImages_IOS12_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS12_64; sourceTree = "<group>"; };
 		606E57E8215B8C410080A274 /* ReferenceImages_IOS12_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS12_64; sourceTree = "<group>"; };
@@ -1881,6 +1887,8 @@
 				2327614622EB069F007FF24A /* CKSystraceListener.h */,
 				23824A5222720FEC00B559F3 /* CKAnalyticsListenerHelpers.h */,
 				23824A5D22720FEC00B559F3 /* CKAnalyticsListenerHelpers.mm */,
+				60508838236788B900060327 /* CKAsyncBlock.h */,
+				60508843236788B900060327 /* CKAsyncBlock.mm */,
 				23770A1022EB205E00858140 /* CKSystraceScope.h */,
 				23770A0522EB205E00858140 /* CKSystraceScope.mm */,
 			);
@@ -2835,6 +2843,7 @@
 				03B8B54D1D2A346F00EDFF59 /* CKMutex.h in Headers */,
 				238507AD1FE05A6E00534B93 /* CKComponentProtocol.h in Headers */,
 				03B8B54E1D2A346F00EDFF59 /* CKHighlightOverlayLayer.h in Headers */,
+				60508845236788B900060327 /* CKAsyncBlock.h in Headers */,
 				231E12182341F3370055A438 /* CKMountable.h in Headers */,
 				03B8B54F1D2A346F00EDFF59 /* CKTextKitContext.h in Headers */,
 				72CF4320233D068700A82419 /* CKDataSourceChangesetApplicator.h in Headers */,
@@ -2982,6 +2991,7 @@
 				60D7B3AD20FC90500011AB3B /* YGLayout.h in Headers */,
 				23B65AC9213FF9300049FFAC /* CKRenderComponent.h in Headers */,
 				D0B47D491CBD948E00BB33CE /* CKDataSourceStateInternal.h in Headers */,
+				60508844236788B900060327 /* CKAsyncBlock.h in Headers */,
 				D0B47D581CBD948E00BB33CE /* CKComponentGestureActionsInternal.h in Headers */,
 				23D26A4822440C5B0087350C /* CKCollectionViewDataSourceListener.h in Headers */,
 				D4F1FAC322940023002932E7 /* CKBaseRenderContext.h in Headers */,
@@ -3692,6 +3702,7 @@
 				7262D3AF225CE0A200BA991E /* CKComponentControllerHelper.mm in Sources */,
 				03B8B4C91D2A346F00EDFF59 /* CKAsyncLayer.mm in Sources */,
 				03B8B4CA1D2A346F00EDFF59 /* CKAsyncTransaction.m in Sources */,
+				60508847236788B900060327 /* CKAsyncBlock.mm in Sources */,
 				03B8B4CB1D2A346F00EDFF59 /* CKAsyncTransactionContainer.m in Sources */,
 				03B8B4CC1D2A346F00EDFF59 /* CKAsyncTransactionGroup.m in Sources */,
 				03B8B4CD1D2A346F00EDFF59 /* CKHighlightOverlayLayer.mm in Sources */,
@@ -3987,6 +3998,7 @@
 				D0B47CC21CBD943400BB33CE /* CKDataSourceChange.m in Sources */,
 				D0B47CC31CBD943400BB33CE /* CKDataSourceChangesetModification.mm in Sources */,
 				D0B47CC41CBD943400BB33CE /* CKDataSourceReloadModification.mm in Sources */,
+				60508846236788B900060327 /* CKAsyncBlock.mm in Sources */,
 				ACFAD6B32245759200D6E051 /* YGValue.cpp in Sources */,
 				2D640D5D1DB7FD7800271CB4 /* CKInvalidChangesetOperationType.mm in Sources */,
 				D0B47CC51CBD943400BB33CE /* CKDataSourceUpdateConfigurationModification.mm in Sources */,

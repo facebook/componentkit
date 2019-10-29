@@ -8,6 +8,8 @@
  *
  */
 
+#include <functional>
+
 #import <Foundation/Foundation.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKMountable.h>
@@ -19,6 +21,13 @@
  This protocol is being used by the infrastructure to collect data into systrace if enabled.
  */
 @protocol CKSystraceListener <NSObject>
+
+/**
+ Start of the block that will start on one thread and end on another
+
+ @return completion block that will be called after the switch to different queue
+ */
+- (std::function<void(void)>)willStartAsyncBlockTrace:(const char *const)blockName;
 
 /**
  Start/End a block trace in systrace.
