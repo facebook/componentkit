@@ -16,6 +16,11 @@
  It represents a node for single child node in the component tree.
  */
 @interface CKScopeTreeNodeWithChild : CKScopeTreeNode <CKTreeNodeWithChildProtocol>
+{
+  @package
+  // When this feature is enabled, this class is not in use anymore as any node might have multiple children.
+  BOOL _renderOnlyTreeNodes;
+}
 @property (nonatomic, strong) id<CKTreeNodeProtocol> child;
 @end
 

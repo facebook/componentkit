@@ -13,22 +13,6 @@
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 
 @implementation CKScopeTreeNodeWithChild
-{
-  // When this feature is enabled, this class is not in use anymore as any node might have multiple children.
-  BOOL _renderOnlyTreeNodes;
-}
-
-- (instancetype)initWithPreviousNode:(id<CKTreeNodeProtocol>)previousNode
-                         scopeHandle:(CKComponentScopeHandle *)scopeHandle
-{
-  if (self = [super initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
-    auto const threadLocalScope = CKThreadLocalComponentScope::currentScope();
-    if (threadLocalScope != nullptr) {
-      _renderOnlyTreeNodes = threadLocalScope->unifyComponentTreeConfig.renderOnlyTreeNodes;
-    }
-  }
-  return self;
-}
 
 - (size_t)childrenSize
 {

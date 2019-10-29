@@ -24,6 +24,8 @@
       CKAssert(previousNode == nil || [previousNode conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"previousNode should conform to id<CKScopeTreeNodeProtocol>, but its class %@ does not.", previousNode.class);
       // Push the new pair into the thread local.
       threadLocalScope->stack.push({.frame = self, .previousFrame = (id<CKScopeTreeNodeProtocol>)previousNode});
+
+      _renderOnlyTreeNodes = threadLocalScope->unifyComponentTreeConfig.renderOnlyTreeNodes;
     }
   }
   return self;
