@@ -53,10 +53,13 @@ struct CKLifecycleMethodCounts {
 
 @property (nonatomic, assign, readonly) NSInteger computeLayoutCount;
 
-+ (void)setShouldEarlyReturnNew:(BOOL)shouldEarlyReturnNew;
+
 - (CKLifecycleTestComponentController *)controller;
 - (void)updateStateToIncludeNewAttribute;
 @end
+
+auto CKLifecycleTestComponentSetShouldEarlyReturnNew(BOOL shouldEarlyReturnNew) -> void;
+
 
 @interface CKRenderLifecycleTestComponent : CKRenderComponent
 

@@ -318,7 +318,7 @@ using namespace CKComponentControllerHelper;
                                                                                                                              sizeRangeProvider:nil];
   UIView *view = [UIView new];
 
-  [CKLifecycleTestComponent setShouldEarlyReturnNew:YES];
+  CKLifecycleTestComponentSetShouldEarlyReturnNew(YES);
 
   const CKComponentLifecycleTestHelperState state1 = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                      constrainedSize:{{0,0}, {100, 100}}
@@ -326,7 +326,7 @@ using namespace CKComponentControllerHelper;
   [componentLifecycleTestController updateWithState:state1];
   [componentLifecycleTestController attachToView:view];
 
-  [CKLifecycleTestComponent setShouldEarlyReturnNew:NO];
+  CKLifecycleTestComponentSetShouldEarlyReturnNew(NO);
 
   const CKComponentLifecycleTestHelperState state2 = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                      constrainedSize:{{0,0}, {100, 100}}

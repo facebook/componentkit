@@ -21,7 +21,7 @@
 
 static BOOL _shouldEarlyReturnNew = NO;
 
-+ (void)setShouldEarlyReturnNew:(BOOL)shouldEarlyReturnNew
+auto CKLifecycleTestComponentSetShouldEarlyReturnNew(BOOL shouldEarlyReturnNew) -> void
 {
   _shouldEarlyReturnNew = shouldEarlyReturnNew;
 }
