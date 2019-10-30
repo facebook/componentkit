@@ -363,3 +363,5 @@ extern const struct CKStackComponentLayoutExtraKeys {
                        size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @end
+
+#import <ComponentKit/FlexboxComponentBuilder.h>

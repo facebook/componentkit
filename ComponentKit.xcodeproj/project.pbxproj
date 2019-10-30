@@ -961,6 +961,8 @@
 		D6C713FA224CCA5800BADCC6 /* CKAnimationComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C713ED224CCA5700BADCC6 /* CKAnimationComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6C713FB224CCA5800BADCC6 /* CKAnimationComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6C713F8224CCA5700BADCC6 /* CKAnimationComponent.mm */; };
 		D6C713FC224CCA5800BADCC6 /* CKAnimationComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6C713F8224CCA5700BADCC6 /* CKAnimationComponent.mm */; };
+		D6F9A4AC23477F4200D4FC0A /* FlexboxComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F9A4AB23477F4200D4FC0A /* FlexboxComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D6F9A4AD23477F4200D4FC0A /* FlexboxComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F9A4AB23477F4200D4FC0A /* FlexboxComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB14A3411D8267DF0004BECF /* CKAutoSizedImageComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKAutoSizedImageComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB14A3421D8267DF0004BECF /* CKAutoSizedImageComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = EB14A33F1D8267DF0004BECF /* CKAutoSizedImageComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB14A3431D8267DF0004BECF /* CKAutoSizedImageComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = EB14A3401D8267DF0004BECF /* CKAutoSizedImageComponent.mm */; };
@@ -1666,6 +1668,7 @@
 		D6CB417A20AF04A9000075F9 /* CKCollection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKCollection.h; sourceTree = "<group>"; };
 		D6CB418520AF0783000075F9 /* CKCasting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKCasting.h; sourceTree = "<group>"; };
 		D6CD290520DFE723000881EF /* CKComponentAnimationsEquality.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKComponentAnimationsEquality.h; sourceTree = "<group>"; };
+		D6F9A4AB23477F4200D4FC0A /* FlexboxComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlexboxComponentBuilder.h; sourceTree = "<group>"; };
 		EB14A33F1D8267DF0004BECF /* CKAutoSizedImageComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAutoSizedImageComponent.h; sourceTree = "<group>"; };
 		EB14A3401D8267DF0004BECF /* CKAutoSizedImageComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAutoSizedImageComponent.mm; sourceTree = "<group>"; };
 		EB14A34F1D8268580004BECF /* CKImageComponentTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKImageComponentTests.mm; sourceTree = "<group>"; };
@@ -2407,6 +2410,7 @@
 				D0B47B501CBD926700BB33CE /* CKRatioLayoutComponent.mm */,
 				D0B47B581CBD926700BB33CE /* CKStaticLayoutComponent.h */,
 				D0B47B591CBD926700BB33CE /* CKStaticLayoutComponent.mm */,
+				D6F9A4AB23477F4200D4FC0A /* FlexboxComponentBuilder.h */,
 			);
 			path = LayoutComponents;
 			sourceTree = "<group>";
@@ -2794,6 +2798,7 @@
 				03DED2C12226015900CD63FF /* CKDataSourceSplitChangesetModification.h in Headers */,
 				23770A3022EB46EB00858140 /* CKRenderTreeNode.h in Headers */,
 				7FB5C1ED1F865BF300D2726B /* CKComponentDescriptionHelper.h in Headers */,
+				D6F9A4AD23477F4200D4FC0A /* FlexboxComponentBuilder.h in Headers */,
 				03B8B5311D2A346F00EDFF59 /* CKInsetComponent.h in Headers */,
 				D69F137722E6FE3F00984709 /* CKDelayedNonNull.h in Headers */,
 				D48D9D40234261C4003DDC41 /* CKTransitions.h in Headers */,
@@ -2907,6 +2912,7 @@
 			files = (
 				23FEC59F203B30DA0068E09D /* CKTreeNode.h in Headers */,
 				23EF1D44209365BA004C95BE /* CKTreeNodeWithChildren.h in Headers */,
+				D6F9A4AC23477F4200D4FC0A /* FlexboxComponentBuilder.h in Headers */,
 				23EF1D40209365BA004C95BE /* CKTreeNodeWithChild.h in Headers */,
 				2377A9CA23570A2200092BE2 /* CKMountable+UIView.h in Headers */,
 				A2A89C3B2011C0FC009D0377 /* CKInspectableView.h in Headers */,
