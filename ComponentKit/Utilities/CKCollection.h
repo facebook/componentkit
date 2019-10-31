@@ -16,7 +16,7 @@
 #import <type_traits>
 
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/ComponentUtilities.h>
+#import <ComponentKit/CKFunctionalHelpers.h>
 
 namespace CK {
   namespace Collection {

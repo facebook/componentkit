@@ -12,7 +12,7 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
-#import <ComponentKit/CKEqualityHashHelpers.h>
+#import <ComponentKit/CKEqualityHelpers.h>
 
 #include <tuple>
 

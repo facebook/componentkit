@@ -22,7 +22,7 @@
 #import "CKComponentSubclass.h"
 #import "CKCompositeComponent.h"
 #import "CKInternalHelpers.h"
-#import "ComponentUtilities.h"
+#import "CKFunctionalHelpers.h"
 
 const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
   .hadOverflow = @"hadOverflow"

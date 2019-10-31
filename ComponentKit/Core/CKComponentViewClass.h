@@ -15,7 +15,7 @@
 #import <unordered_map>
 
 #import <UIKit/UIKit.h>
-#import <ComponentKit/CKEqualityHashHelpers.h>
+#import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/ComponentViewReuseUtilities.h>
 
 struct CKComponentViewClassIdentifier {

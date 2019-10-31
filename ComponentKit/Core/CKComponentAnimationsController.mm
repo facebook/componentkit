@@ -11,7 +11,7 @@
 #import "CKComponentAnimationsController.h"
 
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/ComponentUtilities.h>
+#import <ComponentKit/CKFunctionalHelpers.h>
 
 namespace CK {
   static auto makePendingAnimation(const CKComponentAnimation &a)

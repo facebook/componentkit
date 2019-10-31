@@ -12,7 +12,7 @@
 #import <vector>
 
 #import <XCTest/XCTest.h>
-#import "ComponentUtilities.h"
+#import "CKFunctionalHelpers.h"
 
 @interface CKVectorChainingTests : XCTestCase
 @end

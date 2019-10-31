@@ -14,7 +14,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
-#import <ComponentKit/CKEqualityHashHelpers.h>
+#import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/ComponentUtilities.h>
 
 /** Unique identifier for tree nodes. */

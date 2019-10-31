@@ -17,7 +17,7 @@
 #import "ComponentLayoutContext.h"
 #import "CKMacros.h"
 #import "CKInternalHelpers.h"
-#import "CKEqualityHashHelpers.h"
+#import "CKEqualityHelpers.h"
 
 bool CKRelativeDimension::operator==(const CKRelativeDimension &other) const noexcept
 {

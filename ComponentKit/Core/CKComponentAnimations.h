@@ -15,7 +15,7 @@
 #import <ComponentKit/CKComponentAnimation.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentTreeDiff.h>
-#import <ComponentKit/CKEqualityHashHelpers.h>
+#import <ComponentKit/CKEqualityHelpers.h>
 
 @class CKComponentScopeRoot;
 

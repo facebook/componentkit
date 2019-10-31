@@ -13,7 +13,7 @@
 #import <unordered_map>
 #import <vector>
 
-#import <ComponentKit/CKEqualityHashHelpers.h>
+#import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/CKNonNull.h>
 
 @class CKComponentRootView;

@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <string>
+#import <vector>
 
 // From folly:
 // This is the Hash128to64 function from Google's cityhash (available
@@ -181,4 +182,36 @@ namespace CKTupleOperations
     }
   };
   
+}
+
+/** Correctly equates two objects, including cases where both objects are nil (where `isEqual:` would return NO). */
+inline BOOL CKObjectIsEqual(id<NSObject> obj, id<NSObject> otherObj)
+{
+  return obj == otherObj || [obj isEqual:otherObj];
+}
+
+typedef BOOL (^CKEqualityComparisonBlock)(id object, id comparisonObject);
+
+/**
+ * Correctly executes the comparisonBlock for two objects, including cases one of the objects is nil or
+ * of a different type (where `isEqual:` would return NO).
+ */
+inline BOOL CKCompareObjectEquality(id object, id comparisonObject, CKEqualityComparisonBlock comparisonBlock) {
+  if (object == comparisonObject) {
+    return YES;
+  } else if (!object || !comparisonObject || ![comparisonObject isKindOfClass:[object class]]) {
+    return NO;
+  }
+  return comparisonBlock(object, comparisonObject);
+}
+
+/** Correctly equates two vectors of keys (scope state key) */
+inline bool CKKeyVectorsEqual(const std::vector<id<NSObject>> &a, const std::vector<id<NSObject>> &b)
+{
+  if (a.size() != b.size()) {
+    return false;
+  }
+  return std::equal(a.begin(), a.end(), b.begin(), [](id<NSObject> x, id<NSObject> y){
+    return CKObjectIsEqual(x, y); // be pedantic and use a lambda here becuase BOOL != bool
+  });
 }

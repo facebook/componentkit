@@ -13,7 +13,7 @@
 #import <UIKit/UICollectionView.h>
 #import <UIKit/UITableView.h>
 
-#import "CKEqualityHashHelpers.h"
+#import "CKEqualityHelpers.h"
 #import "CKIndexSetDescription.h"
 #import "CKMacros.h"
 #import "CKAssert.h"

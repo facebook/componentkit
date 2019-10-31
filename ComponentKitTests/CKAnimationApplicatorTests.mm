@@ -16,6 +16,7 @@
 
 #import "CKAnimationSpy.h"
 #import "CKComponentAnimationsEquality.h"
+#import "CKFunctionalHelpers.h"
 #import "TransactionProviderSpy.h"
 
 @interface CKAnimationApplicatorTests : XCTestCase

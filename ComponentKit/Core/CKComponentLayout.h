@@ -18,7 +18,7 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
-#import <ComponentKit/CKEqualityHashHelpers.h>
+#import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/CKNonNull.h>
 #import <ComponentKit/CKOptional.h>
 #import <ComponentKit/CKSizeRange.h>

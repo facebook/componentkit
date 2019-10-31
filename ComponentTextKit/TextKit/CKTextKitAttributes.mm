@@ -10,7 +10,7 @@
 
 #import <ComponentKit/CKTextKitAttributes.h>
 
-#import <ComponentKit/CKEqualityHashHelpers.h>
+#import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/CKMacros.h>
 
 #include <functional>

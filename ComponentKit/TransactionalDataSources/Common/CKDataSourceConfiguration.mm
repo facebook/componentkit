@@ -11,7 +11,7 @@
 #import "CKDataSourceConfiguration.h"
 #import "CKDataSourceConfigurationInternal.h"
 
-#import "CKEqualityHashHelpers.h"
+#import "CKEqualityHelpers.h"
 #import "CKGlobalConfig.h"
 #import "CKMacros.h"
 
