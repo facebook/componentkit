@@ -64,15 +64,6 @@
  */
 - (void)setViewConfiguration:(const CKComponentViewConfiguration &)viewConfiguration;
 
-/**
- Unmounts the component:
- - Clears the references to supercomponent and superview.
- - If the component has a _mountedView:
-   - Clears the view's reference back to this component using CKSetMountedComponentForView().
-   - Clears _mountedView.
- */
-- (void)unmount;
-
 - (id)nextResponderAfterController;
 
 /** The size that was passed into the component; don't touch this. */

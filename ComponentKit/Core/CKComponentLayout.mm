@@ -189,9 +189,9 @@ CKComponentLayout CKComputeComponentLayout(id<CKMountable> component,
   return component ? [component layoutThatFits:sizeRange parentSize:parentSize] : (CKComponentLayout){};
 }
 
-void CKUnmountComponents(NSSet *componentsToUnmount)
+void CKUnmountComponents(NSSet<id<CKMountable>> *componentsToUnmount)
 {
-  for (CKComponent *component in componentsToUnmount) {
+  for (id<CKMountable> component in componentsToUnmount) {
     [component unmount];
   }
 }

@@ -144,4 +144,4 @@ CKComponentLayout CKComputeComponentLayout(id<CKMountable> component,
                                            const CGSize parentSize);
 
 /** Unmounts all components returned by a previous call to CKMountComponentLayout. */
-void CKUnmountComponents(NSSet *componentsToUnmount);
+void CKUnmountComponents(NSSet<id<CKMountable>> *componentsToUnmount);

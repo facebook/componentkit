@@ -98,6 +98,15 @@ struct CKMountInfo {
                             systraceListener:(id<CKSystraceListener>)systraceListener;
 
 /**
+Unmounts the component:
+- Clears the references to supercomponent and superview.
+- If the component has a _mountedView:
+  - Clears the view's reference back to this component using CKSetMountedComponentForView().
+  - Clears _mountedView.
+*/
+- (void)unmount;
+
+/**
  Called when the component and all its children have been mounted.
 
  @param systraceListener The current systrace listener - will be nil if systrace is not enabled.
