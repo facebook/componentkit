@@ -25,7 +25,13 @@
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size;
 
-/** The size that was passed into the component; don't touch this. */
-@property (nonatomic, assign, readonly) CKComponentSize size;
+/** Get the component size, can be empty */
+- (CKComponentSize)size;
+
+/** Can be set only during the component creation and only if there is no size already. */
+- (void)setSize:(const CKComponentSize &)size;
+
+/** Can be called only during the component creation and only if there is no existing view configuration already. */
+- (void)setViewConfiguration:(const CKComponentViewConfiguration &)viewConfiguration;
 
 @end
