@@ -118,7 +118,7 @@ struct CKMountComponentLayoutResult {
 CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
                                                     UIView *view,
                                                     NSSet *previouslyMountedComponents,
-                                                    CKComponent *supercomponent,
+                                                    id<CKMountable> supercomponent,
                                                     id<CKAnalyticsListener> analyticsListener = nil,
                                                     BOOL isUpdate = NO);
 
