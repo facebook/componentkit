@@ -13,8 +13,9 @@
 #import <objc/runtime.h>
 #import <unordered_map>
 
-#import "CKAssert.h"
-#import "CKComponentViewConfiguration.h"
+#import <ComponentKit/CKAssert.h>
+
+#import "CKComponentViewClass.h"
 
 using namespace CK::Component;
 

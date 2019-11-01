@@ -233,7 +233,7 @@ UIView *ViewReusePoolMap::viewForConfiguration(Class componentClass,
   const Component::ViewKey key = {
     componentClass,
     config.viewClass().getIdentifier(),
-    config.rep->attributeShape
+    config.attributeShape(),
   };
   // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
   UIView *v = map[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);

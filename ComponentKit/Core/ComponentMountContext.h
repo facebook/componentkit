@@ -19,14 +19,6 @@
 namespace CK {
   namespace Component {
 
-    /** Will be used to collect information during mount. */
-    struct MountAnalyticsContext {
-      NSUInteger viewAllocations = 0;
-      NSUInteger viewReuses = 0;
-      NSUInteger viewHides = 0;
-      NSUInteger viewUnhides = 0;
-    };
-
     struct MountContext {
       /** Constructs a new mount context for the given view. */
       static MountContext RootContext(UIView *v, MountAnalyticsContext *mAnalyticsContext = nullptr, BOOL isUpdate = NO) {

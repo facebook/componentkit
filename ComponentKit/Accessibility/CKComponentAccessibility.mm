@@ -1,19 +1,16 @@
 /*
- *  Copyright (c) 2014-present, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- *
- */
+*  Copyright (c) 2014-present, Facebook, Inc.
+*  All rights reserved.
+*
+*  This source code is licensed under the BSD-style license found in the
+*  LICENSE file in the root directory of this source tree. An additional grant
+*  of patent rights can be found in the PATENTS file in the same directory.
+*
+*/
 
 #import "CKComponentAccessibility.h"
 
 #import <ComponentKit/CKAssert.h>
-
-#import "ComponentViewManager.h"
-#import "CKComponentViewConfiguration.h"
 
 /** Helper that converts the accessibility context characteristics to a map of component view attributes */
 static CKViewComponentAttributeValueMap ViewAttributesFromAccessibilityContext(const CKComponentAccessibilityContext &accessibilityContext)

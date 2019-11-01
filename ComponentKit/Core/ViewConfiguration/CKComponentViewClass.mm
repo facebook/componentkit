@@ -11,10 +11,7 @@
 #import "CKComponentViewClass.h"
 
 #import <ComponentKit/CKAssert.h>
-
-#import "CKInternalHelpers.h"
-#import "CKComponentViewConfiguration.h"
-#import "CKGlobalConfig.h"
+#import <Componentkit/CKInternalHelpers.h>
 
 std::string CKComponentViewClassIdentifier::description() const
 {

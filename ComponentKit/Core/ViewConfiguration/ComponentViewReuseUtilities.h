@@ -16,7 +16,13 @@ struct CKComponentViewClass;
 
 namespace CK {
   namespace Component {
-    struct MountAnalyticsContext;
+    /** Will be used to collect information during mount. */
+    struct MountAnalyticsContext {
+      NSUInteger viewAllocations = 0;
+      NSUInteger viewReuses = 0;
+      NSUInteger viewHides = 0;
+      NSUInteger viewUnhides = 0;
+    };
 
     class ViewReuseUtilities {
     public:

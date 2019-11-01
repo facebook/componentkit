@@ -159,3 +159,30 @@ namespace std {
 
 // Explicitly instantiate this CKViewComponentAttributeValueMap to improve compile time.
 extern template class std::unordered_map<CKComponentViewAttribute, CKBoxedValue>;
+
+namespace CK {
+namespace Component {
+/**
+ Describes a set of attribute *identifiers* for attributes that can't be un-applied (unapplicator is nil).
+ Any two components that have a different PersistentAttributeShape cannot recycle the same view.
+ */
+class PersistentAttributeShape {
+public:
+  PersistentAttributeShape(const CKViewComponentAttributeValueMap &attributes)
+  : _identifier(computeIdentifier(attributes)) {};
+
+  bool operator==(const PersistentAttributeShape &other) const {
+    return _identifier == other._identifier;
+  }
+
+private:
+  friend struct ::std::hash<PersistentAttributeShape>;
+  /**
+   This is a int32_t since they are compared on the main thread where we want optimal performance.
+   Behind the scenes, these are looked up/created using a map of unordered_set<string> -> int32_t.
+   */
+  int32_t _identifier;
+  static int32_t computeIdentifier(const CKViewComponentAttributeValueMap &attributes);
+};
+}
+}
