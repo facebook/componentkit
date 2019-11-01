@@ -109,7 +109,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
       .enableComponentReuseOptimizations = enableComponentReuseOptimizations,
       .systraceListener = threadScope.systraceListener,
       .shouldCollectTreeNodeCreationInformation = [analyticsListener shouldCollectTreeNodeCreationInformation:previousRoot],
-      .enableLayoutCache = globalConfig.enableLayoutCacheInRender,
       .unifyComponentTreeConfig = unifyComponentTreeConfig,
     };
 

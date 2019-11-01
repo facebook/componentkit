@@ -26,8 +26,6 @@ struct CKGlobalConfig {
   BOOL alwaysBuildRenderTree = NO;
   /** Same as above, but only in DEBUG configuration */
   BOOL alwaysBuildRenderTreeInDebug = YES;
-  /** If enabled, we will cache the layout in render components and reuse it during a component reuse. */
-  BOOL enableLayoutCacheInRender = NO;
   /**
    `componentController.component` will be updated right after commponent build if this is enabled.
    This is only for running expeirment in ComponentKit. Please DO NOT USE.
