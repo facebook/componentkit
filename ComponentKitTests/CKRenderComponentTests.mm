@@ -516,13 +516,9 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   return
   [CKCompositeComponentWithScopeAndState
    newWithComponent:
-   [CKFlexboxComponent
-    newWithView:{}
-    size:{}
-    style:{}
-    children:{
-      { c }
-    }]];
+   CK::FlexboxComponentBuilder()
+       .child(c)
+       .build()];
 }
 
 @end

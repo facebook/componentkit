@@ -44,14 +44,11 @@ static CKComponent *componentWithDeepViewHierarchy(NSInteger viewLevel)
     return nil;
   }
   return
-  [CKFlexboxComponent
-   newWithView:{[UIImageView class]}
-   size:{}
-   style:{}
-   children:{
-     {componentWithDeepViewHierarchy(viewLevel - 1)},
-     {componentWithDeepViewHierarchy(viewLevel - 1)},
-   }];
+  CK::FlexboxComponentBuilder()
+      .viewClass([UIImageView class])
+      .child(componentWithDeepViewHierarchy(viewLevel - 1))
+      .child(componentWithDeepViewHierarchy(viewLevel - 1))
+      .build();
 }
 
 CKComponent *CKComponentWithHostingViewTestModel(CKComponentHostingViewTestModel *model)
@@ -65,19 +62,12 @@ CKComponent *CKComponentWithHostingViewTestModel(CKComponentHostingViewTestModel
     }
     case CKComponentHostingViewWrapperTypeFlexbox: {
       return
-      [CKFlexboxComponent
-       newWithView:{}
-       size:{}
-       style:{}
-       children:{
-         {
-           .component =
-           [CKLifecycleTestComponent
+      CK::FlexboxComponentBuilder()
+          .child([CKLifecycleTestComponent
             newWithView:{[UIView class], {{@selector(setBackgroundColor:), [model color]}}}
-            size:[model size]],
-           .sizeConstraints = model.size
-         }
-       }];
+            size:[model size]])
+              .sizeConstraints(model.size)
+          .build();
     }
     case CKComponentHostingViewWrapperTypeRenderComponent: {
       return [CKRenderLifecycleTestComponent new];

@@ -43,14 +43,10 @@
   auto const c = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     component1 = [TestScopeIntegrationComponent newWithIdentifier:nil title:state1];
     component2 = [TestScopeIntegrationComponent newWithIdentifier:nil title:state2];
-    return [CKFlexboxComponent
-            newWithView:{}
-            size:{}
-            style:{}
-            children:{
-              {component1},
-              {component2},
-            }];
+    return CK::FlexboxComponentBuilder()
+               .child(component1)
+               .child(component2)
+               .build();
   });
 
   [self verifyComponentsHasCorrectStateAndController:component1 component2:component2 state1:state1 state2:state2];
@@ -67,14 +63,10 @@
   auto const c = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     component1 = [TestScopeIntegrationComponent newWithIdentifier:@"1" title:state1];
     component2 = [TestScopeIntegrationComponent newWithIdentifier:@"1" title:state2];
-    return [CKFlexboxComponent
-            newWithView:{}
-            size:{}
-            style:{}
-            children:{
-              {component1},
-              {component2},
-            }];
+    return CK::FlexboxComponentBuilder()
+               .child(component1)
+               .child(component2)
+               .build();
   });
 
   [self verifyComponentsHasCorrectStateAndController:component1 component2:component2 state1:state1 state2:state2];
@@ -91,14 +83,10 @@
   auto const c = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     component1 = [TestScopeIntegrationComponent newWithIdentifier:@"1" title:state1];
     component2 = [TestScopeIntegrationComponent newWithIdentifier:@"2" title:state2];
-    return [CKFlexboxComponent
-            newWithView:{}
-            size:{}
-            style:{}
-            children:{
-              {component1},
-              {component2},
-            }];
+    return CK::FlexboxComponentBuilder()
+               .child(component1)
+               .child(component2)
+               .build();
   });
 
   [self verifyComponentsHasCorrectStateAndController:component1 component2:component2 state1:state1 state2:state2];

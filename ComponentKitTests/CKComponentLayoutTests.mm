@@ -90,8 +90,10 @@
 
 static CKFlexboxComponent* flexboxComponentWithScopedChildren(NSArray<CKComponent *> *children) {
 
-  CKFlexboxComponent *c = [CKFlexboxComponent newWithView:{} size:{} style:{.alignItems = CKFlexboxAlignItemsStart}
-                                                 children:CK::map(children, [](CKComponent *child) -> CKFlexboxComponentChild { return {child}; })];
+  CKFlexboxComponent *c = CK::FlexboxComponentBuilder()
+                              .alignItems(CKFlexboxAlignItemsStart)
+                              .children(CK::map(children, [](CKComponent *child) -> CKFlexboxComponentChild { return {child}; }))
+                              .build();
   return c;
 }
 

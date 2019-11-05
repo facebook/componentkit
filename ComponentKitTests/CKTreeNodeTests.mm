@@ -290,14 +290,10 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
   buildComponent(^CKComponent*{
     c = [CKTreeNodeTest_Component_WithState new];
     // Using flexbox here to add a render component to the hierarchy, which forces buildComponentTree:
-    return [CKFlexboxComponent
-            newWithView:{}
-            size:{}
-            style:{}
-            children:{
-              {c},
-              {[CKTreeNodeTest_RenderComponent_WithNilState new]},
-            }];
+    return CK::FlexboxComponentBuilder()
+               .child(c)
+               .child([CKTreeNodeTest_RenderComponent_WithNilState new])
+               .build();
   });
   [self _test_nonNil_initialState_withComponent:c];
 }
@@ -346,14 +342,11 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
   auto const results = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^CKComponent *{
     c1 = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@1];
     c2 = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@2];
-    return [CKFlexboxComponent
-            newWithView:{}
-            size:{}
-            style:{.alignItems = CKFlexboxAlignItemsStretch}
-            children:{
-              {c1},
-              {c2},
-            }];
+    return CK::FlexboxComponentBuilder()
+               .alignItems(CKFlexboxAlignItemsStretch)
+               .child(c1)
+               .child(c2)
+               .build();
   });
 
   // Simulate a props update which *reorders* the children.
@@ -362,14 +355,11 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
   auto const results2 = CKBuildComponent(results.scopeRoot, {}, ^CKComponent *{
     c1SecondGen = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@1];
     c2SecondGen = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@2];
-    return [CKFlexboxComponent
-            newWithView:{}
-            size:{}
-            style:{.alignItems = CKFlexboxAlignItemsStretch}
-            children:{
-              {c2SecondGen},
-              {c1SecondGen},
-            }];
+    return CK::FlexboxComponentBuilder()
+               .alignItems(CKFlexboxAlignItemsStretch)
+               .child(c2SecondGen)
+               .child(c1SecondGen)
+               .build();
   });
 
   // Make sure each component retreive its correct state even after reorder.
@@ -386,15 +376,12 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
     c1 = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@1];
     c2 = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@2];
     c3 = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@3];
-    return [CKFlexboxComponent
-            newWithView:{}
-            size:{}
-            style:{.alignItems = CKFlexboxAlignItemsStretch}
-            children:{
-              {c1},
-              {c2},
-              {c3},
-            }];
+    return CK::FlexboxComponentBuilder()
+               .alignItems(CKFlexboxAlignItemsStretch)
+               .child(c1)
+               .child(c2)
+               .child(c3)
+               .build();
   });
 
   // Simulate a props update which *removes* c2 from the hierarchy.
@@ -403,14 +390,11 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
   auto const results2 = CKBuildComponent(results.scopeRoot, {}, ^CKComponent *{
     c1SecondGen = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@1];
     c3SecondGen = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@3];
-    return [CKFlexboxComponent
-            newWithView:{}
-            size:{}
-            style:{.alignItems = CKFlexboxAlignItemsStretch}
-            children:{
-              {c1SecondGen},
-              {c3SecondGen},
-            }];
+    return CK::FlexboxComponentBuilder()
+               .alignItems(CKFlexboxAlignItemsStretch)
+               .child(c1SecondGen)
+               .child(c3SecondGen)
+               .build();
   });
 
   // Make sure each component retreive its correct state even after reorder.

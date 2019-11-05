@@ -88,26 +88,23 @@
   UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
 
   const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
-    return [CKFlexboxComponent
-            newWithView:{}
-            size:{}
-            style:{.alignItems = CKFlexboxAlignItemsStretch}
-            children:{
-              {[CKBoundsAnimationComponent newWithIdentifier:@0], .flexGrow = 1},
-            }];
+    return CK::FlexboxComponentBuilder()
+               .alignItems(CKFlexboxAlignItemsStretch)
+               .child([CKBoundsAnimationComponent newWithIdentifier:@0])
+                   .flexGrow(1)
+               .build();
   });
   const CKComponentLayout firstLayout = [firstResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
   NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container, nil, nil).mountedComponents;
 
   const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, ^{
-    return [CKFlexboxComponent
-            newWithView:{}
-            size:{}
-            style:{.alignItems = CKFlexboxAlignItemsStretch}
-            children:{
-              {[CKBoundsAnimationComponent newWithIdentifier:@0], .flexGrow = 1},
-              {[CKBoundsAnimationComponent newWithIdentifier:@1], .flexGrow = 1},
-            }];
+    return CK::FlexboxComponentBuilder()
+               .alignItems(CKFlexboxAlignItemsStretch)
+               .child([CKBoundsAnimationComponent newWithIdentifier:@0])
+                   .flexGrow(1)
+               .child([CKBoundsAnimationComponent newWithIdentifier:@1])
+                   .flexGrow(1)
+               .build();
   });
   const CKComponentLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
   NSSet *secondMountedComponents = CKMountComponentLayout(secondLayout, container, firstMountedComponents, nil).mountedComponents;
@@ -168,15 +165,14 @@
 
   const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, ^{
     CKComponentScope scope([CKFlexboxComponent class], @"foo");
-    return [CKFlexboxComponent
-            newWithView:{[CKBoundsAnimationRecordingView class]}
-            size:{}
-            style:{.alignItems = CKFlexboxAlignItemsStretch}
-            children:{
-              {CK::ComponentBuilder()
+    return CK::FlexboxComponentBuilder()
+               .viewClass([CKBoundsAnimationRecordingView class])
+               .alignItems(CKFlexboxAlignItemsStretch)
+               .child(CK::ComponentBuilder()
                    .viewClass([CKBoundsAnimationRecordingView class])
-                   .build(), .flexGrow = 1},
-            }];
+                   .build())
+                   .flexGrow(1)
+               .build();
   });
   const CKComponentLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
   NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container, nil, nil).mountedComponents;
@@ -189,15 +185,14 @@
     // NB: We use a plain CKComponent, not a CKBoundsAnimationComponent; otherwise the scope tokens of the child will
     // be different, and we will avoid animating the child view for that reason instead of the changing parent scope.
     CKComponentScope scope([CKFlexboxComponent class], @"bar");
-    return [CKFlexboxComponent
-            newWithView:{[CKBoundsAnimationRecordingView class]}
-            size:{}
-            style:{.alignItems = CKFlexboxAlignItemsStretch}
-            children:{
-              {CK::ComponentBuilder()
+    return CK::FlexboxComponentBuilder()
+               .viewClass([CKBoundsAnimationRecordingView class])
+               .alignItems(CKFlexboxAlignItemsStretch)
+               .child(CK::ComponentBuilder()
                    .viewClass([CKBoundsAnimationRecordingView class])
-                   .build(), .flexGrow = 1},
-            }];
+                   .build())
+                   .flexGrow(1)
+               .build();
   });
   const CKComponentLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
   NSSet *secondMountedComponents = CKMountComponentLayout(secondLayout, container, firstMountedComponents, nil).mountedComponents;

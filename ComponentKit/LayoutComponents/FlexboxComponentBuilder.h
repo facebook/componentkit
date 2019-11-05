@@ -138,8 +138,30 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     return *this;
   }
 
+  /** Top padding applied to the container */
+  auto &paddingTop(CKRelativeDimension p)
+  {
+    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
+      _currentChild.padding.top = p;
+    } else {
+      _style.padding.top = p;
+    }
+    return *this;
+  }
+
   /** Bottom padding applied to the container */
   auto &paddingBottom(CGFloat p)
+  {
+    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
+      _currentChild.padding.bottom = p;
+    } else {
+      _style.padding.bottom = p;
+    }
+    return *this;
+  }
+
+  /** Bottom padding applied to the container */
+  auto &paddingBottom(CKRelativeDimension p)
   {
     if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
       _currentChild.padding.bottom = p;
@@ -160,8 +182,30 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     return *this;
   }
 
+  /** Start padding applied to the container. Left in left-to-right languages, right in right-to-left languages */
+  auto &paddingStart(CKRelativeDimension p)
+  {
+    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
+      _currentChild.padding.start = p;
+    } else {
+      _style.padding.start = p;
+    }
+    return *this;
+  }
+
   /** End padding applied to the container. Right in left-to-right languages, left in right-to-left languages */
   auto &paddingEnd(CGFloat p)
+  {
+    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
+      _currentChild.padding.end = p;
+    } else {
+      _style.padding.end = p;
+    }
+    return *this;
+  }
+
+  /** End padding applied to the container. Right in left-to-right languages, left in right-to-left languages */
+  auto &paddingEnd(CKRelativeDimension p)
   {
     if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
       _currentChild.padding.end = p;
