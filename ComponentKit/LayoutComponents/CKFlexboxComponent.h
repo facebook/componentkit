@@ -262,7 +262,7 @@ struct CKFlexboxComponentStyle {
    
    If set to NO, will allocate a yoga node for every single child even it is backed by yoga as well
    */
-  BOOL useDeepYogaTrees = NO;
+  CK::Optional<BOOL> useDeepYogaTrees = CK::none;
 };
 
 struct CKFlexboxComponentChild {

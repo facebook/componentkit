@@ -108,3 +108,16 @@ CK_LINKABLE(CKMountableComponent_Yoga)
 }
 
 @end
+
+@implementation CKDeepYogaTreesContext
+
++ (instancetype)newWithUseDeepYogaTrees:(BOOL)useDeepYogaTrees
+{
+  const auto c = [super new];
+  if (c) {
+    c->_useDeepYogaTrees = useDeepYogaTrees;
+  }
+  return c;
+}
+
+@end

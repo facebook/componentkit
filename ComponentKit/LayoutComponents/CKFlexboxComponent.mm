@@ -16,6 +16,7 @@
 #import "yoga/Yoga.h"
 
 #import "CKComponent+Yoga.h"
+#import "CKComponentContext.h"
 #import "CKComponentInternal.h"
 #import "CKComponentLayout.h"
 #import "CKComponentLayoutBaseline.h"
@@ -51,9 +52,16 @@ template class std::vector<CKFlexboxComponentChild>;
 
 @end
 
+static auto getUseDeepYogaTrees(const CKFlexboxComponentStyle &style) -> BOOL {
+  return style.useDeepYogaTrees.valueOr([]{
+    return [CKComponentContext<CKDeepYogaTreesContext>::get() useDeepYogaTrees];
+  });
+}
+
 @implementation CKFlexboxComponent {
   CKFlexboxComponentStyle _style;
   std::vector<CKFlexboxComponentChild> _children;
+  BOOL _useDeepYogaTrees;
 }
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
@@ -66,6 +74,7 @@ template class std::vector<CKFlexboxComponentChild>;
   if (component) {
     component->_style = style;
     component->_children = children.take();
+    component->_useDeepYogaTrees = getUseDeepYogaTrees(style);
   }
   return component;
 }
@@ -364,7 +373,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
 
   for (auto iterator = children.begin(); iterator != children.end(); iterator++) {
     const CKFlexboxComponentChild child = *iterator;
-    const YGNodeRef childNode = _style.useDeepYogaTrees ? [child.component ygNode:constrainedSize] : YGNodeNewWithConfig(ckYogaDefaultConfig());
+    const YGNodeRef childNode = _useDeepYogaTrees ? [child.component ygNode:constrainedSize] : YGNodeNewWithConfig(ckYogaDefaultConfig());
 
     // We add object only if there is actual used element
     CKFlexboxChildCachedLayout *childLayout = [CKFlexboxChildCachedLayout new];
@@ -396,7 +405,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     // sure we do not include CKCompositeSize as
     // node size, as it will always we equal to {}
     // and use it's child size instead
-    const auto nodeSize = _style.useDeepYogaTrees ? [child.component nodeSize] : [child.component size];
+    const auto nodeSize = _useDeepYogaTrees ? [child.component nodeSize] : [child.component size];
     applySizeAttributes(childNode, child, nodeSize, parentWidth, parentHeight);
 
     YGNodeStyleSetFlexGrow(childNode, child.flexGrow);
@@ -423,7 +432,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     // TODO: In odrer to keep the the logic consistent, we are resetting all
     // the margins that were potentially set from the child's style in
     // recursion. We will have to decide on the convention afterwards.
-    if (_style.useDeepYogaTrees) {
+    if (_useDeepYogaTrees) {
       applyMarginToEdge(childNode, YGEdgeTop, convertFloatToYogaRepresentation(0));
       applyMarginToEdge(childNode, YGEdgeBottom, convertFloatToYogaRepresentation(0));
       applyMarginToEdge(childNode, YGEdgeStart, convertFloatToYogaRepresentation(0));
@@ -691,7 +700,7 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
     // We cache measurements for the duration of single layout calculation of FlexboxComponent
     // ComponentKit and Yoga handle caching between calculations
 
-    if (_style.useDeepYogaTrees && [childCachedLayout.component isYogaBasedLayout]) {
+    if (_useDeepYogaTrees && [childCachedLayout.component isYogaBasedLayout]) {
       // If the child component isYogaBasedLayout we don't call layoutThatFits:parentSize:
       // because it will create another Yoga tree. Instead, we call layoutFromYgNode:thatFits:
       // to reuse the already created yoga Node.

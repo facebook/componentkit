@@ -72,3 +72,11 @@ CK_LINK_REQUIRE_CATEGORY(CKCompositeComponent_Yoga)
 CK_LINK_REQUIRE_CATEGORY(CKMountableComponent_Yoga)
 @interface CKMountableComponent (Yoga) <CKYogaBasedComponentProtocol>
 @end
+
+@interface CKDeepYogaTreesContext : NSObject
+
+@property (nonatomic, assign, readonly) BOOL useDeepYogaTrees;
+
++ (instancetype)newWithUseDeepYogaTrees:(BOOL)useDeepYogaTrees;
+
+@end
