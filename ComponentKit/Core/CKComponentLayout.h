@@ -27,7 +27,6 @@
 @class CKComponentController;
 @class CKComponentScopeRoot;
 
-@protocol CKAnalyticsListener;
 @protocol CKMountable;
 
 struct CKComponentLayoutChild;

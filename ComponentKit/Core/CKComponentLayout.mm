@@ -160,10 +160,6 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent buildTrigger:buildTrigger];
   LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
 
-#if CK_ASSERTIONS_ENABLED
-  const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
-#endif
-
   CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   CKDetectDuplicateComponent(layout);
   auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};

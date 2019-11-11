@@ -308,6 +308,10 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 - (CKComponentLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize
 {
+#if CK_ASSERTIONS_ENABLED
+  const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
+#endif
+
   CK::Component::LayoutContext context(self, constrainedSize);
   auto const systraceListener = context.systraceListener;
   [systraceListener willLayoutComponent:self];
