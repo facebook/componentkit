@@ -31,12 +31,12 @@
 }
 
 - (void)didMountComponentTreeWithRootComponent:(id<CKMountable>)component
-                         mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext
+                         mountAnalyticsContext:(CK::Optional<CK::Component::MountAnalyticsContext>)mountAnalyticsContext
 {
   _didMountComponentHitCount++;
-  if (const auto mc = mountAnalyticsContext) {
-    _viewAllocationsCount += mc->viewAllocations;
-  }
+  mountAnalyticsContext.apply([&](const auto &mc) {
+    _viewAllocationsCount += mc.viewAllocations;
+  });
 }
 
 - (void)willCollectAnimationsFromComponentTreeWithRootComponent:(id<CKMountable>)component

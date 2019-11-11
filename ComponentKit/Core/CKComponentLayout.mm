@@ -148,7 +148,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
     CKUnmountComponents(componentsToUnmount);
   }
   [analyticsListener didMountComponentTreeWithRootComponent:layout.component
-                                      mountAnalyticsContext:mountAnalyticsContextPointer];
+                                      mountAnalyticsContext:mountAnalyticsContextPointer == nullptr ? CK::none : CK::Optional <CK::Component::MountAnalyticsContext> {mountAnalyticsContext}];
   return {mountedComponents, componentsToUnmount};
 }
 

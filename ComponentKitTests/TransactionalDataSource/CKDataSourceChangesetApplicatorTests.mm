@@ -266,7 +266,7 @@ static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
 }
 
 - (void)didMountComponentTreeWithRootComponent:(id<CKMountable>)component
-                         mountAnalyticsContext:(CK::Component::MountAnalyticsContext *)mountAnalyticsContext
+                         mountAnalyticsContext:(CK::Optional<CK::Component::MountAnalyticsContext>)mountAnalyticsContext
 {
 
 }
