@@ -123,12 +123,11 @@
 }
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-size:(const CGSize)size
-children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
-supercomponent:(CKComponent *)supercomponent
-systraceListener:(id<CKSystraceListener>)systraceListener
+                                        size:(const CGSize)size
+                                    children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
+                              supercomponent:(CKComponent *)supercomponent
 {
-  CK::Component::MountResult r = [super mountInContext:context size:size children:children supercomponent:supercomponent systraceListener:systraceListener];
+  CK::Component::MountResult r = [super mountInContext:context size:size children:children supercomponent:supercomponent];
   return {
     .mountChildren = NO,
     .contextForChildren = r.contextForChildren

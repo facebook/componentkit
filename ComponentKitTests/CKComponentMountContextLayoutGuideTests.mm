@@ -87,13 +87,11 @@
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
-                            systraceListener:(id<CKSystraceListener>)systraceListener
 {
   const CK::Component::MountResult mountResult = [super mountInContext:context
                                                                   size:size
                                                               children:children
-                                                        supercomponent:supercomponent
-                                                      systraceListener:systraceListener];
+                                                        supercomponent:supercomponent];
   _layoutGuideUsedAtMountTime = context.layoutGuide;
   return mountResult;
 }

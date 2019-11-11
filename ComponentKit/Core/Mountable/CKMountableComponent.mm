@@ -14,7 +14,6 @@
 
 #import "CKComponentDescriptionHelper.h"
 #import "CKMountable+UIView.h"
-#import "CKSystraceListener.h"
 #import "CKWeakObjectContainer.h"
 
 @implementation CKMountableComponent
@@ -101,11 +100,8 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild> >)children
                               supercomponent:(id<CKMountable>)supercomponent
-                            systraceListener:(id<CKSystraceListener>)systraceListener
 {
   CKCAssertWithCategory([NSThread isMainThread], [self class], @"This method must be called on the main thread");
-
-  [systraceListener willMountComponent:self];
 
   if (_mountInfo == nullptr) {
     _mountInfo.reset(new CKMountInfo());
@@ -162,9 +158,9 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   }
 }
 
-- (void)childrenDidMount:(id<CKSystraceListener>)systraceListener
+- (void)childrenDidMount
 {
-  [systraceListener didMountComponent:self];
+  
 }
 
 - (CKMountInfo)mountInfo

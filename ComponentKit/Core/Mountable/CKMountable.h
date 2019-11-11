@@ -15,8 +15,6 @@
 #import <ComponentKit/CKComponentSize.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>
 
-@protocol CKSystraceListener;
-
 struct CKComponentLayoutChild;
 
 struct CKComponentViewContext {
@@ -94,8 +92,7 @@ struct CKMountInfo {
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
-                              supercomponent:(id<CKMountable>)supercomponent
-                            systraceListener:(id<CKSystraceListener>)systraceListener;
+                              supercomponent:(id<CKMountable>)supercomponent;
 
 /**
 Unmounts the component:
@@ -111,7 +108,7 @@ Unmounts the component:
 
  @param systraceListener The current systrace listener - will be nil if systrace is not enabled.
  */
-- (void)childrenDidMount:(id<CKSystraceListener>)systraceListener;
+- (void)childrenDidMount;
 
 /** Unique identifier of the component - can be nil */
 @property (nonatomic, strong, readonly) id<NSObject> uniqueIdentifier;

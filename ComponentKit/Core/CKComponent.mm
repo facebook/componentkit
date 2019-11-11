@@ -188,11 +188,8 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
-                            systraceListener:(id<CKSystraceListener>)systraceListener
 {
   CKCAssertWithCategory([NSThread isMainThread], [self class], @"This method must be called on the main thread");
-
-  [systraceListener willMountComponent:self];
 
   // Taking a const ref to a temporary extends the lifetime of the temporary to the lifetime of the const ref
   const CKComponentViewConfiguration &viewConfiguration = CK::Component::Accessibility::IsAccessibilityEnabled() ? CK::Component::Accessibility::AccessibleViewConfiguration(_viewConfiguration) : _viewConfiguration;
@@ -270,10 +267,9 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   }
 }
 
-- (void)childrenDidMount:(id<CKSystraceListener>)systraceListener
+- (void)childrenDidMount
 {
   [_scopeHandle.controller componentDidMount:self];
-  [systraceListener didMountComponent:self];
 }
 
 #pragma mark - Animation
