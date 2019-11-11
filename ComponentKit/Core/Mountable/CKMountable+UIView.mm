@@ -27,7 +27,7 @@ void CKSetViewPositionAndBounds(UIView *v,
     [v setBounds:{v.bounds.origin, size}];
   } @catch (NSException *exception) {
     NSString *const componentBacktraceDescription =
-      CKComponentBacktraceDescription(generateComponentBacktrace(supercomponent));
+      CKComponentBacktraceDescription(CKComponentGenerateBacktrace(supercomponent));
     NSString *const componentChildrenDescription = CKComponentChildrenDescription(children);
     [NSException raise:exception.name
                 format:@"%@ raised %@ during mount: %@\n backtrace:%@ children:%@", klass, exception.name, exception.reason, componentBacktraceDescription, componentChildrenDescription];

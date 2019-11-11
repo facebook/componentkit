@@ -11,13 +11,11 @@
 #import "CKComponentDescriptionHelper.h"
 
 #import <ComponentKit/CKMountable.h>
-#import <ComponentKit/CKStatelessComponent.h>
 
 static NSString *componentDescriptionOrClass(id<CKMountable> component)
 {
   return [component description] ?: NSStringFromClass([component class]);
 }
-
 
 static NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace, BOOL nested, BOOL compactDescription) noexcept
 {
@@ -39,7 +37,7 @@ static NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *compo
 
 NSString *CKComponentCompactDescription(id<CKMountable> component)
 {
-  return [component isMemberOfClass:[CKStatelessComponent class]] ? [component description]: NSStringFromClass([component class]);
+  return [component debugName] ?: NSStringFromClass([component class]);
 }
 
 NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept
@@ -81,7 +79,7 @@ NSString *CKComponentDescriptionWithChildren(NSString *description, NSArray *chi
   return result;
 }
 
-NSArray<id<CKMountable>> *generateComponentBacktrace(id<CKMountable> component)
+NSArray<id<CKMountable>> *CKComponentGenerateBacktrace(id<CKMountable> component)
 {
   NSMutableArray<id<CKMountable>> *const componentBacktrace = [NSMutableArray arrayWithObject:component];
   while ([componentBacktrace lastObject]

@@ -228,7 +228,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   } else {
     CKCAssertWithCategory(_mountInfo->view == nil, [self class],
                           @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
-                          [self class], [_mountInfo->view class], CKComponentBacktraceDescription(generateComponentBacktrace(self)));
+                          [self class], [_mountInfo->view class], CKComponentBacktraceDescription(CKComponentGenerateBacktrace(self)));
     _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, size}};
 
     return {.mountChildren = YES, .contextForChildren = effectiveContext};
@@ -237,7 +237,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 - (NSString *)backtraceStackDescription
 {
-  return CKComponentBacktraceStackDescription(generateComponentBacktrace(self));
+  return CKComponentBacktraceStackDescription(CKComponentGenerateBacktrace(self));
 }
 
 - (void)unmount
@@ -490,6 +490,11 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 - (id)state
 {
   return _scopeHandle.state;
+}
+
+- (NSString *)debugName
+{
+  return NSStringFromClass(self.class);
 }
 
 @end

@@ -129,7 +129,7 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   } else {
     CKCAssertWithCategory(_mountInfo->view == nil, [self class],
                           @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
-                          [self class], [_mountInfo->view class], CKComponentBacktraceDescription(generateComponentBacktrace(self)));
+                          [self class], [_mountInfo->view class], CKComponentBacktraceDescription(CKComponentGenerateBacktrace(self)));
     _mountInfo->viewContext = {context.viewManager->view, {context.position, size}};
     return {.mountChildren = YES, .contextForChildren = context};
   }
@@ -179,6 +179,11 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 - (id<NSObject>)uniqueIdentifier
 {
   return nil;
+}
+
+- (NSString *)debugName
+{
+  return NSStringFromClass(self.class);
 }
 
 @end

@@ -29,6 +29,11 @@
   return [NSString stringWithFormat:@"<%@: %p> (%@)", _identifier, self, NSStringFromClass([self class])];
 }
 
+- (NSString *)debugName
+{
+  return self.description;
+}
+
 @end
 
 CKComponent *CKCreateStatelessComponent(NS_RELEASES_ARGUMENT CKComponent *component, const char *debugIdentifier) NS_RETURNS_RETAINED

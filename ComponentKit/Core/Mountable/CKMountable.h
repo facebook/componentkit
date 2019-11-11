@@ -116,4 +116,7 @@ Unmounts the component:
 /** Backward Compatibility */
 - (id)controller;
 
+/** Name used in debug message */
+- (NSString *)debugName;
+
 @end
