@@ -13,11 +13,9 @@
 #import <tgmath.h>
 
 #import <ComponentKit/CKAssert.h>
-
-#import "ComponentLayoutContext.h"
-#import "CKMacros.h"
-#import "CKInternalHelpers.h"
-#import "CKEqualityHelpers.h"
+#import <Componentkit/CKEqualityHelpers.h>
+#import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKInternalHelpers.h>
 
 bool CKRelativeDimension::operator==(const CKRelativeDimension &other) const noexcept
 {

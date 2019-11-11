@@ -16,18 +16,50 @@
 #import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/CKMacros.h>
 
+#if (!CK_LAYOUT_CONTEXT_DISABLED)
+
+#import <ComponentKit/ComponentLayoutContext.h>
+
+#define CKCAssertPositiveReal(description, num) \
+  CKCAssertWithCategory(num >= 0 && num < CGFLOAT_MAX, CK::Component::LayoutContext::currentRootComponentClassName(), @"%@ (%f) must be a real positive integer.\n%@", description, num, CK::Component::LayoutContext::currentStackDescription())
+
+#define CKCAssertInfOrPositiveReal(description, num) \
+  CKCAssertWithCategory(isinf(num) || (num >= 0 && num < CGFLOAT_MAX), CK::Component::LayoutContext::currentRootComponentClassName(), @"%@ (%f) must be infinite or a real positive integer.\n%@", description, num, CK::Component::LayoutContext::currentStackDescription())
+
+#define CKCAssertWidth(min, max) \
+  CKCAssertWithCategory(min.width <= max.width, \
+    CK::Component::LayoutContext::currentRootComponentClassName(), \
+    @"Range min width (%f) must not be larger than max width (%f).", min.width, max.width)
+
+#define CKCAssertHeight(min, max) \
+  CKCAssertWithCategory(min.height <= max.height, \
+    CK::Component::LayoutContext::currentRootComponentClassName(), \
+    @"Range min height (%f) must not be larger than max height (%f).", min.height, max.height)
+
+#else
+
+#define CKCAssertPositiveReal(description, num) \
+  CKCAssert(num >= 0 && num < CGFLOAT_MAX, @"%@ (%f) must be a real positive integer.", description, num)
+
+#define CKCAssertInfOrPositiveReal(description, num) \
+  CKCAssert(isinf(num) || (num >= 0 && num < CGFLOAT_MAX), @"%@ (%f) must be infinite or a real positive integer.", description, num)
+
+#define CKCAssertWidth(min, max) \
+  CKCAssert(min.width <= max.width, @"Range min width (%f) must not be larger than max width (%f).", min.width, max.width)
+
+#define CKCAssertHeight(min, max) \
+  CKCAssert(min.height <= max.height, @"Range min height (%f) must not be larger than max height (%f).", min.height, max.height)
+
+#endif
+
 CKSizeRange::CKSizeRange(const CGSize &_min, const CGSize &_max) : min(_min), max(_max)
 {
   CKCAssertPositiveReal(@"Range min width", min.width);
   CKCAssertPositiveReal(@"Range min height", min.height);
   CKCAssertInfOrPositiveReal(@"Range max width", max.width);
   CKCAssertInfOrPositiveReal(@"Range max height", max.height);
-  CKCAssertWithCategory(min.width <= max.width,
-                        CK::Component::LayoutContext::currentRootComponentClassName(),
-                        @"Range min width (%f) must not be larger than max width (%f).", min.width, max.width);
-  CKCAssertWithCategory(min.height <= max.height,
-                        CK::Component::LayoutContext::currentRootComponentClassName(),
-                        @"Range min height (%f) must not be larger than max height (%f).", min.height, max.height);
+  CKCAssertWidth(min, max);
+  CKCAssertHeight(min, max);
 }
 
 CGSize CKSizeRange::clamp(const CGSize &size) const

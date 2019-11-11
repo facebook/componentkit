@@ -9,9 +9,24 @@
  */
 
 #import "CKComponentSize.h"
-#import "CKEqualityHelpers.h"
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKEqualityHelpers.h>
+
+#if (!CK_LAYOUT_CONTEXT_DISABLED)
+
+#import <ComponentKit/ComponentLayoutContext.h>
+
+#define CKCAssertConstrainedValue(val) \
+  CKCAssert(!isnan(val), @"Constrained value must not be NaN. Current stack description: %@", \
+    CK::Component::LayoutContext::currentStackDescription()) \
+
+#else
+
+#define CKCAssertConstrainedValue(val) \
+  CKCAssert(!isnan(val), @"Constrained value must not be NaN.")
+
+#endif
 
 CKComponentSize CKComponentSize::fromCGSize(CGSize size) noexcept
 {
@@ -20,8 +35,8 @@ CKComponentSize CKComponentSize::fromCGSize(CGSize size) noexcept
 
 static inline void CKCSConstrain(CGFloat minVal, CGFloat exactVal, CGFloat maxVal, CGFloat *outMin, CGFloat *outMax) noexcept
 {
-    CKCAssert(!isnan(minVal), @"minVal must not be NaN. Current stack description: %@", CK::Component::LayoutContext::currentStackDescription());
-    CKCAssert(!isnan(maxVal), @"maxVal must not be NaN. Current stack description: %@", CK::Component::LayoutContext::currentStackDescription());
+    CKCAssertConstrainedValue(minVal);
+    CKCAssertConstrainedValue(maxVal);
     // Avoid use of min/max primitives since they're harder to reason
     // about in the presence of NaN (in exactVal)
     // Follow CSS: min overrides max overrides exact.
