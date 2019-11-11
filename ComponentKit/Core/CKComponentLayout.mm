@@ -19,6 +19,7 @@
 #import "ComponentLayoutContext.h"
 #import "ComponentUtilities.h"
 #import "CKAnalyticsListener.h"
+#import "CKComponentAnimationPredicates.h"
 #import "CKComponentCreationValidation.h"
 #import "CKComponentEvents.h"
 #import "CKComponentInternal.h"
@@ -45,15 +46,13 @@ static void _deleteComponentLayoutChild(void *target) noexcept
   delete (std::vector<CKComponentLayoutChild> *)target;
 }
 
-static auto buildComponentsByPredicateMap(const CKComponentLayout &layout)
+static auto buildComponentsByPredicateMap(const CKComponentLayout &layout,
+                                          const std::unordered_set<CKMountablePredicate> &predicates)
 {
-  const auto predicates = std::unordered_set<CKMountablePredicate> {
-    CKComponentHasAnimationsOnInitialMountPredicate,
-    CKComponentHasAnimationsFromPreviousComponentPredicate,
-    CKComponentHasAnimationsOnFinalUnmountPredicate,
-  };
   auto componentsByPredicate = CKComponentRootLayout::ComponentsByPredicateMap {};
-
+  if (predicates.empty()) {
+    return componentsByPredicate;
+  }
   layout.enumerateLayouts([&](const auto &l){
     if (l.component == nil) { return; }
     for (const auto &p : predicates) {
@@ -154,6 +153,7 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
 
 CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
                                                    const CKSizeRange &sizeRange,
+                                                   const std::unordered_set<CKMountablePredicate> &predicates,
                                                    id<CKAnalyticsListener> analyticsListener,
                                                    CK::Optional<CKBuildTrigger> buildTrigger)
 {
@@ -173,13 +173,25 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
       layoutCache[(CKComponent *)l.component] = l;
     }
   });
-  const auto componentsByPredicate = buildComponentsByPredicateMap(layout);
+  const auto componentsByPredicate = buildComponentsByPredicateMap(layout, predicates);
   [analyticsListener didLayoutComponentTreeWithRootComponent:rootComponent];
   return CKComponentRootLayout {
     layout,
     layoutCache,
     componentsByPredicate,
   };
+}
+
+CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
+                                                   const CKSizeRange &sizeRange,
+                                                   id<CKAnalyticsListener> analyticsListener,
+                                                   CK::Optional<CKBuildTrigger> buildTrigger)
+{
+  return CKComputeRootComponentLayout(rootComponent,
+                                      sizeRange,
+                                      CKComponentAnimationPredicates(),
+                                      analyticsListener,
+                                      buildTrigger);
 }
 
 CKComponentLayout CKComputeComponentLayout(id<CKMountable> component,

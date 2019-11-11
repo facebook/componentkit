@@ -126,8 +126,23 @@ CKMountComponentLayoutResult CKMountComponentLayout(const CKComponentLayout &lay
  Safely computes the layout of the given root component by guarding against nil components.
  @param rootComponent The root component to compute the layout for.
  @param sizeRange The size range to compute the component layout within.
+ @param predicates Predicates that is used for building a lookup map in `CKComponentRootLayout`.
  @param analyticsListener analytics listener used to log layout time.
+ @param buildTrigger Indicates the source that triggers this layout computation.
  */
+CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
+                                                   const CKSizeRange &sizeRange,
+                                                   const std::unordered_set<CKMountablePredicate> &predicates,
+                                                   id<CKAnalyticsListener> analyticsListener = nil,
+                                                   CK::Optional<CKBuildTrigger> buildTrigger = CK::none);
+
+/**
+ Safely computes the layout of the given root component by guarding against nil components.
+ @param rootComponent The root component to compute the layout for.
+ @param sizeRange The size range to compute the component layout within.
+ @param analyticsListener analytics listener used to log layout time.
+ @param buildTrigger Indicates the source that triggers this layout computation.
+*/
 CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener = nil,
