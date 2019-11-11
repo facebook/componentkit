@@ -42,6 +42,7 @@ static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateContr
   NSInteger _didGenerateChangeCounter;
   NSInteger _syncModificationStartCounter;
   CKDataSourceState *_state;
+  void(^_didModifyPreviousStateBlock)(void);
 }
 
 static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
@@ -359,6 +360,40 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   }
 }
 
+/**
+ This test covers the case when a "re-entrant" changeset application happens in `didModifyPreviousState`
+ event callback. We should make sure no redundant work is done in background queue becasue of this.
+ */
+- (void)testDataSourceApplyingChangesetInDidModifyPreviousStateCallback
+{
+  const auto dataSource = CKComponentTestDataSource(ComponentProvider, self);
+  _didModifyPreviousStateBlock = ^{
+    [dataSource
+     applyChangeset:[[CKDataSourceChangesetBuilder dataSourceChangeset] build]
+     mode:CKUpdateModeAsynchronous
+     userInfo:@{}];
+    _didModifyPreviousStateBlock = nil;
+  };
+  // Applying this changeset asynchronously triggers another changeset application in `_didModifyPreviousStateBlock`.
+  [dataSource
+   applyChangeset:[[CKDataSourceChangesetBuilder dataSourceChangeset] build]
+   mode:CKUpdateModeAsynchronous
+   userInfo:@{}];
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 3;
+  });
+  // Applying another changeset to make sure all asynchronous work is finished in background queue.
+  [dataSource
+   applyChangeset:[[CKDataSourceChangesetBuilder dataSourceChangeset] build]
+   mode:CKUpdateModeAsynchronous
+   userInfo:@{}];
+  CKRunRunLoopUntilBlockIsTrue(^BOOL{
+    return _announcedChanges.count == 4;
+  });
+  // `_willGenerateChangeCounter` matches the number of asynchronous changeset applications.
+  XCTAssertEqual(_willGenerateChangeCounter, 3);
+}
+
 #pragma mark - Listener
 
 - (void)dataSource:(CKDataSource *)dataSource
@@ -368,6 +403,9 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 {
   _state = state;
   [_announcedChanges addObject:changes];
+  if (_didModifyPreviousStateBlock) {
+    _didModifyPreviousStateBlock();
+  }
 }
 
 - (void)dataSource:(CKDataSource *)dataSource willSyncApplyModificationWithUserInfo:(NSDictionary *)userInfo

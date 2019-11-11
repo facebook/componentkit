@@ -54,6 +54,7 @@
   CKComponentStateUpdatesMap _pendingAsynchronousStateUpdates;
   CKComponentStateUpdatesMap _pendingSynchronousStateUpdates;
   NSMutableArray<id<CKDataSourceStateModifying>> *_pendingAsynchronousModifications;
+  BOOL _processingAsynchronousModification;
   BOOL _shouldPauseStateUpdates;
   BOOL _isBackgroundMode;
   dispatch_queue_t _workQueue;
@@ -324,7 +325,8 @@
   CKAssertMainThread();
 
   id<CKDataSourceStateModifying> modification = _pendingAsynchronousModifications.firstObject;
-  if (_pendingAsynchronousModifications.count > 0) {
+  if (!_processingAsynchronousModification && _pendingAsynchronousModifications.count > 0) {
+    _processingAsynchronousModification = YES;
     CKDataSourceModificationPair *modificationPair =
     [[CKDataSourceModificationPair alloc]
      initWithModification:modification
@@ -474,6 +476,7 @@
       [self _synchronouslyApplyChange:change qos:modificationPair.modification.qos];
     }
 
+    _processingAsynchronousModification = NO;
     [self _startAsynchronousModificationIfNeeded];
   });
 }
