@@ -10,17 +10,18 @@
 
 #import "CKComponent+UIView.h"
 
+#import <ComponentKit/CKMountedObjectForView.h>
+
 #import "CKComponent.h"
-#import "CKMountable+UIView.h"
 
 /** Strong reference back to the associated component while the component is mounted. */
 CKComponent *CKMountedComponentForView(UIView *view)
 {
-  return (CKComponent *)CKMountableForView(view);
+  return (CKComponent *)CKMountedObjectForView(view);
 }
 
 /** This is for internal use by the framework only. */
 void CKSetMountedComponentForView(UIView *view, CKComponent *component)
 {
-  CKSetMountableForView(view, component);
+  CKSetMountedObjectForView(view, component);
 }

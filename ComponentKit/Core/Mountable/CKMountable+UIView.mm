@@ -14,21 +14,6 @@
 
 #import "CKComponentDescriptionHelper.h"
 
-static char const kViewComponentKey = ' ';
-
-/** Strong reference back to the associated CKMountable while the component is mounted. */
-id<CKMountable> CKMountableForView(UIView *view)
-{
-  return objc_getAssociatedObject(view, &kViewComponentKey);
-}
-
-/** This is for internal use by the framework only. */
-void CKSetMountableForView(UIView *view, id<CKMountable> component)
-{
-  objc_setAssociatedObject(view, &kViewComponentKey, component, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-
 void CKSetViewPositionAndBounds(UIView *v,
                                 const CK::Component::MountContext &context,
                                 const CGSize size,

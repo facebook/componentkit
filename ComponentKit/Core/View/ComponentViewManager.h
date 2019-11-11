@@ -19,7 +19,7 @@
 
 #import <ComponentKit/CKComponentViewAttribute.h>
 #import <ComponentKit/CKComponentViewClass.h>
-#import <ComponentKit/CKComponentViewConfiguration.h>
+#import <ComponentKit/CKViewConfiguration.h>
 
 @class CKComponent;
 
@@ -112,10 +112,26 @@ namespace CK {
       /** Resets each individual pool inside the map. */
       void reset(UIView *container, MountAnalyticsContext *mountAnalyticsContext);
 
+      template <typename AccessibilityContext>
       UIView *viewForConfiguration(Class componentClass,
-                                   const CKComponentViewConfiguration &config,
+                                   const CKViewConfiguration<AccessibilityContext> &config,
                                    UIView *container,
-                                   MountAnalyticsContext *mountAnalyticsContext);
+                                   MountAnalyticsContext *mountAnalyticsContext)
+      {
+        if (!config.viewClass().hasView()) {
+          return nil;
+        }
+
+        const Component::ViewKey key = {
+          componentClass,
+          config.viewClass().getIdentifier(),
+          config.attributeShape(),
+        };
+        // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
+        UIView *v = map[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
+        vendedViews.push_back(v);
+        return v;
+      }
 
       friend void ViewReusePool::hideAll(UIView *view, MountAnalyticsContext *mountAnalyticsContext);
     private:
@@ -144,8 +160,12 @@ namespace CK {
       UIView *const view;
 
       /** Returns a recycled or newly created subview for the given configuration. */
+      template <typename AccessibilityContext>
       UIView *viewForConfiguration(Class componentClass,
-                                   const CKComponentViewConfiguration &config);
+                                   const CKViewConfiguration<AccessibilityContext> &config)
+      {
+        return viewReusePoolMap.viewForConfiguration(componentClass, config, view, mountAnalyticsContext);
+      }
 
     private:
       ViewReusePoolMap &viewReusePoolMap;
@@ -157,10 +177,16 @@ namespace CK {
 
     class AttributeApplicator {
     public:
-      static void apply(UIView *view, const CKComponentViewConfiguration &config);
+      template <typename AccessibilityContext>
+      static void apply(UIView *view, const CKViewConfiguration<AccessibilityContext> &config)
+      {
+        applyAttributes(view, config.attributes());
+      }
 
       /** Internal implementation detail of CKPerformOptimisticViewMutation; don't use this directly. */
       static void addOptimisticViewMutationTeardown(UIView *view, CKOptimisticViewMutationTeardown teardown);
+    private:
+      static void applyAttributes(UIView *view, std::shared_ptr<const CKViewComponentAttributeValueMap> attributes);
     };
   }
 }

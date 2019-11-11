@@ -10,6 +10,8 @@
 
 #import "CKMountableComponent.h"
 
+#import <ComponentKit/CKMountedObjectForView.h>
+
 #import "CKComponentDescriptionHelper.h"
 #import "CKMountable+UIView.h"
 #import "CKSystraceListener.h"
@@ -114,11 +116,11 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
   UIView *v = context.viewManager->viewForConfiguration([self class], viewConfiguration);
   if (v) {
-    auto const currentMountedComponent = (CKMountableComponent *)CKMountableForView(v);
+    auto const currentMountedComponent = (CKMountableComponent *)CKMountedObjectForView(v);
     if (_mountInfo->view != v) {
       [self _relinquishMountedView];     // First release our old view
       [currentMountedComponent unmount]; // Then unmount old component (if any) from the new view
-      CKSetMountableForView(v, self);
+      CKSetMountedObjectForView(v, self);
       CK::Component::AttributeApplicator::apply(v, viewConfiguration);
       _mountInfo->view = v;
     } else {
@@ -153,8 +155,8 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   if (_mountInfo != nullptr) {
     UIView *view = _mountInfo->view;
     if (view) {
-      CKAssert(CKMountableForView(view) == self, @"");
-      CKSetMountableForView(view, nil);
+      CKAssert(CKMountedObjectForView(view) == self, @"");
+      CKSetMountedObjectForView(view, nil);
       _mountInfo->view = nil;
     }
   }

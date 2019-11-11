@@ -16,13 +16,7 @@
 #error This file must be compiled as Obj-C++. If you are importing it, you must change your file extension to .mm.
 #endif
 
-/** Strong reference back to the associated CKMountable while the component is mounted. */
-id<CKMountable> CKMountableForView(UIView *view);
-
-/** This is for internal use by the framework only. */
-void CKSetMountableForView(UIView *view, id<CKMountable> component);
-
-/** This is a helper function whichs set the view position and bounds during mount */
+/** This is a helper function which sets the view position and bounds during mount */
 void CKSetViewPositionAndBounds(UIView *v,
                                 const CK::Component::MountContext &context,
                                 const CGSize size,

@@ -13,19 +13,11 @@
 #import <objc/runtime.h>
 #import <unordered_map>
 
-#import "CKMutex.h"
-
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKMutex.h>
+#import <ComponentKit/ComponentViewReuseUtilities.h>
 
-#import "CKInternalHelpers.h"
-#import "CKMutex.h"
-#import "ComponentUtilities.h"
-#import "ComponentViewReuseUtilities.h"
-#import "CKComponentInternal.h"
-#import "CKComponentSubclass.h"
-#import "CKComponentViewConfiguration.h"
-#import "CKGlobalConfig.h"
-#import "CKMountable+UIView.h"
+#import "CKMountedObjectForView.h"
 
 using namespace CK::Component;
 
@@ -207,44 +199,18 @@ void ViewReusePoolMap::reset(UIView *container, CK::Component::MountAnalyticsCon
         [container exchangeSubviewAtIndex:i withSubviewAtIndex:swapIndex];
       }
       CKCAssertWithCategory(swapIndex != NSNotFound,
-                            [CKMountableForView(*nextVendedViewIt) class],
-                            @"Expected to find subview %@ (component: %@) in %@ (component: %@)",
+                            [CKMountedObjectForView(*nextVendedViewIt) class],
+                            @"Expected to find subview %@ (mounted object: %@) in %@ (mounted object: %@)",
                             [*nextVendedViewIt class],
-                            [CKMountableForView(*nextVendedViewIt) class],
+                            [CKMountedObjectForView(*nextVendedViewIt) class],
                             [container class],
-                            [CKMountableForView(container) class]);
+                            [CKMountedObjectForView(container) class]);
     }
 
     ++nextVendedViewIt;
   }
 
   vendedViews.clear();
-}
-
-UIView *ViewReusePoolMap::viewForConfiguration(Class componentClass,
-                                               const CKComponentViewConfiguration &config,
-                                               UIView *container,
-                                               CK::Component::MountAnalyticsContext *mountAnalyticsContext)
-{
-  if (!config.viewClass().hasView()) {
-    return nil;
-  }
-  
-  const Component::ViewKey key = {
-    componentClass,
-    config.viewClass().getIdentifier(),
-    config.attributeShape(),
-  };
-  // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
-  UIView *v = map[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
-  vendedViews.push_back(v);
-  return v;
-}
-
-UIView *ViewManager::viewForConfiguration(Class componentClass,
-                                          const CKComponentViewConfiguration &config)
-{
-  return viewReusePoolMap.viewForConfiguration(componentClass, config, view, mountAnalyticsContext);
 }
 
 static char kPersistentAttributesViewKey = ' ';
@@ -261,7 +227,7 @@ static CKComponentAttributeSetWrapper *attributeSetWrapperForView(UIView *view)
   return wrapper;
 }
 
-void AttributeApplicator::apply(UIView *view, const CKComponentViewConfiguration &config)
+void AttributeApplicator::applyAttributes(UIView *view, std::shared_ptr<const CKViewComponentAttributeValueMap> attributes)
 {
   CK::Component::ActionDisabler actionDisabler; // We never want implicit animations when applying attributes
 
@@ -282,7 +248,7 @@ void AttributeApplicator::apply(UIView *view, const CKComponentViewConfiguration
   }
 
   const CKViewComponentAttributeValueMap &oldAttributes = wrapper->_attributes ? *wrapper->_attributes : *empty;
-  const CKViewComponentAttributeValueMap &newAttributes = *config.attributes();
+  const CKViewComponentAttributeValueMap &newAttributes = *attributes;
 
   // First, tear down any attributes that appear in the *old* set but not the new set, and *do* have an unapplicator.
   for (const auto &oldAttr : oldAttributes) {
@@ -317,7 +283,7 @@ void AttributeApplicator::apply(UIView *view, const CKComponentViewConfiguration
   }
 
   // Update the wrapper to reference the new attributes. Don't do this before now since it changes oldAttributes.
-  wrapper->_attributes = config.attributes();
+  wrapper->_attributes = std::move(attributes);
 }
 
 void AttributeApplicator::addOptimisticViewMutationTeardown(UIView *view, CKOptimisticViewMutationTeardown teardown)
