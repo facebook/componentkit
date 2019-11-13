@@ -12,7 +12,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/ComponentUtilities.h>
+#import <ComponentKit/CKGeometryHelpers.h>
 #import <ComponentKit/ComponentViewManager.h>
 #import <ComponentKit/ComponentViewReuseUtilities.h>
 

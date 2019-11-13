@@ -41,7 +41,7 @@
 
   UIView *view = [UIView new];
   [componentLifecycleTestController attachToView:view];
-  CKLifecycleTestComponentController *controller = (CKLifecycleTestComponentController *)state.componentLayout.component.controller;
+  CKLifecycleTestComponentController *controller = ((CKLifecycleTestComponent *)state.componentLayout.component).controller;
   const CKLifecycleMethodCounts actual = controller.counts;
   const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .didAcquireView = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());
@@ -61,7 +61,7 @@
   [componentLifecycleTestController attachToView:view];
   [componentLifecycleTestController detachFromView];
 
-  CKLifecycleTestComponentController *controller = (CKLifecycleTestComponentController *)state.componentLayout.component.controller;
+  CKLifecycleTestComponentController *controller = ((CKLifecycleTestComponent *)state.componentLayout.component).controller;
   const CKLifecycleMethodCounts actual = controller.counts;
   const CKLifecycleMethodCounts expected = {.willMount = 1, .didMount = 1, .willUnmount = 1, .didUnmount = 1, .willRelinquishView = 1, .didAcquireView = 1};
   XCTAssertTrue(actual == expected, @"Expected %@ but got %@", expected.description(), actual.description());

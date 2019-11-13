@@ -11,14 +11,15 @@
 #import "CKMountableComponent.h"
 
 #import <ComponentKit/CKMountedObjectForView.h>
+#import <ComponentKit/CKWeakObjectContainer.h>
 
 #import "CKComponentDescriptionHelper.h"
-#import "CKMountable+UIView.h"
-#import "CKWeakObjectContainer.h"
+#import "CKLayout.h"
+#import "CKMountableHelpers.h"
 
 @implementation CKMountableComponent
 {
-  CKComponentViewConfiguration _viewConfiguration;
+  CKMountableViewConfiguration _viewConfiguration;
   CK::Optional<CKComponentSize> _size;
   /** Only non-null while mounted. */
   std::unique_ptr<CKMountInfo> _mountInfo;
@@ -29,7 +30,7 @@
   return [self newWithView:{} size:{}];
 }
 
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
++ (instancetype)newWithView:(const CKMountableViewConfiguration &)view size:(const CKComponentSize &)size
 {
   auto const c = [super new];
   if (c) {
@@ -52,15 +53,10 @@
   return _mountInfo ? _mountInfo->viewContext : CKComponentViewContext();
 }
 
-- (void)setViewConfiguration:(const CKComponentViewConfiguration &)viewConfiguration
+- (void)setViewConfiguration:(const CKMountableViewConfiguration &)viewConfiguration
 {
   CKAssert(_viewConfiguration.isDefaultConfiguration(), @"Component(%@) already has '_viewConfiguration'.", self);
   _viewConfiguration = viewConfiguration;
-}
-
-- (const CKComponentViewConfiguration &)viewConfiguration
-{
-  return _viewConfiguration;
 }
 
 - (CKComponentSize)size
@@ -108,16 +104,14 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   }
   _mountInfo->supercomponent = supercomponent;
 
-  auto const viewConfiguration = [self viewConfiguration];
-
-  UIView *v = context.viewManager->viewForConfiguration([self class], viewConfiguration);
+  UIView *v = context.viewManager->viewForConfiguration([self class], _viewConfiguration);
   if (v) {
     auto const currentMountedComponent = (CKMountableComponent *)CKMountedObjectForView(v);
     if (_mountInfo->view != v) {
       [self _relinquishMountedView];     // First release our old view
       [currentMountedComponent unmount]; // Then unmount old component (if any) from the new view
       CKSetMountedObjectForView(v, self);
-      CK::Component::AttributeApplicator::apply(v, viewConfiguration);
+      CK::Component::AttributeApplicator::apply(v, _viewConfiguration);
       _mountInfo->view = v;
     } else {
       CKAssert(currentMountedComponent == self, @"");
@@ -160,7 +154,7 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 - (void)childrenDidMount
 {
-  
+
 }
 
 - (CKMountInfo)mountInfo
@@ -184,6 +178,11 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 - (NSString *)debugName
 {
   return NSStringFromClass(self.class);
+}
+
+- (BOOL)shouldCacheLayout
+{
+  return NO;
 }
 
 @end

@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKLayout.h>
 
 @protocol CKMountable;
 

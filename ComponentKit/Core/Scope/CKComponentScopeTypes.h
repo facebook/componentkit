@@ -36,4 +36,3 @@ typedef void (^CKComponentControllerScopeEnumerator)(id<CKComponentControllerPro
  */
 using CKComponentPredicate = BOOL (*)(id<CKComponentProtocol>);
 using CKComponentControllerPredicate = BOOL (*)(id<CKComponentControllerProtocol>);
-using CKMountablePredicate = BOOL (*)(id<CKMountable>);

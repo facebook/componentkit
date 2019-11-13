@@ -14,6 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentSize.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>

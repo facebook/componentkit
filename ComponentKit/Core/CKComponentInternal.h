@@ -64,6 +64,11 @@
 
 - (id)nextResponderAfterController;
 
+/**
+ A CKComponentViewConfiguration specifies the class of a view and the attributes that should be applied to it.
+ */
+- (const CKComponentViewConfiguration &)viewConfiguration;
+
 /** The size that was passed into the component; don't touch this. */
 @property (nonatomic, assign, readonly) CKComponentSize size;
 

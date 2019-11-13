@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKMountable+UIView.h"
+#import "CKMountableHelpers.h"
 
 #import <objc/runtime.h>
 

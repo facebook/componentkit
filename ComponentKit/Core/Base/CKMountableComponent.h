@@ -12,6 +12,17 @@
 
 #import <ComponentKit/CKComponentSize.h>
 #import <ComponentKit/CKMountable.h>
+#import <ComponentKit/CKViewConfiguration.h>
+
+// This is just a placeholder for `CKMountableViewConfiguration`
+// since we don't need accessibility context in `CKMountableComponent` at the moment.
+struct CKEmptyAccessibilityContext {
+  bool operator==(const CKEmptyAccessibilityContext &other) const {
+    return true;
+  }
+};
+
+using CKMountableViewConfiguration = CKViewConfiguration<CKEmptyAccessibilityContext>;
 
 @interface CKMountableComponent : NSObject <CKMountable>
 
@@ -22,7 +33,7 @@
  @example A component that renders a red square:
  [CKMountableComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{100, 100}]
 */
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
++ (instancetype)newWithView:(const CKMountableViewConfiguration &)view
                        size:(const CKComponentSize &)size;
 
 /** Get the component size, can be empty */
@@ -32,6 +43,6 @@
 - (void)setSize:(const CKComponentSize &)size;
 
 /** Can be called only during the component creation and only if there is no existing view configuration already. */
-- (void)setViewConfiguration:(const CKComponentViewConfiguration &)viewConfiguration;
+- (void)setViewConfiguration:(const CKMountableViewConfiguration &)viewConfiguration;
 
 @end

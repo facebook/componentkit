@@ -228,7 +228,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
     CKRunRunLoopUntilBlockIsTrue(^BOOL{
       return _state != nil;
     });
-    controller = (CKLifecycleTestComponentController *)[[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component().controller;
+    controller = ((CKLifecycleTestComponent *)[[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component()).controller;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       [dataSource hash];
     });
@@ -244,7 +244,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
     return _state != nil;
   });
-  const auto controller = (CKLifecycleTestComponentController *)[[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component().controller;
+  const auto controller = ((CKLifecycleTestComponent *)[[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component()).controller;
   [dataSource updateConfiguration:[_state.configuration copyWithContext:kTestInvalidateControllerContext sizeRange:{}]
                              mode:CKUpdateModeSynchronous
                          userInfo:@{}];

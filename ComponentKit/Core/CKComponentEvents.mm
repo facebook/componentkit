@@ -10,6 +10,7 @@
 
 #import "CKComponentEvents.h"
 
+
 #import "CKComponentInternal.h"
 #import "CKComponentControllerInternal.h"
 #import "CKComponentSubclass.h"
@@ -55,7 +56,7 @@ void CKComponentSendDidPrepareLayoutForComponent(CKComponentScopeRoot *scopeRoot
   [scopeRoot enumerateComponentsMatchingPredicate:&CKComponentDidPrepareLayoutForComponentToControllerPredicate
                                             block:^(id<CKComponentProtocol> c) {
                                               CKComponent *component = (CKComponent *)c;
-                                              const CKComponentLayout componentLayout = layout.cachedLayoutForScopedComponent(component);
+                                              const CKComponentLayout componentLayout = layout.cachedLayoutForComponent(component);
                                               [component.controller didPrepareLayout:componentLayout forComponent:component];
                                             }];
 }
@@ -74,8 +75,9 @@ void CKComponentUpdateComponentForComponentControllerWithIndexPaths(id<NSFastEnu
 {
   for (NSIndexPath *indexPath in indexPaths) {
     CKDataSourceItem *item = [state objectAtIndexPath:indexPath];
-    item.rootLayout.enumerateComponentControllers(^(CKComponentController *controller, CKComponent *component) {
-      controller.latestComponent = component;
+    item.rootLayout.enumerateCachedLayout(^(const CKComponentLayout &layout) {
+      const auto component = (CKComponent *)layout.component;
+      component.controller.latestComponent = component;
     });
   }
 }

@@ -35,7 +35,7 @@
 #import "CKComponentViewConfiguration.h"
 #import "CKInternalHelpers.h"
 #import "CKMountAnimationGuard.h"
-#import "CKMountable+UIView.h"
+#import "CKMountableHelpers.h"
 #import "CKWeakObjectContainer.h"
 #import "ComponentLayoutContext.h"
 #import "CKThreadLocalComponentScope.h"
@@ -495,6 +495,11 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 - (NSString *)debugName
 {
   return NSStringFromClass(self.class);
+}
+
+- (BOOL)shouldCacheLayout
+{
+  return self.controller != nil;
 }
 
 @end

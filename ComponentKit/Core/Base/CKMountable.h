@@ -11,10 +11,11 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/ComponentMountContext.h>
-#import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentSize.h>
-#import <ComponentKit/CKComponentViewConfiguration.h>
 
+@protocol CKMountable;
+
+struct CKComponentLayout;
 struct CKComponentLayoutChild;
 
 struct CKComponentViewContext {
@@ -53,11 +54,6 @@ struct CKMountInfo {
  of the component's content. In this case, you should **not** make any assumptions about what class the view is.
  */
 - (CKComponentViewContext)viewContext;
-
-/**
- A CKComponentViewConfiguration specifies the class of a view and the attributes that should be applied to it.
- */
-- (const CKComponentViewConfiguration &)viewConfiguration;
 
 /** Used to get the root component in the responder chain; don't touch this. */
 @property (nonatomic, weak) UIView *rootComponentMountedView;
@@ -113,10 +109,15 @@ Unmounts the component:
 /** Unique identifier of the component - can be nil */
 @property (nonatomic, strong, readonly) id<NSObject> uniqueIdentifier;
 
-/** Backward Compatibility */
-- (id)controller;
+/**
+ Indicates if layout should be cached during computation of component tree.
+ This is for backward compatibility because we don't want to expose the concept of component controller.
+ */
+- (BOOL)shouldCacheLayout;
 
 /** Name used in debug message */
 - (NSString *)debugName;
 
 @end
+
+using CKMountablePredicate = BOOL (*)(id<CKMountable>);

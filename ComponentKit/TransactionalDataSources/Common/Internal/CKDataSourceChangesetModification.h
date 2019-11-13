@@ -11,9 +11,11 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
 #import <ComponentKit/CKDataSourceStateModifying.h>
 
+@class CKComponentScopeRoot;
 @class CKDataSourceChangeset;
 @class CKDataSourceItem;
 
