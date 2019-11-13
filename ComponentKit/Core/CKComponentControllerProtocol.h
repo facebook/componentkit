@@ -16,4 +16,6 @@
 
 - (instancetype)initWithComponent:(id<CKComponentProtocol>)component;
 
+@property (nonatomic, weak, readonly) id<CKComponentProtocol> component;
+
 @end

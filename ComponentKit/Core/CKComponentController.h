@@ -13,6 +13,7 @@
 #import <UIKit/UIKit.h>
 #import <ComponentKit/CKComponentControllerProtocol.h>
 #import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponent.h>
 
 @class CKComponent;
 

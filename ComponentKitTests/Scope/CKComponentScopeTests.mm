@@ -53,6 +53,7 @@
 {
   return [super init];
 }
+- (id<CKComponentProtocol>)component { return nil; }
 @end
 
 @interface CKComponentScopeTests : XCTestCase
