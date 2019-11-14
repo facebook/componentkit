@@ -55,9 +55,6 @@ struct CKMountInfo {
  */
 - (CKComponentViewContext)viewContext;
 
-/** Used to get the root component in the responder chain; don't touch this. */
-@property (nonatomic, weak) UIView *rootComponentMountedView;
-
 /** If the component owns its own view and is mounted, returns it. */
 @property (nonatomic, readonly) UIView *mountedView;
 

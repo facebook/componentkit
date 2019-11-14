@@ -16,6 +16,7 @@
 
 /**
  Recursively mounts the layout in the view, returning a set of the mounted components.
+ This function is not for a generic use case of mounting every implementation of `CKMountable`, instead it's only for `CKComponent`.
  @param layout The layout to mount, usually returned from a call to -layoutThatFits:parentSize:
  @param view The view in which to mount the layout.
  @param previouslyMountedComponents If a previous layout was mounted, pass the return value of the previous call to

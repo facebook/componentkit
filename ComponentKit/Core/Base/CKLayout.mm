@@ -97,8 +97,6 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
   stack.push({layout, MountContext::RootContext(view, mountAnalyticsContextPointer, isUpdate), supercomponent, NO});
   auto const mountedComponents = CK::makeNonNull([NSMutableSet set]);
 
-  layout.component.rootComponentMountedView = view;
-
   while (!stack.empty()) {
     MountItem &item = stack.top();
     if (item.visited) {

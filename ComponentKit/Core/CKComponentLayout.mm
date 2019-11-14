@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKComponentAnimationPredicates.h>
+#import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKDetectDuplicateComponent.h>
 #import <ComponentKit/ComponentLayoutContext.h>
 
@@ -22,6 +23,7 @@ CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
                                            id<CKAnalyticsListener> analyticsListener,
                                            BOOL isUpdate)
 {
+  ((CKComponent *)layout.component).rootComponentMountedView = view;
   [analyticsListener willMountComponentTreeWithRootComponent:layout.component];
   const auto result =
   CKMountLayout(layout,
