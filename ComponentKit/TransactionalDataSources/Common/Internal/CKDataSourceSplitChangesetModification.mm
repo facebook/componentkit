@@ -37,7 +37,7 @@ using namespace CKComponentControllerHelper;
 
 @implementation CKDataSourceSplitChangesetModification
 {
-  id<CKComponentStateListener> _stateListener;
+  __weak id<CKComponentStateListener> _stateListener;
   NSDictionary *_userInfo;
   CKDataSourceViewport _viewport;
   CKDataSourceQOS _qos;
