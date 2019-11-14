@@ -12,7 +12,6 @@
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKLinkable.h>
-#import <ComponentKit/CKMountableComponent.h>
 
 #import "yoga/Yoga.h"
 
@@ -67,8 +66,4 @@ CK_LINK_REQUIRE_CATEGORY(CKComponent_Yoga)
 
 CK_LINK_REQUIRE_CATEGORY(CKCompositeComponent_Yoga)
 @interface CKCompositeComponent (Yoga)
-@end
-
-CK_LINK_REQUIRE_CATEGORY(CKMountableComponent_Yoga)
-@interface CKMountableComponent (Yoga) <CKYogaBasedComponentProtocol>
 @end

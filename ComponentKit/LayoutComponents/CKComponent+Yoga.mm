@@ -78,33 +78,3 @@ CK_LINKABLE(CKCompositeComponent_Yoga)
 }
 
 @end
-
-CK_LINKABLE(CKMountableComponent_Yoga)
-@implementation CKMountableComponent (Yoga)
-
-- (BOOL)isYogaBasedLayout
-{
-  return NO;
-}
-
-- (CKComponentSize)nodeSize
-{
-  return [self size];
-}
-
-- (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
-{
-  return YGNodeNewWithConfig(ckYogaDefaultConfig());
-}
-
-- (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
-{
-  return {};
-}
-
-- (BOOL)usesCustomBaseline
-{
-  return NO;
-}
-
-@end
