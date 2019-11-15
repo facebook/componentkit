@@ -40,7 +40,6 @@ const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
 @property (nonatomic) YGMeasureMode widthMode;
 @property (nonatomic) YGMeasureMode heightMode;
 @property (nonatomic) CGSize parentSize;
-@property (nonatomic) CKFlexboxAlignSelf align;
 @property (nonatomic) NSInteger zIndex;
 
 @end
@@ -373,7 +372,6 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     childLayout.widthMode = (YGMeasureMode) -1;
     childLayout.heightMode = (YGMeasureMode) -1;
     childLayout.parentSize = parentSize;
-    childLayout.align = child.alignSelf;
     childLayout.zIndex = child.zIndex;
     if (child.aspectRatio.isDefined()) {
       YGNodeStyleSetAspectRatio(childNode, child.aspectRatio.aspectRatio());
