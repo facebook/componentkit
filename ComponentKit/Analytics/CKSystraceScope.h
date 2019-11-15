@@ -38,6 +38,7 @@ public:
 private:
   const char *const _blockName;
   id<CKSystraceListener> _systraceListener;
+  bool _isAsync;
   CKSystraceScope(const CKSystraceScope &) = delete; // copy
   CKSystraceScope &operator=(const CKSystraceScope&) = delete;
   CKSystraceScope(CKSystraceScope&&) = delete; // move

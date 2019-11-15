@@ -28,6 +28,7 @@
  @return completion block that will be called after the switch to different queue
  */
 - (std::function<void(void)>)willStartAsyncBlockTrace:(const char *const)blockName;
+- (void)didEndAsyncBlockTrace:(const char *const)blockName;
 
 /**
  Start/End a block trace in systrace.
