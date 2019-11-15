@@ -20,7 +20,7 @@
 /**
  This protocol is being used by the infrastructure to collect data into systrace if enabled.
  */
-@protocol CKSystraceListener <NSObject>
+@protocol CKSystraceListener <CKMountLayoutListener>
 
 /**
  Start of the block that will start on one thread and end on another
@@ -43,14 +43,6 @@
  */
 - (void)willBuildComponent:(Class)componentClass;
 - (void)didBuildComponent:(Class)componentClass;
-
-/**
- Called before/after mounting a component.
-
- Will be called only when systrace is enabled.
- */
-- (void)willMountComponent:(id<CKMountable>)component;
-- (void)didMountComponent:(id<CKMountable>)component;
 
 /**
  Called before/after layout a component.

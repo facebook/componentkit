@@ -100,8 +100,15 @@ struct CKMountLayoutResult {
   CK::Optional<CK::Component::MountAnalyticsContext> mountAnalyticsContext;
 };
 
-using CKWillMountLayout = std::function<void(id<CKMountable>)>;
-using CKDidMountLayout = std::function<void(id<CKMountable>)>;
+@protocol CKMountLayoutListener <NSObject>
+
+/**
+ Called before/after mounting a component.
+ */
+- (void)willMountComponent:(id<CKMountable>)component;
+- (void)didMountComponent:(id<CKMountable>)component;
+
+@end
 
 /**
  Recursively mounts the layout in the view, returning a set of the mounted components.
@@ -123,8 +130,7 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
                                   id<CKMountable> supercomponent,
                                   BOOL isUpdate = NO,
                                   BOOL shouldCollectMountInfo = NO,
-                                  const CKWillMountLayout &willMountLayout = nullptr,
-                                  const CKDidMountLayout &didMountLayout = nullptr);
+                                  id<CKMountLayoutListener> listener = nil);
 
 /**
  Safely computes the layout of the given root component by guarding against nil components.

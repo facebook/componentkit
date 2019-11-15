@@ -32,12 +32,7 @@ CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
                 supercomponent,
                 isUpdate,
                 [analyticsListener shouldCollectMountInformationForRootComponent:layout.component],
-                [&](const auto component) {
-                  [analyticsListener.systraceListener willMountComponent:component];
-                },
-                [&](const auto component) {
-                  [analyticsListener.systraceListener didMountComponent:component];
-                });
+                analyticsListener.systraceListener);
   [analyticsListener didMountComponentTreeWithRootComponent:layout.component
                                       mountAnalyticsContext:result.mountAnalyticsContext];
   return result;

@@ -78,8 +78,7 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
                                   id<CKMountable> supercomponent,
                                   BOOL isUpdate,
                                   BOOL shouldCollectMountInfo,
-                                  const CKWillMountLayout &willMountLayout,
-                                  const CKDidMountLayout &didMountLayout)
+                                  id<CKMountLayoutListener> listener)
 {
   struct MountItem {
     const CKComponentLayout &layout;
@@ -101,18 +100,14 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
     MountItem &item = stack.top();
     if (item.visited) {
       [item.layout.component childrenDidMount];
-      if (didMountLayout != nullptr) {
-        didMountLayout(item.layout.component);
-      }
+      [listener didMountComponent:item.layout.component];
       stack.pop();
     } else {
       item.visited = YES;
       if (item.layout.component == nil) {
         continue; // Nil components in a layout struct are invalid, but handle them gracefully
       }
-      if (willMountLayout != nullptr) {
-        willMountLayout(item.layout.component);
-      }
+      [listener willMountComponent:item.layout.component];
       const MountResult mountResult = [item.layout.component mountInContext:item.mountContext
                                                                        size:item.layout.size
                                                                    children:item.layout.children
