@@ -16,6 +16,7 @@
                 previousState:(CKDataSourceState *)previousState
                appliedChanges:(CKDataSourceAppliedChanges *)appliedChanges
             deferredChangeset:(CKDataSourceChangeset *)deferredChangeset
+    addedComponentControllers:(NSArray<CKComponentController *> *)addedComponentControllers
   invalidComponentControllers:(NSArray<CKComponentController *> *)invalidComponentControllers
 {
   if (self = [super init]) {
@@ -23,6 +24,7 @@
     _previousState = previousState;
     _appliedChanges = appliedChanges;
     _deferredChangeset = deferredChangeset;
+    _addedComponentControllers = addedComponentControllers;
     _invalidComponentControllers = invalidComponentControllers;
   }
   return self;

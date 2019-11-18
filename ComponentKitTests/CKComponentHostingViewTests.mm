@@ -197,6 +197,14 @@ typedef struct {
                 @"Expected component controller to get invalidation event");
 }
 
+- (void)testComponentControllerReceivesDidInit
+{
+  CKComponentHostingView *view = [[self class] hostingView:{}];
+  CKLifecycleTestComponent *testComponent = (CKLifecycleTestComponent *)view.mountedLayout.component;
+
+  XCTAssertTrue(testComponent.controller.calledDidInit, @"Expected component controller to get did init event");
+}
+
 - (void)testComponentControllerReceivesInvalidateEventDuringDeallocationEvenWhenParentIsStillPresent
 {
   CKComponentHostingView *view = [[self class] hostingView:{

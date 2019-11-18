@@ -84,6 +84,18 @@ auto CKLifecycleTestComponentSetShouldEarlyReturnNew(BOOL shouldEarlyReturnNew) 
 
 @implementation CKLifecycleTestComponentController
 
+- (void)didInit
+{
+  if (![NSThread isMainThread]) {
+    CKFatal(@"didInit should only be called on main thread");
+  } else if (_calledDidInit) {
+    CKFatal(@"didInit should only be called once");
+  }
+
+  [super didInit];
+  _calledDidInit = YES;
+}
+
 - (void)willMount
 {
   [super willMount];

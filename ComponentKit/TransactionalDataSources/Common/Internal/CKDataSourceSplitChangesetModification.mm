@@ -70,6 +70,7 @@ using namespace CKComponentControllerHelper;
   ? splitChangesetOptions.viewportBoundingSize
   : _viewport.size;
 
+  NSMutableArray<CKComponentController *> *addedComponentControllers = [NSMutableArray array];
   NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
 
   NSMutableArray *newSections = [NSMutableArray array];
@@ -127,6 +128,11 @@ using namespace CKComponentControllerHelper;
       CKDataSourceItem *const oldItem = section[indexPath.item];
       CKDataSourceItem *const item = CKBuildDataSourceItem([oldItem scopeRoot], {}, sizeRange, configuration, model, context);
       [section replaceObjectAtIndex:indexPath.item withObject:item];
+      for (const auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
+                                                                                                   oldItem.scopeRoot,
+                                                                                                   &CKComponentControllerInitializeEventPredicate)) {
+        [addedComponentControllers addObject:componentController];
+      }
       for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
                                                                                                      oldItem.scopeRoot,
                                                                                                      &CKComponentControllerInvalidateEventPredicate)) {
@@ -360,6 +366,7 @@ using namespace CKComponentControllerHelper;
                                      previousState:oldState
                                     appliedChanges:appliedChanges
                                  deferredChangeset:createDeferredChangeset(deferredInsertedItems, computeDeferredItems(sectionsForDeferredUpdatedItems))
+                         addedComponentControllers:addedComponentControllers
                        invalidComponentControllers:invalidComponentControllers];
 }
 

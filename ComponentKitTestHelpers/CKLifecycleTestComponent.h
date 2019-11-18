@@ -40,6 +40,7 @@ struct CKLifecycleMethodCounts {
 };
 
 @interface CKLifecycleTestComponentController : CKComponentController
+@property (nonatomic, assign, readonly) BOOL calledDidInit;
 @property (nonatomic, assign) BOOL calledComponentTreeWillAppear;
 @property (nonatomic, assign) BOOL calledComponentTreeDidDisappear;
 @property (nonatomic, assign) BOOL calledWillUpdateComponent;

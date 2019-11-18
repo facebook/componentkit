@@ -168,3 +168,12 @@
 
 @implementation CKTestChildRenderComponentController
 @end
+
+@implementation CKCompositeComponentWithScope
+
++ (instancetype)newWithComponentProvider:(CKComponent *(^)())componentProvider
+{
+  CKComponentScope scope(self);
+  return [super newWithComponent:componentProvider()];
+}
+@end

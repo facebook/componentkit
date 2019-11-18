@@ -49,6 +49,7 @@ using namespace CKComponentControllerHelper;
 
   NSMutableArray *newSections = [NSMutableArray array];
   NSMutableSet *updatedIndexPaths = [NSMutableSet set];
+  NSMutableArray<CKComponentController *> *addedComponentControllers = [NSMutableArray array];
   NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
   __block CKComponentScopeRootIdentifier globalIdentifier = 0;
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
@@ -66,6 +67,11 @@ using namespace CKComponentControllerHelper;
         [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
         CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], stateUpdatesForItem->second, sizeRange, configuration, [item model], context);
         [newItems addObject:newItem];
+        for (const auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                                     item.scopeRoot,
+                                                                                                     &CKComponentControllerInitializeEventPredicate)) {
+          [addedComponentControllers addObject:componentController];
+        }
         for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
                                                                                                        item.scopeRoot,
                                                                                                        &CKComponentControllerInvalidateEventPredicate)) {
@@ -93,6 +99,7 @@ using namespace CKComponentControllerHelper;
                                      previousState:oldState
                                     appliedChanges:appliedChanges
                                  deferredChangeset:nil
+                         addedComponentControllers:addedComponentControllers
                        invalidComponentControllers:invalidComponentControllers];
 }
 

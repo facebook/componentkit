@@ -48,6 +48,7 @@ using namespace CKComponentControllerHelper;
 
   NSMutableArray *newSections = [NSMutableArray array];
   NSMutableSet *updatedIndexPaths = [NSMutableSet set];
+  NSMutableArray<CKComponentController *> *addedComponentControllers = [NSMutableArray array];
   NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     NSMutableArray *newItems = [NSMutableArray array];
@@ -56,6 +57,11 @@ using namespace CKComponentControllerHelper;
       // On reload, we would like avoid component reuse - by passing `enableComponentReuseOptimizations = NO`, we make sure that all the components will be recreated.
       CKDataSourceItem *const newItem = CKBuildDataSourceItem([item scopeRoot], {}, sizeRange, configuration, [item model], context, NO);
       [newItems addObject:newItem];
+      for (const auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                                   item.scopeRoot,
+                                                                                                   &CKComponentControllerInitializeEventPredicate)) {
+        [addedComponentControllers addObject:componentController];
+      }
       for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
                                                                                                      item.scopeRoot,
                                                                                                      &CKComponentControllerInvalidateEventPredicate)) {
@@ -82,6 +88,7 @@ using namespace CKComponentControllerHelper;
                                      previousState:oldState
                                     appliedChanges:appliedChanges
                                  deferredChangeset:nil
+                         addedComponentControllers:addedComponentControllers
                        invalidComponentControllers:invalidComponentControllers];
 }
 

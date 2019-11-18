@@ -411,6 +411,23 @@ using namespace CKComponentControllerHelper;
                 @"Expected controller %@ to have received component tree did disappear event", fooComponent.controller);
 }
 
+- (void)testComponentControllerReceivesDidInitEvent
+{
+  CKComponentLifecycleTestHelper *componentLifecycleTestController =
+    [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class] sizeRangeProvider:nil];
+  const CKComponentLifecycleTestHelperState state =
+    [componentLifecycleTestController prepareForUpdateWithModel:nil
+                                                constrainedSize:{{0,0}, {100, 100}}
+                                                        context:nil];
+
+  [componentLifecycleTestController attachToView:[UIView new]];
+  [componentLifecycleTestController updateWithState:state];
+  CKComponentScopeRootAnnounceControllerInitialization([componentLifecycleTestController state].scopeRoot);
+  CKLifecycleTestComponent *fooComponent = (CKLifecycleTestComponent *)state.componentLayout.component;
+  XCTAssertTrue(fooComponent.controller.calledDidInit,
+                @"Expected component controller to get did init event");
+}
+
 - (void)testComponentControllerReceivesInvalidateEvent
 {
   CKComponentLifecycleTestHelper *componentLifecycleTestController =

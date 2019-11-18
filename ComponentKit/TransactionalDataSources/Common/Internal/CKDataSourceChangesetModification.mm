@@ -84,6 +84,7 @@ using namespace CKComponentControllerHelper;
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
 
+  NSMutableArray<CKComponentController *> *addedComponentControllers = [NSMutableArray array];
   NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
 
   NSMutableArray *newSections = [NSMutableArray array];
@@ -328,6 +329,7 @@ using namespace CKComponentControllerHelper;
                                      previousState:oldState
                                     appliedChanges:appliedChanges
                                  deferredChangeset:nil
+                         addedComponentControllers:addedComponentControllers
                        invalidComponentControllers:invalidComponentControllers];
 }
 

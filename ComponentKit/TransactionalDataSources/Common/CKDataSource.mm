@@ -370,6 +370,15 @@
   CKDataSourceState *const newState = [change state];
   _state = newState;
 
+  // Announce 'didInit'.
+  for (CKComponentController *componentController in change.addedComponentControllers) {
+    [componentController didInit];
+  }
+  for (NSIndexPath *insertedIndex in [appliedChanges insertedIndexPaths]) {
+    CKDataSourceItem *insertedItem = [newState objectAtIndexPath:insertedIndex];
+    CKComponentScopeRootAnnounceControllerInitialization([insertedItem scopeRoot]);
+  }
+
   // Announce 'invalidateController'.
   for (CKComponentController *componentController in change.invalidComponentControllers) {
     [componentController invalidateController];

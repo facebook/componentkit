@@ -24,6 +24,11 @@ BOOL CKComponentControllerDisappearanceEventPredicate(id<CKComponentControllerPr
   return CKSubclassOverridesInstanceMethod([CKComponentController class], [controller class], @selector(componentTreeDidDisappear));
 }
 
+BOOL CKComponentControllerInitializeEventPredicate(id<CKComponentControllerProtocol> controller)
+{
+  return CKSubclassOverridesInstanceMethod([CKComponentController class], [controller class], @selector(didInit));
+}
+
 BOOL CKComponentControllerInvalidateEventPredicate(id<CKComponentControllerProtocol> controller)
 {
   return CKSubclassOverridesInstanceMethod([CKComponentController class], [controller class], @selector(invalidateController));
@@ -42,6 +47,14 @@ void CKComponentScopeRootAnnounceControllerDisappearance(CKComponentScopeRoot *s
   [scopeRoot enumerateComponentControllersMatchingPredicate:&CKComponentControllerDisappearanceEventPredicate block:^(id<CKComponentControllerProtocol> scopedController) {
     CKComponentController *controller = (CKComponentController *)scopedController;
     [controller componentTreeDidDisappear];
+  }];
+}
+
+void CKComponentScopeRootAnnounceControllerInitialization(CKComponentScopeRoot *scopeRoot)
+{
+  [scopeRoot enumerateComponentControllersMatchingPredicate:&CKComponentControllerInitializeEventPredicate block:^(id<CKComponentControllerProtocol> scopedController) {
+    CKComponentController *controller = (CKComponentController *)scopedController;
+    [controller didInit];
   }];
 }
 

@@ -29,4 +29,26 @@ namespace CKComponentControllerHelper {
                                                                });
     return CK::map(removedControllers, [](const auto controller){ return (CKComponentController *)controller; });
   }
+
+  auto addedControllersFromPreviousScopeRootMatchingPredicate(CKComponentScopeRoot *newRoot,
+                                                              CKComponentScopeRoot *previousRoot,
+                                                              CKComponentControllerPredicate predicate) -> std::vector<CKComponentController *>
+  {
+    if (!newRoot) {
+      return {};
+    }
+
+    const auto newControllers = [newRoot componentControllersMatchingPredicate:predicate];
+
+    if (!previousRoot) {
+      return CK::map(newControllers, [](const auto controller){ return (CKComponentController *)controller; });
+    }
+    const auto oldControllers = [previousRoot componentControllersMatchingPredicate:predicate];
+    const auto addedControllers = CK::Collection::difference(newControllers,
+                                                             oldControllers,
+                                                             [](const auto &lhs, const auto &rhs){
+                                                               return lhs == rhs;
+                                                             });
+    return CK::map(addedControllers, [](const auto controller){ return (CKComponentController *)controller; });
+  }
 };

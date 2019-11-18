@@ -19,6 +19,9 @@
 
 @interface CKComponentController<__covariant ComponentType:CKComponent *> : NSObject <CKComponentControllerProtocol>
 
+/** The controller was initialised. Called on the main thread. */
+- (void)didInit NS_REQUIRES_SUPER;
+
 /** The controller's component is not mounted, but is about to be. */
 - (void)willMount NS_REQUIRES_SUPER;
 

@@ -91,6 +91,7 @@ static NSString *componentStateName(CKComponentControllerState state)
   return _component;
 }
 
+- (void)didInit {}
 - (void)willMount {}
 - (void)didMount {}
 - (void)willRemount {}

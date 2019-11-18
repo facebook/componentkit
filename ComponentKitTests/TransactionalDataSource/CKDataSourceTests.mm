@@ -12,6 +12,7 @@
 
 #import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
+#import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKCompositeComponent.h>
@@ -31,6 +32,7 @@
 #import "CKDataSourceStateTestHelpers.h"
 
 static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateControllerContext";
+static NSString *const kTestInitialiseControllerContext = @"kTestInitialiseControllerContext";
 
 @interface CKDataSourceTests : XCTestCase <CKDataSourceAsyncListener>
 @end
@@ -50,8 +52,13 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   if ([context isEqual:kTestInvalidateControllerContext]) {
     return CK::ComponentBuilder()
                .build();
+  } else if ([context isEqual:kTestInitialiseControllerContext]) {
+    return [CKCompositeComponentWithScope newWithComponentProvider:^{
+      return [CKLifecycleTestComponent new];
+    }];
+  } else {
+    return [CKLifecycleTestComponent new];
   }
-  return [CKLifecycleTestComponent new];
 }
 
 - (void)setUp
@@ -236,6 +243,21 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   XCTAssertTrue(CKRunRunLoopUntilBlockIsTrue(^BOOL(void){
     return controller.calledInvalidateController;
   }));
+}
+
+- (void)testDataSourceAddingComponentTriggersDidInitOnMainThread
+{
+  const auto firstIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+  CKDataSource *dataSource = CKComponentTestDataSource(ComponentProvider, self);
+  const auto firstController = (CKLifecycleTestComponentController *)((CKLifecycleTestComponent *)[[_state objectAtIndexPath:firstIndexPath] rootLayout].component()).controller;
+  XCTAssertTrue(firstController.calledDidInit);
+  [dataSource updateConfiguration:[_state.configuration copyWithContext:kTestInitialiseControllerContext sizeRange:{}]
+                             mode:CKUpdateModeSynchronous
+                         userInfo:@{}];
+  const auto secondController = (CKLifecycleTestComponentController *)((CKSingleChildComponent *)[[_state objectAtIndexPath:firstIndexPath] rootLayout].component()).child.controller;
+  XCTAssertNotEqual(firstController, secondController);
+  XCTAssertTrue(firstController.calledInvalidateController);
+  XCTAssertTrue(secondController.calledDidInit);
 }
 
 - (void)testDataSourceRemovingComponentTriggersInvalidateOnMainThread

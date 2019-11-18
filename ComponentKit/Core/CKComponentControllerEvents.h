@@ -22,12 +22,14 @@
  */
 BOOL CKComponentControllerAppearanceEventPredicate(id<CKComponentControllerProtocol> controller);
 BOOL CKComponentControllerDisappearanceEventPredicate(id<CKComponentControllerProtocol> controller);
+BOOL CKComponentControllerInitializeEventPredicate(id<CKComponentControllerProtocol> controller);
 BOOL CKComponentControllerInvalidateEventPredicate(id<CKComponentControllerProtocol> controller);
 
 /**
  Called by the infrastructure when cells appear or disappear. These functions announce to all component controllers
  in the hierarchy that matched the above predicates.
  */
+void CKComponentScopeRootAnnounceControllerInitialization(CKComponentScopeRoot *scopeRoot);
 void CKComponentScopeRootAnnounceControllerAppearance(CKComponentScopeRoot *scopeRoot);
 void CKComponentScopeRootAnnounceControllerDisappearance(CKComponentScopeRoot *scopeRoot);
 void CKComponentScopeRootAnnounceControllerInvalidation(CKComponentScopeRoot *scopeRoot);
