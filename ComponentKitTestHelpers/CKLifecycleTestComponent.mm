@@ -160,6 +160,8 @@ auto CKLifecycleTestComponentSetShouldEarlyReturnNew(BOOL shouldEarlyReturnNew) 
 {
   if (![NSThread isMainThread]) {
     CKFatal(@"InvalidateController should only be called on main thread");
+  } else if (_calledInvalidateController) {
+    CKFatal(@"InvalidateController should only be called once");
   }
   [super invalidateController];
   _calledInvalidateController = YES;
