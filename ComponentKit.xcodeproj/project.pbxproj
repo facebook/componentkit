@@ -337,7 +337,6 @@
 		2D8270F61E3F72DE008C1A26 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = 035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */; };
 		2D8270F71E3F72F1008C1A26 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = 035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */; };
 		2D8270FC1E3F7581008C1A26 /* libComponentKitTestHelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */; };
-		2D8C3D441D64F41E00E6D47A /* ReferenceImages_IOS10_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */; };
 		2D8C3D521D64F43E00E6D47A /* ReferenceImages_IOS10_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */; };
 		2DBF1D7A1D3425ED004F28E8 /* CKDetectDuplicateComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKDetectDuplicateComponent.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2DBF1D7B1D3425ED004F28E8 /* CKDetectDuplicateComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKDetectDuplicateComponent.mm */; };
@@ -607,8 +606,6 @@
 		7F5A85301F1F903D00238338 /* CKFlexboxComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F6BAF671F1F6E5200600828 /* CKFlexboxComponent.mm */; };
 		7F5A853B1F1F904C00238338 /* CKComponentControllerEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF5435E1F1F6DF700EFEFDD /* CKComponentControllerEvents.mm */; };
 		7F5A853F1F1F907800238338 /* CKComponentLayoutBaseline.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F6BAF651F1F6E5200600828 /* CKComponentLayoutBaseline.m */; };
-		7F6AC97520935A0B00DDF374 /* ReferenceImages_IOS11_64 in Resources */ = {isa = PBXBuildFile; fileRef = 7F6AC97020935A0B00DDF374 /* ReferenceImages_IOS11_64 */; };
-		7F6AC97720935A1900DDF374 /* ReferenceImages_IOS11_3_64 in Resources */ = {isa = PBXBuildFile; fileRef = 7F6AC97620935A1900DDF374 /* ReferenceImages_IOS11_3_64 */; };
 		7F6AC9802093680900DDF374 /* ReferenceImages_IOS11_3_64 in Resources */ = {isa = PBXBuildFile; fileRef = 7F6AC97F2093680900DDF374 /* ReferenceImages_IOS11_3_64 */; };
 		7F6BAF681F1F6E5200600828 /* CKComponentLayoutBaseline.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F6BAF641F1F6E5200600828 /* CKComponentLayoutBaseline.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F6BAF691F1F6E5200600828 /* CKComponentLayoutBaseline.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F6BAF651F1F6E5200600828 /* CKComponentLayoutBaseline.m */; };
@@ -1228,7 +1225,6 @@
 		2D7A98141DB56BD10064FC6D /* CKDataSourceChangesetVerification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CKDataSourceChangesetVerification.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		2D7A98151DB56BD10064FC6D /* CKDataSourceChangesetVerification.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKDataSourceChangesetVerification.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		2D7A98241DB56D8D0064FC6D /* CKDataSourceChangesetVerificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKDataSourceChangesetVerificationTests.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10_64; sourceTree = "<group>"; };
 		2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10_64; sourceTree = "<group>"; };
 		2DBF1D781D3425ED004F28E8 /* CKDetectDuplicateComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDetectDuplicateComponent.h; sourceTree = "<group>"; };
 		2DBF1D791D3425ED004F28E8 /* CKDetectDuplicateComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDetectDuplicateComponent.mm; sourceTree = "<group>"; };
@@ -1369,8 +1365,6 @@
 		7F31BF541F7C3E4A0087E614 /* ReferenceImages_IOS11_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS11_64; sourceTree = "<group>"; };
 		7F47ECDD218A254300AD4E55 /* CKDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDispatch.h; sourceTree = "<group>"; };
 		7F47ECDE218A254300AD4E55 /* CKDispatch.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDispatch.mm; sourceTree = "<group>"; };
-		7F6AC97020935A0B00DDF374 /* ReferenceImages_IOS11_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS11_64; sourceTree = "<group>"; };
-		7F6AC97620935A1900DDF374 /* ReferenceImages_IOS11_3_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS11_3_64; sourceTree = "<group>"; };
 		7F6AC97F2093680900DDF374 /* ReferenceImages_IOS11_3_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS11_3_64; sourceTree = "<group>"; };
 		7F6BAF641F1F6E5200600828 /* CKComponentLayoutBaseline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentLayoutBaseline.h; sourceTree = "<group>"; };
 		7F6BAF651F1F6E5200600828 /* CKComponentLayoutBaseline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKComponentLayoutBaseline.m; sourceTree = "<group>"; };
@@ -2719,9 +2713,6 @@
 			isa = PBXGroup;
 			children = (
 				606E57DA215B84BF0080A274 /* ReferenceImages_IOS12_64 */,
-				7F6AC97620935A1900DDF374 /* ReferenceImages_IOS11_3_64 */,
-				7F6AC97020935A0B00DDF374 /* ReferenceImages_IOS11_64 */,
-				2D8C3D421D64F41E00E6D47A /* ReferenceImages_IOS10_64 */,
 			);
 			name = ReferenceImages;
 			sourceTree = "<group>";
@@ -3612,9 +3603,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F6AC97520935A0B00DDF374 /* ReferenceImages_IOS11_64 in Resources */,
-				7F6AC97720935A1900DDF374 /* ReferenceImages_IOS11_3_64 in Resources */,
-				2D8C3D441D64F41E00E6D47A /* ReferenceImages_IOS10_64 in Resources */,
 				606E57E5215B84BF0080A274 /* ReferenceImages_IOS12_64 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
