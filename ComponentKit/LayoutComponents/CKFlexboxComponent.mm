@@ -395,7 +395,7 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     // node size, as it will always we equal to {}
     // and use it's child size instead
     const auto nodeSize = _style.useDeepYogaTrees ? [child.component nodeSize] : [child.component size];
-    applySizeAttributes(childNode, child, nodeSize, parentWidth, parentHeight);
+    applySizeAttributes(childNode, child, nodeSize, parentWidth, parentHeight, _style.useDeepYogaTrees);
 
     YGNodeStyleSetFlexGrow(childNode, child.flexGrow);
     YGNodeStyleSetFlexShrink(childNode, child.flexShrink);
@@ -485,93 +485,60 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
   return stackNode;
 }
 
-static void applySizeAttributes(YGNodeRef node, CKFlexboxComponentChild child, CKComponentSize nodeSize, CGFloat parentWidth, CGFloat parentHeight)
+static void applySizeAttribute(YGNodeRef node,
+                               void(*percentFunc)(YGNodeRef, float),
+                               void(*pointFunc)(YGNodeRef, float),
+                               const CKRelativeDimension &childAttribute,
+                               const CKRelativeDimension &nodeAttribute,
+                               CGFloat parentValue,
+                               BOOL useDeepYogaTrees)
+{
+  switch (childAttribute.type()) {
+    case CKRelativeDimension::Type::PERCENT:
+      percentFunc(node, convertFloatToYogaRepresentation(childAttribute.value() * 100));
+      break;
+    case CKRelativeDimension::Type::POINTS:
+      pointFunc(node, convertFloatToYogaRepresentation(childAttribute.value()));
+      break;
+    case CKRelativeDimension::Type::AUTO:
+      if (useDeepYogaTrees) {
+        switch (nodeAttribute.type()) {
+          case CKRelativeDimension::Type::PERCENT:
+            percentFunc(node, convertFloatToYogaRepresentation(nodeAttribute.value() * 100));
+            break;
+          case CKRelativeDimension::Type::POINTS:
+            pointFunc(node, convertFloatToYogaRepresentation(nodeAttribute.value()));
+            break;
+          case CKRelativeDimension::Type::AUTO:
+            // Fall back to the component's size
+            const CGFloat value = nodeAttribute.resolve(YGUndefined, parentValue);
+            pointFunc(node, convertFloatToYogaRepresentation(value));
+            break;
+        }
+      } else {
+        // Fall back to the component's size
+        const CGFloat value = nodeAttribute.resolve(YGUndefined, parentValue);
+        pointFunc(node, convertFloatToYogaRepresentation(value));
+      }
+      break;
+  }
+}
+
+static void applySizeAttributes(YGNodeRef node,
+                                const CKFlexboxComponentChild &child,
+                                const CKComponentSize &nodeSize,
+                                CGFloat parentWidth,
+                                CGFloat parentHeight,
+                                BOOL useDeepYogaTrees)
 {
   const CKComponentSize childSize = child.sizeConstraints;
 
-  switch (childSize.width.type()) {
-    case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetWidthPercent(node, convertFloatToYogaRepresentation(childSize.width.value() * 100));
-      break;
-    case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetWidth(node, convertFloatToYogaRepresentation(childSize.width.value()));
-      break;
-    case CKRelativeDimension::Type::AUTO:
-      // Fall back to the component's width
-      const CGFloat width = nodeSize.width.resolve(YGUndefined, parentWidth);
-      YGNodeStyleSetWidth(node, convertFloatToYogaRepresentation(width));
-      break;
-  }
-
-  switch (childSize.height.type()) {
-    case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetHeightPercent(node, convertFloatToYogaRepresentation(childSize.height.value() * 100));
-      break;
-    case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetHeight(node, convertFloatToYogaRepresentation(childSize.height.value()));
-      break;
-    case CKRelativeDimension::Type::AUTO:
-      // Fall back to the component's height
-      const CGFloat height = nodeSize.height.resolve(YGUndefined, parentHeight);
-      YGNodeStyleSetHeight(node, convertFloatToYogaRepresentation(height));
-      break;
-  }
-
-  switch (childSize.minWidth.type()) {
-    case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetMinWidthPercent(node, convertFloatToYogaRepresentation(childSize.minWidth.value() * 100));
-      break;
-    case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetMinWidth(node, convertFloatToYogaRepresentation(childSize.minWidth.value()));
-      break;
-    case CKRelativeDimension::Type::AUTO:
-      // Fall back to the component's constraint
-      const CGFloat minWidth = nodeSize.minWidth.resolve(YGUndefined, parentWidth);
-      YGNodeStyleSetMinWidth(node, convertFloatToYogaRepresentation(minWidth));
-      break;
-  }
-
-  switch (childSize.maxWidth.type()) {
-    case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetMaxWidthPercent(node, convertFloatToYogaRepresentation(childSize.maxWidth.value() * 100));
-      break;
-    case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetMaxWidth(node, convertFloatToYogaRepresentation(childSize.maxWidth.value()));
-      break;
-    case CKRelativeDimension::Type::AUTO:
-      // Fall back to the component's constraint
-      const CGFloat maxWidth = nodeSize.maxWidth.resolve(YGUndefined, parentWidth);
-      YGNodeStyleSetMaxWidth(node, convertFloatToYogaRepresentation(maxWidth));
-      break;
-  }
-
-  switch (childSize.minHeight.type()) {
-    case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetMinHeightPercent(node, convertFloatToYogaRepresentation(childSize.minHeight.value() * 100));
-      break;
-    case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetMinHeight(node, convertFloatToYogaRepresentation(childSize.minHeight.value()));
-      break;
-    case CKRelativeDimension::Type::AUTO:
-      // Fall back to the component's constraint
-      const CGFloat minHeight = nodeSize.minHeight.resolve(YGUndefined, parentHeight);
-      YGNodeStyleSetMinHeight(node, convertFloatToYogaRepresentation(minHeight));
-      break;
-  }
-
-  switch (childSize.maxHeight.type()) {
-    case CKRelativeDimension::Type::PERCENT:
-      YGNodeStyleSetMaxHeightPercent(node, convertFloatToYogaRepresentation(childSize.maxHeight.value() * 100));
-      break;
-    case CKRelativeDimension::Type::POINTS:
-      YGNodeStyleSetMaxHeight(node, convertFloatToYogaRepresentation(childSize.maxHeight.value()));
-      break;
-    case CKRelativeDimension::Type::AUTO:
-      // Fall back to the component's constraint
-      const CGFloat maxHeight = nodeSize.maxHeight.resolve(YGUndefined, parentHeight);
-      YGNodeStyleSetMaxHeight(node, convertFloatToYogaRepresentation(maxHeight));
-      break;
-  }
+  applySizeAttribute(node, &YGNodeStyleSetWidthPercent, &YGNodeStyleSetWidth, childSize.width, nodeSize.width, parentWidth, useDeepYogaTrees);
+  applySizeAttribute(node, &YGNodeStyleSetHeightPercent, &YGNodeStyleSetHeight, childSize.height, nodeSize.height, parentHeight, useDeepYogaTrees);
+  applySizeAttribute(node, &YGNodeStyleSetMinWidthPercent, &YGNodeStyleSetMinWidth, childSize.minWidth, nodeSize.minWidth, parentWidth, useDeepYogaTrees);
+  applySizeAttribute(node, &YGNodeStyleSetMaxWidthPercent, &YGNodeStyleSetMaxWidth, childSize.maxWidth, nodeSize.maxWidth, parentWidth, useDeepYogaTrees);
+  applySizeAttribute(node, &YGNodeStyleSetMinHeightPercent, &YGNodeStyleSetMinHeight, childSize.minHeight, nodeSize.minHeight, parentHeight, useDeepYogaTrees);
+  applySizeAttribute(node, &YGNodeStyleSetMaxHeightPercent, &YGNodeStyleSetMaxHeight, childSize.maxHeight, nodeSize.maxHeight, parentHeight, useDeepYogaTrees);
 }
 
 static void applyPositionToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension value)

@@ -1768,6 +1768,12 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 
 - (void)testAlignedStretchCrossSizing
 {
+  // Althought this test looks odd with deep yoga trees on, this
+  // will actually never happen in real life, because the top yoga
+  // node is always restricted to the size of the container
+  // (UITableViewCell or UIScreen) so the width for the topmost node will
+  // always be exact. To see the real world test case, refer to the
+  // `testAlignedStretchCrossSizingWithFixedParentWidth`
   CKFlexboxComponent *c =
   [CKFlexboxComponent
    newWithView:kWhiteBackgroundView
@@ -1784,8 +1790,38 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    }];
   static CKSizeRange kVariableSize = {{100, 100}, {200, 200}};
 
-  // all children should be 200px wide
+  // all children should be 150px wide
   CKSnapshotVerifyComponent(c, kVariableSize, nil);
+}
+
+- (void)testAlignedStretchCrossSizingWithFixedParentWidth
+{
+  const auto c =
+  CK::FlexboxComponentBuilder()
+    .viewClass([UIView class])
+    .backgroundColor([UIColor grayColor])
+    .direction(CKFlexboxDirectionColumn)
+    .useDeepYogaTrees(_useDeepYogaTrees)
+    .minWidth(100)
+    .maxWidth(200)
+    .child(CK::ComponentBuilder()
+           .viewClass([UIView class])
+           .backgroundColor([UIColor redColor])
+           .width(CKRelativeDimension::Percent(1.0))
+           .height(50)
+           .build())
+    .child(CK::ComponentBuilder()
+           .viewClass([UIView class])
+           .backgroundColor([UIColor greenColor])
+           .width(150)
+           .height(150)
+           .build())
+      .marginTop(20)
+    .build();
+  
+  const CKSizeRange kSize = {{200, 0}, {200, INFINITY}};
+  
+  CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
 - (void)testAlignedStretchNoChildExceedsMin
