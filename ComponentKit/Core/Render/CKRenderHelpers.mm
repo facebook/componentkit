@@ -46,13 +46,16 @@ namespace CKRenderInternal {
       params.scopeRoot.rootNode.registerNode(reusedChild, node);
       // Update the previous component.
       prevChildComponent = reusedChild.component;
+      // Update the render node of the component reuse.
+      [node didReuseRenderNode:previousNode];
     } else {
       // Update the previous component.
       prevChildComponent = [(id<CKRenderWithChildComponentProtocol>)previousNode.component childComponent];
+      // Update the render node of the component reuse.
+      [node didReuseRenderNode:previousNode
+                     scopeRoot:params.scopeRoot
+             previousScopeRoot:params.previousScopeRoot];
     }
-
-    // Update the render node of the component reuse.
-    [node didReuseRenderNode:previousNode params:params];
 
     if (childComponent != nullptr) {
       // Link the previous child component to the the new component.
@@ -219,26 +222,27 @@ namespace CKRender {
         }
 
         // Update the `parentHasStateUpdate` param for Faster state/props updates.
-        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, component, previousParent, params)) {
+        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(component, previousParent, params)) {
           parentHasStateUpdate = YES;
         }
 
-        // If there is a node, we update the parents' pointers to the next level in the tree.
-        if (node) {
-          parent = (id<CKTreeNodeWithChildrenProtocol>)node;
-          previousParent = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
-
-          // Report information to `debugAnalyticsListener`.
-          if (params.shouldCollectTreeNodeCreationInformation) {
-            [params.scopeRoot.analyticsListener didBuildTreeNodeForPrecomputedChild:component
-                                                                               node:node
-                                                                             parent:parent
-                                                                             params:params
-                                                               parentHasStateUpdate:parentHasStateUpdate];
-          }
-        }
-
         if (childComponent) {
+
+          // If there is a node, we update the parents' pointers to the next level in the tree.
+          if (node) {
+            parent = (id<CKTreeNodeWithChildrenProtocol>)node;
+            previousParent = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
+
+            // Report information to `debugAnalyticsListener`.
+            if (params.shouldCollectTreeNodeCreationInformation) {
+              [params.scopeRoot.analyticsListener didBuildTreeNodeForPrecomputedChild:component
+                                                                                 node:node
+                                                                               parent:parent
+                                                                               params:params
+                                                                 parentHasStateUpdate:parentHasStateUpdate];
+            }
+          }
+
           [childComponent buildComponentTree:parent
                               previousParent:previousParent
                                       params:params
@@ -273,7 +277,7 @@ namespace CKRender {
         }
 
         // Update the `parentHasStateUpdate` param for Faster state/props updates.
-        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, component, previousParent, params)) {
+        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(component, previousParent, params)) {
           parentHasStateUpdate = YES;
         }
 
@@ -322,14 +326,8 @@ namespace CKRender {
         }
 
         // Update the `parentHasStateUpdate` param for Faster state/props updates.
-        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, component, previousParent, params)) {
+        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(component, previousParent, params)) {
           parentHasStateUpdate = YES;
-        }
-
-        // If there is a node, we update the parents' pointers to the next level in the tree.
-        if (node) {
-          parent = (id<CKTreeNodeWithChildrenProtocol>)node;
-          previousParent = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
         }
 
         auto const child = [component render:node.state];
@@ -338,6 +336,13 @@ namespace CKRender {
             // Set the link between the parent to its child.
             *childComponent = child;
           }
+
+          // If there is a node, we update the parents' pointers to the next level in the tree.
+          if (node) {
+            parent = (id<CKTreeNodeWithChildrenProtocol>)node;
+            previousParent = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
+          }
+
           // Call build component tree on the child component.
           [child buildComponentTree:parent
                      previousParent:previousParent
@@ -371,19 +376,19 @@ namespace CKRender {
         }
 
         // Update the `parentHasStateUpdate` param for Faster state/props updates.
-        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, component, previousParent, params)) {
+        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(component, previousParent, params)) {
           parentHasStateUpdate = YES;
+        }
+
+        auto const children = [component renderChildren:node.state];
+        if (childrenComponents != nullptr) {
+          *childrenComponents = children;
         }
 
         // If there is a node, we update the parents' pointers to the next level in the tree.
         if (node) {
           parent = (id<CKTreeNodeWithChildrenProtocol>)node;
           previousParent = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
-        }
-
-        auto const children = [component renderChildren:node.state];
-        if (childrenComponents != nullptr) {
-          *childrenComponents = children;
         }
 
         for (auto const child : children) {
@@ -424,7 +429,7 @@ namespace CKRender {
         }
 
         // Update the `parentHasStateUpdate` param for Faster state/props updates.
-        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(node, component, previousParent, params)) {
+        if (!parentHasStateUpdate && CKRender::nodeHasStateUpdate(node, previousParent, params)) {
           parentHasStateUpdate = YES;
         }
 
@@ -523,12 +528,24 @@ namespace CKRender {
     }
   }
 
-  auto componentHasStateUpdate(id<CKTreeNodeProtocol> node,
-                               id<CKTreeNodeComponentProtocol> component,
-                               id<CKTreeNodeWithChildrenProtocol> previousParent,
+  auto componentHasStateUpdate(__unsafe_unretained id<CKTreeNodeComponentProtocol> component,
+                               __unsafe_unretained id<CKTreeNodeWithChildrenProtocol> previousParent,
                                const CKBuildComponentTreeParams &params) -> BOOL {
     if (previousParent && params.buildTrigger == CKBuildTrigger::StateUpdate) {
-      auto const scopeHandle = node ? node.scopeHandle : component.scopeHandle;
+      auto const scopeHandle = component.scopeHandle;
+      if (scopeHandle != nil) {
+        auto const stateUpdateBlock = params.stateUpdates.find(scopeHandle);
+        return stateUpdateBlock != params.stateUpdates.end();
+      }
+    }
+    return NO;
+  }
+
+  auto nodeHasStateUpdate(__unsafe_unretained id<CKTreeNodeProtocol> node,
+                          __unsafe_unretained id<CKTreeNodeWithChildrenProtocol> previousParent,
+                          const CKBuildComponentTreeParams &params) -> BOOL {
+    if (previousParent && params.buildTrigger == CKBuildTrigger::StateUpdate) {
+      auto const scopeHandle = node.scopeHandle;
       if (scopeHandle != nil) {
         auto const stateUpdateBlock = params.stateUpdates.find(scopeHandle);
         return stateUpdateBlock != params.stateUpdates.end();

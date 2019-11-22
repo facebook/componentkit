@@ -18,6 +18,16 @@
  It represents a node for CKRenderComponent component in the component tree.
  */
 @interface CKRenderTreeNode : CKScopeTreeNodeWithChild
+
+/** Will be called after buildComponentTree: */
 + (void)didBuildComponentTree:(id<CKTreeNodeProtocol>)node;
-- (void)didReuseRenderNode:(CKRenderTreeNode *)node params:(const CKBuildComponentTreeParams &)params;
+
+/** Will be called after component reuse */
+- (void)didReuseRenderNode:(CKRenderTreeNode *)node;
+
+/** Will be called after component reuse when `renderOnlyTreeNodes` is on */
+- (void)didReuseRenderNode:(CKRenderTreeNode *)node
+                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
+         previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
+
 @end

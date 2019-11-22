@@ -44,17 +44,23 @@
   threadLocalScope->stack.pop();
 }
 
-- (void)didReuseRenderNode:(CKRenderTreeNode *)node params:(const CKBuildComponentTreeParams &)params
+- (void)didReuseRenderNode:(CKRenderTreeNode *)node
 {
   // Transfer the children vector from the reused node.
-  _children = node->_children;
+   _children = node->_children;
+}
 
-  if (params.unifyComponentTreeConfig.renderOnlyTreeNodes) {
-    for (auto const &child : _children) {
-      auto childStateKey = std::get<0>(child);
-      if (std::get<1>(childStateKey.nodeKey) % 2 == kTreeNodeParentBaseKey) {
-        [std::get<1>(child) didReuseInScopeRoot:params.scopeRoot fromPreviousScopeRoot:params.previousScopeRoot];
-      }
+- (void)didReuseRenderNode:(CKRenderTreeNode *)node
+                 scopeRoot:(CKComponentScopeRoot *)scopeRoot
+         previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+{
+  // Transfer the children vector from the reused node.
+   _children = node->_children;
+
+  for (auto const &child : _children) {
+    auto childStateKey = std::get<0>(child);
+    if (std::get<1>(childStateKey.nodeKey) % 2 == kTreeNodeParentBaseKey) {
+      [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
     }
   }
 }
