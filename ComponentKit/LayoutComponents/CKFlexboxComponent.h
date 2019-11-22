@@ -162,8 +162,6 @@ private:
 struct CKFlexboxBorder {
   CKFlexboxBorderDimension top;
   CKFlexboxBorderDimension bottom;
-  CKFlexboxBorderDimension left;
-  CKFlexboxBorderDimension right;
   CKFlexboxBorderDimension start;
   CKFlexboxBorderDimension end;
 };

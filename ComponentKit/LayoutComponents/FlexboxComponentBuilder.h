@@ -257,28 +257,6 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /**
-  Left border applied to the container. Left in left-to-right languages, right in right-to-left languages.s This only
-  reserves space for the border - you are responsible for drawing the border. Border behaves nearly identically to
-  padding and is only separate from padding to make it easier to implement border effects such as color.
-  */
-  auto &borderLeft(CGFloat b)
-  {
-    _style.border.left = b;
-    return *this;
-  }
-
-  /**
-  Right border applied to the container. Left in left-to-right languages, right in right-to-left languages.s This only
-  reserves space for the border - you are responsible for drawing the border. Border behaves nearly identically to
-  padding and is only separate from padding to make it easier to implement border effects such as color.
-  */
-  auto &borderRight(CGFloat b)
-  {
-    _style.border.right = b;
-    return *this;
-  }
-
-  /**
    Start border applied to the container. Left in left-to-right languages, right in right-to-left languages.s This only
    reserves space for the border - you are responsible for drawing the border. Border behaves nearly identically to
    padding and is only separate from padding to make it easier to implement border effects such as color.
