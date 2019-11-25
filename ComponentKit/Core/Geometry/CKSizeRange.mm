@@ -29,12 +29,12 @@
 #define CKCAssertWidth(min, max) \
   CKCAssertWithCategory(min.width <= max.width, \
     CK::Component::LayoutContext::currentRootComponentClassName(), \
-    @"Range min width (%f) must not be larger than max width (%f).", min.width, max.width)
+    @"Range min width (%f) must not be larger than max width (%f).\n%@", min.width, max.width, CK::Component::LayoutContext::currentStackDescription())
 
 #define CKCAssertHeight(min, max) \
   CKCAssertWithCategory(min.height <= max.height, \
     CK::Component::LayoutContext::currentRootComponentClassName(), \
-    @"Range min height (%f) must not be larger than max height (%f).", min.height, max.height)
+    @"Range min height (%f) must not be larger than max height (%f).\n%@", min.height, max.height, CK::Component::LayoutContext::currentStackDescription())
 
 #else
 
