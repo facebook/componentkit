@@ -967,6 +967,8 @@
 		D6A0CF9722844811000CC4D0 /* CKAnimationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6A0CF9522844811000CC4D0 /* CKAnimationTests.mm */; };
 		D6A2652120AC333F00B7B499 /* CKIndexSetDescription.mm in Sources */ = {isa = PBXBuildFile; fileRef = D63F9F8220AAF487003F3887 /* CKIndexSetDescription.mm */; };
 		D6A2652F20AC5B2100B7B499 /* NSIndexSetExtensions.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6B0AE0020AAFB1000A31FDF /* NSIndexSetExtensions.mm */; };
+		D6A39C83238726C700F2E177 /* CKDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = D6A39C82238726C700F2E177 /* CKDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D6A39C84238726C700F2E177 /* CKDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = D6A39C82238726C700F2E177 /* CKDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6B0ADF420AAF88C00A31FDF /* CKIndexSetDescriptionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6B0ADF320AAF88C00A31FDF /* CKIndexSetDescriptionTests.mm */; };
 		D6B0AE0120AAFB1000A31FDF /* NSIndexSetExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = D6B0ADFF20AAFB1000A31FDF /* NSIndexSetExtensions.h */; };
 		D6B0AE0220AAFB1000A31FDF /* NSIndexSetExtensions.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6B0AE0020AAFB1000A31FDF /* NSIndexSetExtensions.mm */; };
@@ -1681,6 +1683,7 @@
 		D6A0CF8522844556000CC4D0 /* CKAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAnimation.h; sourceTree = "<group>"; };
 		D6A0CF8622844556000CC4D0 /* CKAnimation.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnimation.mm; sourceTree = "<group>"; };
 		D6A0CF9522844811000CC4D0 /* CKAnimationTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnimationTests.mm; sourceTree = "<group>"; };
+		D6A39C82238726C700F2E177 /* CKDictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKDictionary.h; sourceTree = "<group>"; };
 		D6B0ADF320AAF88C00A31FDF /* CKIndexSetDescriptionTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKIndexSetDescriptionTests.mm; sourceTree = "<group>"; };
 		D6B0ADFF20AAFB1000A31FDF /* NSIndexSetExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSIndexSetExtensions.h; sourceTree = "<group>"; };
 		D6B0AE0020AAFB1000A31FDF /* NSIndexSetExtensions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = NSIndexSetExtensions.mm; sourceTree = "<group>"; };
@@ -2280,6 +2283,7 @@
 				9092AE911DFA46D3009878B2 /* CKAvailability.h */,
 				D6CB418520AF0783000075F9 /* CKCasting.h */,
 				D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */,
+				D6A39C82238726C700F2E177 /* CKDictionary.h */,
 				D68927EC225B5B29009DBBD9 /* CKLinkable.h */,
 				D60C2D9B22B9743D001F502B /* CKNonNull.h */,
 				D69F137522E6FE3F00984709 /* CKDelayedNonNull.h */,
@@ -2831,6 +2835,7 @@
 				23EA314521A2E57400FEC59C /* CKTreeNodeTypes.h in Headers */,
 				03B8B5131D2A346F00EDFF59 /* CKComponentAnimation.h in Headers */,
 				72647CA32368CEB90072F330 /* CKBaseRenderContext.h in Headers */,
+				D6A39C84238726C700F2E177 /* CKDictionary.h in Headers */,
 				7287ACC6236CA248007B0611 /* ComponentViewReuseUtilities.h in Headers */,
 				72E9B98422329686004E3B90 /* CKCollectionViewDataSourceInternal.h in Headers */,
 				60D7B3B820FC90500011AB3B /* YGNodePrint.h in Headers */,
@@ -3232,6 +3237,7 @@
 				D0B47D6F1CBD948E00BB33CE /* CKTextKitTailTruncater.h in Headers */,
 				7260FC772371FB7C00FF22A8 /* CKGeometryHelpers.h in Headers */,
 				D0B47D761CBD948E00BB33CE /* CKAsyncTransactionContainer.h in Headers */,
+				D6A39C83238726C700F2E177 /* CKDictionary.h in Headers */,
 				D0B47CE91CBD948E00BB33CE /* CKMacros.h in Headers */,
 				D0B47D691CBD948E00BB33CE /* CKTextKitEntityAttribute.h in Headers */,
 				D0B47D731CBD948E00BB33CE /* CKAsyncLayerSubclass.h in Headers */,
