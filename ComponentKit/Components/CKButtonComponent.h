@@ -31,7 +31,7 @@ public:
   /// Get the states map.
   const Map &getMap() const { return map; }
 private:
-  const Map map;
+  Map map;
 };
 
 struct CKButtonComponentOptions {
