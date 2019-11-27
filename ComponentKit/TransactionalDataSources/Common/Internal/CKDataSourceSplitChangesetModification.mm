@@ -32,6 +32,7 @@
 #import "CKDataSourceModificationHelper.h"
 #import "CKIndexSetDescription.h"
 #import "CKInvalidChangesetOperationType.h"
+#import "CKFatal.h"
 
 using namespace CKComponentControllerHelper;
 

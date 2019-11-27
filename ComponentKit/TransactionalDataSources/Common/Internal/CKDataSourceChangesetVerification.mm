@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "CKAssert.h"
+#import "CKFatal.h"
 #import "CKDataSourceChangesetVerification.h"
 
 #import <ComponentKit/CKDataSourceChangesetInternal.h>

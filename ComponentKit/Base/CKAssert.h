@@ -40,23 +40,6 @@
 #define CKFailAssertWithCategory(category, description, ...) CKAssertWithCategory(NO, category, (description), ##__VA_ARGS__)
 #define CKCFailAssertWithCategory(category, description, ...) CKCAssertWithCategory(NO, category, (description), ##__VA_ARGS__)
 
-#define CKFatal(description, ...) CKAssert(NO, (description), ##__VA_ARGS__)
-#define CKCFatal(description, ...) CKCAssert(NO, (description), ##__VA_ARGS__)
-
-#define CKFatalWithCategory(category, description, ...) \
-do { \
-  NSMutableString *__ckError_loggingString = [NSMutableString stringWithFormat:@"[%@] Fatal: ",(category)]; \
-  [__ckError_loggingString appendFormat:(description), ##__VA_ARGS__]; \
-  CKFatal(@"%@", __ckError_loggingString);\
-} while(0)
-
-#define CKCFatalWithCategory(category, description, ...) \
-do { \
-  NSMutableString *__ckError_loggingString = [NSMutableString stringWithFormat:@"[%@] Fatal: ",(category)]; \
-  [__ckError_loggingString appendFormat:(description), ##__VA_ARGS__]; \
-  CKCFatal(@"%@", __ckError_loggingString);\
-} while(0)
-
 #define CKAssertWithCategory(condition, category, description, ...) \
 do { \
   if (!(condition)) { \

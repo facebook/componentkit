@@ -11,6 +11,7 @@
 #import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 
 #import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKFatal.h>
 
 @implementation CKLifecycleTestComponent
 

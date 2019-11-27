@@ -14,7 +14,7 @@
 #import <vector>
 #import <objc/runtime.h>
 
-#import "CKAssert.h"
+#import "CKFatal.h"
 #import "CKComponent+UIView.h"
 #import "CKInternalHelpers.h"
 

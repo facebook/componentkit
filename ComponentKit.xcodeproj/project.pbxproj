@@ -521,6 +521,8 @@
 		7268B5512241A7E400F68A37 /* CKComponentHostingContainerViewProvider.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7268B54D2241A7E400F68A37 /* CKComponentHostingContainerViewProvider.mm */; };
 		7279B64420E2801D00A50F6E /* CKDataSourceQOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 7279B64320E2801D00A50F6E /* CKDataSourceQOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7279B64520E2801D00A50F6E /* CKDataSourceQOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 7279B64320E2801D00A50F6E /* CKDataSourceQOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		727CC948238DD04D008F36D4 /* CKFatal.h in Headers */ = {isa = PBXBuildFile; fileRef = 727CC947238DD04D008F36D4 /* CKFatal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		727CC949238DD04D008F36D4 /* CKFatal.h in Headers */ = {isa = PBXBuildFile; fileRef = 727CC947238DD04D008F36D4 /* CKFatal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7287ACB7236CA248007B0611 /* CKComponentViewAttribute.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7287ACAE236CA247007B0611 /* CKComponentViewAttribute.mm */; };
 		7287ACB8236CA248007B0611 /* CKComponentViewAttribute.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7287ACAE236CA247007B0611 /* CKComponentViewAttribute.mm */; };
 		7287ACB9236CA248007B0611 /* ComponentViewManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7287ACAF236CA247007B0611 /* ComponentViewManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -1331,6 +1333,7 @@
 		7268B5422241A7E400F68A37 /* CKComponentHostingContainerViewProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentHostingContainerViewProvider.h; sourceTree = "<group>"; };
 		7268B54D2241A7E400F68A37 /* CKComponentHostingContainerViewProvider.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentHostingContainerViewProvider.mm; sourceTree = "<group>"; };
 		7279B64320E2801D00A50F6E /* CKDataSourceQOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDataSourceQOS.h; sourceTree = "<group>"; };
+		727CC947238DD04D008F36D4 /* CKFatal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKFatal.h; sourceTree = "<group>"; };
 		7287ACAE236CA247007B0611 /* CKComponentViewAttribute.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewAttribute.mm; sourceTree = "<group>"; };
 		7287ACAF236CA247007B0611 /* ComponentViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentViewManager.h; sourceTree = "<group>"; };
 		7287ACB0236CA248007B0611 /* ComponentViewReuseUtilities.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ComponentViewReuseUtilities.mm; sourceTree = "<group>"; };
@@ -2301,6 +2304,7 @@
 				D666EF90232AD35000291474 /* CKPropBitmap.h */,
 				72647D002368D5D60072F330 /* CKRequired.h */,
 				D608DF8D232D7A3800CD90D9 /* CKVariant.h */,
+				727CC947238DD04D008F36D4 /* CKFatal.h */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -2825,6 +2829,7 @@
 				2D7A98171DB56BD10064FC6D /* CKDataSourceChangesetVerification.h in Headers */,
 				721AAE55214F19B700B9EE8A /* CKComponentRootLayoutProvider.h in Headers */,
 				03B8B4F71D2A346F00EDFF59 /* CKDataSourceStateModifying.h in Headers */,
+				727CC949238DD04D008F36D4 /* CKFatal.h in Headers */,
 				03B8B4FA1D2A346F00EDFF59 /* CKTextKitRenderer+TextChecking.h in Headers */,
 				03B8B4FB1D2A346F00EDFF59 /* CKDataSourceState.h in Headers */,
 				03B8B4FC1D2A346F00EDFF59 /* CKDataSourceListener.h in Headers */,
@@ -3220,6 +3225,7 @@
 				72EFBE3D2372EF7B00A205AB /* CKLayout.h in Headers */,
 				D0B47CE71CBD948E00BB33CE /* CKArgumentPrecondition.h in Headers */,
 				D48D9D3B23424C75003DDC41 /* CKAnimationComponent+Internal.h in Headers */,
+				727CC948238DD04D008F36D4 /* CKFatal.h in Headers */,
 				72D30B7B236B41DE0023DB1F /* CKComponentViewConfiguration.h in Headers */,
 				D0B47D771CBD948E00BB33CE /* CKAsyncTransactionGroup.h in Headers */,
 				72647D1C2368D6830072F330 /* CKMountAnimationGuard.h in Headers */,

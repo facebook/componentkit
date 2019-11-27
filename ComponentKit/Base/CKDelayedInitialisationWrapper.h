@@ -14,7 +14,7 @@
 #include <type_traits>
 #include <utility>
 
-#import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKFatal.h>
 #import <ComponentKit/CKOptional.h>
 
 namespace CK {
