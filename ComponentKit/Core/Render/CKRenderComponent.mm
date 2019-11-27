@@ -10,11 +10,12 @@
 
 #import "CKRenderComponent.h"
 
+#import <ComponentKit/CKInternalHelpers.h>
+
 #import "CKBuildComponent.h"
 #import "CKComponentInternal.h"
 #import "CKRenderComponentInternal.h"
 #import "CKComponentSubclass.h"
-#import "CKInternalHelpers.h"
 #import "CKRenderHelpers.h"
 #import "CKTreeNode.h"
 #import "CKGlobalConfig.h"

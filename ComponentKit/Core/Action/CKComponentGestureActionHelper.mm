@@ -10,9 +10,11 @@
 
 #import "CKComponentGestureActionHelper.h"
 #import "CKComponentGestureActionsInternal.h"
+
 #import <ComponentKit/CKAction.h>
+#import <ComponentKit/CKMutex.h>
+
 #import "CKComponent+UIView.h"
-#import "CKMutex.h"
 
 /** Pass in a property block if you need to initialize the gesture recognizer **/
 CKGestureRecognizerReusePool::CKGestureRecognizerReusePool(Class gestureRecognizerClass, CKComponentGestureRecognizerSetupFunction setupFunction)

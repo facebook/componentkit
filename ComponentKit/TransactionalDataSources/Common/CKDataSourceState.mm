@@ -10,8 +10,9 @@
 
 #import "CKDataSourceStateInternal.h"
 
-#import "CKEqualityHelpers.h"
-#import "CKMacros.h"
+#import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/CKMacros.h>
+
 #import "CKDataSourceConfiguration.h"
 #import "CKDataSourceItem.h"
 

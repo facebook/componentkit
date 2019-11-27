@@ -14,9 +14,9 @@
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentPerfScope.h>
+#import <ComponentKit/CKInternalHelpers.h>
 
 #import "CKComponentSubclass.h"
-#import "CKInternalHelpers.h"
 #import "ComponentLayoutContext.h"
 
 @interface CKInsetComponent ()

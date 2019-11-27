@@ -10,8 +10,9 @@
 
 #import "CKCollectionViewDataSourceCell.h"
 
+#import <ComponentKit/CKDelayedNonNull.h>
+
 #import "CKComponentRootView.h"
-#import "CKDelayedNonNull.h"
 
 @implementation CKCollectionViewDataSourceCell {
   CK::DelayedNonNull<CKComponentRootView *> _rootView;

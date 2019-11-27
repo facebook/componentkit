@@ -13,10 +13,9 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/CKMutex.h>
 
 #include <tuple>
-
-#import "CKMutex.h"
 
 typedef std::tuple<Class, id<NSObject>> CKTreeNodeClassType;
 

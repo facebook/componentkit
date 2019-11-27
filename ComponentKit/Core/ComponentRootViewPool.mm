@@ -10,9 +10,10 @@
 
 #import "ComponentRootViewPool.h"
 
-#import "CKAssert.h"
+#import <ComponentKit/CKAssert.h>
+#import <ComponentKit/ComponentViewManager.h>
+
 #import "CKComponentRootViewInternal.h"
-#import "ComponentViewManager.h"
 
 using namespace CK::Component;
 

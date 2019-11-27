@@ -12,10 +12,10 @@
 
 #import <queue>
 
-#import "CKAssert.h"
-#import "CKComponentDescriptionHelper.h"
-#import "CKComponentInternal.h"
-#import "CKMountable.h"
+#import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKMountable.h>
+#import <ComponentKit/CKComponentDescriptionHelper.h>
+#import <ComponentKit/CKComponentInternal.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"

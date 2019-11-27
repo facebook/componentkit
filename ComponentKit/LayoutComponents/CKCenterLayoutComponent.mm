@@ -11,8 +11,8 @@
 #import "CKCenterLayoutComponent.h"
 
 #import <ComponentKit/CKComponentPerfScope.h>
+#import <ComponentKit/CKInternalHelpers.h>
 
-#import "CKInternalHelpers.h"
 #import "CKComponentSubclass.h"
 #import "ComponentUtilities.h"
 

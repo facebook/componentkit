@@ -10,7 +10,7 @@
 
 #include "CKComponentTreeDiff.h"
 
-#import "CKCollection.h"
+#import <ComponentKit/CKCollection.h>
 
 namespace CK {
   auto ComponentTreeDiff::description() const -> NSString *

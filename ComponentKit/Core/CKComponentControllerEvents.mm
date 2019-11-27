@@ -10,7 +10,8 @@
 
 #import "CKComponentControllerEvents.h"
 
-#import "CKInternalHelpers.h"
+#import <ComponentKit/CKInternalHelpers.h>
+
 #import "CKComponentController.h"
 #import "CKComponentControllerProtocol.h"
 

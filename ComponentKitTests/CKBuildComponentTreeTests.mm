@@ -13,10 +13,10 @@
 #import <ComponentKit/CKFlexboxComponent.h>
 
 #import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
+#import <ComponentKit/CKMountable.h>
 
 #import "CKRenderHelpers.h"
 #import "CKComponent.h"
-#import "CKMountable.h"
 #import "CKCompositeComponent.h"
 #import "CKRenderComponent.h"
 #import "CKRenderLayoutWithChildrenComponent.h"

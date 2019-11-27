@@ -16,8 +16,8 @@
 
 #import "CKFatal.h"
 #import "CKComponent+UIView.h"
-#import "CKInternalHelpers.h"
 
+#import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKComponentInternal.h>
 
 CKComponentViewAttributeValue CKComponentTapGestureAttribute(CKAction<UIGestureRecognizer *> action)

@@ -13,6 +13,7 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKOptional.h>
 
 #import <algorithm>
 #import <vector>
@@ -35,7 +36,6 @@
 #import "CKComponentEvents.h"
 #import "CKGlobalConfig.h"
 #import "CKComponentHostingContainerViewProvider.h"
-#import "CKOptional.h"
 
 static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return nil; }
 

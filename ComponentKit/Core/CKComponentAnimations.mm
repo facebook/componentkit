@@ -10,13 +10,14 @@
 
 #import "CKComponentAnimations.h"
 
-#import "CKCasting.h"
-#import "CKCollection.h"
+#import <ComponentKit/CKCasting.h>
+#import <ComponentKit/CKCollection.h>
+#import <ComponentKit/CKInternalHelpers.h>
+
 #import "CKComponentEvents.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
-#import "CKInternalHelpers.h"
 
 namespace CK {
   static auto getScopeHandle(id<CKMountable> const c) {

@@ -10,9 +10,10 @@
 
 #import "CKDataSourceAppliedChanges.h"
 
+#import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/CKMacros.h>
+
 #import "ComponentUtilities.h"
-#import "CKEqualityHelpers.h"
-#import "CKMacros.h"
 
 @implementation CKDataSourceAppliedChanges
 

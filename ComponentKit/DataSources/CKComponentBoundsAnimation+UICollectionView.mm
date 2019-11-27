@@ -9,7 +9,8 @@
  */
 
 #import "CKComponentBoundsAnimation+UICollectionView.h"
-#import "CKAvailability.h"
+
+#import <ComponentKit/CKAvailability.h>
 
 #import <vector>
 

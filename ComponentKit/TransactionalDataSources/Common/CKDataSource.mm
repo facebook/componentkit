@@ -11,6 +11,9 @@
 #import "CKDataSource.h"
 #import "CKDataSourceInternal.h"
 
+
+#import <ComponentKit/CKMutex.h>
+
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"
 #import "CKComponentControllerInternal.h"
@@ -34,7 +37,6 @@
 #import "CKDataSourceUpdateConfigurationModification.h"
 #import "CKDataSourceUpdateStateModification.h"
 #import "CKSystraceScope.h"
-#import "CKMutex.h"
 
 @interface CKDataSourceModificationPair : NSObject
 

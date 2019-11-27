@@ -13,10 +13,11 @@
 #import <UIKit/UICollectionView.h>
 #import <UIKit/UITableView.h>
 
-#import "CKEqualityHelpers.h"
+#import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKAssert.h>
+
 #import "CKIndexSetDescription.h"
-#import "CKMacros.h"
-#import "CKAssert.h"
 
 @implementation CKDataSourceChangeset
 

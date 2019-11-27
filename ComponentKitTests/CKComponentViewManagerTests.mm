@@ -10,9 +10,8 @@
 
 #import <XCTest/XCTest.h>
 
-#import "ComponentViewManager.h"
-#import "ComponentViewReuseUtilities.h"
-
+#import <ComponentKit/ComponentViewManager.h>
+#import <ComponentKit/ComponentViewReuseUtilities.h>
 #import <ComponentKit/CKCasting.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentInternal.h>

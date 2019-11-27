@@ -13,8 +13,8 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKComponentDescriptionHelper.h>
 #import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKInternalHelpers.h>
 
-#import "CKInternalHelpers.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 #import "CKRenderHelpers.h"

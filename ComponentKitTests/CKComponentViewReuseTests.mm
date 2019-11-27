@@ -16,9 +16,8 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKCompositeComponent.h>
-
-#import "ComponentViewManager.h"
-#import "ComponentViewReuseUtilities.h"
+#import <ComponentKit/ComponentViewManager.h>
+#import <ComponentKit/ComponentViewReuseUtilities.h>
 
 @interface CKComponentViewReuseTests : XCTestCase <CKComponentProvider>
 @end

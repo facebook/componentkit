@@ -12,11 +12,12 @@
 
 #include <mutex>
 
+#import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKMutex.h>
+
 #import "CKComponentScopeRoot.h"
 #import "CKComponentSubclass.h"
 #import "CKComponentInternal.h"
-#import "CKInternalHelpers.h"
-#import "CKMutex.h"
 #import "CKComponentProtocol.h"
 #import "CKComponentControllerProtocol.h"
 #import "CKThreadLocalComponentScope.h"

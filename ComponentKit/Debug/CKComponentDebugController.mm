@@ -14,6 +14,8 @@
 
 #import <mutex>
 
+#import <ComponentKit/CKMutex.h>
+
 #import "CKComponent+UIView.h"
 #import "CKComponent.h"
 #import "CKComponentAnimation.h"
@@ -21,7 +23,6 @@
 #import "CKComponentHostingViewInternal.h"
 #import "CKComponentInternal.h"
 #import "CKComponentRootView.h"
-#import "CKMutex.h"
 
 #import <objc/runtime.h>
 

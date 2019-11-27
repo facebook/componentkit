@@ -15,8 +15,7 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentPerfScope.h>
-
-#import "CKInternalHelpers.h"
+#import <ComponentKit/CKInternalHelpers.h>
 
 @implementation CKRatioLayoutComponent
 {

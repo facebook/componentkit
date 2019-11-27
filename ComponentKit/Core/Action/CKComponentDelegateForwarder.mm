@@ -13,7 +13,8 @@
 #import <vector>
 #import <objc/runtime.h>
 
-#import "CKAssert.h"
+#import <ComponentKit/CKAssert.h>
+
 #import "CKComponent+UIView.h"
 #import "CKComponentSubclass.h"
 

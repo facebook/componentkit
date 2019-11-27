@@ -12,6 +12,8 @@
 
 #import <ComponentKit/CKComponentPerfScope.h>
 #import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKFunctionalHelpers.h>
 
 #import "yoga/Yoga.h"
 
@@ -21,8 +23,6 @@
 #import "CKComponentLayoutBaseline.h"
 #import "CKComponentSubclass.h"
 #import "CKCompositeComponent.h"
-#import "CKInternalHelpers.h"
-#import "CKFunctionalHelpers.h"
 
 const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
   .hadOverflow = @"hadOverflow"

@@ -16,10 +16,10 @@
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
 #import <ComponentKit/CKRootTreeNode.h>
+#import <ComponentKit/CKMutex.h>
 
 #include <tuple>
 
-#import "CKMutex.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKRenderHelpers.h"
 

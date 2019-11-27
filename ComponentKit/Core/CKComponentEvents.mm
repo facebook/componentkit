@@ -10,11 +10,11 @@
 
 #import "CKComponentEvents.h"
 
+#import <ComponentKit/CKInternalHelpers.h>
 
 #import "CKComponentInternal.h"
 #import "CKComponentControllerInternal.h"
 #import "CKComponentSubclass.h"
-#import "CKInternalHelpers.h"
 #import "CKComponentProtocol.h"
 #import "CKDataSourceItem.h"
 #import "CKDataSourceState.h"

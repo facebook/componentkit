@@ -12,7 +12,7 @@
 
 #import <objc/runtime.h>
 
-#import "CKComponentDescriptionHelper.h"
+#import <ComponentKit/CKComponentDescriptionHelper.h>
 
 void CKSetViewPositionAndBounds(UIView *v,
                                 const CK::Component::MountContext &context,

@@ -13,8 +13,8 @@
 #import <array>
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKInternalHelpers.h>
 
-#import "CKInternalHelpers.h"
 #import "CKComponentSubclass.h"
 
 struct CKStateConfiguration {

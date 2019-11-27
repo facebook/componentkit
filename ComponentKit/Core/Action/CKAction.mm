@@ -14,12 +14,13 @@
 #import <vector>
 #import <array>
 
-#import "CKAssert.h"
+#import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKMutex.h>
+
 #import "CKComponent+UIView.h"
 #import "CKComponent.h"
 #import "CKComponentInternal.h"
-#import "CKInternalHelpers.h"
-#import "CKMutex.h"
 
 void CKActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKActionTypelist<> &list) noexcept { }
 void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) noexcept { }
