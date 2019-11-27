@@ -11,6 +11,8 @@
 #import "CKComponentController.h"
 #import "CKComponentControllerInternal.h"
 
+#import <mutex>
+
 #import <ComponentKit/CKAssert.h>
 
 #import "CKComponentInternal.h"
@@ -48,6 +50,8 @@ static NSString *componentStateName(CKComponentControllerState state)
   CKComponentControllerState _state;
   BOOL _updatingComponent;
   __weak CKComponent *_component;
+  // Protects `_component` and `_latestComponent` when `threadSafe_component` is called.
+  std::mutex _componentMutex;
 #if CK_ASSERTIONS_ENABLED
   __weak NSThread *_initializationThread;
 #endif
@@ -69,8 +73,14 @@ static NSString *componentStateName(CKComponentControllerState state)
   CKAssertMainThread();
   if (latestComponent != _latestComponent) {
     [self willUpdateComponent];
-    _latestComponent = latestComponent;
-    _updatingComponent = YES;
+    if ([self.class shouldAcquireLockWhenUpdatingComponent]) {
+      std::lock_guard<std::mutex> lock(_componentMutex);
+      _latestComponent = latestComponent;
+      _updatingComponent = YES;
+    } else {
+      _latestComponent = latestComponent;
+      _updatingComponent = YES;
+    }
   }
 }
 
@@ -89,6 +99,23 @@ static NSString *componentStateName(CKComponentControllerState state)
 - (CKComponent *)lastMountedComponent
 {
   return _component;
+}
+
+- (CKComponent *)threadSafe_component
+{
+  if ([NSThread isMainThread]) {
+    return _component ?: _latestComponent;
+  } else {
+    CKAssert([self.class shouldAcquireLockWhenUpdatingComponent],
+             @"threadSafe_component should only be called when updating component is thread safe as well");
+    std::lock_guard<std::mutex> lock(_componentMutex);
+    return _component ?: _latestComponent;
+  }
+}
+
++ (BOOL)shouldAcquireLockWhenUpdatingComponent
+{
+  return CKReadGlobalConfig().shouldAcquireLockWhenUpdatingComponentInController;
 }
 
 - (void)didInit {}
@@ -116,11 +143,22 @@ static NSString *componentStateName(CKComponentControllerState state)
   if (!_updatingComponent) {
     if (component != _component) {
       [self willUpdateComponent];
-      _component = component;
-      _updatingComponent = YES;
+      if ([self.class shouldAcquireLockWhenUpdatingComponent]) {
+        std::lock_guard<std::mutex> lock(_componentMutex);
+        _component = component;
+        _updatingComponent = YES;
+      } else {
+        _component = component;
+        _updatingComponent = YES;
+      }
     }
   } else {
-    _component = component;
+    if ([self.class shouldAcquireLockWhenUpdatingComponent]) {
+      std::lock_guard<std::mutex> lock(_componentMutex);
+      _component = component;
+    } else {
+      _component = component;
+    }
   }
 }
 

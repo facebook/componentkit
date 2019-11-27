@@ -21,6 +21,17 @@
  */
 @property (nonatomic, weak) CKComponent *latestComponent;
 
+/**
+ Provides a thread safe access to underlying component.
+ This should only be used by ComponentKit infra in a very rare case.
+ */
+- (CKComponent *)threadSafe_component;
+
+/**
+ This gives us the ability to avoid acquiring lock when `threadSafe_component` is not needed.
+ */
++ (BOOL)shouldAcquireLockWhenUpdatingComponent;
+
 - (void)componentWillMount:(CKComponent *)component;
 - (void)componentDidMount:(CKComponent *)component;
 - (void)componentWillUnmount:(CKComponent *)component;
