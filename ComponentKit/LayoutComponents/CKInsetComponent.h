@@ -48,3 +48,5 @@
                   component:(CKComponent *)component;
 
 @end
+
+#import <ComponentKit/InsetComponentBuilder.h>
