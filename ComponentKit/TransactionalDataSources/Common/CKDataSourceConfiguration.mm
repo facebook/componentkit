@@ -12,9 +12,8 @@
 #import "CKDataSourceConfigurationInternal.h"
 
 #import <ComponentKit/CKEqualityHelpers.h>
+#import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKMacros.h>
-
-#import "CKGlobalConfig.h"
 
 static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return nil; }
 

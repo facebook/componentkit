@@ -10,8 +10,9 @@
 
 #import "CKAsyncBlock.h"
 
+#import <ComponentKit/CKGlobalConfig.h>
+
 #import "CKAnalyticsListener.h"
-#import "CKGlobalConfig.h"
 
 namespace CK {
 namespace Analytics {

@@ -13,7 +13,8 @@
 #import <algorithm>
 #import <unordered_map>
 
-#import "CKGlobalConfig.h"
+#import <ComponentKit/CKGlobalConfig.h>
+
 #import "CKThreadLocalComponentScope.h"
 #import "CKTreeNodeProtocol.h"
 

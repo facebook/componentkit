@@ -12,6 +12,7 @@
 #import "CKComponentHostingViewInternal.h"
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKOptional.h>
 
@@ -34,7 +35,6 @@
 #import "CKComponentControllerEvents.h"
 #import "CKComponentControllerHelper.h"
 #import "CKComponentEvents.h"
-#import "CKGlobalConfig.h"
 #import "CKComponentHostingContainerViewProvider.h"
 
 static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return nil; }

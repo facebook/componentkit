@@ -10,6 +10,7 @@
 
 #import "CKRenderComponent.h"
 
+#import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKInternalHelpers.h>
 
 #import "CKBuildComponent.h"
@@ -18,7 +19,6 @@
 #import "CKComponentSubclass.h"
 #import "CKRenderHelpers.h"
 #import "CKTreeNode.h"
-#import "CKGlobalConfig.h"
 
 @implementation CKRenderComponent
 
