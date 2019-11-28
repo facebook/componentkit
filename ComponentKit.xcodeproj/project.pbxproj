@@ -348,6 +348,7 @@
 		6016FC2520A9BA2900440702 /* CKComponent+Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6016FC2620A9BA2900440702 /* CKComponent+Yoga.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */; };
 		6016FC2720A9BA2900440702 /* CKComponent+Yoga.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */; };
+		6017286F238FEF65000D5CD6 /* CKDelayedInitialisationWrapperTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 60172864238FEF57000D5CD6 /* CKDelayedInitialisationWrapperTests.mm */; };
 		60508844236788B900060327 /* CKAsyncBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 60508838236788B900060327 /* CKAsyncBlock.h */; };
 		60508845236788B900060327 /* CKAsyncBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 60508838236788B900060327 /* CKAsyncBlock.h */; };
 		60508846236788B900060327 /* CKAsyncBlock.mm in Sources */ = {isa = PBXBuildFile; fileRef = 60508843236788B900060327 /* CKAsyncBlock.mm */; };
@@ -1252,6 +1253,7 @@
 		49FA174D1D182C1200EA8126 /* CKDataSourceIntegrationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceIntegrationTests.mm; sourceTree = "<group>"; };
 		6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKComponent+Yoga.h"; sourceTree = "<group>"; };
 		6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CKComponent+Yoga.mm"; sourceTree = "<group>"; };
+		60172864238FEF57000D5CD6 /* CKDelayedInitialisationWrapperTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDelayedInitialisationWrapperTests.mm; sourceTree = "<group>"; };
 		60508838236788B900060327 /* CKAsyncBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAsyncBlock.h; sourceTree = "<group>"; };
 		60508843236788B900060327 /* CKAsyncBlock.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAsyncBlock.mm; sourceTree = "<group>"; };
 		606E57DA215B84BF0080A274 /* ReferenceImages_IOS12_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS12_64; sourceTree = "<group>"; };
@@ -2184,6 +2186,7 @@
 				A27436F51AE94FCA00832359 /* TransactionalDataSource */,
 				D64F6548210F58560083EE75 /* CKSubclassOverridesSelectorTests.mm */,
 				D63A926D2224857D00E7CC91 /* CKOptionalTests.mm */,
+				60172864238FEF57000D5CD6 /* CKDelayedInitialisationWrapperTests.mm */,
 				D62D6DBB2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm */,
 				D62122E4223855B7008F3473 /* CKAnimationSpy.h */,
 				D62122EF223856B2008F3473 /* TransactionProviderSpy.h */,
@@ -3951,6 +3954,7 @@
 				72B93ED5234374B600F10364 /* CKComponentGeneratorTests.mm in Sources */,
 				D023D12E1E242CD4004A0A61 /* CKComponentAccessibilityCustomActionsAttributeTests.mm in Sources */,
 				B342DC851AC23EA900ACAC53 /* CKComponentScopeTests.mm in Sources */,
+				6017286F238FEF65000D5CD6 /* CKDelayedInitialisationWrapperTests.mm in Sources */,
 				A2CD66321AF2F0C70083A839 /* CKDataSourceStateTests.mm in Sources */,
 				23FE1F0A2020A7160036F727 /* CKComponentLayoutTests.mm in Sources */,
 				B342DC781AC23EA900ACAC53 /* CKComponentMountTests.mm in Sources */,

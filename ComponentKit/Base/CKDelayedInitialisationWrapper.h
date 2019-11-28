@@ -39,7 +39,18 @@ struct DelayedInitialisationWrapper final {
     _value = std::forward<Args...>(args...);
   }
 
+  auto get() const -> const T& {
+    if (_value.hasValue() == false) {
+      CKCFatal(@"Expecting value to be set");
+    }
+    return *_value.unsafeValuePtrOrNull();
+  }
+  
   operator const T&() const {
+    return get();
+  }
+  
+  auto get() -> T& {
     if (_value.hasValue() == false) {
       CKCFatal(@"Expecting value to be set");
     }
@@ -47,10 +58,7 @@ struct DelayedInitialisationWrapper final {
   }
 
   operator T&() {
-    if (_value.hasValue() == false) {
-      CKCFatal(@"Expecting value to be set");
-    }
-    return *_value.unsafeValuePtrOrNull();
+    return get();
   }
 
   // Can't return a reference to the optional storage since it stores T, not U.
