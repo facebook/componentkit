@@ -17,16 +17,7 @@
 #import "CKComponentScopeRoot.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKScopeTreeNode.h"
-#import "CKScopeTreeNodeWithChild.h"
 #import "CKTreeNodeProtocol.h"
-
-static Class<CKComponentScopeFrameProtocol> getFrameClass(Class __unsafe_unretained componentClass,
-                                                          BOOL renderOnlyTreeNodes) {
-  if (!renderOnlyTreeNodes && componentClass == [CKCompositeComponent class]) {
-    return [CKScopeTreeNodeWithChild class];
-  }
-  return [CKScopeTreeNode class];
-}
 
 CKComponentScope::~CKComponentScope()
 {
@@ -51,16 +42,13 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
 
     [_threadLocalScope->systraceListener willBuildComponent:componentClass];
 
-    Class<CKComponentScopeFrameProtocol> frameClass = getFrameClass(componentClass,
-                                                                    _threadLocalScope->unifyComponentTreeConfig.renderOnlyTreeNodes);
-    const auto childPair = [frameClass childPairForPair:_threadLocalScope->stack.top()
-                                                newRoot:_threadLocalScope->newScopeRoot
-                                         componentClass:componentClass
-                                             identifier:identifier
-                                                   keys:_threadLocalScope->keys.top()
-                                    initialStateCreator:initialStateCreator
-                                           stateUpdates:_threadLocalScope->stateUpdates
-                               unifyComponentTreeConfig:_threadLocalScope->unifyComponentTreeConfig];
+    const auto childPair = [CKScopeTreeNode childPairForPair:_threadLocalScope->stack.top()
+                                                     newRoot:_threadLocalScope->newScopeRoot
+                                              componentClass:componentClass
+                                                  identifier:identifier
+                                                        keys:_threadLocalScope->keys.top()
+                                         initialStateCreator:initialStateCreator
+                                                stateUpdates:_threadLocalScope->stateUpdates];
     _threadLocalScope->stack.push({.frame = childPair.frame, .previousFrame = childPair.previousFrame});
     _scopeHandle = childPair.frame.scopeHandle;
     _threadLocalScope->keys.push({});

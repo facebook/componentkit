@@ -12,13 +12,6 @@
 
 @protocol CKAnalyticsListener;
 
-struct CKUnifyComponentTreeConfig {
-  /** If enabled, the CKScopeTreeNode will link the new node to the corresponding handle. */
-  BOOL linkScopeTreeNodeToHandle = NO;
-  /** If enabled, only render components will get a tree node */
-  BOOL renderOnlyTreeNodes = NO;
-};
-
 struct CKGlobalConfig {
   /** Default analytics listener which will be used in cased that no other listener is provided */
   id<CKAnalyticsListener> defaultAnalyticsListener = nil;
@@ -31,8 +24,6 @@ struct CKGlobalConfig {
    This is only for running expeirment in ComponentKit. Please DO NOT USE.
    */
   BOOL updateComponentInControllerAfterBuild = NO;
-  /** Component Tree Unification config */
-  CKUnifyComponentTreeConfig unifyComponentTreeConfig;
   /**
    `CK::Component::GlobalRootViewPool` will be used in `CKComponentHostingView` when this is enabled.
    */

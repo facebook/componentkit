@@ -59,9 +59,6 @@ struct CKBuildComponentTreeParams {
 
   // When disabled, all the comopnents will be regenerated (no component reuse optimiztions). Enabled by default.
   BOOL enableComponentReuseOptimizations = YES;
-
-  // Merge Tree Nodes and Scope Frames
-  CKUnifyComponentTreeConfig unifyComponentTreeConfig;
 };
 
 @protocol CKTreeNodeWithChildrenProtocol;

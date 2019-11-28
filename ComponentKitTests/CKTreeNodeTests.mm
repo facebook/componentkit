@@ -26,7 +26,6 @@
 #import "CKTreeNodeWithChildren.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKBuildComponent.h"
-#import "CKScopeTreeNodeWithChild.h"
 #import "CKRenderTreeNode.h"
 
 static BOOL verifyChildToParentConnection(id<CKTreeNodeWithChildrenProtocol> parentNode, CKTreeNode *childNode, CKComponent *c) {
@@ -428,7 +427,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 
 @implementation CKTreeNodeWithChildTests
 
-- (id<CKTreeNodeWithChildProtocol>)newTreeNodeWithChild
+- (id<CKTreeNodeWithChildrenProtocol>)newTreeNodeWithChild
 {
   return [CKTreeNodeWithChild new];
 }
@@ -438,7 +437,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 - (void)test_childForComponentKey_onCKTreeNodeWithChild {
   // Simulate first component tree creation
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  id<CKTreeNodeWithChildProtocol> root1 = [self newTreeNodeWithChild];
+  id<CKTreeNodeWithChildrenProtocol> root1 = [self newTreeNodeWithChild];
   auto const component1 = CK::ComponentBuilder()
                               .build();
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
@@ -448,7 +447,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
                                                     stateUpdates:{}];
 
   // Simulate a component tree creation due to a state update
-  id<CKTreeNodeWithChildProtocol> root2 = [self newTreeNodeWithChild];
+  id<CKTreeNodeWithChildrenProtocol> root2 = [self newTreeNodeWithChild];
   auto const component2 = CK::ComponentBuilder()
                               .build();
   CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
@@ -464,7 +463,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 - (void)test_nodeIdentifier_onCKTreeNodeWithChild_betweenGenerations {
   // Simulate first component tree creation
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  id<CKTreeNodeWithChildProtocol> root1 = [self newTreeNodeWithChild];
+  id<CKTreeNodeWithChildrenProtocol> root1 = [self newTreeNodeWithChild];
   auto const component1 = CK::ComponentBuilder()
                               .build();
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
@@ -474,7 +473,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
                                                     stateUpdates:{}];
 
   // Simulate a component tree creation due to a state update
-  id<CKTreeNodeWithChildProtocol> root2 = [self newTreeNodeWithChild];
+  id<CKTreeNodeWithChildrenProtocol> root2 = [self newTreeNodeWithChild];
   auto const component2 = CK::ComponentBuilder()
                               .build();
   CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
@@ -490,7 +489,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 {
   // Simulate first component tree creation
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  id<CKTreeNodeWithChildProtocol> root1 = [self newTreeNodeWithChild];
+  id<CKTreeNodeWithChildrenProtocol> root1 = [self newTreeNodeWithChild];
   auto const component1 = CK::ComponentBuilder()
                               .build();
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
@@ -500,7 +499,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
                                                     stateUpdates:{}];
 
   // Simulate a component tree creation due to a state update
-  id<CKTreeNodeWithChildProtocol> root2 = [self newTreeNodeWithChild];
+  id<CKTreeNodeWithChildrenProtocol> root2 = [self newTreeNodeWithChild];
   auto const component2 = CK::ComponentBuilder()
                               .build();
   CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
@@ -518,7 +517,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 {
   // Simulate first component tree creation
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  id<CKTreeNodeWithChildProtocol> root1 = [self newTreeNodeWithChild];
+  id<CKTreeNodeWithChildrenProtocol> root1 = [self newTreeNodeWithChild];
   auto const component1 = CK::ComponentBuilder()
                               .build();
   CKTreeNode *childNode1 = [[CKTreeNode alloc] initWithComponent:component1
@@ -528,7 +527,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
                                                     stateUpdates:{}];
 
   // Simulate a component tree creation with a DIFFRENT child
-  id<CKTreeNodeWithChildProtocol> root2 = [self newTreeNodeWithChild];
+  id<CKTreeNodeWithChildrenProtocol> root2 = [self newTreeNodeWithChild];
   auto const component2 = [CKRenderComponent newWithView:{} size:{}];
   CKTreeNode *childNode2 = [[CKTreeNode alloc] initWithComponent:component2
                                                           parent:root2
@@ -543,24 +542,12 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 
 @end
 
-@interface CKSCopeTreeNodeWithChildTests : CKTreeNodeWithChildTests
-@end
-
-@implementation CKSCopeTreeNodeWithChildTests
-
-- (id<CKTreeNodeWithChildProtocol>)newTreeNodeWithChild
-{
-  return [CKScopeTreeNodeWithChild new];
-}
-
-@end
-
 @interface CKRenderTreeNodeTests : CKTreeNodeWithChildTests
 @end
 
 @implementation CKRenderTreeNodeTests
 
-- (id<CKTreeNodeWithChildProtocol>)newTreeNodeWithChild
+- (id<CKTreeNodeWithChildrenProtocol>)newTreeNodeWithChild
 {
   return [CKRenderTreeNode new];
 }

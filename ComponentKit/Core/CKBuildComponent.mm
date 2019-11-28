@@ -76,8 +76,7 @@ namespace CKBuildComponentHelpers {
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        BOOL enableComponentReuseOptimizations,
-                                        CKUnifyComponentTreeConfig unifyComponentTreeConfig)
+                                        BOOL enableComponentReuseOptimizations)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const globalConfig = CKReadGlobalConfig();
@@ -85,7 +84,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
   CKThreadLocalComponentScope threadScope(previousRoot,
                                           stateUpdates,
-                                          unifyComponentTreeConfig,
                                           buildTrigger);
 
   auto const analyticsListener = [previousRoot analyticsListener];
@@ -109,7 +107,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
       .enableComponentReuseOptimizations = enableComponentReuseOptimizations,
       .systraceListener = threadScope.systraceListener,
       .shouldCollectTreeNodeCreationInformation = [analyticsListener shouldCollectTreeNodeCreationInformation:previousRoot],
-      .unifyComponentTreeConfig = unifyComponentTreeConfig,
     };
 
     // Build the component tree from the render function.

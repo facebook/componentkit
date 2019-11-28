@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKScopeTreeNodeWithChild.h"
+#import "CKScopeTreeNode.h"
 
 @protocol CKTreeNodeComponentProtocol;
 
@@ -17,15 +17,12 @@
 
  It represents a node for CKRenderComponent component in the component tree.
  */
-@interface CKRenderTreeNode : CKScopeTreeNodeWithChild
+@interface CKRenderTreeNode : CKScopeTreeNode
 
 /** Will be called after buildComponentTree: */
 + (void)didBuildComponentTree:(id<CKTreeNodeProtocol>)node;
 
 /** Will be called after component reuse */
-- (void)didReuseRenderNode:(CKRenderTreeNode *)node;
-
-/** Will be called after component reuse when `renderOnlyTreeNodes` is on */
 - (void)didReuseRenderNode:(CKRenderTreeNode *)node
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
          previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;

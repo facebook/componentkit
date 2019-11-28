@@ -34,8 +34,7 @@ struct CKComponentScopeFramePair {
                                    identifier:(id)identifier
                                          keys:(const std::vector<id<NSObject>> &)keys
                           initialStateCreator:(id (^)(void))initialStateCreator
-                                 stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                     unifyComponentTreeConfig:(const CKUnifyComponentTreeConfig &)unifyComponentTreeConfig;
+                                 stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates;
 
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
 

@@ -37,10 +37,8 @@ namespace CKBuildComponentHelpers {
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
  @param enableComponentReuseOptimizations If `NO`, all the comopnents will be regenerated (no component reuse optimiztions). `YES` by default.
- @param unifyComponentTreeConfig Tree unification config.
  */
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        BOOL enableComponentReuseOptimizations = YES,
-                                        CKUnifyComponentTreeConfig unifyComponentTreeConfig = CKReadGlobalConfig().unifyComponentTreeConfig);
+                                        BOOL enableComponentReuseOptimizations = YES);

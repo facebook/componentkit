@@ -28,6 +28,7 @@
 #import "CKComponentScopeRootFactory.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKScopeTreeNode.h"
+#import "CKRenderTreeNode.h"
 
 /** A helper class that inherits from 'CKRenderComponent'; render the component from the initializer */
 @interface CKComponentTreeTestComponent_Render : CKRenderComponent
@@ -53,8 +54,8 @@
 {
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   auto const root = scopeRoot.rootNode.node();
-  CKComponent *c = CK::ComponentBuilder()
-                       .build();
+  CKComponent *c = [CKComponentTreeTestComponent_Render new];
+
   [c buildComponentTree:root previousParent:nil params:{
     .scopeRoot = scopeRoot,
     .stateUpdates = {},
@@ -68,8 +69,8 @@
   // Simulate a second tree creation.
   auto const scopeRoot2 = [scopeRoot newRoot];
   auto const root2 = scopeRoot2.rootNode.node();
-  CKComponent *c2 = CK::ComponentBuilder()
-                        .build();
+  CKComponent *c2 = [CKComponentTreeTestComponent_Render new];
+
   [c2 buildComponentTree:root2 previousParent:root params:{
     .scopeRoot = scopeRoot2,
     .previousScopeRoot = scopeRoot,
@@ -86,8 +87,8 @@
 {
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   auto const root = scopeRoot.rootNode.node();
-  CKComponent *c = CK::ComponentBuilder()
-                       .build();
+  CKComponent *c = [CKComponentTreeTestComponent_Render new];
+
   CKRenderComponent *renderComponent = [CKComponentTreeTestComponent_Render newWithComponent:c];
   [renderComponent buildComponentTree:root previousParent:nil params:{
     .scopeRoot = scopeRoot,
@@ -102,20 +103,20 @@
   verifyChildToParentConnection(root, singleChildNode, renderComponent);
 
   // Check the next level of the tree
-  if ([singleChildNode conformsToProtocol:@protocol(CKTreeNodeWithChildProtocol)]) {
-    id<CKTreeNodeWithChildProtocol> parentNode = (id<CKTreeNodeWithChildProtocol>)singleChildNode;
+  if ([singleChildNode conformsToProtocol:@protocol(CKTreeNodeWithChildrenProtocol)]) {
+    auto const parentNode = (id<CKTreeNodeWithChildrenProtocol>)singleChildNode;
     XCTAssertEqual(parentNode.children.size(), 1);
     CKTreeNode *componentNode = parentNode.children[0];
     verifyChildToParentConnection(parentNode, componentNode, c);
   } else {
-    XCTFail(@"singleChildNode has to conform to CKTreeNodeWithChildProtocol as it has a child.");
+    XCTFail(@"singleChildNode has to conform to CKTreeNodeWithChildrenProtocol as it has a child.");
   }
 
   // Simulate a second tree creation.
   auto const scopeRoot2 = [scopeRoot newRoot];
   auto const root2 = scopeRoot2.rootNode.node();
-  CKComponent *c2 = CK::ComponentBuilder()
-                        .build();
+  CKComponent *c2 = [CKComponentTreeTestComponent_Render new];
+
   CKRenderComponent *renderComponent2 = [CKComponentTreeTestComponent_Render newWithComponent:c2];
   [renderComponent2 buildComponentTree:root2 previousParent:root params:{
     .scopeRoot = scopeRoot2,
@@ -133,11 +134,9 @@
 {
   CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
   auto const scopeRoot = threadScope.newScopeRoot;
-  CKTreeNodeWithChildren *root = [[CKTreeNodeWithChildren alloc] init];
-  CKComponent *c10 = CK::ComponentBuilder()
-                         .build();
-  CKComponent *c11 = CK::ComponentBuilder()
-                         .build();
+  auto const root = [CKScopeTreeNode new];
+  CKComponent *c10 = [CKComponentTreeTestComponent_Render new];
+  CKComponent *c11 = [CKComponentTreeTestComponent_Render new];
   auto renderWithChidlrenComponent = [CKTestRenderWithChildrenComponent newWithChildren:{c10, c11}];
   [renderWithChidlrenComponent buildComponentTree:root previousParent:nil params:{
     .scopeRoot = scopeRoot,
@@ -147,27 +146,14 @@
     .treeNodeDirtyIds = {},
   } parentHasStateUpdate:NO];
 
-  XCTAssertEqual(root.children.size(), 1);
-  XCTAssertTrue(verifyComponentsInNode(root, @[renderWithChidlrenComponent]));
-
-  // Verify that the child component has 2 children nodes.
-  CKTreeNode *childNode = root.children[0];
-  // Check the next level of the tree
-  if ([childNode isKindOfClass:[CKTreeNodeWithChildren class]]) {
-    CKTreeNodeWithChildren *parentNode = (CKTreeNodeWithChildren *)childNode;
-    XCTAssertEqual(parentNode.children.size(), 2);
-    XCTAssertTrue(verifyComponentsInNode(parentNode, @[c10, c11]));
-  } else {
-    XCTFail(@"childNode has to be CKTreeNodeWithChildren as it has children.");
-  }
+  XCTAssertEqual(root.children.size(), 2);
+  XCTAssertTrue(verifyComponentsInNode(root, @[c10, c11]));
 
   // Simulate a second tree creation.
   auto const scopeRoot2 = [scopeRoot newRoot];
   auto const root2 = scopeRoot2.rootNode.node();
-  CKComponent *c20 = CK::ComponentBuilder()
-                         .build();
-  CKComponent *c21 = CK::ComponentBuilder()
-                         .build();
+  CKComponent *c20 = [CKComponentTreeTestComponent_Render new];
+  CKComponent *c21 = [CKComponentTreeTestComponent_Render new];
   auto renderWithChidlrenComponent2 = [CKTestRenderWithChildrenComponent newWithChildren:{c20, c21}];
   [renderWithChidlrenComponent2 buildComponentTree:root2 previousParent:root params:{
     .scopeRoot = scopeRoot2,
@@ -195,10 +181,8 @@
   __block CKComponentTreeTestComponent_Render *c;
   __block CKCompositeComponentWithScopeAndState *rootComponent;
   auto const componentFactory = ^{
-    c = [CKComponentTreeTestComponent_Render newWithComponent:CK::ComponentBuilder()
-                                                                  .build()];
-    rootComponent = [CKCompositeComponentWithScopeAndState
-                     newWithComponent:c];
+    c = [CKComponentTreeTestComponent_Render newWithComponent:CK::ComponentBuilder().build()];
+    rootComponent = [CKCompositeComponentWithScopeAndState newWithComponent:c];
     return rootComponent;
   };
 
@@ -213,51 +197,6 @@
   CKTreeNodeDirtyIds dirtyNodeIds = CKRender::treeNodeDirtyIdsFor(buildResults.scopeRoot, stateUpdates, CKBuildTrigger::StateUpdate);
   CKTreeNodeDirtyIds expectedDirtyNodeIds = {rootComponent.scopeHandle.treeNodeIdentifier};
   XCTAssertEqual(dirtyNodeIds, expectedDirtyNodeIds);
-}
-
-- (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_updateParentOnStateUpdate
-{
-  __block CKComponentTreeTestComponent_RenderWithChild *child1;
-  __block CKCompositeComponentWithScopeAndState *child2;
-  __block CKTestRenderWithChildrenComponent *rootComponent;
-  auto const componentFactory = ^{
-    child1 = [CKComponentTreeTestComponent_RenderWithChild new];
-    child2 =  [CKCompositeComponentWithScopeAndState newWithComponent:[CKComponent new]];
-    rootComponent = [CKTestRenderWithChildrenComponent newWithChildren:{child1, child2}];
-    return rootComponent;
-  };
-
-  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory);
-  XCTAssertFalse(child1.hasReusedComponent);
-
-  // Simulate a state update on child2 (child1 should be reused in this case).
-  CKComponentStateUpdateMap stateUpdates;
-  stateUpdates[child2.scopeHandle].push_back(^(id){
-    return @2;
-  });
-
-  auto const buildResultsAfterStateUpdate = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory);
-  XCTAssertTrue(child1.hasReusedComponent);
-
-
-  // Simulate a state update on `child1.childComponent` - which should mark the path from `child1.childComponent` to the root as dirty.
-  CKComponentStateUpdateMap stateUpdates2;
-  stateUpdates2[child1.childComponent.scopeHandle].push_back(^(id){
-    return @2;
-  });
-
-  auto const dirtyNodeIds = CKRender::treeNodeDirtyIdsFor(buildResultsAfterStateUpdate.scopeRoot, stateUpdates2, CKBuildTrigger::StateUpdate);
-  CKTreeNodeDirtyIds expectedDirtyNodeIds = {
-    child1.childComponent.scopeHandle.treeNodeIdentifier,
-    child1.scopeHandle.treeNodeIdentifier,
-    rootComponent.scopeHandle.treeNodeIdentifier,
-  };
-
-  auto const child1ParentNode = buildResultsAfterStateUpdate.scopeRoot.rootNode.parentForNodeIdentifier(child1.scopeHandle.treeNodeIdentifier);
-  auto const child1ChildComponentParentNode = buildResultsAfterStateUpdate.scopeRoot.rootNode.parentForNodeIdentifier(child1.childComponent.scopeHandle.treeNodeIdentifier);
-  XCTAssertTrue(child1ParentNode.component == rootComponent);
-  XCTAssertTrue(child1ChildComponentParentNode.component == child1);
-  XCTAssertTrue(dirtyNodeIds == expectedDirtyNodeIds);
 }
 
 #pragma mark - Helpers

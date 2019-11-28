@@ -133,7 +133,6 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                                          keys:(const std::vector<id<NSObject>> &)keys
                           initialStateCreator:(id (^)(void))initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                     unifyComponentTreeConfig:(const CKUnifyComponentTreeConfig &)unifyComponentTreeConfig
 {
   id<CKScopeTreeNodeProtocol> frame = (id<CKScopeTreeNodeProtocol>)pair.frame;
   id<CKScopeTreeNodeProtocol> previousFrame = (id<CKScopeTreeNodeProtocol>)pair.previousFrame;
@@ -160,10 +159,8 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                                initWithPreviousNode:childFrameOfPreviousFrame
                                scopeHandle:newHandle];
 
-  if (unifyComponentTreeConfig.linkScopeTreeNodeToHandle) {
-    // Link the tree node to the scope handle.
-    [newHandle setTreeNode:newChild];
-  }
+  // Link the tree node to the scope handle.
+  [newHandle setTreeNode:newChild];
 
   // Insert the new node to its parent map.
   [frame setChild:newChild forKey:stateKey];
