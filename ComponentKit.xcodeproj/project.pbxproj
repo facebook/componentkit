@@ -627,6 +627,8 @@
 		72ECF11822FE4154008C2D00 /* ComponentRootViewPool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72B19F6122F489B300C6063E /* ComponentRootViewPool.mm */; };
 		72EFBD982369E33200A205AB /* CKComponentAccessibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 72EFBD962369E33200A205AB /* CKComponentAccessibility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		72EFBD992369E33200A205AB /* CKComponentAccessibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 72EFBD962369E33200A205AB /* CKComponentAccessibility.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		72F0729323903A7C00338AB0 /* CKSizeAssert.h in Headers */ = {isa = PBXBuildFile; fileRef = 72F0729223903A7C00338AB0 /* CKSizeAssert.h */; };
+		72F0729423903A7C00338AB0 /* CKSizeAssert.h in Headers */ = {isa = PBXBuildFile; fileRef = 72F0729223903A7C00338AB0 /* CKSizeAssert.h */; };
 		72F47F3822F59F5700D1311A /* ComponentRootViewPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 72B19F5622F489B300C6063E /* ComponentRootViewPool.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		7F27E2C01F69CC0F00573E14 /* CKLifecycleTestComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F98F58A1F67F2F600436978 /* CKLifecycleTestComponent.h */; };
 		7F27E2C11F69CC0F00573E14 /* CKLifecycleTestComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F98F58B1F67F2F600436978 /* CKLifecycleTestComponent.mm */; };
@@ -1392,6 +1394,7 @@
 		72D30B7A236B41DE0023DB1F /* CKComponentViewConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentViewConfiguration.h; sourceTree = "<group>"; };
 		72E9B98222329686004E3B90 /* CKCollectionViewDataSourceInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewDataSourceInternal.h; sourceTree = "<group>"; };
 		72EFBD962369E33200A205AB /* CKComponentAccessibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentAccessibility.h; sourceTree = "<group>"; };
+		72F0729223903A7C00338AB0 /* CKSizeAssert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKSizeAssert.h; sourceTree = "<group>"; };
 		7F31BF541F7C3E4A0087E614 /* ReferenceImages_IOS11_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS11_64; sourceTree = "<group>"; };
 		7F6AC97F2093680900DDF374 /* ReferenceImages_IOS11_3_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS11_3_64; sourceTree = "<group>"; };
 		7F6BAF641F1F6E5200600828 /* CKComponentLayoutBaseline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentLayoutBaseline.h; sourceTree = "<group>"; };
@@ -2416,6 +2419,7 @@
 				60EFF4B32113555C00CA7C68 /* CKStatelessComponent.mm */,
 				D427E8182314A888004F22BD /* CKStatelessComponentContext.h */,
 				D427E8172314A887004F22BD /* CKStatelessComponentContext.mm */,
+				72F0729223903A7C00338AB0 /* CKSizeAssert.h */,
 				D0B47AF81CBD926700BB33CE /* CKUpdateMode.h */,
 				D0B47AF91CBD926700BB33CE /* ComponentLayoutContext.h */,
 				D0B47AFA1CBD926700BB33CE /* ComponentLayoutContext.mm */,
@@ -2782,6 +2786,7 @@
 				03B8B4D61D2A346F00EDFF59 /* CKDataSourceUpdateStateModification.h in Headers */,
 				03B8B4D81D2A346F00EDFF59 /* CKComponentProvider.h in Headers */,
 				03B8B4D91D2A346F00EDFF59 /* CKComponentAnnouncerBase.h in Headers */,
+				72F0729423903A7C00338AB0 /* CKSizeAssert.h in Headers */,
 				237E8940213FFC6D00793B4D /* CKRenderLayoutWithChildrenComponent.h in Headers */,
 				2322A216224504B1006BFCD2 /* CKCollectionViewDataSourceListenerAnnouncer.h in Headers */,
 				723958F1238E9B22005B570A /* CKComponentDescriptionHelper.h in Headers */,
@@ -3167,6 +3172,7 @@
 				D0B47CEE1CBD948E00BB33CE /* CKNetworkImageDownloading.h in Headers */,
 				D0B47D601CBD948E00BB33CE /* CKLabelComponent.h in Headers */,
 				D0B47D2A1CBD948E00BB33CE /* CKComponentFlexibleSizeRangeProvider.h in Headers */,
+				72F0729323903A7C00338AB0 /* CKSizeAssert.h in Headers */,
 				72395912238E9B22005B570A /* CKComponentViewAttribute.h in Headers */,
 				D0B47D141CBD948E00BB33CE /* CKComponentBoundsAnimation+UICollectionView.h in Headers */,
 				723958EC238E9B22005B570A /* CKLayout.h in Headers */,

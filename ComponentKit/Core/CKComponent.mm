@@ -41,6 +41,7 @@
 #import "CKComponentScopeRoot.h"
 #import "CKRenderHelpers.h"
 #import "CKComponentCreationValidation.h"
+#import "CKSizeAssert.h"
 
 CGFloat const kCKComponentParentDimensionUndefined = NAN;
 CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndefined, kCKComponentParentDimensionUndefined};
@@ -307,6 +308,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
 #endif
 
+  CKAssertSizeRange(constrainedSize);
   CK::Component::LayoutContext context(self, constrainedSize);
   auto const systraceListener = context.systraceListener;
   [systraceListener willLayoutComponent:self];
@@ -333,7 +335,9 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
   CKAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
            [self class], [layout.component class]);
+  CKAssertResolvedSize(_size, parentSize);
   CKSizeRange resolvedRange __attribute__((unused)) = constrainedSize.intersect(_size.resolve(parentSize));
+  CKAssertSizeRange(resolvedRange);
   CKAssertWithCategory(CKIsGreaterThanOrEqualWithTolerance(resolvedRange.max.width, layout.size.width)
                        && CKIsGreaterThanOrEqualWithTolerance(layout.size.width, resolvedRange.min.width)
                        && CKIsGreaterThanOrEqualWithTolerance(resolvedRange.max.height,layout.size.height)
@@ -352,6 +356,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
+  CKAssertResolvedSize(_size, parentSize);
   CKSizeRange resolvedRange = constrainedSize.intersect(_size.resolve(parentSize));
   return [self computeLayoutThatFits:resolvedRange];
 }

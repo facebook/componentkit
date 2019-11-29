@@ -13,20 +13,8 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKEqualityHelpers.h>
 
-#if (!CK_LAYOUT_CONTEXT_DISABLED)
-
-#import <ComponentKit/ComponentLayoutContext.h>
-
-#define CKCAssertConstrainedValue(val) \
-  CKCAssert(!isnan(val), @"Constrained value must not be NaN. Current stack description: %@", \
-    CK::Component::LayoutContext::currentStackDescription()) \
-
-#else
-
 #define CKCAssertConstrainedValue(val) \
   CKCAssert(!isnan(val), @"Constrained value must not be NaN.")
-
-#endif
 
 CKComponentSize CKComponentSize::fromCGSize(CGSize size) noexcept
 {
