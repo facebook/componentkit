@@ -85,8 +85,30 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     return *this;
   }
 
+  /** Start margin applied to the container. Left in left-to-right languages, right in right-to-left languages */
+  auto &marginStart(CKRelativeDimension m)
+  {
+    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
+      _currentChild.margin.start = m;
+    } else {
+      _style.margin.start = m;
+    }
+    return *this;
+  }
+
   /** End margin applied to the container. Right in left-to-right languages, left in right-to-left languages */
   auto &marginEnd(CGFloat m)
+  {
+    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
+      _currentChild.margin.end = m;
+    } else {
+      _style.margin.end = m;
+    }
+    return *this;
+  }
+
+  /** End margin applied to the container. Right in left-to-right languages, left in right-to-left languages */
+  auto &marginEnd(CKRelativeDimension m)
   {
     if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
       _currentChild.margin.end = m;
