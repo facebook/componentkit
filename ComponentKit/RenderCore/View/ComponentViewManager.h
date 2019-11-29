@@ -19,6 +19,7 @@
 
 #import <ComponentKit/CKComponentViewAttribute.h>
 #import <ComponentKit/CKComponentViewClass.h>
+#import <ComponentKit/CKDictionary.h>
 #import <ComponentKit/CKViewConfiguration.h>
 
 @class CKComponent;
@@ -87,6 +88,7 @@ namespace CK {
     class ViewReusePool {
     public:
       ViewReusePool() : position(pool.begin()) {};
+      ViewReusePool(ViewReusePool &&) = default;
 
       /** Unhides all views vended so far; hides others. Resets position to begin(). */
       void reset(MountAnalyticsContext *mountAnalyticsContext);
@@ -128,7 +130,12 @@ namespace CK {
           config.attributeShape(),
         };
         // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
-        UIView *v = map[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
+        auto const v = [&]() {
+          if (useCKDictionary) {
+            return dictionary[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
+          }
+          return map[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
+        }();
         vendedViews.push_back(v);
         return v;
       }
@@ -136,7 +143,9 @@ namespace CK {
       friend void ViewReusePool::hideAll(UIView *view, MountAnalyticsContext *mountAnalyticsContext);
     private:
       std::unordered_map<ViewKey, ViewReusePool> map;
+      Dictionary<ViewKey, ViewReusePool> dictionary;
       std::vector<UIView *> vendedViews;
+      BOOL useCKDictionary;
 
       ViewReusePoolMap(const ViewReusePoolMap&) = delete;
       ViewReusePoolMap &operator=(const ViewReusePoolMap&) = delete;

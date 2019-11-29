@@ -14,6 +14,7 @@
 #import <unordered_map>
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKMutex.h>
 #import <ComponentKit/ComponentViewReuseUtilities.h>
 
@@ -154,7 +155,7 @@ void ViewReusePool::hideAll(UIView *view, MountAnalyticsContext *mountAnalyticsC
   }
 }
 
-ViewReusePoolMap::ViewReusePoolMap() {}
+ViewReusePoolMap::ViewReusePoolMap() : useCKDictionary{CKReadGlobalConfig().useCKDictionaryInViewReusePoolMap} {}
 
 ViewReusePoolMap &ViewReusePoolMap::viewReusePoolMapForView(UIView *v)
 {

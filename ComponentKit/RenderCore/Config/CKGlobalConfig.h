@@ -32,6 +32,10 @@ struct CKGlobalConfig {
    This enables acquiring lock when updating component in component controller.
    */
   BOOL shouldAcquireLockWhenUpdatingComponentInController = NO;
+  /**
+   Enables using \c CK::Dictionary instead of \c std::unordered_map in \c ViewReusePoolMap.
+   */
+  BOOL useCKDictionaryInViewReusePoolMap = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();
