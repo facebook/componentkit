@@ -331,10 +331,10 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                          [self class],
                          (childrenSize == 1 ? @"CKRenderLayoutComponent" : @"CKRenderLayoutWithChildrenComponent"));
   }
-#endif
 
   CKAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
            [self class], [layout.component class]);
+
   CKAssertResolvedSize(_size, parentSize);
   CKSizeRange resolvedRange __attribute__((unused)) = constrainedSize.intersect(_size.resolve(parentSize));
   CKAssertSizeRange(resolvedRange);
@@ -346,6 +346,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                        @"Computed size %@ for %@ does not fall within constrained size %@\n%@",
                        NSStringFromCGSize(layout.size), [self class], resolvedRange.description(),
                        CK::Component::LayoutContext::currentStackDescription());
+#endif
 
   [systraceListener didLayoutComponent:self];
 
