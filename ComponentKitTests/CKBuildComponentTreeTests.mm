@@ -23,8 +23,6 @@
 #import "CKComponentInternal.h"
 #import "CKButtonComponent.h"
 #import "CKTreeNode.h"
-#import "CKTreeNodeWithChild.h"
-#import "CKTreeNodeWithChildren.h"
 #import "CKComponentScopeRootFactory.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKScopeTreeNode.h"
@@ -232,8 +230,8 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
   for (auto const childNode : node.children) {
     // We add the child identifier + its level in the tree.
     [identifiers addObject:[NSString stringWithFormat:@"%d-%d",childNode.nodeIdentifier, level]];
-    if ([childNode isKindOfClass:[CKTreeNodeWithChildren class]]) {
-      treeChildrenIdentifiers((CKTreeNodeWithChildren *)childNode, identifiers, level+1);
+    if ([childNode isKindOfClass:[CKRenderTreeNode class]]) {
+      treeChildrenIdentifiers((CKRenderTreeNode *)childNode, identifiers, level+1);
     }
   }
 }

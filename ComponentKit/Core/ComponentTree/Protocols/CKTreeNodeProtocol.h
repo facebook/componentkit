@@ -159,10 +159,6 @@ struct CKBuildComponentTreeParams {
 
 @end
 
-@protocol CKTreeNodeWithChildProtocol <CKTreeNodeWithChildrenProtocol>
-@property (nonatomic, strong) id<CKTreeNodeProtocol> child;
-@end
-
 /**
  Default empty state for CKRenderComponentProtocol components.
 

@@ -11,7 +11,6 @@
 #import "CKRootTreeNode.h"
 
 #import "CKRenderHelpers.h"
-#import "CKTreeNodeWithChildren.h"
 #import "CKScopeTreeNode.h"
 
 CKRootTreeNode::CKRootTreeNode(): _node([CKScopeTreeNode new]) {};

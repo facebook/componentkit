@@ -17,8 +17,6 @@
 #import <ComponentKit/CKMutex.h>
 #import <ComponentKit/CKOptional.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
-#import <ComponentKit/CKTreeNodeWithChild.h>
-#import <ComponentKit/CKTreeNodeWithChildren.h>
 
 #import "CKScopeTreeNode.h"
 #import "CKRenderTreeNode.h"
@@ -358,7 +356,7 @@ namespace CKRender {
       {
         CKCAssert(component, @"component cannot be nil");
         auto const node = [[CKRenderTreeNode alloc]
-                           initWithRenderComponent:component
+                           initWithComponent:component
                            parent:parent
                            previousParent:previousParent
                            scopeRoot:params.scopeRoot

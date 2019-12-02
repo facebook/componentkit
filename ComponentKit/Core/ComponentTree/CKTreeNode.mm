@@ -46,39 +46,12 @@
   return self;
 }
 
-// Non-Render initializer
-- (instancetype)initWithComponent:(id<CKTreeNodeComponentProtocol>)component
+// Render initializer
+- (instancetype)initWithComponent:(id<CKRenderComponentProtocol>)component
                            parent:(id<CKTreeNodeWithChildrenProtocol>)parent
                    previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-{
-  auto const componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
-  auto const previousNode = [previousParent childForComponentKey:componentKey];
-  auto const scopeHandle = component.scopeHandle;
-  // For non-render components, the scope handle will be aquired from the component's base initializer.
-  if (self = [self initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
-    _component = component;
-    _componentKey = componentKey;
-    // Set the link between the parent and the child.
-    [parent setChild:self forComponentKey:_componentKey];
-    // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
-    scopeRoot.rootNode.registerNode(self, parent);
-    // Set the link between the tree node and the scope handle.
-    [scopeHandle setTreeNode:self];
-#if DEBUG
-    [component acquireTreeNode:self];
-#endif
-  }
-  return self;
-}
-
-// Render initializer
-- (instancetype)initWithRenderComponent:(id<CKRenderComponentProtocol>)component
-                                 parent:(id<CKTreeNodeWithChildrenProtocol>)parent
-                         previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
-                              scopeRoot:(CKComponentScopeRoot *)scopeRoot
-                           stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
   Class componentClass = [component class];
   auto const componentKey = [parent createComponentKeyForChildWithClass:componentClass identifier:[component componentIdentifier]];

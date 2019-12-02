@@ -20,7 +20,6 @@
 #import "CKRenderHelpers.h"
 #import "CKThreadLocalComponentScope.h"
 #import "CKTreeNodeProtocol.h"
-#import "CKTreeNodeWithChildren.h"
 #import "CKComponentCreationValidation.h"
 #import "CKScopeTreeNodeProtocol.h"
 
