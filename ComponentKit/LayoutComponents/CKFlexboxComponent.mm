@@ -603,7 +603,6 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   const CKSizeRange sanitizedSizeRange = convertCKSizeRangeToYogaRepresentation(constrainedSize);
-  CKAssertSizeRange(sanitizedSizeRange);
   // We create cache for the duration of single calculation, so it is used only on one thread
   // The cache is strictly internal and shouldn't be exposed in any way
   // The purpose of the cache is to save calculations done in measure() function in Yoga to reuse
