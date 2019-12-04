@@ -82,7 +82,8 @@
            "(component=%@)", size.description(), _child);
 
   CKComponentLayout l = [_child layoutThatFits:constrainedSize parentSize:parentSize];
-  return {self, l.size, {{{0,0}, l}}};
+  const auto lSize = l.size;
+  return {self, lSize, {{{0,0}, std::move(l)}}};
 }
 
 @end
