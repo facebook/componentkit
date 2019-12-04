@@ -149,8 +149,7 @@ static YGSize measureYGComponent(YGNodeRef node,
   // so we just cache the results to try to reuse them during final layout
   if (!CKYogaNodeCanUseCachedMeasurement(widthMode, width, heightMode, height, cachedLayout.widthMode, cachedLayout.width, cachedLayout.heightMode, cachedLayout.height, static_cast<float>(cachedLayout.componentLayout.size.width), static_cast<float>(cachedLayout.componentLayout.size.height), 0, 0, ckYogaDefaultConfig())) {
     CKComponent *component = cachedLayout.component;
-    CKComponentLayout componentLayout = CKComputeComponentLayout(component, convertCKSizeRangeToCKRepresentation(CKSizeRange(minSize, maxSize)), convertCGSizeToCKRepresentation(cachedLayout.parentSize));
-    cachedLayout.componentLayout = componentLayout;
+    cachedLayout.componentLayout = CKComputeComponentLayout(component, convertCKSizeRangeToCKRepresentation(CKSizeRange(minSize, maxSize)), convertCGSizeToCKRepresentation(cachedLayout.parentSize));
     cachedLayout.width = width;
     cachedLayout.height = height;
     cachedLayout.widthMode = widthMode;
