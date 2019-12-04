@@ -133,7 +133,7 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
                            constrainedSize.max.height -
                            (finite(_insets.bottom,
                                    centerInset(constrainedSize.max.height, childLayout.size.height)) + childLayout.size.height));
-  return {self, computedSize, {{{x,y}, childLayout}}};
+  return {self, computedSize, {{{x,y}, std::move(childLayout)}}};
 }
 
 @end
