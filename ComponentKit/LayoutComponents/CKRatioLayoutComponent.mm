@@ -16,6 +16,7 @@
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentPerfScope.h>
 #import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKSizeAssert.h>
 
 @implementation CKRatioLayoutComponent
 {
@@ -69,6 +70,7 @@
   // If there is no max size in *either* dimension, we can't apply the ratio, so just pass our size range through.
   const CKSizeRange childRange = (bestSize == sizeOptions.end())
   ? constrainedSize : constrainedSize.intersect(CKSizeRange(*bestSize, *bestSize));
+  CKAssertSizeRange(childRange);
   const CGSize parentSize = (bestSize == sizeOptions.end()) ? kCKComponentParentSizeUndefined : *bestSize;
   const CKComponentLayout childLayout = CKComputeComponentLayout(_component, childRange, parentSize);
   return {self, childLayout.size, {{{0,0}, childLayout}}};

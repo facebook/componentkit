@@ -13,6 +13,7 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKFunctionalHelpers.h>
+#import <ComponentKit/CKSizeAssert.h>
 
 #import "CKComponentSubclass.h"
 
@@ -58,6 +59,7 @@
       constrainedSize.max.height - child.position.y
     };
     CKSizeRange childConstraint = child.size.resolveSizeRange(size, {{0,0}, autoMaxSize});
+    CKAssertSizeRange(childConstraint);
     return CKComponentLayoutChild({child.position, CKComputeComponentLayout(child.component, childConstraint, size)});
   });
 

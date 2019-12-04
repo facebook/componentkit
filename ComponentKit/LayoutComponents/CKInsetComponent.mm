@@ -15,6 +15,7 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentPerfScope.h>
 #import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKSizeAssert.h>
 
 #import "CKComponentSubclass.h"
 #import "ComponentLayoutContext.h"
@@ -107,6 +108,7 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
       MAX(0, constrainedSize.max.height - insetsY),
     }
   };
+  CKAssertSizeRange(insetConstrainedSize);
   const CGSize insetParentSize = {
     MAX(0, parentSize.width - insetsX),
     MAX(0, parentSize.height - insetsY)

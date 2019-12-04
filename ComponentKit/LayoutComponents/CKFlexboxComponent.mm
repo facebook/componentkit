@@ -14,6 +14,7 @@
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKFunctionalHelpers.h>
+#import <ComponentKit/CKSizeAssert.h>
 
 #import "yoga/Yoga.h"
 
@@ -607,6 +608,7 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   const CKSizeRange sanitizedSizeRange = convertCKSizeRangeToYogaRepresentation(constrainedSize);
+  CKAssertSizeRange(sanitizedSizeRange);
   // We create cache for the duration of single calculation, so it is used only on one thread
   // The cache is strictly internal and shouldn't be exposed in any way
   // The purpose of the cache is to save calculations done in measure() function in Yoga to reuse
@@ -660,6 +662,8 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
       // to reuse the already created yoga Node.
       const CKSizeRange childRange = {childSize, childSize};
       const CKSizeRange childConstraintSize = childRange.intersect(childCachedLayout.component.size.resolve(size));
+      CKAssertSizeRange(childRange);
+      CKAssertSizeRange(childConstraintSize);
 
       childrenLayout[i].layout = [childCachedLayout.component layoutFromYgNode:childNode thatFits:childConstraintSize];
     } else if ([self canReuseCachedLayout:childCachedLayout forChildWithExactSize:childSize]) {
