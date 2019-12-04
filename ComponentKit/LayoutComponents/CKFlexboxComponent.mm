@@ -471,11 +471,6 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
   applyPaddingToEdge(stackNode, YGEdgeStart, _style.padding.start);
   applyPaddingToEdge(stackNode, YGEdgeEnd, _style.padding.end);
 
-  applyMarginToEdge(stackNode, YGEdgeTop, _style.margin.top);
-  applyMarginToEdge(stackNode, YGEdgeBottom, _style.margin.bottom);
-  applyMarginToEdge(stackNode, YGEdgeStart, _style.margin.start);
-  applyMarginToEdge(stackNode, YGEdgeEnd, _style.margin.end);
-
   applyBorderToEdge(stackNode, YGEdgeTop, _style.border.top);
   applyBorderToEdge(stackNode, YGEdgeBottom, _style.border.bottom);
   applyBorderToEdge(stackNode, YGEdgeStart, _style.border.start);

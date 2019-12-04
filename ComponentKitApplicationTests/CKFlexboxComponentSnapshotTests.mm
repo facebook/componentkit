@@ -1299,45 +1299,42 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 
 - (void)testMarginOnFlexbox
 {
-  CKFlexboxComponent *c =
-  [CKFlexboxComponent
-   newWithView:kLightGrayBackgroundView
-   size:{}
-   style:{
-     .direction = CKFlexboxDirectionColumn,
-     .margin = {
-       .top = 10,
-       .start = 30,
-       .end = 10,
-       .bottom = 20,
-     },
-     .useDeepYogaTrees = _useDeepYogaTrees,
-   }
-   children:{
-     {
-       [CKFlexboxComponent
-        newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}}
-        size:{}
-        style:{
-          .direction = CKFlexboxDirectionRow,
-          .margin = {
-            .top = 10,
-            .start = 30,
-            .end = 10,
-            .bottom = 20,
-          },
-          .useDeepYogaTrees = _useDeepYogaTrees,
-        }
-        children:{
-          {
-            [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50, 50}],
-          },
-          {
-            [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50, 50}],
-          },
-        }]
-     },
-   }];
+  auto const c =
+  CK::FlexboxComponentBuilder()
+    .viewClass([UIView class])
+    .backgroundColor([UIColor lightGrayColor])
+    .direction(CKFlexboxDirectionColumn)
+    .marginTop(10)
+    .marginStart(30)
+    .marginEnd(10)
+    .marginBottom(20)
+    .useDeepYogaTrees(_useDeepYogaTrees)
+    .child(
+      CK::FlexboxComponentBuilder()
+        .viewClass([UIView class])
+        .backgroundColor([UIColor blueColor])
+        .direction(CKFlexboxDirectionRow)
+        .useDeepYogaTrees(_useDeepYogaTrees)
+        .marginTop(10)
+        .marginStart(30)
+        .marginEnd(10)
+        .marginBottom(20)
+        .child(
+          CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .backgroundColor([UIColor redColor])
+            .width(50)
+            .height(50)
+            .build())
+        .child(
+          CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .backgroundColor([UIColor greenColor])
+            .width(50)
+            .height(50)
+            .build())
+        .build())
+  .build();
   
   static CKSizeRange kSize = {{0,0}, {INFINITY, INFINITY}};
   CKSnapshotVerifyComponent(c, kSize, nil);
