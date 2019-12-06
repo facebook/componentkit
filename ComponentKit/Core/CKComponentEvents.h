@@ -47,4 +47,5 @@ void CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths(id<NSFastEnumera
  Update component of component controller in component trees of `indexPaths`of CKDataSourceState
  */
 void CKComponentUpdateComponentForComponentControllerWithIndexPaths(id<NSFastEnumeration> indexPaths,
-                                                                    CKDataSourceState *state);
+                                                                    CKDataSourceState *state,
+                                                                    BOOL shouldUpdateComponentOverride);

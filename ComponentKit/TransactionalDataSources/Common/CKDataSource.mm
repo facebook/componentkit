@@ -390,9 +390,9 @@
     CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
   }
 
-  if (newState.configuration.options.updateComponentInControllerAfterBuild.valueOr(NO)) {
-    CKComponentUpdateComponentForComponentControllerWithIndexPaths(appliedChanges.finalUpdatedIndexPaths.allValues, newState);
-  }
+  CKComponentUpdateComponentForComponentControllerWithIndexPaths(appliedChanges.finalUpdatedIndexPaths.allValues,
+                                                                 newState,
+                                                                 newState.configuration.options.updateComponentInControllerAfterBuild.valueOr(NO));
 
   [_announcer dataSource:self didModifyPreviousState:previousState withState:newState byApplyingChanges:appliedChanges];
 

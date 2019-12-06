@@ -507,4 +507,9 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return self.controller != nil;
 }
 
++ (BOOL)shouldUpdateComponentInController
+{
+  return NO;
+}
+
 @end

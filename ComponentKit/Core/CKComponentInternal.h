@@ -84,4 +84,10 @@
 /** For internal debug use only; don't touch this. */
 - (NSString *)backtraceStackDescription;
 
+/**
+ Update component in controller right after new generation is created.
+ NOTE: This should only be used by ComponentKit infra.
+ */
++ (BOOL)shouldUpdateComponentInController;
+
 @end
