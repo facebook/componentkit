@@ -29,6 +29,11 @@ static constexpr auto isSet(PropsBitmapType bitmap, PropsBitmapType prop, PropsB
   return isSet(bitmap, prop) && isSet(bitmap, props...);
 }
 
+static constexpr auto clear(PropsBitmapType bitmap, PropsBitmapType prop) -> PropsBitmapType
+{
+  return (bitmap & ~prop);
+}
+
 }  // namespace PropBitmap
 }  // namespace BuilderDetails
 }  // namespace CK

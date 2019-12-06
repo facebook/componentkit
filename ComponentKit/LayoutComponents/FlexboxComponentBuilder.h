@@ -642,8 +642,15 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   */
   template <typename Collection> auto &children(Collection &&c)
   {
-    _children = std::vector<CKFlexboxComponentChild>{std::forward<Collection>(c)};
-    return *this;
+    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
+      _children.push_back(_currentChild);
+    }
+
+    auto newChildren = std::vector<CKFlexboxComponentChild>{std::forward<Collection>(c)};
+    _children.insert(
+      _children.end(), std::make_move_iterator(newChildren.begin()), std::make_move_iterator(newChildren.end()));
+    return reinterpret_cast<
+      FlexboxComponentBuilder<PropBitmap::clear(PropsBitmap, FlexboxComponentPropId::hasActiveChild)> &>(*this);
   }
 
   /**
@@ -653,8 +660,15 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   */
   auto &children(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&c)
   {
-    _children = c.take();
-    return *this;
+    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
+      _children.push_back(_currentChild);
+    }
+
+    auto newChildren = c.take();
+    _children.insert(
+      _children.end(), std::make_move_iterator(newChildren.begin()), std::make_move_iterator(newChildren.end()));
+    return reinterpret_cast<
+      FlexboxComponentBuilder<PropBitmap::clear(PropsBitmap, FlexboxComponentPropId::hasActiveChild)> &>(*this);
   }
 
   /**

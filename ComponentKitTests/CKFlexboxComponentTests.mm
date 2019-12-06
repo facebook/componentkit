@@ -367,6 +367,34 @@
   XCTAssertTrue(areLayoutsEqual(buildComponentTreeAndComputeLayout(NO), buildComponentTreeAndComputeLayout(YES)));
 }
 
+- (void)test_WhenUsingBothChildAndChildren_ChildrenAreAddedInSameOrder
+{
+  auto const a = CK::ComponentBuilder().build();
+  auto const b = CK::ComponentBuilder().build();
+  auto const c = CK::ComponentBuilder().build();
+  auto const d = CK::ComponentBuilder().build();
+  auto const e = CK::ComponentBuilder().build();
+
+  auto const flexbox =
+  CK::FlexboxComponentBuilder()
+  .viewClass([UIView class])
+  .child(a)
+  .children({{b}, {c}, {d}})
+  .child(e)
+  .build();
+
+  const CKSizeRange kSize = {{500, 500}, {500, 500}};
+  auto const layout = [flexbox layoutThatFits:kSize parentSize:kSize.max];
+  auto components = std::vector<id<CKMountable>>{};
+  layout.enumerateLayouts([&](const CKComponentLayout &l) {
+    if (![l.component isKindOfClass:[CKFlexboxComponent class]]) {
+      components.push_back(l.component);
+    }
+  });
+  auto const expected = std::vector<id<CKMountable>>{a, b, c, d, e};
+  XCTAssert(components == expected);
+}
+
 static BOOL areLayoutsEqual(const CKComponentLayout &left, const CKComponentLayout &right) {
   if (left.component.class != right.component.class) {
     return NO;
