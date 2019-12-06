@@ -10,6 +10,8 @@
 
 #import "CKStaticLayoutComponent.h"
 
+#include <algorithm>
+
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKFunctionalHelpers.h>
@@ -55,8 +57,8 @@
   auto layoutChildren = CK::map(_children, [&constrainedSize, &size](CKStaticLayoutComponentChild child) {
 
     CGSize autoMaxSize = {
-      constrainedSize.max.width - child.position.x,
-      constrainedSize.max.height - child.position.y
+      std::max(constrainedSize.max.width - child.position.x, (CGFloat)0),
+      std::max(constrainedSize.max.height - child.position.y, (CGFloat)0)
     };
     CKSizeRange childConstraint = child.size.resolveSizeRange(size, {{0,0}, autoMaxSize});
     CKAssertSizeRange(childConstraint);
