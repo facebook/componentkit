@@ -122,7 +122,7 @@ namespace CK {
     return s.length > 0 ? [s stringByAppendingString:@"\n"] : @"";
   }
 
-  static auto itemsByIndexPathDescription(NSDictionary<NSIndexPath *, NSObject *> * const items, NSString * const title) -> NSString *
+  auto itemsByIndexPathDescription(NSDictionary<NSIndexPath *, NSObject *> * const items, NSString * const title) -> NSString *
   {
     if (items.count == 0) {
       return @"";

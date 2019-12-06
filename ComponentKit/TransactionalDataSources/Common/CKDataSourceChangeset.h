@@ -26,3 +26,7 @@
 - (CKDataSourceChangeset<ModelType> *)build;
 
 @end
+
+namespace CK {
+  auto itemsByIndexPathDescription(NSDictionary<NSIndexPath *, NSObject *> * const items, NSString * const title) -> NSString *;
+}
