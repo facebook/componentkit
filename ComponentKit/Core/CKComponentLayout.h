@@ -11,6 +11,7 @@
 #import <ComponentKit/CKBuildTrigger.h>
 #import <ComponentKit/CKLayout.h>
 #import <ComponentKit/CKOptional.h>
+#import <ComponentKit/CKComponentScopeTypes.h>
 
 @protocol CKAnalyticsListener;
 
@@ -33,6 +34,45 @@ CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
                                            id<CKAnalyticsListener> analyticsListener = nil,
                                            BOOL isUpdate = NO);
 
+struct CKComponentRootLayout { // This is pending renaming
+  /** Layout cache for components that have controller. */
+  using ComponentLayoutCache = std::unordered_map<id<CKMountable>, CKComponentLayout, CK::hash<id<CKMountable>>, CK::is_equal<id<CKMountable>>>;
+  using ComponentsByPredicateMap = std::unordered_map<CKMountablePredicate, std::vector<id<CKMountable>>>;
+
+  CKComponentRootLayout() {}
+  explicit CKComponentRootLayout(CKComponentLayout layout)
+  : CKComponentRootLayout(layout, {}, {}) {}
+  explicit CKComponentRootLayout(CKComponentLayout layout, ComponentLayoutCache layoutCache, ComponentsByPredicateMap componentsByPredicate)
+  : _layout(std::move(layout)), _layoutCache(std::move(layoutCache)), _componentsByPredicate(std::move(componentsByPredicate)) {}
+
+  /**
+   This method returns a CKComponentLayout from the cache for the component if it has a controller.
+   @param component The component to look for the layout with.
+   */
+  auto cachedLayoutForComponent(id<CKMountable> component) const
+  {
+    const auto it = _layoutCache.find(component);
+    return it != _layoutCache.end() ? it->second : CKComponentLayout {};
+  }
+
+  auto componentsMatchingPredicate(const CKMountablePredicate p) const
+  {
+    const auto it = _componentsByPredicate.find(p);
+    return it != _componentsByPredicate.end() ? it->second : std::vector<id<CKMountable>> {};
+  }
+
+  void enumerateCachedLayout(void(^block)(const CKComponentLayout &layout)) const;
+
+  const auto &layout() const { return _layout; }
+  auto component() const { return _layout.component; }
+  auto size() const { return _layout.size; }
+
+private:
+  CKComponentLayout _layout;
+  ComponentLayoutCache _layoutCache;
+  ComponentsByPredicateMap _componentsByPredicate;
+};
+
 /**
  Safely computes the layout of the given root component by guarding against nil components.
  @param rootComponent The root component to compute the layout for.
@@ -44,3 +84,13 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener = nil,
                                                    CK::Optional<CKBuildTrigger> buildTrigger = CK::none);
+
+/**
+ Safely computes the layout of the given component by guarding against nil components.
+ @param component The component to compute the layout for.
+ @param sizeRange The size range to compute the component layout within.
+ @param parentSize The parent size of the component to compute the layout for.
+ */
+CKComponentLayout CKComputeComponentLayout(id<CKMountable> component,
+                                           const CKSizeRange &sizeRange,
+                                           const CGSize parentSize);

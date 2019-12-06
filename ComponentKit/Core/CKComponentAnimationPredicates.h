@@ -10,6 +10,6 @@
 
 #import <unordered_set>
 
-#import <ComponentKit/CKMountable.h>
+#import <ComponentKit/CKComponentScopeTypes.h>
 
 auto CKComponentAnimationPredicates() -> std::unordered_set<CKMountablePredicate>;

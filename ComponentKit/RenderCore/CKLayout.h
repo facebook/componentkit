@@ -55,45 +55,6 @@ struct CKComponentLayoutChild {
   CKComponentLayout layout;
 };
 
-struct CKComponentRootLayout { // This is pending renaming
-  /** Layout cache for components that have controller. */
-  using ComponentLayoutCache = std::unordered_map<id<CKMountable>, CKComponentLayout, CK::hash<id<CKMountable>>, CK::is_equal<id<CKMountable>>>;
-  using ComponentsByPredicateMap = std::unordered_map<CKMountablePredicate, std::vector<id<CKMountable>>>;
-
-  CKComponentRootLayout() {}
-  explicit CKComponentRootLayout(CKComponentLayout layout)
-  : CKComponentRootLayout(layout, {}, {}) {}
-  explicit CKComponentRootLayout(CKComponentLayout layout, ComponentLayoutCache layoutCache, ComponentsByPredicateMap componentsByPredicate)
-  : _layout(std::move(layout)), _layoutCache(std::move(layoutCache)), _componentsByPredicate(std::move(componentsByPredicate)) {}
-
-  /**
-   This method returns a CKComponentLayout from the cache for the component if it has a controller.
-   @param component The component to look for the layout with.
-   */
-  auto cachedLayoutForComponent(id<CKMountable> component) const
-  {
-    const auto it = _layoutCache.find(component);
-    return it != _layoutCache.end() ? it->second : CKComponentLayout {};
-  }
-
-  auto componentsMatchingPredicate(const CKMountablePredicate p) const
-  {
-    const auto it = _componentsByPredicate.find(p);
-    return it != _componentsByPredicate.end() ? it->second : std::vector<id<CKMountable>> {};
-  }
-
-  void enumerateCachedLayout(void(^block)(const CKComponentLayout &layout)) const;
-
-  const auto &layout() const { return _layout; }
-  auto component() const { return _layout.component; }
-  auto size() const { return _layout.size; }
-
-private:
-  CKComponentLayout _layout;
-  ComponentLayoutCache _layoutCache;
-  ComponentsByPredicateMap _componentsByPredicate;
-};
-
 struct CKMountLayoutResult {
   CK::NonNull<NSSet *> mountedComponents;
   NSSet *unmountedComponents;
@@ -131,26 +92,6 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
                                   BOOL isUpdate = NO,
                                   BOOL shouldCollectMountInfo = NO,
                                   id<CKMountLayoutListener> listener = nil);
-
-/**
- Safely computes the layout of the given root component by guarding against nil components.
- @param rootComponent The root component to compute the layout for.
- @param sizeRange The size range to compute the component layout within.
- @param predicates Predicates that is used for building a lookup map in `CKComponentRootLayout`.
- */
-CKComponentRootLayout CKComputeRootLayout(id<CKMountable> rootComponent,
-                                          const CKSizeRange &sizeRange,
-                                          const std::unordered_set<CKMountablePredicate> &predicates = {});
-
-/**
- Safely computes the layout of the given component by guarding against nil components.
- @param component The component to compute the layout for.
- @param sizeRange The size range to compute the component layout within.
- @param parentSize The parent size of the component to compute the layout for.
- */
-CKComponentLayout CKComputeComponentLayout(id<CKMountable> component,
-                                           const CKSizeRange &sizeRange,
-                                           const CGSize parentSize);
 
 /** Unmounts all components returned by a previous call to CKMountComponentLayout. */
 void CKUnmountComponents(NSSet<id<CKMountable>> *componentsToUnmount);

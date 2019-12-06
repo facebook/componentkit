@@ -106,15 +106,10 @@ Unmounts the component:
 /** Unique identifier of the component - can be nil */
 @property (nonatomic, strong, readonly) id<NSObject> uniqueIdentifier;
 
-/**
- Indicates if layout should be cached during computation of component tree.
- This is for backward compatibility because we don't want to expose the concept of component controller.
- */
-- (BOOL)shouldCacheLayout;
-
 /** Name used in debug message */
 - (NSString *)debugName;
 
-@end
+/** A long-lived object that exists across generations */
+- (id)controller;
 
-using CKMountablePredicate = BOOL (*)(id<CKMountable>);
+@end

@@ -33,24 +33,6 @@ static void _deleteComponentLayoutChild(void *target) noexcept
   delete (std::vector<CKComponentLayoutChild> *)target;
 }
 
-static auto buildComponentsByPredicateMap(const CKComponentLayout &layout,
-                                          const std::unordered_set<CKMountablePredicate> &predicates)
-{
-  auto componentsByPredicate = CKComponentRootLayout::ComponentsByPredicateMap {};
-  if (predicates.empty()) {
-    return componentsByPredicate;
-  }
-  layout.enumerateLayouts([&](const auto &l){
-    if (l.component == nil) { return; }
-    for (const auto &p : predicates) {
-      if (p(l.component)) {
-        componentsByPredicate[p].push_back(l.component);
-      }
-    }
-  });
-  return componentsByPredicate;
-}
-
 void CKOffMainThreadDeleter::operator()(std::vector<CKComponentLayoutChild> *target) noexcept
 {
   // When deallocating a large layout tree this is called first on the root node
@@ -138,53 +120,9 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
   };
 }
 
-CKComponentRootLayout CKComputeRootLayout(id<CKMountable> rootComponent,
-                                          const CKSizeRange &sizeRange,
-                                          const std::unordered_set<CKMountablePredicate> &predicates)
-{
-  CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
-  auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};
-  layout.enumerateLayouts([&](const auto &l){
-    if ([l.component shouldCacheLayout]) {
-      // If we have a controller, it's CKComponent as `CKMountable` doesn't support controllers.
-      layoutCache[l.component] = l;
-    }
-  });
-  const auto componentsByPredicate = buildComponentsByPredicateMap(layout, predicates);
-  return CKComponentRootLayout {
-    layout,
-    layoutCache,
-    componentsByPredicate,
-  };
-}
-
-CKComponentLayout CKComputeComponentLayout(id<CKMountable> component,
-                                           const CKSizeRange &sizeRange,
-                                           const CGSize parentSize)
-{
-  return component ? [component layoutThatFits:sizeRange parentSize:parentSize] : (CKComponentLayout){};
-}
-
 void CKUnmountComponents(NSSet<id<CKMountable>> *componentsToUnmount)
 {
   for (id<CKMountable> component in componentsToUnmount) {
     [component unmount];
-  }
-}
-
-void CKComponentLayout::enumerateLayouts(const std::function<void(const CKComponentLayout &)> &f) const
-{
-  f(*this);
-
-  if (children == nil) { return; }
-  for (const auto &child : *children) {
-    child.layout.enumerateLayouts(f);
-  }
-}
-
-void CKComponentRootLayout::enumerateCachedLayout(void(^block)(const CKComponentLayout &layout)) const
-{
-  for (const auto &it : _layoutCache) {
-    block(it.second);
   }
 }

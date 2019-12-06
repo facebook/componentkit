@@ -13,6 +13,7 @@
 #import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKComponentAnimationPredicates.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKDetectDuplicateComponent.h>
 #import <ComponentKit/ComponentLayoutContext.h>
 
@@ -38,6 +39,24 @@ CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
   return result;
 }
 
+static auto buildComponentsByPredicateMap(const CKComponentLayout &layout,
+                                          const std::unordered_set<CKMountablePredicate> &predicates)
+{
+  auto componentsByPredicate = CKComponentRootLayout::ComponentsByPredicateMap {};
+  if (predicates.empty()) {
+    return componentsByPredicate;
+  }
+  layout.enumerateLayouts([&](const auto &l){
+    if (l.component == nil) { return; }
+    for (const auto &p : predicates) {
+      if (p(l.component)) {
+        componentsByPredicate[p].push_back(l.component);
+      }
+    }
+  });
+  return componentsByPredicate;
+}
+
 CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener,
@@ -45,8 +64,46 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent buildTrigger:buildTrigger];
   CK::Component::LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
-  const auto rootLayout = CKComputeRootLayout(rootComponent, sizeRange, CKComponentAnimationPredicates());
+
+  CKComponentLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
+  auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};
+  layout.enumerateLayouts([&](const auto &l){
+    if (l.component.controller) {
+      layoutCache[l.component] = l;
+    }
+  });
+  const auto componentsByPredicate = buildComponentsByPredicateMap(layout, CKComponentAnimationPredicates());
+  const auto rootLayout = CKComponentRootLayout {
+    layout,
+    layoutCache,
+    componentsByPredicate,
+  };
+
   CKDetectDuplicateComponent(rootLayout.layout());
   [analyticsListener didLayoutComponentTreeWithRootComponent:rootComponent];
   return rootLayout;
+}
+
+CKComponentLayout CKComputeComponentLayout(id<CKMountable> component,
+                                           const CKSizeRange &sizeRange,
+                                           const CGSize parentSize)
+{
+  return component ? [component layoutThatFits:sizeRange parentSize:parentSize] : (CKComponentLayout){};
+}
+
+void CKComponentLayout::enumerateLayouts(const std::function<void(const CKComponentLayout &)> &f) const
+{
+  f(*this);
+
+  if (children == nil) { return; }
+  for (const auto &child : *children) {
+    child.layout.enumerateLayouts(f);
+  }
+}
+
+void CKComponentRootLayout::enumerateCachedLayout(void(^ _Nonnull block)(const CKComponentLayout &layout)) const
+{
+  for (const auto &it : _layoutCache) {
+    block(it.second);
+  }
 }
