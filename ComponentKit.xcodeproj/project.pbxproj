@@ -429,8 +429,8 @@
 		72395903238E9B22005B570A /* CKDispatch.mm in Sources */ = {isa = PBXBuildFile; fileRef = 723958BF238E9B21005B570A /* CKDispatch.mm */; };
 		72395904238E9B22005B570A /* CKFunctionalHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958C0238E9B21005B570A /* CKFunctionalHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		72395905238E9B22005B570A /* CKFunctionalHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958C0238E9B21005B570A /* CKFunctionalHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		72395906238E9B22005B570A /* CKWeakObjectContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 723958C1238E9B21005B570A /* CKWeakObjectContainer.m */; };
-		72395907238E9B22005B570A /* CKWeakObjectContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 723958C1238E9B21005B570A /* CKWeakObjectContainer.m */; };
+		72395906238E9B22005B570A /* CKWeakObjectContainer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 723958C1238E9B21005B570A /* CKWeakObjectContainer.mm */; };
+		72395907238E9B22005B570A /* CKWeakObjectContainer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 723958C1238E9B21005B570A /* CKWeakObjectContainer.mm */; };
 		72395908238E9B22005B570A /* CKMutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958C2238E9B21005B570A /* CKMutex.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		72395909238E9B22005B570A /* CKMutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958C2238E9B21005B570A /* CKMutex.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7239590A238E9B22005B570A /* CKCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 723958C3238E9B21005B570A /* CKCollection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1286,7 +1286,7 @@
 		723958BE238E9B21005B570A /* CKEqualityHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKEqualityHelpers.mm; sourceTree = "<group>"; };
 		723958BF238E9B21005B570A /* CKDispatch.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDispatch.mm; sourceTree = "<group>"; };
 		723958C0238E9B21005B570A /* CKFunctionalHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKFunctionalHelpers.h; sourceTree = "<group>"; };
-		723958C1238E9B21005B570A /* CKWeakObjectContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKWeakObjectContainer.m; sourceTree = "<group>"; };
+		723958C1238E9B21005B570A /* CKWeakObjectContainer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKWeakObjectContainer.mm; sourceTree = "<group>"; };
 		723958C2238E9B21005B570A /* CKMutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMutex.h; sourceTree = "<group>"; };
 		723958C3238E9B21005B570A /* CKCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCollection.h; sourceTree = "<group>"; };
 		723958C4238E9B21005B570A /* CKInternalHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKInternalHelpers.h; sourceTree = "<group>"; };
@@ -1899,7 +1899,7 @@
 				723958BE238E9B21005B570A /* CKEqualityHelpers.mm */,
 				723958C0238E9B21005B570A /* CKFunctionalHelpers.h */,
 				723958BC238E9B21005B570A /* CKWeakObjectContainer.h */,
-				723958C1238E9B21005B570A /* CKWeakObjectContainer.m */,
+				723958C1238E9B21005B570A /* CKWeakObjectContainer.mm */,
 				723958C2238E9B21005B570A /* CKMutex.h */,
 				723958C4238E9B21005B570A /* CKInternalHelpers.h */,
 				723958B9238E9B21005B570A /* CKInternalHelpers.mm */,
@@ -2915,7 +2915,6 @@
 				03B8B5361D2A346F00EDFF59 /* CKComponentScopeTypes.h in Headers */,
 				72395941238E9B22005B570A /* CKPropBitmap.h in Headers */,
 				723958FB238E9B22005B570A /* CKContainerWrapper.h in Headers */,
-				23EF1D41209365BA004C95BE /* CKTreeNodeWithChild.h in Headers */,
 				03B8B5391D2A346F00EDFF59 /* CKTextComponentViewInternal.h in Headers */,
 				03B8B53A1D2A346F00EDFF59 /* CKComponentRootViewInternal.h in Headers */,
 				2322A20B224504AE006BFCD2 /* CKCollectionViewDataSourceListener.h in Headers */,
@@ -3014,10 +3013,8 @@
 			files = (
 				7239590C238E9B22005B570A /* CKInternalHelpers.h in Headers */,
 				23FEC59F203B30DA0068E09D /* CKTreeNode.h in Headers */,
-				23EF1D44209365BA004C95BE /* CKTreeNodeWithChildren.h in Headers */,
 				72395936238E9B22005B570A /* CKNonNull.h in Headers */,
 				D6F9A4AC23477F4200D4FC0A /* FlexboxComponentBuilder.h in Headers */,
-				23EF1D40209365BA004C95BE /* CKTreeNodeWithChild.h in Headers */,
 				A2A89C3B2011C0FC009D0377 /* CKInspectableView.h in Headers */,
 				400B0E601F71C63C006BDFEE /* CKDataSourceChangesetInternal.h in Headers */,
 				400B0E611F71C63C006BDFEE /* CKDataSourceChangeset.h in Headers */,
@@ -3754,7 +3751,7 @@
 				03B8B49A1D2A346F00EDFF59 /* CKOverlayLayoutComponent.mm in Sources */,
 				23FEC5A4203B30DA0068E09D /* CKTreeNode.mm in Sources */,
 				03B8B49B1D2A346F00EDFF59 /* CKRatioLayoutComponent.mm in Sources */,
-				72395907238E9B22005B570A /* CKWeakObjectContainer.m in Sources */,
+				72395907238E9B22005B570A /* CKWeakObjectContainer.mm in Sources */,
 				EB14A3441D8267DF0004BECF /* CKAutoSizedImageComponent.mm in Sources */,
 				239F2CFF21E8F26F00580F93 /* CKRootTreeNode.mm in Sources */,
 				230ADF731FC5FBEB001570A3 /* CKComponentEvents.mm in Sources */,
@@ -4113,7 +4110,7 @@
 				D0B47CBF1CBD943400BB33CE /* CKDataSourceItem.mm in Sources */,
 				D0B47CC01CBD943400BB33CE /* CKDataSourceListenerAnnouncer.mm in Sources */,
 				23D1B14322D638F600453EC7 /* CKScopeTreeNode.mm in Sources */,
-				72395906238E9B22005B570A /* CKWeakObjectContainer.m in Sources */,
+				72395906238E9B22005B570A /* CKWeakObjectContainer.mm in Sources */,
 				72395900238E9B22005B570A /* CKEqualityHelpers.mm in Sources */,
 				D0B47CC11CBD943400BB33CE /* CKDataSourceState.mm in Sources */,
 				D63F21D820C20559007604F4 /* CKComponentAnimationsController.mm in Sources */,

@@ -10,27 +10,49 @@
 
 #import "CKWeakObjectContainer.h"
 
-#import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
-@interface CKWeakObjectContainer : NSObject
-@property (nonatomic, weak) id object;
-@end
+#import "CKEqualityHelpers.h"
 
 @implementation CKWeakObjectContainer
+
++ (instancetype)newWithObject:(id)object
+{
+  CKWeakObjectContainer *c = [super new];
+  if (c) {
+    c->_object = object;
+  }
+  return c;
+}
+
+- (BOOL)isEqual:(id)other
+{
+  if (other == self) {
+    return YES;
+  } else if (![other isKindOfClass:[self class]]) {
+    return NO;
+  } else {
+    CKWeakObjectContainer *container = (CKWeakObjectContainer *)other;
+    return CKObjectIsEqual(self->_object, container->_object);
+  }
+}
+
+- (NSUInteger)hash
+{
+  return [self->_object hash];
+}
+
 @end
 
 void ck_objc_setNonatomicAssociatedWeakObject(id container, void *key, id value)
 {
-  CKWeakObjectContainer *wrapper = [CKWeakObjectContainer new];
-  wrapper.object = value;
+  CKWeakObjectContainer *wrapper = [CKWeakObjectContainer newWithObject:value];
   objc_setAssociatedObject(container, key, wrapper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 void ck_objc_setAssociatedWeakObject(id container, void *key, id value)
 {
-  CKWeakObjectContainer *wrapper = [CKWeakObjectContainer new];
-  wrapper.object = value;
+  CKWeakObjectContainer *wrapper = [CKWeakObjectContainer newWithObject:value];
   objc_setAssociatedObject(container, key, wrapper, OBJC_ASSOCIATION_RETAIN);
 }
 

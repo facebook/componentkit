@@ -8,6 +8,13 @@
  *
  */
 
+#import <Foundation/Foundation.h>
+
+@interface CKWeakObjectContainer : NSObject
+@property (readonly, nonatomic, weak) id object;
++ (instancetype)newWithObject:(id)object;
+@end
+
 #ifdef __cplusplus
 extern "C" {
 #endif
