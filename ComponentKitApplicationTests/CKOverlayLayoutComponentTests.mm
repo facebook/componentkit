@@ -32,21 +32,17 @@ static const CKSizeRange kSize = {{320, 320}, {320, 320}};
 
 - (void)testOverlay
 {
-  CKComponent *c = [CKOverlayLayoutComponent
-                    newWithComponent:
-                    [CKComponent
-                     newWithView:{
-                       [UIView class],
-                       {{@selector(setBackgroundColor:), [UIColor blueColor]}}
-                     }
-                     size:{}]
-                    overlay:
-                    [CKComponent
-                     newWithView:{
-                       [CKOverlayTestView class],
-                       {{@selector(setBackgroundColor:), [UIColor colorWithWhite:1.0 alpha:0.6]}}
-                     }
-                     size:{}]];
+  auto const c = CK::OverlayLayoutComponentBuilder()
+  .component(CK::ComponentBuilder()
+                 .viewClass([UIView class])
+                 .backgroundColor([UIColor blueColor])
+                 .build())
+  .overlay(CK::ComponentBuilder()
+               .viewClass([CKOverlayTestView class])
+               .backgroundColor([UIColor colorWithWhite:1.0
+                                                  alpha:0.6])
+               .build())
+  .build();
 
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
