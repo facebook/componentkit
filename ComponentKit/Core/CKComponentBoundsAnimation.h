@@ -43,6 +43,8 @@ struct CKComponentBoundsAnimation {
   CKComponentBoundsAnimationMode mode;
   UIViewAnimationOptions options;
 
+  /** `UIViewAnimationOptionCurve` in `options` will be ignored if this is specified */
+  CAMediaTimingFunction *timingFunction;
   /** Ignored unless mode is Spring, in which case it specifies the damping ratio passed to UIKit. */
   CGFloat springDampingRatio;
   /** Ignored unless mode is Spring, in which case it specifies the initial velocity passed to UIKit. */

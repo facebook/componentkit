@@ -229,15 +229,36 @@
     .duration = 0.5,
     .delay = 0.2,
     .mode = CKComponentBoundsAnimationModeDefault,
-    .options = UIViewAnimationOptionPreferredFramesPerSecond60
+    .options = UIViewAnimationOptionPreferredFramesPerSecond60,
+    .timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.1 :0.9 :0.9 :0.1],
   };
   auto const ba2 = CKComponentBoundsAnimation {
     .duration = 0.5,
     .delay = 0.2,
-    .options = UIViewAnimationOptionPreferredFramesPerSecond60
+    .options = UIViewAnimationOptionPreferredFramesPerSecond60,
+    .timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.1 :0.9 :0.9 :0.1],
   };
 
   XCTAssert(ba1 == ba2);
+}
+
+- (void)test_WhenTimingFunctionsAreNotEqual_IsNotEqual
+{
+  auto const ba1 = CKComponentBoundsAnimation {
+    .duration = 0.5,
+    .delay = 0.2,
+    .mode = CKComponentBoundsAnimationModeDefault,
+    .options = UIViewAnimationOptionPreferredFramesPerSecond60,
+    .timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.1 :0.9 :0.9 :0.2],
+  };
+  auto const ba2 = CKComponentBoundsAnimation {
+    .duration = 0.5,
+    .delay = 0.2,
+    .options = UIViewAnimationOptionPreferredFramesPerSecond60,
+    .timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.1 :0.9 :0.9 :0.1],
+  };
+
+  XCTAssert(ba1 != ba2);
 }
 
 - (void)test_WhenSpringParamsAreNotEqual_IsNotEqual
