@@ -480,6 +480,53 @@ class Variant : private VariantDetail::VariantStorage<Types...>,
   // Inherit assignment operators from each of the types in Types
   using VariantDetail::VariantChoice<sizeof...(Types), Types...>::operator=;
 
+  Variant() = default;
+
+  Variant(const Variant& other) {
+    if (other.getDiscriminator() != 0) {
+      other.match([&](const auto& rhs){
+        using T = std::remove_const_t<std::remove_reference_t<decltype(rhs)>>;
+        *this = other.get<T>();
+      });
+    }
+  }
+
+  Variant(Variant&& other) {
+    if (other.getDiscriminator() != 0) {
+      other.match([&](const auto& rhs){
+        using T = std::remove_const_t<std::remove_reference_t<decltype(rhs)>>;
+        *this = std::move(other.get<T>());
+      });
+    }
+  }
+
+  Variant& operator=(const Variant& other)
+  {
+    if (other.getDiscriminator() != 0) {
+      other.match([&](const auto& rhs){
+        using T = std::remove_const_t<std::remove_reference_t<decltype(rhs)>>;
+        *this = other.get<T>();
+      });
+    } else {
+      destroy();
+    }
+
+    return *this;
+  }
+
+  Variant& operator=(Variant&& other) {
+    if (other.getDiscriminator() != 0) {
+      other.match([&](const auto& rhs){
+        using T = std::remove_const_t<std::remove_reference_t<decltype(rhs)>>;
+        *this = std::move(other.get<T>());
+      });
+    } else {
+      destroy();
+    }
+
+    return *this;
+  }
+
   ~Variant()
   {
     destroy();

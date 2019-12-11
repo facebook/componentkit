@@ -128,6 +128,9 @@ struct Loading {};
 struct Data {
   std::string message;
 };
+struct ObjcObject {
+  NSObject *s;
+};
 
 - (void)test_MatchingCustomTypes
 {
@@ -137,6 +140,43 @@ struct Data {
   state.match([](Empty) {},
               [](Loading) {},
               [](const Data &d) { std::cout << d.message << '\n'; });
+}
+
+static NSInteger getRetainCount(__unsafe_unretained id object) {
+  if (object == nil) {
+    return 0;
+  } else {
+    return CFGetRetainCount((__bridge CFTypeRef)object);
+  }
+}
+
+- (void)test_CopyMoveCtorOperatorEqual
+{
+  auto object = [NSObject new];
+
+  // referenced in object
+  XCTAssertEqual(getRetainCount(object), 1);
+
+  {
+    Variant<Empty, ObjcObject> b;
+
+    {
+      Variant<Empty, ObjcObject> a = ObjcObject{object};
+      // referenced in object & a
+      XCTAssertEqual(getRetainCount(object), 2);
+
+      b = a;
+
+      // referenced in object, a & b
+      XCTAssertEqual(getRetainCount(object), 3);
+    }
+
+    // a gets deleted, referenced in object & b
+    XCTAssertEqual(getRetainCount(object), 2);
+  }
+
+  // b gets deleted, referenced in object
+  XCTAssertEqual(getRetainCount(object), 1);
 }
 
 @end
