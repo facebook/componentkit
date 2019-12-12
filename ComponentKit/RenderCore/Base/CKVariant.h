@@ -484,18 +484,16 @@ class Variant : private VariantDetail::VariantStorage<Types...>,
 
   Variant(const Variant& other) {
     if (other.getDiscriminator() != 0) {
-      other.match([&](const auto& rhs){
-        using T = std::remove_const_t<std::remove_reference_t<decltype(rhs)>>;
-        *this = other.get<T>();
+      other.match([this](const auto& rhs){
+        *this = rhs;
       });
     }
   }
 
   Variant(Variant&& other) {
     if (other.getDiscriminator() != 0) {
-      other.match([&](const auto& rhs){
-        using T = std::remove_const_t<std::remove_reference_t<decltype(rhs)>>;
-        *this = std::move(other.get<T>());
+      other.match([this](auto&& rhs){
+        *this = std::move(rhs);
       });
     }
   }
@@ -503,9 +501,8 @@ class Variant : private VariantDetail::VariantStorage<Types...>,
   Variant& operator=(const Variant& other)
   {
     if (other.getDiscriminator() != 0) {
-      other.match([&](const auto& rhs){
-        using T = std::remove_const_t<std::remove_reference_t<decltype(rhs)>>;
-        *this = other.get<T>();
+      other.match([this](const auto& rhs){
+        *this = rhs;
       });
     } else {
       destroy();
@@ -516,9 +513,8 @@ class Variant : private VariantDetail::VariantStorage<Types...>,
 
   Variant& operator=(Variant&& other) {
     if (other.getDiscriminator() != 0) {
-      other.match([&](const auto& rhs){
-        using T = std::remove_const_t<std::remove_reference_t<decltype(rhs)>>;
-        *this = std::move(other.get<T>());
+      other.match([this](auto&& rhs){
+        *this = std::move(rhs);
       });
     } else {
       destroy();
