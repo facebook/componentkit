@@ -175,7 +175,7 @@ static NSString *const kTestContextForLifecycleComponent = @"kTestContextForLife
 
 static CKComponent *AlternateComponentProvider(id<NSObject> model, id<NSObject> context)
 {
-  return [CKCompositeComponent newWithComponent:[CKComponent new]];
+  return CK::CompositeComponentBuilder().component([CKComponent new]).build();
 }
 
 static CKComponent *ComponentProvider(id<NSObject> _, id<NSObject> context)

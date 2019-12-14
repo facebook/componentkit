@@ -935,6 +935,8 @@
 		D616A2BF20BED2D100695472 /* CKComponentTreeDiff.h in Headers */ = {isa = PBXBuildFile; fileRef = D616A2BC20BED2D100695472 /* CKComponentTreeDiff.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D616A2C020BED2D100695472 /* CKComponentTreeDiff.h in Headers */ = {isa = PBXBuildFile; fileRef = D616A2BC20BED2D100695472 /* CKComponentTreeDiff.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D62D6DBC2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D62D6DBB2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm */; };
+		D63270F223A3B86500D0C653 /* CompositeComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D63270F123A3B86500D0C653 /* CompositeComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D63270F323A3B86500D0C653 /* CompositeComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D63270F123A3B86500D0C653 /* CompositeComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6327647238DB94C004486D4 /* InsetComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D632763C238DB94C004486D4 /* InsetComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6327648238DB94C004486D4 /* InsetComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D632763C238DB94C004486D4 /* InsetComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D634A27F22DB71460085D697 /* ComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D634A27E22DB71460085D697 /* ComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1668,6 +1670,7 @@
 		D62122E4223855B7008F3473 /* CKAnimationSpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAnimationSpy.h; sourceTree = "<group>"; };
 		D62122EF223856B2008F3473 /* TransactionProviderSpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransactionProviderSpy.h; sourceTree = "<group>"; };
 		D62D6DBB2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewConfigurationTests.mm; sourceTree = "<group>"; };
+		D63270F123A3B86500D0C653 /* CompositeComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CompositeComponentBuilder.h; sourceTree = "<group>"; };
 		D632763C238DB94C004486D4 /* InsetComponentBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsetComponentBuilder.h; sourceTree = "<group>"; };
 		D634A27E22DB71460085D697 /* ComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComponentBuilder.h; sourceTree = "<group>"; };
 		D63A926D2224857D00E7CC91 /* CKOptionalTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKOptionalTests.mm; sourceTree = "<group>"; };
@@ -2420,6 +2423,7 @@
 				D0B47B011CBD926700BB33CE /* Scope */,
 				D634A27E22DB71460085D697 /* ComponentBuilder.h */,
 				D48D9D5223426BE3003DDC41 /* ComponentBuilder.mm */,
+				D63270F123A3B86500D0C653 /* CompositeComponentBuilder.h */,
 				723E445B23414FFB00A4806C /* CKComponentGenerator.h */,
 				723E445C23414FFB00A4806C /* CKComponentGenerator.mm */,
 				D48D9D3C2342606B003DDC41 /* CKTransitions.h */,
@@ -2961,6 +2965,7 @@
 				03B8B5501D2A346F00EDFF59 /* CKComponentScopeHandle.h in Headers */,
 				03B8B5511D2A346F00EDFF59 /* CKAsyncTransaction.h in Headers */,
 				03B8B5521D2A346F00EDFF59 /* CKCacheImpl.h in Headers */,
+				D63270F323A3B86500D0C653 /* CompositeComponentBuilder.h in Headers */,
 				03B8B5531D2A346F00EDFF59 /* ComponentUtilities.h in Headers */,
 				03B8B5541D2A346F00EDFF59 /* CKTextKitRenderer+Positioning.h in Headers */,
 				40AB33C91FC39196005D3CE9 /* CKStateUpdateMetadata.h in Headers */,
@@ -3038,6 +3043,7 @@
 				23309AA42045C5F300833BDB /* CKRenderComponentProtocol.h in Headers */,
 				D0B47D431CBD948E00BB33CE /* CKDataSourceInternal.h in Headers */,
 				D0B47D4F1CBD948E00BB33CE /* CKDataSourceUpdateStateModification.h in Headers */,
+				D63270F223A3B86500D0C653 /* CompositeComponentBuilder.h in Headers */,
 				D0B47D271CBD948E00BB33CE /* CKComponentProvider.h in Headers */,
 				23D1B14122D638F600453EC7 /* CKScopeTreeNode.h in Headers */,
 				D0B47D161CBD948E00BB33CE /* CKComponentAnnouncerBase.h in Headers */,

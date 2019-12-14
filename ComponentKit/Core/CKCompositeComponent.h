@@ -37,3 +37,5 @@
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view component:(__attribute__((ns_consumed)) CKComponent *)component;
 
 @end
+
+#import <ComponentKit/CompositeComponentBuilder.h>
