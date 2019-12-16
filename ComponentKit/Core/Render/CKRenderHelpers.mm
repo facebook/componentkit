@@ -144,18 +144,6 @@ namespace CKRenderInternal {
     return NO;
   }
 
-static auto willBuildComponentTree(id<CKTreeNodeProtocol> node,
-                                   id<CKTreeNodeComponentProtocol> component,
-                                   const CKBuildComponentTreeParams &params) -> void {
-    // Context support
-    CKComponentContextHelper::willBuildComponentTree(component);
-
-    // Faster Props updates and context support
-    params.scopeRoot.rootNode.willBuildComponentTree(node);
-
-    // Systrace logging
-    [params.systraceListener willBuildComponent:component.class];
-  }
 
 static auto didBuildComponentTree(id<CKTreeNodeProtocol> node,
                                   id<CKTreeNodeComponentProtocol> component,
@@ -355,6 +343,10 @@ namespace CKRender {
                  CKRenderDidReuseComponentBlock didReuseBlock) -> id<CKTreeNodeProtocol>
       {
         CKCAssert(component, @"component cannot be nil");
+
+        // Context support
+        CKComponentContextHelper::willBuildComponentTree(component);
+
         auto const node = [[CKRenderTreeNode alloc]
                            initWithComponent:component
                            parent:parent
@@ -362,8 +354,11 @@ namespace CKRender {
                            scopeRoot:params.scopeRoot
                            stateUpdates:params.stateUpdates];;
 
+        // Faster Props updates and context support
+        params.scopeRoot.rootNode.willBuildComponentTree(node);
 
-        CKRenderInternal::willBuildComponentTree(node, component, params);
+        // Systrace logging
+        [params.systraceListener willBuildComponent:component.class];
 
         // Faster state/props optimizations require previous parent.
         if (CKRenderInternal::reusePreviousComponentForSingleChild(node, component, childComponent, parent, previousParent, params, parentHasStateUpdate, didReuseBlock)) {
