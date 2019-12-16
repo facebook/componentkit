@@ -14,6 +14,7 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
+#include <functional>
 
 namespace CK {
 
@@ -416,6 +417,13 @@ using MatchResult = typename MatchResultT<Result, Matcher, ElementTypes...>::Typ
 
 #pragma mark - Overloaded
 
+template <typename T>
+using ConditionalFunctionWrapper = typename std::conditional<
+    std::is_pointer<T>::value && std::is_function<typename std::remove_pointer<T>::type>::value,
+    std::function<typename std::remove_pointer<T>::type>,
+    T
+  >::type;
+
 /**
  Struct template that aggregates multiple callables into a single callable by inherting from all of them.
 
@@ -437,8 +445,8 @@ using MatchResult = typename MatchResultT<Result, Matcher, ElementTypes...>::Typ
 
  Thus, the resulting callable can be invoked with both \c int and \c double arguments.
  */
-template <typename... Fs> struct Overloaded : Fs... {
-  Overloaded(Fs... fs) : Fs{fs}... {}
+template <typename... Fs> struct Overloaded : ConditionalFunctionWrapper<Fs>... {
+  Overloaded(Fs... fs) : ConditionalFunctionWrapper<Fs>{fs}... {}
 };
 
 }  // namespace VariantDetail

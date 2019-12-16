@@ -179,4 +179,20 @@ static NSInteger getRetainCount(__unsafe_unretained id object) {
   XCTAssertEqual(getRetainCount(object), 1);
 }
 
+static void parseInt(int& c) {
+  c = 43;
+}
+
+- (void)test_FunctionPointer
+{
+  Variant<int, char> v = 42;
+
+  v.match(&parseInt, [self](const char& c){
+    XCTFail(@"Char is not the value we hold");
+  });
+
+  // If the handler was called the value should have changed
+  XCTAssertEqual(v, 43);
+}
+
 @end
