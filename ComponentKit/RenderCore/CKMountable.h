@@ -112,4 +112,10 @@ Unmounts the component:
 /** A long-lived object that exists across generations */
 - (id)controller;
 
+/** Number of children; can be 0 for leaves */
+- (unsigned int)numberOfChildren;
+
+/** Get child at index; can be nil */
+- (id<CKMountable>)childAtIndex:(unsigned int)index;
+
 @end

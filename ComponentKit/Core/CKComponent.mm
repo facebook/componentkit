@@ -408,6 +408,18 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return ck_objc_getAssociatedWeakObject(self, kRootComponentMountedViewKey);
 }
 
+#pragma mark - CKMountable
+
+- (unsigned int)numberOfChildren
+{
+  return 0;
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  return nil;
+}
+
 #pragma mark - CKComponentProtocol
 
 + (Class<CKComponentControllerProtocol>)controllerClass

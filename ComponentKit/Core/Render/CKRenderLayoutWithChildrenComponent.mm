@@ -10,9 +10,12 @@
 
 #import "CKRenderLayoutWithChildrenComponent.h"
 
+#import <ComponentKit/CKAssert.h>
+
 #import "CKBuildComponent.h"
-#import "CKRenderHelpers.h"
 #import "CKComponentInternal.h"
+#import "CKRenderHelpers.h"
+#import "CKTreeNodeProtocol.h"
 
 @implementation CKRenderLayoutWithChildrenComponent
 {
@@ -54,6 +57,21 @@
 
 - (id)componentIdentifier
 {
+  return nil;
+}
+
+- (unsigned int)numberOfChildren
+{
+  return (unsigned int)_children.size();
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  if (_children.size() > index) {
+    auto const mountable = static_cast<id<CKMountable>>(_children[index]);
+    return mountable;
+  }
+  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %lu", index, _children.size());
   return nil;
 }
 

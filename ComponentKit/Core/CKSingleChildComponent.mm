@@ -26,4 +26,20 @@
   return [super viewForAnimation] ?: [_child viewForAnimation];
 }
 
+#pragma mark - CKMountable
+
+- (unsigned int)numberOfChildren
+{
+  return _child ? 1 : 0;
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  if (index == 0) {
+    return _child;
+  }
+  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %u", index, [self numberOfChildren]);
+  return nil;
+}
+
 @end
