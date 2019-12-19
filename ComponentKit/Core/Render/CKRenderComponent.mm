@@ -97,7 +97,7 @@
 
 + (id)initialState
 {
-  return [CKTreeNodeEmptyState emptyState];
+  return CKTreeNodeEmptyState();
 }
 
 - (BOOL)shouldComponentUpdate:(id<CKRenderComponentProtocol>)component

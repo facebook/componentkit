@@ -160,12 +160,12 @@ struct CKBuildComponentTreeParams {
 @end
 
 /**
- Default empty state for CKRenderComponentProtocol components.
+ A marker used as a performance optimization by CKRenderComponentProtocol components.
 
- If a CKRenderComponentProtocol returns any state other than `CKTreeNodeEmptyState` (including nil)
- - the infra will create it a scope handle and will support a state update.
- Othwerwise, the component will be stateless.
+ If a component conforming to CKRenderComponentProtocol returns this value as its initial state,
+ the infrastructure will SKIP creating a tree node, disabling state updates -- unless some other
+ attribute of the component requires it (e.g. it has a controller).
+
+ This is a performance optimization, since tree nodes are not free.
  */
-@interface CKTreeNodeEmptyState : NSObject
-+ (id)emptyState;
-@end
+id CKTreeNodeEmptyState(void);

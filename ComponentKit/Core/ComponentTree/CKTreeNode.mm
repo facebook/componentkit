@@ -140,17 +140,12 @@
 
 @end
 
-/**
- Implement a singletone empty state here.
- */
-@implementation CKTreeNodeEmptyState
-+ (id)emptyState
+id CKTreeNodeEmptyState(void)
 {
   static dispatch_once_t onceToken;
-  static CKTreeNodeEmptyState *emptyState;
+  static id emptyState;
   dispatch_once(&onceToken, ^{
-    emptyState = [CKTreeNodeEmptyState new];
+    emptyState = [NSObject new];
   });
   return emptyState;
 }
-@end

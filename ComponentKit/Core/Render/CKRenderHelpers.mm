@@ -435,7 +435,7 @@ namespace CKRender {
           // 2. Has a controller
           // 3. Returns `YES` from `requiresScopeHandle`
           id initialState = [componentClass initialStateWithComponent:component];
-          if (initialState != [CKTreeNodeEmptyState emptyState] ||
+          if (initialState != CKTreeNodeEmptyState() ||
               [componentClass controllerClass] ||
               [componentClass requiresScopeHandle]) {
             scopeHandle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
