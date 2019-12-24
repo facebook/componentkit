@@ -14,6 +14,7 @@
 #import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKGlobalConfig.h>
+#import <ComponentKit/CKIterable.h>
 #import <ComponentKit/CKTreeNodeTypes.h>
 
 @protocol CKSystraceListener;
@@ -67,7 +68,7 @@ struct CKBuildComponentTreeParams {
  The component that is hosted by a `CKTreeNodeProtocol`.
  It represents the component holding the the scope handle, capable of building a component tree (CKTreeNode).
  */
-@protocol CKTreeNodeComponentProtocol<CKComponentProtocol>
+@protocol CKTreeNodeComponentProtocol<CKComponentProtocol, CKIterable>
 
 /** Reference to the component's scope handle. */
 - (CKComponentScopeHandle *)scopeHandle;
@@ -97,6 +98,9 @@ struct CKBuildComponentTreeParams {
 
 /** Reference to the component's tree node. */
 - (id<CKTreeNodeProtocol>)treeNode;
+
+/** Get child at index; can be nil */
+- (id<CKTreeNodeComponentProtocol>)childAtIndex:(unsigned int)index;
 #endif
 
 @end
