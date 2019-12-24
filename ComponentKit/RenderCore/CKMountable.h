@@ -12,6 +12,7 @@
 
 #import <ComponentKit/ComponentMountContext.h>
 #import <ComponentKit/CKComponentSize.h>
+#import <ComponentKit/CKIterable.h>
 
 @protocol CKMountable;
 
@@ -29,7 +30,7 @@ struct CKMountInfo {
   CKComponentViewContext viewContext;
 };
 
-@protocol CKMountable <NSObject>
+@protocol CKMountable <CKIterable>
 
 /**
  Call this on children components to compute their layouts.
@@ -111,9 +112,6 @@ Unmounts the component:
 
 /** A long-lived object that exists across generations */
 - (id)controller;
-
-/** Number of children; can be 0 for leaves */
-- (unsigned int)numberOfChildren;
 
 /** Get child at index; can be nil */
 - (id<CKMountable>)childAtIndex:(unsigned int)index;
