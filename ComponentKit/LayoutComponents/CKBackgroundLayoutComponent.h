@@ -31,3 +31,5 @@
                        size:(const CKComponentSize &)size CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @end
+
+#import <ComponentKit/BackgroundLayoutComponentBuilder.h>

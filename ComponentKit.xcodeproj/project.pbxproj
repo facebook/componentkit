@@ -965,6 +965,8 @@
 		D657401321051C6F00FD8AAB /* CKIndexTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = D657401021051C6E00FD8AAB /* CKIndexTransform.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D657401421051C6F00FD8AAB /* CKIndexTransform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D657401121051C6E00FD8AAB /* CKIndexTransform.mm */; };
 		D657401521051C6F00FD8AAB /* CKIndexTransform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D657401121051C6E00FD8AAB /* CKIndexTransform.mm */; };
+		D6683A5023B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D6683A4F23B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D6683A5123B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D6683A4F23B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D68A9E3D22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D68A9E3E22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D6A0CF8722844556000CC4D0 /* CKAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D6A0CF8522844556000CC4D0 /* CKAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1690,6 +1692,7 @@
 		D657400721013CBF00FD8AAB /* CKChangesetHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKChangesetHelpers.h; sourceTree = "<group>"; };
 		D657401021051C6E00FD8AAB /* CKIndexTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKIndexTransform.h; sourceTree = "<group>"; };
 		D657401121051C6E00FD8AAB /* CKIndexTransform.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKIndexTransform.mm; sourceTree = "<group>"; };
+		D6683A4F23B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BackgroundLayoutComponentBuilder.h; sourceTree = "<group>"; };
 		D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKDelayedInitialisationWrapper.h; sourceTree = "<group>"; };
 		D6A0CF8522844556000CC4D0 /* CKAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAnimation.h; sourceTree = "<group>"; };
 		D6A0CF8622844556000CC4D0 /* CKAnimation.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnimation.mm; sourceTree = "<group>"; };
@@ -2554,6 +2557,7 @@
 				D6F9A4AB23477F4200D4FC0A /* FlexboxComponentBuilder.h */,
 				D632763C238DB94C004486D4 /* InsetComponentBuilder.h */,
 				D6146C2A239C48D9006B95C4 /* OverlayLayoutComponentBuilder.h */,
+				D6683A4F23B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h */,
 			);
 			path = LayoutComponents;
 			sourceTree = "<group>";
@@ -2939,6 +2943,7 @@
 				722A1C3522FDA1BD009A5B22 /* CKCategorizable.h in Headers */,
 				03B8B53E1D2A346F00EDFF59 /* CKAsyncLayer.h in Headers */,
 				03B8B53F1D2A346F00EDFF59 /* CKTextKitShadower.h in Headers */,
+				D6683A5123B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h in Headers */,
 				23B65ACA213FF9300049FFAC /* CKRenderComponent.h in Headers */,
 				72395905238E9B22005B570A /* CKFunctionalHelpers.h in Headers */,
 				03B8B5401D2A346F00EDFF59 /* CKComponentScopeRoot.h in Headers */,
@@ -3036,6 +3041,7 @@
 				B1E3067B1E8B0EAA004864CF /* CKBuildComponent.h in Headers */,
 				D0B47D0F1CBD948E00BB33CE /* CKComponentScopeTypes.h in Headers */,
 				6DAC628C1F83DEB900536113 /* CKComponentScopeEnumeratorProvider.h in Headers */,
+				D6683A5023B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h in Headers */,
 				7F6BAF6A1F1F6E5200600828 /* CKFlexboxComponent.h in Headers */,
 				D0B47D2E1CBD948E00BB33CE /* CKComponentRootView.h in Headers */,
 				D0B47D131CBD948E00BB33CE /* CKCollectionViewDataSource.h in Headers */,
