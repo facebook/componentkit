@@ -40,7 +40,8 @@ struct CKComponentLayout { // This is pending renaming
   NSDictionary *extra;
 
   CKComponentLayout(id<CKMountable> c, CGSize s) noexcept;
-  CKComponentLayout(id<CKMountable> c, CGSize s, std::vector<CKComponentLayoutChild> ch, NSDictionary *e = nil) noexcept;
+  CKComponentLayout(id<CKMountable> c, CGSize s, const std::vector<CKComponentLayoutChild> &ch, NSDictionary *e = nil) noexcept;
+  CKComponentLayout(id<CKMountable> c, CGSize s, std::vector<CKComponentLayoutChild> &&ch, NSDictionary *e = nil) noexcept;
 
   CKComponentLayout() noexcept;
 

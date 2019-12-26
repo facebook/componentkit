@@ -20,7 +20,12 @@ CKComponentLayout::CKComponentLayout(id<CKMountable> c, CGSize s) noexcept
   CKCAssertNotNil(c, @"Nil components are not allowed");
 };
 
-CKComponentLayout::CKComponentLayout(id<CKMountable> c, CGSize s, std::vector<CKComponentLayoutChild> ch, NSDictionary *e) noexcept
+CKComponentLayout::CKComponentLayout(id<CKMountable> c, CGSize s, const std::vector<CKComponentLayoutChild> &ch, NSDictionary *e) noexcept
+: component(c), size(s), children(new std::vector<CKComponentLayoutChild>(ch), CKOffMainThreadDeleter()), extra(e) {
+  CKCAssertNotNil(c, @"Nil components are not allowed");
+};
+
+CKComponentLayout::CKComponentLayout(id<CKMountable> c, CGSize s, std::vector<CKComponentLayoutChild> &&ch, NSDictionary *e) noexcept
 : component(c), size(s), children(new std::vector<CKComponentLayoutChild>(std::move(ch)), CKOffMainThreadDeleter()), extra(e) {
   CKCAssertNotNil(c, @"Nil components are not allowed");
 };
