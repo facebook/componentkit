@@ -18,26 +18,27 @@
 
 - (CKComponent *)child
 {
-  return _child;
+  CKFailAssert(@"%@ MUST override the '%@' method.", [self class], NSStringFromSelector(_cmd));
+  return nil;
 }
 
 - (UIView *)viewForAnimation
 {
   // Delegate to the wrapped component's viewForAnimation if we don't have one.
-  return [super viewForAnimation] ?: [_child viewForAnimation];
+  return [super viewForAnimation] ?: [[self child] viewForAnimation];
 }
 
 #pragma mark - CKMountable
 
 - (unsigned int)numberOfChildren
 {
-  return _child ? 1 : 0;
+  return [self child] ? 1 : 0;
 }
 
 - (id<CKMountable>)childAtIndex:(unsigned int)index
 {
   if (index == 0) {
-    return _child;
+    return [self child];
   }
   CKFailAssertWithCategory([self class], @"Index %u is out of bounds %u", index, [self numberOfChildren]);
   return nil;

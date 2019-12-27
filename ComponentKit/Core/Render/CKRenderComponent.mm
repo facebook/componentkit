@@ -21,6 +21,9 @@
 #import "CKTreeNode.h"
 
 @implementation CKRenderComponent
+{
+  CKComponent *_child;
+}
 
 #if DEBUG
 + (void)initialize
@@ -83,7 +86,7 @@
   return [super computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];
 }
 
-- (CKComponent *)childComponent
+- (CKComponent *)child
 {
   return _child;
 }

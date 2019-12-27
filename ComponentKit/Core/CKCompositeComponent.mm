@@ -20,6 +20,9 @@
 #import "CKRenderHelpers.h"
 
 @implementation CKCompositeComponent
+{
+  CKComponent *_child;
+}
 
 #if DEBUG
 + (void)initialize
@@ -76,6 +79,11 @@
   CKComponentLayout l = [_child layoutThatFits:constrainedSize parentSize:parentSize];
   const auto lSize = l.size;
   return {self, lSize, {{{0,0}, std::move(l)}}};
+}
+
+- (CKComponent *)child
+{
+  return _child;
 }
 
 @end

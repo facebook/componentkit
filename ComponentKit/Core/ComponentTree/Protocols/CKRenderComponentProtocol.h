@@ -81,7 +81,7 @@
 /**
  Returns the computed child component, if there is one.
  */
-- (id<CKTreeNodeComponentProtocol>)childComponent;
+- (id<CKTreeNodeComponentProtocol>)child;
 @end
 
 /**

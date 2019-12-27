@@ -58,22 +58,22 @@ CK_LINKABLE(CKCompositeComponent_Yoga)
 
 - (BOOL)isYogaBasedLayout
 {
-  return _child.isYogaBasedLayout;
+  return self.child.isYogaBasedLayout;
 }
 
 - (CKComponentSize)nodeSize
 {
-  return [_child nodeSize];
+  return [self.child nodeSize];
 }
 
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
 {
-  return [_child ygNode:constrainedSize];
+  return [self.child ygNode:constrainedSize];
 }
 
 - (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
 {
-  const CKComponentLayout l = [_child layoutFromYgNode:layoutNode thatFits:constrainedSize];
+  const CKComponentLayout l = [self.child layoutFromYgNode:layoutNode thatFits:constrainedSize];
   return {self, l.size, {{{0,0}, l}}};
 }
 

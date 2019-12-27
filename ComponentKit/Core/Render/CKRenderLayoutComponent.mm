@@ -15,6 +15,9 @@
 #import "CKTreeNode.h"
 
 @implementation CKRenderLayoutComponent
+{
+  CKComponent *_child;
+}
 
 - (CKComponent *)render:(id)state
 {
@@ -54,7 +57,7 @@
   return nil;
 }
 
-- (id<CKTreeNodeComponentProtocol>)childComponent
+- (id<CKTreeNodeComponentProtocol>)child
 {
   return _child;
 }
