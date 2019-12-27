@@ -43,45 +43,6 @@ namespace CKRender {
                  BOOL parentHasStateUpdate) -> void;
   }
 
-    namespace NonRender {
-      /**
-       Build component tree for a non-render component.
-       This should be called when a component, on initialization, receives its child component from the outside and it's not meant to be converted to a render component.
-
-       @param component The component at the head of the component tree.
-       @param childComponent The pre-computed child component owned by the component in input.
-       @param parent The current parent tree node of the component in input.
-       @param previousParent The previous generation of the parent tree node of the component in input.
-       @param params Collection of parameters to use to properly setup build component tree step.
-       @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
-       */
-      auto build(id<CKTreeNodeComponentProtocol> component,
-                 id<CKTreeNodeComponentProtocol> childComponent,
-                 id<CKTreeNodeWithChildrenProtocol> parent,
-                 id<CKTreeNodeWithChildrenProtocol> previousParent,
-                 const CKBuildComponentTreeParams &params,
-                 BOOL parentHasStateUpdate) -> void;
-
-
-      /**
-       Build component tree for non-render components with children.
-       This should be called when a component receives its children components as a prop and it's not meant to be converted to a render component.
-
-       @param component The component at the head of the component tree.
-       @param childrenComponent The pre-computed children components owned by the component in input.
-       @param parent The current parent tree node of the component in input.
-       @param previousParent The previous generation of the parent tree node of the component in input.
-       @param params Collection of parameters to use to properly setup build component tree step.
-       @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
-       */
-      auto buildWithChildren(id<CKTreeNodeComponentProtocol> component,
-                             std::vector<id<CKTreeNodeComponentProtocol>> childrenComponents,
-                             id<CKTreeNodeWithChildrenProtocol> parent,
-                             id<CKTreeNodeWithChildrenProtocol> previousParent,
-                             const CKBuildComponentTreeParams &params,
-                             BOOL parentHasStateUpdate) -> void;
-    }
-
     namespace RenderLayout {
       /**
        Build component tree for render layout components (CKRenderLayoutComponent).

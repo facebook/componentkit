@@ -65,14 +65,6 @@
   return CKComponentDescriptionWithChildren([super description], [NSArray arrayWithObjects:_child, nil]);
 }
 
-- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
-            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
-                    params:(const CKBuildComponentTreeParams &)params
-      parentHasStateUpdate:(BOOL)parentHasStateUpdate
-{
-  CKRender::ComponentTree::NonRender::build(self, _child, parent, previousParent, params, parentHasStateUpdate);
-}
-
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize

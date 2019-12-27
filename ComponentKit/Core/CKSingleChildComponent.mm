@@ -12,6 +12,7 @@
 
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
+#import "CKRenderHelpers.h"
 
 @implementation CKSingleChildComponent
 
@@ -40,6 +41,14 @@
   }
   CKFailAssertWithCategory([self class], @"Index %u is out of bounds %u", index, [self numberOfChildren]);
   return nil;
+}
+
+- (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
+            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+                    params:(const CKBuildComponentTreeParams &)params
+      parentHasStateUpdate:(BOOL)parentHasStateUpdate
+{
+  CKRender::ComponentTree::Iterable::build(self, parent, previousParent, params, parentHasStateUpdate);
 }
 
 @end
