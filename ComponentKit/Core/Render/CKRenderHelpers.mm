@@ -165,6 +165,50 @@ static auto didBuildComponentTree(id<CKTreeNodeProtocol> node,
 
 namespace CKRender {
   namespace ComponentTree {
+    namespace Iterable {
+    auto build(id<CKTreeNodeComponentProtocol> component,
+               id<CKTreeNodeWithChildrenProtocol> parent,
+               id<CKTreeNodeWithChildrenProtocol> previousParent,
+               const CKBuildComponentTreeParams &params,
+               BOOL parentHasStateUpdate) -> void
+    {
+      CKCAssert(component, @"component cannot be nil");
+
+      // Check if the component already has a tree node.
+      id<CKTreeNodeProtocol> node = component.scopeHandle.treeNode;
+
+      if (node) {
+        [node linkComponent:component toParent:parent previousParent:previousParent params:params];
+      }
+
+      unsigned int numberOfChildren = [component numberOfChildren];
+      if (numberOfChildren == 0) {
+        return;
+      }
+
+      // Update the `parentHasStateUpdate` param for Faster state/props updates.
+      if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(component, previousParent, params)) {
+        parentHasStateUpdate = YES;
+      }
+
+      // If there is a node, we update the parents' pointers to the next level in the tree.
+      if (node) {
+        parent = (id<CKTreeNodeWithChildrenProtocol>)node;
+        previousParent = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
+      }
+
+      for (int i=0; i<numberOfChildren; i++) {
+        auto const childComponent = (id<CKTreeNodeComponentProtocol>)[component childAtIndex:i];
+        if (childComponent) {
+          [childComponent buildComponentTree:parent
+                              previousParent:previousParent
+                                      params:params
+                        parentHasStateUpdate:parentHasStateUpdate];
+        }
+      }
+    }
+  }
+
     namespace NonRender {
       auto build(id<CKTreeNodeComponentProtocol> component,
                  id<CKTreeNodeComponentProtocol> childComponent,

@@ -24,6 +24,25 @@ using CKRenderDidReuseComponentBlock = void(^)(id<CKRenderComponentProtocol>);
 
 namespace CKRender {
   namespace ComponentTree {
+
+    namespace Iterable {
+    /**
+     Build component tree for a `CKTreeNodeComponentProtocol` component.
+     This should be called when a component, on initialization, receives its child component from the outside and it's not meant to be converted to a render component.
+
+     @param component The component at the head of the component tree.
+     @param parent The current parent tree node of the component in input.
+     @param previousParent The previous generation of the parent tree node of the component in input.
+     @param params Collection of parameters to use to properly setup build component tree step.
+     @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
+     */
+      auto build(id<CKTreeNodeComponentProtocol> component,
+                 id<CKTreeNodeWithChildrenProtocol> parent,
+                 id<CKTreeNodeWithChildrenProtocol> previousParent,
+                 const CKBuildComponentTreeParams &params,
+                 BOOL parentHasStateUpdate) -> void;
+  }
+
     namespace NonRender {
       /**
        Build component tree for a non-render component.
