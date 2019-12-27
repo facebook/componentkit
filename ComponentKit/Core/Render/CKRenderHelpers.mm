@@ -434,17 +434,6 @@ namespace CKRender {
       }
     }
 
-    namespace Leaf {
-      auto build(id<CKTreeNodeComponentProtocol> component,
-                 id<CKTreeNodeWithChildrenProtocol> parent,
-                 id<CKTreeNodeWithChildrenProtocol> previousParent,
-                 const CKBuildComponentTreeParams &params) -> void {
-        id<CKTreeNodeProtocol> node = component.scopeHandle.treeNode;
-        if (node) {
-          [node linkComponent:component toParent:parent previousParent:previousParent params:params];
-        }
-      }
-    }
     namespace Root {
       auto build(id<CKTreeNodeComponentProtocol> component, const CKBuildComponentTreeParams &params) -> void {
         auto const rootNode = params.scopeRoot.rootNode.node();

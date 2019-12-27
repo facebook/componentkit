@@ -138,23 +138,7 @@ namespace CKRender {
                  BOOL parentHasStateUpdate,
                  CKRenderDidReuseComponentBlock didReuseBlock = nil) -> id<CKTreeNodeProtocol>;
     }
-
-    namespace Leaf {
-      /**
-       Builds a leaf node for a leaf component in the tree.
-       This should be called when the component in input is a leaf component in the tree.
-
-       @param component The leaf component at the end of the component tree.
-       @param parent The current parent of the component in input.
-       @param previousParent The previous generation of the parent tree node of the component in input.
-       @param params Collection of parameters to use to properly setup build component tree step.
-       */
-      auto build(id<CKTreeNodeComponentProtocol> component,
-                 id<CKTreeNodeWithChildrenProtocol> parent,
-                 id<CKTreeNodeWithChildrenProtocol> previousParent,
-                 const CKBuildComponentTreeParams &params) -> void;
-    }
-
+  
     /**
      Builds the component tree from a root component.
 
