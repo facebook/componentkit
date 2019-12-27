@@ -11,8 +11,8 @@
 #import <vector>
 
 #import <ComponentKit/CKContainerWrapper.h>
+#import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKMacros.h>
-#import <ComponentKit/CKRenderLayoutWithChildrenComponent.h>
 
 typedef NS_ENUM(NSInteger, CKFlexboxDirection) {
   CKFlexboxDirectionColumn,
@@ -344,7 +344,7 @@ extern const struct CKStackComponentLayoutExtraKeys {
  layout configurations and can generate CKFlexboxComponent code for you
 
  */
-@interface CKFlexboxComponent : CKRenderLayoutWithChildrenComponent
+@interface CKFlexboxComponent : CKLayoutComponent
 
 /**
  @param view A view configuration, or {} for no view.

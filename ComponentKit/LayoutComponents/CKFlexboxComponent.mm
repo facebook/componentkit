@@ -70,13 +70,6 @@ template class std::vector<CKFlexboxComponentChild>;
   return component;
 }
 
-- (std::vector<CKComponent *>)renderChildren:(id)state
-{
-  return CK::map(_children, [](auto const &child) {
-    return child.component;
-  });
-}
-
 static float convertFloatToYogaRepresentation(const float& value) {
   return isnan(value) || isinf(value) ? YGUndefined : value;
 }
@@ -706,6 +699,22 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
     YGNodeStyleSetMaxHeight(node, constrainedSize.max.height);
   }
   return node;
+}
+
+#pragma mark - CKMountable
+
+- (unsigned int)numberOfChildren
+{
+  return (unsigned int)_children.size();
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  if (index < _children.size()) {
+    return _children[index].component;
+  }
+  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %lu", index, _children.size());
+  return nil;
 }
 
 @end
