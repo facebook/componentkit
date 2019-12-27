@@ -41,11 +41,6 @@
   return c;
 }
 
-- (CKComponent *)render:(id)state
-{
-  return _component;
-}
-
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   std::vector<CGSize> sizeOptions;
@@ -74,6 +69,22 @@
   const CGSize parentSize = (bestSize == sizeOptions.end()) ? kCKComponentParentSizeUndefined : *bestSize;
   const CKComponentLayout childLayout = CKComputeComponentLayout(_component, childRange, parentSize);
   return {self, childLayout.size, {{{0,0}, childLayout}}};
+}
+
+#pragma mark - CKMountable
+
+- (unsigned int)numberOfChildren
+{
+  return _component ? 1 : 0;
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  if (index == 0) {
+    return _component;
+  }
+  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %u", index, [self numberOfChildren]);
+  return nil;
 }
 
 @end

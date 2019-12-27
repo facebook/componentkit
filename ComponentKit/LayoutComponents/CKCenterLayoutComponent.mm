@@ -38,11 +38,6 @@
   return c;
 }
 
-- (CKComponent *)render:(id)state
-{
-  return _child;
-}
-
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   // If we have a finite size in any direction, pass this so that the child can
@@ -82,6 +77,22 @@
   };
 
   return {self, size, {{childPosition, childLayout}}};
+}
+
+#pragma mark - CKMountable
+
+- (unsigned int)numberOfChildren
+{
+  return _child ? 1 : 0;
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  if (index == 0) {
+    return _child;
+  }
+  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %u", index, [self numberOfChildren]);
+  return nil;
 }
 
 @end

@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKRenderLayoutComponent.h>
+#import <ComponentKit/CKLayoutComponent.h>
 
 typedef NS_OPTIONS(NSUInteger, CKCenterLayoutComponentCenteringOptions) {
   /** The child is positioned in {0,0} relatively to the layout bounds */
@@ -33,7 +33,7 @@ typedef NS_OPTIONS(NSUInteger, CKCenterLayoutComponentSizingOptions) {
 };
 
 /** Lays out a single child component and position it so that it is centered into the layout bounds. */
-@interface CKCenterLayoutComponent : CKRenderLayoutComponent
+@interface CKCenterLayoutComponent : CKLayoutComponent
 
 /**
  @param centeringOptions see CKCenterLayoutComponentCenteringOptions.

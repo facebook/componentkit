@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKRenderLayoutComponent.h>
+#import <ComponentKit/CKLayoutComponent.h>
 
 /**
  @uidocs https://fburl.com/CKInsetComponent:ac83
@@ -33,7 +33,7 @@
  @note
  An CKInsetComponent with an infinite left inset and 10px for all other edges will position it's child 10px from the right edge.
  */
-@interface CKInsetComponent : CKRenderLayoutComponent
+@interface CKInsetComponent : CKLayoutComponent
 
 /** Convenience that calls +newWithView:insets:component: with {} for view. */
 + (instancetype)newWithInsets:(UIEdgeInsets)insets component:(CKComponent *)child;

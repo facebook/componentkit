@@ -73,11 +73,6 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
   CK_NOT_DESIGNATED_INITIALIZER();
 }
 
-- (CKComponent *)render:(id)state
-{
-  return _component;
-}
-
 /**
  Inset will compute a new constrained size for it's child after applying insets and re-positioning
  the child to respect the inset.
@@ -134,6 +129,22 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
                            (finite(_insets.bottom,
                                    centerInset(constrainedSize.max.height, childLayout.size.height)) + childLayout.size.height));
   return {self, computedSize, {{{x,y}, std::move(childLayout)}}};
+}
+
+#pragma mark - CKMountable
+
+- (unsigned int)numberOfChildren
+{
+  return _component ? 1 : 0;
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  if (index == 0) {
+    return _component;
+  }
+  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %u", index, [self numberOfChildren]);
+  return nil;
 }
 
 @end
