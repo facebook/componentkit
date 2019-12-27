@@ -12,8 +12,8 @@
 
 #import <ComponentKit/CKContainerWrapper.h>
 #import <ComponentKit/CKDimension.h>
+#import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKMacros.h>
-#import <ComponentKit/CKRenderLayoutWithChildrenComponent.h>
 
 struct CKStaticLayoutComponentChild {
   CGPoint position;
@@ -36,7 +36,7 @@ struct CKStaticLayoutComponentChild {
 
  Computes a size that is the union of all childrens' frames.
  */
-@interface CKStaticLayoutComponent : CKRenderLayoutWithChildrenComponent
+@interface CKStaticLayoutComponent : CKLayoutComponent
 
 /**
  @param view Passed to the super class initializer.

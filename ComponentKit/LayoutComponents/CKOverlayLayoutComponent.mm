@@ -38,9 +38,20 @@
   return c;
 }
 
-- (std::vector<CKComponent *>)renderChildren:(id)state
+#pragma mark - CKMountable
+
+- (unsigned int)numberOfChildren
 {
-  return {_overlay, _component};
+  return _overlay ? 2 : 1;
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  if (index < [self numberOfChildren]) {
+    return index == 0 ? _component : _overlay;
+  }
+  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %u", index, [self numberOfChildren]);
+  return nil;
 }
 
 /**

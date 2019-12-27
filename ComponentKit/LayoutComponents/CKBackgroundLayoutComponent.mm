@@ -37,9 +37,18 @@
   return c;
 }
 
-- (std::vector<CKComponent *>)renderChildren:(id)state
+- (unsigned int)numberOfChildren
 {
-  return {_component, _background};
+  return _background ? 2 : 1;
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  if (index < [self numberOfChildren]) {
+    return index == 0 ? _component : _background;
+  }
+  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %u", index, [self numberOfChildren]);
+  return nil;
 }
 
 /**

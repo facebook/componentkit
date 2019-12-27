@@ -40,11 +40,18 @@
   return [self newWithView:{} size:{} children:std::move(children)];
 }
 
-- (std::vector<CKComponent *>)renderChildren:(id)state
+- (unsigned int)numberOfChildren
 {
-  return CK::map(_children, [](auto const &child) {
-    return child.component;
-  });
+  return (unsigned int)_children.size();
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  if (index < _children.size()) {
+    return _children[index].component;
+  }
+  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %u", index, [self numberOfChildren]);
+  return nil;
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
