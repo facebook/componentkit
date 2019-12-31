@@ -334,6 +334,12 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
   }
 }
 
+static bool hasChildWithRelativePositioning(const CKFlexboxComponentChild &child) {
+  return
+  (child.component != nil
+   && child.position.type == CKFlexboxPositionTypeRelative);
+}
+
 /*
  layoutCache is passed by reference so that we are able to allocate it in one thread
  and mutate it within that thread
@@ -350,12 +356,26 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
   CGFloat parentMainDimension = isHorizontalFlexboxDirection(_style.direction) ? parentWidth : parentHeight;
   CGSize parentSize = CGSizeMake(parentWidth, parentHeight);
 
-  const auto children = CK::filter(_children, [](const CKFlexboxComponentChild &child){
-    return child.component != nil;
-  });
+  // Find the first and last relatively-positioned children,
+  // as we need to know them when we apply spacing as margin.
+  const auto firstRelativeChild = std::find_if(_children.cbegin(), _children.cend(), hasChildWithRelativePositioning);
+  const auto lastRelativeChild = ([&firstRelativeChild, children = &self->_children]() {
+      if (firstRelativeChild == children->cend()) {
+        return children->cend();
+      }
+      // We know we'll find a valid result here because we found firstRelativeChild.
+      const auto rFirstRelativeChild = std::make_reverse_iterator(firstRelativeChild);
+      const auto rLastRelativeChild = std::find_if(children->crbegin(), rFirstRelativeChild, hasChildWithRelativePositioning);
+      // Convert back to forward iterator
+      return rLastRelativeChild.base() - 1;
+  })();
 
-  for (auto iterator = children.begin(); iterator != children.end(); iterator++) {
-    const CKFlexboxComponentChild child = *iterator;
+  for (auto iterator = _children.begin(); iterator != _children.end(); ++iterator) {
+    const CKFlexboxComponentChild &child = *iterator;
+    if (!child.component) {
+      continue;
+    }
+
     const YGNodeRef childNode = _style.useDeepYogaTrees ? [child.component ygNode:constrainedSize] : YGNodeNewWithConfig(ckYogaDefaultConfig());
 
     // We add object only if there is actual used element
@@ -427,19 +447,24 @@ static BOOL isHorizontalFlexboxDirection(const CKFlexboxDirection &direction)
     // Yoga defines spacing in terms of Parent padding and Child margin
     // To avoid confusion for all children spacing is emulated with Start Margin
     // We only use End Margin for the last child to emulate space between it and parent
-    if (iterator != children.begin()) {
-      // Children in the middle have margin = spacingBefore + spacingAfter of previous + spacing of parent
-      YGNodeStyleSetMargin(childNode, spacingEdge, convertFloatToYogaRepresentation(child.spacingBefore + _style.spacing + savedSpacing));
-    } else {
-      // For the space between parent and first child we just use spacingBefore
-      YGNodeStyleSetMargin(childNode, spacingEdge, convertFloatToYogaRepresentation(child.spacingBefore));
+    if (child.position.type == CKFlexboxPositionTypeRelative) {
+      if (iterator != firstRelativeChild) {
+        // Children in the middle have margin = spacingBefore + spacingAfter of previous + spacing of parent
+        YGNodeStyleSetMargin(childNode, spacingEdge, convertFloatToYogaRepresentation(child.spacingBefore + _style.spacing + savedSpacing));
+      } else {
+        // For the space between parent and first child we just use spacingBefore
+        YGNodeStyleSetMargin(childNode, spacingEdge, convertFloatToYogaRepresentation(child.spacingBefore));
+      }
     }
+
     YGNodeInsertChild(stackNode, childNode, YGNodeGetChildCount(stackNode));
 
-    savedSpacing = child.spacingAfter;
-    if (next(iterator) == children.end()) {
-      // For the space between parent and last child we use only spacingAfter
-      YGNodeStyleSetMargin(childNode, ygSpacingEdgeFromDirection(_style.direction, YES), convertFloatToYogaRepresentation(savedSpacing));
+    if (child.position.type == CKFlexboxPositionTypeRelative) {
+      savedSpacing = child.spacingAfter;
+      if (iterator == lastRelativeChild) {
+        // For the space between parent and last child we use only spacingAfter
+        YGNodeStyleSetMargin(childNode, ygSpacingEdgeFromDirection(_style.direction, YES), convertFloatToYogaRepresentation(savedSpacing));
+      }
     }
 
     /** The margins will override any spacing we applied earlier */
@@ -549,7 +574,7 @@ static void applyPaddingToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension v
   if (value.isDefined() == false) {
     return;
   }
-  
+
   CKRelativeDimension dimension = value.dimension();
   switch (dimension.type()) {
     case CKRelativeDimension::Type::PERCENT:

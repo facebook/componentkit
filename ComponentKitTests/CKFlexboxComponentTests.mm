@@ -307,6 +307,99 @@
   XCTAssertEqual(YGNodeStyleGetMargin(childNode, YGEdgeBottom).value, 10);
 }
 
+- (void)testSpacingDoesNotApplyToAbsolutelyPositionedChildren
+{
+  auto const c0 = CK::ComponentBuilder().build();
+  auto const c1 = CK::ComponentBuilder().build();
+  auto const c2 = CK::ComponentBuilder().build();
+  auto const c3 = CK::ComponentBuilder().build();
+  auto const c4 = CK::ComponentBuilder().build();
+
+  auto const flexbox =
+  CK::FlexboxComponentBuilder()
+  .viewClass([UIView class])
+  .spacing(1)
+  // 0
+  .child(c0)
+  .positionType(CKFlexboxPositionTypeAbsolute)
+  // 0
+  .child(c1)
+  // + 1
+  .child(c2)
+  .spacingAfter(2)
+  // + 0
+  .child(c3)
+  .positionType(CKFlexboxPositionTypeAbsolute)
+  // + 3
+  .child(c4)
+  .spacingAfter(6)
+  .build();
+
+  YGNodeRef node = [flexbox ygNode:{}];
+
+  auto child = YGNodeGetChild(node, 0);
+  XCTAssertEqual(YGNodeStyleGetPositionType(child), YGPositionTypeAbsolute);
+  XCTAssertEqual(YGNodeStyleGetMargin(child, YGEdgeStart), YGValueUndefined);
+  child = YGNodeGetChild(node, 1);
+  XCTAssertEqual(YGNodeStyleGetPositionType(child), YGPositionTypeRelative);
+  XCTAssertEqual(YGNodeStyleGetMargin(child, YGEdgeStart), YGValueUndefined);
+  child = YGNodeGetChild(node, 2);
+  XCTAssertEqual(YGNodeStyleGetPositionType(child), YGPositionTypeRelative);
+  XCTAssertEqual(YGNodeStyleGetMargin(child, YGEdgeStart), YGValue{1.0f});
+  XCTAssertEqual(YGNodeStyleGetMargin(child, YGEdgeEnd), YGValueUndefined);
+  child = YGNodeGetChild(node, 3);
+  XCTAssertEqual(YGNodeStyleGetPositionType(child), YGPositionTypeAbsolute);
+  XCTAssertEqual(YGNodeStyleGetMargin(child, YGEdgeStart), YGValueUndefined);
+  child = YGNodeGetChild(node, 4);
+  XCTAssertEqual(YGNodeStyleGetPositionType(child), YGPositionTypeRelative);
+  XCTAssertEqual(YGNodeStyleGetMargin(child, YGEdgeStart), YGValue{3.0f});
+  XCTAssertEqual(YGNodeStyleGetMargin(child, YGEdgeEnd), YGValue{6.0f});
+}
+
+- (void)testSpacingDoesNotApplyToNilChildren
+{
+  CKComponent *const c0 = CK::ComponentBuilder().build();
+  CKComponent *const c1 = CK::ComponentBuilder().build();
+  CKComponent *const c2 = CK::ComponentBuilder().build();
+
+  auto const flexbox =
+  CK::FlexboxComponentBuilder()
+  .viewClass([UIView class])
+  .spacing(1)
+  // 0
+  .child(nil)
+  .positionType(CKFlexboxPositionTypeAbsolute)
+  // 0
+  .child(c0)
+  // + 1
+  .child(c1)
+  .spacingAfter(2)
+  // + 0
+  .child(nil)
+  .spacingAfter(20)
+  // + 3
+  .child(c2)
+  .spacingAfter(7)
+  .child(nil)
+  .build();
+
+  YGNodeRef node = [flexbox ygNode:{}];
+
+  const auto count = YGNodeGetChildCount(node);
+  XCTAssertEqual(count, 3, @"Expected 3 nodes for non-nil children");
+
+  auto child = YGNodeGetChild(node, 0);
+  XCTAssertEqual(YGNodeStyleGetPositionType(child), YGPositionTypeRelative);
+  XCTAssertEqual(YGNodeStyleGetMargin(child, YGEdgeStart), YGValueUndefined);
+  child = YGNodeGetChild(node, 1);
+  XCTAssertEqual(YGNodeStyleGetPositionType(child), YGPositionTypeRelative);
+  XCTAssertEqual(YGNodeStyleGetMargin(child, YGEdgeStart), YGValue{1.0f});
+  child = YGNodeGetChild(node, 2);
+  XCTAssertEqual(YGNodeStyleGetPositionType(child), YGPositionTypeRelative);
+  XCTAssertEqual(YGNodeStyleGetMargin(child, YGEdgeStart), YGValue{3.0f});
+  XCTAssertEqual(YGNodeStyleGetMargin(child, YGEdgeEnd), YGValue{7.0f});
+}
+
 - (void)testCorrectnesOfDefaultStyleValues
 {
   CKFlexboxComponentStyle style = {};
