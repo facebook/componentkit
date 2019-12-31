@@ -324,11 +324,10 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
     auto const childrenSize = layout.children->size();
     CKAssertWithCategory(childrenSize == 0,
                          NSStringFromClass([self class]),
-                         @"%@ is subclassing CKComponent directly, you need to subclass %@ instead. "
-                         "Context: we’re phasing out CKComponent subclasses for in favor of CKRenderLayoutComponent/CKRenderLayoutWithChildrenComponent subclasses. "
+                         @"%@ is subclassing CKComponent directly, you need to subclass CKLayoutComponent instead. "
+                         "Context: we’re phasing out CKComponent subclasses for in favor of CKLayoutComponent subclasses. "
                          "While this is still kinda OK for leaf components, things start to break when you introduce a CKComponent subclass with children.",
-                         [self class],
-                         (childrenSize == 1 ? @"CKRenderLayoutComponent" : @"CKRenderLayoutWithChildrenComponent"));
+                         [self class]);
   }
 
   CKAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
