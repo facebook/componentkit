@@ -225,8 +225,6 @@
 		230ADF711FC5FBDB001570A3 /* CKComponentEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 230ADF6F1FC5FBDA001570A3 /* CKComponentEvents.mm */; };
 		230ADF721FC5FBE8001570A3 /* CKComponentEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 230ADF6E1FC5FBDA001570A3 /* CKComponentEvents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		230ADF731FC5FBEB001570A3 /* CKComponentEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 230ADF6F1FC5FBDA001570A3 /* CKComponentEvents.mm */; };
-		231039BE2142908700422B0E /* CKRenderComponentInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 231039B32142908700422B0E /* CKRenderComponentInternal.h */; };
-		231039BF2142908700422B0E /* CKRenderComponentInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 231039B32142908700422B0E /* CKRenderComponentInternal.h */; };
 		2322A20B224504AE006BFCD2 /* CKCollectionViewDataSourceListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D26A4722440C5B0087350C /* CKCollectionViewDataSourceListener.h */; };
 		2322A216224504B1006BFCD2 /* CKCollectionViewDataSourceListenerAnnouncer.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D26A5422440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h */; };
 		2322A217224504B1006BFCD2 /* CKCollectionViewDataSourceListenerAnnouncer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23D26A5322440E7C0087350C /* CKCollectionViewDataSourceListenerAnnouncer.mm */; };
@@ -1184,7 +1182,6 @@
 		2306B421211B2CE400A42F81 /* CKRenderComponentTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKRenderComponentTests.mm; sourceTree = "<group>"; };
 		230ADF6E1FC5FBDA001570A3 /* CKComponentEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentEvents.h; sourceTree = "<group>"; };
 		230ADF6F1FC5FBDA001570A3 /* CKComponentEvents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentEvents.mm; sourceTree = "<group>"; };
-		231039B32142908700422B0E /* CKRenderComponentInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderComponentInternal.h; sourceTree = "<group>"; };
 		2322E8952212FC0400C35501 /* CKComponentHostingViewProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentHostingViewProtocol.h; sourceTree = "<group>"; };
 		2327614622EB069F007FF24A /* CKSystraceListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKSystraceListener.h; sourceTree = "<group>"; };
 		23309AA22045C5F300833BDB /* CKRenderComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderComponentProtocol.h; sourceTree = "<group>"; };
@@ -1841,7 +1838,6 @@
 		23B65AB8213FF9300049FFAC /* Render */ = {
 			isa = PBXGroup;
 			children = (
-				231039B32142908700422B0E /* CKRenderComponentInternal.h */,
 				23B65ABC213FF9300049FFAC /* CKRenderComponent.h */,
 				23B65ABE213FF9300049FFAC /* CKRenderComponent.mm */,
 				237E893D213FFC6D00793B4D /* CKRenderLayoutWithChildrenComponent.h */,
@@ -3003,7 +2999,6 @@
 				72395915238E9B22005B570A /* ComponentViewReuseUtilities.h in Headers */,
 				2398D8B823ACD5E90028EC2A /* CKLayoutComponent.h in Headers */,
 				03B8B5621D2A346F00EDFF59 /* CKTextComponentViewControlTracker.h in Headers */,
-				231039BF2142908700422B0E /* CKRenderComponentInternal.h in Headers */,
 				03B8B5631D2A346F00EDFF59 /* ComponentLayoutContext.h in Headers */,
 				03B8B5641D2A346F00EDFF59 /* CKCompositeComponent.h in Headers */,
 				72647CCD2368D15D0072F330 /* CKComponentDelegateForwarder.h in Headers */,
@@ -3072,7 +3067,6 @@
 				7239593E238E9B22005B570A /* CKAvailability.h in Headers */,
 				D0B47D3C1CBD948E00BB33CE /* CKStatefulViewComponentController.h in Headers */,
 				723958F0238E9B22005B570A /* CKComponentDescriptionHelper.h in Headers */,
-				231039BE2142908700422B0E /* CKRenderComponentInternal.h in Headers */,
 				D427E81A2314A888004F22BD /* CKStatelessComponentContext.h in Headers */,
 				60EFF4B42113555C00CA7C68 /* CKStatelessComponent.h in Headers */,
 				D48D9D3E2342606B003DDC41 /* CKTransitions.h in Headers */,
