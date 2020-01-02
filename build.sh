@@ -25,7 +25,7 @@ function project_version() {
 function ci() {
   # replace line contains s.version with a new line contains value of `project_version`.
   sed -i -e "s/s.version = \'[\.0-9]*\'/s.version = \'$(project_version)\'/g" ComponentKit.podspec
-  
+
   xcodebuild \
     clean \
     -project $1 \
@@ -39,7 +39,7 @@ function ci() {
 }
 
 function ios_ci() {
-  ci $1 $2 iphonesimulator "platform=iOS Simulator,name=iPhone 5s" Release $3
+  ci $1 $2 iphonesimulator "platform=iOS Simulator,name=iPhone 8" Release $3
 }
 
 function tvos_ci() {
