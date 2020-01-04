@@ -13,6 +13,7 @@
 #import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/CKMacros.h>
 
+#import "CKIndexSetDescription.h"
 #import "ComponentUtilities.h"
 
 @implementation CKDataSourceAppliedChanges
@@ -54,17 +55,29 @@
   return self;
 }
 
+- (BOOL)isEmpty
+{
+  return [_updatedIndexPaths count] == 0 && [_removedIndexPaths count] == 0 &&
+  [_removedSections count] == 0 && [_movedIndexPaths count] == 0 &&
+  [_insertedSections count] == 0 && [_insertedIndexPaths count] == 0;
+}
+
 - (NSString *)description
 {
-  return [NSString stringWithFormat:
-          @"<CKDataSourceAppliedChanges: %p>\n \
-          Updated Index Paths: %@\n \
-          Removed Index Paths: %@\n \
-          Remove Sections: %@\n \
-          Moves: %@\n \
-          Inserted Sections: %@\n \
-          Inserted Index Paths: %@",
-          self, _updatedIndexPaths, _removedIndexPaths, _removedSections, _movedIndexPaths, _insertedSections, _insertedIndexPaths];
+  if ([self isEmpty]) {
+    return @"";
+  }
+
+  auto const description = [NSMutableString new];
+  [description appendString:@"{\n"];
+  [description appendString:indexPathsDescriptionWithTitle(_updatedIndexPaths, @"Updated Items")];
+  [description appendString:indexPathsDescriptionWithTitle(_removedIndexPaths, @"Removed Items")];
+  [description appendString:withNewLineIfNotEmpty(CK::indexSetDescription(_removedSections, @"Removed Sections", 2))];
+  [description appendString:indexPathToIndexPathMapDescriptionWithTitle(_movedIndexPaths, @"Moved Items")];
+  [description appendString:withNewLineIfNotEmpty(CK::indexSetDescription(_insertedSections, @"Inserted Sections", 2))];
+  [description appendString:indexPathsDescriptionWithTitle(_insertedIndexPaths, @"Inserted Items")];
+  [description appendString:@"}"];
+  return description;
 }
 
 - (BOOL)isEqual:(id)object
@@ -92,6 +105,56 @@
     [_userInfo hash],
   };
   return CKIntegerArrayHash(subhashes, CK_ARRAY_COUNT(subhashes));
+}
+
+static auto withNewLineIfNotEmpty(NSString *s) -> NSString *
+{
+  return s.length > 0 ? [s stringByAppendingString:@"\n"] : @"";
+}
+
+static auto indexPathsDescriptionWithTitle(NSSet<NSIndexPath *> *indexPaths, NSString *title) -> NSString *
+{
+  if ([indexPaths count] == 0) {
+    return @"";
+  }
+
+  auto description = [NSMutableString new];
+  [description appendFormat:@"  %@: {\n", title];
+
+  auto const sortedIndexPaths = [[indexPaths allObjects] sortedArrayUsingSelector:@selector(compare:)];
+  auto const indexPathStrs = [NSMutableArray<NSString *> new];
+  for (NSIndexPath *const indexPath : sortedIndexPaths) {
+    auto const ipStr = [NSString stringWithFormat:@"    (%ld-%ld)", (long)indexPath.section, (long)indexPath.item];
+    [indexPathStrs addObject:ipStr];
+  }
+  [description appendString:[indexPathStrs componentsJoinedByString:@",\n"]];
+
+  [description appendString:@"\n  }\n"];
+  return description;
+}
+
+static auto indexPathToIndexPathMapDescriptionWithTitle(NSDictionary<NSIndexPath *, NSIndexPath *> *map, NSString *title) -> NSString *
+{
+  if ([map count] == 0) {
+    return @"";
+  }
+
+  auto description = [NSMutableString new];
+  [description appendFormat:@"  %@: {\n", title];
+
+  auto const sortedIndexPaths = [[map allKeys] sortedArrayUsingSelector:@selector(compare:)];
+  auto const indexPathStrs = [NSMutableArray<NSString *> new];
+  for (NSIndexPath *const indexPath : sortedIndexPaths) {
+    auto const toIndexPath = map[indexPath];
+    auto const ipStr = [NSString stringWithFormat:@"    (%ld-%ld) -> (%ld-%ld)",
+                        (long)indexPath.section, (long)indexPath.item,
+                        (long)toIndexPath.section, (long)toIndexPath.item];
+    [indexPathStrs addObject:ipStr];
+  }
+  [description appendString:[indexPathStrs componentsJoinedByString:@",\n"]];
+
+  [description appendString:@"\n  }\n"];
+  return description;
 }
 
 static NSArray *sortedIndexPaths(NSArray<NSIndexPath *> *indexPaths, BOOL reverse)

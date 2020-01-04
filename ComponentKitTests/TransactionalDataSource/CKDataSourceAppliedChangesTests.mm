@@ -13,6 +13,9 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKDataSourceAppliedChanges.h>
+#import <ComponentKitTestHelpers/CKChangesetHelpers.h>
+
+using namespace CK;
 
 @interface CKDataSourceAppliedChangesTests : XCTestCase
 @end
@@ -881,4 +884,149 @@
   XCTAssertEqualObjects(updateMapping[[NSIndexPath indexPathForItem:0 inSection:4]], [NSIndexPath indexPathForItem:0 inSection:9]);
 }
 
+@end
+
+@interface CKDataSourceAppliedChangesTests_Description : XCTestCase
+@end
+
+@implementation CKDataSourceAppliedChangesTests_Description
+
+- (void)test_WhenEmpty_DescriptionIsEmpty
+{
+  auto const changes = [CKDataSourceAppliedChanges new];
+
+  auto const description = [changes description];
+
+  XCTAssertEqualObjects(description, @"");
+}
+
+- (void)test_WhenHasSectionChanges_IncludesThemInDescription
+{
+  auto const changes = [[CKDataSourceAppliedChanges alloc]
+                        initWithUpdatedIndexPaths:nil
+                        removedIndexPaths:nil
+                        removedSections:[NSIndexSet indexSetWithIndexesInRange:{0, 2}]
+                        movedIndexPaths:nil
+                        insertedSections:[NSIndexSet indexSetWithIndex:0]
+                        insertedIndexPaths:nil
+                        userInfo:nil];;
+
+  auto const description = [changes description];
+
+  auto const expectedDescription =
+  @"\
+{\n\
+  Removed Sections: 0–1\n\
+  Inserted Sections: 0\n\
+}";
+  XCTAssertEqualObjects(description, expectedDescription);
+}
+
+- (void)test_WhenHasRemovedItems_IncludesThemInDescriptionSorted
+{
+  auto const changes = [[CKDataSourceAppliedChanges alloc]
+                        initWithUpdatedIndexPaths:nil
+                        removedIndexPaths:[NSSet setWithArray:@[
+                          IndexPath{1, 1}.toCocoa(),
+                          IndexPath{0, 2}.toCocoa(),
+                        ]]
+                        removedSections:nil
+                        movedIndexPaths:nil
+                        insertedSections:nil
+                        insertedIndexPaths:nil
+                        userInfo:nil];;
+
+  auto const description = [changes description];
+
+  auto const expectedDescription =
+  @"\
+{\n\
+  Removed Items: {\n\
+    (0-2),\n\
+    (1-1)\n\
+  }\n\
+}";
+  XCTAssertEqualObjects(description, expectedDescription);
+}
+
+- (void)test_WhenHasUpdatedItems_IncludesThemInDescriptionSorted
+{
+  auto const changes = [[CKDataSourceAppliedChanges alloc]
+                        initWithUpdatedIndexPaths:[NSSet setWithArray:@[
+                          IndexPath{1, 1}.toCocoa(),
+                          IndexPath{0, 2}.toCocoa(),
+                        ]]
+                        removedIndexPaths:nil
+                        removedSections:nil
+                        movedIndexPaths:nil
+                        insertedSections:nil
+                        insertedIndexPaths:nil
+                        userInfo:nil];;
+
+  auto const description = [changes description];
+
+  auto const expectedDescription =
+  @"\
+{\n\
+  Updated Items: {\n\
+    (0-2),\n\
+    (1-1)\n\
+  }\n\
+}";
+  XCTAssertEqualObjects(description, expectedDescription);
+}
+
+- (void)test_WhenHasInsertedItems_IncludesThemInDescriptionSorted
+{
+  auto const changes = [[CKDataSourceAppliedChanges alloc]
+                        initWithUpdatedIndexPaths:nil
+                        removedIndexPaths:nil
+                        removedSections:nil
+                        movedIndexPaths:nil
+                        insertedSections:nil
+                        insertedIndexPaths:[NSSet setWithArray:@[
+                          IndexPath{1, 1}.toCocoa(),
+                          IndexPath{0, 2}.toCocoa(),
+                        ]]
+                        userInfo:nil];;
+
+  auto const description = [changes description];
+
+  auto const expectedDescription =
+  @"\
+{\n\
+  Inserted Items: {\n\
+    (0-2),\n\
+    (1-1)\n\
+  }\n\
+}";
+  XCTAssertEqualObjects(description, expectedDescription);
+}
+
+- (void)test_WhenHasMovedItems_IncludesThemInDescriptionSortedByFromIndexPath
+{
+  auto const changes = [[CKDataSourceAppliedChanges alloc]
+                        initWithUpdatedIndexPaths:nil
+                        removedIndexPaths:nil
+                        removedSections:nil
+                        movedIndexPaths:@{
+                          IndexPath{1, 1}.toCocoa() : IndexPath{1, 2}.toCocoa(),
+                          IndexPath{0, 2}.toCocoa() : IndexPath{0, 0}.toCocoa(),
+                        }
+                        insertedSections:nil
+                        insertedIndexPaths:nil
+                        userInfo:nil];;
+
+  auto const description = [changes description];
+
+  auto const expectedDescription =
+  @"\
+{\n\
+  Moved Items: {\n\
+    (0-2) -> (0-0),\n\
+    (1-1) -> (1-2)\n\
+  }\n\
+}";
+  XCTAssertEqualObjects(description, expectedDescription);
+}
 @end
