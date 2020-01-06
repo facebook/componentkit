@@ -48,6 +48,9 @@ class __attribute__((__may_alias__)) BackgroundLayoutComponentBuilder
       BackgroundLayoutComponentBuilder<PropsBitmap | BackgroundLayoutComponentPropId::background> &>(*this);
   }
 
+ private:
+  friend BuilderBase<BackgroundLayoutComponentBuilder, PropsBitmap>;
+
   /**
   Creates a new component instance with specified properties.
 

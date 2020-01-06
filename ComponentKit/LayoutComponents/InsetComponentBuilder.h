@@ -78,6 +78,9 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::component> &>(*this);
   }
 
+ private:
+  friend BuilderBase<InsetComponentBuilder, PropsBitmap>;
+
   /**
   Creates a new component instance with specified properties.
 

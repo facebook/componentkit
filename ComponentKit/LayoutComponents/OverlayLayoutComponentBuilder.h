@@ -40,6 +40,9 @@ public:
     return reinterpret_cast<OverlayLayoutComponentBuilder<PropsBitmap | OverlayLayoutComponentPropId::overlay> &>(*this);
   }
 
+private:
+  friend BuilderBase<OverlayLayoutComponentBuilder, PropsBitmap>;
+
   /**
   Creates a new component instance with specified properties.
 

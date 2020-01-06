@@ -56,6 +56,9 @@ class __attribute__((__may_alias__)) CompositeComponentBuilder
     return reinterpret_cast<CompositeComponentBuilder<PropsBitmap | CompositeComponentPropId::component> &>(*this);
   }
 
+ private:
+  friend BuilderBase<CompositeComponentBuilder, PropsBitmap>;
+
   /**
   Creates a new component instance with specified properties.
 
