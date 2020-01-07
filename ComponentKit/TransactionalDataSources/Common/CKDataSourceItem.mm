@@ -62,7 +62,7 @@
 
 - (NSString *)description
 {
-  return [NSString stringWithFormat:@"%@ - model:%@", [super description], _model];
+  return [_model description];
 }
 
 #pragma mark - CKCategorizable
