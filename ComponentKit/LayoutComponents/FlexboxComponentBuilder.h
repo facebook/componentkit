@@ -41,80 +41,73 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     return *this;
   }
 
-  /** Margin applied to the container */
+  /** Margin applied to the child */
   auto &margin(const CKFlexboxSpacing &m)
   {
-    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
-      _currentChild.margin = m;
-    } else {
-      _style.margin = m;
-    }
+    constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
+    static_assert(isSettingPropertiesForChild,
+                  "Cannot set child property 'margin' before specifying a child component using .child()");
+    _currentChild.margin = m;
     return *this;
   }
 
-  /** Top margin applied to the container */
+  /** Top margin applied to the child */
   auto &marginTop(CGFloat m)
   {
-    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
-      _currentChild.margin.top = m;
-    } else {
-      _style.margin.top = m;
-    }
+    constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
+    static_assert(isSettingPropertiesForChild,
+                  "Cannot set child property 'marginTop' before specifying a child component using .child()");
+    _currentChild.margin.top = m;
     return *this;
   }
 
-  /** Bottom margin applied to the container */
+  /** Bottom margin applied to the child */
   auto &marginBottom(CGFloat m)
   {
-    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
-      _currentChild.margin.bottom = m;
-    } else {
-      _style.margin.bottom = m;
-    }
+    constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
+    static_assert(isSettingPropertiesForChild,
+                  "Cannot set child property 'marginBottom' before specifying a child component using .child()");
+    _currentChild.margin.bottom = m;
     return *this;
   }
 
-  /** Start margin applied to the container. Left in left-to-right languages, right in right-to-left languages */
+  /** Start margin applied to the child. Left in left-to-right languages, right in right-to-left languages */
   auto &marginStart(CGFloat m)
   {
-    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
-      _currentChild.margin.start = m;
-    } else {
-      _style.margin.start = m;
-    }
+    constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
+    static_assert(isSettingPropertiesForChild,
+    "Cannot set child property 'marginStart' before specifying a child component using .child()");
+    _currentChild.margin.start = m;
     return *this;
   }
 
-  /** Start margin applied to the container. Left in left-to-right languages, right in right-to-left languages */
+  /** Start margin applied to the child. Left in left-to-right languages, right in right-to-left languages */
   auto &marginStart(CKRelativeDimension m)
   {
-    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
-      _currentChild.margin.start = m;
-    } else {
-      _style.margin.start = m;
-    }
+    constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
+    static_assert(isSettingPropertiesForChild,
+                  "Cannot set child property 'marginStart' before specifying a child component using .child()");
+    _currentChild.margin.start = m;
     return *this;
   }
 
-  /** End margin applied to the container. Right in left-to-right languages, left in right-to-left languages */
+  /** End margin applied to the child. Right in left-to-right languages, left in right-to-left languages */
   auto &marginEnd(CGFloat m)
   {
-    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
-      _currentChild.margin.end = m;
-    } else {
-      _style.margin.end = m;
-    }
+    constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
+    static_assert(isSettingPropertiesForChild,
+                  "Cannot set child property 'marginEnd' before specifying a child component using .child()");
+    _currentChild.margin.end = m;
     return *this;
   }
 
-  /** End margin applied to the container. Right in left-to-right languages, left in right-to-left languages */
+  /** End margin applied to the child. Right in left-to-right languages, left in right-to-left languages */
   auto &marginEnd(CKRelativeDimension m)
   {
-    if (PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild)) {
-      _currentChild.margin.end = m;
-    } else {
-      _style.margin.end = m;
-    }
+    constexpr auto isSettingPropertiesForChild = PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
+    static_assert(isSettingPropertiesForChild,
+                  "Cannot set child property 'marginEnd' before specifying a child component using .child()");
+    _currentChild.margin.end = m;
     return *this;
   }
 

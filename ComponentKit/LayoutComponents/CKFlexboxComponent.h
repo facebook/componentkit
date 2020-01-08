@@ -230,8 +230,6 @@ struct CKFlexboxComponentStyle {
   CKFlexboxDirection direction;
   /** The amount of space between each child. Overriden by any margins on the child in the flex direction */
   CGFloat spacing;
-  /** Margin applied to the container */
-  CKFlexboxSpacing margin;
   /** How children are aligned if there are no flexible children. */
   CKFlexboxJustifyContent justifyContent;
   /** Orientation of children along cross axis */

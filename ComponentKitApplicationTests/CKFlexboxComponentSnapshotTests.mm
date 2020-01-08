@@ -170,12 +170,6 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
          style:{
            .direction = CKFlexboxDirectionRow,
            .alignItems = CKFlexboxAlignItemsStretch,
-           .margin = {
-             .top = 10,
-             .start = 10,
-             .end = 10,
-             .bottom = 10,
-           },
            .useDeepYogaTrees = useDeepYogaTrees,
          }
          children:{
@@ -185,10 +179,6 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
               newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor brownColor]}}}
               size:{100,NAN}
               style:{
-                .margin = {
-                  .top = 5,
-                  .bottom = 5,
-                },
                 .border = {
                   .top = 5,
                   .start = 5,
@@ -1304,10 +1294,6 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
     .viewClass([UIView class])
     .backgroundColor([UIColor lightGrayColor])
     .direction(CKFlexboxDirectionColumn)
-    .marginTop(10)
-    .marginStart(30)
-    .marginEnd(10)
-    .marginBottom(20)
     .useDeepYogaTrees(_useDeepYogaTrees)
     .child(
       CK::FlexboxComponentBuilder()
@@ -1315,10 +1301,6 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
         .backgroundColor([UIColor blueColor])
         .direction(CKFlexboxDirectionRow)
         .useDeepYogaTrees(_useDeepYogaTrees)
-        .marginTop(10)
-        .marginStart(30)
-        .marginEnd(10)
-        .marginBottom(20)
         .child(
           CK::ComponentBuilder()
             .viewClass([UIView class])
