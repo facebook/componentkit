@@ -284,23 +284,23 @@
 - (void)testActionWithCppArgs
 {
   __block std::vector<std::string> actionVec;
-  
+
   CKComponent *innerComponent = [CKComponent new];
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
    newWithCppArgumentBlock:^(CKComponent *sender, std::vector<std::string> vec) { actionVec = vec; }
    component:innerComponent];
-  
+
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil).mountedComponents;
-  
+
   std::vector<std::string> cppThing = {"hummus", "chips", "salad"};
   CKAction<const std::vector<std::string> &> action = { @selector(testCppArgumentAction:vector:) };
   action.send(innerComponent, cppThing);
-  
+
   XCTAssert(actionVec == cppThing, @"Contexts should match what was passed to CKActionSend");
-  
+
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
 
@@ -401,7 +401,7 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
 {
   __block id actionContext = nil;
   __block id actionContext2 = nil;
-  
+
   CKComponent *innerComponent = [CKComponent new];
   CKTestActionComponent *outerComponent =
   [CKTestActionComponent
@@ -410,20 +410,20 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
    primitiveArgumentBlock:^(CKComponent *sender, int value) { XCTFail(@"Should not be called."); }
    noArgumentBlock:^(CKComponent *sender) { XCTFail(@"Should not be called."); }
    component:innerComponent];
-  
+
   // Must be mounted to send actions:
   UIView *rootView = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout([outerComponent layoutThatFits:{} parentSize:{}], rootView, nil, nil).mountedComponents;
-  
+
   id context = @"hello";
   id context2 = @"morty";
-  
+
   CKAction<id, id> action = { @selector(testAction2:context1:context2:) };
   CKAction<id, id, id> promotedAction = CKAction<id, id>::promotedFrom<id>(action);
   promotedAction.send(innerComponent, context, context2, @"rick");
-  
+
   XCTAssert(actionContext == context && actionContext2 == context2, @"Contexts should match what was passed to CKActionSend");
-  
+
   [mountedComponents makeObjectsPerformSelector:@selector(unmount)];
 }
 
@@ -668,10 +668,10 @@ static CKAction<> createDemotedWithReference(void (^callback)(CKComponent*, int)
 - (void)testThatScopeActionWithSameSelectorHaveUniqueIdentifiers
 {
   CKThreadLocalComponentScope threadScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {});
-  
+
   CKComponentScope scope([CKTestScopeActionComponent class], @"moose");
   const CKAction<> action1 = {scope, @selector(triggerAction:)};
-  
+
   CKComponentScope scope2([CKTestScopeActionComponent class], @"cat");
   const CKAction<> action2 = {scope2, @selector(triggerAction:)};
 
