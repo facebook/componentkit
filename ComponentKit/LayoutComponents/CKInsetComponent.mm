@@ -135,16 +135,12 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
 
 - (unsigned int)numberOfChildren
 {
-  return _component ? 1 : 0;
+  return CKIterable::numberOfChildren(_component);
 }
 
 - (id<CKMountable>)childAtIndex:(unsigned int)index
 {
-  if (index == 0) {
-    return _component;
-  }
-  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %u", index, [self numberOfChildren]);
-  return nil;
+  return CKIterable::childAtIndex(self, index, _component);
 }
 
 @end

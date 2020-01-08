@@ -83,16 +83,12 @@
 
 - (unsigned int)numberOfChildren
 {
-  return _child ? 1 : 0;
+  return CKIterable::numberOfChildren(_child);
 }
 
 - (id<CKMountable>)childAtIndex:(unsigned int)index
 {
-  if (index == 0) {
-    return _child;
-  }
-  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %u", index, [self numberOfChildren]);
-  return nil;
+  return CKIterable::childAtIndex(self, index, _child);
 }
 
 @end
