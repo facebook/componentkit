@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKIterableHelpers.h>
 
 /** This component should be used on non-leaf components with a custom layout . */
 @interface CKLayoutComponent : CKComponent

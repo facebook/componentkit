@@ -289,6 +289,8 @@
 		23D26A4822440C5B0087350C /* CKCollectionViewDataSourceListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D26A4722440C5B0087350C /* CKCollectionViewDataSourceListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23D26A5522440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23D26A5322440E7C0087350C /* CKCollectionViewDataSourceListenerAnnouncer.mm */; };
 		23D26A5622440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D26A5422440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h */; };
+		23D70D3823C4F50400722429 /* CKIterableHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D70D2D23C4F50400722429 /* CKIterableHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		23D70D3923C4F50400722429 /* CKIterableHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D70D2D23C4F50400722429 /* CKIterableHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23E0E24823ABECB80023583C /* CKIterable.h in Headers */ = {isa = PBXBuildFile; fileRef = 23E0E23D23ABECB80023583C /* CKIterable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23E0E24923ABECB80023583C /* CKIterable.h in Headers */ = {isa = PBXBuildFile; fileRef = 23E0E23D23ABECB80023583C /* CKIterable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23EA314421A2E57400FEC59C /* CKTreeNodeTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 23EA313921A2E57400FEC59C /* CKTreeNodeTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1215,6 +1217,7 @@
 		23D26A4722440C5B0087350C /* CKCollectionViewDataSourceListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewDataSourceListener.h; sourceTree = "<group>"; };
 		23D26A5322440E7C0087350C /* CKCollectionViewDataSourceListenerAnnouncer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCollectionViewDataSourceListenerAnnouncer.mm; sourceTree = "<group>"; };
 		23D26A5422440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCollectionViewDataSourceListenerAnnouncer.h; sourceTree = "<group>"; };
+		23D70D2D23C4F50400722429 /* CKIterableHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKIterableHelpers.h; sourceTree = "<group>"; };
 		23E0E23D23ABECB80023583C /* CKIterable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKIterable.h; sourceTree = "<group>"; };
 		23EA313921A2E57400FEC59C /* CKTreeNodeTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTreeNodeTypes.h; sourceTree = "<group>"; };
 		23F949F322689F7600E590A2 /* CKAnalyticsListenerSpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAnalyticsListenerSpy.h; sourceTree = "<group>"; };
@@ -2403,6 +2406,7 @@
 				7260FBF32371BAB100FF22A8 /* CKComponentAnimationPredicates.mm */,
 				D0B47AF21CBD926700BB33CE /* CKCompositeComponent.h */,
 				D0B47AF31CBD926700BB33CE /* CKCompositeComponent.mm */,
+				23D70D2D23C4F50400722429 /* CKIterableHelpers.h */,
 				72647D1B2368D6830072F330 /* CKMountAnimationGuard.h */,
 				72647CE52368D35F0072F330 /* CKOptimisticViewMutations.h */,
 				72647CE42368D35E0072F330 /* CKOptimisticViewMutations.mm */,
@@ -2775,6 +2779,7 @@
 				A2A89C3C2011C110009D0377 /* CKInspectableView.h in Headers */,
 				D616A2C020BED2D100695472 /* CKComponentTreeDiff.h in Headers */,
 				237E82BE21B011F000794571 /* CKComponentPerfScope.h in Headers */,
+				23D70D3923C4F50400722429 /* CKIterableHelpers.h in Headers */,
 				60D7B3BA20FC90500011AB3B /* Yoga-internal.h in Headers */,
 				03B8B4D21D2A346F00EDFF59 /* CKComponentRootView.h in Headers */,
 				7262D39E225CE02E00BA991E /* CKComponentControllerHelper.h in Headers */,
@@ -3160,6 +3165,7 @@
 				D0B47D451CBD948E00BB33CE /* CKDataSourceItemInternal.h in Headers */,
 				72647CE02368D2E10072F330 /* CKInvalidChangesetOperationType.h in Headers */,
 				72395942238E9B22005B570A /* CKLinkable.h in Headers */,
+				23D70D3823C4F50400722429 /* CKIterableHelpers.h in Headers */,
 				23D26A5622440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h in Headers */,
 				60D7B3A920FC90500011AB3B /* Utils.h in Headers */,
 				72647CBB2368D0BA0072F330 /* CKComponentContext.h in Headers */,
