@@ -47,3 +47,5 @@ typedef NS_OPTIONS(NSUInteger, CKCenterLayoutComponentSizingOptions) {
                                    size:(const CKComponentSize &)size;
 
 @end
+
+#import <ComponentKit/CenterLayoutComponentBuilder.h>
