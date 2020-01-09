@@ -88,6 +88,7 @@ using namespace CKComponentControllerHelper;
     const CKDataSourceSplitUpdateResult result =
     splitUpdatedItems(newSections,
                       updatedItems,
+                      addedComponentControllers,
                       invalidComponentControllers,
                       sizeRange,
                       configuration,
@@ -438,6 +439,7 @@ struct CKDataSourceSplitUpdateResult {
 
 static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSourceItem *> *> *sections,
                                                        NSDictionary<NSIndexPath *, id> *updatedItems,
+                                                       NSMutableArray<CKComponentController *> *addedComponentControllers,
                                                        NSMutableArray<CKComponentController *> *invalidComponentControllers,
                                                        const CKSizeRange &sizeRange,
                                                        CKDataSourceConfiguration *configuration,
@@ -485,6 +487,11 @@ static CKDataSourceSplitUpdateResult splitUpdatedItems(NSArray<NSArray<CKDataSou
         computedItems[indexPath] = newItem;
         initialUpdatedItems[indexPath] = updatedModel;
         contentSize = addSizeToSize(contentSize, [newItem rootLayout].size());
+        for (const auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
+                                                                                                     item.scopeRoot,
+                                                                                                     &CKComponentControllerInitializeEventPredicate)) {
+          [addedComponentControllers addObject:componentController];
+        }
         for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(newItem.scopeRoot,
                                                                                                        item.scopeRoot,
                                                                                                        &CKComponentControllerInvalidateEventPredicate)) {

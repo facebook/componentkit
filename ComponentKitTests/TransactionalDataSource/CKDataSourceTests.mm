@@ -33,6 +33,7 @@
 
 static NSString *const kTestInvalidateControllerContext = @"kTestInvalidateControllerContext";
 static NSString *const kTestInitialiseControllerContext = @"kTestInitialiseControllerContext";
+static NSNumber *const kTestinitialiseControllerModel = @2;
 
 @interface CKDataSourceTests : XCTestCase <CKDataSourceAsyncListener>
 @end
@@ -52,7 +53,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   if ([context isEqual:kTestInvalidateControllerContext]) {
     return CK::ComponentBuilder()
                .build();
-  } else if ([context isEqual:kTestInitialiseControllerContext]) {
+  } else if ([context isEqual:kTestInitialiseControllerContext] || model == kTestinitialiseControllerModel) {
     return [CKCompositeComponentWithScope newWithComponentProvider:^{
       return [CKLifecycleTestComponent new];
     }];
@@ -245,7 +246,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   }));
 }
 
-- (void)testDataSourceAddingComponentTriggersDidInitOnMainThread
+- (void)testDataSourceAddingComponentByUpdatingConfigurationTriggersDidInitOnMainThread
 {
   const auto firstIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
   CKDataSource *dataSource = CKComponentTestDataSource(ComponentProvider, self);
@@ -254,6 +255,23 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   [dataSource updateConfiguration:[_state.configuration copyWithContext:kTestInitialiseControllerContext sizeRange:{}]
                              mode:CKUpdateModeSynchronous
                          userInfo:@{}];
+  const auto secondController = (CKLifecycleTestComponentController *)((CKSingleChildComponent *)[[_state objectAtIndexPath:firstIndexPath] rootLayout].component()).child.controller;
+  XCTAssertNotEqual(firstController, secondController);
+  XCTAssertTrue(firstController.calledInvalidateController);
+  XCTAssertTrue(secondController.calledDidInit);
+}
+
+- (void)testDataSourceAddingComponentByApplyingChangesetTriggersDidInitOnMainThread
+{
+  const auto firstIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+  CKDataSource *dataSource = CKComponentTestDataSource(ComponentProvider, self);
+  const auto firstController = (CKLifecycleTestComponentController *)((CKLifecycleTestComponent *)[[_state objectAtIndexPath:firstIndexPath] rootLayout].component()).controller;
+  XCTAssertTrue(firstController.calledDidInit);
+  [dataSource applyChangeset:[[[CKDataSourceChangesetBuilder dataSourceChangeset]
+                              withUpdatedItems:@{firstIndexPath: kTestinitialiseControllerModel}]
+                              build]
+                        mode:CKUpdateModeSynchronous
+                    userInfo:@{}];
   const auto secondController = (CKLifecycleTestComponentController *)((CKSingleChildComponent *)[[_state objectAtIndexPath:firstIndexPath] rootLayout].component()).child.controller;
   XCTAssertNotEqual(firstController, secondController);
   XCTAssertTrue(firstController.calledInvalidateController);
