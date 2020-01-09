@@ -672,15 +672,19 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
       // because it will create another Yoga tree. Instead, we call layoutFromYgNode:thatFits:
       // to reuse the already created yoga Node.
       const CKSizeRange childRange = {childSize, childSize};
-      const CKSizeRange childConstraintSize = childRange.intersect(childCachedLayout.component.size.resolve(size));
       CKAssertSizeRange(childRange);
+      const CKSizeRange resolvedSizeRange = childCachedLayout.component.size.resolve(size);
+      CKAssertSizeRange(resolvedSizeRange);
+      const CKSizeRange childConstraintSize = childRange.intersect(resolvedSizeRange);
       CKAssertSizeRange(childConstraintSize);
 
       childrenLayout[i].layout = [childCachedLayout.component layoutFromYgNode:childNode thatFits:childConstraintSize];
     } else if ([self canReuseCachedLayout:childCachedLayout forChildWithExactSize:childSize]) {
       childrenLayout[i].layout = childCachedLayout.componentLayout;
     } else {
-      childrenLayout[i].layout = CKComputeComponentLayout(childCachedLayout.component, {childSize, childSize}, size);
+      const CKSizeRange childRange = {childSize, childSize};
+      CKAssertSizeRange(childRange);
+      childrenLayout[i].layout = CKComputeComponentLayout(childCachedLayout.component, childRange, size);
     }
     childrenLayout[i].layout.size = childSize;
   }
