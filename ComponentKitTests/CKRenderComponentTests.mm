@@ -378,7 +378,7 @@
   auto const componentFactory = ^{
     c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
     c2 = [CKTestRenderComponent newWithProps:{.identifier = 2}];
-    return [CKTestRenderWithChildrenComponent newWithChildren:{c1, c2}];
+    return [CKTestLayoutComponent newWithChildren:{c1, c2}];
   };
 
   // Build scope root with predicates.
@@ -408,7 +408,7 @@
   auto const componentFactory = ^{
     c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
     c2 = [CKTestRenderComponent newWithProps:{.identifier = 2}];
-    return [CKTestRenderWithChildrenComponent newWithChildren:{c1, c2}];
+    return [CKTestLayoutComponent newWithChildren:{c1, c2}];
   };
 
   // Build scope root with predicates.
@@ -436,7 +436,7 @@
   auto const componentFactory = ^{
     c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
     c2 = [CKTestRenderComponent newWithProps:{.identifier = 2}];
-    return [CKTestRenderWithChildrenComponent newWithChildren:{c1, c2}];
+    return [CKTestLayoutComponent newWithChildren:{c1, c2}];
   };
 
   // Build scope root with predicates.
@@ -530,7 +530,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   auto const componentFactory = ^{
     c1 = [CKTestRenderWithNonRenderWithStateChildComponent new];
     c2 = [CKTestRenderWithNonRenderWithStateChildComponent new];
-    return [CKTestRenderWithChildrenComponent newWithChildren:{c1, c2}];
+    return [CKTestLayoutComponent newWithChildren:{c1, c2}];
   };
 
   // Build first component generation:
@@ -589,7 +589,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   auto const componentFactory = ^{
     c1 = [CKTestRenderWithNonRenderWithStateChildComponent new];
     c2 = [CKTestRenderWithNonRenderWithStateChildComponent new];
-    return [CKTestRenderWithChildrenComponent newWithChildren:{c1, c2}];
+    return [CKTestLayoutComponent newWithChildren:{c1, c2}];
   };
 
   // Build first component generation:

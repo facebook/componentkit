@@ -144,7 +144,7 @@
 }
 @end
 
-@implementation CKTestRenderWithChildrenComponent
+@implementation CKTestLayoutComponent
 {
   std::vector<CKComponent *> _children;
 }
@@ -160,9 +160,17 @@
 {
   return YES;
 }
-- (std::vector<CKComponent *>)renderChildren:(id)state
+- (unsigned int)numberOfChildren
 {
-  return _children;
+  return (unsigned int)_children.size();
+}
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  if (index < _children.size()) {
+    return _children[index];
+  }
+  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %lu", index, _children.size());
+  return nil;
 }
 @end
 

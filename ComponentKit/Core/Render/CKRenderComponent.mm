@@ -30,11 +30,11 @@
   if (self != [CKRenderComponent class]) {
     CKAssert(!CKSubclassOverridesInstanceMethod([CKRenderComponent class], self, @selector(computeLayoutThatFits:)),
              @"%@ overrides -computeLayoutThatFits: which is not allowed. "
-             "Consider subclassing CKRenderLayoutWithChildrenComponent directly if you need to perform custom layout.",
+             "Consider subclassing CKLayoutComponent directly if you need to perform custom layout.",
              self);
     CKAssert(!CKSubclassOverridesInstanceMethod([CKRenderComponent class], self, @selector(layoutThatFits:parentSize:)),
              @"%@ overrides -layoutThatFits:parentSize: which is not allowed. "
-             "Consider subclassing CKRenderLayoutWithChildrenComponent directly if you need to perform custom layout.",
+             "Consider subclassing CKLayoutComponent directly if you need to perform custom layout.",
              self);
   }
 }

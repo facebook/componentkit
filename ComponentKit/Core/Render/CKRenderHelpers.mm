@@ -218,48 +218,6 @@ namespace CKRender {
     }
   }
 
-    namespace RenderLayout {
-      auto buildWithChildren(id<CKRenderWithChildrenComponentProtocol> component,
-                             std::vector<id<CKTreeNodeComponentProtocol>> *childrenComponents,
-                             id<CKTreeNodeWithChildrenProtocol> parent,
-                             id<CKTreeNodeWithChildrenProtocol> previousParent,
-                             const CKBuildComponentTreeParams &params,
-                             BOOL parentHasStateUpdate) -> void
-      {
-        // Check if the component already has a tree node.
-        id<CKTreeNodeProtocol> node = component.scopeHandle.treeNode;
-
-        if (node) {
-          [node linkComponent:component toParent:parent previousParent:previousParent params:params];
-        }
-
-        // Update the `parentHasStateUpdate` param for Faster state/props updates.
-        if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(component, previousParent, params)) {
-          parentHasStateUpdate = YES;
-        }
-
-        auto const children = [component renderChildren:node.state];
-        if (childrenComponents != nullptr) {
-          *childrenComponents = children;
-        }
-
-        // If there is a node, we update the parents' pointers to the next level in the tree.
-        if (node) {
-          parent = (id<CKTreeNodeWithChildrenProtocol>)node;
-          previousParent = (id<CKTreeNodeWithChildrenProtocol>)[previousParent childForComponentKey:[node componentKey]];
-        }
-
-        for (auto const child : children) {
-          if (child) {
-            [child buildComponentTree:parent
-                       previousParent:previousParent
-                               params:params
-                 parentHasStateUpdate:parentHasStateUpdate];
-          }
-        }
-      }
-    }
-
     namespace Render {
       auto build(id<CKRenderWithChildComponentProtocol> component,
                  __strong id<CKTreeNodeComponentProtocol> *childComponent,

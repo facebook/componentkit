@@ -14,8 +14,8 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
+#import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKRenderComponent.h>
-#import <ComponentKit/CKRenderLayoutWithChildrenComponent.h>
 
 @interface CKContextTestComponent<T> : CKComponent
 @property (nonatomic, strong) id<NSObject> objectFromContext;
@@ -27,7 +27,7 @@
 @property (nonatomic, strong) CKContextTestComponent *childTest;
 @end
 
-@interface CKContextTestWithChildrenComponent : CKRenderLayoutWithChildrenComponent
+@interface CKContextTestWithChildrenComponent : CKLayoutComponent
 + (instancetype)newWithChildren:(std::vector<CKComponent *>)children;
 @property (nonatomic, assign) std::vector<CKComponent *>children;
 @end
@@ -509,8 +509,18 @@
   return c;
 }
 
-- (std::vector<CKComponent *>)renderChildren:(id)state
+- (unsigned int)numberOfChildren
 {
-  return _children;
+  return (unsigned int)_children.size();
 }
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  if (index < _children.size()) {
+    return _children[index];
+  }
+  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %lu", index, _children.size());
+  return nil;
+}
+
 @end

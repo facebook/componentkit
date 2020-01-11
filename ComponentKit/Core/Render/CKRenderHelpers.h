@@ -43,25 +43,6 @@ namespace CKRender {
                  BOOL parentHasStateUpdate) -> void;
   }
 
-    namespace RenderLayout {
-      /**
-       Build component tree for layout render component with children components (CKRenderLayoutWithChildrenComponent).
-
-       @param component The *render* component at the head of the component tree.
-       @param parent The current parent of the component in input.
-       @param previousParent The previous generation of the parent tree node of the component in input.
-       @param params Collection of parameters to use to properly setup build component tree step.
-       @param parentHasStateUpdate Flag used to run optimizations at component tree build time. `YES` if the input parent received a state update.
-
-       */
-      auto buildWithChildren(id<CKRenderWithChildrenComponentProtocol> component,
-                             std::vector<id<CKTreeNodeComponentProtocol>> *childrenComponents,
-                             id<CKTreeNodeWithChildrenProtocol> parent,
-                             id<CKTreeNodeWithChildrenProtocol> previousParent,
-                             const CKBuildComponentTreeParams &params,
-                             BOOL parentHasStateUpdate) -> void;
-    }
-
     namespace Render {
       /**
        Build component tree for *render* component.
