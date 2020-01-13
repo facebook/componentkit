@@ -18,11 +18,32 @@ constexpr static auto __max = component;
 
 template <PropsBitmapType PropsBitmap = 0>
 class __attribute__((__may_alias__)) InsetComponentBuilder
-    : public ComponentBuilderBase<InsetComponentBuilder, PropsBitmap> {
+    : public ViewConfigBuilderBase<InsetComponentBuilder, PropsBitmap>, public BuilderBase<InsetComponentBuilder, PropsBitmap> {
  public:
   InsetComponentBuilder() = default;
 
   ~InsetComponentBuilder() = default;
+
+  /**
+   Specifies a complete view configuration which will be used to create a view for the component.
+
+   @param c A struct describing the view for this component.
+
+   @note Calling this method on a builder that already has a view class or any of the view properties set will trigger
+   a compilation error.
+
+   @note This method only accepts temporaries as its argument. If you need to pass an existing variable use
+   @c std::move().
+   */
+  auto &view(CKComponentViewConfiguration &&c)
+  {
+    constexpr auto viewConfigurationOverridesExistingViewClass =
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
+    static_assert(!viewConfigurationOverridesExistingViewClass,
+                  "Setting view configuration overrides existing view class");
+    _viewConfig = std::move(c);
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | ViewConfigBuilderPropId::viewConfig> &>(*this);
+  }
 
   /**
    The amount of space to inset on each side.
@@ -108,6 +129,7 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   }
 
  private:
+  CKComponentViewConfiguration _viewConfig;
   UIEdgeInsets _insets;
   CKComponent *_component;
 };
