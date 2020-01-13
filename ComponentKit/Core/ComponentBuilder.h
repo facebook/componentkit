@@ -594,6 +594,111 @@ public:
   }
 };
 
+namespace ComponentBuilderBaseSizeOnlyPropId {
+  constexpr static auto size = BuilderBasePropId::__max << 1;
+  constexpr static auto __max = size;
+}
+
+template <template <PropsBitmapType> class Derived, PropsBitmapType PropsBitmap>
+class __attribute__((__may_alias__)) ComponentBuilderBaseSizeOnly : public BuilderBase<Derived, PropsBitmap> {
+public:
+  ComponentBuilderBaseSizeOnly() = default;
+  ~ComponentBuilderBaseSizeOnly() = default;
+
+  /**
+   The width of the component relative to its parent's size.
+   */
+  auto &width(CKRelativeDimension w)
+  {
+    _size.width = w;
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
+  }
+
+  /**
+   The width of the component.
+   */
+  auto &width(CGFloat w)
+  {
+    _size.width = w;
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
+  }
+
+  /**
+   The height of the component relative to its parent's size.
+   */
+  auto &height(CKRelativeDimension h)
+  {
+    _size.height = h;
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
+  }
+
+  /**
+   The height of the component.
+   */
+  auto &height(CGFloat h)
+  {
+    _size.height = h;
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
+  }
+
+  /**
+   The minumum allowable width of the component relative to its parent's size.
+   */
+  auto &minWidth(CKRelativeDimension w)
+  {
+    _size.minWidth = w;
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
+  }
+
+  /**
+   The minumum allowable height of the component relative to its parent's size.
+   */
+  auto &minHeight(CKRelativeDimension h)
+  {
+    _size.minHeight = h;
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
+  }
+
+  /**
+   The maximum allowable width of the component relative to its parent's size.
+   */
+  auto &maxWidth(CKRelativeDimension w)
+  {
+    _size.maxWidth = w;
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
+  }
+
+  /**
+   The maximum allowable height of the component relative to its parent's size.
+   */
+  auto &maxHeight(CKRelativeDimension h)
+  {
+    _size.maxHeight = h;
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
+  }
+
+  /**
+   Specifies a size constraint that should apply to this component.
+   */
+  auto &size(CKComponentSize &&s)
+  {
+    _size = std::move(s);
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
+  }
+
+  /**
+   Specifies a size constraint that should apply to this component.
+   */
+  auto &size(const CKComponentSize &s)
+  {
+    _size = s;
+    return reinterpret_cast<Derived<PropsBitmap | ComponentBuilderBaseSizeOnlyPropId::size> &>(*this);
+  }
+
+protected:
+  CKComponentSize _size;
+};
+
 namespace ComponentBuilderBasePropId {
   constexpr static auto size = ViewConfigBuilderPropId::__max << 1;
   constexpr static auto __max = size;
