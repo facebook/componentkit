@@ -26,10 +26,17 @@ struct CKTestChildRenderComponentProps {
 + (instancetype)newWithProps:(const CKTestChildRenderComponentProps &)props;
 @end
 
+// CKCompositeComponent with scope and state.
+@interface CKCompositeComponentWithScopeAndState : CKCompositeComponent
++ (instancetype)newWithComponent:(CKComponent *)component;
+- (CKComponent *)child;
+@end
+
 // Render component with a `CKTestChildRenderComponent` child component.
 struct CKTestRenderComponentProps {
   NSUInteger identifier;
   BOOL shouldUseComponentContext;
+  BOOL shouldUseNonRenderChild;
 };
 
 @interface CKTestRenderComponent : CKRenderComponent
@@ -37,12 +44,8 @@ struct CKTestRenderComponentProps {
 @property (nonatomic, assign) NSUInteger renderCalledCounter;
 @property (nonatomic, assign) NSUInteger identifier;
 @property (nonatomic, strong) CKTestChildRenderComponent *childComponent;
+@property (nonatomic, strong) CKCompositeComponentWithScopeAndState *nonRenderChildComponent;
 + (instancetype)newWithProps:(const CKTestRenderComponentProps &)props;
-@end
-
-// CKCompositeComponent with scope and state.
-@interface CKCompositeComponentWithScopeAndState : CKCompositeComponent
-+ (instancetype)newWithComponent:(CKComponent *)component;
 @end
 
 // Render component with CKCompositeComponentWithScopeAndState child

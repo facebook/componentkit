@@ -382,10 +382,15 @@
   };
 
   // Build scope root with predicates.
-  auto const scopeRoot = CKComponentScopeRootWithPredicates(nil, nil, {&CKComponentRenderTestsPredicate}, {&CKComponentControllerRenderTestsPredicate});
+  auto const scopeRoot = CKComponentScopeRootWithPredicates(nil, nil,
+                                                            {&CKComponentRenderTestsPredicate},
+                                                            {&CKComponentControllerRenderTestsPredicate});
   auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory, YES);
   // Verify components and controllers registration in the scope root.
-  [self verifyComponentsAndControllersAreRegisteredInScopeRoot:buildResults.scopeRoot components:{c1.childComponent, c2.childComponent}];
+  [self verifyComponentsAndControllersAreRegisteredInScopeRoot:buildResults.scopeRoot
+                                                    components:{c1.childComponent, c2.childComponent}
+                                            componentPredicate:&CKComponentRenderTestsPredicate
+                                  componentControllerPredicate:&CKComponentControllerRenderTestsPredicate];
 
   // Simulate a state update on c2.
   CKComponentStateUpdateMap stateUpdates;
@@ -397,7 +402,55 @@
   // Verify c1 has been reused
   XCTAssertTrue(c1.didReuseComponent);
   // Verify components and controllers registration in the scope root.
-  [self verifyComponentsAndControllersAreRegisteredInScopeRoot:buildResults2.scopeRoot components:{c1.childComponent, c2.childComponent}];
+  [self verifyComponentsAndControllersAreRegisteredInScopeRoot:buildResults2.scopeRoot
+                                                    components:{c1.childComponent,c2.childComponent}
+                                            componentPredicate:&CKComponentRenderTestsPredicate
+                                  componentControllerPredicate:&CKComponentControllerRenderTestsPredicate];
+}
+
+- (void)test_registerComponentsAndControllersInScopeRootAfterReuseWithNonRenderComponents
+{
+  // Build new tree with siblings `CKTestRenderComponent` components.
+  __block CKTestRenderComponent *c1;
+  __block CKTestRenderComponent *c2;
+  auto const componentFactory = ^{
+    c1 = [CKTestRenderComponent newWithProps:{.identifier = 1}];
+    c2 = [CKTestRenderComponent newWithProps:{.identifier = 2, .shouldUseNonRenderChild = YES}];
+    return [CKTestLayoutComponent newWithChildren:{c1, c2}];
+  };
+
+  // Build scope root with predicates.
+  auto const scopeRoot = CKComponentScopeRootWithPredicates(nil, nil,
+  {&CKAllNonNilComponentsTestsPredicate},
+  {&CKAllNonNilComponentsControllersTestsPredicate});
+  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory, YES);
+  // Verify components and controllers registration in the scope root.
+  [self verifyComponentsAndControllersAreRegisteredInScopeRoot:buildResults.scopeRoot
+                                                    components:{
+    c1, c1.childComponent,
+    c2, c2.nonRenderChildComponent, c2.nonRenderChildComponent.child,
+  }
+                                            componentPredicate:&CKAllNonNilComponentsTestsPredicate
+                                  componentControllerPredicate:&CKAllNonNilComponentsControllersTestsPredicate];
+
+  // Simulate a state update on c1.
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[c1.scopeHandle].push_back(^(id){
+    return @2;
+  });
+
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, YES);
+  // Verify c1 has been reused
+  XCTAssertTrue(c2.didReuseComponent);
+
+  // Verify components and controllers registration in the scope root.
+  [self verifyComponentsAndControllersAreRegisteredInScopeRoot:buildResults2.scopeRoot
+                                                    components:{
+    c1, c1.childComponent,
+    c2, c2.nonRenderChildComponent, c2.nonRenderChildComponent.child,
+  }
+                                            componentPredicate:&CKAllNonNilComponentsTestsPredicate
+                                  componentControllerPredicate:&CKAllNonNilComponentsControllersTestsPredicate];
 }
 
 - (void)test_componentIsNotBeingReusedOnAStateUpdate_WhenEnableComponentReuseOptimizationsIsOff
@@ -453,13 +506,23 @@
 #pragma mark - Helpers
 
 // Filters `CKTestChildRenderComponent` components.
-static BOOL CKComponentRenderTestsPredicate(id<CKComponentProtocol> controller) {
-  return [controller class] == [CKTestChildRenderComponent class];
+static BOOL CKComponentRenderTestsPredicate(id<CKComponentProtocol> component) {
+  return [component class] == [CKTestChildRenderComponent class];
 }
 
 // Filters `CKTestChildRenderComponentController` controllers.
 static BOOL CKComponentControllerRenderTestsPredicate(id<CKComponentControllerProtocol> controller) {
   return [controller class] == [CKTestChildRenderComponentController class];
+}
+
+// Filters all non-nil components.
+static BOOL CKAllNonNilComponentsTestsPredicate(id<CKComponentProtocol> component) {
+  return component != nil;
+}
+
+// Filters all non-nil controllers.
+static BOOL CKAllNonNilComponentsControllersTestsPredicate(id<CKComponentControllerProtocol> controller) {
+  return controller != nil;
 }
 
 - (void)verifyComponentIsNotBeingReused:(CKTestRenderComponent *)c
@@ -486,12 +549,17 @@ static BOOL CKComponentControllerRenderTestsPredicate(id<CKComponentControllerPr
 
 - (void)verifyComponentsAndControllersAreRegisteredInScopeRoot:(CKComponentScopeRoot *)scopeRoot
                                                     components:(std::vector<CKComponent *>)components
+                                            componentPredicate:(CKComponentPredicate)componentPredicate
+                                  componentControllerPredicate:(CKComponentControllerPredicate)componentControllerPredicate
 {
-  auto const registeredComponents = [scopeRoot componentsMatchingPredicate:&CKComponentRenderTestsPredicate];
-  auto const registeredControllers = [scopeRoot componentControllersMatchingPredicate:&CKComponentControllerRenderTestsPredicate];
+  auto const registeredComponents = [scopeRoot componentsMatchingPredicate:componentPredicate];
+  auto const registeredControllers = [scopeRoot componentControllersMatchingPredicate:componentControllerPredicate];
   for (auto const &c: components) {
+    XCTAssertNotNil(c, @"component shoudn't be nil here");
     XCTAssertTrue(CK::Collection::contains(registeredComponents, c));
-    XCTAssertTrue(CK::Collection::contains(registeredControllers, c.scopeHandle.controller));
+    if (c.controller) {
+      XCTAssertTrue(CK::Collection::contains(registeredControllers, c.controller));
+    }
   }
 }
 

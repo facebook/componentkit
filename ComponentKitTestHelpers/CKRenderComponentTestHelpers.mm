@@ -21,6 +21,7 @@
 @implementation CKTestRenderComponent
 {
   BOOL _shouldUseComponentContext;
+  BOOL _shouldUseNonRenderChild;
 }
 
 + (instancetype)newWithProps:(const CKTestRenderComponentProps &)props
@@ -29,6 +30,7 @@
   if (c) {
     c->_identifier = props.identifier;
     c->_shouldUseComponentContext = props.shouldUseComponentContext;
+    c->_shouldUseNonRenderChild = props.shouldUseNonRenderChild;
   }
   return c;
 }
@@ -37,6 +39,16 @@
 {
   CKComponentMutableContext<NSNumber> context(@1);
   _renderCalledCounter++;
+  if (_shouldUseNonRenderChild) {
+    _nonRenderChildComponent = [CKCompositeComponentWithScopeAndState
+                                newWithComponent:
+                                [CKCompositeComponentWithScopeAndState
+                                 newWithComponent:
+                                [CKCompositeComponentWithScopeAndState
+                                 newWithComponent:
+                                CK::ComponentBuilder().build()]]];
+    return _nonRenderChildComponent;
+  }
   _childComponent = [CKTestChildRenderComponent newWithProps:{
     .shouldUseComponentContext = _shouldUseComponentContext,
   }];
@@ -57,6 +69,8 @@
 {
   _didReuseComponent = YES;
   _childComponent = component->_childComponent;
+  _nonRenderChildComponent = component->_nonRenderChildComponent;
+  _shouldUseNonRenderChild = component->_shouldUseNonRenderChild;
 }
 
 @end
@@ -112,15 +126,27 @@
 @end
 
 @implementation CKCompositeComponentWithScopeAndState
+{
+  CKComponent *_child;
+}
 + (instancetype)newWithComponent:(CKComponent *)component
 {
   CKComponentScope scope(self);
-  return [super newWithComponent:component];
+  auto const c = [super newWithComponent:component];
+  if (c) {
+    c->_child = component;
+  }
+  return c;
 }
 
 + (id)initialState
 {
   return @1;
+}
+
+- (CKComponent *)child
+{
+  return _child;
 }
 @end
 
