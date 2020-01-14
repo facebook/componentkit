@@ -40,7 +40,7 @@ static NSString *const indentString = @"| ";
 }
 
 /** Used by Chisel. Don't rename or remove this without changing Chisel! */
-+ (NSString *)componentHierarchyDescriptionForView:(UIView *)view
++ (NSString *)componentHierarchyDescriptionForView:(UIView *)view  NS_EXTENSION_UNAVAILABLE("Recursively describes components using -[UIApplication keyWindow]")
 {
   if (view == nil) {
     return [self componentHierarchyDescription];
