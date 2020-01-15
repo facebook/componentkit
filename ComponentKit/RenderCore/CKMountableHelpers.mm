@@ -10,9 +10,16 @@
 
 #import "CKMountableHelpers.h"
 
-#import <objc/runtime.h>
-
 #import <ComponentKit/CKComponentDescriptionHelper.h>
+
+void CKSetViewPositionAndBounds(UIView *v,
+                                const CK::Component::MountContext &context,
+                                const CGSize size)
+{
+  const CGPoint anchorPoint = v.layer.anchorPoint;
+  [v setCenter:context.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
+  [v setBounds:{v.bounds.origin, size}];
+}
 
 void CKSetViewPositionAndBounds(UIView *v,
                                 const CK::Component::MountContext &context,
@@ -22,9 +29,7 @@ void CKSetViewPositionAndBounds(UIView *v,
                                 Class<CKMountable> klass)
 {
   @try {
-    const CGPoint anchorPoint = v.layer.anchorPoint;
-    [v setCenter:context.position + CGPoint({size.width * anchorPoint.x, size.height * anchorPoint.y})];
-    [v setBounds:{v.bounds.origin, size}];
+    CKSetViewPositionAndBounds(v, context, size);
   } @catch (NSException *exception) {
     NSString *const componentBacktraceDescription =
       CKComponentBacktraceDescription(CKComponentGenerateBacktrace(supercomponent));

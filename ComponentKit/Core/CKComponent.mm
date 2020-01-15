@@ -18,6 +18,7 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKComponentContextHelper.h>
+#import <ComponentKit/CKFatal.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKMutex.h>
@@ -219,7 +220,16 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
       CKAssert(currentMountedComponent == self, @"");
     }
 
-    CKSetViewPositionAndBounds(v, context, size, children, supercomponent, [self class]);
+    @try {
+      CKSetViewPositionAndBounds(v, context, size);
+    } @catch (NSException *exception) {
+      CKCFatalWithCategory(NSStringFromClass([self class]),
+                           @"Raised %@ during mount: %@\nBacktrace: %@\nChildren: %@",
+                           exception.name,
+                           exception.reason,
+                           CKComponentBacktraceDescription(CKComponentGenerateBacktrace(supercomponent)),
+                           CKComponentChildrenDescription(children));
+    }
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
 

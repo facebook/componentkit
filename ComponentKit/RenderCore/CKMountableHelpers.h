@@ -23,3 +23,8 @@ void CKSetViewPositionAndBounds(UIView *v,
                                 std::shared_ptr<const std::vector<CKComponentLayoutChild> > children,
                                 id<CKMountable> supercomponent,
                                 Class<CKMountable> klass);
+
+/** This is a helper function which sets the view position and bounds during mount */
+void CKSetViewPositionAndBounds(UIView *v,
+                                const CK::Component::MountContext &context,
+                                const CGSize size);
