@@ -169,3 +169,100 @@ static CKComponent *ComponentProvider(id<NSObject> _, id<NSObject> __)
   XCTAssertEqualObjects(state.description, expected);
 }
 @end
+
+@interface CKDataSourceStateTests_ContentsFingerprint : XCTestCase
+@end
+
+@interface ModelWithModelAndContext : NSObject
+@property (nonatomic, readonly, strong) id model;
+@property (nonatomic, readonly, strong) id context;
+
++ (instancetype)newWithModel:(id)model context:(id)context;
+
+@end
+
+static auto stateWithModels(const std::vector<id> &models) -> CKDataSourceState *
+{
+  auto const items = [NSMutableArray<CKDataSourceItem *> new];
+  for (id model : models) {
+    [items addObject:[[CKDataSourceItem alloc] initWithModel:model scopeRoot:nil]];
+  }
+  return
+  [[CKDataSourceState alloc]
+   initWithConfiguration:nil
+   sections:@[items]];
+}
+
+@implementation CKDataSourceStateTests_ContentsFingerprint
+
+- (void)test_WhenIsEmpty_FingerprintIsEmpty
+{
+  XCTAssertEqualObjects([CKDataSourceState new].contentsFingerprint, @"");
+}
+
+- (void)test_WhenHasModelWithModelAndContext_FingerprintIncludesModelAndContextTypesInSameOrder
+{
+  auto const state1 = stateWithModels({
+    [ModelWithModelAndContext newWithModel:@"" context:@0],
+    [ModelWithModelAndContext newWithModel:@"" context:@0],
+    [ModelWithModelAndContext newWithModel:@[] context:@0],
+  });
+
+  auto const state2 = stateWithModels({
+    [ModelWithModelAndContext newWithModel:@"" context:@0],
+    [ModelWithModelAndContext newWithModel:@[] context:@1],
+    [ModelWithModelAndContext newWithModel:@[] context:@1],
+  });
+
+  XCTAssertEqualObjects(state1.contentsFingerprint, state2.contentsFingerprint);
+}
+
+- (void)test_WhenHasModelWithModelAndContextAndNils_FingerprintIncludesModelAndContextTypesInSameOrder
+{
+  auto const state1 = stateWithModels({
+    [ModelWithModelAndContext newWithModel:nil context:@0],
+    [ModelWithModelAndContext newWithModel:@"" context:nil],
+    [ModelWithModelAndContext newWithModel:@"" context:@0],
+  });
+
+  auto const state2 = stateWithModels({
+    [ModelWithModelAndContext newWithModel:nil context:@0],
+    [ModelWithModelAndContext newWithModel:@"" context:@0],
+    [ModelWithModelAndContext newWithModel:nil context:@0],
+  });
+
+  XCTAssertEqualObjects(state1.contentsFingerprint, state2.contentsFingerprint);
+}
+
+- (void)test_WhenHasModelWithoutModelAndContext_FingerprintIncludesModelTypesInSameOrder
+{
+  auto const state1 = stateWithModels({
+    @0,
+    @"",
+    @"",
+    @0,
+  });
+
+  auto const state2 = stateWithModels({
+    @0,
+    @0,
+    @"",
+  });
+
+  XCTAssertNotEqualObjects(state1.contentsFingerprint, @"");
+  XCTAssertEqualObjects(state1.contentsFingerprint, state2.contentsFingerprint);
+}
+
+@end
+
+@implementation ModelWithModelAndContext
+
++ (instancetype)newWithModel:(id)model context:(id)context
+{
+  auto const m = [super new];
+  m->_model = model;
+  m->_context = context;
+  return m;
+}
+
+@end

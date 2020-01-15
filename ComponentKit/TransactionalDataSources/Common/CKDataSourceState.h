@@ -31,4 +31,7 @@ typedef void(^CKDataSourceEnumerator)(CKDataSourceItem *, NSIndexPath *, BOOL *s
 /** The configuration used to generate this state object. */
 @property (nonatomic, strong, readonly) CKDataSourceConfiguration *configuration;
 
+/** A string somewhat uniquely identifying this state object contents. */
+@property (nonatomic, strong, readonly) NSString *contentsFingerprint;
+
 @end
