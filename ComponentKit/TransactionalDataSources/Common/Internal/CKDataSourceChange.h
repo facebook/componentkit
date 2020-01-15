@@ -20,12 +20,14 @@
 - (instancetype)initWithState:(CKDataSourceState *)state
                 previousState:(CKDataSourceState *)previousState
                appliedChanges:(CKDataSourceAppliedChanges *)appliedChanges
+             appliedChangeset:(CKDataSourceChangeset *)appliedChangeset
             deferredChangeset:(CKDataSourceChangeset *)deferredChangeset
     addedComponentControllers:(NSArray<CKComponentController *> *)addedComponentControllers
   invalidComponentControllers:(NSArray<CKComponentController *> *)invalidComponentControllers;
 @property (nonatomic, strong, readonly) CKDataSourceState *state;
 @property (nonatomic, strong, readonly) CKDataSourceState *previousState;
 @property (nonatomic, strong, readonly) CKDataSourceAppliedChanges *appliedChanges;
+@property (nonatomic, strong, readonly) CKDataSourceChangeset *appliedChangeset;
 /**
  * A changeset that should be applied immediately afterward.
  *

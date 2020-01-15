@@ -15,6 +15,7 @@
 - (instancetype)initWithState:(CKDataSourceState *)state
                 previousState:(CKDataSourceState *)previousState
                appliedChanges:(CKDataSourceAppliedChanges *)appliedChanges
+             appliedChangeset:(CKDataSourceChangeset *)appliedChangeset
             deferredChangeset:(CKDataSourceChangeset *)deferredChangeset
     addedComponentControllers:(NSArray<CKComponentController *> *)addedComponentControllers
   invalidComponentControllers:(NSArray<CKComponentController *> *)invalidComponentControllers
@@ -23,6 +24,7 @@
     _state = state;
     _previousState = previousState;
     _appliedChanges = appliedChanges;
+    _appliedChangeset = appliedChangeset;
     _deferredChangeset = deferredChangeset;
     _addedComponentControllers = addedComponentControllers;
     _invalidComponentControllers = invalidComponentControllers;

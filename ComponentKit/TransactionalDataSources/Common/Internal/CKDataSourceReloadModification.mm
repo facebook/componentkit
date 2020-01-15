@@ -87,6 +87,7 @@ using namespace CKComponentControllerHelper;
   return [[CKDataSourceChange alloc] initWithState:newState
                                      previousState:oldState
                                     appliedChanges:appliedChanges
+                                  appliedChangeset:nil
                                  deferredChangeset:nil
                          addedComponentControllers:addedComponentControllers
                        invalidComponentControllers:invalidComponentControllers];

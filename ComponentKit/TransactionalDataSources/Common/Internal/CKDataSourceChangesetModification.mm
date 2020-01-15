@@ -334,6 +334,7 @@ using namespace CKComponentControllerHelper;
   return [[CKDataSourceChange alloc] initWithState:newState
                                      previousState:oldState
                                     appliedChanges:appliedChanges
+                                  appliedChangeset:_changeset
                                  deferredChangeset:nil
                          addedComponentControllers:addedComponentControllers
                        invalidComponentControllers:invalidComponentControllers];

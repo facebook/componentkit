@@ -363,10 +363,19 @@ using namespace CKComponentControllerHelper;
                                                insertedSections:[_changeset insertedSections]
                                              insertedIndexPaths:[NSSet setWithArray:[initialInsertedItems allKeys]]
                                                        userInfo:_userInfo];
+  CKDataSourceChangeset *appliedChangeset =
+  [[[[[[[[CKDataSourceChangesetBuilder dataSourceChangeset]
+         withUpdatedItems:initialUpdatedItems]
+        withRemovedItems:[_changeset removedItems]]
+       withRemovedSections:[_changeset removedSections]]
+      withMovedItems:[_changeset movedItems]]
+     withInsertedSections:[_changeset insertedSections]]
+    withInsertedItems:initialInsertedItems] build];
 
   return [[CKDataSourceChange alloc] initWithState:newState
                                      previousState:oldState
                                     appliedChanges:appliedChanges
+                                  appliedChangeset:appliedChangeset
                                  deferredChangeset:createDeferredChangeset(deferredInsertedItems, computeDeferredItems(sectionsForDeferredUpdatedItems))
                          addedComponentControllers:addedComponentControllers
                        invalidComponentControllers:invalidComponentControllers];
