@@ -68,8 +68,7 @@ static NSUInteger _globalApplyChangeCount = 0;
   _queue = dispatch_queue_create("CKDataSourceChangesetApplicator.Tests", DISPATCH_QUEUE_SERIAL);
   _changesetApplicator =
   [[CKDataSourceChangesetApplicator alloc]
-   initWithDataSource:(CKDataSource *)_dataSource
-   dataSourceState:dataSourceState
+   initWithDataSource:_dataSource
    queue:_queue];
   _buildComponentCount = 0;
 }

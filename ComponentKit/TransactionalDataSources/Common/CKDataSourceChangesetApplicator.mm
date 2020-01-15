@@ -52,12 +52,11 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
 }
 
 - (instancetype)initWithDataSource:(CKDataSource *)dataSource
-                   dataSourceState:(CKDataSourceState *)dataSourceState
                              queue:(dispatch_queue_t)queue
 {
   if (self = [super init]) {
     _dataSource = dataSource;
-    _dataSourceState = dataSourceState;
+    _dataSourceState = dataSource.state;
     _queue = queue;
     _changesetApplicatorId = @(OSAtomicIncrement32(&globalChangesetApplicatorId));
     [_dataSource addListener:self];

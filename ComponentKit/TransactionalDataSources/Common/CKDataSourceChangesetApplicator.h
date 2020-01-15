@@ -26,13 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  @param dataSource The dataSource that changesets will be applied to.
- @param dataSourceState The latest state from dataSource.
  @param queue A serial queue that will be used for processing changeset, which includes components generation.
  Main queue is discouraged to be used here because changeset applicator is not optimized for it.
  Undefined behavior if a concurrent queue is passed in.
  */
 - (instancetype)initWithDataSource:(CKDataSource *)dataSource
-                   dataSourceState:(CKDataSourceState *)dataSourceState
                              queue:(dispatch_queue_t)queue;
 
 /**
