@@ -25,6 +25,13 @@
 
 static NSString *const indentString = @"| ";
 
+@interface CKComponentHierarchyDebugHelper ()
+
++ (NSString *)componentHierarchyDescriptionForView:(UIView *)view NS_EXTENSION_UNAVAILABLE("Recursively describes components using -[UIApplication keyWindow]");
++ (NSString *)componentHierarchyDescriptionForView:(UIView *)view searchUpwards:(BOOL)upwards showViews:(BOOL)showViews NS_EXTENSION_UNAVAILABLE("Recursively describes components using -[UIApplication keyWindow]");
+
+@end
+
 @implementation CKComponentHierarchyDebugHelper
 
 + (NSString *)componentHierarchyDescription
