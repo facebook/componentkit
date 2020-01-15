@@ -88,7 +88,7 @@ static NSUInteger _globalApplyChangeCount = 0;
                                            qos:CKDataSourceQOSDefault];
   });
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 1);
+  XCTAssertEqual(_dataSource.verifyChangeCount, 2);
   XCTAssertEqual(_dataSource.applyChangeCount, 1);
 }
 
@@ -118,7 +118,7 @@ static NSUInteger _globalApplyChangeCount = 0;
      qos:CKDataSourceQOSDefault];
   });
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 2);
+  XCTAssertEqual(_dataSource.verifyChangeCount, 4);
   XCTAssertEqual(_dataSource.applyChangeCount, 2);
 }
 
@@ -136,11 +136,11 @@ static NSUInteger _globalApplyChangeCount = 0;
   });
   [_dataSource sendNewState];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 2);
+  XCTAssertEqual(_dataSource.verifyChangeCount, 4);
   XCTAssertEqual(_dataSource.applyChangeCount, 0);
   [self waitUntilChangesetApplicatorQueueIsIdle];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 4);
+  XCTAssertEqual(_dataSource.verifyChangeCount, 8);
   XCTAssertEqual(_dataSource.applyChangeCount, 2);
 }
 
@@ -153,19 +153,19 @@ static NSUInteger _globalApplyChangeCount = 0;
      qos:CKDataSourceQOSDefault];
   });
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  [_dataSource sendNewState];
   dispatch_sync(_queue, ^{
     [self->_changesetApplicator
      applyChangeset:defaultChangeset()
      userInfo:@{}
      qos:CKDataSourceQOSDefault];
   });
+  [_dataSource sendNewState];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 2);
+  XCTAssertEqual(_dataSource.verifyChangeCount, 4);
   XCTAssertEqual(_dataSource.applyChangeCount, 1);
   [self waitUntilChangesetApplicatorQueueIsIdle];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 3);
+  XCTAssertEqual(_dataSource.verifyChangeCount, 6);
   XCTAssertEqual(_dataSource.applyChangeCount, 2);
 }
 
@@ -185,7 +185,7 @@ static NSUInteger _globalApplyChangeCount = 0;
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
   [self waitUntilChangesetApplicatorQueueIsIdle];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 2);
+  XCTAssertEqual(_dataSource.verifyChangeCount, 4);
   XCTAssertEqual(_dataSource.applyChangeCount, 1);
   XCTAssertTrue(_buildComponentCount == 1, @"`dataSourceItem` should only be built once because of cache.");
 }
@@ -206,7 +206,7 @@ static NSUInteger _globalApplyChangeCount = 0;
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
   [self waitUntilChangesetApplicatorQueueIsIdle];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 2);
+  XCTAssertEqual(_dataSource.verifyChangeCount, 4);
   XCTAssertEqual(_dataSource.applyChangeCount, 1);
   XCTAssertTrue(_buildComponentCount == 2, @"`dataSourceItem` should be built twice because cache is invalidated.");
 }
@@ -339,64 +339,41 @@ static CKDataSourceChangeset *defaultChangeset()
 #pragma mark - CKDataSourceMock
 
 @implementation CKDataSourceMock
-{
-  CKDataSourceState *_state;
-}
-
-- (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration
-{
-  return [self initWithState:[[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]]];
-}
-
-- (instancetype)initWithState:(CKDataSourceState *)state
-{
-  if (self = [super init]) {
-    _state = state;
-  }
-  return self;
-}
-
-- (CKDataSourceState *)state
-{
-  return _state;
-}
 
 - (BOOL)applyChange:(CKDataSourceChange *)change
 {
-  if (change.previousState != _state) {
-    return NO;
+  const auto applied = [super applyChange:change];
+  if (applied) {
+    _applyChangeCount++;
+    _globalApplyChangeCount++;
   }
-  _applyChangeCount++;
-  _globalApplyChangeCount++;
-  _state = change.state;
-  return YES;
+  return applied;
 }
 
 - (BOOL)verifyChange:(CKDataSourceChange *)change
 {
   _verifyChangeCount++;
   _globalVerifyChangeCount++;
-  return change.previousState == _state;
+  return [super verifyChange:change];
 }
 
 - (void)sendNewState
 {
-  [self sendNewStateWithSizeRange:_state.configuration.sizeRange];
+  [self sendNewStateWithSizeRange:self.state.configuration.sizeRange];
 }
 
 - (void)sendNewStateWithSizeRange:(CKSizeRange)sizeRange
 {
-  const auto previousState = _state;
   const auto configuration =
   [[CKDataSourceConfiguration alloc]
    initWithComponentProviderFunc:componentProvider
-   context:previousState.configuration.context
+   context:self.state.configuration.context
    sizeRange:sizeRange
-   options:previousState.configuration.options
-   componentPredicates:previousState.configuration.componentPredicates
-   componentControllerPredicates:previousState.configuration.componentControllerPredicates
-   analyticsListener:previousState.configuration.analyticsListener];
-  _state = [[CKDataSourceState alloc] initWithConfiguration:configuration sections:@[]];
+   options:self.state.configuration.options
+   componentPredicates:self.state.configuration.componentPredicates
+   componentControllerPredicates:self.state.configuration.componentControllerPredicates
+   analyticsListener:self.state.configuration.analyticsListener];
+  [self updateConfiguration:configuration mode:CKUpdateModeSynchronous userInfo:@{}];
 }
 
 @end
