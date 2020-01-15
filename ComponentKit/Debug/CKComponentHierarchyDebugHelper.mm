@@ -59,7 +59,7 @@ static NSString *const indentString = @"| ";
 }
 
 /** Deprecated, used by old versions of Chisel. If you come across this after June 2018, delete it. */
-+ (NSString *)componentHierarchyDescriptionForView:(UIView *)view searchUpwards:(BOOL)upwards showViews:(BOOL)showViews
++ (NSString *)componentHierarchyDescriptionForView:(UIView *)view searchUpwards:(BOOL)upwards showViews:(BOOL)showViews  NS_EXTENSION_UNAVAILABLE("Recursively describes components using -[UIApplication keyWindow]")
 {
   return [self componentHierarchyDescriptionForView:view];
 }
