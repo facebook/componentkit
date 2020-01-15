@@ -16,11 +16,13 @@
 #import <ComponentKit/CKDataSourceAppliedChanges.h>
 #import <ComponentKit/CKDataSourceChange.h>
 #import <ComponentKit/CKDataSourceChangesetModification.h>
+#import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceInternal.h>
 #import <ComponentKit/CKDataSourceListener.h>
 #import <ComponentKit/CKDataSourceModificationHelper.h>
 #import <ComponentKit/CKDataSourceQOSHelper.h>
 #import <ComponentKit/CKDataSourceState.h>
+#import <ComponentKit/CKDataSourceSplitChangesetModification.h>
 #import <ComponentKit/CKSystraceScope.h>
 
 static void *kQueueKey = &kQueueKey;
@@ -31,6 +33,7 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
   CKDataSourceChangeset *changeset;
   NSDictionary *userInfo;
   CKDataSourceQOS qos;
+  BOOL hasSplitChangeset;
 };
 
 @interface CKDataSourceChangesetApplicator () <CKDataSourceChangesetModificationItemGenerator, CKDataSourceListener>
@@ -49,6 +52,8 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
 
   NSMapTable<CKDataSourceChangeset *, NSMapTable<id, CKDataSourceItem *> *> *_dataSourceItemCache;
   CKDataSourceChangeset *_currentChangeset;
+
+  CKDataSourceViewport _viewport;
 }
 
 - (instancetype)initWithDataSource:(CKDataSource *)dataSource
@@ -80,11 +85,25 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
               userInfo:(NSDictionary *)userInfo
                    qos:(CKDataSourceQOS)qos
 {
+  [self applyChangeset:changeset
+              userInfo:userInfo
+                   qos:qos
+     hasSplitChangeset:NO];
+}
+
+- (void)applyChangeset:(CKDataSourceChangeset *)changeset
+              userInfo:(NSDictionary *)userInfo
+                   qos:(CKDataSourceQOS)qos
+     hasSplitChangeset:(BOOL)hasSplitChangeset
+{
   if (!_isRunningOnQueue()) {
     auto const asyncSwitchToApply = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::ChangeSetApplicatorWillSwitchToApply);
     dispatch_async(_queue, blockUsingDataSourceQOS(^{
       CKSystraceScope switchToApplyScope(asyncSwitchToApply);
-      [self applyChangeset:changeset userInfo:userInfo qos:qos];
+      [self applyChangeset:changeset
+                  userInfo:userInfo
+                       qos:qos
+         hasSplitChangeset:hasSplitChangeset];
     }, qos));
     return;
   }
@@ -93,20 +112,32 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
     self->_dataSource.shouldPauseStateUpdates = YES;
   });
 
-  _pipeline.push_back({changeset, userInfo, qos});
   userInfo = _mergeUserInfoWithChangesetApplicatorId(userInfo, _changesetApplicatorId);
+  BOOL shouldSplitChangeset = !hasSplitChangeset && _dataSourceState.configuration.options.splitChangesetOptions.enabled;
 
   // `_currentChangeset` is used in `buildDataSourceItemForPreviousRoot` for querying item cache for inserted items.
   _currentChangeset = changeset;
   CKDataSourceChange *change = nil;
   {
-    const auto modification =
-    [[CKDataSourceChangesetModification alloc]
-     initWithChangeset:changeset
-     stateListener:_dataSource
-     userInfo:userInfo qos:qos
-     shouldValidateChangeset:NO];
-    [modification setItemGenerator:self];
+    id<CKDataSourceStateModifying> modification = nil;
+    if (!shouldSplitChangeset) {
+      const auto m =
+      [[CKDataSourceChangesetModification alloc]
+       initWithChangeset:changeset
+       stateListener:_dataSource
+       userInfo:userInfo qos:qos
+       shouldValidateChangeset:NO];
+      [m setItemGenerator:self];
+      modification = m;
+    } else {
+      modification =
+      [[CKDataSourceSplitChangesetModification alloc]
+       initWithChangeset:changeset
+       stateListener:_dataSource
+       userInfo:userInfo
+       viewport:_viewport
+       qos:qos];
+    }
     @autoreleasepool {
       change = [modification changeFromState:_dataSourceState];
     }
@@ -114,6 +145,24 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
   _currentChangeset = nil;
   _dataSourceState = change.state;
 
+  CKDataSourceChangeset *deferredChangeset = nil;
+  if (!shouldSplitChangeset) {
+    _pipeline.push_back({changeset, userInfo, qos, hasSplitChangeset});
+  } else {
+    deferredChangeset = change.deferredChangeset;
+    // Changeset applicator will take over deferred changeset, so nil it out in `CKDataSourceChange`.
+    change = [[CKDataSourceChange alloc]
+              initWithState:change.state
+              previousState:change.previousState
+              appliedChanges:change.appliedChanges
+              appliedChangeset:change.appliedChangeset
+              deferredChangeset:nil
+              addedComponentControllers:change.addedComponentControllers
+              invalidComponentControllers:change.invalidComponentControllers];
+    // Only push `appliedChangeset` to pipeline so that we can retry if
+    // any  changeset application fails.
+    _pipeline.push_back({change.appliedChangeset, userInfo, qos, YES});
+  }
   NSUInteger pipelineId = _pipelineId;
   auto const willVerifyChange = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::ChangeSetApplicatorWillVerifyChange);
   dispatch_async(dispatch_get_main_queue(), ^{
@@ -146,6 +195,22 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
     }, qos));
     __unused const auto isApplied = [dataSource applyChange:change];
     CKCAssert(isApplied == isValid, @"`CKDataSourceChange` is verified but not able to be applied.");
+  });
+
+  if (shouldSplitChangeset && deferredChangeset) {
+    // In order to guarantee the order of applied changesets, we need to apply
+    // deferred changeset in the same runloop.
+    [self applyChangeset:deferredChangeset
+                userInfo:userInfo
+                     qos:qos
+       hasSplitChangeset:YES];
+  }
+}
+
+- (void)setViewPort:(CKDataSourceViewport)viewport
+{
+  dispatch_async(_queue, ^{
+    _viewport = viewport;
   });
 }
 
@@ -185,7 +250,10 @@ static NSDictionary *_mergeUserInfoWithChangesetApplicatorId(NSDictionary *userI
   const auto pipeline = _pipeline;
   _pipeline = {};
   for (const auto &item : pipeline) {
-    [self applyChangeset:item.changeset userInfo:item.userInfo qos:item.qos];
+    [self applyChangeset:item.changeset
+                userInfo:item.userInfo
+                     qos:item.qos
+       hasSplitChangeset:item.hasSplitChangeset];
   }
 }
 

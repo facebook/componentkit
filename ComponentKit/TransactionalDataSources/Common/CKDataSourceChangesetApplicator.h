@@ -10,11 +10,10 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceQOS.h>
 
-@class CKDataSource;
 @class CKDataSourceChangeset;
-@class CKDataSourceState;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -42,6 +41,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)applyChangeset:(CKDataSourceChangeset *)changeset
               userInfo:(NSDictionary *)userInfo
                    qos:(CKDataSourceQOS)qos;
+
+/**
+ Viewport metrics used for calculating items that are in the viewport, when changeset splitting is enabled.
+ */
+- (void)setViewPort:(CKDataSourceViewport)viewport;
 
 @end
 
