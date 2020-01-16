@@ -932,6 +932,8 @@
 		D616A2BE20BED2D100695472 /* CKComponentTreeDiff.mm in Sources */ = {isa = PBXBuildFile; fileRef = D616A2BB20BED2D100695472 /* CKComponentTreeDiff.mm */; };
 		D616A2BF20BED2D100695472 /* CKComponentTreeDiff.h in Headers */ = {isa = PBXBuildFile; fileRef = D616A2BC20BED2D100695472 /* CKComponentTreeDiff.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D616A2C020BED2D100695472 /* CKComponentTreeDiff.h in Headers */ = {isa = PBXBuildFile; fileRef = D616A2BC20BED2D100695472 /* CKComponentTreeDiff.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D61CAAC423D0A6C100D86060 /* ImageComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D61CAAC323D0A6C100D86060 /* ImageComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D61CAAC523D0A6C100D86060 /* ImageComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D61CAAC323D0A6C100D86060 /* ImageComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D62D6DBC2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D62D6DBB2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm */; };
 		D63270F223A3B86500D0C653 /* CompositeComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D63270F123A3B86500D0C653 /* CompositeComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D63270F323A3B86500D0C653 /* CompositeComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D63270F123A3B86500D0C653 /* CompositeComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1668,6 +1670,7 @@
 		D6146C2A239C48D9006B95C4 /* OverlayLayoutComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OverlayLayoutComponentBuilder.h; sourceTree = "<group>"; };
 		D616A2BB20BED2D100695472 /* CKComponentTreeDiff.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentTreeDiff.mm; sourceTree = "<group>"; };
 		D616A2BC20BED2D100695472 /* CKComponentTreeDiff.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKComponentTreeDiff.h; sourceTree = "<group>"; };
+		D61CAAC323D0A6C100D86060 /* ImageComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageComponentBuilder.h; sourceTree = "<group>"; };
 		D62122E4223855B7008F3473 /* CKAnimationSpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAnimationSpy.h; sourceTree = "<group>"; };
 		D62122EF223856B2008F3473 /* TransactionProviderSpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransactionProviderSpy.h; sourceTree = "<group>"; };
 		D62D6DBB2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewConfigurationTests.mm; sourceTree = "<group>"; };
@@ -2342,6 +2345,7 @@
 				D0B47AD11CBD926700BB33CE /* CKNetworkImageComponent.h */,
 				D0B47AD21CBD926700BB33CE /* CKNetworkImageComponent.mm */,
 				D0B47AD31CBD926700BB33CE /* CKNetworkImageDownloading.h */,
+				D61CAAC323D0A6C100D86060 /* ImageComponentBuilder.h */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -2973,6 +2977,7 @@
 				D63270F323A3B86500D0C653 /* CompositeComponentBuilder.h in Headers */,
 				03B8B5531D2A346F00EDFF59 /* ComponentUtilities.h in Headers */,
 				03B8B5541D2A346F00EDFF59 /* CKTextKitRenderer+Positioning.h in Headers */,
+				D61CAAC523D0A6C100D86060 /* ImageComponentBuilder.h in Headers */,
 				40AB33C91FC39196005D3CE9 /* CKStateUpdateMetadata.h in Headers */,
 				72C410642241659F0025D6B5 /* CKComponentAttachController.h in Headers */,
 				72395919238E9B22005B570A /* CKMountedObjectForView.h in Headers */,
@@ -3165,6 +3170,7 @@
 				23D70D3823C4F50400722429 /* CKIterableHelpers.h in Headers */,
 				23D26A5622440E7D0087350C /* CKCollectionViewDataSourceListenerAnnouncer.h in Headers */,
 				60D7B3A920FC90500011AB3B /* Utils.h in Headers */,
+				D61CAAC423D0A6C100D86060 /* ImageComponentBuilder.h in Headers */,
 				72647CBB2368D0BA0072F330 /* CKComponentContext.h in Headers */,
 				D0B47CEA1CBD948E00BB33CE /* ComponentKit.h in Headers */,
 				72395928238E9B22005B570A /* CKComponentSize.h in Headers */,

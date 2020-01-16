@@ -58,11 +58,12 @@ static UIImage *TestImageWithColorAndSize(UIColor *color, CGSize size)
 
 - (void)testImageComponentWithFixedSize
 {
-  CKImageComponent *c =
-  [CKImageComponent
-   newWithImage:TestImageWithColorAndSize([UIColor orangeColor], CGSizeMake(200, 200))
-   attributes:{}
-   size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))];
+  auto const c =
+  CK::ImageComponentBuilder()
+  .image(TestImageWithColorAndSize([UIColor orangeColor], CGSizeMake(200, 200)))
+  .width(50)
+  .height(50)
+  .build();
 
   static CKSizeRange kSize = {{0, 0}, {400, 400}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -70,14 +71,14 @@ static UIImage *TestImageWithColorAndSize(UIColor *color, CGSize size)
 
 - (void)testImageComponentWithNilImageAndCustomBackgroundColor
 {
-  CKImageComponent *c =
-  [CKImageComponent
-   newWithImage:nil
-   attributes:{
-     {@selector(setBackgroundColor:), [UIColor darkGrayColor]},
-     {CKComponentViewAttribute::LayerAttribute(@selector(setCornerRadius:)), 50}
-   }
-   size:CKComponentSize::fromCGSize(CGSizeMake(180, 180))];
+  auto const c =
+  CK::ImageComponentBuilder()
+  .image(nil)
+  .backgroundColor([UIColor darkGrayColor])
+  .cornerRadius(50)
+  .width(180)
+  .height(180)
+  .build();
 
   static CKSizeRange kSize = {{0, 0}, {400, 400}};
   CKSnapshotVerifyComponent(c, kSize, nil);

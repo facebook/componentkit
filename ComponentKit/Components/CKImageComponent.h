@@ -25,3 +25,5 @@ struct CKComponentSize;
                         size:(const CKComponentSize &)size;
 
 @end
+
+#import <ComponentKit/ImageComponentBuilder.h>
