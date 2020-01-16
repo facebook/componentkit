@@ -58,7 +58,7 @@ static NSUInteger _globalApplyChangeCount = 0;
   [[CKDataSourceConfiguration alloc]
    initWithComponentProviderFunc:componentProvider
    context:nil
-   sizeRange:{}
+   sizeRange:{{100, 100}, {100, 100}}
    options:{}
    componentPredicates:{}
    componentControllerPredicates:{}
@@ -75,6 +75,7 @@ static NSUInteger _globalApplyChangeCount = 0;
 
 - (void)tearDown
 {
+  _dataSource = nil;
   _changesetApplicator = nil;
   _globalVerifyChangeCount = 0;
   _globalApplyChangeCount = 0;
@@ -88,8 +89,7 @@ static NSUInteger _globalApplyChangeCount = 0;
                                            qos:CKDataSourceQOSDefault];
   });
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 2);
-  XCTAssertEqual(_dataSource.applyChangeCount, 1);
+  [self assertNumberOfSuccessfulChanges:1 numberOfFailedChanges:0];
 }
 
 - (void)testChangesetIsNotAppliedIfDataSourceIsDeallocated
@@ -118,8 +118,7 @@ static NSUInteger _globalApplyChangeCount = 0;
      qos:CKDataSourceQOSDefault];
   });
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 4);
-  XCTAssertEqual(_dataSource.applyChangeCount, 2);
+  [self assertNumberOfSuccessfulChanges:2 numberOfFailedChanges:0];
 }
 
 - (void)testChangesetsAreReappliedIfDataSourceStateIsChangedWhenProcessingChangesets
@@ -136,12 +135,10 @@ static NSUInteger _globalApplyChangeCount = 0;
   });
   [_dataSource sendNewState];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 4);
-  XCTAssertEqual(_dataSource.applyChangeCount, 0);
+  [self assertNumberOfSuccessfulChanges:0 numberOfFailedChanges:2];
   [self waitUntilChangesetApplicatorQueueIsIdle];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 8);
-  XCTAssertEqual(_dataSource.applyChangeCount, 2);
+  [self assertNumberOfSuccessfulChanges:2 numberOfFailedChanges:2];
 }
 
 - (void)testSecondChangesetIsReappliedIfDataSourceStateIsChangedWhenProcessingSecondChangeset
@@ -161,12 +158,10 @@ static NSUInteger _globalApplyChangeCount = 0;
   });
   [_dataSource sendNewState];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 4);
-  XCTAssertEqual(_dataSource.applyChangeCount, 1);
+  [self assertNumberOfSuccessfulChanges:1 numberOfFailedChanges:1];
   [self waitUntilChangesetApplicatorQueueIsIdle];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 6);
-  XCTAssertEqual(_dataSource.applyChangeCount, 2);
+  [self assertNumberOfSuccessfulChanges:2 numberOfFailedChanges:1];
 }
 
 - (void)testDataSourceItemCacheIsUsedWhenChangesetIsReapplied
@@ -185,8 +180,7 @@ static NSUInteger _globalApplyChangeCount = 0;
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
   [self waitUntilChangesetApplicatorQueueIsIdle];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 4);
-  XCTAssertEqual(_dataSource.applyChangeCount, 1);
+  [self assertNumberOfSuccessfulChanges:1 numberOfFailedChanges:1];
   XCTAssertTrue(_buildComponentCount == 1, @"`dataSourceItem` should only be built once because of cache.");
 }
 
@@ -206,8 +200,7 @@ static NSUInteger _globalApplyChangeCount = 0;
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
   [self waitUntilChangesetApplicatorQueueIsIdle];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(_dataSource.verifyChangeCount, 4);
-  XCTAssertEqual(_dataSource.applyChangeCount, 1);
+  [self assertNumberOfSuccessfulChanges:1 numberOfFailedChanges:1];
   XCTAssertTrue(_buildComponentCount == 2, @"`dataSourceItem` should be built twice because cache is invalidated.");
 }
 
@@ -229,10 +222,95 @@ static NSUInteger _globalApplyChangeCount = 0;
   XCTAssertFalse(_dataSource.shouldPauseStateUpdates);
 }
 
+- (void)testSpiltChangesetIsAppliedWithoutDefferedChangesetWhenViewportIsLargeEnough
+{
+  [self enableSplitChangeset];
+  [_changesetApplicator setViewPort:{.size = {100, 200}}];
+  dispatch_sync(_queue, ^{
+    [self->_changesetApplicator
+     applyChangeset:
+     [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
+       withInsertedItems:@{
+         [NSIndexPath indexPathForItem:0 inSection:0]: @0,
+         [NSIndexPath indexPathForItem:1 inSection:0]: @1,
+       }]
+       withInsertedSections:[NSIndexSet indexSetWithIndex:0]] build]
+     userInfo:@{}qos:CKDataSourceQOSDefault];
+  });
+  [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
+  [self assertNumberOfSuccessfulChanges:1 numberOfFailedChanges:0];
+}
+
+- (void)testSpiltChangesetIsAppliedWithDefferedChangesetWhenViewportIsNotLargeEnough
+{
+  [self enableSplitChangeset];
+  [_changesetApplicator setViewPort:{.size = {100, 100}}];
+  dispatch_sync(_queue, ^{
+    [self->_changesetApplicator
+     applyChangeset:
+     [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
+       withInsertedItems:@{
+         [NSIndexPath indexPathForItem:0 inSection:0]: @0,
+         [NSIndexPath indexPathForItem:1 inSection:0]: @1,
+       }]
+       withInsertedSections:[NSIndexSet indexSetWithIndex:0]] build]
+     userInfo:@{}qos:CKDataSourceQOSDefault];
+  });
+  [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
+  [self assertNumberOfSuccessfulChanges:2 numberOfFailedChanges:0];
+}
+
+- (void)testSpiltChangesetIsReappliedWithoutDefferedChangesetWhenDataSourceStateIsChanged
+{
+  [self enableSplitChangeset];
+  [_changesetApplicator setViewPort:{.size = {100, 200}}];
+  dispatch_sync(_queue, ^{
+    [self->_changesetApplicator
+     applyChangeset:
+     [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
+       withInsertedItems:@{
+         [NSIndexPath indexPathForItem:0 inSection:0]: @0,
+         [NSIndexPath indexPathForItem:1 inSection:0]: @1,
+       }]
+       withInsertedSections:[NSIndexSet indexSetWithIndex:0]] build]
+     userInfo:@{}qos:CKDataSourceQOSDefault];
+  });
+  [_dataSource sendNewState];
+  [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
+  [self assertNumberOfSuccessfulChanges:0 numberOfFailedChanges:1];
+  [self waitUntilChangesetApplicatorQueueIsIdle];
+  [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
+  [self assertNumberOfSuccessfulChanges:1 numberOfFailedChanges:1];
+}
+
+- (void)testSpiltChangesetIsReappliedWithDefferedChangesetWhenDataSourceStateIsChanged
+{
+  [self enableSplitChangeset];
+  [_changesetApplicator setViewPort:{.size = {100, 100}}];
+  dispatch_sync(_queue, ^{
+    [self->_changesetApplicator
+     applyChangeset:
+     [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
+       withInsertedItems:@{
+         [NSIndexPath indexPathForItem:0 inSection:0]: @0,
+         [NSIndexPath indexPathForItem:1 inSection:0]: @1,
+       }]
+       withInsertedSections:[NSIndexSet indexSetWithIndex:0]] build]
+     userInfo:@{}qos:CKDataSourceQOSDefault];
+  });
+  [_dataSource sendNewState];
+  [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
+  [self assertNumberOfSuccessfulChanges:0 numberOfFailedChanges:2];
+  [self waitUntilChangesetApplicatorQueueIsIdle];
+  [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
+  [self assertNumberOfSuccessfulChanges:2 numberOfFailedChanges:2];
+}
+
 static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
 {
   return CK::ComponentBuilder()
-             .build();
+    .size({100, 100})
+    .build();
 }
 
 #pragma mark - CKAnalyticsListener
@@ -312,6 +390,25 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 
 #pragma mark - Helpers
 
+- (void)enableSplitChangeset
+{
+  const auto preivousConfiguration = _dataSource.state.configuration;
+  const auto configuration =
+  [[CKDataSourceConfiguration alloc]
+   initWithComponentProviderFunc:componentProvider
+   context:preivousConfiguration.context
+   sizeRange:preivousConfiguration.sizeRange
+   options:{
+    .splitChangesetOptions = {
+      .enabled = YES,
+    },
+   }
+   componentPredicates:preivousConfiguration.componentPredicates
+   componentControllerPredicates:preivousConfiguration.componentControllerPredicates
+   analyticsListener:preivousConfiguration.analyticsListener];
+  [_dataSource updateConfiguration:configuration mode:CKUpdateModeSynchronous userInfo:@{}];
+}
+
 - (void)waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue
 {
   __block BOOL didRun = NO;
@@ -327,6 +424,14 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 {
   // Use `dispatch_sync` to block the main queue until the queue finishes its current task.
   dispatch_sync(_queue, ^{});
+}
+
+- (void)assertNumberOfSuccessfulChanges:(NSUInteger)numberOfSuccessfulChanges
+                  numberOfFailedChanges:(NSUInteger)numberOfFailedChanges
+{
+  // Number is doubled because internally `applyChange` calls `verifyChange` as well.
+  XCTAssertEqual(_dataSource.verifyChangeCount, (numberOfFailedChanges + numberOfSuccessfulChanges) * 2);
+  XCTAssertEqual(_dataSource.applyChangeCount, numberOfSuccessfulChanges);
 }
 
 static CKDataSourceChangeset *defaultChangeset()
