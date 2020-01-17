@@ -246,4 +246,11 @@ private:
   return CK::makeNonNull([CKComponentHostingContainerView new]);
 }
 
+- (void)rootViewWillEnterViewPool
+{
+  [_rootView removeFromSuperview];
+  _rootView = nil;
+  _rootViewCategory = nil;
+}
+
 @end

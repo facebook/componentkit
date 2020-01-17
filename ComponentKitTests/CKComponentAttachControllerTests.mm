@@ -304,4 +304,11 @@ struct CKComponentTestAttachResult {
   return CK::makeNonNull([CKComponentRootView new]);
 }
 
+- (void)rootViewWillEnterViewPool
+{
+  [_rootView removeFromSuperview];
+  _rootView = nil;
+  _rootViewCategory = nil;
+}
+
 @end

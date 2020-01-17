@@ -69,4 +69,9 @@ typedef UIView *(^CKComponentRootViewHitTestHook)(UIView *rootView, CGPoint poin
  */
 - (CK::NonNull<CKComponentRootView *>)createRootView;
 
+/**
+ Called before root view enters view pool.
+ */
+- (void)rootViewWillEnterViewPool;
+
 @end
