@@ -47,6 +47,12 @@
  */
 - (void)setRootViewPool:(CK::Component::RootViewPool)rootViewPool;
 
+/**
+ Calling this method pushes all root views that this attach controller holds to the root view pool immediately
+ instead of pushing them upon deallocation.
+ */
+- (void)pushRootViewsToViewPool;
+
 @end
 
 /**

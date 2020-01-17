@@ -239,6 +239,8 @@ struct CKComponentTestAttachResult {
   const auto rootViewHost2 = CK::makeNonNull([CKComponentTestRootViewHost new]);
   const auto rootViewCategory1 = CK::makeNonNull(@"Category1");
   const auto rootViewCategory2 = CK::makeNonNull(@"Category2");
+  CKComponentRootView *rootView1 = nil;
+  CKComponentRootView *rootView2 = nil;
 
   @autoreleasepool {
     auto attachController = [CKComponentAttachController new];
@@ -247,16 +249,48 @@ struct CKComponentTestAttachResult {
     [self _attachWithAttachController:attachController scopeIdentifier:1 view:{rootViewHost1, rootViewCategory1}];
     [self _attachWithAttachController:attachController scopeIdentifier:2 view:{rootViewHost2, rootViewCategory2}];
 
+    rootView1 = [rootViewHost1 rootView];
+    rootView2 = [rootViewHost2 rootView];
+
     attachController = nil;
   }
 
+  XCTAssertEqual([rootViewHost1 numberOfViewsCreated], 1);
+  XCTAssertEqual([rootViewHost2 numberOfViewsCreated], 1);
+  XCTAssertNil([rootViewHost1 rootView]);
+  XCTAssertNil([rootViewHost2 rootView]);
+  XCTAssertNil([rootViewHost1 rootViewCategory]);
+  XCTAssertNil([rootViewHost2 rootViewCategory]);
+  XCTAssertEqual(rootView1, rootViewPool.popRootViewWithCategory(rootViewCategory1));
+  XCTAssertEqual(rootView2, rootViewPool.popRootViewWithCategory(rootViewCategory2));
+  XCTAssertNil(rootViewPool.popRootViewWithCategory(rootViewCategory1));
+  XCTAssertNil(rootViewPool.popRootViewWithCategory(rootViewCategory2));
+}
+
+- (void)testAttachControllerPushRootViewsToViewPool
+{
+  auto rootViewPool = CK::Component::RootViewPool();
+  const auto rootViewHost1 = CK::makeNonNull([CKComponentTestRootViewHost new]);
+  const auto rootViewHost2 = CK::makeNonNull([CKComponentTestRootViewHost new]);
+  const auto rootViewCategory1 = CK::makeNonNull(@"Category1");
+  const auto rootViewCategory2 = CK::makeNonNull(@"Category2");
+
+  auto attachController = [CKComponentAttachController new];
+
+  [attachController setRootViewPool:rootViewPool];
+  [self _attachWithAttachController:attachController scopeIdentifier:1 view:{rootViewHost1, rootViewCategory1}];
+  [self _attachWithAttachController:attachController scopeIdentifier:2 view:{rootViewHost2, rootViewCategory2}];
+
   const auto rootView1 = [rootViewHost1 rootView];
   const auto rootView2 = [rootViewHost2 rootView];
+  [attachController pushRootViewsToViewPool];
 
   XCTAssertEqual([rootViewHost1 numberOfViewsCreated], 1);
   XCTAssertEqual([rootViewHost2 numberOfViewsCreated], 1);
-  XCTAssertEqualObjects([rootViewHost1 rootViewCategory], rootViewCategory1);
-  XCTAssertEqualObjects([rootViewHost2 rootViewCategory], rootViewCategory2);
+  XCTAssertNil([rootViewHost1 rootView]);
+  XCTAssertNil([rootViewHost2 rootView]);
+  XCTAssertNil([rootViewHost1 rootViewCategory]);
+  XCTAssertNil([rootViewHost2 rootViewCategory]);
   XCTAssertEqual(rootView1, rootViewPool.popRootViewWithCategory(rootViewCategory1));
   XCTAssertEqual(rootView2, rootViewPool.popRootViewWithCategory(rootViewCategory2));
   XCTAssertNil(rootViewPool.popRootViewWithCategory(rootViewCategory1));

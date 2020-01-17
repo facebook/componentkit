@@ -69,6 +69,18 @@
                     capacity:20];
 }
 
+- (void)pushRootViewsToViewPool
+{
+  _rootViewPool.apply([&](auto &rootViewPool) {
+    for (id<CKComponentRootViewHost> rootViewHost : _rootViewHosts) {
+      if (const auto rootView = rootViewHost.rootView) {
+        [self _detachComponentLayoutFromView:rootView];
+      }
+    }
+    pushRootViewsToViewPool(rootViewPool, _rootViewHosts);
+  });
+}
+
 auto CKUpdateComponentRootViewHost(CK::NonNull<id<CKComponentRootViewHost>> rootViewHost,
                                    CK::NonNull<NSString *> rootViewCategory,
                                    CK::NonNull<CKComponentAttachController *> attachController) -> void
@@ -239,6 +251,21 @@ static CKComponentAttachState *mountComponentLayoutInView(const CKComponentRootL
   return attachState;
 }
 
+static void pushRootViewsToViewPool(CK::Component::RootViewPool &rootViewPool,
+                                    NSHashTable<id<CKComponentRootViewHost>> *rootViewHosts)
+{
+  for (id<CKComponentRootViewHost> rootViewHost : rootViewHosts) {
+    const auto rootViewCategory = rootViewHost.rootViewCategory;
+    const auto rootView = rootViewHost.rootView;
+    if (rootViewCategory && rootView) {
+      [rootViewHost rootViewWillEnterViewPool];
+      rootViewPool.pushRootViewWithCategory(CK::makeNonNull(rootView),
+                                            CK::makeNonNull(rootViewCategory));
+    }
+  }
+  [rootViewHosts removeAllObjects];
+}
+
 static void tearDownAttachStateFromViews(NSArray<UIView *> *views,
                                          CK::Optional<CK::Component::RootViewPool> rootViewPool,
                                          NSHashTable<id<CKComponentRootViewHost>> *rootViewHosts)
@@ -253,14 +280,7 @@ static void tearDownAttachStateFromViews(NSArray<UIView *> *views,
 
   // Push root views to view pool when attach controller is deallocated.
   rootViewPool.apply([&](auto &rootViewPool) {
-    for (id<CKComponentRootViewHost> rootViewHost : rootViewHosts) {
-      const auto rootViewCategory = rootViewHost.rootViewCategory;
-      const auto rootView = rootViewHost.rootView;
-      if (rootViewCategory && rootView) {
-        rootViewPool.pushRootViewWithCategory(CK::makeNonNull(rootView),
-                                              CK::makeNonNull(rootViewCategory));
-      }
-    }
+    pushRootViewsToViewPool(rootViewPool, rootViewHosts);
   });
 }
 
