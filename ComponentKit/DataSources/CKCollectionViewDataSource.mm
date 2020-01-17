@@ -136,7 +136,7 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
     // Animating the collection view is an expensive operation and should be
     // avoided when possible.
     if (boundsAnimation.duration) {
-      id boundsAnimationContext = CKComponentBoundsAnimationPrepareForCollectionViewBatchUpdates(_collectionView);
+      id boundsAnimationContext = CKComponentBoundsAnimationPrepareForCollectionViewBatchUpdates(_collectionView, heightChange(previousState, state, changes.updatedIndexPaths));
       [UIView performWithoutAnimation:^{
         applyUpdatedState(state);
       }];
@@ -170,6 +170,17 @@ static void applyChangesToCollectionView(UICollectionView *collectionView,
       [_announcer dataSourceDidEndUpdates:self didModifyPreviousState:previousState withState:state byApplyingChanges:changes];
     }];
   }
+}
+
+static auto heightChange(CKDataSourceState *previousState, CKDataSourceState *state, NSSet *updatedIndexPaths) -> CGFloat
+{
+  auto change = 0.0;
+  for (NSIndexPath *indexPath in updatedIndexPaths) {
+    auto const oldHeight = [previousState objectAtIndexPath:indexPath].rootLayout.size().height;
+    auto const newHeight = [state objectAtIndexPath:indexPath].rootLayout.size().height;
+    change += (newHeight - oldHeight);
+  }
+  return change;
 }
 
 - (void)dataSource:(CKDataSource *)dataSource

@@ -38,7 +38,7 @@
  for example, if you determine that the update has no animation, or that all index paths to be animated are offscreen,
  you can skip calling CKComponentBoundsAnimationApplyAfterBatchUpdates entirely.
  */
-id CKComponentBoundsAnimationPrepareForCollectionViewBatchUpdates(UICollectionView *cv);
+id CKComponentBoundsAnimationPrepareForCollectionViewBatchUpdates(UICollectionView *cv, CGFloat heightChange);
 
 /** @see CKComponentBoundsAnimationPrepareForCollectionViewBatchUpdates */
 void CKComponentBoundsAnimationApplyAfterCollectionViewBatchUpdates(id context, const CKComponentBoundsAnimation &animation);
