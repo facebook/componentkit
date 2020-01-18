@@ -403,11 +403,11 @@ static bool hasChildWithRelativePositioning(const CKFlexboxComponentChild &child
       YGNodeSetBaselineFunc(childNode, useHeightAsBaselineFunction);
     }
 
-    // If deep yoga trees are on, we need to make
-    // sure we do not include CKCompositeSize as
-    // node size, as it will always we equal to {}
-    // and use it's child size instead
-    const auto nodeSize = _style.useDeepYogaTrees ? [child.component nodeSize] : [child.component size];
+    // We need to make sure we do not include
+    // CKCompositeSize as node size, as it will
+    // always we equal to {} and use it's
+    // child size instead
+    const auto nodeSize = [child.component nodeSize];
     applySizeAttributes(childNode, child, nodeSize, parentWidth, parentHeight, _style.useDeepYogaTrees);
 
     YGNodeStyleSetFlexGrow(childNode, child.flexGrow);
