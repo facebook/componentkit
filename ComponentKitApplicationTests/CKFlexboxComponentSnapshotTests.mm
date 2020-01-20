@@ -105,25 +105,29 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 
 - (void)testShrinkingBehaviourWithFullFlexGrow
 {
-  CKFlexboxComponent *c =
-  [CKFlexboxComponent
-   newWithView:{}
-   size:{500,500}
-   style:{
-     .direction = CKFlexboxDirectionRow,
-     .alignItems = CKFlexboxAlignItemsStart,
-     .useDeepYogaTrees = _useDeepYogaTrees,
-   }
-   children: {
-     {
-       .component = [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{500, 500}],
-       .flexGrow = 0, .flexShrink = 1,
-     },
-     {
-       .component = [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{500, 500}],
-       .flexGrow = 1, .flexShrink = 1,
-     },
-   }];
+  auto const c = CK::FlexboxComponentBuilder()
+  .width(500)
+  .height(500)
+  .direction(CKFlexboxDirectionRow)
+  .alignItems(CKFlexboxAlignItemsStart)
+  .useDeepYogaTrees(_useDeepYogaTrees)
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor greenColor])
+          .width(500)
+          .height(500)
+          .build())
+          .flexGrow(0)
+          .flexShrink(1)
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor redColor])
+          .width(500)
+          .height(500)
+          .build())
+          .flexGrow(1)
+          .flexShrink(1)
+  .build();
   
   static CKSizeRange kSize = {{500, 500}, {500, 500}};
   CKSnapshotVerifyComponent(c, kSize, nil);
@@ -132,7 +136,11 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 - (void)testCorrectnessOfDeeplyNestedFlexboxHierarchies
 {
   CKComponent *(^component)(UIColor *, const CKComponentSize &) = ^CKComponent *(UIColor *color, const CKComponentSize &size) {
-    return [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), color}}} size:size];
+    return CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .backgroundColor(color)
+            .size(size)
+            .build();
   };
   CKFlexboxComponentChild(^leaf)(UIColor *, const CKComponentSize &) = ^CKFlexboxComponentChild (UIColor *color, const CKComponentSize &size) {
     return {
@@ -270,30 +278,34 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 
 - (void)testOverflowBehaviorsWhenAllFlexShrinkComponentsHaveBeenClampedToZeroButViolationStillExists
 {
-  CKFlexboxComponent *c =
-  [CKFlexboxComponent
-   newWithView:kWhiteBackgroundView
-   size:{}
-   style:{
-     .alignItems = CKFlexboxAlignItemsStart,
-     .direction = CKFlexboxDirectionRow,
-     .useDeepYogaTrees = _useDeepYogaTrees,
-   }
-   children:{
-     // After flexShrink-able children are all clamped to zero, the sum of their widths is 100px.
-     {
-       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}],
-       .flexShrink = 0,
-     },
-     {
-       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{50,50}],
-       .flexShrink = 1,
-     },
-     {
-       [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}],
-       .flexShrink = 0,
-     },
-   }];
+  auto const c = CK::FlexboxComponentBuilder()
+  .viewClass([UIView class])
+  .backgroundColor([UIColor whiteColor])
+  .alignItems(CKFlexboxAlignItemsStart)
+  .direction(CKFlexboxDirectionRow)
+  .useDeepYogaTrees(_useDeepYogaTrees)
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor redColor])
+          .width(50)
+          .height(50)
+          .build())
+          .flexShrink(0)
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor blueColor])
+          .width(50)
+          .height(50)
+          .build())
+          .flexShrink(1)
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor greenColor])
+          .width(50)
+          .height(50)
+          .build())
+          .flexShrink(0)
+  .build();
 
   // Width is 75px--that's less than the sum of the widths of the child components, which is 100px.
   static CKSizeRange kSize = {{75, 0}, {75, 150}};
@@ -302,20 +314,37 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 
 - (void)testFlexWithUnequalIntrinsicSizes
 {
-  CKFlexboxComponent *c =
-  [CKFlexboxComponent
-   newWithView:kWhiteBackgroundView
-   size:{}
-   style:{
-     .alignItems = CKFlexboxAlignItemsStart,
-     .direction = CKFlexboxDirectionRow,
-     .useDeepYogaTrees = _useDeepYogaTrees,
-   }
-   children:{
-     flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}], 1),
-     flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{150,150}], 1),
-     flexChild([CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{50,50}], 1),
-   }];
+  auto const c = CK::FlexboxComponentBuilder()
+  .viewClass([UIView class])
+  .backgroundColor([UIColor whiteColor])
+  .alignItems(CKFlexboxAlignItemsStart)
+  .direction(CKFlexboxDirectionRow)
+  .useDeepYogaTrees(_useDeepYogaTrees)
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor redColor])
+          .width(50)
+          .height(50)
+          .build())
+          .flexShrink(1)
+          .flexGrow(1)
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor blueColor])
+          .width(150)
+          .height(150)
+          .build())
+          .flexShrink(1)
+          .flexGrow(1)
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor greenColor])
+          .width(50)
+          .height(50)
+          .build())
+          .flexShrink(1)
+          .flexGrow(1)
+  .build();
 
   // width 300px; height 0-150px.
   static CKSizeRange kUnderflowSize = {{300, 0}, {300, 150}};
@@ -328,20 +357,31 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 
 - (void)testCrossAxisSizeBehaviors
 {
-  CKFlexboxComponent *c =
-  [CKFlexboxComponent
-   newWithView:kWhiteBackgroundView
-   size:{}
-   style:{
-     .alignItems = CKFlexboxAlignItemsStart,
-     .direction = CKFlexboxDirectionColumn,
-     .useDeepYogaTrees = _useDeepYogaTrees,
-   }
-   children:{
-     {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]},
-     {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,50}]},
-     {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,50}]},
-   }];
+  auto const c = CK::FlexboxComponentBuilder()
+  .viewClass([UIView class])
+  .backgroundColor([UIColor whiteColor])
+  .alignItems(CKFlexboxAlignItemsStart)
+  .direction(CKFlexboxDirectionColumn)
+  .useDeepYogaTrees(_useDeepYogaTrees)
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor redColor])
+          .width(50)
+          .height(50)
+          .build())
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor blueColor])
+          .width(100)
+          .height(50)
+          .build())
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor greenColor])
+          .width(150)
+          .height(50)
+          .build())
+  .build();
 
   // width 0-300px; height 300px
   static CKSizeRange kVariableHeight = {{0, 300}, {300, 300}};
@@ -354,21 +394,32 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 
 - (void)testSpacing
 {
-  CKFlexboxComponent *c =
-  [CKFlexboxComponent
-   newWithView:kWhiteBackgroundView
-   size:{}
-   style:{
-     .alignItems = CKFlexboxAlignItemsStart,
-     .direction = CKFlexboxDirectionColumn,
-     .spacing = 10,
-     .useDeepYogaTrees = _useDeepYogaTrees,
-   }
-   children:{
-     {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]},
-     {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,50}]},
-     {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,50}]},
-   }];
+  auto const c = CK::FlexboxComponentBuilder()
+  .viewClass([UIView class])
+  .backgroundColor([UIColor whiteColor])
+  .alignItems(CKFlexboxAlignItemsStart)
+  .direction(CKFlexboxDirectionColumn)
+  .spacing(10)
+  .useDeepYogaTrees(_useDeepYogaTrees)
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor redColor])
+          .width(50)
+          .height(50)
+          .build())
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor blueColor])
+          .width(100)
+          .height(50)
+          .build())
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor greenColor])
+          .width(150)
+          .height(50)
+          .build())
+  .build();
 
   // width 0-300px; height 300px
   static CKSizeRange kVariableHeight = {{0, 300}, {300, 300}};
@@ -377,21 +428,32 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
 
 - (void)testNegativeSpacing
 {
-  CKFlexboxComponent *c =
-  [CKFlexboxComponent
-   newWithView:kWhiteBackgroundView
-   size:{}
-   style:{
-     .alignItems = CKFlexboxAlignItemsStart,
-     .direction = CKFlexboxDirectionColumn,
-     .spacing = -10,
-     .useDeepYogaTrees = _useDeepYogaTrees,
-   }
-   children:{
-     {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{50,50}]},
-     {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor blueColor]}}} size:{100,50}]},
-     {[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor greenColor]}}} size:{150,50}]},
-   }];
+  auto const c = CK::FlexboxComponentBuilder()
+  .viewClass([UIView class])
+  .backgroundColor([UIColor whiteColor])
+  .alignItems(CKFlexboxAlignItemsStart)
+  .direction(CKFlexboxDirectionColumn)
+  .spacing(-10)
+  .useDeepYogaTrees(_useDeepYogaTrees)
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor redColor])
+          .width(50)
+          .height(50)
+          .build())
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor blueColor])
+          .width(100)
+          .height(50)
+          .build())
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor greenColor])
+          .width(150)
+          .height(50)
+          .build())
+  .build();
 
   // width 0-300px; height 300px
   static CKSizeRange kVariableHeight = {{0, 300}, {300, 300}};
@@ -408,20 +470,16 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
     view.layer.borderWidth = 3.0f;
   }};
 
-  CKComponent *c =
-  [CKFlexboxComponent
-   newWithView:{[UIView class], {{borderAttribute, nil}}}
-   size:{}
-   style:{
-     .direction = CKFlexboxDirectionColumn,
-     .spacing = 10,
-     .alignItems = CKFlexboxAlignItemsStretch,
-     .useDeepYogaTrees = _useDeepYogaTrees,
-   }
-   children:{
-     {nil},
-     {nil},
-   }];
+  auto const c = CK::FlexboxComponentBuilder()
+  .viewClass([UIView class])
+  .attributes({{borderAttribute, nil}})
+  .direction(CKFlexboxDirectionColumn)
+  .spacing(10)
+  .alignItems(CKFlexboxAlignItemsStretch)
+  .useDeepYogaTrees(_useDeepYogaTrees)
+  .child(nil)
+  .child(nil)
+  .build();
 
   // width 300px; height 0-300px
   static CKSizeRange kVariableHeight = {{300, 0}, {300, 300}};
