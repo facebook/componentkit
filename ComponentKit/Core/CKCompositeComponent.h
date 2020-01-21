@@ -24,7 +24,7 @@
 
  @warning Overriding -layoutThatFits:parentSize: or -computeLayoutThatFits: is **not allowed** for any subclass.
  */
-@interface CKCompositeComponent<__covariant CKComponentStateType:id> : CKSingleChildComponent
+@interface CKCompositeComponent : CKSingleChildComponent
 
 /** Calls the initializer with {} for view. */
 + (instancetype)newWithComponent:(__attribute__((ns_consumed)) CKComponent *)component;

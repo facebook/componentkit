@@ -25,7 +25,7 @@ extern CGSize const kCKComponentParentSizeUndefined;
 
 @class CKComponentController;
 
-@interface CKComponent<__covariant CKComponentStateType:id> ()
+@interface CKComponent ()
 
 /**
  Call this on children components to compute their layouts within your implementation of -computeLayoutThatFits:.
@@ -76,13 +76,13 @@ extern CGSize const kCKComponentParentSizeUndefined;
  Called to get the component's initial state; the default implementation returns nil.
  @see CKComponentScopeFrame
  */
-+ (CKComponentStateType)initialState;
++ (id)initialState;
 
 /**
  Returns the component's state if available.
  Can be called only *after* the component's creation is done.
  */
-- (CKComponentStateType)state;
+- (id)state;
 
 /**
  Enqueue a change to the state.
@@ -99,7 +99,7 @@ extern CGSize const kCKComponentParentSizeUndefined;
  @param mode The update mode used to apply the state update.
  @@see CKUpdateMode
  */
-- (void)updateState:(CKComponentStateType (^)(CKComponentStateType currentState))updateBlock mode:(CKUpdateMode)mode;
+- (void)updateState:(id (^)(id currentState))updateBlock mode:(CKUpdateMode)mode;
 
 /**
  Allows an action to be forwarded to another target. By default, returns the receiver if it implements action,
