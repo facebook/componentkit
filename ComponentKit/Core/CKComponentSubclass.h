@@ -17,6 +17,8 @@
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKUpdateMode.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /** A constant that indicates that the parent's size is not yet determined in a given dimension. */
 extern CGFloat const kCKComponentParentDimensionUndefined;
 
@@ -76,13 +78,13 @@ extern CGSize const kCKComponentParentSizeUndefined;
  Called to get the component's initial state; the default implementation returns nil.
  @see CKComponentScopeFrame
  */
-+ (id)initialState;
++ (id _Nullable)initialState;
 
 /**
  Returns the component's state if available.
  Can be called only *after* the component's creation is done.
  */
-- (id)state;
+- (id _Nullable)state;
 
 /**
  Enqueue a change to the state.
@@ -99,13 +101,13 @@ extern CGSize const kCKComponentParentSizeUndefined;
  @param mode The update mode used to apply the state update.
  @@see CKUpdateMode
  */
-- (void)updateState:(id (^)(id currentState))updateBlock mode:(CKUpdateMode)mode;
+- (void)updateState:(id _Nullable (^)(id _Nullable currentState))updateBlock mode:(CKUpdateMode)mode;
 
 /**
  Allows an action to be forwarded to another target. By default, returns the receiver if it implements action,
  and proceeds up the responder chain otherwise.
  */
-- (id)targetForAction:(SEL)action withSender:(id)sender;
+- (id _Nullable)targetForAction:(SEL _Nullable)action withSender:(id _Nullable)sender;
 
 /**
  When an action is triggered, a component may use this method to either capture or ignore the given action. The default
@@ -114,7 +116,7 @@ extern CGSize const kCKComponentParentSizeUndefined;
  In practice, this is useful only for integrations with UIMenuController whose API walks the UIResponder chain to
  determine which menu items to display. You should not override this method for standard component actions.
  */
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
+- (BOOL)canPerformAction:(SEL _Nullable)action withSender:(id _Nullable)sender;
 
 /**
  Override to return a list of animations that will be applied to the component when it is first mounted.
@@ -166,9 +168,11 @@ extern CGSize const kCKComponentParentSizeUndefined;
 
  This method may be overridden in rare situations where a more suitable view should be used for rendering animations.
  */
-- (UIView *)viewForAnimation;
+- (UIView * _Nullable)viewForAnimation;
 
 /** Returns the component's controller, if any. */
-- (CKComponentController *)controller;
+- (CKComponentController * _Nullable)controller;
 
 @end
+
+NS_ASSUME_NONNULL_END

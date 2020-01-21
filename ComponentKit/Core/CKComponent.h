@@ -20,6 +20,8 @@
 #import <ComponentKit/CKComponentViewConfiguration.h>
 #import <ComponentKit/CKMountable.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /** A component is an immutable object that specifies how to configure a view, loosely inspired by React. */
 @interface CKComponent : NSObject <CKMountable, CKComponentProtocol>
 
@@ -50,8 +52,10 @@
  - Its supercomponent;
  - The view the component is mounted within, if it is the root component.
  */
-- (id)nextResponder;
+- (id _Nullable)nextResponder;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #import <ComponentKit/ComponentBuilder.h>
