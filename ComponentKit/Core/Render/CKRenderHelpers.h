@@ -15,7 +15,6 @@
 #import <ComponentKit/CKRootTreeNode.h>
 
 @protocol CKRenderWithChildComponentProtocol;
-@protocol CKRenderWithChildrenComponentProtocol;
 
 @class CKRenderComponent;
 @class CKTreeNodeWithChild;

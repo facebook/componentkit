@@ -83,17 +83,3 @@
  */
 - (id<CKTreeNodeComponentProtocol>)child;
 @end
-
-/**
- Render component with multi child.
- */
-@protocol CKRenderWithChildrenComponentProtocol <CKRenderComponentProtocol>
-
-/*
- Returns a vector of 'CKComponent' children that will be rendered to the screen.
-
- @param state The current state of the component.
- */
-- (std::vector<id<CKTreeNodeComponentProtocol>>)renderChildren:(id)state;
-
-@end
