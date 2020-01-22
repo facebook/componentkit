@@ -13,6 +13,8 @@
 #import <ComponentKit/CKSingleChildComponent.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*
 @warning Overriding -layoutThatFits:parentSize: or -computeLayoutThatFits: is **not allowed** for any subclass.
 */
@@ -24,7 +26,7 @@
 
  @param state The current state of the component.
  */
-- (CKComponent *)render:(id)state;
+- (CKComponent * _Nullable)render:(id _Nullable)state;
 
 /**
  Returns view configuration for the component.
@@ -37,3 +39,5 @@
 - (CKComponentViewConfiguration)viewConfigurationWithState:(id)state;
 
 @end
+
+NS_ASSUME_NONNULL_END

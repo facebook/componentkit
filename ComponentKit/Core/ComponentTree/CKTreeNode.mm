@@ -81,7 +81,7 @@
 
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
              toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
-       previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+       previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
                params:(const CKBuildComponentTreeParams &)params
 {
   auto const componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];

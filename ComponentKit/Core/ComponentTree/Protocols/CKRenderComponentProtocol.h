@@ -10,6 +10,8 @@
 
 #import <ComponentKit/CKTreeNodeProtocol.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  This protocol is being implemented by the components that has a render method: `CKRenderComponent`.
 
@@ -22,7 +24,7 @@
  Override this method in order to provide an initialState which depends on the component's props.
  Otherwise, override `+(id)initialState` instead.
  */
-+ (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component;
++ (id _Nullable)initialStateWithComponent:(id<CKRenderComponentProtocol>)component;
 
 /*
  Override this method in order to allow ComopnentKit to reuse the previous components.
@@ -62,7 +64,7 @@
 
  In this case, the infrastrcture cannot distinguish between B1 and B2, unless it provides a unqiue identifier.
  */
-- (id<NSObject>)componentIdentifier;
+- (id<NSObject> _Nullable)componentIdentifier;
 @end
 
 
@@ -76,10 +78,12 @@
 
  @param state The current state of the component.
  */
-- (id<CKTreeNodeComponentProtocol>)render:(id)state;
+- (id<CKTreeNodeComponentProtocol> _Nullable)render:(id _Nullable)state;
 
 /**
  Returns the computed child component, if there is one.
  */
-- (id<CKTreeNodeComponentProtocol>)child;
+- (id<CKTreeNodeComponentProtocol> _Nullable)child;
 @end
+
+NS_ASSUME_NONNULL_END

@@ -17,6 +17,8 @@
 #import <ComponentKit/CKIterable.h>
 #import <ComponentKit/CKTreeNodeTypes.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol CKSystraceListener;
 @protocol CKDebugAnalyticsListener;
 
@@ -53,7 +55,7 @@ struct CKBuildComponentTreeParams {
   CKBuildTrigger buildTrigger;
 
   // The current systrace listener. Can be nil if systrace is not enabled.
-  id<CKSystraceListener> systraceListener;
+  id<CKSystraceListener> _Nullable systraceListener;
 
   // Collect tree node information for logging.
   BOOL shouldCollectTreeNodeCreationInformation;
@@ -71,7 +73,7 @@ struct CKBuildComponentTreeParams {
 @protocol CKTreeNodeComponentProtocol<CKComponentProtocol, CKIterable>
 
 /** Reference to the component's scope handle. */
-- (CKComponentScopeHandle *)scopeHandle;
+- (CKComponentScopeHandle * _Nullable)scopeHandle;
 
 /** Ask the component to acquire a scope handle. */
 - (void)acquireScopeHandle:(CKComponentScopeHandle *)scopeHandle;
@@ -81,7 +83,7 @@ struct CKBuildComponentTreeParams {
  It's being called by the infra during the component tree creation.
  */
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
-            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+            previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate;
 
@@ -97,10 +99,10 @@ struct CKBuildComponentTreeParams {
 - (void)acquireTreeNode:(id<CKTreeNodeProtocol>)treeNode;
 
 /** Reference to the component's tree node. */
-- (id<CKTreeNodeProtocol>)treeNode;
+- (id<CKTreeNodeProtocol> _Nullable)treeNode;
 
 /** Get child at index; can be nil */
-- (id<CKTreeNodeComponentProtocol>)childAtIndex:(unsigned int)index;
+- (id<CKTreeNodeComponentProtocol> _Nullable)childAtIndex:(unsigned int)index;
 #endif
 
 @end
@@ -113,11 +115,11 @@ struct CKBuildComponentTreeParams {
 @protocol CKTreeNodeProtocol <NSObject>
 
 - (id<CKTreeNodeComponentProtocol>)component;
-- (CKComponentScopeHandle *)scopeHandle;
+- (CKComponentScopeHandle * _Nullable)scopeHandle;
 - (CKTreeNodeIdentifier)nodeIdentifier;
 
 /** Returns the component's state */
-- (id)state;
+- (id _Nullable)state;
 
 /** Returns the componeny key according to its current owner */
 - (const CKTreeNodeComponentKey &)componentKey;
@@ -128,7 +130,7 @@ struct CKBuildComponentTreeParams {
 /** This method should be called on nodes that have been created from CKComponentScope */
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
              toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
-       previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+       previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
                params:(const CKBuildComponentTreeParams &)params;
 
 #if DEBUG
@@ -152,11 +154,11 @@ struct CKBuildComponentTreeParams {
 - (size_t)childrenSize;
 
 /** Returns a component tree node according to its component key */
-- (id<CKTreeNodeProtocol>)childForComponentKey:(const CKTreeNodeComponentKey &)key;
+- (id<CKTreeNodeProtocol> _Nullable)childForComponentKey:(const CKTreeNodeComponentKey &)key;
 
 /** Creates a component key for a child node according to its component class; this method is being called once during the component tree creation */
 - (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
-                                                   identifier:(id<NSObject>)identifier;
+                                                   identifier:(id<NSObject> _Nullable)identifier;
 
 /** Save a child node in the parent node according to its component key; this method is being called once during the component tree creation */
 - (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;
@@ -173,3 +175,5 @@ struct CKBuildComponentTreeParams {
  This is a performance optimization, since tree nodes are not free.
  */
 id CKTreeNodeEmptyState(void);
+
+NS_ASSUME_NONNULL_END

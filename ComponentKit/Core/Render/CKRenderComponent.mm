@@ -58,7 +58,7 @@
 }
 
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
-            previousParent:(id<CKTreeNodeWithChildrenProtocol>)previousParent
+            previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
@@ -114,7 +114,7 @@
   return {};
 }
 
-- (id)componentIdentifier
+- (id _Nullable)componentIdentifier
 {
   return nil;
 }

@@ -168,11 +168,12 @@ namespace CKRender {
     namespace Iterable {
     auto build(id<CKTreeNodeComponentProtocol> component,
                id<CKTreeNodeWithChildrenProtocol> parent,
-               id<CKTreeNodeWithChildrenProtocol> previousParent,
+               id<CKTreeNodeWithChildrenProtocol> _Nullable previousParent,
                const CKBuildComponentTreeParams &params,
                BOOL parentHasStateUpdate) -> void
     {
-      CKCAssert(component, @"component cannot be nil");
+      CKCAssertNil(component, @"component cannot be nil");
+      CKCAssertNil(parent, @"parent cannot be nil");
 
       // Check if the component already has a tree node.
       id<CKTreeNodeProtocol> node = component.scopeHandle.treeNode;
@@ -222,12 +223,13 @@ namespace CKRender {
       auto build(id<CKRenderWithChildComponentProtocol> component,
                  __strong id<CKTreeNodeComponentProtocol> *childComponent,
                  id<CKTreeNodeWithChildrenProtocol> parent,
-                 id<CKTreeNodeWithChildrenProtocol> previousParent,
+                 id<CKTreeNodeWithChildrenProtocol> _Nullable previousParent,
                  const CKBuildComponentTreeParams &params,
                  BOOL parentHasStateUpdate,
                  CKRenderDidReuseComponentBlock didReuseBlock) -> id<CKTreeNodeProtocol>
       {
         CKCAssert(component, @"component cannot be nil");
+        CKCAssert(parent, @"parent cannot be nil");
 
         // Context support
         CKComponentContextHelper::willBuildComponentTree(component);
