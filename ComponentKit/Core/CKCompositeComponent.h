@@ -11,6 +11,8 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKSingleChildComponent.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  CKCompositeComponent allows you to hide your implementation details and avoid subclassing layout components like
  CKFlexboxComponent. In almost all cases, you should subclass CKCompositeComponent instead of subclassing any other
@@ -27,15 +29,22 @@
 @interface CKCompositeComponent : CKSingleChildComponent
 
 /** Calls the initializer with {} for view. */
-+ (instancetype)newWithComponent:(__attribute__((ns_consumed)) CKComponent *)component;
++ (instancetype _Nullable)newWithComponent:(NS_RELEASES_ARGUMENT CKComponent * _Nullable)component;
 
 /**
  @param view Passed to CKComponent's initializer. This should be used sparingly for CKCompositeComponent. Prefer
  delegating view configuration completely to the child component to hide implementation details.
  @param component The component the composite component uses for layout and sizing.
  */
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view component:(__attribute__((ns_consumed)) CKComponent *)component;
++ (instancetype _Nullable)newWithView:(const CKComponentViewConfiguration &)view component:(NS_RELEASES_ARGUMENT CKComponent  * _Nullable)component;
 
 @end
+
+#define CK_COMPOSITE_COMPONENT_INIT_UNAVAILABLE \
+CK_COMPONENT_INIT_UNAVAILABLE; \
++ (instancetype _Nullable)newWithComponent:(NS_RELEASES_ARGUMENT CKComponent * _Nullable)component NS_UNAVAILABLE; \
++ (instancetype _Nullable)newWithView:(const CKComponentViewConfiguration &)view component:(NS_RELEASES_ARGUMENT CKComponent  * _Nullable)component NS_UNAVAILABLE
+
+NS_ASSUME_NONNULL_END
 
 #import <ComponentKit/CompositeComponentBuilder.h>

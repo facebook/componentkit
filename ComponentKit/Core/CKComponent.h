@@ -56,6 +56,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#define CK_COMPONENT_INIT_UNAVAILABLE \
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view \
+                       size:(const CKComponentSize &)size NS_UNAVAILABLE
+
 NS_ASSUME_NONNULL_END
 
 #import <ComponentKit/ComponentBuilder.h>

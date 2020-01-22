@@ -13,7 +13,11 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /** Infra components with single child should inherit from this one. Please DO NOT use it directly. */
 @interface CKSingleChildComponent : CKComponent
-- (CKComponent *)child;
+- (CKComponent * _Nullable)child;
 @end
+
+NS_ASSUME_NONNULL_END
