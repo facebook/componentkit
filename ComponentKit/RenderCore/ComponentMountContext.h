@@ -14,7 +14,6 @@
 
 #import <ComponentKit/CKGeometryHelpers.h>
 #import <ComponentKit/ComponentViewManager.h>
-#import <ComponentKit/ComponentViewReuseUtilities.h>
 
 namespace CK {
   namespace Component {

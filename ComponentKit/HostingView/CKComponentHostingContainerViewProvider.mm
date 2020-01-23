@@ -10,6 +10,7 @@
 
 #import "CKComponentHostingContainerViewProvider.h"
 
+#import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKCasting.h>
 #import <ComponentKit/CKDelayedNonNull.h>
 #import <ComponentKit/CKOptional.h>

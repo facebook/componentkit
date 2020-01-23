@@ -12,17 +12,15 @@
 
 #import <unordered_set>
 
-#import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKCollection.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKComponentControllerProtocol.h>
 #import <ComponentKit/CKStateUpdateMetadata.h>
-#import <ComponentKit/CKTreeNodeTypes.h>
-#import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKUpdateMode.h>
 
+@protocol CKAnalyticsListener;
 @protocol CKComponentProtocol;
 @protocol CKComponentControllerProtocol;
 @protocol CKTreeNodeProtocol;
@@ -31,6 +29,8 @@
 
 @class CKComponentScopeFrame;
 @class CKComponentScopeRoot;
+
+class CKRootTreeNode;
 
 /** Component state announcements will always be made on the main thread. */
 @protocol CKComponentStateListener <NSObject>

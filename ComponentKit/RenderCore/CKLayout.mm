@@ -13,6 +13,11 @@
 #import <stack>
 #import <unordered_map>
 
+/** Deletes the target off the main thread; important since component layouts are large recursive structures. */
+struct CKOffMainThreadDeleter {
+  void operator()(std::vector<CKComponentLayoutChild> *target) noexcept;
+};
+
 using namespace CK::Component;
 
 CKComponentLayout::CKComponentLayout(id<CKMountable> c, CGSize s) noexcept

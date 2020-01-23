@@ -10,6 +10,7 @@
 
 #import "CKRenderHelpers.h"
 
+#import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKRenderComponent.h>
 #import <ComponentKit/CKComponentContextHelper.h>
 #import <ComponentKit/CKComponentInternal.h>

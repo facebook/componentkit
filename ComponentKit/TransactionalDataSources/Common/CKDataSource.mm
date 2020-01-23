@@ -13,6 +13,7 @@
 
 
 #import <ComponentKit/CKMutex.h>
+#import <ComponentKit/CKRootTreeNode.h>
 
 #import "CKComponentControllerEvents.h"
 #import "CKComponentEvents.h"

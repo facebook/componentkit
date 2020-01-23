@@ -11,8 +11,8 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/ComponentMountContext.h>
-#import <ComponentKit/CKComponentSize.h>
 #import <ComponentKit/CKIterable.h>
+#import <ComponentKit/CKSizeRange.h>
 
 @protocol CKMountable;
 

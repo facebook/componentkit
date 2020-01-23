@@ -10,8 +10,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKComponentScopeFrame.h>
-#import <ComponentKit/CKRenderComponentProtocol.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKTreeNodeTypes.h>
 

@@ -11,6 +11,7 @@
 #import "CKComponentLifecycleTestHelper.h"
 
 #import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAttachController.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentProvider.h>

@@ -20,6 +20,7 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
+#import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 
 #import "CKStateExposingComponent.h"

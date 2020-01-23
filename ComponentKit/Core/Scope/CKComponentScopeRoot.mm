@@ -13,6 +13,7 @@
 #import <libkern/OSAtomic.h>
 
 #import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKRootTreeNode.h>
 
 #import "CKComponentProtocol.h"
 #import "CKComponentControllerProtocol.h"

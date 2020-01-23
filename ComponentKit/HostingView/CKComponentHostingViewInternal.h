@@ -13,7 +13,6 @@
 #import <ComponentKit/CKComponentHostingViewProtocol.h>
 #import <ComponentKit/CKDimension.h>
 #import <ComponentKit/CKComponentLayout.h>
-#import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKGlobalConfig.h>

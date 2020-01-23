@@ -15,6 +15,7 @@
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKOptional.h>
+#import <ComponentKit/CKRootTreeNode.h>
 
 #import <algorithm>
 #import <vector>

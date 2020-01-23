@@ -8,8 +8,6 @@
  *
  */
 
-#import <string>
-
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKAssert.h>

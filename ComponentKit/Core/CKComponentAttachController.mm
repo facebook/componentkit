@@ -11,6 +11,7 @@
 #import <objc/runtime.h>
 #import "CKComponentInternal.h"
 
+#import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKDelayedNonNull.h>
 #import <ComponentKit/CKOptional.h>
 

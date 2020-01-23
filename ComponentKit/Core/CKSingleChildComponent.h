@@ -11,7 +11,6 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKComponent.h>
-#import <ComponentKit/CKTreeNodeProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -15,7 +15,7 @@
 
 #import "yoga/Yoga.h"
 
-YGConfigRef ckYogaDefaultConfig();
+YGConfigRef _Nonnull ckYogaDefaultConfig();
 
 /**
  A protocol that is used for the components that are powered by Yoga layout engine
@@ -42,14 +42,14 @@ YGConfigRef ckYogaDefaultConfig();
 
  By default returns a Yoga node with default configuration
  */
-- (YGNodeRef)ygNode:(CKSizeRange)constrainedSize;
+- (YGNodeRef _Nonnull)ygNode:(CKSizeRange)constrainedSize;
 
 /**
  A method to create a component layout instance from the given node and constrained size.
 
  By default returns an empty layout
  */
-- (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize;
+- (CKComponentLayout)layoutFromYgNode:(YGNodeRef _Nonnull)layoutNode thatFits:(CKSizeRange)constrainedSize;
 
 /**
  A flag that represents whether the component's layout sets a custom baseline value using the key

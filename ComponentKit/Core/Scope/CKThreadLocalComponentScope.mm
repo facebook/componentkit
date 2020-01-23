@@ -14,6 +14,8 @@
 #import <stack>
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKAnalyticsListener.h>
+#import <ComponentKit/CKRootTreeNode.h>
 
 #import "CKComponentScopeRoot.h"
 #import "CKScopeTreeNode.h"

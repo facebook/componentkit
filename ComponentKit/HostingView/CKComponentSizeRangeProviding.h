@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKDimension.h>
+#import <ComponentKit/CKSizeRange.h>
 
 @protocol CKComponentSizeRangeProviding <NSObject>
 @required

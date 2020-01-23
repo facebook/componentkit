@@ -13,7 +13,7 @@
 #import <tgmath.h>
 
 #import <ComponentKit/CKAssert.h>
-#import <Componentkit/CKEqualityHelpers.h>
+#import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKInternalHelpers.h>
 

@@ -22,6 +22,7 @@
 #import <ComponentKit/CKComponentControllerProtocol.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKRenderComponent.h>
+#import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKTreeNode.h>
 

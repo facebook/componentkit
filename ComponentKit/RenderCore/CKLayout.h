@@ -8,8 +8,6 @@
  *
  */
 
-#import <unordered_map>
-#import <unordered_set>
 #import <utility>
 #import <vector>
 
@@ -26,11 +24,6 @@
 @protocol CKMountable;
 
 struct CKComponentLayoutChild;
-
-/** Deletes the target off the main thread; important since component layouts are large recursive structures. */
-struct CKOffMainThreadDeleter {
-  void operator()(std::vector<CKComponentLayoutChild> *target) noexcept;
-};
 
 /** Represents the computed size of a component, as well as the computed sizes and positions of its children. */
 struct CKComponentLayout { // This is pending renaming

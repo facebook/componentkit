@@ -12,13 +12,9 @@
 
 #import <ComponentKit/CKBuildComponentResult.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
-#import <ComponentKit/CKComponentBoundsAnimation.h>
-#import <ComponentKit/CKGlobalConfig.h>
 
 @class CKComponentScopeRoot;
 @class CKComponent;
-
-struct CKBuildComponentTreeParams;
 
 namespace CKBuildComponentHelpers {
   /**

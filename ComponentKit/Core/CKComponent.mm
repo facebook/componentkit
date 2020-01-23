@@ -13,6 +13,7 @@
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
 
+#import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKArgumentPrecondition.h>
 #import <ComponentKit/CKBuildComponent.h>

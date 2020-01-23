@@ -15,6 +15,7 @@
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 
+@protocol CKRenderComponentProtocol;
 
 /**
  This object represents a node in the component tree.

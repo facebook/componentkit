@@ -8,7 +8,6 @@
  *
  */
 
-#import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKSingleChildComponent.h>
 
 NS_ASSUME_NONNULL_BEGIN
