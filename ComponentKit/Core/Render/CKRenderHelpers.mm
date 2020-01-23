@@ -172,8 +172,8 @@ namespace CKRender {
                const CKBuildComponentTreeParams &params,
                BOOL parentHasStateUpdate) -> void
     {
-      CKCAssertNil(component, @"component cannot be nil");
-      CKCAssertNil(parent, @"parent cannot be nil");
+      CKCAssertNotNil(component, @"component cannot be nil");
+      CKCAssertNotNil(parent, @"parent cannot be nil");
 
       // Check if the component already has a tree node.
       id<CKTreeNodeProtocol> node = component.scopeHandle.treeNode;
@@ -228,8 +228,8 @@ namespace CKRender {
                  BOOL parentHasStateUpdate,
                  CKRenderDidReuseComponentBlock didReuseBlock) -> id<CKTreeNodeProtocol>
       {
-        CKCAssert(component, @"component cannot be nil");
-        CKCAssert(parent, @"parent cannot be nil");
+        CKCAssertNotNil(component, @"component cannot be nil");
+        CKCAssertNotNil(parent, @"parent cannot be nil");
 
         // Context support
         CKComponentContextHelper::willBuildComponentTree(component);
