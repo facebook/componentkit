@@ -17,7 +17,6 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 #import <ComponentKit/CKComponentControllerProtocol.h>
-#import <ComponentKit/CKStateUpdateMetadata.h>
 #import <ComponentKit/CKUpdateMode.h>
 
 @protocol CKAnalyticsListener;
@@ -31,6 +30,7 @@
 @class CKComponentScopeRoot;
 
 class CKRootTreeNode;
+struct CKStateUpdateMetadata;
 
 /** Component state announcements will always be made on the main thread. */
 @protocol CKComponentStateListener <NSObject>
@@ -38,7 +38,7 @@ class CKRootTreeNode;
 - (void)componentScopeHandle:(CKComponentScopeHandle *)handle
               rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
        didReceiveStateUpdate:(id (^)(id))stateUpdate
-                    metadata:(const CKStateUpdateMetadata)metadata
+                    metadata:(const CKStateUpdateMetadata &)metadata
                         mode:(CKUpdateMode)mode;
 
 @end

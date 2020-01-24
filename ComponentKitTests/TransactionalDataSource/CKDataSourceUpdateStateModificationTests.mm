@@ -67,7 +67,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)componentScopeHandle:(CKComponentScopeHandle *)handle
               rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
        didReceiveStateUpdate:(id (^)(id))stateUpdate
-                    metadata:(const CKStateUpdateMetadata)metadata
+                    metadata:(const CKStateUpdateMetadata &)metadata
                         mode:(CKUpdateMode)mode
 {
   _pendingStateUpdates[rootIdentifier][handle].push_back(stateUpdate);

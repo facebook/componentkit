@@ -248,7 +248,7 @@ static std::vector<CKComponentController *> _addedComponentControllersBetweenSco
 - (void)componentScopeHandle:(CKComponentScopeHandle *)handle
               rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
        didReceiveStateUpdate:(id (^)(id))stateUpdate
-                    metadata:(const CKStateUpdateMetadata)metadata
+                    metadata:(const CKStateUpdateMetadata &)metadata
                         mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
