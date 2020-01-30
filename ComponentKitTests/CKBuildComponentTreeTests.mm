@@ -14,18 +14,16 @@
 
 #import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
 #import <ComponentKit/CKMountable.h>
-
-#import "CKRenderHelpers.h"
-#import "CKComponent.h"
-#import "CKCompositeComponent.h"
-#import "CKRenderComponent.h"
-#import "CKComponentInternal.h"
-#import "CKButtonComponent.h"
-#import "CKTreeNode.h"
-#import "CKComponentScopeRootFactory.h"
-#import "CKThreadLocalComponentScope.h"
-#import "CKScopeTreeNode.h"
-#import "CKRenderTreeNode.h"
+#import <ComponentKit/CKRenderHelpers.h>
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKRenderComponent.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKButtonComponent.h>
+#import <ComponentKit/CKComponentScopeRootFactory.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
+#import <ComponentKit/CKRenderTreeNode.h>
+#import <ComponentKit/CKScopeTreeNode.h>
 
 /** A helper class that inherits from 'CKRenderComponent'; render the component from the initializer */
 @interface CKComponentTreeTestComponent_Render : CKRenderComponent

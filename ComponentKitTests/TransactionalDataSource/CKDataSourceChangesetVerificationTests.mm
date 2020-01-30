@@ -17,9 +17,10 @@
 #import <ComponentKit/CKDataSourceChangesetModification.h>
 #import <ComponentKit/CKDataSourceItemInternal.h>
 #import <ComponentKit/CKDataSourceStateInternal.h>
+#import <ComponentKit/CKDataSourceChangesetVerification.h>
+
 #import <ComponentKitTestHelpers/CKChangesetHelpers.h>
 
-#import "CKDataSourceChangesetVerification.h"
 #import "CKDataSourceStateTestHelpers.h"
 
 @interface CKDataSourceChangesetVerificationTests : XCTestCase

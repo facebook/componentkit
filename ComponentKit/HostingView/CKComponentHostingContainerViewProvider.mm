@@ -15,12 +15,12 @@
 #import <ComponentKit/CKDelayedNonNull.h>
 #import <ComponentKit/CKOptional.h>
 
-#import "CKComponentAttachControllerInternal.h"
-#import "CKComponentLayout.h"
-#import "CKComponentRootLayoutProvider.h"
-#import "CKComponentRootView.h"
-#import "CKComponentRootViewInternal.h"
-#import "CKComponentSizeRangeProviding.h"
+#import <ComponentKit/CKComponentAttachControllerInternal.h>
+#import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentRootLayoutProvider.h>
+#import <ComponentKit/CKComponentRootView.h>
+#import <ComponentKit/CKComponentRootViewInternal.h>
+#import <ComponentKit/CKComponentSizeRangeProviding.h>
 
 using namespace CK;
 

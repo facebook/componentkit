@@ -18,7 +18,7 @@
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKNonNull.h>
-#import <Componentkit/ComponentRootViewPool.h>
+#import <ComponentKit/ComponentRootViewPool.h>
 
 @protocol CKAnalyticsListener;
 @protocol CKComponentSizeRangeProviding;

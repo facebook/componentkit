@@ -12,8 +12,9 @@
 
 #import <ComponentKit/CKBackgroundLayoutComponent.h>
 #import <ComponentKit/CKComponent.h>
-#import <ComponentKit/CKDetectDuplicateComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
+
+#import <ComponentKit/CKDetectDuplicateComponent.h>
 
 #pragma mark - Tests
 

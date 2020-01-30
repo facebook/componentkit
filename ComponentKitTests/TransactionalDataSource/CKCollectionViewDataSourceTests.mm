@@ -21,7 +21,7 @@
 #import <ComponentKit/CKSupplementaryViewDataSource.h>
 #import <ComponentKit/CKSizeRange.h>
 
-#import "CKCollectionViewDataSourceInternal.h"
+#import <ComponentKit/CKCollectionViewDataSourceInternal.h>
 
 @interface CKCollectionViewDataSource () <UICollectionViewDataSource>
 @end

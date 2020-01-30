@@ -13,16 +13,16 @@
 
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
-#import "CKComponent.h"
-#import "CKComponentProvider.h"
-#import "CKComponentScope.h"
-#import "CKComponentSubclass.h"
-#import "CKCompositeComponent.h"
-#import "CKComponentController.h"
-#import "CKCollectionViewDataSource.h"
-#import "CKDataSourceConfiguration.h"
-#import "CKDataSourceConfigurationInternal.h"
-#import "CKDataSourceChangeset.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentProvider.h>
+#import <ComponentKit/CKComponentScope.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKComponentController.h>
+#import <ComponentKit/CKCollectionViewDataSource.h>
+#import <ComponentKit/CKDataSourceConfiguration.h>
+#import <ComponentKit/CKDataSourceConfigurationInternal.h>
+#import <ComponentKit/CKDataSourceChangeset.h>
 
 static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPrepareLayoutForComponent";
 

@@ -16,11 +16,10 @@
 #import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKRenderHelpers.h>
 
 #import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
-
-#import "CKRenderHelpers.h"
-#import "CKScopeTreeNode.h"
 
 @interface CKRenderComponentTests : XCTestCase
 @end

@@ -10,14 +10,13 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CKComponentController.h"
-#import "CKBuildComponent.h"
-#import "CKComponentInternal.h"
-#import "CKComponentSubclass.h"
-#import "CKComponentScopeHandle.h"
-#import "CKThreadLocalComponentScope.h"
-#import "CKFlexboxComponent.h"
-
+#import <ComponentKit/CKComponentController.h>
+#import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKComponentScopeHandle.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
+#import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 
 @interface TestScopeIntegrationComponent : CKComponent

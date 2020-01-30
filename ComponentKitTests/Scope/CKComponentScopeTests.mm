@@ -24,9 +24,8 @@
 #import <ComponentKit/CKRenderComponent.h>
 #import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
-#import <ComponentKit/CKTreeNode.h>
 
-#import "CKScopeTreeNode.h"
+#import <ComponentKit/CKTreeNode.h>
 
 @protocol TestScopedProtocol <NSObject>
 @end

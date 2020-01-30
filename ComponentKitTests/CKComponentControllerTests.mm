@@ -10,20 +10,20 @@
 
 #import <XCTest/XCTest.h>
 
-#import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
-#import <ComponentKitTestHelpers/CKComponentTestRootScope.h>
-#import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
-
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentControllerEvents.h>
 #import <ComponentKit/CKComponentControllerHelper.h>
-#import <ComponentKit/CKComponentControllerInternal.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentHostingView.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
+#import <ComponentKit/CKComponentControllerInternal.h>
+
+#import <ComponentKitTestHelpers/CKComponentLifecycleTestHelper.h>
+#import <ComponentKitTestHelpers/CKComponentTestRootScope.h>
+#import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 
 using namespace CKComponentControllerHelper;
 

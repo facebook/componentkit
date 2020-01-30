@@ -14,17 +14,15 @@
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKFlexboxComponent.h>
-
-#import "CKComponent.h"
-#import "CKCompositeComponent.h"
-#import "CKRenderComponent.h"
-#import "CKLayoutComponent.h"
-#import "CKComponentInternal.h"
-#import "CKButtonComponent.h"
-#import "CKTreeNode.h"
-#import "CKThreadLocalComponentScope.h"
-#import "CKBuildComponent.h"
-#import "CKRenderTreeNode.h"
+#import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKRenderComponent.h>
+#import <ComponentKit/CKLayoutComponent.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKButtonComponent.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
+#import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKRenderTreeNode.h>
 
 static BOOL verifyChildToParentConnection(id<CKTreeNodeWithChildrenProtocol> parentNode, CKTreeNode *childNode, id<CKRenderComponentProtocol> c) {
   auto const componentKey = [childNode componentKey];

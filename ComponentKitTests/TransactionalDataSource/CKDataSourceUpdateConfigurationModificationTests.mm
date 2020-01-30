@@ -23,10 +23,11 @@
 #import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceState.h>
+#import <ComponentKit/CKDataSourceUpdateConfigurationModification.h>
+
 #import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 
 #import "CKDataSourceStateTestHelpers.h"
-#import "CKDataSourceUpdateConfigurationModification.h"
 
 static NSString *const kTestContextForLifecycleComponent = @"kTestContextForLifecycleComponent";
 
