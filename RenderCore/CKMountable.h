@@ -83,7 +83,6 @@ struct CKMountInfo {
  @param size The size for this component
  @param children The positioned children for this component. Normally this parameter is ignored.
  @param supercomponent This component's parent component
- @param systraceListener The current systrace listener - will be nil if systrace is not enabled.
  @return An updated mount context. In most cases, this is just be the passed-in context. If a view was created, this is
  used to specify that subcomponents should be mounted inside the view.
  */
@@ -103,8 +102,6 @@ Unmounts the component:
 
 /**
  Called when the component and all its children have been mounted.
-
- @param systraceListener The current systrace listener - will be nil if systrace is not enabled.
  */
 - (void)childrenDidMount;
 

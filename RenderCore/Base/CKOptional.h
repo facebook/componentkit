@@ -595,8 +595,6 @@ private:
  v.push_back(y);
  }, x, y);
 
- @param vm  function-like object that will be invoked if the Optional contains the value.
-
  Note: you are not allowed to return anything from value handler in apply.
  */
 template <typename F, typename T, typename S>
@@ -619,8 +617,6 @@ auto apply(F &&f, const Optional<T> &opt1, const Optional<S> &opt2) -> void {
  v.push_back(y);
  v.push_back(z);
  }, x, y, z);
-
- @param vm  function-like object that will be invoked if the Optional contains the value.
 
  Note: you are not allowed to return anything from value handler in apply.
  */

@@ -80,8 +80,7 @@ struct CKMountLayoutResult {
 
  @param isUpdate Indicates whether the mount is due to an (state/props) update.
  @param shouldCollectMountInfo should mount information be collected and returned in `CKMountLayoutResult`.
- @param willMountLayout Called before mounting each layout in the layout tree.
- @param didMountLayout Called after mounting each layout in the layout tree.
+ @param listener Object collecting all mount layout events. Can be nil.
  */
 CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
                                   UIView *view,
