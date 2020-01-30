@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKBuildComponent.h>
@@ -177,3 +181,5 @@ struct CKBuildComponentTreeParams {
 id CKTreeNodeEmptyState(void);
 
 NS_ASSUME_NONNULL_END
+
+#endif

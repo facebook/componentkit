@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 /**
@@ -29,3 +33,5 @@ typedef BOOL (^CKStatefulViewReusePoolPendingMayRelinquishBlock)(void);
          mayRelinquishBlock:(CKStatefulViewReusePoolPendingMayRelinquishBlock)mayRelinquishBlock;
 
 @end
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentProvider.h>
@@ -36,3 +40,5 @@
 - (BOOL)hasSameComponentProviderAndContextAs:(CKDataSourceConfiguration *)other;
 
 @end
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 struct CKComponentRootLayout;
@@ -18,3 +22,5 @@ struct CKComponentRootLayout;
 
 @end
 
+
+#endif

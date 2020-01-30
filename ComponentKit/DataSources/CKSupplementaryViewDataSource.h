@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 @class UICollectionReusableView;
@@ -25,3 +29,5 @@
                                  atIndexPath:(NSIndexPath *)indexPath;
 
 @end
+
+#endif

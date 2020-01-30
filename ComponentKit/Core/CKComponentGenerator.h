@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <CoreGraphics/CoreGraphics.h>
 #import <Foundation/Foundation.h>
 
@@ -130,3 +134,5 @@ struct CKComponentGeneratorOptions {
 - (void)setScopeRoot:(CKComponentScopeRoot *)scopeRoot;
 
 @end
+
+#endif

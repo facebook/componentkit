@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKSizeRange.h>
@@ -22,3 +26,5 @@
  */
 - (CKSizeRange)sizeRangeForBoundingSize:(CGSize)size;
 @end
+
+#endif

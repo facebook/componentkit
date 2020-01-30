@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
@@ -40,3 +44,5 @@
 @property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
 
 @end
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #ifndef CKComponentTreeDiff_h
 #define CKComponentTreeDiff_h
 
@@ -44,3 +48,5 @@ namespace CK {
 }
 
 #endif /* CKComponentTreeDiff_h */
+
+#endif

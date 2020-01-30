@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKComponent.h>
 
 #import <ComponentKit/CKAsyncLayer.h>
@@ -41,3 +45,5 @@ struct CKTextComponentOptions
                                  size:(const CKComponentSize &)size;
 
 @end
+
+#endif

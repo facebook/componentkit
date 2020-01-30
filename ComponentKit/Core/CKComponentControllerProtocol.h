@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 @protocol CKComponentProtocol;
@@ -19,3 +23,5 @@
 @property (nonatomic, weak, readonly) id<CKComponentProtocol> component;
 
 @end
+
+#endif

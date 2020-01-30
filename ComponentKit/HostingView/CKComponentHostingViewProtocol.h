@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKInspectableView.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
 
@@ -20,3 +24,5 @@
 - (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider;
 
 @end
+
+#endif

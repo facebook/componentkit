@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 /**
@@ -26,3 +30,5 @@
 - (instancetype)initWithEntity:(id<NSObject>)entity;
 
 @end
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKInvalidChangesetOperationType.h>
@@ -30,3 +34,5 @@ CKInvalidChangesetInfo CKIsValidChangesetForState(CKDataSourceChangeset *changes
 void CKVerifyChangeset(CKDataSourceChangeset *changeset,
                        CKDataSourceState *state,
                        NSArray<id<CKDataSourceStateModifying>> *pendingAsynchronousModifications);
+
+#endif

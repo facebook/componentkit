@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKTextKitRenderer.h>
 
 typedef void (^ck_text_component_index_block_t)(NSUInteger characterIndex,
@@ -101,3 +105,5 @@ typedef NS_ENUM(NSUInteger, CKTextKitRendererMeasureOption) {
 - (CGRect)trailingRect;
 
 @end
+
+#endif

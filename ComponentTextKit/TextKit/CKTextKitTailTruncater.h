@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKTextKitTruncating.h>
@@ -15,3 +19,5 @@
 @interface CKTextKitTailTruncater : NSObject <CKTextKitTruncating>
 
 @end
+
+#endif

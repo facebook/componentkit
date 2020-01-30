@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <vector>
@@ -176,3 +180,5 @@ static void CKActionSendResponderChain(SEL selector, id target, CKComponent *sen
   void (*typedFunction)(id, SEL, id, T...) = (void (*)(id, SEL, id, T...))info.imp;
   typedFunction(info.responder, selector, sender, args...);
 }
+
+#endif

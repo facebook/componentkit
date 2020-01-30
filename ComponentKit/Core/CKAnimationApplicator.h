@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #ifndef CKAnimationApplicator_h
 #define CKAnimationApplicator_h
 
@@ -55,3 +59,5 @@ namespace CK {
 }
 
 #endif /* CKAnimationApplicator_h */
+
+#endif

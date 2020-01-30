@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKBuildTrigger.h>
@@ -28,3 +32,5 @@ struct CKBuildComponentResult {
   CKComponentBoundsAnimation boundsAnimation;
   CKBuildTrigger buildTrigger;
 };
+
+#endif

@@ -8,8 +8,12 @@
  *
  */
 
-#ifndef __cplusplus
-#error This file must be compiled as Obj-C++. If you are importing it, you must change your file extension to .mm.
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
+#if !defined(__cplusplus) && CK_NOT_SWIFT
+#error This file must be compiled Obj-C++ or imported from Swift. Objective-C files should have their extension changed to .mm.
 #endif
 
 #import <UIKit/UIKit.h>
@@ -63,3 +67,5 @@ NS_ASSUME_NONNULL_BEGIN
 NS_ASSUME_NONNULL_END
 
 #import <ComponentKit/ComponentBuilder.h>
+
+#endif

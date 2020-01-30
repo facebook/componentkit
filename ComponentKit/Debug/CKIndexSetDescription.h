@@ -8,8 +8,14 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 namespace CK {
   auto indexSetDescription(NSIndexSet *const is, NSString *const title = @"", const int indent = 0) -> NSString *;
 }
+
+#endif

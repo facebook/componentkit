@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <unordered_set>
@@ -38,3 +42,5 @@ CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateList
                                                          id<CKAnalyticsListener> analyticsListener,
                                                          const std::unordered_set<CKComponentPredicate> &componentPredicates,
                                                          const std::unordered_set<CKComponentControllerPredicate> &componentControllerPredicates);
+
+#endif

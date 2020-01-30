@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #ifndef ComponentKit_CKCacheImpl_h
 #define ComponentKit_CKCacheImpl_h
 
@@ -615,4 +619,5 @@ namespace CK {
 };// end namespace CK
 
 
+#endif
 #endif

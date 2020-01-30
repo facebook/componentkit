@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #include <functional>
 
 #import <Foundation/Foundation.h>
@@ -61,3 +65,5 @@
 - (void)didCheckShouldComponentUpdate:(id<CKRenderComponentProtocol>)component;
 
 @end
+
+#endif

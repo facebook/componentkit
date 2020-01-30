@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKDataSource.h>
@@ -87,3 +91,5 @@
 @property (readonly, nonatomic, weak) id<CKSupplementaryViewDataSource> supplementaryViewDataSource;
 
 @end
+
+#endif

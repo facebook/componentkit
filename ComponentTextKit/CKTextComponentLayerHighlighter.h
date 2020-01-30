@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 const NSRange CKTextComponentLayerInvalidHighlightRange = { NSNotFound, 0 };
@@ -23,3 +27,5 @@ const NSRange CKTextComponentLayerInvalidHighlightRange = { NSNotFound, 0 };
 - (void)layoutHighlight;
 
 @end
+
+#endif

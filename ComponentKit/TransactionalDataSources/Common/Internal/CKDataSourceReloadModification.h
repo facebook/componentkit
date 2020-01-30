@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKDataSourceStateModifying.h>
@@ -15,3 +19,5 @@
 @interface CKDataSourceReloadModification : NSObject <CKDataSourceStateModifying>
 - (instancetype)initWithUserInfo:(NSDictionary *)userInfo;
 @end
+
+#endif

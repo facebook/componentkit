@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 @class CKAsyncTransaction;
@@ -137,3 +141,5 @@ typedef NS_ENUM(NSUInteger, CKAsyncTransactionState) {
 - (void)commit;
 
 @end
+
+#endif

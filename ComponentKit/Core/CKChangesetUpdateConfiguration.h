@@ -1,5 +1,9 @@
 // Copyright 2004-present Facebook. All Rights Reserved.
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKDataSourceQOS.h>
 #import <ComponentKit/CKUpdateMode.h>
 
@@ -29,3 +33,5 @@ struct CKChangesetUpdateConfiguration {
 - (CKChangesetUpdateConfiguration)updateConfigurationForChangeset:(CKDataSourceChangeset *)changeset;
 
 @end
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 struct CKComponentLayout;
@@ -36,3 +40,5 @@ CKDuplicateComponentInfo CKFindDuplicateComponent(const CKComponentLayout &layou
  @param layout The top-level component layout of the component hierarchy.
  */
  void CKDetectDuplicateComponent(const CKComponentLayout &layout);
+
+#endif

@@ -1,5 +1,9 @@
 // Copyright 2004-present Facebook. All Rights Reserved.
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <vector>
 
 #import <Foundation/NSIndexSet.h>
@@ -84,3 +88,5 @@ namespace CK {
     return CompositeIndexTransform<T1, T2>(std::forward<T1>(t1), std::forward<T2>(t2));
   }
 }
+
+#endif

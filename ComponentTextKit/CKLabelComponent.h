@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKCompositeComponent.h>
 
 struct CKLabelAttributes
@@ -73,3 +77,5 @@ struct CKLabelAttributes
                                   size:(const CKComponentSize &)size;
 
 @end
+
+#endif

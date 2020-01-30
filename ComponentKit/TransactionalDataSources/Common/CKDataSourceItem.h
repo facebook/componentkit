@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKCategorizable.h>
@@ -29,3 +33,5 @@ struct CKComponentRootLayout;
 @property (nonatomic, readonly) CKComponentBoundsAnimation boundsAnimation;
 
 @end
+
+#endif

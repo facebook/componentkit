@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentContextHelper.h>
@@ -109,3 +113,5 @@ private:
   CKComponentMutableContext(const CKComponentMutableContext&) = delete;
   CKComponentMutableContext &operator=(const CKComponentMutableContext&) = delete;
 };
+
+#endif

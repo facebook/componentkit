@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentScopeRoot.h>
@@ -33,3 +37,5 @@ void CKComponentScopeRootAnnounceControllerInitialization(CKComponentScopeRoot *
 void CKComponentScopeRootAnnounceControllerAppearance(CKComponentScopeRoot *scopeRoot);
 void CKComponentScopeRootAnnounceControllerDisappearance(CKComponentScopeRoot *scopeRoot);
 void CKComponentScopeRootAnnounceControllerInvalidation(CKComponentScopeRoot *scopeRoot);
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKDataSourceState.h>
 
 /** Internal interface since this class is usually only created internally. */
@@ -23,3 +27,5 @@
 @property (nonatomic, copy, readonly) NSArray *sections;
 
 @end
+
+#endif

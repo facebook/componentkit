@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 @class CKComponentHostingView;
@@ -22,3 +26,5 @@
  */
 - (void)componentHostingViewDidInvalidateSize:(CKComponentHostingView *)hostingView;
 @end
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKBuildTrigger.h>
 #import <ComponentKit/CKLayout.h>
 #import <ComponentKit/CKOptional.h>
@@ -94,3 +98,5 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
 CKComponentLayout CKComputeComponentLayout(id<CKMountable> component,
                                            const CKSizeRange &sizeRange,
                                            const CGSize parentSize);
+
+#endif

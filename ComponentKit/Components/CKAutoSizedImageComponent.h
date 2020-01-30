@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKCompositeComponent.h>
 
 struct CKComponentSize;
@@ -24,3 +28,5 @@ struct CKComponentSize;
                   attributes:(const CKViewComponentAttributeValueMap &)attributes;
 
 @end
+
+#endif

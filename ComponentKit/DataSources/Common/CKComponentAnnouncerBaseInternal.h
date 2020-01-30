@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <vector>
 
 @interface CKComponentAnnouncerBase ()
@@ -29,3 +33,5 @@
   std::shared_ptr<const std::vector<__weak id>> _listenerVector;
 }
 @end
+
+#endif

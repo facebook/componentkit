@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKBaseRenderContext.h>
 #import <ComponentKit/CKPropBitmap.h>
 
@@ -36,3 +40,5 @@ namespace CK {
 
   static_assert(sizeof(ComponentSpecContext) == sizeof(BaseRenderContext), "Render context shouldn't add any data");
 }
+
+#endif

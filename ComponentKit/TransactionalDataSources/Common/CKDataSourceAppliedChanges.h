@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 @interface CKDataSourceAppliedChanges : NSObject
@@ -56,3 +60,5 @@
                                  userInfo:(NSDictionary *)userInfo NS_DESIGNATED_INITIALIZER;
 
 @end
+
+#endif

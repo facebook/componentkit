@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <vector>
 
 #import <UIKit/UIKit.h>
@@ -81,3 +85,5 @@
 - (NSUInteger)lineCount;
 
 @end
+
+#endif

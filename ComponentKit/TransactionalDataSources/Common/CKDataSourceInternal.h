@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKDataSource.h>
 
 @class CKDataSourceChange;
@@ -61,3 +65,5 @@
 - (BOOL)verifyChange:(CKDataSourceChange *)change;
 
 @end
+
+#endif

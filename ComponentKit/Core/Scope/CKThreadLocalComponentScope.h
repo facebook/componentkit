@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <stack>
 #import <vector>
 
@@ -55,3 +59,5 @@ public:
 private:
   CKThreadLocalComponentScope *const previousScope;
 };
+
+#endif

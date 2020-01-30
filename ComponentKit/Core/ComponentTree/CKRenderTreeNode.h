@@ -8,7 +8,11 @@
  *
  */
 
-#import "CKScopeTreeNode.h"
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
+#import <ComponentKit/CKScopeTreeNode.h>
 
 @protocol CKTreeNodeComponentProtocol;
 
@@ -28,3 +32,5 @@
          previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
 
 @end
+
+#endif

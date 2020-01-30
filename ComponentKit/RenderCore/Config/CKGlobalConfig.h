@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 @protocol CKAnalyticsListener;
@@ -39,3 +43,5 @@ struct CKGlobalConfig {
 };
 
 CKGlobalConfig CKReadGlobalConfig();
+
+#endif

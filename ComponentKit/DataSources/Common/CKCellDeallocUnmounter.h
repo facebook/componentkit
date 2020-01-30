@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIView.h>
 
@@ -42,3 +46,5 @@
  * and all the View <--> Component links to be broken and the whole structure to be freed.
  */
 void CKSetupDeallocUnmounter(UIView *cell, CKComponentScopeRootIdentifier scopeIdentifier, CKComponentAttachController *attachController);
+
+#endif

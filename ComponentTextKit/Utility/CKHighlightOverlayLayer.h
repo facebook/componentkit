@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <QuartzCore/QuartzCore.h>
 
 @interface CKHighlightOverlayLayer : CALayer
@@ -43,3 +47,5 @@
 @property (nonatomic, assign, setter = ck_setAllowsHighlightDrawing:) BOOL ck_allowsHighlightDrawing;
 
 @end
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentAnimationData.h>
@@ -134,3 +138,5 @@ namespace CK {
     int _animationID = 0;
   };
 }
+
+#endif

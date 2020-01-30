@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKComponentController.h>
 
 /**
@@ -100,3 +104,5 @@
 - (void)canRelinquishStatefulViewDidChange;
 
 @end
+
+#endif

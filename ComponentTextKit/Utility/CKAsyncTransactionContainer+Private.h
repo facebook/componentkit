@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKAsyncTransactionContainer.h>
 
 @interface CALayer (CKAsyncTransactionContainerTransactions)
@@ -17,3 +21,5 @@
 - (void)ck_asyncTransactionContainerWillBeginTransaction:(CKAsyncTransaction *)transaction;
 - (void)ck_asyncTransactionContainerDidCompleteTransaction:(CKAsyncTransaction *)transaction;
 @end
+
+#endif

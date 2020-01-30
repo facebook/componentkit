@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKMountable.h>
 
@@ -51,3 +55,5 @@ id<CKMountable> childAtIndex(__unsafe_unretained id<CKIterable> self, unsigned i
   }
 }
 }
+
+#endif

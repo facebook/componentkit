@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKDataSourceItem.h>
 
 /** Internal interface since this class is usually only created internally. */
@@ -26,3 +30,5 @@
                     scopeRoot:(CKComponentScopeRoot *)scopeRoot;
 
 @end
+
+#endif

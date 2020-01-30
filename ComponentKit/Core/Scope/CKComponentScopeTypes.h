@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <unordered_map>
@@ -37,3 +41,5 @@ typedef void (^CKComponentControllerScopeEnumerator)(id<CKComponentControllerPro
 using CKComponentPredicate = BOOL (*)(id<CKComponentProtocol>);
 using CKComponentControllerPredicate = BOOL (*)(id<CKComponentControllerProtocol>);
 using CKMountablePredicate = BOOL (*)(id<CKMountable>);
+
+#endif

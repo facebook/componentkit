@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKLayoutComponent.h>
@@ -50,3 +54,5 @@
 @end
 
 #import <ComponentKit/InsetComponentBuilder.h>
+
+#endif

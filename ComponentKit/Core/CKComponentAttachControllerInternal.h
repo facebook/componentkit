@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKAnimationApplicator.h>
@@ -56,3 +60,5 @@ auto CKSetAttachStateForView(UIView *view, CKComponentAttachState *attachState) 
 auto CKUpdateComponentRootViewHost(CK::NonNull<id<CKComponentRootViewHost>> rootViewHost,
                                    CK::NonNull<NSString *> rootViewCategory,
                                    CK::NonNull<CKComponentAttachController *> attachController) -> void;
+
+#endif

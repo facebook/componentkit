@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIKit.h>
 
@@ -71,3 +75,5 @@ typedef NS_ENUM(NSUInteger, CKAsyncTransactionContainerState) {
 
 @interface UIView (CKAsyncTransactionContainer) <CKAsyncTransactionContainer>
 @end
+
+#endif

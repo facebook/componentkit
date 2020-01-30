@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 @interface CKStatelessComponentContext : NSObject
@@ -17,3 +21,5 @@
 + (instancetype)contextAllocatingComponent;
 
 @end
+
+#endif

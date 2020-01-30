@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import "CKTextKitRenderer.h"
 
 /**
@@ -27,3 +31,5 @@ static uint64_t const CKTextKitTextCheckingTypeTruncation =           1ULL << 34
 - (NSTextCheckingResult *)textCheckingResultAtPoint:(CGPoint)point;
 
 @end
+
+#endif

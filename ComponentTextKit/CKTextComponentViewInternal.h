@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import "CKTextComponentView.h"
 
 @class CKTextComponentLayer;
@@ -21,3 +25,5 @@
 @property (nonatomic, strong, readonly) CKTextComponentViewControlTracker *controlTracker;
 
 @end
+
+#endif

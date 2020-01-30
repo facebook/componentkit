@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <vector>
 
 #import <UIKit/UIKit.h>
@@ -123,3 +127,5 @@
 + (instancetype)new NS_UNAVAILABLE;
 
 @end
+
+#endif

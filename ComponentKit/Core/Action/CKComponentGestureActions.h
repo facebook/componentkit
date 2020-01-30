@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentDelegateForwarder.h>
@@ -51,3 +55,5 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
                                                           CKComponentGestureRecognizerSetupFunction setupFunction,
                                                           CKAction<UIGestureRecognizer *> action,
                                                           CKComponentForwardedSelectors delegateSelectors = {});
+
+#endif

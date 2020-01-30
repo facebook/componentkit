@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKAction.h>
@@ -36,3 +40,5 @@
  */
 CKComponentViewAttributeValue CKComponentDelegateAttribute(SEL delegatePropertySelector,
                                                            CKComponentForwardedSelectors selectors) noexcept;
+
+#endif

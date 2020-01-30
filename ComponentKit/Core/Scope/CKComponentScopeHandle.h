@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
@@ -117,3 +121,5 @@ typedef int CKScopedResponderKey;
 - (id)responderForKey:(CKScopedResponderKey)key;
 
 @end
+
+#endif

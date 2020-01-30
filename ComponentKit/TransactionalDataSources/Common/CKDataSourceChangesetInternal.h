@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKDataSourceChangeset.h>
 
 /** Internal interface since this class is usually only consumed internally. */
@@ -43,3 +47,5 @@
 namespace CK {
   auto changesetDescription(const CKDataSourceChangeset *const changeset) -> NSString *;
 }
+
+#endif

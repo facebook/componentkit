@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKAnalyticsListener.h>
@@ -24,4 +28,6 @@ namespace CKAnalyticsListenerHelpers {
   auto GetReusedNodes(NSObject *object) -> CKComponentReuseWrapper *;
   auto SetReusedNodes(NSObject *object, CKComponentReuseWrapper *wrapper) -> void;
 }
+#endif
+
 #endif

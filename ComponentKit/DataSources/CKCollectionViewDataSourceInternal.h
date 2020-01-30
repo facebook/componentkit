@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKCollectionViewDataSource.h>
 
 @class CKDataSource;
@@ -40,3 +44,5 @@
 - (void)removeListener:(id<CKCollectionViewDataSourceListener>)listener;
 
 @end
+
+#endif

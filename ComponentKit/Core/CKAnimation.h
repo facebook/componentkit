@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <algorithm>
@@ -586,3 +590,5 @@ namespace CK {
     auto sequence(A1 a1, A2 a2) { return SequenceBuilder<A1, A2>{ a1, a2 }; }
   }
 }
+
+#endif

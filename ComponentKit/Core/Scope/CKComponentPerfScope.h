@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 @protocol CKSystraceListener;
@@ -44,3 +48,5 @@ private:
   id<CKSystraceListener> _systraceListener;
   Class _componentClass;
 };
+
+#endif

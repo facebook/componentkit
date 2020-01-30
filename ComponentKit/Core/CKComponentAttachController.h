@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentLayout.h>
@@ -109,3 +113,5 @@ struct CKComponentAttachControllerAttachComponentRootLayoutParams {
 void CKComponentAttachControllerAttachComponentRootLayout(
     CKComponentAttachController *const self,
     const CKComponentAttachControllerAttachComponentRootLayoutParams &params);
+
+#endif

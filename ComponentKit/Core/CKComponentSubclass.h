@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponent.h>
@@ -176,3 +180,5 @@ extern CGSize const kCKComponentParentSizeUndefined;
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

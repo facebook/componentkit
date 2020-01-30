@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKSizeRange.h>
 
 #import <vector>
@@ -81,3 +85,5 @@ namespace CK {
     };
   }
 }
+
+#endif

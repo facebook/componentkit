@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKDataSourceConfiguration.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
@@ -98,3 +102,5 @@ struct CKDataSourceOptions {
 - (const CKDataSourceOptions &)options;
 
 @end
+
+#endif

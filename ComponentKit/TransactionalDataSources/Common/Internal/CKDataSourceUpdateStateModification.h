@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKDataSourceStateModifying.h>
@@ -18,3 +22,5 @@ typedef std::unordered_map<CKComponentScopeRootIdentifier, CKComponentStateUpdat
 @interface CKDataSourceUpdateStateModification : NSObject <CKDataSourceStateModifying>
 - (instancetype)initWithStateUpdates:(const CKComponentStateUpdatesMap &)stateUpdates;
 @end
+
+#endif

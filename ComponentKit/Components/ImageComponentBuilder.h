@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 namespace CK {
 namespace BuilderDetails {
 namespace ImageComponentPropId {
@@ -352,3 +356,4 @@ private:
 using ImageComponentBuilder = BuilderDetails::ImageComponentBuilder<>;
 }
 
+#endif

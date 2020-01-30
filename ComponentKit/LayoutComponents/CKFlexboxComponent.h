@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <vector>
 
 #import <ComponentKit/CKContainerWrapper.h>
@@ -361,3 +365,5 @@ extern const struct CKStackComponentLayoutExtraKeys {
 @end
 
 #import <ComponentKit/FlexboxComponentBuilder.h>
+
+#endif

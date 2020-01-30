@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKComponent.h>
 
 struct CKComponentSize;
@@ -27,3 +31,5 @@ struct CKComponentSize;
 @end
 
 #import <ComponentKit/ImageComponentBuilder.h>
+
+#endif

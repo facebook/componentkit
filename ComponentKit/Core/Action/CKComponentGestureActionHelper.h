@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
@@ -42,3 +46,5 @@ private:
 };
 
 CKGestureRecognizerReusePool* CKCreateOrGetReusePool(Class gestureRecognizerClass, CKComponentGestureRecognizerSetupFunction setupFunction);
+
+#endif

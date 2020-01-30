@@ -8,6 +8,10 @@
 *
 */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 namespace CK {
 namespace BuilderDetails {
 namespace CenterLayoutComponentPropId {
@@ -93,3 +97,5 @@ private:
  */
 using CenterLayoutComponentBuilder = BuilderDetails::CenterLayoutComponentBuilder<>;
 }
+
+#endif

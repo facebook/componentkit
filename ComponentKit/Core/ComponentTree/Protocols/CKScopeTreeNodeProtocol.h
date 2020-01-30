@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKComponentScopeFrame.h>
 
@@ -50,3 +54,5 @@ namespace std {
 - (void)setChild:(id<CKScopeTreeNodeProtocol>)child forKey:(const CKScopeNodeKey &)key;
 
 @end
+
+#endif

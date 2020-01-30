@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKBuildComponent.h>
@@ -120,3 +124,5 @@ namespace CKRender {
                            const CKComponentStateUpdateMap &stateUpdates,
                            const CKBuildTrigger &buildTrigger) -> CKTreeNodeDirtyIds;
 }
+
+#endif

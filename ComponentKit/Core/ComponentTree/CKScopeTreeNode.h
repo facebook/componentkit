@@ -8,9 +8,12 @@
  *
  */
 
-#import <ComponentKit/CKScopeTreeNodeProtocol.h>
+#import <ComponentKit/CKDefines.h>
 
-#import "CKTreeNode.h"
+#if CK_NOT_SWIFT
+
+#import <ComponentKit/CKScopeTreeNodeProtocol.h>
+#import <ComponentKit/CKTreeNode.h>
 
 extern NSUInteger const kTreeNodeParentBaseKey;
 extern NSUInteger const kTreeNodeOwnerBaseKey;
@@ -28,3 +31,6 @@ extern NSUInteger const kTreeNodeOwnerBaseKey;
   std::vector<std::tuple<CKScopeNodeKey, id<CKTreeNodeProtocol>>> _children;
 }
 @end
+
+#endif
+

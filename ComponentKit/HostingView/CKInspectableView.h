@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKComponentLayout.h>
@@ -17,3 +21,5 @@
 /** Call this only on the main thread. */
 - (CKComponentLayout)mountedLayout;
 @end
+
+#endif

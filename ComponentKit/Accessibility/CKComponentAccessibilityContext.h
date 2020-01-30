@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKAction.h>
@@ -60,3 +64,5 @@ struct CKComponentAccessibilityContext {
     && other.accessibilityComponentAction == accessibilityComponentAction;
   }
 };
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKBaseRenderContext.h>
@@ -294,3 +298,5 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKAction<UIEvent 
  @param actions An ordered list of actions, each with a name and an associated CKAction<>
  */
 CKComponentViewAttributeValue CKComponentAccessibilityCustomActionsAttribute(const std::vector<std::pair<NSString *, CKAction<>>> &actions) noexcept;
+
+#endif

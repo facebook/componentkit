@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKAsyncLayer.h>
 #import <ComponentKit/CKAsyncTransaction.h>
 
@@ -39,3 +43,5 @@
                                                        drawParameters:(NSObject *)drawParameters;
 
 @end
+
+#endif

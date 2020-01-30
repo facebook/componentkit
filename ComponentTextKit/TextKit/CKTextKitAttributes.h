@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #ifndef ComponentKit_CKTextKitAttributes_h
@@ -120,4 +124,5 @@ struct CKTextKitAttributes {
   size_t hash() const;
 };
 
+#endif
 #endif

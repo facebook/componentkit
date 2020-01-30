@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #pragma once
 
 #import <ComponentKit/CKComponent.h>
@@ -927,3 +931,5 @@ private:
 };
 }
 }
+
+#endif

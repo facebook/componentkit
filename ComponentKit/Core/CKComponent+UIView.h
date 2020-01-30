@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 @class CKComponent;
@@ -21,3 +25,5 @@ CKComponent *CKMountedComponentForView(UIView *view);
 
 /** This is for internal use by the framework only. */
 void CKSetMountedComponentForView(UIView *view, CKComponent *component);
+
+#endif

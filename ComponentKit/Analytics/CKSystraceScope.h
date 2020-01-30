@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKAsyncBlock.h>
@@ -44,3 +48,5 @@ private:
   CKSystraceScope(CKSystraceScope&&) = delete; // move
   CKSystraceScope &operator=(CKSystraceScope&&) = delete;
 };
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 @protocol CKComponentProtocol;
 
 template<typename...>
@@ -30,3 +34,5 @@ namespace CK {
     friend class ::CKAction;
   };
 }
+
+#endif

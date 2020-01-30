@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 typedef id (*CKOptimisticViewMutationGetter)(UIView *view, id context);
@@ -38,3 +42,5 @@ void CKPerformOptimisticViewMutation(UIView *view,
 
 /** A helper that creates a getter and setter for a given keypath. */
 void CKPerformOptimisticViewMutation(UIView *view, NSString *keyPath, id value);
+
+#endif

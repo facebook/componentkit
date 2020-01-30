@@ -8,6 +8,10 @@
 *
 */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKComponentAccessibilityContext.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>
 
@@ -34,3 +38,5 @@ namespace CK {
     }
   }
 }
+
+#endif

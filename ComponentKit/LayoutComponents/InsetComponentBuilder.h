@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 namespace CK {
 namespace BuilderDetails {
 namespace InsetComponentPropId {
@@ -137,3 +141,5 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
 
 using InsetComponentBuilder = BuilderDetails::InsetComponentBuilder<>;
 }
+
+#endif

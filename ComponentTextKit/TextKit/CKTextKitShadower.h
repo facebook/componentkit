@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 /**
@@ -68,3 +72,5 @@
 - (void)setShadowInContext:(CGContextRef)context;
 
 @end
+
+#endif

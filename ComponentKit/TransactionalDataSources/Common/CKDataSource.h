@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <CoreGraphics/CGGeometry.h>
@@ -109,3 +113,5 @@ struct CKDataSourceViewport {
 - (void)setChangesetModificationGenerator:(id<CKDataSourceChangesetModificationGenerator>)changesetModificationGenerator;
 
 @end
+
+#endif

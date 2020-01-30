@@ -8,8 +8,14 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKDataSourceQOS.h>
 
 dispatch_block_t blockUsingDataSourceQOS(dispatch_block_t block, CKDataSourceQOS qos, BOOL isBackgroundMode = NO);
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <objc/message.h>
 #import <vector>
 
@@ -57,3 +61,5 @@ namespace CK {
     };
   }
 }
+
+#endif

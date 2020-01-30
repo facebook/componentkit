@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceQOS.h>
 
@@ -57,3 +61,5 @@
 - (BOOL)hasFinishedComputingLayout;
 
 @end
+
+#endif

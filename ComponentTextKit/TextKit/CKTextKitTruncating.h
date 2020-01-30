@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <vector>
 
 #import <UIKit/UIKit.h>
@@ -35,3 +39,5 @@
                 constrainedSize:(CGSize)constrainedSize;
 
 @end
+
+#endif

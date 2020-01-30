@@ -1,5 +1,9 @@
 // Copyright 2004-present Facebook. All Rights Reserved.
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKAnimation.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKMacros.h>
@@ -50,3 +54,5 @@
 + (instancetype)newWithComponent:(CKComponent *)component CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @end
+
+#endif

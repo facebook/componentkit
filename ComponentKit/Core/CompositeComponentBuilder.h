@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 namespace CK {
 namespace BuilderDetails {
 namespace CompositeComponentPropId {
@@ -91,3 +95,5 @@ class __attribute__((__may_alias__)) CompositeComponentBuilder
 
 using CompositeComponentBuilder = BuilderDetails::CompositeComponentBuilder<>;
 }
+
+#endif

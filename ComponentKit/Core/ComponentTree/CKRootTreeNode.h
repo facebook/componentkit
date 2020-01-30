@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKTreeNodeProtocol.h>
@@ -56,3 +60,5 @@ private:
   /** A stack of all the existing render components' nodes that are being created in a given point */
   std::stack<CKTreeNodeIdentifier> _stack;
 };
+
+#endif

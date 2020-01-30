@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
@@ -145,3 +149,5 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
                        parentHasStateUpdate:(BOOL)parentHasStateUpdate;
 
 @end
+
+#endif

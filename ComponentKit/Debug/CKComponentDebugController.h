@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentInternal.h>
@@ -60,3 +64,5 @@ CK::Component::MountContext CKDebugMountContext(Class componentClass,
                                                 const CK::Component::MountContext &context,
                                                 const CKComponentViewConfiguration &viewConfiguration,
                                                 const CGSize size);
+
+#endif

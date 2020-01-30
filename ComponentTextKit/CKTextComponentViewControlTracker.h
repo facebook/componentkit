@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import "CKTextComponentViewInternal.h"
 
 /**
@@ -31,3 +35,5 @@
                                  withEvent:(UIEvent *)event;
 
 @end
+
+#endif

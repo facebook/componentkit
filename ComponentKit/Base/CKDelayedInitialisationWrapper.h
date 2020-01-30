@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #pragma once
 
 #include <new>
@@ -74,3 +78,5 @@ struct DelayedInitialisationWrapper final {
 };
 
 }
+
+#endif

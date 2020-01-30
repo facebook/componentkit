@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentHostingView.h>
 #import <ComponentKit/CKComponentHostingViewProtocol.h>
@@ -77,3 +81,5 @@ struct CKComponentHostingViewOptions {
 - (void)reloadWithMode:(CKUpdateMode)mode;
 
 @end
+
+#endif

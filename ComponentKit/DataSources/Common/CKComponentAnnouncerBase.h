@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 /**
@@ -19,3 +23,5 @@
  */
 @interface CKComponentAnnouncerBase : NSObject
 @end
+
+#endif

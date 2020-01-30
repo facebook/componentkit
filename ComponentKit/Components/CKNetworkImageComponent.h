@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKNetworkImageDownloading.h>
 
@@ -32,3 +36,5 @@ struct CKNetworkImageComponentOptions {
                 attributes:(const CKViewComponentAttributeValueMap &)attributes;
 
 @end
+
+#endif

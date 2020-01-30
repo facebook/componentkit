@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKLayoutComponent.h>
 
 typedef NS_OPTIONS(NSUInteger, CKCenterLayoutComponentCenteringOptions) {
@@ -49,3 +53,5 @@ typedef NS_OPTIONS(NSUInteger, CKCenterLayoutComponentSizingOptions) {
 @end
 
 #import <ComponentKit/CenterLayoutComponentBuilder.h>
+
+#endif

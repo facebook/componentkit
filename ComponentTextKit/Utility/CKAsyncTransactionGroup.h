@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKAsyncTransactionContainer.h>
@@ -26,3 +30,5 @@
 - (void)addTransactionContainer:(CALayer *)containerLayer;
 
 @end
+
+#endif

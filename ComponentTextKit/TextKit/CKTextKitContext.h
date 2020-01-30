@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 /**
@@ -43,3 +47,5 @@
                                                           NSTextContainer *textContainer))block;
 
 @end
+
+#endif

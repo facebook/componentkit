@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
@@ -48,3 +52,5 @@ struct CKComponentHostingViewRootViewPoolOptions {
 - (void)mount;
 
 @end
+
+#endif

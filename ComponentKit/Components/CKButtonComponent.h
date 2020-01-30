@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <unordered_map>
 
 #import <UIKit/UIKit.h>
@@ -85,3 +89,5 @@ struct CKButtonComponentOptions {
                       options:(const CKButtonComponentOptions &)options;
 
 @end
+
+#endif

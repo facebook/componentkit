@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKSingleChildComponent.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -47,3 +51,5 @@ CK_COMPONENT_INIT_UNAVAILABLE; \
 NS_ASSUME_NONNULL_END
 
 #import <ComponentKit/CompositeComponentBuilder.h>
+
+#endif

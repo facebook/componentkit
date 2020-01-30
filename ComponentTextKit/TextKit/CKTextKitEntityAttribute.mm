@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKTextKitEntityAttribute.h>
+#import "CKTextKitEntityAttribute.h"
 
 @implementation CKTextKitEntityAttribute
 

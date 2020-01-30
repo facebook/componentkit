@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKAnimation.h>
 
 @class CKComponent;
@@ -30,3 +34,5 @@ struct CKTransitions {
  @param transitions The animations to apply to the component.
  */
 CKComponent *CKComponentWithTransitions(CKComponent *component, const CKTransitions& transitions);
+
+#endif

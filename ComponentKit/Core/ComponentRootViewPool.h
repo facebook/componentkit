@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <unordered_map>
@@ -69,3 +73,5 @@ namespace CK {
     auto GlobalRootViewPool() -> RootViewPool &;
   };
 };
+
+#endif

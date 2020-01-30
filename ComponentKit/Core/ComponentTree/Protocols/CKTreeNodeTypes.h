@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #include <tuple>
@@ -48,3 +52,5 @@ namespace CK {
 /** A map between CKTreeNodeComponentKey to counter; we use it to avoid collisions for identical keys */
 using CKTreeNodeKeyToCounter = std::unordered_map<CKTreeNodeComponentKey, NSUInteger, CK::TreeNode::hasher, CK::TreeNode::comparator>;
 
+
+#endif

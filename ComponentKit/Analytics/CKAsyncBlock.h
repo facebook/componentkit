@@ -8,6 +8,10 @@
 *
 */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #include <functional>
 
 #import <Foundation/Foundation.h>
@@ -46,3 +50,5 @@ auto willStartAsyncBlock(const char *const blockName) -> AsyncBlock;
 
 }
 }
+
+#endif

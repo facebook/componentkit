@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKThreadLocalComponentScope.h>
@@ -36,3 +40,5 @@ private:
   CKThreadLocalComponentScope *_threadLocalScope;
   id<NSObject> _key;
 };
+
+#endif

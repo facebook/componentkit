@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKComponentRootView.h>
@@ -75,3 +79,5 @@ typedef UIView *(^CKComponentRootViewHitTestHook)(UIView *rootView, CGPoint poin
 - (void)rootViewWillEnterViewPool;
 
 @end
+
+#endif

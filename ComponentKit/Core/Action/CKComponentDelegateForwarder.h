@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKAction.h>
@@ -46,3 +50,5 @@ auto CKDelegateProxyForObject(NSObject *obj) -> CKComponentDelegateForwarder *_N
 auto CKSetDelegateProxyForObject(NSObject *obj, CKComponentDelegateForwarder *_Nullable delegateProxy) -> void;
 
 NS_ASSUME_NONNULL_END
+
+#endif

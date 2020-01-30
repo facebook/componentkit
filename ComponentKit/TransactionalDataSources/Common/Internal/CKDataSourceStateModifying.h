@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKDataSourceQOS.h>
 
 @class CKDataSourceChange;
@@ -27,3 +31,5 @@
 - (CKDataSourceQOS)qos;
 
 @end
+
+#endif

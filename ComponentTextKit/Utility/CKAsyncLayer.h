@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <QuartzCore/QuartzCore.h>
 
 typedef NS_ENUM(NSUInteger, CKAsyncLayerDisplayMode) {
@@ -72,3 +76,5 @@ typedef NS_ENUM(NSUInteger, CKAsyncLayerDisplayMode) {
 - (void)setNeedsAsyncDisplay;
 
 @end
+
+#endif

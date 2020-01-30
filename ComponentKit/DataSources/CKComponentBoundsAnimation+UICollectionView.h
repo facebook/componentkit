@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKComponentBoundsAnimation.h>
@@ -42,3 +46,5 @@ id CKComponentBoundsAnimationPrepareForCollectionViewBatchUpdates(UICollectionVi
 
 /** @see CKComponentBoundsAnimationPrepareForCollectionViewBatchUpdates */
 void CKComponentBoundsAnimationApplyAfterCollectionViewBatchUpdates(id context, const CKComponentBoundsAnimation &animation);
+
+#endif

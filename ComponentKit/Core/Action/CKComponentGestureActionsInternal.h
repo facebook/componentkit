@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 /** Exposed only for testing. Do not touch this directly. */
@@ -15,3 +19,5 @@
 + (instancetype)sharedInstance;
 - (void)handleGesture:(UIGestureRecognizer *)recognizer;
 @end
+
+#endif

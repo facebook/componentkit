@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <vector>
@@ -32,3 +36,5 @@ namespace CKComponentControllerHelper {
                                                                 CKComponentScopeRoot *previousRoot,
                                                                 CKComponentControllerPredicate predicate) -> std::vector<CKComponentController *>;
 };
+
+#endif

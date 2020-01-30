@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKComponentAnimationHooks.h>
@@ -62,3 +66,5 @@ struct CKComponentAnimation {
 private:
   CKComponentAnimationHooks hooks;
 };
+
+#endif

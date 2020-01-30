@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKLayoutComponent.h>
 
 #import <ComponentKit/CKMacros.h>
@@ -28,3 +32,5 @@
 @end
 
 #import <ComponentKit/OverlayLayoutComponentBuilder.h>
+
+#endif

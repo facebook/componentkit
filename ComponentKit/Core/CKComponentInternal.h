@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <memory>
 
 #import <ComponentKit/CKBuildComponent.h>
@@ -91,3 +95,5 @@
 + (BOOL)shouldUpdateComponentInController;
 
 @end
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #include <unordered_map>
 
 #import <Foundation/Foundation.h>
@@ -35,3 +39,5 @@ struct CKStateUpdateMetadata {
   // this map allows you to describe how the map should merge values for the same key.
   CKUserInfoMergeMap userInfoMergeMap;
 };
+
+#endif

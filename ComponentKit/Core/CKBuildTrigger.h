@@ -8,9 +8,15 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 // Collection of events that trigger a new component generation.
 enum class CKBuildTrigger {
   NewTree,
   StateUpdate,
   PropsUpdate,
 };
+
+#endif

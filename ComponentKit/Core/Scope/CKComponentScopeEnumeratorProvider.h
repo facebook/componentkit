@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
@@ -27,3 +31,5 @@
                                                  block:(CKComponentControllerScopeEnumerator)block;
 
 @end
+
+#endif

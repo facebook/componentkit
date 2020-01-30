@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKAssert.h>
@@ -67,3 +71,5 @@ auto operator !=(const CKComponentBoundsAnimation &lhs, const CKComponentBoundsA
 void CKComponentBoundsAnimationApply(const CKComponentBoundsAnimation &animation,
                                      void (^animations)(void),
                                      void (^completion)(BOOL finished));
+
+#endif

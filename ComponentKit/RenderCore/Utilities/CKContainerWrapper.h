@@ -1,3 +1,7 @@
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #pragma once
 
 #include <initializer_list>
@@ -38,3 +42,5 @@ public:
 private:
   Container _container;
 };
+
+#endif

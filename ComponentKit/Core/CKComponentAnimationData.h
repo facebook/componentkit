@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #ifndef CKComponentAnimationData_h
 #define CKComponentAnimationData_h
 
@@ -38,3 +42,5 @@ struct CKComponentControllerAnimationData {
 };
 
 #endif /* CKComponentAnimationData_h */
+
+#endif

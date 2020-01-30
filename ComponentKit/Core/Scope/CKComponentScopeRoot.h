@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <unordered_set>
@@ -84,3 +88,5 @@ struct CKStateUpdateMetadata;
 #endif
 
 @end
+
+#endif

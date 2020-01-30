@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKAsyncLayer.h>
 
 @class CKTextComponentLayerHighlighter;
@@ -23,3 +27,5 @@
 @property (nonatomic, strong, readonly) CKTextComponentLayerHighlighter *highlighter;
 
 @end
+
+#endif

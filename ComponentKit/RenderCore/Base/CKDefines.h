@@ -8,13 +8,10 @@
 *
 */
 
-#import <ComponentKit/CKDefines.h>
-
-#if CK_NOT_SWIFT
-
-#import <ComponentKit/CKComponentAccessibilityContext.h>
-#import <ComponentKit/CKViewConfiguration.h>
-
-using CKComponentViewConfiguration = CKViewConfiguration<CKComponentAccessibilityContext>;
-
+#if __has_feature(modules)
+  #define CK_SWIFT 1
+#else
+  #define CK_SWIFT 0
 #endif
+
+#define CK_NOT_SWIFT !CK_SWIFT

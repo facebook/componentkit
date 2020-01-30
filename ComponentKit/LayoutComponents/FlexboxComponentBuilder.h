@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <ComponentKit/CKFlexboxComponent.h>
 
 namespace CK {
@@ -721,3 +725,5 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
 
 using FlexboxComponentBuilder = BuilderDetails::FlexboxComponentBuilder<>;
 }
+
+#endif

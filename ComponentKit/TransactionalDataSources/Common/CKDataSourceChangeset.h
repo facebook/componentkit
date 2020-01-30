@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 @interface CKDataSourceChangeset<__covariant ModelType> : NSObject
@@ -30,3 +34,5 @@
 namespace CK {
   auto itemsByIndexPathDescription(NSDictionary<NSIndexPath *, NSObject *> * const items, NSString * const title) -> NSString *;
 }
+
+#endif

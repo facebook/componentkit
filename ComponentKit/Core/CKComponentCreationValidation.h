@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKAssert.h>
@@ -59,4 +63,6 @@ BOOL CKIsRunningInTest();
 #else
 #define CKValidateComponentCreation()
 #define CKValidateRenderComponentCreation()
+#endif
+
 #endif
