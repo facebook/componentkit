@@ -12,6 +12,9 @@
 
 #if CK_NOT_SWIFT
 
+#import <ComponentKit/ComponentBuilder.h>
+#import <ComponentKit/CKInsetComponent.h>
+
 namespace CK {
 namespace BuilderDetails {
 namespace InsetComponentPropId {

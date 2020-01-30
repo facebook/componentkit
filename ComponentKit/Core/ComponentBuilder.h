@@ -12,8 +12,6 @@
 
 #if CK_NOT_SWIFT
 
-#pragma once
-
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentGestureActions.h>
 #import <ComponentKit/CKNonNull.h>

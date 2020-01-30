@@ -12,6 +12,9 @@
 
 #if CK_NOT_SWIFT
 
+#import <ComponentKit/ComponentBuilder.h>
+#import <ComponentKit/CKCompositeComponent.h>
+
 namespace CK {
 namespace BuilderDetails {
 namespace CompositeComponentPropId {

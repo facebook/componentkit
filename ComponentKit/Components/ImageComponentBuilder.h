@@ -12,6 +12,9 @@
 
 #if CK_NOT_SWIFT
 
+#import <ComponentKit/ComponentBuilder.h>
+#import <ComponentKit/CKImageComponent.h>
+
 namespace CK {
 namespace BuilderDetails {
 namespace ImageComponentPropId {

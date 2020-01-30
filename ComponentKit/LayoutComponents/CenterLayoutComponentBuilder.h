@@ -12,6 +12,9 @@
 
 #if CK_NOT_SWIFT
 
+#import <ComponentKit/ComponentBuilder.h>
+#import <ComponentKit/CKCenterLayoutComponent.h>
+
 namespace CK {
 namespace BuilderDetails {
 namespace CenterLayoutComponentPropId {

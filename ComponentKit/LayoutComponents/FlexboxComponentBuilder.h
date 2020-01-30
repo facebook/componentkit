@@ -12,6 +12,7 @@
 
 #if CK_NOT_SWIFT
 
+#import <ComponentKit/ComponentBuilder.h>
 #import <ComponentKit/CKFlexboxComponent.h>
 
 namespace CK {
