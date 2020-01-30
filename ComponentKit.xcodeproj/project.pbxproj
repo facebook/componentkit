@@ -2270,6 +2270,7 @@
 			children = (
 				D0B47AC21CBD926700BB33CE /* ComponentKit */,
 				D0B47C3F1CBD92C200BB33CE /* ComponentTextKit */,
+				723958B1238E9B21005B570A /* RenderCore */,
 				B342DCBF1AC2443F00ACAC53 /* ComponentKitApplicationsTestsHost */,
 				A1AB4F9123350D86001F41DB /* ComponentKitPerfTests */,
 				B342DC411AC23E8200ACAC53 /* ComponentKitTests */,
@@ -2338,7 +2339,6 @@
 				D0B47B341CBD926700BB33CE /* Debug */,
 				D0B47B3A1CBD926700BB33CE /* HostingView */,
 				D0B47B461CBD926700BB33CE /* LayoutComponents */,
-				723958B1238E9B21005B570A /* RenderCore */,
 				72647C9F2368CEB80072F330 /* Spec */,
 				D0B47B5A1CBD926700BB33CE /* StatefulViews */,
 				D0B47B611CBD926700BB33CE /* TransactionalDataSources */,
