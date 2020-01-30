@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <deque>
 #import <string>
 #import <unordered_map>
@@ -199,3 +203,5 @@ namespace CK {
     };
   }
 }
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <stdlib.h>
 #import <pthread.h>
 
@@ -132,3 +136,5 @@ namespace CK {
   typedef Locker<StaticMutex> StaticMutexLocker;
 
 } // namespace CK
+
+#endif

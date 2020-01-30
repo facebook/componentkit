@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #pragma once
 
 #include <algorithm>
@@ -78,4 +82,6 @@ private:
   Storage _elements;
 };
 }
+
+#endif
 

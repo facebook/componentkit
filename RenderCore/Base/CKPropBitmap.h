@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #pragma once
 
 #include <type_traits>
@@ -37,3 +41,5 @@ static constexpr auto clear(PropsBitmapType bitmap, PropsBitmapType prop) -> Pro
 }  // namespace PropBitmap
 }  // namespace BuilderDetails
 }  // namespace CK
+
+#endif

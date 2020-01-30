@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #ifndef CKCasting_h
 #define CKCasting_h
 
@@ -22,3 +26,4 @@ namespace CK {
 }
 
 #endif /* CKCasting_h */
+#endif /* CK_NOT_SWIFT */

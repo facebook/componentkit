@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <string>
 #import <stdlib.h>
 #import <string.h>
@@ -145,3 +149,5 @@ namespace std {
     }
   };
 }
+
+#endif

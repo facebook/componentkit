@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKAssert.h>
@@ -130,3 +134,5 @@ struct CKRelativeSizeRange {
   CKSizeRange resolveSizeRange(const CGSize &parentSize,
                                const CKSizeRange &autoSizeRange = {{0,0}, {INFINITY, INFINITY}}) const noexcept;
 };
+
+#endif

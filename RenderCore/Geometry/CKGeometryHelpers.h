@@ -8,6 +8,10 @@
 *
 */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 inline CGPoint operator+(const CGPoint &p1, const CGPoint &p2)
@@ -49,3 +53,5 @@ inline UIEdgeInsets operator-(const UIEdgeInsets &e)
 {
   return { -e.top, -e.left, -e.bottom, -e.right };
 }
+
+#endif

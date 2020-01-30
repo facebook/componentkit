@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <memory>
 
 #import <UIKit/UIKit.h>
@@ -75,3 +79,5 @@ namespace CK {
     };
   }
 }
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/ComponentMountContext.h>
@@ -117,3 +121,5 @@ Unmounts the component:
 - (id<CKMountable>)childAtIndex:(unsigned int)index;
 
 @end
+
+#endif

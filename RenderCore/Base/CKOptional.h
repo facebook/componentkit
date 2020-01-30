@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #pragma once
 
 #include <cstdlib>
@@ -706,3 +710,5 @@ auto operator!=(None, const Optional<T>& rhs) noexcept -> bool {
 }
 
 } // namespace CK
+
+#endif

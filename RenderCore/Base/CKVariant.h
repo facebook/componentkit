@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #include <array>
 #include <cassert>
 #include <new>
@@ -666,3 +670,5 @@ class Variant : private VariantDetail::VariantStorage<Types...>,
 };
 
 }  // namespace CK
+
+#endif

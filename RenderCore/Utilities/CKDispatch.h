@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <UIKit/UIKit.h>
 
 /**
@@ -20,3 +24,5 @@
  * the block when the run mode of the main run loop is kCFRunLoopDefaultMode.
  */
 void CKDispatchMainDefaultMode(dispatch_block_t block) noexcept;
+
+#endif

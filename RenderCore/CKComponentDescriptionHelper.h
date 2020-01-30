@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKLayout.h>
@@ -27,3 +31,5 @@ __BEGIN_DECLS
 extern NSString *CKComponentDescriptionWithChildren(NSString *description, NSArray *children);
 
 __END_DECLS
+
+#endif

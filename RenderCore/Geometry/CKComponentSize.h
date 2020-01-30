@@ -10,6 +10,9 @@
 
 #import <ComponentKit/CKDimension.h>
 
+#if CK_NOT_SWIFT
+
+
 /**
  A representation of a component's desired size relative to the size of its parent.
 
@@ -83,3 +86,5 @@ namespace std {
     size_t operator ()(const CKComponentSize &) noexcept;
   };
 }
+
+#endif

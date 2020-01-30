@@ -15,6 +15,10 @@
 #import <ComponentKit/CKMountedObjectForView.h>
 #import <ComponentKit/CKViewConfiguration.h>
 #import <ComponentKit/ComponentMountContext.h>
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 
 namespace CK {
 
@@ -90,3 +94,5 @@ private:
 };
 
 };
+
+#endif

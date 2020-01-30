@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #ifndef CKCollection_h
 #define CKCollection_h
 
@@ -138,3 +142,4 @@ private:
 };
 
 #endif /* CKCollection_h */
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <string>
@@ -215,3 +219,5 @@ inline bool CKKeyVectorsEqual(const std::vector<id<NSObject>> &a, const std::vec
     return CKObjectIsEqual(x, y); // be pedantic and use a lambda here becuase BOOL != bool
   });
 }
+
+#endif

@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <string>
 
 #import <UIKit/UIKit.h>
@@ -59,3 +63,5 @@ static inline CGFloat CKRoundValueToPixelGrid(CGFloat value, const BOOL forceCei
     }
     return scaledValue / scale;
 }
+
+#endif

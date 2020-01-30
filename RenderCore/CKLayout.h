@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <utility>
 #import <vector>
 
@@ -89,3 +93,5 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
 
 /** Unmounts all components returned by a previous call to CKMountComponentLayout. */
 void CKUnmountComponents(NSSet<id<CKMountable>> *componentsToUnmount);
+
+#endif

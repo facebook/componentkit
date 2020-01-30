@@ -8,6 +8,10 @@
  *
  */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #pragma once
 
 #include <ComponentKit/CKDelayedInitialisationWrapper.h>
@@ -17,3 +21,5 @@ namespace CK {
   template <typename Ptr>
   using DelayedNonNull = DelayedInitialisationWrapper<NonNull<Ptr>>;
 }
+
+#endif

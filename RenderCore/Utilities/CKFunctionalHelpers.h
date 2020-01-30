@@ -8,6 +8,10 @@
 *
 */
 
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 #import <Foundation/Foundation.h>
 
 #import <algorithm>
@@ -190,3 +194,5 @@ namespace CK {
     return newVector;
   }
 };
+
+#endif

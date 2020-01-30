@@ -11,6 +11,10 @@
 #pragma once
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKDefines.h>
+
+#if CK_NOT_SWIFT
+
 
 namespace CK {
 
@@ -100,3 +104,5 @@ template <typename Ptr>
 auto makeNonNull(Ptr p) { return NonNull<Ptr>{std::move(p)}; }
 
 } // namespace CK
+
+#endif
