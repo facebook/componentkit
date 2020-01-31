@@ -26,6 +26,7 @@ namespace CK {
 
 struct MountCallbacks {
   CKMountCallbackBlock didAcquireViewBlock = nil;
+  CKMountCallbackBlock willRelinquishViewBlock = nil;
 };
 
 struct MountController {
@@ -49,7 +50,7 @@ struct MountController {
     if (v) {
       auto const currentMountedComponent = (id<CKMountable>)CKMountedObjectForView(v);
       if (_mountInfo->view != v) {
-        _relinquishMountedView(mountable); // First release our old view
+        _relinquishMountedView(mountable, mountCallbacks.willRelinquishViewBlock); // First release our old view
         [currentMountedComponent unmount]; // Then unmount old component (if any) from the new view
         CKSetMountedObjectForView(v, mountable);
         CK::Component::AttributeApplicator::apply(v, viewConfiguration);
@@ -75,11 +76,11 @@ struct MountController {
     }
   }
 
-  auto unmount(id<CKMountable> mountable) -> void
+  auto unmount(id<CKMountable> mountable, CKMountCallbackBlock willRelinquishViewBlock = nil) -> void
   {
     CKCAssertMainThread();
     if (_mountInfo != nullptr) {
-      _relinquishMountedView(mountable);
+      _relinquishMountedView(mountable, willRelinquishViewBlock);
       _mountInfo.reset();
     }
   }
@@ -88,13 +89,16 @@ struct MountController {
 private:
   mutable std::unique_ptr<CKMountInfo> _mountInfo;
 
-  auto _relinquishMountedView(id<CKMountable> mountable) -> void
+  auto _relinquishMountedView(id<CKMountable> mountable, CKMountCallbackBlock willRelinquishViewBlock) -> void
   {
     CKCAssertMainThread();
     CKCAssert(_mountInfo != nullptr, @"_mountInfo should not be null");
     if (_mountInfo != nullptr) {
       UIView *view = _mountInfo->view;
       if (view) {
+        if (willRelinquishViewBlock) {
+          willRelinquishViewBlock(view);
+        }
         CKCAssert(CKMountedObjectForView(view) == mountable, @"");
         CKSetMountedObjectForView(view, nil);
         _mountInfo->view = nil;
