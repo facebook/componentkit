@@ -20,7 +20,13 @@
 #if CK_NOT_SWIFT
 
 
+using CKMountCallbackBlock = void(^)(UIView *);
+
 namespace CK {
+
+struct MountCallbacks {
+  CKMountCallbackBlock didAcquireViewBlock = nil;
+};
 
 struct MountController {
   template <typename AccessibilityContext>
@@ -29,7 +35,8 @@ struct MountController {
              const CK::Component::MountContext &context,
              const CGSize size,
              std::shared_ptr<const std::vector<CKComponentLayoutChild>> children,
-             id<CKMountable> supercomponent) -> Component::MountResult
+             id<CKMountable> supercomponent,
+             const MountCallbacks &mountCallbacks = {}) -> Component::MountResult
   {
     CKCAssertMainThread();
 
@@ -46,6 +53,9 @@ struct MountController {
         [currentMountedComponent unmount]; // Then unmount old component (if any) from the new view
         CKSetMountedObjectForView(v, mountable);
         CK::Component::AttributeApplicator::apply(v, viewConfiguration);
+        if (mountCallbacks.didAcquireViewBlock) {
+          mountCallbacks.didAcquireViewBlock(v);
+        }
         _mountInfo->view = v;
       } else {
         CKCAssert(currentMountedComponent == mountable, @"");
