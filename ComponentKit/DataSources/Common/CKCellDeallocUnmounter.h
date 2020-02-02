@@ -22,7 +22,7 @@
  * This will cause the layout referenced by `scopeIdentifier` to be unmounted when `cell` is deallocated.
  * This is useful for collection views, whose cell views are managed by UIKit: usually they are re-used,
  * but sometimes they are deallocated. At that point, the object graph looks like this:
- 
+
                                              Cell view
                                               |
                                               |

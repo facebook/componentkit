@@ -114,7 +114,7 @@ invalidComponentControllers:_invalidComponentControllersBetweenScopeRoots(result
 
   const auto inputs = std::make_shared<const CKComponentGeneratorInputs>(_pendingInputs);
   const auto asyncGeneration = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::ComponentGeneratorWillGenerate);
-  
+
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     CKSystraceScope generationScope(asyncGeneration);
     const auto result =
@@ -130,7 +130,7 @@ invalidComponentControllers:_invalidComponentControllersBetweenScopeRoots(result
     const auto invalidComponentControllers =
     std::make_shared<const std::vector<CKComponentController *>>(_invalidComponentControllersBetweenScopeRoots(result->scopeRoot, inputs->scopeRoot));
     const auto asyncApplication = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::ComponentGeneratorWillApply);
-    
+
     dispatch_async(_affinedQueue, ^{
       CKSystraceScope applicationScope(asyncApplication);
       if (![_delegate componentGeneratorShouldApplyAsynchronousGenerationResult:self]) {

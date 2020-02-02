@@ -1,4 +1,4 @@
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
@@ -36,9 +36,9 @@ public:
   CKContainerWrapper(const CKContainerWrapper<Container> &) = delete;
   CKContainerWrapper(CKContainerWrapper<Container> &&) = default;
   ~CKContainerWrapper() = default;
-  
+
   Container take() { return std::move(_container); }
-  
+
 private:
   Container _container;
 };

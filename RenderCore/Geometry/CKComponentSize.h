@@ -8,10 +8,11 @@
  *
  */
 
-#import <ComponentKit/CKDimension.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
+#import <RenderCore/CKDimension.h>
 
 /**
  A representation of a component's desired size relative to the size of its parent.

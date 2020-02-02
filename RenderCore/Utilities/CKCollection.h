@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
@@ -19,8 +19,8 @@
 #import <functional>
 #import <type_traits>
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKFunctionalHelpers.h>
+#import <RenderCore/CKAssert.h>
+#import <RenderCore/CKFunctionalHelpers.h>
 
 namespace CK {
   namespace Collection {

@@ -23,7 +23,7 @@
  Returns a view attribute that proxies the delegate onto the component responder chain.
  You must handle the method in the component for which this is an attribute, or an ancestor,
  or an assertion will fire (since there is no sensible default for a delegate method to return).
- 
+
  Usage:
 
  [CKComponent
@@ -34,7 +34,7 @@
    })
  }}
  size:{}] ...
- 
+
  Then you can implement -scrollViewDidScroll: in your composite component, that potentially has a number of intervening components before the scroll component.
 
  */

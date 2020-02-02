@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
@@ -17,10 +17,10 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/ComponentViewReuseUtilities.h>
-#import <ComponentKit/CKComponentViewAttribute.h>
-#import <ComponentKit/CKComponentViewClass.h>
-#import <ComponentKit/CKContainerWrapper.h>
+#import <RenderCore/ComponentViewReuseUtilities.h>
+#import <RenderCore/CKComponentViewAttribute.h>
+#import <RenderCore/CKComponentViewClass.h>
+#import <RenderCore/CKContainerWrapper.h>
 
 typedef void (^CKComponentViewReuseBlock)(UIView *);
 
@@ -98,7 +98,7 @@ struct CKViewConfiguration {
   {
     return rep->viewClass;
   }
-  
+
   std::shared_ptr<const CKViewComponentAttributeValueMap> attributes() const noexcept
   {
     return rep->attributes;
@@ -108,7 +108,7 @@ struct CKViewConfiguration {
   {
     return rep->accessibilityContext;
   }
-  
+
   BOOL isDefaultConfiguration() const
   {
     return rep == singletonViewConfiguration();

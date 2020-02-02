@@ -8,13 +8,13 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKMountable.h>
+#import <RenderCore/CKMountable.h>
 
 #ifndef __cplusplus
 #error This file must be compiled as Obj-C++. If you are importing it, you must change your file extension to .mm.

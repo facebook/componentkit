@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
@@ -17,12 +17,12 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKEqualityHelpers.h>
-#import <ComponentKit/CKMountable.h>
-#import <ComponentKit/CKNonNull.h>
-#import <ComponentKit/CKOptional.h>
-#import <ComponentKit/CKSizeRange.h>
+#import <RenderCore/CKAssert.h>
+#import <RenderCore/CKEqualityHelpers.h>
+#import <RenderCore/CKMountable.h>
+#import <RenderCore/CKNonNull.h>
+#import <RenderCore/CKOptional.h>
+#import <RenderCore/CKSizeRange.h>
 
 @protocol CKAnalyticsListener;
 @protocol CKMountable;

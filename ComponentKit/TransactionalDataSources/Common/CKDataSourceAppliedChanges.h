@@ -29,19 +29,19 @@
 /**
  This property returns a mapping for each row being updated
  from their current index path to their new index path after the changeset has been applied.
- 
+
  Because this is pretty confusing, here's a simple example:
  Let's say we have a changeset made up of the following operations:
  Insert a row at (0, 0)
  Update the row at (0, 1)
- 
+
  Feeding this changeset into the function below would return:
  (0,1) -> (0,2)
- 
+
  This mapping occurs because the inserted row at (0,0) pushes the row at (0,1) down one row.
- 
+
  Of course, these changesets can be more and more complicated, so updated rows can move up or down, and change rows or sections.
- 
+
  There are also certain assumptions made:
  - An updated row cannot also be removed, both in terms of row removal and section removal (if it's removed, we ignore it and continue as normal)
  - A section cannot be inserted and removed in the same changeset

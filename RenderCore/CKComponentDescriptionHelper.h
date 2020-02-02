@@ -8,13 +8,13 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/CKLayout.h>
+#import <RenderCore/CKLayout.h>
 
 @protocol CKMountable;
 

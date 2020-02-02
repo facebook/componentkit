@@ -49,11 +49,11 @@ struct DelayedInitialisationWrapper final {
     }
     return *_value.unsafeValuePtrOrNull();
   }
-  
+
   operator const T&() const {
     return get();
   }
-  
+
   auto get() -> T& {
     if (_value.hasValue() == false) {
       CKCFatal(@"Expecting value to be set");

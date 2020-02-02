@@ -8,14 +8,14 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKSizeRange.h>
+#import <RenderCore/CKAssert.h>
+#import <RenderCore/CKSizeRange.h>
 
 /**
  A dimension relative to constraints to be provided in the future.

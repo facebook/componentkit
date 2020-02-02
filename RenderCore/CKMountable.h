@@ -8,15 +8,15 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
 #import <Foundation/Foundation.h>
 
-#import <ComponentKit/ComponentMountContext.h>
-#import <ComponentKit/CKIterable.h>
-#import <ComponentKit/CKSizeRange.h>
+#import <RenderCore/ComponentMountContext.h>
+#import <RenderCore/CKIterable.h>
+#import <RenderCore/CKSizeRange.h>
 
 @protocol CKMountable;
 

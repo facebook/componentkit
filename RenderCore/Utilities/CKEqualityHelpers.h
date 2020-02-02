@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
@@ -37,12 +37,12 @@ inline uint64_t CKHashCString(const char *str)
 {
   uint64_t retval = 0;
   unsigned char *s = (unsigned char *)str;
-  
+
   while (*s) {
     retval *= (uint64_t)0x100000001b3ULL;
     retval ^= (uint64_t)*s++;
   }
-  
+
   return retval;
 }
 
@@ -185,7 +185,7 @@ namespace CKTupleOperations
       return _eq_helper<std::tuple<TT...>>::equal(a, b);
     }
   };
-  
+
 }
 
 /** Correctly equates two objects, including cases where both objects are nil (where `isEqual:` would return NO). */

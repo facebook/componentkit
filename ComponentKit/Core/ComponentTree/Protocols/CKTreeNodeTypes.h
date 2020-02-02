@@ -32,7 +32,7 @@ namespace CK {
   namespace TreeNode {
     auto areKeysEqual(const CKTreeNodeComponentKey &lhs, const CKTreeNodeComponentKey &rhs) -> bool;
     auto isKeyEmpty(const CKTreeNodeComponentKey &key) -> bool;
-    
+
     struct comparator {
       bool operator() (const CKTreeNodeComponentKey &lhs, const CKTreeNodeComponentKey &rhs) const
       {

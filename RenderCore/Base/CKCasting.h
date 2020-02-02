@@ -8,14 +8,14 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
 #ifndef CKCasting_h
 #define CKCasting_h
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/CKAssert.h>
 
 namespace CK {
   template <typename T>

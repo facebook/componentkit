@@ -66,7 +66,7 @@ namespace CKRender {
                  BOOL parentHasStateUpdate,
                  CKRenderDidReuseComponentBlock didReuseBlock = nil) -> id<CKTreeNodeProtocol>;
     }
-  
+
     /**
      Builds the component tree from a root component.
 
@@ -116,7 +116,7 @@ namespace CKRender {
   auto markTreeNodeDirtyIdsFromNodeUntilRoot(CKTreeNodeIdentifier nodeIdentifier,
                                              CKRootTreeNode &previousRootNode,
                                              CKTreeNodeDirtyIds &treeNodesDirtyIds) -> void;
-  
+
   /**
    @return A collection of tree node marked as dirty if any. An empty collection otherwise.
    */

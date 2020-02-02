@@ -8,14 +8,14 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
 #pragma once
 
 #include <ComponentKit/CKDelayedInitialisationWrapper.h>
-#include <ComponentKit/CKNonNull.h>
+#include <RenderCore/CKNonNull.h>
 
 namespace CK {
   template <typename Ptr>

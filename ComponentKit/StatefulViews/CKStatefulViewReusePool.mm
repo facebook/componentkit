@@ -55,7 +55,7 @@ public:
 
     return nil;
   };
-  
+
   NSUInteger viewCount()
   {
     return _entries.size();

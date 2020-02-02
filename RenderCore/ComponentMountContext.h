@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
@@ -16,8 +16,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKGeometryHelpers.h>
-#import <ComponentKit/ComponentViewManager.h>
+#import <RenderCore/CKGeometryHelpers.h>
+#import <RenderCore/ComponentViewManager.h>
 
 namespace CK {
   namespace Component {
@@ -41,7 +41,7 @@ namespace CK {
       MountAnalyticsContext *mountAnalyticsContext;
       /** Indicates whether the mount is due to an (state/props) update */
       BOOL isUpdate;
-      
+
       MountContext offset(const CGPoint p, const CGSize parentSize, const CGSize childSize) const {
         const UIEdgeInsets guide = adjustedGuide(layoutGuide, p, parentSize, childSize);
         return MountContext(viewManager, position + p, guide, shouldBlockAnimations, mountAnalyticsContext, isUpdate);

@@ -13,10 +13,10 @@
 #import <objc/runtime.h>
 #import <unordered_map>
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKGlobalConfig.h>
-#import <ComponentKit/CKMutex.h>
-#import <ComponentKit/ComponentViewReuseUtilities.h>
+#import <RenderCore/CKAssert.h>
+#import <RenderCore/CKGlobalConfig.h>
+#import <RenderCore/CKMutex.h>
+#import <RenderCore/ComponentViewReuseUtilities.h>
 
 #import "CKMountedObjectForView.h"
 

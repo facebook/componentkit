@@ -8,17 +8,17 @@
 *
 */
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKComponentDescriptionHelper.h>
-#import <ComponentKit/CKMountable.h>
-#import <ComponentKit/CKMountableHelpers.h>
-#import <ComponentKit/CKMountedObjectForView.h>
-#import <ComponentKit/CKViewConfiguration.h>
-#import <ComponentKit/ComponentMountContext.h>
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
+#import <RenderCore/CKAssert.h>
+#import <RenderCore/CKComponentDescriptionHelper.h>
+#import <RenderCore/CKMountable.h>
+#import <RenderCore/CKMountableHelpers.h>
+#import <RenderCore/CKMountedObjectForView.h>
+#import <RenderCore/CKViewConfiguration.h>
+#import <RenderCore/ComponentMountContext.h>
 
 using CKMountCallbackBlock = void(^)(UIView *);
 

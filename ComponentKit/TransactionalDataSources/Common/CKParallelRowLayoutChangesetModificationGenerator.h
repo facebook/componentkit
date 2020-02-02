@@ -21,7 +21,7 @@
  complete, but instead are scheduled concurrently on a row by row basis, and
  immediately passed on to the UI. This will enable a speedup in latency at the
  potential cost of scroll performance.
- 
+
  NOTE: This is still highly experimental and likely should not yet be used in
  production unless you know what you're doing.
  */

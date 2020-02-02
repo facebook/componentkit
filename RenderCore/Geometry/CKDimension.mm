@@ -12,10 +12,10 @@
 
 #import <tgmath.h>
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKEqualityHelpers.h>
-#import <ComponentKit/CKMacros.h>
-#import <ComponentKit/CKInternalHelpers.h>
+#import <RenderCore/CKAssert.h>
+#import <RenderCore/CKEqualityHelpers.h>
+#import <RenderCore/CKMacros.h>
+#import <RenderCore/CKInternalHelpers.h>
 
 bool CKRelativeDimension::operator==(const CKRelativeDimension &other) const noexcept
 {

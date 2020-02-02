@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
@@ -17,7 +17,7 @@
 
 #import <libkern/OSAtomic.h>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/CKAssert.h>
 
 #if defined (__GNUC__)
 # define CK_NOTHROW __attribute__ ((nothrow))

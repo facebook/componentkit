@@ -13,10 +13,10 @@
 #import <objc/runtime.h>
 #import <unordered_map>
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKEqualityHelpers.h>
-#import <ComponentKit/CKMacros.h>
+#import <RenderCore/CKAssert.h>
+#import <RenderCore/CKAssert.h>
+#import <RenderCore/CKEqualityHelpers.h>
+#import <RenderCore/CKMacros.h>
 
 /**
  * Helper macro for asserting that an @encode type is the same size as

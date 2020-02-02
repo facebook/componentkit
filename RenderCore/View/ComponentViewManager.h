@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
@@ -21,10 +21,10 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKComponentViewAttribute.h>
-#import <ComponentKit/CKComponentViewClass.h>
-#import <ComponentKit/CKDictionary.h>
-#import <ComponentKit/CKViewConfiguration.h>
+#import <RenderCore/CKComponentViewAttribute.h>
+#import <RenderCore/CKComponentViewClass.h>
+#import <RenderCore/CKDictionary.h>
+#import <RenderCore/CKViewConfiguration.h>
 
 @class CKComponent;
 

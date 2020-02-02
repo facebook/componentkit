@@ -10,7 +10,7 @@
 
 #import "CKComponentDescriptionHelper.h"
 
-#import <ComponentKit/CKMountable.h>
+#import <RenderCore/CKMountable.h>
 
 static NSString *componentDescriptionOrClass(id<CKMountable> component)
 {

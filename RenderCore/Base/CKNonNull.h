@@ -10,11 +10,11 @@
 
 #pragma once
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
+#import <RenderCore/CKAssert.h>
 
 namespace CK {
 

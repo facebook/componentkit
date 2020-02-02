@@ -10,8 +10,8 @@
 
 #import "CKComponentViewClass.h"
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKInternalHelpers.h>
+#import <RenderCore/CKAssert.h>
+#import <RenderCore/CKInternalHelpers.h>
 
 std::string CKComponentViewClassIdentifier::description() const
 {

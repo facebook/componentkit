@@ -12,9 +12,9 @@
 
 #import <functional>
 
-#import <ComponentKit/CKDimension.h>
-#import <ComponentKit/CKEqualityHelpers.h>
-#import <ComponentKit/CKMacros.h>
+#import <RenderCore/CKDimension.h>
+#import <RenderCore/CKEqualityHelpers.h>
+#import <RenderCore/CKMacros.h>
 
 #define CKCAssertPositiveReal(description, num) \
   CKCAssert(num >= 0 && num < CGFLOAT_MAX, @"%@ (%f) must be a real positive integer.", description, num)

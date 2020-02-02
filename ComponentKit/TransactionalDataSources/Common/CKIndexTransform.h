@@ -21,7 +21,7 @@ namespace CK {
       NSRange range;
       NSInteger offset;
     };
-    
+
     std::vector<RangeOffset> _rangeOffsets;
   };
 

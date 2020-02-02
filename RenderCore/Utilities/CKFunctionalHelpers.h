@@ -8,7 +8,7 @@
 *
 */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
@@ -19,7 +19,7 @@
 #import <type_traits>
 #import <vector>
 
-#import <ComponentKit/CKMacros.h>
+#import <RenderCore/CKMacros.h>
 
 namespace CK {
   /**

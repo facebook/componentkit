@@ -10,8 +10,8 @@
 
 #import "CKComponentSize.h"
 
-#import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKEqualityHelpers.h>
+#import <RenderCore/CKAssert.h>
+#import <RenderCore/CKEqualityHelpers.h>
 
 #define CKCAssertConstrainedValue(val) \
   CKCAssert(!isnan(val), @"Constrained value must not be NaN.")

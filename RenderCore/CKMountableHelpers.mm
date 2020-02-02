@@ -10,7 +10,7 @@
 
 #import "CKMountableHelpers.h"
 
-#import <ComponentKit/CKComponentDescriptionHelper.h>
+#import <RenderCore/CKComponentDescriptionHelper.h>
 
 void CKSetViewPositionAndBounds(UIView *v,
                                 const CK::Component::MountContext &context,

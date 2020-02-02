@@ -40,7 +40,7 @@ class _CKTypedComponentDebugInitialTarget;
 /** A base-class for typed components that doesn't use templates to avoid template bloat. */
 class CKActionBase {
   protected:
-  
+
   /**
    We support several different types of action variants. You don't need to use this value anywhere, it's set for you
    by whatever initializer you end up using.
@@ -60,7 +60,7 @@ class CKActionBase {
 
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
   CKActionBase(SEL selector) noexcept;
-  
+
   CKActionBase(dispatch_block_t block) noexcept;
 
   ~CKActionBase() {};
@@ -140,7 +140,7 @@ public:
     return nil;
 #endif
   }
-  
+
   BOOL isBlockBaseAction() const {
     return _action._variant == CKActionBase::CKActionVariant::Block;
   }
@@ -174,7 +174,7 @@ static void CKActionSendResponderChain(SEL selector, id target, CKComponent *sen
   CKCAssert([info.responder methodSignatureForSelector:selector].numberOfArguments <= sizeof...(args) + 3,
             @"Target invocation contains too many arguments => sender: %@ | SEL: %@ | target: %@",
             sender, NSStringFromSelector(selector), [target class]);
-  
+
   // ARC assumes all IMPs return an id and will try to retain void,
   // so have to case the IMP since it returns void.
   void (*typedFunction)(id, SEL, id, T...) = (void (*)(id, SEL, id, T...))info.imp;

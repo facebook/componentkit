@@ -149,7 +149,7 @@ struct TypeWithPointer {
 {
   Optional<TypeWithPointer> const a = TypeWithPointer { @"John Doe" };
   Optional<TypeWithPointer> const b = TypeWithPointer { nil };
-  
+
   XCTAssertEqualObjects(a.mapToPtr(&TypeWithPointer::title), @"John Doe");
   XCTAssertNil(b.mapToPtr(&TypeWithPointer::title));
 }
@@ -400,7 +400,7 @@ static auto returnsNone() -> Optional<CopyMoveTracker> { return none; }
   CK::apply([&](int one, int two, int three){
     result = one + two + three;
   }, Optional<int>(1), Optional<int>(2), Optional<int>(3));
-  
+
   XCTAssertEqual(result, 6);
 }
 
@@ -408,19 +408,19 @@ static auto returnsNone() -> Optional<CopyMoveTracker> { return none; }
 {
   auto result = -1;
   const Optional<int> intNone = none;
-  
+
   CK::apply([&](int one, int two, int three){
     result = one + two + three;
   }, Optional<int>(1), intNone, Optional<int>(3));
-  
+
   CK::apply([&](int one, int two, int three){
     result = one + two + three;
   }, intNone, Optional<int>(2), Optional<int>(3));
-  
+
   CK::apply([&](int one, int two, int three){
     result = one + two + three;
   }, Optional<int>(1), Optional<int>(2), intNone);
-  
+
   XCTAssertEqual(result, -1);
 }
 

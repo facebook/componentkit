@@ -23,8 +23,10 @@
 		B34FB9821ABE8BA300D2D896 /* WildeGuessCollectionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B34FB9751ABE8BA300D2D896 /* WildeGuessCollectionViewController.mm */; };
 		B34FB9841ABE8BB000D2D896 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B34FB9831ABE8BB000D2D896 /* main.m */; };
 		B3E848D11ABE848900377D52 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3E848D01ABE848900377D52 /* Images.xcassets */; };
-		D093267A1CC4674400CFEBC4 /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D093266D1CC4647700CFEBC4 /* ComponentKit.framework */; };
-		D093267B1CC4675200CFEBC4 /* ComponentKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D093266D1CC4647700CFEBC4 /* ComponentKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D43188C123E209BE0024AA12 /* ComponentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D093266D1CC4647700CFEBC4 /* ComponentKit.framework */; };
+		D43188C223E209BE0024AA12 /* ComponentKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D093266D1CC4647700CFEBC4 /* ComponentKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D43188C423E209C40024AA12 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D43187DC23E2011C0024AA12 /* RenderCore.framework */; };
+		D43188C523E209C40024AA12 /* RenderCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D43187DC23E2011C0024AA12 /* RenderCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D44CF6AC23E1D0E50056039B /* Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44CF6AB23E1D0E50056039B /* Swift.swift */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +94,20 @@
 			remoteGlobalIDString = A273801A1AFD144100E6F222;
 			remoteInfo = ComponentKitTestHelpers;
 		};
+		D43187DB23E2011C0024AA12 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0B47DC41CBDAFFF00BB33CE /* ComponentKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D48293D823DF9EEB00017D94;
+			remoteInfo = RenderCore;
+		};
+		D43187DD23E2011C0024AA12 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0B47DC41CBDAFFF00BB33CE /* ComponentKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D48293FA23DF9F4100017D94;
+			remoteInfo = RenderCoreAppleTV;
+		};
 		D44CF6A223E1CFFA0056039B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D0B47DC41CBDAFFF00BB33CE /* ComponentKit.xcodeproj */;
@@ -102,13 +118,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		D0B47DE11CBDB06C00BB33CE /* Embed Frameworks */ = {
+		D43188C323E209BF0024AA12 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D093267B1CC4675200CFEBC4 /* ComponentKit.framework in Embed Frameworks */,
+				D43188C223E209BE0024AA12 /* ComponentKit.framework in Embed Frameworks */,
+				D43188C523E209C40024AA12 /* RenderCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -159,7 +176,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D093267A1CC4674400CFEBC4 /* ComponentKit.framework in Frameworks */,
+				D43188C123E209BE0024AA12 /* ComponentKit.framework in Frameworks */,
+				D43188C423E209C40024AA12 /* RenderCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +279,8 @@
 				40953BEC22AA2A54006A8511 /* ComponentKit.framework */,
 				40953BEE22AA2A54006A8511 /* libComponentKitTestHelpers.a */,
 				40953BF022AA2A54006A8511 /* ComponentKitTestsAppleTV.xctest */,
+				D43187DE23E2011C0024AA12 /* RenderCore.framework */,
+				D43187DC23E2011C0024AA12 /* RenderCore.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -275,7 +295,7 @@
 				B3E848BC1ABE848900377D52 /* Sources */,
 				B3E848BD1ABE848900377D52 /* Frameworks */,
 				B3E848BE1ABE848900377D52 /* Resources */,
-				D0B47DE11CBDB06C00BB33CE /* Embed Frameworks */,
+				D43188C323E209BF0024AA12 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -387,6 +407,20 @@
 			fileType = archive.ar;
 			path = libComponentKitTestHelpers.a;
 			remoteRef = D09326761CC4647700CFEBC4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D43187DC23E2011C0024AA12 /* RenderCore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = RenderCore.framework;
+			remoteRef = D43187DB23E2011C0024AA12 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D43187DE23E2011C0024AA12 /* RenderCore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = RenderCore.framework;
+			remoteRef = D43187DD23E2011C0024AA12 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D44CF6A323E1CFFA0056039B /* ComponentKitPerfTests.xctest */ = {

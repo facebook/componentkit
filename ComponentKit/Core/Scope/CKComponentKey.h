@@ -26,7 +26,7 @@
    CKComponentKey key(contact.uniqueIdentifier);
    return [ContactComponent newWithContact:context];
  });
- 
+
  Each ContactComponent will have its own state; if contacts are inserted, deleted, or moved they will maintain the
  correct state.
  */

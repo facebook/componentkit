@@ -13,7 +13,7 @@
 #import <objc/runtime.h>
 #import <unordered_map>
 
-#import <ComponentKit/CKAssert.h>
+#import <RenderCore/CKAssert.h>
 
 #import "CKComponentViewClass.h"
 

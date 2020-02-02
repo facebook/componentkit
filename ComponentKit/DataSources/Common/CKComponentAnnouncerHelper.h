@@ -31,7 +31,7 @@ namespace CK {
       static void call(CKComponentAnnouncerBase *self, SEL s, ARGS... args) {
         typedef void (*TT)(id self, SEL _cmd, ARGS...); // for floats, etc, we need to use the strong typed versions
         TT objc_msgSendTyped = (TT)(void*)objc_msgSend;
-        
+
         auto frozenListeners = loadListeners(self);
         if (frozenListeners) {
           for (id listener : *frozenListeners) {
@@ -39,12 +39,12 @@ namespace CK {
           }
         }
       }
-      
+
       template<typename... ARGS>
       static void callOptional(CKComponentAnnouncerBase *self, SEL s, ARGS... args) {
         typedef void (*TT)(id self, SEL _cmd, ARGS...); // for floats, etc, we need to use the strong typed versions
         TT objc_msgSendTyped = (TT)(void*)objc_msgSend;
-        
+
         auto frozenListeners = loadListeners(self);
         if (frozenListeners) {
           for (id listener : *frozenListeners) {
@@ -54,9 +54,9 @@ namespace CK {
           }
         }
       }
-      
+
       static void addListener(CKComponentAnnouncerBase *self, SEL s, id listener);
-      
+
       static void removeListener(CKComponentAnnouncerBase *self, SEL s, id listener);
     };
   }

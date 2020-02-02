@@ -49,7 +49,7 @@ public:
 
   /** The current systrace listener. Can be nil if systrace is not enabled. */
   id<CKSystraceListener> systraceListener;
-  
+
   /** Build trigger of the corsposnding component creation */
   CKBuildTrigger buildTrigger;
 

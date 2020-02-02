@@ -21,7 +21,7 @@
  controller as they are initialized to identify which component controllers respond to appearance events. The results of
  the predicate are cached, which allows us to avoid traversing the full component hierarchy every time a component
  appears on the screen.
- 
+
  You should never use these predicates directly. They are built to work with CKComponentScopeRoot.
  */
 BOOL CKComponentControllerAppearanceEventPredicate(id<CKComponentControllerProtocol> controller);

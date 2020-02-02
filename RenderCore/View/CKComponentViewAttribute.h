@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
@@ -16,7 +16,7 @@
 #import <unordered_map>
 
 #import <UIKit/UIKit.h>
-#import <ComponentKit/CKEqualityHelpers.h>
+#import <RenderCore/CKEqualityHelpers.h>
 
 /**
  View attributes usually correspond to properties (like background color or alpha) but can represent arbitrarily complex
