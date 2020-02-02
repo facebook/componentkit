@@ -28,6 +28,8 @@
 		D43188C423E209C40024AA12 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D43187DC23E2011C0024AA12 /* RenderCore.framework */; };
 		D43188C523E209C40024AA12 /* RenderCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D43187DC23E2011C0024AA12 /* RenderCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D44CF6AC23E1D0E50056039B /* Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44CF6AB23E1D0E50056039B /* Swift.swift */; };
+		D4BC57BC23E384050075D688 /* CKSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4BC57B923E384050075D688 /* CKSwift.framework */; };
+		D4BC57BD23E384050075D688 /* CKSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D4BC57B923E384050075D688 /* CKSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +117,20 @@
 			remoteGlobalIDString = A1AB4FED23350E45001F41DB;
 			remoteInfo = ComponentKitPerfTests;
 		};
+		D4BC57B823E384050075D688 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0B47DC41CBDAFFF00BB33CE /* ComponentKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D4BC578023E37A1B0075D688;
+			remoteInfo = CKSwift;
+		};
+		D4BC57BA23E384050075D688 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0B47DC41CBDAFFF00BB33CE /* ComponentKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D4BC578823E37A1B0075D688;
+			remoteInfo = CKSwiftTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -125,6 +141,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				D43188C223E209BE0024AA12 /* ComponentKit.framework in Embed Frameworks */,
+				D4BC57BD23E384050075D688 /* CKSwift.framework in Embed Frameworks */,
 				D43188C523E209C40024AA12 /* RenderCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -177,6 +194,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D43188C123E209BE0024AA12 /* ComponentKit.framework in Frameworks */,
+				D4BC57BC23E384050075D688 /* CKSwift.framework in Frameworks */,
 				D43188C423E209C40024AA12 /* RenderCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -281,6 +299,8 @@
 				40953BF022AA2A54006A8511 /* ComponentKitTestsAppleTV.xctest */,
 				D43187DE23E2011C0024AA12 /* RenderCore.framework */,
 				D43187DC23E2011C0024AA12 /* RenderCore.framework */,
+				D4BC57B923E384050075D688 /* CKSwift.framework */,
+				D4BC57BB23E384050075D688 /* CKSwiftTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -428,6 +448,20 @@
 			fileType = wrapper.cfbundle;
 			path = ComponentKitPerfTests.xctest;
 			remoteRef = D44CF6A223E1CFFA0056039B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4BC57B923E384050075D688 /* CKSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CKSwift.framework;
+			remoteRef = D4BC57B823E384050075D688 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4BC57BB23E384050075D688 /* CKSwiftTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = CKSwiftTests.xctest;
+			remoteRef = D4BC57BA23E384050075D688 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
