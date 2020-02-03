@@ -12,6 +12,7 @@
 
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKMutex.h>
 
 #import "CKBuildComponent.h"
 #import "CKComponentInternal.h"
@@ -117,6 +118,28 @@
 - (id _Nullable)componentIdentifier
 {
   return nil;
+}
+
++ (BOOL)requiresScopeHandle
+{
+  const Class componentClass = self;
+
+  static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER; // protects cache
+  CK::StaticMutexLocker l(mutex);
+
+  static std::unordered_map<Class, BOOL> *cache = new std::unordered_map<Class, BOOL>();
+  const auto &it = cache->find(componentClass);
+  if (it == cache->end()) {
+    BOOL hasAnimations = NO;
+    if (CKSubclassOverridesInstanceMethod([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
+        CKSubclassOverridesInstanceMethod([CKComponent class], componentClass, @selector(animationsOnInitialMount)) ||
+        CKSubclassOverridesInstanceMethod([CKComponent class], componentClass, @selector(animationsOnFinalUnmount))) {
+      hasAnimations = YES;
+    }
+    cache->insert({componentClass, hasAnimations});
+    return hasAnimations;
+  }
+  return it->second;
 }
 
 @end

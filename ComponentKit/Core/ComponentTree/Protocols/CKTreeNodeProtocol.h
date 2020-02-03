@@ -91,9 +91,6 @@ struct CKBuildComponentTreeParams {
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate;
 
-/** Returns true if the component requires scope handle */
-+ (BOOL)requiresScopeHandle;
-
 #if DEBUG
 // These two methods are in DEBUG only in order to save memory.
 // Once we build the component tree (by calling `buildComponentTree:`) by default,

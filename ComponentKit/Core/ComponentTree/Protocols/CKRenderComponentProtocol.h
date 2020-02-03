@@ -69,6 +69,9 @@ NS_ASSUME_NONNULL_BEGIN
  In this case, the infrastrcture cannot distinguish between B1 and B2, unless it provides a unqiue identifier.
  */
 - (id<NSObject> _Nullable)componentIdentifier;
+
+/** Returns true if the component requires scope handle */
++ (BOOL)requiresScopeHandle;
 @end
 
 

@@ -182,10 +182,6 @@
   }
   return c;
 }
-+ (BOOL)requiresScopeHandle
-{
-  return YES;
-}
 - (unsigned int)numberOfChildren
 {
   return (unsigned int)_children.size();
