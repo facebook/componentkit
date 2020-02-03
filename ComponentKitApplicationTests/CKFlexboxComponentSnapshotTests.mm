@@ -3070,6 +3070,38 @@ static CKFlexboxComponentChild flexChild(CKComponent *c, CGFloat flexFactor)
    }];
 }
 
+- (void)testFlexChildWrappedWithCompositeComponent
+{
+  // This is a minimalistic test case that
+  // shows how wrapping a component with explicit size
+  // set with a CKCompositeComponent can result
+  // in an inconsistent layout.
+  // **Note** with deep yoga trees flag on
+  // we get the consistent behaviour as this
+  // scenario has been explicitely solved
+  auto const c = CK::FlexboxComponentBuilder()
+  .direction(CKFlexboxDirectionColumn)
+  .useDeepYogaTrees(_useDeepYogaTrees)
+  .child(CK::ComponentBuilder()
+          .viewClass([UIView class])
+          .backgroundColor([UIColor greenColor])
+          .width(200)
+          .height(200)
+          .build())
+  .child(CK::CompositeComponentBuilder()
+          .component(CK::ComponentBuilder()
+            .viewClass([UIView class])
+            .backgroundColor([UIColor redColor])
+            .width(200)
+            .height(200)
+            .build())
+          .build())
+  .build();
+  
+  static CKSizeRange kSize = {{400, 0}, {400, INFINITY}};
+  CKSnapshotVerifyComponent(c, kSize, nil);
+}
+
 @end
 
 @interface CKFlexboxComponentWithDeepYogaTreeSnapshotTests : CKFlexboxComponentSnapshotTests
