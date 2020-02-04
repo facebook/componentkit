@@ -64,7 +64,7 @@
                                    .attribute(@selector(setPrimitiveDouble:), @11.3)
                                    .attribute(@selector(setPrimitiveFloat:), @21.1F)
                                    .build();
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
     .componentLayout = [testComponent layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
@@ -96,12 +96,12 @@
                                    .attribute(@selector(setPrimitiveDouble:), 11.3)
                                    .attribute(@selector(setPrimitiveFloat:), 21.1F)
                                    .build();
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
     .componentLayout = [testComponent layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
   }];
-  
+
   UIView *container = [[UIView alloc] init];
   [componentLifecycleTestController attachToView:container];
   CKNSNumberView *c = [[container subviews] firstObject];
@@ -117,7 +117,7 @@
                                     .attribute(@selector(setTitle:), @"Test")
                                     .backgroundColor([UIColor blueColor])
                                     .build();
-  CKComponentLifecycleTestHelper *componentLifecycleTestController1 = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController1 = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                               sizeRangeProvider:nil];
   [componentLifecycleTestController1 updateWithState:{
     .componentLayout = [testComponent1 layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
@@ -131,7 +131,7 @@
                                     .attribute(@selector(setTitle:), @"Test")
                                     .backgroundColor([UIColor redColor])
                                     .build();
-  CKComponentLifecycleTestHelper *componentLifecycleTestController2 = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController2 = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                               sizeRangeProvider:nil];
   [componentLifecycleTestController2 updateWithState:{
     .componentLayout = [testComponent2 layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
@@ -149,7 +149,7 @@
                                     .viewClass([CKHidingCounterView class])
                                     .backgroundColor([UIColor blueColor])
                                     .build();
-  CKComponentLifecycleTestHelper *componentLifecycleTestController1 = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController1 = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController1 updateWithState:{
     .componentLayout = [testComponent1 layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
@@ -162,7 +162,7 @@
                                     .viewClass([CKHidingCounterView class])
                                     .backgroundColor([UIColor redColor])
                                     .build();
-  CKComponentLifecycleTestHelper *componentLifecycleTestController2 = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController2 = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController2 updateWithState:{
     .componentLayout = [testComponent2 layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
@@ -188,7 +188,7 @@
                                     .attribute(attrWithUnapplicator, @1)
                                     .build();
 
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
     .componentLayout = [testComponent1 layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
@@ -234,7 +234,7 @@
                                     .attribute(attrWithUpdater, @1)
                                     .build();
 
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
     .componentLayout = [testComponent1 layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]
@@ -293,7 +293,7 @@
                                     .attribute(attr, @1)
                                     .build();
 
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
     .componentLayout = [testComponent1 layoutThatFits:{{0, 0}, {10, 10}} parentSize:kCKComponentParentSizeUndefined]

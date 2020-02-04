@@ -28,16 +28,16 @@ struct CKComponentLifecycleTestHelperState {
 
 // This class allows us to test Component lifecycle methods.
 // It can act as Data source and attach itself to views
-@interface CKComponentLifecycleTestHelper : NSObject
+@interface CKComponentLifecycleTestHelper<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> : NSObject
 
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
+- (instancetype)initWithComponentProvider:(CKComponent *(*)(ModelType model, ContextType context))componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 
-- (CKComponentLifecycleTestHelperState)prepareForUpdateWithModel:(id)model
-                                                     constrainedSize:(CKSizeRange)constrainedSize
-                                                             context:(id<NSObject>)context;
+- (CKComponentLifecycleTestHelperState)prepareForUpdateWithModel:(ModelType)model
+                                                 constrainedSize:(CKSizeRange)constrainedSize
+                                                         context:(ContextType)context;
 
 - (void)updateWithState:(const CKComponentLifecycleTestHelperState &)state;
 

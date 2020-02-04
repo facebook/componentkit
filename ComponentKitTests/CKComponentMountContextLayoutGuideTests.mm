@@ -38,7 +38,7 @@
    children:{
      {{50, 50}, c, {100, 100}},
    }];
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
     .componentLayout = [layoutComponent layoutThatFits:{} parentSize:{NAN, NAN}]
@@ -67,7 +67,7 @@
    children:{
      {{100, 100}, innerLayoutComponent, {100, 100}},
    }];
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nil
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
     .componentLayout = [outerLayoutComponent layoutThatFits:{} parentSize:{NAN, NAN}]

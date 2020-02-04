@@ -22,12 +22,14 @@
 #import <ComponentKit/CKComponentRootLayoutProvider.h>
 #import <ComponentKit/CKDimension.h>
 
+using ProviderFunc = CKComponent *(*)(id<NSObject>, id<NSObject>);
+
 @interface CKComponentLifecycleTestHelper () <CKComponentStateListener, CKComponentRootLayoutProvider>
 @end
 
 @implementation CKComponentLifecycleTestHelper
 {
-  Class<CKComponentProvider> _componentProvider;
+  ProviderFunc _componentProvider;
   id<CKComponentSizeRangeProviding> _sizeRangeProvider;
   CKComponentScopeRoot *_previousScopeRoot;
   CKComponentStateUpdateMap _pendingStateUpdates;
@@ -37,7 +39,7 @@
   CKComponentAttachController *_componentAttachController;
 }
 
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
+- (instancetype)initWithComponentProvider:(ProviderFunc)componentProvider
                         sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
 {
   if (self = [super init]) {
@@ -48,14 +50,14 @@
   return self;
 }
 
-- (CKComponentLifecycleTestHelperState)prepareForUpdateWithModel:(id)model
-                                                     constrainedSize:(CKSizeRange)constrainedSize
-                                                             context:(id<NSObject>)context
+- (CKComponentLifecycleTestHelperState)prepareForUpdateWithModel:(id<NSObject>)model
+                                                 constrainedSize:(CKSizeRange)constrainedSize
+                                                         context:(id<NSObject>)context
 {
   CKAssertMainThread();
   CKComponentScopeRoot *previousScopeRoot = _previousScopeRoot ?: CKComponentScopeRootWithDefaultPredicates(self, nil);
   CKBuildComponentResult result = CKBuildComponent(previousScopeRoot, _pendingStateUpdates, ^{
-    return [_componentProvider componentForModel:model context:context];
+    return _componentProvider ? _componentProvider(model, context) : nil;
   });
   const CKComponentLayout componentLayout = CKComputeRootComponentLayout(result.component, constrainedSize).layout();
   _previousScopeRoot = result.scopeRoot;

@@ -19,7 +19,7 @@
 #import <ComponentKit/ComponentViewManager.h>
 #import <ComponentKit/ComponentViewReuseUtilities.h>
 
-@interface CKComponentViewReuseTests : XCTestCase <CKComponentProvider>
+@interface CKComponentViewReuseTests : XCTestCase
 @end
 
 /** Injects a view not controlled by components and specifies its children should be mounted inside it. */
@@ -243,7 +243,7 @@ static UIView *viewFactory()
 {
   UIView *rootView = [[UIView alloc] init];
 
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:[componentLifecycleTestController prepareForUpdateWithModel:@NO
                                                                                                 constrainedSize:{{0,0}, {100, 100}}
@@ -266,7 +266,7 @@ static UIView *reuseAwareViewFactory()
   return [[CKReuseAwareView alloc] init];
 }
 
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+static CKComponent *componentProvider(id<NSObject> model, id<NSObject>context)
 {
   if ([(NSNumber *)model boolValue]) {
     return CK::ComponentBuilder()

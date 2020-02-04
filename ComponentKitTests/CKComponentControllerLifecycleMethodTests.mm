@@ -19,19 +19,19 @@
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentSubclass.h>
 
-@interface CKComponentControllerLifecycleMethodTests : XCTestCase <CKComponentProvider>
+@interface CKComponentControllerLifecycleMethodTests : XCTestCase
 @end
 
 @implementation CKComponentControllerLifecycleMethodTests
 
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+static CKComponent *componentProvider(id<NSObject> model, id<NSObject>context)
 {
   return [CKLifecycleTestComponent new];
 }
 
 - (void)testThatMountingComponentCallsWillAndDidMount
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
 
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
@@ -49,7 +49,7 @@
 
 - (void)testThatUnmountingComponentCallsWillAndDidUnmount
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
 
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
@@ -69,7 +69,7 @@
 
 - (void)testThatUpdatingComponentWhileMountedCallsWillAndDidRemount
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
 
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
@@ -90,7 +90,7 @@
 
 - (void)testThatUpdatingComponentWhileNotMountedCallsNothing
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
 
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil

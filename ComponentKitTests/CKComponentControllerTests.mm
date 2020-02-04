@@ -14,7 +14,6 @@
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKComponentControllerEvents.h>
 #import <ComponentKit/CKComponentControllerHelper.h>
-#import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKComponentHostingView.h>
@@ -31,12 +30,12 @@ using namespace CKComponentControllerHelper;
 @interface CKEmptyComponentController: CKComponentController
 @end
 
-@interface CKComponentControllerTests : XCTestCase <CKComponentProvider>
+@interface CKComponentControllerTests : XCTestCase
 @end
 
 @implementation CKComponentControllerTests
 
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+static CKComponent *componentProvider(id<NSObject> model, id<NSObject>context)
 {
   return [CKLifecycleTestComponent new];
 }
@@ -50,7 +49,7 @@ using namespace CKComponentControllerHelper;
 
 - (void)testThatAttachingManagerInstantiatesComponentController
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:{{0,0}, {100, 100}}
@@ -67,7 +66,7 @@ using namespace CKComponentControllerHelper;
 - (void)testThatRemountingUnchangedComponentDoesNotCallDidUpdateComponent
 {
   CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc]
-                                                                      initWithComponentProvider:[self class]
+                                                                      initWithComponentProvider:componentProvider
                                                                               sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                 constrainedSize:{{0,0}, {100, 100}}
@@ -88,7 +87,7 @@ using namespace CKComponentControllerHelper;
 
 - (void)testThatUpdatingManagerUpdatesComponentController
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   UIView *view = [UIView new];
 
@@ -112,7 +111,7 @@ using namespace CKComponentControllerHelper;
 
 - (void)testThatAttachingManagerCallsDidAcquireView
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:{{0,0}, {100, 100}}
@@ -129,7 +128,7 @@ using namespace CKComponentControllerHelper;
 
 - (void)testThatDetachingManagerCallsDidRelinquishView
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:{{0,0}, {100, 100}}
@@ -149,7 +148,7 @@ using namespace CKComponentControllerHelper;
 
 - (void)testThatUpdatingStateWhileAttachedRelinquishesOldViewAndAcquiresNewOne
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:{{0,0}, {100, 100}}
@@ -176,7 +175,7 @@ using namespace CKComponentControllerHelper;
 {
   const auto componentLifecycleTestController =
   [[CKComponentLifecycleTestHelper alloc]
-   initWithComponentProvider:[self class]
+   initWithComponentProvider:componentProvider
    sizeRangeProvider:nil];
   const auto state =
   [componentLifecycleTestController
@@ -208,7 +207,7 @@ using namespace CKComponentControllerHelper;
 {
   const auto componentLifecycleTestController =
   [[CKComponentLifecycleTestHelper alloc]
-   initWithComponentProvider:[self class]
+   initWithComponentProvider:componentProvider
    sizeRangeProvider:nil];
   const auto state =
   [componentLifecycleTestController
@@ -244,7 +243,7 @@ using namespace CKComponentControllerHelper;
 {
   const auto componentLifecycleTestController =
   [[CKComponentLifecycleTestHelper alloc]
-   initWithComponentProvider:[self class]
+   initWithComponentProvider:componentProvider
    sizeRangeProvider:nil];
   const auto state =
   [componentLifecycleTestController
@@ -278,7 +277,7 @@ using namespace CKComponentControllerHelper;
 
 - (void)testThatResponderChainIsInOrderComponentThenControllerThenRootView
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:{{0,0}, {100, 100}}
@@ -297,16 +296,16 @@ using namespace CKComponentControllerHelper;
 
 - (void)testThatResponderChainTargetsCorrectResponder
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:{{0,0}, {100, 100}}
                                                                                                             context:nil];
   [componentLifecycleTestController updateWithState:state];
-  
+
   UIView *view = [UIView new];
   [componentLifecycleTestController attachToView:view];
-  
+
   CKLifecycleTestComponent *fooComponent = (CKLifecycleTestComponent *)state.componentLayout.component;
   XCTAssertEqualObjects([fooComponent targetForAction:nil withSender:fooComponent], fooComponent, @"Component should respond to this action");
   XCTAssertEqualObjects([fooComponent targetForAction:nil withSender:nil], fooComponent.controller, @"Component's controller should respond to this action");
@@ -314,7 +313,7 @@ using namespace CKComponentControllerHelper;
 
 - (void)testThatEarlyReturnNew_fromFirstComponent_allowsComponentCreation_whenNotEarlyReturning_onStateUpdate
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   UIView *view = [UIView new];
 
@@ -341,7 +340,7 @@ using namespace CKComponentControllerHelper;
 
 - (void)testThatComponentControllerReceivesComponentTreeWillAppearEvent
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:{{0,0}, {100, 100}}
@@ -356,7 +355,7 @@ using namespace CKComponentControllerHelper;
 
 - (void)testThatComponentControllerReceivesComponentTreeDidDisappearEvent
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                     constrainedSize:{{0,0}, {100, 100}}
@@ -373,7 +372,7 @@ using namespace CKComponentControllerHelper;
 
 - (void)testThatComponentControllerReceivesComponentTreeWillAppearEventAfterAdditionalStateUpdates
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state1 = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                      constrainedSize:{{0,0}, {100, 100}}
@@ -392,7 +391,7 @@ using namespace CKComponentControllerHelper;
 
 - (void)testThatComponentControllerReceivesComponentTreeDidDisappearEventAfterAdditionalStateUpdates
 {
-  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class]
+  CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider
                                                                                                                              sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state1 = [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                                                                      constrainedSize:{{0,0}, {100, 100}}
@@ -414,7 +413,7 @@ using namespace CKComponentControllerHelper;
 - (void)testComponentControllerReceivesDidInitEvent
 {
   CKComponentLifecycleTestHelper *componentLifecycleTestController =
-    [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class] sizeRangeProvider:nil];
+    [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state =
     [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                 constrainedSize:{{0,0}, {100, 100}}
@@ -431,7 +430,7 @@ using namespace CKComponentControllerHelper;
 - (void)testComponentControllerReceivesInvalidateEvent
 {
   CKComponentLifecycleTestHelper *componentLifecycleTestController =
-    [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:[self class] sizeRangeProvider:nil];
+    [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:componentProvider sizeRangeProvider:nil];
   const CKComponentLifecycleTestHelperState state =
     [componentLifecycleTestController prepareForUpdateWithModel:nil
                                                 constrainedSize:{{0,0}, {100, 100}}
