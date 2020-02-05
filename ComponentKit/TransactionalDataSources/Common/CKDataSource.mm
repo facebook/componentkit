@@ -64,7 +64,6 @@
 
   CKDataSourceViewport _viewport;
   BOOL _changesetSplittingEnabled;
-  id<CKDataSourceChangesetModificationGenerator> _changesetModificationGenerator;
 }
 @end
 
@@ -114,12 +113,6 @@
 {
   CKAssertMainThread();
   return _state;
-}
-
-- (void)setChangesetModificationGenerator:(id<CKDataSourceChangesetModificationGenerator>)changesetModificationGenerator
-{
-  CKAssertMainThread();
-  _changesetModificationGenerator = changesetModificationGenerator;
 }
 
 - (void)applyChangeset:(CKDataSourceChangeset *)changeset
@@ -505,11 +498,6 @@
                                                              userInfo:userInfo
                                                              viewport:_viewport
                                                                   qos:qos];
-  } else if(_changesetModificationGenerator) {
-    return [_changesetModificationGenerator changesetGenerationModificationForChangeset:changeset
-                                                                               userInfo:userInfo
-                                                                                    qos:qos
-                                                                          stateListener:self];
   } else {
     return
     [[CKDataSourceChangesetModification alloc] initWithChangeset:changeset
