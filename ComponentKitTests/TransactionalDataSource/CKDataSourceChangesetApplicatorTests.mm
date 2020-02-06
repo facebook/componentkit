@@ -135,7 +135,6 @@ static NSUInteger _globalApplyChangeCount = 0;
   });
   [_dataSource sendNewState];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  [self assertNumberOfSuccessfulChanges:0 numberOfFailedChanges:2];
   [self waitUntilChangesetApplicatorQueueIsIdle];
   [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
   [self assertNumberOfSuccessfulChanges:2 numberOfFailedChanges:2];
