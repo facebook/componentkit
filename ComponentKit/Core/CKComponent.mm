@@ -60,7 +60,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 #endif
 
 #if CK_ASSERTIONS_ENABLED
-  BOOL leafComponentOnARenderTree;
+  BOOL directSubclass;
 #endif
 }
 
@@ -176,9 +176,9 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
-#if CK_ASSERTIONS_ENABLED
-  leafComponentOnARenderTree = YES;
-#endif
+  #if CK_ASSERTIONS_ENABLED
+    directSubclass = YES;
+  #endif
   CKRender::ComponentTree::Iterable::build(self, parent, previousParent, params, parentHasStateUpdate);
 }
 
@@ -330,9 +330,9 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   // If `leafComponentOnARenderTree` is true, the infrastructure treats this component as a leaf component.
   // If this component has children in its layout, this means that it's not a real leaf component.
   // As a result, the infrastructure won't call `buildComponentTree:` on the component's children and can affect the render process.
-  if (leafComponentOnARenderTree && layout.children != nullptr) {
+  if (directSubclass && layout.children != nullptr) {
     auto const childrenSize = layout.children->size();
-    CKAssertWithCategory(childrenSize == 0,
+    CKAssertWithCategory(childrenSize <= 1,
                          NSStringFromClass([self class]),
                          @"%@ is subclassing CKComponent directly, you need to subclass CKLayoutComponent instead. "
                          "Context: we’re phasing out CKComponent subclasses for in favor of CKLayoutComponent subclasses. "

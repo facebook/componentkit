@@ -12,7 +12,7 @@
 
 #if CK_NOT_SWIFT
 
-#import <ComponentKit/CKSingleChildComponent.h>
+#import <ComponentKit/CKComponent.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning Overriding -layoutThatFits:parentSize: or -computeLayoutThatFits: is **not allowed** for any subclass.
  */
-@interface CKCompositeComponent : CKSingleChildComponent
+@interface CKCompositeComponent : CKComponent
 
 /** Calls the initializer with {} for view. */
 + (instancetype _Nullable)newWithComponent:(NS_RELEASES_ARGUMENT CKComponent * _Nullable)component;
@@ -40,6 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param component The component the composite component uses for layout and sizing.
  */
 + (instancetype _Nullable)newWithView:(const CKComponentViewConfiguration &)view component:(NS_RELEASES_ARGUMENT CKComponent  * _Nullable)component;
+
+/** Access the child component. For intenral use only. */
+- (CKComponent * _Nullable)child;
 
 @end
 

@@ -14,7 +14,6 @@
 
 
 #import <ComponentKit/CKComponent.h>
-#import <ComponentKit/CKSingleChildComponent.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -23,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @warning Overriding -layoutThatFits:parentSize: or -computeLayoutThatFits: is **not allowed** for any subclass.
 */
 
-@interface CKRenderComponent : CKSingleChildComponent <CKRenderWithChildComponentProtocol>
+@interface CKRenderComponent : CKComponent <CKRenderWithChildComponentProtocol>
 
 /**
  Returns a child component that needs to be rendered from this component.

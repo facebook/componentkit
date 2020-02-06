@@ -17,6 +17,7 @@
 
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
+#import "CKIterableHelpers.h"
 #import "CKRenderHelpers.h"
 
 @implementation CKCompositeComponent
@@ -84,6 +85,22 @@
 - (CKComponent *)child
 {
   return _child;
+}
+
+- (UIView *)viewForAnimation
+{
+  // Delegate to the wrapped component's viewForAnimation if we don't have one.
+  return [super viewForAnimation] ?: [_child viewForAnimation];
+}
+
+- (unsigned int)numberOfChildren
+{
+  return CKIterable::numberOfChildren(_child);
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  return CKIterable::childAtIndex(self, index, _child);
 }
 
 @end

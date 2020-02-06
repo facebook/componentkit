@@ -130,7 +130,6 @@
 #import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKScopeTreeNode.h>
 #import <ComponentKit/CKScopeTreeNodeProtocol.h>
-#import <ComponentKit/CKSingleChildComponent.h>
 #import <ComponentKit/CKSizeRange.h>
 #import <ComponentKit/CKStatefulViewComponent.h>
 #import <ComponentKit/CKStatefulViewComponentController.h>

@@ -10,13 +10,12 @@
 
 #import "CKRenderComponent.h"
 
-#import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKMutex.h>
 
-#import "CKBuildComponent.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
+#import "CKIterableHelpers.h"
 #import "CKRenderHelpers.h"
 #import "CKTreeNode.h"
 
@@ -58,6 +57,12 @@
   return nil;
 }
 
+- (UIView *)viewForAnimation
+{
+  // Delegate to the wrapped component's viewForAnimation if we don't have one.
+  return [super viewForAnimation] ?: [_child viewForAnimation];
+}
+
 - (void)buildComponentTree:(id<CKTreeNodeWithChildrenProtocol>)parent
             previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
                     params:(const CKBuildComponentTreeParams &)params
@@ -89,6 +94,16 @@
 - (CKComponent *)child
 {
   return _child;
+}
+
+- (unsigned int)numberOfChildren
+{
+  return CKIterable::numberOfChildren(_child);
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  return CKIterable::childAtIndex(self, index, _child);
 }
 
 #pragma mark - CKRenderComponentProtocol

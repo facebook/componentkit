@@ -255,7 +255,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   [dataSource updateConfiguration:[_state.configuration copyWithContext:kTestInitialiseControllerContext sizeRange:{}]
                              mode:CKUpdateModeSynchronous
                          userInfo:@{}];
-  const auto secondController = (CKLifecycleTestComponentController *)((CKSingleChildComponent *)[[_state objectAtIndexPath:firstIndexPath] rootLayout].component()).child.controller;
+  const auto secondController = (CKLifecycleTestComponentController *)((CKCompositeComponent *)[[_state objectAtIndexPath:firstIndexPath] rootLayout].component()).child.controller;
   XCTAssertNotEqual(firstController, secondController);
   XCTAssertTrue(firstController.calledInvalidateController);
   XCTAssertTrue(secondController.calledDidInit);
@@ -272,7 +272,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
                               build]
                         mode:CKUpdateModeSynchronous
                     userInfo:@{}];
-  const auto secondController = (CKLifecycleTestComponentController *)((CKSingleChildComponent *)[[_state objectAtIndexPath:firstIndexPath] rootLayout].component()).child.controller;
+  const auto secondController = (CKLifecycleTestComponentController *)((CKCompositeComponent *)[[_state objectAtIndexPath:firstIndexPath] rootLayout].component()).child.controller;
   XCTAssertNotEqual(firstController, secondController);
   XCTAssertTrue(firstController.calledInvalidateController);
   XCTAssertTrue(secondController.calledDidInit);
