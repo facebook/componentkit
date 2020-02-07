@@ -12,14 +12,16 @@
 
 #import <objc/runtime.h>
 
+#import <RenderCore/CKAssociatedObject.h>
+
 static char const kMountedObjectKey = ' ';
 
 id CKMountedObjectForView(UIView *view)
 {
-  return objc_getAssociatedObject(view, &kMountedObjectKey);
+  return CKGetAssociatedObject_MainThreadAffined(view, &kMountedObjectKey);
 }
 
 void CKSetMountedObjectForView(UIView *view, id object)
 {
-  objc_setAssociatedObject(view, &kMountedObjectKey, object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  CKSetAssociatedObject_MainThreadAffined(view, &kMountedObjectKey, object);
 }

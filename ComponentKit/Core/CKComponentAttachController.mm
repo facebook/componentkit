@@ -12,6 +12,7 @@
 #import "CKComponentInternal.h"
 
 #import <ComponentKit/CKAnalyticsListener.h>
+#import <ComponentKit/CKAssociatedObject.h>
 #import <ComponentKit/CKDelayedNonNull.h>
 #import <ComponentKit/CKOptional.h>
 
@@ -335,10 +336,10 @@ static char const kViewAttachStateKey = ' ';
 
 auto CKGetAttachStateForView(UIView *view) -> CKComponentAttachState *
 {
-  return objc_getAssociatedObject(view, &kViewAttachStateKey);
+  return CKGetAssociatedObject_MainThreadAffined(view, &kViewAttachStateKey);
 }
 
 auto CKSetAttachStateForView(UIView *view, CKComponentAttachState *attachState) -> void
 {
-  objc_setAssociatedObject(view, &kViewAttachStateKey, attachState, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  CKSetAssociatedObject_MainThreadAffined(view, &kViewAttachStateKey, attachState);
 }
