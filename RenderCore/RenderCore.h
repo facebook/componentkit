@@ -12,6 +12,7 @@
 
 #import <RenderCore/CKArgumentPrecondition.h>
 #import <RenderCore/CKAssert.h>
+#import <RenderCore/CKAssociatedObject.h>
 #import <RenderCore/CKAvailability.h>
 #import <RenderCore/CKCasting.h>
 #import <RenderCore/CKCollection.h>
