@@ -40,6 +40,10 @@ struct CKGlobalConfig {
    Enables using \c CK::Dictionary instead of \c std::unordered_map in \c ViewReusePoolMap.
    */
   BOOL useCKDictionaryInViewReusePoolMap = NO;
+  /**
+   Enables using CK scoped associated object in main thread affined scenario.
+   */
+  BOOL useCKAssociatedObject = YES;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

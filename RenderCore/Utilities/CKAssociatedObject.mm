@@ -15,6 +15,7 @@
 #import <vector>
 
 #import <RenderCore/CKAssert.h>
+#import <RenderCore/CKGlobalConfig.h>
 
 /**
  Since the only way to get notified when an object is deallocated is through associated object from
@@ -37,10 +38,19 @@ static AssociatedObjectMap *CKMainThreadAffinedAssociatedObjectMap()
   return associatedObjectMap;
 }
 
+static BOOL useCKAssociatedObject()
+{
+  static BOOL useCKAssociatedObject = CKReadGlobalConfig().useCKAssociatedObject;
+  return useCKAssociatedObject;
+}
+
 id _Nullable CKGetAssociatedObject_MainThreadAffined(__unsafe_unretained id object,
                                                      const void *key)
 {
   CKCAssertMainThread();
+  if (!useCKAssociatedObject()) {
+    return objc_getAssociatedObject(object, key);
+  }
   const auto map = CKMainThreadAffinedAssociatedObjectMap();
   const auto it = map->find(uintptr_t(object));
   if (it == map->end()) {
@@ -63,6 +73,10 @@ void CKSetAssociatedObject_MainThreadAffined(__unsafe_unretained id object,
                                              __unsafe_unretained id _Nullable value)
 {
   CKCAssertMainThread();
+  if (!useCKAssociatedObject()) {
+    objc_setAssociatedObject(object, key, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return;
+  }
   const auto map = CKMainThreadAffinedAssociatedObjectMap();
   const auto address = (uintptr_t)object;
   const auto it = map->find(address);
