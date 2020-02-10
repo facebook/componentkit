@@ -319,6 +319,18 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     _style.useDeepYogaTrees = d;
     return *this;
   }
+      
+  /**
+  If set to @c YES, flexbox will use the composite component child size to assign size
+  properties on yoga node instead of the size of composite component itself.
+  
+  This is a temporary flag used for migration purposes.
+  */
+  auto &skipCompositeComponentSize(bool d)
+  {
+    _style.skipCompositeComponentSize = d;
+    return *this;
+  }
 
   /**
    Adds a child component with default layout options to this flexbox component.
