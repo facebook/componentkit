@@ -8,15 +8,16 @@
  *
  */
 
+#import <Foundation/Foundation.h>
 #import <RenderCore/CKDefines.h>
+#import <RenderCore/CKIterable.h>
 
 #if CK_NOT_SWIFT
 
-#import <Foundation/Foundation.h>
-
 #import <RenderCore/ComponentMountContext.h>
-#import <RenderCore/CKIterable.h>
 #import <RenderCore/CKSizeRange.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol CKMountable;
 
@@ -24,13 +25,13 @@ struct CKComponentLayout;
 struct CKComponentLayoutChild;
 
 struct CKComponentViewContext {
-  __kindof UIView *view;
+  __kindof UIView *_Nullable view;
   CGRect frame;
 };
 
 struct CKMountInfo {
-  id<CKMountable> supercomponent;
-  UIView *view;
+  id<CKMountable> _Nullable supercomponent;
+  UIView *_Nullable view;
   CKComponentViewContext viewContext;
 };
 
@@ -61,7 +62,7 @@ struct CKMountInfo {
 - (CKComponentViewContext)viewContext;
 
 /** If the component owns its own view and is mounted, returns it. */
-@property (nonatomic, readonly) UIView *mountedView;
+@property (nonatomic, readonly, nullable) UIView *mountedView;
 
 /** If the component is mounted, returns it. */
 @property (nonatomic, readonly) CKMountInfo mountInfo;
@@ -89,7 +90,7 @@ struct CKMountInfo {
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
                                         size:(const CGSize)size
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
-                              supercomponent:(id<CKMountable>)supercomponent;
+                              supercomponent:(id<CKMountable> _Nullable)supercomponent;
 
 /**
 Unmounts the component:
@@ -105,18 +106,25 @@ Unmounts the component:
  */
 - (void)childrenDidMount;
 
-/** Unique identifier of the component - can be nil */
-@property (nonatomic, strong, readonly) id<NSObject> uniqueIdentifier;
+/** Unique identifier of the component */
+@property (nonatomic, strong, readonly, nullable) id<NSObject> uniqueIdentifier;
 
 /** Name used in debug message */
-- (NSString *)debugName;
+@property (nonatomic, copy, readonly, nullable) NSString *debugName;
 
 /** A long-lived object that exists across generations */
-- (id)controller;
-
-/** Get child at index; can be nil */
-- (id<CKMountable>)childAtIndex:(unsigned int)index;
+@property (nonatomic, strong, readonly, nullable) id controller;
 
 @end
 
+#else
+
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(Mountable)
+@protocol CKMountable <CKIterable>
+@end
+
 #endif
+
+NS_ASSUME_NONNULL_END
