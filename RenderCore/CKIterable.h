@@ -10,12 +10,20 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol CKIterable <NSObject>
+
+#if CK_NOT_SWIFT
 
 /** Number of children; can be 0 for leaves */
 - (unsigned int)numberOfChildren;
 
-/** Get child at index; can be nil */
-- (id<CKIterable>)childAtIndex:(unsigned int)index;
+/** Get child at index */
+- (id<CKIterable> _Nullable)childAtIndex:(unsigned int)index;
+
+#endif
 
 @end
+
+NS_ASSUME_NONNULL_END
