@@ -8,20 +8,19 @@
  *
  */
 
+#import <Foundation/Foundation.h>
 #import <ComponentKit/CKDefines.h>
 
-#if CK_NOT_SWIFT
-
-#import <Foundation/Foundation.h>
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol CKComponentControllerProtocol;
 
+NS_SWIFT_NAME(ComponentProtocol)
 @protocol CKComponentProtocol <NSObject>
 
-+ (id)initialState;
-
-+ (Class<CKComponentControllerProtocol>)controllerClass;
+@property (nonatomic, strong, readonly, class, nullable) id initialState;
+@property (nonatomic, strong, readonly, class, nullable) Class<CKComponentControllerProtocol> controllerClass;
 
 @end
 
-#endif
+NS_ASSUME_NONNULL_END
