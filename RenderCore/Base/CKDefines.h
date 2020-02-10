@@ -8,6 +8,8 @@
 *
 */
 
+#import <RenderCore/CKMacros.h>
+
 #if __has_feature(modules)
   #define CK_SWIFT 1
 #else
@@ -15,3 +17,9 @@
 #endif
 
 #define CK_NOT_SWIFT !CK_SWIFT
+
+#if CK_SWIFT
+  #define CK_SWIFT_DESIGNATED_INITIALIZER NS_DESIGNATED_INITIALIZER
+#else
+  #define CK_SWIFT_DESIGNATED_INITIALIZER CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE
+#endif
