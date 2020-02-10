@@ -20,6 +20,8 @@
 #import <ComponentKit/CKTreeNodeTypes.h>
 #import <ComponentKit/CKUpdateMode.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class CKComponent;
 @class CKComponentScopeRoot;
 @class CKScopedResponder;
@@ -38,22 +40,22 @@
 + (instancetype)handleForComponent:(id<CKComponentProtocol>)component;
 
 /** Creates a conceptually brand new scope handle */
-- (instancetype)initWithListener:(id<CKComponentStateListener>)listener
+- (instancetype)initWithListener:(id<CKComponentStateListener> _Nullable)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                   componentClass:(Class<CKComponentProtocol>)componentClass
-                    initialState:(id)initialState;
+                    initialState:(id _Nullable)initialState;
 
 /** Creates a new instance of the scope handle that incorporates the given state updates. */
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                        componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot;
 
 /** Enqueues a state update to be applied to the scope with the given mode. */
-- (void)updateState:(id (^)(id))updateBlock
+- (void)updateState:(id _Nullable (^)(id _Nullable))updateBlock
            metadata:(const CKStateUpdateMetadata &)metadata
                mode:(CKUpdateMode)mode;
 
 /** Replaces the state for this handle. May only be called *before* resolution. */
-- (void)replaceState:(id)state;
+- (void)replaceState:(id _Nullable)state;
 
 /** Informs the scope handle that it should complete its configuration. This will generate the controller */
 - (void)resolve;
@@ -61,27 +63,26 @@
 /** Acquire component, assert if the scope handle is wrong */
 - (void)forceAcquireFromComponent:(id<CKComponentProtocol>)component;
 
-/** Set the tree node of the acquired component. May only be called *before* resolution. */
-- (void)setTreeNode:(id<CKTreeNodeProtocol>)treeNode;
-
 /**
  Should not be called until after handleForComponent:. The controller will assert (if assertions are compiled), and
  return nil until `resolve` is called.
  */
-@property (nonatomic, strong, readonly) ControllerType controller;
+@property (nonatomic, strong, readonly, nullable) ControllerType controller;
 
 @property (nonatomic, assign, readonly) Class<CKComponentProtocol> componentClass;
 
-@property (nonatomic, strong, readonly) id state;
-@property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
-@property (nonatomic, readonly, weak) id<CKComponentProtocol> acquiredComponent;
+@property (nonatomic, strong, readonly, nullable) id state;
+@property (nonatomic, assign, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
+@property (nonatomic, weak, readonly, nullable) id<CKComponentProtocol> acquiredComponent;
 @property (nonatomic, assign, readonly) CKTreeNodeIdentifier treeNodeIdentifier;
-@property (nonatomic, weak, readonly) id<CKTreeNodeProtocol> treeNode;
+
+/** The tree node of the acquired component. Setter should only be called *before* resolution. */
+@property (nonatomic, weak, nullable) id<CKTreeNodeProtocol> treeNode;
 
 /**
  Provides a responder corresponding with this scope handle. The controller will assert if called before resolution.
  */
-- (CKScopedResponder *)scopedResponder;
+@property (nonatomic, strong, readonly) CKScopedResponder *scopedResponder;
 
 @end
 
@@ -113,13 +114,15 @@ typedef int CKScopedResponderKey;
 /**
  Returns the key needed to access the responder at a later time.
  */
-- (CKScopedResponderKey)keyForHandle:(CKComponentScopeHandle *)handle;
+- (CKScopedResponderKey)keyForHandle:(CKComponentScopeHandle * _Nullable)handle;
 
 /**
  Returns the proper responder based on the key provided.
  */
-- (id)responderForKey:(CKScopedResponderKey)key;
+- (id _Nullable)responderForKey:(CKScopedResponderKey)key;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

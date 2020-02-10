@@ -8,21 +8,21 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
-
-#if CK_NOT_SWIFT
-
 #import <Foundation/Foundation.h>
-
-#include <tuple>
-#include <unordered_set>
-#include <unordered_map>
+#import <ComponentKit/CKDefines.h>
 
 #import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/ComponentUtilities.h>
 
 /** Unique identifier for tree nodes. */
 typedef int32_t CKTreeNodeIdentifier;
+
+#if CK_NOT_SWIFT
+
+#include <tuple>
+#include <unordered_set>
+#include <unordered_map>
+
 /** A key between a tree ndoe to its parent */
 typedef std::tuple<Class, NSUInteger, id<NSObject>> CKTreeNodeComponentKey;
 /** unordered_set of all the "dirty" tree nodes' identifiers; "dirty" means node on a state update branch. */
