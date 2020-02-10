@@ -49,7 +49,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 @implementation CKComponent
 {
-  CKComponentScopeHandle<CKComponentController *> *_scopeHandle;
+  CKComponentScopeHandle *_scopeHandle;
   CKComponentViewConfiguration _viewConfiguration;
 
   /** Only non-null while mounted. */
@@ -269,7 +269,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
     UIView *view = _mountInfo->view;
     if (view) {
       CKAssert(CKMountedComponentForView(view) == self, @"");
-      [_scopeHandle.controller component:self willRelinquishView:view];
+      [(CKComponentController *)_scopeHandle.controller component:self willRelinquishView:view];
       CKSetMountedComponentForView(view, nil);
       _mountInfo->view = nil;
     }
@@ -278,7 +278,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 - (void)childrenDidMount
 {
-  [_scopeHandle.controller componentDidMount:self];
+  [(CKComponentController *)_scopeHandle.controller componentDidMount:self];
 }
 
 #pragma mark - Animation

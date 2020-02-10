@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol CKComponentProtocol;
 @protocol CKTreeNodeProtocol;
 
-@interface CKComponentScopeHandle<__covariant ControllerType:id<CKComponentControllerProtocol>> : NSObject
+@interface CKComponentScopeHandle : NSObject
 
 /**
  This method looks to see if the currently defined scope matches that of the given component; if so it returns the
@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
  Should not be called until after handleForComponent:. The controller will assert (if assertions are compiled), and
  return nil until `resolve` is called.
  */
-@property (nonatomic, strong, readonly, nullable) ControllerType controller;
+@property (nonatomic, strong, readonly, nullable) id<CKComponentControllerProtocol> controller;
 
 @property (nonatomic, assign, readonly) Class<CKComponentProtocol> componentClass;
 
