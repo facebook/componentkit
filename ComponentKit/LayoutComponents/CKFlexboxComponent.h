@@ -270,7 +270,11 @@ struct CKFlexboxComponentStyle {
    
    This is a temporary flag used for migration purposes.
    */
+#if CK_ASSERTIONS_ENABLED
   BOOL skipCompositeComponentSize = YES;
+#else
+  BOOL skipCompositeComponentSize = NO;
+#endif
 };
 
 struct CKFlexboxComponentChild {
