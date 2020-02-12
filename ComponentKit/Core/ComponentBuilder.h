@@ -208,7 +208,7 @@ public:
   /**
    Specifies whether subviews of a view for the component should be confined to its bounds.
 
-   @param enabled A Boolean value that determines whether subviews are confined
+   @param clip A Boolean value that determines whether subviews are confined
 
    @note Calling this method on a builder that does not have a view class set will trigger a compilation error.
 
@@ -860,7 +860,7 @@ auto ComponentBuilder() -> ComponentBuilderEmpty;
 /**
  Provides a fluent API for creating instances of @c CKComponent base class.
 
- @param context The spec context to use.
+ @param c The spec context to use.
 
  @note This factory overload is to be used when a key is required to reference the built component in a spec from the
  `CK_ANIMATION` function.

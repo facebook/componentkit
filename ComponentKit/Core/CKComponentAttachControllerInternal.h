@@ -54,7 +54,7 @@ auto CKSetAttachStateForView(UIView *view, CKComponentAttachState *attachState) 
  is different from the existing `rootViewCategory`.
  @param rootViewHost The host of root view that its root view can be replaced based on its category.
  @param rootViewCategory Category of the root view which will be used for retrieving a root view from root view pool.
- @param attahController The `CKComponentAttachController` that is used for detaching components from the existing
+ @param attachController The `CKComponentAttachController` that is used for detaching components from the existing
  root view if it's going to be replaced.
  */
 auto CKUpdateComponentRootViewHost(CK::NonNull<id<CKComponentRootViewHost>> rootViewHost,

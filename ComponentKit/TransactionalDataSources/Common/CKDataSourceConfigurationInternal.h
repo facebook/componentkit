@@ -68,8 +68,8 @@ struct CKDataSourceOptions {
 @interface CKDataSourceConfiguration ()
 
 /**
- @param componentProvider See @protocol(CKComponentProvider)
- @param context Passed to methods exposed by @protocol(CKComponentProvider).
+ @param componentProvider The class that provides the component (@see CKComponentProvider).
+ @param context Passed to methods exposed by the protocol CKComponentProvider (@see CKComponentProvider).
  @param sizeRange Used for the root layout.
  @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
                             root. By passing in the predicates on initialization, we are able to cache which components

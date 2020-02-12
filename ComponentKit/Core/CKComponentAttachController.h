@@ -96,9 +96,9 @@ private:
  2) Detach the component tree currently attached to the view, if and only if the component tree currently attached has a different
  scope identifier.
 
- @param rootLayout The component (and layout) tree to attach.
- @param view The view to attach the component tree to
- @param scopeIdentifier The scope identifier for the component tree, this identifier should be stable among multiple versions
+ @field rootLayout The component (and layout) tree to attach.
+ @field view The view to attach the component tree to
+ @field scopeIdentifier The scope identifier for the component tree, this identifier should be stable among multiple versions
  of the component tree representing the same logical item.
  */
 struct CKComponentAttachControllerAttachComponentRootLayoutParams {

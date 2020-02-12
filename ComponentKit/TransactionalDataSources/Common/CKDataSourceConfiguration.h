@@ -21,8 +21,8 @@
 @interface CKDataSourceConfiguration<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> : NSObject
 
 /**
- @param componentProvider See @protocol(CKComponentProvider)
- @param context Passed to methods exposed by @protocol(CKComponentProvider).
+ @param componentProvider The class that provides the component (@see CKComponentProvider).
+ @param context Passed to methods exposed by the protocol CKComponentProvider (@see CKComponentProvider).
  @param sizeRange Used for the root layout.
  */
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider

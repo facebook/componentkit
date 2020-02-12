@@ -25,7 +25,7 @@
  Announced on the main thread when the data source has just updated its state.
  @param dataSource The sending data source.
  @param previousState The state that the data source was previously exposing.
- @param newState The state that the data source currently has. Always use this to get new state instead of relying on dataSource.state
+ @param state The state that the data source currently has. Always use this to get new state instead of relying on dataSource.state
  @param changes The changes that were applied (which may correspond to multiple
         CKDataSourceChangeset objects).
  */

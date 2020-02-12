@@ -67,13 +67,13 @@ namespace CKRender {
                  CKRenderDidReuseComponentBlock didReuseBlock = nil) -> id<CKTreeNodeProtocol>;
     }
 
-    /**
-     Builds the component tree from a root component.
-
-     @param component The root component of the tree.
-     @param params Collection of parameters to use to properly setup build component tree step.
-     */
     namespace Root {
+      /**
+      Builds the component tree from a root component.
+
+      @param component The root component of the tree.
+      @param params Collection of parameters to use to properly setup build component tree step.
+      */
       auto build(id<CKTreeNodeComponentProtocol> component, const CKBuildComponentTreeParams &params) -> void;
     }
   }

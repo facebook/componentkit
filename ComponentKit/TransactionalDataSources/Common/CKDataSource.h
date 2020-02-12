@@ -48,7 +48,7 @@ struct CKDataSourceViewport {
 @interface CKDataSource : NSObject <CKComponentStateListener>
 
 /**
- @param configuration @see CKDataSourceConfiguration.
+ @param configuration An immutable configuration object used to create the data source (@see CKDataSourceConfiguration).
  */
 - (instancetype)initWithConfiguration:(CKDataSourceConfiguration *)configuration;
 

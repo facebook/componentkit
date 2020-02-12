@@ -34,7 +34,7 @@
 /**
  Called before the component tree creation.
 
- @param scopRoot Scope root for component tree. Use that to identify tree between will/didBuild.
+ @param scopeRoot Scope root for component tree. Use that to identify tree between will/didBuild.
  @param buildTrigger The build trigger (new tree, state update, props updates) for this component tree creation.
  @param stateUpdates The state updates map for the component tree creation.
  @param enableComponentReuseOptimizations If `NO` any optimization for component reuse is turned off.
@@ -47,7 +47,7 @@
 /**
  Called after the component tree creation.
 
- @param scopRoot Scope root for component tree. Use that to identify tree between will/didBuild
+ @param scopeRoot Scope root for component tree. Use that to identify tree between will/didBuild
  @param buildTrigger The build trigger (new tree, state update, props updates) for this component tree creation.
  @param stateUpdates The state updates map for the component tree creation.
  @param component Root component for created tree
