@@ -17,6 +17,7 @@
 #import <ComponentKit/CKContainerWrapper.h>
 #import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKMacros.h>
+#import <ComponentKit/CKOptional.h>
 
 typedef NS_ENUM(NSInteger, CKFlexboxDirection) {
   CKFlexboxDirectionColumn,
@@ -270,11 +271,7 @@ struct CKFlexboxComponentStyle {
    
    This is a temporary flag used for migration purposes.
    */
-#if CK_ASSERTIONS_ENABLED
-  BOOL skipCompositeComponentSize = YES;
-#else
-  BOOL skipCompositeComponentSize = NO;
-#endif
+  CK::Optional<BOOL> skipCompositeComponentSize;
 };
 
 struct CKFlexboxComponentChild {

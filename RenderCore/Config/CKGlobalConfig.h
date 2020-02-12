@@ -44,6 +44,11 @@ struct CKGlobalConfig {
    Enables using CK scoped associated object in main thread affined scenario.
    */
   BOOL useCKAssociatedObject = YES;
+  /**
+   Uses the composite component child size to assign size
+   properties on yoga node instead of the size of composite component itself
+   */
+  BOOL skipCompositeComponentSize = YES;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

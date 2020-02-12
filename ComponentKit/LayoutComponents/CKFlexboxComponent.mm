@@ -11,6 +11,7 @@
 #import "CKFlexboxComponent.h"
 
 #import <ComponentKit/CKComponentPerfScope.h>
+#import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKFunctionalHelpers.h>
@@ -68,6 +69,12 @@ template class std::vector<CKFlexboxComponentChild>;
     component->_children = children.take();
   }
   return component;
+}
+
+static bool skipCompositeComponentSize(const CKFlexboxComponentStyle &style) {
+  return style.skipCompositeComponentSize.valueOr([](){
+    return CKReadGlobalConfig().skipCompositeComponentSize;
+  });
 }
 
 static float convertFloatToYogaRepresentation(const float& value) {
@@ -407,7 +414,7 @@ static bool hasChildWithRelativePositioning(const CKFlexboxComponentChild &child
     // sure we do not include CKCompositeSize as
     // node size, as it will always we equal to {}
     // and use it's child size instead
-    const auto nodeSize = _style.useDeepYogaTrees || _style.skipCompositeComponentSize ? [child.component nodeSize] : [child.component size];
+    const auto nodeSize = _style.useDeepYogaTrees || skipCompositeComponentSize(_style) ? [child.component nodeSize] : [child.component size];
     applySizeAttributes(childNode, child, nodeSize, parentWidth, parentHeight, _style.useDeepYogaTrees);
 
     YGNodeStyleSetFlexGrow(childNode, child.flexGrow);
