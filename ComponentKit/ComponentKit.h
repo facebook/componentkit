@@ -19,6 +19,7 @@
 #import <ComponentKit/CKAnimationComponent.h>
 #import <ComponentKit/CKArgumentPrecondition.h>
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKAssociatedObject.h>
 #import <ComponentKit/CKAsyncLayer.h>
 #import <ComponentKit/CKAutoSizedImageComponent.h>
 #import <ComponentKit/CKAvailability.h>
@@ -68,6 +69,7 @@
 #import <ComponentKit/CKComponentRootView.h>
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
+#import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentSize.h>
