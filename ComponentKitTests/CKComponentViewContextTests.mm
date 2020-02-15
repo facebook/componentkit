@@ -24,6 +24,8 @@
 @interface CKNestedComponent : CKCompositeComponent
 @property (nonatomic, strong) CKComponent *subcomponent;
 
++ (instancetype)new;
+
 @end
 
 @implementation CKComponentViewContextTests
@@ -39,7 +41,6 @@ static CKComponent *nestedComponentProvider(id<NSObject> model, id<NSObject>cont
 {
   return [CKNestedComponent new];
 }
-
 
 static const CKSizeRange size = {{100, 100}, {100, 100}};
 

@@ -22,6 +22,8 @@
 
 @interface CKTestStateComponent : CKCompositeComponent
 
++ (instancetype)new;
+
 @property (nonatomic, readonly, strong) id state;
 
 @end

@@ -8,6 +8,10 @@
     This can be used to test what happens when state changes and the LifecycleTestComponent is removed.
     Call setLifecycleTestComponentIsHidden to trigger the corresponding state change. */
 @interface CKEmbeddedTestComponent : CKCompositeComponent
+
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size;
+
 - (void)setLifecycleTestComponentIsHidden:(BOOL)isHidden;
 - (CKLifecycleTestComponent *)lifecycleTestComponent;
+
 @end

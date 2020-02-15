@@ -29,6 +29,9 @@
 static NSString *const kTestStateForLifecycleComponent = @"kTestStateForLifecycleComponent";
 
 @interface CKStatefulTestComponent : CKCompositeComponent
+
++ (instancetype)new;
+
 @property (nonatomic, readonly) NSString *state;
 @property (nonatomic, readonly) CKLifecycleTestComponent *lifecycleComponent;
 @end

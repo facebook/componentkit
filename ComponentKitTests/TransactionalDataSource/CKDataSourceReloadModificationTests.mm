@@ -30,6 +30,9 @@ static u_int32_t globalState = 0;
 static u_int32_t lifecycleComponentState = 1;
 
 @interface CKTestGlobalStateComponent : CKCompositeComponent
+
++ (instancetype)new;
+
 @property (nonatomic, readonly) u_int32_t globalStateAtTimeOfCreation;
 @property (nonatomic, readonly) CKLifecycleTestComponent *lifecycleComponent;
 @end
