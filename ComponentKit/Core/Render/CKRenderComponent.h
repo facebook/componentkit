@@ -9,10 +9,6 @@
  */
 
 #import <ComponentKit/CKDefines.h>
-
-#if CK_NOT_SWIFT
-
-
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
 
@@ -24,12 +20,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CKRenderComponent : CKComponent <CKRenderWithChildComponentProtocol>
 
+- (instancetype)init CK_SWIFT_DESIGNATED_INITIALIZER;
+
 /**
  Returns a child component that needs to be rendered from this component.
 
  @param state The current state of the component.
  */
 - (CKComponent * _Nullable)render:(id _Nullable)state;
+
+#if CK_NOT_SWIFT
+
++ (instancetype)new;
 
 /**
  Returns view configuration for the component.
@@ -41,8 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CKComponentViewConfiguration)viewConfigurationWithState:(id)state;
 
+#endif
+
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif

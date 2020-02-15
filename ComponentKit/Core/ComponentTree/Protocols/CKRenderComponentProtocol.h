@@ -9,9 +9,6 @@
  */
 
 #import <ComponentKit/CKDefines.h>
-
-#if CK_NOT_SWIFT
-
 #import <ComponentKit/CKTreeNodeProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -22,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  Please DO NOT implement a new component that conforms to this protocol;
  your component should subclass either from `CKRenderComponent`.
  */
+NS_SWIFT_NAME(RenderComponentProtocol)
 @protocol CKRenderComponentProtocol <CKTreeNodeComponentProtocol>
 
 /*
@@ -68,16 +66,17 @@ NS_ASSUME_NONNULL_BEGIN
 
  In this case, the infrastrcture cannot distinguish between B1 and B2, unless it provides a unqiue identifier.
  */
-- (id<NSObject> _Nullable)componentIdentifier;
+@property (nonatomic, strong, readonly, nullable) id componentIdentifier;
 
 /** Returns true if the component requires scope handle */
-+ (BOOL)requiresScopeHandle;
-@end
+@property (nonatomic, assign, readonly, class) BOOL requiresScopeHandle;
 
+@end
 
 /**
  Render component with a single child.
  */
+NS_SWIFT_NAME(RenderWithChildComponentProtocol)
 @protocol CKRenderWithChildComponentProtocol <CKRenderComponentProtocol>
 
 /**
@@ -90,9 +89,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Returns the computed child component, if there is one.
  */
-- (id<CKTreeNodeComponentProtocol> _Nullable)child;
+@property (nonatomic, strong, readonly, nullable) id<CKTreeNodeComponentProtocol> child;
+
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif
