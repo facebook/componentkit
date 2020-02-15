@@ -8,12 +8,9 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
-
-#if CK_NOT_SWIFT
-
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKDefines.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentAnimation.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
@@ -32,6 +29,8 @@ extern CGSize const kCKComponentParentSizeUndefined;
 @class CKComponentController;
 
 @interface CKComponent ()
+
+#if CK_NOT_SWIFT
 
 /**
  Call this on children components to compute their layouts within your implementation of -computeLayoutThatFits:.
@@ -78,11 +77,7 @@ extern CGSize const kCKComponentParentSizeUndefined;
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize;
 
-/**
- Called to get the component's initial state; the default implementation returns nil.
- @see CKComponentScopeFrame
- */
-+ (id _Nullable)initialState;
+#endif
 
 /**
  Returns the component's state if available.
@@ -122,6 +117,8 @@ extern CGSize const kCKComponentParentSizeUndefined;
  */
 - (BOOL)canPerformAction:(SEL _Nullable)action withSender:(id _Nullable)sender;
 
+#if CK_NOT_SWIFT
+
 /**
  Override to return a list of animations that will be applied to the component when it is first mounted.
 
@@ -159,6 +156,8 @@ extern CGSize const kCKComponentParentSizeUndefined;
  */
 - (std::vector<CKComponentFinalUnmountAnimation>)animationsOnFinalUnmount;
 
+#endif
+
 /**
  Attempts to return a view suitable for rendering an animation.
 
@@ -172,13 +171,11 @@ extern CGSize const kCKComponentParentSizeUndefined;
 
  This method may be overridden in rare situations where a more suitable view should be used for rendering animations.
  */
-- (UIView * _Nullable)viewForAnimation;
+@property (nonatomic, strong, readonly, nullable) UIView *viewForAnimation;
 
 /** Returns the component's controller, if any. */
-- (CKComponentController * _Nullable)controller;
+- (CKComponentController *_Nullable)controller;
 
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif

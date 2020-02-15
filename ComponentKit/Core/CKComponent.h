@@ -8,17 +8,13 @@
  *
  */
 
+#import <UIKit/UIKit.h>
 #import <ComponentKit/CKDefines.h>
-
-#if CK_NOT_SWIFT
 
 #if !defined(__cplusplus) && CK_NOT_SWIFT
 #error This file must be compiled Obj-C++ or imported from Swift. Objective-C files should have their extension changed to .mm.
 #endif
 
-#import <UIKit/UIKit.h>
-
-#import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentSize.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>
@@ -27,7 +23,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /** A component is an immutable object that specifies how to configure a view, loosely inspired by React. */
+NS_SWIFT_NAME(Component)
 @interface CKComponent : NSObject <CKMountable, CKComponentProtocol>
+
+- (instancetype)init CK_SWIFT_DESIGNATED_INITIALIZER;
+
+#if CK_NOT_SWIFT
+
+- (instancetype)initWithView:(const CKComponentViewConfiguration &)view
+                        size:(const CKComponentSize &)size;
 
 /**
  @param view A struct describing the view for this component. Pass {} to specify that no view should be created.
@@ -39,16 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size;
 
-/**
- While the component is mounted, returns information about the component's manifestation in the view hierarchy.
++ (instancetype)new;
 
- If this component creates a view, this method returns the view it created (or recycled) and a frame with origin 0,0
- and size equal to the view's bounds, since the component's size is the view's size.
-
- If this component does not create a view, returns the view this component is mounted within and the logical frame
- of the component's content. In this case, you should **not** make any assumptions about what class the view is.
- */
-- (CKComponentViewContext)viewContext;
+#endif
 
 /**
  While the component is mounted, returns its next responder. This is the first of:
@@ -61,11 +58,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 #define CK_COMPONENT_INIT_UNAVAILABLE \
++ (instancetype)new NS_UNAVAILABLE; \
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view \
                        size:(const CKComponentSize &)size NS_UNAVAILABLE
 
 NS_ASSUME_NONNULL_END
 
 #import <ComponentKit/ComponentBuilder.h>
-
-#endif

@@ -17,6 +17,7 @@
 #import <Foundation/Foundation.h>
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKMountable.h>
+#import <ComponentKit/CKLayout.h>
 
 @protocol CKMountable;
 @protocol CKRenderComponentProtocol;

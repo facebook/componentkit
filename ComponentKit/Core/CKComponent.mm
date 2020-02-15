@@ -94,7 +94,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 - (instancetype)init
 {
-  CK_NOT_DESIGNATED_INITIALIZER();
+  return [self initWithView:{} size:{}];
 }
 
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
@@ -146,6 +146,11 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 {
   CKAssert(_viewConfiguration.isDefaultConfiguration(), @"Component(%@) already has '_viewConfiguration'.", self);
   _viewConfiguration = viewConfiguration;
+}
+
+- (CKComponentScopeHandle *)scopeHandle
+{
+  return _scopeHandle;
 }
 
 - (CKComponentViewContext)viewContext

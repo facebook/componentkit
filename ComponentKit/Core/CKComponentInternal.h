@@ -82,17 +82,14 @@
 /** Used to get the scope root enumerator; during component creation only */
 @property (nonatomic, strong, readonly) id<CKComponentScopeEnumeratorProvider> scopeEnumeratorProvider;
 
-/** For internal use only; don't touch this. */
-@property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle;
-
 /** For internal debug use only; don't touch this. */
-- (NSString *)backtraceStackDescription;
+@property (nonatomic, copy, readonly) NSString *backtraceStackDescription;
 
 /**
  Update component in controller right after new generation is created.
  NOTE: This should only be used by ComponentKit infra.
  */
-+ (BOOL)shouldUpdateComponentInController;
+@property (nonatomic, assign, readonly, class) BOOL shouldUpdateComponentInController;
 
 @end
 
