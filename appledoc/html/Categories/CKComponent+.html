@@ -56,13 +56,17 @@
 	
 	<optgroup label="Properties">
 		
+		<option value="//api/name/backtraceStackDescription">backtraceStackDescription</option>
+		
 		<option value="//api/name/rootComponentMountedView">rootComponentMountedView</option>
 		
 		<option value="//api/name/scopeEnumeratorProvider">scopeEnumeratorProvider</option>
 		
-		<option value="//api/name/scopeHandle">scopeHandle</option>
+		<option value="//api/name/shouldUpdateComponentInController">shouldUpdateComponentInController</option>
 		
 		<option value="//api/name/size">size</option>
+		
+		<option value="//api/name/viewForAnimation">viewForAnimation</option>
 		
 	</optgroup>
 	
@@ -70,11 +74,7 @@
 	
 	<optgroup label="Class Methods">
 		
-		<option value="//api/name/initialState">+ initialState</option>
-		
 		<option value="//api/name/newRenderComponentWithView:size:">+ newRenderComponentWithView:size:</option>
-		
-		<option value="//api/name/shouldUpdateComponentInController">+ shouldUpdateComponentInController</option>
 		
 	</optgroup>
 	
@@ -87,8 +87,6 @@
 		<option value="//api/name/animationsOnFinalUnmount">- animationsOnFinalUnmount</option>
 		
 		<option value="//api/name/animationsOnInitialMount">- animationsOnInitialMount</option>
-		
-		<option value="//api/name/backtraceStackDescription">- backtraceStackDescription</option>
 		
 		<option value="//api/name/boundsAnimationFromPreviousComponent:">- boundsAnimationFromPreviousComponent:</option>
 		
@@ -113,8 +111,6 @@
 		<option value="//api/name/updateState:mode:">- updateState:mode:</option>
 		
 		<option value="//api/name/viewConfiguration">- viewConfiguration</option>
-		
-		<option value="//api/name/viewForAnimation">- viewForAnimation</option>
 		
 	</optgroup>
 	
@@ -518,49 +514,8 @@ used to specify that subcomponents should be mounted inside the view.</p>
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/scopeHandle" title="scopeHandle"></a>
-	<h3 class="method-title"><code><a href="#//api/name/scopeHandle">&nbsp;&nbsp;scopeHandle</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>For internal use only; don&rsquo;t touch this.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) CKComponentScopeHandle *scopeHandle</code></div>
-
-		    
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
 	<a name="//api/name/backtraceStackDescription" title="backtraceStackDescription"></a>
-	<h3 class="method-title"><code><a href="#//api/name/backtraceStackDescription">&ndash;&nbsp;backtraceStackDescription</a></code>
+	<h3 class="method-title"><code><a href="#//api/name/backtraceStackDescription">&nbsp;&nbsp;backtraceStackDescription</a></code>
 </h3>
 
 	<div class="method-info">
@@ -575,7 +530,7 @@ used to specify that subcomponents should be mounted inside the view.</p>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (NSString *)backtraceStackDescription</code></div>
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, copy, readonly) NSString *backtraceStackDescription</code></div>
 
 		    
 			
@@ -601,7 +556,7 @@ used to specify that subcomponents should be mounted inside the view.</p>
 	</div>
 </div><div class="section-method">
 	<a name="//api/name/shouldUpdateComponentInController" title="shouldUpdateComponentInController"></a>
-	<h3 class="method-title"><code><a href="#//api/name/shouldUpdateComponentInController">+&nbsp;shouldUpdateComponentInController</a></code>
+	<h3 class="method-title"><code><a href="#//api/name/shouldUpdateComponentInController">&nbsp;&nbsp;shouldUpdateComponentInController</a></code>
 </h3>
 
 	<div class="method-info">
@@ -617,7 +572,7 @@ NOTE: This should only be used by ComponentKit infra.</p>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>+ (BOOL)shouldUpdateComponentInController</code></div>
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, assign, readonly, class) BOOL shouldUpdateComponentInController</code></div>
 
 		    
 			
@@ -817,47 +772,6 @@ against parentSize, intersect it with constrainedSize, and call -computeLayoutTh
 				<p>In certain advanced cases, you may want to customize this logic. Overriding this method allows you to receive all
 three parameters and do the computation yourself.</p><div class="warning"><p><strong>Warning:</strong> Overriding this method should be done VERY rarely.</p></div>
 			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentSubclass.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/initialState" title="initialState"></a>
-	<h3 class="method-title"><code><a href="#//api/name/initialState">+&nbsp;initialState</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>Called to get the component&rsquo;s initial state; the default implementation returns nil.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>+ (id _Nullable)initialState</code></div>
-
-		    
-			
-
-			
-
-			
-
 			
 
 			
@@ -1266,7 +1180,7 @@ identify equivalent components between trees.</p></div>
 	</div>
 </div><div class="section-method">
 	<a name="//api/name/viewForAnimation" title="viewForAnimation"></a>
-	<h3 class="method-title"><code><a href="#//api/name/viewForAnimation">&ndash;&nbsp;viewForAnimation</a></code>
+	<h3 class="method-title"><code><a href="#//api/name/viewForAnimation">&nbsp;&nbsp;viewForAnimation</a></code>
 </h3>
 
 	<div class="method-info">
@@ -1281,7 +1195,7 @@ identify equivalent components between trees.</p></div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (UIView *_Nullable)viewForAnimation</code></div>
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly, nullable) UIView *viewForAnimation</code></div>
 
 		    
 			
@@ -1377,7 +1291,7 @@ they are composed of other components, return the animatable view of its descend
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2020 Facebook. All rights reserved. Updated: 2020-02-05</p>
+						<p class="copyright">Copyright &copy; 2020 Facebook. All rights reserved. Updated: 2020-02-15</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
