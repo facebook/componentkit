@@ -73,6 +73,7 @@
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKComponentSize.h>
+#import <ComponentKit/CKComponentSize_SwiftBridge.h>
 #import <ComponentKit/CKComponentSizeRangeProviding.h>
 #import <ComponentKit/CKComponentSpecContext.h>
 #import <ComponentKit/CKComponentViewAttribute.h>
@@ -94,6 +95,7 @@
 #import <ComponentKit/CKDelayedNonNull.h>
 #import <ComponentKit/CKDictionary.h>
 #import <ComponentKit/CKDimension.h>
+#import <ComponentKit/CKDimension_SwiftBridge.h>
 #import <ComponentKit/CKDispatch.h>
 #import <ComponentKit/CKEqualityHelpers.h>
 #import <ComponentKit/CKFatal.h>
@@ -133,6 +135,7 @@
 #import <ComponentKit/CKScopeTreeNode.h>
 #import <ComponentKit/CKScopeTreeNodeProtocol.h>
 #import <ComponentKit/CKSizeRange.h>
+#import <ComponentKit/CKSizeRange_SwiftBridge.h>
 #import <ComponentKit/CKStatefulViewComponent.h>
 #import <ComponentKit/CKStatefulViewComponentController.h>
 #import <ComponentKit/CKStatelessComponent.h>
