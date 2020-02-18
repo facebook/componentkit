@@ -64,29 +64,6 @@ namespace CK {
   }
 }
 
-/** Specialize std::hash. */
-namespace std {
-  template<> struct hash<CK::Component::PersistentAttributeShape>
-  {
-    size_t operator()(const CK::Component::PersistentAttributeShape &s) const
-    {
-      return std::hash<int32_t>()(s._identifier);
-    }
-  };
-
-  template <> struct hash<CK::Component::ViewKey>
-  {
-    size_t operator()(const CK::Component::ViewKey &k) const
-    {
-      return [k.componentClass hash]
-              ^ hash<CKComponentViewClassIdentifier>()(k.viewClassIdentifier)
-              ^ std::hash<CK::Component::PersistentAttributeShape>()(k.attributeShape);
-    }
-  };
-}
-
-struct CKComponentViewClass;
-
 namespace CK {
   namespace Component {
     class ViewReusePool {
@@ -134,22 +111,15 @@ namespace CK {
           config.attributeShape(),
         };
         // Note that operator[] creates a new ViewReusePool if one doesn't exist yet. This is what we want.
-        auto const v = [&]() {
-          if (useCKDictionary) {
-            return dictionary[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
-          }
-          return map[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
-        }();
+        auto const v = dictionary[key].viewForClass(config.viewClass(), container, mountAnalyticsContext);
         vendedViews.push_back(v);
         return v;
       }
 
       friend void ViewReusePool::hideAll(UIView *view, MountAnalyticsContext *mountAnalyticsContext);
     private:
-      std::unordered_map<ViewKey, ViewReusePool> map;
       Dictionary<ViewKey, ViewReusePool> dictionary;
       std::vector<UIView *> vendedViews;
-      BOOL useCKDictionary;
 
       ViewReusePoolMap(const ViewReusePoolMap&) = delete;
       ViewReusePoolMap &operator=(const ViewReusePoolMap&) = delete;
