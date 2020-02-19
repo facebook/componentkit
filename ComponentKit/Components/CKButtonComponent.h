@@ -90,4 +90,6 @@ struct CKButtonComponentOptions {
 
 @end
 
+#import <ComponentKit/ButtonComponentBuilder.h>
+
 #endif

@@ -68,6 +68,7 @@ struct CKBuildComponentTreeParams {
 
 #endif
 
+@protocol CKTreeNodeProtocol;
 @protocol CKTreeNodeWithChildrenProtocol;
 
 /**

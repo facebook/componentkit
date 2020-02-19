@@ -1091,6 +1091,8 @@
 		D6683A5123B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D6683A4F23B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D68A9E3D22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D68A9E3E22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D69FDBAA23E32385002046EC /* ButtonComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D69FDBA923E32385002046EC /* ButtonComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D69FDBAB23E32385002046EC /* ButtonComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D69FDBA923E32385002046EC /* ButtonComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6A0CF8722844556000CC4D0 /* CKAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D6A0CF8522844556000CC4D0 /* CKAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6A0CF8822844556000CC4D0 /* CKAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D6A0CF8522844556000CC4D0 /* CKAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6A0CF8922844556000CC4D0 /* CKAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6A0CF8622844556000CC4D0 /* CKAnimation.mm */; };
@@ -1989,6 +1991,7 @@
 		D65FBC5B23B548BA00F7FD7F /* CenterLayoutComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CenterLayoutComponentBuilder.h; sourceTree = "<group>"; };
 		D6683A4F23B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BackgroundLayoutComponentBuilder.h; sourceTree = "<group>"; };
 		D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKDelayedInitialisationWrapper.h; sourceTree = "<group>"; };
+		D69FDBA923E32385002046EC /* ButtonComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ButtonComponentBuilder.h; sourceTree = "<group>"; };
 		D6A0CF8522844556000CC4D0 /* CKAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAnimation.h; sourceTree = "<group>"; };
 		D6A0CF8622844556000CC4D0 /* CKAnimation.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnimation.mm; sourceTree = "<group>"; };
 		D6A0CF9522844811000CC4D0 /* CKAnimationTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKAnimationTests.mm; sourceTree = "<group>"; };
@@ -2717,6 +2720,7 @@
 				D0B47AD11CBD926700BB33CE /* CKNetworkImageComponent.h */,
 				D0B47AD21CBD926700BB33CE /* CKNetworkImageComponent.mm */,
 				D0B47AD31CBD926700BB33CE /* CKNetworkImageDownloading.h */,
+				D69FDBA923E32385002046EC /* ButtonComponentBuilder.h */,
 				D61CAAC323D0A6C100D86060 /* ImageComponentBuilder.h */,
 			);
 			path = Components;
@@ -3312,6 +3316,7 @@
 				D4BC574323E3765C0075D688 /* CKAvailability.h in Headers */,
 				727CC949238DD04D008F36D4 /* CKFatal.h in Headers */,
 				D4BC573323E3765C0075D688 /* CKDelayedNonNull.h in Headers */,
+				D69FDBAB23E32385002046EC /* ButtonComponentBuilder.h in Headers */,
 				03B8B4FA1D2A346F00EDFF59 /* CKTextKitRenderer+TextChecking.h in Headers */,
 				D4BC572B23E3765C0075D688 /* CKDispatch.h in Headers */,
 				03B8B4FB1D2A346F00EDFF59 /* CKDataSourceState.h in Headers */,
@@ -3548,6 +3553,7 @@
 				60EFF4B42113555C00CA7C68 /* CKStatelessComponent.h in Headers */,
 				D48D9D3E2342606B003DDC41 /* CKTransitions.h in Headers */,
 				D0B47CEF1CBD948E00BB33CE /* CKComponent.h in Headers */,
+				D69FDBAA23E32385002046EC /* ButtonComponentBuilder.h in Headers */,
 				D0B47CF31CBD948E00BB33CE /* CKComponentController.h in Headers */,
 				D4BC576423E3765C0075D688 /* CKCollection.h in Headers */,
 				D0B47D2B1CBD948E00BB33CE /* CKComponentHostingView.h in Headers */,

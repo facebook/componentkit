@@ -52,136 +52,128 @@ static UIImage *fakeImage()
 
 - (void)testButtonWithTitle
 {
-  CKButtonComponent *b = [CKButtonComponent
-                          newWithAction:{}
-                          options:{
-                            .titles = @"Hello World",
-                          }
-                         ];
+  auto const b =
+  CK::ButtonComponentBuilder()
+  .action(nullptr)
+  .title(@"Hello World")
+  .build();
+
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
 - (void)testButtonWithTitleAndTitleEdgeInsets
 {
-  CKButtonComponent *b = [CKButtonComponent
-                          newWithAction:{}
-                          options:{
-                            .titles = @"Hello World",
-                            .titleEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
-                          }
-                         ];
+  auto const b =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .title(@"Hello World")
+  .titleEdgeInsets(UIEdgeInsetsMake(10, 10, 10, 10))
+  .build();
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
 - (void)testButtonWithImage
 {
-  CKButtonComponent *b = [CKButtonComponent
-                          newWithAction:{}
-                          options:{
-                            .images = fakeImage(),
-                          }
-                         ];
+  auto const b =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .image(fakeImage())
+  .build();
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
 - (void)testButtonWithImageAndImageEdgeInsets
 {
-  CKButtonComponent *b = [CKButtonComponent
-                          newWithAction:{}
-                          options:{
-                            .images = fakeImage(),
-                            .imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
-                          }
-                         ];
+  auto const b =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .image(fakeImage())
+  .imageEdgeInsets(UIEdgeInsetsMake(10, 10, 10, 10))
+  .build();
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
 - (void)testButtonWithTitleAndImage
 {
-  CKButtonComponent *b = [CKButtonComponent
-                          newWithAction:{}
-                          options:{
-                            .titles = @"Hello World",
-                            .images = fakeImage(),
-                          }
-                         ];
+  auto const b =
+  CK::ButtonComponentBuilder()
+  .action(nullptr)
+  .title(@"Hello World")
+  .image(fakeImage())
+  .build();
+
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
 - (void)testButtonWithTitleAndImageWithImageEdgeInsets
 {
-  CKButtonComponent *b = [CKButtonComponent
-                          newWithAction:{}
-                          options:{
-                            .titles = @"Hello World",
-                            .images = fakeImage(),
-                            .imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
-                          }
-                         ];
+  auto const b =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .title(@"Hello World")
+  .image(fakeImage())
+  .imageEdgeInsets(UIEdgeInsetsMake(10, 10, 10, 10))
+  .build();
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
 - (void)testButtonWithTitleAndImageWithTitleEdgeInsets
 {
-  CKButtonComponent *b = [CKButtonComponent
-                          newWithAction:{}
-                          options:{
-                            .titles = @"Hello World",
-                            .images = fakeImage(),
-                            .titleEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
-                          }
-                         ];
+  auto const b =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .title(@"Hello World")
+  .image(fakeImage())
+  .titleEdgeInsets(UIEdgeInsetsMake(10, 10, 10, 10))
+  .build();
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
 - (void)testButtonWithTitleAndImageWithTitleEdgeInsetsAndImageEdgeInsets
 {
-  CKButtonComponent *b = [CKButtonComponent
-                          newWithAction:{}
-                          options:{
-                            .titles = @"Hello World",
-                            .images = fakeImage(),
-                            .titleEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
-                            .imageEdgeInsets = UIEdgeInsetsMake(20, 20, 20, 20),
-                          }
-                         ];
+  auto const b =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .title(@"Hello World")
+  .image(fakeImage())
+  .titleEdgeInsets(UIEdgeInsetsMake(10, 10, 10, 10))
+  .imageEdgeInsets(UIEdgeInsetsMake(20, 20, 20, 20))
+  .build();
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
 - (void)testButtonWithTitleAndImageAndContentEdgeInsets
 {
-  CKButtonComponent *b = [CKButtonComponent
-                          newWithAction:{}
-                          options:{
-                            .titles = @"Hello World",
-                            .images = fakeImage(),
-                            .contentEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
-                          }
-                         ];
+  auto const b =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .title(@"Hello World")
+  .image(fakeImage())
+  .contentEdgeInsets(UIEdgeInsetsMake(10, 10, 10, 10))
+  .build();
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
 
 - (void)testButtonWithTitleAndImageAndContentEdgeInsetsAndTitleEdgeInsetsAndImageEdgeInsets
 {
-  CKButtonComponent *b = [CKButtonComponent
-                          newWithAction:{}
-                          options:{
-                            .titles = @"Hello World",
-                            .images = fakeImage(),
-                            .contentEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
-                            .titleEdgeInsets = UIEdgeInsetsMake(20, 20, 20, 20),
-                            .imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10),
-                          }
-                         ];
+  auto const b =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .title(@"Hello World")
+  .image(fakeImage())
+  .contentEdgeInsets(UIEdgeInsetsMake(10, 10, 10, 10))
+  .titleEdgeInsets(UIEdgeInsetsMake(20, 20, 20, 20))
+  .imageEdgeInsets(UIEdgeInsetsMake(10, 10, 10, 10))
+  .build();
   CKSizeRange size;
   CKSnapshotVerifyComponent(b, size, nil);
 }
@@ -198,65 +190,59 @@ static UIImage *fakeImage()
   };
   CKSizeRange size;
 
-  CKButtonComponent *normal = [CKButtonComponent
-                               newWithAction:{}
-                               options:{
-                                 .titles = @"Hello",
-                                 .titleColors = titleColors,
-                               }
-                              ];
+  auto const normal =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .title(@"Hello")
+  .titleColors(titleColors)
+  .build();
   CKSnapshotVerifyComponent(normal, size, @"normal");
 
-  CKButtonComponent *hi = [CKButtonComponent
-                           newWithAction:{}
-                           options:{
-                             .titles = @"Hello",
-                             .titleColors = titleColors,
-                             .attributes = {{@selector(setHighlighted:), @YES}},
-                           }
-                          ];
+  auto const hi =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .title(@"Hello")
+  .titleColors(titleColors)
+  .attribute(@selector(setHighlighted:), YES)
+  .build();
   CKSnapshotVerifyComponent(hi, size, @"highlighted");
 
-  CKButtonComponent *sel = [CKButtonComponent
-                            newWithAction:{}
-                            options:{
-                              .titles = @"Hello",
-                              .titleColors = titleColors,
-                              .selected = YES,
-                            }
-                           ];
+  auto const sel =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .title(@"Hello")
+  .titleColors(titleColors)
+  .selected(YES)
+  .build();
   CKSnapshotVerifyComponent(sel, size, @"selected");
 
-  CKButtonComponent *dis = [CKButtonComponent
-                            newWithAction:{}
-                            options:{
-                              .titles = @"Hello",
-                              .titleColors = titleColors,
-                              .enabled = NO,
-                            }
-                           ];
+  auto const dis =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .title(@"Hello")
+  .titleColors(titleColors)
+  .enabled(NO)
+  .build();
   CKSnapshotVerifyComponent(dis, size, @"disabled");
 
-  CKButtonComponent *dissel = [CKButtonComponent
-                               newWithAction:{}
-                               options:{
-                                 .titles = @"Hello",
-                                 .titleColors = titleColors,
-                                 .selected = YES,
-                                 .enabled = NO,
-                               }
-                              ];
+  auto const dissel =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .title(@"Hello")
+  .titleColors(titleColors)
+  .selected(YES)
+  .enabled(NO)
+  .build();
   CKSnapshotVerifyComponent(dissel, size, @"disabled_selected");
 
-  CKButtonComponent *selhi = [CKButtonComponent
-                              newWithAction:{}
-                              options:{
-                                .titles = @"Hello",
-                                .titleColors = titleColors,
-                                .selected = YES,
-                                .attributes = {{@selector(setHighlighted:), @YES}},
-                              }
-                             ];
+  auto const selhi =
+  CK::ButtonComponentBuilder()
+  .action({})
+  .title(@"Hello")
+  .titleColors(titleColors)
+  .selected(YES)
+  .attribute(@selector(setHighlighted:), YES)
+  .build();
   CKSnapshotVerifyComponent(selhi, size, @"selected_highlighted");
 }
 

@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 
 #import <ComponentKit/BackgroundLayoutComponentBuilder.h>
+#import <ComponentKit/ButtonComponentBuilder.h>
 #import <ComponentKit/CenterLayoutComponentBuilder.h>
 #import <ComponentKit/CKAction.h>
 #import <ComponentKit/CKAnalyticsListener.h>
