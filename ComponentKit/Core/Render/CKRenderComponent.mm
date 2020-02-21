@@ -135,9 +135,19 @@
   return nil;
 }
 
+// TODO: Remove when new version is released.
 + (BOOL)requiresScopeHandle
 {
-  const Class componentClass = self;
+  return NO;
+}
+
+- (BOOL)requiresScopeHandle
+{
+  if ([self.class controllerClass] != nil) {
+    return YES;
+  }
+
+  const Class componentClass = self.class;
 
   static CK::StaticMutex mutex = CK_MUTEX_INITIALIZER; // protects cache
   CK::StaticMutexLocker l(mutex);
@@ -145,14 +155,14 @@
   static std::unordered_map<Class, BOOL> *cache = new std::unordered_map<Class, BOOL>();
   const auto &it = cache->find(componentClass);
   if (it == cache->end()) {
-    BOOL hasAnimations = NO;
-    if (CKSubclassOverridesInstanceMethod([CKComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
-        CKSubclassOverridesInstanceMethod([CKComponent class], componentClass, @selector(animationsOnInitialMount)) ||
-        CKSubclassOverridesInstanceMethod([CKComponent class], componentClass, @selector(animationsOnFinalUnmount))) {
-      hasAnimations = YES;
-    }
-    cache->insert({componentClass, hasAnimations});
-    return hasAnimations;
+    const BOOL requiresScopeHandle =
+      [componentClass requiresScopeHandle] ||
+      CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(buildController)) ||
+      CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
+      CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsOnInitialMount)) ||
+      CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsOnFinalUnmount));
+    cache->insert({componentClass, requiresScopeHandle});
+    return requiresScopeHandle;
   }
   return it->second;
 }

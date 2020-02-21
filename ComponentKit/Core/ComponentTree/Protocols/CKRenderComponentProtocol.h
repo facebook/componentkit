@@ -69,7 +69,7 @@ NS_SWIFT_NAME(RenderComponentProtocol)
 @property (nonatomic, strong, readonly, nullable) id componentIdentifier;
 
 /** Returns true if the component requires scope handle */
-@property (nonatomic, assign, readonly, class) BOOL requiresScopeHandle;
+@property (nonatomic, assign, readonly) BOOL requiresScopeHandle;
 
 @end
 

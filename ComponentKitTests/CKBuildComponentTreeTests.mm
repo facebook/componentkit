@@ -256,7 +256,7 @@ static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSM
 @end
 
 @implementation CKComponentTreeTestComponent_RenderWithChild
-+ (BOOL)requiresScopeHandle
+- (BOOL)requiresScopeHandle
 {
   return YES;
 }

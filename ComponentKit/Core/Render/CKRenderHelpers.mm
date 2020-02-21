@@ -309,12 +309,9 @@ namespace CKRender {
         } else {
           // The component needs a scope handle in few cases:
           // 1. Has an initial state
-          // 2. Has a controller
-          // 3. Returns `YES` from `requiresScopeHandle`
+          // 2. Returns `YES` from `requiresScopeHandle`
           id initialState = [componentClass initialStateWithComponent:component];
-          if (initialState != CKTreeNodeEmptyState() ||
-              [componentClass controllerClass] ||
-              [componentClass requiresScopeHandle]) {
+          if (initialState != CKTreeNodeEmptyState() || component.requiresScopeHandle) {
             scopeHandle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
                                                             rootIdentifier:scopeRoot.globalIdentifier
                                                             componentClass:componentClass
