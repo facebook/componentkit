@@ -85,6 +85,15 @@
 /** For internal debug use only; don't touch this. */
 @property (nonatomic, copy, readonly) NSString *backtraceStackDescription;
 
+/** For internal use; don't touch this. */
+@property (nonatomic, assign, readonly) BOOL hasAnimations;
+
+/** For internal use; don't touch this. */
+@property (nonatomic, assign, readonly) BOOL hasBoundsAnimations;
+
+/** For internal use; don't touch this. */
+@property (nonatomic, assign, readonly) BOOL controllerOverridesDidPrepareLayout;
+
 /**
  Update component in controller right after new generation is created.
  NOTE: This should only be used by ComponentKit infra.

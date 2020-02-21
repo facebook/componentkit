@@ -130,6 +130,26 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   CKAssert(_mountInfo == nullptr, @"%@ must be unmounted before dealloc", [self class]);
 }
 
+- (BOOL)hasAnimations
+{
+  return CKSubclassOverridesInstanceMethod([CKComponent class], [self class], @selector(animationsFromPreviousComponent:));
+}
+
+- (BOOL)hasBoundsAnimations
+{
+  return CKSubclassOverridesInstanceMethod([CKComponent class], [self class], @selector(boundsAnimationFromPreviousComponent:));
+}
+
+- (BOOL)controllerOverridesDidPrepareLayout
+{
+  const Class<CKComponentControllerProtocol> controllerClass = [[self class] controllerClass];
+  return
+  controllerClass
+  && CKSubclassOverridesInstanceMethod([CKComponentController class],
+                                  controllerClass,
+                                  @selector(didPrepareLayout:forComponent:));
+}
+
 - (id<CKComponentControllerProtocol>)buildController
 {
   return [[(Class)[self.class controllerClass] alloc] initWithComponent:self];
