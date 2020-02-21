@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ComponentProtocol)
 @protocol CKComponentProtocol <NSObject>
 
+@property (nonatomic, copy, readonly) NSString *className;
 @property (nonatomic, strong, readonly, class, nullable) id initialState;
 @property (nonatomic, strong, readonly, class, nullable) Class<CKComponentControllerProtocol> controllerClass;
 

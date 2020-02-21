@@ -510,7 +510,7 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return _scopeHandle.state;
 }
 
-- (NSString *)debugName
+- (NSString *)className
 {
   return NSStringFromClass(self.class);
 }

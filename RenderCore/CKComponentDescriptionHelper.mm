@@ -37,7 +37,7 @@ static NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *compo
 
 NSString *CKComponentCompactDescription(id<CKMountable> component)
 {
-  return [component debugName] ?: NSStringFromClass([component class]);
+  return component.className ?: NSStringFromClass([component class]);
 }
 
 NSString *CKComponentBacktraceDescription(NSArray<id<CKMountable>> *componentBacktrace) noexcept

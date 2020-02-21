@@ -29,9 +29,9 @@
   return [NSString stringWithFormat:@"<%@: %p> (%@)", _identifier, self, NSStringFromClass([self class])];
 }
 
-- (NSString *)debugName
+- (NSString *)className
 {
-  return self.description;
+  return _identifier;
 }
 
 @end

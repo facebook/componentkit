@@ -38,6 +38,8 @@
 { return nil; };
 - (id<CKComponentControllerProtocol>)buildController
 { return nil; }
+- (NSString *)className
+{ return @""; }
 @end
 
 @interface TestComponentWithoutScopedProtocol : NSObject <CKComponentProtocol>
@@ -48,6 +50,8 @@
 { return nil; };
 - (id<CKComponentControllerProtocol>)buildController
 { return nil; }
+- (NSString *)className
+{ return @""; }
 @end
 
 @interface TestComponentControllerWithScopedProtocol : NSObject <CKComponentControllerProtocol, TestScopedProtocol>

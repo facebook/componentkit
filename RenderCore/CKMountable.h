@@ -109,8 +109,8 @@ Unmounts the component:
 /** Unique identifier of the component */
 @property (nonatomic, strong, readonly, nullable) id<NSObject> uniqueIdentifier;
 
-/** Name used in debug message */
-@property (nonatomic, copy, readonly, nullable) NSString *debugName;
+/** Name of the component's class */
+@property (nonatomic, copy, readonly) NSString *className;
 
 /** A long-lived object that exists across generations */
 @property (nonatomic, strong, readonly, nullable) id controller;
