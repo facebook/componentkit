@@ -51,22 +51,13 @@
                               supercomponent:(CKComponent *)supercomponent NS_REQUIRES_SUPER;
 
 /**
- For internal use only; don't use this initializer.
-
- @param view A struct describing the view for this component. Pass {} to specify that no view should be created.
- @param size A size constraint that should apply to this component. Pass {} to specify no size constraint.
-
- This initializer will not try to acquire the scope handle from the thread local store.
- */
-+ (instancetype)newRenderComponentWithView:(const CKComponentViewConfiguration &)view
-                                      size:(const CKComponentSize &)size;
-
-/**
  For internal use only; don't use this directly.
  */
 - (void)setViewConfiguration:(const CKComponentViewConfiguration &)viewConfiguration;
 
 - (id)nextResponderAfterController;
+
+- (void)didFinishComponentInitialization;
 
 /**
  A CKComponentViewConfiguration specifies the class of a view and the attributes that should be applied to it.

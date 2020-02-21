@@ -81,12 +81,6 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   return [[self alloc] initWithView:view size:size];
 }
 
-+ (instancetype)newRenderComponentWithView:(const CKComponentViewConfiguration &)view
-                                      size:(const CKComponentSize &)size
-{
-  return [[self alloc] initRenderComponentWithView:view size:size];
-}
-
 + (instancetype)new
 {
   return [self newWithView:{} size:{}];
@@ -101,33 +95,24 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                         size:(const CKComponentSize &)size
 {
   if (self = [super init]) {
-    CKValidateComponentCreation();
-    _scopeHandle = [CKComponentScopeHandle handleForComponent:self];
     _viewConfiguration = view;
     _size = size;
+
+    [self didFinishComponentInitialization];
   }
   return self;
 }
-
-- (instancetype)initRenderComponentWithView:(const CKComponentViewConfiguration &)view
-                                       size:(const CKComponentSize &)size
-{
-  if (self = [super init]) {
-    CKValidateRenderComponentCreation();
-    // Mark render component in the scope root.
-    CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree();
-    CKComponentContextHelper::didCreateRenderComponent(self);
-    _viewConfiguration = view;
-    _size = size;
-  }
-  return self;
-}
-
 
 - (void)dealloc
 {
   // Since the component and its view hold strong references to each other, this should never happen!
   CKAssert(_mountInfo == nullptr, @"%@ must be unmounted before dealloc", [self class]);
+}
+
+- (void)didFinishComponentInitialization
+{
+  CKValidateComponentCreation();
+  _scopeHandle = [CKComponentScopeHandle handleForComponent:self];
 }
 
 - (BOOL)hasAnimations

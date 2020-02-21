@@ -20,8 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CKRenderComponent : CKComponent <CKRenderWithChildComponentProtocol>
 
-- (instancetype)init CK_SWIFT_DESIGNATED_INITIALIZER;
-
 /**
  Returns a child component that needs to be rendered from this component.
 
@@ -30,8 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (CKComponent * _Nullable)render:(id _Nullable)state;
 
 #if CK_NOT_SWIFT
-
-+ (instancetype)new;
 
 /**
  Returns view configuration for the component.
@@ -46,5 +42,13 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 
 @end
+
+#if CK_SWIFT
+#define CK_RENDER_COMPONENT_INIT_UNAVAILABLE \
+  - (instancetype)init NS_UNAVAILABLE;
+#else
+#define CK_RENDER_COMPONENT_INIT_UNAVAILABLE \
+  + (instancetype)new NS_UNAVAILABLE;
+#endif
 
 NS_ASSUME_NONNULL_END

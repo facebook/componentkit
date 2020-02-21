@@ -14,7 +14,9 @@
 #import <ComponentKit/CKMutex.h>
 
 #import "CKComponentInternal.h"
+#import "CKComponentCreationValidation.h"
 #import "CKComponentSubclass.h"
+#import "CKThreadLocalComponentScope.h"
 #import "CKIterableHelpers.h"
 #import "CKRenderHelpers.h"
 #import "CKTreeNode.h"
@@ -40,15 +42,12 @@
 }
 #endif
 
-+ (instancetype)new
+- (void)didFinishComponentInitialization
 {
-  return [super newRenderComponentWithView:{} size:{}];
-}
-
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view
-                       size:(const CKComponentSize &)size
-{
-  return [super newRenderComponentWithView:view size:size];
+  // Not calling super intentionally.
+  CKValidateRenderComponentCreation();
+  CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree();
+  CKComponentContextHelper::didCreateRenderComponent(self);
 }
 
 - (CKComponent *)render:(id)state

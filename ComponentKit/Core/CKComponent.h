@@ -26,12 +26,15 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Component)
 @interface CKComponent : NSObject <CKMountable, CKComponentProtocol>
 
+// TODO: Remove when `-initWithView:size` is exposed to Swift.
 - (instancetype)init CK_SWIFT_DESIGNATED_INITIALIZER;
+
++ (instancetype)new CK_SWIFT_UNAVAILABLE;
 
 #if CK_NOT_SWIFT
 
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
-                        size:(const CKComponentSize &)size;
+                        size:(const CKComponentSize &)size NS_DESIGNATED_INITIALIZER;
 
 /**
  @param view A struct describing the view for this component. Pass {} to specify that no view should be created.
@@ -42,8 +45,6 @@ NS_SWIFT_NAME(Component)
  */
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size;
-
-+ (instancetype)new;
 
 #endif
 
@@ -57,10 +58,18 @@ NS_SWIFT_NAME(Component)
 
 @end
 
+#if CK_SWIFT
 #define CK_COMPONENT_INIT_UNAVAILABLE \
-+ (instancetype)new NS_UNAVAILABLE; \
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view \
-                       size:(const CKComponentSize &)size NS_UNAVAILABLE
+  - (instancetype)init NS_UNAVAILABLE
+#else
+#define CK_COMPONENT_INIT_UNAVAILABLE \
+  + (instancetype)new NS_UNAVAILABLE; \
+  + (instancetype)newWithView:(const CKComponentViewConfiguration &)view \
+                         size:(const CKComponentSize &)size NS_UNAVAILABLE; \
+  - (instancetype)init NS_UNAVAILABLE; \
+  - (instancetype)initWithView:(const CKComponentViewConfiguration &)view \
+                          size:(const CKComponentSize &)size NS_UNAVAILABLE;
+#endif
 
 NS_ASSUME_NONNULL_END
 
