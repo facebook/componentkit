@@ -36,6 +36,8 @@
 + (id)initialState { return nil; }
 + (Class<CKComponentControllerProtocol>)controllerClass
 { return nil; };
+- (id<CKComponentControllerProtocol>)buildController
+{ return nil; }
 @end
 
 @interface TestComponentWithoutScopedProtocol : NSObject <CKComponentProtocol>
@@ -44,6 +46,8 @@
 + (id)initialState { return nil; }
 + (Class<CKComponentControllerProtocol>)controllerClass
 { return nil; };
+- (id<CKComponentControllerProtocol>)buildController
+{ return nil; }
 @end
 
 @interface TestComponentControllerWithScopedProtocol : NSObject <CKComponentControllerProtocol, TestScopedProtocol>

@@ -193,15 +193,13 @@
 - (void)resolve
 {
   CKAssertFalse(_resolved);
+  // Strong ref
+  const auto acquiredComponent = _acquiredComponent;
   // _acquiredComponent may be nil if a component scope was declared before an early return. In that case, the scope
   // handle will not be acquired, and we should avoid creating a component controller for the nil component.
-  if (!_controller && _acquiredComponent) {
-    const Class<CKComponentControllerProtocol> controllerClass = [_acquiredComponent.class controllerClass];
-    if (controllerClass) {
-      // The compiler is not happy when I don't explicitly cast as (Class)
-      // See: http://stackoverflow.com/questions/21699755/create-an-instance-from-a-class-that-conforms-to-a-protocol
-      _controller = [[(Class)controllerClass alloc] initWithComponent:_acquiredComponent];
-
+  if (!_controller && acquiredComponent) {
+    _controller = [acquiredComponent buildController];
+    if (_controller) {
       CKThreadLocalComponentScope *const currentScope = CKThreadLocalComponentScope::currentScope();
       if (currentScope) {
         [currentScope->newScopeRoot registerComponentController:_controller];

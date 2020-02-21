@@ -21,6 +21,12 @@ NS_SWIFT_NAME(ComponentProtocol)
 @property (nonatomic, strong, readonly, class, nullable) id initialState;
 @property (nonatomic, strong, readonly, class, nullable) Class<CKComponentControllerProtocol> controllerClass;
 
+/*
+ * For internal use only. Please do not use this. Will soon be deprecated.
+ * Overriding this API has undefined behvaiour.
+ */
+- (id<CKComponentControllerProtocol>)buildController;
+
 @end
 
 NS_ASSUME_NONNULL_END

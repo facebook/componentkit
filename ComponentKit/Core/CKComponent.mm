@@ -130,6 +130,11 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   CKAssert(_mountInfo == nullptr, @"%@ must be unmounted before dealloc", [self class]);
 }
 
+- (id<CKComponentControllerProtocol>)buildController
+{
+  return [[(Class)[self.class controllerClass] alloc] initWithComponent:self];
+}
+
 - (void)acquireScopeHandle:(CKComponentScopeHandle *)scopeHandle
 {
   CKAssert(_scopeHandle == nil, @"Component(%@) already has '_scopeHandle'.", self);
