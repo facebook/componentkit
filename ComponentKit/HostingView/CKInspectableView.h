@@ -20,6 +20,9 @@
 @protocol CKInspectableView
 /** Call this only on the main thread. */
 - (CKComponentLayout)mountedLayout;
+
+/** Unique identifier for the component hierarchy hosted in this view */
+- (id<NSObject>)uniqueIdentifier;
 @end
 
 #endif

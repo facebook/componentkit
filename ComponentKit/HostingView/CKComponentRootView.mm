@@ -75,4 +75,10 @@ static NSMutableArray *hitTestHooks;
   return attachState ? CKComponentAttachStateRootLayout(attachState).layout() : CKComponentLayout();
 }
 
+- (id<NSObject>)uniqueIdentifier
+{
+  auto const scopeRootIdentifier = CKGetAttachStateForView(self).scopeIdentifier;
+  return scopeRootIdentifier > 0 ? @(scopeRootIdentifier) : nil;
+}
+
 @end
