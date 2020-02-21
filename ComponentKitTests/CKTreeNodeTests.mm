@@ -555,9 +555,9 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
   return c;
 }
 
-+ (id)initialStateWithComponent:(CKTreeNodeTest_RenderComponent_WithStateFromProps *)c
+- (id)initialState
 {
-  return c->_prop;
+  return _prop;
 }
 
 - (CKComponent *)render:(id)state
@@ -631,9 +631,9 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
   return [CKComponent new];
 }
 
-+ (id)initialStateWithComponent:(CKTreeNodeTest_RenderComponent_WithIdentifier *)component
+- (id)initialState
 {
-  return component->_identifier;
+  return _identifier;
 }
 
 @end

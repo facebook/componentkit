@@ -26,7 +26,7 @@ NS_SWIFT_NAME(RenderComponentProtocol)
  Override this method in order to provide an initialState which depends on the component's props.
  Otherwise, override `+(id)initialState` instead.
  */
-+ (id _Nullable)initialStateWithComponent:(id<CKRenderComponentProtocol>)component;
+- (id _Nullable)initialState;
 
 /*
  Override this method in order to allow ComopnentKit to reuse the previous components.

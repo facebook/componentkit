@@ -310,7 +310,7 @@ namespace CKRender {
           // The component needs a scope handle in few cases:
           // 1. Has an initial state
           // 2. Returns `YES` from `requiresScopeHandle`
-          id initialState = [componentClass initialStateWithComponent:component];
+          id initialState = [component initialState];
           if (initialState != CKTreeNodeEmptyState() || component.requiresScopeHandle) {
             scopeHandle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
                                                             rootIdentifier:scopeRoot.globalIdentifier

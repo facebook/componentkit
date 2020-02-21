@@ -106,8 +106,7 @@
   return CKIterable::childAtIndex(self, index, _child);
 }
 
-#pragma mark - CKRenderComponentProtocol
-
+// TODO: Remove when new version is released.
 + (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component
 {
   return [self initialState];
@@ -116,6 +115,13 @@
 + (id)initialState
 {
   return CKTreeNodeEmptyState();
+}
+
+#pragma mark - CKRenderComponentProtocol
+
+- (id)initialState
+{
+  return [self.class initialStateWithComponent:self];
 }
 
 - (BOOL)shouldComponentUpdate:(id<CKRenderComponentProtocol>)component
