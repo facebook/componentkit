@@ -72,7 +72,9 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   _children.push_back({componentKey, child});
 }
 
-- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot
+      fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+        mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
 {
   // In case that CKComponentScope was created, but not acquired from the component (for example: early nil return) ,
   // the component was never linked to the scope handle/tree node, hence, we should stop the recursion here.
@@ -80,11 +82,18 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
     return;
   }
 
-  [super didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
-  for (auto const &child : _children) {
-    auto childKey = std::get<0>(child);
-    if (std::get<1>(childKey) % 2 == kTreeNodeParentBaseKey) {
-      [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
+  [super didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot mergeTreeNodesLinks:mergeTreeNodesLinks];
+
+  if (mergeTreeNodesLinks) {
+    for (auto const &child : _children) {
+      [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot mergeTreeNodesLinks:mergeTreeNodesLinks];
+    }
+  } else  {
+    for (auto const &child : _children) {
+      auto childKey = std::get<0>(child);
+      if (std::get<1>(childKey) % 2 == kTreeNodeParentBaseKey) {
+        [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot mergeTreeNodesLinks:mergeTreeNodesLinks];
+      }
     }
   }
 }
@@ -126,6 +135,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                                          keys:(const std::vector<id<NSObject>> &)keys
                           initialStateCreator:(id (^)(void))initialStateCreator
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                          mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
 {
   id<CKScopeTreeNodeProtocol> frame = (id<CKScopeTreeNodeProtocol>)pair.frame;
   id<CKScopeTreeNodeProtocol> previousFrame = (id<CKScopeTreeNodeProtocol>)pair.previousFrame;
@@ -157,6 +167,12 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
 
   // Insert the new node to its parent map.
   [frame setChildScope:newChild forComponentKey:componentKey];
+
+  // Update the component key on the new child.
+  if (mergeTreeNodesLinks) {
+    newChild->_componentKey = componentKey;
+  }
+
   return {.frame = newChild, .previousFrame = childFrameOfPreviousFrame};
 }
 

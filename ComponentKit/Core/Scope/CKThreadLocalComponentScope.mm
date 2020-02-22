@@ -37,8 +37,9 @@ CKThreadLocalComponentScope *CKThreadLocalComponentScope::currentScope() noexcep
 
 CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                                                          const CKComponentStateUpdateMap &updates,
-                                                         CKBuildTrigger trigger)
-: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), systraceListener(previousScopeRoot.analyticsListener.systraceListener), buildTrigger(trigger), componentAllocations(0), previousScope(CKThreadLocalComponentScope::currentScope())
+                                                         CKBuildTrigger trigger,
+                                                         BOOL merge)
+: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), systraceListener(previousScopeRoot.analyticsListener.systraceListener), buildTrigger(trigger),  componentAllocations(0), mergeTreeNodesLinks(merge), previousScope(CKThreadLocalComponentScope::currentScope())
 {
   stack.push({newScopeRoot.rootNode.node(), previousScopeRoot.rootNode.node()});
   keys.push({});

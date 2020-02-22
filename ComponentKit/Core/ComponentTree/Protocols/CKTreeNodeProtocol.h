@@ -64,6 +64,9 @@ struct CKBuildComponentTreeParams {
 
   // When disabled, all the comopnents will be regenerated (no component reuse optimiztions). Enabled by default.
   BOOL enableComponentReuseOptimizations = YES;
+
+  // Avoid duplicate links in the tree nodes for owner/parent based nodes
+  BOOL mergeTreeNodesLinks = NO;
 };
 
 #endif
@@ -137,7 +140,9 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
 
 
 /** This method should be called after a node has been reused */
-- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot
+      fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+        mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks;
 
 /** This method should be called on nodes that have been created from CKComponentScope */
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component

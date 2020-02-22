@@ -29,6 +29,10 @@
  CKTreeNode is the base class of a tree node. It will be attached non-render components (CKComponent & CKCompositeComponent).
  */
 @interface CKTreeNode : NSObject <CKTreeNodeProtocol>
+{
+  @package
+  CKTreeNodeComponentKey _componentKey;
+}
 
 /** Base initializer */
 - (instancetype)initWithPreviousNode:(id<CKTreeNodeProtocol>)previousNode

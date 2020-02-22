@@ -30,7 +30,8 @@ class CKThreadLocalComponentScope {
 public:
   CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                               const CKComponentStateUpdateMap &updates,
-                              CKBuildTrigger trigger = CKBuildTrigger::NewTree);
+                              CKBuildTrigger trigger = CKBuildTrigger::NewTree,
+                              BOOL merge = NO);
   ~CKThreadLocalComponentScope();
 
   /** Returns nullptr if there isn't a current scope */
@@ -55,6 +56,9 @@ public:
 
   /** Component Allocations */
   NSUInteger componentAllocations;
+
+  /** Avoid duplicate links in the tree nodes for owner/parent based nodes */
+  BOOL mergeTreeNodesLinks;
 
 private:
   CKThreadLocalComponentScope *const previousScope;

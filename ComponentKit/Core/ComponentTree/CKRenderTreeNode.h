@@ -29,7 +29,8 @@
 /** Will be called after component reuse */
 - (void)didReuseRenderNode:(CKRenderTreeNode *)node
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
-         previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
+         previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+       mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks;
 
 @end
 

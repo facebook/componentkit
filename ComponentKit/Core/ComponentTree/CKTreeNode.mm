@@ -30,9 +30,6 @@
 @end
 
 @implementation CKTreeNode
-{
-  CKTreeNodeComponentKey _componentKey;
-}
 
 // Base initializer
 - (instancetype)initWithPreviousNode:(id<CKTreeNodeProtocol>)previousNode
@@ -84,9 +81,12 @@
        previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
                params:(const CKBuildComponentTreeParams &)params
 {
-  auto const componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
+  if (!params.mergeTreeNodesLinks)
+  {
+    auto const componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
+    _componentKey = componentKey;
+  }
   _component = component;
-  _componentKey = componentKey;
   // Set the link between the parent and the child.
   [parent setChild:self forComponentKey:_componentKey];
   // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
@@ -106,7 +106,9 @@
   return _componentKey;
 }
 
-- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot
+      fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+        mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
 {
   auto const parent = previousScopeRoot.rootNode.parentForNodeIdentifier(_nodeIdentifier);
   CKAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");

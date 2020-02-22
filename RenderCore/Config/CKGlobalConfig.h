@@ -45,6 +45,10 @@ struct CKGlobalConfig {
    properties on yoga node instead of the size of composite component itself
    */
   BOOL skipCompositeComponentSize = YES;
+  /**
+   Avoid duplicate links in the tree nodes for owner/parent based nodes
+   */
+  BOOL mergeTreeNodesLinks = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

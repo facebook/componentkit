@@ -16,6 +16,7 @@
 
 #import <ComponentKit/CKBuildComponentResult.h>
 #import <ComponentKit/CKComponentScopeTypes.h>
+#import <ComponentKit/CKGlobalConfig.h>
 
 @class CKComponentScopeRoot;
 @class CKComponent;
@@ -37,10 +38,12 @@ namespace CKBuildComponentHelpers {
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
  @param enableComponentReuseOptimizations If `NO`, all the comopnents will be regenerated (no component reuse optimiztions). `YES` by default.
+ @param mergeTreeNodesLinks if `YES`, the tree nodes tree will merge owner/parent based links.
  */
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
-                                        BOOL enableComponentReuseOptimizations = YES);
+                                        BOOL enableComponentReuseOptimizations = YES,
+                                        BOOL mergeTreeNodesLinks = CKReadGlobalConfig().mergeTreeNodesLinks);
 
 #endif

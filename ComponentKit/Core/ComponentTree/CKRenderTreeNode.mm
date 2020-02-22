@@ -45,14 +45,21 @@
 - (void)didReuseRenderNode:(CKRenderTreeNode *)node
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
          previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
+       mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
 {
   // Transfer the children vector from the reused node.
    _children = node->_children;
 
-  for (auto const &child : _children) {
-    auto childKey = std::get<0>(child);
-    if (std::get<1>(childKey) % 2 == kTreeNodeParentBaseKey) {
-      [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
+  if (mergeTreeNodesLinks) {
+    for (auto const &child : _children) {
+      [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot mergeTreeNodesLinks:mergeTreeNodesLinks];
+    }
+  } else {
+    for (auto const &child : _children) {
+      auto childKey = std::get<0>(child);
+      if (std::get<1>(childKey) % 2 == kTreeNodeParentBaseKey) {
+        [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot mergeTreeNodesLinks:mergeTreeNodesLinks];
+      }
     }
   }
 }
