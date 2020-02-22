@@ -28,7 +28,7 @@ extern NSUInteger const kTreeNodeOwnerBaseKey;
 @interface CKScopeTreeNode : CKTreeNode <CKScopeTreeNodeProtocol>
 {
   @package
-  std::vector<std::tuple<CKScopeNodeKey, id<CKTreeNodeProtocol>>> _children;
+  std::vector<std::tuple<CKTreeNodeComponentKey, id<CKTreeNodeProtocol>>> _children;
 }
 @end
 

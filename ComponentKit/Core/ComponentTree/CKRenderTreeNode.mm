@@ -50,8 +50,8 @@
    _children = node->_children;
 
   for (auto const &child : _children) {
-    auto childStateKey = std::get<0>(child);
-    if (std::get<1>(childStateKey.nodeKey) % 2 == kTreeNodeParentBaseKey) {
+    auto childKey = std::get<0>(child);
+    if (std::get<1>(childKey) % 2 == kTreeNodeParentBaseKey) {
       [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
     }
   }
