@@ -76,7 +76,11 @@ std::string CKIdentifierFromDelegateForwarderSelectors(const CKComponentForwarde
     CKComponent *responder = CKMountedComponentForView(_view);
     id target = [responder targetForAction:selector withSender:responder];
     if (!target) {
-      CKFailAssert(@"Delegate method is being called on an unmounted component's view: %@ selector:%@", _view, NSStringFromSelector(selector));
+      CKFailAssertWithCategory(
+        CKLastMountedComponentClassNameForView(_view),
+        @"Delegate method is being called on an unmounted component's view: %@ selector:%@", 
+        _view,
+        NSStringFromSelector(selector));
       return;
     }
     [anInvocation invokeWithTarget:target];

@@ -59,6 +59,7 @@
 {
   UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
   id mockComponent = [OCMockObject mockForClass:[CKComponent class]];
+  [[[mockComponent stub] andReturn:@"MyClass"] className];
   CKFakeActionComponent *fakeParentComponent = [CKFakeActionComponent new];
   [[[mockComponent stub] andReturn:fakeParentComponent] nextResponder];
   [[[mockComponent stub] andReturn:fakeParentComponent] targetForAction:[OCMArg anySelector] withSender:[OCMArg any]];
@@ -106,6 +107,7 @@
 
   UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
   id mockComponent = [OCMockObject mockForClass:[CKComponent class]];
+  [[[mockComponent stub] andReturn:@"MyClass"] className];
   CKFakeActionComponent *fakeParentComponent = [CKFakeActionComponent new];
   [[[mockComponent stub] andReturn:fakeParentComponent] nextResponder];
   [[[mockComponent stub] andReturn:fakeParentComponent] targetForAction:[OCMArg anySelector] withSender:[OCMArg any]];
@@ -126,6 +128,7 @@
 {
   UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
   id mockComponent = [OCMockObject mockForClass:[CKComponent class]];
+  [[[mockComponent stub] andReturn:@"MyClass"] className];
   CKFakeActionComponent *fakeParentComponent = [CKFakeActionComponent new];
   [[[mockComponent stub] andReturn:fakeParentComponent] nextResponder];
   [[[mockComponent stub] andReturn:fakeParentComponent] targetForAction:[OCMArg anySelector] withSender:[OCMArg any]];

@@ -20,6 +20,8 @@
 #error This file must be compiled as Obj-C++. If you are importing it, you must change your file extension to .mm.
 #endif
 
+NSString *CKLastMountedComponentClassNameForView(UIView *view);
+
 /** Strong reference back to the associated component while the component is mounted. */
 CKComponent *CKMountedComponentForView(UIView *view);
 
