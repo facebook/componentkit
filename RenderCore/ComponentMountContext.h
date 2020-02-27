@@ -60,10 +60,10 @@ namespace CK {
       static UIEdgeInsets adjustedGuide(const UIEdgeInsets layoutGuide, const CGPoint offset,
                                         const CGSize parentSize, const CGSize childSize) {
         return {
-          .left = layoutGuide.left + offset.x,
           .top = layoutGuide.top + offset.y,
-          .right = layoutGuide.right + (parentSize.width - childSize.width) - offset.x,
+          .left = layoutGuide.left + offset.x,
           .bottom = layoutGuide.bottom + (parentSize.height - childSize.height) - offset.y,
+          .right = layoutGuide.right + (parentSize.width - childSize.width) - offset.x,
         };
       };
     };
