@@ -12,11 +12,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+__attribute__((objc_subclassing_restricted))
 NS_SWIFT_NAME(ComponentSize)
 @interface CKComponentSize_SwiftBridge : NSObject
 
 - (instancetype)initWithSize:(CGSize)size;
-- (instancetype)initWithWidth:(CKDimension_SwiftBridge *)width height:(CKDimension_SwiftBridge *)height;
+- (instancetype)initWithWidth:(CKDimension_SwiftBridge *)width
+                       height:(CKDimension_SwiftBridge *)height
+                     minWidth:(CKDimension_SwiftBridge *)minWidth
+                    minHeight:(CKDimension_SwiftBridge *)minHeight
+                     maxWidth:(CKDimension_SwiftBridge *)maxWidth
+                    maxHeight:(CKDimension_SwiftBridge *)maxHeight;
 
 @end
 

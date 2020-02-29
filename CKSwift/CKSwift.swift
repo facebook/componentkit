@@ -53,8 +53,17 @@ public struct ComponentSize: Hashable {
   }
 
   public init(width: Dimension = Dimension(),
-              height: Dimension = Dimension()) {
-    componentSize = ComponentKit.ComponentSize(width: width.dimension, height: height.dimension)
+              height: Dimension = Dimension(),
+              minWidth: Dimension = Dimension(),
+              minHeight: Dimension = Dimension(),
+              maxWidth: Dimension = Dimension(),
+              maxHeight: Dimension = Dimension()) {
+    componentSize = ComponentKit.ComponentSize(width: width.dimension,
+                                               height: height.dimension,
+                                               minWidth: minWidth.dimension,
+                                               minHeight: minHeight.dimension,
+                                               maxWidth: maxWidth.dimension,
+                                               maxHeight: maxHeight.dimension)
   }
 }
 

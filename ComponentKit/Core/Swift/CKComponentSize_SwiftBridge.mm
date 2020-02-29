@@ -35,12 +35,21 @@
   return [self initWithComponentSize:CKComponentSize::fromCGSize(size)];
 }
 
-- (instancetype)initWithWidth:(CKDimension_SwiftBridge *)width height:(CKDimension_SwiftBridge *)height
+- (instancetype)initWithWidth:(CKDimension_SwiftBridge *)width
+                       height:(CKDimension_SwiftBridge *)height
+                     minWidth:(CKDimension_SwiftBridge *)minWidth
+                    minHeight:(CKDimension_SwiftBridge *)minHeight
+                     maxWidth:(CKDimension_SwiftBridge *)maxWidth
+                    maxHeight:(CKDimension_SwiftBridge *)maxHeight
 {
   return
   [self initWithComponentSize:{
     .width = width.dimension,
     .height = height.dimension,
+    .minWidth = minWidth.dimension,
+    .minHeight = minHeight.dimension,
+    .maxWidth = maxWidth.dimension,
+    .maxHeight = maxHeight.dimension,
   }];
 }
 

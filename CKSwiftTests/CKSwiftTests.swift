@@ -33,8 +33,8 @@ class CKSwiftTests : XCTestCase {
   }
 
   func test_InitialisingComponentSizeWithDimensions() {
-    let expected = "<CKComponentSize: exact={200pt, 300pt}, min={Auto, Auto}, max={Auto, Auto}>"
-    XCTAssertEqual(ComponentSize(width: 200, height: 300).description, expected)
+    let expected = "<CKComponentSize: exact={200pt, 300pt}, min={100pt, 50pt}, max={400pt, 600pt}>"
+    XCTAssertEqual(ComponentSize(width: 200, height: 300, minWidth: 100, minHeight: 50, maxWidth: 400, maxHeight: 600).description, expected)
   }
 
   func test_WhenDimensionIsOmitted_ThisDimensionInitialisedToAuto() {
