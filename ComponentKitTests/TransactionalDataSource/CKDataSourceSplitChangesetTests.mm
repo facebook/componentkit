@@ -23,7 +23,7 @@
 
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
-@interface CKDataSourceSplitChangesetTests : XCTestCase <CKComponentProvider, CKDataSourceListener>
+@interface CKDataSourceSplitChangesetTests : XCTestCase <CKDataSourceListener>
 
 @end
 
@@ -32,7 +32,7 @@
   CKDataSourceState *_currentDataSourceState;
 }
 
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+static CKComponent *componentProvider(id<NSObject> model, id<NSObject> _)
 {
   const CGSize size = [(NSValue *)model CGSizeValue];
   return CK::ComponentBuilder()
@@ -50,7 +50,7 @@
 
 - (void)testDataSourceDoesNotSplitChangesetIfChangesetSplittingDisabled
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {});
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {});
   [dataSource addListener:self];
 
   [dataSource applyChangeset:initialInsertionChangeset(10, {.width = 10, .height = 10}) mode:CKUpdateModeSynchronous userInfo:nil];
@@ -59,7 +59,7 @@
 
 - (void)testDataSourceDoesNotSplitChangesetIfDoesntFillViewportVertical
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
     .layoutAxis = CKDataSourceLayoutAxisVertical,
@@ -72,7 +72,7 @@
 
 - (void)testDataSourceDoesNotSplitChangesetIfFillsViewportVertical
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
     .layoutAxis = CKDataSourceLayoutAxisVertical,
@@ -85,7 +85,7 @@
 
 - (void)testDataSourceSplitsChangesetIfOverflowsViewportVertical
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
     .layoutAxis = CKDataSourceLayoutAxisVertical,
@@ -103,7 +103,7 @@
 
 - (void)testSplitChangesetIsAppliedAsynchronously
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
     .layoutAxis = CKDataSourceLayoutAxisVertical,
@@ -119,7 +119,7 @@
 
 - (void)testDataSourceDoesNotSplitChangesetIfDoesntFillViewportHorizontal
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 20, .height = 10 },
     .layoutAxis = CKDataSourceLayoutAxisHorizontal,
@@ -132,7 +132,7 @@
 
 - (void)testDataSourceDoesNotSplitChangesetIfFillsViewportHorizontal
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 20, .height = 10 },
     .layoutAxis = CKDataSourceLayoutAxisHorizontal,
@@ -145,7 +145,7 @@
 
 - (void)testDataSourceSplitsChangesetIfOverflowsViewportHorizontal
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 20, .height = 10 },
     .layoutAxis = CKDataSourceLayoutAxisHorizontal,
@@ -162,7 +162,7 @@
 
 - (void)testDeferredChangesetHasTheSameUserInfo
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 20, .height = 10 },
     .layoutAxis = CKDataSourceLayoutAxisHorizontal,
@@ -180,7 +180,7 @@
 
 - (void)testDataSourceDoesNotSplitChangesetIfExistingContentFillsViewport
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
     .layoutAxis = CKDataSourceLayoutAxisVertical,
@@ -198,7 +198,7 @@
 
 - (void)testDataSourceDoesNotSplitChangesetIfUpdateCausesSizeIncrease
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
     .layoutAxis = CKDataSourceLayoutAxisVertical,
@@ -223,7 +223,7 @@
 
 - (void)testDataSourceSplitsChangesetIfUpdateCausesSizeDecrease
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
     .layoutAxis = CKDataSourceLayoutAxisVertical,
@@ -252,7 +252,7 @@
 
 - (void)testDataSourceSplitsChangesetIfItemRemovalCausesSizeDecrease
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
     .layoutAxis = CKDataSourceLayoutAxisVertical,
@@ -279,7 +279,7 @@
 
 - (void)testDataSourceDoesNotSplitChangesetsIfNotContiguousTailInsertion
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
     .layoutAxis = CKDataSourceLayoutAxisVertical,
@@ -297,7 +297,7 @@
 
 - (void)testDataSourceDoesNotSplitUpdateChangesetsWhenOptionDisabled
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
     .layoutAxis = CKDataSourceLayoutAxisVertical,
@@ -319,7 +319,7 @@
 
 - (void)testDataSourceSplitsUpdateChangesetsWhenOptionEnabled
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .splitUpdates = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
@@ -344,7 +344,7 @@
 
 - (void)testDataSourceSplitsChangesetCorrectlyForNonZeroOffset
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .splitUpdates = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
@@ -413,7 +413,7 @@
 
 - (void)testDataSourceDoesNotProcessDeferredUpdateWhenItemIsRemoved
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .splitUpdates = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
@@ -453,7 +453,7 @@
 
 - (void)testDataSourceDoesNotProcessDeferredUpdateWhenSectionIsRemoved
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .splitUpdates = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
@@ -493,7 +493,7 @@
 
 - (void)testDataSourceShiftsUpdatedChangesetIndicesWhenItemsAreRemoved
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .splitUpdates = YES,
     .viewportBoundingSize = { .width = 10, .height = 20 },
@@ -544,7 +544,7 @@
 
 - (void)testDataSourceShiftsUpdatedChangesetIndicesWhenSectionsAreRemoved
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .splitUpdates = YES,
     .viewportBoundingSize = { .width = 10, .height = 10 },
@@ -601,7 +601,7 @@
 
 - (void)testDataSourceStateAfterApplyingSplitUpdateChangesetContainsCorrectModels
 {
-  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions([self class], {
+  CKDataSource *const dataSource = dataSourceWithSplitChangesetOptions(componentProvider, {
     .enabled = YES,
     .splitUpdates = YES,
     .viewportBoundingSize = { .width = 10, .height = 10 },
@@ -640,11 +640,11 @@
   }];
 }
 
-static CKDataSource *dataSourceWithSplitChangesetOptions(Class<CKComponentProvider> componentProvider, const CKDataSourceSplitChangesetOptions &splitChangesetOptions)
+static CKDataSource *dataSourceWithSplitChangesetOptions(CKComponentProviderFunc componentProvider, const CKDataSourceSplitChangesetOptions &splitChangesetOptions)
 {
   CKDataSourceConfiguration *const config =
   [[CKDataSourceConfiguration alloc]
-   initWithComponentProvider:componentProvider
+   initWithComponentProviderFunc:componentProvider
    context:nil
    sizeRange:{}
    options:{.splitChangesetOptions = splitChangesetOptions}

@@ -11,6 +11,8 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 
+#import <Foundation/Foundation.h>
+
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
 #import <ComponentKit/CKComponent.h>
@@ -122,10 +124,11 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
  Tests start here.
  */
 
+static NSMutableArray<CKComponent *> *g_components;
+static NSMutableDictionary<NSString *, CKComponent *> *g_componentsDictionary;
+
 @interface CKDataSourceIntegrationTests : XCTestCase
 @property (strong) CKCollectionViewDataSource *dataSource;
-@property (strong) NSMutableArray<CKComponent *> *components;
-@property (strong) NSMutableDictionary<NSString *, CKComponent *> *componentsDictionary;
 @property (strong) CKDataSourceIntegrationTestComponentController *componentController;
 @property (assign) CGSize itemSize;
 @end
@@ -138,8 +141,8 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
 
   self.itemSize = CGSizeMake(320, 480);
 
-  self.components = [NSMutableArray new];
-  self.componentsDictionary = [NSMutableDictionary dictionary];
+  g_components = [NSMutableArray new];
+  g_componentsDictionary = [NSMutableDictionary dictionary];
   self.dataSource = [self generateDataSource];
 
   [self.dataSource applyChangeset:
@@ -148,12 +151,12 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
      withInsertedItems:@{ [NSIndexPath indexPathForItem:0 inSection:0] : @"" }]
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
-  XCTAssertEqual(self.components.count, 1);
-  XCTAssertNotNil(self.components.lastObject.controller);
-  XCTAssertTrue([self.components.lastObject.controller isKindOfClass:[CKDataSourceIntegrationTestComponentController class]]);
+  XCTAssertEqual(g_components.count, 1);
+  XCTAssertNotNil(g_components.lastObject.controller);
+  XCTAssertTrue([g_components.lastObject.controller isKindOfClass:[CKDataSourceIntegrationTestComponentController class]]);
 
   self.componentController =
-  (CKDataSourceIntegrationTestComponentController*) self.components.lastObject.controller;
+  (CKDataSourceIntegrationTestComponentController*) g_components.lastObject.controller;
 }
 
 - (CKCollectionViewDataSource *)generateDataSource
@@ -167,7 +170,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
    collectionViewLayout:flowLayout];
 
   CKDataSourceConfiguration *config = [[CKDataSourceConfiguration alloc]
-                                       initWithComponentProvider:(id)self
+                                       initWithComponentProviderFunc:componentProvider
                                        context:nil
                                        sizeRange:CKSizeRange(self.itemSize, self.itemSize)
                                        options:{}
@@ -179,16 +182,17 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                                                                    configuration:config];
 }
 
-- (CKComponent *)componentForModel:(NSString*)model context:(id<NSObject>)context
+static CKComponent *componentProvider(id<NSObject> untypedModel, id<NSObject> _)
 {
+  NSString *const model = (NSString *)untypedModel;
   Class klass =
   [model isEqualToString:kOverrideDidPrepareLayoutForComponent]
   ? [CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponent class]
   : [CKDataSourceIntegrationTestComponent class];
 
   CKComponent *component = [klass newWithIdentifier:model];
-  [self.components addObject:component];
-  self.componentsDictionary[model] = component;
+  [g_components addObject:component];
+  g_componentsDictionary[model] = component;
   return component;
 }
 
@@ -199,7 +203,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
      withUpdatedItems:@{[NSIndexPath indexPathForItem:0 inSection:0] : @""}]
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
-  XCTAssertEqual(self.components.count, 2);
+  XCTAssertEqual(g_components.count, 2);
   XCTAssertEqualObjects(self.componentController.callbacks, (@[
                                                               NSStringFromSelector(@selector(willUpdateComponent)),
                                                               NSStringFromSelector(@selector(willRemount)),
@@ -227,7 +231,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
   CKDataSourceIntegrationTestComponentController *controller =
-  (CKDataSourceIntegrationTestComponentController*)self.componentsDictionary[@"2"].controller;
+  (CKDataSourceIntegrationTestComponentController*)g_componentsDictionary[@"2"].controller;
 
   // We use 'CKTestConfigDefault' and item is out of the view port. It means it shoudn't get any update.
   XCTAssertEqualObjects(controller.callbacks, (@[]));
@@ -247,7 +251,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
   CKDataSourceIntegrationTestComponentController *controller =
-  (CKDataSourceIntegrationTestComponentController*)self.componentsDictionary[@"2"].controller;
+  (CKDataSourceIntegrationTestComponentController*)g_componentsDictionary[@"2"].controller;
 
   XCTAssertEqualObjects(controller.callbacks, (@[]));
 
@@ -257,7 +261,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
   controller =
-  (CKDataSourceIntegrationTestComponentController*)self.componentsDictionary[@"2"].controller;
+  (CKDataSourceIntegrationTestComponentController*)g_componentsDictionary[@"2"].controller;
 
   XCTAssertEqualObjects(controller.callbacks, (@[]));
 
@@ -267,7 +271,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
                          [NSIndexPath indexPathForItem:2 inSection:0]})]
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
-  controller = (CKDataSourceIntegrationTestComponentController*)self.components.lastObject.controller;
+  controller = (CKDataSourceIntegrationTestComponentController*)g_components.lastObject.controller;
 
 
   XCTAssertEqualObjects(controller.callbacks, (@[]));
@@ -288,7 +292,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
   CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponentController *controller =
-  (CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponentController*)self.componentsDictionary[kOverrideDidPrepareLayoutForComponent].controller;
+  (CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponentController*)g_componentsDictionary[kOverrideDidPrepareLayoutForComponent].controller;
 
   XCTAssertEqualObjects(controller.callbacks, (@[
                                                  NSStringFromSelector(@selector(didPrepareLayout:forComponent:))
@@ -303,7 +307,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
      @{ [NSIndexPath indexPathForItem:2 inSection:0] : kOverrideDidPrepareLayoutForComponent }]
     build] mode:CKUpdateModeSynchronous userInfo:nil];
 
-  controller = (CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponentController*)self.componentsDictionary[kOverrideDidPrepareLayoutForComponent].controller;
+  controller = (CKDataSourceIntegrationOverrideDidPrepareLayoutForComponentTestComponentController*)g_componentsDictionary[kOverrideDidPrepareLayoutForComponent].controller;
 
   XCTAssertEqualObjects(controller.callbacks, (@[
                                                  NSStringFromSelector(@selector(didPrepareLayout:forComponent:)),
@@ -346,7 +350,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
       build] mode:CKUpdateModeSynchronous userInfo:nil];
 
     CKDataSourceIntegrationTestComponentController * controller =
-    (CKDataSourceIntegrationTestComponentController*) self.components.lastObject.controller;
+    (CKDataSourceIntegrationTestComponentController*) g_components.lastObject.controller;
     callbacks = controller.callbacks;
 
     // We clean everything to ensure dataSource receives deallocation happens when autorelease pool is destroyed
