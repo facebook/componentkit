@@ -515,9 +515,4 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   return NSStringFromClass(self.class);
 }
 
-+ (BOOL)shouldUpdateComponentInController
-{
-  return NO;
-}
-
 @end

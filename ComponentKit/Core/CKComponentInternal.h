@@ -85,12 +85,6 @@
 /** For internal use; don't touch this. */
 @property (nonatomic, assign, readonly) BOOL controllerOverridesDidPrepareLayout;
 
-/**
- Update component in controller right after new generation is created.
- NOTE: This should only be used by ComponentKit infra.
- */
-@property (nonatomic, assign, readonly, class) BOOL shouldUpdateComponentInController;
-
 @end
 
 #endif
