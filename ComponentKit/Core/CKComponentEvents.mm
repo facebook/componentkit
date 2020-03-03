@@ -78,16 +78,13 @@ void CKComponentSendDidPrepareLayoutForComponentsWithIndexPaths(id<NSFastEnumera
 }
 
 void CKComponentUpdateComponentForComponentControllerWithIndexPaths(id<NSFastEnumeration> indexPaths,
-                                                                    CKDataSourceState *state,
-                                                                    BOOL shouldUpdateComponentOverride)
+                                                                    CKDataSourceState *state)
 {
   for (NSIndexPath *indexPath in indexPaths) {
     CKDataSourceItem *item = [state objectAtIndexPath:indexPath];
     item.rootLayout.enumerateCachedLayout(^(const CKComponentLayout &layout) {
       const auto component = (CKComponent *)layout.component;
-      if ([component.class shouldUpdateComponentInController] || shouldUpdateComponentOverride) {
-        component.controller.latestComponent = component;
-      }
+      component.controller.latestComponent = component;
     });
   }
 }

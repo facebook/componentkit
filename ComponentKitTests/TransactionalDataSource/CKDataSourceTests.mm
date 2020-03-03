@@ -365,23 +365,13 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 
 - (void)testDataSourceComponentInControllerIsNotUpdatedAfterComponentBuild
 {
-  [self _testUpdateComponentInControllerAfterBuild:NO];
-}
-
-- (void)testDataSourceComponentInControllerIsUpdatedAfterComponentBuild
-{
-  [self _testUpdateComponentInControllerAfterBuild:YES];
-}
-
-- (void)_testUpdateComponentInControllerAfterBuild:(BOOL)updateComponentInControllerAfterBuild
-{
   CKComponentController *componentController = nil;
   // Autorelease pool is needed here to make sure `oldState` is deallocated so that weak reference of component
   // in `CKComponentController` is nil.
   @autoreleasepool {
     const auto dataSource = CKComponentTestDataSource(ComponentProvider,
                                                       self,
-                                                      {.updateComponentInControllerAfterBuild = updateComponentInControllerAfterBuild});
+                                                      {});
     CKComponent *component = (CKComponent *)[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].rootLayout.component();
     componentController = component.controller;
     const auto update =
@@ -390,14 +380,9 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
      build];
     [dataSource applyChangeset:update mode:CKUpdateModeSynchronous userInfo:@{}];
   }
-  if (updateComponentInControllerAfterBuild) {
-    // `latestComponent` is updated so `componentController.component` returns the latest generation of component even
-    // after `oldState` is deallocated.
-    XCTAssertNotEqual(componentController.component, nil);
-  } else {
-    // `latestComponent` is not updated so `componentController.component` is nil because `oldState` is deallocated.
-    XCTAssertEqual(componentController.component, nil);
-  }
+  // `latestComponent` is updated so `componentController.component` returns the latest generation of component even
+  // after `oldState` is deallocated.
+  XCTAssertNotEqual(componentController.component, nil);
 }
 
 /**

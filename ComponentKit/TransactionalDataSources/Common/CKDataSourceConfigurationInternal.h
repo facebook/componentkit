@@ -58,11 +58,6 @@ struct CKDataSourceSplitChangesetOptions {
 
 struct CKDataSourceOptions {
   CKDataSourceSplitChangesetOptions splitChangesetOptions;
-  /**
-   `componentController.component` will be updated right after commponent build if this is enabled.
-   This is only for running expeirment in ComponentKit. Please DO NOT USE.
-   */
-  CK::Optional<BOOL> updateComponentInControllerAfterBuild = CK::none;
 };
 
 @interface CKDataSourceConfiguration ()

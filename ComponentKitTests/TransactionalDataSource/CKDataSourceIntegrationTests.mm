@@ -234,7 +234,7 @@ static CKComponent *componentProvider(id<NSObject> untypedModel, id<NSObject> _)
   (CKDataSourceIntegrationTestComponentController*)g_componentsDictionary[@"2"].controller;
 
   // We use 'CKTestConfigDefault' and item is out of the view port. It means it shoudn't get any update.
-  XCTAssertEqualObjects(controller.callbacks, (@[]));
+  XCTAssertEqualObjects(controller.callbacks, (@[NSStringFromSelector(@selector(willUpdateComponent))]));
 }
 
 - (void)testUpdateModelAlwaysSendUpdateControllerCallbacks_didPrepareLayoutForComponent_off
@@ -263,7 +263,7 @@ static CKComponent *componentProvider(id<NSObject> untypedModel, id<NSObject> _)
   controller =
   (CKDataSourceIntegrationTestComponentController*)g_componentsDictionary[@"2"].controller;
 
-  XCTAssertEqualObjects(controller.callbacks, (@[]));
+  XCTAssertEqualObjects(controller.callbacks, (@[NSStringFromSelector(@selector(willUpdateComponent))]));
 
   [self.dataSource applyChangeset:
    [[[CKDataSourceChangesetBuilder new]
@@ -274,7 +274,7 @@ static CKComponent *componentProvider(id<NSObject> untypedModel, id<NSObject> _)
   controller = (CKDataSourceIntegrationTestComponentController*)g_components.lastObject.controller;
 
 
-  XCTAssertEqualObjects(controller.callbacks, (@[]));
+  XCTAssertEqualObjects(controller.callbacks, (@[NSStringFromSelector(@selector(willUpdateComponent))]));
 }
 
 - (void)testUpdateModelAlwaysSendUpdateControllerCallbacks_didPrepareLayoutForComponent_on
@@ -311,6 +311,7 @@ static CKComponent *componentProvider(id<NSObject> untypedModel, id<NSObject> _)
 
   XCTAssertEqualObjects(controller.callbacks, (@[
                                                  NSStringFromSelector(@selector(didPrepareLayout:forComponent:)),
+                                                 NSStringFromSelector(@selector(willUpdateComponent)),
                                                  NSStringFromSelector(@selector(didPrepareLayout:forComponent:))
                                                  ]));
 

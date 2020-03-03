@@ -24,11 +24,6 @@ struct CKGlobalConfig {
   /** Same as above, but only in DEBUG configuration */
   BOOL alwaysBuildRenderTreeInDebug = YES;
   /**
-   `componentController.component` will be updated right after commponent build if this is enabled.
-   This is only for running expeirment in ComponentKit. Please DO NOT USE.
-   */
-  BOOL updateComponentInControllerAfterBuild = NO;
-  /**
    `CK::Component::GlobalRootViewPool` will be used in `CKComponentHostingView` when this is enabled.
    */
   BOOL enableGlobalRootViewPoolInHostingView = NO;

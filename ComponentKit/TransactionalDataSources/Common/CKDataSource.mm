@@ -385,8 +385,7 @@
   }
 
   CKComponentUpdateComponentForComponentControllerWithIndexPaths(appliedChanges.finalUpdatedIndexPaths.allValues,
-                                                                 newState,
-                                                                 newState.configuration.options.updateComponentInControllerAfterBuild.valueOr(NO));
+                                                                 newState);
 
   [_announcer dataSource:self didModifyPreviousState:previousState withState:newState byApplyingChanges:appliedChanges];
 
