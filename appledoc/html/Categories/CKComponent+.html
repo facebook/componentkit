@@ -58,11 +58,15 @@
 		
 		<option value="//api/name/backtraceStackDescription">backtraceStackDescription</option>
 		
+		<option value="//api/name/controllerOverridesDidPrepareLayout">controllerOverridesDidPrepareLayout</option>
+		
+		<option value="//api/name/hasAnimations">hasAnimations</option>
+		
+		<option value="//api/name/hasBoundsAnimations">hasBoundsAnimations</option>
+		
 		<option value="//api/name/rootComponentMountedView">rootComponentMountedView</option>
 		
 		<option value="//api/name/scopeEnumeratorProvider">scopeEnumeratorProvider</option>
-		
-		<option value="//api/name/shouldUpdateComponentInController">shouldUpdateComponentInController</option>
 		
 		<option value="//api/name/size">size</option>
 		
@@ -71,12 +75,6 @@
 	</optgroup>
 	
 
-	
-	<optgroup label="Class Methods">
-		
-		<option value="//api/name/newRenderComponentWithView:size:">+ newRenderComponentWithView:size:</option>
-		
-	</optgroup>
 	
 
 	
@@ -233,66 +231,6 @@ used to specify that subcomponents should be mounted inside the view.</p>
 				<h4 class="method-subtitle">Discussion</h4>
 				<p>Override this if your component wants to perform a custom mounting action, but this should be very rare!</p>
 			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/newRenderComponentWithView:size:" title="newRenderComponentWithView:size:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/newRenderComponentWithView:size:">+&nbsp;newRenderComponentWithView:size:</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>For internal use only; don&rsquo;t use this initializer.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>+ (instancetype)newRenderComponentWithView:(const CKComponentViewConfiguration &amp;)<em>view</em> size:(const CKComponentSize &amp;)<em>size</em></code></div>
-
-		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>view</code></th>
-						<td><p>A struct describing the view for this component. Pass {} to specify that no view should be created.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>size</code></th>
-						<td><p>A size constraint that should apply to this component. Pass {} to specify no size constraint.</p>
-
-<p>This initializer will not try to acquire the scope handle from the thread local store.</p></td>
-					</tr>
-				
-				</table>
-			</div>
-			
-
-			
-
-			
-
 			
 
 			
@@ -555,8 +493,8 @@ used to specify that subcomponents should be mounted inside the view.</p>
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/shouldUpdateComponentInController" title="shouldUpdateComponentInController"></a>
-	<h3 class="method-title"><code><a href="#//api/name/shouldUpdateComponentInController">&nbsp;&nbsp;shouldUpdateComponentInController</a></code>
+	<a name="//api/name/hasAnimations" title="hasAnimations"></a>
+	<h3 class="method-title"><code><a href="#//api/name/hasAnimations">&nbsp;&nbsp;hasAnimations</a></code>
 </h3>
 
 	<div class="method-info">
@@ -566,13 +504,94 @@ used to specify that subcomponents should be mounted inside the view.</p>
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Update component in controller right after new generation is created.
-NOTE: This should only be used by ComponentKit infra.</p>
+				<p>For internal use; don&rsquo;t touch this.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>@property (nonatomic, assign, readonly, class) BOOL shouldUpdateComponentInController</code></div>
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, assign, readonly) BOOL hasAnimations</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/hasBoundsAnimations" title="hasBoundsAnimations"></a>
+	<h3 class="method-title"><code><a href="#//api/name/hasBoundsAnimations">&nbsp;&nbsp;hasBoundsAnimations</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>For internal use; don&rsquo;t touch this.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, assign, readonly) BOOL hasBoundsAnimations</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKComponentInternal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/controllerOverridesDidPrepareLayout" title="controllerOverridesDidPrepareLayout"></a>
+	<h3 class="method-title"><code><a href="#//api/name/controllerOverridesDidPrepareLayout">&nbsp;&nbsp;controllerOverridesDidPrepareLayout</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>For internal use; don&rsquo;t touch this.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, assign, readonly) BOOL controllerOverridesDidPrepareLayout</code></div>
 
 		    
 			
@@ -1291,7 +1310,7 @@ they are composed of other components, return the animatable view of its descend
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2020 Facebook. All rights reserved. Updated: 2020-02-15</p>
+						<p class="copyright">Copyright &copy; 2020 Facebook. All rights reserved. Updated: 2020-03-04</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
