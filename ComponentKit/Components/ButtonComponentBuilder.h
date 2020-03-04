@@ -61,6 +61,15 @@ class __attribute__((__may_alias__)) ButtonComponentBuilder
   }
 
   /**
+   The title of the button for different states.
+   */
+  auto &titles(const CKButtonComponentStateMap<NSString *>::Map &m)
+  {
+    _titles = m;
+    return *this;
+  }
+
+  /**
    The title color of the button for \c UIControlStateNormal .
    */
   auto &titleColor(NS_RELEASES_ARGUMENT UIColor *c)
@@ -106,6 +115,15 @@ class __attribute__((__may_alias__)) ButtonComponentBuilder
   }
 
   /**
+   The images of the button for different states.
+   */
+  auto &images(const CKButtonComponentStateMap<UIImage *>::Map &m)
+  {
+    _images = m;
+    return *this;
+  }
+
+  /**
    The background image of the button for \c UIControlStateNormal .
    */
   auto &backgroundImage(NS_RELEASES_ARGUMENT UIImage *i)
@@ -120,6 +138,15 @@ class __attribute__((__may_alias__)) ButtonComponentBuilder
   auto &backgroundImage(NS_RELEASES_ARGUMENT UIImage *i, UIControlState s)
   {
     _backgroundImages[s] = i;
+    return *this;
+  }
+
+  /**
+   The background images of the button for different states.
+   */
+  auto &backgroundImages(const CKButtonComponentStateMap<UIImage *>::Map &m)
+  {
+    _backgroundImages = m;
     return *this;
   }
 
@@ -337,6 +364,32 @@ class __attribute__((__may_alias__)) ButtonComponentBuilder
   auto &cornerRadius(CGFloat r)
   {
     _options.attributes.insert({ CKComponentViewAttribute::LayerAttribute(@selector(setCornerRadius:)), r });
+    return reinterpret_cast<ButtonComponentBuilder<PropsBitmap | ButtonComponentPropId::anyAttribute> &>(*this);
+  }
+
+  /**
+   Specifies the action that should be sent when the user performs a single tap gesture on the component's view.
+
+   @param a A @c CKAction instance to be sent when the gesture is recognized.
+   */
+  auto &onTap(CKAction<UIGestureRecognizer *> a)
+  {
+    _options.attributes.insert(CKComponentTapGestureAttribute(a));
+    return reinterpret_cast<ButtonComponentBuilder<PropsBitmap | ButtonComponentPropId::anyAttribute> &>(*this);
+  }
+
+  /**
+   Specifies a selector that should be sent up the responder chain when the component's view receives any event that
+   matches a given event mask.
+
+   @param events  Events that should trigger the action.
+   @param action  An selector to send.
+
+   @note Setting this property on a view that is not a @c UIControl subclass will trigger a runtime error.
+   */
+  auto &onControlEvents(UIControlEvents events, SEL action)
+  {
+    _options.attributes.insert(CKComponentActionAttribute(action, events));
     return reinterpret_cast<ButtonComponentBuilder<PropsBitmap | ButtonComponentPropId::anyAttribute> &>(*this);
   }
 
