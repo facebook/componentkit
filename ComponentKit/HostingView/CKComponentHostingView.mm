@@ -12,6 +12,7 @@
 #import "CKComponentHostingViewInternal.h"
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKBlockSizeRangeProvider.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKOptional.h>
@@ -88,6 +89,17 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                componentControllerPredicates:{}
                            analyticsListener:nil
                                      options:{}];
+}
+
+- (instancetype)initWithComponentProvider:(CKComponentProviderFunc)componentProvider
+                   sizeRangeProviderBlock:(CKComponentSizeRangeProviderBlock)sizeRangeProvider
+{
+  return [self initWithComponentProviderFunc:componentProvider
+              sizeRangeProvider:[[CKBlockSizeRangeProvider alloc] initWithBlock:sizeRangeProvider]
+            componentPredicates:{}
+  componentControllerPredicates:{}
+              analyticsListener:nil
+                        options:{}];
 }
 
 - (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider

@@ -44,6 +44,9 @@ extension Dimension: ExpressibleByIntegerLiteral {
 
 // Re-export the type to avoid importing ComponentKit directly and ambiguities in type lookup
 public typealias SizeRange = ComponentKit.SizeRange
+public typealias Component = ComponentKit.Component
+public typealias ComponentHostingView = ComponentKit.ComponentHostingView
+public typealias ComponentHostingViewDelegate = ComponentKit.ComponentHostingViewDelegate
 
 public struct ComponentSize: Hashable {
   private let componentSize: ComponentKit.ComponentSize

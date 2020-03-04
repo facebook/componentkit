@@ -48,4 +48,21 @@ class CKSwiftTests : XCTestCase {
     let expected = "<CKSizeRange: min={100, 200}, max={200, 300}>"
     XCTAssertEqual(sizeRange.description, expected)
   }
+
+  func test_WhenSizingHostingView_InvokesSizeRangeProvider() {
+    var sizeRangeProviderWasCalledWithExpectedSize = false
+    let expectedSize = CGSize(width: 320, height: 480)
+    let hv = ComponentHostingView<NSNumber, NSObject>(
+      componentProvider: { _, _ in return Component() },
+      sizeRangeProviderBlock: { size in
+        sizeRangeProviderWasCalledWithExpectedSize = (size == expectedSize)
+        return SizeRange(minSize: size, maxSize: size)
+    })
+    hv.updateModel(2, mode: .asynchronous)
+    hv.updateContext(nil, mode: .synchronous)
+
+    let _ = hv.sizeThatFits(expectedSize)
+
+    XCTAssert(sizeRangeProviderWasCalledWithExpectedSize)
+  }
 }
