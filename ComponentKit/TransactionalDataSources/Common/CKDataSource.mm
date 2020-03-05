@@ -383,6 +383,11 @@
     CKDataSourceItem *removedItem = [previousState objectAtIndexPath:removedIndex];
     CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
   }
+  [[appliedChanges removedSections] enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *) {
+    [previousState enumerateObjectsInSectionAtIndex:idx usingBlock:^(CKDataSourceItem *removedItem, NSIndexPath *, BOOL *) {
+      CKComponentScopeRootAnnounceControllerInvalidation([removedItem scopeRoot]);
+    }];
+  }];
 
   CKComponentUpdateComponentForComponentControllerWithIndexPaths(appliedChanges.finalUpdatedIndexPaths.allValues,
                                                                  newState);

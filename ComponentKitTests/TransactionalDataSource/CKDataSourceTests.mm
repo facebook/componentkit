@@ -285,6 +285,30 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   XCTAssertTrue(controller.calledInvalidateController);
 }
 
+- (void)testDataSourceRemovingItemTriggersInvalidateOnMainThread
+{
+  CKDataSource *dataSource = CKComponentTestDataSource(ComponentProvider, self);
+  const auto controller = ((CKLifecycleTestComponent *)[[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component()).controller;
+  [dataSource applyChangeset:[[[CKDataSourceChangesetBuilder dataSourceChangeset]
+                               withRemovedItems:[NSSet setWithObject:[NSIndexPath indexPathForRow:0 inSection:0]]]
+                              build]
+                        mode:CKUpdateModeSynchronous
+                    userInfo:@{}];
+  XCTAssertTrue(controller.calledInvalidateController);
+}
+
+- (void)testDataSourceRemovingSectionTriggersInvalidateOnMainThread
+{
+  CKDataSource *dataSource = CKComponentTestDataSource(ComponentProvider, self);
+  const auto controller = ((CKLifecycleTestComponent *)[[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component()).controller;
+  [dataSource applyChangeset:[[[CKDataSourceChangesetBuilder dataSourceChangeset]
+                               withRemovedSections:[NSIndexSet indexSetWithIndex:0]]
+                              build]
+                        mode:CKUpdateModeSynchronous
+                    userInfo:@{}];
+  XCTAssertTrue(controller.calledInvalidateController);
+}
+
 - (void)testDataSourceApplyingPrecomputedChange
 {
   const auto dataSource = CKComponentTestDataSource(ComponentProvider, self);
