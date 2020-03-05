@@ -233,9 +233,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
     // DataSource deallocation is also triggered on background.
     // CKLifecycleTestComponent will assert if it receives an invalidation not on the main thread,
     CKDataSource *dataSource = CKComponentTestDataSource(ComponentProvider, self);
-    CKRunRunLoopUntilBlockIsTrue(^BOOL{
-      return _state != nil;
-    });
     controller = ((CKLifecycleTestComponent *)[[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component()).controller;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       [dataSource hash];
@@ -281,9 +278,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)testDataSourceRemovingComponentTriggersInvalidateOnMainThread
 {
   CKDataSource *dataSource = CKComponentTestDataSource(ComponentProvider, self);
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _state != nil;
-  });
   const auto controller = ((CKLifecycleTestComponent *)[[_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] rootLayout].component()).controller;
   [dataSource updateConfiguration:[_state.configuration copyWithContext:kTestInvalidateControllerContext sizeRange:{}]
                              mode:CKUpdateModeSynchronous
@@ -311,9 +305,6 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)testDataSourceApplyingPrecomputedChangeAfterStateIsChanged
 {
   const auto dataSource = CKComponentTestDataSource(ComponentProvider, self);
-  CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _state != nil;
-  });
   const auto insertion =
   [[[CKDataSourceChangesetBuilder dataSourceChangeset]
     withInsertedItems:@{[NSIndexPath indexPathForItem:0 inSection:0]: @1}]
