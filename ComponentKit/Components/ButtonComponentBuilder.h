@@ -450,16 +450,9 @@ class __attribute__((__may_alias__)) ButtonComponentBuilder
    Specifies a complete attribute map for a view of this component.
 
    @param a  The attribute map to set.
-
-   @note Calling this method on a builder that does not have a view class set will trigger a compilation error.
-
-   @note Calling this method on a builder that already has a complete view configuration set will trigger
-   a compilation error.
    */
   auto &attributes(CKViewComponentAttributeValueMap a)
   {
-    constexpr auto noAttributesSet = !PropBitmap::isSet(PropsBitmap, ButtonComponentPropId::anyAttribute);
-    static_assert(noAttributesSet, "Setting 'attributes' overrides existing attributes.");
     _options.attributes = std::move(a);
     return reinterpret_cast<ButtonComponentBuilder<PropsBitmap> &>(*this);
   }
