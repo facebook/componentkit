@@ -35,7 +35,7 @@ bool CKRootTreeNode::isEmpty() {
   return _node.childrenSize == 0;
 }
 
-id<CKScopeTreeNodeProtocol> CKRootTreeNode::node() {
+CKScopeTreeNode *CKRootTreeNode::node() const {
   return _node;
 }
 

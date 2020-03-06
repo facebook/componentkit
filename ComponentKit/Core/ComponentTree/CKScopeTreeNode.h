@@ -12,8 +12,9 @@
 
 #if CK_NOT_SWIFT
 
-#import <ComponentKit/CKScopeTreeNodeProtocol.h>
 #import <ComponentKit/CKTreeNode.h>
+#import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKComponentScopeFrame.h>
 
 extern NSUInteger const kTreeNodeParentBaseKey;
 extern NSUInteger const kTreeNodeOwnerBaseKey;
@@ -25,12 +26,18 @@ extern NSUInteger const kTreeNodeOwnerBaseKey;
 
  It represents a node with children in the component tree.
  */
-@interface CKScopeTreeNode : CKTreeNode <CKScopeTreeNodeProtocol>
+@interface CKScopeTreeNode : CKTreeNode <CKTreeNodeWithChildrenProtocol, CKComponentScopeFrameProtocol>
 {
   @package
   std::vector<std::tuple<CKTreeNodeComponentKey, id<CKTreeNodeProtocol>>> _children;
 }
+
+- (CKTreeNodeComponentKey)createKeyForComponentClass:(Class<CKComponentProtocol>)componentClass
+                                          identifier:(id)identifier
+                                                keys:(const std::vector<id<NSObject>> &)keys;
+- (CKScopeTreeNode *)childScopeForComponentKey:(const CKTreeNodeComponentKey &)scopeNodeKey;
+- (void)setChildScope:(CKScopeTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;
+
 @end
 
 #endif
-

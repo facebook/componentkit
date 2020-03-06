@@ -21,9 +21,9 @@
   if (self = [super initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
     auto const threadLocalScope = CKThreadLocalComponentScope::currentScope();
     if (threadLocalScope != nullptr) {
-      CKAssert(previousNode == nil || [previousNode conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"previousNode should conform to id<CKScopeTreeNodeProtocol>, but its class %@ does not.", previousNode.class);
+      CKAssert(previousNode == nil || [previousNode isKindOfClass:[CKScopeTreeNode class]], @"previousNode should be a CKScopeTreeNode, but its class is: %@.", previousNode.class);
       // Push the new pair into the thread local.
-      threadLocalScope->stack.push({.frame = self, .previousFrame = (id<CKScopeTreeNodeProtocol>)previousNode});
+      threadLocalScope->stack.push({.frame = self, .previousFrame = (CKScopeTreeNode *)previousNode});
     }
   }
   return self;

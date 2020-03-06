@@ -134,7 +134,6 @@
 #import <ComponentKit/CKRequired.h>
 #import <ComponentKit/CKRootTreeNode.h>
 #import <ComponentKit/CKScopeTreeNode.h>
-#import <ComponentKit/CKScopeTreeNodeProtocol.h>
 #import <ComponentKit/CKSizeRange.h>
 #import <ComponentKit/CKSizeRange_SwiftBridge.h>
 #import <ComponentKit/CKStatefulViewComponent.h>

@@ -13,6 +13,7 @@
 #include <mutex>
 
 #import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKScopeTreeNode.h>
 #import <ComponentKit/CKMutex.h>
 
 #import "CKComponentScopeRoot.h"

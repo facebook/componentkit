@@ -20,17 +20,15 @@
 
 @class CKComponentScopeHandle;
 @class CKComponentScopeRoot;
+@class CKScopeTreeNode;
 @protocol CKComponentProtocol;
-@protocol CKTreeNodeComponentProtocol;
-@protocol CKTreeNodeProtocol;
-@protocol CKComponentScopeFrameProtocol;
 
 struct CKComponentScopeFramePair {
-  id<CKComponentScopeFrameProtocol> frame;
-  id<CKComponentScopeFrameProtocol> previousFrame;
+  CKScopeTreeNode *frame;
+  CKScopeTreeNode *previousFrame;
 };
 
-@protocol CKComponentScopeFrameProtocol
+@protocol CKComponentScopeFrameProtocol <NSObject>
 
 + (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
                                       newRoot:(CKComponentScopeRoot *)newRoot

@@ -98,8 +98,6 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   }
 }
 
-#pragma mark - CKScopeTreeNodeProtocol
-
 - (CKTreeNodeComponentKey)createKeyForComponentClass:(Class<CKComponentProtocol>)componentClass
                                           identifier:(id)identifier
                                                 keys:(const std::vector<id<NSObject>> &)keys
@@ -116,12 +114,12 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   return std::make_tuple(componentClass, keyCounter, identifier, keys);
 }
 
-- (id<CKScopeTreeNodeProtocol>)childScopeForComponentKey:(const CKTreeNodeComponentKey &)key
+- (CKScopeTreeNode *)childScopeForComponentKey:(const CKTreeNodeComponentKey &)key
 {
-  return (id<CKScopeTreeNodeProtocol>)[self childForComponentKey:key];
+  return (CKScopeTreeNode *)[self childForComponentKey:key];
 }
 
-- (void)setChildScope:(id<CKScopeTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
+- (void)setChildScope:(CKScopeTreeNode *)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
 {
   _children.push_back({componentKey, child});
 }
@@ -137,12 +135,10 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                                  stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                           mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
 {
-  id<CKScopeTreeNodeProtocol> frame = (id<CKScopeTreeNodeProtocol>)pair.frame;
-  id<CKScopeTreeNodeProtocol> previousFrame = (id<CKScopeTreeNodeProtocol>)pair.previousFrame;
+  CKScopeTreeNode *frame = pair.frame;
+  CKScopeTreeNode *previousFrame = pair.previousFrame;
 
   CKAssertNotNil(frame, @"Must have frame");
-  CKAssert([frame conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"frame should conform to id<CKScopeTreeNodeProtocol> instead of %@", frame.class);
-  CKAssert(previousFrame == nil || [previousFrame conformsToProtocol:@protocol(CKScopeTreeNodeProtocol)], @"previousFrame should conform to id<CKScopeTreeNodeProtocol> instead of %@", previousFrame.class);
 
   // Generate key inside the new parent
   CKTreeNodeComponentKey componentKey = [frame createKeyForComponentClass:componentClass identifier:identifier keys:keys];

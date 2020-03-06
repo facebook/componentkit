@@ -93,9 +93,9 @@
 {
   CKComponentScopeRoot *root = CKComponentScopeRootWithDefaultPredicates(nil, nil);
   CKThreadLocalComponentScope threadScope(root, {});
-  id<CKComponentScopeFrameProtocol> rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
+  CKScopeTreeNode *rootFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
   CKComponentScope scope([CKCompositeComponent class]);
-  id<CKComponentScopeFrameProtocol> currentFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
+  CKScopeTreeNode *currentFrame = CKThreadLocalComponentScope::currentScope()->stack.top().frame;
   XCTAssertTrue(currentFrame != rootFrame);
 }
 
