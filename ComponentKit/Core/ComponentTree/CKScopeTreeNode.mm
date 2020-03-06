@@ -132,6 +132,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                      initialStateCreator:(id (^)(void))initialStateCreator
                             stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                      mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
+                     requiresScopeHandle:(BOOL)requiresScopeHandle
 {
   CKAssertNotNil(pair.node, @"Must have a node");
   CKAssertNotNil(initialStateCreator, @"Must has an initial state creator");
@@ -142,12 +143,18 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   CKScopeTreeNode *childScopeFromPreviousScope = [pair.previousNode childScopeForComponentKey:componentKey];
 
   // Create new handle.
-  CKComponentScopeHandle *newHandle = childScopeFromPreviousScope
-  ? [childScopeFromPreviousScope.scopeHandle newHandleWithStateUpdates:stateUpdates componentScopeRoot:newRoot]
-  : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
-                                      rootIdentifier:newRoot.globalIdentifier
-                                      componentClass:componentClass
-                                        initialState:(initialStateCreator ? initialStateCreator() : nil)];
+  CKComponentScopeHandle *newHandle;
+
+  if (childScopeFromPreviousScope != nil) {
+    newHandle = [childScopeFromPreviousScope.scopeHandle newHandleWithStateUpdates:stateUpdates componentScopeRoot:newRoot];
+  } else if (requiresScopeHandle) {
+    newHandle = [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
+                                                  rootIdentifier:newRoot.globalIdentifier
+                                                  componentClass:componentClass
+                                                    initialState:(initialStateCreator ? initialStateCreator() : nil)];
+  }
+
+  CKAssert((newHandle != nil) == requiresScopeHandle, @"Expecting scopeHandle (%@) to be [un]set for requiresScopeHandleValue", newHandle);
 
   // Create new node.
   CKScopeTreeNode *newChild = [[CKScopeTreeNode alloc]

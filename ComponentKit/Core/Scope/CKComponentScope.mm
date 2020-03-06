@@ -53,7 +53,8 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
                                                         keys:_threadLocalScope->keys.top()
                                          initialStateCreator:toInitialStateCreator(initialStateCreator, componentClass)
                                                 stateUpdates:_threadLocalScope->stateUpdates
-                                         mergeTreeNodesLinks:_threadLocalScope->mergeTreeNodesLinks];
+                                         mergeTreeNodesLinks:_threadLocalScope->mergeTreeNodesLinks
+                                         requiresScopeHandle:YES];
     _threadLocalScope->stack.push({.node = childPair.node, .previousNode = childPair.previousNode});
     _scopeHandle = childPair.node.scopeHandle;
     _threadLocalScope->keys.push({});
