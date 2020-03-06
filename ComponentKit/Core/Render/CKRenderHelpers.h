@@ -97,10 +97,10 @@ namespace CKRender {
   /**
    @return `YES` if the component of the node has a state update, `NO` otherwise.
    */
-  auto componentHasStateUpdate(__unsafe_unretained id<CKTreeNodeComponentProtocol> component,
-                               __unsafe_unretained id<CKTreeNodeWithChildrenProtocol> previousParent,
-                               const CKBuildComponentTreeParams &params) -> BOOL;
-
+  auto componentHasStateUpdate(__unsafe_unretained CKComponentScopeHandle *scopeHandle,
+                               __unsafe_unretained id previousParent,
+                               CKBuildTrigger buildTrigger,
+                               const CKComponentStateUpdateMap& stateUpdates) -> BOOL;
   /**
    @return `YES` if the component of the node has a state update, `NO` otherwise.
    */

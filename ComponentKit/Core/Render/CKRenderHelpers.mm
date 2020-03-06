@@ -190,9 +190,11 @@ namespace CKRender {
       }
 
       // Update the `parentHasStateUpdate` param for Faster state/props updates.
-      if (!parentHasStateUpdate && CKRender::componentHasStateUpdate(component, previousParent, params)) {
-        parentHasStateUpdate = YES;
-      }
+      parentHasStateUpdate = parentHasStateUpdate ||
+      CKRender::componentHasStateUpdate(component.scopeHandle,
+                                        previousParent,
+                                        params.buildTrigger,
+                                        params.stateUpdates);
 
       // If there is a node, we update the parents' pointers to the next level in the tree.
       if (node) {
@@ -256,9 +258,11 @@ namespace CKRender {
         }
 
         // Update the `parentHasStateUpdate` param for Faster state/props updates.
-        if (!parentHasStateUpdate && CKRender::nodeHasStateUpdate(node, previousParent, params)) {
-          parentHasStateUpdate = YES;
-        }
+        parentHasStateUpdate = parentHasStateUpdate ||
+        CKRender::componentHasStateUpdate(node.scopeHandle,
+                                          previousParent,
+                                          params.buildTrigger,
+                                          params.stateUpdates);
 
         auto const child = [component render:node.state];
         if (child) {
@@ -331,28 +335,12 @@ namespace CKRender {
     }
   }
 
-  auto componentHasStateUpdate(__unsafe_unretained id<CKTreeNodeComponentProtocol> component,
-                               __unsafe_unretained id<CKTreeNodeWithChildrenProtocol> previousParent,
-                               const CKBuildComponentTreeParams &params) -> BOOL {
-    if (previousParent && params.buildTrigger == CKBuildTrigger::StateUpdate) {
-      auto const scopeHandle = component.scopeHandle;
-      if (scopeHandle != nil) {
-        auto const stateUpdateBlock = params.stateUpdates.find(scopeHandle);
-        return stateUpdateBlock != params.stateUpdates.end();
-      }
-    }
-    return NO;
-  }
-
-  auto nodeHasStateUpdate(__unsafe_unretained id<CKTreeNodeProtocol> node,
-                          __unsafe_unretained id<CKTreeNodeWithChildrenProtocol> previousParent,
-                          const CKBuildComponentTreeParams &params) -> BOOL {
-    if (previousParent && params.buildTrigger == CKBuildTrigger::StateUpdate) {
-      auto const scopeHandle = node.scopeHandle;
-      if (scopeHandle != nil) {
-        auto const stateUpdateBlock = params.stateUpdates.find(scopeHandle);
-        return stateUpdateBlock != params.stateUpdates.end();
-      }
+  auto componentHasStateUpdate(__unsafe_unretained CKComponentScopeHandle *scopeHandle,
+                               __unsafe_unretained id previousParent,
+                               CKBuildTrigger buildTrigger,
+                               const CKComponentStateUpdateMap& stateUpdates) -> BOOL {
+    if (scopeHandle != nil && previousParent != nil && buildTrigger == CKBuildTrigger::StateUpdate) {
+      return stateUpdates.find(scopeHandle) != stateUpdates.end();
     }
     return NO;
   }
