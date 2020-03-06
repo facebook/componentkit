@@ -134,6 +134,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                      mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
 {
   CKAssertNotNil(pair.node, @"Must have a node");
+  CKAssertNotNil(initialStateCreator, @"Must has an initial state creator");
 
   // Generate key inside the new parent
   CKTreeNodeComponentKey componentKey = [pair.node createKeyForComponentClass:componentClass identifier:identifier keys:keys];
@@ -146,7 +147,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                       rootIdentifier:newRoot.globalIdentifier
                                       componentClass:componentClass
-                                        initialState:(initialStateCreator ? initialStateCreator() : [componentClass initialState])];
+                                        initialState:(initialStateCreator ? initialStateCreator() : nil)];
 
   // Create new node.
   CKScopeTreeNode *newChild = [[CKScopeTreeNode alloc]

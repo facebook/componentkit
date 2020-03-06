@@ -17,6 +17,12 @@
 #import "CKScopeTreeNode.h"
 #import "CKTreeNodeProtocol.h"
 
+static auto toInitialStateCreator(id (^initialStateCreator)(void), Class componentClass) {
+  return initialStateCreator ?: ^{
+    return [componentClass initialState];
+  };
+}
+
 CKComponentScope::~CKComponentScope()
 {
   if (_threadLocalScope != nullptr) {
@@ -45,7 +51,7 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
                                               componentClass:componentClass
                                                   identifier:identifier
                                                         keys:_threadLocalScope->keys.top()
-                                         initialStateCreator:initialStateCreator
+                                         initialStateCreator:toInitialStateCreator(initialStateCreator, componentClass)
                                                 stateUpdates:_threadLocalScope->stateUpdates
                                          mergeTreeNodesLinks:_threadLocalScope->mergeTreeNodesLinks];
     _threadLocalScope->stack.push({.node = childPair.node, .previousNode = childPair.previousNode});
