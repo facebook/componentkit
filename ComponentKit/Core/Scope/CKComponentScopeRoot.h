@@ -28,9 +28,7 @@
 @protocol CKComponentControllerProtocol;
 @protocol CKTreeNodeProtocol;
 @protocol CKTreeNodeWithChildrenProtocol;
-@protocol CKComponentScopeFrameProtocol;
 
-@class CKComponentScopeFrame;
 @class CKComponentScopeRoot;
 
 class CKRootTreeNode;

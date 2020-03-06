@@ -49,7 +49,7 @@
   // We can rely on this infomration to increase the `componentAllocations` counter.
   currentScope->componentAllocations++;
 
-  CKComponentScopeHandle *handle = currentScope->stack.top().frame.scopeHandle;
+  CKComponentScopeHandle *handle = currentScope->stack.top().node.scopeHandle;
   if ([handle acquireFromComponent:component]) {
     [currentScope->newScopeRoot registerComponent:component];
     return handle;

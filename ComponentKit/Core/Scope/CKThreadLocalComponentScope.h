@@ -19,10 +19,10 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKBuildComponent.h>
-#import <ComponentKit/CKComponentScopeFrame.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKScopeTreeNode.h>
 
 @protocol CKSystraceListener;
 
@@ -45,7 +45,7 @@ public:
 
   CKComponentScopeRoot *const newScopeRoot;
   const CKComponentStateUpdateMap stateUpdates;
-  std::stack<CKComponentScopeFramePair> stack;
+  std::stack<CKComponentScopePair> stack;
   std::stack<std::vector<id<NSObject>>> keys;
 
   /** The current systrace listener. Can be nil if systrace is not enabled. */

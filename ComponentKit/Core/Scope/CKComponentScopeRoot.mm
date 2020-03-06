@@ -17,7 +17,6 @@
 
 #import "CKComponentProtocol.h"
 #import "CKComponentControllerProtocol.h"
-#import "CKComponentScopeFrame.h"
 #import "CKThreadLocalComponentScope.h"
 
 typedef std::unordered_map<CKComponentPredicate, NSHashTable<id<CKComponentProtocol>> *> _CKRegisteredComponentsMap;

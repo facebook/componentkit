@@ -11,8 +11,6 @@
 #import "CKComponentScope.h"
 
 #import "CKAnalyticsListener.h"
-#import "CKCompositeComponent.h"
-#import "CKComponentScopeFrame.h"
 #import "CKComponentScopeHandle.h"
 #import "CKComponentScopeRoot.h"
 #import "CKThreadLocalComponentScope.h"
@@ -25,7 +23,7 @@ CKComponentScope::~CKComponentScope()
     [_scopeHandle resolve];
 
     if (_threadLocalScope->systraceListener) {
-      auto const componentClass = _threadLocalScope->stack.top().frame.scopeHandle.componentClass;
+      auto const componentClass = _threadLocalScope->stack.top().node.scopeHandle.componentClass;
       [_threadLocalScope->systraceListener didBuildComponent:componentClass];
     }
 
@@ -50,8 +48,8 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
                                          initialStateCreator:initialStateCreator
                                                 stateUpdates:_threadLocalScope->stateUpdates
                                          mergeTreeNodesLinks:_threadLocalScope->mergeTreeNodesLinks];
-    _threadLocalScope->stack.push({.frame = childPair.frame, .previousFrame = childPair.previousFrame});
-    _scopeHandle = childPair.frame.scopeHandle;
+    _threadLocalScope->stack.push({.node = childPair.node, .previousNode = childPair.previousNode});
+    _scopeHandle = childPair.node.scopeHandle;
     _threadLocalScope->keys.push({});
   }
   CKCAssertWithCategory(_threadLocalScope != nullptr,

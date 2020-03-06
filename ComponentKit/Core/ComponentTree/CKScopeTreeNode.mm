@@ -124,30 +124,25 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   _children.push_back({componentKey, child});
 }
 
-#pragma mark - CKComponentScopeFrameProtocol
-
-+ (CKComponentScopeFramePair)childPairForPair:(const CKComponentScopeFramePair &)pair
-                                      newRoot:(CKComponentScopeRoot *)newRoot
-                               componentClass:(Class<CKComponentProtocol>)componentClass
-                                   identifier:(id)identifier
-                                         keys:(const std::vector<id<NSObject>> &)keys
-                          initialStateCreator:(id (^)(void))initialStateCreator
-                                 stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                          mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
++ (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
+                                 newRoot:(CKComponentScopeRoot *)newRoot
+                          componentClass:(Class<CKComponentProtocol>)componentClass
+                              identifier:(id)identifier
+                                    keys:(const std::vector<id<NSObject>> &)keys
+                     initialStateCreator:(id (^)(void))initialStateCreator
+                            stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                     mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
 {
-  CKScopeTreeNode *frame = pair.frame;
-  CKScopeTreeNode *previousFrame = pair.previousFrame;
-
-  CKAssertNotNil(frame, @"Must have frame");
+  CKAssertNotNil(pair.node, @"Must have a node");
 
   // Generate key inside the new parent
-  CKTreeNodeComponentKey componentKey = [frame createKeyForComponentClass:componentClass identifier:identifier keys:keys];
-  // Get the child from the previous equivalent frame.
-  CKScopeTreeNode *childFrameOfPreviousFrame = [previousFrame childScopeForComponentKey:componentKey];
+  CKTreeNodeComponentKey componentKey = [pair.node createKeyForComponentClass:componentClass identifier:identifier keys:keys];
+  // Get the child from the previous equivalent scope.
+  CKScopeTreeNode *childScopeFromPreviousScope = [pair.previousNode childScopeForComponentKey:componentKey];
 
   // Create new handle.
-  CKComponentScopeHandle *newHandle = childFrameOfPreviousFrame
-  ? [childFrameOfPreviousFrame.scopeHandle newHandleWithStateUpdates:stateUpdates componentScopeRoot:newRoot]
+  CKComponentScopeHandle *newHandle = childScopeFromPreviousScope
+  ? [childScopeFromPreviousScope.scopeHandle newHandleWithStateUpdates:stateUpdates componentScopeRoot:newRoot]
   : [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                       rootIdentifier:newRoot.globalIdentifier
                                       componentClass:componentClass
@@ -155,21 +150,21 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
 
   // Create new node.
   CKScopeTreeNode *newChild = [[CKScopeTreeNode alloc]
-                               initWithPreviousNode:childFrameOfPreviousFrame
+                               initWithPreviousNode:childScopeFromPreviousScope
                                scopeHandle:newHandle];
 
   // Link the tree node to the scope handle.
   [newHandle setTreeNode:newChild];
 
   // Insert the new node to its parent map.
-  [frame setChildScope:newChild forComponentKey:componentKey];
+  [pair.node setChildScope:newChild forComponentKey:componentKey];
 
   // Update the component key on the new child.
   if (mergeTreeNodesLinks) {
     newChild->_componentKey = componentKey;
   }
 
-  return {.frame = newChild, .previousFrame = childFrameOfPreviousFrame};
+  return {.node = newChild, .previousNode = childScopeFromPreviousScope};
 }
 
 #pragma mark - Helpers
@@ -206,7 +201,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                                  : @""),
                                 std::get<3>(key).empty() ? @"" : formatKeys(std::get<3>(key))];
       [childrenDebugDescriptions addObject:description];
-      for (NSString *s in [(id<CKComponentScopeFrameProtocol>)childNode debugDescriptionComponents]) {
+      for (NSString *s in [(CKScopeTreeNode *)childNode debugDescriptionComponents]) {
         [childrenDebugDescriptions addObject:[@"  " stringByAppendingString:s]];
       }
     }

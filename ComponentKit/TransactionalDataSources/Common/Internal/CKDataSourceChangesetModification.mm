@@ -25,7 +25,6 @@
 #import "CKComponentEvents.h"
 #import "CKComponentLayout.h"
 #import "CKComponentProvider.h"
-#import "CKComponentScopeFrame.h"
 #import "CKComponentScopeRoot.h"
 #import "CKComponentScopeRootFactory.h"
 #import "CKDataSourceModificationHelper.h"

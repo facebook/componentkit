@@ -23,7 +23,7 @@
     if (threadLocalScope != nullptr) {
       CKAssert(previousNode == nil || [previousNode isKindOfClass:[CKScopeTreeNode class]], @"previousNode should be a CKScopeTreeNode, but its class is: %@.", previousNode.class);
       // Push the new pair into the thread local.
-      threadLocalScope->stack.push({.frame = self, .previousFrame = (CKScopeTreeNode *)previousNode});
+      threadLocalScope->stack.push({.node = self, .previousNode = (CKScopeTreeNode *)previousNode});
     }
   }
   return self;
@@ -36,7 +36,7 @@
     return;
   }
 
-  CKAssert(!threadLocalScope->stack.empty() && threadLocalScope->stack.top().frame == (id<CKComponentScopeFrameProtocol>)node, @"top.frame (%@) is not equal to node (%@)", threadLocalScope->stack.top().frame, node);
+  CKAssert(!threadLocalScope->stack.empty() && threadLocalScope->stack.top().node == (CKScopeTreeNode *)node, @"top.node (%@) is not equal to node (%@)", threadLocalScope->stack.top().node, node);
 
   // Pop the top element of the stack.
   threadLocalScope->stack.pop();
