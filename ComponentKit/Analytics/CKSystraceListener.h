@@ -62,8 +62,8 @@
 
   Will be called only when systrace is enabled.
 */
-- (void)willCheckShouldComponentUpdate:(id<CKRenderComponentProtocol>)component;
-- (void)didCheckShouldComponentUpdate:(id<CKRenderComponentProtocol>)component;
+- (void)willCheckShouldComponentUpdate:(const char *const)componentTypeName;
+- (void)didCheckShouldComponentUpdate:(const char *const)componentTypeName;
 
 @end
 

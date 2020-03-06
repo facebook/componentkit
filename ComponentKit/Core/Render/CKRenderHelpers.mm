@@ -90,9 +90,9 @@ namespace CKRenderInternal {
       auto const& dirtyNodeIdsForPropsUpdates = params.previousScopeRoot.rootNode.dirtyNodeIdsForPropsUpdates();
       auto const dirtyNodeId = dirtyNodeIdsForPropsUpdates.find(node.nodeIdentifier);
       if (dirtyNodeId == dirtyNodeIdsForPropsUpdates.end()) {
-        [params.systraceListener willCheckShouldComponentUpdate:component];
+        [params.systraceListener willCheckShouldComponentUpdate:component.typeName];
         auto const shouldComponentUpdate = [component shouldComponentUpdate:previousComponent];
-        [params.systraceListener didCheckShouldComponentUpdate:component];
+        [params.systraceListener didCheckShouldComponentUpdate:component.typeName];
         if (!shouldComponentUpdate) {
           CKRenderInternal::reusePreviousComponent(component, childComponent, node, previousNode, params, didReuseBlock);
           return YES;
