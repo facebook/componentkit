@@ -87,9 +87,9 @@ namespace CKRenderInternal {
     // If there is no previous compononet, there is nothing to reuse.
     if (previousComponent) {
       // We check if the component node is dirty in the **previous** scope root.
-      auto const dirtyNodeIdsForPropsUpdates = params.previousScopeRoot.rootNode.dirtyNodeIdsForPropsUpdates();
+      auto const& dirtyNodeIdsForPropsUpdates = params.previousScopeRoot.rootNode.dirtyNodeIdsForPropsUpdates();
       auto const dirtyNodeId = dirtyNodeIdsForPropsUpdates.find(node.nodeIdentifier);
-      if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
+      if (dirtyNodeId == dirtyNodeIdsForPropsUpdates.end()) {
         [params.systraceListener willCheckShouldComponentUpdate:component];
         auto const shouldComponentUpdate = [component shouldComponentUpdate:previousComponent];
         [params.systraceListener didCheckShouldComponentUpdate:component];
