@@ -39,6 +39,8 @@
 { return nil; }
 - (NSString *)className
 { return @""; }
+- (const char *)typeName
+{ return ""; }
 @end
 
 @interface TestComponentWithoutScopedProtocol : NSObject <CKComponentProtocol>
@@ -51,6 +53,8 @@
 { return nil; }
 - (NSString *)className
 { return @""; }
+- (const char *)typeName
+{ return ""; }
 @end
 
 @interface TestComponentControllerWithScopedProtocol : NSObject <CKComponentControllerProtocol, TestScopedProtocol>

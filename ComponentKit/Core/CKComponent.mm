@@ -512,7 +512,12 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 - (NSString *)className
 {
-  return NSStringFromClass(self.class);
+  return [NSString stringWithUTF8String:self.typeName];
+}
+
+- (const char *)typeName
+{
+  return class_getName(self.class);
 }
 
 @end

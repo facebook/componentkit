@@ -46,7 +46,7 @@ private:
   CKComponentPerfScope(const CKComponentPerfScope&) = delete;
   CKComponentPerfScope &operator=(const CKComponentPerfScope&) = delete;
   id<CKSystraceListener> _systraceListener;
-  Class _componentClass;
+  const char *_componentTypeName;
 };
 
 #endif

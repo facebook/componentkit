@@ -50,14 +50,13 @@
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  Class componentClass = [component class];
-  auto const componentKey = [parent createComponentKeyForChildWithClass:componentClass identifier:[component componentIdentifier]];
+  auto const componentKey = [parent createComponentKeyForChildWithTypeName:component.typeName identifier:[component componentIdentifier]];
   auto const previousNode = [previousParent childForComponentKey:componentKey];
 
   // For Render Layout components, the component might have a scope handle already.
   CKComponentScopeHandle *scopeHandle = component.scopeHandle;
   if (scopeHandle == nil) {
-    scopeHandle = CKRender::ScopeHandle::Render::create(component, componentClass, previousNode, scopeRoot, stateUpdates);
+    scopeHandle = CKRender::ScopeHandle::Render::create(component, previousNode, scopeRoot, stateUpdates);
   }
 
   if (self = [self initWithPreviousNode:previousNode scopeHandle:scopeHandle]) {
@@ -83,7 +82,7 @@
 {
   if (!params.mergeTreeNodesLinks)
   {
-    auto const componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
+    auto const componentKey = [parent createComponentKeyForChildWithTypeName:component.typeName identifier:nil];
     _componentKey = componentKey;
   }
   _component = component;

@@ -84,12 +84,10 @@ namespace CKRender {
        Create a scope handle for Render component (if needed).
 
        @param component Render component which the scope handle will be created for.
-       @param componentClass The component class .
        @param previousNode The prevoious equivalent tree node.
        @param stateUpdates The state updates map of this component generation.
        */
       auto create(id<CKRenderComponentProtocol> component,
-                  Class componentClass,
                   id<CKTreeNodeProtocol> previousNode,
                   CKComponentScopeRoot *scopeRoot,
                   const CKComponentStateUpdateMap &stateUpdates) -> CKComponentScopeHandle*;

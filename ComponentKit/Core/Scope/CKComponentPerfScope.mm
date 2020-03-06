@@ -16,7 +16,7 @@
 
 CKComponentPerfScope::~CKComponentPerfScope()
 {
-  [_systraceListener didBuildComponent:_componentClass];
+  [_systraceListener didBuildComponent:_componentTypeName];
 }
 
 CKComponentPerfScope::CKComponentPerfScope(Class __unsafe_unretained componentClass) noexcept
@@ -27,9 +27,9 @@ CKComponentPerfScope::CKComponentPerfScope(Class __unsafe_unretained componentCl
     auto const systraceListener = threadLocalScope->systraceListener;
     if (systraceListener)
     {
-      [systraceListener willBuildComponent:componentClass];
+      _componentTypeName = class_getName(componentClass);
+      [systraceListener willBuildComponent:_componentTypeName];
       _systraceListener = systraceListener;
-      _componentClass = componentClass;
     }
   }
 }

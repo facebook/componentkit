@@ -160,7 +160,7 @@ static auto didBuildComponentTree(id<CKTreeNodeProtocol> node,
     params.scopeRoot.rootNode.didBuildComponentTree(node);
 
     // Systrace logging
-    [params.systraceListener didBuildComponent:component.class];
+    [params.systraceListener didBuildComponent:component.typeName];
   }
 
 }
@@ -247,7 +247,7 @@ namespace CKRender {
         params.scopeRoot.rootNode.willBuildComponentTree(node);
 
         // Systrace logging
-        [params.systraceListener willBuildComponent:component.class];
+        [params.systraceListener willBuildComponent:component.typeName];
 
         // Faster state/props optimizations require previous parent.
         if (CKRenderInternal::reusePreviousComponentForSingleChild(node, component, childComponent, parent, previousParent, params, parentHasStateUpdate, didReuseBlock)) {
@@ -297,7 +297,6 @@ namespace CKRender {
   namespace ScopeHandle {
     namespace Render {
       auto create(id<CKRenderComponentProtocol> component,
-                  Class componentClass,
                   id<CKTreeNodeProtocol> previousNode,
                   CKComponentScopeRoot *scopeRoot,
                   const CKComponentStateUpdateMap &stateUpdates) -> CKComponentScopeHandle*
@@ -315,7 +314,7 @@ namespace CKRender {
           if (initialState != CKTreeNodeEmptyState() || component.requiresScopeHandle) {
             scopeHandle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
                                                             rootIdentifier:scopeRoot.globalIdentifier
-                                                            componentClass:componentClass
+                                                         componentTypeName:component.typeName
                                                               initialState:initialState];
           }
         }

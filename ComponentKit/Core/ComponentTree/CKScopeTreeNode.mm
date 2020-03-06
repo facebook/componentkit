@@ -53,18 +53,18 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   return nil;
 }
 
-- (CKTreeNodeComponentKey)createComponentKeyForChildWithClass:(id<CKComponentProtocol>)componentClass
-                                                   identifier:(id<NSObject>)identifier
+- (CKTreeNodeComponentKey)createComponentKeyForChildWithTypeName:(const char *)componentTypeName
+                                                      identifier:(id<NSObject>)identifier
 {
   // Create **parent** based key counter.
   NSUInteger keyCounter = kTreeNodeParentBaseKey;
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
-    if (std::get<0>(childKey) == componentClass && CKObjectIsEqual(std::get<2>(childKey), identifier)) {
+    if (std::get<0>(childKey) == componentTypeName && CKObjectIsEqual(std::get<2>(childKey), identifier)) {
       keyCounter += 2;
     }
   }
-  return std::make_tuple(componentClass, keyCounter, identifier, std::vector<id<NSObject>>{});
+  return std::make_tuple(componentTypeName, keyCounter, identifier, std::vector<id<NSObject>>{});
 }
 
 - (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
@@ -98,20 +98,20 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   }
 }
 
-- (CKTreeNodeComponentKey)createKeyForComponentClass:(Class<CKComponentProtocol>)componentClass
-                                          identifier:(id)identifier
-                                                keys:(const std::vector<id<NSObject>> &)keys
+- (CKTreeNodeComponentKey)createKeyForComponentTypeName:(const char *)componentTypeName
+                                             identifier:(id)identifier
+                                                   keys:(const std::vector<id<NSObject>> &)keys
 {
   // Create **owner** based key counter.
   NSUInteger keyCounter = kTreeNodeOwnerBaseKey;
   for (auto const &child : _children) {
     auto childKey = std::get<0>(child);
-    if (std::get<0>(childKey) == componentClass && CKObjectIsEqual(std::get<2>(childKey), identifier)) {
+    if (std::get<0>(childKey) == componentTypeName && CKObjectIsEqual(std::get<2>(childKey), identifier)) {
       keyCounter += 2;
     }
   }
-  // Update the stateKey with the class key counter to make sure we don't have collisions.
-  return std::make_tuple(componentClass, keyCounter, identifier, keys);
+  // Update the stateKey with the type name key counter to make sure we don't have collisions.
+  return std::make_tuple(componentTypeName, keyCounter, identifier, keys);
 }
 
 - (CKScopeTreeNode *)childScopeForComponentKey:(const CKTreeNodeComponentKey &)key
@@ -126,7 +126,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
 
 + (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
                                  newRoot:(CKComponentScopeRoot *)newRoot
-                          componentClass:(Class<CKComponentProtocol>)componentClass
+                       componentTypeName:(const char *)componentTypeName
                               identifier:(id)identifier
                                     keys:(const std::vector<id<NSObject>> &)keys
                      initialStateCreator:(id (^)(void))initialStateCreator
@@ -138,7 +138,9 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   CKAssertNotNil(initialStateCreator, @"Must has an initial state creator");
 
   // Generate key inside the new parent
-  CKTreeNodeComponentKey componentKey = [pair.node createKeyForComponentClass:componentClass identifier:identifier keys:keys];
+  CKTreeNodeComponentKey componentKey = [pair.node createKeyForComponentTypeName:componentTypeName
+                                                                      identifier:identifier
+                                                                            keys:keys];
   // Get the child from the previous equivalent scope.
   CKScopeTreeNode *childScopeFromPreviousScope = [pair.previousNode childScopeForComponentKey:componentKey];
 
@@ -150,7 +152,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   } else if (requiresScopeHandle) {
     newHandle = [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                                   rootIdentifier:newRoot.globalIdentifier
-                                                  componentClass:componentClass
+                                               componentTypeName:componentTypeName
                                                     initialState:(initialStateCreator ? initialStateCreator() : nil)];
   }
 
@@ -202,8 +204,8 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
     auto const key = std::get<0>(child);
     auto const childNode = std::get<1>(child);
     if (std::get<1>(key) % 2 == kTreeNodeOwnerBaseKey) {
-      auto const description = [NSString stringWithFormat:@"- %@%@%@",
-                                NSStringFromClass(std::get<0>(key)),
+      auto const description = [NSString stringWithFormat:@"- %s%@%@",
+                                std::get<0>(key),
                                 (std::get<2>(key)
                                  ? [NSString stringWithFormat:@":%@", std::get<2>(key)]
                                  : @""),

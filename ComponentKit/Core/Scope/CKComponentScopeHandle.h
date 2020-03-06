@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** Creates a conceptually brand new scope handle */
 - (instancetype)initWithListener:(id<CKComponentStateListener> _Nullable)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                  componentClass:(Class<CKComponentProtocol>)componentClass
+               componentTypeName:(const char *)componentTypeName
                     initialState:(id _Nullable)initialState;
 
 /** Creates a new instance of the scope handle that incorporates the given state updates. */
@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly, nullable) id<CKComponentControllerProtocol> controller;
 
-@property (nonatomic, assign, readonly) Class<CKComponentProtocol> componentClass;
+@property (nonatomic, assign, readonly) const char* componentTypeName;
 
 @property (nonatomic, strong, readonly, nullable) id state;
 @property (nonatomic, assign, readonly) CKComponentScopeHandleIdentifier globalIdentifier;

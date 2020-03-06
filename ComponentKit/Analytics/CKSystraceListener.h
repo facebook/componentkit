@@ -46,8 +46,8 @@
 
  Will be called only when systrace is enabled.
  */
-- (void)willBuildComponent:(Class)componentClass;
-- (void)didBuildComponent:(Class)componentClass;
+- (void)willBuildComponent:(const char *)componentTypeName;
+- (void)didBuildComponent:(const char *)componentTypeName;
 
 /**
  Called before/after layout a component.

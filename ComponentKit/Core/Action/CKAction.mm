@@ -408,9 +408,15 @@ void _CKTypedComponentDebugCheckComponentScopeHandle(CKComponentScopeHandle *han
   // In DEBUG mode, we want to do the minimum of type-checking for the action that's possible in Objective-C. We
   // can't do exact type checking, but we can ensure that you're passing the right type of primitives to the right
   // argument indices.
-  const Class klass = handle.componentClass;
+  const Class klass = objc_getClass(handle.componentTypeName);
 
-  _CKTypedComponentDebugCheckComponent(klass, selector, typeEncodings);
+  CKCAssertWithCategory(klass != nil,
+                        [NSString stringWithUTF8String:handle.componentTypeName],
+                        @"Creating an action from a scope should always yield a class");
+
+  if (klass != nil) {
+    _CKTypedComponentDebugCheckComponent(klass, selector, typeEncodings);
+  }
 }
 
 void _CKTypedComponentDebugCheckTargetSelector(id target, SEL selector, const std::vector<const char *> &typeEncodings) noexcept

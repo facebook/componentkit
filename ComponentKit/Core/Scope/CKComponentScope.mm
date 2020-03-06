@@ -29,8 +29,12 @@ CKComponentScope::~CKComponentScope()
     [_scopeHandle resolve];
 
     if (_threadLocalScope->systraceListener) {
-      auto const componentClass = _threadLocalScope->stack.top().node.scopeHandle.componentClass;
-      [_threadLocalScope->systraceListener didBuildComponent:componentClass];
+      auto const componentTypeName = _threadLocalScope->stack.top().node.scopeHandle.componentTypeName ?: "UnkownTypeName";
+      CKCAssertWithCategory(objc_getClass(componentTypeName) != nil,
+                            [NSString stringWithUTF8String:componentTypeName],
+                            @"Creating an action from a scope should always yield a class");
+
+      [_threadLocalScope->systraceListener didBuildComponent:componentTypeName];
     }
 
     _threadLocalScope->stack.pop();
@@ -43,12 +47,13 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
 {
   _threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (_threadLocalScope != nullptr) {
+    const auto componentTypeName = class_getName(componentClass);
 
-    [_threadLocalScope->systraceListener willBuildComponent:componentClass];
+    [_threadLocalScope->systraceListener willBuildComponent:componentTypeName];
 
     const auto childPair = [CKScopeTreeNode childPairForPair:_threadLocalScope->stack.top()
                                                      newRoot:_threadLocalScope->newScopeRoot
-                                              componentClass:componentClass
+                                           componentTypeName:componentTypeName
                                                   identifier:identifier
                                                         keys:_threadLocalScope->keys.top()
                                          initialStateCreator:toInitialStateCreator(initialStateCreator, componentClass)

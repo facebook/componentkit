@@ -64,14 +64,14 @@
 
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                  componentClass:(Class)componentClass
+               componentTypeName:(const char *)componentTypeName
                     initialState:(id)initialState
 {
   static int32_t nextGlobalIdentifier = 0;
   return [self initWithListener:listener
                globalIdentifier:OSAtomicIncrement32(&nextGlobalIdentifier)
                  rootIdentifier:rootIdentifier
-                 componentClass:componentClass
+              componentTypeName:componentTypeName
                           state:initialState
                      controller:nil  // Controllers are built on resolution of the handle.
                 scopedResponder:nil];  // Scoped responders are created lazily. Once they exist, we use that reference for future handles.
@@ -80,7 +80,7 @@
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                 globalIdentifier:(CKComponentScopeHandleIdentifier)globalIdentifier
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
-                  componentClass:(Class<CKComponentProtocol>)componentClass
+               componentTypeName:(const char *)componentTypeName
                            state:(id)state
                       controller:(id<CKComponentControllerProtocol>)controller
                  scopedResponder:(CKScopedResponder *)scopedResponder
@@ -89,7 +89,7 @@
     _listener = listener;
     _globalIdentifier = globalIdentifier;
     _rootIdentifier = rootIdentifier;
-    _componentClass = componentClass;
+    _componentTypeName = componentTypeName;
     _state = state;
     _controller = controller;
 
@@ -116,7 +116,7 @@
   return [[CKComponentScopeHandle alloc] initWithListener:_listener
                                          globalIdentifier:_globalIdentifier
                                            rootIdentifier:_rootIdentifier
-                                           componentClass:_componentClass
+                                        componentTypeName:_componentTypeName
                                                     state:updatedState
                                                controller:_controller
                                           scopedResponder:_scopedResponder];
@@ -165,7 +165,7 @@
 
 - (BOOL)acquireFromComponent:(id<CKComponentProtocol>)component
 {
-  if (!_acquired && [component isMemberOfClass:_componentClass]) {
+  if (!_acquired && component.typeName == _componentTypeName) {
     _acquired = YES;
     _acquiredComponent = component;
     return YES;
@@ -176,7 +176,7 @@
 
 - (void)forceAcquireFromComponent:(id<CKComponentProtocol>)component
 {
-  CKAssert([component isMemberOfClass:_componentClass], @"%@ has to be a member of %@ class", component, _componentClass);
+  CKAssert(component.typeName == _componentTypeName, @"%s has to be a member of %s class", component.typeName, _componentTypeName);
   CKAssert(!_acquired, @"scope handle cannot be acquired twice");
   _acquired = YES;
   _acquiredComponent = component;
