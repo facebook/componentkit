@@ -35,10 +35,7 @@ struct CKComponentHostingViewOptions {
   /// Specifying a initial size enables the ability to handle the first model/context update asynchronously.
   CK::Optional<CGSize> initialSize;
   /// A root view pool that hosting view can retrieve its container view from.
-  CK::Optional<CK::Component::RootViewPool> rootViewPool =
-  CKReadGlobalConfig().enableGlobalRootViewPoolInHostingView
-  ? CK::Optional<CK::Component::RootViewPool>(CK::Component::GlobalRootViewPool())
-  : CK::none;
+  CK::Optional<CK::Component::RootViewPool> rootViewPool = CK::none;
 };
 
 @interface CKComponentHostingView<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> () <CKComponentHostingViewProtocol>
