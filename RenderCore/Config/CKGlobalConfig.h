@@ -24,10 +24,6 @@ struct CKGlobalConfig {
   /** Same as above, but only in DEBUG configuration */
   BOOL alwaysBuildRenderTreeInDebug = YES;
   /**
-   `CK::Component::GlobalRootViewPool` will be used in `CKComponentHostingView` when this is enabled.
-   */
-  BOOL enableGlobalRootViewPoolInHostingView = NO;
-  /**
    This enables acquiring lock when updating component in component controller.
    */
   BOOL shouldAcquireLockWhenUpdatingComponentInController = NO;

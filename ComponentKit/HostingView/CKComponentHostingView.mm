@@ -166,13 +166,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
      scopeIdentifier:_componentGenerator.scopeRoot.globalIdentifier
      analyticsListener:_componentGenerator.scopeRoot.analyticsListener
      sizeRangeProvider:sizeRangeProvider
-     allowTapPassthrough:_allowTapPassthrough
-     rootViewPoolOptions:options.rootViewPool.map([&](const auto rootViewPool) {
-      return CKComponentHostingViewRootViewPoolOptions {
-        .rootViewCategory = CK::makeNonNull([NSString stringWithFormat:@"%@-%@", NSStringFromClass(self.class), componentProviderIdentifier]),
-        .rootViewPool = rootViewPool,
-      };
-     })];
+     allowTapPassthrough:_allowTapPassthrough];
     [self addSubview:self.containerView];
 
     _initialSize = options.initialSize;

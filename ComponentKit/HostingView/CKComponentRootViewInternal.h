@@ -34,11 +34,6 @@ typedef UIView *(^CKComponentRootViewHitTestHook)(UIView *rootView, CGPoint poin
 - (void)setAllowTapPassthrough:(BOOL)allowTapPassthrough;
 
 /**
- Called before root view is pushed into `CK::Component::RootViewPool`.
- */
-- (void)willEnterViewPool NS_REQUIRES_SUPER;
-
-/**
  Exposes the ability to supplement the hitTest for the root view used in each CKComponentHostingView or
  UICollectionViewCell within a CKCollectionViewDataSource.
 
@@ -49,34 +44,6 @@ typedef UIView *(^CKComponentRootViewHitTestHook)(UIView *rootView, CGPoint poin
 
 /** Returns an array of all registered hit test hooks. */
 + (NSArray *)hitTestHooks;
-
-@end
-
-/**
- This should be implemented for object that hosts a `CKComponentRootView`.
- A `CKComponentRootViewHost` provides categorization and read/write access of root view.
- */
-@protocol CKComponentRootViewHost <NSObject>
-
-/**
- Category of root view. This can be used as category for `CK::Component::RootViewPool`.
- */
-@property (nonatomic, copy) NSString *rootViewCategory;
-
-/**
- The underlying `CKComponentRootView`.
- */
-@property (nonatomic, strong) CKComponentRootView *rootView;
-
-/**
- Create a new root view which will be attached to this `CKComponentRootViewHost`.
- */
-- (CK::NonNull<CKComponentRootView *>)createRootView;
-
-/**
- Called before root view enters view pool.
- */
-- (void)rootViewWillEnterViewPool;
 
 @end
 
