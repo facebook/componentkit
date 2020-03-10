@@ -105,12 +105,6 @@
   return CKIterable::childAtIndex(self, index, _child);
 }
 
-// TODO: Remove when new version is released.
-+ (id)initialStateWithComponent:(id<CKRenderComponentProtocol>)component
-{
-  return [self initialState];
-}
-
 + (id)initialState
 {
   return CKTreeNodeEmptyState();
@@ -120,7 +114,7 @@
 
 - (id)initialState
 {
-  return [self.class initialStateWithComponent:self];
+  return [self.class initialState];
 }
 
 - (BOOL)shouldComponentUpdate:(id<CKRenderComponentProtocol>)component
@@ -140,12 +134,6 @@
   return nil;
 }
 
-// TODO: Remove when new version is released.
-+ (BOOL)requiresScopeHandle
-{
-  return NO;
-}
-
 - (BOOL)requiresScopeHandle
 {
   if ([self.class controllerClass] != nil) {
@@ -161,7 +149,6 @@
   const auto &it = cache->find(componentClass);
   if (it == cache->end()) {
     const BOOL requiresScopeHandle =
-      [componentClass requiresScopeHandle] ||
       CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(buildController)) ||
       CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsFromPreviousComponent:)) ||
       CKSubclassOverridesInstanceMethod([CKRenderComponent class], componentClass, @selector(animationsOnInitialMount)) ||
