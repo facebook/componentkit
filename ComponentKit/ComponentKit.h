@@ -110,10 +110,10 @@
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKIterable.h>
 #import <ComponentKit/CKIterableHelpers.h>
+#import <ComponentKit/CKLinkable.h>
 #import <ComponentKit/CKLabelComponent.h>
 #import <ComponentKit/CKLayout.h>
 #import <ComponentKit/CKLayoutComponent.h>
-#import <ComponentKit/CKLinkable.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKMountable.h>
 #import <ComponentKit/CKMountableHelpers.h>
