@@ -159,4 +159,10 @@
   return it->second;
 }
 
+- (instancetype)clone
+{
+  // The default implementation returns `nil`, which indicates `clone` is not supported in this component.
+  return nil;
+}
+
 @end

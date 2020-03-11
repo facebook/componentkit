@@ -47,6 +47,11 @@ NS_SWIFT_NAME(RenderComponentProtocol)
 - (void)didReuseComponent:(id<CKRenderComponentProtocol>)component;
 
 /**
+ Creates a new instance of render component with props from the current instance.
+ */
+- (instancetype)clone;
+
+/**
  Override this method in order to assign a unique identifier to a component.
 
  The default identifier of a component would be its class and an integer which represent the order it was built.
