@@ -91,9 +91,9 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
   while (!stack.empty()) {
     MountItem &item = stack.top();
     if (item.visited) {
-      if (item.layout.component != nil) {
-        [item.layout.component childrenDidMount];
-        [listener didMountComponent:item.layout.component];
+      if (auto const c = item.layout.component) {
+        [c childrenDidMount];
+        [listener didMountComponent:c];
       }
       stack.pop();
     } else {
