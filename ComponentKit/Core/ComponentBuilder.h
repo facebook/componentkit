@@ -339,6 +339,27 @@ public:
   }
 
   /**
+   Used to determine how a view lays out its content when its bounds change. The default is @c UIViewContentModeScaleToFill .
+
+   @param m A mode to set.
+
+   @note Calling this method on a builder that does not have a view class set will trigger a compilation error.
+
+   @note Calling this method on a builder that already has a complete view configuration set will trigger
+   a compilation error.
+   */
+  auto &contentMode(UIViewContentMode m)
+  {
+    constexpr auto contentModeOverridesExistingViewConfiguration =
+        PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
+    static_assert(!contentModeOverridesExistingViewConfiguration, "Setting 'contentMode' overrides existing view configuration");
+    constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
+    static_assert(viewClassIsSet, "Cannot set 'contentMode' without setting 'viewClass' first");
+    _attributes.insert({@selector(setContentMode:), m});
+    return *this;
+  }
+
+  /**
    Sets a value for an arbitrary view property by specifying a selector that corresponds to the property setter and the
    value.
 
