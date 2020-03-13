@@ -95,7 +95,8 @@ private:
 - (void)setRootLayout:(const CKComponentRootLayout &)rootLayout
 {
   CKAssertMainThread();
-  _previousLayoutProvider = _layoutProvider;
+  // In the case when layout has no chance to be mounted, we need to make sure the correct previous layout is still retained.
+  _previousLayoutProvider = _previousLayoutProvider ?: _layoutProvider;
   _layoutProvider = [[CKComponentHostingContainerLayoutProvider alloc] initWithRootLayout:rootLayout];
   _needsMount = YES;
 }
