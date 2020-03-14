@@ -31,6 +31,7 @@
             {
               .isAccessibilityElement = accessibility.isAccessibilityElement,
               .accessibilityLabel = accessibility.accessibilityLabel,
+              .accessibilityTraits = accessibility.accessibilityTraits,
             },
           }
                        size:size];

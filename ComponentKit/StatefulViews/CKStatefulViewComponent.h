@@ -18,6 +18,7 @@
 struct CKStatefulViewComponentAccessibility {
   NSNumber *isAccessibilityElement;
   NSString *accessibilityLabel;
+  NSNumber *accessibilityTraits;
 };
 
 /**
