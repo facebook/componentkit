@@ -69,17 +69,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   CK_NOT_DESIGNATED_INITIALIZER();
 }
 
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-{
-  return [self initWithComponentProvider:componentProvider
-                       sizeRangeProvider:sizeRangeProvider
-                     componentPredicates:{}
-           componentControllerPredicates:{}
-                       analyticsListener:nil
-                                 options:{}];
-}
-
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider
                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
 {
@@ -100,25 +89,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   componentControllerPredicates:{}
               analyticsListener:nil
                         options:{}];
-}
-
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                      componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-            componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                                  options:(const CKComponentHostingViewOptions &)options
-{
-  auto const p = ^(id<NSObject> m, id<NSObject> c) {
-    return [componentProvider componentForModel:m context:c];
-  };
-  return [self initWithComponentProviderBlock:p
-                  componentProviderIdentifier:[NSString stringWithFormat:@"%p", componentProvider]
-                            sizeRangeProvider:sizeRangeProvider
-                          componentPredicates:componentPredicates
-                componentControllerPredicates:componentControllerPredicates
-                            analyticsListener:analyticsListener
-                                      options:options];
 }
 
 - (instancetype)initWithComponentProviderFunc:(CKComponentProviderFunc)componentProvider

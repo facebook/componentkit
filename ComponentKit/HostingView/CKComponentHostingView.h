@@ -37,12 +37,6 @@ NS_SWIFT_NAME(ComponentHostingView)
 - (instancetype)initWithComponentProviderFunc:(CKComponent * _Nullable(* _Nonnull)(ModelType model, ContextType context))componentProvider
                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
 
-/**
- This method is deprecated. Please use initWithComponentProviderFunc:sizeRangeProvider:
- */
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider;
-
 #else
 
 typedef CKComponent * _Nullable(*CKComponentProviderFn)(ModelType _Nullable, ContextType _Nullable);

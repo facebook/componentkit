@@ -20,12 +20,12 @@
 #import <ComponentKit/CKComponentScope.h>
 #import <ComponentKit/CKComponentSubclass.h>
 
-@interface CKComponentHostingViewAsyncStateUpdateTests : XCTestCase <CKComponentProvider>
+@interface CKComponentHostingViewAsyncStateUpdateTests : XCTestCase 
 @end
 
 @implementation CKComponentHostingViewAsyncStateUpdateTests
 
-+ (CKComponent *)componentForModel:(id<NSObject>)model context:(id<NSObject>)context
+static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
 {
   CKComponentScope scope([CKComponent class]);
   return CK::ComponentBuilder()
@@ -36,8 +36,8 @@
 
 - (void)testAsynchronouslyUpdatingStateOfComponentEventuallyUpdatesCorrespondingView
 {
-  CKComponentHostingView *hostingView = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewAsyncStateUpdateTests class]
-                                                                                sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
+  CKComponentHostingView *hostingView = [[CKComponentHostingView alloc] initWithComponentProviderFunc:componentProvider
+                                                                                    sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
   hostingView.bounds = CGRectMake(0, 0, 100, 100);
   [hostingView layoutIfNeeded];
 
@@ -56,8 +56,8 @@
 
 - (void)testAsynchronouslyUpdatingStateOfComponentAndThenSynchronouslyUpdatingStateImmediatelyUpdatesCorrespondingView
 {
-  CKComponentHostingView *hostingView = [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewAsyncStateUpdateTests class]
-                                                                                sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
+  CKComponentHostingView *hostingView = [[CKComponentHostingView alloc] initWithComponentProviderFunc:componentProvider
+                                                                                    sizeRangeProvider:[CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]];
   hostingView.bounds = CGRectMake(0, 0, 100, 100);
   [hostingView layoutIfNeeded];
 

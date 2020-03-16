@@ -37,25 +37,6 @@ struct CKComponentHostingViewOptions {
 
 @interface CKComponentHostingView<__covariant ModelType: id<NSObject>, __covariant ContextType: id<NSObject>> () <CKComponentHostingViewProtocol>
 
-/**
- @param componentProvider  provider conforming to CKComponentProvider protocol.
- @param sizeRangeProvider sizing range provider conforming to CKComponentSizeRangeProviding.
- @param componentPredicates A vector of C functions that are executed on each component constructed within the scope
-                            root. By passing in the predicates on initialization, we are able to cache which components
-                            match the predicate for rapid enumeration later.
- @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
- @param analyticsListener listener conforming to AnalyticsListener will be used to get component lifecycle callbacks for logging
- @param options Set of CKComponentHostingViewOptions
- @see CKComponentProvider
- @see CKComponentSizeRangeProviding
- */
-- (instancetype)initWithComponentProvider:(Class<CKComponentProvider>)componentProvider
-                        sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                      componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-            componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                        analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                                  options:(const CKComponentHostingViewOptions &)options;
-
 - (instancetype)initWithComponentProviderFunc:(CKComponent *(*)(ModelType model, ContextType context))componentProvider
                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates

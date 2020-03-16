@@ -35,7 +35,13 @@ typedef struct {
   BOOL shouldUpdateModelAfterCreation = YES;
 } CKComponentHostingViewConfiguration;
 
-@interface CKComponentHostingViewTests : XCTestCase <CKComponentProvider, CKComponentHostingViewDelegate>
+
+static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<NSObject> context)
+{
+  return CKComponentWithHostingViewTestModel(model);
+}
+
+@interface CKComponentHostingViewTests : XCTestCase <CKComponentHostingViewDelegate>
 + (CKComponentHostingView *)makeHostingView:(const CKComponentHostingViewConfiguration &)options;
 @end
 
@@ -61,7 +67,7 @@ typedef struct {
 
 + (CKComponentHostingView *)makeHostingView:(const CKComponentHostingViewConfiguration &)options
 {
-  return [[CKComponentHostingView alloc] initWithComponentProvider:[CKComponentHostingViewTests class]
+  return [[CKComponentHostingView alloc] initWithComponentProviderFunc:CKComponentTestComponentProviderFunc
                                                  sizeRangeProvider:options.sizeRangeProvider ?: [CKComponentFlexibleSizeRangeProvider providerWithFlexibility:CKComponentSizeRangeFlexibleWidthAndHeight]
                                                componentPredicates:{}
                                      componentControllerPredicates:{}
@@ -83,11 +89,6 @@ typedef struct {
   return CK::makeNonNull([NSString stringWithFormat:@"%@-%@",
                           NSStringFromClass([CKComponentHostingView class]),
                           [self componentProviderIdentifier]]);
-}
-
-+ (CKComponent *)componentForModel:(CKComponentHostingViewTestModel *)model context:(id<NSObject>)context
-{
-  return CKComponentWithHostingViewTestModel(model);
 }
 
 - (void)setUp
@@ -406,11 +407,6 @@ typedef struct {
 }
 
 @end
-
-static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<NSObject> context)
-{
-  return CKComponentWithHostingViewTestModel(model);
-}
 
 @interface CKComponentHostingViewTests_ComponentProviderFunction : CKComponentHostingViewTests
 @end
