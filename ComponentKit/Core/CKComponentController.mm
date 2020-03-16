@@ -115,7 +115,7 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 + (BOOL)shouldAcquireLockWhenUpdatingComponent
 {
-  return CKReadGlobalConfig().shouldAcquireLockWhenUpdatingComponentInController;
+  return NO;
 }
 
 - (void)didInit {}

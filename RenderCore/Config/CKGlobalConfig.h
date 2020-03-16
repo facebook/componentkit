@@ -24,10 +24,6 @@ struct CKGlobalConfig {
   /** Same as above, but only in DEBUG configuration */
   BOOL alwaysBuildRenderTreeInDebug = YES;
   /**
-   This enables acquiring lock when updating component in component controller.
-   */
-  BOOL shouldAcquireLockWhenUpdatingComponentInController = NO;
-  /**
    Uses the composite component child size to assign size
    properties on yoga node instead of the size of composite component itself
    */
