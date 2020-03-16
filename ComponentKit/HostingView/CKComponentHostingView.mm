@@ -98,32 +98,12 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
                                       options:(const CKComponentHostingViewOptions &)options
 {
-  componentProvider = componentProvider ?: nilProvider;
-
-  auto const p = ^(id<NSObject> m, id<NSObject> c) { return componentProvider(m, c); };
-  return [self initWithComponentProviderBlock:p
-                  componentProviderIdentifier:[NSString stringWithFormat:@"%p", componentProvider]
-                            sizeRangeProvider:sizeRangeProvider
-                          componentPredicates:componentPredicates
-                componentControllerPredicates:componentControllerPredicates
-                            analyticsListener:analyticsListener
-                                      options:options];
-}
-
-- (instancetype)initWithComponentProviderBlock:(CKComponentProviderBlock)componentProvider
-                   componentProviderIdentifier:(NSString *)componentProviderIdentifier
-                             sizeRangeProvider:(id<CKComponentSizeRangeProviding>)sizeRangeProvider
-                           componentPredicates:(const std::unordered_set<CKComponentPredicate> &)componentPredicates
-                 componentControllerPredicates:(const std::unordered_set<CKComponentControllerPredicate> &)componentControllerPredicates
-                             analyticsListener:(id<CKAnalyticsListener>)analyticsListener
-                                       options:(const CKComponentHostingViewOptions &)options
-{
   if (self = [super initWithFrame:CGRectZero]) {
     _componentGenerator =
     [[CKComponentGenerator alloc]
      initWithOptions:{
        .delegate = CK::makeNonNull(self),
-       .componentProvider = CK::makeNonNull(componentProvider),
+       .componentProvider = CK::makeNonNull(componentProvider ?: nilProvider),
        .componentPredicates = componentPredicates,
        .componentControllerPredicates = componentControllerPredicates,
        .analyticsListener = analyticsListener,

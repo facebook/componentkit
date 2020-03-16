@@ -56,9 +56,9 @@ struct CKComponentGeneratorOptions {
   CK::NonNull<id<CKComponentGeneratorDelegate>> delegate;
 
   /**
-   A `componentProvider` block that is called when generate component.
+   A `componentProvider` function that is called when generate component.
    */
-  CK::NonNull<CKComponentProviderBlock> componentProvider;
+  CK::NonNull<CKComponentProviderFunc> componentProvider;
 
   /**
    Optional `componentPredicates` that is used for creating `CKComponentScopeRoot`.

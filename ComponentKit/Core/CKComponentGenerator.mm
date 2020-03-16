@@ -42,7 +42,7 @@ struct CKComponentGeneratorInputs {
 
 @implementation CKComponentGenerator
 {
-  CKComponentProviderBlock _componentProvider;
+  CKComponentProviderFunc _componentProvider;
   CKComponentGeneratorInputs _pendingInputs;
   __weak id<CKComponentGeneratorDelegate> _delegate;
   dispatch_queue_t _affinedQueue;

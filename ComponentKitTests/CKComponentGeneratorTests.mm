@@ -28,34 +28,45 @@
 
 @end
 
+@interface VerificationModel : NSObject
+@property (nonatomic, readwrite) BOOL verified;
+@end
+
+@implementation VerificationModel
+@end
+
 @implementation CKComponentGeneratorTests
 {
   CKBuildComponentResult _asyncComponentGenerationResult;
   BOOL _didReceiveComponentStateUpdate;
 }
 
+static CKComponent *verificationComponentProvider(id<NSObject> m, id<NSObject> c)
+{
+  VerificationModel *model = (VerificationModel *)m;
+  model.verified = YES;
+
+  VerificationModel *context = (VerificationModel *)c;
+  context.verified = YES;
+  return CK::ComponentBuilder()
+                  .build();
+}
+
 - (void)testUpdateModelAndContext_ModelAndContextAreUsedInComponentProvider
 {
-  const auto model = [NSObject new];
-  const auto context = [NSObject new];
-  __block BOOL modelVerified = NO;
-  __block BOOL contextVerified = NO;
+  const auto model = [VerificationModel new];
+  const auto context = [VerificationModel new];
   const auto componentGenerator =
   [[CKComponentGenerator alloc]
    initWithOptions:{
      .delegate = CK::makeNonNull(self),
-     .componentProvider = CK::makeNonNull(^(id<NSObject> m, id<NSObject> c) {
-       modelVerified = model == m;
-       contextVerified = context == c;
-       return CK::ComponentBuilder()
-                  .build();
-     }),
+     .componentProvider = CK::makeNonNull(verificationComponentProvider),
    }];
   [componentGenerator updateModel:model];
   [componentGenerator updateContext:context];
   [componentGenerator generateComponentSynchronously];
-  XCTAssertTrue(modelVerified);
-  XCTAssertTrue(contextVerified);
+  XCTAssertTrue(model.verified);
+  XCTAssertTrue(context.verified);
 }
 
 - (void)testGenerateComponentSynchronously_ComponentResultIsReturned
@@ -92,7 +103,7 @@
   [[CKComponentGenerator alloc]
    initWithOptions:{
      .delegate = CK::makeNonNull(self),
-     .componentProvider = CK::makeNonNull(^(id<NSObject> m, id<NSObject> c) {
+     .componentProvider = CK::makeNonNull([](id<NSObject> m, id<NSObject> c) -> CKComponent *{
        return [CKTestStateComponent new];
      }),
    }];
@@ -114,8 +125,9 @@
   [[CKComponentGenerator alloc]
    initWithOptions:{
      .delegate = CK::makeNonNull(self),
-     .componentProvider = CK::makeNonNull(^(id<NSObject> m, id<NSObject> c) {
-       return [CKTestRenderComponent newWithProps:{}];
+     .componentProvider = CK::makeNonNull(
+       [](id<NSObject> m, id<NSObject> c) -> CKComponent * {
+          return [CKTestRenderComponent newWithProps:{}];
      }),
    }];
 }
