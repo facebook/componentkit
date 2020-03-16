@@ -280,12 +280,6 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   }).valueOr({});
 }
 
-- (id<NSObject>)uniqueIdentifier
-{
-  auto const scopeRootIdentifier = _componentGenerator.scopeRoot.globalIdentifier;
-  return scopeRootIdentifier > 0 ? @(scopeRootIdentifier) : nil;
-}
-
 - (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider
 {
   return _componentGenerator.scopeRoot;

@@ -18,7 +18,10 @@
 /**
  A common interface shared by views that host component hierarches.
  */
-@protocol CKComponentHostingViewProtocol <CKInspectableView>
+@protocol CKComponentHostingViewProtocol
+
+/** Call this only on the main thread. */
+- (CKComponentLayout)mountedLayout;
 
 /** Returns the current scope enumerator provider. Main thread only. */
 - (id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider;
