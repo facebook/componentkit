@@ -175,6 +175,17 @@ public:
   }
 
   /**
+   Used to determine how a view lays out its content when its bounds change. The default is @c UIViewContentModeScaleToFill .
+
+   @param m A mode to set.
+   */
+  auto &contentMode(UIViewContentMode m)
+  {
+    _attributes.insert({@selector(setContentMode:), m});
+    return *this;
+  }
+
+  /**
    Sets a value for an arbitrary view property by specifying a selector that corresponds to the property setter and the
    value.
 
