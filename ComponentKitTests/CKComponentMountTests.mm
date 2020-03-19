@@ -14,13 +14,15 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKIterableHelpers.h>
+#import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKMountController.h>
 #import <ComponentKit/CKMountedObjectForView.h>
 
 @interface CKComponentMountTests : XCTestCase
 @end
 
-@interface CKDontMountChildrenComponent : CKComponent
+@interface CKDontMountChildrenComponent : CKLayoutComponent
 + (instancetype)newWithChild:(CKComponent *)child;
 @end
 
@@ -139,6 +141,16 @@
   CKDontMountChildrenComponent *c = [self newWithView:{} size:{}];
   c->_child = child;
   return c;
+}
+
+- (unsigned int)numberOfChildren
+{
+  return CKIterable::numberOfChildren(_child);
+}
+
+- (id<CKMountable>)childAtIndex:(unsigned int)index
+{
+  return CKIterable::childAtIndex(self, index, _child);
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize

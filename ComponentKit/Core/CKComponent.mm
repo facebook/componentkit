@@ -58,10 +58,6 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 #if DEBUG
   __weak id<CKTreeNodeProtocol> _treeNode;
 #endif
-
-#if CK_ASSERTIONS_ENABLED
-  BOOL directSubclass;
-#endif
 }
 
 #if DEBUG
@@ -191,9 +187,6 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                     params:(const CKBuildComponentTreeParams &)params
       parentHasStateUpdate:(BOOL)parentHasStateUpdate
 {
-  #if CK_ASSERTIONS_ENABLED
-    directSubclass = YES;
-  #endif
   CKRender::ComponentTree::Iterable::build(self, parent, previousParent, params, parentHasStateUpdate);
 }
 
@@ -342,12 +335,13 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                                     relativeToParentSize:parentSize];
 
 #if CK_ASSERTIONS_ENABLED
-  // If `leafComponentOnARenderTree` is true, the infrastructure treats this component as a leaf component.
   // If this component has children in its layout, this means that it's not a real leaf component.
   // As a result, the infrastructure won't call `buildComponentTree:` on the component's children and can affect the render process.
-  if (directSubclass && layout.children != nullptr) {
-    auto const childrenSize = layout.children->size();
-    CKAssertWithCategory(childrenSize <= 1,
+  if (self.superclass == [CKComponent class] && layout.children != nullptr && layout.children->size() > 0) {
+    const auto overridesIterableMethods =
+    CKSubclassOverridesInstanceMethod([CKComponent class], self.class, @selector(childAtIndex:)) &&
+    CKSubclassOverridesInstanceMethod([CKComponent class], self.class, @selector(numberOfChildren));
+    CKAssertWithCategory(overridesIterableMethods,
                          NSStringFromClass([self class]),
                          @"%@ is subclassing CKComponent directly, you need to subclass CKLayoutComponent instead. "
                          "Context: we’re phasing out CKComponent subclasses for in favor of CKLayoutComponent subclasses. "
