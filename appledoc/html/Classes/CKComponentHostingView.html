@@ -70,10 +70,6 @@
 		
 		<option value="//api/name/hostingViewWillAppear">- hostingViewWillAppear</option>
 		
-		<option value="//api/name/initWithComponentProvider:sizeRangeProvider:">- initWithComponentProvider:sizeRangeProvider:</option>
-		
-		<option value="//api/name/initWithComponentProvider:sizeRangeProvider:componentPredicates:componentControllerPredicates:analyticsListener:options:">- initWithComponentProvider:sizeRangeProvider:componentPredicates:componentControllerPredicates:analyticsListener:options:</option>
-		
 		<option value="//api/name/initWithComponentProviderFunc:sizeRangeProvider:">- initWithComponentProviderFunc:sizeRangeProvider:</option>
 		
 		<option value="//api/name/reloadWithMode:">- reloadWithMode:</option>
@@ -240,47 +236,6 @@
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/initWithComponentProvider:sizeRangeProvider:" title="initWithComponentProvider:sizeRangeProvider:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/initWithComponentProvider:sizeRangeProvider:">&ndash;&nbsp;initWithComponentProvider:sizeRangeProvider:</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>This method is deprecated. Please use initWithComponentProviderFunc:sizeRangeProvider:</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithComponentProvider:(Class&lt;CKComponentProvider&gt;)<em>componentProvider</em> sizeRangeProvider:(id&lt;CKComponentSizeRangeProviding&gt;)<em>sizeRangeProvider</em></code></div>
-
-		    
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentHostingView.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
 	<a name="//api/name/updateModel:mode:" title="updateModel:mode:"></a>
 	<h3 class="method-title"><code><a href="#//api/name/updateModel:mode:">&ndash;&nbsp;updateModel:mode:</a></code>
 </h3>
@@ -412,95 +367,6 @@
 
 						<div class="task-list">
 							<div class="section-method">
-	<a name="//api/name/initWithComponentProvider:sizeRangeProvider:componentPredicates:componentControllerPredicates:analyticsListener:options:" title="initWithComponentProvider:sizeRangeProvider:componentPredicates:componentControllerPredicates:analyticsListener:options:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/initWithComponentProvider:sizeRangeProvider:componentPredicates:componentControllerPredicates:analyticsListener:options:">&ndash;&nbsp;initWithComponentProvider:sizeRangeProvider:componentPredicates:componentControllerPredicates:analyticsListener:options:</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>provider conforming to CKComponentProvider protocol.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithComponentProvider:(Class&lt;CKComponentProvider&gt;)<em>componentProvider</em> sizeRangeProvider:(id&lt;CKComponentSizeRangeProviding&gt;)<em>sizeRangeProvider</em> componentPredicates:(const std : : unordered_set&lt;CKComponentPredicate&gt; &amp;)<em>componentPredicates</em> componentControllerPredicates:(const std : : unordered_set&lt;CKComponentControllerPredicate&gt; &amp;)<em>componentControllerPredicates</em> analyticsListener:(id&lt;CKAnalyticsListener&gt;)<em>analyticsListener</em> options:(const CKComponentHostingViewOptions &amp;)<em>options</em></code></div>
-
-		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>componentProvider</code></th>
-						<td><p>provider conforming to CKComponentProvider protocol.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>sizeRangeProvider</code></th>
-						<td><p>sizing range provider conforming to CKComponentSizeRangeProviding.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>componentPredicates</code></th>
-						<td><p>A vector of C functions that are executed on each component constructed within the scope
-                            root. By passing in the predicates on initialization, we are able to cache which components
-                            match the predicate for rapid enumeration later.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>componentControllerPredicates</code></th>
-						<td><p>Same as componentPredicates above, but for component controllers.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>analyticsListener</code></th>
-						<td><p>listener conforming to AnalyticsListener will be used to get component lifecycle callbacks for logging</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>options</code></th>
-						<td><p>Set of CKComponentHostingViewOptions</p></td>
-					</tr>
-				
-				</table>
-			</div>
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection see-also-section">
-				<h4 class="method-subtitle">See Also</h4>
-				<ul>
-					
-					<li><code><p><a href="../Protocols/CKComponentSizeRangeProviding.html">CKComponentSizeRangeProviding</a></p></code></li>
-					
-				</ul>
-			</div>
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponentHostingViewInternal.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
 	<a name="//api/name/applyResult:" title="applyResult:"></a>
 	<h3 class="method-title"><code><a href="#//api/name/applyResult:">&ndash;&nbsp;applyResult:</a></code>
 </h3>
@@ -598,7 +464,7 @@ Use case could be reloading a hosting view when <code>CKComponentContext</code> 
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2020 Facebook. All rights reserved. Updated: 2020-03-14</p>
+						<p class="copyright">Copyright &copy; 2020 Facebook. All rights reserved. Updated: 2020-03-19</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
