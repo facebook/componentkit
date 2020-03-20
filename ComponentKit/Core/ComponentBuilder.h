@@ -78,7 +78,7 @@ public:
     static_assert(contextIsSet, "Cannot set 'key' without specifying 'context'");
 
     _key = key;
-    return reinterpret_cast<Derived<PropsBitmap> &>(*this);
+    return reinterpret_cast<Derived<PropsBitmap | BuilderBasePropId::key> &>(*this);
   }
 
   /**
