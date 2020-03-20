@@ -30,11 +30,11 @@ static CKComponentAnimationHooks hooksForCAAnimation(CKComponent *component, CAA
     .didRemount = [^(id context){
       CALayer *layer = layerPath ? [component.viewForAnimation valueForKeyPath:layerPath] : component.viewForAnimation.layer;
       if (auto const lp = layerPath) {
-        CKCAssertWithCategory(layer != nil, [component class],
-                              @"%@ has no mounted layer at key path %@, so it cannot be animated", [component class], lp);
+        CKCAssertWithCategory(layer != nil, [component className],
+                              @"%@ has no mounted layer at key path %@, so it cannot be animated", [component className], lp);
       } else {
-        CKCAssertWithCategory(layer != nil, [component class],
-                              @"%@ has no mounted layer, so it cannot be animated", [component class]);
+        CKCAssertWithCategory(layer != nil, [component className],
+                              @"%@ has no mounted layer, so it cannot be animated", [component className]);
       }
       NSString *key = [[NSUUID UUID] UUIDString];
       auto const animationAddTime = [layer convertTime:CACurrentMediaTime() fromLayer:nil];
@@ -58,8 +58,8 @@ static CKComponentAnimationHooks hooksForFinalUnmountAnimation(const CKComponent
   return CKComponentAnimationHooks {
     .willRemount = ^() {
       const auto viewForAnimation = [component viewForAnimation];
-      CKCAssertWithCategory(viewForAnimation != nil, [component class],
-                            @"Can't animate component without a view. Check if %@ has a view.", [component class]);
+      CKCAssertWithCategory(viewForAnimation != nil, [component className],
+                            @"Can't animate component without a view. Check if %@ has a view.", [component className]);
       const auto snapshotView = [viewForAnimation snapshotViewAfterScreenUpdates:NO];
       snapshotView.frame = [viewForAnimation convertRect:viewForAnimation.bounds toView:hostView];
       snapshotView.userInteractionEnabled = NO;
