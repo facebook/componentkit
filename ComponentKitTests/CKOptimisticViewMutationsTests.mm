@@ -82,13 +82,11 @@
 
 - (void)testFunctionBasedViewMutationsAreAppliedAndTornDownCorrectly
 {
-  CKButtonComponent *buttonComponent =
-  [CKButtonComponent
-   newWithAction:nullptr
-   options:{
-     .titles = @"Original",
-   }
-  ];
+  auto const buttonComponent =
+  CK::ButtonComponentBuilder()
+      .action(nullptr)
+      .title(@"Original")
+      .build();
   CKComponentLifecycleTestHelper *componentLifecycleTestController = [[CKComponentLifecycleTestHelper alloc] initWithComponentProvider:nullptr
                                                                                                                              sizeRangeProvider:nil];
   [componentLifecycleTestController updateWithState:{
