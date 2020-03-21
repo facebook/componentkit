@@ -97,8 +97,9 @@ void CKComponentContextHelper::restore(const CKComponentContextPreviousState &st
   // testTriplyNestedComponentContextWithNilMiddleValueCorrectlyRestoresOuterValue for an example.
   CKComponentContextValue *const v = contextValue(YES);
   NSMutableDictionary *const c = v->_dictionary;
-  CKCAssert(c[storeResult.key] == storeResult.newValue, @"Context value for %@ unexpectedly mutated", storeResult.key);
-  c[storeResult.key] = storeResult.originalValue;
+  id<NSCopying> storeResultKey = (id<NSCopying>)storeResult.key;
+  CKCAssert(c[storeResultKey] == storeResult.newValue, @"Context value for %@ unexpectedly mutated", storeResult.key);
+  c[storeResultKey] = storeResult.originalValue;
   clearContextValueIfEmpty(v);
 }
 
