@@ -18,6 +18,7 @@
 #import <ComponentKit/CKMutex.h>
 #import <ComponentKit/CKOptional.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
+#import <ComponentKit/CKCoalescedSpecSupport.h>
 
 #import "CKScopeTreeNode.h"
 #import "CKRenderTreeNode.h"
@@ -190,11 +191,13 @@ namespace CKRender {
       }
 
       // Update the `parentHasStateUpdate` param for Faster state/props updates.
+      // TODO: Share this value with the value precomputed in the scope
       parentHasStateUpdate = parentHasStateUpdate ||
-      CKRender::componentHasStateUpdate(component.scopeHandle,
-                                        previousParent,
-                                        params.buildTrigger,
-                                        params.stateUpdates);
+      (params.buildTrigger != CKBuildTrigger::NewTree &&
+       CKRender::componentHasStateUpdate(component.scopeHandle,
+                                         previousParent,
+                                         params.buildTrigger,
+                                         params.stateUpdates));
 
       // If there is a node, we update the parents' pointers to the next level in the tree.
       if (node) {
@@ -259,10 +262,13 @@ namespace CKRender {
 
         // Update the `parentHasStateUpdate` param for Faster state/props updates.
         parentHasStateUpdate = parentHasStateUpdate ||
-        CKRender::componentHasStateUpdate(node.scopeHandle,
-                                          previousParent,
-                                          params.buildTrigger,
-                                          params.stateUpdates);
+        (params.buildTrigger != CKBuildTrigger::NewTree &&
+         CKRender::componentHasStateUpdate(node.scopeHandle,
+                                           previousParent,
+                                           params.buildTrigger,
+                                           params.stateUpdates));
+
+        CK::CoalescedWillRenderRenderComponent(parentHasStateUpdate);
 
         auto const child = [component render:node.state];
         if (child) {
@@ -277,6 +283,7 @@ namespace CKRender {
                parentHasStateUpdate:parentHasStateUpdate];
         }
 
+        CK::CoalescedDidRenderRenderComponent();
         CKRenderInternal::didBuildComponentTree(node, component, params);
 
         return node;

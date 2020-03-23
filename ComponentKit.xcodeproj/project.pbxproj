@@ -1035,6 +1035,8 @@
 		D4EEE0F023E1E6DF00D1ED7E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EEE0EF23E1E6DF00D1ED7E /* QuartzCore.framework */; };
 		D4EEE0F423E1E6F800D1ED7E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EEE0F323E1E6F800D1ED7E /* UIKit.framework */; };
 		D4EEE0F823E1E91A00D1ED7E /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04977E51CC4145E0046CBCC /* OCMock.framework */; };
+		D4F2164A2415BDBA00E65166 /* CKCoalescedSpecSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */; };
+		D4F2164B2415BDBA00E65166 /* CKCoalescedSpecSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */; };
 		D608DF9E232E2E9B00CD90D9 /* CKVariantTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D608DF9D232E2E9B00CD90D9 /* CKVariantTests.mm */; };
 		D608DF9F232E2E9B00CD90D9 /* CKVariantTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D608DF9D232E2E9B00CD90D9 /* CKVariantTests.mm */; };
 		D60C2DA922B98355001F502B /* CKNonNullTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D60C2DA822B98355001F502B /* CKNonNullTests.mm */; };
@@ -1954,6 +1956,7 @@
 		D4EEE0EF23E1E6DF00D1ED7E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS13.2.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		D4EEE0F123E1E6E800D1ED7E /* TVUIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVUIKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS13.2.sdk/System/Library/Frameworks/TVUIKit.framework; sourceTree = DEVELOPER_DIR; };
 		D4EEE0F323E1E6F800D1ED7E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS13.2.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCoalescedSpecSupport.h; sourceTree = "<group>"; };
 		D608DF9D232E2E9B00CD90D9 /* CKVariantTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKVariantTests.mm; sourceTree = "<group>"; };
 		D60C2DA822B98355001F502B /* CKNonNullTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKNonNullTests.mm; sourceTree = "<group>"; };
 		D6146C2A239C48D9006B95C4 /* OverlayLayoutComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OverlayLayoutComponentBuilder.h; sourceTree = "<group>"; };
@@ -2692,6 +2695,7 @@
 			isa = PBXGroup;
 			children = (
 				D68F872D242018D600C16A2A /* CKExceptionInfo.h */,
+				D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */,
 				D46328BA2415486600E5B7DA /* CKLinkable.h */,
 				D68A9E3C22E3A57B001F5BE0 /* CKDelayedInitialisationWrapper.h */,
 				727CC947238DD04D008F36D4 /* CKFatal.h */,
@@ -3287,6 +3291,7 @@
 				03B8B4ED1D2A346F00EDFF59 /* CKComponentHierarchyDebugHelper.h in Headers */,
 				72647CA52368CEB90072F330 /* CKComponentSpecContext.h in Headers */,
 				D4BC574723E3765C0075D688 /* CKFunctionalHelpers.h in Headers */,
+				D4F2164B2415BDBA00E65166 /* CKCoalescedSpecSupport.h in Headers */,
 				03B8B4EE1D2A346F00EDFF59 /* CKTextComponent.h in Headers */,
 				6016FC2520A9BA2900440702 /* CKComponent+Yoga.h in Headers */,
 				03B8B4EF1D2A346F00EDFF59 /* CKStatefulViewReusePool.h in Headers */,
@@ -3732,6 +3737,7 @@
 				D0B47D781CBD948E00BB33CE /* CKCacheImpl.h in Headers */,
 				D4BC576C23E3765C0075D688 /* CKInternalHelpers.h in Headers */,
 				D0B47D071CBD948E00BB33CE /* ComponentUtilities.h in Headers */,
+				D4F2164A2415BDBA00E65166 /* CKCoalescedSpecSupport.h in Headers */,
 				2322E8A02212FC0400C35501 /* CKComponentHostingViewProtocol.h in Headers */,
 				D0B47D6A1CBD948E00BB33CE /* CKTextKitRenderer+Positioning.h in Headers */,
 				D0B47CF51CBD948E00BB33CE /* CKComponentInternal.h in Headers */,

@@ -17,6 +17,9 @@
 #import "CKScopeTreeNode.h"
 #import "CKTreeNodeProtocol.h"
 
+#import <ComponentKit/CKRenderHelpers.h>
+#import <ComponentKit/CKCoalescedSpecSupport.h>
+
 static auto toInitialStateCreator(id (^initialStateCreator)(void), Class componentClass) {
   return initialStateCreator ?: ^{
     return [componentClass initialState];
@@ -37,7 +40,7 @@ CKComponentScope::~CKComponentScope()
       [_threadLocalScope->systraceListener didBuildComponent:componentTypeName];
     }
 
-    _threadLocalScope->pop(YES);
+    _threadLocalScope->pop(YES, YES);
   }
 }
 
@@ -50,7 +53,9 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
 
     [_threadLocalScope->systraceListener willBuildComponent:componentTypeName];
 
-    const auto childPair = [CKScopeTreeNode childPairForPair:_threadLocalScope->stack.top()
+    const auto& pair = _threadLocalScope->stack.top();
+
+    const auto childPair = [CKScopeTreeNode childPairForPair:pair
                                                      newRoot:_threadLocalScope->newScopeRoot
                                            componentTypeName:componentTypeName
                                                   identifier:identifier
@@ -60,7 +65,21 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
                                          mergeTreeNodesLinks:_threadLocalScope->mergeTreeNodesLinks
                                          requiresScopeHandle:YES];
     _scopeHandle = childPair.node.scopeHandle;
-    _threadLocalScope->push({.node = childPair.node, .previousNode = childPair.previousNode}, YES);
+
+    const auto ancestorHasStateUpdate =
+        (_threadLocalScope->shouldAlwaysComputeIsAncestorDirty &&
+         _threadLocalScope->enableComponentReuseOptimizations &&
+         _threadLocalScope->buildTrigger != CKBuildTrigger::NewTree &&
+         CK::IsCoalescedMode())
+        ? (_threadLocalScope->ancestorHasStateUpdate.top() ||
+           CKRender::componentHasStateUpdate(
+               childPair.node.scopeHandle,
+               pair.previousNode,
+               _threadLocalScope->buildTrigger,
+               _threadLocalScope->stateUpdates))
+        : true;
+
+    _threadLocalScope->push({.node = childPair.node, .previousNode = childPair.previousNode}, YES, ancestorHasStateUpdate);
   }
   CKCAssertWithCategory(_threadLocalScope != nullptr,
                         NSStringFromClass(componentClass),
