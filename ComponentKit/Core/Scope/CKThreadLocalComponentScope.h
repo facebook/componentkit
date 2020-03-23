@@ -52,6 +52,7 @@ public:
   const CKComponentStateUpdateMap stateUpdates;
   std::stack<CKComponentScopePair> stack;
   std::stack<std::vector<id<NSObject>>> keys;
+  std::stack<BOOL> ancestorHasStateUpdate;
 
   /** The current systrace listener. Can be nil if systrace is not enabled. */
   id<CKSystraceListener> systraceListener;
@@ -74,7 +75,8 @@ public:
   const BOOL shouldAlwaysComputeIsAncestorDirty;
 
   void push(CKComponentScopePair scopePair, BOOL keysSupportEnabled = NO);
-  void pop(BOOL keysSupportEnabled = NO);
+  void push(CKComponentScopePair scopePair, BOOL keysSupportEnabled, BOOL ancestorHasStateUpdate);
+  void pop(BOOL keysSupportEnabled = NO, BOOL ancestorStateUpdateSupportEnabled = NO);
 
 private:
   CKThreadLocalComponentScope *const previousScope;

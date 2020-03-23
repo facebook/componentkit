@@ -60,6 +60,7 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *p
 {
   stack.push({newScopeRoot.rootNode.node(), previousScopeRoot.rootNode.node()});
   keys.push({});
+  ancestorHasStateUpdate.push(NO);
   pthread_setspecific(_threadKey(), this);
 }
 
@@ -68,6 +69,7 @@ CKThreadLocalComponentScope::~CKThreadLocalComponentScope()
   stack.pop();
   CKCAssert(stack.empty(), @"Didn't expect stack to contain anything in destructor");
   CKCAssert(keys.size() == 1 && keys.top().empty(), @"Expected keys to be at initial state in destructor");
+  CKCAssert(ancestorHasStateUpdate.size() == 1 && ancestorHasStateUpdate.top() == NO, @"Expected ancestorHasStateUpdate to be at initial state in destructor");
   pthread_setspecific(_threadKey(), previousScope);
 }
 
@@ -78,13 +80,22 @@ void CKThreadLocalComponentScope::push(CKComponentScopePair scopePair, BOOL keys
   }
 }
 
-void CKThreadLocalComponentScope::pop(BOOL keysSupportEnabled) {
+void CKThreadLocalComponentScope::push(CKComponentScopePair scopePair, BOOL keysSupportEnabled, BOOL ancestorHasStateUpdateValue) {
+  push(scopePair, keysSupportEnabled);
+  ancestorHasStateUpdate.push(ancestorHasStateUpdateValue);
+}
+
+void CKThreadLocalComponentScope::pop(BOOL keysSupportEnabled, BOOL ancestorStateUpdateSupportEnabled) {
   stack.pop();
   if (keysSupportEnabled) {
     CKCAssert(
         keys.top().empty(),
         @"Expected keys to be cleared on pop");
     keys.pop();
+  }
+
+  if (ancestorStateUpdateSupportEnabled) {
+    ancestorHasStateUpdate.pop();
   }
 }
 
