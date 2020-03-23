@@ -37,9 +37,7 @@ CKComponentScope::~CKComponentScope()
       [_threadLocalScope->systraceListener didBuildComponent:componentTypeName];
     }
 
-    _threadLocalScope->stack.pop();
-    CKCAssert(_threadLocalScope->keys.top().empty(), @"Expected keys to be cleared by destructor time");
-    _threadLocalScope->keys.pop();
+    _threadLocalScope->pop(YES);
   }
 }
 
@@ -61,9 +59,8 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
                                                 stateUpdates:_threadLocalScope->stateUpdates
                                          mergeTreeNodesLinks:_threadLocalScope->mergeTreeNodesLinks
                                          requiresScopeHandle:YES];
-    _threadLocalScope->stack.push({.node = childPair.node, .previousNode = childPair.previousNode});
     _scopeHandle = childPair.node.scopeHandle;
-    _threadLocalScope->keys.push({});
+    _threadLocalScope->push({.node = childPair.node, .previousNode = childPair.previousNode}, YES);
   }
   CKCAssertWithCategory(_threadLocalScope != nullptr,
                         NSStringFromClass(componentClass),

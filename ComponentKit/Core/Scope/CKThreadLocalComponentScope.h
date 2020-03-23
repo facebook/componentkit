@@ -73,6 +73,9 @@ public:
 
   const BOOL shouldAlwaysComputeIsAncestorDirty;
 
+  void push(CKComponentScopePair scopePair, BOOL keysSupportEnabled = NO);
+  void pop(BOOL keysSupportEnabled = NO);
+
 private:
   CKThreadLocalComponentScope *const previousScope;
 };

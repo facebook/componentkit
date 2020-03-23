@@ -71,6 +71,23 @@ CKThreadLocalComponentScope::~CKThreadLocalComponentScope()
   pthread_setspecific(_threadKey(), previousScope);
 }
 
+void CKThreadLocalComponentScope::push(CKComponentScopePair scopePair, BOOL keysSupportEnabled) {
+  stack.push(std::move(scopePair));
+  if (keysSupportEnabled) {
+    keys.push({});
+  }
+}
+
+void CKThreadLocalComponentScope::pop(BOOL keysSupportEnabled) {
+  stack.pop();
+  if (keysSupportEnabled) {
+    CKCAssert(
+        keys.top().empty(),
+        @"Expected keys to be cleared on pop");
+    keys.pop();
+  }
+}
+
 void CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree()
 {
   CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
