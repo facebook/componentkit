@@ -132,8 +132,8 @@
 
 - (NSArray<NSString *> *)debugDescriptionNodes
 {
-  return @[[NSString stringWithFormat:@"- %@ %d - %@",
-            [_component class],
+  return @[[NSString stringWithFormat:@"- %s %d - %@",
+            _component.typeName,
             _nodeIdentifier,
             self]];
 }
