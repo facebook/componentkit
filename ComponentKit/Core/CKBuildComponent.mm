@@ -81,12 +81,17 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   auto const globalConfig = CKReadGlobalConfig();
 
   auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
+  auto const analyticsListener = [previousRoot analyticsListener];
+  auto const shouldCollectTreeNodeCreationInformation = [analyticsListener shouldCollectTreeNodeCreationInformation:previousRoot];
+
   CKThreadLocalComponentScope threadScope(previousRoot,
                                           stateUpdates,
                                           buildTrigger,
-                                          mergeTreeNodesLinks);
+                                          mergeTreeNodesLinks,
+                                          enableComponentReuseOptimizations,
+                                          shouldCollectTreeNodeCreationInformation,
+                                          globalConfig.alwaysBuildRenderTree);
 
-  auto const analyticsListener = [previousRoot analyticsListener];
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
                                             buildTrigger:buildTrigger
                                             stateUpdates:stateUpdates
@@ -102,11 +107,11 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
       .scopeRoot = threadScope.newScopeRoot,
       .previousScopeRoot = previousRoot,
       .stateUpdates = stateUpdates,
-      .treeNodeDirtyIds = CKRender::treeNodeDirtyIdsFor(previousRoot, stateUpdates, buildTrigger),
+      .treeNodeDirtyIds = threadScope.treeNodeDirtyIds,
       .buildTrigger = buildTrigger,
       .enableComponentReuseOptimizations = enableComponentReuseOptimizations,
       .systraceListener = threadScope.systraceListener,
-      .shouldCollectTreeNodeCreationInformation = [analyticsListener shouldCollectTreeNodeCreationInformation:previousRoot],
+      .shouldCollectTreeNodeCreationInformation = shouldCollectTreeNodeCreationInformation,
       .mergeTreeNodesLinks = mergeTreeNodesLinks,
     };
 

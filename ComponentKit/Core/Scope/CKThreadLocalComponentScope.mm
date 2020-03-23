@@ -16,6 +16,7 @@
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKRootTreeNode.h>
+#import <ComponentKit/CKRenderHelpers.h>
 
 #import "CKComponentScopeRoot.h"
 #import "CKScopeTreeNode.h"
@@ -38,8 +39,22 @@ CKThreadLocalComponentScope *CKThreadLocalComponentScope::currentScope() noexcep
 CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                                                          const CKComponentStateUpdateMap &updates,
                                                          CKBuildTrigger trigger,
-                                                         BOOL merge)
-: newScopeRoot([previousScopeRoot newRoot]), stateUpdates(updates), stack(), systraceListener(previousScopeRoot.analyticsListener.systraceListener), buildTrigger(trigger),  componentAllocations(0), mergeTreeNodesLinks(merge), previousScope(CKThreadLocalComponentScope::currentScope())
+                                                         BOOL merge,
+                                                         BOOL enableComponentReuseOptimizations,
+                                                         BOOL shouldCollectTreeNodeCreationInformation,
+                                                         BOOL alwaysBuildRenderTree)
+: newScopeRoot([previousScopeRoot newRoot]),
+  previousScopeRoot(previousScopeRoot),
+  stateUpdates(updates),
+  stack(),
+  systraceListener(previousScopeRoot.analyticsListener.systraceListener),
+  buildTrigger(trigger),
+  componentAllocations(0),
+  mergeTreeNodesLinks(merge),
+  treeNodeDirtyIds(CKRender::treeNodeDirtyIdsFor(previousScopeRoot, stateUpdates, trigger)),
+  enableComponentReuseOptimizations(enableComponentReuseOptimizations),
+  shouldCollectTreeNodeCreationInformation(shouldCollectTreeNodeCreationInformation),
+  previousScope(CKThreadLocalComponentScope::currentScope())
 {
   stack.push({newScopeRoot.rootNode.node(), previousScopeRoot.rootNode.node()});
   keys.push({});
