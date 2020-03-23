@@ -1023,6 +1023,8 @@
 		D4BC57BF23E3849A0075D688 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; };
 		D4BC57C023E386E30075D688 /* RenderCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; };
 		D4BC57C123E386E30075D688 /* RenderCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D431881723E2057E0024AA12 /* RenderCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D4CE54352417F1B2006AA602 /* CKComponentCoalescingMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D4CE54342417F1B2006AA602 /* CKComponentCoalescingMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4CE54362417F1B2006AA602 /* CKComponentCoalescingMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D4CE54342417F1B2006AA602 /* CKComponentCoalescingMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4D9CF022342AECE00D1BA22 /* CKTransitions.mm in Sources */ = {isa = PBXBuildFile; fileRef = D48D9D3D2342606B003DDC41 /* CKTransitions.mm */; };
 		D4EEE0A523E1DE1400D1ED7E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EEE09A23E1DE1400D1ED7E /* CoreGraphics.framework */; };
 		D4EEE0A723E1DE1E00D1ED7E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EEE0A623E1DE1E00D1ED7E /* QuartzCore.framework */; };
@@ -1943,6 +1945,7 @@
 		D4BC579123E37A1B0075D688 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4BC579D23E37A240075D688 /* CKSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKSwift.swift; sourceTree = "<group>"; };
 		D4BC57C423E387510075D688 /* CKSwift.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CKSwift.xcconfig; sourceTree = "<group>"; };
+		D4CE54342417F1B2006AA602 /* CKComponentCoalescingMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentCoalescingMode.h; sourceTree = "<group>"; };
 		D4EEE09A23E1DE1400D1ED7E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		D4EEE0A623E1DE1E00D1ED7E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		D4EEE0A823E1DE2A00D1ED7E /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreText.framework; sourceTree = DEVELOPER_DIR; };
@@ -2727,6 +2730,7 @@
 				D6B4182A23EABF880037E475 /* Swift */,
 				722A1C3322FDA1B1009A5B22 /* CKCategorizable.h */,
 				238695661FE0571D00D4DAE2 /* CKComponentControllerProtocol.h */,
+				D4CE54342417F1B2006AA602 /* CKComponentCoalescingMode.h */,
 				40AB33C71FC39196005D3CE9 /* CKStateUpdateMetadata.h */,
 				7FF5435D1F1F6DF700EFEFDD /* CKComponentControllerEvents.h */,
 				7FF5435E1F1F6DF700EFEFDD /* CKComponentControllerEvents.mm */,
@@ -3248,6 +3252,7 @@
 				03B8B4D81D2A346F00EDFF59 /* CKComponentProvider.h in Headers */,
 				D4BC573523E3765C0075D688 /* CKWeakObjectContainer.h in Headers */,
 				D4BC573B23E3765C0075D688 /* CKMacros.h in Headers */,
+				D4CE54362417F1B2006AA602 /* CKComponentCoalescingMode.h in Headers */,
 				D4BC574D23E3765C0075D688 /* CKViewConfiguration.h in Headers */,
 				03B8B4D91D2A346F00EDFF59 /* CKComponentAnnouncerBase.h in Headers */,
 				72F0729423903A7C00338AB0 /* CKSizeAssert.h in Headers */,
@@ -3751,6 +3756,7 @@
 				728D25D223E8853A0016D672 /* CKAssociatedObject.h in Headers */,
 				D0B47D281CBD948E00BB33CE /* CKComponentDebugController.h in Headers */,
 				D0B47D651CBD948E00BB33CE /* CKTextComponentViewControlTracker.h in Headers */,
+				D4CE54352417F1B2006AA602 /* CKComponentCoalescingMode.h in Headers */,
 				D0B47D051CBD948E00BB33CE /* ComponentLayoutContext.h in Headers */,
 				D0B47D011CBD948E00BB33CE /* CKCompositeComponent.h in Headers */,
 			);
