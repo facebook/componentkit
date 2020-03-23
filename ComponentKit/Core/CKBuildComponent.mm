@@ -90,7 +90,8 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                           mergeTreeNodesLinks,
                                           enableComponentReuseOptimizations,
                                           shouldCollectTreeNodeCreationInformation,
-                                          globalConfig.alwaysBuildRenderTree);
+                                          globalConfig.alwaysBuildRenderTree,
+                                          NO);
 
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
                                             buildTrigger:buildTrigger

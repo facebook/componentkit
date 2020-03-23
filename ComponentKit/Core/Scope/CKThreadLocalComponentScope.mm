@@ -42,7 +42,8 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *p
                                                          BOOL merge,
                                                          BOOL enableComponentReuseOptimizations,
                                                          BOOL shouldCollectTreeNodeCreationInformation,
-                                                         BOOL alwaysBuildRenderTree)
+                                                         BOOL alwaysBuildRenderTree,
+                                                         BOOL shouldAlwaysComputeIsAncestorDirty)
 : newScopeRoot([previousScopeRoot newRoot]),
   previousScopeRoot(previousScopeRoot),
   stateUpdates(updates),
@@ -54,6 +55,7 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *p
   treeNodeDirtyIds(CKRender::treeNodeDirtyIdsFor(previousScopeRoot, stateUpdates, trigger)),
   enableComponentReuseOptimizations(enableComponentReuseOptimizations),
   shouldCollectTreeNodeCreationInformation(shouldCollectTreeNodeCreationInformation),
+  shouldAlwaysComputeIsAncestorDirty(shouldAlwaysComputeIsAncestorDirty),
   previousScope(CKThreadLocalComponentScope::currentScope())
 {
   stack.push({newScopeRoot.rootNode.node(), previousScopeRoot.rootNode.node()});

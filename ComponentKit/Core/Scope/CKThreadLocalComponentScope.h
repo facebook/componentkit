@@ -34,7 +34,8 @@ public:
                               BOOL merge = NO,
                               BOOL enableComponentReuseOptimizations = YES,
                               BOOL shouldCollectTreeNodeCreationInformation = NO,
-                              BOOL alwaysBuildRenderTree = NO);
+                              BOOL alwaysBuildRenderTree = NO,
+                              BOOL shouldAlwaysComputeIsAncestorDirty = NO);
   ~CKThreadLocalComponentScope();
 
   /** Returns nullptr if there isn't a current scope */
@@ -69,6 +70,8 @@ public:
   const BOOL enableComponentReuseOptimizations;
 
   const BOOL shouldCollectTreeNodeCreationInformation;
+
+  const BOOL shouldAlwaysComputeIsAncestorDirty;
 
 private:
   CKThreadLocalComponentScope *const previousScope;
