@@ -11,6 +11,7 @@
 #import "CKComponentBoundsAnimation+UICollectionView.h"
 
 #import <ComponentKit/CKAvailability.h>
+#import <ComponentKit/CKExceptionInfo.h>
 
 #import <vector>
 
@@ -259,7 +260,17 @@ static NSIndexPath* largestAnimatingVisibleElementForOriginalLayout(NSDictionary
 static BOOL elementWillExitVisibleRect(NSIndexPath *indexPath, NSDictionary *indexPathsToAnimatingViews, UICollectionView *collectionView, CGRect visibleRect)
 {
   UIView *animatingView = indexPathsToAnimatingViews[indexPath];
-  UICollectionViewLayoutAttributes *attributes = [collectionView layoutAttributesForItemAtIndexPath:indexPath];
+
+  UICollectionViewLayoutAttributes *attributes = nil;
+  @try {
+    attributes = [collectionView layoutAttributesForItemAtIndexPath:indexPath];
+  } @catch (NSException *exception) {
+    CKExceptionInfoSetValueForKey(@"ck_index_path", ([NSString stringWithFormat: @"(%ld-%ld)", (long)indexPath.section, (long)indexPath.item]));
+    CKExceptionInfoSetValueForKey(@"ck_cv_number_of_sections", ([NSString stringWithFormat:@"%ld", (long)[collectionView numberOfSections]]));
+    CKExceptionInfoSetValueForKey(@"ck_cv_number_of_items_in_section", ([NSString stringWithFormat:@"%ld", (long)[collectionView numberOfItemsInSection:indexPath.section]]));
+    CKExceptionInfoSetValueForKey(@"ck_cv_visible_rect", NSStringFromCGRect(visibleRect));
+    [exception raise];
+  }
 
   BOOL isItemCurrentlyInVisibleRect = (CGRectIntersectsRect(visibleRect,animatingView.frame));
   BOOL willItemAnimateOffVisibleRect = !CGRectIntersectsRect(visibleRect, attributes.frame);
