@@ -46,6 +46,16 @@ struct CKComponentScopePair {
                      mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
                      requiresScopeHandle:(BOOL)requiresScopeHandle;
 
++ (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
+                                 newRoot:(CKComponentScopeRoot *)newRoot
+                       componentTypeName:(const char *)componentTypeName
+                            componentKey:(const CKTreeNodeComponentKey &)componentKey
+              childScopeFromPreviousNode:(CKScopeTreeNode *)childScopeFromPreviousScope
+                     initialStateCreator:(id (^)(void))initialStateCreator
+                            stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                     mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
+                     requiresScopeHandle:(BOOL)requiresScopeHandle;
+
 - (CKTreeNodeComponentKey)createKeyForComponentTypeName:(const char *)componentTypeName
                                              identifier:(id)identifier
                                                    keys:(const std::vector<id<NSObject>> &)keys;

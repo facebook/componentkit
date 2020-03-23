@@ -144,6 +144,30 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   // Get the child from the previous equivalent scope.
   CKScopeTreeNode *childScopeFromPreviousScope = [pair.previousNode childScopeForComponentKey:componentKey];
 
+  return [self childPairForPair:pair
+                        newRoot:newRoot
+              componentTypeName:componentTypeName
+                   componentKey:componentKey
+    childScopeFromPreviousNode:childScopeFromPreviousScope
+            initialStateCreator:initialStateCreator
+                   stateUpdates:stateUpdates
+            mergeTreeNodesLinks:mergeTreeNodesLinks
+            requiresScopeHandle:requiresScopeHandle];
+}
+
++ (CKComponentScopePair)childPairForPair:(const CKComponentScopePair &)pair
+                                 newRoot:(CKComponentScopeRoot *)newRoot
+                       componentTypeName:(const char *)componentTypeName
+                            componentKey:(const CKTreeNodeComponentKey &)componentKey
+              childScopeFromPreviousNode:(CKScopeTreeNode *)childScopeFromPreviousScope
+                     initialStateCreator:(id (^)(void))initialStateCreator
+                            stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
+                     mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
+                     requiresScopeHandle:(BOOL)requiresScopeHandle
+{
+  CKAssertNotNil(pair.node, @"Must have a node");
+  CKAssertNotNil(initialStateCreator, @"Must has an initial state creator");
+
   // Create new handle.
   CKComponentScopeHandle *newHandle;
 
