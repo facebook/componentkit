@@ -1103,6 +1103,7 @@
 		D6B0ADF420AAF88C00A31FDF /* CKIndexSetDescriptionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6B0ADF320AAF88C00A31FDF /* CKIndexSetDescriptionTests.mm */; };
 		D6B0AE0120AAFB1000A31FDF /* NSIndexSetExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = D6B0ADFF20AAFB1000A31FDF /* NSIndexSetExtensions.h */; };
 		D6B0AE0220AAFB1000A31FDF /* NSIndexSetExtensions.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6B0AE0020AAFB1000A31FDF /* NSIndexSetExtensions.mm */; };
+		D6BA03C624144B8400D13A21 /* ComponentHostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BA03BB24144B8400D13A21 /* ComponentHostingViewController.swift */; };
 		D6C3B05E20B71DBE0089F06A /* CKComponentAnimations.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3B05C20B71DBE0089F06A /* CKComponentAnimations.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D6C3B05F20B71DBE0089F06A /* CKComponentAnimations.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6C3B05D20B71DBE0089F06A /* CKComponentAnimations.mm */; };
 		D6C3B06A20B71DE90089F06A /* CKComponentAnimations.h in Headers */ = {isa = PBXBuildFile; fileRef = D6C3B05C20B71DBE0089F06A /* CKComponentAnimations.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -2000,6 +2001,7 @@
 		D6B0ADF320AAF88C00A31FDF /* CKIndexSetDescriptionTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKIndexSetDescriptionTests.mm; sourceTree = "<group>"; };
 		D6B0ADFF20AAFB1000A31FDF /* NSIndexSetExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSIndexSetExtensions.h; sourceTree = "<group>"; };
 		D6B0AE0020AAFB1000A31FDF /* NSIndexSetExtensions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = NSIndexSetExtensions.mm; sourceTree = "<group>"; };
+		D6BA03BB24144B8400D13A21 /* ComponentHostingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComponentHostingViewController.swift; sourceTree = "<group>"; };
 		D6C3B05C20B71DBE0089F06A /* CKComponentAnimations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKComponentAnimations.h; sourceTree = "<group>"; };
 		D6C3B05D20B71DBE0089F06A /* CKComponentAnimations.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAnimations.mm; sourceTree = "<group>"; };
 		D6C3B06C20B71FFD0089F06A /* CKComponentAnimationsTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAnimationsTests.mm; sourceTree = "<group>"; };
@@ -3195,9 +3197,10 @@
 		D4BC578123E37A1B0075D688 /* CKSwift */ = {
 			isa = PBXGroup;
 			children = (
-				D4BC57C423E387510075D688 /* CKSwift.xcconfig */,
-				D4BC579D23E37A240075D688 /* CKSwift.swift */,
 				D4BC578223E37A1B0075D688 /* CKSwift.h */,
+				D4BC579D23E37A240075D688 /* CKSwift.swift */,
+				D4BC57C423E387510075D688 /* CKSwift.xcconfig */,
+				D6BA03BB24144B8400D13A21 /* ComponentHostingViewController.swift */,
 				D4BC578323E37A1B0075D688 /* Info.plist */,
 			);
 			path = CKSwift;
@@ -4957,6 +4960,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4BC579E23E37A240075D688 /* CKSwift.swift in Sources */,
+				D6BA03C624144B8400D13A21 /* ComponentHostingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
