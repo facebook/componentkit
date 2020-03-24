@@ -52,13 +52,13 @@
 
   if (mergeTreeNodesLinks) {
     for (auto const &child : _children) {
-      [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot mergeTreeNodesLinks:mergeTreeNodesLinks];
+      [std::get<1>(child) didReuseWithParent:self inScopeRoot:scopeRoot mergeTreeNodesLinks:mergeTreeNodesLinks];
     }
   } else {
     for (auto const &child : _children) {
       auto childKey = std::get<0>(child);
       if (std::get<1>(childKey) % 2 == kTreeNodeParentBaseKey) {
-        [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot mergeTreeNodesLinks:mergeTreeNodesLinks];
+        [std::get<1>(child) didReuseWithParent:self inScopeRoot:scopeRoot mergeTreeNodesLinks:mergeTreeNodesLinks];
       }
     }
   }

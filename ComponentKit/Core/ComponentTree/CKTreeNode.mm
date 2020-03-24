@@ -105,11 +105,10 @@
   return _componentKey;
 }
 
-- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot
-      fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
-        mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
+- (void)didReuseWithParent:(id<CKTreeNodeProtocol>)parent
+               inScopeRoot:(CKComponentScopeRoot *)scopeRoot
+       mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
 {
-  auto const parent = previousScopeRoot.rootNode.parentForNodeIdentifier(_nodeIdentifier);
   CKAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");
   scopeRoot.rootNode.registerNode(self, parent);
   if (_scopeHandle) {

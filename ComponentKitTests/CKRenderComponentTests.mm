@@ -15,6 +15,7 @@
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
+#import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKRenderHelpers.h>
@@ -600,18 +601,6 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
 
 - (void)test_scopeFramePreserveStateDuringComponentReuse
 {
-  // CKComponentScopeFrame
-  [self __test_scopeFramePreserveStateDuringComponentReuse];
-}
-
-- (void)test_renderComponentPreserveStateDuringComponentReuse
-{
-  // CKComponentScopeFrame
-  [self __test_renderComponentPreserveStateDuringComponentReuse];
-}
-
-- (void)__test_scopeFramePreserveStateDuringComponentReuse
-{
   // Build new tree with siblings `CKTestRenderWithNonRenderWithStateChildComponent` components.
   // Each `CKTestRenderWithNonRenderWithStateChildComponent` has non-render component with state.
   __block CKTestRenderWithNonRenderWithStateChildComponent *c1;
@@ -669,7 +658,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   XCTAssertEqual(newState2, c2.childComponent.scopeHandle.state);
 }
 
-- (void)__test_renderComponentPreserveStateDuringComponentReuse
+- (void)test_renderComponentPreserveStateDuringComponentReuse
 {
   // Build new tree with siblings `CKTestRenderWithNonRenderWithStateChildComponent` components.
   // Each `CKTestRenderWithNonRenderWithStateChildComponent` has non-render component with state.
@@ -726,6 +715,59 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   XCTAssertFalse(c1.didReuseComponent);
   // Verify `c2.childComponent` preserves its state during component reuse
   XCTAssertEqual(newState2, c2.scopeHandle.state);
+}
+
+- (void)test_nodeToParentLinksAfterReuse
+{
+  // Build new tree with siblings `CKTestRenderWithNonRenderWithStateChildComponent` components.
+  // Each `CKTestRenderWithNonRenderWithStateChildComponent` has non-render component with state.
+  __block CKTestRenderWithNonRenderWithStateChildComponent *c1;
+  __block CKTestRenderWithNonRenderWithStateChildComponent *c2;
+  __block CKTestLayoutComponent *root;
+  auto const componentFactory = ^{
+    c1 = [CKTestRenderWithNonRenderWithStateChildComponent new];
+    c2 = [CKTestRenderWithNonRenderWithStateChildComponent new];
+    root = [CKTestLayoutComponent newWithChildren:{c1, c2}];
+    return root;
+  };
+
+  // Build first component generation:
+  auto const scopeRoot = CKComponentScopeRootWithPredicates(nil, nil, {}, {});
+  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory, YES, _mergeTreeNodesLinks);
+
+  // Simulate state update on c1
+  NSNumber *newState1 = @10;
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[c1.scopeHandle].push_back(^(id){ return newState1; });
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, YES, _mergeTreeNodesLinks);
+  // Verify `c2.childComponent` gets the correct new state
+  XCTAssertEqual(newState1, c1.scopeHandle.state);
+  // Verify c2 was reused
+  XCTAssertTrue(c2.didReuseComponent);
+  // Verify c1 wasn't reused
+  XCTAssertFalse(c1.didReuseComponent);
+
+  NSMutableSet *components = [NSMutableSet setWithArray:@[c1, c2, c1.childComponent, c2.childComponent]];
+  NSMutableSet *componentsFromParentNodeMap = [NSMutableSet set];
+
+  // Add all the components from c1.childComponent to the root
+  id<CKTreeNodeComponentProtocol> component = c1.childComponent;
+  while (component) {
+    [componentsFromParentNodeMap addObject:component];
+    auto const parent = buildResults2.scopeRoot.rootNode.parentForNodeIdentifier(component.scopeHandle.treeNode.nodeIdentifier);
+    component = parent.component;
+  }
+
+  // Add all the components from c2.childComponent to the root
+  id<CKTreeNodeComponentProtocol> component2 = c2.childComponent;
+  while (component2) {
+    [componentsFromParentNodeMap addObject:component2];
+    auto const parent = buildResults2.scopeRoot.rootNode.parentForNodeIdentifier(component2.scopeHandle.treeNode.nodeIdentifier);
+    component2 = parent.component;
+  }
+
+  // Verify we got the same components from the node -> parent map as expected.
+  XCTAssertTrue([components isEqualToSet:componentsFromParentNodeMap]);
 }
 
 @end

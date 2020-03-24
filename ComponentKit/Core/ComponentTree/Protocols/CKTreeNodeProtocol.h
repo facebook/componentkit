@@ -140,9 +140,9 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
 
 
 /** This method should be called after a node has been reused */
-- (void)didReuseInScopeRoot:(CKComponentScopeRoot *)scopeRoot
-      fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
-        mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks;
+- (void)didReuseWithParent:(id<CKTreeNodeProtocol>)parent
+               inScopeRoot:(CKComponentScopeRoot *)scopeRoot
+       mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks;
 
 /** This method should be called on nodes that have been created from CKComponentScope */
 - (void)linkComponent:(id<CKTreeNodeComponentProtocol>)component
