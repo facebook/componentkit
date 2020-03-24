@@ -27,3 +27,11 @@
   #define CK_SWIFT_UNAVAILABLE
   #define CK_OBJC_UNAVAILABLE NS_UNAVAILABLE
 #endif
+
+#ifdef __cplusplus
+#define CK_EXTERN_C_BEGIN extern "C" {
+#define CK_EXTERN_C_END }
+#else
+#define CK_EXTERN_C_BEGIN
+#define CK_EXTERN_C_END
+#endif
