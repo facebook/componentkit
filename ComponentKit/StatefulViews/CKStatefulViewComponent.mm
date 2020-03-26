@@ -21,20 +21,21 @@
 + (instancetype)newWithSize:(const CKComponentSize &)size
               accessibility:(const CKStatefulViewComponentAccessibility &)accessibility
 {
-  // We need a component-created view in the hierarchy to serve as the stateful view's parent to ensure proper ordering.
-  // This is a temporary solution to add accessibility to stateful view components because
-  // the current feed accessibilityLabel aggregator searches the component tree for accessiblity contexts
-  return [super newWithView:
-          {
-            [UIView class],
-            {},
-            {
-              .isAccessibilityElement = accessibility.isAccessibilityElement,
-              .accessibilityLabel = accessibility.accessibilityLabel,
-              .accessibilityTraits = accessibility.accessibilityTraits,
-            },
-          }
-                       size:size];
+  return
+  [super
+   newWithView:
+   {
+     {
+       // CK infra will infer [UIView class] on mount when accessibility is enabled.
+     },
+     {},
+     {
+       .isAccessibilityElement = accessibility.isAccessibilityElement,
+       .accessibilityLabel = accessibility.accessibilityLabel,
+       .accessibilityTraits = accessibility.accessibilityTraits,
+     },
+   }
+   size:size];
 }
 
 @end
