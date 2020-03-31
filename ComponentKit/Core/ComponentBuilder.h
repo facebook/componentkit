@@ -47,7 +47,7 @@ class __attribute__((__may_alias__)) BuilderBase {
 
 protected:
   BuilderBase() = default;
-  BuilderBase(CK::ComponentSpecContext context) : _context(std::move(context)) { }
+  BuilderBase(const CK::ComponentSpecContext& context) : _context(context.copy()) { }
 
 public:
   /**
@@ -732,7 +732,7 @@ class __attribute__((__may_alias__)) ComponentBuilderBase : public ViewConfigBui
  protected:
   ComponentBuilderBase() = default;
 
-  ComponentBuilderBase(CK::ComponentSpecContext context)
+  ComponentBuilderBase(const CK::ComponentSpecContext& context)
     : BuilderBase<Derived, PropsBitmap>{context} { }
 
   ComponentBuilderBase(const ComponentBuilderBase &) = default;
@@ -909,7 +909,7 @@ class __attribute__((__may_alias__)) ComponentBuilder : public ComponentBuilderB
 
 private:
   ComponentBuilder() = default;
-  ComponentBuilder(CK::ComponentSpecContext context)
+  ComponentBuilder(const CK::ComponentSpecContext& context)
     : ComponentBuilderBase<ComponentBuilder, PropsBitmap>{context} { }
 
   friend auto CK::ComponentBuilder() -> ComponentBuilderEmpty;
