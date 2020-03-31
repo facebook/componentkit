@@ -38,7 +38,7 @@ namespace CK {
     }
     
     ComponentSpecContext copy() const {
-      return {_component};
+      return *this;
     }
   };
 
