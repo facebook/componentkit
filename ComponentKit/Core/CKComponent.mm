@@ -27,6 +27,8 @@
 #import <ComponentKit/CKWeakObjectContainer.h>
 #import <ComponentKit/CKComponentDescriptionHelper.h>
 #import <ComponentKit/CKMountableHelpers.h>
+#import <ComponentKit/CKComponentSize_SwiftBridge+Internal.h>
+#import <ComponentKit/CKComponentViewConfiguration_SwiftBridge+Internal.h>
 
 #import "CKComponent+UIView.h"
 #import "CKComponentAccessibility.h"
@@ -85,6 +87,12 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 - (instancetype)init
 {
   return [self initWithView:{} size:{}];
+}
+
+- (instancetype)initWithViewConfig:(CKComponentViewConfiguration_SwiftBridge *)viewConfig
+                     componentSize:(CKComponentSize_SwiftBridge *)size
+{
+  return [self initWithView:viewConfig.viewConfig size:size.componentSize];
 }
 
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view

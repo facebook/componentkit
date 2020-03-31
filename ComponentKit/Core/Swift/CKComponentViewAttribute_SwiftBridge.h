@@ -8,17 +8,18 @@
  *
  */
 
-#import <ComponentKit/CKComponentSize_SwiftBridge.h>
-
-#import <ComponentKit/CKComponentSize.h>
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CKComponentSize_SwiftBridge ()
+__attribute__((objc_subclassing_restricted))
+NS_SWIFT_NAME(ComponentViewAttribute)
+@interface CKComponentViewAttribute_SwiftBridge : NSObject
 
-- (instancetype)initWithComponentSize:(const CKComponentSize &)componentSize NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithIdentifier:(NSString *)identifier applicator:(void(^)(UIView *))applicator;
 
-- (const CKComponentSize &)componentSize;
+- (instancetype)init NS_UNAVAILABLE;
 
 @end
 

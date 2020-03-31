@@ -8,17 +8,17 @@
  *
  */
 
-#import <ComponentKit/CKComponentSize_SwiftBridge.h>
+#import <ComponentKit/CKComponentViewAttribute_SwiftBridge.h>
 
-#import <ComponentKit/CKComponentSize.h>
+#import <ComponentKit/CKComponentViewAttribute.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CKComponentSize_SwiftBridge ()
+@interface CKComponentViewAttribute_SwiftBridge ()
 
-- (instancetype)initWithComponentSize:(const CKComponentSize &)componentSize NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithViewAttribute:(const CKComponentViewAttribute &)viewAttribute NS_DESIGNATED_INITIALIZER;
 
-- (const CKComponentSize &)componentSize;
+- (const CKComponentViewAttribute &)viewAttribute;
 
 @end
 

@@ -17,7 +17,9 @@
 
 #import <ComponentKit/CKComponentProtocol.h>
 #import <ComponentKit/CKComponentSize.h>
+#import <ComponentKit/CKComponentSize_SwiftBridge.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>
+#import <ComponentKit/CKComponentViewConfiguration_SwiftBridge.h>
 #import <ComponentKit/CKMountable.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -26,8 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Component)
 @interface CKComponent : NSObject <CKMountable, CKComponentProtocol>
 
-// TODO: Remove when `-initWithView:size` is exposed to Swift.
-- (instancetype)init CK_SWIFT_DESIGNATED_INITIALIZER;
+- (instancetype)initWithViewConfig:(CKComponentViewConfiguration_SwiftBridge *)viewConfig
+                     componentSize:(CKComponentSize_SwiftBridge *)size CK_SWIFT_DESIGNATED_INITIALIZER;
 
 + (instancetype)new CK_SWIFT_UNAVAILABLE;
 

@@ -53,6 +53,11 @@
   }];
 }
 
+- (const CKComponentSize &)componentSize
+{
+  return _size;
+}
+
 - (BOOL)isEqual:(id)other
 {
   if (other == nil) {

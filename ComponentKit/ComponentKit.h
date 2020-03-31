@@ -79,8 +79,10 @@
 #import <ComponentKit/CKComponentSizeRangeProviding.h>
 #import <ComponentKit/CKComponentSpecContext.h>
 #import <ComponentKit/CKComponentViewAttribute.h>
+#import <ComponentKit/CKComponentViewAttribute_SwiftBridge.h>
 #import <ComponentKit/CKComponentViewClass.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>
+#import <ComponentKit/CKComponentViewConfiguration_SwiftBridge.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKContainerWrapper.h>
 #import <ComponentKit/CKDataSource.h>
