@@ -29,6 +29,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     : public ComponentBuilderBase<FlexboxComponentBuilder, PropsBitmap> {
  public:
   FlexboxComponentBuilder() = default;
+  FlexboxComponentBuilder(const CK::ComponentSpecContext &context) : ComponentBuilderBase<FlexboxComponentBuilder, PropsBitmap>{context} { }
 
   ~FlexboxComponentBuilder() = default;
 
@@ -319,11 +320,11 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     _style.useDeepYogaTrees = d;
     return *this;
   }
-      
+
   /**
   If set to @c YES, flexbox will use the composite component child size to assign size
   properties on yoga node instead of the size of composite component itself.
-  
+
   This is a temporary flag used for migration purposes.
   */
   auto &skipCompositeComponentSize(bool d)
@@ -736,7 +737,37 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
 
 }
 
-using FlexboxComponentBuilder = BuilderDetails::FlexboxComponentBuilder<>;
+using FlexboxComponentBuilderEmpty = BuilderDetails::FlexboxComponentBuilder<>;
+using FlexboxComponentBuilderContext = BuilderDetails::FlexboxComponentBuilder<BuilderDetails::BuilderBasePropId::context>;
+
+/**
+ @uidocs https://fburl.com/CKFlexboxComponent:ca56
+
+ A layout component that creates a list of children vertically or horizontally according to Flexbox.
+
+ This component layout is powered by Yoga layout engine (https://github.com/facebook/yoga).
+ You can find more details about Yoga properties and implementation here (https://yogalayout.com/docs/)
+ Yoga playground (https://yogalayout.com/playground) allows you to experiment with different
+ layout configurations and can generate CKFlexboxComponent code for you
+ */
+auto FlexboxComponentBuilder() -> FlexboxComponentBuilderEmpty;
+
+/**
+ @uidocs https://fburl.com/CKFlexboxComponent:ca56
+
+ A layout component that creates a list of children vertically or horizontally according to Flexbox.
+
+ @param c The spec context to use.
+
+ @note This factory overload is to be used when a key is required to reference the built component in a spec from the
+ @c CK_ANIMATION function.
+
+ This component layout is powered by Yoga layout engine (https://github.com/facebook/yoga).
+ You can find more details about Yoga properties and implementation here (https://yogalayout.com/docs/)
+ Yoga playground (https://yogalayout.com/playground) allows you to experiment with different
+ layout configurations and can generate CKFlexboxComponent code for you
+ */
+auto FlexboxComponentBuilder(const CK::ComponentSpecContext &c) -> FlexboxComponentBuilderContext;
 }
 
 #endif

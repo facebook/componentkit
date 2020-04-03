@@ -1129,6 +1129,8 @@
 		D6CDB13623EEEF6E000EFB93 /* CKBlockSizeRangeProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = D6CDB13323EEEF6E000EFB93 /* CKBlockSizeRangeProvider.h */; };
 		D6CDB13723EEEF6E000EFB93 /* CKBlockSizeRangeProvider.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6CDB13423EEEF6E000EFB93 /* CKBlockSizeRangeProvider.mm */; };
 		D6CDB13823EEEF6E000EFB93 /* CKBlockSizeRangeProvider.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6CDB13423EEEF6E000EFB93 /* CKBlockSizeRangeProvider.mm */; };
+		D6E07816243618A100541390 /* FlexboxComponentBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6E0780B243618A100541390 /* FlexboxComponentBuilder.mm */; };
+		D6E07817243618A100541390 /* FlexboxComponentBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6E0780B243618A100541390 /* FlexboxComponentBuilder.mm */; };
 		D6EF79EF23ECC6E600230005 /* CKSizeRange_SwiftBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6EF79E623ECC6E500230005 /* CKSizeRange_SwiftBridge.mm */; };
 		D6EF79F023ECC6E600230005 /* CKSizeRange_SwiftBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = D6EF79E623ECC6E500230005 /* CKSizeRange_SwiftBridge.mm */; };
 		D6EF79F123ECC6E600230005 /* CKSizeRange_SwiftBridge+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D6EF79E723ECC6E500230005 /* CKSizeRange_SwiftBridge+Internal.h */; };
@@ -2028,6 +2030,7 @@
 		D6CD290520DFE723000881EF /* CKComponentAnimationsEquality.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKComponentAnimationsEquality.h; sourceTree = "<group>"; };
 		D6CDB13323EEEF6E000EFB93 /* CKBlockSizeRangeProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKBlockSizeRangeProvider.h; sourceTree = "<group>"; };
 		D6CDB13423EEEF6E000EFB93 /* CKBlockSizeRangeProvider.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKBlockSizeRangeProvider.mm; sourceTree = "<group>"; };
+		D6E0780B243618A100541390 /* FlexboxComponentBuilder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FlexboxComponentBuilder.mm; sourceTree = "<group>"; };
 		D6EF79E623ECC6E500230005 /* CKSizeRange_SwiftBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKSizeRange_SwiftBridge.mm; sourceTree = "<group>"; };
 		D6EF79E723ECC6E500230005 /* CKSizeRange_SwiftBridge+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKSizeRange_SwiftBridge+Internal.h"; sourceTree = "<group>"; };
 		D6EF79E823ECC6E500230005 /* CKComponentSize_SwiftBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKComponentSize_SwiftBridge.h; sourceTree = "<group>"; };
@@ -2955,6 +2958,7 @@
 				D0B47B581CBD926700BB33CE /* CKStaticLayoutComponent.h */,
 				D0B47B591CBD926700BB33CE /* CKStaticLayoutComponent.mm */,
 				D6F9A4AB23477F4200D4FC0A /* FlexboxComponentBuilder.h */,
+				D6E0780B243618A100541390 /* FlexboxComponentBuilder.mm */,
 				D632763C238DB94C004486D4 /* InsetComponentBuilder.h */,
 				D6146C2A239C48D9006B95C4 /* OverlayLayoutComponentBuilder.h */,
 				D6683A4F23B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h */,
@@ -4547,6 +4551,7 @@
 				03B8B4A21D2A346F00EDFF59 /* CKStatefulViewReusePool.mm in Sources */,
 				03B8B4A31D2A346F00EDFF59 /* CKDataSource.mm in Sources */,
 				03B8B4A41D2A346F00EDFF59 /* CKDataSourceAppliedChanges.mm in Sources */,
+				D6E07817243618A100541390 /* FlexboxComponentBuilder.mm in Sources */,
 				D4D9CF022342AECE00D1BA22 /* CKTransitions.mm in Sources */,
 				D6EF79F623ECC6E600230005 /* CKDimension_SwiftBridge.mm in Sources */,
 				03B8B4A61D2A346F00EDFF59 /* CKDataSourceConfiguration.mm in Sources */,
@@ -4931,6 +4936,7 @@
 				2361E8E32330F7AD00F8890D /* CKTreeNodeTypes.mm in Sources */,
 				D0B47CDC1CBD943400BB33CE /* CKTextKitRenderer.mm in Sources */,
 				D0B47CDD1CBD943400BB33CE /* CKTextKitRendererCache.mm in Sources */,
+				D6E07816243618A100541390 /* FlexboxComponentBuilder.mm in Sources */,
 				D0B47CDE1CBD943400BB33CE /* CKTextKitShadower.mm in Sources */,
 				D0B47D7B1CBD94EC00BB33CE /* CKComponentDebugController.mm in Sources */,
 				D0B47CDF1CBD943400BB33CE /* CKTextKitTailTruncater.mm in Sources */,
