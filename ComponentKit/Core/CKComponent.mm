@@ -447,6 +447,10 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 #pragma mark - CKComponentProtocol
 
++ (CKComponentCoalescingMode)coalescingMode {
+  return CKComponentCoalescingModeNone;
+}
+
 + (Class<CKComponentControllerProtocol>)controllerClass
 {
   const Class componentClass = self;

@@ -41,6 +41,8 @@
 { return @""; }
 - (const char *)typeName
 { return ""; }
++ (CKComponentCoalescingMode)coalescingMode
+{ return CKComponentCoalescingModeNone; }
 @end
 
 @interface TestComponentWithoutScopedProtocol : NSObject <CKComponentProtocol>
@@ -55,6 +57,8 @@
 { return @""; }
 - (const char *)typeName
 { return ""; }
++ (CKComponentCoalescingMode)coalescingMode
+{ return CKComponentCoalescingModeNone; }
 @end
 
 @interface TestComponentControllerWithScopedProtocol : NSObject <CKComponentControllerProtocol, TestScopedProtocol>

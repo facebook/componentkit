@@ -10,6 +10,7 @@
 
 #import <Foundation/Foundation.h>
 #import <ComponentKit/CKDefines.h>
+#import <ComponentKit/CKComponentCoalescingMode.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,6 +23,7 @@ NS_SWIFT_NAME(ComponentProtocol)
 @property (nonatomic, assign, readonly) const char *typeName;
 @property (nonatomic, strong, readonly, class, nullable) id initialState;
 @property (nonatomic, strong, readonly, class, nullable) Class<CKComponentControllerProtocol> controllerClass;
+@property (nonatomic, assign, readonly, class) CKComponentCoalescingMode coalescingMode;
 
 /*
  * For internal use only. Please do not use this. Will soon be deprecated.
