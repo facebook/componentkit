@@ -23,6 +23,7 @@
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKScopeTreeNode.h>
+#import <ComponentKit/CKComponentCoalescingMode.h>
 
 @protocol CKSystraceListener;
 
@@ -35,7 +36,7 @@ public:
                               BOOL enableComponentReuseOptimizations = YES,
                               BOOL shouldCollectTreeNodeCreationInformation = NO,
                               BOOL alwaysBuildRenderTree = NO,
-                              BOOL shouldAlwaysComputeIsAncestorDirty = NO);
+                              CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone);
   ~CKThreadLocalComponentScope();
 
   /** Returns nullptr if there isn't a current scope */
@@ -72,7 +73,7 @@ public:
 
   const BOOL shouldCollectTreeNodeCreationInformation;
 
-  const BOOL shouldAlwaysComputeIsAncestorDirty;
+  const CKComponentCoalescingMode coalescingMode;
 
   void push(CKComponentScopePair scopePair, BOOL keysSupportEnabled = NO);
   void push(CKComponentScopePair scopePair, BOOL keysSupportEnabled, BOOL ancestorHasStateUpdate);

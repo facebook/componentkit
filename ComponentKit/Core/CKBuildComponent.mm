@@ -75,7 +75,8 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         CKComponent *(^componentFactory)(void),
                                         BOOL enableComponentReuseOptimizations,
-                                        BOOL mergeTreeNodesLinks)
+                                        BOOL mergeTreeNodesLinks,
+                                        CKComponentCoalescingMode coalescingMode)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const globalConfig = CKReadGlobalConfig();
@@ -91,7 +92,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                           enableComponentReuseOptimizations,
                                           shouldCollectTreeNodeCreationInformation,
                                           globalConfig.alwaysBuildRenderTree,
-                                          NO);
+                                          coalescingMode);
 
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
                                             buildTrigger:buildTrigger
