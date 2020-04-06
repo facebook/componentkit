@@ -132,9 +132,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 - (BOOL)controllerOverridesDidPrepareLayout
 {
   const Class<CKComponentControllerProtocol> controllerClass = [[self class] controllerClass];
-  return
-  controllerClass
-  && CKSubclassOverridesInstanceMethod([CKComponentController class],
+  return CKSubclassOverridesInstanceMethod([CKComponentController class],
                                   controllerClass,
                                   @selector(didPrepareLayout:forComponent:));
 }
