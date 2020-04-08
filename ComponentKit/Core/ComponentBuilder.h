@@ -626,6 +626,10 @@ template <template <PropsBitmapType> class Derived, PropsBitmapType PropsBitmap>
 class __attribute__((__may_alias__)) ComponentBuilderBaseSizeOnly : public BuilderBase<Derived, PropsBitmap> {
 public:
   ComponentBuilderBaseSizeOnly() = default;
+
+  ComponentBuilderBaseSizeOnly(const CK::ComponentSpecContext& context)
+    : BuilderBase<Derived, PropsBitmap>{context} { }
+
   ~ComponentBuilderBaseSizeOnly() = default;
 
   /**
