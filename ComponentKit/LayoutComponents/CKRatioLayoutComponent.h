@@ -44,4 +44,6 @@
 
 @end
 
+#import <ComponentKit/RatioLayoutComponentBuilder.h>
+
 #endif

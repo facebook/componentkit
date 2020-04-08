@@ -384,6 +384,10 @@
 		7227043323423332009A82A6 /* CKBuildComponentResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 7227043123423332009A82A6 /* CKBuildComponentResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		722A1C3422FDA1B2009A5B22 /* CKCategorizable.h in Headers */ = {isa = PBXBuildFile; fileRef = 722A1C3322FDA1B1009A5B22 /* CKCategorizable.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		722A1C3522FDA1BD009A5B22 /* CKCategorizable.h in Headers */ = {isa = PBXBuildFile; fileRef = 722A1C3322FDA1B1009A5B22 /* CKCategorizable.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		722EFE96243CAD9600CD3A48 /* RatioLayoutComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 722EFE8B243CAD9600CD3A48 /* RatioLayoutComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		722EFE97243CAD9600CD3A48 /* RatioLayoutComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 722EFE8B243CAD9600CD3A48 /* RatioLayoutComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		722EFE99243CBB8700CD3A48 /* RatioLayoutComponentBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 722EFE98243CBB8700CD3A48 /* RatioLayoutComponentBuilder.mm */; };
+		722EFE9A243CBB8700CD3A48 /* RatioLayoutComponentBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 722EFE98243CBB8700CD3A48 /* RatioLayoutComponentBuilder.mm */; };
 		723E445D23414FFB00A4806C /* CKComponentGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 723E445B23414FFB00A4806C /* CKComponentGenerator.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		723E445E23414FFB00A4806C /* CKComponentGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 723E445B23414FFB00A4806C /* CKComponentGenerator.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		723E445F23414FFB00A4806C /* CKComponentGenerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 723E445C23414FFB00A4806C /* CKComponentGenerator.mm */; };
@@ -1527,6 +1531,8 @@
 		722A1C3322FDA1B1009A5B22 /* CKCategorizable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCategorizable.h; sourceTree = "<group>"; };
 		722E00A1238FEF700047BA1C /* CKGlobalConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKGlobalConfig.h; sourceTree = "<group>"; };
 		722E00A2238FEF700047BA1C /* CKGlobalConfig.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKGlobalConfig.mm; sourceTree = "<group>"; };
+		722EFE8B243CAD9600CD3A48 /* RatioLayoutComponentBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RatioLayoutComponentBuilder.h; sourceTree = "<group>"; };
+		722EFE98243CBB8700CD3A48 /* RatioLayoutComponentBuilder.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RatioLayoutComponentBuilder.mm; sourceTree = "<group>"; };
 		723958B2238E9B21005B570A /* CKLayout.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKLayout.mm; sourceTree = "<group>"; };
 		723958B3238E9B21005B570A /* CKLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKLayout.h; sourceTree = "<group>"; };
 		723958B4238E9B21005B570A /* CKMountableHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKMountableHelpers.mm; sourceTree = "<group>"; };
@@ -2963,6 +2969,8 @@
 				D6146C2A239C48D9006B95C4 /* OverlayLayoutComponentBuilder.h */,
 				D6683A4F23B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h */,
 				D65FBC5B23B548BA00F7FD7F /* CenterLayoutComponentBuilder.h */,
+				722EFE8B243CAD9600CD3A48 /* RatioLayoutComponentBuilder.h */,
+				722EFE98243CBB8700CD3A48 /* RatioLayoutComponentBuilder.mm */,
 			);
 			path = LayoutComponents;
 			sourceTree = "<group>";
@@ -3380,6 +3388,7 @@
 				723E448C2345058000A4806C /* CKBuildTrigger.h in Headers */,
 				72C74F62236B643B00E4D533 /* CKComponentAccessibilityContext.h in Headers */,
 				03B8B50E1D2A346F00EDFF59 /* CKComponentScope.h in Headers */,
+				722EFE97243CAD9600CD3A48 /* RatioLayoutComponentBuilder.h in Headers */,
 				D66BEECA24241D070051F0E4 /* CKClippingComponent.h in Headers */,
 				03B8B5111D2A346F00EDFF59 /* CKDataSourceChange.h in Headers */,
 				23EA314521A2E57400FEC59C /* CKTreeNodeTypes.h in Headers */,
@@ -3789,6 +3798,7 @@
 				D4F2164A2415BDBA00E65166 /* CKCoalescedSpecSupport.h in Headers */,
 				2322E8A02212FC0400C35501 /* CKComponentHostingViewProtocol.h in Headers */,
 				D0B47D6A1CBD948E00BB33CE /* CKTextKitRenderer+Positioning.h in Headers */,
+				722EFE96243CAD9600CD3A48 /* RatioLayoutComponentBuilder.h in Headers */,
 				D0B47CF51CBD948E00BB33CE /* CKComponentInternal.h in Headers */,
 				D6C3B05E20B71DBE0089F06A /* CKComponentAnimations.h in Headers */,
 				72647CEC2368D3AE0072F330 /* CKRenderHelpers.h in Headers */,
@@ -4471,6 +4481,7 @@
 				ACFAD6BA22457CC400D6E051 /* YGValue.cpp in Sources */,
 				23770A2E22EB46EB00858140 /* CKRenderTreeNode.mm in Sources */,
 				D6EF79FA23ECC6E600230005 /* CKComponentSize_SwiftBridge.mm in Sources */,
+				722EFE9A243CBB8700CD3A48 /* RatioLayoutComponentBuilder.mm in Sources */,
 				ACFAD6B822457CB400D6E051 /* log.cpp in Sources */,
 				7221BA572172B07200969D41 /* CKDataSourceQOSHelper.mm in Sources */,
 				2D03A6601D3869A800E4F890 /* CKDetectDuplicateComponent.mm in Sources */,
@@ -4928,6 +4939,7 @@
 				D0B47CD61CBD943400BB33CE /* CKTextComponentViewControlTracker.mm in Sources */,
 				7221BA562172B07200969D41 /* CKDataSourceQOSHelper.mm in Sources */,
 				D0B47CD71CBD943400BB33CE /* CKTextKitAttributes.mm in Sources */,
+				722EFE99243CBB8700CD3A48 /* RatioLayoutComponentBuilder.mm in Sources */,
 				D0B47CD81CBD943400BB33CE /* CKTextKitContext.mm in Sources */,
 				6016FC2620A9BA2900440702 /* CKComponent+Yoga.mm in Sources */,
 				D0B47CD91CBD943400BB33CE /* CKTextKitEntityAttribute.mm in Sources */,
