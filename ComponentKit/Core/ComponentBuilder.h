@@ -47,9 +47,10 @@ class __attribute__((__may_alias__)) BuilderBase {
 
 protected:
   BuilderBase() = default;
-  BuilderBase(const CK::ComponentSpecContext& context) : _context(context.copy()) { }
+  BuilderBase(const CK::ComponentSpecContext& context) : _context(context) { }
 
 public:
+  BuilderBase(const BuilderBase&) = default;
   /**
    Creates a new component instance and optionally wrap it with an animation component.
 

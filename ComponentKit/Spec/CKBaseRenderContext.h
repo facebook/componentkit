@@ -22,10 +22,16 @@ namespace CK {
 
   protected:
     id<CKComponentProtocol> _component;
+    
+    BaseRenderContext(const BaseRenderContext &) = default;
+    BaseRenderContext& operator=(const BaseRenderContext &) = default;
 
   public:
     BaseRenderContext(const id<CKComponentProtocol> component): _component(component) {}
     BaseRenderContext(): _component(nullptr) {}
+    
+    BaseRenderContext(BaseRenderContext &&) = default;
+    BaseRenderContext& operator=(BaseRenderContext&&) = default;
 
     template <typename Component>
     friend inline auto component(const BaseRenderContext &context) -> Component;

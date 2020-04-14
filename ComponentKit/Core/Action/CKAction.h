@@ -163,7 +163,7 @@ public:
   /**
   Constructs an action for a controller from a render context.
   */
-  static CKAction<T...> actionForController(CK::BaseRenderContext context, SEL selector) {
+  static CKAction<T...> actionForController(const CK::BaseRenderContext &context, SEL selector) {
     id<CKRenderComponentProtocol> component = (id)context._component;
 #if DEBUG
     CKCAssert([context._component conformsToProtocol:@protocol(CKRenderComponentProtocol)], @"RenderContext contains non render component");
@@ -232,7 +232,7 @@ public:
   void send(CKComponent *sender, T... args) const
   { this->send(sender, defaultBehavior(), args...); };
 
-  void send(CK::BaseRenderContext context, T... args) const
+  void send(const CK::BaseRenderContext &context, T... args) const
   {
     CKCAssertNotNil(context._component, @"RenderContext contains nil component");
     this->send((CKComponent *)context._component, defaultBehavior(), args...);
