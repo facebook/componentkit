@@ -265,7 +265,7 @@ static BOOL elementWillExitVisibleRect(NSIndexPath *indexPath, NSDictionary *ind
   @try {
     attributes = [collectionView layoutAttributesForItemAtIndexPath:indexPath];
   } @catch (NSException *exception) {
-    CKExceptionInfoSetValueForKey(@"ck_index_path", ([NSString stringWithFormat: @"(%ld-%ld)", (long)indexPath.section, (long)indexPath.item]));
+    CKExceptionInfoSetValueForKey(@"ck_index_path", (indexPath != nil ? [NSString stringWithFormat: @"(%ld-%ld)", (long)indexPath.section, (long)indexPath.item] : @"null"));
     CKExceptionInfoSetValueForKey(@"ck_cv_number_of_sections", ([NSString stringWithFormat:@"%ld", (long)[collectionView numberOfSections]]));
     CKExceptionInfoSetValueForKey(@"ck_cv_number_of_items_in_section", ([NSString stringWithFormat:@"%ld", (long)[collectionView numberOfItemsInSection:indexPath.section]]));
     CKExceptionInfoSetValueForKey(@"ck_cv_visible_rect", NSStringFromCGRect(visibleRect));
