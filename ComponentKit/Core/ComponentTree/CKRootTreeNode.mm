@@ -31,7 +31,7 @@ id<CKTreeNodeProtocol> CKRootTreeNode::parentForNodeIdentifier(CKTreeNodeIdentif
   return nil;
 }
 
-bool CKRootTreeNode::isEmpty() {
+bool CKRootTreeNode::isEmpty() const {
   return _node.childrenSize == 0;
 }
 

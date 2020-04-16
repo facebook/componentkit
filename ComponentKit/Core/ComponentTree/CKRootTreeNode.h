@@ -29,7 +29,7 @@ public:
   id<CKTreeNodeProtocol> parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier) const;
 
   /** Returns whether the node has children or not */
-  bool isEmpty();
+  bool isEmpty() const;
 
   /** access the internal node */
   CKScopeTreeNode *node() const;
