@@ -79,7 +79,9 @@ public:
     static_assert(contextIsSet, "Cannot set 'key' without specifying 'context'");
 
     _key = key;
-    return reinterpret_cast<Derived<PropsBitmap | BuilderBasePropId::key> &>(*this);
+
+    // `this` pointer needs adjustment since `BuilderBase` is not the first base class of `ComponentBuilderBase`
+    return reinterpret_cast<Derived<PropsBitmap | BuilderBasePropId::key> &>(*static_cast<Derived<PropsBitmap> *>(this));
   }
 
   /**
@@ -90,7 +92,9 @@ public:
   auto &animationInitial(CK::Animation::Initial animationInitial)
   {
     _transitions.onInitialMount = std::move(animationInitial);
-    return reinterpret_cast<Derived<PropsBitmap | BuilderBasePropId::transitions> &>(*this);
+
+    // `this` pointer needs adjustment since `BuilderBase` is not the first base class of `ComponentBuilderBase`
+    return reinterpret_cast<Derived<PropsBitmap | BuilderBasePropId::transitions> &>(*static_cast<Derived<PropsBitmap> *>(this));
   }
 
   /**
@@ -101,7 +105,9 @@ public:
   auto &animationFinal(CK::Animation::Final animationFinal)
   {
     _transitions.onFinalUnmount = std::move(animationFinal);
-    return reinterpret_cast<Derived<PropsBitmap | BuilderBasePropId::transitions> &>(*this);
+
+    // `this` pointer needs adjustment since `BuilderBase` is not the first base class of `ComponentBuilderBase`
+    return reinterpret_cast<Derived<PropsBitmap | BuilderBasePropId::transitions> &>(*static_cast<Derived<PropsBitmap> *>(this));
   }
 
 private:
