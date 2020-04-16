@@ -30,7 +30,7 @@
 - (void)didReuseRenderNode:(CKRenderTreeNode *)node
                  scopeRoot:(CKComponentScopeRoot *)scopeRoot
          previousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
-       mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks;
+       traverseAllChildren:(BOOL)traverseAllChildren;
 
 @end
 

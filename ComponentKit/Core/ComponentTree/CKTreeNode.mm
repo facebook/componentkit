@@ -107,7 +107,7 @@
 
 - (void)didReuseWithParent:(id<CKTreeNodeProtocol>)parent
                inScopeRoot:(CKComponentScopeRoot *)scopeRoot
-       mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
+       traverseAllChildren:(BOOL)traverseAllChildren
 {
   CKAssert(parent != nil, @"The parent cannot be nil; every node should have a valid parent.");
   scopeRoot.rootNode.registerNode(self, parent);

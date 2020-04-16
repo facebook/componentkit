@@ -41,7 +41,7 @@ namespace CKRenderInternal {
     [node didReuseRenderNode:previousNode
                    scopeRoot:params.scopeRoot
            previousScopeRoot:params.previousScopeRoot
-         mergeTreeNodesLinks:params.mergeTreeNodesLinks];
+         traverseAllChildren:params.mergeTreeNodesLinks];
 
     if (childComponent != nullptr) {
       // Link the previous child component to the the new component.

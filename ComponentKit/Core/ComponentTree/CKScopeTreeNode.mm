@@ -74,7 +74,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
 
 - (void)didReuseWithParent:(id<CKTreeNodeProtocol>)parent
                inScopeRoot:(CKComponentScopeRoot *)scopeRoot
-       mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
+       traverseAllChildren:(BOOL)traverseAllChildren
 {
   // In case that CKComponentScope was created, but not acquired from the component (for example: early nil return) ,
   // the component was never linked to the scope handle/tree node, hence, we should stop the recursion here.
@@ -82,17 +82,17 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
     return;
   }
 
-  [super didReuseWithParent:parent inScopeRoot:scopeRoot mergeTreeNodesLinks:mergeTreeNodesLinks];
+  [super didReuseWithParent:parent inScopeRoot:scopeRoot traverseAllChildren:traverseAllChildren];
 
-  if (mergeTreeNodesLinks) {
+  if (traverseAllChildren) {
     for (auto const &child : _children) {
-      [std::get<1>(child) didReuseWithParent:self inScopeRoot:scopeRoot mergeTreeNodesLinks:mergeTreeNodesLinks];
+      [std::get<1>(child) didReuseWithParent:self inScopeRoot:scopeRoot traverseAllChildren:traverseAllChildren];
     }
   } else  {
     for (auto const &child : _children) {
       auto childKey = std::get<0>(child);
       if (std::get<1>(childKey) % 2 == kTreeNodeParentBaseKey) {
-        [std::get<1>(child) didReuseWithParent:self inScopeRoot:scopeRoot mergeTreeNodesLinks:mergeTreeNodesLinks];
+        [std::get<1>(child) didReuseWithParent:self inScopeRoot:scopeRoot traverseAllChildren:traverseAllChildren];
       }
     }
   }
