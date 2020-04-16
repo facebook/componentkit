@@ -57,7 +57,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   /** Only non-null while mounted. */
   std::unique_ptr<CKMountInfo> _mountInfo;
 
-#if DEBUG
+#if CK_ASSERTIONS_ENABLED
   __weak id<CKTreeNodeProtocol> _treeNode;
 #endif
 }
@@ -171,7 +171,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   return _mountInfo ? _mountInfo->viewContext : CKComponentViewContext();
 }
 
-#if DEBUG
+#if CK_ASSERTIONS_ENABLED
 // These two methods are in DEBUG only in order to save memory.
 // Once we build the component tree (by calling `buildComponentTree:`) by default,
 // we can swap the the scopeHandle ref with the treeNode one.

@@ -159,7 +159,11 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
       return !CGSizeEqualToSize(rootLayout.size(), size);
     }).valueOr(NO);
     if (mountedComponent != _component || shouldLayoutComponent) {
-      auto const rootLayout = CKComputeRootComponentLayout(_component, {size, size}, _componentGenerator.scopeRoot.analyticsListener, buildTrigger);
+      auto const rootLayout = CKComputeRootComponentLayout(_component,
+                                                           {size, size},
+                                                           _componentGenerator.scopeRoot.analyticsListener,
+                                                           buildTrigger,
+                                                           _componentGenerator.scopeRoot);
       [self _applyRootLayout:rootLayout];
     }
     [_containerViewProvider mount];

@@ -26,7 +26,7 @@ public:
 
   void registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProtocol> parent);
   /** Query the parent node of existing node*/
-  id<CKTreeNodeProtocol> parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier);
+  id<CKTreeNodeProtocol> parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier) const;
 
   /** Returns whether the node has children or not */
   bool isEmpty();

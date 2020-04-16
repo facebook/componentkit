@@ -14,8 +14,9 @@
 #import <ComponentKit/CKComponentAnimationPredicates.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentSubclass.h>
-#import <ComponentKit/CKDetectDuplicateComponent.h>
+#import <ComponentKit/CKTreeVerificationHelpers.h>
 #import <ComponentKit/ComponentLayoutContext.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
 
 CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
                                            UIView *view,
@@ -60,7 +61,8 @@ static auto buildComponentsByPredicateMap(const CKComponentLayout &layout,
 CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener,
-                                                   CK::Optional<CKBuildTrigger> buildTrigger)
+                                                   CK::Optional<CKBuildTrigger> buildTrigger,
+                                                   CKComponentScopeRoot *scopeRoot)
 {
   [analyticsListener willLayoutComponentTreeWithRootComponent:rootComponent buildTrigger:buildTrigger];
   CK::Component::LayoutSystraceContext systraceContext([analyticsListener systraceListener]);
@@ -80,6 +82,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
   };
 
   CKDetectDuplicateComponent(rootLayout.layout());
+  CKVerifyTreeNodesToParentLinks(scopeRoot, rootLayout.layout());
   [analyticsListener didLayoutComponentTreeWithRootComponent:rootComponent];
   return rootLayout;
 }

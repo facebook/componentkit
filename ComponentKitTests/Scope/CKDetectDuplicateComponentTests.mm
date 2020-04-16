@@ -14,7 +14,7 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
 
-#import <ComponentKit/CKDetectDuplicateComponent.h>
+#import <ComponentKit/CKTreeVerificationHelpers.h>
 
 #pragma mark - Tests
 

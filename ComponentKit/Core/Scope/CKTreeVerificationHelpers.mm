@@ -8,7 +8,7 @@
  *
  */
 
-#import "CKDetectDuplicateComponent.h"
+#import "CKTreeVerificationHelpers.h"
 
 #import <queue>
 
@@ -16,6 +16,8 @@
 #import <ComponentKit/CKMountable.h>
 #import <ComponentKit/CKComponentDescriptionHelper.h>
 #import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKRootTreeNode.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
@@ -72,6 +74,60 @@ void CKDetectDuplicateComponent(const CKComponentLayout &layout) {
                               info.backtraceDescription);
   }
 #endif
+}
+
+#if CK_ASSERTIONS_ENABLED
+static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const CKComponentLayout &layout, id<CKTreeNodeProtocol> parentNode)
+{
+  if (layout.component == nil) {
+    return;
+  }
+
+  id<CKTreeNodeProtocol> treeNode = nil;
+  if ([layout.component isKindOfClass:[CKComponent class]]) {
+    auto const c = (CKComponent *)layout.component;
+    if (c.treeNode) {
+      treeNode = c.treeNode;
+      auto const expectedParentNode = rootNode.parentForNodeIdentifier(treeNode.nodeIdentifier);
+      if (expectedParentNode == nil) {
+        CKCFailAssertWithCategory(CKComponentCompactDescription(c),
+                                  @"Missing link from node to its parent on the CKRootTreeNode; \n"
+                                  @"make sure your component returns all its children on the CKIterable methods.\n"
+                                  @"Component:%@\n"
+                                  @"Expected parent component:%@",
+                                  c,
+                                  parentNode.component);
+      } else if (expectedParentNode != parentNode) {
+        CKCFailAssertWithCategory(CKComponentCompactDescription(c),
+                                  @"Incorrect link from node to its parent on the CKRootTreeNode; \n"
+                                  @"make sure your component returns all its children on the CKIterable methods.\n"
+                                  @"Component:%@\n"
+                                  @"Parent component:%@\n"
+                                  @"Expected parent component:%@",
+                                  c,
+                                  parentNode.component,
+                                  expectedParentNode.component);
+      }
+    }
+  }
+  
+  // Continue the check on the children; if the component has no tree node, pass the previous one.
+  if (layout.children) {
+    for (const auto &childLayout : *layout.children) {
+      CKVerifyTreeNodeWithParent(rootNode, childLayout.layout, treeNode ?: parentNode);
+    }
+  }
+}
+
+#endif
+
+void CKVerifyTreeNodesToParentLinks(CKComponentScopeRoot *scopeRoot, const CKComponentLayout &layout)
+{
+  #if CK_ASSERTIONS_ENABLED
+  if (scopeRoot.hasRenderComponentInTree) {
+    CKVerifyTreeNodeWithParent(scopeRoot.rootNode, layout, scopeRoot.rootNode.node());
+  }
+  #endif
 }
 
 #pragma clang diagnostic pop

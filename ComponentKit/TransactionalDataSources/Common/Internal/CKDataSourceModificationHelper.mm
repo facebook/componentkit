@@ -37,7 +37,8 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
   const auto rootLayout = CKComputeRootComponentLayout(result.component,
                                                        sizeRange,
                                                        result.scopeRoot.analyticsListener,
-                                                       result.buildTrigger);
+                                                       result.buildTrigger,
+                                                       result.scopeRoot);
   return [[CKDataSourceItem alloc] initWithRootLayout:rootLayout
                                                 model:model
                                             scopeRoot:result.scopeRoot

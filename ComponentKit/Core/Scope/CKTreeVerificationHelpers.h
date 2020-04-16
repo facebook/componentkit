@@ -16,6 +16,7 @@
 
 struct CKComponentLayout;
 
+@class CKComponentScopeRoot;
 @protocol CKMountable;
 
 /** Represents an info for a component that is being used more than once in a component tree */
@@ -40,5 +41,10 @@ CKDuplicateComponentInfo CKFindDuplicateComponent(const CKComponentLayout &layou
  @param layout The top-level component layout of the component hierarchy.
  */
  void CKDetectDuplicateComponent(const CKComponentLayout &layout);
+
+/**
+ Verify the the links between the nodes to their parent nodes are set correctly in the root node.
+ */
+void CKVerifyTreeNodesToParentLinks(CKComponentScopeRoot *scopeRoot, const CKComponentLayout &layout);
 
 #endif

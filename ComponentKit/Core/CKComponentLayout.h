@@ -18,6 +18,7 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 
 @protocol CKAnalyticsListener;
+@class CKComponentScopeRoot;
 
 /**
  Recursively mounts the layout in the view, returning a set of the mounted components.
@@ -83,11 +84,13 @@ private:
  @param sizeRange The size range to compute the component layout within.
  @param analyticsListener analytics listener used to log layout time.
  @param buildTrigger Indicates the source that triggers this layout computation.
+ @param scopeRoot The scope root of the current tree.
  */
 CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent,
                                                    const CKSizeRange &sizeRange,
                                                    id<CKAnalyticsListener> analyticsListener = nil,
-                                                   CK::Optional<CKBuildTrigger> buildTrigger = CK::none);
+                                                   CK::Optional<CKBuildTrigger> buildTrigger = CK::none,
+                                                   CKComponentScopeRoot *scopeRoot = nil);
 
 /**
  Safely computes the layout of the given component by guarding against nil components.

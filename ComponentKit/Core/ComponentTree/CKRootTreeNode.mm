@@ -22,7 +22,7 @@ void CKRootTreeNode::registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProt
   }
 }
 
-id<CKTreeNodeProtocol> CKRootTreeNode::parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier) {
+id<CKTreeNodeProtocol> CKRootTreeNode::parentForNodeIdentifier(CKTreeNodeIdentifier nodeIdentifier) const {
   CKCAssert(nodeIdentifier != 0, @"Cannot retrieve parent for an empty node");
   auto const it = _nodesToParentNodes.find(nodeIdentifier);
   if (it != _nodesToParentNodes.end()) {

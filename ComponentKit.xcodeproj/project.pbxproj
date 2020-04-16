@@ -291,8 +291,8 @@
 		23FEC5A4203B30DA0068E09D /* CKTreeNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23FEC592203B30DA0068E09D /* CKTreeNode.mm */; };
 		23FEC5AA203B31230068E09D /* CKTreeNodeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 23FEC5A9203B31230068E09D /* CKTreeNodeTests.mm */; };
 		2D019D291DC0371300EC9EA2 /* CKDataSourceIntegrationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49FA174D1D182C1200EA8126 /* CKDataSourceIntegrationTests.mm */; };
-		2D03A6601D3869A800E4F890 /* CKDetectDuplicateComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKDetectDuplicateComponent.mm */; };
-		2D03A6611D3869C700E4F890 /* CKDetectDuplicateComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKDetectDuplicateComponent.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2D03A6601D3869A800E4F890 /* CKTreeVerificationHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKTreeVerificationHelpers.mm */; };
+		2D03A6611D3869C700E4F890 /* CKTreeVerificationHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKTreeVerificationHelpers.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2D7A98161DB56BD10064FC6D /* CKDataSourceChangesetVerification.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D7A98141DB56BD10064FC6D /* CKDataSourceChangesetVerification.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2D7A98171DB56BD10064FC6D /* CKDataSourceChangesetVerification.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D7A98141DB56BD10064FC6D /* CKDataSourceChangesetVerification.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2D7A98181DB56BD10064FC6D /* CKDataSourceChangesetVerification.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D7A98151DB56BD10064FC6D /* CKDataSourceChangesetVerification.mm */; };
@@ -303,8 +303,8 @@
 		2D8270F71E3F72F1008C1A26 /* CKTestRunLoopRunning.mm in Sources */ = {isa = PBXBuildFile; fileRef = 035FD04B1D83218100D28351 /* CKTestRunLoopRunning.mm */; };
 		2D8270FC1E3F7581008C1A26 /* libComponentKitTestHelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A273801A1AFD144100E6F222 /* libComponentKitTestHelpers.a */; };
 		2D8C3D521D64F43E00E6D47A /* ReferenceImages_IOS10_64 in Resources */ = {isa = PBXBuildFile; fileRef = 2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */; };
-		2DBF1D7A1D3425ED004F28E8 /* CKDetectDuplicateComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKDetectDuplicateComponent.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2DBF1D7B1D3425ED004F28E8 /* CKDetectDuplicateComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKDetectDuplicateComponent.mm */; };
+		2DBF1D7A1D3425ED004F28E8 /* CKTreeVerificationHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DBF1D781D3425ED004F28E8 /* CKTreeVerificationHelpers.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2DBF1D7B1D3425ED004F28E8 /* CKTreeVerificationHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DBF1D791D3425ED004F28E8 /* CKTreeVerificationHelpers.mm */; };
 		2DCA4E721D889D0300AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2DCA4E731D889D1500AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */; };
 		39B090BF1B71645600A5470B /* CKComponentAttachControllerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B090BE1B71645600A5470B /* CKComponentAttachControllerTests.mm */; };
@@ -1481,8 +1481,8 @@
 		2D7A98151DB56BD10064FC6D /* CKDataSourceChangesetVerification.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKDataSourceChangesetVerification.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		2D7A98241DB56D8D0064FC6D /* CKDataSourceChangesetVerificationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = CKDataSourceChangesetVerificationTests.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		2D8C3D501D64F43E00E6D47A /* ReferenceImages_IOS10_64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ReferenceImages_IOS10_64; sourceTree = "<group>"; };
-		2DBF1D781D3425ED004F28E8 /* CKDetectDuplicateComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDetectDuplicateComponent.h; sourceTree = "<group>"; };
-		2DBF1D791D3425ED004F28E8 /* CKDetectDuplicateComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDetectDuplicateComponent.mm; sourceTree = "<group>"; };
+		2DBF1D781D3425ED004F28E8 /* CKTreeVerificationHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTreeVerificationHelpers.h; sourceTree = "<group>"; };
+		2DBF1D791D3425ED004F28E8 /* CKTreeVerificationHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTreeVerificationHelpers.mm; sourceTree = "<group>"; };
 		2DCA4E711D889B8500AAB2B3 /* CKDataSourceConfigurationInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKDataSourceConfigurationInternal.h; sourceTree = "<group>"; };
 		39B090BE1B71645600A5470B /* CKComponentAttachControllerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentAttachControllerTests.mm; sourceTree = "<group>"; };
 		3E9D6721215E39520019429E /* CKRenderComponentTestHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRenderComponentTestHelpers.h; sourceTree = "<group>"; };
@@ -2862,8 +2862,8 @@
 				D0B47B0A1CBD926700BB33CE /* CKComponentScopeRootFactory.h */,
 				B1AE6CF51E8B202F00C9AA96 /* CKComponentScopeRootFactory.mm */,
 				D0B47B0B1CBD926700BB33CE /* CKComponentScopeTypes.h */,
-				2DBF1D781D3425ED004F28E8 /* CKDetectDuplicateComponent.h */,
-				2DBF1D791D3425ED004F28E8 /* CKDetectDuplicateComponent.mm */,
+				2DBF1D781D3425ED004F28E8 /* CKTreeVerificationHelpers.h */,
+				2DBF1D791D3425ED004F28E8 /* CKTreeVerificationHelpers.mm */,
 				D0B47B0C1CBD926700BB33CE /* CKThreadLocalComponentScope.h */,
 				D0B47B0D1CBD926700BB33CE /* CKThreadLocalComponentScope.mm */,
 			);
@@ -3430,7 +3430,7 @@
 				60D7B3BE20FC90500011AB3B /* YGFloatOptional.h in Headers */,
 				03B8B5291D2A346F00EDFF59 /* CKStaticLayoutComponent.h in Headers */,
 				72647D1D2368D6830072F330 /* CKMountAnimationGuard.h in Headers */,
-				2D03A6611D3869C700E4F890 /* CKDetectDuplicateComponent.h in Headers */,
+				2D03A6611D3869C700E4F890 /* CKTreeVerificationHelpers.h in Headers */,
 				72647CE92368D35F0072F330 /* CKOptimisticViewMutations.h in Headers */,
 				D4BC576723E3765C0075D688 /* CKCasting.h in Headers */,
 				23D1B14222D638F600453EC7 /* CKScopeTreeNode.h in Headers */,
@@ -3766,7 +3766,7 @@
 				D4BC573E23E3765C0075D688 /* CKMountedObjectForView.h in Headers */,
 				D0B47D0D1CBD948E00BB33CE /* CKComponentScopeRoot.h in Headers */,
 				72647CD02368D15D0072F330 /* CKComponentDelegateAttribute.h in Headers */,
-				2DBF1D7A1D3425ED004F28E8 /* CKDetectDuplicateComponent.h in Headers */,
+				2DBF1D7A1D3425ED004F28E8 /* CKTreeVerificationHelpers.h in Headers */,
 				60D7B3B920FC90500011AB3B /* Yoga-internal.h in Headers */,
 				D634A27F22DB71460085D697 /* ComponentBuilder.h in Headers */,
 				D4BC573023E3765C0075D688 /* CKGlobalConfig.h in Headers */,
@@ -4484,7 +4484,7 @@
 				722EFE9A243CBB8700CD3A48 /* RatioLayoutComponentBuilder.mm in Sources */,
 				ACFAD6B822457CB400D6E051 /* log.cpp in Sources */,
 				7221BA572172B07200969D41 /* CKDataSourceQOSHelper.mm in Sources */,
-				2D03A6601D3869A800E4F890 /* CKDetectDuplicateComponent.mm in Sources */,
+				2D03A6601D3869A800E4F890 /* CKTreeVerificationHelpers.mm in Sources */,
 				03B8B46E1D2A346F00EDFF59 /* CKButtonComponent.mm in Sources */,
 				03B8B46F1D2A346F00EDFF59 /* CKImageComponent.mm in Sources */,
 				72C74F64236B643B00E4D533 /* CKComponentAccessibility.mm in Sources */,
@@ -4885,7 +4885,7 @@
 				72647CAB2368D0300072F330 /* CKAction.mm in Sources */,
 				60D7B3CD20FC90500011AB3B /* YGEnums.cpp in Sources */,
 				D0B47CB91CBD943400BB33CE /* CKStatefulViewComponentController.mm in Sources */,
-				2DBF1D7B1D3425ED004F28E8 /* CKDetectDuplicateComponent.mm in Sources */,
+				2DBF1D7B1D3425ED004F28E8 /* CKTreeVerificationHelpers.mm in Sources */,
 				D0B47CBA1CBD943400BB33CE /* CKStatefulViewReusePool.mm in Sources */,
 				72C74F63236B643B00E4D533 /* CKComponentAccessibility.mm in Sources */,
 				239F2CFE21E8F26F00580F93 /* CKRootTreeNode.mm in Sources */,

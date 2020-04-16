@@ -60,7 +60,11 @@ using namespace CKComponentControllerHelper;
       [updatedIndexPaths addObject:[NSIndexPath indexPathForItem:itemIdx inSection:sectionIdx]];
       CKDataSourceItem *newItem;
       if (onlySizeRangeChanged) {
-        const auto rootLayout = CKComputeRootComponentLayout(item.rootLayout.component(), sizeRange, [item scopeRoot].analyticsListener);
+        const auto rootLayout = CKComputeRootComponentLayout(item.rootLayout.component(),
+                                                             sizeRange,
+                                                             [item scopeRoot].analyticsListener,
+                                                             CK::none,
+                                                             [item scopeRoot]);
         newItem = [[CKDataSourceItem alloc] initWithRootLayout:rootLayout
                                                          model:[item model]
                                                      scopeRoot:[item scopeRoot]
