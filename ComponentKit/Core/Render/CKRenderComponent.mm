@@ -117,7 +117,7 @@
   return [self.class initialState];
 }
 
-- (BOOL)shouldComponentUpdate:(id<CKRenderComponentProtocol>)component
+- (BOOL)shouldComponentUpdate:(id<CKReusableComponentProtocol>)component
 {
   return YES;
 }

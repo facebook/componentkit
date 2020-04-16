@@ -201,7 +201,7 @@ auto CKLifecycleTestComponentSetShouldEarlyReturnNew(BOOL shouldEarlyReturnNew) 
   return [CKLifecycleTestComponent newWithView:{} size:{}];
 }
 
-- (BOOL)shouldComponentUpdate:(id<CKRenderComponentProtocol>)component
+- (BOOL)shouldComponentUpdate:(id<CKReusableComponentProtocol>)component
 {
   return NO;
 }

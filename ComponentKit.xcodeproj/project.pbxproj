@@ -1041,6 +1041,8 @@
 		D4EEE0F823E1E91A00D1ED7E /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04977E51CC4145E0046CBCC /* OCMock.framework */; };
 		D4F2164A2415BDBA00E65166 /* CKCoalescedSpecSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */; };
 		D4F2164B2415BDBA00E65166 /* CKCoalescedSpecSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */; };
+		D4FBC0F02437970F0024B27E /* CKReusableComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4FBC0F12437970F0024B27E /* CKReusableComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D608DF9E232E2E9B00CD90D9 /* CKVariantTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D608DF9D232E2E9B00CD90D9 /* CKVariantTests.mm */; };
 		D608DF9F232E2E9B00CD90D9 /* CKVariantTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D608DF9D232E2E9B00CD90D9 /* CKVariantTests.mm */; };
 		D60C2DA922B98355001F502B /* CKNonNullTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D60C2DA822B98355001F502B /* CKNonNullTests.mm */; };
@@ -1983,6 +1985,7 @@
 		D4EEE0F123E1E6E800D1ED7E /* TVUIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVUIKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS13.2.sdk/System/Library/Frameworks/TVUIKit.framework; sourceTree = DEVELOPER_DIR; };
 		D4EEE0F323E1E6F800D1ED7E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS13.2.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		D4F2163F2415BDBA00E65166 /* CKCoalescedSpecSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCoalescedSpecSupport.h; sourceTree = "<group>"; };
+		D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKReusableComponentProtocol.h; sourceTree = "<group>"; };
 		D608DF9D232E2E9B00CD90D9 /* CKVariantTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKVariantTests.mm; sourceTree = "<group>"; };
 		D60C2DA822B98355001F502B /* CKNonNullTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKNonNullTests.mm; sourceTree = "<group>"; };
 		D6146C2A239C48D9006B95C4 /* OverlayLayoutComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OverlayLayoutComponentBuilder.h; sourceTree = "<group>"; };
@@ -2225,6 +2228,7 @@
 		23309AA12045C5F300833BDB /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				D4FBC0E52437970F0024B27E /* CKReusableComponentProtocol.h */,
 				23309AA22045C5F300833BDB /* CKRenderComponentProtocol.h */,
 				23309AA32045C5F300833BDB /* CKTreeNodeProtocol.h */,
 				23EA313921A2E57400FEC59C /* CKTreeNodeTypes.h */,
@@ -3386,6 +3390,7 @@
 				03B8B5071D2A346F00EDFF59 /* CKDataSourceUpdateConfigurationModification.h in Headers */,
 				72EFBD992369E33200A205AB /* CKComponentAccessibility.h in Headers */,
 				D4BC576B23E3765C0075D688 /* CKMountController.h in Headers */,
+				D4FBC0F12437970F0024B27E /* CKReusableComponentProtocol.h in Headers */,
 				D64CC1A620DE655200DBE8D3 /* CKAnimationApplicator.h in Headers */,
 				03B8B50C1D2A346F00EDFF59 /* CKComponentSizeRangeProviding.h in Headers */,
 				723E448C2345058000A4806C /* CKBuildTrigger.h in Headers */,
@@ -3694,6 +3699,7 @@
 				721AAE54214F19B700B9EE8A /* CKComponentRootLayoutProvider.h in Headers */,
 				7279B64420E2801D00A50F6E /* CKDataSourceQOS.h in Headers */,
 				239F2CFC21E8F26F00580F93 /* CKRootTreeNode.h in Headers */,
+				D4FBC0F02437970F0024B27E /* CKReusableComponentProtocol.h in Headers */,
 				ACFAD6B12245759200D6E051 /* YGMarker.h in Headers */,
 				72647CB12368D0300072F330 /* CKComponentActionInternal.h in Headers */,
 				D0B47D4A1CBD948E00BB33CE /* CKDataSourceChange.h in Headers */,
