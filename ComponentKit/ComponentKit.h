@@ -167,3 +167,4 @@
 #import <ComponentKit/ImageComponentBuilder.h>
 #import <ComponentKit/InsetComponentBuilder.h>
 #import <ComponentKit/OverlayLayoutComponentBuilder.h>
+#import <ComponentKit/RatioLayoutComponentBuilder.h>
