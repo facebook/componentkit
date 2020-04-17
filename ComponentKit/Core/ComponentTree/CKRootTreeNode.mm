@@ -10,6 +10,8 @@
 
 #import "CKRootTreeNode.h"
 
+#import <ComponentKit/CKAssert.h>
+
 #import "CKRenderHelpers.h"
 #import "CKScopeTreeNode.h"
 
@@ -18,6 +20,9 @@ CKRootTreeNode::CKRootTreeNode(): _node([CKScopeTreeNode new]) {};
 void CKRootTreeNode::registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProtocol> parent) {
   CKCAssert(parent != nil, @"Cannot register a nil parent node");
   if (node) {
+    CKCAssertWithCategory(_nodesToParentNodes.find(node.nodeIdentifier) == _nodesToParentNodes.cend(),
+      ([node.component.className stringByAppendingFormat:@"-%@", parent.component.className]),
+      @"Attempting to register a component and its parent twice");
     _nodesToParentNodes[node.nodeIdentifier] = parent;
   }
 }
