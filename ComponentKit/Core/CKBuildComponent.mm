@@ -73,7 +73,7 @@ namespace CKBuildComponentHelpers {
 
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
-                                        CKComponent *(^componentFactory)(void),
+                                        NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         BOOL enableComponentReuseOptimizations,
                                         BOOL mergeTreeNodesLinks,
                                         CKComponentCoalescingMode coalescingMode)
