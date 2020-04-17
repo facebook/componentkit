@@ -10,6 +10,8 @@
 
 #import "CKComponentGenerator.h"
 
+#import <mutex>
+
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentController.h>
@@ -22,7 +24,7 @@
 
 static void *kAffinedQueueKey = &kAffinedQueueKey;
 
-#define CKAssertAffinedQueue() CKAssert([self _isRunningOnAffinedQueue], @"This method must only be called on the affined queue")
+#define CKAssertAffinedQueue() CKCAssert(_isRunningOnAffinedQueue(), @"This method must only be called on the affined queue")
 
 struct CKComponentGeneratorInputs {
   CKComponentScopeRoot *scopeRoot;
@@ -36,6 +38,43 @@ struct CKComponentGeneratorInputs {
   };
 };
 
+/**
+ This makes sure accessing `inputs` is either thread-safe or affined to a specific queue.
+ */
+struct CKComponentGeneratorInputsStore {
+  CKComponentGeneratorInputsStore(dispatch_queue_t affinedQueue,
+                                  CKComponentGeneratorInputs inputs)
+  : _affinedQueue(affinedQueue), _inputs(inputs) {
+    if (_affinedQueue != nil && _affinedQueue != dispatch_get_main_queue()) {
+      dispatch_queue_set_specific(_affinedQueue, kAffinedQueueKey, kAffinedQueueKey, NULL);
+    }
+  }
+
+  template <typename T>
+  T acquireInputs(NS_NOESCAPE T(^block)(CKComponentGeneratorInputs &)) {
+    if (_affinedQueue) {
+      CKAssertAffinedQueue();
+      return block(_inputs);
+    } else {
+      std::lock_guard<std::mutex> lock(_inputsMutex);
+      return block(_inputs);
+    }
+  }
+private:
+  dispatch_queue_t _affinedQueue;
+  std::mutex _inputsMutex;
+  CKComponentGeneratorInputs _inputs;
+
+  BOOL _isRunningOnAffinedQueue()
+  {
+    if (_affinedQueue == dispatch_get_main_queue()) {
+      return [NSThread isMainThread];
+    } else {
+      return (dispatch_get_specific(kAffinedQueueKey) == kAffinedQueueKey);
+    }
+  }
+};
+
 @interface CKComponentGenerator () <CKComponentStateListener>
 
 @end
@@ -43,8 +82,8 @@ struct CKComponentGeneratorInputs {
 @implementation CKComponentGenerator
 {
   CKComponentProviderFunc _componentProvider;
-  CKComponentGeneratorInputs _pendingInputs;
   __weak id<CKComponentGeneratorDelegate> _delegate;
+  std::unique_ptr<CKComponentGeneratorInputsStore> _inputsStore;
   dispatch_queue_t _affinedQueue;
 }
 
@@ -53,24 +92,23 @@ struct CKComponentGeneratorInputs {
   if (self = [super init]) {
     _delegate = options.delegate;
     _componentProvider = options.componentProvider;
-    _pendingInputs = {
-      .scopeRoot =
-      CKComponentScopeRootWithPredicates(self,
-                                         options.analyticsListener ?: CKReadGlobalConfig().defaultAnalyticsListener,
-                                         options.componentPredicates,
-                                         options.componentControllerPredicates)
-    };
+    _inputsStore =
+    std::make_unique<CKComponentGeneratorInputsStore>(options.affinedQueue, CKComponentGeneratorInputs {
+      .scopeRoot = CKComponentScopeRootWithPredicates(self,
+                                                      options.analyticsListener ?: CKReadGlobalConfig().defaultAnalyticsListener,
+                                                      options.componentPredicates,
+                                                      options.componentControllerPredicates)
+    });
     _affinedQueue = options.affinedQueue;
-    if (_affinedQueue != dispatch_get_main_queue()) {
-      dispatch_queue_set_specific(_affinedQueue, kAffinedQueueKey, kAffinedQueueKey, NULL);
-    }
   }
   return self;
 }
 
 - (void)dealloc
 {
-  const auto scopeRoot = _pendingInputs.scopeRoot;
+  const auto scopeRoot = _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs){
+    return inputs.scopeRoot;
+  });
   const auto invalidateController = ^{
     CKComponentScopeRootAnnounceControllerInvalidation(scopeRoot);
   };
@@ -83,36 +121,40 @@ struct CKComponentGeneratorInputs {
 
 - (void)updateModel:(id<NSObject>)model
 {
-  CKAssertAffinedQueue();
-  _pendingInputs.model = model;
+  _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
+    inputs.model = model;
+  });
 }
 
 - (void)updateContext:(id<NSObject>)context
 {
-  CKAssertAffinedQueue();
-  _pendingInputs.context = context;
+  _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
+    inputs.context = context;
+  });
 }
 
 - (CKBuildComponentResult)generateComponentSynchronously
 {
-  CKAssertAffinedQueue();
-
-  const auto enableComponentReuse = _pendingInputs.enableComponentReuse;
-  _pendingInputs.enableComponentReuse = YES;
-  const auto result = CKBuildComponent(_pendingInputs.scopeRoot, _pendingInputs.stateUpdates, ^{
-    return _componentProvider(_pendingInputs.model, _pendingInputs.context);
-  }, enableComponentReuse);
-  [self _applyResult:result
-addedComponentControllers:_addedComponentControllersBetweenScopeRoots(result.scopeRoot, _pendingInputs.scopeRoot)
-invalidComponentControllers:_invalidComponentControllersBetweenScopeRoots(result.scopeRoot, _pendingInputs.scopeRoot)];
-  return result;
+  return
+  _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
+    const auto enableComponentReuse = inputs.enableComponentReuse;
+    inputs.enableComponentReuse = YES;
+    const auto result = CKBuildComponent(inputs.scopeRoot, inputs.stateUpdates, ^{
+      return _componentProvider(inputs.model, inputs.context);
+    }, enableComponentReuse);
+    _applyResult(result,
+                 inputs,
+                 _addedComponentControllersBetweenScopeRoots(result.scopeRoot, inputs.scopeRoot),
+                 _invalidComponentControllersBetweenScopeRoots(result.scopeRoot, inputs.scopeRoot));
+    return result;
+  });
 }
 
 - (void)generateComponentAsynchronously
 {
-  CKAssertAffinedQueue();
-
-  const auto inputs = std::make_shared<const CKComponentGeneratorInputs>(_pendingInputs);
+  const auto inputs = _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &_inputs){
+    return std::make_shared<const CKComponentGeneratorInputs>(_inputs);
+  });
   const auto asyncGeneration = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::ComponentGeneratorWillGenerate);
 
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -131,66 +173,73 @@ invalidComponentControllers:_invalidComponentControllersBetweenScopeRoots(result
     std::make_shared<const std::vector<CKComponentController *>>(_invalidComponentControllersBetweenScopeRoots(result->scopeRoot, inputs->scopeRoot));
     const auto asyncApplication = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::ComponentGeneratorWillApply);
 
-    dispatch_async(_affinedQueue, ^{
+    const auto applyResult = ^{
       CKSystraceScope applicationScope(asyncApplication);
       if (![_delegate componentGeneratorShouldApplyAsynchronousGenerationResult:self]) {
         return;
       }
       // If the inputs haven't changed, apply the result; otherwise, retry.
-      if (_pendingInputs == *inputs) {
-        _pendingInputs.enableComponentReuse = YES;
-        [self _applyResult:*result
- addedComponentControllers:addedComponentControllers != nullptr ? *addedComponentControllers : std::vector<CKComponentController *>{}
-invalidComponentControllers:invalidComponentControllers != nullptr ? *invalidComponentControllers : std::vector<CKComponentController *>{}];
-        [_delegate componentGenerator:self didAsynchronouslyGenerateComponentResult:*result];
-      } else {
+      const auto shouldRetry = _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &_inputs){
+        if (_inputs == *inputs) {
+          _inputs.enableComponentReuse = YES;
+          _applyResult(*result,
+                       _inputs,
+                       addedComponentControllers != nullptr ? *addedComponentControllers : std::vector<CKComponentController *>{},
+                       invalidComponentControllers != nullptr ? *invalidComponentControllers : std::vector<CKComponentController *>{});
+          return NO;
+        } else {
+          return YES;
+        }
+      });
+      if (shouldRetry) {
         [self generateComponentAsynchronously];
+      } else {
+        [_delegate componentGenerator:self didAsynchronouslyGenerateComponentResult:*result];
       }
-    });
+    };
+
+    if (_affinedQueue) {
+      dispatch_async(_affinedQueue, applyResult);
+    } else {
+      applyResult();
+    }
   });
 }
 
 - (void)ignoreComponentReuseInNextGeneration
 {
-  CKAssertAffinedQueue();
-  _pendingInputs.enableComponentReuse = NO;
+  _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs){
+    inputs.enableComponentReuse = NO;
+  });
 }
 
 - (CKComponentScopeRoot *)scopeRoot
 {
-  CKAssertAffinedQueue();
-  return _pendingInputs.scopeRoot;
+  return _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs){
+    return inputs.scopeRoot;
+  });
 }
 
 - (void)setScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {
-  CKAssertAffinedQueue();
-  _notifyInitializationControllerEvents(_addedComponentControllersBetweenScopeRoots(scopeRoot, _pendingInputs.scopeRoot));
-  _notifyInvalidateControllerEvents(_invalidComponentControllersBetweenScopeRoots(scopeRoot, _pendingInputs.scopeRoot));
-  _pendingInputs.scopeRoot = scopeRoot;
+  _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs){
+    _notifyInitializationControllerEvents(_addedComponentControllersBetweenScopeRoots(scopeRoot, inputs.scopeRoot));
+    _notifyInvalidateControllerEvents(_invalidComponentControllersBetweenScopeRoots(scopeRoot, inputs.scopeRoot));
+    inputs.scopeRoot = scopeRoot;
+  });
 }
 
 #pragma mark - Private
 
-- (void)_applyResult:(const CKBuildComponentResult &)result
-addedComponentControllers:(const std::vector<CKComponentController *>&)addedComponentControllers
-invalidComponentControllers:(const std::vector<CKComponentController *> &)invalidComponentControllers
+static void _applyResult(const CKBuildComponentResult &result,
+                         CKComponentGeneratorInputs &inputs,
+                         const std::vector<CKComponentController *> &addedComponentControllers,
+                         const std::vector<CKComponentController *> &invalidComponentControllers)
 {
-  CKAssertAffinedQueue();
-
   _notifyInitializationControllerEvents(addedComponentControllers);
   _notifyInvalidateControllerEvents(invalidComponentControllers);
-  _pendingInputs.scopeRoot = result.scopeRoot;
-  _pendingInputs.stateUpdates = {};
-}
-
-- (BOOL)_isRunningOnAffinedQueue
-{
-  if (_affinedQueue == dispatch_get_main_queue()) {
-    return [NSThread isMainThread];
-  } else {
-    return (dispatch_get_specific(kAffinedQueueKey) == kAffinedQueueKey);
-  }
+  inputs.scopeRoot = result.scopeRoot;
+  inputs.stateUpdates = {};
 }
 
 static void _notifyInvalidateControllerEvents(const std::vector<CKComponentController *> &invalidComponentControllers)
@@ -254,10 +303,12 @@ static std::vector<CKComponentController *> _addedComponentControllersBetweenSco
   CKAssertMainThread();
 
   const auto enqueueStateUpdate = ^{
-    _pendingInputs.stateUpdates[handle].push_back(stateUpdate);
+    _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs){
+      inputs.stateUpdates[handle].push_back(stateUpdate);
+    });
     [_delegate componentGenerator:self didReceiveComponentStateUpdateWithMode:mode];
   };
-  if ([self _isRunningOnAffinedQueue]) {
+  if (!_affinedQueue || _affinedQueue == dispatch_get_main_queue()) {
     enqueueStateUpdate();
   } else {
     dispatch_async(_affinedQueue, enqueueStateUpdate);
