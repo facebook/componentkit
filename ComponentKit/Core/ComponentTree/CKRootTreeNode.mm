@@ -17,12 +17,42 @@
 
 CKRootTreeNode::CKRootTreeNode(): _node([CKScopeTreeNode new]) {};
 
+#if CK_ASSERTIONS_ENABLED
+static auto _parentIdentifiers(const std::unordered_map<CKTreeNodeIdentifier,
+                               id<CKTreeNodeProtocol>>& nodesToParentNodes,
+                               id<CKTreeNodeProtocol> node) -> NSString * {
+  const auto parents = [NSMutableArray new];
+
+  while (node.component != nil) {
+    [parents addObject:node.component.className];
+    const auto it = nodesToParentNodes.find(node.nodeIdentifier);
+    node = (it != nodesToParentNodes.cend()) ? it->second : nil;
+  }
+
+  return [[[parents reverseObjectEnumerator] allObjects] componentsJoinedByString:@"-"];
+}
+
+static auto _existingAndNewParentIdentifiers(
+    const std::unordered_map<CKTreeNodeIdentifier,
+    id<CKTreeNodeProtocol>>& nodesToParentNodes,
+    id<CKTreeNodeProtocol> node,
+    id<CKTreeNodeProtocol> parent) -> NSString * {
+  return [NSString stringWithFormat:@"Previous Parents:%@\nNew Parents:%@",
+          _parentIdentifiers(nodesToParentNodes, nodesToParentNodes.find(node.nodeIdentifier)->second),
+          _parentIdentifiers(nodesToParentNodes, parent)];
+}
+
+#endif
+
 void CKRootTreeNode::registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProtocol> parent) {
   CKCAssert(parent != nil, @"Cannot register a nil parent node");
   if (node) {
+#if CK_ASSERTIONS_ENABLED
     CKCAssertWithCategory(_nodesToParentNodes.find(node.nodeIdentifier) == _nodesToParentNodes.cend(),
-      ([node.component.className stringByAppendingFormat:@"-%@", parent.component.className]),
-      @"Attempting to register a component and its parent twice");
+      node.component.className,
+      @"Attempting to register a component and its parent twice.\n%@",
+      _existingAndNewParentIdentifiers(_nodesToParentNodes, node, parent));
+#endif
     _nodesToParentNodes[node.nodeIdentifier] = parent;
   }
 }
