@@ -363,7 +363,7 @@ public:
     constexpr auto viewClassIsSet = PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewClass);
     static_assert(viewClassIsSet, "Cannot set 'contentMode' without setting 'viewClass' first");
     _attributes.insert({@selector(setContentMode:), m});
-    return *this;
+    return reinterpret_cast<Derived<PropsBitmap> &>(*this);
   }
 
   /**
