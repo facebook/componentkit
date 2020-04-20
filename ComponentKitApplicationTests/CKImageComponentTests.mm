@@ -47,10 +47,10 @@ static UIImage *TestImageWithColorAndSize(UIColor *color, CGSize size)
 
 - (void)testImageComponentWithImageSize
 {
-  CKAutoSizedImageComponent *c =
-  [CKAutoSizedImageComponent
-   newWithImage:TestImageWithColorAndSize([UIColor redColor], CGSizeMake(200, 200))
-   attributes:{}];
+  const auto c =
+  CK::AutoSizedImageComponentBuilder()
+  .image(TestImageWithColorAndSize([UIColor redColor], CGSizeMake(200, 200)))
+  .build();
 
   static CKSizeRange kSize = {{0, 0}, {400, 400}};
   CKSnapshotVerifyComponent(c, kSize, nil);
