@@ -29,4 +29,6 @@ struct CKComponentSize;
 
 @end
 
+#import <ComponentKit/AutoSizedImageComponentBuilder.h>
+
 #endif
