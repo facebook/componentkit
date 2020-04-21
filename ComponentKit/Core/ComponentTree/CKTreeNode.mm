@@ -68,7 +68,7 @@
     scopeRoot.rootNode.registerNode(self, parent);
     // Set the link between the tree node and the scope handle.
     [scopeHandle setTreeNode:self];
-#if CK_ASSERTIONS_ENABLED
+#if CK_ASSERTIONS_ENABLED || defined(DEBUG)
     [component acquireTreeNode:self];
 #endif
   }
@@ -90,7 +90,7 @@
   [parent setChild:self forComponentKey:_componentKey];
   // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
   params.scopeRoot.rootNode.registerNode(self, parent);
-#if CK_ASSERTIONS_ENABLED
+#if CK_ASSERTIONS_ENABLED || defined(DEBUG)
   [component acquireTreeNode:self];
 #endif
 }
