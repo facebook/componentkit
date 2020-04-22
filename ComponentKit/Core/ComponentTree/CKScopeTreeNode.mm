@@ -172,7 +172,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   CKComponentScopeHandle *newHandle;
 
   if (childScopeFromPreviousScope != nil) {
-    newHandle = [childScopeFromPreviousScope.scopeHandle newHandleWithStateUpdates:stateUpdates componentScopeRoot:newRoot];
+    newHandle = [childScopeFromPreviousScope.scopeHandle newHandleWithStateUpdates:stateUpdates];
   } else if (requiresScopeHandle) {
     newHandle = [[CKComponentScopeHandle alloc] initWithListener:newRoot.listener
                                                   rootIdentifier:newRoot.globalIdentifier

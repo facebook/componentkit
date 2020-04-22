@@ -246,7 +246,7 @@ namespace CKRender {
                            parent:parent
                            previousParent:previousParent
                            scopeRoot:params.scopeRoot
-                           stateUpdates:params.stateUpdates];;
+                           stateUpdates:params.stateUpdates];
 
         // Faster Props updates and context support
         params.scopeRoot.rootNode.willBuildComponentTree(node);
@@ -315,8 +315,7 @@ namespace CKRender {
         CKComponentScopeHandle *scopeHandle;
         // If there is a previous node, we just duplicate the scope handle.
         if (previousNode) {
-          scopeHandle = [previousNode.scopeHandle newHandleWithStateUpdates:stateUpdates
-                                                         componentScopeRoot:scopeRoot];
+          scopeHandle = [previousNode.scopeHandle newHandleWithStateUpdates:stateUpdates];
         } else {
           // The component needs a scope handle in few cases:
           // 1. Has an initial state
@@ -330,11 +329,10 @@ namespace CKRender {
           }
         }
 
-        // Finalize the node/scope regsitration.
+        // Finalize the node/scope registration.
         if (scopeHandle) {
           [component acquireScopeHandle:scopeHandle];
-          [scopeRoot registerComponent:component];
-          [scopeHandle resolve];
+          [scopeHandle resolveInScopeRoot:scopeRoot];
         }
 
         return scopeHandle;

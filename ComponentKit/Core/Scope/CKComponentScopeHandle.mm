@@ -51,7 +51,6 @@
 
   CKComponentScopeHandle *handle = currentScope->stack.top().node.scopeHandle;
   if ([handle acquireFromComponent:component]) {
-    [currentScope->newScopeRoot registerComponent:component];
     return handle;
   }
   CKAssertWithCategory([component.class controllerClass] == Nil || [component conformsToProtocol:@protocol(CKRenderComponentProtocol)],
@@ -100,7 +99,6 @@
 }
 
 - (instancetype)newHandleWithStateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                       componentScopeRoot:(CKComponentScopeRoot *)componentScopeRoot
 {
   id updatedState = _state;
   const auto pendingUpdatesIt = stateUpdates.find(self);
@@ -112,7 +110,6 @@
     }
   }
 
-  [componentScopeRoot registerComponentController:_controller];
   return [[CKComponentScopeHandle alloc] initWithListener:_listener
                                          globalIdentifier:_globalIdentifier
                                            rootIdentifier:_rootIdentifier
@@ -191,24 +188,22 @@
   _treeNode = treeNode;
 }
 
-- (void)resolve
+- (void)resolveInScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {
   CKAssertFalse(_resolved);
+
   // Strong ref
   const auto acquiredComponent = _acquiredComponent;
-  // _acquiredComponent may be nil if a component scope was declared before an early return. In that case, the scope
-  // handle will not be acquired, and we should avoid creating a component controller for the nil component.
-  if (!_controller && acquiredComponent) {
-    _controller = [acquiredComponent buildController];
-    if (_controller) {
-      CKThreadLocalComponentScope *const currentScope = CKThreadLocalComponentScope::currentScope();
-      if (currentScope) {
-        [currentScope->newScopeRoot registerComponentController:_controller];
-      } else {
-        CKFailAssert(@"Current scope should never be null here. Thread-local stack is corrupted.");
-      }
+  if (acquiredComponent != nil) {
+    // _acquiredComponent may be nil if a component scope was declared before an early return. In that case, the scope
+    // handle will not be acquired, and we should avoid creating a component controller for the nil component.
+    [scopeRoot registerComponent:acquiredComponent];
+    if (_controller == nil) {
+      _controller = [acquiredComponent buildController];
     }
+    [scopeRoot registerComponentController:_controller];
   }
+
   _resolved = YES;
 }
 
