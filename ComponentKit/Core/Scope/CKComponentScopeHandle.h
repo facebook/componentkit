@@ -62,6 +62,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** Acquire component, assert if the scope handle is wrong */
 - (void)forceAcquireFromComponent:(id<CKComponentProtocol>)component;
 
+/** Clears the acquired component. Used in some cases for render to nil. */
+- (void)relinquishComponent;
+
 /**
  Should not be called until after handleForComponent:. The controller will assert (if assertions are compiled), and
  return nil until `resolve` is called.

@@ -38,10 +38,11 @@ namespace CKRenderInternal {
     // Update the previous component.
     prevChildComponent = [(id<CKRenderWithChildComponentProtocol>)previousNode.component child];
     // Update the render node of the component reuse.
+    const auto traverseAllChildren = params.mergeTreeNodesLinks || params.coalescingMode == CKComponentCoalescingModeComposite;
     [node didReuseRenderNode:previousNode
                    scopeRoot:params.scopeRoot
            previousScopeRoot:params.previousScopeRoot
-         traverseAllChildren:params.mergeTreeNodesLinks];
+         traverseAllChildren:traverseAllChildren];
 
     if (childComponent != nullptr) {
       // Link the previous child component to the the new component.

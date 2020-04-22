@@ -22,6 +22,7 @@
 
 class CKThreadLocalComponentScope;
 @class CKComponentScopeHandle;
+@protocol CKTreeNodeWithChildrenProtocol;
 
 typedef void (^CKComponentStateUpdater)(id (^updateBlock)(id),
                                         NSDictionary<NSString *, id> * userInfo,
@@ -105,6 +106,7 @@ private:
   CKComponentScope &operator=(const CKComponentScope&) = delete;
   CKThreadLocalComponentScope *_threadLocalScope;
   CKComponentScopeHandle *_scopeHandle;
+  __unsafe_unretained id<CKTreeNodeWithChildrenProtocol> _parentNode;
 };
 
 #endif

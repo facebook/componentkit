@@ -171,6 +171,11 @@
   }
 }
 
+- (void)relinquishComponent
+{
+  _acquiredComponent = nil;
+}
+
 - (void)forceAcquireFromComponent:(id<CKComponentProtocol>)component
 {
   CKAssert(component.typeName == _componentTypeName, @"%s has to be a member of %s class", component.typeName, _componentTypeName);

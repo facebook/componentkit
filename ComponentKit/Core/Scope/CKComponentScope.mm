@@ -31,8 +31,19 @@ CKComponentScope::~CKComponentScope()
   if (_threadLocalScope != nullptr) {
     [_scopeHandle resolveInScopeRoot:_threadLocalScope->newScopeRoot];
 
+    if (_threadLocalScope->coalescingMode == CKComponentCoalescingModeComposite) {
+      // When coalesced composite components are "on" the component registration needs
+      // to happen during the first build phase in case there is no second build phase.
+      const auto component = _scopeHandle.acquiredComponent;
+      if (component != nil) {
+        [_scopeHandle.treeNode registerComponent:(id<CKTreeNodeComponentProtocol>)component
+                                        toParent:_parentNode
+                                     inScopeRoot:_threadLocalScope->newScopeRoot];
+      }
+    }
+
     if (_threadLocalScope->systraceListener) {
-      auto const componentTypeName = _threadLocalScope->stack.top().node.scopeHandle.componentTypeName ?: "UnkownTypeName";
+      auto const componentTypeName = _scopeHandle.componentTypeName ?: "UnkownTypeName";
       CKCAssertWithCategory(objc_getClass(componentTypeName) != nil,
                             [NSString stringWithUTF8String:componentTypeName],
                             @"Creating an action from a scope should always yield a class");
@@ -54,6 +65,8 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
     [_threadLocalScope->systraceListener willBuildComponent:componentTypeName];
 
     const auto& pair = _threadLocalScope->stack.top();
+
+    _parentNode = pair.node;
 
     const auto childPair = [CKScopeTreeNode childPairForPair:pair
                                                      newRoot:_threadLocalScope->newScopeRoot

@@ -67,6 +67,9 @@ struct CKBuildComponentTreeParams {
 
   // Avoid duplicate links in the tree nodes for owner/parent based nodes
   BOOL mergeTreeNodesLinks = NO;
+
+  // The current coalescing mode.
+  CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone;
 };
 
 #endif
@@ -149,6 +152,11 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
              toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
        previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
                params:(const CKBuildComponentTreeParams &)params;
+
+/** Called by `-linkComponent:toParent:previousParent:params:`.  Associated the component with its parent in the scope root*/
+- (void)registerComponent:(id<CKTreeNodeComponentProtocol>)component
+                 toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
+              inScopeRoot:(CKComponentScopeRoot *)scopeRoot;
 
 #if DEBUG
 /** Returns a multi-line string describing this node and its children nodes */

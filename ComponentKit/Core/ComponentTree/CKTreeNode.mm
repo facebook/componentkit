@@ -85,14 +85,29 @@
     auto const componentKey = [parent createComponentKeyForChildWithTypeName:component.typeName identifier:nil];
     _componentKey = componentKey;
   }
-  _component = component;
   // Set the link between the parent and the child.
   [parent setChild:self forComponentKey:_componentKey];
+
+  // Scoped components already register themselves during the first build phase
+  // when coalesced components are on.
+  if (params.coalescingMode != CKComponentCoalescingModeComposite) {
+    [self registerComponent:component
+                   toParent:parent
+                inScopeRoot:params.scopeRoot];
+  }
+}
+
+- (void)registerComponent:(id<CKTreeNodeComponentProtocol>)component
+                 toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
+              inScopeRoot:(CKComponentScopeRoot *)scopeRoot
+{
+  _component = component;
+
   // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
-  params.scopeRoot.rootNode.registerNode(self, parent);
-#if CK_ASSERTIONS_ENABLED || defined(DEBUG)
-  [component acquireTreeNode:self];
-#endif
+    scopeRoot.rootNode.registerNode(self, parent);
+  #if CK_ASSERTIONS_ENABLED || defined(DEBUG)
+    [component acquireTreeNode:self];
+  #endif
 }
 
 - (id)state
