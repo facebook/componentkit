@@ -389,6 +389,10 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot
 
 }
 
+- (void)didReceiveStateUpdateFromScopeHandle:(CKComponentScopeHandle *)handle rootIdentifier:(CKComponentScopeRootIdentifier)rootID {
+}
+
+
 #pragma mark - Helpers
 
 - (void)enableSplitChangeset

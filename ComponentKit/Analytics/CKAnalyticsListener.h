@@ -148,6 +148,9 @@ fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot;
                                      params:(const CKBuildComponentTreeParams &)params
                        parentHasStateUpdate:(BOOL)parentHasStateUpdate;
 
+- (void)didReceiveStateUpdateFromScopeHandle:(CKComponentScopeHandle *)handle
+                              rootIdentifier:(CKComponentScopeRootIdentifier)rootID;
+
 @end
 
 #endif
