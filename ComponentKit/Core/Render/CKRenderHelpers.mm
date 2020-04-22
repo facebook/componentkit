@@ -193,7 +193,7 @@ namespace CKRender {
       // Update the `parentHasStateUpdate` param for Faster state/props updates.
       // TODO: Share this value with the value precomputed in the scope
       parentHasStateUpdate = parentHasStateUpdate ||
-      (params.buildTrigger != CKBuildTrigger::NewTree &&
+      (params.buildTrigger == CKBuildTrigger::StateUpdate &&
        CKRender::componentHasStateUpdate(component.scopeHandle,
                                          previousParent,
                                          params.buildTrigger,
@@ -262,7 +262,7 @@ namespace CKRender {
 
         // Update the `parentHasStateUpdate` param for Faster state/props updates.
         parentHasStateUpdate = parentHasStateUpdate ||
-        (params.buildTrigger != CKBuildTrigger::NewTree &&
+        (params.buildTrigger == CKBuildTrigger::StateUpdate &&
          CKRender::componentHasStateUpdate(node.scopeHandle,
                                            previousParent,
                                            params.buildTrigger,
