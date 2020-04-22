@@ -11,7 +11,7 @@
 #import "CKDataSource.h"
 #import "CKDataSourceInternal.h"
 
-
+#import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKMutex.h>
 #import <ComponentKit/CKRootTreeNode.h>
 
@@ -266,6 +266,9 @@
                         mode:(CKUpdateMode)mode
 {
   CKAssertMainThread();
+
+  [_state.configuration.analyticsListener didReceiveStateUpdateFromScopeHandle:handle
+                                                                rootIdentifier:rootIdentifier];
 
   if (_pendingAsynchronousStateUpdates.empty() && _pendingSynchronousStateUpdates.empty()) {
     dispatch_async(dispatch_get_main_queue(), ^{

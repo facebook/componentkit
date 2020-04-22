@@ -11,8 +11,20 @@
 #import <Foundation/Foundation.h>
 
 #import <ComponentKit/CKAnalyticsListener.h>
+#import <ComponentKit/CKVariant.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+namespace CK {
+namespace AnalyticsListenerSpy {
+struct DidReceiveStateUpdate {
+  CKComponentScopeHandle *handle;
+  CKComponentScopeRootIdentifier rootID;
+};
+
+using Event = Variant<DidReceiveStateUpdate>;
+}
+}
 
 @interface CKAnalyticsListenerSpy: NSObject <CKAnalyticsListener> {
   @package
@@ -23,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
   NSInteger _willMountComponentHitCount;
   NSInteger _didMountComponentHitCount;
   NSInteger _viewAllocationsCount;
+
+  std::vector<CK::AnalyticsListenerSpy::Event> _events;
 }
 
 @end

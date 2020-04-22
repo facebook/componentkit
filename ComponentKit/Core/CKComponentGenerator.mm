@@ -12,6 +12,7 @@
 
 #import <mutex>
 
+#import <ComponentKit/CKAnalyticsListener.h>
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentController.h>
@@ -305,6 +306,7 @@ static std::vector<CKComponentController *> _addedComponentControllersBetweenSco
   const auto enqueueStateUpdate = ^{
     _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs){
       inputs.stateUpdates[handle].push_back(stateUpdate);
+      [inputs.scopeRoot.analyticsListener didReceiveStateUpdateFromScopeHandle:handle rootIdentifier:rootIdentifier];
     });
     [_delegate componentGenerator:self didReceiveComponentStateUpdateWithMode:mode];
   };

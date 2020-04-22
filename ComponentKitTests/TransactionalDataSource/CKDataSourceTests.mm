@@ -10,11 +10,13 @@
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKitTestHelpers/CKAnalyticsListenerSpy.h>
 #import <ComponentKitTestHelpers/CKLifecycleTestComponent.h>
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 #import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
 
 #import <ComponentKit/CKComponent.h>
+#import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentSubclass.h>
@@ -432,6 +434,30 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   });
   // `_willGenerateChangeCounter` matches the number of asynchronous changeset applications.
   XCTAssertEqual(_willGenerateChangeCounter, 3);
+}
+
+- (void)test_WhenReceivesStateUpdate_ReportsToAnalyticsListener
+{
+  const auto analyticsListenerSpy = [CKAnalyticsListenerSpy new];
+  const auto dataSource = CKComponentTestDataSource(ComponentProvider, self, analyticsListenerSpy);
+  const auto item = [_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+  const auto handle =
+  [[CKComponentScopeHandle alloc] initWithListener:dataSource
+                                    rootIdentifier:item.scopeRoot.globalIdentifier
+                                 componentTypeName:"CKTestComponent"
+                                      initialState:nil];
+
+  [dataSource componentScopeHandle:handle
+                    rootIdentifier:item.scopeRoot.globalIdentifier
+             didReceiveStateUpdate:^(id x){ return x; }
+                          metadata:{}
+                              mode:CKUpdateModeSynchronous];
+
+  const auto event = analyticsListenerSpy->_events.front();
+  event.match([&](CK::AnalyticsListenerSpy::DidReceiveStateUpdate drsu){
+    XCTAssertEqual(drsu.handle, handle);
+    XCTAssertEqual(drsu.rootID, item.scopeRoot.globalIdentifier);
+  });
 }
 
 #pragma mark - Listener

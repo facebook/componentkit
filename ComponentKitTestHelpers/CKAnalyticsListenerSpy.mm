@@ -12,6 +12,8 @@
 
 #import <ComponentKit/CKComponentScopeRoot.h>
 
+using namespace CK::AnalyticsListenerSpy;
+
 @implementation CKAnalyticsListenerSpy
 
 - (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)scopeRoot
@@ -80,7 +82,9 @@
 
 - (void)didReuseNode:(id<CKTreeNodeProtocol>)node inScopeRoot:(CKComponentScopeRoot *)scopeRoot fromPreviousScopeRoot:(CKComponentScopeRoot *)previousScopeRoot {}
 
-- (void)didReceiveStateUpdateFromScopeHandle:(CKComponentScopeHandle *)handle rootIdentifier:(CKComponentScopeRootIdentifier)rootID {}
+- (void)didReceiveStateUpdateFromScopeHandle:(CKComponentScopeHandle *)handle rootIdentifier:(CKComponentScopeRootIdentifier)rootID {
+  _events.push_back(DidReceiveStateUpdate{handle, rootID});
+}
 
 
 @end

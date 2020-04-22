@@ -12,7 +12,10 @@
 
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentGenerator.h>
+#import <ComponentKit/CKComponentInternal.h>
+#import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKitTestHelpers/CKAnalyticsListenerSpy.h>
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 #import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
 
@@ -115,6 +118,28 @@ static CKComponent *verificationComponentProvider(id<NSObject> m, id<NSObject> c
   XCTAssertTrue(_didReceiveComponentStateUpdate);
   const auto result2 = [componentGenerator generateComponentSynchronously];
   XCTAssertEqual(state, ((CKTestStateComponent *)result2.component).state);
+}
+
+- (void)test_WhenReceivesStateUpdate_ReportsToAnalyticsListener
+{
+  const auto analyticsListenerSpy = [CKAnalyticsListenerSpy new];
+  const auto componentGenerator =
+  [[CKComponentGenerator alloc] initWithOptions:{
+    .delegate = CK::makeNonNull(self),
+    .componentProvider = CK::makeNonNull([](id<NSObject> m, id<NSObject> c) -> CKComponent *{
+      return [CKTestStateComponent new];
+    }),
+    .analyticsListener = analyticsListenerSpy
+  }];
+  const auto result1 = [componentGenerator generateComponentSynchronously];
+
+  [result1.component updateState:^(id currentState) { return currentState; } mode:CKUpdateModeSynchronous];
+
+  const auto event = analyticsListenerSpy->_events.front();
+  event.match([&](CK::AnalyticsListenerSpy::DidReceiveStateUpdate drsu){
+    XCTAssertEqual(drsu.handle, result1.component.scopeHandle);
+    XCTAssertEqual(drsu.rootID, result1.scopeRoot.globalIdentifier);
+  });
 }
 
 #pragma mark - Helpers
