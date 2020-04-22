@@ -90,7 +90,7 @@ void CKRootTreeNode::willBuildComponentTree(id<CKTreeNodeProtocol>node) {
   _stack.push(node.nodeIdentifier);
 }
 
-void CKRootTreeNode::didBuildComponentTree(id<CKTreeNodeProtocol>node) {
+void CKRootTreeNode::didBuildComponentTree() {
   if (!_stack.empty()) {
     _stack.pop();
   }

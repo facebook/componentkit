@@ -44,7 +44,7 @@ public:
   void willBuildComponentTree(id<CKTreeNodeProtocol>node);
 
   /** Called after a render component generates its children */
-  void didBuildComponentTree(id<CKTreeNodeProtocol>node);
+  void didBuildComponentTree();
 
 private:
   /** the root node of the component tree */

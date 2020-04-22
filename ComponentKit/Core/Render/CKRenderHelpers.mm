@@ -159,7 +159,7 @@ static auto didBuildComponentTree(id<CKTreeNodeProtocol> node,
     CKComponentContextHelper::didBuildComponentTree(component);
 
     // Props updates and context support
-    params.scopeRoot.rootNode.didBuildComponentTree(node);
+    params.scopeRoot.rootNode.didBuildComponentTree();
 
     // Systrace logging
     [params.systraceListener didBuildComponent:component.typeName];
