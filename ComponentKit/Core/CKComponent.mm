@@ -197,8 +197,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 #pragma mark - Mounting and Unmounting
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-                                        size:(const CGSize)size
-                                    children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
+                                      layout:(const CKComponentLayout &)layout
                               supercomponent:(CKComponent *)supercomponent
 {
   CKCAssertWithCategory([NSThread isMainThread], self.className, @"This method must be called on the main thread");
@@ -215,7 +214,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   [controller componentWillMount:self];
 
   const CK::Component::MountContext &effectiveContext = [CKComponentDebugController debugMode]
-  ? CKDebugMountContext([self class], context, _viewConfiguration, size) : context;
+  ? CKDebugMountContext([self class], context, _viewConfiguration, layout.size) : context;
 
   UIView *v = effectiveContext.viewManager->viewForConfiguration([self class], viewConfiguration);
   if (v) {
@@ -233,14 +232,14 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
     }
 
     @try {
-      CKSetViewPositionAndBounds(v, context, size);
+      CKSetViewPositionAndBounds(v, context, layout.size);
     } @catch (NSException *exception) {
       CKCFatalWithCategory(self.className,
                            @"Raised %@ during mount: %@\nBacktrace: %@\nChildren: %@",
                            exception.name,
                            exception.reason,
                            CKComponentBacktraceDescription(CKComponentGenerateBacktrace(supercomponent)),
-                           CKComponentChildrenDescription(children));
+                           CKComponentChildrenDescription(layout.children));
     }
 
     _mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
@@ -250,7 +249,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
     CKCAssertWithCategory(_mountInfo->view == nil, self.className,
                           @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
                           self.className, [_mountInfo->view class], CKComponentBacktraceDescription(CKComponentGenerateBacktrace(self)));
-    _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, size}};
+    _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, layout.size}};
 
     return {.mountChildren = YES, .contextForChildren = effectiveContext};
   }

@@ -163,11 +163,10 @@
 }
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-                                        size:(const CGSize)size
-                                    children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
+                                        layout:(const CKComponentLayout &)layout
                               supercomponent:(CKComponent *)supercomponent
 {
-  CK::Component::MountResult r = [super mountInContext:context size:size children:children supercomponent:supercomponent];
+  CK::Component::MountResult r = [super mountInContext:context layout:layout supercomponent:supercomponent];
   return {
     .mountChildren = NO,
     .contextForChildren = r.contextForChildren

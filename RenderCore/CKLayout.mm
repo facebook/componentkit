@@ -103,8 +103,7 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
       }
       [listener willMountComponent:item.layout.component];
       const MountResult mountResult = [item.layout.component mountInContext:item.mountContext
-                                                                       size:item.layout.size
-                                                                   children:item.layout.children
+                                                                     layout:item.layout
                                                              supercomponent:item.supercomponent];
       [mountedComponents addObject:item.layout.component];
 
