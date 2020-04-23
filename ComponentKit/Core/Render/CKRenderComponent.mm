@@ -52,7 +52,7 @@
 
 - (CKComponent *)render:(id)state
 {
-  CKFailAssert(@"%@ MUST override the '%@' method.", [self class], NSStringFromSelector(_cmd));
+  CKFailAssert(@"%@ MUST override the '%@' method.", self.className, NSStringFromSelector(_cmd));
   return nil;
 }
 

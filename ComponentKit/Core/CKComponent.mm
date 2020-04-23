@@ -110,7 +110,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 - (void)dealloc
 {
   // Since the component and its view hold strong references to each other, this should never happen!
-  CKAssert(_mountInfo == nullptr, @"%@ must be unmounted before dealloc", [self class]);
+  CKAssert(_mountInfo == nullptr, @"%@ must be unmounted before dealloc", self.className);
 }
 
 - (void)didFinishComponentInitialization
@@ -201,7 +201,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                                     children:(std::shared_ptr<const std::vector<CKComponentLayoutChild>>)children
                               supercomponent:(CKComponent *)supercomponent
 {
-  CKCAssertWithCategory([NSThread isMainThread], [self class], @"This method must be called on the main thread");
+  CKCAssertWithCategory([NSThread isMainThread], self.className, @"This method must be called on the main thread");
 
   // Taking a const ref to a temporary extends the lifetime of the temporary to the lifetime of the const ref
   const CKComponentViewConfiguration &viewConfiguration = CK::Component::Accessibility::IsAccessibilityEnabled() ? CK::Component::Accessibility::AccessibleViewConfiguration(_viewConfiguration) : _viewConfiguration;
@@ -235,7 +235,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
     @try {
       CKSetViewPositionAndBounds(v, context, size);
     } @catch (NSException *exception) {
-      CKCFatalWithCategory(NSStringFromClass([self class]),
+      CKCFatalWithCategory(self.className,
                            @"Raised %@ during mount: %@\nBacktrace: %@\nChildren: %@",
                            exception.name,
                            exception.reason,
@@ -247,9 +247,9 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
     return {.mountChildren = YES, .contextForChildren = effectiveContext.childContextForSubview(v, g.didBlockAnimations)};
   } else {
-    CKCAssertWithCategory(_mountInfo->view == nil, [self class],
+    CKCAssertWithCategory(_mountInfo->view == nil, self.className,
                           @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
-                          [self class], [_mountInfo->view class], CKComponentBacktraceDescription(CKComponentGenerateBacktrace(self)));
+                          self.className, [_mountInfo->view class], CKComponentBacktraceDescription(CKComponentGenerateBacktrace(self)));
     _mountInfo->viewContext = {effectiveContext.viewManager->view, {effectiveContext.position, size}};
 
     return {.mountChildren = YES, .contextForChildren = effectiveContext};
@@ -346,15 +346,15 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
     CKSubclassOverridesInstanceMethod([CKComponent class], self.class, @selector(childAtIndex:)) &&
     CKSubclassOverridesInstanceMethod([CKComponent class], self.class, @selector(numberOfChildren));
     CKAssertWithCategory(overridesIterableMethods,
-                         NSStringFromClass([self class]),
+                         self.className,
                          @"%@ is subclassing CKComponent directly, you need to subclass CKLayoutComponent instead. "
                          "Context: we’re phasing out CKComponent subclasses for in favor of CKLayoutComponent subclasses. "
                          "While this is still kinda OK for leaf components, things start to break when you introduce a CKComponent subclass with children.",
-                         [self class]);
+                         self.className);
   }
 
   CKAssert(layout.component == self, @"Layout computed by %@ should return self as component, but returned %@",
-           [self class], [layout.component class]);
+           self.className, layout.component.className);
 
   CKAssertResolvedSize(_size, parentSize);
   CKSizeRange resolvedRange __attribute__((unused)) = constrainedSize.intersect(_size.resolve(parentSize));
@@ -363,9 +363,9 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
                        && CKIsGreaterThanOrEqualWithTolerance(layout.size.width, resolvedRange.min.width)
                        && CKIsGreaterThanOrEqualWithTolerance(resolvedRange.max.height,layout.size.height)
                        && CKIsGreaterThanOrEqualWithTolerance(layout.size.height,resolvedRange.min.height),
-                       NSStringFromClass([self class]),
+                       self.className,
                        @"Computed size %@ for %@ does not fall within constrained size %@\n%@",
-                       NSStringFromCGSize(layout.size), [self class], resolvedRange.description(),
+                       NSStringFromCGSize(layout.size), self.className, resolvedRange.description(),
                        CK::Component::LayoutContext::currentStackDescription());
 #endif
 
@@ -456,7 +456,7 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
   }
 
   CKAssertWithCategory(!NSClassFromString([NSStringFromClass(componentClass) stringByAppendingString:@"Controller"]),
-                       NSStringFromClass([self class]), @"Should override + (Class<CKComponentControllerProtocol>)controllerClass to return its controllerClass");
+                       [self class], @"Should override + (Class<CKComponentControllerProtocol>)controllerClass to return its controllerClass");
   return Nil;
 }
 
@@ -469,8 +469,8 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 - (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode
 {
-  CKAssertWithCategory(_scopeHandle != nil, [self class], @"A component without state cannot update its state.");
-  CKAssertWithCategory(updateBlock != nil, [self class], @"Cannot enqueue component state modification with a nil update block.");
+  CKAssertWithCategory(_scopeHandle != nil, self.className, @"A component without state cannot update its state.");
+  CKAssertWithCategory(updateBlock != nil, self.className, @"Cannot enqueue component state modification with a nil update block.");
   [_scopeHandle updateState:updateBlock metadata:{} mode:mode];
 }
 

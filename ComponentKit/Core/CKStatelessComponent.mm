@@ -26,7 +26,7 @@
 
 - (NSString *)description
 {
-  return [NSString stringWithFormat:@"<%@: %p> (%@)", _identifier, self, NSStringFromClass([self class])];
+  return [NSString stringWithFormat:@"<%@: %p> (CKStatelessComponent)", _identifier, self];
 }
 
 - (NSString *)className

@@ -749,7 +749,7 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
   if (index < _children.size()) {
     return _children[index].component;
   }
-  CKFailAssertWithCategory([self class], @"Index %u is out of bounds %lu", index, _children.size());
+  CKFailAssertWithCategory(self.className, @"Index %u is out of bounds %lu", index, _children.size());
   return nil;
 }
 

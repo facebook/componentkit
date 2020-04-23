@@ -80,7 +80,7 @@
   } else if (_model) {
     modelCategory = NSStringFromClass([_model class]);
   }
-  return CK::makeNonNull([NSString stringWithFormat:@"%@-%@", modelCategory, NSStringFromClass(component.class)]);
+  return CK::makeNonNull([NSString stringWithFormat:@"%@-%@", modelCategory, component.className]);
 }
 
 @end

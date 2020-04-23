@@ -84,7 +84,7 @@ CKComponentViewAttributeValue CKComponentGestureAttribute(Class gestureRecognize
           if (mountedComponent) {
             fatalMsg = [mountedComponent backtraceStackDescription];
           }
-          CKCFatalWithCategory(mountedComponent.class, @"%@ while mounting \n%@", ex, fatalMsg);
+          CKCFatalWithCategory(mountedComponent.className, @"%@ while mounting \n%@", ex, fatalMsg);
         }
       },
       ^(UIView *view, id value){
