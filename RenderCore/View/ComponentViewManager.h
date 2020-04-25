@@ -29,10 +29,20 @@
 @class CKComponent;
 
 typedef void (^CKOptimisticViewMutationTeardown)(UIView *v);
+typedef void (^CKOptimisticViewMutationOperation)(UIView *v);
+typedef id CKOptimisticMutationToken;
+constexpr id CKOptimisticMutationTokenNull = nil;
 
 namespace CK {
   namespace Component {
     struct MountAnalyticsContext;
+  
+    struct OptimisticViewMutationInfo {
+      int serial;
+      CKOptimisticViewMutationOperation undo;
+      CKOptimisticViewMutationOperation apply;
+      CKOptimisticViewMutationOperation load;
+    };
 
     struct ViewKey {
       /**
@@ -125,6 +135,27 @@ namespace CK {
       ViewReusePoolMap &operator=(const ViewReusePoolMap&) = delete;
     };
 
+    class AttributeApplicator {
+    public:
+      template <typename AccessibilityContext>
+      static void apply(UIView *view, const CKViewConfiguration<AccessibilityContext> &config)
+      {
+        applyAttributes(view, config.attributes());
+      }
+
+      /** Internal implementation detail of CKPerformOptimisticViewMutation; don't use this directly. */
+      static void addOptimisticViewMutationTeardown_Old(UIView *view, CKOptimisticViewMutationTeardown teardown);
+      /** Internal implementation detail of CKPerformOptimisticViewMutation; don't use this directly. */
+      static CKOptimisticMutationToken addOptimisticViewMutation(UIView *view, CKOptimisticViewMutationOperation undo, CKOptimisticViewMutationOperation redo, CKOptimisticViewMutationOperation refresh);
+      /** Internal implementation detail of CKPerformOptimisticViewMutation; don't use this directly. */
+      static void removeOptimisticViewMutation(CKOptimisticMutationToken token);
+      /** Internal implementation detail of CKPerformOptimisticViewMutation; don't use this directly. */
+      static void resetOptimisticViewMutations(UIView *view);
+      
+    private:
+      static void applyAttributes(UIView *view, std::shared_ptr<const CKViewComponentAttributeValueMap> attributes);
+    };
+    
     /**
      An interface to the ViewReusePoolMap for a given container view. The constructor looks up the ViewReusePoolMap for
      the given view; you can subsequently call viewForConfiguration() to fetch-or-create a view from the pool.
@@ -156,20 +187,6 @@ namespace CK {
 
       ViewManager(const ViewManager&) = delete;
       ViewManager &operator=(const ViewManager&) = delete;
-    };
-
-    class AttributeApplicator {
-    public:
-      template <typename AccessibilityContext>
-      static void apply(UIView *view, const CKViewConfiguration<AccessibilityContext> &config)
-      {
-        applyAttributes(view, config.attributes());
-      }
-
-      /** Internal implementation detail of CKPerformOptimisticViewMutation; don't use this directly. */
-      static void addOptimisticViewMutationTeardown(UIView *view, CKOptimisticViewMutationTeardown teardown);
-    private:
-      static void applyAttributes(UIView *view, std::shared_ptr<const CKViewComponentAttributeValueMap> attributes);
     };
   }
 }

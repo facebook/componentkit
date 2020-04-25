@@ -90,11 +90,23 @@ int32_t PersistentAttributeShape::computeIdentifier(const CKViewComponentAttribu
   }
 }
 
+@interface CKOptimisticViewMutationTokenWrapper : NSObject
+{
+@public
+  int _serial;
+  __weak id _view;
+}
+@end
+
 @interface CKComponentAttributeSetWrapper : NSObject
 {
 @public
+  int _tokenSerial;
+  bool _suppressApply;
+  int _tokenSerialBaseline;
   std::shared_ptr<const CKViewComponentAttributeValueMap> _attributes;
-  std::vector<CKOptimisticViewMutationTeardown> _optimisticViewMutationTeardowns;
+  std::vector<CK::Component::OptimisticViewMutationInfo> _optimisticViewMutations;
+  std::vector<CKOptimisticViewMutationTeardown> _optimisticViewMutationTeardowns_Old;
 }
 @end
 
@@ -133,6 +145,7 @@ void ViewReusePool::reset(CK::Component::MountAnalyticsContext *mountAnalyticsCo
   }
   for (auto it = position; it != pool.end(); ++it) {
     [*it setHidden:YES];
+    CK::Component::AttributeApplicator::resetOptimisticViewMutations(*it);
     ViewReuseUtilities::didHide(*it, mountAnalyticsContext);
   }
   position = pool.begin();
@@ -236,16 +249,27 @@ void AttributeApplicator::applyAttributes(UIView *view, std::shared_ptr<const CK
 
   // Avoid the static destructor fiasco, use a pointer:
   static const auto *empty = new CKViewComponentAttributeValueMap();
-
+  
   CKComponentAttributeSetWrapper *const wrapper = attributeSetWrapperForView(view);
 
-  // Reset optimistic mutations so that applicators see they see the state they expect.
-  if (!wrapper->_optimisticViewMutationTeardowns.empty()) {
-    const auto copiedTeardowns = wrapper->_optimisticViewMutationTeardowns;
-    wrapper->_optimisticViewMutationTeardowns.clear();
-    for (CKOptimisticViewMutationTeardown teardown : copiedTeardowns) {
-      if (teardown) {
-        teardown(view);
+  const bool useNewStyleOptimisticMutations = CKReadGlobalConfig().useNewStyleOptimisticMutations;
+  const bool hasNewStyleOptimisticViewMutations = useNewStyleOptimisticMutations && !wrapper->_optimisticViewMutations.empty();
+  
+  if (!useNewStyleOptimisticMutations) {
+    // Reset optimistic mutations so that applicators see they see the state they expect.
+    if (!wrapper->_optimisticViewMutationTeardowns_Old.empty()) {
+      const auto copiedTeardowns = wrapper->_optimisticViewMutationTeardowns_Old;
+      wrapper->_optimisticViewMutationTeardowns_Old.clear();
+      for (CKOptimisticViewMutationTeardown teardown : copiedTeardowns) {
+        if (teardown) {
+          teardown(view);
+        }
+      }
+    }
+  } else {
+    for (auto it = wrapper->_optimisticViewMutations.rbegin(); it != wrapper->_optimisticViewMutations.rend(); ++it) {
+      if (it->undo) {
+        it->undo(view);
       }
     }
   }
@@ -284,21 +308,124 @@ void AttributeApplicator::applyAttributes(UIView *view, std::shared_ptr<const CK
       }
     }
   }
-
+  
+  if (hasNewStyleOptimisticViewMutations) {
+    auto copiedOptimisticMutations = wrapper->_optimisticViewMutations;
+    
+    wrapper->_suppressApply = true;
+    
+    for (auto optimisticMutation : copiedOptimisticMutations) {
+      optimisticMutation.load(view);
+    }
+    
+    wrapper->_suppressApply = false;
+    
+    if (copiedOptimisticMutations.size() != wrapper->_optimisticViewMutations.size()) {
+      copiedOptimisticMutations = wrapper->_optimisticViewMutations;
+    }
+    
+    for (auto optimisticMutation : copiedOptimisticMutations) {
+      optimisticMutation.apply(view);
+    }
+  }
+  
   // Update the wrapper to reference the new attributes. Don't do this before now since it changes oldAttributes.
   wrapper->_attributes = std::move(attributes);
 }
 
-void AttributeApplicator::addOptimisticViewMutationTeardown(UIView *view, CKOptimisticViewMutationTeardown teardown)
+void AttributeApplicator::addOptimisticViewMutationTeardown_Old(UIView *view, CKOptimisticViewMutationTeardown teardown)
 {
   // We must tear down the mutations in the *reverse* order in which they were applied,
   // or we could end up restoring the wrong value.
   CKComponentAttributeSetWrapper *const wrapper = attributeSetWrapperForView(view);
-  wrapper->_optimisticViewMutationTeardowns.insert(wrapper->_optimisticViewMutationTeardowns.begin(), teardown);
+  wrapper->_optimisticViewMutationTeardowns_Old.insert(wrapper->_optimisticViewMutationTeardowns_Old.begin(), teardown);
+}
+
+CKOptimisticMutationToken AttributeApplicator::addOptimisticViewMutation(UIView *view, CKOptimisticViewMutationOperation undo, CKOptimisticViewMutationOperation apply, CKOptimisticViewMutationOperation load)
+{
+  CKComponentAttributeSetWrapper *const wrapper = attributeSetWrapperForView(view);
+  
+  for (auto it = wrapper->_optimisticViewMutations.rbegin(); it != wrapper->_optimisticViewMutations.rend(); ++it) {
+    if (it->undo) {
+      it->undo(view);
+    }
+  }
+  
+  load(view);
+  
+  auto token = [[CKOptimisticViewMutationTokenWrapper alloc] init];
+  token->_serial = wrapper->_tokenSerial++;
+  token->_view = view;
+  
+  wrapper->_optimisticViewMutations.push_back({ .serial = token->_serial, .undo = undo, .apply = apply, .load = load });
+  
+  for (auto optimisticMutation : wrapper->_optimisticViewMutations) {
+    optimisticMutation.apply(view);
+  }
+  
+  return token;
+}
+
+void AttributeApplicator::removeOptimisticViewMutation(CKOptimisticMutationToken token)
+{
+  if (token == CKOptimisticMutationTokenNull) {
+    return;
+  }
+  
+  UIView *view = ((CKOptimisticViewMutationTokenWrapper *)token)->_view;
+  
+  if (view == nullptr) {
+    return;
+  }
+  
+  CKComponentAttributeSetWrapper *const wrapper = attributeSetWrapperForView(view);
+  
+  if (wrapper->_tokenSerialBaseline > ((CKOptimisticViewMutationTokenWrapper *)token)->_serial) {
+    // Token no longer valid or relevant because the associated view recycled
+    return;
+  }
+  
+  for (auto it = wrapper->_optimisticViewMutations.begin(); it != wrapper->_optimisticViewMutations.end(); ++it) {
+    if (it->serial == ((CKOptimisticViewMutationTokenWrapper *)token)->_serial) {
+      if (wrapper->_optimisticViewMutations.size() == 1) {
+        if (it->undo) {
+          it->undo(view);
+        }
+      }
+      wrapper->_optimisticViewMutations.erase(it);
+      break;
+    }
+  }
+  
+  if (!wrapper->_suppressApply) {
+    for (auto optimisticMutation : wrapper->_optimisticViewMutations) {
+      optimisticMutation.apply(view);
+    }
+  }
+}
+
+void AttributeApplicator::resetOptimisticViewMutations(UIView *view)
+{
+  CKComponentAttributeSetWrapper *const wrapper = attributeSetWrapperForView(view);
+  
+  if (wrapper->_tokenSerial > 0) {
+    for (auto it = wrapper->_optimisticViewMutations .rbegin(); it != wrapper->_optimisticViewMutations.rend(); ++it) {
+      if (it->undo) {
+        it->undo(view);
+      }
+    }
+    wrapper->_optimisticViewMutations.clear();
+    wrapper->_tokenSerial++;
+    wrapper->_tokenSerialBaseline = wrapper->_tokenSerial;
+  }
 }
 
 @implementation CKComponentAttributeSetWrapper
 @end
 
 @implementation CKComponentViewReusePoolMapWrapper
+@end
+
+
+@implementation CKOptimisticViewMutationTokenWrapper
 @end

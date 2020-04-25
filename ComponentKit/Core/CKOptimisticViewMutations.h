@@ -25,15 +25,25 @@ typedef void (*CKOptimisticViewMutationSetter)(UIView *view, id value, id contex
  updateState: or trigger a change in the source model object.
 
  @param view The view to modify.
+ @param persistTime The mutation will be persisted for exactly the specified time in seconds and then will revert to the most
+                    up to date value which may be a newer value from after this function was called. If this value is 0 then
+                    the mutation will persist
  @param getter A function that accepts a view instance and returns the value of the property you want to modify.
  @param setter A function that accepts a view instance and some target value and sets the property to that target value.
  @param value The value you want to be set on the view using the setter.
  @param context Passed to both the getter and setter functions. Optional.
-
+ 
  The getter will be invoked to fetch the current value; then the setter will be invoked with the passed value.
  When the view is recycled, the setter will be invoked again with the saved result from the getter block.
  The getter and setter should be free of any side effects that modify other views, global state, etc.
  */
+void CKPerformOptimisticViewMutation(UIView *view,
+                                     CFTimeInterval persistTime,
+                                     CKOptimisticViewMutationGetter getter,
+                                     CKOptimisticViewMutationSetter setter,
+                                     id value,
+                                     id context = nil);
+
 void CKPerformOptimisticViewMutation(UIView *view,
                                      CKOptimisticViewMutationGetter getter,
                                      CKOptimisticViewMutationSetter setter,
@@ -42,5 +52,9 @@ void CKPerformOptimisticViewMutation(UIView *view,
 
 /** A helper that creates a getter and setter for a given keypath. */
 void CKPerformOptimisticViewMutation(UIView *view, NSString *keyPath, id value);
+
+/** A helper that creates a getter and setter for a given keypath. */
+void CKPerformOptimisticViewMutation(UIView *view, CFTimeInterval persistTime, NSString *keyPath, id value);
+
 
 #endif
