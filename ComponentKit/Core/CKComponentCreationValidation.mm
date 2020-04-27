@@ -10,8 +10,6 @@
 
 #import "CKComponentCreationValidation.h"
 
-#import <objc/runtime.h>
-
 #if CK_ASSERTIONS_ENABLED
 @implementation CKComponentCreationValidationContext
 
@@ -24,14 +22,4 @@
 }
 
 @end
-
-BOOL CKIsRunningInTest()
-{
-  static BOOL isTest = NO;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    isTest = objc_lookUpClass("XCTest") != nil;
-  });
-  return isTest;
-}
 #endif

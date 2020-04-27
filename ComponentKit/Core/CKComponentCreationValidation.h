@@ -40,16 +40,15 @@ typedef NS_ENUM(NSUInteger, CKComponentCreationValidationSource) {
 
 @end
 
-BOOL CKIsRunningInTest();
 
 #define CKValidateComponentCreation() \
-  if (!CKIsRunningInTest()) { \
+  do { \
     CKAssertWithCategory(CKComponentContext<CKComponentCreationValidationContext>::get() != nil, \
                          NSStringFromClass(self.class), \
                          @"Component should not be created outside of component provider function."); \
-  }
+  } while (0)
 #define CKValidateRenderComponentCreation() \
-  if (!CKIsRunningInTest()) { \
+  do { \
     const auto validationContext = CKComponentContext<CKComponentCreationValidationContext>::get(); \
     if (!validationContext) { \
       CKFailAssertWithCategory(NSStringFromClass(self.class), \
@@ -59,10 +58,10 @@ BOOL CKIsRunningInTest();
                            NSStringFromClass(self.class), \
                            @"Render component shouldn't be created during component layout"); \
     } \
-  }
+  } while (0)
 #else
-#define CKValidateComponentCreation()
-#define CKValidateRenderComponentCreation()
+#define CKValidateComponentCreation() do {} while (0)
+#define CKValidateRenderComponentCreation() do {} while (0)
 #endif
 
 #endif
