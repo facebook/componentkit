@@ -10,6 +10,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKComponentContext.h>
+#import <ComponentKit/CKComponentCreationValidation.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
@@ -25,8 +28,12 @@
 class CKComponentTestRootScope {
  public:
   CKComponentTestRootScope()
-      : _previousThreadLocalComponentScope(CKThreadLocalComponentScope::currentScope()),
-        _threadLocalComponentScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}) {
+      : _previousThreadLocalComponentScope(CKThreadLocalComponentScope::currentScope())
+      , _threadLocalComponentScope(CKComponentScopeRootWithDefaultPredicates(nil, nil), {})
+#if CK_ASSERTIONS_ENABLED
+      , _validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceBuild])
+#endif
+  {
     /*
      The component test root scope must be created outside of any existing component scope.
      If a previous thread local component scope exists then odds are good the component test root scope is being used
@@ -41,4 +48,7 @@ class CKComponentTestRootScope {
  private:
   CKThreadLocalComponentScope *_previousThreadLocalComponentScope;
   CKThreadLocalComponentScope _threadLocalComponentScope;
+#if CK_ASSERTIONS_ENABLED
+  CKComponentContext<CKComponentCreationValidationContext> _validationContext;
+#endif
 };
