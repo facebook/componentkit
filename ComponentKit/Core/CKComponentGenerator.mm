@@ -157,6 +157,9 @@ private:
     return std::make_shared<const CKComponentGeneratorInputs>(_inputs);
   });
   const auto asyncGeneration = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::ComponentGeneratorWillGenerate);
+  // Avoid capturing `self` in global queue so that `CKComponentGenerator` does not have a chance to be deallocated outside affined queue.
+  const auto componentProvider = _componentProvider;
+  const auto affinedQueue = _affinedQueue;
 
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     CKSystraceScope generationScope(asyncGeneration);
@@ -165,7 +168,7 @@ private:
                                                                     inputs->scopeRoot,
                                                                     inputs->stateUpdates,
                                                                     ^{
-                                                                      return _componentProvider(inputs->model, inputs->context);
+                                                                      return componentProvider(inputs->model, inputs->context);
                                                                     },
                                                                     inputs->enableComponentReuse));
     const auto addedComponentControllers =
@@ -199,8 +202,8 @@ private:
       }
     };
 
-    if (_affinedQueue) {
-      dispatch_async(_affinedQueue, applyResult);
+    if (affinedQueue) {
+      dispatch_async(affinedQueue, applyResult);
     } else {
       applyResult();
     }
