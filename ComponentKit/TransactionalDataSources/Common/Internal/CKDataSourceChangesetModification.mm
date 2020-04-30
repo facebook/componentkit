@@ -13,6 +13,8 @@
 #import <map>
 #import <mutex>
 
+#import <ComponentKit/CKExceptionInfo.h>
+
 #import "CKDataSourceConfigurationInternal.h"
 #import "CKDataSourceStateInternal.h"
 #import "CKDataSourceChange.h"
@@ -80,6 +82,25 @@ using namespace CKComponentControllerHelper;
 
 - (CKDataSourceChange *)changeFromState:(CKDataSourceState *)oldState
 {
+  @try {
+    return [self __changeFromState:oldState];
+  } @catch (NSException *exception) {
+    CKExceptionInfoSetValueForKey(@"ck_changeset", _changeset.description);
+    CKExceptionInfoSetValueForKey(@"ck_user_info", _userInfo.description);
+    CKExceptionInfoSetValueForKey(@"ck_data_source_state", oldState.description);
+    CKExceptionInfoSetValueForKey(
+      @"assert_message",
+      ([NSString stringWithFormat:@"<force_category:%@:force_category> Raised %@ applying modification: %@",
+       oldState.contentsFingerprint,
+       exception.name,
+       exception.reason])
+    );
+    [exception raise];
+  }
+}
+
+- (CKDataSourceChange *)__changeFromState:(CKDataSourceState *)oldState
+{
   CKDataSourceConfiguration *configuration = [oldState configuration];
   id<NSObject> context = [configuration context];
   const CKSizeRange sizeRange = [configuration sizeRange];
@@ -87,7 +108,7 @@ using namespace CKComponentControllerHelper;
   NSMutableArray<CKComponentController *> *addedComponentControllers = [NSMutableArray array];
   NSMutableArray<CKComponentController *> *invalidComponentControllers = [NSMutableArray array];
 
-  NSMutableArray *newSections = [NSMutableArray array];
+  const auto newSections = [NSMutableArray<NSMutableArray *> array];
   [[oldState sections] enumerateObjectsUsingBlock:^(NSArray *items, NSUInteger sectionIdx, BOOL *sectionStop) {
     [newSections addObject:[items mutableCopy]];
   }];
@@ -291,30 +312,24 @@ using namespace CKComponentControllerHelper;
       [items addObject:itemIt.second];
     }
 
-    if (sectionIt.first >= newSections.count) {
-      CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertRow),
-                           @"Invalid section: %lu (>= %lu) while processing inserted items. Changeset: %@, user info: %@, state: %@",
-                           (unsigned long)sectionIt.first,
-                           (unsigned long)newSections.count,
-                           CK::changesetDescription(_changeset),
-                           _userInfo,
-                           oldState);
+    NSMutableArray *sectionItems = nil;
+    @try {
+      sectionItems = [newSections objectAtIndex:sectionIt.first];
+    } @catch (NSException *exception) {
+      CKExceptionInfoSetValueForKey(@"ck_changeset_operation", CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertRow));
+
+      [exception raise];
     }
-    if (_shouldValidateChangeset) {
-      const auto sectionItems = static_cast<NSArray *>([newSections objectAtIndex:sectionIt.first]);
-      const auto invalidIndexes = CK::invalidIndexesForInsertionInArray(sectionItems, indexes);
-      if (invalidIndexes.count > 0) {
-        CKCFatalWithCategory(CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertRow),
-                             @"%@ for range: %@ in section: %lu. Changeset: %@, user info: %@, state: %@",
-                             CK::indexSetDescription(invalidIndexes, @"Invalid indexes", 0),
-                             NSStringFromRange({0, sectionItems.count}),
-                             (unsigned long)sectionIt.first,
-                             CK::changesetDescription(_changeset),
-                             _userInfo,
-                             oldState);
-      }
+
+    @try {
+      [sectionItems insertObjects:items atIndexes:indexes];
+    } @catch (NSException *exception) {
+      CKExceptionInfoSetValueForKey(@"ck_changeset_operation", CKHumanReadableInvalidChangesetOperationType(CKInvalidChangesetOperationTypeInsertRow));
+      CKExceptionInfoSetValueForKey(@"ck_invalid_indexes", CK::indexSetDescription(CK::invalidIndexesForInsertionInArray(sectionItems, indexes), @"", 0));
+      CKExceptionInfoSetValueForKey(@"ck_section", ([NSString stringWithFormat:@"%lu", (unsigned long)sectionIt.first]));
+
+      [exception raise];
     }
-    [[newSections objectAtIndex:sectionIt.first] insertObjects:items atIndexes:indexes];
   }
 
   CKDataSourceState *newState =
