@@ -125,8 +125,7 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
       [[CKDataSourceChangesetModification alloc]
        initWithChangeset:changeset
        stateListener:_dataSource
-       userInfo:userInfo qos:qos
-       shouldValidateChangeset:NO];
+       userInfo:userInfo qos:qos];
       [m setItemGenerator:self];
       modification = m;
     } else {

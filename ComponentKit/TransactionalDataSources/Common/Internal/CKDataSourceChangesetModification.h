@@ -47,8 +47,7 @@ typedef NS_ENUM(NSUInteger, CKDataSourceChangesetModificationItemType) {
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
-                              qos:(CKDataSourceQOS)qos
-          shouldValidateChangeset:(BOOL)shouldValidateChangeset;
+                              qos:(CKDataSourceQOS)qos;
 
 @property (nonatomic, readonly, strong) CKDataSourceChangeset *changeset;
 

@@ -321,7 +321,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   const auto modification =
   [[CKDataSourceChangesetModification alloc]
    initWithChangeset:insertion
-   stateListener:nil userInfo:@{} qos:CKDataSourceQOSDefault shouldValidateChangeset:NO];
+   stateListener:nil userInfo:@{} qos:CKDataSourceQOSDefault];
   const auto change = [modification changeFromState:_state];
   const auto isApplied = [dataSource applyChange:change];
   XCTAssertTrue(isApplied, @"Change should be applied to datasource successfully.");
@@ -338,7 +338,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   const auto modification =
   [[CKDataSourceChangesetModification alloc]
    initWithChangeset:insertion
-   stateListener:nil userInfo:@{} qos:CKDataSourceQOSDefault shouldValidateChangeset:NO];
+   stateListener:nil userInfo:@{} qos:CKDataSourceQOSDefault];
   const auto change = [modification changeFromState:_state];
   [dataSource reloadWithMode:CKUpdateModeSynchronous userInfo:@{}];
   const auto newState = _state;
@@ -357,7 +357,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   const auto modification =
   [[CKDataSourceChangesetModification alloc]
    initWithChangeset:insertion
-   stateListener:nil userInfo:@{} qos:CKDataSourceQOSDefault shouldValidateChangeset:NO];
+   stateListener:nil userInfo:@{} qos:CKDataSourceQOSDefault];
   const auto change = [modification changeFromState:_state];
   const auto isValid = [dataSource verifyChange:change];
   XCTAssertTrue(isValid, @"Change should be valid.");
@@ -373,7 +373,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   const auto modification =
   [[CKDataSourceChangesetModification alloc]
    initWithChangeset:insertion
-   stateListener:nil userInfo:@{} qos:CKDataSourceQOSDefault shouldValidateChangeset:NO];
+   stateListener:nil userInfo:@{} qos:CKDataSourceQOSDefault];
   const auto change = [modification changeFromState:_state];
   [dataSource reloadWithMode:CKUpdateModeSynchronous userInfo:@{}];
   const auto isValid = [dataSource verifyChange:change];

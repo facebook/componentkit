@@ -42,25 +42,18 @@ using namespace CKComponentControllerHelper;
   NSDictionary *_userInfo;
   CKDataSourceQOS _qos;
   __weak id<CKDataSourceChangesetModificationItemGenerator> _itemGenerator;
-  BOOL _shouldValidateChangeset;
 }
 
 - (instancetype)initWithChangeset:(CKDataSourceChangeset *)changeset
                     stateListener:(id<CKComponentStateListener>)stateListener
                          userInfo:(NSDictionary *)userInfo
                               qos:(CKDataSourceQOS)qos
-          shouldValidateChangeset:(BOOL)shouldValidateChangeset
 {
   if (self = [super init]) {
     _changeset = changeset;
     _stateListener = stateListener;
     _userInfo = [userInfo copy];
     _qos = qos;
-#if CK_ASSERTIONS_ENABLED
-    _shouldValidateChangeset = YES;
-#else
-    _shouldValidateChangeset = shouldValidateChangeset;
-#endif
   }
   return self;
 }

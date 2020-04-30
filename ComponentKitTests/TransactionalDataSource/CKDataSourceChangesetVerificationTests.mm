@@ -796,8 +796,7 @@
   const auto pendingModification = [[CKDataSourceChangesetModification alloc] initWithChangeset:pendingChangeset
                                                                                   stateListener:nil
                                                                                        userInfo:nil
-                                                                                            qos:CKDataSourceQOSDefault
-                                                                        shouldValidateChangeset:NO];
+                                                                                            qos:CKDataSourceQOSDefault];
   const auto changeset = CK::makeChangeset({
     .removedSections = {
       0, 3
@@ -1158,8 +1157,7 @@
       build]
      stateListener:nil
      userInfo:nil
-     qos:CKDataSourceQOSDefault
-     shouldValidateChangeset:NO],
+     qos:CKDataSourceQOSDefault],
     ];
   CKDataSourceChangeset *changeset =
   [[[CKDataSourceChangesetBuilder dataSourceChangeset]
@@ -1188,8 +1186,7 @@
       build]
      stateListener:nil
      userInfo:nil
-     qos:CKDataSourceQOSDefault
-     shouldValidateChangeset:NO],
+     qos:CKDataSourceQOSDefault],
     // Insert two items into section 0
     [[CKDataSourceChangesetModification alloc]
      initWithChangeset:
@@ -1201,8 +1198,7 @@
       build]
      stateListener:nil
      userInfo:nil
-     qos:CKDataSourceQOSDefault
-     shouldValidateChangeset:NO],
+     qos:CKDataSourceQOSDefault],
     // Insert section 1
     [[CKDataSourceChangesetModification alloc]
      initWithChangeset:
@@ -1211,8 +1207,7 @@
       build]
      stateListener:nil
      userInfo:nil
-     qos:CKDataSourceQOSDefault
-     shouldValidateChangeset:NO],
+     qos:CKDataSourceQOSDefault],
     // Insert two items into section 1
     [[CKDataSourceChangesetModification alloc]
      initWithChangeset:
@@ -1224,8 +1219,7 @@
       build]
      stateListener:nil
      userInfo:nil
-     qos:CKDataSourceQOSDefault
-     shouldValidateChangeset:NO],
+     qos:CKDataSourceQOSDefault],
     ];
   // Remove first item from each section
   CKDataSourceChangeset *changeset =
@@ -1253,8 +1247,7 @@
       build]
      stateListener:nil
      userInfo:nil
-     qos:CKDataSourceQOSDefault
-     shouldValidateChangeset:NO],
+     qos:CKDataSourceQOSDefault],
     // Insert two items into section 0
     [[CKDataSourceChangesetModification alloc]
      initWithChangeset:
@@ -1266,8 +1259,7 @@
       build]
      stateListener:nil
      userInfo:nil
-     qos:CKDataSourceQOSDefault
-     shouldValidateChangeset:NO],
+     qos:CKDataSourceQOSDefault],
     ];
   // Remove first item from section 1
   CKDataSourceChangeset *changeset =
