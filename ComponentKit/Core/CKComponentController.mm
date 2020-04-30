@@ -73,7 +73,7 @@ static NSString *componentStateName(CKComponentControllerState state)
   CKAssertMainThread();
   if (latestComponent != _latestComponent) {
     [self willUpdateComponent];
-    if ([self.class shouldAcquireLockWhenUpdatingComponent]) {
+    if (self.shouldAcquireLockWhenUpdatingComponent) {
       std::lock_guard<std::mutex> lock(_componentMutex);
       _latestComponent = latestComponent;
       _updatingComponent = YES;
@@ -106,14 +106,14 @@ static NSString *componentStateName(CKComponentControllerState state)
   if ([NSThread isMainThread]) {
     return _component ?: _latestComponent;
   } else {
-    CKAssert([self.class shouldAcquireLockWhenUpdatingComponent],
+    CKAssert(self.shouldAcquireLockWhenUpdatingComponent,
              @"threadSafe_component should only be called when updating component is thread safe as well");
     std::lock_guard<std::mutex> lock(_componentMutex);
     return _component ?: _latestComponent;
   }
 }
 
-+ (BOOL)shouldAcquireLockWhenUpdatingComponent
+- (BOOL)shouldAcquireLockWhenUpdatingComponent
 {
   return NO;
 }
@@ -143,7 +143,7 @@ static NSString *componentStateName(CKComponentControllerState state)
   if (!_updatingComponent) {
     if (component != _component) {
       [self willUpdateComponent];
-      if ([self.class shouldAcquireLockWhenUpdatingComponent]) {
+      if (self.shouldAcquireLockWhenUpdatingComponent) {
         std::lock_guard<std::mutex> lock(_componentMutex);
         _component = component;
         _updatingComponent = YES;
@@ -153,7 +153,7 @@ static NSString *componentStateName(CKComponentControllerState state)
       }
     }
   } else {
-    if ([self.class shouldAcquireLockWhenUpdatingComponent]) {
+    if (self.shouldAcquireLockWhenUpdatingComponent) {
       std::lock_guard<std::mutex> lock(_componentMutex);
       _component = component;
     } else {
