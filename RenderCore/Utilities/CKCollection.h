@@ -21,6 +21,7 @@
 
 #import <RenderCore/CKAssert.h>
 #import <RenderCore/CKFunctionalHelpers.h>
+#import <RenderCore/CKOptional.h>
 
 namespace CK {
   namespace Collection {
@@ -90,6 +91,19 @@ namespace CK {
         [elementStrs addObject:d(e)];
       }
       return [elementStrs componentsJoinedByString:@",\n"];
+    }
+
+    /**
+     Returns an optional wrapping the value for a given key if it is present in the map, \c none otherwise.
+     */
+    template <typename Map>
+    auto valueForKey(const Map& map, const typename Map::key_type& key) -> Optional<typename Map::mapped_type>
+    {
+      auto const it = map.find(key);
+      if (it == map.end()) {
+        return none;
+      }
+      return (*it).second;
     }
   }
 }

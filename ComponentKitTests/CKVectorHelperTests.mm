@@ -9,10 +9,12 @@
  */
 
 #import <stdlib.h>
+#import <unordered_map>
 #import <vector>
 
 #import <XCTest/XCTest.h>
 
+#import <ComponentKit/CKCollection.h>
 #import <ComponentKit/CKFunctionalHelpers.h>
 
 @interface CKVectorChainingTests : XCTestCase
@@ -253,6 +255,31 @@
   std::vector<int> b = CK::intersperse(a, ^int{ return 4; });
   std::vector<int> expected = {1,5,4,5,2,5,4,5,3};
   XCTAssertTrue(CK::intersperse(b, ^int{ return 5; }) == expected);
+}
+
+@end
+
+@interface CKCollectionTests : XCTestCase
+@end
+
+@implementation CKCollectionTests
+
+- (void)test_WhenMapDoesNotHaveKey_ValueForKeyReturnsNone
+{
+  auto const map = std::unordered_map<int, int>{
+    {1, 2}
+  };
+
+  XCTAssert(CK::Collection::valueForKey(map, 2) == CK::none);
+}
+
+- (void)test_WhenMapHasKey_ValueForKeyReturnsValue
+{
+  auto const map = std::unordered_map<int, int>{
+    {1, 2}
+  };
+
+  XCTAssert(CK::Collection::valueForKey(map, 1) == 2);
 }
 
 @end
