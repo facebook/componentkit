@@ -56,6 +56,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
   const auto diff = CK::animatedComponentsBetweenLayouts(l, {});
 
+  XCTAssertFalse(diff.isEmpty());
   const auto expectedDiff = CK::ComponentTreeDiff {
     .appearedComponents = {c.child},
   };
@@ -75,7 +76,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
   const auto diff = CK::animatedComponentsBetweenLayouts(l2, l);
 
-  XCTAssert(diff == CK::ComponentTreeDiff {});
+  XCTAssert(diff.isEmpty());
 }
 
 - (void)test_WhenPreviousTreeIsNotEmpty_ReturnsComponentsWithChangeAnimationsAsUpdated
@@ -93,6 +94,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
   const auto diff = CK::animatedComponentsBetweenLayouts(l2, l);
 
+  XCTAssertFalse(diff.isEmpty());
   const auto expectedDiff = CK::ComponentTreeDiff {
     .updatedComponents = {{c.child, c2.child}},
   };
@@ -108,7 +110,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
   const auto diff = CK::animatedComponentsBetweenLayouts(l, l);
 
-  XCTAssert(diff == CK::ComponentTreeDiff {});
+  XCTAssert(diff.isEmpty());
 }
 
 - (void)test_WhenPreviousTreeIsNotEmpty_ReturnsOnlyDisappearedComponentsWithDisappearAnimation
@@ -129,6 +131,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
   const auto diff = CK::animatedComponentsBetweenLayouts(l2, l);
 
+  XCTAssertFalse(diff.isEmpty());
   const auto expectedDiff = CK::ComponentTreeDiff {
     .disappearedComponents = {c},
   };
