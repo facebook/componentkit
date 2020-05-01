@@ -164,14 +164,13 @@ public:
   Constructs an action for a controller from a render context.
   */
   static CKAction<T...> actionForController(const CK::BaseRenderContext &context, SEL selector) {
-    id<CKRenderComponentProtocol> component = (id)context._component;
+    const auto scopeHandle = scopeHandleFromContext(context);
 #if DEBUG
-    CKCAssert([context._component conformsToProtocol:@protocol(CKRenderComponentProtocol)], @"RenderContext contains non render component");
     std::vector<const char *> typeEncodings;
     CKActionTypeVectorBuild(typeEncodings, CKActionTypelist<T...>{});
-    _CKTypedComponentDebugCheckComponentScopeHandle(component.scopeHandle, selector, typeEncodings);
+    _CKTypedComponentDebugCheckComponentScopeHandle(scopeHandle, selector, typeEncodings);
 #endif
-    return CKAction<T...>(component.scopeHandle.controller, selector);
+    return CKAction<T...>(scopeHandle.controller, selector);
   }
 
   /** Like actionFromBlock, but allows passing a block that doesn't take a sender component. */
@@ -234,8 +233,7 @@ public:
 
   void send(const CK::BaseRenderContext &context, T... args) const
   {
-    CKCAssertNotNil(context._component, @"RenderContext contains nil component");
-    this->send((CKComponent *)context._component, defaultBehavior(), args...);
+    this->send(componentFromContext(context), defaultBehavior(), args...);
   };
 
   void send(CKComponent *sender, CKActionSendBehavior behavior, T... args) const

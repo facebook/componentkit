@@ -128,6 +128,20 @@ std::string CKActionBase::identifier() const noexcept
 
 dispatch_block_t CKActionBase::block() const noexcept { return _block; };
 
+CKComponentScopeHandle *CKActionBase::scopeHandleFromContext(const CK::BaseRenderContext &context) {
+  // Requires CKComponentInternal.h which shouldn't be imported publicly.
+  return componentFromContext(context).scopeHandle;
+}
+
+CKComponent *CKActionBase::componentFromContext(const CK::BaseRenderContext &context) {
+  const auto component = context._component;
+#if DEBUG
+    CKCAssertNotNil(component, @"BaseRenderContext contains nil component");
+    CKCAssert([component conformsToProtocol:@protocol(CKTreeNodeComponentProtocol)], @"RenderContext contains non tree node component");
+#endif
+  return ((CKComponent *)component);
+}
+
 #pragma mark - Sending
 
 CKActionInfo CKActionFind(SEL selector, id target) noexcept

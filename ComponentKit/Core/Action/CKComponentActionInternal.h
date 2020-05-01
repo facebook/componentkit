@@ -79,6 +79,9 @@ class CKActionBase {
   CKActionVariant _variant;
   SEL _selector;
 
+  static CKComponent *componentFromContext(const CK::BaseRenderContext &context);
+  static CKComponentScopeHandle *scopeHandleFromContext(const CK::BaseRenderContext &context);
+
 public:
   explicit operator bool() const noexcept;
   bool isEqual(const CKActionBase &rhs) const noexcept {

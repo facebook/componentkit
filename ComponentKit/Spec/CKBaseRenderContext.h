@@ -14,8 +14,7 @@
 
 @protocol CKComponentProtocol;
 
-template<typename...>
-class CKAction;
+class CKActionBase;
 
 namespace CK {
   class BaseRenderContext {
@@ -36,8 +35,7 @@ namespace CK {
     template <typename Component>
     friend inline auto component(const BaseRenderContext &context) -> Component;
 
-    template<typename...>
-    friend class ::CKAction;
+    friend class ::CKActionBase;
   };
 }
 
