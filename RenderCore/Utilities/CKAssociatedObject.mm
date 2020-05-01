@@ -15,7 +15,6 @@
 #import <vector>
 
 #import <RenderCore/CKAssert.h>
-#import <RenderCore/CKGlobalConfig.h>
 
 /**
  Since the only way to get notified when an object is deallocated is through associated object from

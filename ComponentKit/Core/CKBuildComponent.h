@@ -47,6 +47,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         BOOL enableComponentReuseOptimizations = YES,
                                         BOOL mergeTreeNodesLinks = CKReadGlobalConfig().mergeTreeNodesLinks,
-                                        CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone);
+                                        CKComponentCoalescingMode coalescingMode = CKReadGlobalConfig().coalescingMode);
 
 #endif
