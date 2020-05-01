@@ -46,7 +46,10 @@ using namespace CK::AnalyticsListenerSpy;
   _willCollectAnimationsHitCount++;
 }
 
-- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(id<CKMountable>)component
+- (void)didCollectAnimations:(const CKComponentAnimations &)animations
+              fromComponents:(const CK::ComponentTreeDiff &)animatedComponents
+inComponentTreeWithRootComponent:(id<CKMountable>)component
+         scopeRootIdentifier:(CKComponentScopeRootIdentifier)scopeRootID
 {
   _didCollectAnimationsHitCount++;
 }

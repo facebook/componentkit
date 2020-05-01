@@ -160,7 +160,10 @@ static CKComponentAttachState *mountComponentLayoutInView(const CKComponentRootL
   [analyticsListener willCollectAnimationsFromComponentTreeWithRootComponent:rootLayout.component()];
   const auto animatedComponents = CK::animatedComponentsBetweenLayouts(rootLayout, prevLayout);
   const auto animations = CK::animationsForComponents(animatedComponents, view);
-  [analyticsListener didCollectAnimationsFromComponentTreeWithRootComponent:rootLayout.component()];
+  [analyticsListener didCollectAnimations:animations
+                           fromComponents:animatedComponents
+         inComponentTreeWithRootComponent:rootLayout.component()
+                      scopeRootIdentifier:scopeIdentifier];
 
   auto const oldAttachState = CKGetAttachStateForView(view);
   NSSet *currentlyMountedComponents = oldAttachState.mountedComponents;

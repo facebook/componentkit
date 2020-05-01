@@ -26,6 +26,11 @@
 @class CKComponent;
 @class CKComponentScopeRoot;
 
+struct CKComponentAnimations;
+namespace CK {
+struct ComponentTreeDiff;
+}
+
 /**
  This protocol is being used by the infrastructure to collect data about the component tree life cycle.
  */
@@ -113,7 +118,10 @@
  @param component Root component for the tree that is about to be mounted.
  */
 - (void)willCollectAnimationsFromComponentTreeWithRootComponent:(id<CKMountable>)component;
-- (void)didCollectAnimationsFromComponentTreeWithRootComponent:(id<CKMountable>)component;
+- (void)didCollectAnimations:(const CKComponentAnimations &)animations
+              fromComponents:(const CK::ComponentTreeDiff &)animatedComponents
+inComponentTreeWithRootComponent:(id<CKMountable>)component
+         scopeRootIdentifier:(CKComponentScopeRootIdentifier)scopeRootID;
 
 /** Render Components **/
 
