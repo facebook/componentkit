@@ -48,10 +48,24 @@ void CKRootTreeNode::registerNode(id<CKTreeNodeProtocol> node, id<CKTreeNodeProt
   CKCAssert(parent != nil, @"Cannot register a nil parent node");
   if (node) {
 #if CK_ASSERTIONS_ENABLED
-    CKCAssertWithCategory(_nodesToParentNodes.find(node.nodeIdentifier) == _nodesToParentNodes.cend(),
-      node.component.className,
-      @"Attempting to register a component and its parent twice.\n%@",
-      _existingAndNewParentIdentifiers(_nodesToParentNodes, node, parent));
+    const auto registeredParent = _nodesToParentNodes.find(node.nodeIdentifier);
+    if (registeredParent != _nodesToParentNodes.cend()) {
+      const auto parentComponentTreeDescription =
+        _existingAndNewParentIdentifiers(_nodesToParentNodes, node, parent);
+      if (registeredParent->second.nodeIdentifier == parent.nodeIdentifier) {
+        // Suggests non optimal tree build/reuse logic.
+        CKCFailAssertWithCategory(node.component.className,
+                                  @"Duplicate parent registration.\n%@",
+                                  parentComponentTreeDescription);
+      } else {
+        // Suggests same component instance is used in two subtrees or reuse error.
+        CKCFailAssertWithCategory(node.component.className,
+                                  @"Distinct parent registration (current: %ld - new: %ld).\n%@",
+                                  (long)registeredParent->second.nodeIdentifier,
+                                  (long)parent.nodeIdentifier,
+                                  parentComponentTreeDescription);
+      }
+    }
 #endif
     _nodesToParentNodes[node.nodeIdentifier] = parent;
   }
