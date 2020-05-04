@@ -69,8 +69,8 @@ void CKDetectDuplicateComponent(const CKComponentLayout &layout) {
     CKCFailAssertWithCategory(CKComponentCompactDescription(info.component),
                               @"Duplicate component in the tree. Attempting to use %@ more than once in the component tree can lead to an incorrect and unexpected behavior\n"
                               @"Please make sure to create another instance of %@ if needed. \nComponent backtrace:\n%@",
-                              [info.component class],
-                              [info.component class],
+                              info.component.className,
+                              info.component.className,
                               info.backtraceDescription);
   }
 #endif
