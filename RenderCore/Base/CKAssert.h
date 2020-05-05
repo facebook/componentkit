@@ -67,6 +67,7 @@ do { \
   } \
 } while(0)
 
+#if CK_ASSERTIONS_ENABLED
 #define CKCWarnWithCategory(condition, category, description, ...) \
 do { \
   if (!(condition)) { \
@@ -75,6 +76,9 @@ do { \
     NSLog(@"%@",__ckWarning_loggingString); \
   } \
 } while(0)
+#else
+#define CKCWarnWithCategory(condition, category, description, ...)
+#endif
 
 #define CKWarn(condition, description, ...) if (!(condition)) { NSLog((description), ##__VA_ARGS__); }
 

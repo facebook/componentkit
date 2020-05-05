@@ -46,6 +46,9 @@ public:
   operator U () const & { return _ptr; }
   operator Ptr &&() && { return std::move(_ptr); }
 
+  // Explicit conversion to nullable
+  auto asNullable() const -> Ptr { return _ptr; }
+
   // Passthrough
   Ptr operator ->() const { return _ptr; }
   Ptr operator *() const { return _ptr; }
