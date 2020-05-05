@@ -113,6 +113,11 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   CKAssert(_mountInfo == nullptr, @"%@ must be unmounted before dealloc", self.className);
 }
 
+- (NSString *)description
+{
+  return [NSString stringWithFormat:@"<%s: %p (%@)>", self.typeName, self, self.class];
+}
+
 - (void)didFinishComponentInitialization
 {
   CKValidateComponentCreation();
