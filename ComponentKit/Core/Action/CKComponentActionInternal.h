@@ -56,7 +56,7 @@ class CKActionBase {
   CKActionBase(id target, SEL selector) noexcept;
 
   CKActionBase(const CKComponentScope &scope, SEL selector) noexcept;
-  CKActionBase(SEL selector, id<CKRenderComponentProtocol> component) noexcept;
+  CKActionBase(SEL selector, CKComponentScopeHandle *handle) noexcept;
 
   /** Legacy constructor for raw selector actions. Traverse up the mount responder chain. */
   CKActionBase(SEL selector) noexcept;
