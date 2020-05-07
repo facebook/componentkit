@@ -88,13 +88,9 @@
   // Set the link between the parent and the child.
   [parent setChild:self forComponentKey:_componentKey];
 
-  // Scoped components already register themselves during the first build phase
-  // when coalesced components are on.
-  if (params.coalescingMode != CKComponentCoalescingModeComposite) {
-    [self registerComponent:component
-                   toParent:parent
-                inScopeRoot:params.scopeRoot];
-  }
+  [self registerComponent:component
+                 toParent:parent
+              inScopeRoot:params.scopeRoot];
 }
 
 - (void)registerComponent:(id<CKTreeNodeComponentProtocol>)component
