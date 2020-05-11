@@ -40,8 +40,7 @@ namespace CKRenderInternal {
     // Update the render node of the component reuse.
     [node didReuseRenderNode:previousNode
                    scopeRoot:params.scopeRoot
-           previousScopeRoot:params.previousScopeRoot
-         traverseAllChildren:NO];
+           previousScopeRoot:params.previousScopeRoot];
 
     if (childComponent != nullptr) {
       // Link the previous child component to the the new component.
