@@ -47,8 +47,18 @@ CKComponentScope::~CKComponentScope()
 CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id identifier, id (^initialStateCreator)(void)) noexcept
 {
   CKCAssert(class_isMetaClass(object_getClass(componentClass)), @"Expected %@ to be a meta class", componentClass);
+  CKCWarnWithCategory(
+    [componentClass conformsToProtocol:@protocol(CKReusableComponentProtocol)] == NO,
+    NSStringFromClass(componentClass),
+    @"Reusable components shouldn't use scopes.");
+
   _threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (_threadLocalScope != nullptr) {
+    CKCWarnWithCategory(
+      [componentClass isKindOfClass:[CKComponent class]] == _threadLocalScope->enforceCKComponentSubclasses,
+      NSStringFromClass(componentClass),
+      @"Component with scope must be created inside component provider function. This appears to not be a **component** scope?");
+
     const auto componentTypeName = class_getName(componentClass);
 
     [_threadLocalScope->systraceListener willBuildComponent:componentTypeName];
