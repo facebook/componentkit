@@ -47,5 +47,5 @@
     CKAssertConstrainedValue(resolvedMax.width); \
     CKAssertConstrainedValue(resolvedMax.height)
 #else
-  #define CKAssertResolvedSize(componentSize, parentSize)
+  #define CKAssertResolvedSize(componentSize, parentSize)  do {} while (0)
 #endif
