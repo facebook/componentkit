@@ -39,14 +39,12 @@ namespace CKBuildComponentHelpers {
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
  @param enableComponentReuseOptimizations If `NO`, all the comopnents will be regenerated (no component reuse optimiztions). `YES` by default.
- @param mergeTreeNodesLinks if `YES`, the tree nodes tree will merge owner/parent based links.
  @param coalescingMode Defines the coalescing mode to use for the current component tree.
  */
 CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         BOOL enableComponentReuseOptimizations = YES,
-                                        BOOL mergeTreeNodesLinks = CKReadGlobalConfig().mergeTreeNodesLinks,
                                         CKComponentCoalescingMode coalescingMode = CKReadGlobalConfig().coalescingMode);
 
 #endif

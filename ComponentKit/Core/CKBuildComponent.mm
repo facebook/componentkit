@@ -75,7 +75,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         BOOL enableComponentReuseOptimizations,
-                                        BOOL mergeTreeNodesLinks,
                                         CKComponentCoalescingMode coalescingMode)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
@@ -88,7 +87,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   CKThreadLocalComponentScope threadScope(previousRoot,
                                           stateUpdates,
                                           buildTrigger,
-                                          mergeTreeNodesLinks,
                                           enableComponentReuseOptimizations,
                                           shouldCollectTreeNodeCreationInformation,
                                           globalConfig.alwaysBuildRenderTree,
@@ -114,7 +112,6 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
       .enableComponentReuseOptimizations = enableComponentReuseOptimizations,
       .systraceListener = threadScope.systraceListener,
       .shouldCollectTreeNodeCreationInformation = shouldCollectTreeNodeCreationInformation,
-      .mergeTreeNodesLinks = mergeTreeNodesLinks,
       .coalescingMode = coalescingMode,
     };
 

@@ -30,10 +30,6 @@ struct CKGlobalConfig {
    */
   BOOL skipCompositeComponentSize = YES;
   /**
-   Avoid duplicate links in the tree nodes for owner/parent based nodes
-   */
-  BOOL mergeTreeNodesLinks = NO;
-  /**
    Use new method of performing optimistic mutations which can last beyond next mount
    */
   BOOL useNewStyleOptimisticMutations = NO;

@@ -32,7 +32,6 @@ public:
   CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                               const CKComponentStateUpdateMap &updates,
                               CKBuildTrigger trigger = CKBuildTrigger::NewTree,
-                              BOOL merge = NO,
                               BOOL enableComponentReuseOptimizations = YES,
                               BOOL shouldCollectTreeNodeCreationInformation = NO,
                               BOOL alwaysBuildRenderTree = NO,
@@ -63,9 +62,6 @@ public:
 
   /** Component Allocations */
   NSUInteger componentAllocations;
-
-  /** Avoid duplicate links in the tree nodes for owner/parent based nodes */
-  BOOL mergeTreeNodesLinks;
 
   const CKTreeNodeDirtyIds treeNodeDirtyIds;
 

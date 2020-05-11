@@ -132,7 +132,6 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
                                     keys:(const std::vector<id<NSObject>> &)keys
                      initialStateCreator:(id (^)(void))initialStateCreator
                             stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                     mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
                      requiresScopeHandle:(BOOL)requiresScopeHandle
 {
   CKAssertNotNil(pair.node, @"Must have a node");
@@ -152,7 +151,6 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
     childScopeFromPreviousNode:childScopeFromPreviousScope
             initialStateCreator:initialStateCreator
                    stateUpdates:stateUpdates
-            mergeTreeNodesLinks:mergeTreeNodesLinks
             requiresScopeHandle:requiresScopeHandle];
 }
 
@@ -163,7 +161,6 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
               childScopeFromPreviousNode:(CKScopeTreeNode *)childScopeFromPreviousScope
                      initialStateCreator:(id (^)(void))initialStateCreator
                             stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
-                     mergeTreeNodesLinks:(BOOL)mergeTreeNodesLinks
                      requiresScopeHandle:(BOOL)requiresScopeHandle
 {
   CKAssertNotNil(pair.node, @"Must have a node");

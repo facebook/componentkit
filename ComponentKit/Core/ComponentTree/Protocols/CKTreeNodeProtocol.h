@@ -65,9 +65,6 @@ struct CKBuildComponentTreeParams {
   // When disabled, all the comopnents will be regenerated (no component reuse optimiztions). Enabled by default.
   BOOL enableComponentReuseOptimizations = YES;
 
-  // Avoid duplicate links in the tree nodes for owner/parent based nodes
-  BOOL mergeTreeNodesLinks = NO;
-
   // The current coalescing mode.
   CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone;
 };
