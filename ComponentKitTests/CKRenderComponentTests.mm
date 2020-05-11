@@ -34,6 +34,9 @@
 @interface CKRenderComponentAndScopeWithMergeLinksTreeTests : CKRenderComponentAndScopeTreeTests
 @end
 
+@interface CKRenderComponentAndScopeWithUpdatesScopeIdentifierTreeTests : CKRenderComponentAndScopeTreeTests
+@end
+
 @implementation CKRenderComponentTests
 {
   CKTestRenderComponent *_c;
@@ -780,4 +783,62 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   _mergeTreeNodesLinks = YES;
 }
 
+@end
+
+@implementation CKRenderComponentAndScopeWithUpdatesScopeIdentifierTreeTests
+
+- (void)test_componentReuseWhenReorderScopedComponents
+{
+  // Build new tree with siblings `CKCompositeComponentWithScope components
+  // tha thas `CKTestRenderWithNonRenderWithStateChildComponent` children.
+  // Each `CKTestRenderWithNonRenderWithStateChildComponent` has non-render component with state.
+  __block CKCompositeComponentWithScope *c1;
+  __block CKCompositeComponentWithScope *c2;
+  __block CKCompositeComponentWithScope *c3;
+  auto const componentFactory = ^{
+    c1 = [CKCompositeComponentWithScope newWithComponentProvider:^CKComponent *{
+      return [CKTestRenderWithNonRenderWithStateChildComponent new];
+    } scopeIdentifier:@1];
+    c2 = [CKCompositeComponentWithScope newWithComponentProvider:^CKComponent *{
+      return [CKTestRenderWithNonRenderWithStateChildComponent new];
+    } scopeIdentifier:@2];
+    return [CKTestLayoutComponent newWithChildren:{c1, c2}];
+  };
+
+  // Build first component generation:
+  auto const scopeRoot = CKComponentScopeRootWithPredicates(nil, nil, {}, {});
+  auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory, YES, _mergeTreeNodesLinks);
+
+  // Insert new child c3 before c1
+  auto const componentFactory2 = ^{
+    c3 = [CKCompositeComponentWithScope newWithComponentProvider:^CKComponent *{
+      return [CKTestRenderWithNonRenderWithStateChildComponent new];
+    } scopeIdentifier:@3];
+    c1 = [CKCompositeComponentWithScope newWithComponentProvider:^CKComponent *{
+      return [CKTestRenderWithNonRenderWithStateChildComponent new];
+    } scopeIdentifier:@1];
+    c2 = [CKCompositeComponentWithScope newWithComponentProvider:^CKComponent *{
+      return [CKTestRenderWithNonRenderWithStateChildComponent new];
+    } scopeIdentifier:@2];
+    return [CKTestLayoutComponent newWithChildren:{c3, c1, c2}];
+  };
+
+  // Simulate state update on c1.child.childComponent
+  NSNumber *newState1 = @10;
+  CKComponentStateUpdateMap stateUpdates;
+  auto c1Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c1.child;
+  stateUpdates[c1Child.childComponent.scopeHandle].push_back(^(id){ return newState1; });
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory2, YES, _mergeTreeNodesLinks);
+
+  // Accessing the updated children
+  c1Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c1.child;
+  auto c2Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c2.child;
+
+  // Verify `c2.child.childComponent` gets the correct new state
+  XCTAssertEqual(newState1, c1Child.childComponent.scopeHandle.state);
+  // Verify c2.child was reused
+  XCTAssertTrue(c2Child.didReuseComponent);
+  // Verify c1.child wasn't reused
+  XCTAssertFalse(c1Child.didReuseComponent);
+}
 @end

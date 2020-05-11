@@ -65,4 +65,6 @@ struct CKTestRenderComponentProps {
 
 @interface CKCompositeComponentWithScope : CKCompositeComponent
 + (instancetype)newWithComponentProvider:(CKComponent *(^)())componentProvider;
++ (instancetype)newWithComponentProvider:(CKComponent *(^)())componentProvider scopeIdentifier:(id)scopeIdentifier;
+- (CKComponent *)child;
 @end

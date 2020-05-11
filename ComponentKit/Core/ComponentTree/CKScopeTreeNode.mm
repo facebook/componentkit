@@ -53,8 +53,9 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   return nil;
 }
 
-- (CKTreeNodeComponentKey)createComponentKeyForChildWithTypeName:(const char *)componentTypeName
-                                                      identifier:(id<NSObject>)identifier
+- (CKTreeNodeComponentKey)createParentKeyForComponentTypeName:(const char *)componentTypeName
+                                                   identifier:(id<NSObject>)identifier
+                                                         keys:(const std::vector<id<NSObject>> &)keys
 {
   // Create **parent** based key counter.
   NSUInteger keyCounter = kTreeNodeParentBaseKey;
@@ -64,7 +65,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
       keyCounter += 2;
     }
   }
-  return std::make_tuple(componentTypeName, keyCounter, identifier, std::vector<id<NSObject>>{});
+  return std::make_tuple(componentTypeName, keyCounter, identifier, keys);
 }
 
 - (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey
@@ -194,10 +195,7 @@ NSUInteger const kTreeNodeOwnerBaseKey = 1;
   [pair.node setChildScope:newChild forComponentKey:componentKey];
 
   // Update the component key on the new child.
-  if (mergeTreeNodesLinks) {
-    newChild->_componentKey = componentKey;
-  }
-
+  newChild->_componentKey = componentKey;
   return {.node = newChild, .previousNode = childScopeFromPreviousScope};
 }
 

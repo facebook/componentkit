@@ -185,8 +185,9 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
 - (id<CKTreeNodeProtocol> _Nullable)childForComponentKey:(const CKTreeNodeComponentKey &)key;
 
 /** Creates a component key for a child node according to its component type name; this method is being called once during the component tree creation */
-- (CKTreeNodeComponentKey)createComponentKeyForChildWithTypeName:(const char *)componentTypeName
-                                                      identifier:(id<NSObject> _Nullable)identifier;
+- (CKTreeNodeComponentKey)createParentKeyForComponentTypeName:(const char *)componentTypeName
+                                                   identifier:(id<NSObject> _Nullable)identifier
+                                                         keys:(const std::vector<id<NSObject>> &)keys;
 
 /** Save a child node in the parent node according to its component key; this method is being called once during the component tree creation */
 - (void)setChild:(id<CKTreeNodeProtocol>)child forComponentKey:(const CKTreeNodeComponentKey &)componentKey;

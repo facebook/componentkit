@@ -50,7 +50,10 @@
                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
                      stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
 {
-  auto const componentKey = [parent createComponentKeyForChildWithTypeName:component.typeName identifier:[component componentIdentifier]];
+  auto const componentKey = [parent createParentKeyForComponentTypeName:component.typeName
+                                                             identifier:[component componentIdentifier]
+                                                                   keys:{}];
+
   auto const previousNode = [previousParent childForComponentKey:componentKey];
 
   // For Render Layout components, the component might have a scope handle already.
@@ -80,11 +83,13 @@
        previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
                params:(const CKBuildComponentTreeParams &)params
 {
-  if (!params.mergeTreeNodesLinks)
-  {
-    auto const componentKey = [parent createComponentKeyForChildWithTypeName:component.typeName identifier:nil];
-    _componentKey = componentKey;
-  }
+  // The existing `_componentKey` that was created by the scope, is an owner based key;
+  // hence, we extract the `unique identifer` and the `keys` vector from it and recreate a parent based key based on this information.
+  auto const componentKey = [parent createParentKeyForComponentTypeName:component.typeName
+                                                             identifier:std::get<2>(_componentKey)
+                                                                   keys:std::get<3>(_componentKey)];
+  _componentKey = componentKey;
+
   // Set the link between the parent and the child.
   [parent setChild:self forComponentKey:_componentKey];
 

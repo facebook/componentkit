@@ -200,10 +200,29 @@
 @end
 
 @implementation CKCompositeComponentWithScope
+{
+  CKComponent *_child;
+}
 
 + (instancetype)newWithComponentProvider:(CKComponent *(^)())componentProvider
 {
-  CKComponentScope scope(self);
-  return [super newWithComponent:componentProvider()];
+  return [self newWithComponentProvider:componentProvider scopeIdentifier:nil];
 }
+
++ (instancetype)newWithComponentProvider:(CKComponent *(^)())componentProvider scopeIdentifier:(id)scopeIdentifier
+{
+  CKComponentScope scope(self, scopeIdentifier);
+  auto const child = componentProvider();
+  auto const c = [super newWithComponent:child];
+  if (c) {
+    c->_child = child;
+  }
+  return c;
+}
+
+- (CKComponent *)child
+{
+  return _child;
+}
+
 @end
