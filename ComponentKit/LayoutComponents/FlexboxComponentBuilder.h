@@ -40,7 +40,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.direction = d;
     return *this;
   }
@@ -50,7 +50,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child(). To set spacing for a particular child, use 'spacing[Before|After]'.");
+                  "Properties for the container must be set before the first call to .child(). To set spacing for a particular child, use 'spacing[Before|After]'.");
     _style.spacing = s;
     return *this;
   }
@@ -130,7 +130,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.justifyContent = j;
     return *this;
   }
@@ -140,7 +140,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.alignItems = a;
     return *this;
   }
@@ -150,7 +150,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.alignContent = a;
     return *this;
   }
@@ -160,7 +160,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.wrap = w;
     return *this;
   }
@@ -273,7 +273,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.border = b;
     return *this;
   }
@@ -287,7 +287,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.border.top = b;
     return *this;
   }
@@ -301,7 +301,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.border.bottom = b;
     return *this;
   }
@@ -315,7 +315,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.border.start = b;
     return *this;
   }
@@ -329,7 +329,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.border.end = b;
     return *this;
   }
@@ -342,7 +342,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.layoutDirection = d;
     return *this;
   }
@@ -357,7 +357,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.useDeepYogaTrees = d;
     return *this;
   }
@@ -372,7 +372,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   {
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(isNotSettingPropertiesForChild,
-                  "Properies for the container must be set before the first call to .child()");
+                  "Properties for the container must be set before the first call to .child()");
     _style.skipCompositeComponentSize = d;
     return *this;
   }
@@ -734,7 +734,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
       isNotSettingPropertiesForChild,
-      "Properies for the container must be set before the first call to .child(). To set width for a particular child, use 'sizeConstraints'."
+      "Properties for the container must be set before the first call to .child(). To set width for a particular child, use 'sizeConstraints'."
     );
     return Super::width(w);
   }
@@ -747,7 +747,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
       isNotSettingPropertiesForChild,
-      "Properies for the container must be set before the first call to .child(). To set width for a particular child, use 'sizeConstraints'."
+      "Properties for the container must be set before the first call to .child(). To set width for a particular child, use 'sizeConstraints'."
     );
     return Super::width(w);
   }
@@ -760,7 +760,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
       isNotSettingPropertiesForChild,
-      "Properies for the container must be set before the first call to .child(). To set height for a particular child, use 'sizeConstraints'."
+      "Properties for the container must be set before the first call to .child(). To set height for a particular child, use 'sizeConstraints'."
     );
     return Super::height(h);
   }
@@ -773,7 +773,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
       isNotSettingPropertiesForChild,
-      "Properies for the container must be set before the first call to .child(). To set height for a particular child, use 'sizeConstraints'."
+      "Properties for the container must be set before the first call to .child(). To set height for a particular child, use 'sizeConstraints'."
     );
     return Super::height(h);
   }
@@ -786,7 +786,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
       isNotSettingPropertiesForChild,
-      "Properies for the container must be set before the first call to .child(). To set min width for a particular child, use 'sizeConstraints'."
+      "Properties for the container must be set before the first call to .child(). To set min width for a particular child, use 'sizeConstraints'."
     );
     return Super::minWidth(w);
   }
@@ -799,7 +799,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
       isNotSettingPropertiesForChild,
-      "Properies for the container must be set before the first call to .child(). To set min height for a particular child, use 'sizeConstraints'."
+      "Properties for the container must be set before the first call to .child(). To set min height for a particular child, use 'sizeConstraints'."
     );
     return Super::minHeight(h);
   }
@@ -812,7 +812,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
       isNotSettingPropertiesForChild,
-      "Properies for the container must be set before the first call to .child(). To set max width for a particular child, use 'sizeConstraints'."
+      "Properties for the container must be set before the first call to .child(). To set max width for a particular child, use 'sizeConstraints'."
     );
     return Super::maxWidth(w);
   }
@@ -825,7 +825,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
       isNotSettingPropertiesForChild,
-      "Properies for the container must be set before the first call to .child(). To set max height for a particular child, use 'sizeConstraints'."
+      "Properties for the container must be set before the first call to .child(). To set max height for a particular child, use 'sizeConstraints'."
     );
     return Super::maxHeight(h);
   }
@@ -838,7 +838,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
       isNotSettingPropertiesForChild,
-      "Properies for the container must be set before the first call to .child(). To set size for a particular child, use 'sizeConstraints'."
+      "Properties for the container must be set before the first call to .child(). To set size for a particular child, use 'sizeConstraints'."
     );
     return Super::size(std::move(s));
   }
@@ -851,7 +851,7 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
     constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
     static_assert(
       isNotSettingPropertiesForChild,
-      "Properies for the container must be set before the first call to .child(). To set size for a particular child, use 'sizeConstraints'."
+      "Properties for the container must be set before the first call to .child(). To set size for a particular child, use 'sizeConstraints'."
     );
     return Super::size(s);
   }
