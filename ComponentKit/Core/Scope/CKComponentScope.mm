@@ -55,9 +55,9 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
   _threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (_threadLocalScope != nullptr) {
     CKCWarnWithCategory(
-      [componentClass isKindOfClass:[CKComponent class]] == _threadLocalScope->enforceCKComponentSubclasses,
+      [componentClass isSubclassOfClass:[CKComponent class]] == _threadLocalScope->enforceCKComponentSubclasses,
       NSStringFromClass(componentClass),
-      @"Component with scope must be created inside component provider function. This appears to not be a **component** scope?");
+      @"Component type doesn't match the TLS's type. Have you created the component **outside** a component provider function?");
 
     const auto componentTypeName = class_getName(componentClass);
 
