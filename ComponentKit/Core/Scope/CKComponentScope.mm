@@ -78,16 +78,15 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
     _scopeHandle = childPair.node.scopeHandle;
 
     const auto ancestorHasStateUpdate =
-        (_threadLocalScope->coalescingMode == CKComponentCoalescingModeComposite &&
+        _threadLocalScope->coalescingMode == CKComponentCoalescingModeComposite &&
          _threadLocalScope->enableComponentReuseOptimizations &&
-         _threadLocalScope->buildTrigger == CKBuildTrigger::StateUpdate)
-        ? (_threadLocalScope->ancestorHasStateUpdate.top() ||
+         _threadLocalScope->buildTrigger == CKBuildTrigger::StateUpdate &&
+        (_threadLocalScope->ancestorHasStateUpdate.top() ||
            CKRender::componentHasStateUpdate(
                childPair.node.scopeHandle,
                pair.previousNode,
                _threadLocalScope->buildTrigger,
-               _threadLocalScope->stateUpdates))
-        : true;
+             _threadLocalScope->stateUpdates));
 
     _threadLocalScope->push({.node = childPair.node, .previousNode = childPair.previousNode}, YES, ancestorHasStateUpdate);
   }
