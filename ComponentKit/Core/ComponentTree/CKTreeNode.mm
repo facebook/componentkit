@@ -23,6 +23,34 @@
 #import "CKThreadLocalComponentScope.h"
 #import "CKRenderHelpers.h"
 
+namespace CK {
+namespace TreeNode {
+  id<CKTreeNodeProtocol> nodeForComponent(id<CKComponentProtocol> component)
+  {
+    CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
+    if (currentScope == nullptr) {
+      return nil;
+    }
+
+    // `nodeForComponent` is being called for every non-render component from the base constructor of `CKComponent`.
+    // We can rely on this infomration to increase the `componentAllocations` counter.
+    currentScope->componentAllocations++;
+
+    CKTreeNode *node = currentScope->stack.top().node;
+    if ([node.scopeHandle acquireFromComponent:component]) {
+      return node;
+    }
+    CKCAssertWithCategory([component.class controllerClass] == Nil || [component conformsToProtocol:@protocol(CKRenderComponentProtocol)],
+      NSStringFromClass([component class]),
+      @"Component has a controller but no scope! Make sure you construct your scope(self) "
+      "before constructing the component or CKComponentTestRootScope at the start of the test.");
+
+    return nil;
+  }
+}
+}
+
+
 @interface CKTreeNode ()
 @property (nonatomic, weak, readwrite) id<CKTreeNodeComponentProtocol> component;
 @property (nonatomic, strong, readwrite) CKComponentScopeHandle *scopeHandle;

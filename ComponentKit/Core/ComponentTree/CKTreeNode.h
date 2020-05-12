@@ -21,6 +21,17 @@
 
 @protocol CKRenderComponentProtocol;
 
+namespace CK {
+namespace TreeNode {
+  /**
+  This function looks to see if the currently defined scope matches that of the given component; if so it returns the
+  node corresponding to the current scope. Otherwise it returns nil.
+  This is only meant to be called when constructing a component and as part of the implementation itself.
+  */
+  id<CKTreeNodeProtocol> nodeForComponent(id<CKComponentProtocol> component);
+}
+}
+
 /**
  This object represents a node in the component tree.
 

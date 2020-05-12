@@ -117,7 +117,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 - (void)didFinishComponentInitialization
 {
   CKValidateComponentCreation();
-  _treeNode = [CKComponentScopeHandle handleForComponent:self].treeNode;
+  _treeNode = CK::TreeNode::nodeForComponent(self);
 }
 
 - (BOOL)hasAnimations

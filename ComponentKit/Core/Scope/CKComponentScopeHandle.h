@@ -32,13 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CKComponentScopeHandle : NSObject
 
-/**
- This method looks to see if the currently defined scope matches that of the given component; if so it returns the
- handle corresponding to the current scope. Otherwise it returns nil.
- This is only meant to be called when constructing a component and as part of the implementation itself.
- */
-+ (instancetype)handleForComponent:(id<CKComponentProtocol>)component;
-
 /** Creates a conceptually brand new scope handle */
 - (instancetype)initWithListener:(id<CKComponentStateListener> _Nullable)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
@@ -59,14 +52,17 @@ NS_ASSUME_NONNULL_BEGIN
 /** Informs the scope handle that it should complete its configuration. This will generate the controller */
 - (void)resolveInScopeRoot:(CKComponentScopeRoot *)scopeRoot;
 
-/** Acquire component, assert if the scope handle is wrong */
+/** Acquire component if possible, assert if the scope handle is wrong */
+- (BOOL)acquireFromComponent:(id<CKComponentProtocol>)component;
+
+/** Force acquire component, assert if the scope handle is wrong */
 - (void)forceAcquireFromComponent:(id<CKComponentProtocol>)component;
 
 /** Clears the acquired component. Used in some cases for render to nil. */
 - (void)relinquishComponent;
 
 /**
- Should not be called until after handleForComponent:. The controller will assert (if assertions are compiled), and
+ Should not be called until after nodeForComponent(). The controller will assert (if assertions are compiled), and
  return nil until `resolve` is called.
  */
 @property (nonatomic, strong, readonly, nullable) id<CKComponentControllerProtocol> controller;

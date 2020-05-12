@@ -38,29 +38,6 @@
   CKScopedResponder *_scopedResponder;
 }
 
-+ (CKComponentScopeHandle *)handleForComponent:(id<CKComponentProtocol>)component
-{
-  CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
-  if (currentScope == nullptr) {
-    return nil;
-  }
-
-  // `handleForComponent` is being called for every non-render component from the base constructor of `CKComponent`.
-  // We can rely on this infomration to increase the `componentAllocations` counter.
-  currentScope->componentAllocations++;
-
-  CKComponentScopeHandle *handle = currentScope->stack.top().node.scopeHandle;
-  if ([handle acquireFromComponent:component]) {
-    return handle;
-  }
-  CKAssertWithCategory([component.class controllerClass] == Nil || [component conformsToProtocol:@protocol(CKRenderComponentProtocol)],
-    NSStringFromClass([component class]),
-    @"Component has a controller but no scope! Make sure you construct your scope(self) "
-    "before constructing the component or CKComponentTestRootScope at the start of the test.");
-
-  return nil;
-}
-
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
                   rootIdentifier:(CKComponentScopeRootIdentifier)rootIdentifier
                componentTypeName:(const char *)componentTypeName
