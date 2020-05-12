@@ -24,7 +24,7 @@
 #import "CKRenderHelpers.h"
 
 @interface CKTreeNode ()
-@property (nonatomic, strong, readwrite) id<CKTreeNodeComponentProtocol> component;
+@property (nonatomic, weak, readwrite) id<CKTreeNodeComponentProtocol> component;
 @property (nonatomic, strong, readwrite) CKComponentScopeHandle *scopeHandle;
 @property (nonatomic, assign, readwrite) CKTreeNodeIdentifier nodeIdentifier;
 @end
@@ -71,9 +71,8 @@
     scopeRoot.rootNode.registerNode(self, parent);
     // Set the link between the tree node and the scope handle.
     [scopeHandle setTreeNode:self];
-#if CK_ASSERTIONS_ENABLED || defined(DEBUG)
+    // Update the treeNode on the component
     [component acquireTreeNode:self];
-#endif
   }
   return self;
 }
@@ -103,12 +102,8 @@
               inScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {
   _component = component;
-
   // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
-    scopeRoot.rootNode.registerNode(self, parent);
-  #if CK_ASSERTIONS_ENABLED || defined(DEBUG)
-    [component acquireTreeNode:self];
-  #endif
+  scopeRoot.rootNode.registerNode(self, parent);
 }
 
 - (id)state

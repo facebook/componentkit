@@ -86,9 +86,6 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
 /** Reference to the component's scope handle. */
 @property (nonatomic, strong, readonly, nullable) CKComponentScopeHandle *scopeHandle;
 
-/** Ask the component to acquire a scope handle. */
-- (void)acquireScopeHandle:(CKComponentScopeHandle *)scopeHandle;
-
 /**
  This method translates the component render method into a 'CKTreeNode'; a component tree.
  It's being called by the infra during the component tree creation.
@@ -100,11 +97,6 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
 
 #endif
 
-#if CK_ASSERTIONS_ENABLED || defined(DEBUG)
-// These two methods are in DEBUG only in order to save memory.
-// Once we build the component tree (by calling `buildComponentTree:`) by default,
-// we can swap the the scopeHandle ref with the treeNode one.
-
 /** Ask the component to acquire a tree node. */
 - (void)acquireTreeNode:(id<CKTreeNodeProtocol>)treeNode;
 
@@ -113,7 +105,6 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
 
 /** Get child at index; can be nil */
 - (id<CKTreeNodeComponentProtocol> _Nullable)childAtIndex:(unsigned int)index;
-#endif
 
 @end
 
@@ -125,7 +116,7 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
 
 #if CK_NOT_SWIFT
 
-@property (nonatomic, strong, readonly) id<CKTreeNodeComponentProtocol> component;
+@property (nonatomic, weak, readonly) id<CKTreeNodeComponentProtocol> component;
 
 @property (nonatomic, strong, readonly, nullable) CKComponentScopeHandle *scopeHandle;
 

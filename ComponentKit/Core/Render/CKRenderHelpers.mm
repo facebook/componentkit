@@ -330,7 +330,7 @@ namespace CKRender {
 
         // Finalize the node/scope registration.
         if (scopeHandle) {
-          [component acquireScopeHandle:scopeHandle];
+          [scopeHandle forceAcquireFromComponent:component];
           [scopeHandle resolveInScopeRoot:scopeRoot];
         }
 

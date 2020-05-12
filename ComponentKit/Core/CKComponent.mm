@@ -51,15 +51,11 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 @implementation CKComponent
 {
-  CKComponentScopeHandle *_scopeHandle;
+  id<CKTreeNodeProtocol> _treeNode;
   CKComponentViewConfiguration _viewConfiguration;
 
   /** Only non-null while mounted. */
   std::unique_ptr<CKMountInfo> _mountInfo;
-
-#if CK_ASSERTIONS_ENABLED || defined(DEBUG)
-  __weak id<CKTreeNodeProtocol> _treeNode;
-#endif
 }
 
 #if DEBUG
@@ -121,7 +117,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 - (void)didFinishComponentInitialization
 {
   CKValidateComponentCreation();
-  _scopeHandle = [CKComponentScopeHandle handleForComponent:self];
+  _treeNode = [CKComponentScopeHandle handleForComponent:self].treeNode;
 }
 
 - (BOOL)hasAnimations
@@ -147,13 +143,6 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   return [[(Class)[self.class controllerClass] alloc] initWithComponent:self];
 }
 
-- (void)acquireScopeHandle:(CKComponentScopeHandle *)scopeHandle
-{
-  CKAssert(_scopeHandle == nil, @"Component(%@) already has '_scopeHandle'.", self);
-  [scopeHandle forceAcquireFromComponent:self];
-  _scopeHandle = scopeHandle;
-}
-
 - (const CKComponentViewConfiguration &)viewConfiguration
 {
   return _viewConfiguration;
@@ -167,7 +156,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 - (CKComponentScopeHandle *)scopeHandle
 {
-  return _scopeHandle;
+  return _treeNode.scopeHandle;
 }
 
 - (CKComponentViewContext)viewContext
@@ -176,8 +165,6 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   return _mountInfo ? _mountInfo->viewContext : CKComponentViewContext();
 }
 
-#if CK_ASSERTIONS_ENABLED || defined(DEBUG)
-// These two methods are in DEBUG only in order to save memory.
 - (void)acquireTreeNode:(id<CKTreeNodeProtocol>)treeNode
 {
   _treeNode = treeNode;
@@ -187,7 +174,6 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 {
   return _treeNode;
 }
-#endif
 
 #pragma mark - ComponentTree
 
@@ -215,7 +201,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   }
   _mountInfo->supercomponent = supercomponent;
 
-  CKComponentController *controller = _scopeHandle.controller;
+  CKComponentController *controller = _treeNode.scopeHandle.controller;
   [controller componentWillMount:self];
 
   const CK::Component::MountContext &effectiveContext = [CKComponentDebugController debugMode]
@@ -269,7 +255,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 {
   CKAssertMainThread();
   if (_mountInfo != nullptr) {
-    CKComponentController *const controller = _scopeHandle.controller;
+    CKComponentController *const controller = _treeNode.scopeHandle.controller;
     [controller componentWillUnmount:self];
     [self _relinquishMountedView];
     _mountInfo.reset();
@@ -285,7 +271,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
     UIView *view = _mountInfo->view;
     if (view) {
       CKAssert(CKMountedComponentForView(view) == self, @"");
-      [(CKComponentController *)_scopeHandle.controller component:self willRelinquishView:view];
+      [(CKComponentController *)_treeNode.scopeHandle.controller component:self willRelinquishView:view];
       CKSetMountedComponentForView(view, nil);
       _mountInfo->view = nil;
     }
@@ -294,7 +280,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 - (void)childrenDidMount
 {
-  [(CKComponentController *)_scopeHandle.controller componentDidMount:self];
+  [(CKComponentController *)_treeNode.scopeHandle.controller componentDidMount:self];
 }
 
 #pragma mark - Animation
@@ -396,7 +382,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 - (id)nextResponder
 {
-  return _scopeHandle.controller ?: [self nextResponderAfterController];
+  return _treeNode.scopeHandle.controller ?: [self nextResponderAfterController];
 }
 
 - (id)nextResponderAfterController
@@ -473,19 +459,19 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 - (void)updateState:(id (^)(id))updateBlock mode:(CKUpdateMode)mode
 {
-  CKAssertWithCategory(_scopeHandle != nil, self.className, @"A component without state cannot update its state.");
+  CKAssertWithCategory(_treeNode.scopeHandle != nil, self.className, @"A component without state cannot update its state.");
   CKAssertWithCategory(updateBlock != nil, self.className, @"Cannot enqueue component state modification with a nil update block.");
-  [_scopeHandle updateState:updateBlock metadata:{} mode:mode];
+  [_treeNode.scopeHandle updateState:updateBlock metadata:{} mode:mode];
 }
 
 - (CKComponentController *)controller
 {
-  return _scopeHandle.controller;
+  return _treeNode.scopeHandle.controller;
 }
 
 - (id<NSObject>)uniqueIdentifier
 {
-  return _scopeHandle ? @(_scopeHandle.globalIdentifier) : nil;
+  return _treeNode ? @(_treeNode.scopeHandle.globalIdentifier) : nil;
 }
 
 -(id<CKComponentScopeEnumeratorProvider>)scopeEnumeratorProvider
@@ -513,7 +499,7 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 - (id)state
 {
-  return _scopeHandle.state;
+  return _treeNode.scopeHandle.state;
 }
 
 - (NSString *)className
