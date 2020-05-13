@@ -311,30 +311,22 @@ namespace CKRender {
                   CKComponentScopeRoot *scopeRoot,
                   const CKComponentStateUpdateMap &stateUpdates) -> CKComponentScopeHandle*
       {
-        CKComponentScopeHandle *scopeHandle;
         // If there is a previous node, we just duplicate the scope handle.
         if (previousNode) {
-          scopeHandle = [previousNode.scopeHandle newHandleWithStateUpdates:stateUpdates];
+          return [previousNode.scopeHandle newHandleWithStateUpdates:stateUpdates];
         } else {
           // The component needs a scope handle in few cases:
           // 1. Has an initial state
           // 2. Returns `YES` from `requiresScopeHandle`
           id initialState = [component initialState];
           if (initialState != CKTreeNodeEmptyState() || component.requiresScopeHandle) {
-            scopeHandle = [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
-                                                            rootIdentifier:scopeRoot.globalIdentifier
-                                                         componentTypeName:component.typeName
-                                                              initialState:initialState];
+            return [[CKComponentScopeHandle alloc] initWithListener:scopeRoot.listener
+                                                     rootIdentifier:scopeRoot.globalIdentifier
+                                                  componentTypeName:component.typeName
+                                                       initialState:initialState];
           }
         }
-
-        // Finalize the node/scope registration.
-        if (scopeHandle) {
-          [scopeHandle forceAcquireFromComponent:component];
-          [scopeHandle resolveInScopeRoot:scopeRoot];
-        }
-
-        return scopeHandle;
+        return nil;
       }
     }
   }

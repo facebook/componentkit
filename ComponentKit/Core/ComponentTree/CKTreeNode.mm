@@ -101,6 +101,9 @@ namespace TreeNode {
     [scopeHandle setTreeNode:self];
     // Update the treeNode on the component
     [component acquireTreeNode:self];
+    // Finalize the node/scope registration.
+    [scopeHandle forceAcquireFromComponent:component];
+    [scopeHandle resolveInScopeRoot:scopeRoot];
   }
   return self;
 }
