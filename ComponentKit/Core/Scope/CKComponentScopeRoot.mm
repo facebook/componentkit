@@ -68,9 +68,6 @@ typedef std::unordered_map<CKComponentControllerPredicate, NSHashTable<id<CKComp
     _globalIdentifier = globalIdentifier;
     _componentPredicates = componentPredicates;
     _componentControllerPredicates = componentControllerPredicates;
-#if DEBUG
-    _hasRenderComponentInTree = globalConfig.alwaysBuildRenderTreeInDebug;
-#endif
   }
   return self;
 }
