@@ -182,6 +182,11 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   return [self.containerView sizeThatFits:size];
 }
 
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+  [_componentGenerator updateTraitCollection:self.traitCollection];
+}
+
 #pragma mark - Hit Testing
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
@@ -305,6 +310,8 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
       // A synchronous update was either scheduled or completed, so we can skip the async update.
       return;
     }
+    // Sync trait collection in `componentGenerator` before building the next generation.
+    [_componentGenerator updateTraitCollection:self.traitCollection];
     [_componentGenerator generateComponentAsynchronously];
   });
 }
@@ -337,6 +344,8 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   }
 
   _isSynchronouslyUpdatingComponent = YES;
+  // Sync trait collection in `componentGenerator` before building the next generation.
+  [_componentGenerator updateTraitCollection:self.traitCollection];
   const auto result = [_componentGenerator generateComponentSynchronously];
   [self _applyResult:result];
   _isSynchronouslyUpdatingComponent = NO;

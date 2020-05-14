@@ -73,6 +73,7 @@
                   mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo
 {
+  [_componentDataSource setTraitCollection:_collectionView.traitCollection];
   [_componentDataSource applyChangeset:changeset
                                   mode:mode
                               userInfo:userInfo];
@@ -222,6 +223,7 @@ static auto heightChange(CKDataSourceState *previousState, CKDataSourceState *st
 - (void)reloadWithMode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo
 {
+  [_componentDataSource setTraitCollection:_collectionView.traitCollection];
   [_componentDataSource reloadWithMode:mode userInfo:userInfo];
 }
 
@@ -229,6 +231,7 @@ static auto heightChange(CKDataSourceState *previousState, CKDataSourceState *st
                        mode:(CKUpdateMode)mode
                    userInfo:(NSDictionary *)userInfo
 {
+  [_componentDataSource setTraitCollection:_collectionView.traitCollection];
   [_componentDataSource updateConfiguration:configuration mode:mode userInfo:userInfo];
 }
 
