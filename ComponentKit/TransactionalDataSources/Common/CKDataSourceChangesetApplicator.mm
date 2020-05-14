@@ -24,6 +24,7 @@
 #import <ComponentKit/CKDataSourceState.h>
 #import <ComponentKit/CKDataSourceSplitChangesetModification.h>
 #import <ComponentKit/CKSystraceScope.h>
+#import <ComponentKit/CKTraitCollectionHelper.h>
 
 static void *kQueueKey = &kQueueKey;
 static NSString *const kChangesetApplicatorIdUserInfoKey = @"CKDataSourceChangesetApplicator.Id";
@@ -54,6 +55,7 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
   CKDataSourceChangeset *_currentChangeset;
 
   CKDataSourceViewport _viewport;
+  UITraitCollection *_traitCollection;
 }
 
 - (instancetype)initWithDataSource:(CKDataSource *)dataSource
@@ -117,7 +119,7 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
 
   // `_currentChangeset` is used in `buildDataSourceItemForPreviousRoot` for querying item cache for inserted items.
   _currentChangeset = changeset;
-  CKDataSourceChange *change = nil;
+  __block CKDataSourceChange *change = nil;
   {
     id<CKDataSourceStateModifying> modification = nil;
     if (!shouldSplitChangeset) {
@@ -137,9 +139,11 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
        viewport:_viewport
        qos:qos];
     }
-    @autoreleasepool {
-      change = [modification changeFromState:_dataSourceState];
-    }
+    CKPerformWithCurrentTraitCollection(_traitCollection, ^{
+      @autoreleasepool {
+        change = [modification changeFromState:_dataSourceState];
+      }
+    });
   }
   _currentChangeset = nil;
   _dataSourceState = change.state;
@@ -210,6 +214,13 @@ struct CKDataSourceChangesetApplicatorPipelineItem {
 {
   dispatch_async(_queue, ^{
     _viewport = viewport;
+  });
+}
+
+- (void)setTraitCollection:(UITraitCollection *)traitCollection
+{
+  dispatch_async(_queue, ^{
+    _traitCollection = [traitCollection copy];
   });
 }
 

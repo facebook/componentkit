@@ -13,7 +13,7 @@
 #if CK_NOT_SWIFT
 
 #import <CoreGraphics/CoreGraphics.h>
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import <unordered_set>
 
@@ -107,6 +107,11 @@ struct CKComponentGeneratorOptions {
  Updates the context used to render the component.
  */
 - (void)updateContext:(id<NSObject>)context;
+
+/**
+ Set this so that calling `UITraitCollection.currentTraitCollection` in component returns desired value.
+*/
+- (void)updateTraitCollection:(UITraitCollection *)traitCollection;
 
 /**
  Generate component synchronously on affined queue and return the result.

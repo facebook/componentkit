@@ -12,7 +12,7 @@
 
 #if CK_NOT_SWIFT
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKDataSourceQOS.h>
@@ -50,6 +50,11 @@ NS_ASSUME_NONNULL_BEGIN
  Viewport metrics used for calculating items that are in the viewport, when changeset splitting is enabled.
  */
 - (void)setViewPort:(CKDataSourceViewport)viewport;
+
+/**
+ Set this so that calling `UITraitCollection.currentTraitCollection` in component returns desired value.
+ */
+- (void)setTraitCollection:(UITraitCollection *)traitCollection;
 
 @end
 

@@ -12,7 +12,7 @@
 
 #if CK_NOT_SWIFT
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import <CoreGraphics/CGGeometry.h>
 
@@ -92,6 +92,11 @@ struct CKDataSourceViewport {
  Viewport metrics used for calculating items that are in the viewport, when changeset splitting is enabled.
  */
 - (void)setViewport:(CKDataSourceViewport)viewport;
+
+/**
+ Set this so that calling `UITraitCollection.currentTraitCollection` in component returns desired value.
+ */
+- (void)setTraitCollection:(UITraitCollection *)traitCollection;
 
 - (void)addListener:(id<CKDataSourceListener>)listener;
 - (void)removeListener:(id<CKDataSourceListener>)listener;

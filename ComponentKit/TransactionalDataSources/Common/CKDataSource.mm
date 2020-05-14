@@ -38,6 +38,7 @@
 #import "CKDataSourceUpdateConfigurationModification.h"
 #import "CKDataSourceUpdateStateModification.h"
 #import "CKSystraceScope.h"
+#import "CKTraitCollectionHelper.h"
 
 @interface CKDataSourceModificationPair : NSObject
 
@@ -64,6 +65,8 @@
 
   CKDataSourceViewport _viewport;
   BOOL _changesetSplittingEnabled;
+
+  UITraitCollection *_traitCollection;
 }
 @end
 
@@ -257,6 +260,12 @@
   return _isBackgroundMode;
 }
 
+- (void)setTraitCollection:(UITraitCollection *)traitCollection
+{
+  CKAssertMainThread();
+  _traitCollection = [traitCollection copy];
+}
+
 #pragma mark - State Listener
 
 - (void)componentScopeHandle:(CKComponentScopeHandle *)handle
@@ -331,10 +340,13 @@
      initWithModification:modification
      state:_state];
 
+    const auto traitCollection = _traitCollection;
     auto const asyncModification = CK::Analytics::willStartAsyncBlock(CK::Analytics::BlockName::DataSourceWillStartModification);
     dispatch_block_t block = blockUsingDataSourceQOS(^{
       CKSystraceScope modificationScope(asyncModification);
-      [self _applyModificationPair:modificationPair];
+      CKPerformWithCurrentTraitCollection(traitCollection, ^{
+        [self _applyModificationPair:modificationPair];
+      });
     }, [modification qos], _isBackgroundMode);
 
     dispatch_async(_workQueue, block);
@@ -357,8 +369,10 @@
 
 - (void)_synchronouslyApplyModification:(id<CKDataSourceStateModifying>)modification
 {
-  [_announcer dataSource:self willSyncApplyModificationWithUserInfo:[modification userInfo]];
-  [self _synchronouslyApplyChange:[modification changeFromState:_state] qos:modification.qos];
+  CKPerformWithCurrentTraitCollection(_traitCollection, ^{
+    [_announcer dataSource:self willSyncApplyModificationWithUserInfo:[modification userInfo]];
+    [self _synchronouslyApplyChange:[modification changeFromState:_state] qos:modification.qos];
+  });
 }
 
 - (void)_synchronouslyApplyChange:(CKDataSourceChange *)change qos:(CKDataSourceQOS)qos

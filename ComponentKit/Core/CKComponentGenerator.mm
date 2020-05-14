@@ -22,6 +22,7 @@
 #import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKSystraceScope.h>
+#import <ComponentKit/CKTraitCollectionHelper.h>
 
 static void *kAffinedQueueKey = &kAffinedQueueKey;
 
@@ -33,6 +34,7 @@ struct CKComponentGeneratorInputs {
   id<NSObject> context;
   CKComponentStateUpdateMap stateUpdates;
   BOOL enableComponentReuse;
+  UITraitCollection *traitCollection;
 
   bool operator==(const CKComponentGeneratorInputs &i) const {
     return scopeRoot == i.scopeRoot && model == i.model && context == i.context && stateUpdates == i.stateUpdates && enableComponentReuse == i.enableComponentReuse;
@@ -120,6 +122,13 @@ private:
   }
 }
 
+- (void)updateTraitCollection:(UITraitCollection *)traitCollection
+{
+  _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
+    inputs.traitCollection = [traitCollection copy];
+  });
+}
+
 - (void)updateModel:(id<NSObject>)model
 {
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
@@ -140,9 +149,12 @@ private:
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
     const auto enableComponentReuse = inputs.enableComponentReuse;
     inputs.enableComponentReuse = YES;
-    const auto result = CKBuildComponent(inputs.scopeRoot, inputs.stateUpdates, ^{
-      return _componentProvider(inputs.model, inputs.context);
-    }, enableComponentReuse);
+    __block CKBuildComponentResult result;
+    CKPerformWithCurrentTraitCollection(inputs.traitCollection, ^{
+      result = CKBuildComponent(inputs.scopeRoot, inputs.stateUpdates, ^{
+        return _componentProvider(inputs.model, inputs.context);
+      }, enableComponentReuse);
+    });
     _applyResult(result,
                  inputs,
                  _addedComponentControllersBetweenScopeRoots(result.scopeRoot, inputs.scopeRoot),
@@ -160,17 +172,17 @@ private:
   // Avoid capturing `self` in global queue so that `CKComponentGenerator` does not have a chance to be deallocated outside affined queue.
   const auto componentProvider = _componentProvider;
   const auto affinedQueue = _affinedQueue;
-
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     CKSystraceScope generationScope(asyncGeneration);
-    const auto result =
-    std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
-                                                                    inputs->scopeRoot,
-                                                                    inputs->stateUpdates,
-                                                                    ^{
-                                                                      return componentProvider(inputs->model, inputs->context);
-                                                                    },
-                                                                    inputs->enableComponentReuse));
+    __block std::shared_ptr<const CKBuildComponentResult> result = nullptr;
+    CKPerformWithCurrentTraitCollection(inputs->traitCollection, ^{
+      result = std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
+        inputs->scopeRoot,
+        inputs->stateUpdates,
+        ^{ return componentProvider(inputs->model, inputs->context); },
+        inputs->enableComponentReuse
+      ));
+    });
     const auto addedComponentControllers =
     std::make_shared<const std::vector<CKComponentController *>>(_addedComponentControllersBetweenScopeRoots(result->scopeRoot, inputs->scopeRoot));
     const auto invalidComponentControllers =
