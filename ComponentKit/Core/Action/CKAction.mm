@@ -270,7 +270,12 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKAction<UIEvent 
         CKComponentActionList *const list = CKGetAssociatedObject_MainThreadAffined(control, ck_actionListKey);
         CKCAssertNotNil(list, @"Unapplicator should always find an action list installed by applicator");
         auto &actionList = list->_actions[controlEvents];
-        actionList.erase(std::find(actionList.begin(), actionList.end(), action));
+        auto it = std::find(actionList.begin(), actionList.end(), action);
+        if (it == actionList.end()) {
+          CKCFailAssert(@"Unapplicator should always find item in action list");
+          return;
+        }
+        actionList.erase(it);
         // Don't bother unsetting the action list or removing the forwarder as a target; both are harmless.
       }
     },
