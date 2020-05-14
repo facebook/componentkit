@@ -250,10 +250,10 @@ static char const kViewAttachStateKey = ' ';
 
 auto CKGetAttachStateForView(UIView *view) -> CKComponentAttachState *
 {
-  return CKGetAssociatedObject_MainThreadAffined(view, &kViewAttachStateKey);
+  return objc_getAssociatedObject(view, &kViewAttachStateKey);
 }
 
 auto CKSetAttachStateForView(UIView *view, CKComponentAttachState *attachState) -> void
 {
-  CKSetAssociatedObject_MainThreadAffined(view, &kViewAttachStateKey, attachState);
+  objc_setAssociatedObject(view, &kViewAttachStateKey, attachState, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
