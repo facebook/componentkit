@@ -76,6 +76,10 @@ struct CKStateUpdateMetadata;
 @property (nonatomic, strong, readonly) id<CKAnalyticsListener> analyticsListener;
 @property (nonatomic, readonly) CKComponentScopeRootIdentifier globalIdentifier;
 
+
+// Forces ownership of the component tree by the scope root.
+@property (nonatomic, strong) id<CKComponentProtocol> rootComponent;
+
 /** Render Support */
 @property (nonatomic, assign) BOOL hasRenderComponentInTree;
 - (CKRootTreeNode &)rootNode;
