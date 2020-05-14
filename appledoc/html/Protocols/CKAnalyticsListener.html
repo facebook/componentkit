@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>CKAnalyticsListener Protocol Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">ComponentKit </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Facebook</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:enableComponentReuseOptimizations:">- didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:enableComponentReuseOptimizations:</option>
+		
+		<option value="//api/name/didBuildTreeNodeForPrecomputedChild:node:parent:params:parentHasStateUpdate:">- didBuildTreeNodeForPrecomputedChild:node:parent:params:parentHasStateUpdate:</option>
+		
+		<option value="//api/name/didLayoutComponentTreeWithRootComponent:">- didLayoutComponentTreeWithRootComponent:</option>
+		
+		<option value="//api/name/didReuseNode:inScopeRoot:fromPreviousScopeRoot:">- didReuseNode:inScopeRoot:fromPreviousScopeRoot:</option>
+		
+		<option value="//api/name/shouldCollectMountInformationForRootComponent:">- shouldCollectMountInformationForRootComponent:</option>
+		
+		<option value="//api/name/shouldCollectTreeNodeCreationInformation:">- shouldCollectTreeNodeCreationInformation:</option>
+		
+		<option value="//api/name/systraceListener">- systraceListener</option>
+		
+		<option value="//api/name/willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:enableComponentReuseOptimizations:">- willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:enableComponentReuseOptimizations:</option>
+		
+		<option value="//api/name/willCollectAnimationsFromComponentTreeWithRootComponent:">- willCollectAnimationsFromComponentTreeWithRootComponent:</option>
+		
+		<option value="//api/name/willLayoutComponentTreeWithRootComponent:buildTrigger:">- willLayoutComponentTreeWithRootComponent:buildTrigger:</option>
+		
+		<option value="//api/name/willMountComponentTreeWithRootComponent:">- willMountComponentTreeWithRootComponent:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">CKAnalyticsListener Protocol Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Conforms to</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>CKAnalyticsListener.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>This protocol is being used by the infrastructure to collect data about the component tree life cycle.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:enableComponentReuseOptimizations:" title="willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:enableComponentReuseOptimizations:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:enableComponentReuseOptimizations:">&ndash;&nbsp;willBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:enableComponentReuseOptimizations:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called before the component tree creation.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)willBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)<em>scopeRoot</em> buildTrigger:(CKBuildTrigger)<em>buildTrigger</em> stateUpdates:(const CKComponentStateUpdateMap &amp;)<em>stateUpdates</em> enableComponentReuseOptimizations:(BOOL)<em>enableComponentReuseOptimizations</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>scopeRoot</code></th>
+						<td><p>Scope root for component tree. Use that to identify tree between will/didBuild.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>buildTrigger</code></th>
+						<td><p>The build trigger (new tree, state update, props updates) for this component tree creation.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>stateUpdates</code></th>
+						<td><p>The state updates map for the component tree creation.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>enableComponentReuseOptimizations</code></th>
+						<td><p>If <code>NO</code> any optimization for component reuse is turned off.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:enableComponentReuseOptimizations:" title="didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:enableComponentReuseOptimizations:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:enableComponentReuseOptimizations:">&ndash;&nbsp;didBuildComponentTreeWithScopeRoot:buildTrigger:stateUpdates:component:enableComponentReuseOptimizations:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called after the component tree creation.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)didBuildComponentTreeWithScopeRoot:(CKComponentScopeRoot *)<em>scopeRoot</em> buildTrigger:(CKBuildTrigger)<em>buildTrigger</em> stateUpdates:(const CKComponentStateUpdateMap &amp;)<em>stateUpdates</em> component:(CKComponent *)<em>component</em> enableComponentReuseOptimizations:(BOOL)<em>enableComponentReuseOptimizations</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>scopeRoot</code></th>
+						<td><p>Scope root for component tree. Use that to identify tree between will/didBuild</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>buildTrigger</code></th>
+						<td><p>The build trigger (new tree, state update, props updates) for this component tree creation.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>stateUpdates</code></th>
+						<td><p>The state updates map for the component tree creation.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>component</code></th>
+						<td><p>Root component for created tree</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>enableComponentReuseOptimizations</code></th>
+						<td><p>If <code>NO</code> any optimization for component reuse is turned off.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/willLayoutComponentTreeWithRootComponent:buildTrigger:" title="willLayoutComponentTreeWithRootComponent:buildTrigger:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/willLayoutComponentTreeWithRootComponent:buildTrigger:">&ndash;&nbsp;willLayoutComponentTreeWithRootComponent:buildTrigger:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called before component tree layout.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)willLayoutComponentTreeWithRootComponent:(id&lt;CKMountable&gt;)<em>component</em> buildTrigger:(CK : : Optional&lt;CKBuildTrigger&gt;)<em>buildTrigger</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>component</code></th>
+						<td><p>The root component that was laid out.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>buildTrigger</code></th>
+						<td><p>The build trigger that caused the layout computaion
+                     Can be CK::none, in case that the layout was computed due to a re-layout measurment.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Please not that this callback can be called on the same component from different threads in undefined order, for instance:
+ThreadA, willLayout Component1
+ThreadB, willLayout Component1
+ThreadA, didLayout Component1
+ThreadB, didLayout Component1
+To identify matching will/didLayout events between callbacks, please use Thread id and Component id</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/didLayoutComponentTreeWithRootComponent:" title="didLayoutComponentTreeWithRootComponent:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/didLayoutComponentTreeWithRootComponent:">&ndash;&nbsp;didLayoutComponentTreeWithRootComponent:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called after component tree layout.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)didLayoutComponentTreeWithRootComponent:(id&lt;CKMountable&gt;)<em>component</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>component</code></th>
+						<td><p>The root component that was laid out.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Please not that this callback can be called on the same component from different threads in undefined order, for instance:
+ThreadA, willLayout Component1
+ThreadB, willLayout Component1
+ThreadA, didLayout Component1
+ThreadB, didLayout Component1
+To identify matching will/didLayout events between callbacks, please use Thread id and Component id</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/willMountComponentTreeWithRootComponent:" title="willMountComponentTreeWithRootComponent:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/willMountComponentTreeWithRootComponent:">&ndash;&nbsp;willMountComponentTreeWithRootComponent:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called before/after mounting a component tree</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)willMountComponentTreeWithRootComponent:(id&lt;CKMountable&gt;)<em>component</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>component</code></th>
+						<td><p>Root component for mounted tree</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/shouldCollectMountInformationForRootComponent:" title="shouldCollectMountInformationForRootComponent:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/shouldCollectMountInformationForRootComponent:">&ndash;&nbsp;shouldCollectMountInformationForRootComponent:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called before mounting a component tree.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)shouldCollectMountInformationForRootComponent:(id&lt;CKMountable&gt;)<em>component</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>If returns YES, an extra information will be collected during the mount process.
+The extra information will be provided back in <code>didMountComponentTreeWithRootComponent</code> callback.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/willCollectAnimationsFromComponentTreeWithRootComponent:" title="willCollectAnimationsFromComponentTreeWithRootComponent:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/willCollectAnimationsFromComponentTreeWithRootComponent:">&ndash;&nbsp;willCollectAnimationsFromComponentTreeWithRootComponent:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called before/after collecting animations from a component tree.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)willCollectAnimationsFromComponentTreeWithRootComponent:(id&lt;CKMountable&gt;)<em>component</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>component</code></th>
+						<td><p>Root component for the tree that is about to be mounted.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/didReuseNode:inScopeRoot:fromPreviousScopeRoot:" title="didReuseNode:inScopeRoot:fromPreviousScopeRoot:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/didReuseNode:inScopeRoot:fromPreviousScopeRoot:">&ndash;&nbsp;didReuseNode:inScopeRoot:fromPreviousScopeRoot:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Called after a component tree&rsquo;s node has been reused</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)didReuseNode:(id&lt;CKTreeNodeProtocol&gt;)<em>node</em> inScopeRoot:(CKComponentScopeRoot *)<em>scopeRoot</em> fromPreviousScopeRoot:(CKComponentScopeRoot *)<em>previousScopeRoot</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>node</code></th>
+						<td><p>The tree node that has been reused.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>scopeRoot</code></th>
+						<td><p>Scope root for component tree.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>previousScopeRoot</code></th>
+						<td><p>The previous scope root of the component tree</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<div class="warning"><p><strong>Warning:</strong> A node is only reused if conforming to the render protocol.</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/systraceListener" title="systraceListener"></a>
+	<h3 class="method-title"><code><a href="#//api/name/systraceListener">&ndash;&nbsp;systraceListener</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Provides a systrace listener. Can be nil if systrace is not enabled.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (id&lt;CKSystraceListener&gt;)systraceListener</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/shouldCollectTreeNodeCreationInformation:" title="shouldCollectTreeNodeCreationInformation:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/shouldCollectTreeNodeCreationInformation:">&ndash;&nbsp;shouldCollectTreeNodeCreationInformation:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>If returns true, <code>didBuildTreeNodeForPrecomputedChild</code> will be called for non-render component during the component tree creation.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)shouldCollectTreeNodeCreationInformation:(CKComponentScopeRoot *)<em>scopeRoot</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/didBuildTreeNodeForPrecomputedChild:node:parent:params:parentHasStateUpdate:" title="didBuildTreeNodeForPrecomputedChild:node:parent:params:parentHasStateUpdate:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/didBuildTreeNodeForPrecomputedChild:node:parent:params:parentHasStateUpdate:">&ndash;&nbsp;didBuildTreeNodeForPrecomputedChild:node:parent:params:parentHasStateUpdate:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Will be called for every component with pre-computed child (CKCompositeComponent for example) during the component tree creation.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)didBuildTreeNodeForPrecomputedChild:(id&lt;CKTreeNodeComponentProtocol&gt;)<em>component</em> node:(id&lt;CKTreeNodeProtocol&gt;)<em>node</em> parent:(id&lt;CKTreeNodeWithChildrenProtocol&gt;)<em>parent</em> params:(const CKBuildComponentTreeParams &amp;)<em>params</em> parentHasStateUpdate:(BOOL)<em>parentHasStateUpdate</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">CKAnalyticsListener.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2020 Facebook. All rights reserved. Updated: 2020-05-14</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
