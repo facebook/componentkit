@@ -35,8 +35,6 @@ struct CKComponentContextStackItem {
   std::stack<CKComponentContextStackItem> _stack;
   // Dirty flag for the current store in use.
   BOOL _itemWasAdded;
-  // A pointer to the existing scope root, which we set only if `enableFasterPropsUpdates` is enabled.
-  __weak CKComponentScopeRoot *_scopeRoot;
 }
 @end
 @implementation CKComponentContextValue @end
@@ -50,14 +48,6 @@ static CKComponentContextValue *contextValue(BOOL create)
     contextValue->_dictionary = [NSMutableDictionary dictionary];
     contextValue->_renderToDictionaryCache = [NSMapTable weakToStrongObjectsMapTable];
     threadDictionary[kThreadDictionaryKey] = contextValue;
-    // Props updates support.
-    CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
-    // Save the existing scope root.
-    if (currentScope != nullptr && currentScope->newScopeRoot) {
-      contextValue->_scopeRoot = currentScope->newScopeRoot;
-    } else {
-      contextValue->_scopeRoot = nil;
-    }
   }
   return contextValue;
 }
@@ -168,9 +158,10 @@ id CKComponentContextHelper::fetchMutable(id key)
 {
   CKComponentContextValue *const v = contextValue(NO);
   if (v) {
-    auto const scopeRoot = v->_scopeRoot;
-    if (scopeRoot) {
-      scopeRoot.rootNode.markTopRenderComponentAsDirtyForPropsUpdates();
+    // Props updates support.
+    CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
+    if (currentScope != nullptr) {
+      currentScope->newScopeRoot.rootNode.markTopRenderComponentAsDirtyForPropsUpdates();
     }
     return v->_dictionary[key];
   }
