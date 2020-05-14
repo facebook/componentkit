@@ -19,7 +19,9 @@
 #import <ComponentKit/CKMountController.h>
 #import <ComponentKit/CKMountedObjectForView.h>
 
-@interface CKComponentMountTests : XCTestCase
+#import "CKComponentTestCase.h"
+
+@interface CKComponentMountTests : CKComponentTestCase
 @end
 
 @interface CKDontMountChildrenComponent : CKLayoutComponent

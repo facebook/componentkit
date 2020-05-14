@@ -18,7 +18,9 @@
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKOptimisticViewMutations.h>
 
-@interface CKOptimisticViewMutationsTests : XCTestCase
+#import "CKComponentTestCase.h"
+
+@interface CKOptimisticViewMutationsTests : CKComponentTestCase
 @end
 
 @implementation CKOptimisticViewMutationsTests

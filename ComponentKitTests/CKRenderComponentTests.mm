@@ -22,10 +22,12 @@
 
 #import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
 
-@interface CKRenderComponentTests : XCTestCase
+#import "CKComponentTestCase.h"
+
+@interface CKRenderComponentTests : CKComponentTestCase
 @end
 
-@interface CKRenderComponentAndScopeTreeTests : XCTestCase
+@interface CKRenderComponentAndScopeTreeTests : CKComponentTestCase
 @end
 
 @implementation CKRenderComponentTests

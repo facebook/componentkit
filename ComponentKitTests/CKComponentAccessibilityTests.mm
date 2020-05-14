@@ -15,9 +15,11 @@
 
 #import <ComponentKit/CKComponentAccessibility.h>
 
+#import "CKComponentTestCase.h"
+
 using namespace CK::Component::Accessibility;
 
-@interface CKComponentAccessibilityTests : XCTestCase
+@interface CKComponentAccessibilityTests : CKComponentTestCase
 @end
 
 @interface UIView (CKComponentAccessibilityTests)

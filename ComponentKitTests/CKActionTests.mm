@@ -24,6 +24,8 @@
 #import <ComponentKit/CKComponentController.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
 
+#import "CKComponentTestCase.h"
+
 @interface CKComponentActionTestAssertionHandler : NSAssertionHandler
 @end
 
@@ -170,7 +172,7 @@
 }
 @end
 
-@interface CKActionTests : XCTestCase
+@interface CKActionTests : CKComponentTestCase
 @end
 
 @implementation CKActionTests

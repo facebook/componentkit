@@ -16,9 +16,11 @@
 
 #import <ComponentKit/CKTreeVerificationHelpers.h>
 
+#import "CKComponentTestCase.h"
+
 #pragma mark - Tests
 
-@interface CKDetectDuplicateComponentTests : XCTestCase
+@interface CKDetectDuplicateComponentTests : CKComponentTestCase
 
 @end
 

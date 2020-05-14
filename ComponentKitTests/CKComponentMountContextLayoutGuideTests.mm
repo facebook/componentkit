@@ -17,9 +17,11 @@
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKStaticLayoutComponent.h>
 
+#import "CKComponentTestCase.h"
+
 @protocol CKAnalyticsListener;
 
-@interface CKComponentMountContextLayoutGuideTests : XCTestCase
+@interface CKComponentMountContextLayoutGuideTests : CKComponentTestCase
 @end
 
 @interface CKLayoutGuideTestComponent : CKComponent

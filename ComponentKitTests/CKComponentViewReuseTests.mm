@@ -19,7 +19,9 @@
 #import <ComponentKit/ComponentViewManager.h>
 #import <ComponentKit/ComponentViewReuseUtilities.h>
 
-@interface CKComponentViewReuseTests : XCTestCase
+#import "CKComponentTestCase.h"
+
+@interface CKComponentViewReuseTests : CKComponentTestCase
 @end
 
 /** Injects a view not controlled by components and specifies its children should be mounted inside it. */

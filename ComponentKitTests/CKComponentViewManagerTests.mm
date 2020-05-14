@@ -17,9 +17,11 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKCompositeComponent.h>
 
+#import "CKComponentTestCase.h"
+
 using CK::Component::ViewManager;
 
-@interface CKComponentViewManagerTests : XCTestCase
+@interface CKComponentViewManagerTests : CKComponentTestCase
 @end
 
 /** Overrides all subview related methods *except* addSubview: to throw. */

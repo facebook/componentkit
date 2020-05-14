@@ -18,15 +18,16 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKCompositeComponent.h>
 
+#import "CKComponentTestCase.h"
 
 @interface CKDetectScrollComponent : CKCompositeComponent <UIScrollViewDelegate>
 @property (nonatomic, assign) BOOL receivedScroll;
 @end
 
-@interface CKComponentGestureActionsTests : XCTestCase
+@interface CKComponentGestureActionsTests : CKComponentTestCase
 @end
 
-@interface CKComponentDelegateAttributeTests : XCTestCase
+@interface CKComponentDelegateAttributeTests : CKComponentTestCase
 @end
 
 @implementation CKComponentDelegateAttributeTests

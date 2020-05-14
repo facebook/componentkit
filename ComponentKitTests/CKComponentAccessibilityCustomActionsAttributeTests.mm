@@ -17,7 +17,9 @@
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKComponentSubclass.h>
 
-@interface CKComponentAccessibilityCustomActionsAttributeTests : XCTestCase
+#import "CKComponentTestCase.h"
+
+@interface CKComponentAccessibilityCustomActionsAttributeTests : CKComponentTestCase
 @end
 
 @implementation CKComponentAccessibilityCustomActionsAttributeTests

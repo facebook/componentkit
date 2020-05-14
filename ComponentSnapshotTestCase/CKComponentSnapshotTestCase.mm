@@ -15,11 +15,37 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKComponentContextHelper.h>
+#import <ComponentKit/CKComponentCreationValidation.h>
 
 static CKComponent *(^_componentBlock)();
 static CKComponent *_leakyComponent;
 
 @implementation CKComponentSnapshotTestCase
+{
+#if CK_ASSERTIONS_ENABLED
+  CKComponentContextPreviousState _previousState;
+#endif
+}
+
+- (void)setUp
+{
+  [super setUp];
+#if CK_ASSERTIONS_ENABLED
+  _previousState = CKComponentContextHelper::store(
+    [CKComponentCreationValidationContext class],
+    [[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceBuild]
+  );
+#endif
+}
+
+- (void)tearDown
+{
+  [super tearDown];
+#if CK_ASSERTIONS_ENABLED
+  CKComponentContextHelper::restore(_previousState);
+#endif
+}
 
 - (BOOL)compareSnapshotOfComponent:(CKComponent *)component
                          sizeRange:(CKSizeRange)sizeRange

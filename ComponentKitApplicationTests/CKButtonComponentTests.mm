@@ -14,6 +14,7 @@
 #import <ComponentSnapshotTestCase/CKComponentSnapshotTestCase.h>
 
 #import <ComponentKit/CKButtonComponent.h>
+#import <ComponentKitTestHelpers/CKComponentTestRootScope.h>
 
 @interface CKButtonComponentTests : CKComponentSnapshotTestCase
 @end

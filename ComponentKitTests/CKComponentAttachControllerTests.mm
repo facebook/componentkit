@@ -19,6 +19,8 @@
 #import <ComponentKit/CKComponentRootView.h>
 #import <ComponentKitTestHelpers/CKAnalyticsListenerSpy.h>
 
+#import "CKComponentTestCase.h"
+
 @interface CKComponentRootLayoutTestProvider: NSObject <CKComponentRootLayoutProvider>
 
 @end
@@ -48,7 +50,7 @@ struct CKComponentTestAttachResult {
   id<CKComponentRootLayoutProvider> layoutProvider;
 };
 
-@interface CKComponentAttachControllerTests : XCTestCase
+@interface CKComponentAttachControllerTests : CKComponentTestCase
 @end
 
 @implementation CKComponentAttachControllerTests

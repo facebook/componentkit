@@ -16,6 +16,8 @@
 
 #import "yoga/Yoga.h"
 
+#import "CKComponentTestCase.h"
+
 @interface CKFlexboxComponent (Test)
 
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize;
@@ -23,7 +25,7 @@
 
 @end
 
-@interface CKFlexboxComponentTests : XCTestCase
+@interface CKFlexboxComponentTests : CKComponentTestCase
 @end
 
 @implementation CKFlexboxComponentTests

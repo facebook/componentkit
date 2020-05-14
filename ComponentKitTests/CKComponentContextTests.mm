@@ -14,8 +14,11 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentContext.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
+#import <ComponentKit/CKComponentCreationValidation.h>
 #import <ComponentKit/CKLayoutComponent.h>
 #import <ComponentKit/CKRenderComponent.h>
+
+#import <ComponentKitTestHelpers/CKComponentTestRootScope.h>
 
 @interface CKContextTestComponent<T> : CKComponent
 @property (nonatomic, strong) id<NSObject> objectFromContext;
@@ -63,7 +66,11 @@
 - (void)testComponentContextDoesntCleansUpWhenItGoesOutOfScopeIfThereIsRenderComponentInSubtree
 {
   NSObject *o = [[NSObject alloc] init];
-  CKComponent *component = [CKComponent new];
+  CKComponent *component = nil;
+  {
+    CKComponentTestRootScope testScope;
+    component = [CKComponent new];
+  }
 
   {
     CKComponentMutableContext<NSObject> context(o);
@@ -240,8 +247,11 @@
     CKComponentMutableContext<NSObject> context1(o1);
     XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
 
-    // Simulate creation of render component.
-    component1 = [CKComponent new];
+    {
+      CKComponentTestRootScope testScope;
+      // Simulate creation of render component.
+      component1 = [CKComponent new];
+    }
     CKComponentContextHelper::didCreateRenderComponent(component1);
   }
 
@@ -355,7 +365,11 @@
 - (void)testComponentContextDoesntCleansUpWhenItGoesOutOfScopeIfThereIsRenderComponentInSubtree
 {
   NSObject *o = [[NSObject alloc] init];
-  CKComponent *component = [CKComponent new];
+  CKComponent *component = nil;
+  {
+    CKComponentTestRootScope testScope;
+    component = [CKComponent new];
+  }
 
   {
     CKComponentContext<NSObject> context(o);
@@ -430,14 +444,21 @@
   NSObject *o1 = [NSObject alloc];
   NSObject *o2 = [NSObject alloc];
 
-  CKComponent *component1;
+  CKComponent *component1 = nil;
+  {
+    CKComponentTestRootScope testScope;
+    component1 = [CKComponent new];
+  }
 
   {
     CKComponentContext<NSObject> context1(o1);
     XCTAssertEqualObjects(CKComponentContextHelper::fetchAll().objects, @{[NSObject class]: o1});
 
     // Simulate creation of render component.
-    component1 = [CKComponent new];
+    {
+      CKComponentTestRootScope testScope;
+      component1 = [CKComponent new];
+    }
     CKComponentContextHelper::didCreateRenderComponent(component1);
   }
 

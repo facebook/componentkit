@@ -19,10 +19,12 @@
 #import <ComponentKit/CKComponentAnimations.h>
 #import <ComponentKit/CKCompositeComponent.h>
 #import <ComponentKit/CKThreadLocalComponentScope.h>
+#import <ComponentKitTestHelpers/CKComponentTestRootScope.h>
 
 #import "CKComponentAnimationsEquality.h"
+#import "CKComponentTestCase.h"
 
-@interface CKComponentAnimationsTests_LayoutDiffing: XCTestCase
+@interface CKComponentAnimationsTests_LayoutDiffing: CKComponentTestCase
 @end
 
 @interface ComponentWithInitialMountAnimations: CKComponent
@@ -140,7 +142,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
 @end
 
-@interface CKComponentAnimationsTests: XCTestCase
+@interface CKComponentAnimationsTests: CKComponentTestCase
 @end
 
 @implementation CKComponentAnimationsTests
@@ -155,6 +157,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
 - (void)test_ForAllAppearedComponents_AnimationsOnInitialMountAreCollected
 {
+  CKComponentTestRootScope testScope;
   const auto a1 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
   const auto c1 = [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{a1}];
   const auto a2 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
@@ -177,6 +180,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
 - (void)test_ForAllUpdatedComponents_AnimationsFromPreviousComponentAreCollected
 {
+  CKComponentTestRootScope testScope;
   const auto a1 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
   const auto pc1 = [CKComponent new];
   const auto c1 = [ComponentWithAnimationsFromPreviousComponent newWithAnimations:{a1} fromPreviousComponent:pc1];
@@ -225,6 +229,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
 - (void)test_IfHasInitialAnimations_IsNotEmpty
 {
+  CKComponentTestRootScope testScope;
   const auto a1 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
   const auto c1 = [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{a1}];
   const auto as = CKComponentAnimations {
@@ -240,6 +245,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
 - (void)test_IfHasAnimationsFromPreviousComponent_IsNotEmpty
 {
+  CKComponentTestRootScope testScope;
   const auto a1 = CKComponentAnimation([CKComponent new], [CAAnimation new]);
   const auto c1 = [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{a1}];
   const auto as = CKComponentAnimations {
@@ -255,6 +261,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
 - (void)test_IfComponentHasNoInitialAnimations_IsEmpty
 {
+  CKComponentTestRootScope testScope;
   const auto diff = CK::ComponentTreeDiff {
     .appearedComponents = {
       [ComponentWithInitialMountAnimations newWithInitialMountAnimations:{}],
@@ -268,6 +275,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
 - (void)test_IfComponentHasNoAnimationsFromPreviousComponent_IsEmpty
 {
+  CKComponentTestRootScope testScope;
   const auto pc1 = [CKComponent new];
   const auto c1 = [ComponentWithAnimationsFromPreviousComponent newWithAnimations:{} fromPreviousComponent:pc1];
   const auto diff = CK::ComponentTreeDiff {
@@ -384,7 +392,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 }
 @end
 
-@interface CKComponentAnimationTests : XCTestCase
+@interface CKComponentAnimationTests : CKComponentTestCase
 @end
 
 @implementation CKComponentAnimationTests

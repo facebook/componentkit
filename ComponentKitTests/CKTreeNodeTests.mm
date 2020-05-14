@@ -24,6 +24,8 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKRenderTreeNode.h>
 
+#import "CKComponentTestCase.h"
+
 static BOOL verifyChildToParentConnection(id<CKTreeNodeWithChildrenProtocol> parentNode, CKTreeNode *childNode, id<CKRenderComponentProtocol> c) {
   auto const componentKey = [childNode componentKey];
   auto const childComponent = [parentNode childForComponentKey:componentKey].component;
@@ -105,7 +107,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 + (instancetype)newWithIdentifier:(id<NSObject>)identifier;
 @end
 
-@interface CKTreeNodeTests : XCTestCase
+@interface CKTreeNodeTests : CKComponentTestCase
 @end
 
 @implementation CKTreeNodeTests
@@ -402,7 +404,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
 
 @end
 
-@interface CKRenderTreeNodeTests : XCTestCase
+@interface CKRenderTreeNodeTests : CKComponentTestCase
 @end
 
 @implementation CKRenderTreeNodeTests

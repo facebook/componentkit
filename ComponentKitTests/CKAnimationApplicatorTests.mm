@@ -16,10 +16,11 @@
 #import <ComponentKit/CKFunctionalHelpers.h>
 
 #import "CKAnimationSpy.h"
+#import "CKComponentTestCase.h"
 #import "CKComponentAnimationsEquality.h"
 #import "TransactionProviderSpy.h"
 
-@interface CKAnimationApplicatorTests : XCTestCase
+@interface CKAnimationApplicatorTests : CKComponentTestCase
 @end
 
 @implementation CKAnimationApplicatorTests {
@@ -32,6 +33,7 @@
 - (void)setUp
 {
   [super setUp];
+
   // Shared pointers are used to keep instances of CKAnimationSpy that have been
   // captured by CKComponentAnimation hooks alive, otherwise they will capture references
   // to temporaries
@@ -165,7 +167,7 @@
 
 @end
 
-@interface CKAnimationApplicatorTests_Cleanup : XCTestCase
+@interface CKAnimationApplicatorTests_Cleanup : CKComponentTestCase
 @end
 
 @implementation CKAnimationApplicatorTests_Cleanup {
