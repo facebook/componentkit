@@ -89,27 +89,6 @@
   [self assertNumberOfSuccessfulChanges:1 numberOfFailedChanges:0];
 }
 
-- (void)testChangesetIsNotAppliedIfDataSourceIsDeallocated
-{
-  __block auto verifyChangeCount = 0;
-  __block auto applyChangeCount = 0;
-  _dataSource.willVerifyChange = ^{
-    verifyChangeCount++;
-  };
-  _dataSource.didApplyChange = ^{
-    applyChangeCount++;
-  };
-  dispatch_sync(_queue, ^{
-    [self->_changesetApplicator applyChangeset:defaultChangeset()
-                                      userInfo:@{}
-                                           qos:CKDataSourceQOSDefault];
-  });
-  _dataSource = nil;
-  [self waitUntilChangesetApplicatorFinishesItsTasksOnMainQueue];
-  XCTAssertEqual(verifyChangeCount, 0);
-  XCTAssertEqual(applyChangeCount, 0);
-}
-
 - (void)testChangesAreAppliedSequentiallyAfterApplyChangesetIsCalledMultipleTimes
 {
   dispatch_sync(_queue, ^{
