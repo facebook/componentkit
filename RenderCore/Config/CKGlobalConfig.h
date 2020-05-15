@@ -35,6 +35,10 @@ struct CKGlobalConfig {
    Component coalescing mode.
    */
    CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone;
+   /**
+    Used for migrating `lastMountedComponent` in `CKComponentController`.
+    */
+   BOOL lastMountedComponentMigrationEnabled = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

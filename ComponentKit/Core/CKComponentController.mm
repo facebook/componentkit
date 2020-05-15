@@ -14,6 +14,7 @@
 #import <mutex>
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKGlobalConfig.h>
 
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
@@ -98,7 +99,7 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 - (CKComponent *)lastMountedComponent
 {
-  return _component;
+  return CKReadGlobalConfig().lastMountedComponentMigrationEnabled ? self.component : _component;
 }
 
 - (CKComponent *)threadSafe_component
