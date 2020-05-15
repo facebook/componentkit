@@ -88,25 +88,25 @@ static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const CKC
     auto const c = (CKComponent *)layout.component;
     if (c.treeNode) {
       treeNode = c.treeNode;
-      auto const expectedParentNode = rootNode.parentForNodeIdentifier(treeNode.nodeIdentifier);
-      if (expectedParentNode == nil) {
+      auto const registeredParentNode = rootNode.parentForNodeIdentifier(treeNode.nodeIdentifier);
+      if (registeredParentNode == nil) {
         CKCFailAssertWithCategory(CKComponentCompactDescription(c),
                                   @"Missing link from node to its parent on the CKRootTreeNode; \n"
                                   @"make sure your component returns all its children on the CKIterable methods.\n"
                                   @"Component:%@\n"
-                                  @"Expected parent component:%@",
+                                  @"Parent component:%@",
                                   c,
                                   parentNode.component);
-      } else if (expectedParentNode != parentNode) {
+      } else if (registeredParentNode != parentNode) {
         CKCFailAssertWithCategory(CKComponentCompactDescription(c),
                                   @"Incorrect link from node to its parent on the CKRootTreeNode; \n"
                                   @"make sure your component returns all its children on the CKIterable methods.\n"
                                   @"Component:%@\n"
                                   @"Parent component:%@\n"
-                                  @"Expected parent component:%@",
+                                  @"Registered parent component:%@",
                                   c,
                                   parentNode.component,
-                                  expectedParentNode.component);
+                                  registeredParentNode.component);
       }
     }
   }
