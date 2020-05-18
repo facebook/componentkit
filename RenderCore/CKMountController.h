@@ -87,7 +87,7 @@ struct MountController {
 
   const auto &mountInfo() const { return _mountInfo; }
 private:
-  mutable std::unique_ptr<CKMountInfo> _mountInfo;
+  std::unique_ptr<CKMountInfo> _mountInfo;
 
   auto _relinquishMountedView(id<CKMountable> mountable, CKMountCallbackBlock willRelinquishViewBlock) -> void
   {
