@@ -189,12 +189,20 @@ namespace CKRender {
         return;
       }
 
+      // The assumption was that if there was no previous parent this node couldn't
+      // possibly have a state update. In reality this can happen if the previous generation
+      // didn't contain a render component (thus the second phase wouldn't have been performed
+      // and component aren't linked). A state update on a first generation's non reusable
+      // component introducing a reusable component would lead to an incorrect `parentHasStateUpdate`
+      // value.
+      id previousParentOrComponent = params.previousScopeRoot.hasRenderComponentInTree == NO ? (id)component : previousParent;
+
       // Update the `parentHasStateUpdate` param for Faster state/props updates.
       // TODO: Share this value with the value precomputed in the scope
       parentHasStateUpdate = parentHasStateUpdate ||
       (params.buildTrigger == CKBuildTrigger::StateUpdate &&
        CKRender::componentHasStateUpdate(component.scopeHandle,
-                                         previousParent,
+                                         previousParentOrComponent,
                                          params.buildTrigger,
                                          params.stateUpdates));
 
