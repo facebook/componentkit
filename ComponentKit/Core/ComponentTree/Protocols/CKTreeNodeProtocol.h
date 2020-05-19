@@ -140,11 +140,6 @@ NS_SWIFT_NAME(TreeNodeComponentProtocol)
        previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
                params:(const CKBuildComponentTreeParams &)params;
 
-/** Called by `-linkComponent:toParent:previousParent:params:`.  Associated the component with its parent in the scope root*/
-- (void)registerComponent:(id<CKTreeNodeComponentProtocol>)component
-                 toParent:(id<CKTreeNodeWithChildrenProtocol>)parent
-              inScopeRoot:(CKComponentScopeRoot *)scopeRoot;
-
 #if DEBUG
 /** Returns a multi-line string describing this node and its children nodes */
 @property (nonatomic, copy, readonly) NSString *debugDescription;
