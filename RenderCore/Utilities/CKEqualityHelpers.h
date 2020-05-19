@@ -46,7 +46,7 @@ inline uint64_t CKHashCString(const char *str)
   return retval;
 }
 
-#if __LP64__
+#if defined(__LP64__) && __LP64__
 inline size_t CKHash64ToNative(uint64_t key) {
   return key;
 }
