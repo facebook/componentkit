@@ -14,6 +14,7 @@
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKInternalHelpers.h>
+#import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKFunctionalHelpers.h>
 #import <ComponentKit/CKSizeAssert.h>
 
@@ -25,6 +26,7 @@
 #import "CKComponentLayoutBaseline.h"
 #import "CKComponentSubclass.h"
 #import "CKCompositeComponent.h"
+#import "CKThreadLocalComponentScope.h"
 
 const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
   .hadOverflow = @"hadOverflow"
@@ -55,7 +57,43 @@ template class std::vector<CKFlexboxComponentChild>;
 @implementation CKFlexboxComponent {
   CKFlexboxComponentStyle _style;
   std::vector<CKFlexboxComponentChild> _children;
+
+#if CK_ASSERTIONS_ENABLED
+  // @cuva - Attempting to debug a memory related issue - see below comments for more details.
+  // https://fburl.com/tasks/oahenjua
+  std::size_t _barrier;
+  std::vector<CKFlexboxComponentChild> _childrenCopy;
+  std::size_t _childrenSize;
+  NSArray<NSString *> *_description;
+#endif
 }
+
+#if CK_ASSERTIONS_ENABLED
+static NSArray<NSString *> *_makeDescription(const std::vector<CKFlexboxComponentChild>& children) {
+  NSMutableArray<NSString *> *const items = [NSMutableArray new];
+  if (const auto tls = CKThreadLocalComponentScope::currentScope()) {
+    auto stack = tls->stack;
+    while (stack.empty() == false) {
+      const auto top = stack.top();
+      stack.pop();
+      if (top.node.scopeHandle != nil) {
+        [items addObject:@(top.node.scopeHandle.componentTypeName)];
+      }
+    }
+  }
+
+  [items addObject:@"----- Children -------"];
+
+  for (const auto& child : children) {
+    if (child.component.className != nil) {
+      [items addObject:child.component.className];
+    }
+  }
+
+  return items;
+}
+
+#endif
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
@@ -67,8 +105,49 @@ template class std::vector<CKFlexboxComponentChild>;
   if (component) {
     component->_style = style;
     component->_children = children.take();
+
+#if CK_ASSERTIONS_ENABLED
+  if (CKReadGlobalConfig().shouldPerformFlexboxExtraAssertions) {
+    component->_barrier = 42;
+    component->_childrenSize = component->_children.size();
+    for (const auto& child : component->_children) {
+      // Forcibly create a copy of each `CKFlexboxComponentChild` which will in turn generate arc traffic on `child.component`.
+      // The intention is that the arc traffic will acess if the pointers are valid arc pointers.
+      component->_childrenCopy.push_back(child);
+    }
+    component->_description = _makeDescription(component->_children);
+  }
+#endif
   }
   return component;
+}
+
+- (void)dealloc
+{
+#if CK_ASSERTIONS_ENABLED
+  if (CKReadGlobalConfig().shouldPerformFlexboxExtraAssertions) {
+    CKAssert(_barrier == 42, @"Barrier value overriden.\n%@", [_description componentsJoinedByString:@"\n"]);
+    // Somewhat "check" containers integrity.
+    CKAssert(_childrenCopy.size() == _childrenSize, @"_childrenCopy seems busted?\n%@", [_description componentsJoinedByString:@"\n"]);
+    CKAssert(_children.size() == _childrenSize, @"_children seems busted?\n%@", [_description componentsJoinedByString:@"\n"]);
+
+    if (_barrier == 42 && _childrenCopy.size() == _children.size()) {
+      // Check that _children && _childrenCopy are the same w/o trigering arc traffic.
+      for (std::size_t i = 0; i < _childrenSize; ++i) {
+        const auto &c = _children[i];
+        const auto &c2 = _childrenCopy[i];
+        CKAssert(
+          c.component == c2.component,
+          @"Child at index: %ld is different from copy, something was changed between `+new` and `-dealloc`.\n%@",
+          (long)i, [_description componentsJoinedByString:@"\n"]);
+      }
+      // Retriger copy of both _children and _childrenCopy to generate arc traffic
+      const auto copy = _childrenCopy;
+      _childrenCopy = _children;
+      _childrenCopy = copy;
+    }
+  }
+#endif
 }
 
 static bool skipCompositeComponentSize(const CKFlexboxComponentStyle &style) {
