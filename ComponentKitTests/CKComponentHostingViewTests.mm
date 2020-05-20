@@ -33,6 +33,7 @@ typedef struct {
   id<CKComponentSizeRangeProviding> sizeRangeProvider;
   CK::Optional<CGSize> initialSize;
   BOOL shouldUpdateModelAfterCreation = YES;
+  void(^willGenerateComponent)();
 } CKComponentHostingViewConfiguration;
 
 
@@ -55,7 +56,8 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
   auto const model = [[CKComponentHostingViewTestModel alloc]
                       initWithColor:[UIColor orangeColor]
                       size:CKComponentSize::fromCGSize(CGSizeMake(50, 50))
-                      wrapperType:options.wrapperType];
+                      wrapperType:options.wrapperType
+                      willGenerateComponent:options.willGenerateComponent];
   auto const view = [self makeHostingView:options];
   if (options.shouldUpdateModelAfterCreation) {
     view.bounds = CGRectMake(0, 0, 100, 100);
@@ -313,7 +315,8 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
   [view updateModel:[[CKComponentHostingViewTestModel alloc]
                      initWithColor:nil
                      size:{}
-                     wrapperType:CKComponentHostingViewWrapperTypeRenderComponent]
+                     wrapperType:CKComponentHostingViewWrapperTypeRenderComponent
+                     willGenerateComponent:nil]
                mode:CKUpdateModeSynchronous];
   [view layoutIfNeeded];
   const auto c2 = (CKRenderLifecycleTestComponent *)view.mountedLayout.component;
@@ -404,6 +407,28 @@ static CKComponent *CKComponentTestComponentProviderFunc(id<NSObject> model, id<
   [hostingView layoutIfNeeded];
   XCTAssertEqual(_analyticsListenerSpy->_didLayoutComponentTreeHitCount, 1);
   XCTAssertEqual(_analyticsListenerSpy->_didMountComponentHitCount, 1);
+}
+
+- (void)test_CurrentTraitCollectionIsCorrectInBackgroundQueueWhenTraitCollectionIsSet
+{
+  if (@available(iOS 13.0, tvOS 13.0, *)) {
+    __block UITraitCollection *currentTraitCollection = nil;
+    const auto hostingView = [[self class] hostingView:{
+      .analyticsListener = _analyticsListenerSpy,
+      .shouldUpdateModelAfterCreation = YES,
+      .initialSize = CGSizeMake(100, 100),
+      .willGenerateComponent = ^{
+        currentTraitCollection = [UITraitCollection currentTraitCollection];
+      },
+    }];
+
+    XCTAssertEqual(currentTraitCollection.userInterfaceIdiom, hostingView.traitCollection.userInterfaceIdiom);
+    [hostingView updateContext:nil mode:CKUpdateModeAsynchronous];
+    CKRunRunLoopUntilBlockIsTrue(^BOOL{
+      return _analyticsListenerSpy->_didBuildComponentTreeHitCount == 2;
+    });
+    XCTAssertEqual(currentTraitCollection.userInterfaceIdiom, hostingView.traitCollection.userInterfaceIdiom);
+  }
 }
 
 @end

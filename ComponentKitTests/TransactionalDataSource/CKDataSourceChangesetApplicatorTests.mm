@@ -49,6 +49,7 @@
   dispatch_queue_t _queue;
 
   std::atomic<NSUInteger> _buildComponentCount;
+  UITraitCollection *_currentTraitCollection;
 }
 
 - (void)setUp
@@ -286,6 +287,26 @@
   [self assertNumberOfSuccessfulChanges:2 numberOfFailedChanges:2];
 }
 
+- (void)testCurrentTraitCollectionIsCorrectInWorkQueue
+{
+  if (@available(iOS 13.0, tvOS 13.0, *)) {
+    [_changesetApplicator setTraitCollection:[UITraitCollection traitCollectionWithUserInterfaceIdiom:UIUserInterfaceIdiomCarPlay]];
+    [_changesetApplicator
+     applyChangeset:
+     [[[[CKDataSourceChangesetBuilder dataSourceChangeset]
+        withInsertedItems:@{
+          [NSIndexPath indexPathForItem:0 inSection:0]: @0,
+        }]
+       withInsertedSections:[NSIndexSet indexSetWithIndex:0]] build]
+     userInfo:@{}
+     qos:CKDataSourceQOSDefault];
+    CKRunRunLoopUntilBlockIsTrue(^BOOL{
+      return _buildComponentCount == 1;
+    });
+    XCTAssertEqual(_currentTraitCollection.userInterfaceIdiom, UIUserInterfaceIdiomCarPlay);
+  }
+}
+
 static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
 {
   return CK::ComponentBuilder()
@@ -300,6 +321,9 @@ static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
                                stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
           enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations
 {
+  if (@available(iOS 13.0, tvOS 13.0, *)) {
+    _currentTraitCollection = [UITraitCollection currentTraitCollection];
+  }
   _buildComponentCount++;
 }
 

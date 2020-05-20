@@ -28,6 +28,8 @@ using Event = Variant<DidReceiveStateUpdate>;
 
 @interface CKAnalyticsListenerSpy: NSObject <CKAnalyticsListener> {
   @package
+  NSInteger _willBuildComponentTreeHitCount;
+  NSInteger _didBuildComponentTreeHitCount;
   NSInteger _willLayoutComponentTreeHitCount;
   NSInteger _didLayoutComponentTreeHitCount;
   NSInteger _willCollectAnimationsHitCount;

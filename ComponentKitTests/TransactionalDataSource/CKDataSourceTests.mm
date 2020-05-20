@@ -48,6 +48,7 @@ static NSNumber *const kTestinitialiseControllerModel = @2;
   NSInteger _syncModificationStartCounter;
   CKDataSourceState *_state;
   void(^_didModifyPreviousStateBlock)(void);
+  UITraitCollection *_currentTraitCollection;
 }
 
 static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
@@ -460,6 +461,22 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   });
 }
 
+- (void)test_WhenTraitCollectionIsSet_CurrentTraitCollectionIsCorrectInWorkQueue
+{
+  if (@available(iOS 13.0, tvOS 13.0, *)) {
+    const auto dataSource = CKComponentTestDataSource(ComponentProvider, self);
+    [dataSource setTraitCollection:[UITraitCollection traitCollectionWithUserInterfaceIdiom:UIUserInterfaceIdiomCarPlay]];
+    [dataSource
+     applyChangeset:[[CKDataSourceChangesetBuilder dataSourceChangeset] build]
+     mode:CKUpdateModeAsynchronous
+     userInfo:@{}];
+    CKRunRunLoopUntilBlockIsTrue(^BOOL{
+      return _didGenerateChangeCounter == 1;
+    });
+    XCTAssertEqual(_currentTraitCollection.userInterfaceIdiom, UIUserInterfaceIdiomCarPlay);
+  }
+}
+
 #pragma mark - Listener
 
 - (void)dataSource:(CKDataSource *)dataSource
@@ -482,6 +499,9 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
 - (void)dataSource:(CKDataSource *)dataSource willGenerateNewStateWithUserInfo:(NSDictionary *)userInfo
 {
   _willGenerateChangeCounter++;
+  if (@available(iOS 13.0, tvOS 13.0, *)) {
+    _currentTraitCollection = [UITraitCollection currentTraitCollection];
+  }
 }
 
 - (void)dataSource:(CKDataSource *)dataSource didGenerateNewState:(CKDataSourceState *)newState changes:(CKDataSourceAppliedChanges *)changes

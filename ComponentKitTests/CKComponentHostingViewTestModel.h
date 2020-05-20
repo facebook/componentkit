@@ -29,13 +29,15 @@ typedef NS_ENUM(NSUInteger, CKComponentHostingViewWrapperType) {
 
 - (instancetype)initWithColor:(UIColor *)color
                          size:(const CKComponentSize &)size
-                  wrapperType:(CKComponentHostingViewWrapperType)wrapperType;
+                  wrapperType:(CKComponentHostingViewWrapperType)wrapperType
+        willGenerateComponent:(void(^)())willGenerateComponent;
 
 - (instancetype)init CK_NOT_DESIGNATED_INITIALIZER_ATTRIBUTE;
 
 @property (nonatomic, strong, readonly) UIColor *color;
 @property (nonatomic, readonly) CKComponentSize size;
 @property (nonatomic, readonly) CKComponentHostingViewWrapperType wrapperType;
+@property (nonatomic, copy, readonly) void(^willGenerateComponent)();
 
 @end
 
