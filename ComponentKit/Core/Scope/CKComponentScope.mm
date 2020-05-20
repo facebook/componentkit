@@ -51,6 +51,10 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
     [componentClass conformsToProtocol:@protocol(CKReusableComponentProtocol)] == NO,
     NSStringFromClass(componentClass),
     @"Reusable components shouldn't use scopes.");
+  CKCWarnWithCategory(
+    [identifier isKindOfClass:[CKComponent class]] == NO,
+    NSStringFromClass(componentClass),
+    @"Identifier should never be an instance of CKComponent. Identifiers should be **constant**.");
 
   _threadLocalScope = CKThreadLocalComponentScope::currentScope();
   if (_threadLocalScope != nullptr) {
