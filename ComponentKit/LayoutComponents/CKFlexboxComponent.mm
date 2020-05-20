@@ -152,7 +152,7 @@ static NSArray<NSString *> *_makeDescription(const std::vector<CKFlexboxComponen
 
 static bool skipCompositeComponentSize(const CKFlexboxComponentStyle &style) {
   return style.skipCompositeComponentSize.valueOr([](){
-    return CKReadGlobalConfig().skipCompositeComponentSize;
+    return CKReadGlobalConfig().useNodeSize;
   });
 }
 

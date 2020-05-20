@@ -26,7 +26,7 @@ struct CKGlobalConfig {
    Uses the composite component child size to assign size
    properties on yoga node instead of the size of composite component itself
    */
-  BOOL skipCompositeComponentSize = YES;
+  BOOL useNodeSize = YES;
   /**
    Use new method of performing optimistic mutations which can last beyond next mount
    */

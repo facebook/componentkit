@@ -15,6 +15,7 @@
 #import <ComponentKit/CKComponent.h>
 #import <ComponentKit/CKComponentLayout.h>
 #import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKOverlayLayoutComponent.h>
 #import <ComponentKit/CKLinkable.h>
 
 #import "yoga/Yoga.h"
@@ -70,6 +71,10 @@ CK_LINK_REQUIRE_CATEGORY(CKComponent_Yoga)
 
 CK_LINK_REQUIRE_CATEGORY(CKCompositeComponent_Yoga)
 @interface CKCompositeComponent (Yoga)
+@end
+
+CK_LINK_REQUIRE_CATEGORY(CKOverlayLayoutComponent_Yoga)
+@interface CKOverlayLayoutComponent (Yoga)
 @end
 
 #endif

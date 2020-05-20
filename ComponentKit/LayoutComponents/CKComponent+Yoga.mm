@@ -78,3 +78,15 @@ CK_LINKABLE(CKCompositeComponent_Yoga)
 }
 
 @end
+
+CK_LINKABLE(CKOverlayLayoutComponent_Yoga)
+@implementation CKOverlayLayoutComponent (Yoga)
+
+- (CKComponentSize)nodeSize
+{
+  return CKReadGlobalConfig().useNodeSize
+  ? [(CKComponent *)[self childAtIndex:0] nodeSize]
+  : CKComponentSize();
+}
+
+@end
