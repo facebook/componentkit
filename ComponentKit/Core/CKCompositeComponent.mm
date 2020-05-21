@@ -11,7 +11,6 @@
 #import "CKCompositeComponent.h"
 
 #import <ComponentKit/CKAssert.h>
-#import <ComponentKit/CKComponentDescriptionHelper.h>
 #import <ComponentKit/CKMacros.h>
 #import <ComponentKit/CKInternalHelpers.h>
 
@@ -81,11 +80,6 @@
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view size:(const CKComponentSize &)size
 {
   CK_NOT_DESIGNATED_INITIALIZER();
-}
-
-- (NSString *)description
-{
-  return CKComponentDescriptionWithChildren([super description], [NSArray arrayWithObjects:_child, nil]);
 }
 
 - (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
