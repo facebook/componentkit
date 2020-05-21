@@ -111,7 +111,11 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 - (NSString *)description
 {
-  return [NSString stringWithFormat:@"<%s: %p (%@)>", self.typeName, self, self.class];
+  const char *const className = class_getName(self.class);
+  const char *const typeName = self.typeName;
+  return (strcmp(className, self.typeName) == 0)
+  ? [NSString stringWithFormat:@"<%s: %p>", className, self]
+  : [NSString stringWithFormat:@"<%s: %p (%s)>", typeName, self, className];
 }
 
 - (void)didFinishComponentInitialization
