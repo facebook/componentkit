@@ -152,9 +152,10 @@ static UIView *viewFactory()
       .build();
 
   CKComponent *firstComponent =
-  [CKCompositeComponent
-   newWithView:{[UIView class], {}}
-   component:innerComponent];
+  CK::CompositeComponentBuilder()
+      .viewClass([UIView class])
+      .component(innerComponent)
+      .build();
 
   UIView *container = [[UIView alloc] init];
   CK::Component::ViewReuseUtilities::mountingInRootView(container);
@@ -195,9 +196,10 @@ static UIView *viewFactory()
       .build();
 
   CKComponent *firstComponent =
-  [CKCompositeComponent
-   newWithView:{[UIView class], {}}
-   component:innerComponent];
+  CK::CompositeComponentBuilder()
+      .viewClass([UIView class])
+      .component(innerComponent)
+      .build();
 
   UIView *container = [[UIView alloc] init];
   CK::Component::ViewReuseUtilities::mountingInRootView(container);
@@ -223,10 +225,11 @@ static UIView *viewFactory()
   XCTAssertFalse(viewThatEnteredReusePool.hidden, @"View that entered pool should not be hidden since its parent was");
 
   CKComponent *thirdComponent =
-  [CKCompositeComponent
-   newWithView:{[UIView class], {}}
-   component:CK::ComponentBuilder()
-                 .build()];
+  CK::CompositeComponentBuilder()
+      .viewClass([UIView class])
+      .component(CK::ComponentBuilder()
+                 .build())
+      .build();
   {
     ViewManager m(container);
     UIView *newestTopLevelView = m.viewForConfiguration([thirdComponent class], [thirdComponent viewConfiguration]);

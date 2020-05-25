@@ -200,9 +200,10 @@ static UIView *imageViewFactory()
       .viewClass({[CKTestReusableView class], @selector(didEnterReusePool), nil})
       .build();
   CKComponent *component =
-  [CKCompositeComponent
-   newWithView:{{[CKTestReusableView class], @selector(didEnterReusePool), nil}}
-   component:childComponent];
+  CK::CompositeComponentBuilder()
+      .viewClass({[CKTestReusableView class], @selector(didEnterReusePool), nil})
+      .component(childComponent)
+      .build();
 
   UIView *container = [[UIView alloc] init];
   CK::Component::ViewReuseUtilities::mountingInRootView(container);

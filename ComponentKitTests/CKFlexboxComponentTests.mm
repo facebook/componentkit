@@ -416,9 +416,8 @@
         .alignItems(CKFlexboxAlignItemsStart)
         .spacing(5)
         .useDeepYogaTrees(useDeepYogaTrees)
-        .child([CKCompositeComponent
-                       newWithComponent:
-                       CK::FlexboxComponentBuilder()
+        .child(CK::CompositeComponentBuilder()
+                   .component(CK::FlexboxComponentBuilder()
                            .alignItems(CKFlexboxAlignItemsStart)
                            .spacing(5)
                            .useDeepYogaTrees(useDeepYogaTrees)
@@ -441,7 +440,8 @@
                                 .build())
                                .spacingBefore(-10)
                                .spacingAfter(10)
-                           .build()])
+                           .build())
+                   .build())
         .child(CK::ComponentBuilder()
              .viewClass([UIView class])
              .build())
