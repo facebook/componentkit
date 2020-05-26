@@ -156,6 +156,10 @@ static bool skipCompositeComponentSize(const CKFlexboxComponentStyle &style) {
   });
 }
 
+static bool setPercentOnChildNode(const CKFlexboxComponentStyle &style) {
+  return style.useDeepYogaTrees || CKReadGlobalConfig().setPercentOnChildNode;
+}
+
 static float convertFloatToYogaRepresentation(const float& value) {
   return isnan(value) || isinf(value) ? YGUndefined : value;
 }
@@ -494,7 +498,7 @@ static bool hasChildWithRelativePositioning(const CKFlexboxComponentChild &child
     // node size, as it will always we equal to {}
     // and use it's child size instead
     const auto nodeSize = _style.useDeepYogaTrees || skipCompositeComponentSize(_style) ? [child.component nodeSize] : [child.component size];
-    applySizeAttributes(childNode, child, nodeSize, parentWidth, parentHeight, _style.useDeepYogaTrees);
+    applySizeAttributes(childNode, child, nodeSize, parentWidth, parentHeight, setPercentOnChildNode(_style));
 
     YGNodeStyleSetFlexGrow(childNode, child.flexGrow);
     YGNodeStyleSetFlexShrink(childNode, child.flexShrink);
@@ -588,7 +592,7 @@ static void applySizeAttribute(YGNodeRef node,
                                const CKRelativeDimension &childAttribute,
                                const CKRelativeDimension &nodeAttribute,
                                CGFloat parentValue,
-                               BOOL useDeepYogaTrees)
+                               BOOL setPercentOnChildNode)
 {
   switch (childAttribute.type()) {
     case CKRelativeDimension::Type::PERCENT:
@@ -598,7 +602,7 @@ static void applySizeAttribute(YGNodeRef node,
       pointFunc(node, convertFloatToYogaRepresentation(childAttribute.value()));
       break;
     case CKRelativeDimension::Type::AUTO:
-      if (useDeepYogaTrees) {
+      if (setPercentOnChildNode) {
         switch (nodeAttribute.type()) {
           case CKRelativeDimension::Type::PERCENT:
             percentFunc(node, convertFloatToYogaRepresentation(nodeAttribute.value() * 100));
@@ -626,16 +630,16 @@ static void applySizeAttributes(YGNodeRef node,
                                 const CKComponentSize &nodeSize,
                                 CGFloat parentWidth,
                                 CGFloat parentHeight,
-                                BOOL useDeepYogaTrees)
+                                BOOL setPercentOnChildNode)
 {
   const CKComponentSize childSize = child.sizeConstraints;
 
-  applySizeAttribute(node, &YGNodeStyleSetWidthPercent, &YGNodeStyleSetWidth, childSize.width, nodeSize.width, parentWidth, useDeepYogaTrees);
-  applySizeAttribute(node, &YGNodeStyleSetHeightPercent, &YGNodeStyleSetHeight, childSize.height, nodeSize.height, parentHeight, useDeepYogaTrees);
-  applySizeAttribute(node, &YGNodeStyleSetMinWidthPercent, &YGNodeStyleSetMinWidth, childSize.minWidth, nodeSize.minWidth, parentWidth, useDeepYogaTrees);
-  applySizeAttribute(node, &YGNodeStyleSetMaxWidthPercent, &YGNodeStyleSetMaxWidth, childSize.maxWidth, nodeSize.maxWidth, parentWidth, useDeepYogaTrees);
-  applySizeAttribute(node, &YGNodeStyleSetMinHeightPercent, &YGNodeStyleSetMinHeight, childSize.minHeight, nodeSize.minHeight, parentHeight, useDeepYogaTrees);
-  applySizeAttribute(node, &YGNodeStyleSetMaxHeightPercent, &YGNodeStyleSetMaxHeight, childSize.maxHeight, nodeSize.maxHeight, parentHeight, useDeepYogaTrees);
+  applySizeAttribute(node, &YGNodeStyleSetWidthPercent, &YGNodeStyleSetWidth, childSize.width, nodeSize.width, parentWidth, setPercentOnChildNode);
+  applySizeAttribute(node, &YGNodeStyleSetHeightPercent, &YGNodeStyleSetHeight, childSize.height, nodeSize.height, parentHeight, setPercentOnChildNode);
+  applySizeAttribute(node, &YGNodeStyleSetMinWidthPercent, &YGNodeStyleSetMinWidth, childSize.minWidth, nodeSize.minWidth, parentWidth, setPercentOnChildNode);
+  applySizeAttribute(node, &YGNodeStyleSetMaxWidthPercent, &YGNodeStyleSetMaxWidth, childSize.maxWidth, nodeSize.maxWidth, parentWidth, setPercentOnChildNode);
+  applySizeAttribute(node, &YGNodeStyleSetMinHeightPercent, &YGNodeStyleSetMinHeight, childSize.minHeight, nodeSize.minHeight, parentHeight, setPercentOnChildNode);
+  applySizeAttribute(node, &YGNodeStyleSetMaxHeightPercent, &YGNodeStyleSetMaxHeight, childSize.maxHeight, nodeSize.maxHeight, parentHeight, setPercentOnChildNode);
 }
 
 static void applyPositionToEdge(YGNodeRef node, YGEdge edge, CKFlexboxDimension value)

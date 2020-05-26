@@ -28,6 +28,16 @@ struct CKGlobalConfig {
    */
   BOOL useNodeSize = YES;
   /**
+   Uses the overlayout layout component child size to assign size
+   properties on yoga node instead of the size of overlayout component itself
+   */
+  BOOL useNodeSizeOverlayComponent = NO;
+  /**
+   Instead of setting resolving the percentage size manually from parent size
+   set the percent on the yoga node itself instead
+   */
+  BOOL setPercentOnChildNode = NO;
+  /**
    Use new method of performing optimistic mutations which can last beyond next mount
    */
   BOOL useNewStyleOptimisticMutations = NO;
