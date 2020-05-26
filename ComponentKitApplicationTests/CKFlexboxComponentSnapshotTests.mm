@@ -128,7 +128,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
           .flexGrow(1)
           .flexShrink(1)
   .build();
-  
+
   static CKSizeRange kSize = {{500, 500}, {500, 500}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
@@ -1378,7 +1378,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
             .build())
         .build())
   .build();
-  
+
   static CKSizeRange kSize = {{0,0}, {INFINITY, INFINITY}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
@@ -1858,9 +1858,9 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
            .build())
       .marginTop(20)
     .build();
-  
+
   const CKSizeRange kSize = {{200, 0}, {200, INFINITY}};
-  
+
   CKSnapshotVerifyComponent(c, kSize, nil);
 }
 
@@ -3085,7 +3085,6 @@ static CKFlexboxComponentChild flexChild(CKComponent *c, CGFloat flexFactor)
   auto const c = CK::FlexboxComponentBuilder()
   .direction(CKFlexboxDirectionColumn)
   .useDeepYogaTrees(_useDeepYogaTrees)
-  .skipCompositeComponentSize(false)
   .child(CK::ComponentBuilder()
           .viewClass([UIView class])
           .backgroundColor([UIColor greenColor])
@@ -3101,7 +3100,7 @@ static CKFlexboxComponentChild flexChild(CKComponent *c, CGFloat flexFactor)
             .build())
           .build())
   .build();
-  
+
   static CKSizeRange kSize = {{400, 0}, {400, INFINITY}};
   CKSnapshotVerifyComponent(c, kSize, nil);
 }

@@ -26,7 +26,7 @@ struct CKGlobalConfig {
    Uses the composite component child size to assign size
    properties on yoga node instead of the size of composite component itself
    */
-  BOOL useNodeSize = YES;
+  BOOL useNodeSize = NO;
   /**
    Uses the overlayout layout component child size to assign size
    properties on yoga node instead of the size of overlayout component itself

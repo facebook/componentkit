@@ -363,21 +363,6 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   }
 
   /**
-  If set to @c YES, flexbox will use the composite component child size to assign size
-  properties on yoga node instead of the size of composite component itself.
-
-  This is a temporary flag used for migration purposes.
-  */
-  auto &skipCompositeComponentSize(bool d)
-  {
-    constexpr auto isNotSettingPropertiesForChild = !PropBitmap::isSet(PropsBitmap, FlexboxComponentPropId::hasActiveChild);
-    static_assert(isNotSettingPropertiesForChild,
-                  "Properties for the container must be set before the first call to .child()");
-    _style.skipCompositeComponentSize = d;
-    return *this;
-  }
-
-  /**
    Adds a child component with default layout options to this flexbox component.
 
    @param c component to add.
