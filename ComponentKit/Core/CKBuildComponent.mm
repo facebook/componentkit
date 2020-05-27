@@ -120,17 +120,19 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   }
 
   CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;
+  auto const boundsAnimation = CKBuildComponentHelpers::boundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot);
 
   [analyticsListener didBuildComponentTreeWithScopeRoot:newScopeRoot
                                            buildTrigger:buildTrigger
                                            stateUpdates:stateUpdates
                                               component:component
-                      enableComponentReuseOptimizations:enableComponentReuseOptimizations];
+                      enableComponentReuseOptimizations:enableComponentReuseOptimizations
+                                        boundsAnimation:boundsAnimation];
   newScopeRoot.rootComponent = component;
   return {
     .component = component,
     .scopeRoot = newScopeRoot,
-    .boundsAnimation = CKBuildComponentHelpers::boundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot),
+    .boundsAnimation = boundsAnimation,
     .buildTrigger = buildTrigger,
   };
 }

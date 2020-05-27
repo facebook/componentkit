@@ -332,6 +332,7 @@ static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                                  component:(CKComponent *)component
          enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations
+                           boundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation
 {
 
 }

@@ -62,7 +62,8 @@ struct ComponentTreeDiff;
                               buildTrigger:(CKBuildTrigger)buildTrigger
                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                                  component:(CKComponent *)component
-         enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations;
+         enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations
+                           boundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation;
 
 /**
  Called before component tree layout.

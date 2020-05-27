@@ -29,6 +29,7 @@ using namespace CK::AnalyticsListenerSpy;
                               stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                                  component:(CKComponent *)component
         enableComponentReuseOptimizations:(BOOL)enableComponentReuseOptimizations
+                           boundsAnimation:(const CKComponentBoundsAnimation &)boundsAnimation
 {
   _didBuildComponentTreeHitCount++;
 }
