@@ -509,6 +509,8 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 
 - (const char *)typeName
 {
+  // Coalesced component require their type names to differ from their class names.
+  // https://fburl.com/codesearch/tjepeywh
   return class_getName(self.class);
 }
 
