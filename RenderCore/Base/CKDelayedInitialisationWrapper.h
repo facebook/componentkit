@@ -8,7 +8,7 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
+#import <RenderCore/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
@@ -18,8 +18,8 @@
 #include <type_traits>
 #include <utility>
 
-#import <ComponentKit/CKFatal.h>
-#import <ComponentKit/CKOptional.h>
+#import <RenderCore/CKAssert.h>
+#import <RenderCore/CKOptional.h>
 
 namespace CK {
 
@@ -45,7 +45,8 @@ struct DelayedInitialisationWrapper final {
 
   auto get() const -> const T& {
     if (_value.hasValue() == false) {
-      CKCFatal(@"Expecting value to be set");
+      CKCFailAssert(@"Expecting value to be set");
+      std::abort();
     }
     return *_value.unsafeValuePtrOrNull();
   }
@@ -56,7 +57,8 @@ struct DelayedInitialisationWrapper final {
 
   auto get() -> T& {
     if (_value.hasValue() == false) {
-      CKCFatal(@"Expecting value to be set");
+      CKCFailAssert(@"Expecting value to be set");
+      std::abort();
     }
     return *_value.unsafeValuePtrOrNull();
   }
@@ -71,7 +73,8 @@ struct DelayedInitialisationWrapper final {
   template <typename U, typename = std::enable_if_t<std::is_convertible<T, U>::value>>
   operator U() const {
     if (_value.hasValue() == false) {
-      CKCFatal(@"Expecting value to be set");
+      CKCFailAssert(@"Expecting value to be set");
+      std::abort();
     }
     return *_value.unsafeValuePtrOrNull();
   }

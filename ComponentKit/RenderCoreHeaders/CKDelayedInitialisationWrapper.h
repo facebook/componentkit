@@ -8,12 +8,4 @@
  *
  */
 
-#import <ComponentKit/CKDefines.h>
-#import <UIKit/UIKit.h>
-
-/**
- A common root view used by CKComponentHostingView and CKCollectionViewDataSource.
- If implementing your own data source you are not required to use this root view, but you may wish to.
- */
-@interface CKComponentRootView : UIView
-@end
+#import <RenderCore/CKDelayedInitialisationWrapper.h>

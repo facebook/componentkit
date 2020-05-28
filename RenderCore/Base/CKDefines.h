@@ -10,10 +10,10 @@
 
 #import <RenderCore/CKMacros.h>
 
-#if __has_feature(modules)
-  #define CK_SWIFT 1
-#else
+#if defined(__cplusplus) && __cplusplus
   #define CK_SWIFT 0
+#else
+  #define CK_SWIFT 1
 #endif
 
 #define CK_NOT_SWIFT !CK_SWIFT

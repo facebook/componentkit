@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <ComponentKit/CKDelayedInitialisationWrapper.h>
+#include <RenderCore/CKDelayedInitialisationWrapper.h>
 #include <RenderCore/CKNonNull.h>
 
 namespace CK {
