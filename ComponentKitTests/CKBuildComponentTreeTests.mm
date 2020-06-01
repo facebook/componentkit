@@ -50,7 +50,7 @@
 - (void)test_buildComponentTree_onCKComponent
 {
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  auto const root = scopeRoot.rootNode.node();
+  auto const root = [scopeRoot rootNode].node();
   CKComponent *c = [CKComponentTreeTestComponent_Render new];
 
   [c buildComponentTree:root previousParent:nil params:{
@@ -64,8 +64,8 @@
   XCTAssertEqual(root.children[0].component, c);
 
   // Simulate a second tree creation.
-  auto const scopeRoot2 = [scopeRoot newRoot];
-  auto const root2 = scopeRoot2.rootNode.node();
+  auto const scopeRoot2 = [scopeRoot.asNullable() newRoot];
+  auto const root2 = [scopeRoot2 rootNode].node();
   CKComponent *c2 = [CKComponentTreeTestComponent_Render new];
 
   [c2 buildComponentTree:root2 previousParent:root params:{
@@ -83,7 +83,7 @@
 - (void)test_buildComponentTree_onCKRenderComponent
 {
   auto const scopeRoot = CKComponentScopeRootWithDefaultPredicates(nil, nil);
-  auto const root = scopeRoot.rootNode.node();
+  auto const root = [scopeRoot rootNode].node();
   CKComponent *c = [CKComponentTreeTestComponent_Render new];
 
   CKRenderComponent *renderComponent = [CKComponentTreeTestComponent_Render newWithComponent:c];
@@ -110,8 +110,8 @@
   }
 
   // Simulate a second tree creation.
-  auto const scopeRoot2 = [scopeRoot newRoot];
-  auto const root2 = scopeRoot2.rootNode.node();
+  auto const scopeRoot2 = [scopeRoot.asNullable() newRoot];
+  auto const root2 = [scopeRoot2 rootNode].node();
   CKComponent *c2 = [CKComponentTreeTestComponent_Render new];
 
   CKRenderComponent *renderComponent2 = [CKComponentTreeTestComponent_Render newWithComponent:c2];

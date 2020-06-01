@@ -17,6 +17,7 @@
 #import <unordered_set>
 
 #import <ComponentKit/CKComponentScopeTypes.h>
+#import <ComponentKit/CKNonNull.h>
 
 @protocol CKComponentStateListener;
 @protocol CKAnalyticsListener;
@@ -27,8 +28,8 @@
  Initializes a CKComponentScopeRoot with the normal, infrastructure-provided predicates necessary for the framework
  to work. You should use this function to create scope roots unless you really know what you're doing.
  */
-CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener,
-                                                                id<CKAnalyticsListener> analyticsListener);
+CK::NonNull<CKComponentScopeRoot *> CKComponentScopeRootWithDefaultPredicates(id<CKComponentStateListener> listener,
+                                                                              id<CKAnalyticsListener> analyticsListener);
 
 /**
  Initializes a CKComponentScopeRoot with your provided predicates in addition to the normal, infrastructure-provided
@@ -38,9 +39,9 @@ CKComponentScopeRoot *CKComponentScopeRootWithDefaultPredicates(id<CKComponentSt
                             match the predicate for rapid enumeration later.
  @param componentControllerPredicates Same as componentPredicates above, but for component controllers.
  */
-CKComponentScopeRoot *CKComponentScopeRootWithPredicates(id<CKComponentStateListener> listener,
-                                                         id<CKAnalyticsListener> analyticsListener,
-                                                         const std::unordered_set<CKComponentPredicate> &componentPredicates,
-                                                         const std::unordered_set<CKComponentControllerPredicate> &componentControllerPredicates);
+CK::NonNull<CKComponentScopeRoot *> CKComponentScopeRootWithPredicates(id<CKComponentStateListener> listener,
+                                                                       id<CKAnalyticsListener> analyticsListener,
+                                                                       const std::unordered_set<CKComponentPredicate> &componentPredicates,
+                                                                       const std::unordered_set<CKComponentControllerPredicate> &componentControllerPredicates);
 
 #endif
