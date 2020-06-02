@@ -172,6 +172,7 @@ private:
   // Avoid capturing `self` in global queue so that `CKComponentGenerator` does not have a chance to be deallocated outside affined queue.
   const auto componentProvider = _componentProvider;
   const auto affinedQueue = _affinedQueue;
+  __weak const auto weakSelf = self;
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     CKSystraceScope generationScope(asyncGeneration);
     __block std::shared_ptr<const CKBuildComponentResult> result = nullptr;
@@ -191,11 +192,15 @@ private:
 
     const auto applyResult = ^{
       CKSystraceScope applicationScope(asyncApplication);
-      if (![_delegate componentGeneratorShouldApplyAsynchronousGenerationResult:self]) {
+      const auto strongSelf = weakSelf;
+      if (!strongSelf) {
+        return;
+      }
+      if (![strongSelf->_delegate componentGeneratorShouldApplyAsynchronousGenerationResult:strongSelf]) {
         return;
       }
       // If the inputs haven't changed, apply the result; otherwise, retry.
-      const auto shouldRetry = _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &_inputs){
+      const auto shouldRetry = strongSelf->_inputsStore->acquireInputs(^(CKComponentGeneratorInputs &_inputs){
         if (_inputs == *inputs) {
           _inputs.enableComponentReuse = YES;
           _applyResult(*result,
@@ -208,9 +213,9 @@ private:
         }
       });
       if (shouldRetry) {
-        [self generateComponentAsynchronously];
+        [strongSelf generateComponentAsynchronously];
       } else {
-        [_delegate componentGenerator:self didAsynchronouslyGenerateComponentResult:*result];
+        [strongSelf->_delegate componentGenerator:strongSelf didAsynchronouslyGenerateComponentResult:*result];
       }
     };
 
