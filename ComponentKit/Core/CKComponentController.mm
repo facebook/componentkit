@@ -94,7 +94,9 @@ static NSString *componentStateName(CKComponentControllerState state)
                          @"`self.component` must be called on the main thread");
   }
 #endif
-  return _component ?: _latestComponent;
+  const auto component = _component ?: _latestComponent;
+  CKWarn(component != nil, @"`nil` component shouldn't be returned");
+  return component;
 }
 
 - (CKComponent *)lastMountedComponent
