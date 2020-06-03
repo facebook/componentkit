@@ -18,6 +18,7 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKComponentCoalescingMode.h>
+#import <ComponentKit/CKNonNull.h>
 
 @class CKComponentScopeRoot;
 @class CKComponent;
@@ -28,7 +29,7 @@ namespace CKBuildComponentHelpers {
 
    @return The related build trigger given the in input parameters
    */
-  auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> CKBuildTrigger;
+  auto getBuildTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> CKBuildTrigger;
 }
 
 /**

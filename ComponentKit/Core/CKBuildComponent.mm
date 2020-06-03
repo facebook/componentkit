@@ -23,9 +23,9 @@
 #import "CKComponentCreationValidation.h"
 
 namespace CKBuildComponentHelpers {
-  auto getBuildTrigger(CKComponentScopeRoot *scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> CKBuildTrigger
+  auto getBuildTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> CKBuildTrigger
   {
-    if (!scopeRoot.rootNode.isEmpty()) {
+    if (![scopeRoot rootNode].isEmpty()) {
       return (stateUpdates.size() > 0) ? CKBuildTrigger::StateUpdate : CKBuildTrigger::PropsUpdate;
     }
     return CKBuildTrigger::NewTree;
@@ -80,7 +80,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const globalConfig = CKReadGlobalConfig();
 
-  auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
+  auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(CK::makeNonNull(previousRoot), stateUpdates);
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const shouldCollectTreeNodeCreationInformation = [analyticsListener shouldCollectTreeNodeCreationInformation:previousRoot];
 
