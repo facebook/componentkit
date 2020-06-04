@@ -14,10 +14,20 @@
 
 #import <Foundation/Foundation.h>
 
+#include <string>
+#import <ComponentKit/CKAction.h>
+
 /** Exposed only for testing. Do not touch this directly. */
 @interface CKComponentGestureActionForwarder : NSObject
 + (instancetype)sharedInstance;
 - (void)handleGesture:(UIGestureRecognizer *)recognizer;
 @end
+
+CKComponentViewAttributeValue CKComponentGestureAttributeInternal(Class gestureRecognizerClass,
+                                                                  CKComponentGestureRecognizerSetupFunction setupFunction,
+                                                                  CKAction<UIGestureRecognizer *> action,
+                                                                  const std::string& identifierSuffix,
+                                                                  void (^applicatorBlock)(UIView *, UIGestureRecognizer *),
+                                                                  void (^unapplicatorBlock)(UIGestureRecognizer *));
 
 #endif
