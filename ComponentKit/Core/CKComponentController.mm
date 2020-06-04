@@ -27,6 +27,14 @@ typedef NS_ENUM(NSInteger, CKComponentControllerState) {
   CKComponentControllerStateUnmounting,
 };
 
+#if CK_ASSERTIONS_ENABLED
+typedef NS_ENUM(NSInteger, CKComponentControllerLifecycleState) {
+  CKComponentControllerAllocated = 0,
+  CKComponentControllerInitialized,
+  CKComponentControllerInvalidated,
+};
+#endif
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 static NSString *componentStateName(CKComponentControllerState state)
@@ -55,6 +63,7 @@ static NSString *componentStateName(CKComponentControllerState state)
   std::mutex _componentMutex;
 #if CK_ASSERTIONS_ENABLED
   __weak NSThread *_initializationThread;
+  CKComponentControllerLifecycleState _lifecycleState;
 #endif
 }
 
@@ -67,6 +76,16 @@ static NSString *componentStateName(CKComponentControllerState state)
 #endif
   }
   return self;
+}
+
+- (void)dealloc
+{
+#if CK_ASSERTIONS_ENABLED
+  CKWarnWithCategory(
+    _lifecycleState == CKComponentControllerInvalidated || _lifecycleState == CKComponentControllerAllocated,
+    self.component.className,
+    @"Dealloc called but controller was: %td", _lifecycleState);
+#endif
 }
 
 - (void)setLatestComponent:(CKComponent *)latestComponent
@@ -121,7 +140,15 @@ static NSString *componentStateName(CKComponentControllerState state)
   return NO;
 }
 
-- (void)didInit {}
+- (void)didInit {
+#if CK_ASSERTIONS_ENABLED
+  CKWarnWithCategory(_lifecycleState == CKComponentControllerAllocated,
+                     self.component.className,
+                     @"Did init called but controller was: %td", _lifecycleState);
+  _lifecycleState = CKComponentControllerInitialized;
+#endif
+}
+
 - (void)willMount {}
 - (void)didMount {}
 - (void)willRemount {}
@@ -134,7 +161,14 @@ static NSString *componentStateName(CKComponentControllerState state)
 - (void)componentDidAcquireView {}
 - (void)componentTreeWillAppear {}
 - (void)componentTreeDidDisappear {}
-- (void)invalidateController {}
+- (void)invalidateController {
+#if CK_ASSERTIONS_ENABLED
+  CKWarnWithCategory(_lifecycleState == CKComponentControllerInitialized,
+                     self.component.className,
+                     @"Invalidate called but controller was: %td", _lifecycleState);
+  _lifecycleState = CKComponentControllerInvalidated;
+#endif
+}
 - (void)didPrepareLayout:(const CKComponentLayout &)layout forComponent:(CKComponent *)component {}
 
 #pragma mark - Hooks
