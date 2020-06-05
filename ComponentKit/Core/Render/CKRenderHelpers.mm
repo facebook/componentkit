@@ -350,7 +350,7 @@ namespace CKRender {
   }
 
   auto markTreeNodeDirtyIdsFromNodeUntilRoot(CKTreeNodeIdentifier nodeIdentifier,
-                                             CKRootTreeNode &previousRootNode,
+                                             const CKRootTreeNode &previousRootNode,
                                              CKTreeNodeDirtyIds &treeNodesDirtyIds) -> void
   {
     CKTreeNodeIdentifier currentNodeIdentifier = nodeIdentifier;
