@@ -115,7 +115,7 @@
     return root2;
   };
 
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory2, YES);
+  auto const buildResults2 = CKBuildComponent(CK::makeNonNull(buildResults.scopeRoot), stateUpdates, componentFactory2, YES);
 
   // c has dirty parent, however, the components are equal, so we reuse the previous component.
   XCTAssertEqual(c.renderCalledCounter, 1);
@@ -271,7 +271,7 @@
     return root2;
   };
 
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory2, YES);
+  auto const buildResults2 = CKBuildComponent(CK::makeNonNull(buildResults.scopeRoot), stateUpdates, componentFactory2, YES);
 
   // c has dirty parent, however, the components are equal, so we reuse the previous component.
   XCTAssertEqual(c.renderCalledCounter, 1);
@@ -329,7 +329,7 @@
     return c2;
   };
 
-  auto const buildResults = CKBuildComponent(_scopeRoot, {}, componentFactory, YES);
+  auto const buildResults = CKBuildComponent(CK::makeNonNull(_scopeRoot), {}, componentFactory, YES);
 
   // The components are equal, but the node id is dirty - hence, we cannot reuse the previous component.
   [self verifyComponentIsNotBeingReused:_c c2:c2 scopeRoot:_scopeRoot scopeRoot2:buildResults.scopeRoot];
@@ -369,7 +369,7 @@
     return rootComponent2;
   };
 
-  CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory2, YES);
+  CKBuildComponent(CK::makeNonNull(buildResults.scopeRoot), stateUpdates, componentFactory2, YES);
   XCTAssertTrue(c2.childComponent.parentHasStateUpdate);
 }
 
@@ -401,7 +401,7 @@
     return @2;
   });
 
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, YES);
+  auto const buildResults2 = CKBuildComponent(CK::makeNonNull(buildResults.scopeRoot), stateUpdates, componentFactory, YES);
   // Verify c1 has been reused
   XCTAssertTrue(c1.didReuseComponent);
   // Verify components and controllers registration in the scope root.
@@ -442,7 +442,7 @@
     return @2;
   });
 
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, YES);
+  auto const buildResults2 = CKBuildComponent(CK::makeNonNull(buildResults.scopeRoot), stateUpdates, componentFactory, YES);
   // Verify c1 has been reused
   XCTAssertTrue(c2.didReuseComponent);
 
@@ -478,7 +478,7 @@
   });
 
   auto enableComponentReuseOptimizations = NO;
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, enableComponentReuseOptimizations);
+  auto const buildResults2 = CKBuildComponent(CK::makeNonNull(buildResults.scopeRoot), stateUpdates, componentFactory, enableComponentReuseOptimizations);
   // Verify no component have been reused.
   XCTAssertFalse(c1.didReuseComponent);
   XCTAssertFalse(c2.didReuseComponent);
@@ -500,7 +500,7 @@
   auto const buildResults = CKBuildComponent(scopeRoot, {}, componentFactory, YES);
 
   auto enableComponentReuseOptimizations = NO;
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, {}, componentFactory, enableComponentReuseOptimizations);
+  auto const buildResults2 = CKBuildComponent(CK::makeNonNull(buildResults.scopeRoot), {}, componentFactory, enableComponentReuseOptimizations);
   // Verify no component have been reused.
   XCTAssertFalse(c1.didReuseComponent);
   XCTAssertFalse(c2.didReuseComponent);
@@ -599,7 +599,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   NSNumber *newState1 = @10;
   CKComponentStateUpdateMap stateUpdates;
   stateUpdates[c1.childComponent.scopeHandle].push_back(^(id){ return newState1; });
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, YES);
+  auto const buildResults2 = CKBuildComponent(CK::makeNonNull(buildResults.scopeRoot), stateUpdates, componentFactory, YES);
   // Verify `c2.childComponent` gets the correct new state
   XCTAssertEqual(newState1, c1.childComponent.scopeHandle.state);
   // Verify c2 was reused
@@ -612,7 +612,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   CKComponentStateUpdateMap stateUpdates2;
   stateUpdates2[c2.childComponent.scopeHandle].push_back(^(id){ return newState2;});
 
-  auto const buildResults3 = CKBuildComponent(buildResults2.scopeRoot, stateUpdates2, componentFactory, YES);
+  auto const buildResults3 = CKBuildComponent(CK::makeNonNull(buildResults2.scopeRoot), stateUpdates2, componentFactory, YES);
   // Verify `c2.childComponent` gets the correct new state
   XCTAssertEqual(newState2, c2.childComponent.scopeHandle.state);
   // Verify c1 was reused
@@ -627,7 +627,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   CKComponentStateUpdateMap stateUpdates3;
   stateUpdates3[c1.childComponent.scopeHandle].push_back(^(id){ return newState3;});
 
-  auto const buildResults4 = CKBuildComponent(buildResults3.scopeRoot, stateUpdates3, componentFactory, YES);
+  auto const buildResults4 = CKBuildComponent(CK::makeNonNull(buildResults3.scopeRoot), stateUpdates3, componentFactory, YES);
   // Verify `c1.childComponent` gets the correct new state
   XCTAssertEqual(newState3, c1.childComponent.scopeHandle.state);
   // Verify c2 was reused
@@ -658,7 +658,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   NSNumber *newState1 = @10;
   CKComponentStateUpdateMap stateUpdates;
   stateUpdates[c1.scopeHandle].push_back(^(id){ return newState1; });
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, YES);
+  auto const buildResults2 = CKBuildComponent(CK::makeNonNull(buildResults.scopeRoot), stateUpdates, componentFactory, YES);
   // Verify `c2.childComponent` gets the correct new state
   XCTAssertEqual(newState1, c1.scopeHandle.state);
   // Verify c2 was reused
@@ -671,7 +671,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   CKComponentStateUpdateMap stateUpdates2;
   stateUpdates2[c2.scopeHandle].push_back(^(id){ return newState2;});
 
-  auto const buildResults3 = CKBuildComponent(buildResults2.scopeRoot, stateUpdates2, componentFactory, YES);
+  auto const buildResults3 = CKBuildComponent(CK::makeNonNull(buildResults2.scopeRoot), stateUpdates2, componentFactory, YES);
   // Verify `c2.childComponent` gets the correct new state
   XCTAssertEqual(newState2, c2.scopeHandle.state);
   // Verify c1 was reused
@@ -686,7 +686,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   CKComponentStateUpdateMap stateUpdates3;
   stateUpdates3[c1.scopeHandle].push_back(^(id){ return newState3;});
 
-  auto const buildResults4 = CKBuildComponent(buildResults3.scopeRoot, stateUpdates3, componentFactory, YES);
+  auto const buildResults4 = CKBuildComponent(CK::makeNonNull(buildResults3.scopeRoot), stateUpdates3, componentFactory, YES);
   // Verify `c1.childComponent` gets the correct new state
   XCTAssertEqual(newState3, c1.scopeHandle.state);
   // Verify c2 was reused
@@ -719,7 +719,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   NSNumber *newState1 = @10;
   CKComponentStateUpdateMap stateUpdates;
   stateUpdates[c1.scopeHandle].push_back(^(id){ return newState1; });
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory, YES);
+  auto const buildResults2 = CKBuildComponent(CK::makeNonNull(buildResults.scopeRoot), stateUpdates, componentFactory, YES);
   // Verify `c2.childComponent` gets the correct new state
   XCTAssertEqual(newState1, c1.scopeHandle.state);
   // Verify c2 was reused
@@ -791,7 +791,7 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   CKComponentStateUpdateMap stateUpdates;
   auto c1Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c1.child;
   stateUpdates[c1Child.childComponent.scopeHandle].push_back(^(id){ return newState1; });
-  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory2, YES);
+  auto const buildResults2 = CKBuildComponent(CK::makeNonNull(buildResults.scopeRoot), stateUpdates, componentFactory2, YES);
 
   // Accessing the updated children
   c1Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c1.child;

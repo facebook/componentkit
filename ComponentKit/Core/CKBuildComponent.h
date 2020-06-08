@@ -36,13 +36,13 @@ namespace CKBuildComponentHelpers {
  Used to construct a component hierarchy. This is necessary to configure the thread-local state so that components
  can be properly connected to a scope root.
 
- @param previousRoot The previous scope root that was associated with the cell. May be nil if no prior root is available
+ @param previousRoot The previous scope root that was associated with the cell.
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
  @param enableComponentReuseOptimizations If `NO`, all the comopnents will be regenerated (no component reuse optimiztions). `YES` by default.
  @param coalescingMode Defines the coalescing mode to use for the current component tree.
  */
-CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
+CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         BOOL enableComponentReuseOptimizations = YES,

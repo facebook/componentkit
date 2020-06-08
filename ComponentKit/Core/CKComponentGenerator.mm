@@ -151,7 +151,7 @@ private:
     inputs.enableComponentReuse = YES;
     __block CKBuildComponentResult result;
     CKPerformWithCurrentTraitCollection(inputs.traitCollection, ^{
-      result = CKBuildComponent(inputs.scopeRoot, inputs.stateUpdates, ^{
+      result = CKBuildComponent(CK::makeNonNull(inputs.scopeRoot), inputs.stateUpdates, ^{
         return _componentProvider(inputs.model, inputs.context);
       }, enableComponentReuse);
     });
@@ -178,7 +178,7 @@ private:
     __block std::shared_ptr<const CKBuildComponentResult> result = nullptr;
     CKPerformWithCurrentTraitCollection(inputs->traitCollection, ^{
       result = std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
-        inputs->scopeRoot,
+        CK::makeNonNull(inputs->scopeRoot),
         inputs->stateUpdates,
         ^{ return componentProvider(inputs->model, inputs->context); },
         inputs->enableComponentReuse

@@ -71,7 +71,7 @@ namespace CKBuildComponentHelpers {
   }
 }
 
-CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
+CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         BOOL enableComponentReuseOptimizations,
@@ -80,7 +80,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const globalConfig = CKReadGlobalConfig();
 
-  auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(CK::makeNonNull(previousRoot), stateUpdates);
+  auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const shouldCollectTreeNodeCreationInformation = [analyticsListener shouldCollectTreeNodeCreationInformation:previousRoot];
 

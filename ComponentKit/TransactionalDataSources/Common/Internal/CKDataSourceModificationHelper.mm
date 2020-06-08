@@ -30,7 +30,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
   const auto componentFactory = ^{
     return componentProvider(model, context);
   };
-  const CKBuildComponentResult result = CKBuildComponent(previousRoot,
+  const CKBuildComponentResult result = CKBuildComponent(CK::makeNonNull(previousRoot),
                                                          stateUpdates,
                                                          componentFactory,
                                                          enableComponentReuseOptimizations);

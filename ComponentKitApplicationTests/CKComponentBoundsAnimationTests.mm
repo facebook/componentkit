@@ -58,7 +58,7 @@
     return [CKBoundsAnimationComponent newWithIdentifier:@0];
   };
   const CKBuildComponentResult firstResult = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, block);
-  const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, block);
+  const CKBuildComponentResult secondResult = CKBuildComponent(CK::makeNonNull(firstResult.scopeRoot), {}, block);
   XCTAssertEqual(secondResult.boundsAnimation.duration, 0.5);
 }
 
@@ -73,7 +73,7 @@
   const CKComponentLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
   NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container, nil, nil).mountedComponents;
 
-  const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, block);
+  const CKBuildComponentResult secondResult = CKBuildComponent(CK::makeNonNull(firstResult.scopeRoot), {}, block);
   const CKComponentLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
   NSSet *secondMountedComponents = CKMountComponentLayout(secondLayout, container, firstMountedComponents, nil).mountedComponents;
 
@@ -97,7 +97,7 @@
   const CKComponentLayout firstLayout = [firstResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
   NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container, nil, nil).mountedComponents;
 
-  const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, ^{
+  const CKBuildComponentResult secondResult = CKBuildComponent(CK::makeNonNull(firstResult.scopeRoot), {}, ^{
     return CK::FlexboxComponentBuilder()
                .alignItems(CKFlexboxAlignItemsStretch)
                .child([CKBoundsAnimationComponent newWithIdentifier:@0])
@@ -128,7 +128,7 @@
   auto const l1 = [bcr1.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
   auto const v = [[UIView alloc] initWithFrame:{{0, 0}, {50, 50}}];
   auto const mc1 = CKMountComponentLayout(l1, v, nil, nil).mountedComponents;
-  auto const bcr2 = CKBuildComponent(bcr1.scopeRoot, {}, f);
+  auto const bcr2 = CKBuildComponent(CK::makeNonNull(bcr1.scopeRoot), {}, f);
   auto const l2 = [bcr2.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
 
   __unused auto const _ = CKMountComponentLayout(l2, v, mc1, nil).mountedComponents;
@@ -147,7 +147,7 @@
   const CKComponentLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
   NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container, nil, nil).mountedComponents;
 
-  const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, ^{
+  const CKBuildComponentResult secondResult = CKBuildComponent(CK::makeNonNull(firstResult.scopeRoot), {}, ^{
     return [CKBoundsAnimationComponent newWithIdentifier:@1];
   });
   const CKComponentLayout secondLayout = [secondResult.component layoutThatFits:{{100, 100}, {100, 100}} parentSize:{}];
@@ -177,7 +177,7 @@
   const CKComponentLayout firstLayout = [firstResult.component layoutThatFits:{{50, 50}, {50, 50}} parentSize:{}];
   NSSet *firstMountedComponents = CKMountComponentLayout(firstLayout, container, nil, nil).mountedComponents;
 
-  const CKBuildComponentResult secondResult = CKBuildComponent(firstResult.scopeRoot, {}, ^{
+  const CKBuildComponentResult secondResult = CKBuildComponent(CK::makeNonNull(firstResult.scopeRoot), {}, ^{
     // Change the scope identifier for the new version of the stack. This means that the outer view's bounds change
     // shouldn't be animated; crucially, the *inner* view's bounds change should *also* not be animated, even though
     // it is recycling the same view.
@@ -211,7 +211,7 @@
 {
   auto const f = ^{ return [CKBoundsAnimationComponent newWithIdentifier:@0]; };
   auto const bcr1 = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, f);
-  auto const bcr2 = CKBuildComponent(bcr1.scopeRoot, {}, f);
+  auto const bcr2 = CKBuildComponent(CK::makeNonNull(bcr1.scopeRoot), {}, f);
   XCTAssertEqualObjects(bcr2.boundsAnimation.component, bcr2.component);
 }
 #endif
