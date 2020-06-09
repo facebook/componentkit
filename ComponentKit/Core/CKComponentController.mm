@@ -81,10 +81,9 @@ static NSString *componentStateName(CKComponentControllerState state)
 - (void)dealloc
 {
 #if CK_ASSERTIONS_ENABLED
-  CKWarnWithCategory(
+  CKWarn(
     _lifecycleState == CKComponentControllerInvalidated || _lifecycleState == CKComponentControllerAllocated,
-    self.component.className,
-    @"Dealloc called but controller was: %td", _lifecycleState);
+    @"Dealloc called but controller (%@) was: %td", self.class, _lifecycleState);
 #endif
 }
 
@@ -146,9 +145,8 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 - (void)didInit {
 #if CK_ASSERTIONS_ENABLED
-  CKWarnWithCategory(_lifecycleState == CKComponentControllerAllocated,
-                     self.component.className,
-                     @"Did init called but controller was: %td", _lifecycleState);
+  CKWarn(_lifecycleState == CKComponentControllerAllocated,
+         @"Did init called but controller (%@) was: %td", self.class, _lifecycleState);
   _lifecycleState = CKComponentControllerInitialized;
 #endif
 }
@@ -167,9 +165,9 @@ static NSString *componentStateName(CKComponentControllerState state)
 - (void)componentTreeDidDisappear {}
 - (void)invalidateController {
 #if CK_ASSERTIONS_ENABLED
-  CKWarnWithCategory(_lifecycleState == CKComponentControllerInitialized,
-                     self.component.className,
-                     @"Invalidate called but controller was: %td", _lifecycleState);
+  CKWarn(_lifecycleState == CKComponentControllerInitialized,
+         self.component.className,
+         @"Invalidate called but controller (%@) was: %td", self.class, _lifecycleState);
   _lifecycleState = CKComponentControllerInvalidated;
 #endif
 }
