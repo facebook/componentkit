@@ -125,14 +125,18 @@ static NSString *componentStateName(CKComponentControllerState state)
 
 - (CKComponent *)threadSafe_component
 {
+  CKComponent *component = nil;
   if ([NSThread isMainThread]) {
-    return _component ?: _latestComponent;
+    component = _component ?: _latestComponent;
   } else {
     CKAssert(self.shouldAcquireLockWhenUpdatingComponent,
              @"threadSafe_component should only be called when updating component is thread safe as well");
     std::lock_guard<std::mutex> lock(_componentMutex);
-    return _component ?: _latestComponent;
+    component = _component ?: _latestComponent;
   }
+
+  CKWarn(component != nil, @"`nil` component shouldn't be returned");
+  return component;
 }
 
 - (BOOL)shouldAcquireLockWhenUpdatingComponent
