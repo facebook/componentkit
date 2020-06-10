@@ -136,12 +136,6 @@ private:
   _boundsAnimation = {};
 }
 
-- (void)unmount
-{
-  CKAssertMainThread();
-  [_attachController detachComponentLayoutWithScopeIdentifier:_scopeIdentifier];
-}
-
 @end
 
 @implementation CKComponentHostingContainerLayoutProvider

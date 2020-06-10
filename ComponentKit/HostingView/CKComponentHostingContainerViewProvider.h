@@ -43,7 +43,6 @@
 - (void)setComponent:(CKComponent *)component;
 
 - (void)mount;
-- (void)unmount;
 
 @end
 
