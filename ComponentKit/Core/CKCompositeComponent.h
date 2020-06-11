@@ -33,39 +33,39 @@ NS_SWIFT_NAME(CompositeComponent)
 CK_COMPONENT_INIT_UNAVAILABLE;
 
 // TODO: Remove when `-initWithView:component` is exposed to Swift.
-- (instancetype _Nullable)initWithComponent:(NS_RELEASES_ARGUMENT CKComponent *_Nullable)component CK_SWIFT_DESIGNATED_INITIALIZER;
+- (instancetype _Nullable)initWithComponent:(NS_RELEASES_ARGUMENT id<CKMountable> _Nullable)component CK_SWIFT_DESIGNATED_INITIALIZER;
 
 #if CK_NOT_SWIFT
 
 - (instancetype _Nullable)initWithView:(const CKComponentViewConfiguration &)view
-                             component:(NS_RELEASES_ARGUMENT CKComponent  * _Nullable)component NS_DESIGNATED_INITIALIZER;
+                             component:(NS_RELEASES_ARGUMENT id<CKMountable> _Nullable)component NS_DESIGNATED_INITIALIZER;
 
 /** Calls the initializer with {} for view. */
-+ (instancetype _Nullable)newWithComponent:(NS_RELEASES_ARGUMENT CKComponent * _Nullable)component;
++ (instancetype _Nullable)newWithComponent:(NS_RELEASES_ARGUMENT id<CKMountable> _Nullable)component;
 
 /**
  @param view Passed to CKComponent's initializer. This should be used sparingly for CKCompositeComponent. Prefer
  delegating view configuration completely to the child component to hide implementation details.
  @param component The component the composite component uses for layout and sizing.
  */
-+ (instancetype _Nullable)newWithView:(const CKComponentViewConfiguration &)view component:(NS_RELEASES_ARGUMENT CKComponent  * _Nullable)component;
++ (instancetype _Nullable)newWithView:(const CKComponentViewConfiguration &)view component:(NS_RELEASES_ARGUMENT id<CKMountable> _Nullable)component;
 
 #endif
 
 /** Access the child component. For internal use only. */
-@property (nonatomic, strong, readonly, nullable) CKComponent *child;
+@property (nonatomic, strong, readonly, nullable) id<CKMountable> child;
 
 @end
 
 #if CK_SWIFT
 #define CK_COMPOSITE_COMPONENT_INIT_UNAVAILABLE \
-  - (instancetype _Nullable)initWithComponent:(NS_RELEASES_ARGUMENT CKComponent *_Nullable)component NS_UNAVAILABLE
+  - (instancetype _Nullable)initWithComponent:(NS_RELEASES_ARGUMENT id<CKMountable> _Nullable)component NS_UNAVAILABLE
 #else
 #define CK_COMPOSITE_COMPONENT_INIT_UNAVAILABLE \
   - (instancetype _Nullable)initWithView:(const CKComponentViewConfiguration &)view \
-                               component:(NS_RELEASES_ARGUMENT CKComponent  * _Nullable)component NS_UNAVAILABLE; \
-  + (instancetype _Nullable)newWithComponent:(NS_RELEASES_ARGUMENT CKComponent * _Nullable)component NS_UNAVAILABLE; \
-  + (instancetype _Nullable)newWithView:(const CKComponentViewConfiguration &)view component:(NS_RELEASES_ARGUMENT CKComponent  * _Nullable)component NS_UNAVAILABLE;
+                               component:(NS_RELEASES_ARGUMENT id<CKMountable>  _Nullable)component NS_UNAVAILABLE; \
+  + (instancetype _Nullable)newWithComponent:(NS_RELEASES_ARGUMENT id<CKMountable>  _Nullable)component NS_UNAVAILABLE; \
+  + (instancetype _Nullable)newWithView:(const CKComponentViewConfiguration &)view component:(NS_RELEASES_ARGUMENT id<CKMountable> _Nullable)component NS_UNAVAILABLE;
 #endif
 
 NS_ASSUME_NONNULL_END

@@ -29,7 +29,7 @@ struct CKTestChildRenderComponentProps {
 // CKCompositeComponent with scope and state.
 @interface CKCompositeComponentWithScopeAndState : CKCompositeComponent
 + (instancetype)newWithComponent:(CKComponent *)component;
-- (CKComponent *)child;
+- (CKComponent *)childComponent;
 @end
 
 // Render component with a `CKTestChildRenderComponent` child component.
@@ -66,5 +66,5 @@ struct CKTestRenderComponentProps {
 @interface CKCompositeComponentWithScope : CKCompositeComponent
 + (instancetype)newWithComponentProvider:(CKComponent *(^)())componentProvider;
 + (instancetype)newWithComponentProvider:(CKComponent *(^)())componentProvider scopeIdentifier:(id)scopeIdentifier;
-- (CKComponent *)child;
+- (CKComponent *)childComponent;
 @end

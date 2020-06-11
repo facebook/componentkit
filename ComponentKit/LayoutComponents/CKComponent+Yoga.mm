@@ -10,6 +10,9 @@
 
 #import "CKComponent+Yoga.h"
 
+#import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKInternalHelpers.h>
+
 #import "CKComponentInternal.h"
 
 YGConfigRef ckYogaDefaultConfig()
@@ -58,22 +61,28 @@ CK_LINKABLE(CKCompositeComponent_Yoga)
 
 - (BOOL)isYogaBasedLayout
 {
-  return self.child.isYogaBasedLayout;
+  if (id const yogaBasedChild = CKReturnIfResponds(self.child, @selector(isYogaBasedLayout))) {
+    return [yogaBasedChild isYogaBasedLayout];
+  }
+  return NO;
 }
 
 - (CKComponentSize)nodeSize
 {
-  return [self.child nodeSize];
+  CKCAssertWithCategory([self.child respondsToSelector:_cmd], ([NSString stringWithFormat:@"%@-%@", self.className, self.child.className]), @"%@ doesn't respond to %@", self.child.className, NSStringFromSelector(_cmd));
+  return [(id)self.child nodeSize];;
 }
 
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize
 {
-  return [self.child ygNode:constrainedSize];
+  CKCAssertWithCategory([self.child respondsToSelector:_cmd], ([NSString stringWithFormat:@"%@-%@", self.className, self.child.className]), @"%@ doesn't respond to %@", self.child.className, NSStringFromSelector(_cmd));
+  return [(id)self.child ygNode:constrainedSize];
 }
 
 - (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
 {
-  const CKComponentLayout l = [self.child layoutFromYgNode:layoutNode thatFits:constrainedSize];
+  CKCAssertWithCategory([self.child respondsToSelector:_cmd], ([NSString stringWithFormat:@"%@-%@", self.className, self.child.className]), @"%@ doesn't respond to %@", self.child.className, NSStringFromSelector(_cmd));
+  auto const l = [(id)self.child layoutFromYgNode:layoutNode thatFits:constrainedSize];
   return {self, l.size, {{{0,0}, l}}};
 }
 

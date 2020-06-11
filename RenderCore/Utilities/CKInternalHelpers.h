@@ -64,4 +64,10 @@ static inline CGFloat CKRoundValueToPixelGrid(CGFloat value, const BOOL forceCei
     return scaledValue / scale;
 }
 
+// Can be used to introduce a new "checked" identifier confined to a smaller scope, i.e.
+// if (id const checked = CKReturnIfResponds(any, @selector(method)) {
+//   [checked method]; // Safe!
+// }
+auto CKReturnIfResponds(id const obj, SEL const sel) -> id;
+
 #endif

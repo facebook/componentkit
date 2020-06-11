@@ -60,7 +60,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
   XCTAssertFalse(diff.isEmpty());
   const auto expectedDiff = CK::ComponentTreeDiff {
-    .appearedComponents = {c.child},
+    .appearedComponents = {CK::objCForceCast<CKComponent>(c.child)},
   };
   XCTAssert(diff == expectedDiff);
 }
@@ -98,7 +98,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
 
   XCTAssertFalse(diff.isEmpty());
   const auto expectedDiff = CK::ComponentTreeDiff {
-    .updatedComponents = {{c.child, c2.child}},
+    .updatedComponents = {{CK::objCForceCast<CKComponent>(c.child), CK::objCForceCast<CKComponent>(c2.child)}},
   };
   XCTAssert(diff == expectedDiff);
 }

@@ -75,3 +75,8 @@ CGFloat CKRoundPixelValue(CGFloat f) noexcept
 {
   return roundf(f * CKScreenScale()) / CKScreenScale();
 }
+
+auto CKReturnIfResponds(id const obj, SEL const sel) -> id
+{
+  return [obj respondsToSelector:sel] ? obj : nil;
+}

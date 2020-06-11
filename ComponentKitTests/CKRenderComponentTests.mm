@@ -431,7 +431,7 @@
   [self verifyComponentsAndControllersAreRegisteredInScopeRoot:buildResults.scopeRoot
                                                     components:{
     c1, c1.childComponent,
-    c2, c2.nonRenderChildComponent, c2.nonRenderChildComponent.child,
+    c2, c2.nonRenderChildComponent, c2.nonRenderChildComponent.childComponent,
   }
                                             componentPredicate:&CKAllNonNilComponentsTestsPredicate
                                   componentControllerPredicate:&CKAllNonNilComponentsControllersTestsPredicate];
@@ -450,7 +450,7 @@
   [self verifyComponentsAndControllersAreRegisteredInScopeRoot:buildResults2.scopeRoot
                                                     components:{
     c1, c1.childComponent,
-    c2, c2.nonRenderChildComponent, c2.nonRenderChildComponent.child,
+    c2, c2.nonRenderChildComponent, c2.nonRenderChildComponent.childComponent,
   }
                                             componentPredicate:&CKAllNonNilComponentsTestsPredicate
                                   componentControllerPredicate:&CKAllNonNilComponentsControllersTestsPredicate];
@@ -789,13 +789,13 @@ static CKCompositeComponentWithScopeAndState* generateComponentHierarchyWithComp
   // Simulate state update on c1.child.childComponent
   NSNumber *newState1 = @10;
   CKComponentStateUpdateMap stateUpdates;
-  auto c1Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c1.child;
+  auto c1Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c1.childComponent;
   stateUpdates[c1Child.childComponent.scopeHandle].push_back(^(id){ return newState1; });
   auto const buildResults2 = CKBuildComponent(CK::makeNonNull(buildResults.scopeRoot), stateUpdates, componentFactory2, YES);
 
   // Accessing the updated children
-  c1Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c1.child;
-  auto c2Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c2.child;
+  c1Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c1.childComponent;
+  auto c2Child = (CKTestRenderWithNonRenderWithStateChildComponent *)c2.childComponent;
 
   // Verify `c2.child.childComponent` gets the correct new state
   XCTAssertEqual(newState1, c1Child.childComponent.scopeHandle.state);
