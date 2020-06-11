@@ -15,6 +15,7 @@
 
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKGlobalConfig.h>
+#import <ComponentKit/CKInternalHelpers.h>
 
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
@@ -82,7 +83,10 @@ static NSString *componentStateName(CKComponentControllerState state)
 {
 #if CK_ASSERTIONS_ENABLED
   CKWarn(
-    _lifecycleState == CKComponentControllerInvalidated || _lifecycleState == CKComponentControllerAllocated,
+    _lifecycleState == CKComponentControllerInvalidated ||
+    _lifecycleState == CKComponentControllerAllocated ||
+    (_lifecycleState == CKComponentControllerInitialized &&
+     !CKSubclassOverridesInstanceMethod([CKComponentController class], self.class, @selector(invalidateController))),
     @"Dealloc called but controller (%@) was: %td", self.class, _lifecycleState);
 #endif
 }
@@ -165,7 +169,9 @@ static NSString *componentStateName(CKComponentControllerState state)
 - (void)componentTreeDidDisappear {}
 - (void)invalidateController {
 #if CK_ASSERTIONS_ENABLED
-  CKWarn(_lifecycleState == CKComponentControllerInitialized,
+  CKWarn(_lifecycleState == CKComponentControllerInitialized ||
+         (_lifecycleState == CKComponentControllerAllocated &&
+          !CKSubclassOverridesInstanceMethod([CKComponentController class], self.class, @selector(didInit))),
          self.component.className,
          @"Invalidate called but controller (%@) was: %td", self.class, _lifecycleState);
   _lifecycleState = CKComponentControllerInvalidated;
