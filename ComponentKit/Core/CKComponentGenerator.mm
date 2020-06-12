@@ -330,8 +330,11 @@ static std::vector<CKComponentController *> _addedComponentControllersBetweenSco
     });
     [_delegate componentGenerator:self didReceiveComponentStateUpdateWithMode:mode];
   };
-  if (!_affinedQueue || _affinedQueue == dispatch_get_main_queue()) {
+  if (_affinedQueue == dispatch_get_main_queue()) {
     enqueueStateUpdate();
+  } else if (!_affinedQueue) {
+    // Dispatch to avoid potential deadlock.
+    dispatch_async(dispatch_get_main_queue(), enqueueStateUpdate);
   } else {
     dispatch_async(_affinedQueue, enqueueStateUpdate);
   }
