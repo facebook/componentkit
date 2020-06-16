@@ -10,9 +10,6 @@
 
 #import "CKImageComponent.h"
 
-@interface CKImageView : UIImageView
-@end
-
 @implementation CKImageComponent
 
 + (instancetype)newWithImage:(UIImage *)image
@@ -26,27 +23,9 @@
 
   return [self
           newWithView:{
-            [CKImageView class],
+            [UIImageView class],
             std::move(updatedAttributes)
           } size:size];
-}
-
-@end
-
-@implementation CKImageView
-
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
-{
-  [super traitCollectionDidChange:previousTraitCollection];
-  if (@available(iOS 13.0, tvOS 13.0, *)) {
-    // In the case where image appearance is decided by color apperance from trait collection,
-    // we need to reset image manually in image view to get the correct color appearance.
-    if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
-      const auto image = self.image;
-      self.image = nil;
-      self.image = image;
-    }
-  }
 }
 
 @end
