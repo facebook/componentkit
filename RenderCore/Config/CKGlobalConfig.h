@@ -54,6 +54,11 @@ struct CKGlobalConfig {
     When true flexbox has additional assertions.
     */
    BOOL shouldPerformFlexboxExtraAssertions = NO;
+
+   /**
+    When true controllers won't be registered in the new scope root when a component subsequently renders-to-nil.
+    */
+   BOOL shouldSkipControllerRegistrationWhenRenderingToNil = NO;
 };
 
 CKGlobalConfig CKReadGlobalConfig();

@@ -171,6 +171,7 @@
 }
 
 - (void)resolveInScopeRoot:(CKComponentScopeRoot *)scopeRoot
+shouldSkipControllerRegistrationOnRenderToNil:(BOOL)shouldSkipControllerRegistrationOnRenderToNil
 {
   CKAssertFalse(_resolved);
 
@@ -188,9 +189,20 @@
   // in the predicates.
   [scopeRoot registerComponent:acquiredComponent];
 
-  // Always register the controller in the scope root if it's present - inc.
-  // when rendering to nil.
-  [scopeRoot registerComponentController:_controller];
+  if (shouldSkipControllerRegistrationOnRenderToNil) {
+    if (acquiredComponent != nil) {
+      // Only register the controller if we're not rendering to nil.
+      [scopeRoot registerComponentController:_controller];
+    } else {
+      // We've rendered to nil - clear out the controller. It will be re-allocated on
+      // the next non-nil render.
+      _controller = nil;
+    }
+  } else {
+    // Always register the controller in the scope root if it's present - inc.
+    // when rendering to nil.
+    [scopeRoot registerComponentController:_controller];
+  }
 }
 
 - (CKScopedResponder *)scopedResponder

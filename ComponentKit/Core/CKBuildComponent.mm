@@ -90,6 +90,7 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
                                           enableComponentReuseOptimizations,
                                           shouldCollectTreeNodeCreationInformation,
                                           globalConfig.alwaysBuildRenderTree,
+                                          globalConfig.shouldSkipControllerRegistrationWhenRenderingToNil,
                                           coalescingMode);
 
   [analyticsListener willBuildComponentTreeWithScopeRoot:previousRoot
