@@ -150,10 +150,6 @@ static NSArray<NSString *> *_makeDescription(const std::vector<CKFlexboxComponen
 #endif
 }
 
-static bool skipCompositeComponentSize(const CKFlexboxComponentStyle &style) {
-  return style.useDeepYogaTrees || CKReadGlobalConfig().useNodeSize;
-}
-
 static bool setPercentOnChildNode(const CKFlexboxComponentStyle &style) {
   return style.useDeepYogaTrees || CKReadGlobalConfig().setPercentOnChildNode;
 }
@@ -491,11 +487,10 @@ static bool hasChildWithRelativePositioning(const CKFlexboxComponentChild &child
       YGNodeSetBaselineFunc(childNode, useHeightAsBaselineFunction);
     }
 
-    // If deep yoga trees are on, we need to make
-    // sure we do not include CKCompositeSize as
-    // node size, as it will always we equal to {}
-    // and use it's child size instead
-    const auto nodeSize = skipCompositeComponentSize(_style) ? [child.component nodeSize] : [child.component size];
+    // We need to make sure we do not include CKCompositeComponent
+    // size as node size, as it will always we equal to {} and
+    // use its child size instead
+    const auto nodeSize = [child.component nodeSize];
     applySizeAttributes(childNode, child, nodeSize, parentWidth, parentHeight, setPercentOnChildNode(_style));
 
     YGNodeStyleSetFlexGrow(childNode, child.flexGrow);

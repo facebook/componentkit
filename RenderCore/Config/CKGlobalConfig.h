@@ -23,11 +23,6 @@ struct CKGlobalConfig {
   /** If enabled, CKBuildComponent will always build the component tree (CKTreeNode), even if there is no Render component in the tree*/
   BOOL alwaysBuildRenderTree = NO;
   /**
-   Uses the composite component child size to assign size
-   properties on yoga node instead of the size of composite component itself
-   */
-  BOOL useNodeSize = YES;
-  /**
    Uses the overlayout layout component child size to assign size
    properties on yoga node instead of the size of overlayout component itself
    */
