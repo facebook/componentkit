@@ -18,7 +18,6 @@
 #import <ComponentKit/CKComponentScopeTypes.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKComponentCoalescingMode.h>
-#import <ComponentKit/CKNonNull.h>
 
 @class CKComponentScopeRoot;
 @class CKComponent;

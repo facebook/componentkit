@@ -99,7 +99,7 @@
     return [CKComponent new];
   };
 
-  (void)CKBuildComponent(CK::makeNonNull(firstBuildResult.scopeRoot), {}, block2);
+  (void)CKBuildComponent(firstBuildResult.scopeRoot, {}, block2);
 
   XCTAssertEqualObjects(state, nextState);
 }

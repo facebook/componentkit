@@ -20,6 +20,7 @@
 #import <ComponentKit/CKComponentControllerHelper.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentScopeRootFactory.h>
+#import <ComponentKit/CKDelayedInitialisationWrapper.h>
 #import <ComponentKit/CKGlobalConfig.h>
 #import <ComponentKit/CKSystraceScope.h>
 #import <ComponentKit/CKTraitCollectionHelper.h>
@@ -149,7 +150,7 @@ private:
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
     const auto enableComponentReuse = inputs.enableComponentReuse;
     inputs.enableComponentReuse = YES;
-    __block CKBuildComponentResult result;
+    __block CK::DelayedInitialisationWrapper<CKBuildComponentResult> result;
     CKPerformWithCurrentTraitCollection(inputs.traitCollection, ^{
       result = CKBuildComponent(CK::makeNonNull(inputs.scopeRoot), inputs.stateUpdates, ^{
         return _componentProvider(inputs.model, inputs.context);
@@ -157,8 +158,8 @@ private:
     });
     _applyResult(result,
                  inputs,
-                 _addedComponentControllersBetweenScopeRoots(result.scopeRoot, inputs.scopeRoot),
-                 _invalidComponentControllersBetweenScopeRoots(result.scopeRoot, inputs.scopeRoot));
+                 _addedComponentControllersBetweenScopeRoots(result.get().scopeRoot, inputs.scopeRoot),
+                 _invalidComponentControllersBetweenScopeRoots(result.get().scopeRoot, inputs.scopeRoot));
     return result;
   });
 }

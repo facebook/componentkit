@@ -333,7 +333,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
   // Simulate a props update which *reorders* the children.
   __block CKTreeNodeTest_RenderComponent_WithIdentifier *c1SecondGen;
   __block CKTreeNodeTest_RenderComponent_WithIdentifier *c2SecondGen;
-  auto const results2 = CKBuildComponent(CK::makeNonNull(results.scopeRoot), {}, ^CKComponent *{
+  auto const results2 = CKBuildComponent(results.scopeRoot, {}, ^CKComponent *{
     c1SecondGen = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@1];
     c2SecondGen = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@2];
     return CK::FlexboxComponentBuilder()
@@ -368,7 +368,7 @@ static CKComponent* buildComponent(CKComponent*(^block)()) {
   // Simulate a props update which *removes* c2 from the hierarchy.
   __block CKTreeNodeTest_RenderComponent_WithIdentifier *c1SecondGen;
   __block CKTreeNodeTest_RenderComponent_WithIdentifier *c3SecondGen;
-  auto const results2 = CKBuildComponent(CK::makeNonNull(results.scopeRoot), {}, ^CKComponent *{
+  auto const results2 = CKBuildComponent(results.scopeRoot, {}, ^CKComponent *{
     c1SecondGen = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@1];
     c3SecondGen = [CKTreeNodeTest_RenderComponent_WithIdentifier newWithIdentifier:@3];
     return CK::FlexboxComponentBuilder()

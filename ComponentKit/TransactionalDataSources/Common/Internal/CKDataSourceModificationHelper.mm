@@ -36,7 +36,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
                                                          enableComponentReuseOptimizations);
   const auto rootLayout = CKComputeRootComponentLayout(result.component,
                                                        sizeRange,
-                                                       result.scopeRoot.analyticsListener,
+                                                       [result.scopeRoot analyticsListener],
                                                        result.buildTrigger,
                                                        result.scopeRoot);
   return [[CKDataSourceItem alloc] initWithRootLayout:rootLayout

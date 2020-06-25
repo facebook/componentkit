@@ -15,6 +15,7 @@
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKDelayedInitialisationWrapper.h>
 #import <ComponentKitTestHelpers/CKAnalyticsListenerSpy.h>
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 #import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
@@ -40,7 +41,7 @@
 
 @implementation CKComponentGeneratorTests
 {
-  CKBuildComponentResult _asyncComponentGenerationResult;
+  CK::Optional<CKBuildComponentResult> _asyncComponentGenerationResult;
   BOOL _didReceiveComponentStateUpdate;
 }
 
@@ -84,7 +85,7 @@ static CKComponent *verificationComponentProvider(id<NSObject> m, id<NSObject> c
   const auto componentGenerator = [self createComponentGenerator];
   [componentGenerator generateComponentAsynchronously];
   CKRunRunLoopUntilBlockIsTrue(^BOOL{
-    return _asyncComponentGenerationResult.component != nil;
+    return _asyncComponentGenerationResult.hasValue();
   });
 }
 
@@ -138,7 +139,7 @@ static CKComponent *verificationComponentProvider(id<NSObject> m, id<NSObject> c
   const auto event = analyticsListenerSpy->_events.front();
   event.match([&](CK::AnalyticsListenerSpy::DidReceiveStateUpdate drsu){
     XCTAssertEqual(drsu.handle, result1.component.scopeHandle);
-    XCTAssertEqual(drsu.rootID, result1.scopeRoot.globalIdentifier);
+    XCTAssertEqual(drsu.rootID, [result1.scopeRoot globalIdentifier]);
   });
 }
 

@@ -120,7 +120,7 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
     CKRender::ComponentTree::Root::build(component, params);
   }
 
-  CKComponentScopeRoot *newScopeRoot = threadScope.newScopeRoot;
+  auto newScopeRoot = CK::makeNonNull(threadScope.newScopeRoot);
   auto const boundsAnimation = CKBuildComponentHelpers::boundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot);
 
   [analyticsListener didBuildComponentTreeWithScopeRoot:newScopeRoot
@@ -129,7 +129,7 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
                                               component:component
                       enableComponentReuseOptimizations:enableComponentReuseOptimizations
                                         boundsAnimation:boundsAnimation];
-  newScopeRoot.rootComponent = component;
+  [newScopeRoot setRootComponent:component];
   return {
     .component = component,
     .scopeRoot = newScopeRoot,

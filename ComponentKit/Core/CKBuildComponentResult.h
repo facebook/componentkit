@@ -16,6 +16,7 @@
 
 #import <ComponentKit/CKBuildTrigger.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
+#import <ComponentKit/CKNonNull.h>
 
 @class CKComponent;
 @class CKComponentScopeRoot;
@@ -28,7 +29,7 @@
  */
 struct CKBuildComponentResult {
   CKComponent *component;
-  CKComponentScopeRoot *scopeRoot;
+  CK::NonNull<CKComponentScopeRoot *> scopeRoot;
   CKComponentBoundsAnimation boundsAnimation;
   CKBuildTrigger buildTrigger;
 };

@@ -71,7 +71,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
     return CK::CompositeComponentBuilder().component([ComponentWithInitialMountAnimations new]).build();
   });
   const auto l = CKComputeRootComponentLayout(bcr.component, sizeRange, nil);
-  const auto bcr2 = CKBuildComponent(CK::makeNonNull(bcr.scopeRoot), {}, ^{
+  const auto bcr2 = CKBuildComponent(bcr.scopeRoot, {}, ^{
     return CK::CompositeComponentBuilder().component([ComponentWithInitialMountAnimations new]).build();
   });
   const auto l2 = CKComputeRootComponentLayout(bcr2.component, sizeRange, nil);
@@ -88,7 +88,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
   });
   const auto c = CK::objCForceCast<CKCompositeComponent>(bcr.component);
   const auto l = CKComputeRootComponentLayout(c, sizeRange, nil);
-  const auto bcr2 = CKBuildComponent(CK::makeNonNull(bcr.scopeRoot), {}, ^{
+  const auto bcr2 = CKBuildComponent(bcr.scopeRoot, {}, ^{
     return CK::CompositeComponentBuilder().component([ComponentWithAnimationsFromPreviousComponent new]).build();
   });
   const auto c2 = CK::objCForceCast<CKCompositeComponent>(bcr2.component);
@@ -123,7 +123,7 @@ const auto sizeRange = CKSizeRange {CGSizeZero, {INFINITY, INFINITY}};
     return CK::CompositeComponentBuilder().component([CompositeComponentWithScope newWithComponent:c]).build();
   });
   const auto l = CKComputeRootComponentLayout(bcr.component, sizeRange, nil);
-  const auto bcr2 = CKBuildComponent(CK::makeNonNull(bcr.scopeRoot), {}, ^{
+  const auto bcr2 = CKBuildComponent(bcr.scopeRoot, {}, ^{
     // Compared to the previous tree there are two components that have disappeared: CompositeComponentWithScope and
     // ComponentWithDisappearAnimation. However, we should get only the latter in ComponentTreeDiff::disappearedComponents
     // since the former doesn't define any disappear animation.
