@@ -25,8 +25,8 @@
 namespace CKBuildComponentHelpers {
   auto getBuildTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> CKBuildTrigger
   {
-    if (![scopeRoot rootNode].isEmpty()) {
-      return (stateUpdates.size() > 0) ? CKBuildTrigger::StateUpdate : CKBuildTrigger::PropsUpdate;
+    if ([scopeRoot rootComponent] != nil) {
+      return stateUpdates.empty() ? CKBuildTrigger::PropsUpdate : CKBuildTrigger::StateUpdate;
     }
     return CKBuildTrigger::NewTree;
   }
