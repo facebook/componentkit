@@ -137,12 +137,12 @@ using namespace CKComponentControllerHelper;
                                                                      context:context
                                                                     itemType:CKDataSourceChangesetModificationItemTypeUpdate];
     [section replaceObjectAtIndex:indexPath.item withObject:item];
-    for (const auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
+    for (auto componentController : addedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
                                                                                                  oldItem.scopeRoot,
                                                                                                  &CKComponentControllerInitializeEventPredicate)) {
       [addedComponentControllers addObject:componentController];
     }
-    for (const auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
+    for (auto componentController : removedControllersFromPreviousScopeRootMatchingPredicate(item.scopeRoot,
                                                                                                    oldItem.scopeRoot,
                                                                                                    &CKComponentControllerInvalidateEventPredicate)) {
       [invalidComponentControllers addObject:componentController];

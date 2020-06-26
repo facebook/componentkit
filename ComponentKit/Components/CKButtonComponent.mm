@@ -191,19 +191,19 @@ static CKButtonComponentConfiguration *configurationFromOptions(const CKButtonCo
   CKButtonComponentConfiguration *const config = [[CKButtonComponentConfiguration alloc] init];
   CKStateConfigurationArray &configs = config->_configurations;
   NSUInteger hash = 0;
-  for (const auto it : options.titles.getMap()) {
+  for (const auto& it : options.titles.getMap()) {
     configs[indexForState(it.first)].title = it.second;
     hash ^= (it.first ^ [it.second hash]);
   }
-  for (const auto it : options.titleColors.getMap()) {
+  for (const auto& it : options.titleColors.getMap()) {
     configs[indexForState(it.first)].titleColor = it.second;
     hash ^= (it.first ^ [it.second hash]);
   }
-  for (const auto it : options.images.getMap()) {
+  for (const auto& it : options.images.getMap()) {
     configs[indexForState(it.first)].image = it.second;
     hash ^= (it.first ^ [it.second hash]);
   }
-  for (const auto it : options.backgroundImages.getMap()) {
+  for (const auto& it : options.backgroundImages.getMap()) {
     configs[indexForState(it.first)].backgroundImage = it.second;
     hash ^= (it.first ^ [it.second hash]);
   }
@@ -313,5 +313,3 @@ static inline NSUInteger indexForState(UIControlState state)
 }
 
 @end
-
-

@@ -53,7 +53,7 @@ CKDuplicateComponentInfo CKFindDuplicateComponent(const CKComponentLayout &layou
       [previouslySeenComponent addObject:component];
     }
     if (componentLayout.children) {
-      for (const auto childComponentLayout : *componentLayout.children) {
+      for (const auto& childComponentLayout : *componentLayout.children) {
         queue.push(childComponentLayout.layout);
         [componentsToParentComponents setObject:componentLayout.component forKey:childComponentLayout.layout.component];
       }
@@ -110,7 +110,7 @@ static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const CKC
       }
     }
   }
-  
+
   // Continue the check on the children; if the component has no tree node, pass the previous one.
   if (layout.children) {
     for (const auto &childLayout : *layout.children) {

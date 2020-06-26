@@ -268,7 +268,7 @@ static void _notifyInvalidateControllerEvents(const std::vector<CKComponentContr
 {
   const auto componentControllers = std::make_shared<std::vector<CKComponentController *>>(invalidComponentControllers);
   const auto invalidateControllers = ^{
-    for (const auto componentController : *componentControllers) {
+    for (auto componentController : *componentControllers) {
       [componentController invalidateController];
     }
   };
@@ -283,7 +283,7 @@ static void _notifyInitializationControllerEvents(const std::vector<CKComponentC
 {
   const auto componentControllers = std::make_shared<std::vector<CKComponentController *>>(addedComponentControllers);
   const auto didInitControllers = ^{
-    for (const auto componentController : *componentControllers) {
+    for (auto componentController : *componentControllers) {
       [componentController didInit];
     }
   };
