@@ -25,7 +25,7 @@
 #import <ComponentKit/CKAutoSizedImageComponent.h>
 #import <ComponentKit/CKAvailability.h>
 #import <ComponentKit/CKBackgroundLayoutComponent.h>
-#import <ComponentKit/CKBaseRenderContext.h>
+#import <ComponentKit/CKBaseSpecContext.h>
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKBuildComponentResult.h>
 #import <ComponentKit/CKBuildTrigger.h>

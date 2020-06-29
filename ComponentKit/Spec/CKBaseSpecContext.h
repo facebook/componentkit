@@ -17,23 +17,23 @@
 class CKActionBase;
 
 namespace CK {
-  class BaseRenderContext {
+  class BaseSpecContext {
 
   protected:
     id<CKComponentProtocol> _component;
-    
-    BaseRenderContext(const BaseRenderContext &) = default;
-    BaseRenderContext& operator=(const BaseRenderContext &) = default;
+
+    BaseSpecContext(const BaseSpecContext &) = default;
+    BaseSpecContext& operator=(const BaseSpecContext &) = default;
 
   public:
-    BaseRenderContext(const id<CKComponentProtocol> component): _component(component) {}
-    BaseRenderContext(): _component(nullptr) {}
-    
-    BaseRenderContext(BaseRenderContext &&) = default;
-    BaseRenderContext& operator=(BaseRenderContext&&) = default;
+    BaseSpecContext(const id<CKComponentProtocol> component): _component(component) {}
+    BaseSpecContext(): _component(nullptr) {}
+
+    BaseSpecContext(BaseSpecContext &&) = default;
+    BaseSpecContext& operator=(BaseSpecContext&&) = default;
 
     template <typename Component>
-    friend inline auto component(const BaseRenderContext &context) -> Component;
+    friend inline auto component(const BaseSpecContext &context) -> Component;
 
     friend class ::CKActionBase;
   };

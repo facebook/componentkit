@@ -14,7 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <ComponentKit/CKBaseRenderContext.h>
+#import <ComponentKit/CKBaseSpecContext.h>
 #import <ComponentKit/CKComponentViewAttribute.h>
 #import <ComponentKit/CKComponentActionInternal.h>
 #import <ComponentKit/CKRenderComponentProtocol.h>
@@ -163,7 +163,7 @@ public:
   /**
   Constructs an action for a controller from a render context.
   */
-  static CKAction<T...> unsafeActionForController(const CK::BaseRenderContext &context, SEL selector) {
+  static CKAction<T...> unsafeActionForController(const CK::BaseSpecContext &context, SEL selector) {
     return CKAction<T...>{selector, scopeHandleFromContext(context)};
   }
 
@@ -225,7 +225,7 @@ public:
   void send(CKComponent *sender, T... args) const
   { this->send(sender, defaultBehavior(), args...); };
 
-  void send(const CK::BaseRenderContext &context, T... args) const
+  void send(const CK::BaseSpecContext &context, T... args) const
   {
     this->send(componentFromContext(context), defaultBehavior(), args...);
   };

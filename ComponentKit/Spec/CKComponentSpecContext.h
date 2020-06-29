@@ -12,7 +12,7 @@
 
 #if CK_NOT_SWIFT
 
-#import <ComponentKit/CKBaseRenderContext.h>
+#import <ComponentKit/CKBaseSpecContext.h>
 #import <ComponentKit/CKPropBitmap.h>
 
 @class CKComponent;
@@ -24,10 +24,10 @@ namespace CK {
     class BuilderBase;
   }
 
-  class ComponentSpecContext : public BaseRenderContext {
+  class ComponentSpecContext : public BaseSpecContext {
   public:
-    ComponentSpecContext(const id<CKComponentProtocol> component): BaseRenderContext{component} {}
-    ComponentSpecContext(): BaseRenderContext{} {}
+    ComponentSpecContext(const id<CKComponentProtocol> component): BaseSpecContext{component} {}
+    ComponentSpecContext(): BaseSpecContext{} {}
 
   private:
     template <template <BuilderDetails::PropsBitmapType> class, BuilderDetails::PropsBitmapType>
@@ -36,13 +36,13 @@ namespace CK {
     void declareKey(id key, CKComponent *component) const {
       // Do nothing here - OSS.
     }
-    
+
     ComponentSpecContext copy() const {
       return *this;
     }
   };
 
-  static_assert(sizeof(ComponentSpecContext) == sizeof(BaseRenderContext), "Render context shouldn't add any data");
+  static_assert(sizeof(ComponentSpecContext) == sizeof(BaseSpecContext), "Render context shouldn't add any data");
 }
 
 #endif
