@@ -36,10 +36,6 @@ namespace CK {
     void declareKey(id key, CKComponent *component) const {
       // Do nothing here - OSS.
     }
-
-    ComponentSpecContext copy() const {
-      return *this;
-    }
   };
 
   static_assert(sizeof(ComponentSpecContext) == sizeof(BaseSpecContext), "Render context shouldn't add any data");
