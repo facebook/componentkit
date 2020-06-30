@@ -24,7 +24,7 @@ namespace CK {
 
     struct MountContext {
       /** Constructs a new mount context for the given view. */
-      static MountContext RootContext(UIView *v, MountAnalyticsContext *mAnalyticsContext = nullptr) {
+      static MountContext RootContext(UIView *v, MountAnalyticsContext *mAnalyticsContext) {
         ViewReuseUtilities::mountingInRootView(v);
         return MountContext(std::make_shared<ViewManager>(v, mAnalyticsContext), {0,0}, {}, NO, mAnalyticsContext);
       }

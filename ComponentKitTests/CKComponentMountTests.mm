@@ -114,7 +114,7 @@
   };
   const auto component = [CKComponent newWithView:viewConfig size:{}];
   const auto view = [[UIView alloc] initWithFrame:CGRect {{0, 0}, {10, 10}}];
-  const auto context = CK::Component::MountContext::RootContext(view);
+  const auto context = CK::Component::MountContext::RootContext(view, nullptr);
   const auto children = std::make_shared<const std::vector<CKComponentLayoutChild>>(std::vector<CKComponentLayoutChild> {});
 
   const auto result = mountController.mount(component, viewConfig, context, {5, 5}, children, nil);
@@ -125,7 +125,7 @@
   XCTAssertEqualObjects(label.text, @"Hello");
   XCTAssertEqual(CKMountedObjectForView(label), component);
   XCTAssertEqual(mountController.mountInfo()->view, label);
-  
+
   mountController.unmount(component);
   XCTAssertTrue(mountController.mountInfo() == nullptr);
   XCTAssertNil(CKMountedObjectForView(label));
