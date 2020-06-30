@@ -84,8 +84,8 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
                                   UIView *view,
                                   NSSet *previouslyMountedComponents,
                                   id<CKMountable> supercomponent,
-                                  BOOL shouldCollectMountInfo = NO,
-                                  id<CKMountLayoutListener> listener = nil);
+                                  BOOL shouldCollectMountInfo,
+                                  id<CKMountLayoutListener> listener);
 
 /** Unmounts all components returned by a previous call to CKMountComponentLayout. */
 void CKUnmountComponents(NSSet<id<CKMountable>> *componentsToUnmount);
