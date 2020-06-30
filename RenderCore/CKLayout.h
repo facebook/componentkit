@@ -77,8 +77,6 @@ struct CKMountLayoutResult {
         CKMountLayout; any components that are not present in the new layout will be unmounted.
  @param supercomponent Usually pass nil; if you are mounting a subtree of a layout, pass the parent component so the
         component responder chain can be connected correctly.
-
- @param isUpdate Indicates whether the mount is due to an (state/props) update.
  @param shouldCollectMountInfo should mount information be collected and returned in `CKMountLayoutResult`.
  @param listener Object collecting all mount layout events. Can be nil.
  */
@@ -86,7 +84,6 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
                                   UIView *view,
                                   NSSet *previouslyMountedComponents,
                                   id<CKMountable> supercomponent,
-                                  BOOL isUpdate = NO,
                                   BOOL shouldCollectMountInfo = NO,
                                   id<CKMountLayoutListener> listener = nil);
 

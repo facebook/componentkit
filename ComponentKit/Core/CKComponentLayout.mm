@@ -22,8 +22,7 @@ CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
                                            UIView *view,
                                            NSSet *previouslyMountedComponents,
                                            id<CKMountable> supercomponent,
-                                           id<CKAnalyticsListener> analyticsListener,
-                                           BOOL isUpdate)
+                                           id<CKAnalyticsListener> analyticsListener)
 {
   ((CKComponent *)layout.component).rootComponentMountedView = view;
   [analyticsListener willMountComponentTreeWithRootComponent:layout.component];
@@ -32,7 +31,6 @@ CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
                 view,
                 previouslyMountedComponents,
                 supercomponent,
-                isUpdate,
                 [analyticsListener shouldCollectMountInformationForRootComponent:layout.component],
                 analyticsListener.systraceListener);
   [analyticsListener didMountComponentTreeWithRootComponent:layout.component

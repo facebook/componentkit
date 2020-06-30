@@ -63,7 +63,6 @@ struct CKComponentAttachControllerAttachComponentRootLayoutParams {
   const CKComponentBoundsAnimation &boundsAnimation;
   UIView *view;
   id<CKAnalyticsListener> analyticsListener;
-  BOOL isUpdate;
 };
 
 void CKComponentAttachControllerAttachComponentRootLayout(

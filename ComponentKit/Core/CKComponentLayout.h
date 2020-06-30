@@ -36,8 +36,7 @@ CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
                                            UIView *view,
                                            NSSet *previouslyMountedComponents,
                                            id<CKMountable> supercomponent,
-                                           id<CKAnalyticsListener> analyticsListener = nil,
-                                           BOOL isUpdate = NO);
+                                           id<CKAnalyticsListener> analyticsListener = nil);
 
 struct CKComponentRootLayout { // This is pending renaming
   /** Layout cache for components that have controller. */

@@ -68,7 +68,6 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
                                   UIView *view,
                                   NSSet *previouslyMountedComponents,
                                   id<CKMountable> supercomponent,
-                                  BOOL isUpdate,
                                   BOOL shouldCollectMountInfo,
                                   id<CKMountLayoutListener> listener)
 {
@@ -85,7 +84,7 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
   std::stack<MountItem> stack;
   MountAnalyticsContext mountAnalyticsContext;
   auto const mountAnalyticsContextPointer = shouldCollectMountInfo ? &mountAnalyticsContext : nullptr;
-  stack.push({layout, MountContext::RootContext(view, mountAnalyticsContextPointer, isUpdate), supercomponent, NO});
+  stack.push({layout, MountContext::RootContext(view, mountAnalyticsContextPointer), supercomponent, NO});
   auto const mountedComponents = CK::makeNonNull([NSMutableSet set]);
 
   while (!stack.empty()) {
