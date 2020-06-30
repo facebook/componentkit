@@ -43,8 +43,15 @@ private:
 };
 
 /**
- Separate structure to handle accessibility as we want the components infrastructure to decide wether to use it or not depending if accessibility is enabled or not.
- Not to be confused with accessibilityIdentifier which is used for automation to identify elements on the screen. To set the identifier pass in {@selector(setAccessibilityIdentifier:), @"accessibilityId"} with the viewConfiguration's attributes
+ Holds values that are only applied to a view if VoiceOver is enabled.
+
+ The accessibility identifier is often used by end-to-end tests even
+ when VoiceOver is disabled, so it is not set here. To set the
+ accessibility identifier, pass it as a normal view attribute:
+
+ ```
+ {@selector(setAccessibilityIdentifier:), @"accessibilityId"}
+ ```
  */
 struct CKComponentAccessibilityContext {
   NSNumber *isAccessibilityElement;
