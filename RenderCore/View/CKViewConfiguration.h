@@ -65,7 +65,6 @@ struct CKViewConfiguration {
     }));
   }
 
-  // Constructors and destructors are defined out-of-line to prevent code bloat.
   ~CKViewConfiguration() {}
   bool operator==(const CKViewConfiguration &other) const noexcept
   {
