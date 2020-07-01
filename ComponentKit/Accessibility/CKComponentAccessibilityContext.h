@@ -60,6 +60,11 @@ struct CKComponentAccessibilityContext {
   CKComponentAccessibilityTextAttribute accessibilityValue;
   NSNumber *accessibilityTraits;
   CKAction<> accessibilityComponentAction;
+  /**
+   Arbitrary extra data about accessibility. ComponentKit ignores this data,
+   but you may use it for accessibility-related abstractions.
+   */
+  NSDictionary *extra;
 
   BOOL isEmpty() const {
     return isAccessibilityElement == nil
@@ -67,7 +72,8 @@ struct CKComponentAccessibilityContext {
         && !accessibilityHint.hasText()
         && !accessibilityValue.hasText()
         && accessibilityTraits == nil
-        && !accessibilityComponentAction;
+        && !accessibilityComponentAction
+        && extra == nil;
   }
 };
 
