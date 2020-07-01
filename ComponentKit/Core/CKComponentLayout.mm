@@ -26,15 +26,24 @@ CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
 {
   ((CKComponent *)layout.component).rootComponentMountedView = view;
   [analyticsListener willMountComponentTreeWithRootComponent:layout.component];
+
+  CK::Component::MountAnalyticsContext mountAnalyticsContext;
+  const BOOL collectMountAnalytics =
+  [analyticsListener shouldCollectMountInformationForRootComponent:layout.component];
+
   const auto result =
   CKMountLayout(layout,
                 view,
                 previouslyMountedComponents,
                 supercomponent,
-                [analyticsListener shouldCollectMountInformationForRootComponent:layout.component],
+                collectMountAnalytics ? &mountAnalyticsContext : nullptr,
                 analyticsListener.systraceListener);
-  [analyticsListener didMountComponentTreeWithRootComponent:layout.component
-                                      mountAnalyticsContext:result.mountAnalyticsContext];
+  [analyticsListener
+   didMountComponentTreeWithRootComponent:layout.component
+   mountAnalyticsContext:
+   collectMountAnalytics
+   ? CK::Optional<CK::Component::MountAnalyticsContext> {mountAnalyticsContext}
+   : CK::none];
   return result;
 }
 

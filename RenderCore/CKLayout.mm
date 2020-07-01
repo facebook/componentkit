@@ -68,7 +68,7 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
                                   UIView *view,
                                   NSSet *previouslyMountedComponents,
                                   id<CKMountable> supercomponent,
-                                  BOOL shouldCollectMountInfo,
+                                  CK::Component::MountAnalyticsContext *mountAnalyticsContext,
                                   id<CKMountLayoutListener> listener)
 {
   struct MountItem {
@@ -82,9 +82,7 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
   // in a DFS fashion which is handy if you want to animate a subpart
   // of the tree
   std::stack<MountItem> stack;
-  MountAnalyticsContext mountAnalyticsContext;
-  auto const mountAnalyticsContextPointer = shouldCollectMountInfo ? &mountAnalyticsContext : nullptr;
-  stack.push({layout, MountContext::RootContext(view, mountAnalyticsContextPointer), supercomponent, NO});
+  stack.push({layout, MountContext::RootContext(view, mountAnalyticsContext), supercomponent, NO});
   auto const mountedComponents = CK::makeNonNull([NSMutableSet set]);
 
   while (!stack.empty()) {
@@ -126,7 +124,6 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
   return {
     mountedComponents,
     componentsToUnmount,
-    shouldCollectMountInfo ? CK::Optional<MountAnalyticsContext> {mountAnalyticsContext} : CK::none,
   };
 }
 
