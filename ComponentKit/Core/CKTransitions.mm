@@ -13,6 +13,8 @@
 #import <ComponentKit/CKComponent.h>
 #import "CKAnimationComponent+Internal.h"
 
+CKTransitions::~CKTransitions() {}
+
 template <typename T>
 static CAAnimation *toCA(const CK::Optional<T>& a) {
   return a.mapToPtr([](const T& a) { return a.toCA(); });

@@ -87,6 +87,8 @@ id CKActionBase::initialTarget(CKComponent *sender) const
 
 CKActionBase::CKActionBase() noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::RawSelector), _selector(nullptr) {}
 
+CKActionBase::CKActionBase(const CKActionBase&) = default;
+
 CKActionBase::CKActionBase(id target, SEL selector) noexcept : _target(target), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::TargetSelector), _selector(selector) {};
 
 

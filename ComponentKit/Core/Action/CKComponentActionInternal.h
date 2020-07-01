@@ -53,6 +53,7 @@ class CKActionBase {
   };
 
   CKActionBase() noexcept;
+  CKActionBase(const CKActionBase&);
   CKActionBase(id target, SEL selector) noexcept;
 
   CKActionBase(const CKComponentScope &scope, SEL selector) noexcept;
