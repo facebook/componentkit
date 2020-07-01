@@ -59,7 +59,6 @@ struct CKComponentAccessibilityContext {
   CKComponentAccessibilityTextAttribute accessibilityHint;
   CKComponentAccessibilityTextAttribute accessibilityValue;
   NSNumber *accessibilityTraits;
-  CKAction<> accessibilityComponentAction;
   /**
    Arbitrary extra data about accessibility. ComponentKit ignores this data,
    but you may use it for accessibility-related abstractions.
@@ -72,9 +71,47 @@ struct CKComponentAccessibilityContext {
         && !accessibilityHint.hasText()
         && !accessibilityValue.hasText()
         && accessibilityTraits == nil
-        && !accessibilityComponentAction
         && extra == nil;
   }
 };
+
+/**
+ Sometimes you may wish to trigger the CKAction for a component externally
+ as part of implementing a UIAccessibilityCustomAction for VoiceOver.
+ ComponentKit itself never does this, but components may expose their action
+ for such external use by storing an entry in the extra dictionary
+ of CKComponentAccessibilityContext under this key.
+
+ The corresponding value should be an Objective-C block that returns a
+ CKAction<>. You can safely generate this using the
+ CKAccessibilityExtraActionValue function.
+
+ For example:
+
+ ```
+ CKComponentAccessibilityContext {
+   .extra = @{
+     CKAccessibilityExtraActionKey: CKAccessibilityExtraActionValue(action)
+   }
+ }
+ ```
+ */
+extern NSString *const CKAccessibilityExtraActionKey;
+
+/** For use with CKAccessibilityExtraActionKey. */
+id CKAccessibilityExtraActionValue(CKAction<> action);
+
+/**
+ Extracts the value stored using CKAccessibilityExtraActionValue.
+ If the parameter is nil, returns a default-constructed no-op action.
+ For example:
+
+ ```
+ CKAction<> action = CKAccessibilityActionFromExtraValue(
+   context.extra[CKAccessibilityExtraActionKey]
+ );
+ ```
+ */
+CKAction<> CKAccessibilityActionFromExtraValue(id extraValue);
 
 #endif

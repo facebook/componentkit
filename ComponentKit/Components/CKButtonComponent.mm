@@ -148,10 +148,10 @@ typedef std::array<CKStateConfiguration, 8> CKStateConfigurationArray;
   });
 
   CKComponentAccessibilityContext accessibilityContext(options.accessibilityContext);
-  if (!accessibilityContext.accessibilityComponentAction) {
-    accessibilityContext.accessibilityComponentAction = options.enabled
-    ? CKAction<>::demotedFrom(action, static_cast<UIEvent*>(nil))
-    : nullptr;
+  if (!accessibilityContext.extra[CKAccessibilityExtraActionKey]) {
+    NSMutableDictionary *extra = [accessibilityContext.extra mutableCopy] ?: [NSMutableDictionary new];
+    extra[CKAccessibilityExtraActionKey] = CKAccessibilityExtraActionValue(CKAction<>::demotedFrom(action, static_cast<UIEvent*>(nil)));
+    accessibilityContext.extra = extra;
   }
 
   const auto b = [super
