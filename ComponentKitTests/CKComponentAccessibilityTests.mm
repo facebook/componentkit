@@ -62,7 +62,7 @@ using namespace CK::Component::Accessibility;
       .accessibilityValue = ^{ return @"accessibleWayne";},
       .accessibilityTraits = @(UIAccessibilityTraitButton | UIAccessibilityTraitImage),
     }};
-  
+
   XCTAssertTrue(AccessibleViewConfiguration(viewConfiguration) == expectedViewConfiguration, @"Accessibility attributes were applied incorrectly");
 }
 
@@ -99,7 +99,7 @@ using namespace CK::Component::Accessibility;
                                    .build();
 
   UIView *container = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([testComponent layoutThatFits:{} parentSize:{}], container, nil, nil).mountedComponents;
+  NSSet *mountedComponents = CKMountComponentLayout([testComponent layoutThatFits:{} parentSize:{}], container, nil, nil);
 
   XCTAssertEqual(testComponent.viewContext.view.isAccessibilityElement, YES);
   XCTAssertEqual(testComponent.viewContext.view.accessibilityLabel, @"accessibleSuperman",);
@@ -125,7 +125,7 @@ using namespace CK::Component::Accessibility;
                                    .build();
 
   UIView *container = [UIView new];
-  NSSet *mountedComponents = CKMountComponentLayout([testComponent layoutThatFits:{} parentSize:{}], container, nil, nil).mountedComponents;
+  NSSet *mountedComponents = CKMountComponentLayout([testComponent layoutThatFits:{} parentSize:{}], container, nil, nil);
 
   XCTAssertEqual(testComponent.viewContext.view.isAccessibilityElement, NO);
   XCTAssertNil(testComponent.viewContext.view.accessibilityLabel);

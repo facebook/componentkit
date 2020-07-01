@@ -53,11 +53,6 @@ struct CKComponentLayoutChild {
   CKComponentLayout layout;
 };
 
-struct CKMountLayoutResult {
-  CK::NonNull<NSSet *> mountedComponents;
-  NSSet *unmountedComponents;
-};
-
 @protocol CKMountLayoutListener <NSObject>
 
 /**
@@ -79,12 +74,12 @@ struct CKMountLayoutResult {
  @param mountAnalyticsContext If non-null, the counters in this context will be incremented during mount.
  @param listener Object collecting all mount layout events. Can be nil.
  */
-CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
-                                  UIView *view,
-                                  NSSet *previouslyMountedComponents,
-                                  id<CKMountable> supercomponent,
-                                  CK::Component::MountAnalyticsContext *mountAnalyticsContext,
-                                  id<CKMountLayoutListener> listener);
+NSSet<id<CKMountable>> *CKMountLayout(const CKComponentLayout &layout,
+                                      UIView *view,
+                                      NSSet<id<CKMountable>> *previouslyMountedComponents,
+                                      id<CKMountable> supercomponent,
+                                      CK::Component::MountAnalyticsContext *mountAnalyticsContext,
+                                      id<CKMountLayoutListener> listener);
 
 /** Unmounts all components returned by a previous call to CKMountComponentLayout. */
 void CKUnmountComponents(NSSet<id<CKMountable>> *componentsToUnmount);

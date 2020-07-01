@@ -64,12 +64,12 @@ std::shared_ptr<const std::vector<CKComponentLayoutChild>> CKComponentLayout::em
   return cached;
 }
 
-CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
-                                  UIView *view,
-                                  NSSet *previouslyMountedComponents,
-                                  id<CKMountable> supercomponent,
-                                  CK::Component::MountAnalyticsContext *mountAnalyticsContext,
-                                  id<CKMountLayoutListener> listener)
+NSSet<id<CKMountable>> *CKMountLayout(const CKComponentLayout &layout,
+                                      UIView *view,
+                                      NSSet<id<CKMountable>> *previouslyMountedComponents,
+                                      id<CKMountable> supercomponent,
+                                      CK::Component::MountAnalyticsContext *mountAnalyticsContext,
+                                      id<CKMountLayoutListener> listener)
 {
   struct MountItem {
     const CKComponentLayout &layout;
@@ -114,17 +114,13 @@ CKMountLayoutResult CKMountLayout(const CKComponentLayout &layout,
     }
   }
 
-  NSMutableSet *componentsToUnmount;
-  if (previouslyMountedComponents) {
-    // Unmount any components that were in previouslyMountedComponents but are no longer in mountedComponents.
-    componentsToUnmount = [previouslyMountedComponents mutableCopy];
-    [componentsToUnmount minusSet:mountedComponents];
-    CKUnmountComponents(componentsToUnmount);
+  // Unmount any components that were in previouslyMountedComponents but are no longer in mountedComponents.
+  for (id<CKMountable> component in previouslyMountedComponents) {
+    if (![mountedComponents containsObject:component]) {
+      [component unmount];
+    }
   }
-  return {
-    mountedComponents,
-    componentsToUnmount,
-  };
+  return mountedComponents;
 }
 
 void CKUnmountComponents(NSSet<id<CKMountable>> *componentsToUnmount)

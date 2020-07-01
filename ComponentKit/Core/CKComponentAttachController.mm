@@ -167,11 +167,15 @@ static CKComponentAttachState *mountComponentLayoutInView(const CKComponentRootL
   NSSet *currentlyMountedComponents = oldAttachState.mountedComponents;
   __block NSSet *newMountedComponents = nil;
   const auto mountPerformer = ^{
-    __block NSSet<CKComponent *> *unmountedComponents;
+    __block NSMutableSet<CKComponent *> *unmountedComponents;
     CKComponentBoundsAnimationApply(boundsAnimation, ^{
-      const auto result = CKMountComponentLayout(rootLayout.layout(), view, currentlyMountedComponents, nil, analyticsListener);
-      newMountedComponents = result.mountedComponents;
-      unmountedComponents = result.unmountedComponents;
+      newMountedComponents = CKMountComponentLayout(rootLayout.layout(), view, currentlyMountedComponents, nil, analyticsListener);
+
+      // This could probably be done more efficiently by making mountPerformer
+      // return a pair: currentlyMountedComponents & newMountedComponents.
+      // Then we can skip the allocation and simply enumerate over the two sets.
+      unmountedComponents = [currentlyMountedComponents mutableCopy];
+      [unmountedComponents minusSet:newMountedComponents];
     }, nil);
     return unmountedComponents;
   };

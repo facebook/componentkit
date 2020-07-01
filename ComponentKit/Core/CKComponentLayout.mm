@@ -18,11 +18,11 @@
 #import <ComponentKit/ComponentLayoutContext.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
 
-CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
-                                           UIView *view,
-                                           NSSet *previouslyMountedComponents,
-                                           id<CKMountable> supercomponent,
-                                           id<CKAnalyticsListener> analyticsListener)
+NSSet<id<CKMountable>> *CKMountComponentLayout(const CKComponentLayout &layout,
+                                               UIView *view,
+                                               NSSet<id<CKMountable>> *previouslyMountedComponents,
+                                               id<CKMountable> supercomponent,
+                                               id<CKAnalyticsListener> analyticsListener)
 {
   ((CKComponent *)layout.component).rootComponentMountedView = view;
   [analyticsListener willMountComponentTreeWithRootComponent:layout.component];
@@ -31,7 +31,7 @@ CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
   const BOOL collectMountAnalytics =
   [analyticsListener shouldCollectMountInformationForRootComponent:layout.component];
 
-  const auto result =
+  NSSet<id<CKMountable>> *const mountedComponents =
   CKMountLayout(layout,
                 view,
                 previouslyMountedComponents,
@@ -44,7 +44,7 @@ CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
    collectMountAnalytics
    ? CK::Optional<CK::Component::MountAnalyticsContext> {mountAnalyticsContext}
    : CK::none];
-  return result;
+  return mountedComponents;
 }
 
 static auto buildComponentsByPredicateMap(const CKComponentLayout &layout,

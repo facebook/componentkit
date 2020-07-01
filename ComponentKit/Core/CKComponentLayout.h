@@ -32,11 +32,11 @@
  @param analyticsListener analytics listener used to log mount time.
  @param isUpdate Indicates whether the mount is due to an (state/props) update.
  */
-CKMountLayoutResult CKMountComponentLayout(const CKComponentLayout &layout,
-                                           UIView *view,
-                                           NSSet *previouslyMountedComponents,
-                                           id<CKMountable> supercomponent,
-                                           id<CKAnalyticsListener> analyticsListener = nil);
+NSSet<id<CKMountable>> *CKMountComponentLayout(const CKComponentLayout &layout,
+                                               UIView *view,
+                                               NSSet<id<CKMountable>> *previouslyMountedComponents,
+                                               id<CKMountable> supercomponent,
+                                               id<CKAnalyticsListener> analyticsListener = nil);
 
 struct CKComponentRootLayout { // This is pending renaming
   /** Layout cache for components that have controller. */
