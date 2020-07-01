@@ -69,6 +69,7 @@ struct CKComponentViewAttribute {
   unapplicator(unapp),
   updater(upd) {};
 
+  CKComponentViewAttribute(CKComponentViewAttribute const&);
   ~CKComponentViewAttribute();
 
   /**

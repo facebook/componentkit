@@ -211,6 +211,8 @@ applicator(^(UIView *view, id value){
   performSetter(view, setter, value);
 }) {}
 
+CKComponentViewAttribute::CKComponentViewAttribute(CKComponentViewAttribute const&) = default;
+
 // Explicit destructor to prevent inlining, reduce code size. See D1814602.
 CKComponentViewAttribute::~CKComponentViewAttribute() {}
 
