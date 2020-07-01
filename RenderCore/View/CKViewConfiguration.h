@@ -66,32 +66,6 @@ struct CKViewConfiguration {
   }
 
   ~CKViewConfiguration() {}
-  bool operator==(const CKViewConfiguration &other) const noexcept
-  {
-    if (other.rep == rep) {
-      return true;
-    }
-    if (!(other.rep->attributeShape == rep->attributeShape
-          && other.rep->viewClass == rep->viewClass
-          && other.rep->accessibilityContext == rep->accessibilityContext
-          && other.rep->blockImplicitAnimations == rep->blockImplicitAnimations)) {
-      return false;
-    }
-
-    const auto &otherAttributes = other.rep->attributes;
-    if (otherAttributes == rep->attributes) {
-      return true;
-    } else if (otherAttributes->size() == rep->attributes->size()) {
-      return std::find_if(rep->attributes->begin(),
-                          rep->attributes->end(),
-                          [&](std::pair<const CKComponentViewAttribute &, id> elem) {
-                            const auto otherElem = otherAttributes->find(elem.first);
-                            return otherElem == otherAttributes->end() || !CKObjectIsEqual(otherElem->second, elem.second);
-                          }) == rep->attributes->end();
-    } else {
-      return false;
-    }
-  }
 
   const CKComponentViewClass &viewClass() const noexcept
   {

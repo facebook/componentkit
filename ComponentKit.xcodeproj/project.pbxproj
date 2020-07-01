@@ -1071,7 +1071,6 @@
 		D616A2C020BED2D100695472 /* CKComponentTreeDiff.h in Headers */ = {isa = PBXBuildFile; fileRef = D616A2BC20BED2D100695472 /* CKComponentTreeDiff.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D61CAAC423D0A6C100D86060 /* ImageComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D61CAAC323D0A6C100D86060 /* ImageComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D61CAAC523D0A6C100D86060 /* ImageComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D61CAAC323D0A6C100D86060 /* ImageComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D62D6DBC2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = D62D6DBB2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm */; };
 		D63270F223A3B86500D0C653 /* CompositeComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D63270F123A3B86500D0C653 /* CompositeComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D63270F323A3B86500D0C653 /* CompositeComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D63270F123A3B86500D0C653 /* CompositeComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6327647238DB94C004486D4 /* InsetComponentBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = D632763C238DB94C004486D4 /* InsetComponentBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2017,7 +2016,6 @@
 		D61CAAC323D0A6C100D86060 /* ImageComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageComponentBuilder.h; sourceTree = "<group>"; };
 		D62122E4223855B7008F3473 /* CKAnimationSpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAnimationSpy.h; sourceTree = "<group>"; };
 		D62122EF223856B2008F3473 /* TransactionProviderSpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransactionProviderSpy.h; sourceTree = "<group>"; };
-		D62D6DBB2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKComponentViewConfigurationTests.mm; sourceTree = "<group>"; };
 		D63270F123A3B86500D0C653 /* CompositeComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CompositeComponentBuilder.h; sourceTree = "<group>"; };
 		D632763C238DB94C004486D4 /* InsetComponentBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsetComponentBuilder.h; sourceTree = "<group>"; };
 		D634A27E22DB71460085D697 /* ComponentBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ComponentBuilder.h; sourceTree = "<group>"; };
@@ -2604,7 +2602,6 @@
 				D64F6548210F58560083EE75 /* CKSubclassOverridesSelectorTests.mm */,
 				D63A926D2224857D00E7CC91 /* CKOptionalTests.mm */,
 				60172864238FEF57000D5CD6 /* CKDelayedInitialisationWrapperTests.mm */,
-				D62D6DBB2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm */,
 				D62122E4223855B7008F3473 /* CKAnimationSpy.h */,
 				D62122EF223856B2008F3473 /* TransactionProviderSpy.h */,
 				D60C2DA822B98355001F502B /* CKNonNullTests.mm */,
@@ -4769,7 +4766,6 @@
 				A2E5BDD31EB94E1900444CD9 /* CKComponentKeyTests.mm in Sources */,
 				B761C8AB1CB36AAE00CDD03F /* CKDataSourceConfigurationTests.mm in Sources */,
 				B342DC6F1AC23EA900ACAC53 /* CKComponentControllerTests.mm in Sources */,
-				D62D6DBC2236C40F004B45E1 /* CKComponentViewConfigurationTests.mm in Sources */,
 				72B93ED5234374B600F10364 /* CKComponentGeneratorTests.mm in Sources */,
 				D023D12E1E242CD4004A0A61 /* CKComponentAccessibilityCustomActionsAttributeTests.mm in Sources */,
 				B342DC851AC23EA900ACAC53 /* CKComponentScopeTests.mm in Sources */,

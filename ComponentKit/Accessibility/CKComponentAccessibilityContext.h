@@ -28,7 +28,7 @@ typedef NSString *(^CKAccessibilityLazyTextBlock)();
 struct CKComponentAccessibilityTextAttribute {
   CKComponentAccessibilityTextAttribute() {};
   CKComponentAccessibilityTextAttribute(CKAccessibilityLazyTextBlock textBlock) : accessibilityLazyTextBlock(textBlock) {};
-  CKComponentAccessibilityTextAttribute(NSString *text) : accessibilityLazyTextBlock(^{ return text; }) {};
+  CKComponentAccessibilityTextAttribute(NSString *text) : accessibilityLazyTextBlock(text ? ^{ return text; } : (CKAccessibilityLazyTextBlock)nil) {};
 
   BOOL hasText() const {
     return accessibilityLazyTextBlock != nil;
@@ -61,14 +61,13 @@ struct CKComponentAccessibilityContext {
   NSNumber *accessibilityTraits;
   CKAction<> accessibilityComponentAction;
 
-  bool operator==(const CKComponentAccessibilityContext &other) const
-  {
-    return CKObjectIsEqual(other.isAccessibilityElement, isAccessibilityElement)
-    && CKObjectIsEqual(other.accessibilityLabel.value(), accessibilityLabel.value())
-    && CKObjectIsEqual(other.accessibilityHint.value(), accessibilityHint.value())
-    && CKObjectIsEqual(other.accessibilityValue.value(), accessibilityValue.value())
-    && CKObjectIsEqual(other.accessibilityTraits, accessibilityTraits)
-    && other.accessibilityComponentAction == accessibilityComponentAction;
+  BOOL isEmpty() const {
+    return isAccessibilityElement == nil
+        && !accessibilityLabel.hasText()
+        && !accessibilityHint.hasText()
+        && !accessibilityValue.hasText()
+        && accessibilityTraits == nil
+        && !accessibilityComponentAction;
   }
 };
 
