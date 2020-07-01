@@ -184,7 +184,7 @@
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (CK : : Component : : MountResult)mountInContext:(const CK : : Component : : MountContext &amp;)<em>context</em> layout:(const CKComponentLayout &amp;)<em>layout</em> supercomponent:(CKComponent *)<em>supercomponent</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (CK : : Component : : MountResult)mountInContext:(const CK : : Component : : MountContext &amp;)<em>context</em> layout:(const CKLayout &amp;)<em>layout</em> supercomponent:(CKComponent *)<em>supercomponent</em></code></div>
 
 		    
 			
@@ -635,7 +635,7 @@ used to specify that subcomponents should be mounted inside the view.</p>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (CKComponentLayout)layoutThatFits:(CKSizeRange)<em>constrainedSize</em> parentSize:(CGSize)<em>parentSize</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (CKLayout)layoutThatFits:(CKSizeRange)<em>constrainedSize</em> parentSize:(CGSize)<em>parentSize</em></code></div>
 
 		    
 			
@@ -671,7 +671,7 @@ depends on the child&rsquo;s size).</p></td>
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<div class="warning"><p><strong>Warning:</strong> You may not override this method. Override -computeLayoutThatFits: instead.</p></div><div class="warning"><p><strong>Warning:</strong> In almost all cases, prefer the use of CKComputeComponentLayout in CKComponentLayout</p></div>
+				<div class="warning"><p><strong>Warning:</strong> You may not override this method. Override -computeLayoutThatFits: instead.</p></div><div class="warning"><p><strong>Warning:</strong> In almost all cases, prefer the use of CKComputeComponentLayout in CKLayout</p></div>
 			</div>
 			
 
@@ -705,7 +705,7 @@ depends on the child&rsquo;s size).</p></td>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)<em>constrainedSize</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (CKLayout)computeLayoutThatFits:(CKSizeRange)<em>constrainedSize</em></code></div>
 
 		    
 			
@@ -715,7 +715,7 @@ depends on the child&rsquo;s size).</p></td>
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>constrainedSize</code></th>
-						<td><p>A min and max size. This is computed as described in the description. The CKComponentLayout you
+						<td><p>A min and max size. This is computed as described in the description. The CKLayout you
 return MUST have a size between these two sizes. This is enforced by assertion.</p></td>
 					</tr>
 				
@@ -771,7 +771,7 @@ against parentSize, intersect it with constrainedSize, and call -computeLayoutTh
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)<em>constrainedSize</em> restrictedToSize:(const CKComponentSize &amp;)<em>size</em> relativeToParentSize:(CGSize)<em>parentSize</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (CKLayout)computeLayoutThatFits:(CKSizeRange)<em>constrainedSize</em> restrictedToSize:(const CKComponentSize &amp;)<em>size</em> relativeToParentSize:(CGSize)<em>parentSize</em></code></div>
 
 		    
 			
