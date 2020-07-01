@@ -15,39 +15,39 @@
 
 /** Deletes the target off the main thread; important since component layouts are large recursive structures. */
 struct CKOffMainThreadDeleter {
-  void operator()(std::vector<CKComponentLayoutChild> *target) noexcept;
+  void operator()(std::vector<CKLayoutChild> *target) noexcept;
 };
 
 using namespace CK::Component;
 
-CKComponentLayout::CKComponentLayout(id<CKMountable> c, CGSize s) noexcept
+CKLayout::CKLayout(id<CKMountable> c, CGSize s) noexcept
 : component(c), size(s), children(emptyChildren()), extra(nil) {
   CKCAssertNotNil(c, @"Nil components are not allowed");
 };
 
-CKComponentLayout::CKComponentLayout(id<CKMountable> c, CGSize s, const std::vector<CKComponentLayoutChild> &ch, NSDictionary *e) noexcept
-: component(c), size(s), children(new std::vector<CKComponentLayoutChild>(ch), CKOffMainThreadDeleter()), extra(e) {
+CKLayout::CKLayout(id<CKMountable> c, CGSize s, const std::vector<CKLayoutChild> &ch, NSDictionary *e) noexcept
+: component(c), size(s), children(new std::vector<CKLayoutChild>(ch), CKOffMainThreadDeleter()), extra(e) {
   CKCAssertNotNil(c, @"Nil components are not allowed");
 };
 
-CKComponentLayout::CKComponentLayout(id<CKMountable> c, CGSize s, std::vector<CKComponentLayoutChild> &&ch, NSDictionary *e) noexcept
-: component(c), size(s), children(new std::vector<CKComponentLayoutChild>(std::move(ch)), CKOffMainThreadDeleter()), extra(e) {
+CKLayout::CKLayout(id<CKMountable> c, CGSize s, std::vector<CKLayoutChild> &&ch, NSDictionary *e) noexcept
+: component(c), size(s), children(new std::vector<CKLayoutChild>(std::move(ch)), CKOffMainThreadDeleter()), extra(e) {
   CKCAssertNotNil(c, @"Nil components are not allowed");
 };
 
-CKComponentLayout::CKComponentLayout() noexcept
+CKLayout::CKLayout() noexcept
 : component(nil), size({0, 0}), children(emptyChildren()), extra(nil) {};
 
 static void _deleteComponentLayoutChild(void *target) noexcept
 {
-  delete (std::vector<CKComponentLayoutChild> *)target;
+  delete (std::vector<CKLayoutChild> *)target;
 }
 
-void CKOffMainThreadDeleter::operator()(std::vector<CKComponentLayoutChild> *target) noexcept
+void CKOffMainThreadDeleter::operator()(std::vector<CKLayoutChild> *target) noexcept
 {
   // When deallocating a large layout tree this is called first on the root node
   // so we dispatch once and deallocate the whole tree on a background thread.
-  // However, if you have a CKComponentLayout as an ivar/variable, it will be initialized
+  // However, if you have a CKLayout as an ivar/variable, it will be initialized
   // with the default contstructor and an empty vector. When you set the ivar, this method is called
   // to deallocate the empty layout, and in this case it's not worth doing the dispatch.
   if ([NSThread isMainThread] && target && !target->empty()) {
@@ -58,13 +58,13 @@ void CKOffMainThreadDeleter::operator()(std::vector<CKComponentLayoutChild> *tar
   }
 }
 
-std::shared_ptr<const std::vector<CKComponentLayoutChild>> CKComponentLayout::emptyChildren() noexcept
+std::shared_ptr<const std::vector<CKLayoutChild>> CKLayout::emptyChildren() noexcept
 {
-  static std::shared_ptr<const std::vector<CKComponentLayoutChild>> cached(new std::vector<CKComponentLayoutChild>());
+  static std::shared_ptr<const std::vector<CKLayoutChild>> cached(new std::vector<CKLayoutChild>());
   return cached;
 }
 
-NSSet<id<CKMountable>> *CKMountLayout(const CKComponentLayout &layout,
+NSSet<id<CKMountable>> *CKMountLayout(const CKLayout &layout,
                                       UIView *view,
                                       NSSet<id<CKMountable>> *previouslyMountedComponents,
                                       id<CKMountable> supercomponent,
@@ -72,7 +72,7 @@ NSSet<id<CKMountable>> *CKMountLayout(const CKComponentLayout &layout,
                                       id<CKMountLayoutListener> listener)
 {
   struct MountItem {
-    const CKComponentLayout &layout;
+    const CKLayout &layout;
     MountContext mountContext;
     id<CKMountable> supercomponent;
     BOOL visited;

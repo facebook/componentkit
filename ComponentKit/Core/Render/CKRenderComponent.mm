@@ -75,7 +75,7 @@
   }
 }
 
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
@@ -84,7 +84,7 @@
            "(component=%@)", size.description(), _child);
 
   if (_child) {
-    CKComponentLayout l = [_child layoutThatFits:constrainedSize parentSize:parentSize];
+    CKLayout l = [_child layoutThatFits:constrainedSize parentSize:parentSize];
     return {self, l.size, {{{0,0}, l}}};
   }
   return [super computeLayoutThatFits:constrainedSize restrictedToSize:size relativeToParentSize:parentSize];

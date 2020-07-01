@@ -62,12 +62,12 @@ static NSMutableArray *hitTestHooks;
   return superHitView;
 }
 
-- (CKComponentLayout)mountedLayout
+- (CKLayout)mountedLayout
 {
   // It's weird to reach into ck_attachState here. ck_attachState should probably be refactored
   // to simply be a concrete method on this class, instead of a category.
   CKComponentAttachState *const attachState = CKGetAttachStateForView(self);
-  return attachState ? CKComponentAttachStateRootLayout(attachState).layout() : CKComponentLayout();
+  return attachState ? CKComponentAttachStateRootLayout(attachState).layout() : CKLayout();
 }
 
 - (id<NSObject>)uniqueIdentifier

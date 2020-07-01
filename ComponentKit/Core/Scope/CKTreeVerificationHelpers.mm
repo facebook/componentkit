@@ -33,9 +33,9 @@ static NSArray<id<CKMountable>> *generateComponentBacktrace(id<CKMountable> comp
   return componentBacktrace;
 }
 
-CKDuplicateComponentInfo CKFindDuplicateComponent(const CKComponentLayout &layout)
+CKDuplicateComponentInfo CKFindDuplicateComponent(const CKLayout &layout)
 {
-  std::queue<const CKComponentLayout> queue;
+  std::queue<const CKLayout> queue;
   NSMutableSet<id<NSObject>> *const previouslySeenComponent = [NSMutableSet new];
   NSMapTable<id<CKMountable>, id<CKMountable>> *const componentsToParentComponents = [NSMapTable strongToStrongObjectsMapTable];
   queue.push(layout);
@@ -62,7 +62,7 @@ CKDuplicateComponentInfo CKFindDuplicateComponent(const CKComponentLayout &layou
   return {};
 }
 
-void CKDetectDuplicateComponent(const CKComponentLayout &layout) {
+void CKDetectDuplicateComponent(const CKLayout &layout) {
 #if CK_ASSERTIONS_ENABLED
   auto const info = CKFindDuplicateComponent(layout);
   if (info.component) {
@@ -77,7 +77,7 @@ void CKDetectDuplicateComponent(const CKComponentLayout &layout) {
 }
 
 #if CK_ASSERTIONS_ENABLED
-static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const CKComponentLayout &layout, id<CKTreeNodeProtocol> parentNode)
+static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const CKLayout &layout, id<CKTreeNodeProtocol> parentNode)
 {
   if (layout.component == nil) {
     return;
@@ -121,7 +121,7 @@ static void CKVerifyTreeNodeWithParent(const CKRootTreeNode &rootNode, const CKC
 
 #endif
 
-void CKVerifyTreeNodesToParentLinks(CKComponentScopeRoot *scopeRoot, const CKComponentLayout &layout)
+void CKVerifyTreeNodesToParentLinks(CKComponentScopeRoot *scopeRoot, const CKLayout &layout)
 {
   #if CK_ASSERTIONS_ENABLED
   if (scopeRoot.hasRenderComponentInTree) {

@@ -21,7 +21,7 @@
 @interface CKFlexboxComponent (Test)
 
 - (YGNodeRef)ygNode:(CKSizeRange)constrainedSize;
-- (CKComponentLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize;
+- (CKLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize;
 
 @end
 
@@ -410,7 +410,7 @@
 
 - (void)testSameLayoutIsCalculatedWithAndWithoutDeepYogaTrees
 {
-  CKComponentLayout(^buildComponentTreeAndComputeLayout)(BOOL) = ^CKComponentLayout(BOOL useDeepYogaTrees) {
+  CKLayout(^buildComponentTreeAndComputeLayout)(BOOL) = ^CKLayout(BOOL useDeepYogaTrees) {
     CKFlexboxComponent *component =
     CK::FlexboxComponentBuilder()
         .alignItems(CKFlexboxAlignItemsStart)
@@ -483,7 +483,7 @@
   const CKSizeRange kSize = {{500, 500}, {500, 500}};
   auto const layout = [flexbox layoutThatFits:kSize parentSize:kSize.max];
   auto components = std::vector<id<CKMountable>>{};
-  layout.enumerateLayouts([&](const CKComponentLayout &l) {
+  layout.enumerateLayouts([&](const CKLayout &l) {
     if (![l.component isKindOfClass:[CKFlexboxComponent class]]) {
       components.push_back(l.component);
     }
@@ -492,7 +492,7 @@
   XCTAssert(components == expected);
 }
 
-static BOOL areLayoutsEqual(const CKComponentLayout &left, const CKComponentLayout &right) {
+static BOOL areLayoutsEqual(const CKLayout &left, const CKLayout &right) {
   if (left.component.class != right.component.class) {
     return NO;
   }
@@ -501,7 +501,7 @@ static BOOL areLayoutsEqual(const CKComponentLayout &left, const CKComponentLayo
     return NO;
   }
 
-  for(std::vector<CKComponentLayoutChild>::size_type i = 0; i != left.children->size(); i++) {
+  for(std::vector<CKLayoutChild>::size_type i = 0; i != left.children->size(); i++) {
     auto leftChild = left.children->at(i);
     auto rightChild = right.children->at(i);
 

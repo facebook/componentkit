@@ -177,7 +177,7 @@ static NSString *componentStateName(CKComponentControllerState state)
   _lifecycleState = CKComponentControllerInvalidated;
 #endif
 }
-- (void)didPrepareLayout:(const CKComponentLayout &)layout forComponent:(CKComponent *)component {}
+- (void)didPrepareLayout:(const CKLayout &)layout forComponent:(CKComponent *)component {}
 
 #pragma mark - Hooks
 

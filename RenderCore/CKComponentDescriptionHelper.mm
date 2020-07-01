@@ -50,7 +50,7 @@ NSString *CKComponentBacktraceStackDescription(NSArray<id<CKMountable>> *compone
   return CKComponentBacktraceDescription(componentBacktrace, NO, YES);
 }
 
-NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKComponentLayoutChild>> children) noexcept
+NSString *CKComponentChildrenDescription(std::shared_ptr<const std::vector<CKLayoutChild>> children) noexcept
 {
   NSMutableString *const description = [NSMutableString string];
   for (auto childIter = children->begin(); childIter != children->end(); childIter++) {

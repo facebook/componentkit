@@ -112,7 +112,7 @@ static NSString *const kOverrideDidPrepareLayoutForComponent = @"kOverrideDidPre
   return self;
 }
 
-- (void)didPrepareLayout:(const CKComponentLayout &)layout forComponent:(CKComponent *)component
+- (void)didPrepareLayout:(const CKLayout &)layout forComponent:(CKComponent *)component
 {
   [self.callbacks addObject:NSStringFromSelector(_cmd)];
   [self.layoutComponentsFromCallbacks addObject:[NSString stringWithFormat:@"%p",layout.component]];

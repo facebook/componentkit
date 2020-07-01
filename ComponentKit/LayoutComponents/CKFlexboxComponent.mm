@@ -38,7 +38,7 @@ const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
 @interface CKFlexboxChildCachedLayout : NSObject
 
 @property (nonatomic) CKComponent *component;
-@property (nonatomic) CKComponentLayout componentLayout;
+@property (nonatomic) CKLayout componentLayout;
 @property (nonatomic) float width;
 @property (nonatomic) float height;
 @property (nonatomic) YGMeasureMode widthMode;
@@ -262,7 +262,7 @@ static CKFlexboxChildCachedLayout* getCKFlexboxChildCachedLayoutFromYogaNode(YGN
 
   if (!CKYogaNodeCanUseCachedMeasurement(YGMeasureModeExactly, width, YGMeasureModeExactly, height, cachedLayout.widthMode, cachedLayout.width, cachedLayout.heightMode, cachedLayout.height, static_cast<float>(cachedLayout.componentLayout.size.width), static_cast<float>(cachedLayout.componentLayout.size.height), 0, 0, ckYogaDefaultConfig())) {
     const CGSize fixedSize = {width, height};
-    const CKComponentLayout componentLayout = CKComputeComponentLayout(cachedLayout.component, convertCKSizeRangeToCKRepresentation(CKSizeRange(fixedSize, fixedSize)), convertCGSizeToCKRepresentation(cachedLayout.parentSize));
+    const CKLayout componentLayout = CKComputeComponentLayout(cachedLayout.component, convertCKSizeRangeToCKRepresentation(CKSizeRange(fixedSize, fixedSize)), convertCGSizeToCKRepresentation(cachedLayout.parentSize));
     cachedLayout.componentLayout = componentLayout;
     cachedLayout.width = width;
     cachedLayout.height = height;
@@ -700,7 +700,7 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
   YGNodeStyleSetBorder(node, edge, convertFloatToYogaRepresentation(value.value()));
 }
 
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   const CKSizeRange sanitizedSizeRange = convertCKSizeRangeToYogaRepresentation(constrainedSize);
   // We create cache for the duration of single calculation, so it is used only on one thread
@@ -714,7 +714,7 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
   return [self layoutFromYgNode:layoutNode thatFits:constrainedSize];
 }
 
-- (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
+- (CKLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
 {
   // Before we finalize layout we want to sort children according to their z-order
   // We want children with higher z-order to be closer to the end of list
@@ -731,7 +731,7 @@ static void applyBorderToEdge(YGNodeRef node, YGEdge edge, CKFlexboxBorderDimens
               return aCachedContext.zIndex < bCachedContext.zIndex;
             });
 
-  std::vector<CKComponentLayoutChild> childrenLayout(childCount);
+  std::vector<CKLayoutChild> childrenLayout(childCount);
   const float width = convertFloatToCKRepresentation(YGNodeLayoutGetWidth(layoutNode));
   const float height = convertFloatToCKRepresentation(YGNodeLayoutGetHeight(layoutNode));
   const CGSize size = {width, height};

@@ -44,7 +44,7 @@ static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
   UIView *componentView = [hostingView.containerView.subviews firstObject];
   XCTAssertEqualObjects(componentView.backgroundColor, [UIColor blackColor], @"Expected bg color to initially be black");
 
-  const CKComponentLayout &layout = [hostingView mountedLayout];
+  const CKLayout &layout = [hostingView mountedLayout];
   CKComponent *c = (CKComponent *)layout.component;
   [c updateState:^(id oldState){ return [UIColor redColor]; } mode:CKUpdateModeAsynchronous];
 
@@ -64,7 +64,7 @@ static CKComponent *componentProvider(id<NSObject> model, id<NSObject> context)
   UIView *componentView = [hostingView.containerView.subviews firstObject];
   XCTAssertEqualObjects(componentView.backgroundColor, [UIColor blackColor], @"Expected bg color to initially be black");
 
-  const CKComponentLayout &layout = [hostingView mountedLayout];
+  const CKLayout &layout = [hostingView mountedLayout];
   CKComponent *c = (CKComponent *)layout.component;
   [c updateState:^(id oldState){ return [UIColor redColor]; } mode:CKUpdateModeAsynchronous];
   [c updateState:^(id oldState){ return oldState; } mode:CKUpdateModeSynchronous];

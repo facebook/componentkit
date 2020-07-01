@@ -36,7 +36,7 @@ extern CGSize const kCKComponentParentSizeUndefined;
  Call this on children components to compute their layouts within your implementation of -computeLayoutThatFits:.
 
  @warning You may not override this method. Override -computeLayoutThatFits: instead.
- @warning In almost all cases, prefer the use of CKComputeComponentLayout in CKComponentLayout
+ @warning In almost all cases, prefer the use of CKComputeComponentLayout in CKLayout
 
  @param constrainedSize Specifies a minimum and maximum size. The receiver must choose a size that is in this range.
  @param parentSize The parent component's size. If the parent component does not have a final size in a given dimension,
@@ -45,7 +45,7 @@ extern CGSize const kCKComponentParentSizeUndefined;
 
  @return A struct defining the layout of the receiver and its children.
  */
-- (CKComponentLayout)layoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)layoutThatFits:(CKSizeRange)constrainedSize
                          parentSize:(CGSize)parentSize;
 
 /**
@@ -59,10 +59,10 @@ extern CGSize const kCKComponentParentSizeUndefined;
  (The analogy for UIView: you might return a certain size from -sizeThatFits:, but a parent view can always override
  that size and set your frame to any size.)
 
- @param constrainedSize A min and max size. This is computed as described in the description. The CKComponentLayout you
+ @param constrainedSize A min and max size. This is computed as described in the description. The CKLayout you
  return MUST have a size between these two sizes. This is enforced by assertion.
  */
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize;
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize;
 
 /**
  CKComponent's implementation of -layoutThatFits:parentSize: calls this method to resolve the component's size
@@ -73,7 +73,7 @@ extern CGSize const kCKComponentParentSizeUndefined;
 
  @warning Overriding this method should be done VERY rarely.
  */
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize;
 

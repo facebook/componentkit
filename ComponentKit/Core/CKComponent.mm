@@ -188,7 +188,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 #pragma mark - Mounting and Unmounting
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-                                      layout:(const CKComponentLayout &)layout
+                                      layout:(const CKLayout &)layout
                               supercomponent:(CKComponent *)supercomponent
 {
   CKCAssertWithCategory([NSThread isMainThread], self.className, @"This method must be called on the main thread");
@@ -313,7 +313,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
 
 #pragma mark - Layout
 
-- (CKComponentLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize
+- (CKLayout)layoutThatFits:(CKSizeRange)constrainedSize parentSize:(CGSize)parentSize
 {
 #if CK_ASSERTIONS_ENABLED
   const CKComponentContext<CKComponentCreationValidationContext> validationContext([[CKComponentCreationValidationContext alloc] initWithSource:CKComponentCreationValidationSourceLayout]);
@@ -324,7 +324,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   auto const systraceListener = context.systraceListener;
   [systraceListener willLayoutComponent:self];
 
-  CKComponentLayout layout = [self computeLayoutThatFits:constrainedSize
+  CKLayout layout = [self computeLayoutThatFits:constrainedSize
                                         restrictedToSize:_size
                                     relativeToParentSize:parentSize];
 
@@ -364,7 +364,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   return layout;
 }
 
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
@@ -373,7 +373,7 @@ CGSize const kCKComponentParentSizeUndefined = {kCKComponentParentDimensionUndef
   return [self computeLayoutThatFits:resolvedRange];
 }
 
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   return {self, constrainedSize.min};
 }

@@ -54,7 +54,7 @@ YGConfigRef _Nonnull ckYogaDefaultConfig();
 
  By default returns an empty layout
  */
-- (CKComponentLayout)layoutFromYgNode:(YGNodeRef _Nonnull)layoutNode thatFits:(CKSizeRange)constrainedSize;
+- (CKLayout)layoutFromYgNode:(YGNodeRef _Nonnull)layoutNode thatFits:(CKSizeRange)constrainedSize;
 
 /**
  A flag that represents whether the component's layout sets a custom baseline value using the key

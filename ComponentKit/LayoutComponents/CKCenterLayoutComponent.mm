@@ -38,7 +38,7 @@
   return c;
 }
 
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   // If we have a finite size in any direction, pass this so that the child can
   // resolve percentages agains it. Otherwise pass kCKComponentParentDimensionUndefined
@@ -53,7 +53,7 @@
     (_centeringOptions & CKCenterLayoutComponentCenteringX) != 0 ? 0 : constrainedSize.min.width,
     (_centeringOptions & CKCenterLayoutComponentCenteringY) != 0 ? 0 : constrainedSize.min.height,
   };
-  const CKComponentLayout childLayout = CKComputeComponentLayout(_child, {minChildSize, {constrainedSize.max}}, size);
+  const CKLayout childLayout = CKComputeComponentLayout(_child, {minChildSize, {constrainedSize.max}}, size);
 
   // If we have an undetermined height or width, use the child size to define the layout
   // size

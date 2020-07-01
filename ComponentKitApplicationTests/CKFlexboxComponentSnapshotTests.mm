@@ -44,9 +44,9 @@
   return c;
 }
 
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
-  CKComponentLayout parentLayout = [super computeLayoutThatFits:constrainedSize];
+  CKLayout parentLayout = [super computeLayoutThatFits:constrainedSize];
   NSMutableDictionary *extra = parentLayout.extra ? [parentLayout.extra mutableCopy]: [NSMutableDictionary dictionary];
   extra[kCKComponentLayoutExtraBaselineKey] = @(_baseline);
   parentLayout.extra = extra;
@@ -2769,7 +2769,7 @@ static CKComponentViewConfiguration kLightGrayBackgroundView = {
    children:{
      {
        // CKCompositeComponent is used just to verify that CKFlexboxComponent is actually
-       // laying out each child at the correct size, not just setting CKComponentLayout.size.
+       // laying out each child at the correct size, not just setting CKLayout.size.
        [CKCompositeComponent
         newWithComponent:
         [CKComponent

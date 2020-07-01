@@ -54,7 +54,7 @@
   return nil;
 }
 
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   CGSize size = {
     isinf(constrainedSize.max.width) ? kCKComponentParentDimensionUndefined : constrainedSize.max.width,
@@ -69,7 +69,7 @@
     };
     CKSizeRange childConstraint = child.size.resolveSizeRange(size, {{0,0}, autoMaxSize});
     CKAssertSizeRange(childConstraint);
-    return CKComponentLayoutChild({child.position, CKComputeComponentLayout(child.component, childConstraint, size)});
+    return CKLayoutChild({child.position, CKComputeComponentLayout(child.component, childConstraint, size)});
   });
 
   if (isnan(size.width)) {

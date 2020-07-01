@@ -37,7 +37,7 @@
                                    .build();
   CKComponent *c = [CKDontMountChildrenComponent newWithChild:viewComponent];
 
-  CKComponentLayout layout = [c layoutThatFits:{} parentSize:{NAN, NAN}];
+  CKLayout layout = [c layoutThatFits:{} parentSize:{NAN, NAN}];
 
   XCTAssertTrue(layout.children->front().layout.component == viewComponent,
                @"Expected view component to exist in the layout tree");
@@ -56,7 +56,7 @@
   CKComponent *c = CK::ComponentBuilder()
                        .viewClass([UIView class])
                        .build();
-  CKComponentLayout layout = [c layoutThatFits:{} parentSize:{NAN, NAN}];
+  CKLayout layout = [c layoutThatFits:{} parentSize:{NAN, NAN}];
 
   UIView *container = [UIView new];
   NSSet *mountedComponents = CKMountComponentLayout(layout, container, nil, nil);
@@ -75,7 +75,7 @@
                        .viewClass([UIView class])
                        .build();
 
-  const CKComponentLayout layoutBoth = {a, CGSizeZero,
+  const CKLayout layoutBoth = {a, CGSizeZero,
     {
       {CGPointZero, {a, {}, {}}},
       {CGPointZero, {b, {}, {}}},
@@ -88,7 +88,7 @@
   XCTAssertNotNil(a.viewContext.view, @"Didn't create view");
   XCTAssertNotNil(b.viewContext.view, @"Didn't create view");
 
-  const CKComponentLayout layoutA = {a, CGSizeZero,
+  const CKLayout layoutA = {a, CGSizeZero,
     {
       {CGPointZero, {a, {}, {}}},
     }
@@ -115,7 +115,7 @@
   const auto component = [CKComponent newWithView:viewConfig size:{}];
   const auto view = [[UIView alloc] initWithFrame:CGRect {{0, 0}, {10, 10}}];
   const auto context = CK::Component::MountContext::RootContext(view, nullptr);
-  const auto children = std::make_shared<const std::vector<CKComponentLayoutChild>>(std::vector<CKComponentLayoutChild> {});
+  const auto children = std::make_shared<const std::vector<CKLayoutChild>>(std::vector<CKLayoutChild> {});
 
   const auto result = mountController.mount(component, viewConfig, context, {5, 5}, children, nil);
   const auto label = (UILabel *)view.subviews.firstObject;
@@ -155,7 +155,7 @@
   return CKIterable::childAtIndex(self, index, _child);
 }
 
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   return {
     self,
@@ -165,7 +165,7 @@
 }
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-                                        layout:(const CKComponentLayout &)layout
+                                        layout:(const CKLayout &)layout
                               supercomponent:(CKComponent *)supercomponent
 {
   CK::Component::MountResult r = [super mountInContext:context layout:layout supercomponent:supercomponent];

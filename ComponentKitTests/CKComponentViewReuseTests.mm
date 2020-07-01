@@ -322,7 +322,7 @@ static CKComponent *componentProvider(id<NSObject> model, id<NSObject>context)
 }
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-                                       layout:(const CKComponentLayout &)layout
+                                       layout:(const CKLayout &)layout
                               supercomponent:(CKComponent *)supercomponent
 {
   const auto result = [super mountInContext:context layout:layout supercomponent:supercomponent];

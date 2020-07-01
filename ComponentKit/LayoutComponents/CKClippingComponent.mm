@@ -46,7 +46,7 @@
   return CKIterable::childAtIndex(self, index, _component);
 }
 
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
@@ -71,7 +71,7 @@
     self,
     // This component will always have the "normal" size as if the child *was* always constrained.
     resolvedRange.clamp(childLayout.size),
-    std::vector<CKComponentLayoutChild> {
+    std::vector<CKLayoutChild> {
       {CGPointZero, finalLayout}
     }
   };

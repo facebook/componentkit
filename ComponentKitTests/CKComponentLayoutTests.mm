@@ -19,12 +19,12 @@
 #import <ComponentKit/CKFlexboxComponent.h>
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 
-@interface CKComponentLayoutTestComponentController : CKComponentController
+@interface CKLayoutTestComponentController : CKComponentController
 @end
 
-@interface CKComponentLayoutTestComponent : CKComponent
+@interface CKLayoutTestComponent : CKComponent
 @end
-@implementation CKComponentLayoutTestComponent
+@implementation CKLayoutTestComponent
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
 {
@@ -35,18 +35,18 @@
 }
 + (Class<CKComponentControllerProtocol>)controllerClass
 {
-  return [CKComponentLayoutTestComponentController class];
+  return [CKLayoutTestComponentController class];
 }
 @end
 
-@implementation CKComponentLayoutTestComponentController
+@implementation CKLayoutTestComponentController
 @end
 
-@interface CKComponentLayoutTests : XCTestCase
+@interface CKLayoutTests : XCTestCase
 
 @end
 
-@implementation CKComponentLayoutTests
+@implementation CKLayoutTests
 
 - (void)testComputeRootLayout_WithCache_NoScope
 {
@@ -62,7 +62,7 @@
 
   // Make sure the cache contains all the components that have component controller.
   for (id child in children) {
-    const CKComponentLayout cacheLayout = layout.cachedLayoutForComponent(child);
+    const CKLayout cacheLayout = layout.cachedLayoutForComponent(child);
     XCTAssertTrue(cacheLayout.component == nil);
   }
 }
@@ -81,7 +81,7 @@
 
   // Make sure the cache contains all the components that have component controller.
   for (id child in children) {
-    const CKComponentLayout cacheLayout = layout.cachedLayoutForComponent(child);
+    const CKLayout cacheLayout = layout.cachedLayoutForComponent(child);
     XCTAssertTrue(cacheLayout.component == child);
   }
 }
@@ -101,7 +101,7 @@ static NSArray<CKComponent *>* createChildrenArray(BOOL scoped) {
   NSMutableArray<CKComponent *> *components = [NSMutableArray array];
   for (NSUInteger i=0; i<5; i++) {
     if (scoped) {
-      [components addObject:[CKComponentLayoutTestComponent newWithView:{} size:{}]];
+      [components addObject:[CKLayoutTestComponent newWithView:{} size:{}]];
     } else {
       [components addObject:CK::ComponentBuilder()
                                 .build()];

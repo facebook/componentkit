@@ -16,10 +16,10 @@
 
 #import <ComponentKit/CKComponentLayout.h>
 
-/** Adopted by views that may contain mounted CKComponentLayouts. May be used by debug tools. */
+/** Adopted by views that may contain mounted CKLayouts. May be used by debug tools. */
 @protocol CKInspectableView
 /** Call this only on the main thread. */
-- (CKComponentLayout)mountedLayout;
+- (CKLayout)mountedLayout;
 
 /** Unique identifier for the component hierarchy hosted in this view */
 - (id<NSObject>)uniqueIdentifier;

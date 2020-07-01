@@ -14,7 +14,7 @@
 
 #import <Foundation/Foundation.h>
 
-struct CKComponentLayout;
+struct CKLayout;
 
 @class CKComponentScopeRoot;
 @protocol CKMountable;
@@ -34,17 +34,17 @@ struct CKDuplicateComponentInfo {
   NSString *backtraceDescription;
 };
 
-CKDuplicateComponentInfo CKFindDuplicateComponent(const CKComponentLayout &layout);
+CKDuplicateComponentInfo CKFindDuplicateComponent(const CKLayout &layout);
 
 /**
  Detects, and reports, duplicate usage of a component found in the given component layout.
  @param layout The top-level component layout of the component hierarchy.
  */
- void CKDetectDuplicateComponent(const CKComponentLayout &layout);
+ void CKDetectDuplicateComponent(const CKLayout &layout);
 
 /**
  Verify the the links between the nodes to their parent nodes are set correctly in the root node.
  */
-void CKVerifyTreeNodesToParentLinks(CKComponentScopeRoot *scopeRoot, const CKComponentLayout &layout);
+void CKVerifyTreeNodesToParentLinks(CKComponentScopeRoot *scopeRoot, const CKLayout &layout);
 
 #endif

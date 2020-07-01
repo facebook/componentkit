@@ -87,7 +87,7 @@
  Called on the main thread when a new component has been created and its layout has been calculated.
  This layout will be used during the next mount (unless another state update will be triggered).
  */
-- (void)didPrepareLayout:(const CKComponentLayout &)layout forComponent:(CKComponent *)component;
+- (void)didPrepareLayout:(const CKLayout &)layout forComponent:(CKComponent *)component;
 
 /** The current version of the component. */
 @property (nonatomic, weak, readonly) ComponentType component;

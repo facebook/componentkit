@@ -50,7 +50,7 @@
 /**
  First layout the contents, then fit the background image.
  */
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
                           restrictedToSize:(const CKComponentSize &)size
                       relativeToParentSize:(CGSize)parentSize
 {
@@ -58,17 +58,17 @@
            @"CKBackgroundLayoutComponent only passes size {} to the super class initializer, but received size %@ "
            "(component=%@, background=%@)", size.description(), _component, _background);
 
-  const CKComponentLayout contentsLayout = [_component layoutThatFits:constrainedSize parentSize:parentSize];
+  const CKLayout contentsLayout = [_component layoutThatFits:constrainedSize parentSize:parentSize];
 
   return {
     self,
     contentsLayout.size,
     _background
-    ? std::vector<CKComponentLayoutChild> {
+    ? std::vector<CKLayoutChild> {
       {{0,0}, [_background layoutThatFits:{contentsLayout.size, contentsLayout.size} parentSize:contentsLayout.size]},
       {{0,0}, contentsLayout},
     }
-    : std::vector<CKComponentLayoutChild> {
+    : std::vector<CKLayoutChild> {
       {{0,0}, contentsLayout}
     }
   };

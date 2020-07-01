@@ -15,7 +15,7 @@
 #if CK_NOT_SWIFT
 
 /**
- Set a key value pair using this in CKComponentLayout.extra for a custom baseline. The component which uses this property should also override @{usesCustomBaseline} to return YES.
+ Set a key value pair using this in CKLayout.extra for a custom baseline. The component which uses this property should also override @{usesCustomBaseline} to return YES.
  e.g. @{kCKComponentLayoutExtraBaselineKey : 20}
  */
 

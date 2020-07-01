@@ -44,7 +44,7 @@ struct CKDataSourceViewport {
   CGPoint contentOffset;
 };
 
-/** Transforms an input of model objects into CKComponentLayouts. All methods and callbacks are main thread only. */
+/** Transforms an input of model objects into CKLayouts. All methods and callbacks are main thread only. */
 @interface CKDataSource : NSObject <CKComponentStateListener>
 
 /**

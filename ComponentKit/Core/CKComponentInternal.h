@@ -45,7 +45,7 @@
  used to specify that subcomponents should be mounted inside the view.
  */
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-                                      layout:(const CKComponentLayout &)layout
+                                      layout:(const CKLayout &)layout
                               supercomponent:(CKComponent *)supercomponent NS_REQUIRES_SUPER;
 
 /**

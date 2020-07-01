@@ -81,7 +81,7 @@ static void buildRecursiveDescriptionForView(NSMutableString *description,
     // middle of the tree via componentHierarchyDescriptionForView:, or someone is playing tricks
     // and doing weird things. In any case, go ahead and try to find the corresponding layout
     // and print it.
-    const CKComponentLayout layout = findLayoutForComponent(view, component);
+    const CKLayout layout = findLayoutForComponent(view, component);
     if (layout.component) {
       buildRecursiveDescriptionForLayout(description,
                                          visitedViews,
@@ -102,7 +102,7 @@ static void buildRecursiveDescriptionForView(NSMutableString *description,
   // If we encounter a CKComponentRootView, we want to print the view and then jump into
   // visiting the root layout it contains.
   if ([view isKindOfClass:[CKComponentRootView class]]) {
-    CKComponentLayout rootLayout = rootLayoutFromRootView((CKComponentRootView *)view);
+    CKLayout rootLayout = rootLayoutFromRootView((CKComponentRootView *)view);
     if (rootLayout.component) {
       buildRecursiveDescriptionForLayout(description,
                                          visitedViews,
@@ -125,7 +125,7 @@ static void buildRecursiveDescriptionForView(NSMutableString *description,
   }
 }
 
-static CKComponentLayout rootLayoutFromRootView(CKComponentRootView *rootView)
+static CKLayout rootLayoutFromRootView(CKComponentRootView *rootView)
 {
   if (CKGetAttachStateForView(rootView)) {
     return CKComponentAttachStateRootLayout(CKGetAttachStateForView(rootView)).layout();
@@ -138,13 +138,13 @@ static CKComponentLayout rootLayoutFromRootView(CKComponentRootView *rootView)
 }
 
 /** Given a layout, finds the sub-layout for a given component. */
-static CKComponentLayout findComponentInLayout(CKComponentLayout layout, CKComponent *component)
+static CKLayout findComponentInLayout(CKLayout layout, CKComponent *component)
 {
   if (layout.component == component) {
     return layout;
   } else if (layout.children) {
     for (const auto &child : *(layout.children)) {
-      const CKComponentLayout childLayout = findComponentInLayout(child.layout, component);
+      const CKLayout childLayout = findComponentInLayout(child.layout, component);
       if (childLayout.component) {
         return childLayout;
       }
@@ -157,12 +157,12 @@ static CKComponentLayout findComponentInLayout(CKComponentLayout layout, CKCompo
  Given a view, searches up the hierarchy and finds all ancestor root views.
  For each, looks in its layout to find the component if it exists, and returns its layout.
  */
-static const CKComponentLayout findLayoutForComponent(UIView *view, CKComponent *component)
+static const CKLayout findLayoutForComponent(UIView *view, CKComponent *component)
 {
   while (view) {
     if ([view isKindOfClass:[CKComponentRootView class]]) {
-      CKComponentLayout rootLayout = rootLayoutFromRootView((CKComponentRootView *)view);
-      CKComponentLayout layoutForComponent = findComponentInLayout(rootLayout, component);
+      CKLayout rootLayout = rootLayoutFromRootView((CKComponentRootView *)view);
+      CKLayout layoutForComponent = findComponentInLayout(rootLayout, component);
       if (layoutForComponent.component == component) {
         return layoutForComponent;
       }
@@ -175,7 +175,7 @@ static const CKComponentLayout findLayoutForComponent(UIView *view, CKComponent 
 static void buildRecursiveDescriptionForLayout(NSMutableString *description,
                                                NSMutableSet<UIView *> *visitedViews,
                                                NSMutableSet<id<CKMountable>> *visitedComponents,
-                                               const CKComponentLayout &layout,
+                                               const CKLayout &layout,
                                                CGPoint position,
                                                NSString *prefix)
 {

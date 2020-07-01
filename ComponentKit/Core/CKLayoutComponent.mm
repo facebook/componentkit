@@ -38,7 +38,7 @@
   return nil;
 }
 
-- (CKComponentLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
+- (CKLayout)computeLayoutThatFits:(CKSizeRange)constrainedSize
 {
   CKFailAssert(@"%@ MUST override the '%@' method.", self.className, NSStringFromSelector(_cmd));
   return [super computeLayoutThatFits:constrainedSize];

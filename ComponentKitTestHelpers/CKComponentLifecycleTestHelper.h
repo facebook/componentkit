@@ -21,7 +21,7 @@ struct CKComponentLifecycleTestHelperState {
   id model;
   id<NSObject> context;
   CKSizeRange constrainedSize;
-  CKComponentLayout componentLayout;
+  CKLayout componentLayout;
   CKComponentScopeRoot *scopeRoot;
   CKComponentBoundsAnimation boundsAnimation;
 };

@@ -19,32 +19,32 @@
 
 using namespace CK::Component;
 
-static pthread_key_t kCKComponentLayoutContextThreadKey;
+static pthread_key_t kCKLayoutContextThreadKey;
 
 struct ThreadKeyInitializer {
   static void destroyStack(LayoutContextValue *p) { delete p; }
-  ThreadKeyInitializer() { pthread_key_create(&kCKComponentLayoutContextThreadKey, (void (*)(void*))destroyStack); }
+  ThreadKeyInitializer() { pthread_key_create(&kCKLayoutContextThreadKey, (void (*)(void*))destroyStack); }
 };
 
 static LayoutContextValue &componentValue(id<CKSystraceListener> listener = nil)
 {
   static ThreadKeyInitializer threadKey;
-  LayoutContextValue *contexts = static_cast<LayoutContextValue *>(pthread_getspecific(kCKComponentLayoutContextThreadKey));
+  LayoutContextValue *contexts = static_cast<LayoutContextValue *>(pthread_getspecific(kCKLayoutContextThreadKey));
   if (!contexts) {
     contexts = new LayoutContextValue;
     if (listener) {
       contexts->systraceListener = listener;
     }
-    pthread_setspecific(kCKComponentLayoutContextThreadKey, contexts);
+    pthread_setspecific(kCKLayoutContextThreadKey, contexts);
   }
   return *contexts;
 }
 
 static void removeComponentStackForThisThread()
 {
-  LayoutContextValue *contexts = static_cast<LayoutContextValue *>(pthread_getspecific(kCKComponentLayoutContextThreadKey));
+  LayoutContextValue *contexts = static_cast<LayoutContextValue *>(pthread_getspecific(kCKLayoutContextThreadKey));
   ThreadKeyInitializer::destroyStack(contexts);
-  pthread_setspecific(kCKComponentLayoutContextThreadKey, nullptr);
+  pthread_setspecific(kCKLayoutContextThreadKey, nullptr);
 }
 
 LayoutContext::LayoutContext(CKComponent *c, CKSizeRange r) : component(c), sizeRange(r)

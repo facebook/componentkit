@@ -24,7 +24,7 @@ void CKSetViewPositionAndBounds(UIView *v,
 void CKSetViewPositionAndBounds(UIView *v,
                                 const CK::Component::MountContext &context,
                                 const CGSize size,
-                                std::shared_ptr<const std::vector<CKComponentLayoutChild> > children,
+                                std::shared_ptr<const std::vector<CKLayoutChild> > children,
                                 id<CKMountable> supercomponent,
                                 Class<CKMountable> klass)
 {

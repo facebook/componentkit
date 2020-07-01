@@ -44,7 +44,7 @@ CK_LINKABLE(CKComponent_Yoga)
   return YGNodeNewWithConfig(ckYogaDefaultConfig());
 }
 
-- (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
+- (CKLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
 {
   return {};
 }
@@ -79,7 +79,7 @@ CK_LINKABLE(CKCompositeComponent_Yoga)
   return [(id)self.child ygNode:constrainedSize];
 }
 
-- (CKComponentLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
+- (CKLayout)layoutFromYgNode:(YGNodeRef)layoutNode thatFits:(CKSizeRange)constrainedSize
 {
   CKCAssertWithCategory([self.child respondsToSelector:_cmd], ([NSString stringWithFormat:@"%@-%@", self.className, self.child.className]), @"%@ doesn't respond to %@", self.child.className, NSStringFromSelector(_cmd));
   auto const l = [(id)self.child layoutFromYgNode:layoutNode thatFits:constrainedSize];

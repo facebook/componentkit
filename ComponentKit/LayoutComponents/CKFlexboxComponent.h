@@ -330,7 +330,7 @@ struct CKFlexboxComponentChild {
 
 extern template class std::vector<CKFlexboxComponentChild>;
 
-/** Keys used to access properties on the CKComponentLayout extra dictionary. */
+/** Keys used to access properties on the CKLayout extra dictionary. */
 extern const struct CKStackComponentLayoutExtraKeys {
   /// NSNumber containing a BOOL which specifies whether a violation of constraints has occurred during layout. The absence of this key indicates that no violation of constraints occurred.
   NSString * const hadOverflow;

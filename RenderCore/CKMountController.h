@@ -35,7 +35,7 @@ struct MountController {
              const CKViewConfiguration<AccessibilityContext> &viewConfiguration,
              const CK::Component::MountContext &context,
              const CGSize size,
-             std::shared_ptr<const std::vector<CKComponentLayoutChild>> children,
+             std::shared_ptr<const std::vector<CKLayoutChild>> children,
              id<CKMountable> supercomponent,
              const MountCallbacks &mountCallbacks = {}) -> Component::MountResult
   {

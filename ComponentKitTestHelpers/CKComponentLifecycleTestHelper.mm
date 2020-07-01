@@ -59,7 +59,7 @@ using ProviderFunc = CKComponent *(*)(id<NSObject>, id<NSObject>);
   CKBuildComponentResult result = CKBuildComponent(CK::makeNonNull(previousScopeRoot), _pendingStateUpdates, ^{
     return _componentProvider ? _componentProvider(model, context) : nil;
   });
-  const CKComponentLayout componentLayout = CKComputeRootComponentLayout(result.component, constrainedSize).layout();
+  const CKLayout componentLayout = CKComputeRootComponentLayout(result.component, constrainedSize).layout();
   _previousScopeRoot = result.scopeRoot;
   _pendingStateUpdates.clear();
   return {

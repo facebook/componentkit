@@ -86,7 +86,7 @@
 @implementation CKLayoutGuideTestComponent
 
 - (CK::Component::MountResult)mountInContext:(const CK::Component::MountContext &)context
-                                      layout:(const CKComponentLayout &)layout
+                                      layout:(const CKLayout &)layout
                               supercomponent:(CKComponent *)supercomponent
 {
   const CK::Component::MountResult mountResult = [super mountInContext:context

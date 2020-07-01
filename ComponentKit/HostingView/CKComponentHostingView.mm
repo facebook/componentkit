@@ -232,7 +232,7 @@ static auto nilProvider(id<NSObject>, id<NSObject>) -> CKComponent * { return ni
   [self _setNeedsUpdateWithMode:mode];
 }
 
-- (CKComponentLayout)mountedLayout
+- (CKLayout)mountedLayout
 {
   return _mountedRootLayout.map([](const auto &rootLayout) {
     return rootLayout.layout();
