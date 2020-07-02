@@ -30,9 +30,8 @@ struct MountCallbacks {
 };
 
 struct MountController {
-  template <typename AccessibilityContext>
   auto mount(id<CKMountable> mountable,
-             const CKViewConfiguration<AccessibilityContext> &viewConfiguration,
+             const CKViewConfiguration &viewConfiguration,
              const CK::Component::MountContext &context,
              const CGSize size,
              std::shared_ptr<const std::vector<CKLayoutChild>> children,

@@ -36,7 +36,7 @@ constexpr id CKOptimisticMutationTokenNull = nil;
 namespace CK {
   namespace Component {
     struct MountAnalyticsContext;
-  
+
     struct OptimisticViewMutationInfo {
       int serial;
       CKOptimisticViewMutationOperation undo;
@@ -105,9 +105,8 @@ namespace CK {
       /** Resets each individual pool inside the map. */
       void reset(UIView *container, MountAnalyticsContext *mountAnalyticsContext);
 
-      template <typename AccessibilityContext>
       UIView *viewForConfiguration(Class componentClass,
-                                   const CKViewConfiguration<AccessibilityContext> &config,
+                                   const CKViewConfiguration &config,
                                    UIView *container,
                                    MountAnalyticsContext *mountAnalyticsContext)
       {
@@ -137,8 +136,7 @@ namespace CK {
 
     class AttributeApplicator {
     public:
-      template <typename AccessibilityContext>
-      static void apply(UIView *view, const CKViewConfiguration<AccessibilityContext> &config)
+      static void apply(UIView *view, const CKViewConfiguration &config)
       {
         applyAttributes(view, config.attributes());
       }
@@ -151,11 +149,11 @@ namespace CK {
       static void removeOptimisticViewMutation(CKOptimisticMutationToken token);
       /** Internal implementation detail of CKPerformOptimisticViewMutation; don't use this directly. */
       static void resetOptimisticViewMutations(UIView *view);
-      
+
     private:
       static void applyAttributes(UIView *view, std::shared_ptr<const CKViewComponentAttributeValueMap> attributes);
     };
-    
+
     /**
      An interface to the ViewReusePoolMap for a given container view. The constructor looks up the ViewReusePoolMap for
      the given view; you can subsequently call viewForConfiguration() to fetch-or-create a view from the pool.
@@ -174,9 +172,8 @@ namespace CK {
       UIView *const view;
 
       /** Returns a recycled or newly created subview for the given configuration. */
-      template <typename AccessibilityContext>
       UIView *viewForConfiguration(Class componentClass,
-                                   const CKViewConfiguration<AccessibilityContext> &config)
+                                   const CKViewConfiguration &config)
       {
         return viewReusePoolMap.viewForConfiguration(componentClass, config, view, mountAnalyticsContext);
       }

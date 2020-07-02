@@ -18,6 +18,7 @@
 #import <UIKit/UIKit.h>
 
 #import <RenderCore/ComponentViewReuseUtilities.h>
+#import <RenderCore/CKAccessibilityContext.h>
 #import <RenderCore/CKComponentViewAttribute.h>
 #import <RenderCore/CKComponentViewClass.h>
 #import <RenderCore/CKContainerWrapper.h>
@@ -30,10 +31,7 @@ typedef void (^CKComponentViewReuseBlock)(UIView *);
 
  {[UIView class]}
  {[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}, {@selector(setAlpha:), @0.5}}}
-
- This is made as template because it doesn't depend on concrete implementation of `AccessibilityContext`.
  */
-template<typename AccessibilityContext>
 struct CKViewConfiguration {
 
   CKViewConfiguration() noexcept :
@@ -50,7 +48,7 @@ struct CKViewConfiguration {
 
   CKViewConfiguration(CKComponentViewClass &&cls,
                       CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs,
-                      AccessibilityContext &&accessibilityCtx,
+                      CKAccessibilityContext &&accessibilityCtx,
                       bool blockImplicitAnimations = false) noexcept
   {
     // Need to use attrs before we move it below.
@@ -77,7 +75,7 @@ struct CKViewConfiguration {
     return rep->attributes;
   }
 
-  const AccessibilityContext &accessibilityContext() const noexcept
+  const CKAccessibilityContext &accessibilityContext() const noexcept
   {
     return rep->accessibilityContext;
   }
@@ -101,7 +99,7 @@ private:
   struct Repr {
     CKComponentViewClass viewClass;
     std::shared_ptr<const CKViewComponentAttributeValueMap> attributes;
-    AccessibilityContext accessibilityContext;
+    CKAccessibilityContext accessibilityContext;
     CK::Component::PersistentAttributeShape attributeShape;
     bool blockImplicitAnimations;
   };
@@ -118,9 +116,10 @@ private:
 };
 
 namespace std {
-  template<typename AccessibilityContext> struct hash<CKViewConfiguration<AccessibilityContext>>
+  template <>
+  struct hash<CKViewConfiguration>
   {
-    size_t operator()(const CKViewConfiguration<AccessibilityContext> &cl) const noexcept
+    size_t operator()(const CKViewConfiguration &cl) const noexcept
     {
       NSUInteger subhashes[] = {
         std::hash<CKComponentViewClass>()(cl.viewClass()),
