@@ -121,11 +121,6 @@ static NSString *componentStateName(CKComponentControllerState state)
   return component;
 }
 
-- (CKComponent *)lastMountedComponent
-{
-  return CKReadGlobalConfig().lastMountedComponentMigrationEnabled ? self.component : _component;
-}
-
 - (CKComponent *)threadSafe_component
 {
   CKComponent *component = nil;

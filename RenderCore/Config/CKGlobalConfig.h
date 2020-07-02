@@ -41,11 +41,6 @@ struct CKGlobalConfig {
    */
    CKComponentCoalescingMode coalescingMode = CKComponentCoalescingModeNone;
    /**
-    Used for migrating `lastMountedComponent` in `CKComponentController`.
-    */
-   BOOL lastMountedComponentMigrationEnabled = NO;
-
-   /**
     When true flexbox has additional assertions.
     */
    BOOL shouldPerformFlexboxExtraAssertions = NO;
