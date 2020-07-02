@@ -15,6 +15,6 @@
 #import <ComponentKit/CKComponentAccessibilityContext.h>
 #import <ComponentKit/CKViewConfiguration.h>
 
-using CKComponentViewConfiguration = CKViewConfiguration<CKComponentAccessibilityContext>;
+using CKComponentViewConfiguration = CKViewConfiguration<CKAccessibilityContext>;
 
 #endif

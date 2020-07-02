@@ -24,7 +24,7 @@ struct CKTextComponentAccessibilityContext
   /**
    Should rarely be used, the component's text will be used by default.
    */
-  CKComponentAccessibilityTextAttribute accessibilityLabel;
+  CKAccessibilityTextAttribute accessibilityLabel;
 };
 
 struct CKTextComponentOptions

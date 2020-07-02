@@ -13,7 +13,7 @@
 #import <ComponentKit/CKAssert.h>
 
 /** Helper that converts the accessibility context characteristics to a map of component view attributes */
-static CKViewComponentAttributeValueMap ViewAttributesFromAccessibilityContext(const CKComponentAccessibilityContext &accessibilityContext)
+static CKViewComponentAttributeValueMap ViewAttributesFromAccessibilityContext(const CKAccessibilityContext &accessibilityContext)
 {
   CKViewComponentAttributeValueMap accessibilityAttributes;
   if (accessibilityContext.isAccessibilityElement) {
@@ -38,7 +38,7 @@ CKComponentViewConfiguration CK::Component::Accessibility::AccessibleViewConfigu
 {
   CKCAssertMainThread();
   // Copy is intentional so we can move later.
-  CKComponentAccessibilityContext accessibilityContext = viewConfiguration.accessibilityContext();
+  CKAccessibilityContext accessibilityContext = viewConfiguration.accessibilityContext();
   const CKViewComponentAttributeValueMap &accessibilityAttributes = ViewAttributesFromAccessibilityContext(accessibilityContext);
   if (accessibilityAttributes.size() > 0) {
     CKViewComponentAttributeValueMap newAttributes(*viewConfiguration.attributes());

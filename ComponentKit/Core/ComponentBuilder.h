@@ -570,7 +570,7 @@ public:
    @note Calling this method on a builder that already has a complete view configuration set will trigger
    a compilation error.
    */
-  auto &accessibilityContext(CKComponentAccessibilityContext c)
+  auto &accessibilityContext(CKAccessibilityContext c)
   {
     constexpr auto accessibilityContextOverridesExistingViewConfiguration =
         PropBitmap::isSet(PropsBitmap, ViewConfigBuilderPropId::viewConfig);
@@ -607,7 +607,7 @@ public:
 protected:
   CKComponentViewClass _viewClass;
   CKViewComponentAttributeValueMap _attributes;
-  CKComponentAccessibilityContext _accessibilityCtx;
+  CKAccessibilityContext _accessibilityCtx;
   bool _blockImplicitAnimations;
 };
 

@@ -62,7 +62,7 @@ struct CKButtonComponentOptions {
   /// Additional attributes for the underlying UIButton
   CKViewComponentAttributeValueMap attributes;
   /// Accessibility context for the button.
-  CKComponentAccessibilityContext accessibilityContext;
+  CKAccessibilityContext accessibilityContext;
   /// Size restrictions for the button.
   CKComponentSize size;
   /// The inset or outset margins for the rectangle around the button's content.
