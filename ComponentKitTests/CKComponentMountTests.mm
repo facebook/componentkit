@@ -118,7 +118,7 @@
 
   std::unique_ptr<CKMountInfo> mountInfo;
 
-  const auto result = CKPerformMount(mountInfo, layout, viewConfig, context, nil, nil, nil);
+  const auto result = CKPerformMount(mountInfo, layout, viewConfig, context, nil, nullptr, nullptr);
   const auto label = (UILabel *)view.subviews.firstObject;
   XCTAssertTrue(result.mountChildren);
   XCTAssertTrue(CGRectEqualToRect(label.frame, CGRect {{0, 0}, {5, 5}}));

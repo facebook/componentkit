@@ -19,15 +19,15 @@
 
 static void relinquishMountedView(std::unique_ptr<CKMountInfo> &mountInfo,
                                   id<CKMountable> mountable,
-                                  CKMountCallbackBlock willRelinquishViewBlock)
+                                  CKMountCallbackFunction willRelinquishViewFunction)
 {
   CKCAssertMainThread();
   CKCAssert(mountInfo, @"mountInfo should not be null");
   if (mountInfo) {
     UIView *view = mountInfo->view;
     if (view) {
-      if (willRelinquishViewBlock) {
-        willRelinquishViewBlock(view);
+      if (willRelinquishViewFunction) {
+        willRelinquishViewFunction(mountable, view);
       }
       CKCAssert(CKMountedObjectForView(view) == mountable, @"");
       CKSetMountedObjectForView(view, nil);
@@ -41,8 +41,8 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
                                           const CKViewConfiguration &viewConfiguration,
                                           const CK::Component::MountContext &context,
                                           const id<CKMountable> supercomponent,
-                                          const CKMountCallbackBlock didAcquireViewBlock,
-                                          const CKMountCallbackBlock willRelinquishViewBlock)
+                                          const CKMountCallbackFunction didAcquireViewFunction,
+                                          const CKMountCallbackFunction willRelinquishViewFunction)
 {
   CKCAssertMainThread();
 
@@ -55,12 +55,12 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
   if (v) {
     auto const currentMountedComponent = (id<CKMountable>)CKMountedObjectForView(v);
     if (mountInfo->view != v) {
-      relinquishMountedView(mountInfo, layout.component, willRelinquishViewBlock); // First release our old view
+      relinquishMountedView(mountInfo, layout.component, willRelinquishViewFunction); // First release our old view
       [currentMountedComponent unmount]; // Then unmount old component (if any) from the new view
       CKSetMountedObjectForView(v, layout.component);
       CK::Component::AttributeApplicator::apply(v, viewConfiguration);
-      if (didAcquireViewBlock) {
-        didAcquireViewBlock(v);
+      if (didAcquireViewFunction) {
+        didAcquireViewFunction(layout.component, v);
       }
       mountInfo->view = v;
     } else {
@@ -95,11 +95,11 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
 
 void CKPerformUnmount(std::unique_ptr<CKMountInfo> &mountInfo,
                       const id<CKMountable> mountable,
-                      const CKMountCallbackBlock willRelinquishViewBlock)
+                      const CKMountCallbackFunction willRelinquishViewFunction)
 {
   CKCAssertMainThread();
   if (mountInfo) {
-    relinquishMountedView(mountInfo, mountable, willRelinquishViewBlock);
+    relinquishMountedView(mountInfo, mountable, willRelinquishViewFunction);
     mountInfo.reset();
   }
 }

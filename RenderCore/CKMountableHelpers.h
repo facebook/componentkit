@@ -25,7 +25,7 @@ struct CKLayout;
 struct CKMountInfo;
 struct CKViewConfiguration;
 
-using CKMountCallbackBlock = void(^)(UIView *);
+using CKMountCallbackFunction = void(*)(id<CKMountable> mountable, UIView *view);
 
 /**
  The CKMountable protocol requires implementing the mounting method
@@ -40,8 +40,8 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
                                           const CKViewConfiguration &viewConfiguration,
                                           const CK::Component::MountContext &context,
                                           const id<CKMountable> supercomponent,
-                                          const CKMountCallbackBlock didAcquireViewBlock,
-                                          const CKMountCallbackBlock willRelinquishViewBlock);
+                                          const CKMountCallbackFunction didAcquireViewFunction,
+                                          const CKMountCallbackFunction willRelinquishViewFunction);
 
 /**
  Similar to CKPerformMount: a standard implementation of unmounting that can
@@ -49,7 +49,7 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
  */
 void CKPerformUnmount(std::unique_ptr<CKMountInfo> &mountInfo,
                       const id<CKMountable> mountable,
-                      const CKMountCallbackBlock willRelinquishViewBlock);
+                      const CKMountCallbackFunction willRelinquishViewFunction);
 
 /** A helper function to set view position and bounds during mount. */
 void CKSetViewPositionAndBounds(UIView *v,
