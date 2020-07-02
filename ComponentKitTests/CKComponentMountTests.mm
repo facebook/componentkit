@@ -16,7 +16,7 @@
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKIterableHelpers.h>
 #import <ComponentKit/CKLayoutComponent.h>
-#import <ComponentKit/CKMountController.h>
+#import <ComponentKit/CKMountableHelpers.h>
 #import <ComponentKit/CKMountedObjectForView.h>
 
 #import "CKComponentTestCase.h"
@@ -105,9 +105,8 @@
   XCTAssertNil(b.viewContext.view, @"Should not be mounted");
 }
 
-- (void)testMountController
+- (void)testPerformMount
 {
-  auto mountController = CK::MountController {};
   const auto viewConfig = CKComponentViewConfiguration {
     [UILabel class],
     {{@selector(setText:), @"Hello"}}
@@ -117,17 +116,19 @@
   const auto context = CK::Component::MountContext::RootContext(view, nullptr);
   const auto children = std::make_shared<const std::vector<CKLayoutChild>>(std::vector<CKLayoutChild> {});
 
-  const auto result = mountController.mount(component, viewConfig, context, {5, 5}, children, nil);
+  std::unique_ptr<CKMountInfo> mountInfo;
+
+  const auto result = CKPerformMount(mountInfo, component, viewConfig, context, {5, 5}, children, nil, nil, nil);
   const auto label = (UILabel *)view.subviews.firstObject;
   XCTAssertTrue(result.mountChildren);
   XCTAssertTrue(CGRectEqualToRect(label.frame, CGRect {{0, 0}, {5, 5}}));
-  XCTAssertTrue(CGRectEqualToRect(mountController.mountInfo()->viewContext.frame, CGRect {{0, 0}, {5, 5}}));
+  XCTAssertTrue(CGRectEqualToRect(mountInfo->viewContext.frame, CGRect {{0, 0}, {5, 5}}));
   XCTAssertEqualObjects(label.text, @"Hello");
   XCTAssertEqual(CKMountedObjectForView(label), component);
-  XCTAssertEqual(mountController.mountInfo()->view, label);
+  XCTAssertEqual(mountInfo->view, label);
 
-  mountController.unmount(component);
-  XCTAssertTrue(mountController.mountInfo() == nullptr);
+  CKPerformUnmount(mountInfo, component, nil);
+  XCTAssertTrue(mountInfo == nullptr);
   XCTAssertNil(CKMountedObjectForView(label));
 }
 
