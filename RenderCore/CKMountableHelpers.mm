@@ -37,11 +37,9 @@ static void relinquishMountedView(std::unique_ptr<CKMountInfo> &mountInfo,
 }
 
 CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInfo,
-                                          const id<CKMountable> mountable,
+                                          const CKLayout &layout,
                                           const CKViewConfiguration &viewConfiguration,
                                           const CK::Component::MountContext &context,
-                                          const CGSize size,
-                                          const std::shared_ptr<const std::vector<CKLayoutChild>> &children,
                                           const id<CKMountable> supercomponent,
                                           const CKMountCallbackBlock didAcquireViewBlock,
                                           const CKMountCallbackBlock willRelinquishViewBlock)
@@ -53,44 +51,44 @@ CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInf
   }
   mountInfo->supercomponent = supercomponent;
 
-  UIView *v = context.viewManager->viewForConfiguration(mountable.class, viewConfiguration);
+  UIView *v = context.viewManager->viewForConfiguration(layout.component.class, viewConfiguration);
   if (v) {
     auto const currentMountedComponent = (id<CKMountable>)CKMountedObjectForView(v);
     if (mountInfo->view != v) {
-      relinquishMountedView(mountInfo, mountable, willRelinquishViewBlock); // First release our old view
+      relinquishMountedView(mountInfo, layout.component, willRelinquishViewBlock); // First release our old view
       [currentMountedComponent unmount]; // Then unmount old component (if any) from the new view
-      CKSetMountedObjectForView(v, mountable);
+      CKSetMountedObjectForView(v, layout.component);
       CK::Component::AttributeApplicator::apply(v, viewConfiguration);
       if (didAcquireViewBlock) {
         didAcquireViewBlock(v);
       }
       mountInfo->view = v;
     } else {
-      CKCAssert(currentMountedComponent == mountable, @"");
+      CKCAssert(currentMountedComponent == layout.component, @"");
     }
 
     @try {
-      CKSetViewPositionAndBounds(v, context, size);
+      CKSetViewPositionAndBounds(v, context, layout.size);
     } @catch (NSException *exception) {
       NSString *const componentBacktraceDescription =
         CKComponentBacktraceDescription(CKComponentGenerateBacktrace(supercomponent));
-      NSString *const componentChildrenDescription = CKComponentChildrenDescription(children);
+      NSString *const componentChildrenDescription = CKComponentChildrenDescription(layout.children);
       [NSException
        raise:exception.name
        format:@"%@ raised %@ during mount: %@\n backtrace:%@ children:%@",
-       mountable.class, exception.name, exception.reason,
+       layout.component.class, exception.name, exception.reason,
        componentBacktraceDescription, componentChildrenDescription];
     }
 
     mountInfo->viewContext = {v, {{0,0}, v.bounds.size}};
     return {.mountChildren = YES, .contextForChildren = context.childContextForSubview(v, NO)};
   } else {
-    CKCAssertWithCategory(mountInfo->view == nil, mountable.class,
+    CKCAssertWithCategory(mountInfo->view == nil, layout.component.class,
                           @"%@ should not have a mounted %@ after previously being mounted without a view.\n%@",
-                          mountable.class,
+                          layout.component.class,
                           [mountInfo->view class],
-                          CKComponentBacktraceDescription(CKComponentGenerateBacktrace(mountable)));
-    mountInfo->viewContext = {context.viewManager->view, {context.position, size}};
+                          CKComponentBacktraceDescription(CKComponentGenerateBacktrace(layout.component)));
+    mountInfo->viewContext = {context.viewManager->view, {context.position, layout.size}};
     return {.mountChildren = YES, .contextForChildren = context};
   }
 }

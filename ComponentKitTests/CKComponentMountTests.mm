@@ -114,11 +114,11 @@
   const auto component = [CKComponent newWithView:viewConfig size:{}];
   const auto view = [[UIView alloc] initWithFrame:CGRect {{0, 0}, {10, 10}}];
   const auto context = CK::Component::MountContext::RootContext(view, nullptr);
-  const auto children = std::make_shared<const std::vector<CKLayoutChild>>(std::vector<CKLayoutChild> {});
+  CKLayout layout(component, {5, 5});
 
   std::unique_ptr<CKMountInfo> mountInfo;
 
-  const auto result = CKPerformMount(mountInfo, component, viewConfig, context, {5, 5}, children, nil, nil, nil);
+  const auto result = CKPerformMount(mountInfo, layout, viewConfig, context, nil, nil, nil);
   const auto label = (UILabel *)view.subviews.firstObject;
   XCTAssertTrue(result.mountChildren);
   XCTAssertTrue(CGRectEqualToRect(label.frame, CGRect {{0, 0}, {5, 5}}));

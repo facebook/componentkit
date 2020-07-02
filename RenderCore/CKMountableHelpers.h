@@ -21,7 +21,7 @@
 #import <RenderCore/ComponentMountContext.h>
 
 @protocol CKMountable;
-struct CKLayoutChild;
+struct CKLayout;
 struct CKMountInfo;
 struct CKViewConfiguration;
 
@@ -36,11 +36,9 @@ using CKMountCallbackBlock = void(^)(UIView *);
  from the class that conforms to CKMountable.
  */
 CK::Component::MountResult CKPerformMount(std::unique_ptr<CKMountInfo> &mountInfo,
-                                          const id<CKMountable> mountable,
+                                          const CKLayout &layout,
                                           const CKViewConfiguration &viewConfiguration,
                                           const CK::Component::MountContext &context,
-                                          const CGSize size,
-                                          const std::shared_ptr<const std::vector<CKLayoutChild>> &children,
                                           const id<CKMountable> supercomponent,
                                           const CKMountCallbackBlock didAcquireViewBlock,
                                           const CKMountCallbackBlock willRelinquishViewBlock);
