@@ -36,9 +36,10 @@ struct CKComponentGeneratorInputs {
   CKComponentStateUpdateMap stateUpdates;
   BOOL enableComponentReuse;
   UITraitCollection *traitCollection;
+  BOOL hasPropsUpdate;
 
   bool operator==(const CKComponentGeneratorInputs &i) const {
-    return scopeRoot == i.scopeRoot && model == i.model && context == i.context && stateUpdates == i.stateUpdates && enableComponentReuse == i.enableComponentReuse;
+    return scopeRoot == i.scopeRoot && model == i.model && context == i.context && stateUpdates == i.stateUpdates && enableComponentReuse == i.enableComponentReuse && hasPropsUpdate == i.hasPropsUpdate;
   };
 };
 
@@ -133,6 +134,9 @@ private:
 - (void)updateModel:(id<NSObject>)model
 {
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
+    if (inputs.model != model) {
+      inputs.hasPropsUpdate = YES;
+    }
     inputs.model = model;
   });
 }
@@ -140,6 +144,9 @@ private:
 - (void)updateContext:(id<NSObject>)context
 {
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
+    if (inputs.context != context) {
+      inputs.hasPropsUpdate = YES;
+    }
     inputs.context = context;
   });
 }
@@ -154,7 +161,7 @@ private:
     CKPerformWithCurrentTraitCollection(inputs.traitCollection, ^{
       result = CKBuildComponent(CK::makeNonNull(inputs.scopeRoot), inputs.stateUpdates, ^{
         return _componentProvider(inputs.model, inputs.context);
-      }, enableComponentReuse);
+      }, enableComponentReuse, inputs.hasPropsUpdate);
     });
     _applyResult(result,
                  inputs,
@@ -182,7 +189,8 @@ private:
         CK::makeNonNull(inputs->scopeRoot),
         inputs->stateUpdates,
         ^{ return componentProvider(inputs->model, inputs->context); },
-        inputs->enableComponentReuse
+        inputs->enableComponentReuse,
+        inputs->hasPropsUpdate
       ));
     });
     const auto addedComponentControllers =
@@ -262,6 +270,7 @@ static void _applyResult(const CKBuildComponentResult &result,
   _notifyInvalidateControllerEvents(invalidComponentControllers);
   inputs.scopeRoot = result.scopeRoot;
   inputs.stateUpdates = {};
+  inputs.hasPropsUpdate = NO;
 }
 
 static void _notifyInvalidateControllerEvents(const std::vector<CKComponentController *> &invalidComponentControllers)
