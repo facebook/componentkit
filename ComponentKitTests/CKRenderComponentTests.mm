@@ -336,6 +336,92 @@
 
 }
 
+#pragma mark - Props and State Update
+
+- (void)test_fasterStateUpdate_componentIsNotBeingReused_onPropsAndStateUpdate
+{
+  __block CKCompositeComponentWithScopeAndState *root;
+  __block CKTestRenderComponent *c;
+  auto const componentIdentifier = 1;
+  auto const componentFactory = ^{
+    c = [CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}];
+    root = [CKCompositeComponentWithScopeAndState newWithComponent:c];
+    return root;
+  };
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, YES);
+
+  // Simulate props and a state update on a component
+  // 1. parentHasStateUpdate = YES
+  // 2. treeNodeDirtyIds with a fake parent id.
+  // 3. forcePropsUpdates = YES
+  // 4. Props (componentIdentifier) are equal = reuse
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[root.scopeHandle].push_back(^(id){
+    return @2;
+  });
+
+  __block CKCompositeComponentWithScopeAndState *root2;
+  __block CKTestRenderComponent *c2;
+  auto const componentFactory2 = ^{
+    c2 = [CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}];
+    root2 = [CKCompositeComponentWithScopeAndState newWithComponent:c2];
+    return root2;
+  };
+
+  auto const forcePropsUpdates = YES;
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory2, YES, forcePropsUpdates);
+
+  // forcePropsUpdates + state update should end up with PropsAndStateUpdate trigger - which behaves the same as PropsUpdates
+  XCTAssertEqual(c.renderCalledCounter, 1);
+  XCTAssertEqual(c2.renderCalledCounter, 0);
+  XCTAssertFalse(c.didReuseComponent);
+  XCTAssertTrue(c2.didReuseComponent);
+  XCTAssertEqual(c.childComponent, c2.childComponent);
+}
+
+- (void)test_fasterStateUpdate_componentIsBeingReused_onPropsAndStateUpdate
+{
+  __block CKCompositeComponentWithScopeAndState *root;
+  __block CKTestRenderComponent *c;
+  auto const componentIdentifier = 1;
+  auto const componentFactory = ^{
+    c = [CKTestRenderComponent newWithProps:{.identifier = componentIdentifier}];
+    root = [CKCompositeComponentWithScopeAndState newWithComponent:c];
+    return root;
+  };
+  auto const buildResults = CKBuildComponent(CKComponentScopeRootWithDefaultPredicates(nil, nil), {}, componentFactory, YES);
+
+  // Simulate props and a state update on a component
+  // 1. parentHasStateUpdate = YES
+  // 2. treeNodeDirtyIds with a fake parent id.
+  // 3. forcePropsUpdates = YES
+  // 4. Props (componentIdentifier) are different = no reuse
+  CKComponentStateUpdateMap stateUpdates;
+  stateUpdates[root.scopeHandle].push_back(^(id){
+    return @2;
+  });
+
+  __block CKCompositeComponentWithScopeAndState *root2;
+  __block CKTestRenderComponent *c2;
+  // Simulate props update
+  auto const componentIdentifier2 = 2;
+  auto const componentFactory2 = ^{
+    c2 = [CKTestRenderComponent newWithProps:{.identifier = componentIdentifier2}];
+    root2 = [CKCompositeComponentWithScopeAndState newWithComponent:c2];
+    return root2;
+  };
+
+  auto const forcePropsUpdates = YES;
+  auto const buildResults2 = CKBuildComponent(buildResults.scopeRoot, stateUpdates, componentFactory2, YES, forcePropsUpdates);
+
+  // forcePropsUpdates + state update should end up with PropsAndStateUpdate trigger - which behaves the same as PropsUpdates
+  XCTAssertEqual(c.renderCalledCounter, 1);
+  XCTAssertEqual(c2.renderCalledCounter, 1);
+  XCTAssertFalse(c.didReuseComponent);
+  XCTAssertFalse(c2.didReuseComponent);
+  XCTAssertNotEqual(c.childComponent, c2.childComponent);
+}
+
 #pragma mark - parentHasStateUpdate
 
 - (void)test_parentHasStateUpdatePropagatedCorrectly

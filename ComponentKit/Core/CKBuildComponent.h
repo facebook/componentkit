@@ -28,7 +28,9 @@ namespace CKBuildComponentHelpers {
 
    @return The related build trigger given the in input parameters
    */
-  auto getBuildTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> CKBuildTrigger;
+  auto getBuildTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
+                       const CKComponentStateUpdateMap &stateUpdates,
+                       BOOL forcePropsUpdates) -> CKBuildTrigger;
 }
 
 /**
@@ -38,13 +40,16 @@ namespace CKBuildComponentHelpers {
  @param previousRoot The previous scope root that was associated with the cell.
  @param stateUpdates A map of state updates that have accumulated since the last component generation was constructed.
  @param componentFactory A block that constructs your component. Must not be nil.
- @param enableComponentReuseOptimizations If `NO`, all the comopnents will be regenerated (no component reuse optimiztions). `YES` by default.
+ @param enableComponentReuseOptimizations If `NO`, all the comopnents will be regenerated (no component reuse optimiztions). `YES` by
+ default.
+ @param forcePropsUpdates Should be set to YES in case there is both props and state updates at the same time.
  @param coalescingMode Defines the coalescing mode to use for the current component tree.
  */
 CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         BOOL enableComponentReuseOptimizations = YES,
+                                        BOOL forcePropsUpdates = NO,
                                         CKComponentCoalescingMode coalescingMode = CKReadGlobalConfig().coalescingMode);
 
 #endif

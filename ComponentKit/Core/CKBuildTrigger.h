@@ -17,6 +17,7 @@ enum class CKBuildTrigger {
   NewTree,
   StateUpdate,
   PropsUpdate,
+  PropsAndStateUpdate,
 };
 
 #endif

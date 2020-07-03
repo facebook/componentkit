@@ -23,10 +23,16 @@
 #import "CKComponentCreationValidation.h"
 
 namespace CKBuildComponentHelpers {
-  auto getBuildTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot, const CKComponentStateUpdateMap &stateUpdates) -> CKBuildTrigger
+  auto getBuildTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
+                       const CKComponentStateUpdateMap &stateUpdates,
+                       BOOL forcePropsUpdates) -> CKBuildTrigger
   {
     if ([scopeRoot rootComponent] != nil) {
-      return stateUpdates.empty() ? CKBuildTrigger::PropsUpdate : CKBuildTrigger::StateUpdate;
+      if (forcePropsUpdates) {
+        return stateUpdates.empty() ? CKBuildTrigger::PropsUpdate : CKBuildTrigger::PropsAndStateUpdate;
+      } else {
+        return stateUpdates.empty() ? CKBuildTrigger::PropsUpdate : CKBuildTrigger::StateUpdate;
+      }
     }
     return CKBuildTrigger::NewTree;
   }
@@ -75,12 +81,13 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         BOOL enableComponentReuseOptimizations,
+                                        BOOL forcePropsUpdates,
                                         CKComponentCoalescingMode coalescingMode)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const globalConfig = CKReadGlobalConfig();
 
-  auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates);
+  auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates, forcePropsUpdates);
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const shouldCollectTreeNodeCreationInformation = [analyticsListener shouldCollectTreeNodeCreationInformation:previousRoot];
 

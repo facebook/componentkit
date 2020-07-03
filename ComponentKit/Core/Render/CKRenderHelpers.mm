@@ -139,7 +139,7 @@ namespace CKRenderInternal {
       }
     }
     // Props update branch:
-    else if (params.buildTrigger == CKBuildTrigger::PropsUpdate) {
+    else if (params.buildTrigger == CKBuildTrigger::PropsUpdate || params.buildTrigger == CKBuildTrigger::PropsAndStateUpdate) {
       return CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params, didReuseBlock);
     }
 
