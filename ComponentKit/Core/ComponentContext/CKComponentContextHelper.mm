@@ -161,7 +161,7 @@ id CKComponentContextHelper::fetchMutable(id key)
     // Props updates support.
     CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
     if (currentScope != nullptr) {
-      currentScope->newScopeRoot.rootNode.markTopRenderComponentAsDirtyForPropsUpdates();
+      [currentScope->newScopeRoot rootNode].markTopRenderComponentAsDirtyForPropsUpdates();
     }
     return v->_dictionary[key];
   }

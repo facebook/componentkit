@@ -21,6 +21,7 @@
 #import <ComponentKit/CKBuildComponent.h>
 #import <ComponentKit/CKComponentScopeHandle.h>
 #import <ComponentKit/CKGlobalConfig.h>
+#import <ComponentKit/CKNonNull.h>
 #import <ComponentKit/CKTreeNodeProtocol.h>
 #import <ComponentKit/CKScopeTreeNode.h>
 #import <ComponentKit/CKComponentCoalescingMode.h>
@@ -49,7 +50,7 @@ public:
    */
   static void markCurrentScopeWithRenderComponentInTree();
 
-  CKComponentScopeRoot *const newScopeRoot;
+  CK::NonNull<CKComponentScopeRoot *> const newScopeRoot;
   CKComponentScopeRoot *const previousScopeRoot;
   const CKComponentStateUpdateMap stateUpdates;
   std::stack<CKComponentScopePair> stack;

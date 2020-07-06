@@ -110,7 +110,7 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
   auto const component = componentFactory();
 
   // Build the component tree if we have a render component in the hierarchy.
-  if (threadScope.newScopeRoot.hasRenderComponentInTree || globalConfig.alwaysBuildRenderTree) {
+  if ([threadScope.newScopeRoot hasRenderComponentInTree] || globalConfig.alwaysBuildRenderTree) {
     CKBuildComponentTreeParams params = {
       .scopeRoot = threadScope.newScopeRoot,
       .previousScopeRoot = previousRoot,
@@ -127,7 +127,7 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
     CKRender::ComponentTree::Root::build(component, params);
   }
 
-  auto newScopeRoot = CK::makeNonNull(threadScope.newScopeRoot);
+  auto newScopeRoot = threadScope.newScopeRoot;
   auto const boundsAnimation = CKBuildComponentHelpers::boundsAnimationFromPreviousScopeRoot(newScopeRoot, previousRoot);
 
   [analyticsListener didBuildComponentTreeWithScopeRoot:newScopeRoot

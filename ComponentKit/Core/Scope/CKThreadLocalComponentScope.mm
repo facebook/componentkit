@@ -60,7 +60,7 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *p
   shouldSkipControllerRegistrationOnRenderToNil(shouldSkipControllerRegistrationOnRenderToNil),
   previousScope(CKThreadLocalComponentScope::currentScope())
 {
-  stack.push({newScopeRoot.rootNode.node(), previousScopeRoot.rootNode.node()});
+  stack.push({[newScopeRoot rootNode].node(), previousScopeRoot.rootNode.node()});
   keys.push({});
   ancestorHasStateUpdate.push(NO);
   pthread_setspecific(_threadKey(), this);
@@ -105,7 +105,7 @@ void CKThreadLocalComponentScope::markCurrentScopeWithRenderComponentInTree()
 {
   CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
   if (currentScope != nullptr) {
-    currentScope->newScopeRoot.hasRenderComponentInTree = YES;
+    [currentScope->newScopeRoot setHasRenderComponentInTree:YES];
     // `markCurrentScopeWithRenderComponentInTree` is being called for every render component from the base constructor of `CKComponent`.
     // We can rely on this infomration to increase the `componentAllocations` counter.
     currentScope->componentAllocations++;

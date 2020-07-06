@@ -147,7 +147,7 @@
   XCTAssertTrue(verifyComponentsInNode(root, @[c10, c11]));
 
   // Simulate a second tree creation.
-  auto const scopeRoot2 = [scopeRoot newRoot];
+  auto const scopeRoot2 = [scopeRoot.asNullable() newRoot];
   auto const root2 = scopeRoot2.rootNode.node();
   CKComponent *c20 = [CKComponentTreeTestComponent_Render new];
   CKComponent *c21 = [CKComponentTreeTestComponent_Render new];
