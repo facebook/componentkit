@@ -64,7 +64,7 @@ class CKActionBase {
 
   CKActionBase(dispatch_block_t block) noexcept;
 
-  ~CKActionBase() {};
+  ~CKActionBase();
 
   id initialTarget(CKComponent *sender) const;
   CKActionSendBehavior defaultBehavior() const;

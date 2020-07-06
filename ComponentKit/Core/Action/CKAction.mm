@@ -109,6 +109,8 @@ CKActionBase::CKActionBase(SEL selector) noexcept : _target(nil), _scopeIdentifi
 
 CKActionBase::CKActionBase(dispatch_block_t block) noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(block), _variant(CKActionVariant::Block), _selector(NULL) {};
 
+CKActionBase::~CKActionBase() {}
+
 CKActionBase::operator bool() const noexcept { return _selector != NULL || _block != NULL || _scopeIdentifierAndResponderGenerator.second != nil; };
 
 SEL CKActionBase::selector() const noexcept { return _selector; };
