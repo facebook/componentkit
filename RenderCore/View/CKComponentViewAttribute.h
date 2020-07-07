@@ -63,11 +63,7 @@ struct CKComponentViewAttribute {
   CKComponentViewAttribute(const std::string &ident,
                            void (^app)(id view, id value),
                            void (^unapp)(id view, id value) = nil,
-                           void (^upd)(id view, id oldValue, id newValue) = nil) :
-  identifier(ident),
-  applicator(app),
-  unapplicator(unapp),
-  updater(upd) {};
+                           void (^upd)(id view, id oldValue, id newValue) = nil);
 
   CKComponentViewAttribute(CKComponentViewAttribute const&);
   ~CKComponentViewAttribute();

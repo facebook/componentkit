@@ -205,6 +205,15 @@ static void performSetter(id object, SEL setter, id value)
 #pragma clang diagnostic pop
 }
 
+CKComponentViewAttribute::CKComponentViewAttribute(const std::string &ident,
+                           void (^app)(id view, id value),
+                           void (^unapp)(id view, id value),
+                           void (^upd)(id view, id oldValue, id newValue)) :
+  identifier(ident),
+  applicator(app),
+  unapplicator(unapp),
+  updater(upd) {};
+
 CKComponentViewAttribute::CKComponentViewAttribute(SEL setter) noexcept :
 identifier(sel_getName(setter)),
 applicator(^(UIView *view, id value){
