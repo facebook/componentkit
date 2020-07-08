@@ -208,7 +208,7 @@ static BOOL verifyChildToParentConnection(id<CKTreeNodeWithChildrenProtocol> par
 static BOOL verifyComponentsInNode(id<CKTreeNodeWithChildrenProtocol> parentNode, NSArray<CKComponent *> *components) {
   // Verify that the root holds two components has its direct children
   NSMutableSet<CKComponent *> *componentsFromTheTree = [NSMutableSet set];
-  for (auto const node : parentNode.children) {
+  for (auto node : parentNode.children) {
     [componentsFromTheTree addObject:(CKComponent *)node.component];
   }
   NSSet<id<CKMountable>> *componentsSet = [NSSet setWithArray:components];
@@ -226,7 +226,7 @@ static BOOL areTreesEqual(id<CKTreeNodeWithChildrenProtocol> lhs, id<CKTreeNodeW
 
 /** Iterate recursively over the tree and add its node identifiers to the set */
 static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSMutableSet<NSString *> *identifiers, int level) {
-  for (auto const childNode : node.children) {
+  for (auto childNode : node.children) {
     // We add the child identifier + its level in the tree.
     [identifiers addObject:[NSString stringWithFormat:@"%d-%d",childNode.nodeIdentifier, level]];
     if ([childNode isKindOfClass:[CKRenderTreeNode class]]) {

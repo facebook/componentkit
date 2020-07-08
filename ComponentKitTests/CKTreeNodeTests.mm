@@ -50,7 +50,7 @@ static NSMutableArray<CKTreeNode*> *createsNodesForComponentsWithOwner(id<CKTree
 
 /** Iterate recursively over the tree and add its node identifiers to the set */
 static void treeChildrenIdentifiers(id<CKTreeNodeWithChildrenProtocol> node, NSMutableSet<NSString *> *identifiers, int level) {
-  for (auto const childNode : node.children) {
+  for (auto childNode : node.children) {
     // We add the child identifier + its level in the tree.
     [identifiers addObject:[NSString stringWithFormat:@"%d-%d",childNode.nodeIdentifier, level]];
     if ([childNode isKindOfClass:[CKRenderTreeNode class]]) {
