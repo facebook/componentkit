@@ -14,8 +14,10 @@
 #import <ComponentKit/CKComponentGenerator.h>
 #import <ComponentKit/CKComponentInternal.h>
 #import <ComponentKit/CKComponentScopeRoot.h>
+#import <ComponentKit/CKIdValueWrapper.h>
 #import <ComponentKit/CKComponentSubclass.h>
 #import <ComponentKit/CKDelayedInitialisationWrapper.h>
+#import <ComponentKit/CKThreadLocalComponentScope.h>
 #import <ComponentKitTestHelpers/CKAnalyticsListenerSpy.h>
 #import <ComponentKitTestHelpers/CKTestRunLoopRunning.h>
 #import <ComponentKitTestHelpers/CKRenderComponentTestHelpers.h>
@@ -141,6 +143,40 @@ static CKComponent *verificationComponentProvider(id<NSObject> m, id<NSObject> c
     XCTAssertEqual(drsu.handle, result1.component.scopeHandle);
     XCTAssertEqual(drsu.rootID, [result1.scopeRoot globalIdentifier]);
   });
+}
+
+- (void)test_WhenReceivedPropsUpdateAndStateUpdate_BuildTriggerShouldBePropsUpdate
+{
+  const auto componentGenerator =
+  [[CKComponentGenerator alloc] initWithOptions:{
+    .delegate = CK::makeNonNull(self),
+    .componentProvider = CK::makeNonNull([](id<NSObject> m, id<NSObject> c) -> CKComponent *{
+      if (m != [NSNull null]) {
+        auto& model = CKIdValueWrapperGet<CKBuildTrigger>(m);
+        model = CKThreadLocalComponentScope::currentScope()->buildTrigger;
+      }
+      return CK::ComponentBuilder().build();
+    }),
+  }];
+
+  // NewTree
+  [componentGenerator updateModel:[NSNull null]];
+  [componentGenerator updateContext:@1];
+  [componentGenerator generateComponentSynchronously];
+
+  // State Update + Props Update
+  auto modelWrapper = CKIdValueWrapperNonEquatableCreate(CKBuildTrigger{});
+  [componentGenerator updateModel:modelWrapper];
+  const auto stateUpdateListenner = (id<CKComponentStateListener>)componentGenerator;
+  [stateUpdateListenner componentScopeHandle:[CKComponentScopeHandle new]
+                              rootIdentifier:42
+                       didReceiveStateUpdate:^id(id) {
+    return nil;
+  } metadata:{} mode:CKUpdateModeAsynchronous];
+  [componentGenerator generateComponentSynchronously];
+
+  const auto buildTrigger = CKIdValueWrapperGet<CKBuildTrigger>(modelWrapper);
+  XCTAssertEqual(buildTrigger, CKBuildTrigger::PropsAndStateUpdate);
 }
 
 #pragma mark - Helpers
