@@ -34,66 +34,33 @@ typedef void (^CKComponentViewReuseBlock)(UIView *);
  */
 struct CKViewConfiguration {
 
-  CKViewConfiguration() noexcept :
-    rep(singletonViewConfiguration()) {}
-
-  CKViewConfiguration(CKComponentViewClass &&cls) noexcept :
-    CKViewConfiguration(std::move(cls), {}) {}
+  CKViewConfiguration() noexcept;
+  CKViewConfiguration(CKComponentViewClass &&cls) noexcept;
+  CKViewConfiguration(const CKViewConfiguration&) noexcept;
 
   // Prefer overloaded constructors to default arguments to prevent code bloat; with default arguments
   // the compiler must insert initialization of each default value inline at the callsite.
   CKViewConfiguration(CKComponentViewClass &&cls,
-                      CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs) noexcept :
-    CKViewConfiguration(std::move(cls), std::move(attrs), {}) {}
+                      CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs) noexcept;
 
   CKViewConfiguration(CKComponentViewClass &&cls,
                       CKContainerWrapper<CKViewComponentAttributeValueMap> &&attrs,
                       CKAccessibilityContext &&accessibilityCtx,
-                      bool blockImplicitAnimations = false) noexcept
-  {
-    // Need to use attrs before we move it below.
-    CKViewComponentAttributeValueMap attrsMap = attrs.take();
-    CK::Component::PersistentAttributeShape attributeShape(attrsMap);
-    rep.reset(new Repr({
-      .viewClass = std::move(cls),
-      .attributes = std::make_shared<CKViewComponentAttributeValueMap>(std::move(attrsMap)),
-      .accessibilityContext = std::move(accessibilityCtx),
-      .attributeShape = std::move(attributeShape),
-      .blockImplicitAnimations = blockImplicitAnimations
-    }));
-  }
+                      bool blockImplicitAnimations = false) noexcept;
 
-  ~CKViewConfiguration() {}
+  ~CKViewConfiguration();
 
-  const CKComponentViewClass &viewClass() const noexcept
-  {
-    return rep->viewClass;
-  }
+  const CKComponentViewClass &viewClass() const noexcept;
 
-  std::shared_ptr<const CKViewComponentAttributeValueMap> attributes() const noexcept
-  {
-    return rep->attributes;
-  }
+  std::shared_ptr<const CKViewComponentAttributeValueMap> attributes() const noexcept;
 
-  const CKAccessibilityContext &accessibilityContext() const noexcept
-  {
-    return rep->accessibilityContext;
-  }
+  const CKAccessibilityContext &accessibilityContext() const noexcept;
 
-  BOOL isDefaultConfiguration() const
-  {
-    return rep == singletonViewConfiguration();
-  }
+  BOOL isDefaultConfiguration() const;
 
-  bool blockImplicitAnimations() const noexcept
-  {
-    return rep->blockImplicitAnimations;
-  }
+  bool blockImplicitAnimations() const noexcept;
 
-  const CK::Component::PersistentAttributeShape &attributeShape() const noexcept
-  {
-    return rep->attributeShape;
-  }
+  const CK::Component::PersistentAttributeShape &attributeShape() const noexcept;
 
 private:
   struct Repr {

@@ -319,6 +319,11 @@
 		40AB33C91FC39196005D3CE9 /* CKStateUpdateMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AB33C71FC39196005D3CE9 /* CKStateUpdateMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		497824751BC570E000F29081 /* CKCollectionViewDataSourceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 497824741BC570E000F29081 /* CKCollectionViewDataSourceTests.mm */; };
 		49FA174E1D182C1200EA8126 /* CKDataSourceIntegrationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49FA174D1D182C1200EA8126 /* CKDataSourceIntegrationTests.mm */; };
+		4F058E3424B4A45000D4B76A /* CKViewConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */; };
+		4F22A36D24B785CF00641047 /* CKViewConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */; };
+		4F22A37824B78A9300641047 /* CKViewConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */; };
+		4F22A37924B78AA500641047 /* CKViewConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */; };
+		4F22A37A24B78AAD00641047 /* CKViewConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */; };
 		6016FC2420A9BA2900440702 /* CKComponent+Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6016FC2520A9BA2900440702 /* CKComponent+Yoga.h in Headers */ = {isa = PBXBuildFile; fileRef = 6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6016FC2620A9BA2900440702 /* CKComponent+Yoga.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */; };
@@ -1517,6 +1522,7 @@
 		40AB33C71FC39196005D3CE9 /* CKStateUpdateMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStateUpdateMetadata.h; sourceTree = "<group>"; };
 		497824741BC570E000F29081 /* CKCollectionViewDataSourceTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKCollectionViewDataSourceTests.mm; sourceTree = "<group>"; };
 		49FA174D1D182C1200EA8126 /* CKDataSourceIntegrationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDataSourceIntegrationTests.mm; sourceTree = "<group>"; };
+		4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKViewConfiguration.mm; sourceTree = "<group>"; };
 		6016FC1820A9BA2800440702 /* CKComponent+Yoga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKComponent+Yoga.h"; sourceTree = "<group>"; };
 		6016FC2320A9BA2800440702 /* CKComponent+Yoga.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CKComponent+Yoga.mm"; sourceTree = "<group>"; };
 		60172864238FEF57000D5CD6 /* CKDelayedInitialisationWrapperTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKDelayedInitialisationWrapperTests.mm; sourceTree = "<group>"; };
@@ -2354,6 +2360,7 @@
 		723958C6238E9B21005B570A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4F058E2924B4A44F00D4B76A /* CKViewConfiguration.mm */,
 				723958C8238E9B21005B570A /* CKComponentViewAttribute.h */,
 				723958CC238E9B21005B570A /* CKComponentViewAttribute.mm */,
 				723958D0238E9B21005B570A /* ComponentViewManager.h */,
@@ -4525,6 +4532,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F22A37924B78AA500641047 /* CKViewConfiguration.mm in Sources */,
 				D657400F2103833E00FD8AAB /* CKChangesetHelpers.mm in Sources */,
 				7F27E2C11F69CC0F00573E14 /* CKLifecycleTestComponent.mm in Sources */,
 				03A98A6B1D2B2BFD00C5BAC2 /* CKTestActionComponent.mm in Sources */,
@@ -4606,6 +4614,7 @@
 				03B8B4951D2A346F00EDFF59 /* CKComponentHostingView.mm in Sources */,
 				03B8B4961D2A346F00EDFF59 /* CKComponentRootView.mm in Sources */,
 				D6C3B06B20B71E240089F06A /* CKComponentAnimations.mm in Sources */,
+				4F22A36D24B785CF00641047 /* CKViewConfiguration.mm in Sources */,
 				03B8B4971D2A346F00EDFF59 /* CKBackgroundLayoutComponent.mm in Sources */,
 				03B8B4981D2A346F00EDFF59 /* CKCenterLayoutComponent.mm in Sources */,
 				03B8B4991D2A346F00EDFF59 /* CKInsetComponent.mm in Sources */,
@@ -4733,6 +4742,7 @@
 				03F1ABEE1D2B2A9B00867584 /* CKDataSourceStateUpdateTests.mm in Sources */,
 				D64F654A210F58560083EE75 /* CKSubclassOverridesSelectorTests.mm in Sources */,
 				728D25E623E98A6D0016D672 /* CKAssociatedObjectTests.mm in Sources */,
+				4F22A37A24B78AAD00641047 /* CKViewConfiguration.mm in Sources */,
 				03F1ABEF1D2B2A9B00867584 /* CKStateScopeComponentBuilderTests.mm in Sources */,
 				03F1ABF01D2B2A9B00867584 /* CKComponentViewReuseTests.mm in Sources */,
 				03F1ABF11D2B2A9B00867584 /* CKDataSourceReloadModificationTests.mm in Sources */,
@@ -5046,6 +5056,7 @@
 				D431889923E2060F0024AA12 /* CKComponentViewClass.mm in Sources */,
 				D431889A23E2060F0024AA12 /* ComponentViewReuseUtilities.mm in Sources */,
 				D431889C23E2060F0024AA12 /* CKComponentDescriptionHelper.mm in Sources */,
+				4F22A37824B78A9300641047 /* CKViewConfiguration.mm in Sources */,
 				D431889623E2060F0024AA12 /* CKInternalHelpers.mm in Sources */,
 				D431889123E2060F0024AA12 /* CKDimension.mm in Sources */,
 				D431889323E2060F0024AA12 /* CKDispatch.mm in Sources */,
@@ -5070,6 +5081,7 @@
 				D431888923E2060E0024AA12 /* CKComponentViewClass.mm in Sources */,
 				D431888A23E2060E0024AA12 /* ComponentViewReuseUtilities.mm in Sources */,
 				D431888C23E2060E0024AA12 /* CKComponentDescriptionHelper.mm in Sources */,
+				4F058E3424B4A45000D4B76A /* CKViewConfiguration.mm in Sources */,
 				D431888623E2060E0024AA12 /* CKInternalHelpers.mm in Sources */,
 				D431888123E2060E0024AA12 /* CKDimension.mm in Sources */,
 				D431888323E2060E0024AA12 /* CKDispatch.mm in Sources */,
