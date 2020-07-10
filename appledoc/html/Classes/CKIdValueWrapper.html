@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>CKComponent Class Reference</title>
+	<title>CKIdValueWrapper Class Reference</title>
 
 	<link rel="stylesheet" href="../css/style.css">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
@@ -56,17 +56,11 @@
 	
 
 	
-	<optgroup label="Class Methods">
-		
-		<option value="//api/name/newWithView:size:">+ newWithView:size:</option>
-		
-	</optgroup>
-	
 
 	
 	<optgroup label="Instance Methods">
 		
-		<option value="//api/name/nextResponder">- nextResponder</option>
+		<option value="//api/name/initWithValue:assigner:releaser:comparator:">- initWithValue:assigner:releaser:comparator:</option>
 		
 	</optgroup>
 	
@@ -83,7 +77,7 @@
 		<div id="overview_contents" class="container">
 			<div id="content">
 				<main role="main">
-					<h1 class="title">CKComponent Class Reference</h1>
+					<h1 class="title">CKIdValueWrapper Class Reference</h1>
 
 					
 					<div class="section section-specification"><table cellspacing="0"><tbody>
@@ -91,11 +85,8 @@
 	<th>Inherits from</th>
 	<td>NSObject</td>
 </tr><tr>
-	<th>Conforms to</th>
-	<td>CKComponentProtocol<br />CKMountable</td>
-</tr><tr>
 	<th>Declared in</th>
-	<td>CKComponent.h</td>
+	<td>CKIdValueWrapperInternal.h</td>
 </tr>
 						</tbody></table></div>
 					
@@ -105,7 +96,8 @@
 					<div class="section section-overview">
 						<a title="Overview" name="overview"></a>
 						<h2 class="subtitle subtitle-overview">Overview</h2>
-						<p>A component is an immutable object that specifies how to configure a view, loosely inspired by React.</p>
+						<p>CKIdValueWrapper allows to easily wrap a value type like a stuct in an <code>NSObject</code> subclass.
+This type should be interacted with through its C API.</p>
 					</div>
 					
 					
@@ -121,8 +113,8 @@
 
 						<div class="task-list">
 							<div class="section-method">
-	<a name="//api/name/newWithView:size:" title="newWithView:size:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/newWithView:size:">+&nbsp;newWithView:size:</a></code>
+	<a name="//api/name/initWithValue:assigner:releaser:comparator:" title="initWithValue:assigner:releaser:comparator:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithValue:assigner:releaser:comparator:">&ndash;&nbsp;initWithValue:assigner:releaser:comparator:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -132,76 +124,12 @@
 			
 			
 			<div class="method-subsection brief-description">
-				<p>A struct describing the view for this component. Pass {} to specify that no view should be created.</p>
+				<p>Shouldn&rsquo;t be used directly, see CKIdValueWrapperCreate()</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>+ (instancetype)newWithView:(const CKComponentViewConfiguration &amp;)<em>view</em> size:(const CKComponentSize &amp;)<em>size</em></code></div>
-
-		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>view</code></th>
-						<td><p>A struct describing the view for this component. Pass {} to specify that no view should be created.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>size</code></th>
-						<td><p>A size constraint that should apply to this component. Pass {} to specify no size constraint.</p>
-
-<p>@example A component that renders a red square:
-[CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), [UIColor redColor]}}} size:{100, 100}]</p></td>
-					</tr>
-				
-				</table>
-			</div>
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponent.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/nextResponder" title="nextResponder"></a>
-	<h3 class="method-title"><code><a href="#//api/name/nextResponder">&ndash;&nbsp;nextResponder</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>While the component is mounted, returns its next responder. This is the first of:
-- Its component controller, if it has one;
-- Its supercomponent;
-- The view the component is mounted within, if it is the root component.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (id _Nullable)nextResponder</code></div>
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithValue:(void *const _Nullable)<em>value</em> assigner:(CKIdValueWrapperAssignerType _Nullable)<em>assigner</em> releaser:(CKIdValueWrapperReleaserType)<em>releaser</em> comparator:(CKIdValueWrapperComparatorType _Nullable)<em>comparator</em></code></div>
 
 		    
 			
@@ -219,7 +147,7 @@
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">CKComponent.h</code></p>
+				<p><code class="declared-in-ref">CKIdValueWrapperInternal.h</code></p>
 			</div>
 			
 			
