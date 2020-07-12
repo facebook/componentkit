@@ -62,7 +62,7 @@ using namespace CKComponentControllerHelper;
       if (onlySizeRangeChanged) {
         const auto rootLayout = CKComputeRootComponentLayout(item.rootLayout.component(),
                                                              sizeRange,
-                                                             [item scopeRoot].analyticsListener,
+                                                             [[item scopeRoot] analyticsListener],
                                                              CK::none,
                                                              [item scopeRoot]);
         newItem = [[CKDataSourceItem alloc] initWithRootLayout:rootLayout

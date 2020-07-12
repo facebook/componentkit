@@ -18,9 +18,10 @@
 #import <ComponentKit/CKComponentScopeRoot.h>
 #import <ComponentKit/CKDataSourceItem.h>
 #import <ComponentKit/CKDataSourceConfiguration.h>
+#import <ComponentKit/CKNonNull.h>
 #import <ComponentKit/CKSizeRange.h>
 
-CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
+CKDataSourceItem *CKBuildDataSourceItem(CK::NonNull<CKComponentScopeRoot *> previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         const CKSizeRange &sizeRange,
                                         CKDataSourceConfiguration *configuration,

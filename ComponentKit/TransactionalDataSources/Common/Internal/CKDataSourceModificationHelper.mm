@@ -18,7 +18,7 @@
 #import <ComponentKit/CKDataSourceItemInternal.h>
 #import <ComponentKit/CKMountable.h>
 
-CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
+CKDataSourceItem *CKBuildDataSourceItem(CK::NonNull<CKComponentScopeRoot *> previousRoot,
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         const CKSizeRange &sizeRange,
                                         CKDataSourceConfiguration *configuration,
@@ -30,7 +30,7 @@ CKDataSourceItem *CKBuildDataSourceItem(CKComponentScopeRoot *previousRoot,
   const auto componentFactory = ^{
     return componentProvider(model, context);
   };
-  const CKBuildComponentResult result = CKBuildComponent(CK::makeNonNull(previousRoot),
+  const CKBuildComponentResult result = CKBuildComponent(previousRoot,
                                                          stateUpdates,
                                                          componentFactory,
                                                          enableComponentReuseOptimizations);

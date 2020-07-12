@@ -11,6 +11,7 @@
 #import "CKDataSourceItem.h"
 #import "CKDataSourceItemInternal.h"
 
+#import <ComponentKit/CKDelayedNonNull.h>
 #import "CKComponent.h"
 #import "CKComponentLayout.h"
 
@@ -19,13 +20,13 @@
   BOOL _hasRootLayoutAndBoundsAnimation;
   CKComponentRootLayout _rootLayout;
   id _model;
-  CKComponentScopeRoot *_scopeRoot;
+  CK::DelayedNonNull<CKComponentScopeRoot *> _scopeRoot;
 }
 
 @synthesize boundsAnimation = _boundsAnimation;
 
 - (instancetype)initWithModel:(id)model
-                    scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                    scopeRoot:(CK::NonNull<CKComponentScopeRoot *>)scopeRoot
 {
   if (self = [super init]) {
     _model = model;
@@ -37,7 +38,7 @@
 
 - (instancetype)initWithRootLayout:(const CKComponentRootLayout &)rootLayout
                              model:(id)model
-                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                         scopeRoot:(CK::NonNull<CKComponentScopeRoot *>)scopeRoot
                    boundsAnimation:(CKComponentBoundsAnimation)boundsAnimation
 {
   if (self = [self initWithModel:model scopeRoot:scopeRoot]) {
@@ -58,6 +59,11 @@
 {
   CKAssert(_hasRootLayoutAndBoundsAnimation, @"When using the initializer without giving a layout you must override this method");
   return _rootLayout;
+}
+
+- (CK::NonNull<CKComponentScopeRoot *>)scopeRoot
+{
+  return _scopeRoot;
 }
 
 - (NSString *)description

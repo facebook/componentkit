@@ -294,7 +294,7 @@ using namespace CKComponentControllerHelper;
                        invalidComponentControllers:invalidComponentControllers];
 }
 
-- (CKDataSourceItem *)_buildDataSourceItemForPreviousRoot:(CKComponentScopeRoot *)previousRoot
+- (CKDataSourceItem *)_buildDataSourceItemForPreviousRoot:(CK::NonNull<CKComponentScopeRoot *>)previousRoot
                                              stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                                                 sizeRange:(const CKSizeRange &)sizeRange
                                             configuration:(CKDataSourceConfiguration *)configuration

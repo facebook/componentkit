@@ -444,12 +444,12 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   const auto item = [_state objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
   const auto handle =
   [[CKComponentScopeHandle alloc] initWithListener:dataSource
-                                    rootIdentifier:item.scopeRoot.globalIdentifier
+                                    rootIdentifier:[item.scopeRoot globalIdentifier]
                                  componentTypeName:"CKTestComponent"
                                       initialState:nil];
 
   [dataSource componentScopeHandle:handle
-                    rootIdentifier:item.scopeRoot.globalIdentifier
+                    rootIdentifier:[item.scopeRoot globalIdentifier]
              didReceiveStateUpdate:^(id x){ return x; }
                           metadata:{}
                               mode:CKUpdateModeSynchronous];
@@ -457,7 +457,7 @@ static CKComponent *ComponentProvider(id<NSObject> model, id<NSObject> context)
   const auto event = analyticsListenerSpy->_events.front();
   event.match([&](CK::AnalyticsListenerSpy::DidReceiveStateUpdate drsu){
     XCTAssertEqual(drsu.handle, handle);
-    XCTAssertEqual(drsu.rootID, item.scopeRoot.globalIdentifier);
+    XCTAssertEqual(drsu.rootID, [item.scopeRoot globalIdentifier]);
   });
 }
 

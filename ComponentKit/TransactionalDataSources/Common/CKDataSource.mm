@@ -304,7 +304,7 @@
   __block NSIndexPath *ip = nil;
   __block id model = nil;
   [_state enumerateObjectsUsingBlock:^(CKDataSourceItem *item, NSIndexPath *indexPath, BOOL *stop) {
-    if (item.scopeRoot.rootNode.parentForNodeIdentifier(treeNodeIdentifier) != nil) {
+    if ([item.scopeRoot rootNode].parentForNodeIdentifier(treeNodeIdentifier) != nil) {
       ip = indexPath;
       model = item.model;
       *stop = YES;

@@ -17,6 +17,7 @@
 #import <ComponentKit/CKCategorizable.h>
 #import <ComponentKit/CKComponentBoundsAnimation.h>
 #import <ComponentKit/CKComponentRootLayoutProvider.h>
+#import <ComponentKit/CKNonNull.h>
 
 struct CKComponentRootLayout;
 @class CKComponentScopeRoot;
@@ -27,7 +28,7 @@ struct CKComponentRootLayout;
 @property (nonatomic, strong, readonly) id model;
 
 /** The scope root for this item, which holds references to component controllers and state */
-@property (nonatomic, strong, readonly) CKComponentScopeRoot *scopeRoot;
+@property (nonatomic, assign, readonly) CK::NonNull<CKComponentScopeRoot *> scopeRoot;
 
 /** The bounds animation with which to apply the layout */
 @property (nonatomic, readonly) CKComponentBoundsAnimation boundsAnimation;

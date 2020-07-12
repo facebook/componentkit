@@ -19,7 +19,7 @@
 
 - (instancetype)initWithRootLayout:(const CKComponentRootLayout &)rootLayout
                              model:(id)model
-                         scopeRoot:(CKComponentScopeRoot *)scopeRoot
+                         scopeRoot:(CK::NonNull<CKComponentScopeRoot *>)scopeRoot
                    boundsAnimation:(CKComponentBoundsAnimation)boundsAnimation;
 
 /**
@@ -27,7 +27,7 @@
  of their root layout.
  */
 - (instancetype)initWithModel:(id)model
-                    scopeRoot:(CKComponentScopeRoot *)scopeRoot;
+                    scopeRoot:(CK::NonNull<CKComponentScopeRoot *>)scopeRoot;
 
 @end
 

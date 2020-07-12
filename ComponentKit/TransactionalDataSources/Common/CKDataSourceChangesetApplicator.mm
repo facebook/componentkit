@@ -23,6 +23,7 @@
 #import <ComponentKit/CKDataSourceQOSHelper.h>
 #import <ComponentKit/CKDataSourceState.h>
 #import <ComponentKit/CKDataSourceSplitChangesetModification.h>
+#import <ComponentKit/CKNonNull.h>
 #import <ComponentKit/CKSystraceScope.h>
 #import <ComponentKit/CKTraitCollectionHelper.h>
 
@@ -269,7 +270,7 @@ static NSDictionary *_mergeUserInfoWithChangesetApplicatorId(NSDictionary *userI
 
 #pragma mark - CKDataSourceChangesetModificationItemGenerator
 
-- (CKDataSourceItem *)buildDataSourceItemForPreviousRoot:(CKComponentScopeRoot *)previousRoot
+- (CKDataSourceItem *)buildDataSourceItemForPreviousRoot:(CK::NonNull<CKComponentScopeRoot *>)previousRoot
                                             stateUpdates:(const CKComponentStateUpdateMap &)stateUpdates
                                                sizeRange:(const CKSizeRange &)sizeRange
                                            configuration:(CKDataSourceConfiguration *)configuration

@@ -282,10 +282,10 @@ static void attachToCell(CKCollectionViewDataSourceCell *cell,
   CKComponentAttachControllerAttachComponentRootLayout(
       attachController,
       {.layoutProvider = item,
-       .scopeIdentifier = item.scopeRoot.globalIdentifier,
+       .scopeIdentifier = [item.scopeRoot globalIdentifier],
        .boundsAnimation = item.boundsAnimation,
        .view = cell.rootView,
-       .analyticsListener = item.scopeRoot.analyticsListener});
+       .analyticsListener = [item.scopeRoot analyticsListener]});
   [cellToItemMap setObject:item forKey:cell];
 }
 

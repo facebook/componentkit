@@ -13,6 +13,7 @@
 #import <XCTest/XCTest.h>
 
 #import <ComponentKit/CKComponentLayout.h>
+#import <ComponentKit/CKComponentScopeRootFactory.h>
 #import <ComponentKit/CKDataSourceChangeset.h>
 #import <ComponentKit/CKDataSourceChangesetModification.h>
 #import <ComponentKit/CKDataSourceItemInternal.h>
@@ -1280,7 +1281,7 @@ static CKDataSourceItem *itemWithModel(id model)
 {
   return [[CKDataSourceItem alloc] initWithRootLayout:{}
                                                 model:model
-                                            scopeRoot:nil
+                                            scopeRoot:CKComponentScopeRootWithDefaultPredicates(nil, nil)
                                       boundsAnimation:{}];
 }
 
