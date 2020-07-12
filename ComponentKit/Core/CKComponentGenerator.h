@@ -139,7 +139,7 @@ struct CKComponentGeneratorOptions {
 /**
  This is a temporary API for code migration. DO NOT USE.
  */
-- (void)setScopeRoot:(CKComponentScopeRoot *)scopeRoot;
+- (void)setScopeRoot:(CK::NonNull<CKComponentScopeRoot *>)scopeRoot;
 
 @end
 

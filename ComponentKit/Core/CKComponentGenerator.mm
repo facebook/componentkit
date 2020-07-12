@@ -30,7 +30,7 @@ static void *kAffinedQueueKey = &kAffinedQueueKey;
 #define CKAssertAffinedQueue() CKCAssert(_isRunningOnAffinedQueue(), @"This method must only be called on the affined queue")
 
 struct CKComponentGeneratorInputs {
-  CKComponentScopeRoot *scopeRoot;
+  CK::NonNull<CKComponentScopeRoot *> scopeRoot;
   id<NSObject> model;
   id<NSObject> context;
   CKComponentStateUpdateMap stateUpdates;
@@ -159,7 +159,7 @@ private:
     inputs.enableComponentReuse = YES;
     __block CK::DelayedInitialisationWrapper<CKBuildComponentResult> result;
     CKPerformWithCurrentTraitCollection(inputs.traitCollection, ^{
-      result = CKBuildComponent(CK::makeNonNull(inputs.scopeRoot), inputs.stateUpdates, ^{
+      result = CKBuildComponent(inputs.scopeRoot, inputs.stateUpdates, ^{
         return _componentProvider(inputs.model, inputs.context);
       }, enableComponentReuse, inputs.hasPropsUpdate);
     });
@@ -186,7 +186,7 @@ private:
     __block std::shared_ptr<const CKBuildComponentResult> result = nullptr;
     CKPerformWithCurrentTraitCollection(inputs->traitCollection, ^{
       result = std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
-        CK::makeNonNull(inputs->scopeRoot),
+        inputs->scopeRoot,
         inputs->stateUpdates,
         ^{ return componentProvider(inputs->model, inputs->context); },
         inputs->enableComponentReuse,
@@ -250,7 +250,7 @@ private:
   });
 }
 
-- (void)setScopeRoot:(CKComponentScopeRoot *)scopeRoot
+- (void)setScopeRoot:(CK::NonNull<CKComponentScopeRoot *>)scopeRoot
 {
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs){
     _notifyInitializationControllerEvents(_addedComponentControllersBetweenScopeRoots(scopeRoot, inputs.scopeRoot));
@@ -336,7 +336,7 @@ static std::vector<CKComponentController *> _addedComponentControllersBetweenSco
   const auto enqueueStateUpdate = ^{
     _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs){
       inputs.stateUpdates[handle].push_back(stateUpdate);
-      [inputs.scopeRoot.analyticsListener didReceiveStateUpdateFromScopeHandle:handle rootIdentifier:rootIdentifier];
+      [[inputs.scopeRoot analyticsListener] didReceiveStateUpdateFromScopeHandle:handle rootIdentifier:rootIdentifier];
     });
     [_delegate componentGenerator:self didReceiveComponentStateUpdateWithMode:mode];
   };
