@@ -14,6 +14,7 @@
 
 #import <ComponentKit/ComponentBuilder.h>
 #import <ComponentKit/CKInsetComponent.h>
+#import <ComponentKit/CKWritingDirection.h>
 
 namespace CK {
 namespace BuilderDetails {
@@ -94,6 +95,34 @@ class __attribute__((__may_alias__)) InsetComponentBuilder
   auto &insetsRight(CGFloat i)
   {
     _insets.right = i;
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+
+  /**
+  The amount of space to inset. Left in left-to-right languages, right in right-to-left languages.
+  */
+  auto &insetsStart(CGFloat i)
+  {
+    if (CKGetWritingDirection() == CKWritingDirection::RightToLeft) {
+      _insets.right = i;
+    } else {
+      _insets.left = i;
+    }
+
+    return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
+  }
+
+  /**
+  The amount of space to inset. Right in left-to-right languages, left in right-to-left languages.
+  */
+  auto &insetsEnd(CGFloat i)
+  {
+    if (CKGetWritingDirection() == CKWritingDirection::RightToLeft) {
+      _insets.left = i;
+    } else {
+      _insets.right = i;
+    }
+
     return reinterpret_cast<InsetComponentBuilder<PropsBitmap | InsetComponentPropId::insets> &>(*this);
   }
 

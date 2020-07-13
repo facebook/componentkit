@@ -16,6 +16,7 @@
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKFunctionalHelpers.h>
+#import <ComponentKit/CKWritingDirection.h>
 #import <ComponentKit/CKSizeAssert.h>
 
 #import "yoga/Yoga.h"
@@ -275,13 +276,13 @@ static CKFlexboxChildCachedLayout* getCKFlexboxChildCachedLayoutFromYogaNode(YGN
 
 static YGDirection ygApplicationDirection()
 {
-  static YGDirection applicationDirection;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    const NSWritingDirection direction = [NSParagraphStyle defaultWritingDirectionForLanguage:nil];
-    applicationDirection = (direction == NSWritingDirectionRightToLeft) ? YGDirectionRTL : YGDirectionLTR;
-  });
-  return applicationDirection;
+  switch (CKGetWritingDirection()) {
+    case CKWritingDirection::Natural:
+    case CKWritingDirection::LeftToRight:
+      return YGDirectionLTR;
+    case CKWritingDirection::RightToLeft:
+      return YGDirectionRTL;
+  }
 }
 
 static YGDirection ygDirectionFromStackStyle(const CKFlexboxComponentStyle &style)

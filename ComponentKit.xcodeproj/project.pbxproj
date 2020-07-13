@@ -955,6 +955,10 @@
 		D44B215624B73DFE0019E851 /* CKIdValueWrapperInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D44B215024B73DFE0019E851 /* CKIdValueWrapperInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D46328BB2415486600E5B7DA /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D46328BA2415486600E5B7DA /* CKLinkable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D46328BC2415486600E5B7DA /* CKLinkable.h in Headers */ = {isa = PBXBuildFile; fileRef = D46328BA2415486600E5B7DA /* CKLinkable.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D48D24E324B88B6600E3BFC4 /* CKWritingDirection.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D24D724B88B6500E3BFC4 /* CKWritingDirection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D48D24E424B88B6600E3BFC4 /* CKWritingDirection.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D24D724B88B6500E3BFC4 /* CKWritingDirection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D48D24E524B88B6600E3BFC4 /* CKWritingDirection.mm in Sources */ = {isa = PBXBuildFile; fileRef = D48D24E224B88B6600E3BFC4 /* CKWritingDirection.mm */; };
+		D48D24E624B88B6600E3BFC4 /* CKWritingDirection.mm in Sources */ = {isa = PBXBuildFile; fileRef = D48D24E224B88B6600E3BFC4 /* CKWritingDirection.mm */; };
 		D48D9D3B23424C75003DDC41 /* CKAnimationComponent+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D9D3A23424C75003DDC41 /* CKAnimationComponent+Internal.h */; };
 		D48D9D3E2342606B003DDC41 /* CKTransitions.h in Headers */ = {isa = PBXBuildFile; fileRef = D48D9D3C2342606B003DDC41 /* CKTransitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D48D9D3F2342606B003DDC41 /* CKTransitions.mm in Sources */ = {isa = PBXBuildFile; fileRef = D48D9D3D2342606B003DDC41 /* CKTransitions.mm */; };
@@ -1962,6 +1966,8 @@
 		D44B214F24B73DFE0019E851 /* CKIdValueWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKIdValueWrapper.h; sourceTree = "<group>"; };
 		D44B215024B73DFE0019E851 /* CKIdValueWrapperInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKIdValueWrapperInternal.h; sourceTree = "<group>"; };
 		D46328BA2415486600E5B7DA /* CKLinkable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKLinkable.h; sourceTree = "<group>"; };
+		D48D24D724B88B6500E3BFC4 /* CKWritingDirection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKWritingDirection.h; sourceTree = "<group>"; };
+		D48D24E224B88B6600E3BFC4 /* CKWritingDirection.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CKWritingDirection.mm; sourceTree = "<group>"; };
 		D48D9D3A23424C75003DDC41 /* CKAnimationComponent+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKAnimationComponent+Internal.h"; sourceTree = "<group>"; };
 		D48D9D3C2342606B003DDC41 /* CKTransitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKTransitions.h; sourceTree = "<group>"; };
 		D48D9D3D2342606B003DDC41 /* CKTransitions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CKTransitions.mm; sourceTree = "<group>"; };
@@ -2828,6 +2834,8 @@
 				D6A0CF8522844556000CC4D0 /* CKAnimation.h */,
 				D6A0CF8622844556000CC4D0 /* CKAnimation.mm */,
 				B1E306791E8B0EAA004864CF /* CKBuildComponent.h */,
+				D48D24D724B88B6500E3BFC4 /* CKWritingDirection.h */,
+				D48D24E224B88B6600E3BFC4 /* CKWritingDirection.mm */,
 				B1E3067A1E8B0EAA004864CF /* CKBuildComponent.mm */,
 				7227043123423332009A82A6 /* CKBuildComponentResult.h */,
 				723E448A2345058000A4806C /* CKBuildTrigger.h */,
@@ -3531,6 +3539,7 @@
 				D6683A5123B2B3D20015D82D /* BackgroundLayoutComponentBuilder.h in Headers */,
 				23B65ACA213FF9300049FFAC /* CKRenderComponent.h in Headers */,
 				03B8B5401D2A346F00EDFF59 /* CKComponentScopeRoot.h in Headers */,
+				D48D24E424B88B6600E3BFC4 /* CKWritingDirection.h in Headers */,
 				2DCA4E731D889D1500AAB2B3 /* CKDataSourceConfigurationInternal.h in Headers */,
 				C58C31CA247D81F70009B8E7 /* CKFatal.h in Headers */,
 				60D7B3AE20FC90500011AB3B /* YGLayout.h in Headers */,
@@ -3696,6 +3705,7 @@
 				D0B47D2C1CBD948E00BB33CE /* CKComponentHostingViewDelegate.h in Headers */,
 				D0B47D641CBD948E00BB33CE /* CKTextComponentView.h in Headers */,
 				D0B47D4C1CBD948E00BB33CE /* CKDataSourceReloadModification.h in Headers */,
+				D48D24E324B88B6600E3BFC4 /* CKWritingDirection.h in Headers */,
 				D6B7DA43240B067C007E2BEA /* CKComponentViewConfiguration_SwiftBridge.h in Headers */,
 				D0B47D171CBD948E00BB33CE /* CKComponentAnnouncerBaseInternal.h in Headers */,
 				D4BC573823E3765C0075D688 /* CKEqualityHelpers.h in Headers */,
@@ -4684,6 +4694,7 @@
 				03B8B4C91D2A346F00EDFF59 /* CKAsyncLayer.mm in Sources */,
 				03B8B4CA1D2A346F00EDFF59 /* CKAsyncTransaction.mm in Sources */,
 				2398D8B623ACD5E90028EC2A /* CKLayoutComponent.mm in Sources */,
+				D48D24E624B88B6600E3BFC4 /* CKWritingDirection.mm in Sources */,
 				60508847236788B900060327 /* CKAsyncBlock.mm in Sources */,
 				03B8B4CB1D2A346F00EDFF59 /* CKAsyncTransactionContainer.mm in Sources */,
 				03B8B4CC1D2A346F00EDFF59 /* CKAsyncTransactionGroup.mm in Sources */,
@@ -5034,6 +5045,7 @@
 				D0B47CDE1CBD943400BB33CE /* CKTextKitShadower.mm in Sources */,
 				D0B47D7B1CBD94EC00BB33CE /* CKComponentDebugController.mm in Sources */,
 				D0B47CDF1CBD943400BB33CE /* CKTextKitTailTruncater.mm in Sources */,
+				D48D24E524B88B6600E3BFC4 /* CKWritingDirection.mm in Sources */,
 				D0B47CE01CBD943400BB33CE /* CKAsyncLayer.mm in Sources */,
 				D6C3B05F20B71DBE0089F06A /* CKComponentAnimations.mm in Sources */,
 				D0B47CE11CBD943400BB33CE /* CKAsyncTransaction.mm in Sources */,
