@@ -60,7 +60,7 @@ public:
                               for why this is usually a bad idea:
                               http://facebook.github.io/react/tips/props-in-getInitialState-as-anti-pattern.html
    */
-  CKComponentScope(Class __unsafe_unretained componentClass, id identifier = nil, id (^initialStateCreator)(void) = nil) noexcept;
+  explicit CKComponentScope(Class __unsafe_unretained componentClass, id identifier = nil, id (^initialStateCreator)(void) = nil) noexcept;
 
   ~CKComponentScope();
 
