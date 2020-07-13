@@ -894,6 +894,362 @@ class __attribute__((__may_alias__)) FlexboxComponentBuilder
   std::vector<CKFlexboxComponentChild> _children;
 };
 
+namespace FlexboxChildComponentPropId {
+constexpr static auto component = 1 << 0;
+constexpr static auto __max = component;
+}
+
+template <PropsBitmapType PropsBitmap = 0>
+class __attribute__((__may_alias__)) FlexboxChildComponentBuilder {
+
+ public:
+  FlexboxChildComponentBuilder() = default;
+
+  ~FlexboxChildComponentBuilder() = default;
+
+  /** Margin applied to the child */
+  auto &margin(const CKFlexboxSpacing &m)
+  {
+    _child.margin = m;
+    return *this;
+  }
+
+  /** Top margin applied to the child */
+  auto &marginTop(CGFloat m)
+  {
+    _child.margin.top = m;
+    return *this;
+  }
+
+  /** Bottom margin applied to the child */
+  auto &marginBottom(CGFloat m)
+  {
+    _child.margin.bottom = m;
+    return *this;
+  }
+
+  /** Start margin applied to the child. Left in left-to-right languages, right in right-to-left languages */
+  auto &marginStart(CGFloat m)
+  {
+    _child.margin.start = m;
+    return *this;
+  }
+
+  /** Start margin applied to the child. Left in left-to-right languages, right in right-to-left languages */
+  auto &marginStart(CKRelativeDimension m)
+  {
+    _child.margin.start = m;
+    return *this;
+  }
+
+  /** End margin applied to the child. Right in left-to-right languages, left in right-to-left languages */
+  auto &marginEnd(CGFloat m)
+  {
+    _child.margin.end = m;
+    return *this;
+  }
+
+  /** End margin applied to the child. Right in left-to-right languages, left in right-to-left languages */
+  auto &marginEnd(CKRelativeDimension m)
+  {
+    _child.margin.end = m;
+    return *this;
+  }
+
+  /** Padding applied to the container */
+  auto &padding(const CKFlexboxSpacing &p)
+  {
+    _child.padding = p;
+    return *this;
+  }
+
+  /** Top padding applied to the container */
+  auto &paddingTop(CGFloat p)
+  {
+    _child.padding.top = p;
+    return *this;
+  }
+
+  /** Top padding applied to the container */
+  auto &paddingTop(CKRelativeDimension p)
+  {
+    _child.padding.top = p;
+    return *this;
+  }
+
+  /** Bottom padding applied to the container */
+  auto &paddingBottom(CGFloat p)
+  {
+    _child.padding.bottom = p;
+    return *this;
+  }
+
+  /** Bottom padding applied to the container */
+  auto &paddingBottom(CKRelativeDimension p)
+  {
+    _child.padding.bottom = p;
+    return *this;
+  }
+
+  /** Start padding applied to the container. Left in left-to-right languages, right in right-to-left languages */
+  auto &paddingStart(CGFloat p)
+  {
+    _child.padding.start = p;
+    return *this;
+  }
+
+  /** Start padding applied to the container. Left in left-to-right languages, right in right-to-left languages */
+  auto &paddingStart(CKRelativeDimension p)
+  {
+    _child.padding.start = p;
+    return *this;
+  }
+
+  /** End padding applied to the container. Right in left-to-right languages, left in right-to-left languages */
+  auto &paddingEnd(CGFloat p)
+  {
+    _child.padding.end = p;
+    return *this;
+  }
+
+  /** End padding applied to the container. Right in left-to-right languages, left in right-to-left languages */
+  auto &paddingEnd(CKRelativeDimension p)
+  {
+    _child.padding.end = p;
+    return *this;
+  }
+
+  /** Orientation of the child along cross axis, overriding @c alignItems */
+  auto &alignSelf(CKFlexboxAlignSelf a)
+  {
+    _child.alignSelf = a;
+    return *this;
+  }
+
+  /**
+  If the sum of childrens' stack dimensions is less than the minimum size, how much should this component grow?
+  This value represents the "flex grow factor" and determines how much this component should grow in relation to any
+  other flexible children.
+  */
+  auto &flexGrow(CGFloat fg)
+  {
+    _child.flexGrow = fg;
+    return *this;
+  }
+
+  /**
+  If the sum of childrens' stack dimensions is greater than the maximum size, how much should this component shrink?
+  This value represents the "flex shrink factor" and determines how much this component should shink in relation to
+  other flexible children.
+  */
+  auto &flexShrink(CGFloat fs)
+  {
+    _child.flexShrink = fs;
+    return *this;
+  }
+
+  /**
+  Additional space to place before the component in the stacking direction. Overriden by any margins in the stacking
+  direction.
+  */
+  auto &spacingBefore(CGFloat s)
+  {
+    _child.spacingBefore = s;
+    return *this;
+  }
+
+  /**
+  Additional space to place after the component in the stacking direction. Overriden by any margins in the stacking
+  direction.
+  */
+  auto &spacingAfter(CGFloat s)
+  {
+    _child.spacingAfter = s;
+    return *this;
+  }
+
+  /** Specifies the initial size in the stack dimension for the child. */
+  auto &flexBasis(CKRelativeDimension fb)
+  {
+    _child.flexBasis = fb;
+    return *this;
+  }
+
+  /** Position for the child */
+  auto &position(CKFlexboxPosition p)
+  {
+    _child.position = p;
+    return *this;
+  }
+
+  /** Type of the child position */
+  auto &positionType(CKFlexboxPositionType t)
+  {
+    _child.position.type = t;
+    return *this;
+  }
+
+  /** Defines offset from left edge of parent to left edge of child */
+  auto &positionLeft(CGFloat p)
+  {
+    _child.position.left = p;
+    return *this;
+  }
+
+  /** Defines offset from left edge of parent to left edge of child */
+  auto &positionLeft(CKRelativeDimension p)
+  {
+    _child.position.left = p;
+    return *this;
+  }
+
+  /** Defines offset from end edge of parent to end edge of child */
+  auto &positionEnd(CGFloat p)
+  {
+    _child.position.end = p;
+    return *this;
+  }
+
+  /** Defines offset from end edge of parent to end edge of child */
+  auto &positionEnd(CKRelativeDimension p)
+  {
+    _child.position.end = p;
+    return *this;
+  }
+
+  /** Defines offset from starting edge of parent to starting edge of child */
+  auto &positionStart(CGFloat p)
+  {
+    _child.position.start = p;
+    return *this;
+  }
+
+  /** Defines offset from starting edge of parent to starting edge of child */
+  auto &positionStart(CKRelativeDimension p)
+  {
+    _child.position.start = p;
+    return *this;
+  }
+
+  /** Defines offset from top edge of parent to top edge of child */
+  auto &positionTop(CGFloat p)
+  {
+    _child.position.top = p;
+    return *this;
+  }
+
+  /** Defines offset from top edge of parent to top edge of child */
+  auto &positionTop(CKRelativeDimension p)
+  {
+    _child.position.top = p;
+    return *this;
+  }
+
+  /** Defines offset from bottom edge of parent to bottom edge of child */
+  auto &positionBottom(CGFloat p)
+  {
+    _child.position.bottom = p;
+    return *this;
+  }
+
+  /** Defines offset from bottom edge of parent to bottom edge of child */
+  auto &positionBottom(CKRelativeDimension p)
+  {
+    _child.position.bottom = p;
+    return *this;
+  }
+
+  /** Defines offset from right edge of parent to right edge of child */
+  auto &positionRight(CGFloat p)
+  {
+    _child.position.right = p;
+    return *this;
+  }
+
+  /** Defines offset from right edge of parent to right edge of child */
+  auto &positionRight(CKRelativeDimension p)
+  {
+    _child.position.right = p;
+    return *this;
+  }
+
+  /**
+  Stack order of the child.
+  Child with greater stack order will be in front of an child with a lower stack order.
+  If children have the same @c zIndex, the one declared first will appear below.
+  */
+  auto &zIndex(NSInteger i)
+  {
+    _child.zIndex = i;
+    return *this;
+  }
+
+  /**
+  Aspect ratio controls the size of the undefined dimension of a node.
+  Aspect ratio is encoded as a floating point value width/height. e.g. A value of 2 leads to a node
+  with a width twice the size of its height while a value of 0.5 gives the opposite effect.
+  */
+  auto &aspectRatio(CKFlexboxAspectRatio r)
+  {
+    _child.aspectRatio = r;
+    return *this;
+  }
+
+  /**
+  Size constraints on the child. Percentages are resolved against parent size.
+  If constraint is Auto, will resolve against size of children Component
+  By default all values are Auto
+  */
+  auto &sizeConstraints(const CKComponentSize &s)
+  {
+    _child.sizeConstraints = s;
+    return *this;
+  }
+
+  /**
+  This property allows node to force rounding only up.
+  Text should never be rounded down as this may cause it to be truncated.
+  */
+  auto &useTextRounding(bool r)
+  {
+    _child.useTextRounding = r;
+    return *this;
+  }
+
+  /**
+  This property allows to override how the baseline of a component is calculated. The default baseline of component is
+  the baseline of first child in Yoga. If this property is set to @c YES then height of a component will be used as
+  baseline.
+  */
+  auto &useHeightAsBaseline(bool b)
+  {
+    _child.useHeightAsBaseline = b;
+    return *this;
+  }
+
+  /**
+  This property sets the component for the flexbox child.
+  */
+  auto &component(NS_RELEASES_ARGUMENT CKComponent *component)
+  {
+    _child.component = component;
+    return reinterpret_cast<FlexboxChildComponentBuilder<PropsBitmap | FlexboxChildComponentPropId::component> &>(*this);
+  }
+
+  /**
+  Returns a copy of the current CKFlexboxComponentChild instance.
+  */
+  auto build() noexcept -> CKFlexboxComponentChild
+  {
+    constexpr auto componentIsSet = PropBitmap::isSet(PropsBitmap, FlexboxChildComponentPropId::component);
+    static_assert(componentIsSet, "Required property 'component' is not set.");
+    return _child;
+  }
+
+ private:
+  CKFlexboxComponentChild _child = {};
+};
+
 }
 
 using FlexboxComponentBuilderEmpty = BuilderDetails::FlexboxComponentBuilder<>;
@@ -927,6 +1283,14 @@ auto FlexboxComponentBuilder() -> FlexboxComponentBuilderEmpty;
  layout configurations and can generate CKFlexboxComponent code for you
  */
 auto FlexboxComponentBuilder(const CK::ComponentSpecContext &c) -> FlexboxComponentBuilderContext;
+
+
+/**
+ A flexbox child component.
+*/
+using FlexboxChildComponentBuilder = BuilderDetails::FlexboxChildComponentBuilder<>;
+using FlexboxChildBuilder = FlexboxChildComponentBuilder;
+
 }
 
 #endif
