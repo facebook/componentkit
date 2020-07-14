@@ -252,7 +252,7 @@ shouldSkipControllerRegistrationOnRenderToNil:(BOOL)shouldSkipControllerRegistra
   }
 
   std::lock_guard<std::mutex> l(_mutex);
-  auto result = std::find(_handles.begin(), _handles.end(), handle);
+  auto result = CK::find(_handles, handle);
 
   if (result == _handles.end()) {
     CKFailAssert(@"This scope handle is not associated with this Responder.");

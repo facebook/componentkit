@@ -18,6 +18,8 @@
 #include <utility>
 #include <vector>
 
+#import <RenderCore/CKCollection.h>
+
 namespace CK {
 /**
  An associative container that stores a mapping from instances of \c Key to instances of \c Value .
@@ -44,8 +46,7 @@ public:
 #ifndef NDEBUG
     auto keys = std::vector<Key>{};
     for (auto const &kv : kvs) {
-      auto const it = std::find(keys.begin(), keys.end(), kv.first);
-      assert(it == keys.end() && "Keys must be unique");
+      assert(!CK::Collection::contains(keys, kv.first) && "Keys must be unique");
       keys.push_back(kv.first);
     }
 #endif
@@ -66,7 +67,7 @@ public:
    \return  A reference to an existing value, or, if the key was previously missing, a reference to just inserted default constructed value.
    */
   auto operator [](const Key &key) -> Value & {
-    auto const it = std::find_if(_elements.begin(), _elements.end(), [&key](const_reference kv) {
+    auto const it = CK::find_if(_elements, [&key](const_reference kv) {
       return kv.first == key;
     });
 

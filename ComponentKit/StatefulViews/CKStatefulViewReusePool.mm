@@ -10,6 +10,7 @@
 #import "CKStatefulViewComponentController.h"
 
 #import <ComponentKit/CKAssert.h>
+#import <ComponentKit/CKCollection.h>
 #import <ComponentKit/CKDispatch.h>
 
 #import "CKStatefulViewReusePool.h"
@@ -29,8 +30,8 @@ public:
       return nil;
     }
     // Preferentially return the parent view.
-    auto preferIt = std::find_if(_entries.begin(), _entries.end(),
-                           [preferredSuperview](const FBStatefulReusePoolItemEntry entry)->bool {
+    auto preferIt = CK::find_if(_entries,
+                           [preferredSuperview](const FBStatefulReusePoolItemEntry &entry)->bool {
                              return entry.view == preferredSuperview;
                            });
     if (preferIt != _entries.end()) {

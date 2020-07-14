@@ -15,6 +15,7 @@
 #import <vector>
 
 #import <RenderCore/CKAssert.h>
+#import <RenderCore/CKCollection.h>
 
 /**
  Since the only way to get notified when an object is deallocated is through associated object from
@@ -47,7 +48,7 @@ id _Nullable CKGetAssociatedObject_MainThreadAffined(__unsafe_unretained id obje
     return nil;
   }
   const auto &keyValues = it->second;
-  const auto rs = std::find_if(keyValues.begin(), keyValues.end(), [&](const auto &pair) {
+  const auto rs = CK::find_if(keyValues, [&](const auto &pair) {
     return std::get<0>(pair) == key;
   });
   if (rs == keyValues.end()) {
@@ -77,7 +78,7 @@ void CKSetAssociatedObject_MainThreadAffined(__unsafe_unretained id object,
     }
   } else {
     auto &keyValues = it->second;
-    const auto rs = std::find_if(keyValues.begin(), keyValues.end(), [&](const auto &pair) {
+    const auto rs = CK::find_if(keyValues, [&](const auto &pair) {
       return std::get<0>(pair) == key;
     });
     if (rs == keyValues.end()) {

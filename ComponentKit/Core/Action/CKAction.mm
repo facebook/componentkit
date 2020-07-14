@@ -17,6 +17,7 @@
 #import <ComponentKit/CKInternalHelpers.h>
 #import <ComponentKit/CKAssert.h>
 #import <ComponentKit/CKAssociatedObject.h>
+#import <ComponentKit/CKCollection.h>
 #import <ComponentKit/CKMutex.h>
 
 #import "CKComponent+UIView.h"
@@ -274,7 +275,7 @@ CKComponentViewAttributeValue CKComponentActionAttribute(const CKAction<UIEvent 
         CKComponentActionList *const list = CKGetAssociatedObject_MainThreadAffined(control, ck_actionListKey);
         CKCAssertNotNil(list, @"Unapplicator should always find an action list installed by applicator");
         auto &actionList = list->_actions[controlEvents];
-        auto it = std::find(actionList.begin(), actionList.end(), action);
+        auto it = CK::find(actionList, action);
         if (it == actionList.end()) {
           CKCFailAssert(@"Unapplicator should always find item in action list");
           return;

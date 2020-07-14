@@ -108,6 +108,20 @@ namespace CK {
   }
 }
 
+namespace CK {
+template <typename Range, typename Element>
+auto find(Range &&range, const Element &element)
+{
+  return std::find(std::begin(range), std::end(range), element);
+}
+
+template <typename Range, typename UnaryPredicate>
+auto find_if(Range &&range, UnaryPredicate&& predicate)
+{
+  return std::find_if(std::begin(range), std::end(range), std::forward<UnaryPredicate>(predicate));
+}
+}
+
 template <typename T>
 class CKCocoaCollectionAdapter {
   static_assert(std::is_convertible<T, id>::value, "Only elements of ObjC types are supported");

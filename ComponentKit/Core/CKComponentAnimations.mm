@@ -52,9 +52,8 @@ namespace CK {
 
     return map(handlesForUpdatedComponents, [&](const auto &h){
       const auto prevHandle =
-      std::find_if(oldHandlesWithAnimationsFromPreviousComponent.begin(),
-                   oldHandlesWithAnimationsFromPreviousComponent.end(),
-                   [&](const auto &oldHandle) { return oldHandle.globalIdentifier == h.globalIdentifier; });
+      find_if(oldHandlesWithAnimationsFromPreviousComponent,
+              [&](const auto &oldHandle) { return oldHandle.globalIdentifier == h.globalIdentifier; });
       return ComponentTreeDiff::Pair { acquiredComponent(*prevHandle), acquiredComponent(h) };
     });
   }

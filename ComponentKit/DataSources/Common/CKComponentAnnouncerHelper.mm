@@ -10,6 +10,8 @@
 
 #import "CKComponentAnnouncerHelper.h"
 
+#import <ComponentKit/CKCollection.h>
+
 namespace CK {
 
   // used by enumerating part of the code to get currently listeners
@@ -43,7 +45,7 @@ namespace CK {
 
   void Component::AnnouncerHelper::addListener(CKComponentAnnouncerBase *self, SEL s, id listener) {
     if (self->_listenerVector) {
-      if (std::find(self->_listenerVector->begin(), self->_listenerVector->end(), listener) != self->_listenerVector->end()) {
+      if (CK::Collection::contains(*self->_listenerVector, listener)) {
         // Multiple notifications to the same listener are not allowed.
         return;
       }
