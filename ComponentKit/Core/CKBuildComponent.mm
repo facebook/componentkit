@@ -25,16 +25,21 @@
 namespace CKBuildComponentHelpers {
   auto getBuildTrigger(CK::NonNull<CKComponentScopeRoot *> scopeRoot,
                        const CKComponentStateUpdateMap &stateUpdates,
-                       BOOL forcePropsUpdates) -> CKBuildTrigger
+                       BOOL treeHasPropsUpdate) -> CKBuildTrigger
   {
+    CKBuildTrigger trigger = CKBuildTriggerNone;
+
     if ([scopeRoot rootComponent] != nil) {
-      if (forcePropsUpdates) {
-        return stateUpdates.empty() ? CKBuildTrigger::PropsUpdate : CKBuildTrigger::PropsAndStateUpdate;
-      } else {
-        return stateUpdates.empty() ? CKBuildTrigger::PropsUpdate : CKBuildTrigger::StateUpdate;
+      if (stateUpdates.empty() == false) {
+        trigger |= CKBuildTriggerStateUpdate;
+      }
+
+      if (stateUpdates.empty() || treeHasPropsUpdate) {
+        trigger |= CKBuildTriggerPropsUpdate;
       }
     }
-    return CKBuildTrigger::NewTree;
+
+    return trigger;
   }
 
   /**
@@ -81,13 +86,13 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
                                         const CKComponentStateUpdateMap &stateUpdates,
                                         NS_NOESCAPE CKComponent *(^componentFactory)(void),
                                         BOOL enableComponentReuseOptimizations,
-                                        BOOL forcePropsUpdates,
+                                        BOOL treeHasPropsUpdate,
                                         CKComponentCoalescingMode coalescingMode)
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   auto const globalConfig = CKReadGlobalConfig();
 
-  auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates, forcePropsUpdates);
+  auto const buildTrigger = CKBuildComponentHelpers::getBuildTrigger(previousRoot, stateUpdates, treeHasPropsUpdate);
   auto const analyticsListener = [previousRoot analyticsListener];
   auto const shouldCollectTreeNodeCreationInformation = [analyticsListener shouldCollectTreeNodeCreationInformation:previousRoot];
 

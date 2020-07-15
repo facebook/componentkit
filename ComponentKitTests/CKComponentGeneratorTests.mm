@@ -176,7 +176,7 @@ static CKComponent *verificationComponentProvider(id<NSObject> m, id<NSObject> c
   [componentGenerator generateComponentSynchronously];
 
   const auto buildTrigger = CKIdValueWrapperGet<CKBuildTrigger>(modelWrapper);
-  XCTAssertEqual(buildTrigger, CKBuildTrigger::PropsAndStateUpdate);
+  XCTAssertEqual(buildTrigger, CKBuildTriggerPropsUpdate | CKBuildTriggerStateUpdate);
 }
 
 #pragma mark - Helpers

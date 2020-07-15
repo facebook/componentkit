@@ -81,7 +81,7 @@
     .previousScopeRoot = _scopeRoot,
     .stateUpdates = {},
     .treeNodeDirtyIds = {100, 101}, // Use a random id that represents a fake state update on a different branch.
-    .buildTrigger = CKBuildTrigger::StateUpdate,
+    .buildTrigger = CKBuildTriggerStateUpdate,
   });
 
   // As the state update doesn't affect the c2, we should reuse c instead.
@@ -147,7 +147,7 @@
     .treeNodeDirtyIds = {
       _c.scopeHandle.treeNodeIdentifier
     },
-    .buildTrigger = CKBuildTrigger::StateUpdate,
+    .buildTrigger = CKBuildTriggerStateUpdate,
   });
 
   // As the state update affect c2, we should recreate its children.
@@ -179,7 +179,7 @@
     .treeNodeDirtyIds = {
       _c.scopeHandle.treeNodeIdentifier
     },
-    .buildTrigger = CKBuildTrigger::StateUpdate,
+    .buildTrigger = CKBuildTriggerStateUpdate,
   });
 
   // As the state update affect c2, we should recreate its children.
@@ -206,7 +206,7 @@
     .previousScopeRoot = _scopeRoot,
     .stateUpdates = {},
     .treeNodeDirtyIds = {},
-    .buildTrigger = CKBuildTrigger::PropsUpdate,
+    .buildTrigger = CKBuildTriggerPropsUpdate,
   });
 
   // Props are not equal, we cannot reuse the component in this case.
@@ -234,7 +234,7 @@
     .previousScopeRoot = _scopeRoot,
     .stateUpdates = {},
     .treeNodeDirtyIds = {},
-    .buildTrigger = CKBuildTrigger::PropsUpdate,
+    .buildTrigger = CKBuildTriggerPropsUpdate,
   });
 
   // The components are equal, we can reuse the previous component.
@@ -299,7 +299,7 @@
     .previousScopeRoot = _scopeRoot,
     .stateUpdates = {},
     .treeNodeDirtyIds = {},
-    .buildTrigger = CKBuildTrigger::StateUpdate,
+    .buildTrigger = CKBuildTriggerStateUpdate,
   });
 
   // c is not dirty, the components are equal, so we reuse the previous component.

@@ -40,7 +40,7 @@ struct ComponentTreeDiff;
  Called before the component tree creation.
 
  @param scopeRoot Scope root for component tree. Use that to identify tree between will/didBuild.
- @param buildTrigger The build trigger (new tree, state update, props updates) for this component tree creation.
+ @param buildTrigger The build trigger (state update or props updates) for this component tree creation.
  @param stateUpdates The state updates map for the component tree creation.
  @param enableComponentReuseOptimizations If `NO` any optimization for component reuse is turned off.
  */
@@ -53,7 +53,7 @@ struct ComponentTreeDiff;
  Called after the component tree creation.
 
  @param scopeRoot Scope root for component tree. Use that to identify tree between will/didBuild
- @param buildTrigger The build trigger (new tree, state update, props updates) for this component tree creation.
+ @param buildTrigger The build trigger (state update or props updates) for this component tree creation.
  @param stateUpdates The state updates map for the component tree creation.
  @param component Root component for created tree
  @param enableComponentReuseOptimizations If `NO` any optimization for component reuse is turned off.
@@ -69,7 +69,7 @@ struct ComponentTreeDiff;
  Called before component tree layout.
 
  @param component The root component that was laid out.
- @param buildTrigger The build trigger that caused the layout computaion
+ @param buildTrigger The build trigger that caused the layout computation
                      Can be CK::none, in case that the layout was computed due to a re-layout measurment.
 
  @discussion Please not that this callback can be called on the same component from different threads in undefined order, for instance:

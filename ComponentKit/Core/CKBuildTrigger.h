@@ -8,16 +8,16 @@
  *
  */
 
+#import <Foundation/Foundation.h>
 #import <ComponentKit/CKDefines.h>
 
 #if CK_NOT_SWIFT
 
 // Collection of events that trigger a new component generation.
-enum class CKBuildTrigger {
-  NewTree,
-  StateUpdate,
-  PropsUpdate,
-  PropsAndStateUpdate,
+typedef NS_OPTIONS(NSInteger, CKBuildTrigger) {
+  CKBuildTriggerNone = 0,
+  CKBuildTriggerPropsUpdate = 1 << 0,
+  CKBuildTriggerStateUpdate = 1 << 1,
 };
 
 #endif

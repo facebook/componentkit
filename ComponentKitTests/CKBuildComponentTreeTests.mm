@@ -56,7 +56,7 @@
   [c buildComponentTree:root previousParent:nil params:{
     .scopeRoot = scopeRoot,
     .stateUpdates = {},
-    .buildTrigger = CKBuildTrigger::NewTree,
+    .buildTrigger = CKBuildTriggerNone,
     .treeNodeDirtyIds = {},
   } parentHasStateUpdate:NO];
 
@@ -72,7 +72,7 @@
     .scopeRoot = scopeRoot2,
     .previousScopeRoot = scopeRoot,
     .stateUpdates = {},
-    .buildTrigger = CKBuildTrigger::PropsUpdate,
+    .buildTrigger = CKBuildTriggerPropsUpdate,
     .treeNodeDirtyIds = {},
   } parentHasStateUpdate:NO];
   XCTAssertTrue(areTreesEqual(root, root2));
@@ -90,7 +90,7 @@
   [renderComponent buildComponentTree:root previousParent:nil params:{
     .scopeRoot = scopeRoot,
     .stateUpdates = {},
-    .buildTrigger = CKBuildTrigger::NewTree,
+    .buildTrigger = CKBuildTriggerNone,
     .treeNodeDirtyIds = {},
   } parentHasStateUpdate:NO];
 
@@ -119,7 +119,7 @@
     .scopeRoot = scopeRoot2,
     .previousScopeRoot = scopeRoot,
     .stateUpdates = {},
-    .buildTrigger = CKBuildTrigger::PropsUpdate,
+    .buildTrigger = CKBuildTriggerPropsUpdate,
     .treeNodeDirtyIds = {},
   } parentHasStateUpdate:NO];
   XCTAssertTrue(areTreesEqual(root, root2));
@@ -139,7 +139,7 @@
     .scopeRoot = scopeRoot,
     .previousScopeRoot = nil,
     .stateUpdates = {},
-    .buildTrigger = CKBuildTrigger::NewTree,
+    .buildTrigger = CKBuildTriggerNone,
     .treeNodeDirtyIds = {},
   } parentHasStateUpdate:NO];
 
@@ -156,7 +156,7 @@
     .scopeRoot = scopeRoot2,
     .previousScopeRoot = scopeRoot,
     .stateUpdates = {},
-    .buildTrigger = CKBuildTrigger::PropsUpdate,
+    .buildTrigger = CKBuildTriggerPropsUpdate,
     .treeNodeDirtyIds = {},
   } parentHasStateUpdate:NO];
   XCTAssertTrue(areTreesEqual(root, root2));
@@ -166,11 +166,11 @@
 
 - (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_onNewTreeAndPropsUpdate
 {
-  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, CKBuildTrigger::NewTree).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
-  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, CKBuildTrigger::PropsUpdate).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, CKBuildTriggerNone).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, CKBuildTriggerPropsUpdate).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
 
-  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, CKBuildTrigger::NewTree).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
-  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, CKBuildTrigger::PropsUpdate).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, CKBuildTriggerNone).empty(), @"It is not expected to have dirty nodes when new tree generation is triggered");
+  XCTAssertTrue(CKRender::treeNodeDirtyIdsFor(nil, {}, CKBuildTriggerPropsUpdate).empty(), @"It is not expected to have dirty nodes on tree generation triggered by props update");
 }
 
 - (void)test_renderComponentHelpers_treeNodeDirtyIdsFor_onStateUpdate
@@ -191,7 +191,7 @@
     return @2;
   });
 
-  CKTreeNodeDirtyIds dirtyNodeIds = CKRender::treeNodeDirtyIdsFor(buildResults.scopeRoot, stateUpdates, CKBuildTrigger::StateUpdate);
+  CKTreeNodeDirtyIds dirtyNodeIds = CKRender::treeNodeDirtyIdsFor(buildResults.scopeRoot, stateUpdates, CKBuildTriggerStateUpdate);
   CKTreeNodeDirtyIds expectedDirtyNodeIds = {rootComponent.scopeHandle.treeNodeIdentifier};
   XCTAssertEqual(dirtyNodeIds, expectedDirtyNodeIds);
 }

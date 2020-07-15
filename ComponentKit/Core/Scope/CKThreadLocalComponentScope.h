@@ -32,7 +32,7 @@ class CKThreadLocalComponentScope {
 public:
   CKThreadLocalComponentScope(CKComponentScopeRoot *previousScopeRoot,
                               const CKComponentStateUpdateMap &updates,
-                              CKBuildTrigger trigger = CKBuildTrigger::NewTree,
+                              CKBuildTrigger trigger = CKBuildTriggerNone,
                               BOOL enableComponentReuseOptimizations = YES,
                               BOOL shouldCollectTreeNodeCreationInformation = NO,
                               BOOL alwaysBuildRenderTree = NO,
