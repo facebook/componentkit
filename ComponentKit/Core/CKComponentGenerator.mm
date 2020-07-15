@@ -31,16 +31,53 @@ static void *kAffinedQueueKey = &kAffinedQueueKey;
 
 struct CKComponentGeneratorInputs {
   CK::NonNull<CKComponentScopeRoot *> scopeRoot;
-  id<NSObject> model;
-  id<NSObject> context;
   CKComponentStateUpdateMap stateUpdates;
   BOOL enableComponentReuse;
   UITraitCollection *traitCollection;
-  BOOL hasPropsUpdate;
+
+  CKComponentGeneratorInputs(CK::NonNull<CKComponentScopeRoot *> scopeRoot) : scopeRoot(std::move(scopeRoot)) { }
+
+  void updateModel(id<NSObject> model) {
+    _didUpdateModelOrContext = _didUpdateModelOrContext || (model != _model);
+    _model = model;
+  }
+
+  void updateContext(id<NSObject> context) {
+    _didUpdateModelOrContext = _didUpdateModelOrContext || (context != _context);
+    _context = context;
+  }
+
+  id<NSObject> model() const {
+    return _model;
+  }
+
+  id<NSObject> context() const {
+    return _context;
+  }
+
+  BOOL didUpdateModelOrContext() const {
+    return _didUpdateModelOrContext;
+  }
 
   bool operator==(const CKComponentGeneratorInputs &i) const {
-    return scopeRoot == i.scopeRoot && model == i.model && context == i.context && stateUpdates == i.stateUpdates && enableComponentReuse == i.enableComponentReuse && hasPropsUpdate == i.hasPropsUpdate;
-  };
+    return scopeRoot == i.scopeRoot &&
+      _model == i._model &&
+      _context == i._context &&
+      stateUpdates == i.stateUpdates &&
+      enableComponentReuse == i.enableComponentReuse &&
+      _didUpdateModelOrContext == i._didUpdateModelOrContext;
+  }
+
+  void reset(CK::NonNull<CKComponentScopeRoot *> newScopeRoot) {
+    scopeRoot = newScopeRoot;
+    stateUpdates = {};
+    _didUpdateModelOrContext = NO;
+  }
+
+private:
+  id<NSObject> _model;
+  id<NSObject> _context;
+  BOOL _didUpdateModelOrContext;
 };
 
 /**
@@ -49,7 +86,7 @@ struct CKComponentGeneratorInputs {
 struct CKComponentGeneratorInputsStore {
   CKComponentGeneratorInputsStore(dispatch_queue_t affinedQueue,
                                   CKComponentGeneratorInputs inputs)
-  : _affinedQueue(affinedQueue), _inputs(inputs) {
+  : _affinedQueue(affinedQueue), _inputs(std::move(inputs)) {
     if (_affinedQueue != nil && _affinedQueue != dispatch_get_main_queue()) {
       dispatch_queue_set_specific(_affinedQueue, kAffinedQueueKey, kAffinedQueueKey, NULL);
     }
@@ -70,7 +107,7 @@ private:
   std::mutex _inputsMutex;
   CKComponentGeneratorInputs _inputs;
 
-  BOOL _isRunningOnAffinedQueue()
+  BOOL _isRunningOnAffinedQueue() const
   {
     if (_affinedQueue == dispatch_get_main_queue()) {
       return [NSThread isMainThread];
@@ -98,12 +135,12 @@ private:
     _delegate = options.delegate;
     _componentProvider = options.componentProvider;
     _inputsStore =
-    std::make_unique<CKComponentGeneratorInputsStore>(options.affinedQueue, CKComponentGeneratorInputs {
-      .scopeRoot = CKComponentScopeRootWithPredicates(self,
-                                                      options.analyticsListener ?: CKReadGlobalConfig().defaultAnalyticsListener,
-                                                      options.componentPredicates,
-                                                      options.componentControllerPredicates)
-    });
+    std::make_unique<CKComponentGeneratorInputsStore>(options.affinedQueue,
+      CKComponentScopeRootWithPredicates(self,
+                                         options.analyticsListener ?: CKReadGlobalConfig().defaultAnalyticsListener,
+                                         options.componentPredicates,
+                                         options.componentControllerPredicates)
+    );
     _affinedQueue = options.affinedQueue;
   }
   return self;
@@ -134,20 +171,14 @@ private:
 - (void)updateModel:(id<NSObject>)model
 {
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
-    if (inputs.model != model) {
-      inputs.hasPropsUpdate = YES;
-    }
-    inputs.model = model;
+    inputs.updateModel(model);
   });
 }
 
 - (void)updateContext:(id<NSObject>)context
 {
   _inputsStore->acquireInputs(^(CKComponentGeneratorInputs &inputs) {
-    if (inputs.context != context) {
-      inputs.hasPropsUpdate = YES;
-    }
-    inputs.context = context;
+    inputs.updateContext(context);
   });
 }
 
@@ -160,8 +191,8 @@ private:
     __block CK::DelayedInitialisationWrapper<CKBuildComponentResult> result;
     CKPerformWithCurrentTraitCollection(inputs.traitCollection, ^{
       result = CKBuildComponent(inputs.scopeRoot, inputs.stateUpdates, ^{
-        return _componentProvider(inputs.model, inputs.context);
-      }, enableComponentReuse, inputs.hasPropsUpdate);
+        return _componentProvider(inputs.model(), inputs.context());
+      }, enableComponentReuse, inputs.didUpdateModelOrContext());
     });
     _applyResult(result,
                  inputs,
@@ -188,9 +219,9 @@ private:
       result = std::make_shared<const CKBuildComponentResult>(CKBuildComponent(
         inputs->scopeRoot,
         inputs->stateUpdates,
-        ^{ return componentProvider(inputs->model, inputs->context); },
+        ^{ return componentProvider(inputs->model(), inputs->context()); },
         inputs->enableComponentReuse,
-        inputs->hasPropsUpdate
+        inputs->didUpdateModelOrContext()
       ));
     });
     const auto addedComponentControllers =
@@ -268,9 +299,7 @@ static void _applyResult(const CKBuildComponentResult &result,
 {
   _notifyInitializationControllerEvents(addedComponentControllers);
   _notifyInvalidateControllerEvents(invalidComponentControllers);
-  inputs.scopeRoot = result.scopeRoot;
-  inputs.stateUpdates = {};
-  inputs.hasPropsUpdate = NO;
+  inputs.reset(result.scopeRoot);
 }
 
 static void _notifyInvalidateControllerEvents(const std::vector<CKComponentController *> &invalidComponentControllers)
