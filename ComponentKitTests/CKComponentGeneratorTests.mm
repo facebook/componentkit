@@ -168,7 +168,7 @@ static CKComponent *verificationComponentProvider(id<NSObject> m, id<NSObject> c
   auto modelWrapper = CKIdValueWrapperNonEquatableCreate(CKBuildTrigger{});
   [componentGenerator updateModel:modelWrapper];
   const auto stateUpdateListenner = (id<CKComponentStateListener>)componentGenerator;
-  [stateUpdateListenner componentScopeHandle:[CKComponentScopeHandle new]
+  [stateUpdateListenner componentScopeHandle:nil
                               rootIdentifier:42
                        didReceiveStateUpdate:^id(id) {
     return nil;
