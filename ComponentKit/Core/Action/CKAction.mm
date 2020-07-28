@@ -494,7 +494,7 @@ NSString *_CKComponentResponderChainDebugResponderChain(id responder) noexcept {
 
 @implementation CKComponentAccessibilityCustomAction
 {
-  UIView *_ck_view;
+  __weak UIView *_ck_view;
   CKAction<> _ck_action;
 }
 
