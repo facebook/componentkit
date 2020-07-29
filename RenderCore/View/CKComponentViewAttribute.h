@@ -65,7 +65,6 @@ struct CKComponentViewAttribute {
                            void (^unapp)(id view, id value) = nil,
                            void (^upd)(id view, id oldValue, id newValue) = nil);
 
-  CKComponentViewAttribute(CKComponentViewAttribute const&);
   ~CKComponentViewAttribute();
 
   /**
