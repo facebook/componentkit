@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>CKFlexboxPositionType Constants Reference</title>
+	<title>CKBuildTrigger Constants Reference</title>
 
 	<link rel="stylesheet" href="../css/style.css">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
@@ -59,13 +59,13 @@
 		<div id="overview_contents" class="container">
 			<div id="content">
 				<main role="main">
-					<h1 class="title">CKFlexboxPositionType Constants Reference</h1>
+					<h1 class="title">CKBuildTrigger Constants Reference</h1>
 
 					
 					<div class="section section-specification"><table cellspacing="0"><tbody>
 						<tr>
 	<th>Declared in</th>
-	<td>CKFlexboxComponent.h</td>
+	<td>CKBuildTrigger.h</td>
 </tr>
 						</tbody></table></div>
 					
@@ -75,17 +75,19 @@
 					
 
                     
-                    <h3 class="subsubtitle method-title">CKFlexboxPositionType</h3>
+                    <h3 class="subsubtitle method-title">CKBuildTrigger</h3>
                     
                     <div class="section">
                         <!-- display enum values -->
                         
                         <h4 class="method-subtitle">Definition</h4>
-                        <code>typedef NS_ENUM(NSInteger, CKFlexboxPositionType ) {<br>
+                        <code>typedef NS_OPTIONS(NSInteger, CKBuildTrigger ) {<br>
                             
-                            &nbsp;&nbsp; <a href="">CKFlexboxPositionTypeRelative</a>,<br>
+                            &nbsp;&nbsp; <a href="">CKBuildTriggerNone</a> = 0,<br>
                             
-                            &nbsp;&nbsp; <a href="">CKFlexboxPositionTypeAbsolute</a>,<br>
+                            &nbsp;&nbsp; <a href="">CKBuildTriggerPropsUpdate</a> = 1 &lt; &lt; 0,<br>
+                            
+                            &nbsp;&nbsp; <a href="">CKBuildTriggerStateUpdate</a> = 1 &lt; &lt; 1,<br>
                             
                             };</code>
                     
@@ -95,36 +97,32 @@
                         <h4 class="method-subtitle">Constants</h4>
                         <dl class="termdef">
                             
-                            <dt><a name="" title="CKFlexboxPositionTypeRelative"></a><code>CKFlexboxPositionTypeRelative</code></dt>
+                            <dt><a name="" title="CKBuildTriggerNone"></a><code>CKBuildTriggerNone</code></dt>
 <dd>
-
-
-<p>Specifies the type of position children are stacked in</p>
-
-
-
-
 
     
 	<p>
-		Declared In <code class="declared-in-ref">CKFlexboxComponent.h</code>.
+		Declared In <code class="declared-in-ref">CKBuildTrigger.h</code>.
 	</p>
 	
 </dd>
                             
-                            <dt><a name="" title="CKFlexboxPositionTypeAbsolute"></a><code>CKFlexboxPositionTypeAbsolute</code></dt>
+                            <dt><a name="" title="CKBuildTriggerPropsUpdate"></a><code>CKBuildTriggerPropsUpdate</code></dt>
 <dd>
-
-
-<p>With the absolute position, child is positioned relative to parent</p>
-
-
-
-
 
     
 	<p>
-		Declared In <code class="declared-in-ref">CKFlexboxComponent.h</code>.
+		Declared In <code class="declared-in-ref">CKBuildTrigger.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="CKBuildTriggerStateUpdate"></a><code>CKBuildTriggerStateUpdate</code></dt>
+<dd>
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">CKBuildTrigger.h</code>.
 	</p>
 	
 </dd>
