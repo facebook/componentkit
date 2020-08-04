@@ -48,7 +48,7 @@ struct CKMountInfo {
  @return A struct defining the layout of the receiver and its children.
  */
 - (CKLayout)layoutThatFits:(CKSizeRange)constrainedSize
-                         parentSize:(CGSize)parentSize;
+                parentSize:(CGSize)parentSize;
 
 /**
  While the component is mounted, returns information about the component's manifestation in the view hierarchy.
@@ -126,5 +126,3 @@ NS_SWIFT_NAME(Mountable)
 #endif
 
 NS_ASSUME_NONNULL_END
-
-#import <RenderCore/CKLayout.h>
