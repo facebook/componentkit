@@ -25,7 +25,6 @@
 
 @class CKComponent;
 
-typedef id (^CKResponderGenerationBlock)(void);
 typedef NS_ENUM(NSInteger, CKActionSendBehavior) {
   /** Starts searching at the sender's next responder. Usually this is what you want to prevent infinite loops. */
   CKActionSendBehaviorStartAtSenderNextResponder,
@@ -39,7 +38,12 @@ class _CKTypedComponentDebugInitialTarget;
 
 /** A base-class for typed components that doesn't use templates to avoid template bloat. */
 class CKActionBase {
-  protected:
+  struct ScopedResponderAndKey {
+    CKScopedResponder *responder;
+    CKScopedResponderKey key;
+  };
+
+protected:
 
   /**
    We support several different types of action variants. You don't need to use this value anywhere, it's set for you
@@ -75,7 +79,7 @@ class CKActionBase {
   // that runs code on destruction, making this field the first field of this
   // object saves an offset calculation instruction in the destructor.
   __weak id _target;
-  std::pair<CKScopedResponderUniqueIdentifier, CKResponderGenerationBlock> _scopeIdentifierAndResponderGenerator;
+  ScopedResponderAndKey _scopedResponderAndKey;
   dispatch_block_t _block;
   CKActionVariant _variant;
   SEL _selector;

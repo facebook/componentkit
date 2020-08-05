@@ -27,28 +27,6 @@
 void CKActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKActionTypelist<> &list) noexcept { }
 void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) noexcept { }
 
-static auto createScopeIdentifierAndResponderGenerator(CKComponentScopeHandle *handle) ->
-std::pair<CKScopedResponderUniqueIdentifier, CKResponderGenerationBlock>
-{
-  const auto scopedResponder = handle.scopedResponder;
-  const auto responderKey = [scopedResponder keyForHandle:handle];
-  return {
-    scopedResponder.uniqueIdentifier,
-    ^id(void) {
-
-      /**
-       At one point in the history of ComponentKit, it was possible for a CKScopeResponder to
-       return a "stale" target for an action. This was often caused by retain cycles, or,
-       "old" component hierarchies with prolonged lifecycles.
-
-       To prevent this from happening in the future we now provide a key which gives the
-       scopeResponder the wisdom to ignore older generations.
-       */
-      return [scopedResponder responderForKey:responderKey];
-    }
-  };
-}
-
 #pragma mark - CKActionBase
 
 bool CKActionBase::operator==(const CKActionBase& rhs) const
@@ -56,9 +34,8 @@ bool CKActionBase::operator==(const CKActionBase& rhs) const
   return (_variant == rhs._variant
           && CKObjectIsEqual(_target, rhs._target)
           // If we are using a scoped action, we are only concerned that the selector and the
-          // scoped responder match. Since the scoped responder is abstracted away to the block
-          // within in the pair, we provide a identifier to quickly verify the scoped responders are the same.
-          && _scopeIdentifierAndResponderGenerator.first == rhs._scopeIdentifierAndResponderGenerator.first
+          // responder unique identifier matches.
+          && _scopedResponderAndKey.responder.uniqueIdentifier == rhs._scopedResponderAndKey.responder.uniqueIdentifier
           && _selector == rhs._selector
           && _block == rhs._block);
 }
@@ -78,7 +55,7 @@ id CKActionBase::initialTarget(CKComponent *sender) const
     case CKActionVariant::TargetSelector:
       return _target;
     case CKActionVariant::Responder:
-      return _scopeIdentifierAndResponderGenerator.second ? _scopeIdentifierAndResponderGenerator.second() : nil;
+      return [_scopedResponderAndKey.responder responderForKey:_scopedResponderAndKey.key];
     case CKActionVariant::Block:
       CKCFailAssert(@"Should not be asking for target for block action.");
       return nil;
@@ -87,7 +64,7 @@ id CKActionBase::initialTarget(CKComponent *sender) const
 
 CKActionBase::CKActionBase() noexcept
   : _target(nil),
-    _scopeIdentifierAndResponderGenerator({}),
+    _scopedResponderAndKey({}),
     _block(NULL),
     _variant(CKActionVariant::RawSelector),
     _selector(nullptr) {}
@@ -96,7 +73,7 @@ CKActionBase::CKActionBase(const CKActionBase&) = default;
 
 CKActionBase::CKActionBase(id target, SEL selector) noexcept
   : _target(target),
-    _scopeIdentifierAndResponderGenerator({}),
+    _scopedResponderAndKey({}),
     _block(NULL),
     _variant(CKActionVariant::TargetSelector),
     _selector(selector) {}
@@ -106,7 +83,7 @@ CKActionBase::CKActionBase(const CKComponentScope &scope, SEL selector) noexcept
 
 CKActionBase::CKActionBase(SEL selector, CKComponentScopeHandle *handle) noexcept
   : _target(nil),
-    _scopeIdentifierAndResponderGenerator(createScopeIdentifierAndResponderGenerator(handle)),
+    _scopedResponderAndKey{ .responder = handle.scopedResponder, .key = [handle.scopedResponder keyForHandle:handle] },
     _block(NULL),
 
     _variant(CKActionVariant::Responder),
@@ -117,20 +94,20 @@ CKActionBase::CKActionBase(SEL selector, CKComponentScopeHandle *handle) noexcep
 
 CKActionBase::CKActionBase(SEL selector) noexcept
   : _target(nil),
-    _scopeIdentifierAndResponderGenerator({}),
+    _scopedResponderAndKey({}),
     _block(NULL),
     _variant(CKActionVariant::RawSelector),
     _selector(selector) {}
 
 CKActionBase::CKActionBase(dispatch_block_t block) noexcept
   : _target(nil),
-    _scopeIdentifierAndResponderGenerator({}),
+    _scopedResponderAndKey({}),
     _block(block),
     _variant(CKActionVariant::Block),
     _selector(NULL) {}
 
 CKActionBase::operator bool() const noexcept {
-  return _selector != NULL || _block != NULL || _scopeIdentifierAndResponderGenerator.second != nil;
+  return _selector != NULL || _block != NULL || _scopedResponderAndKey.responder != nil;
 }
 
 CKActionBase::~CKActionBase() {}
@@ -147,7 +124,7 @@ std::string CKActionBase::identifier() const noexcept
     case CKActionVariant::TargetSelector:
       return std::string(sel_getName(_selector)) + "-TargetSelector-" + std::to_string((long)_target);
     case CKActionVariant::Responder:
-      return std::string(sel_getName(_selector)) + "-Responder-" + std::to_string(_scopeIdentifierAndResponderGenerator.first);
+      return std::string(sel_getName(_selector)) + "-Responder-" + std::to_string(_scopedResponderAndKey.responder.uniqueIdentifier);
     case CKActionVariant::Block:
       return std::string(sel_getName(_selector)) + "-Block-" + std::to_string((long)_block);
   }
