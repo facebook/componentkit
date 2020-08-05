@@ -68,7 +68,7 @@ CKActionSendBehavior CKActionBase::defaultBehavior() const
   return (_variant == CKActionVariant::RawSelector
           ? CKActionSendBehaviorStartAtSenderNextResponder
           : CKActionSendBehaviorStartAtSender);
-};
+}
 
 id CKActionBase::initialTarget(CKComponent *sender) const
 {
@@ -85,35 +85,59 @@ id CKActionBase::initialTarget(CKComponent *sender) const
   }
 }
 
-CKActionBase::CKActionBase() noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::RawSelector), _selector(nullptr) {}
+CKActionBase::CKActionBase() noexcept
+  : _target(nil),
+    _scopeIdentifierAndResponderGenerator({}),
+    _block(NULL),
+    _variant(CKActionVariant::RawSelector),
+    _selector(nullptr) {}
 
 CKActionBase::CKActionBase(const CKActionBase&) = default;
 
-CKActionBase::CKActionBase(id target, SEL selector) noexcept : _target(target), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::TargetSelector), _selector(selector) {};
+CKActionBase::CKActionBase(id target, SEL selector) noexcept
+  : _target(target),
+    _scopeIdentifierAndResponderGenerator({}),
+    _block(NULL),
+    _variant(CKActionVariant::TargetSelector),
+    _selector(selector) {}
 
+CKActionBase::CKActionBase(const CKComponentScope &scope, SEL selector) noexcept
+  : CKActionBase(selector, scope.scopeHandle()) { }
 
-CKActionBase::CKActionBase(const CKComponentScope &scope, SEL selector) noexcept : _target(nil), _block(NULL), _variant(CKActionVariant::Responder), _selector(selector)
+CKActionBase::CKActionBase(SEL selector, CKComponentScopeHandle *handle) noexcept
+  : _target(nil),
+    _scopeIdentifierAndResponderGenerator(createScopeIdentifierAndResponderGenerator(handle)),
+    _block(NULL),
+
+    _variant(CKActionVariant::Responder),
+    _selector(selector)
 {
-  const auto handle = scope.scopeHandle();
   CKCAssertNotNil(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
-  _scopeIdentifierAndResponderGenerator = createScopeIdentifierAndResponderGenerator(handle);
 }
 
-CKActionBase::CKActionBase(SEL selector, CKComponentScopeHandle *handle) noexcept : _target(nil), _block(NULL), _variant(CKActionVariant::Responder), _selector(selector)
-{
-  CKCAssertNotNil(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
-  _scopeIdentifierAndResponderGenerator = createScopeIdentifierAndResponderGenerator(handle);
-};
+CKActionBase::CKActionBase(SEL selector) noexcept
+  : _target(nil),
+    _scopeIdentifierAndResponderGenerator({}),
+    _block(NULL),
+    _variant(CKActionVariant::RawSelector),
+    _selector(selector) {}
 
-CKActionBase::CKActionBase(SEL selector) noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::RawSelector), _selector(selector) {};
+CKActionBase::CKActionBase(dispatch_block_t block) noexcept
+  : _target(nil),
+    _scopeIdentifierAndResponderGenerator({}),
+    _block(block),
+    _variant(CKActionVariant::Block),
+    _selector(NULL) {}
 
-CKActionBase::CKActionBase(dispatch_block_t block) noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(block), _variant(CKActionVariant::Block), _selector(NULL) {};
+CKActionBase::operator bool() const noexcept {
+  return _selector != NULL || _block != NULL || _scopeIdentifierAndResponderGenerator.second != nil;
+}
 
 CKActionBase::~CKActionBase() {}
 
-CKActionBase::operator bool() const noexcept { return _selector != NULL || _block != NULL || _scopeIdentifierAndResponderGenerator.second != nil; };
-
-SEL CKActionBase::selector() const noexcept { return _selector; };
+SEL CKActionBase::selector() const noexcept {
+  return _selector;
+}
 
 std::string CKActionBase::identifier() const noexcept
 {
@@ -129,7 +153,9 @@ std::string CKActionBase::identifier() const noexcept
   }
 }
 
-dispatch_block_t CKActionBase::block() const noexcept { return _block; };
+dispatch_block_t CKActionBase::block() const noexcept {
+  return _block;
+}
 
 CKComponentScopeHandle *CKActionBase::scopeHandleFromContext(const CK::BaseSpecContext &context) {
   // Requires CKComponentInternal.h which shouldn't be imported publicly.
