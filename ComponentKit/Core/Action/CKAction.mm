@@ -33,7 +33,7 @@ std::pair<CKScopedResponderUniqueIdentifier, CKResponderGenerationBlock>
   const auto scopedResponder = handle.scopedResponder;
   const auto responderKey = [scopedResponder keyForHandle:handle];
   return {
-    [handle globalIdentifier],
+    scopedResponder.uniqueIdentifier,
     ^id(void) {
 
       /**
