@@ -27,8 +27,7 @@
 void CKActionTypeVectorBuild(std::vector<const char *> &typeVector, const CKActionTypelist<> &list) noexcept { }
 void CKConfigureInvocationWithArguments(NSInvocation *invocation, NSInteger index) noexcept { }
 
-static auto createScopeIdentifierAndResponderGenerator(CKComponentScopeHandle *handle,
-                                                       SEL selector) ->
+static auto createScopeIdentifierAndResponderGenerator(CKComponentScopeHandle *handle) ->
 std::pair<CKScopedResponderUniqueIdentifier, CKResponderGenerationBlock>
 {
   const auto scopedResponder = handle.scopedResponder;
@@ -97,13 +96,13 @@ CKActionBase::CKActionBase(const CKComponentScope &scope, SEL selector) noexcept
 {
   const auto handle = scope.scopeHandle();
   CKCAssertNotNil(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
-  _scopeIdentifierAndResponderGenerator = createScopeIdentifierAndResponderGenerator(handle, selector);
+  _scopeIdentifierAndResponderGenerator = createScopeIdentifierAndResponderGenerator(handle);
 }
 
 CKActionBase::CKActionBase(SEL selector, CKComponentScopeHandle *handle) noexcept : _target(nil), _block(NULL), _variant(CKActionVariant::Responder), _selector(selector)
 {
   CKCAssertNotNil(handle, @"You are creating an action that will not fire because you have an invalid scope handle.");
-  _scopeIdentifierAndResponderGenerator = createScopeIdentifierAndResponderGenerator(handle, selector);
+  _scopeIdentifierAndResponderGenerator = createScopeIdentifierAndResponderGenerator(handle);
 };
 
 CKActionBase::CKActionBase(SEL selector) noexcept : _target(nil), _scopeIdentifierAndResponderGenerator({}), _block(NULL), _variant(CKActionVariant::RawSelector), _selector(selector) {};
