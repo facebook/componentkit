@@ -110,9 +110,6 @@ Unmounts the component:
 /** Name of the component's class */
 @property (nonatomic, copy, readonly) NSString *className;
 
-/** A long-lived object that exists across generations */
-@property (nonatomic, strong, readonly, nullable) id controller;
-
 @end
 
 #else

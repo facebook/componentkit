@@ -77,7 +77,7 @@ CKComponentRootLayout CKComputeRootComponentLayout(id<CKMountable> rootComponent
   CKLayout layout = CKComputeComponentLayout(rootComponent, sizeRange, sizeRange.max);
   auto layoutCache = CKComponentRootLayout::ComponentLayoutCache {};
   layout.enumerateLayouts([&](const auto &l){
-    if (l.component.controller) {
+    if ([l.component isKindOfClass:[CKComponent class]] && ((CKComponent *)l.component).controller) {
       layoutCache[l.component] = l;
     }
   });
