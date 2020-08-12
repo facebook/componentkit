@@ -170,8 +170,14 @@
   _treeNode = treeNode;
 }
 
-- (void)resolveInScopeRoot:(CKComponentScopeRoot *)scopeRoot
+- (void)resolveAndRegisterInScopeRoot:(CKComponentScopeRoot *)scopeRoot
 shouldSkipControllerRegistrationOnRenderToNil:(BOOL)shouldSkipControllerRegistrationOnRenderToNil
+{
+  [self resolveInScopeRoot:scopeRoot];
+  [self registerInScopeRoot:scopeRoot shouldSkipControllerRegistrationOnRenderToNil:shouldSkipControllerRegistrationOnRenderToNil];
+}
+
+- (void)resolveInScopeRoot:(CKComponentScopeRoot *)scopeRoot
 {
   CKAssertFalse(_resolved);
 
@@ -184,6 +190,13 @@ shouldSkipControllerRegistrationOnRenderToNil:(BOOL)shouldSkipControllerRegistra
   }
 
   _resolved = YES;
+}
+
+- (void)registerInScopeRoot:(CKComponentScopeRoot *)scopeRoot shouldSkipControllerRegistrationOnRenderToNil:(BOOL)shouldSkipControllerRegistrationOnRenderToNil
+{
+  // Strong ref: _acquiredComponent may be nil when rendering-to-nil as the
+  // handle won't be acquired.
+  const auto acquiredComponent = _acquiredComponent;
 
   // Register after scope handle resolution so the controller can be accessed
   // in the predicates.

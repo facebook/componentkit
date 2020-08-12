@@ -29,7 +29,7 @@ static auto toInitialStateCreator(id (^initialStateCreator)(void), Class compone
 CKComponentScope::~CKComponentScope()
 {
   if (_threadLocalScope != nullptr) {
-    [_scopeHandle resolveInScopeRoot:_threadLocalScope->newScopeRoot
+    [_scopeHandle resolveAndRegisterInScopeRoot:_threadLocalScope->newScopeRoot
         shouldSkipControllerRegistrationOnRenderToNil:
         _threadLocalScope->shouldSkipControllerRegistrationOnRenderToNil];
 

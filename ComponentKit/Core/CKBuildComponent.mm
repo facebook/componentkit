@@ -126,6 +126,7 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
       .systraceListener = threadScope.systraceListener,
       .shouldCollectTreeNodeCreationInformation = shouldCollectTreeNodeCreationInformation,
       .coalescingMode = coalescingMode,
+      .shouldSkipControllerRegistrationOnRenderToNil = globalConfig.shouldSkipControllerRegistrationWhenRenderingToNil,
     };
 
     // Build the component tree from the render function.

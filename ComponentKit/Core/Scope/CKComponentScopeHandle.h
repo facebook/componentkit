@@ -50,7 +50,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)replaceState:(id _Nullable)state;
 
 /** Informs the scope handle that it should complete its configuration. This will generate the controller */
-- (void)resolveInScopeRoot:(CKComponentScopeRoot *)scopeRoot
+- (void)resolveInScopeRoot:(CKComponentScopeRoot *)scopeRoot;
+
+/** Registers the component and its controller in the scope root */
+- (void)registerInScopeRoot:(CKComponentScopeRoot *)scopeRoot
+shouldSkipControllerRegistrationOnRenderToNil:(BOOL)shouldSkipControllerRegistrationOnRenderToNil;
+
+/** Resolves the component and registers the component and its controller in the scope root */
+- (void)resolveAndRegisterInScopeRoot:(CKComponentScopeRoot *)scopeRoot
 shouldSkipControllerRegistrationOnRenderToNil:(BOOL)shouldSkipControllerRegistrationOnRenderToNil;
 
 /** Acquire component if possible, assert if the scope handle is wrong */

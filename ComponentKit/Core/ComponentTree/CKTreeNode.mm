@@ -103,7 +103,7 @@ namespace TreeNode {
     [component acquireTreeNode:self];
     // Finalize the node/scope registration.
     [scopeHandle forceAcquireFromComponent:component];
-    [scopeHandle resolveInScopeRoot:scopeRoot
+    [scopeHandle resolveAndRegisterInScopeRoot:scopeRoot
      shouldSkipControllerRegistrationOnRenderToNil:NO];
   }
   return self;
