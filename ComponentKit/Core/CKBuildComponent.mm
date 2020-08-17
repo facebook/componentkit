@@ -122,9 +122,9 @@ CKBuildComponentResult CKBuildComponent(CK::NonNull<CKComponentScopeRoot *> prev
       .stateUpdates = stateUpdates,
       .treeNodeDirtyIds = threadScope.treeNodeDirtyIds,
       .buildTrigger = buildTrigger,
-      .enableComponentReuseOptimizations = enableComponentReuseOptimizations,
       .systraceListener = threadScope.systraceListener,
       .shouldCollectTreeNodeCreationInformation = shouldCollectTreeNodeCreationInformation,
+      .enableComponentReuseOptimizations = enableComponentReuseOptimizations,
       .coalescingMode = coalescingMode,
       .shouldSkipControllerRegistrationOnRenderToNil = globalConfig.shouldSkipControllerRegistrationWhenRenderingToNil,
     };
