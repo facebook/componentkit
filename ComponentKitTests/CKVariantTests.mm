@@ -123,6 +123,17 @@ struct DestructionTracker {
   XCTAssertFalse(v3 == v4);
 }
 
+- (void)test_HasValue
+{
+  auto v = Variant<int, std::string>{};
+
+  XCTAssertFalse(v.hasValue());
+
+  v = std::string{"CK"};
+
+  XCTAssertTrue(v.hasValue());
+}
+
 struct Empty {};
 struct Loading {};
 struct Data {

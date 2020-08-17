@@ -551,6 +551,14 @@ class Variant : private VariantDetail::VariantStorage<Types...>,
   }
 
   /**
+   Checks if the variant has a value.
+   */
+  auto hasValue() const -> bool
+  {
+    return this->getDiscriminator() != 0;
+  }
+
+  /**
    Matches the variant against a given matcher.
 
    \param matcher A callable that can be invoked with any type in \c Types . If \c matcher cannot be invoked with one or
