@@ -121,24 +121,25 @@ namespace CKRenderInternal {
       return NO;
     }
 
-    if (params.buildTrigger == CKBuildTriggerStateUpdate) {
-      // State update branch - only state updates - no coalesced props update.
+    if (params.buildTrigger & CKBuildTriggerStateUpdate) {
+      // State update branch - only state updates or coalesced state & props update.
       // Check if the tree node is not dirty (not in a branch of a state update).
       auto const dirtyNodeId = params.treeNodeDirtyIds.find(node.nodeIdentifier);
       if (dirtyNodeId == params.treeNodeDirtyIds.end()) {
         // We reuse the component without checking `shouldComponentUpdate:` in the following conditions:
         // 1. The component is not dirty (on a state update branch)
         // 2. No direct parent has a state update
-        if (!parentHasStateUpdate) {
+        // 3. Not a coalesced state & props update.
+        if (!parentHasStateUpdate &&
+            params.buildTrigger == CKBuildTriggerStateUpdate) {
           // Faster state update optimizations.
           return CKRenderInternal::reusePreviousComponent(component, childComponent, node, parent, previousParent, params, didReuseBlock);
         }
         // We fallback to the props update optimization in the follwing case:
-        // - The component is not dirty, but the parent has a state update.
+        // - The component is not dirty, but the parent has a state update or tree props were updated.
         return (CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params, didReuseBlock));
       }
-    } else if (params.buildTrigger & CKBuildTriggerPropsUpdate) {
-      // Props update branch - only props update or props & state update.
+    } else if (params.buildTrigger == CKBuildTriggerPropsUpdate) {
       // Will be used for coalesced props & state updates too.
       return CKRenderInternal::reusePreviousComponentIfComponentsAreEqual(component, childComponent, node, parent, previousParent, params, didReuseBlock);
     }
