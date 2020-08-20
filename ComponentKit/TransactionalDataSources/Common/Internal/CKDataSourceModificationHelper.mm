@@ -16,6 +16,7 @@
 #import <ComponentKit/CKComponentProvider.h>
 #import <ComponentKit/CKDataSourceConfigurationInternal.h>
 #import <ComponentKit/CKDataSourceItemInternal.h>
+#import <ComponentKit/CKExceptionInfoScopedValue.h>
 #import <ComponentKit/CKMountable.h>
 
 CKDataSourceItem *CKBuildDataSourceItem(CK::NonNull<CKComponentScopeRoot *> previousRoot,
@@ -26,6 +27,9 @@ CKDataSourceItem *CKBuildDataSourceItem(CK::NonNull<CKComponentScopeRoot *> prev
                                         id context,
                                         BOOL enableComponentReuseOptimizations)
 {
+  CKExceptionInfoScopedValue modelValue{@"ck_data_source_item_model", NSStringFromClass([model class]) ?: @"Nil"};
+  CKExceptionInfoScopedValue contextValue{@"ck_data_source_item_context", NSStringFromClass([context class]) ?: @"Nil"};
+
   auto const componentProvider = [configuration componentProvider];
   const auto componentFactory = ^{
     return componentProvider(model, context);
