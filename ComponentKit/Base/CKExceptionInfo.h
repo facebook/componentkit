@@ -9,3 +9,4 @@
  */
 
 #define CKExceptionInfoSetValueForKey(key, value)
+#define CKExceptionInfoSetValueForKeyTruncating(key, value)
